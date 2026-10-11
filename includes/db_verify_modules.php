@@ -54,6 +54,7 @@ $DB_VERIFY_MODULE_PREFIXES = [
     'apikeys'          => 'system',
     'api_rate'         => 'system',
     'auth_providers'   => 'system',
+    'sso_'             => 'system',   // SSO groups -> teams (3.5.0)
     'tenant'           => 'system',
     'team'             => 'system',
     'department'       => 'system',

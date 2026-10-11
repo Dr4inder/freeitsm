@@ -165,39 +165,37 @@ require __DIR__ . '/_top.php';
     <p>When sync is on, FreeITSM also asks the provider's userinfo endpoint for anything missing from the ID token. What the ID token says always wins.</p>
 </div>
 
-<!-- Groups from the identity provider (claim mapping, 3.5.0) -->
+<!-- Groups from the identity provider (3.5.0) -->
 <div class="help-section" id="sso-groups">
     <div class="help-section-header"><?php echo helpSectionNum('sso-groups'); ?>
         <div>
             <h3>Groups from the identity provider</h3>
         </div>
     </div>
-    <p>When someone signs in with single sign-on, the identity provider sends a few facts about them - name, email, and usually the <strong>groups</strong> they are in. FreeITSM can use those groups to decide <strong>who is an analyst</strong> and <strong>what they can open</strong>, checked again at every sign-in. Manage staff access in your identity provider and FreeITSM follows it: add someone to a group and they get the access at their next sign-in; take them out and it goes.</p>
-    <p>Three settings on an OpenID Connect provider, under <strong>Groups from the identity provider</strong>:</p>
-    <ul>
-        <li><strong>Group claim</strong> - which part of the sign-in holds the groups. Usually <code>groups</code> or <code>roles</code>; on Keycloak <code>realm_access.roles</code>. Nothing else happens until this is set.</li>
-        <li><strong>Analyst group</strong> - only people in this group can sign in as analysts, and only they are created automatically. An analyst who leaves the group is refused at their next sign-in (their account is left as it is). This is the same as an LDAP directory's analyst group.</li>
-        <li><strong>Access rules</strong> - one line per group, <code>group = what it gives</code>:
-            <pre style="margin:6px 0;">IT-Service-Desk = tickets, knowledge
-IT-Asset-Team   = assets, assets.leasing
-IT-Everyone     = all-modules
-IT-Admins       = admin</pre>
-            What a group can give: a <strong>module</strong> (<code>tickets</code>, <code>assets</code>, <code>knowledge</code> ...), a <strong>capability</strong> - a settings permission like <code>tickets.manage</code> (the list is in System &rarr; Roles) - <code>all-modules</code>, or <code>admin</code>.</li>
-    </ul>
+    <p>When someone signs in with single sign-on, the identity provider sends a few facts about them - name, email, and usually the <strong>groups</strong> they are in. FreeITSM can use those groups to decide <strong>who can be an analyst</strong>, <strong>who is an administrator</strong> and <strong>which teams people are in</strong>, checked again at every sign-in. Manage staff in your identity provider and FreeITSM follows: add someone to a group and they get the access at their next sign-in; take them out and it goes.</p>
+    <p>Open the provider in <strong>System &rarr; SSO</strong> and go to the <strong>Groups and teams</strong> tab:</p>
+    <ol>
+        <li><strong>Where the groups come from</strong> - choose <em>groups</em> for most providers, <em>realm_access.roles</em> for Keycloak, or <em>Something else</em> if yours uses another name.</li>
+        <li><strong>Sign in once</strong> through the provider, then open it again. It now lists <em>what the last sign-in sent</em>, and every group box offers those groups to choose from.</li>
+        <li><strong>Analyst group</strong> (optional) - only people in this group can sign in as analysts, and only they are created automatically. Someone who leaves it is refused at their next sign-in. This is the same as an LDAP directory's analyst group.</li>
+        <li><strong>Administrator group</strong> (optional) - people in it are administrators, people not in it are not. Leave it empty to manage administrators by hand. The last administrator is never removed.</li>
+        <li><strong>Teams</strong> - add a row for each group: choose the group, choose the team. What the team can do - its modules, companies and roles - is set in <strong>System &rarr; Teams</strong>, the same as for anyone you add to a team by hand.</li>
+    </ol>
     <h4>What happens at each sign-in</h4>
     <ul>
-        <li><strong>Modules</strong> become exactly what the matching rules give. In no matching group: no modules. Modules a <em>team</em> gives still count on top.</li>
-        <li><strong>Capabilities</strong> and <strong>admin</strong> are only managed if some rule mentions them, so a rules list that only hands out modules never changes anyone's admin flag. The last active administrator is never demoted.</li>
-        <li>Group names match ignoring case, but otherwise exactly.</li>
+        <li>People are <strong>added</strong> to the teams their groups point to and <strong>taken out</strong> of those teams when they leave the group. Teams with no row here are never changed, so teams you manage by hand are safe.</li>
+        <li>Analysts the provider creates get their modules from these teams (unless the provider names default modules). For companies, choose <strong>Company access for auto-created analysts</strong> on the <em>Signing in</em> tab - set it to <em>None</em> if your teams give the companies.</li>
+        <li>Group names match ignoring capital letters, in any language.</li>
+        <li>A group that nobody has signed in with yet can still be chosen, but it is pointed out, in case it is misspelt.</li>
     </ul>
     <h4>Getting the groups into the sign-in</h4>
     <ul>
-        <li><strong>Microsoft Entra ID:</strong> <em>Token configuration &rarr; Add groups claim</em>. Entra sends group <strong>IDs</strong> (long strings of letters and numbers) unless you choose to send names (cloud-only groups can use <em>sAMAccountName</em> or app roles) - use whatever it sends in the rules.</li>
-        <li><strong>Okta:</strong> add a <code>groups</code> claim to the authorization server with a filter for the groups you want.</li>
+        <li><strong>Microsoft Entra ID:</strong> <em>Token configuration &rarr; Add groups claim</em>. Entra sends group <strong>IDs</strong> (long strings of letters and numbers) unless you set it to send names - either way, choose them from the list after a sign-in.</li>
+        <li><strong>Okta:</strong> add a <code>groups</code> claim to the authorization server, with a filter for the groups you want.</li>
         <li><strong>Keycloak:</strong> realm roles arrive in <code>realm_access.roles</code>; or add a <em>Group Membership</em> mapper named <code>groups</code>.</li>
     </ul>
-    <p>Not sure what your provider sends? Set the group claim, sign in once, and open the provider again: it shows <strong>what the last sign-in sent</strong>.</p>
 </div>
+
 <!-- 4a3. Portal email domains (GH #147) -->
 <div class="help-section" id="portal-domains">
     <div class="help-section-header"><?php echo helpSectionNum('portal-domains'); ?>

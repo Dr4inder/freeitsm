@@ -213,7 +213,7 @@ return [
         // SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
         'oidc_group_claim'       => 'VARCHAR(100) NULL',
         'oidc_analyst_group'     => 'VARCHAR(255) NULL',
-        'oidc_access_rules'      => 'TEXT NULL',
+        'oidc_admin_group'       => 'VARCHAR(255) NULL',
         'oidc_groups_last_seen'  => 'TEXT NULL',
         'sort_order'             => 'INT NOT NULL DEFAULT 0',
         'tenant_id'              => 'INT NULL',
@@ -278,6 +278,22 @@ return [
         'team_id'           => 'INT NOT NULL',
         'created_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
+    ],
+
+    // SSO groups -> teams, and the groups seen at sign-in (3.5.0). includes/sso_claims.php.
+    'sso_group_teams' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'provider_id'      => 'INT NOT NULL',
+        'group_name'       => 'VARCHAR(255) NOT NULL',
+        'team_id'          => 'INT NOT NULL',
+        'created_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
+    'sso_groups_seen' => [
+        'id'                  => 'INT NOT NULL AUTO_INCREMENT',
+        'provider_id'         => 'INT NOT NULL',
+        'group_name'          => 'VARCHAR(255) NOT NULL',
+        'first_seen_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+        'last_seen_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
     ],
 
     'department_teams' => [

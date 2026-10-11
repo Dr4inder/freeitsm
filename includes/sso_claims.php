@@ -1,67 +1,67 @@
 <?php
 /**
- * SSO claim mapping (3.5.0, proposed in PR #174) - the OIDC twin of LDAP's
- * analyst group, plus access that follows the identity provider.
+ * SSO groups (3.5.0, proposed in PR #174) - the OIDC twin of LDAP's analyst
+ * group, plus team membership that follows the identity provider.
  *
- * An OIDC sign-in carries CLAIMS about the person, one of which is usually their
- * groups or roles ("groups", "roles", Keycloak's "realm_access.roles"). Three
- * settings on an OIDC provider (System -> SSO) use it:
+ * An OIDC sign-in carries CLAIMS about the person, and one is usually their
+ * groups or roles. An OIDC provider (System -> SSO -> Groups & teams) can use it:
  *
- *   oidc_group_claim    which claim holds the groups (a dotted path is allowed)
- *   oidc_analyst_group  only someone in this group may sign in as an analyst -
- *                       exactly like ldap_analyst_group: an existing analyst who
- *                       has left it is refused, and nobody outside it is created
- *   oidc_access_rules   one rule per line, "group = grants", re-applied at EVERY
- *                       analyst sign-in so access follows the identity provider:
+ *   oidc_group_claim    which claim holds the groups: groups, roles,
+ *                       realm_access.roles (Keycloak) or another the admin names
+ *   oidc_analyst_group  only members sign in as - and are created as - analysts.
+ *                       LDAP's ldap_analyst_group rule: someone who has left it
+ *                       is refused; their account is left as it is
+ *   oidc_admin_group    members are administrators, non-members are not
+ *                       (the last active administrator is never demoted)
+ *   sso_group_teams     group -> team rows, picked from dropdowns. At every
+ *                       analyst sign-in, membership of each MAPPED team follows
+ *                       the groups; a team with no mapping is never touched.
+ *                       The team decides modules, companies and roles, exactly
+ *                       as it does for anyone added to it by hand.
+ *   sso_groups_seen     every group a provider has sent, so the screen offers
+ *                       groups in a dropdown instead of asking anyone to type one
  *
- *       # comments and blank lines are ignored
- *       IT-Service-Desk = tickets, knowledge, tickets.manage
- *       IT-Everyone     = all-modules
- *       IT-Admins       = admin
+ * 🔑 Nobody types codes. A group name is the identity provider's own, chosen
+ * from what it has sent; everything a group GIVES comes from a team set up on
+ * the Teams screen, in the admin's own language.
  *
- *   A grant is a module key, a capability key (has a dot), "all-modules" or
- *   "admin". The right-hand side is split on the LAST "=", so a group name may
- *   contain one (an LDAP-style DN). Group names match ignoring case, like LDAP.
- *
- * What a sign-in with rules does (ssoApplyClaimAccess):
- *   - modules: every module a matching rule grants (all-modules wins);
- *   - capabilities: ONLY if some rule grants one - then they are exactly what
- *     the matching rules grant, held on the analyst's API-managed role (the SAME
- *     role PATCH /api/v1/analysts/{id}/access writes, so use one or the other);
- *   - admin: ONLY if some rule mentions "admin" at all - then matching an admin
- *     rule makes them one and not matching removes it. Rules that never mention
- *     admin leave the flag alone, so adding a modules rule cannot demote anybody.
- *     The last active administrator is never demoted (they keep it, logged).
- *   - companies and team grants are untouched (teams still add to modules).
- *
- * Nothing here runs unless a group claim is set, and every helper is pure apart
- * from the two that write, so tests/sso-claim-mapping.php can feed it claims.
+ * Group names match ignoring case - for any alphabet, not only A-Z (mb_strtolower),
+ * a fix LDAP's ldapInGroup() gets too.
  */
 
-require_once __DIR__ . '/capabilities.php';
+require_once __DIR__ . '/service_context.php';
 
-/** True once Database Verification has added the claim-mapping columns. */
+/** True once Database Verification has added the columns and tables. */
 function ssoClaimsReady(PDO $conn): bool
 {
     static $ok = null;
     if ($ok !== null) return $ok;
-    try { $conn->query("SELECT oidc_group_claim, oidc_analyst_group, oidc_access_rules, oidc_groups_last_seen FROM auth_providers LIMIT 0"); return $ok = true; }
-    catch (Throwable $e) { return $ok = false; }
+    try {
+        $conn->query("SELECT oidc_group_claim, oidc_analyst_group, oidc_admin_group, oidc_groups_last_seen FROM auth_providers LIMIT 0");
+        $conn->query("SELECT 1 FROM sso_group_teams LIMIT 0");
+        $conn->query("SELECT 1 FROM sso_groups_seen LIMIT 0");
+        return $ok = true;
+    } catch (Throwable $e) { return $ok = false; }
+}
+
+/** The claims offered in the dropdown; anything else is "Other". */
+function ssoCommonGroupClaims(): array
+{
+    return ['groups', 'roles', 'realm_access.roles'];
 }
 
 /**
  * The values of claim $path as a list of strings. A dotted path walks nested
- * objects ("realm_access.roles"). A JSON array gives its scalar members; a
- * single string gives itself. Works on the decoded ID token, whose nested parts
- * are stdClass, and on userinfo, whose are arrays.
+ * objects ("realm_access.roles"); a claim whose own name has dots (a URL) is
+ * matched whole first. An array gives its scalar members; a string gives itself.
+ * Works on the decoded ID token (nested parts are stdClass) and on userinfo.
  * @return string[]
  */
 function ssoClaimValues(array $claims, string $path): array
 {
     $path = trim($path);
     if ($path === '') return [];
-    $node = json_decode(json_encode($claims), true);   // stdClass -> arrays, all the way down
-    // An exact key first: some IdPs use claim names with dots in them (URLs).
+    $node = json_decode(json_encode($claims), true);
     if (is_array($node) && array_key_exists($path, $node)) {
         $node = $node[$path];
     } else {
@@ -70,7 +70,10 @@ function ssoClaimValues(array $claims, string $path): array
             $node = $node[$part];
         }
     }
-    if (is_string($node) || is_int($node)) return [trim((string)$node)];
+    if (is_string($node) || is_int($node)) {
+        $v = trim((string)$node);
+        return $v === '' ? [] : [$v];
+    }
     if (!is_array($node)) return [];
     $out = [];
     foreach ($node as $v) {
@@ -82,118 +85,146 @@ function ssoClaimValues(array $claims, string $path): array
     return array_values(array_unique($out));
 }
 
-/** Is $wanted among $groups? Exact, ignoring case - LDAP's rule. */
+/** The same group, ignoring case in any alphabet and stray spaces. */
+function ssoSameGroup(string $a, string $b): bool
+{
+    $a = trim($a); $b = trim($b);
+    return $a !== '' && mb_strtolower($a, 'UTF-8') === mb_strtolower($b, 'UTF-8');
+}
+
+/** Is $wanted among $groups? */
 function ssoInGroup(array $groups, string $wanted): bool
 {
-    $wanted = trim($wanted);
-    if ($wanted === '') return false;
     foreach ($groups as $g) {
-        if (strcasecmp((string)$g, $wanted) === 0) return true;
+        if (ssoSameGroup((string)$g, $wanted)) return true;
     }
     return false;
 }
 
-/**
- * Parse the access rules. Returns [rules, errors]; each rule is
- * ['group' => string, 'line' => int, 'modules' => [], 'capabilities' => [],
- *  'all_modules' => bool, 'admin' => bool]. An unknown grant is an ERROR (the
- * save refuses it), never silently dropped - the same rule as the REST API.
- * @return array{0:array,1:string[]}
- */
-function ssoParseAccessRules(?string $text): array
+/** A provider's group -> team rows, with the team names. */
+function ssoTeamMappings(PDO $conn, int $providerId): array
 {
-    $rules = [];
-    $errors = [];
-    $modules = array_keys(getModuleRegistry());
-    foreach (preg_split('/\R/', (string)$text) as $i => $raw) {
-        $line = trim($raw);
-        if ($line === '' || $line[0] === '#') continue;
-        $n = $i + 1;
-        $eq = strrpos($line, '=');
-        if ($eq === false) { $errors[] = "Line $n: write it as \"group = grants\"."; continue; }
-        $group = trim(substr($line, 0, $eq));
-        $grants = array_filter(array_map('trim', explode(',', substr($line, $eq + 1))), 'strlen');
-        if ($group === '') { $errors[] = "Line $n: the group name is missing."; continue; }
-        if (!$grants) { $errors[] = "Line $n: nothing to grant after the \"=\"."; continue; }
-        $rule = ['group' => $group, 'line' => $n, 'modules' => [], 'capabilities' => [], 'all_modules' => false, 'admin' => false];
-        foreach ($grants as $g) {
-            $k = strtolower($g);
-            if ($k === 'admin') { $rule['admin'] = true; continue; }
-            if ($k === 'all-modules' || $k === 'all_modules') { $rule['all_modules'] = true; continue; }
-            if (in_array($k, $modules, true)) { $rule['modules'][] = $k; continue; }
-            if (strpos($k, '.') !== false && ($cap = capFromKey($k)) !== null) { $rule['capabilities'][] = $cap; continue; }
-            $errors[] = "Line $n: \"$g\" is not a module, a capability, all-modules or admin."
-                      . ($k === 'system' ? ' (System comes with admin.)' : '');
-        }
-        $rules[] = $rule;
-    }
-    return [$rules, $errors];
+    if (!ssoClaimsReady($conn)) return [];
+    $s = $conn->prepare("SELECT m.group_name, m.team_id, t.name AS team_name
+                           FROM sso_group_teams m JOIN teams t ON t.id = m.team_id
+                          WHERE m.provider_id = ? ORDER BY m.group_name, t.name");
+    $s->execute([$providerId]);
+    return array_map(fn($r) => ['group' => $r['group_name'], 'team_id' => (int)$r['team_id'], 'team_name' => $r['team_name']],
+                     $s->fetchAll(PDO::FETCH_ASSOC));
 }
 
 /**
- * What the rules give someone in $groups: ['all_modules', 'modules',
- * 'capabilities' and 'is_admin' (null = leave it alone), 'matched' => groups].
+ * Replace a provider's group -> team rows. $rows: [['group' => .., 'team_id' => ..]].
+ * Blank rows are skipped; an unknown team is refused (ServiceError).
  */
-function ssoAccessFromGroups(array $rules, array $groups): array
+function ssoSaveTeamMappings(PDO $conn, int $providerId, array $rows): void
 {
-    $plan = ['all_modules' => false, 'modules' => [], 'capabilities' => null, 'is_admin' => null, 'matched' => []];
-    $adminManaged = false;
-    $capsManaged = false;
-    foreach ($rules as $r) {
-        if ($r['admin']) $adminManaged = true;
-        if ($r['capabilities']) $capsManaged = true;
-        if (!ssoInGroup($groups, $r['group'])) continue;
-        $plan['matched'][] = $r['group'];
-        $plan['all_modules'] = $plan['all_modules'] || $r['all_modules'];
-        $plan['modules'] = array_merge($plan['modules'], $r['modules']);
-        $plan['capabilities'] = array_merge($plan['capabilities'] ?? [], $r['capabilities']);
-        if ($r['admin']) $plan['is_admin'] = true;
+    $clean = [];
+    $teamOk = $conn->prepare("SELECT id FROM teams WHERE id = ?");
+    foreach ($rows as $r) {
+        $group = mb_substr(trim((string)($r['group'] ?? '')), 0, 255);
+        $team  = (int)($r['team_id'] ?? 0);
+        if ($group === '' && $team === 0) continue;
+        if ($group === '') throw new ServiceError('validation', 'invalid_field', 'Choose a group for every team row.');
+        $teamOk->execute([$team]);
+        if (!$teamOk->fetchColumn()) throw new ServiceError('validation', 'invalid_field', 'Choose a team for every group row.');
+        $clean[mb_strtolower($group, 'UTF-8') . '|' . $team] = [$group, $team];
     }
-    if ($adminManaged && $plan['is_admin'] === null) $plan['is_admin'] = false;
-    $plan['modules'] = array_values(array_unique($plan['modules']));
-    sort($plan['modules']);
-    // null = no rule grants a capability, so leave theirs alone.
-    $plan['capabilities'] = $capsManaged ? array_values(array_unique($plan['capabilities'] ?? [])) : null;
-    $plan['matched'] = array_values(array_unique($plan['matched']));
-    return $plan;
+    $conn->prepare("DELETE FROM sso_group_teams WHERE provider_id = ?")->execute([$providerId]);
+    $ins = $conn->prepare("INSERT INTO sso_group_teams (provider_id, group_name, team_id) VALUES (?, ?, ?)");
+    foreach ($clean as [$g, $t]) $ins->execute([$providerId, $g, $t]);
+}
+
+/** Groups this provider has sent, most recently seen first. */
+function ssoSeenGroups(PDO $conn, int $providerId): array
+{
+    if (!ssoClaimsReady($conn)) return [];
+    $s = $conn->prepare("SELECT group_name FROM sso_groups_seen WHERE provider_id = ? ORDER BY last_seen_datetime DESC, group_name LIMIT 2000");
+    $s->execute([$providerId]);
+    return $s->fetchAll(PDO::FETCH_COLUMN);
 }
 
 /**
- * Apply the provider's rules to an analyst signing in with $groups. No rules,
- * nothing happens. Returns the plan applied (or null), for the caller to log.
- */
-function ssoApplyClaimAccess(PDO $conn, array $provider, int $analystId, array $groups): ?array
-{
-    [$rules] = ssoParseAccessRules($provider['oidc_access_rules'] ?? '');
-    if (!$rules) return null;
-    $plan = ssoAccessFromGroups($rules, $groups);
-    require_once __DIR__ . '/services/analysts.php';
-    $ctx = ActorContext::system('SSO sign-in');
-    $set = ['all_modules' => $plan['all_modules'], 'modules' => $plan['modules']];
-    if ($plan['capabilities'] !== null) $set['capabilities'] = $plan['capabilities'];
-    if ($plan['is_admin'] !== null) $set['is_admin'] = $plan['is_admin'];
-    try {
-        AnalystsService::setAccess($conn, $ctx, $analystId, $set);
-    } catch (ServiceError $e) {
-        // The last active administrator: keep them one rather than lock everyone
-        // out of System, apply the rest, and say so in the PHP log.
-        if ($e->kind !== 'conflict' || !isset($set['is_admin'])) throw $e;
-        unset($set['is_admin']);
-        $plan['is_admin'] = null;
-        AnalystsService::setAccess($conn, $ctx, $analystId, $set);
-        error_log("SSO claim mapping: analyst #$analystId kept administrator - they are the last active one.");
-    }
-    return $plan;
-}
-
-/**
- * Remember what the last sign-in sent in the group claim, for System -> SSO -
- * setting this up is guesswork without it. Best effort.
+ * Record what a sign-in sent: the last sign-in line on the provider, and each
+ * group in sso_groups_seen for the dropdowns. Best effort - never fails a sign-in.
  */
 function ssoRememberGroups(PDO $conn, int $providerId, string $who, array $groups): void
 {
     try {
         $conn->prepare("UPDATE auth_providers SET oidc_groups_last_seen = ? WHERE id = ?")
              ->execute([json_encode(['at' => gmdate('Y-m-d H:i:s'), 'who' => mb_substr($who, 0, 200), 'groups' => array_slice($groups, 0, 200)]), $providerId]);
+        $up = $conn->prepare("INSERT INTO sso_groups_seen (provider_id, group_name, first_seen_datetime, last_seen_datetime)
+                              VALUES (?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())
+                              ON DUPLICATE KEY UPDATE last_seen_datetime = UTC_TIMESTAMP()");
+        foreach (array_slice($groups, 0, 500) as $g) $up->execute([$providerId, mb_substr($g, 0, 255)]);
     } catch (Throwable $e) { /* never fails a sign-in */ }
+}
+
+/**
+ * At an analyst sign-in: admin from the admin group, team membership from the
+ * mappings. Returns what changed, for the log and the tests:
+ *   ['admin' => true|false|null, 'added' => [team ids], 'removed' => [team ids]]
+ */
+function ssoApplyGroupAccess(PDO $conn, array $provider, int $analystId, array $groups): array
+{
+    $out = ['admin' => null, 'added' => [], 'removed' => []];
+    if (!ssoClaimsReady($conn)) return $out;
+    $providerId = (int)$provider['id'];
+
+    // --- teams: only the mapped ones ---
+    $want = [];
+    $mapped = [];
+    foreach (ssoTeamMappings($conn, $providerId) as $m) {
+        $mapped[$m['team_id']] = true;
+        if (ssoInGroup($groups, $m['group'])) $want[$m['team_id']] = true;
+    }
+    if ($mapped) {
+        $cur = $conn->prepare("SELECT team_id FROM analyst_teams WHERE analyst_id = ?");
+        $cur->execute([$analystId]);
+        $have = array_fill_keys(array_map('intval', $cur->fetchAll(PDO::FETCH_COLUMN)), true);
+        $add = $conn->prepare("INSERT INTO analyst_teams (analyst_id, team_id, created_datetime) VALUES (?, ?, UTC_TIMESTAMP())");
+        $del = $conn->prepare("DELETE FROM analyst_teams WHERE analyst_id = ? AND team_id = ?");
+        foreach (array_keys($mapped) as $teamId) {
+            if (isset($want[$teamId]) && !isset($have[$teamId])) { $add->execute([$analystId, $teamId]); $out['added'][] = $teamId; }
+            if (!isset($want[$teamId]) && isset($have[$teamId])) { $del->execute([$analystId, $teamId]); $out['removed'][] = $teamId; }
+        }
+        // A team can set the sign-in method of those who follow it (GH #41).
+        if (($out['added'] || $out['removed']) && file_exists(__DIR__ . '/analyst_signin.php')) {
+            require_once __DIR__ . '/analyst_signin.php';
+            if (function_exists('analystSignInReady') && analystSignInReady($conn)) analystSignInApplyMany($conn, [$analystId]);
+        }
+    }
+
+    // --- administrator ---
+    $adminGroup = trim((string)($provider['oidc_admin_group'] ?? ''));
+    if ($adminGroup !== '') {
+        require_once __DIR__ . '/services/analysts.php';
+        $isAdmin = ssoInGroup($groups, $adminGroup);
+        try {
+            AnalystsService::setAccess($conn, ActorContext::system('SSO sign-in'), $analystId, ['is_admin' => $isAdmin]);
+            $out['admin'] = $isAdmin;
+        } catch (ServiceError $e) {
+            // The last active administrator keeps it rather than lock everyone out of System.
+            if ($e->kind !== 'conflict') throw $e;
+            error_log("SSO groups: analyst #$analystId kept administrator - they are the last active one.");
+        }
+    }
+    return $out;
+}
+
+/**
+ * When a provider maps groups to teams, the analysts it CREATES get their
+ * modules from those teams - so, unless the provider names default modules,
+ * they start with no modules of their own (the account would otherwise have
+ * every module, and the teams could add nothing to that). Called by
+ * oidcCreateAnalyst() right after the insert.
+ */
+function ssoJitStartForTeams(PDO $conn, int $providerId, int $analystId, ?string $defaultModules): void
+{
+    if (!ssoClaimsReady($conn) || trim((string)$defaultModules) !== '') return;
+    $n = $conn->prepare("SELECT COUNT(*) FROM sso_group_teams WHERE provider_id = ?");
+    $n->execute([$providerId]);
+    if ((int)$n->fetchColumn() > 0) {
+        $conn->prepare("UPDATE analysts SET can_access_all_modules = 0 WHERE id = ?")->execute([$analystId]);
+    }
 }

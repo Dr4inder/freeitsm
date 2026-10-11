@@ -213,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `auth_providers` (
     -- SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
     `oidc_group_claim`       VARCHAR(100) NULL,   -- the claim holding groups/roles, e.g. groups, realm_access.roles
     `oidc_analyst_group`     VARCHAR(255) NULL,   -- only members may sign in as analysts (as ldap_analyst_group)
-    `oidc_access_rules`      TEXT NULL,           -- "group = grants" per line, applied at every analyst sign-in
+    `oidc_admin_group`       VARCHAR(255) NULL,   -- members are administrators, non-members are not (3.5.0)
     `oidc_groups_last_seen`  TEXT NULL,           -- JSON: what the last sign-in sent, shown in System -> SSO
     `sort_order`             INT NOT NULL DEFAULT 0,
     `tenant_id`              INT NULL,
@@ -441,6 +441,36 @@ CREATE TABLE IF NOT EXISTS `analyst_teams` (
     UNIQUE KEY `uq_analyst_team` (`analyst_id`, `team_id`),
     CONSTRAINT `fk_analyst_teams_analyst` FOREIGN KEY (`analyst_id`) REFERENCES `analysts` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_analyst_teams_team` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- SSO groups -> FreeITSM teams (3.5.0). At every analyst sign-in through the
+-- provider, membership of each MAPPED team follows the groups the identity
+-- provider sends; teams with no mapping are never touched. The team decides
+-- modules, companies and roles as it always has. See includes/sso_claims.php.
+CREATE TABLE IF NOT EXISTS `sso_group_teams` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `provider_id`      INT NOT NULL,
+    `group_name`       VARCHAR(255) NOT NULL,
+    `team_id`          INT NOT NULL,
+    `created_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_sso_group_teams` (`provider_id`, `group_name`, `team_id`),
+    KEY `ix_sso_group_teams_team` (`team_id`),
+    CONSTRAINT `fk_sso_group_teams_provider` FOREIGN KEY (`provider_id`) REFERENCES `auth_providers` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_sso_group_teams_team` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Every group a provider has sent at sign-in (3.5.0), so the screens can offer
+-- them in a dropdown instead of asking anyone to type a group name.
+CREATE TABLE IF NOT EXISTS `sso_groups_seen` (
+    `id`                  INT NOT NULL AUTO_INCREMENT,
+    `provider_id`         INT NOT NULL,
+    `group_name`          VARCHAR(255) NOT NULL,
+    `first_seen_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    `last_seen_datetime`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_sso_groups_seen` (`provider_id`, `group_name`),
+    CONSTRAINT `fk_sso_groups_seen_provider` FOREIGN KEY (`provider_id`) REFERENCES `auth_providers` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `department_teams` (

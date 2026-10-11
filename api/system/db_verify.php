@@ -1135,6 +1135,14 @@ try {
             try { $conn->exec("ALTER TABLE rbac_analyst_roles ADD CONSTRAINT fk_rar_role FOREIGN KEY (role_id) REFERENCES rbac_roles (id) ON DELETE CASCADE"); } catch (Exception $e) {}
         }
     }
+    // 3.5.0: SSO group -> team mappings and seen groups go with their provider / team.
+    foreach ([['sso_group_teams', 'fk_sso_group_teams_provider', 'provider_id', 'auth_providers'],
+              ['sso_group_teams', 'fk_sso_group_teams_team', 'team_id', 'teams'],
+              ['sso_groups_seen', 'fk_sso_groups_seen_provider', 'provider_id', 'auth_providers']] as [$t, $fk, $col, $ref]) {
+        if ($tableExists($t) && $tableExists($ref) && !$fkExists($t, $fk)) {
+            try { $conn->exec("ALTER TABLE $t ADD CONSTRAINT $fk FOREIGN KEY ($col) REFERENCES $ref (id) ON DELETE CASCADE"); } catch (Exception $e) {}
+        }
+    }
     // 3.5.0 (PR #174): an API-managed role goes with the analyst it belongs to.
     if ($tableExists('rbac_roles') && $tableExists('analysts')) {
         if (!$fkExists('rbac_roles', 'fk_rbac_roles_managed_analyst')) {

@@ -250,8 +250,10 @@ function ldapInGroup(array $groups, string $wanted): bool {
     $wanted = trim($wanted);
     if ($wanted === '') return false;
     foreach ($groups as $g) {
-        if (strcasecmp($g['cn'], $wanted) === 0) return true;
-        if (strcasecmp($g['dn'], $wanted) === 0) return true;
+        // Ignoring case in ANY alphabet (3.5.0) - strcasecmp() only folds A-Z, so
+        // "Équipe-IT" and "équipe-it" were different groups.
+        if (mb_strtolower($g['cn'], 'UTF-8') === mb_strtolower($wanted, 'UTF-8')) return true;
+        if (mb_strtolower($g['dn'], 'UTF-8') === mb_strtolower($wanted, 'UTF-8')) return true;
     }
     return false;
 }

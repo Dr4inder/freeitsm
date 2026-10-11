@@ -29,6 +29,9 @@ try {
         $ssoTenants = $ssoAdminConn->query("SELECT id, name FROM tenants WHERE is_active = 1 ORDER BY is_default DESC, name")->fetchAll(PDO::FETCH_ASSOC);
     }
 } catch (Exception $e) { $ssoTenants = []; $ssoMultiTenant = false; }
+// The teams a group can be mapped to (3.5.0).
+$ssoTeams = [];
+try { $ssoTeams = $ssoAdminConn->query("SELECT id, name, is_active FROM teams ORDER BY name")->fetchAll(PDO::FETCH_ASSOC); } catch (Throwable $e) { $ssoTeams = []; }
 $ssoColspan = $ssoMultiTenant ? 8 : 7; // providers table column count (Company col only at N>1; Type always)
 
 // The redirect URI the admin must register in their IdP. Built from the
@@ -174,11 +177,23 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
            header and footer are rigid flex items, and the body takes the slack
            with `min-height: 0` so it is allowed to shrink below its content and
            scroll. `overflow: hidden` on the box keeps the corners clean. */
-        .sso-modal { background: var(--surface, #fff); border-radius: 10px; width: 560px; max-width: 92vw; max-height: 90vh;
+        /* 3.5.0: near full-screen - a provider has a lot to set (Ed). */
+        .sso-modal { background: var(--surface, #fff); border-radius: 10px; width: 1000px; max-width: 96vw; height: 90vh; max-height: 90vh;
             display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .sso-modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-soft, #eee); font-size: 16px; font-weight: 600; color: var(--text, #333); flex: 0 0 auto; }
         .sso-modal-body { padding: 20px 24px; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
         .sso-modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-soft, #eee); display: flex; justify-content: flex-end; gap: 10px; flex: 0 0 auto; }
+        .sso-tabs { display: flex; gap: 4px; padding: 0 24px; border-bottom: 1px solid var(--border-soft, #eee); flex: 0 0 auto; overflow-x: auto; }
+        .sso-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 12px 14px; cursor: pointer; font-size: 14px; color: var(--text-muted, #666); white-space: nowrap; }
+        .sso-tabs button.active { color: var(--accent, #0078d4); border-bottom-color: var(--accent, #0078d4); font-weight: 600; }
+        .sso-tab-intro { margin: 0 0 16px; font-size: 13px; color: var(--text-muted, #666); }
+        .sso-map { width: 100%; border-collapse: collapse; }
+        .sso-map th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-muted, #666); padding: 4px 6px; }
+        .sso-map td { padding: 4px 6px; vertical-align: top; }
+        .sso-map td:last-child { width: 1%; }
+        .sso-map input, .sso-map select { width: 100%; box-sizing: border-box; }
+        .sso-group-warn { font-size: 12px; color: var(--warning-text, #92400e); margin-top: 4px; }
+        .sso-group-warn:empty { display: none; }
         /* The four attribute mappings sit two-up; they collapse to one column on narrow screens. */
         /* Encryption + port share a row: the select flexes, the port stays narrow.
            Needed because .form-field select is width:100%, which would otherwise
@@ -327,8 +342,18 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
     <div class="sso-modal-overlay" id="providerModal">
         <div class="sso-modal">
             <div class="sso-modal-header" id="modalTitle"><?php echo htmlspecialchars(t('system.sso.modal_add_title')); ?></div>
+            <div class="sso-tabs" id="ssoTabs" role="tablist">
+                <button type="button" data-tab="connection" class="active"><?php echo htmlspecialchars(t('system.sso.tab_connection')); ?></button>
+                <button type="button" data-tab="signin"><?php echo htmlspecialchars(t('system.sso.tab_signin')); ?></button>
+                <button type="button" data-tab="groups"><?php echo htmlspecialchars(t('system.sso.tab_groups')); ?></button>
+                <button type="button" data-tab="portal"><?php echo htmlspecialchars(t('system.sso.tab_portal')); ?></button>
+            </div>
             <div class="sso-modal-body">
                 <input type="hidden" id="providerId">
+                <?php /* 3.5.0: four tab panels. An OIDC provider shows one at a time
+                         (ssoApplyTabs()); LDAP and CardDAV, which use few of them,
+                         show every panel as one page with no tab bar. */ ?>
+                <div class="sso-tab-panel" data-tab="connection">
                 <div class="form-field">
                     <label><?php echo htmlspecialchars(t('system.sso.field_protocol')); ?></label>
                     <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_protocol_hint')); ?></div>
@@ -551,6 +576,8 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                          "create the person the first time they sign in" describes
                          something that cannot happen — an address book signs
                          nobody in. */ ?>
+                </div><!-- /connection -->
+                <div class="sso-tab-panel" data-tab="signin">
                 <!-- OIDC-only: LDAP has no email_verified claim to require. -->
                 <div class="checkbox-field" id="requireVerifiedField">
                     <input type="checkbox" id="fRequireVerified">
@@ -564,27 +591,6 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                         <option value="initial"><?php echo htmlspecialchars(t('system.sso.profile_sync_initial')); ?></option>
                         <option value="always"><?php echo htmlspecialchars(t('system.sso.profile_sync_always')); ?></option>
                     </select>
-                </div>
-                <?php /* SSO claim mapping (3.5.0) - OIDC only. See includes/sso_claims.php. */ ?>
-                <div id="claimMappingFields" style="border:1px solid var(--border,#ddd);border-radius:6px;padding:12px 14px;margin:0 0 16px;">
-                    <div style="font-weight:600;margin-bottom:4px;"><?php echo htmlspecialchars(t('system.sso.claims_heading')); ?></div>
-                    <div style="margin-bottom:10px;font-size:12px;color:var(--text-muted,#666);"><?php echo htmlspecialchars(t('system.sso.claims_intro')); ?></div>
-                    <div class="form-field">
-                        <label for="fOidcGroupClaim"><?php echo htmlspecialchars(t('system.sso.field_group_claim')); ?></label>
-                        <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_group_claim_hint')); ?></div>
-                        <input type="text" id="fOidcGroupClaim" maxlength="100" placeholder="groups">
-                    </div>
-                    <div class="form-field">
-                        <label for="fOidcAnalystGroup"><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group')); ?></label>
-                        <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group_hint')); ?></div>
-                        <input type="text" id="fOidcAnalystGroup" maxlength="255" placeholder="IT-Staff">
-                    </div>
-                    <div class="form-field">
-                        <label for="fOidcAccessRules"><?php echo htmlspecialchars(t('system.sso.field_access_rules')); ?></label>
-                        <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_access_rules_hint')); ?></div>
-                        <textarea id="fOidcAccessRules" rows="5" spellcheck="false" placeholder="IT-Service-Desk = tickets, knowledge&#10;IT-Everyone = all-modules&#10;IT-Admins = admin" style="width:100%;padding:8px;border:1px solid var(--border,#ccc);border-radius:4px;background:var(--surface,#fff);color:var(--text,#333);font-family:Consolas,Menlo,monospace;font-size:13px;box-sizing:border-box;"></textarea>
-                    </div>
-                    <div id="oidcLastSeen" style="margin:0;font-size:12px;color:var(--text-muted,#666);"></div>
                 </div>
                 <div class="checkbox-field" id="autoCreateField">
                     <input type="checkbox" id="fAutoCreate">
@@ -620,6 +626,61 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                         <option value="block"><?php echo htmlspecialchars(t('system.sso.fallback_mode_block')); ?></option>
                     </select>
                 </div>
+                </div><!-- /signin -->
+                <div class="sso-tab-panel" data-tab="groups">
+                <?php /* SSO groups (3.5.0) - includes/sso_claims.php. Everything here is
+                         chosen, not typed: groups come from what the provider has sent at
+                         sign-in (sso_groups_seen) and what a group gives comes from a team. */ ?>
+                <div id="claimMappingFields">
+                    <p class="sso-tab-intro"><?php echo htmlspecialchars(t('system.sso.claims_intro')); ?></p>
+                    <div class="form-field">
+                        <label for="fOidcGroupClaimSel"><?php echo htmlspecialchars(t('system.sso.field_group_claim')); ?></label>
+                        <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_group_claim_hint')); ?></div>
+                        <select id="fOidcGroupClaimSel">
+                            <option value=""><?php echo htmlspecialchars(t('system.sso.claims_off')); ?></option>
+                            <option value="groups">groups</option>
+                            <option value="roles">roles</option>
+                            <option value="realm_access.roles">realm_access.roles (Keycloak)</option>
+                            <option value="__other"><?php echo htmlspecialchars(t('system.sso.claims_other')); ?></option>
+                        </select>
+                        <input type="text" id="fOidcGroupClaimOther" maxlength="100" style="display:none;margin-top:6px;"
+                               placeholder="<?php echo htmlspecialchars(t('system.sso.claims_other_ph')); ?>">
+                    </div>
+                    <div id="claimGroupBits">
+                        <div class="form-field">
+                            <label for="fOidcAnalystGroup"><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group')); ?></label>
+                            <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group_hint')); ?></div>
+                            <input type="text" id="fOidcAnalystGroup" class="sso-group-input" list="ssoSeenGroups" maxlength="255" autocomplete="off"
+                                   placeholder="<?php echo htmlspecialchars(t('system.sso.group_pick_ph')); ?>">
+                            <div class="sso-group-warn"></div>
+                        </div>
+                        <div class="form-field">
+                            <label for="fOidcAdminGroup"><?php echo htmlspecialchars(t('system.sso.field_claim_admin_group')); ?></label>
+                            <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_claim_admin_group_hint')); ?></div>
+                            <input type="text" id="fOidcAdminGroup" class="sso-group-input" list="ssoSeenGroups" maxlength="255" autocomplete="off"
+                                   placeholder="<?php echo htmlspecialchars(t('system.sso.group_pick_ph')); ?>">
+                            <div class="sso-group-warn"></div>
+                        </div>
+                        <div class="form-field">
+                            <label><?php echo htmlspecialchars(t('system.sso.field_group_teams')); ?></label>
+                            <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_group_teams_hint')); ?></div>
+                            <?php if ($ssoTeams): ?>
+                            <table class="sso-map">
+                                <thead><tr><th><?php echo htmlspecialchars(t('system.sso.col_group')); ?></th><th><?php echo htmlspecialchars(t('system.sso.col_team')); ?></th><th></th></tr></thead>
+                                <tbody id="ssoMapRows"></tbody>
+                            </table>
+                            <button type="button" class="btn btn-secondary" id="ssoMapAdd" style="margin-top:8px;"><?php echo htmlspecialchars(t('system.sso.map_add')); ?></button>
+                            <?php else: ?>
+                            <div class="hint" style="padding:10px;border:1px dashed var(--border,#ccc);border-radius:6px;"><?php echo htmlspecialchars(t('system.sso.no_teams')); ?>
+                                <a href="../teams/"><?php echo htmlspecialchars(t('system.sso.go_teams')); ?></a></div>
+                            <?php endif; ?>
+                        </div>
+                        <div id="oidcLastSeen" style="font-size:12px;color:var(--text-muted,#666);margin-top:6px;"></div>
+                    </div>
+                    <datalist id="ssoSeenGroups"></datalist>
+                </div>
+                </div><!-- /groups -->
+                <div class="sso-tab-panel" data-tab="portal">
                 <?php /* GH #147. OIDC only: a directory has nothing to redirect to
                          and no button. */ ?>
                 <div id="portalRoutingFields">
@@ -645,6 +706,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                     </select>
                 </div>
                 <?php endif; ?>
+                </div><!-- /portal -->
             </div>
             <div class="sso-modal-footer">
                 <button class="btn btn-secondary" id="cancelModalBtn" type="button"><?php echo htmlspecialchars(t('system.sso.cancel')); ?></button>
@@ -661,6 +723,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
     const API = '<?php echo $path_prefix; ?>api/';
     const MULTI_TENANT = <?php echo $ssoMultiTenant ? 'true' : 'false'; ?>;
     const SSO_COLSPAN = <?php echo $ssoColspan; ?>;
+    const SSO_TEAMS = <?php echo json_encode(array_map(fn($t) => ['id' => (int)$t['id'], 'name' => $t['name'], 'active' => (int)$t['is_active'] === 1], $ssoTeams), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     let providers = [];
 
     // ---------- Global switches ----------
@@ -882,7 +945,8 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         $('analystFallbackField').style.display = (isOidc && !autoAnalysts) ? '' : 'none';
         $('profileSyncModeField').style.display = isOidc ? '' : 'none';
         $('portalRoutingFields').style.display = isOidc ? '' : 'none';   // GH #147
-        $('claimMappingFields').style.display = isOidc ? '' : 'none';   // claim mapping (3.5.0)
+        $('claimMappingFields').style.display = isOidc ? '' : 'none';   // SSO groups (3.5.0)
+        ssoApplyTabs();
         // "Default module access for auto-created analysts" describes the
         // accounts JIT sign-in creates, so it only shows while that is on.
         // Nothing signs in through an address book, so there are none.
@@ -901,6 +965,99 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
     }
     $('fProtocol').addEventListener('change', syncProtocolFields);
     $('fAutoCreateAnalysts').addEventListener('change', syncProtocolFields);
+
+    // ===== 3.5.0: tabs, and the SSO groups panel =====
+    let ssoTab = 'connection';
+    function ssoShowTab(name) {
+        ssoTab = name;
+        document.querySelectorAll('#ssoTabs button').forEach(b => b.classList.toggle('active', b.getAttribute('data-tab') === name));
+        ssoApplyTabs();
+    }
+    // OIDC: one panel at a time. LDAP / CardDAV: every panel, no tab bar.
+    function ssoApplyTabs() {
+        const isOidc = $('fProtocol').value === 'oidc';
+        $('ssoTabs').style.display = isOidc ? '' : 'none';
+        document.querySelectorAll('.sso-tab-panel').forEach(p => {
+            p.style.display = (!isOidc || p.getAttribute('data-tab') === ssoTab) ? '' : 'none';
+        });
+    }
+    document.querySelectorAll('#ssoTabs button').forEach(b => b.addEventListener('click', () => ssoShowTab(b.getAttribute('data-tab'))));
+
+    const SSO_COMMON_CLAIMS = ['groups', 'roles', 'realm_access.roles'];
+    function ssoGroupClaimSet(v) {
+        const known = v === '' || SSO_COMMON_CLAIMS.includes(v);
+        $('fOidcGroupClaimSel').value = known ? v : '__other';
+        $('fOidcGroupClaimOther').value = known ? '' : v;
+        ssoSyncClaimUi();
+    }
+    function ssoGroupClaimGet() {
+        return $('fOidcGroupClaimSel').value === '__other' ? $('fOidcGroupClaimOther').value.trim() : $('fOidcGroupClaimSel').value;
+    }
+    function ssoSyncClaimUi() {
+        $('fOidcGroupClaimOther').style.display = $('fOidcGroupClaimSel').value === '__other' ? '' : 'none';
+        $('claimGroupBits').style.display = ssoGroupClaimGet() !== '' || $('fOidcGroupClaimSel').value === '__other' ? '' : 'none';
+    }
+    $('fOidcGroupClaimSel').addEventListener('change', ssoSyncClaimUi);
+    $('fOidcGroupClaimOther').addEventListener('input', ssoSyncClaimUi);
+
+    // The groups this provider has sent - the dropdown under every group box.
+    let ssoSeen = new Set();
+    function ssoSetSeenGroups(list) {
+        ssoSeen = new Set(list.map(g => String(g).toLocaleLowerCase()));
+        const dl = $('ssoSeenGroups');
+        dl.innerHTML = '';
+        list.forEach(g => { const o = document.createElement('option'); o.value = g; dl.appendChild(o); });
+    }
+    // A group nobody has signed in with yet is allowed (they may not have yet),
+    // but said out loud - a misspelt group would quietly match nobody.
+    function ssoGroupWarn(input) {
+        const w = input.parentElement.querySelector('.sso-group-warn');
+        if (!w) return;
+        const v = input.value.trim();
+        w.textContent = (v && !ssoSeen.has(v.toLocaleLowerCase())) ? window.t('system.sso.group_not_seen') : '';
+    }
+    function ssoGroupWarnAll() { document.querySelectorAll('.sso-group-input').forEach(ssoGroupWarn); }
+    document.addEventListener('input', e => { if (e.target.classList && e.target.classList.contains('sso-group-input')) ssoGroupWarn(e.target); });
+
+    // Group -> team rows.
+    function ssoTeamOptions(selected, fallbackName) {
+        let html = '<option value="">' + esc(window.t('system.sso.choose_team')) + '</option>';
+        let found = false;
+        SSO_TEAMS.forEach(t => {
+            if (t.id === selected) found = true;
+            html += '<option value="' + t.id + '"' + (t.id === selected ? ' selected' : '') + '>' + esc(t.name + (t.active ? '' : ' (' + window.t('system.sso.inactive') + ')')) + '</option>';
+        });
+        if (selected && !found) html += '<option value="' + selected + '" selected>' + esc(fallbackName || ('#' + selected)) + '</option>';
+        return html;
+    }
+    function ssoMapAddRow(group, teamId, teamName) {
+        const body = $('ssoMapRows');
+        if (!body) return;
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td><input type="text" class="sso-group-input" list="ssoSeenGroups" maxlength="255" autocomplete="off" placeholder="' + esc(window.t('system.sso.group_pick_ph')) + '"><div class="sso-group-warn"></div></td>'
+            + '<td><select>' + ssoTeamOptions(teamId || 0, teamName) + '</select></td>'
+            + '<td><button type="button" class="btn btn-secondary" title="' + esc(window.t('system.sso.map_remove')) + '">&times;</button></td>';
+        tr.querySelector('input').value = group || '';
+        tr.querySelector('button').addEventListener('click', () => tr.remove());
+        body.appendChild(tr);
+        ssoGroupWarn(tr.querySelector('input'));
+    }
+    function ssoMapLoad(rows) {
+        const body = $('ssoMapRows');
+        if (!body) return;
+        body.innerHTML = '';
+        rows.forEach(r => ssoMapAddRow(r.group, r.team_id, r.team_name));
+        if (!rows.length) ssoMapAddRow('', 0);
+    }
+    function ssoMapCollect() {
+        const body = $('ssoMapRows');
+        if (!body) return undefined;   // no teams yet: leave any stored rows alone
+        return Array.from(body.querySelectorAll('tr')).map(tr => ({
+            group: tr.querySelector('input').value.trim(),
+            team_id: parseInt(tr.querySelector('select').value, 10) || 0
+        })).filter(r => r.group !== '' || r.team_id);
+    }
+    if ($('ssoMapAdd')) $('ssoMapAdd').addEventListener('click', () => ssoMapAddRow('', 0));
 
     function openModal(p) {
         document.getElementById('testResult').className = 'test-result';
@@ -974,15 +1131,20 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         document.getElementById('fProfileSyncMode').value = (p && p.profile_sync_mode) ? p.profile_sync_mode : 'never';
         document.getElementById('fDefaultModules').value = p ? (p.default_modules || '') : '';
         if ($('fJitCompany')) $('fJitCompany').value = (p && p.jit_company_access) ? p.jit_company_access : 'all';
-        // Claim mapping (3.5.0), and what the last sign-in actually sent.
-        $('fOidcGroupClaim').value   = p ? (p.oidc_group_claim || '') : '';
+        // SSO groups (3.5.0): where they come from, the two groups, the team rows,
+        // and the groups seen at sign-in for the dropdowns.
+        ssoSetSeenGroups(p ? (p.groups_seen || []) : []);
+        ssoGroupClaimSet(p ? (p.oidc_group_claim || '') : '');
         $('fOidcAnalystGroup').value = p ? (p.oidc_analyst_group || '') : '';
-        $('fOidcAccessRules').value  = p ? (p.oidc_access_rules || '') : '';
+        $('fOidcAdminGroup').value   = p ? (p.oidc_admin_group || '') : '';
+        ssoMapLoad(p ? (p.team_mappings || []) : []);
         const seen = p && p.oidc_groups_last_seen;
         $('oidcLastSeen').textContent = seen
             ? window.t('system.sso.claims_last_seen', { who: seen.who || '?', at: window.fmtDateTime ? window.fmtDateTime(seen.at) : seen.at,
                                                         groups: (seen.groups && seen.groups.length) ? seen.groups.join(', ') : window.t('system.sso.claims_none_sent') })
             : (p && p.oidc_group_claim ? window.t('system.sso.claims_not_yet') : '');
+        ssoGroupWarnAll();
+        ssoShowTab('connection');
         $('fPortalDomains').value = p ? (p.portal_email_domains || '') : '';
         $('fPortalShowButton').checked = p ? p.portal_show_button !== 0 : true;
         const tenantSel = document.getElementById('fTenant');
@@ -1208,9 +1370,10 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
             profile_sync_mode: document.getElementById('fProfileSyncMode').value || 'never',
             default_modules: document.getElementById('fDefaultModules').value.trim(),
             jit_company_access: $('fJitCompany') ? $('fJitCompany').value : undefined,
-            oidc_group_claim: $('fOidcGroupClaim').value.trim(),
+            oidc_group_claim: ssoGroupClaimGet(),
             oidc_analyst_group: $('fOidcAnalystGroup').value.trim(),
-            oidc_access_rules: $('fOidcAccessRules').value,
+            oidc_admin_group: $('fOidcAdminGroup').value.trim(),
+            team_mappings: ssoMapCollect(),
             portal_email_domains: $('fPortalDomains').value,
             portal_show_button: $('fPortalShowButton').checked ? 1 : 0,
             tenant_id: (document.getElementById('fTenant') ? (document.getElementById('fTenant').value || null) : null)

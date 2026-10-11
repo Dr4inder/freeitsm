@@ -98,7 +98,9 @@ $jitCompanyIn    = in_array($data['jit_company_access'] ?? '', ['all', 'provider
 // SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
 $groupClaimIn    = mb_substr(trim((string)($data['oidc_group_claim'] ?? '')), 0, 100);
 $analystGroupIn  = mb_substr(trim((string)($data['oidc_analyst_group'] ?? '')), 0, 255);
-$accessRulesIn   = trim((string)($data['oidc_access_rules'] ?? ''));
+$adminGroupIn    = mb_substr(trim((string)($data['oidc_admin_group'] ?? '')), 0, 255);
+// Group -> team rows (sso_group_teams): only touched when the dialog sends them.
+$teamMappingsIn  = (isset($data['team_mappings']) && is_array($data['team_mappings'])) ? $data['team_mappings'] : null;
 // Which client company owns this provider. Empty/0 = a global (MSP-internal) one.
 $tenantId        = !empty($data['tenant_id']) ? (int)$data['tenant_id'] : null;
 $id              = isset($data['id']) ? (int)$data['id'] : 0;
@@ -227,13 +229,6 @@ if ($protocol === 'carddav') {
     }
     $scopes = trim($data['scopes'] ?? '');
     if ($scopes === '') $scopes = 'openid email profile';
-    // Claim mapping: refuse a rule that names a module or capability that does
-    // not exist, rather than store something that silently grants nothing.
-    if (array_key_exists('oidc_access_rules', $data)) {
-        require_once '../../includes/sso_claims.php';
-        [, $ruleErrors] = ssoParseAccessRules($accessRulesIn);
-        if ($ruleErrors) bail('Access rules: ' . implode(' ', $ruleErrors));
-    }
 
     $secretInput = $data['client_secret'] ?? '';
     // Directory sync is not an OIDC thing; this provider stores the column
@@ -362,10 +357,10 @@ try {
     $vals[] = $protocol === 'carddav' ? 'all' : $jitCompanyIn;   // an address book creates nobody
     // Claim mapping (3.5.0): an OIDC provider's; cleared for any other protocol.
     $isOidcRow = $protocol === 'oidc';
-    array_push($cols, 'oidc_group_claim', 'oidc_analyst_group', 'oidc_access_rules');
+    array_push($cols, 'oidc_group_claim', 'oidc_analyst_group', 'oidc_admin_group');
     array_push($vals, $isOidcRow && $groupClaimIn !== '' ? $groupClaimIn : null,
                       $isOidcRow && $analystGroupIn !== '' ? $analystGroupIn : null,
-                      $isOidcRow && $accessRulesIn !== '' ? $accessRulesIn : null);
+                      $isOidcRow && $adminGroupIn !== '' ? $adminGroupIn : null);
 
     // 🔴 ON UPDATE, A SETTING THE REQUEST DOES NOT MENTION KEEPS ITS STORED VALUE.
     //
@@ -395,7 +390,7 @@ try {
             if ($protocol === 'oidc') {
                 $readable = array_merge($readable, ['auto_create_users', 'auto_create_analysts', 'analyst_fallback_mode', 'require_verified_email', 'profile_sync_mode', 'issuer_url', 'client_id', 'scopes',
                                                     'portal_email_domains', 'portal_show_button',
-                                                    'oidc_group_claim', 'oidc_analyst_group', 'oidc_access_rules']);
+                                                    'oidc_group_claim', 'oidc_analyst_group', 'oidc_admin_group']);
             } elseif ($protocol === 'ldap') {
                 $readable = array_merge($readable, ['auto_create_users', 'auto_create_analysts', 'analyst_fallback_mode', 'require_verified_email', 'profile_sync_mode'],
                     array_values(array_filter($cols, fn($c) => strpos($c, 'ldap_') === 0 || strpos($c, 'sync_') === 0)));
@@ -452,19 +447,23 @@ try {
         if ($i !== false) { array_splice($cols, $i, 1); array_splice($vals, $i, 1); }
     }
     // Claim mapping: leave the columns out until Database Verification adds them;
-    // otherwise an analyst group or rules need the claim they are read from.
+    // otherwise the analyst / admin groups and team rows need the claim they are
+    // read from.
     require_once '../../includes/sso_claims.php';
     if (!ssoClaimsReady($conn)) {
-        foreach (['oidc_group_claim', 'oidc_analyst_group', 'oidc_access_rules'] as $c) {
+        foreach (['oidc_group_claim', 'oidc_analyst_group', 'oidc_admin_group'] as $c) {
             $i = array_search($c, $cols, true);
             if ($i !== false) { array_splice($cols, $i, 1); array_splice($vals, $i, 1); }
         }
+        $teamMappingsIn = null;
     } else {
         $fClaim = $vals[array_search('oidc_group_claim', $cols, true)];
+        $anyMapping = $teamMappingsIn !== null && array_filter($teamMappingsIn, fn($r) => trim((string)($r['group'] ?? '')) !== '');
         if (($fClaim === null || $fClaim === '')
-            && ($vals[array_search('oidc_analyst_group', $cols, true)] || $vals[array_search('oidc_access_rules', $cols, true)])) {
-            bail('Set the group claim first - the analyst group and access rules are read from it.');
+            && ($vals[array_search('oidc_analyst_group', $cols, true)] || $vals[array_search('oidc_admin_group', $cols, true)] || $anyMapping)) {
+            bail('Choose where the groups come from first - the analyst group, admin group and teams are read from it.');
         }
+        if ($protocol !== 'oidc') $teamMappingsIn = [];   // a protocol switch clears them
     }
 
     // GH #147 portal routing. Checked on the FINAL value (sent or kept), so a
@@ -509,6 +508,10 @@ try {
     $writeLdapSecret    = !isMaskedNoChangeValue($ldapSecretInput);
     $writeCardDavSecret = !isMaskedNoChangeValue($cardDavSecretIn);
 
+    // The provider and its group -> team rows are saved together or not at all
+    // (bail() exits; the open transaction is rolled back when the request ends).
+    $conn->beginTransaction();
+
     if ($id > 0) {
         if ($writeSecret)        { $cols[] = 'client_secret';      $vals[] = encryptValue($secretInput); }
         if ($writeLdapSecret)    { $cols[] = 'ldap_bind_password'; $vals[] = encryptValue($ldapSecretInput); }
@@ -518,6 +521,10 @@ try {
         $vals[] = $id;
         $conn->prepare("UPDATE auth_providers SET $set, last_modified_datetime = UTC_TIMESTAMP() WHERE id = ?")
              ->execute($vals);
+        if ($teamMappingsIn !== null) {
+            try { ssoSaveTeamMappings($conn, $id, $teamMappingsIn); } catch (ServiceError $e) { bail($e->getMessage()); }
+        }
+        $conn->commit();
         echo json_encode(['success' => true, 'id' => $id]);
 
     } else {
@@ -531,9 +538,15 @@ try {
         $names  = '`' . implode('`, `', $cols) . '`';
         $marks  = implode(', ', array_fill(0, count($cols), '?'));
         $conn->prepare("INSERT INTO auth_providers ($names) VALUES ($marks)")->execute($vals);
-        echo json_encode(['success' => true, 'id' => (int)$conn->lastInsertId()]);
+        $newId = (int)$conn->lastInsertId();
+        if ($teamMappingsIn) {
+            try { ssoSaveTeamMappings($conn, $newId, $teamMappingsIn); } catch (ServiceError $e) { bail($e->getMessage()); }
+        }
+        $conn->commit();
+        echo json_encode(['success' => true, 'id' => $newId]);
     }
 
 } catch (Exception $e) {
+    if (isset($conn) && $conn->inTransaction()) $conn->rollBack();
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }

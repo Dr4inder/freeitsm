@@ -34,8 +34,8 @@ try {
     // And the claim-mapping columns (3.5.0).
     require_once '../../includes/sso_claims.php';
     $claimCols = ssoClaimsReady($conn)
-        ? 'p.oidc_group_claim, p.oidc_analyst_group, p.oidc_access_rules, p.oidc_groups_last_seen'
-        : 'NULL AS oidc_group_claim, NULL AS oidc_analyst_group, NULL AS oidc_access_rules, NULL AS oidc_groups_last_seen';
+        ? 'p.oidc_group_claim, p.oidc_analyst_group, p.oidc_admin_group, p.oidc_groups_last_seen'
+        : 'NULL AS oidc_group_claim, NULL AS oidc_analyst_group, NULL AS oidc_admin_group, NULL AS oidc_groups_last_seen';
     // Same for the GH #147 portal routing columns.
     $portalCols = ssoPortalRoutingColumnsReady($conn)
         ? 'p.portal_email_domains, p.portal_show_button'
@@ -80,7 +80,10 @@ try {
             // SSO claim mapping (3.5.0) - see includes/sso_claims.php.
             'oidc_group_claim'      => $r['oidc_group_claim'],
             'oidc_analyst_group'    => $r['oidc_analyst_group'],
-            'oidc_access_rules'     => $r['oidc_access_rules'],
+            'oidc_admin_group'      => $r['oidc_admin_group'],
+            // Group -> team rows, and every group seen at sign-in for the dropdowns.
+            'team_mappings'         => $r['protocol'] === 'oidc' ? ssoTeamMappings($conn, (int)$r['id']) : [],
+            'groups_seen'           => $r['protocol'] === 'oidc' ? ssoSeenGroups($conn, (int)$r['id']) : [],
             'oidc_groups_last_seen' => $r['oidc_groups_last_seen'] ? json_decode($r['oidc_groups_last_seen'], true) : null,
             'sort_order'        => (int)$r['sort_order'],
             // Which client company owns this IdP (null = global / MSP-internal).

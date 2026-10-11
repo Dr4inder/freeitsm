@@ -271,9 +271,9 @@ try {
     // Every path above has now passed its access checks, so it is safe to write.
     oidcSyncProfile($conn, $provider, 'analysts', $analyst, $claims, $name);
 
-    // Claim mapping (3.5.0): modules / capabilities / admin follow the groups.
+    // SSO groups (3.5.0): mapped teams and the admin flag follow the groups.
     if ($groupClaim !== '') {
-        ssoApplyClaimAccess($conn, $provider, (int)$analystId, $ssoGroups);
+        ssoApplyGroupAccess($conn, $provider, (int)$analystId, $ssoGroups);
     }
     $analyst = oidcLoadAnalyst($conn, $analystId);   // pick up any new full_name for the session
 
@@ -602,5 +602,7 @@ function oidcCreateAnalyst(PDO $conn, int $providerId, string $preferredUser, st
     }
     require_once __DIR__ . '/../../includes/sso_identity.php';
     ssoApplyJitCompanies($conn, $providerId, $analystId);   // which companies (3.5.0)
+    require_once __DIR__ . '/../../includes/sso_claims.php';
+    ssoJitStartForTeams($conn, $providerId, $analystId, $defaultModules);   // teams give the modules (3.5.0)
     return $analystId;
 }
