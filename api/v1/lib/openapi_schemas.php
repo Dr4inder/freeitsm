@@ -232,6 +232,17 @@ return array (
                 ),
               ),
             ),
+            // 3.5.0: the lease dates (lease_start new; lease_expiry was not exposed before).
+            'lease_start' =>
+            array (
+              'type' => 'string',
+              'nullable' => true,
+            ),
+            'lease_expiry' =>
+            array (
+              'type' => 'string',
+              'nullable' => true,
+            ),
             // GH #160: the cost centre it is charged to.
             'cost_centre' =>
             array (
@@ -721,6 +732,17 @@ return array (
                       'nullable' => true,
                     ),
                   ),
+                ),
+                // 3.5.0: the lease dates (lease_start new; lease_expiry was not exposed before).
+                'lease_start' =>
+                array (
+                  'type' => 'string',
+                  'nullable' => true,
+                ),
+                'lease_expiry' =>
+                array (
+                  'type' => 'string',
+                  'nullable' => true,
                 ),
                 // GH #160: the cost centre it is charged to.
                 'cost_centre' =>

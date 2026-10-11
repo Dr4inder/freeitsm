@@ -3720,7 +3720,9 @@ $translationNamespaces = ['common', 'asset-management'];
                 purchase_cost: 'asset-management.field.purchase_cost',
                 order_number: 'asset-management.field.order_number',
                 warranty_expiry: 'asset-management.field.warranty_expiry',
-                cost_centre_id: 'asset-management.field.cost_centre'
+                cost_centre_id: 'asset-management.field.cost_centre',
+                lease_start: 'asset-management.field.lease_start',
+                lease_expiry: 'asset-management.field.lease_expiry'
             };
             return map[key] ? window.t(map[key]) : key;
         }

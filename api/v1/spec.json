@@ -1007,7 +1007,7 @@
                             "req": false
                         },
                         {
-                            "name": "purchase_date \/ purchase_cost \/ supplier_id \/ order_number \/ warranty_expiry \/ cost_centre_id",
+                            "name": "purchase_date \/ purchase_cost \/ supplier_id \/ order_number \/ warranty_expiry \/ lease_start \/ lease_expiry \/ cost_centre_id",
                             "in": "body",
                             "desc": "Lifecycle (dates YYYY-MM-DD). cost_centre_id: an ACTIVE cost centre of the asset's own company (422 otherwise)",
                             "req": false

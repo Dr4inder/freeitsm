@@ -34,6 +34,9 @@
         // GH #160: "CODE Name" of the cost centre it is charged to - sortable and filterable like any text column.
         { key: 'cost_centre_label', label: tt('field.cost_centre'),         type: 'string', defaultVisible: false, defaultOrder: 17.5 },
         { key: 'warranty_expiry',   label: tt('field.warranty_expiry'),     type: 'date',   defaultVisible: false, defaultOrder: 18 },
+        // Sort by Lease ends to see what is due back first (3.5.0).
+        { key: 'lease_start',       label: tt('field.lease_start'),         type: 'date',   defaultVisible: false, defaultOrder: 18.1 },
+        { key: 'lease_expiry',      label: tt('field.lease_expiry'),        type: 'date',   defaultVisible: false, defaultOrder: 18.2 },
         // When the inventory agent last reported (discussion #97).
         //
         // 🔑 SORTED, not filtered, is the point. The per-column filter is a list

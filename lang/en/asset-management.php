@@ -279,6 +279,7 @@ return [
         'cost_centre'      => 'Cost centre',
         'cost_centre_inactive' => 'inactive',
         'order_number'     => 'Order number',
+        'lease_start'                 => 'Lease starts',
         'lease_expiry'                => 'Lease ends',
         'warranty_expiry'  => 'Warranty expiry',
         'assigned_user'    => 'Assigned User',

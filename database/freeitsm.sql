@@ -2709,6 +2709,7 @@ CREATE TABLE IF NOT EXISTS `assets` (
     -- schedule) because the question actually being asked is "what do I have
     -- to give back, and when" - and the warranty machinery already answers
     -- that shape of question on the dashboard and in the calendar.
+    `lease_start`       DATE NULL,   -- when a leased asset's lease began (3.5.0)
     `lease_expiry`      DATE NULL,
     -- Multi-tenancy (SCOPED DATA, not config): the company this asset belongs to.
     -- NULL = the Default company (existing installs stay NULL, so a single-company

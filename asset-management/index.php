@@ -2397,6 +2397,10 @@ $translationNamespaces = ['common', 'asset-management'];
                             <input type="date" class="info-value-input" value="${selectedAsset.warranty_expiry || ''}" onchange="updateAssetField('warranty_expiry', this.value)">
                         </div>
                         <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.lease_start')}</span>
+                            <input type="date" class="info-value-input" value="${selectedAsset.lease_start || ''}" onchange="updateAssetField('lease_start', this.value)">
+                        </div>
+                        <div class="info-item">
                             <span class="info-label">${window.t('asset-management.field.lease_expiry')}<span class="expiry-slot" data-expiry-field="lease_expiry">${expiryFlag(selectedAsset.lease_expiry)}</span></span>
                             <input type="date" class="info-value-input" value="${selectedAsset.lease_expiry || ''}" onchange="updateAssetField('lease_expiry', this.value)">
                         </div>
@@ -4424,7 +4428,7 @@ $translationNamespaces = ['common', 'asset-management'];
             // localise here. Legacy rows hold an English label (with spaces/capitals)
             // — those don't match a key, so we show them as-is.
             const FIELD_KEYS = ['type','status','location','supplier','purchase_date',
-                'purchase_cost','order_number','warranty_expiry','lease_expiry','assigned_user',
+                'purchase_cost','order_number','warranty_expiry','lease_start','lease_expiry','cost_centre','assigned_user',
                 'hostname','asset_created','asset_discovered','hostname_reused'];
 
             history.forEach(entry => {

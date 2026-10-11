@@ -73,6 +73,7 @@ class AssetsService
             'purchase_cost'    => ['audit' => 'purchase_cost',   'kind' => 'decimal'],
             'order_number'     => ['audit' => 'order_number',    'kind' => 'string', 'max' => 100],
             'warranty_expiry'  => ['audit' => 'warranty_expiry', 'kind' => 'date'],
+            'lease_start'      => ['audit' => 'lease_start',     'kind' => 'date'],
             'lease_expiry'     => ['audit' => 'lease_expiry',    'kind' => 'date'],
             'hostname'         => ['audit' => 'hostname',         'kind' => 'string', 'max' => 50],
             'manufacturer'     => ['audit' => 'manufacturer',     'kind' => 'string', 'max' => 50],
@@ -150,6 +151,7 @@ class AssetsService
             $columns[] = $field;
             $values[]  = self::validateField($conn, $field, $in[$field], $def);
         }
+        self::assertLeaseOrder($in, []);
         $columns[] = 'tenant_id';
         $values[]  = $storeTenant;
 
@@ -271,6 +273,7 @@ class AssetsService
         if (!$updates) {
             return; // idempotent — nothing to write
         }
+        self::assertLeaseOrder($in, $current);
 
         $args[] = $assetId;
         $conn->prepare('UPDATE assets SET ' . implode(', ', $updates) . ' WHERE id = ?')->execute($args);
@@ -746,6 +749,24 @@ class AssetsService
                     throw new ServiceError('validation', 'invalid_field', "'{$field}' must be at most {$def['max']} characters.");
                 }
                 return $v === '' ? null : $v;
+        }
+    }
+
+    /**
+     * A lease cannot end before it starts. Checked on the dates as they will be
+     * after the write (what was sent, else what is stored), so changing either one
+     * alone is held to the other.
+     */
+    private static function assertLeaseOrder(array $in, array $current): void
+    {
+        $pick = function (string $k) use ($in, $current) {
+            $v = array_key_exists($k, $in) ? $in[$k] : ($current[$k] ?? null);
+            return ($v === null || $v === '') ? null : substr((string)$v, 0, 10);
+        };
+        $start = $pick('lease_start');
+        $end   = $pick('lease_expiry');
+        if ($start !== null && $end !== null && $start > $end) {
+            throw new ServiceError('validation', 'invalid_field', 'The lease cannot end before it starts.');
         }
     }
 

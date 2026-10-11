@@ -58,6 +58,7 @@ class AssetImportService
         'manufacturer', 'model', 'service_tag',
         'supplier_id', 'purchase_date', 'purchase_cost', 'order_number', 'warranty_expiry',
         'cost_centre_id',   // GH #160 - by code, see resolveLookups()
+        'lease_start', 'lease_expiry',
     ];
 
     /**
@@ -236,6 +237,8 @@ class AssetImportService
             'order_number' => ['ordernumber', 'ponumber', 'po'],
             'warranty_expiry' => ['warrantyexpiry', 'warranty', 'warrantyend', 'warrantyends', 'warrantyexpires', 'warrantyuntil'],
             'cost_centre_id' => ['costcentre', 'costcenter', 'costcentrecode', 'costcentercode', 'costcode', 'kostenstelle'],
+            'lease_start' => ['leasestart', 'leasestartdate', 'leasebegins', 'leasefrom', 'leasestarts'],
+            'lease_expiry' => ['leaseend', 'leaseenddate', 'leaseends', 'leaseexpiry', 'leaseexpires', 'leaseto', 'leaseuntil', 'returndate'],
         ];
 
         $fields = AssetFieldsService::catalogue($conn, $analystId);

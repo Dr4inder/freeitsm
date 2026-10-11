@@ -51,7 +51,7 @@ try {
     $allowed = ['hostname', 'asset_tag', 'asset_type_id', 'asset_status_id', 'location_id',
                 'manufacturer', 'model', 'service_tag',
                 'supplier_id', 'purchase_date', 'purchase_cost', 'order_number', 'warranty_expiry',
-                'lease_expiry'];
+                'lease_start', 'lease_expiry'];
 
     $in = [];
     foreach ($allowed as $f) {

@@ -1736,6 +1736,7 @@ return [
         'cost_centre_id'  => 'INT NULL',   // GH #160: the cost centre it is charged to - see includes/cost_centre_assign.php
         'order_number'      => 'VARCHAR(100) NULL',
         'warranty_expiry'   => 'DATE NULL',
+        'lease_start'       => 'DATE NULL',   // when a leased asset's lease began (3.5.0)
         'lease_expiry'      => 'DATE NULL',
         // Multi-tenancy: the company this asset belongs to (NULL = Default).
         'tenant_id'         => 'INT NULL',

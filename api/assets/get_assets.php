@@ -59,6 +59,11 @@ try {
     $colCheck->execute([DB_NAME]);
     $leaseReady = (int)$colCheck->fetchColumn() > 0;
     $leaseCol = $leaseReady ? "a.lease_expiry," : "NULL AS lease_expiry,";
+    // lease_start (3.5.0) is newer still - the same treatment.
+    $lsCheck = $conn->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = 'assets' AND column_name = 'lease_start'");
+    $lsCheck->execute([DB_NAME]);
+    $leaseStartReady = (int)$lsCheck->fetchColumn() > 0;
+    $leaseCol .= $leaseStartReady ? " a.lease_start," : " NULL AS lease_start,";
     // The cost centre it is charged to (GH #160), shown as "CODE Name". Same
     // same-name fallback before Database Verification.
     require_once '../../includes/cost_centre_assign.php';
@@ -232,7 +237,7 @@ try {
     $params = array_merge($params, $tenantParams);
 
     if ($tableExists) {
-        $groupBy = " GROUP BY a.id, a.hostname, a.manufacturer, a.model, a.memory, a.service_tag, a.operating_system, a.feature_release, a.build_number, a.cpu_name, a.speed, a.bios_version, a.location_id, a.purchase_date, a.purchase_cost, a.supplier_id" . ($leaseReady ? ', a.lease_expiry' : '') . ($ccReady ? ', a.cost_centre_id' : '') . ", a.order_number, a.warranty_expiry, a.first_seen, a.last_seen";
+        $groupBy = " GROUP BY a.id, a.hostname, a.manufacturer, a.model, a.memory, a.service_tag, a.operating_system, a.feature_release, a.build_number, a.cpu_name, a.speed, a.bios_version, a.location_id, a.purchase_date, a.purchase_cost, a.supplier_id" . ($leaseReady ? ', a.lease_expiry' : '') . ($leaseStartReady ? ', a.lease_start' : '') . ($ccReady ? ', a.cost_centre_id' : '') . ", a.order_number, a.warranty_expiry, a.first_seen, a.last_seen";
         if ($typeTableExists) {
             $groupBy .= ", a.asset_type_id, aty.name";
         }

@@ -132,6 +132,8 @@ function apiSerializeAsset(PDO $conn, array $r): array {
                 : null,
             'order_number'    => $r['order_number'],
             'warranty_expiry' => $r['warranty_expiry'],
+            'lease_start'     => $r['lease_start'] ?? null,    // 3.5.0
+            'lease_expiry'    => $r['lease_expiry'] ?? null,
         ],
         'assigned_users_count' => (int)($r['assigned_count'] ?? 0),
         'first_seen'   => apiIsoDate($r['first_seen']),
