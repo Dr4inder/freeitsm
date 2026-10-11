@@ -161,14 +161,15 @@ $toolMethod = strtoupper($tool['method'] ?? 'GET');
                                 <?php if ($ftype === 'select'): ?>
                                     <select class="diag-input" id="<?php echo $fid; ?>" data-input-name="<?php echo htmlspecialchars($f['name']); ?>"<?php echo $optAttr; ?>>
                                         <?php foreach (($f['options'] ?? []) as $opt): ?>
-                                            <option value="<?php echo htmlspecialchars($opt['value']); ?>"><?php echo htmlspecialchars($opt['label']); ?></option>
+                                            <option value="<?php echo htmlspecialchars($opt['value']); ?>"<?php echo (isset($_GET[$f['name']]) && (string)$_GET[$f['name']] === (string)$opt['value']) ? ' selected' : ''; ?>><?php echo htmlspecialchars($opt['label']); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 <?php else: ?>
                                     <input type="<?php echo $ftype === 'password' ? 'password' : 'text'; ?>" class="diag-input" id="<?php echo $fid; ?>"
                                            data-input-name="<?php echo htmlspecialchars($f['name']); ?>"<?php echo $optAttr; ?>
                                            autocomplete="<?php echo $ftype === 'password' ? 'new-password' : 'off'; ?>"
-                                           placeholder="<?php echo htmlspecialchars($f['placeholder'] ?? ''); ?>">
+                                           placeholder="<?php echo htmlspecialchars($f['placeholder'] ?? ''); ?>"
+                                           <?php if ($ftype !== 'password' && isset($_GET[$f['name']])): ?>value="<?php echo htmlspecialchars((string)$_GET[$f['name']]); ?>"<?php endif; ?>>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>

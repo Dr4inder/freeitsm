@@ -255,7 +255,7 @@ $row = function (string $label, string $desc, string $control) {
 
     <script src="../../assets/js/projects.js?v=10"></script>
     <script src="../../assets/js/projects-settings.js?v=17"></script>
-    <script src="../../assets/js/ai-settings.js?v=2"></script>
+    <script src="../../assets/js/ai-settings.js?v=3"></script>
     <script src="../../assets/js/mobile.js?v=78"></script>
 </body>
 </html>

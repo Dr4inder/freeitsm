@@ -216,7 +216,7 @@ $translationNamespaces = ['common', 'lms'];
 
     <script src="<?php echo BASE_URL; ?>assets/js/toast.js"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/confirm.js"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/ai-settings.js?v=2"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/ai-settings.js?v=3"></script>
     <script>
     /* The page had one tab and therefore no tab switching at all. */
     function lmsSettingsTab(name) {

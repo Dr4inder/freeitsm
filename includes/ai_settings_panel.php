@@ -76,6 +76,7 @@ function renderAiSettingsPanel(string $ns, array $opts = []): void
     .ai-settings-panel .ai-result.ok   { color: var(--success-text, #107c10); }
     .ai-settings-panel .ai-result.err  { color: var(--danger-accent, #d13438); }
     .ai-settings-panel .ai-result.busy { color: var(--text-muted, #666); }
+    .ai-settings-panel .ai-result-hint { margin-top: 6px; color: var(--text-muted, #666); line-height: 1.45; }
     </style>
     <?php endif; ?>
 

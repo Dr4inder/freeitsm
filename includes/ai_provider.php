@@ -27,6 +27,10 @@
  *                   Asked for by organisations whose governance will not let
  *                   traffic leave their own Azure tenant — for them this is not
  *                   a preference, it is the only way to switch AI on at all.
+ *                   An API version of "v1" uses Azure's newer route instead,
+ *                   {endpoint}/openai/v1/chat/completions, which takes no
+ *                   query string and DOES want the deployment as `model`
+ *                   (GH #171).
  *
  * Request shapes mirror the proven ones in includes/rfp_ai.php; this file is
  * intentionally independent so the RFP builder isn't affected.
@@ -112,7 +116,7 @@ function aiProviderChat(array $cfg, array $opts): array
         $model  = trim((string)$cfg['azure_deployment']);
         $result = aiProviderCallOpenAICompatible(
             aiAzureChatUrl($cfg),
-            '',
+            aiAzureIsV1($cfg) ? $model : '',
             ['api-key: ' . $apiKey],
             $verify,
             $opts
@@ -197,16 +201,53 @@ function aiProviderCallAnthropic(string $model, string $apiKey, bool $verify, ar
  */
 function aiAzureChatUrl(array $cfg): string
 {
-    $endpoint = rtrim(trim((string)$cfg['azure_endpoint']), '/');
+    $endpoint = trim((string)$cfg['azure_endpoint']);
+    /* GH #171: the portal shows a whole "Target URI" beside each deployment
+       (.../openai/deployments/x/chat/completions?api-version=...), and a Foundry
+       project shows .../api/projects/<name>. Either pasted into the endpoint box
+       used to be doubled up into an address Azure answers with 404. Everything
+       from the path onwards is ours to build, so keep only the resource. */
+    foreach (['/openai/', '/api/projects/', '/models/'] as $cut) {
+        $at = stripos($endpoint . '/', $cut);
+        if ($at !== false) $endpoint = substr($endpoint, 0, $at);
+    }
+    $endpoint = rtrim($endpoint, '/');
     // Tolerate a pasted ".../openai" so it is not doubled below.
     if (substr($endpoint, -7) === '/openai') {
         $endpoint = substr($endpoint, 0, -7);
+    }
+    if (aiAzureIsV1($cfg)) {
+        return $endpoint . '/openai/v1/chat/completions';
     }
     $deployment = trim((string)$cfg['azure_deployment']);
     $version    = trim((string)($cfg['azure_api_version'] ?? '')) ?: AI_AZURE_DEFAULT_API_VERSION;
 
     return $endpoint . '/openai/deployments/' . rawurlencode($deployment)
          . '/chat/completions?api-version=' . rawurlencode($version);
+}
+
+/** An API version of "v1" means Azure's newer route, which has no api-version. */
+function aiAzureIsV1(array $cfg): bool
+{
+    return strtolower(trim((string)($cfg['azure_api_version'] ?? ''))) === 'v1';
+}
+
+/**
+ * Whether an API version looks like one Azure publishes.
+ *
+ * ⚠️ GH #171: the portal shows a DATE beside every model - gpt-5-nano's is
+ * 2025-08-07 - and it is the model's version, not an API version. It has exactly
+ * the shape of one, Azure answers it with a bare 404 "Resource not found", and
+ * nothing on that screen says which box was wrong. Used only to EXPLAIN a
+ * failure, never to refuse a value: Azure publishes new versions and this list
+ * will fall behind, which costs nothing because a working call never asks.
+ */
+function aiAzureApiVersionLooksValid(string $v): bool
+{
+    $v = strtolower(trim($v));
+    if ($v === '' || in_array($v, ['v1', 'latest', 'preview'], true)) return true;
+    if (preg_match('/^\d{4}-\d{2}-\d{2}-preview$/', $v)) return true;
+    return in_array($v, ['2022-12-01', '2023-05-15', '2024-02-01', '2024-06-01', '2024-10-21'], true);
 }
 
 /**
@@ -253,27 +294,7 @@ function aiProviderCallOpenAICompatible(string $url, string $model, array $authH
 
     $headers = array_merge($authHeaders, ['content-type: application/json'], $extraHeaders);
 
-    try {
-        $resp = aiProviderHttpPost($url, $headers, json_encode($payload), $verify);
-    } catch (RuntimeException $e) {
-        /* ⚠️ `max_tokens` VS `max_completion_tokens`. Newer deployments — the
-           o-series and after — refuse `max_tokens` outright and say so by name.
-           The two mean the same thing here, and which one is required depends on
-           the deployed model rather than on anything we can see from the config,
-           so the only honest way to know is to be told.
-
-           Retried ONCE, and only when the provider's own words name the
-           replacement — so this cannot loop, and it cannot fire on an unrelated
-           400 such as a bad key or a content filter. Without it, an
-           administrator with a current Azure deployment gets a flat refusal for
-           a field they never chose and cannot see. */
-        if (strpos($e->getMessage(), 'max_completion_tokens') === false) {
-            throw $e;
-        }
-        $payload['max_completion_tokens'] = $payload['max_tokens'];
-        unset($payload['max_tokens']);
-        $resp = aiProviderHttpPost($url, $headers, json_encode($payload), $verify);
-    }
+    $resp = aiOpenAICompatPost($url, $headers, $payload, $verify);
     $data = $resp['data'];
 
     $text = $data['choices'][0]['message']['content'] ?? '';
@@ -299,6 +320,114 @@ function aiProviderCallOpenAICompatible(string $url, string $model, array $authH
         'finish_reason' => $choice['finish_reason'] ?? null,
         'reasoning_tokens' => $data['usage']['completion_tokens_details']['reasoning_tokens'] ?? null,
     ];
+}
+
+/**
+ * POST an OpenAI-format chat request, putting right the two parameters newer
+ * models refuse by name.
+ *
+ * ⚠️ `max_tokens` VS `max_completion_tokens`. Newer deployments — the o-series
+ * and after — refuse `max_tokens` outright and say so by name. The two mean the
+ * same thing here, and which one is required depends on the deployed model
+ * rather than on anything we can see from the config, so the only honest way to
+ * know is to be told.
+ *
+ * ⚠️ `temperature`. The same models (GH #171: gpt-5-nano) accept only their
+ * default temperature and refuse 0 with "Unsupported value: 'temperature'".
+ * Leaving it out means "the model's default", which is all they allow.
+ *
+ * Each fix is applied at most once, and only when the provider's own words name
+ * it — so this cannot loop, and it cannot fire on an unrelated 400 such as a bad
+ * key or a content filter. $payload is passed by reference so a caller making
+ * several calls (tool calling) learns the fix once rather than per round.
+ */
+function aiOpenAICompatPost(string $url, array $headers, array &$payload, bool $verify): array
+{
+    for ($fixes = 0; ; $fixes++) {
+        try {
+            return aiProviderHttpPost($url, $headers, json_encode($payload), $verify);
+        } catch (RuntimeException $e) {
+            $msg = $e->getMessage();
+            if ($fixes >= 2) throw $e;
+            if (array_key_exists('max_tokens', $payload) && strpos($msg, 'max_completion_tokens') !== false) {
+                $payload['max_completion_tokens'] = $payload['max_tokens'];
+                unset($payload['max_tokens']);
+                continue;
+            }
+            if (array_key_exists('temperature', $payload) && stripos($msg, 'temperature') !== false
+                && (stripos($msg, 'unsupported') !== false || stripos($msg, 'not support') !== false)) {
+                unset($payload['temperature']);
+                continue;
+            }
+            throw $e;
+        }
+    }
+}
+
+/**
+ * Record every HTTP exchange this file makes until aiProviderTraceTake().
+ *
+ * For debug tool D014 (GH #171: "is there a way to inspect the payload and
+ * response without dev tools?"). Browser dev tools can never show it, because
+ * the call is made by the SERVER - the browser only ever talks to FreeITSM.
+ * Off unless started, so no ordinary request pays for it.
+ */
+function aiProviderTraceStart(): void
+{
+    $GLOBALS['AI_PROVIDER_TRACE'] = [];
+}
+
+/** Stop recording and return what was recorded. */
+function aiProviderTraceTake(): array
+{
+    $t = $GLOBALS['AI_PROVIDER_TRACE'] ?? [];
+    unset($GLOBALS['AI_PROVIDER_TRACE']);
+    return is_array($t) ? $t : [];
+}
+
+/**
+ * What a failed call most likely means, in a sentence an administrator can act
+ * on - or '' when the error says it plainly enough already.
+ *
+ * Shared by the Test button and debug tool D014, so the two never disagree.
+ */
+function aiExplainFailure(array $cfg, string $msg): string
+{
+    $provider = $cfg['provider'] ?? '';
+    $azure    = $provider === 'azure';
+    $version  = trim((string)($cfg['azure_api_version'] ?? ''));
+
+    if (stripos($msg, 'Network error') !== false || stripos($msg, 'Could not resolve') !== false
+        || stripos($msg, 'timed out') !== false || stripos($msg, 'certificate') !== false) {
+        return 'The request never reached the provider. That is a network, DNS or certificate problem on this server rather than a setting - debug tool D006 checks HTTPS from here.';
+    }
+    if (strpos($msg, '(HTTP 401)') !== false || strpos($msg, '(HTTP 403)') !== false) {
+        return $azure
+            ? 'Azure refused the key. Keys belong to one resource, so a key from a different resource is refused even when the endpoint and deployment are right.'
+            : 'The provider refused the key. Check it was copied in full and belongs to this provider.';
+    }
+    if ($azure && stripos($msg, 'content') !== false && (stripos($msg, 'filter') !== false || stripos($msg, 'management policy') !== false)) {
+        return 'Azure\'s content filter refused the request. That is a policy on the deployment, not a fault here.';
+    }
+    if ($azure && stripos($msg, 'api version') !== false && stripos($msg, 'enabled only') !== false) {
+        return 'This model needs a newer API version than the one in use. Copy the api-version from the end of the deployment\'s Target URI in the portal, or enter v1.';
+    }
+    if (strpos($msg, '(HTTP 404)') !== false) {
+        if (!$azure) {
+            return 'The provider does not recognise the model "' . trim((string)($cfg['model'] ?? '')) . '". Check its exact name in the provider\'s model list.';
+        }
+        if (stripos($msg, 'DeploymentNotFound') !== false || stripos($msg, 'deployment for this resource does not exist') !== false) {
+            return 'Azure found the resource but no deployment called "' . trim((string)($cfg['azure_deployment'] ?? '')) . '" on it. That is the name you chose under Deployments, which need not match the model.';
+        }
+        if (!aiAzureApiVersionLooksValid($version)) {
+            return 'Azure answers 404 when it does not recognise the API version, and "' . $version . '" does not look like one. The date shown beside a model in the portal is the MODEL\'s version, not the API version. Leave the box blank, enter v1, or copy the api-version from the end of the deployment\'s Target URI.';
+        }
+        return 'Azure did not recognise the address. That is usually the API version (too old or too new for this deployment), sometimes the endpoint.';
+    }
+    if (strpos($msg, '(HTTP 429)') !== false) {
+        return 'The provider is rate limiting this key, or its quota or spending limit is used up.';
+    }
+    return '';
 }
 
 /**
@@ -476,23 +605,25 @@ function aiProviderChatTools(array $cfg, array $opts, array $tools, callable $ru
         ]];
     }, $tools);
 
+    // The token and temperature fields, as corrected by aiOpenAICompatPost() -
+    // carried across rounds so a refusal is learned once, not every round.
+    $params = ['max_tokens' => $maxTokens, 'temperature' => $temperature];
     for ($round = 0; $round < $maxRounds; $round++) {
-        $payload = [
-            'model'       => $model,
-            'max_tokens'  => $maxTokens,
-            'temperature' => $temperature,
+        $payload = ['model' => $model] + $params + [
             'tools'       => $wire,
             'messages'    => $messages,
         ];
         if ($provider === 'azure') {
-            unset($payload['model']);   // the deployment decides the model (see aiProviderChat)
-            $resp = aiProviderHttpPost(aiAzureChatUrl($cfg), ['api-key: ' . $apiKey, 'content-type: application/json'], json_encode($payload), $verify);
+            // The deployment decides the model (see aiProviderChat) - except on v1.
+            if (!aiAzureIsV1($cfg)) unset($payload['model']);
+            $resp = aiOpenAICompatPost(aiAzureChatUrl($cfg), ['api-key: ' . $apiKey, 'content-type: application/json'], $payload, $verify);
         } else {
-            $resp = aiProviderHttpPost(rtrim($base, '/') . '/chat/completions', array_merge([
+            $resp = aiOpenAICompatPost(rtrim($base, '/') . '/chat/completions', array_merge([
                 'Authorization: Bearer ' . $apiKey,
                 'content-type: application/json',
-            ], $extraHeaders), json_encode($payload), $verify);
+            ], $extraHeaders), $payload, $verify);
         }
+        $params = array_intersect_key($payload, array_flip(['max_tokens', 'max_completion_tokens', 'temperature']));
         $data = $resp['data'];
 
         $tokIn  += (int)($data['usage']['prompt_tokens']     ?? 0);
@@ -557,10 +688,18 @@ function aiProviderHttpPost(string $url, array $headers, string $body, bool $ver
             CURLOPT_TIMEOUT        => AI_PROVIDER_HTTP_TIMEOUT,
         ]);
         sslApplyCurl($ch);
+        $t0   = microtime(true);
         $resp = curl_exec($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $err  = curl_error($ch);
         curl_close($ch);
+        if (isset($GLOBALS['AI_PROVIDER_TRACE']) && is_array($GLOBALS['AI_PROVIDER_TRACE'])) {
+            $GLOBALS['AI_PROVIDER_TRACE'][] = [
+                'url' => $url, 'headers' => $headers, 'body' => $body, 'attempt' => $attempt,
+                'code' => (int)$code, 'response' => $resp === false ? null : (string)$resp,
+                'error' => $err, 'ms' => (int)((microtime(true) - $t0) * 1000),
+            ];
+        }
 
         if ($resp === false) {
             $lastErr = 'Network error: ' . $err;

@@ -52,5 +52,17 @@ try {
         'reply'       => mb_substr((string)$result['content'], 0, 80),
     ]);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    /* GH #171: a bare "Resource not found (HTTP 404)" left the administrator
+       nowhere to go. Say what it most likely means, and - debug tools being
+       administrators-only - point an administrator at the tool that shows the
+       whole exchange. */
+    $out = ['success' => false, 'error' => $e->getMessage()];
+    if (isset($cfg)) {
+        $hint = aiExplainFailure($cfg, $e->getMessage());
+        if ($hint !== '') $out['hint'] = $hint;
+    }
+    if (sessionIsAdmin()) {
+        $out['debug_url'] = BASE_URL . 'system/debug-tools/d014/?ns=' . rawurlencode($ns);
+    }
+    echo json_encode($out);
 }

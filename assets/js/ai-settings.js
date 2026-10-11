@@ -238,6 +238,24 @@
                         setResult(tr('test_ok', 'Connection OK') + ' — ' + d.provider + ' · ' + d.model + ' · ' + d.duration_ms + 'ms', 'ok');
                     } else {
                         setResult((tr('test_failed', 'Test failed') + ': ') + (d.error || ''), 'err');
+                        // GH #171: what it most likely means, and where to see the whole exchange.
+                        if (d.hint) {
+                            var hint = document.createElement('div');
+                            hint.className = 'ai-result-hint';
+                            hint.textContent = d.hint;
+                            resultEl.appendChild(hint);
+                        }
+                        if (d.debug_url) {
+                            var more = document.createElement('div');
+                            more.className = 'ai-result-hint';
+                            var a = document.createElement('a');
+                            a.href = d.debug_url;
+                            a.target = '_blank';
+                            a.rel = 'noopener';
+                            a.textContent = tr('debug_link', 'See exactly what was sent and what came back (debug tool D014)');
+                            more.appendChild(a);
+                            resultEl.appendChild(more);
+                        }
                     }
                 })
                 .catch(function () { setResult(tr('test_failed', 'Test failed'), 'err'); })
