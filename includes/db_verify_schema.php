@@ -294,6 +294,7 @@ return [
         'group_name'          => 'VARCHAR(255) NOT NULL',
         'first_seen_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
         'last_seen_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+        'label'               => 'VARCHAR(100) NULL',   // the admin's name for the group
     ],
 
     'department_teams' => [

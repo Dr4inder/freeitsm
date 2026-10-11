@@ -19,7 +19,9 @@
  *                       The team decides modules, companies and roles, exactly
  *                       as it does for anyone added to it by hand.
  *   sso_groups_seen     every group a provider has sent, so the screen offers
- *                       groups in a dropdown instead of asking anyone to type one
+ *                       groups in a dropdown instead of asking anyone to type one -
+ *                       each with a NAME the admin gives it (label), because some
+ *                       providers (Microsoft Entra) send codes, not names
  *
  * 🔑 Nobody types codes. A group name is the identity provider's own, chosen
  * from what it has sent; everything a group GIVES comes from a team set up on
@@ -135,13 +137,42 @@ function ssoSaveTeamMappings(PDO $conn, int $providerId, array $rows): void
     foreach ($clean as [$g, $t]) $ins->execute([$providerId, $g, $t]);
 }
 
-/** Groups this provider has sent, most recently seen first. */
+/**
+ * Groups this provider has sent: [['group' => code, 'label' => name|null,
+ * 'last_seen' => datetime]], named ones first, then most recently seen.
+ */
 function ssoSeenGroups(PDO $conn, int $providerId): array
 {
     if (!ssoClaimsReady($conn)) return [];
-    $s = $conn->prepare("SELECT group_name FROM sso_groups_seen WHERE provider_id = ? ORDER BY last_seen_datetime DESC, group_name LIMIT 2000");
+    $s = $conn->prepare("SELECT group_name, label, last_seen_datetime FROM sso_groups_seen WHERE provider_id = ?
+                          ORDER BY (label IS NULL OR label = ''), label, last_seen_datetime DESC, group_name LIMIT 2000");
     $s->execute([$providerId]);
-    return $s->fetchAll(PDO::FETCH_COLUMN);
+    return array_map(fn($r) => ['group' => $r['group_name'], 'label' => ($r['label'] ?? '') !== '' ? $r['label'] : null, 'last_seen' => $r['last_seen_datetime']],
+                     $s->fetchAll(PDO::FETCH_ASSOC));
+}
+
+/**
+ * Name the groups a provider has sent. $labels: [['group' => code, 'label' => name]].
+ * Only groups it has actually sent can be named; a blank name clears it.
+ */
+function ssoSaveGroupLabels(PDO $conn, int $providerId, array $labels): void
+{
+    $up = $conn->prepare("UPDATE sso_groups_seen SET label = ? WHERE provider_id = ? AND group_name = ?");
+    foreach ($labels as $l) {
+        $group = trim((string)($l['group'] ?? ''));
+        if ($group === '') continue;
+        $label = mb_substr(trim((string)($l['label'] ?? '')), 0, 100);
+        $up->execute([$label !== '' ? $label : null, $providerId, $group]);
+    }
+}
+
+/** A group's name if it has one, else the code - for messages and the last-sign-in line. */
+function ssoGroupDisplay(array $seen, string $group): string
+{
+    foreach ($seen as $s) {
+        if (ssoSameGroup($s['group'], $group)) return $s['label'] ?? $group;
+    }
+    return $group;
 }
 
 /**

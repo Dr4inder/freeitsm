@@ -194,6 +194,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         .sso-map input, .sso-map select { width: 100%; box-sizing: border-box; }
         .sso-group-warn { font-size: 12px; color: var(--warning-text, #92400e); margin-top: 4px; }
         .sso-group-warn:empty { display: none; }
+        .sso-group-picker select, .sso-group-picker input { width: 100%; box-sizing: border-box; }
         /* The four attribute mappings sit two-up; they collapse to one column on narrow screens. */
         /* Encryption + port share a row: the select flexes, the port stays narrow.
            Needed because .form-field select is width:100%, which would otherwise
@@ -647,19 +648,25 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                                placeholder="<?php echo htmlspecialchars(t('system.sso.claims_other_ph')); ?>">
                     </div>
                     <div id="claimGroupBits">
+                    <?php /* Some providers (Microsoft Entra) send codes, not names: name
+                             each group here once and every dropdown shows the name. */ ?>
+                    <div class="form-field" id="ssoSeenField" style="margin-bottom:18px;">
+                        <label><?php echo htmlspecialchars(t('system.sso.field_groups_seen')); ?></label>
+                        <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_groups_seen_hint')); ?></div>
+                        <table class="sso-map">
+                            <thead><tr><th><?php echo htmlspecialchars(t('system.sso.col_code')); ?></th><th><?php echo htmlspecialchars(t('system.sso.col_group_name')); ?></th><th><?php echo htmlspecialchars(t('system.sso.col_last_seen')); ?></th></tr></thead>
+                            <tbody id="ssoSeenRows"></tbody>
+                        </table>
+                    </div>
                         <div class="form-field">
-                            <label for="fOidcAnalystGroup"><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group')); ?></label>
+                            <label><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group')); ?></label>
                             <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group_hint')); ?></div>
-                            <input type="text" id="fOidcAnalystGroup" class="sso-group-input" list="ssoSeenGroups" maxlength="255" autocomplete="off"
-                                   placeholder="<?php echo htmlspecialchars(t('system.sso.group_pick_ph')); ?>">
-                            <div class="sso-group-warn"></div>
+                            <div class="sso-group-picker" id="pickAnalystGroup"></div>
                         </div>
                         <div class="form-field">
-                            <label for="fOidcAdminGroup"><?php echo htmlspecialchars(t('system.sso.field_claim_admin_group')); ?></label>
+                            <label><?php echo htmlspecialchars(t('system.sso.field_claim_admin_group')); ?></label>
                             <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_claim_admin_group_hint')); ?></div>
-                            <input type="text" id="fOidcAdminGroup" class="sso-group-input" list="ssoSeenGroups" maxlength="255" autocomplete="off"
-                                   placeholder="<?php echo htmlspecialchars(t('system.sso.group_pick_ph')); ?>">
-                            <div class="sso-group-warn"></div>
+                            <div class="sso-group-picker" id="pickAdminGroup"></div>
                         </div>
                         <div class="form-field">
                             <label><?php echo htmlspecialchars(t('system.sso.field_group_teams')); ?></label>
@@ -677,7 +684,6 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                         </div>
                         <div id="oidcLastSeen" style="font-size:12px;color:var(--text-muted,#666);margin-top:6px;"></div>
                     </div>
-                    <datalist id="ssoSeenGroups"></datalist>
                 </div>
                 </div><!-- /groups -->
                 <div class="sso-tab-panel" data-tab="portal">
@@ -1000,24 +1006,85 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
     $('fOidcGroupClaimSel').addEventListener('change', ssoSyncClaimUi);
     $('fOidcGroupClaimOther').addEventListener('input', ssoSyncClaimUi);
 
-    // The groups this provider has sent - the dropdown under every group box.
-    let ssoSeen = new Set();
-    function ssoSetSeenGroups(list) {
-        ssoSeen = new Set(list.map(g => String(g).toLocaleLowerCase()));
-        const dl = $('ssoSeenGroups');
-        dl.innerHTML = '';
-        list.forEach(g => { const o = document.createElement('option'); o.value = g; dl.appendChild(o); });
+    // ===== Group pickers (3.5.0) =====
+    // A group is CHOSEN from the ones the provider has sent, shown by the name the
+    // admin gave it (System -> SSO -> Groups seen) - Microsoft Entra sends codes.
+    // "Type a group..." remains for a group nobody has signed in with yet.
+    let ssoSeenList = [];   // [{group, label, last_seen}]
+    function ssoSeenKnown(v) { v = String(v || '').toLocaleLowerCase(); return ssoSeenList.some(g => g.group.toLocaleLowerCase() === v); }
+    function ssoGroupText(g) {
+        const code = g.group.length > 24 ? g.group.slice(0, 8) + '…' : g.group;
+        return g.label ? g.label + (g.label === g.group ? '' : '  (' + code + ')') : g.group;
     }
-    // A group nobody has signed in with yet is allowed (they may not have yet),
-    // but said out loud - a misspelt group would quietly match nobody.
-    function ssoGroupWarn(input) {
-        const w = input.parentElement.querySelector('.sso-group-warn');
-        if (!w) return;
-        const v = input.value.trim();
-        w.textContent = (v && !ssoSeen.has(v.toLocaleLowerCase())) ? window.t('system.sso.group_not_seen') : '';
+    function ssoPickerOptions(value) {
+        let html = '<option value="">' + esc(window.t('system.sso.group_none')) + '</option>';
+        let found = false;
+        ssoSeenList.forEach(g => {
+            const sel = value && g.group.toLocaleLowerCase() === String(value).toLocaleLowerCase();
+            if (sel) found = true;
+            html += '<option value="' + esc(g.group) + '"' + (sel ? ' selected' : '') + '>' + esc(ssoGroupText(g)) + '</option>';
+        });
+        if (value && !found) html += '<option value="' + esc(value) + '" selected>' + esc(value + ' - ' + window.t('system.sso.group_unseen_tag')) + '</option>';
+        html += '<option value="__type">' + esc(window.t('system.sso.group_type')) + '</option>';
+        return html;
     }
-    function ssoGroupWarnAll() { document.querySelectorAll('.sso-group-input').forEach(ssoGroupWarn); }
-    document.addEventListener('input', e => { if (e.target.classList && e.target.classList.contains('sso-group-input')) ssoGroupWarn(e.target); });
+    function ssoPickerHtml(value) {
+        return '<select class="sso-pick-sel">' + ssoPickerOptions(value) + '</select>'
+             + '<input type="text" class="sso-pick-text" maxlength="255" autocomplete="off" style="display:none;margin-top:6px;" placeholder="' + esc(window.t('system.sso.group_type_ph')) + '">'
+             + '<div class="sso-group-warn"></div>';
+    }
+    function ssoPickerMount(el, value) { if (el) { el.innerHTML = ssoPickerHtml(value || ''); ssoPickerWarn(el); } }
+    function ssoPickerValue(el) {
+        if (!el) return '';
+        const sel = el.querySelector('.sso-pick-sel');
+        return sel.value === '__type' ? el.querySelector('.sso-pick-text').value.trim() : sel.value;
+    }
+    // A group nobody has signed in with yet is allowed, but said out loud - a
+    // misspelt one would quietly match nobody.
+    function ssoPickerWarn(el) {
+        const w = el.querySelector('.sso-group-warn');
+        const v = ssoPickerValue(el);
+        w.textContent = (v && !ssoSeenKnown(v)) ? window.t('system.sso.group_not_seen') : '';
+    }
+    document.addEventListener('change', e => {
+        if (!e.target.classList || !e.target.classList.contains('sso-pick-sel')) return;
+        const el = e.target.closest('.sso-group-picker');
+        el.querySelector('.sso-pick-text').style.display = e.target.value === '__type' ? '' : 'none';
+        if (e.target.value === '__type') el.querySelector('.sso-pick-text').focus();
+        ssoPickerWarn(el);
+    });
+    document.addEventListener('input', e => {
+        if (e.target.classList && e.target.classList.contains('sso-pick-text')) ssoPickerWarn(e.target.closest('.sso-group-picker'));
+    });
+    // A name typed in "Groups seen" shows in every dropdown straight away.
+    function ssoPickersRefresh() {
+        document.querySelectorAll('.sso-group-picker').forEach(el => {
+            const sel = el.querySelector('.sso-pick-sel');
+            if (sel.value === '__type') return;
+            const v = sel.value;
+            sel.innerHTML = ssoPickerOptions(v);
+        });
+    }
+    function ssoSeenLoad(list) {
+        ssoSeenList = (list || []).map(g => ({ group: g.group, label: g.label || null, last_seen: g.last_seen || null }));
+        const body = $('ssoSeenRows');
+        $('ssoSeenField').style.display = ssoSeenList.length ? '' : 'none';
+        body.innerHTML = ssoSeenList.map((g, i) =>
+            '<tr><td><code style="font-size:12px;word-break:break-all;">' + esc(g.group) + '</code></td>'
+          + '<td><input type="text" class="sso-label" data-i="' + i + '" maxlength="100" value="' + esc(g.label || '') + '" placeholder="' + esc(window.t('system.sso.group_name_ph')) + '"></td>'
+          + '<td style="white-space:nowrap;font-size:12px;color:var(--text-muted,#666);">' + esc(g.last_seen && window.fmtDateTime ? window.fmtDateTime(g.last_seen) : (g.last_seen || '')) + '</td></tr>').join('');
+        body.querySelectorAll('.sso-label').forEach(inp => inp.addEventListener('input', () => {
+            ssoSeenList[+inp.dataset.i].label = inp.value.trim() || null;
+            ssoPickersRefresh();
+        }));
+    }
+    function ssoSeenCollect() {
+        return ssoSeenList.map(g => ({ group: g.group, label: g.label || '' }));
+    }
+    function ssoNameOf(code) {
+        const g = ssoSeenList.find(x => x.group.toLocaleLowerCase() === String(code).toLocaleLowerCase());
+        return g && g.label ? g.label : code;
+    }
 
     // Group -> team rows.
     function ssoTeamOptions(selected, fallbackName) {
@@ -1034,13 +1101,12 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         const body = $('ssoMapRows');
         if (!body) return;
         const tr = document.createElement('tr');
-        tr.innerHTML = '<td><input type="text" class="sso-group-input" list="ssoSeenGroups" maxlength="255" autocomplete="off" placeholder="' + esc(window.t('system.sso.group_pick_ph')) + '"><div class="sso-group-warn"></div></td>'
+        tr.innerHTML = '<td><div class="sso-group-picker"></div></td>'
             + '<td><select>' + ssoTeamOptions(teamId || 0, teamName) + '</select></td>'
             + '<td><button type="button" class="btn btn-secondary" title="' + esc(window.t('system.sso.map_remove')) + '">&times;</button></td>';
-        tr.querySelector('input').value = group || '';
+        ssoPickerMount(tr.querySelector('.sso-group-picker'), group || '');
         tr.querySelector('button').addEventListener('click', () => tr.remove());
         body.appendChild(tr);
-        ssoGroupWarn(tr.querySelector('input'));
     }
     function ssoMapLoad(rows) {
         const body = $('ssoMapRows');
@@ -1053,8 +1119,8 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         const body = $('ssoMapRows');
         if (!body) return undefined;   // no teams yet: leave any stored rows alone
         return Array.from(body.querySelectorAll('tr')).map(tr => ({
-            group: tr.querySelector('input').value.trim(),
-            team_id: parseInt(tr.querySelector('select').value, 10) || 0
+            group: ssoPickerValue(tr.querySelector('.sso-group-picker')),
+            team_id: parseInt(tr.querySelector('td:nth-child(2) select').value, 10) || 0
         })).filter(r => r.group !== '' || r.team_id);
     }
     if ($('ssoMapAdd')) $('ssoMapAdd').addEventListener('click', () => ssoMapAddRow('', 0));
@@ -1133,17 +1199,16 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         if ($('fJitCompany')) $('fJitCompany').value = (p && p.jit_company_access) ? p.jit_company_access : 'all';
         // SSO groups (3.5.0): where they come from, the two groups, the team rows,
         // and the groups seen at sign-in for the dropdowns.
-        ssoSetSeenGroups(p ? (p.groups_seen || []) : []);
+        ssoSeenLoad(p ? (p.groups_seen || []) : []);
         ssoGroupClaimSet(p ? (p.oidc_group_claim || '') : '');
-        $('fOidcAnalystGroup').value = p ? (p.oidc_analyst_group || '') : '';
-        $('fOidcAdminGroup').value   = p ? (p.oidc_admin_group || '') : '';
+        ssoPickerMount($('pickAnalystGroup'), p ? (p.oidc_analyst_group || '') : '');
+        ssoPickerMount($('pickAdminGroup'), p ? (p.oidc_admin_group || '') : '');
         ssoMapLoad(p ? (p.team_mappings || []) : []);
         const seen = p && p.oidc_groups_last_seen;
         $('oidcLastSeen').textContent = seen
             ? window.t('system.sso.claims_last_seen', { who: seen.who || '?', at: window.fmtDateTime ? window.fmtDateTime(seen.at) : seen.at,
-                                                        groups: (seen.groups && seen.groups.length) ? seen.groups.join(', ') : window.t('system.sso.claims_none_sent') })
+                                                        groups: (seen.groups && seen.groups.length) ? seen.groups.map(ssoNameOf).join(', ') : window.t('system.sso.claims_none_sent') })
             : (p && p.oidc_group_claim ? window.t('system.sso.claims_not_yet') : '');
-        ssoGroupWarnAll();
         ssoShowTab('connection');
         $('fPortalDomains').value = p ? (p.portal_email_domains || '') : '';
         $('fPortalShowButton').checked = p ? p.portal_show_button !== 0 : true;
@@ -1371,9 +1436,10 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
             default_modules: document.getElementById('fDefaultModules').value.trim(),
             jit_company_access: $('fJitCompany') ? $('fJitCompany').value : undefined,
             oidc_group_claim: ssoGroupClaimGet(),
-            oidc_analyst_group: $('fOidcAnalystGroup').value.trim(),
-            oidc_admin_group: $('fOidcAdminGroup').value.trim(),
+            oidc_analyst_group: ssoPickerValue($('pickAnalystGroup')),
+            oidc_admin_group: ssoPickerValue($('pickAdminGroup')),
             team_mappings: ssoMapCollect(),
+            group_labels: ssoSeenCollect(),
             portal_email_domains: $('fPortalDomains').value,
             portal_show_button: $('fPortalShowButton').checked ? 1 : 0,
             tenant_id: (document.getElementById('fTenant') ? (document.getElementById('fTenant').value || null) : null)

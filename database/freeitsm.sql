@@ -468,6 +468,9 @@ CREATE TABLE IF NOT EXISTS `sso_groups_seen` (
     `group_name`          VARCHAR(255) NOT NULL,
     `first_seen_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     `last_seen_datetime`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    -- The name an admin gives the group, shown in the dropdowns instead of the
+    -- provider's code (Microsoft Entra sends object IDs). NULL = not named yet.
+    `label`               VARCHAR(100) NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_sso_groups_seen` (`provider_id`, `group_name`),
     CONSTRAINT `fk_sso_groups_seen_provider` FOREIGN KEY (`provider_id`) REFERENCES `auth_providers` (`id`) ON DELETE CASCADE

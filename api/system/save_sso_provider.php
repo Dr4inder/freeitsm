@@ -101,6 +101,8 @@ $analystGroupIn  = mb_substr(trim((string)($data['oidc_analyst_group'] ?? '')), 
 $adminGroupIn    = mb_substr(trim((string)($data['oidc_admin_group'] ?? '')), 0, 255);
 // Group -> team rows (sso_group_teams): only touched when the dialog sends them.
 $teamMappingsIn  = (isset($data['team_mappings']) && is_array($data['team_mappings'])) ? $data['team_mappings'] : null;
+// Names for the groups the provider has sent (sso_groups_seen.label).
+$groupLabelsIn   = (isset($data['group_labels']) && is_array($data['group_labels'])) ? $data['group_labels'] : null;
 // Which client company owns this provider. Empty/0 = a global (MSP-internal) one.
 $tenantId        = !empty($data['tenant_id']) ? (int)$data['tenant_id'] : null;
 $id              = isset($data['id']) ? (int)$data['id'] : 0;
@@ -524,6 +526,7 @@ try {
         if ($teamMappingsIn !== null) {
             try { ssoSaveTeamMappings($conn, $id, $teamMappingsIn); } catch (ServiceError $e) { bail($e->getMessage()); }
         }
+        if ($groupLabelsIn !== null && ssoClaimsReady($conn)) ssoSaveGroupLabels($conn, $id, $groupLabelsIn);
         $conn->commit();
         echo json_encode(['success' => true, 'id' => $id]);
 

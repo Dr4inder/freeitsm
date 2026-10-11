@@ -176,7 +176,8 @@ require __DIR__ . '/_top.php';
     <p>Open the provider in <strong>System &rarr; SSO</strong> and go to the <strong>Groups and teams</strong> tab:</p>
     <ol>
         <li><strong>Where the groups come from</strong> - choose <em>groups</em> for most providers, <em>realm_access.roles</em> for Keycloak, or <em>Something else</em> if yours uses another name.</li>
-        <li><strong>Sign in once</strong> through the provider, then open it again. It now lists <em>what the last sign-in sent</em>, and every group box offers those groups to choose from.</li>
+        <li><strong>Sign in once</strong> through the provider, then open it again. <strong>Groups seen</strong> now lists every group that sign-in sent.</li>
+        <li><strong>Name them.</strong> Some providers - Microsoft Entra among them - send a code such as <code>78d21822-f5ee-...</code> rather than a name. Type a name beside each code (find it in Entra under <em>Groups</em>, the group, <em>Object ID</em>). The dropdowns below then show your names.</li>
         <li><strong>Analyst group</strong> (optional) - only people in this group can sign in as analysts, and only they are created automatically. Someone who leaves it is refused at their next sign-in. This is the same as an LDAP directory's analyst group.</li>
         <li><strong>Administrator group</strong> (optional) - people in it are administrators, people not in it are not. Leave it empty to manage administrators by hand. The last administrator is never removed.</li>
         <li><strong>Teams</strong> - add a row for each group: choose the group, choose the team. What the team can do - its modules, companies and roles - is set in <strong>System &rarr; Teams</strong>, the same as for anyone you add to a team by hand.</li>

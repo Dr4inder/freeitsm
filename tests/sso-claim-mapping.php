@@ -94,7 +94,16 @@ try {
     ssoRememberGroups($conn, $P, 'sam@example.com', ['IT-Desk', 'Sales']);
     ssoRememberGroups($conn, $P, 'jo@example.com', ['IT-Desk', 'Finance']);
     $seen = ssoSeenGroups($conn, $P);
-    ok('every group seen is kept once, for the dropdown', count($seen) === 3 && in_array('Finance', $seen, true), json_encode($seen));
+    ok('every group seen is kept once, for the dropdown', count($seen) === 3 && in_array('Finance', array_column($seen, 'group'), true), json_encode($seen));
+    ssoSaveGroupLabels($conn, $P, [['group' => 'it-desk', 'label' => '  IT service desk  '], ['group' => 'Sales', 'label' => ''], ['group' => 'Never-sent', 'label' => 'Ghost']]);
+    $seen = ssoSeenGroups($conn, $P);
+    $byGroup = array_column($seen, 'label', 'group');
+    ok('a group can be given a name (trimmed), shown first', $seen[0]['group'] === 'IT-Desk' && $seen[0]['label'] === 'IT service desk', json_encode($seen));
+    ok('a blank name stays unnamed', $byGroup['Sales'] === null);
+    ok('a group never sent cannot be named into the list', !array_key_exists('Never-sent', $byGroup) && count($seen) === 3);
+    ok('a name is what messages show; an unnamed group shows its code', ssoGroupDisplay($seen, 'IT-DESK') === 'IT service desk' && ssoGroupDisplay($seen, 'Finance') === 'Finance');
+    ssoRememberGroups($conn, $P, 'sam@example.com', ['IT-Desk']);
+    ok('signing in again keeps the name', array_column(ssoSeenGroups($conn, $P), 'label', 'group')['IT-Desk'] === 'IT service desk');
     $Y = AnalystsService::create($conn, $actor, ['email' => 'zzgroups2@example.invalid']);
     $conn->exec("UPDATE analysts SET can_access_all_modules = 1 WHERE id = $Y");
     ssoJitStartForTeams($conn, $P, $Y, null);
