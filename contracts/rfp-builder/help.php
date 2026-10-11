@@ -128,6 +128,7 @@ $translationNamespaces = ['common', 'contracts'];
                     <p><?php echo t('contracts.rfp.help.overview_p1'); ?></p>
                     <p><?php echo t('contracts.rfp.help.overview_p2'); ?></p>
                     <div class="help-note"><?php echo t('contracts.rfp.help.overview_tip'); ?></div>
+                    <p><?php echo t('contracts.rfp.help.overview_company'); ?></p>
                 </div>
 
                 <div class="help-section" id="workflow">

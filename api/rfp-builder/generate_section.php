@@ -64,6 +64,13 @@ if (!analystCanAccessModule(connectToDatabase(), (int) $_SESSION['analyst_id'], 
     sse('error', ['error' => 'You do not have access to the Contracts module']);
     exit;
 }
+// The RFP's company (3.5.0): one this analyst cannot reach is "not found" - as an event,
+// since rfpGate()'s JSON would corrupt the stream.
+require_once '../../includes/rfp_scope.php';
+if (isset($_GET['rfp_id']) && $_GET['rfp_id'] !== '' && !rfpCanView(connectToDatabase(), (int)$_SESSION['analyst_id'], (int)$_GET['rfp_id'])) {
+    sse('error', ['error' => 'RFP not found']);
+    exit;
+}
 
 $rfpId      = isset($_GET['rfp_id'])      ? (int)$_GET['rfp_id']      : 0;
 $categoryId = isset($_GET['category_id']) ? (int)$_GET['category_id'] : 0;

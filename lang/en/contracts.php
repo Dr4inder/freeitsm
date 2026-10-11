@@ -566,6 +566,7 @@ return [
             'col_updated'         => 'Updated',
             'empty'               => 'No RFPs yet. Click "+ New RFP" to create one.',
             'name_ph'             => 'e.g. New ITSM platform 2026',
+            'company_help'        => 'The company this RFP belongs to. Only analysts who can see that company see it, its documents and its scores.',
             'style_guide_override'=> 'Style guide override',
             'style_guide_ph'      => 'Optional. Leave blank to use the system default.',
             'style_guide_help'    => 'Appended to AI prompts to control writing style of the generated RFP. Plain text, one rule per line.',
@@ -606,6 +607,7 @@ return [
             'overview_p1'  => 'The RFP Builder takes departmental feedback documents (one per contributing department), uses AI to extract every individual requirement, deduplicates and categorises them, drafts a professional RFP document you can send to suppliers, and then scores supplier responses requirement-by-requirement to drive a decision.',
             'overview_p2'  => 'The tool is <strong>internal-only</strong>. Suppliers never log in — you share the generated PDF with them via your usual procurement channel (email, sourcing platform, etc.) and they reply outside FreeITSM. You enter their scores yourself based on reading their responses.',
             'overview_tip' => '<strong>The differentiating step is consolidation.</strong> Five departments asking for "the same thing" rarely use the same words — Pass 2 (consolidation) merges those duplicates while preserving every original quote for political cover, and flags genuine contradictions between departments for you to resolve.',
+            'overview_company' => '<strong>Every RFP belongs to a company</strong> - chosen in <em>Company</em> when you create it, the company you are working in by default. Only analysts who can see that company see the RFP, its documents, requirements and scores, and the list shows the company you have switched to.',
 
             'wf_source'      => 'Source docs',
             'wf_extract'     => 'Extract',
