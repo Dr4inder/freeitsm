@@ -1135,6 +1135,12 @@ try {
             try { $conn->exec("ALTER TABLE rbac_analyst_roles ADD CONSTRAINT fk_rar_role FOREIGN KEY (role_id) REFERENCES rbac_roles (id) ON DELETE CASCADE"); } catch (Exception $e) {}
         }
     }
+    // 3.5.0 (PR #174): an API-managed role goes with the analyst it belongs to.
+    if ($tableExists('rbac_roles') && $tableExists('analysts')) {
+        if (!$fkExists('rbac_roles', 'fk_rbac_roles_managed_analyst')) {
+            try { $conn->exec("ALTER TABLE rbac_roles ADD CONSTRAINT fk_rbac_roles_managed_analyst FOREIGN KEY (managed_for_analyst_id) REFERENCES analysts (id) ON DELETE CASCADE"); } catch (Exception $e) {}
+        }
+    }
     // Search corpus. The cascade is the point, not tidiness: a corpus row holds a
     // COPY of ticket content that is searchable outside the ticket's own access
     // check, so a deleted ticket whose text is still findable would be a

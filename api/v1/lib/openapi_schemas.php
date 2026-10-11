@@ -24,6 +24,133 @@ return array (
         array (
           'type' => 'string',
         ),
+        'is_active' => 
+        array (
+          'type' => 'boolean',
+        ),
+      ),
+    ),
+    'AnalystAccess' => 
+    array (
+      'type' => 'object',
+      'properties' => 
+      array (
+        'is_admin' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'all_modules' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'modules' => 
+        array (
+          'type' => 'array',
+          'items' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+        'all_companies' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'companies' => 
+        array (
+          'type' => 'array',
+          'items' => 
+          array (
+            'type' => 'integer',
+          ),
+        ),
+        'capabilities' => 
+        array (
+          'type' => 'array',
+          'items' => 
+          array (
+            'type' => 'string',
+          ),
+        ),
+        'effective' => 
+        array (
+          'type' => 'object',
+          'properties' => 
+          array (
+            'modules' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+              'nullable' => true,
+              'description' => 'null = every module',
+            ),
+            'companies' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'integer',
+              ),
+            ),
+            'capabilities' => 
+            array (
+              'type' => 'array',
+              'items' => 
+              array (
+                'type' => 'string',
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+    'AnalystDetail' => 
+    array (
+      'type' => 'object',
+      'properties' => 
+      array (
+        'id' => 
+        array (
+          'type' => 'integer',
+        ),
+        'username' => 
+        array (
+          'type' => 'string',
+        ),
+        'name' => 
+        array (
+          'type' => 'string',
+        ),
+        'email' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'is_active' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'is_admin' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'auth_provider_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'created_at' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'last_login_at' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
       ),
     ),
     'Asset' => 
@@ -12768,9 +12895,21 @@ return array (
         '$ref' => '#/components/schemas/DomainHistoryEntry',
       ),
     ),
+    'PATCH /analysts/{id}' => 
+    array (
+      '$ref' => '#/components/schemas/AnalystDetail',
+    ),
+    'PATCH /analysts/{id}/access' => 
+    array (
+      '$ref' => '#/components/schemas/AnalystAccess',
+    ),
     'PATCH /domains/{id}' => 
     array (
       '$ref' => '#/components/schemas/Domain',
+    ),
+    'POST /analysts' => 
+    array (
+      '$ref' => '#/components/schemas/AnalystDetail',
     ),
     'POST /domains' => 
     array (
@@ -12927,6 +13066,14 @@ return array (
       array (
         '$ref' => '#/components/schemas/Analyst',
       ),
+    ),
+    'GET /analysts/{id}' => 
+    array (
+      '$ref' => '#/components/schemas/AnalystDetail',
+    ),
+    'GET /analysts/{id}/access' => 
+    array (
+      '$ref' => '#/components/schemas/AnalystAccess',
     ),
     'GET /asset-locations' => 
     array (
@@ -13827,6 +13974,15 @@ return array (
                   ),
                 ),
                 'analysts' => 
+                array (
+                  'type' => 'array',
+                  'items' => 
+                  array (
+                    'type' => 'string',
+                    'nullable' => true,
+                  ),
+                ),
+                'analyst_access' => 
                 array (
                   'type' => 'array',
                   'items' => 

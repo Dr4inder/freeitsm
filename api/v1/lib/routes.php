@@ -272,6 +272,12 @@ return [
     ['PATCH',  '#^/users/(\d+)$#',                         ['users', 'update'],               'apiUsersUpdate'],
 
     ['GET',    '#^/analysts$#',                            ['analysts', 'read'],              'apiAnalystsList'],
+    // Analyst provisioning (3.5.0, PR #174) - resources/analysts.php
+    ['POST',   '#^/analysts$#',                            ['analysts', 'create'],            'apiAnalystsCreate'],
+    ['GET',    '#^/analysts/(\d+)$#',                      ['analysts', 'read'],              'apiAnalystsGet'],
+    ['PATCH',  '#^/analysts/(\d+)$#',                      ['analysts', 'update'],            'apiAnalystsUpdate'],
+    ['GET',    '#^/analysts/(\d+)/access$#',               ['analyst_access', 'read'],        'apiAnalystsAccessGet'],
+    ['PATCH',  '#^/analysts/(\d+)/access$#',               ['analyst_access', 'manage'],      'apiAnalystsAccessUpdate'],
     ['GET',    '#^/companies$#',                           ['companies', 'read'],             'apiCompaniesList'],
     ['GET',    '#^/statuses$#',                            ['reference', 'read'],             'apiStatusesList'],
     ['GET',    '#^/priorities$#',                          ['reference', 'read'],             'apiPrioritiesList'],

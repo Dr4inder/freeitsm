@@ -308,6 +308,9 @@ return [
         'created_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
         'updated_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
+        // 3.5.0 (PR #174): the analyst whose REST-API-managed role this is; NULL =
+        // an ordinary role. See includes/services/analysts.php.
+        'managed_for_analyst_id' => 'INT NULL',
     ],
 
     'rbac_role_capabilities' => [

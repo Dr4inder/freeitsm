@@ -34,6 +34,8 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2298 | Assets            | Feature     | Assets -> Leases: lease agreements (leasing company, agreement number, cost centre, optional contract in the same company, notice period, documents) split into schedules with their own dates and cost; assets on a schedule have their lease dates kept in step (with per-asset own dates), a configurable outcome (Settings -> Leasing), a Due back list with CSV export, a lease line on the asset panel and calendar notice entries; one company per lease, one active lease per asset. |
 | 2299 | Assets            | Improvement | The Assets navbar buttons are a little narrower so all nine (with Leases) fit comfortably; the Leases pages use the full width. |
 | 2300 | Assets            | Improvement | The asset panel gets a Financial tab beside Key info holding purchase date and cost, supplier, cost centre, order number, warranty expiry and the lease dates (with the lease line), so Key info is about the machine itself. |
+| 2301 | REST API          | Feature     | Analyst provisioning (PR #174, rewritten from @Kraleemil's design): POST/GET/PATCH /analysts/{id} and GET/PATCH /analysts/{id}/access (admin, modules, companies, capabilities on one API-managed role), ?email= and ?include_inactive=1 on GET /analysts; rules in AnalystsService; writes need an administrator key for all companies; new analysts start with no access; last-admin and self guards. |
+| 2302 | System            | Improvement | System -> Roles shows a role the REST API manages for one analyst marked API and read-only: it cannot be edited, deleted or assigned to anyone else, and it is deleted with its analyst (FK). |
 
 
 

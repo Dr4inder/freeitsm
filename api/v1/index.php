@@ -17,6 +17,7 @@ require_once __DIR__ . '/lib/bootstrap.php';
 require_once __DIR__ . '/resources/tickets.php';
 require_once __DIR__ . '/resources/users.php';
 require_once __DIR__ . '/resources/reference.php';
+require_once __DIR__ . '/resources/analysts.php';
 require_once __DIR__ . '/resources/assets.php';
 require_once __DIR__ . '/resources/problems.php';
 require_once __DIR__ . '/resources/changes.php';

@@ -386,7 +386,18 @@ function apiV1PermissionCatalog(): array {
         'analysts' => [
             'label'   => 'Analysts',
             'actions' => [
-                'read' => 'List analysts (for assignment lookups)',
+                'read'   => 'List analysts (for assignment lookups) and view one analyst',
+                // 3.5.0 (PR #174). Writes also need the key to act as an administrator
+                // and to see all companies - see api/v1/resources/analysts.php.
+                'create' => 'Create analysts (administrator keys for all companies only)',
+                'update' => 'Change an analyst\'s name, email, sign-in provider or active flag (administrator keys for all companies only)',
+            ],
+        ],
+        'analyst_access' => [
+            'label'   => 'Analyst access',
+            'actions' => [
+                'read'   => 'View an analyst\'s admin flag, modules, companies and API-managed capabilities',
+                'manage' => 'Set an analyst\'s admin flag, modules, companies and API-managed capabilities (administrator keys for all companies only)',
             ],
         ],
         'companies' => [

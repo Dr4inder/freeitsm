@@ -41,6 +41,16 @@ const Roles = (() => {
             const assigned = [];
             if (+r.analyst_count) assigned.push(`${r.analyst_count} analyst${r.analyst_count == 1 ? '' : 's'}`);
             if (+r.team_count) assigned.push(`${r.team_count} team${r.team_count == 1 ? '' : 's'}`);
+            // 3.5.0 (PR #174): set through the REST API for one analyst - read-only here.
+            if (r.managed_for_analyst_id) {
+                return `<tr>
+                <td><strong>${esc(r.name)}</strong> <span class="roles-chip">API</span><br><small style="color:#888;">Managed through the REST API for ${esc(r.managed_for_name || 'an analyst')}. Change it with PATCH /analysts/${+r.managed_for_analyst_id}/access.</small></td>
+                <td><span class="roles-chip">${r.capability_count} capabilit${r.capability_count == 1 ? 'y' : 'ies'}</span></td>
+                <td>${esc(r.managed_for_name || '')}</td>
+                <td>${+r.is_active ? '<span class="status-badge active">Active</span>' : '<span class="status-badge">Inactive</span>'}</td>
+                <td></td>
+            </tr>`;
+            }
             return `<tr>
                 <td><strong>${esc(r.name)}</strong>${r.description ? `<br><small style="color:#888;">${esc(r.description)}</small>` : ''}</td>
                 <td><span class="roles-chip">${r.capability_count} capabilit${r.capability_count == 1 ? 'y' : 'ies'}</span></td>

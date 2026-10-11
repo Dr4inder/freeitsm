@@ -12199,6 +12199,300 @@
             ]
         },
         {
+            "section": "Analyst provisioning",
+            "items": [
+                {
+                    "m": "POST",
+                    "p": "\/analysts",
+                    "perm": "analysts.create",
+                    "s": "Create an analyst",
+                    "d": "Create an analyst from your identity source (an HR system, or the OIDC provider that decides who is staff). They start with NOTHING - no modules, no companies, not an administrator - and a local password nobody knows, so they sign in through auth_provider_id. Grant access with PATCH \/analysts\/{id}\/access. Needs a key that acts as a System administrator and is scoped to all companies (403 otherwise).",
+                    "params": [
+                        {
+                            "name": "email",
+                            "in": "body",
+                            "desc": "Email address, unique among analysts (stored lower-case)",
+                            "req": true
+                        },
+                        {
+                            "name": "full_name",
+                            "in": "body",
+                            "desc": "Full name (defaults from the email address)",
+                            "req": false
+                        },
+                        {
+                            "name": "username",
+                            "in": "body",
+                            "desc": "Preferred username (defaults to the email local part); a number is added if taken",
+                            "req": false
+                        },
+                        {
+                            "name": "auth_provider_id",
+                            "in": "body",
+                            "desc": "The sign-in provider (System > SSO) they use",
+                            "req": false
+                        }
+                    ],
+                    "body": {
+                        "email": "sam@example.com",
+                        "full_name": "Sam Jones",
+                        "auth_provider_id": 1
+                    },
+                    "section": "Analyst provisioning",
+                    "slug": "post-analysts",
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "A new member of staff",
+                                "note": "Created when they join the staff team at the identity source.",
+                                "body": {
+                                    "email": "sam@example.com",
+                                    "full_name": "Sam Jones",
+                                    "auth_provider_id": 1
+                                }
+                            }
+                        ],
+                        "errors": [
+                            {
+                                "code": 409,
+                                "slug": "conflict",
+                                "when": "Another analyst already uses this email."
+                            },
+                            {
+                                "code": 422,
+                                "slug": "invalid_field",
+                                "when": "email is not valid, or auth_provider_id is not a known provider."
+                            },
+                            {
+                                "code": 403,
+                                "slug": "forbidden",
+                                "when": "The key does not act as an administrator, or is scoped to specific companies."
+                            }
+                        ]
+                    }
+                },
+                {
+                    "m": "GET",
+                    "p": "\/analysts\/{id}",
+                    "perm": "analysts.read",
+                    "s": "Get an analyst",
+                    "d": "One analyst, active or not.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Analyst id",
+                            "req": true
+                        }
+                    ],
+                    "section": "Analyst provisioning",
+                    "slug": "get-analysts-id",
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "One analyst",
+                                "note": "Includes is_active and is_admin.",
+                                "path": {
+                                    "id": "3"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "m": "PATCH",
+                    "p": "\/analysts\/{id}",
+                    "perm": "analysts.update",
+                    "s": "Update an analyst",
+                    "d": "Change any of full_name, email, is_active and auth_provider_id. Deactivating is how the identity source takes away staff access. Setting auth_provider_id switches off Follow team. You cannot deactivate the key's own analyst or the last active administrator. Needs a key that acts as a System administrator and is scoped to all companies (403 otherwise).",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Analyst id",
+                            "req": true
+                        },
+                        {
+                            "name": "full_name \/ email \/ is_active \/ auth_provider_id",
+                            "in": "body",
+                            "desc": "The fields to change",
+                            "req": false
+                        }
+                    ],
+                    "body": {
+                        "is_active": false
+                    },
+                    "section": "Analyst provisioning",
+                    "slug": "patch-analysts-id",
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "They left the staff team",
+                                "note": "Deactivate: they can no longer sign in.",
+                                "path": {
+                                    "id": "3"
+                                },
+                                "body": {
+                                    "is_active": false
+                                }
+                            },
+                            {
+                                "title": "Name change",
+                                "note": "Keep the name in step with the directory.",
+                                "path": {
+                                    "id": "3"
+                                },
+                                "body": {
+                                    "full_name": "Sam Jones-Smith"
+                                }
+                            }
+                        ],
+                        "errors": [
+                            {
+                                "code": 409,
+                                "slug": "conflict",
+                                "when": "Another analyst uses this email, or this is the last active administrator."
+                            },
+                            {
+                                "code": 422,
+                                "slug": "invalid_field",
+                                "when": "A field is invalid, or the key's own analyst would be deactivated."
+                            },
+                            {
+                                "code": 403,
+                                "slug": "forbidden",
+                                "when": "The key does not act as an administrator, or is scoped to specific companies."
+                            }
+                        ]
+                    }
+                },
+                {
+                    "m": "GET",
+                    "p": "\/analysts\/{id}\/access",
+                    "perm": "analyst_access.read",
+                    "s": "Get an analyst's access",
+                    "d": "What the analyst has been given directly - is_admin, all_modules + modules, all_companies + companies, and the capabilities on their API-managed role - and under effective what they end up with once team grants and roles assigned by hand count (effective.modules null = every module).",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Analyst id",
+                            "req": true
+                        }
+                    ],
+                    "section": "Analyst provisioning",
+                    "slug": "get-analysts-id-access",
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "Read access",
+                                "note": "Compare with your identity source before changing anything.",
+                                "path": {
+                                    "id": "3"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "m": "PATCH",
+                    "p": "\/analysts\/{id}\/access",
+                    "perm": "analyst_access.manage",
+                    "s": "Set an analyst's access",
+                    "d": "Set any of is_admin, all_modules, modules (module keys), all_companies, companies (company ids) and capabilities (capability keys). Each list replaces what the analyst has in that part; anything you leave out stays as it is. Capabilities live on one role the API keeps for the analyst - shown read-only in System > Roles; roles assigned by hand and team grants are never touched. Keys are checked: a typo is a 422. System is not a module - it comes with is_admin. You cannot remove the key's own analyst's admin flag or the last active administrator's. Needs a key that acts as a System administrator and is scoped to all companies (403 otherwise).",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Analyst id",
+                            "req": true
+                        },
+                        {
+                            "name": "is_admin \/ all_modules \/ modules \/ all_companies \/ companies \/ capabilities",
+                            "in": "body",
+                            "desc": "The access to set",
+                            "req": false
+                        }
+                    ],
+                    "body": {
+                        "all_modules": false,
+                        "modules": [
+                            "tickets",
+                            "knowledge"
+                        ],
+                        "all_companies": false,
+                        "companies": [
+                            4
+                        ],
+                        "capabilities": [
+                            "tickets.manage"
+                        ]
+                    },
+                    "section": "Analyst provisioning",
+                    "slug": "patch-analysts-id-access",
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "Service desk agent",
+                                "note": "Tickets and Knowledge for one company, and ticket settings.",
+                                "path": {
+                                    "id": "3"
+                                },
+                                "body": {
+                                    "all_modules": false,
+                                    "modules": [
+                                        "tickets",
+                                        "knowledge"
+                                    ],
+                                    "all_companies": false,
+                                    "companies": [
+                                        4
+                                    ],
+                                    "capabilities": [
+                                        "tickets.manage"
+                                    ]
+                                }
+                            },
+                            {
+                                "title": "Take everything away",
+                                "note": "Keeps the account with nothing to open.",
+                                "path": {
+                                    "id": "3"
+                                },
+                                "body": {
+                                    "all_modules": false,
+                                    "modules": [],
+                                    "capabilities": []
+                                }
+                            }
+                        ],
+                        "errors": [
+                            {
+                                "code": 422,
+                                "slug": "invalid_field",
+                                "when": "An unknown module, company or capability, or the key's own analyst would lose admin."
+                            },
+                            {
+                                "code": 422,
+                                "slug": "missing_field",
+                                "when": "None of the six fields was sent."
+                            },
+                            {
+                                "code": 409,
+                                "slug": "conflict",
+                                "when": "This is the last active administrator."
+                            },
+                            {
+                                "code": 403,
+                                "slug": "forbidden",
+                                "when": "The key does not act as an administrator, or is scoped to specific companies."
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
             "section": "Reference data",
             "items": [
                 {
@@ -12206,8 +12500,21 @@
                     "p": "\/analysts",
                     "perm": "analysts.read",
                     "s": "List analysts",
-                    "d": "Active analysts, for assignment lookups.",
-                    "params": [],
+                    "d": "Active analysts, for assignment lookups. Each has is_active; ?include_inactive=1 adds deactivated ones and ?email= finds one by address, for provisioning.",
+                    "params": [
+                        {
+                            "name": "email",
+                            "in": "query",
+                            "desc": "Find one analyst by email (case-insensitive)",
+                            "req": false
+                        },
+                        {
+                            "name": "include_inactive",
+                            "in": "query",
+                            "desc": "1 = include deactivated analysts",
+                            "req": false
+                        }
+                    ],
                     "section": "Reference data",
                     "slug": "get-analysts",
                     "extras": {

@@ -486,7 +486,14 @@ CREATE TABLE IF NOT EXISTS `rbac_roles` (
     `created_datetime`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_datetime`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     `is_demo`           TINYINT(1) NOT NULL DEFAULT 0,   -- set by the demo data importer (#1297)
-    PRIMARY KEY (`id`)
+    -- 3.5.0 (PR #174): set on the ONE role per analyst that the REST API owns
+    -- (PATCH /api/v1/analysts/{id}/access). NULL = an ordinary role managed in
+    -- System -> Roles. A managed role is read-only on that screen and goes with
+    -- its analyst. See includes/services/analysts.php.
+    `managed_for_analyst_id` INT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_rbac_roles_managed_analyst` (`managed_for_analyst_id`),
+    CONSTRAINT `fk_rbac_roles_managed_analyst` FOREIGN KEY (`managed_for_analyst_id`) REFERENCES `analysts` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- The capabilities a role grants. capability_key is '<module>.<action>'.

@@ -24,6 +24,7 @@ return [
     ['department_teams', 'uq_department_team', 'unique', '(`department_id`,`team_id`)'],
     ['analyst_modules', 'uq_analyst_module', 'unique', '(`analyst_id`,`module_key`)'],
     ['team_modules', 'uq_team_module', 'unique', '(`team_id`,`module_key`)'],
+    ['rbac_roles', 'uq_rbac_roles_managed_analyst', 'unique', '(`managed_for_analyst_id`)'],
     ['rbac_role_capabilities', 'uq_rrc_role_capability', 'unique', '(`role_id`,`capability_key`)'],
     ['rbac_analyst_roles', 'uq_rar_analyst_role', 'unique', '(`analyst_id`,`role_id`)'],
     ['rbac_team_roles', 'uq_rtr_team_role', 'unique', '(`team_id`,`role_id`)'],
