@@ -285,6 +285,12 @@ class AssetsService
         if ($warrantyChanged) {
             self::syncWarranty($conn);
         }
+        // Leases (3.5.0): on an asset out on lease, dates typed here become its
+        // own dates on the schedule. Never writes the asset back, so no loop.
+        if (array_key_exists('lease_start', $in) || array_key_exists('lease_expiry', $in)) {
+            require_once __DIR__ . '/../leases.php';
+            leaseAssetDatesEdited($conn, $assetId);
+        }
     }
 
     /**
@@ -628,6 +634,18 @@ class AssetsService
         if ($holders) {
             throw new ServiceError('validation', 'invalid_field',
                 'This asset is held by ' . implode(', ', $holders) . ", who is not in {$target['name']}. Unassign it first.");
+        }
+
+        // Out on a lease: the lease belongs to the old company (3.5.0).
+        require_once __DIR__ . '/../leases.php';
+        if (leaseReady($conn)) {
+            $ls = $conn->prepare("SELECT l.name FROM lease_assets la JOIN lease_schedules s ON s.id = la.schedule_id JOIN leases l ON l.id = s.lease_id
+                                   LEFT JOIN lease_outcomes lo ON lo.id = la.outcome_id WHERE la.asset_id = ? AND " . leaseActiveSql() . " LIMIT 1");
+            $ls->execute([$assetId]);
+            if (($leaseName = $ls->fetchColumn()) !== false) {
+                throw new ServiceError('validation', 'invalid_field',
+                    "This asset is on lease {$leaseName}, which belongs to {$oldName}. Mark it returned or take it off the lease first.");
+            }
         }
 
         // --- what does not exist in the new company -------------------------

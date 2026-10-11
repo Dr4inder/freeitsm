@@ -5148,6 +5148,64 @@ return [
         'updated_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
         'is_demo'          => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
     ],
+
+    // ---- Leases (3.5.0) - Assets -> Leases; see includes/leases.php ----
+    // What became of a leased asset (Assets -> Settings -> Leasing). kind:
+    // 'active' = still on lease, counts towards Due back; 'closed' = finished.
+    'lease_outcomes' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'name'             => 'VARCHAR(100) NOT NULL',
+        'kind'             => "VARCHAR(10) NOT NULL DEFAULT 'active'",
+        'is_default'       => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'display_order'    => 'INT NOT NULL DEFAULT 0',
+        'is_active'        => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'created_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
+    // The agreement. Scoped data like assets: NULL tenant = the Default company.
+    'leases' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'tenant_id'        => 'INT NULL',
+        'name'             => 'VARCHAR(200) NOT NULL',
+        'reference'        => 'VARCHAR(100) NULL',
+        'supplier_id'      => 'INT NULL',
+        'cost_centre_id'   => 'INT NULL',
+        'contract_id'      => 'INT NULL',
+        'notice_days'      => 'INT NULL',
+        'notes'            => 'TEXT NULL',
+        'created_by'       => 'INT NULL',
+        'created_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+        'updated_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
+    // A group of kit on one agreement with its own dates and cost.
+    'lease_schedules' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'lease_id'         => 'INT NOT NULL',
+        'name'             => 'VARCHAR(200) NULL',
+        'reference'        => 'VARCHAR(100) NULL',
+        'start_date'       => 'DATE NULL',
+        'end_date'         => 'DATE NULL',
+        'cost'             => 'DECIMAL(18,2) NULL',
+        'cost_period'      => "VARCHAR(10) NOT NULL DEFAULT 'month'",
+        'currency'         => 'VARCHAR(3) NULL',
+        'order_number'     => 'VARCHAR(100) NULL',
+        'notes'            => 'TEXT NULL',
+        'display_order'    => 'INT NOT NULL DEFAULT 0',
+        'created_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
+    // An asset on a schedule; its own start/end when they differ from the schedule's.
+    'lease_assets' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'schedule_id'      => 'INT NOT NULL',
+        'asset_id'         => 'INT NOT NULL',
+        'outcome_id'       => 'INT NULL',
+        'start_date'       => 'DATE NULL',
+        'end_date'         => 'DATE NULL',
+        'outcome_date'     => 'DATE NULL',
+        'notes'            => 'VARCHAR(500) NULL',
+        'created_by'       => 'INT NULL',
+        'created_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+        'updated_datetime' => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
     // System -> Photo Album: webcam photos as ASCII art. Only the art is stored,
     // never the photo. Personal to each analyst.
     'photo_album' => [

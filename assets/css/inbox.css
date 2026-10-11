@@ -139,7 +139,6 @@ body {
 /* Per-module min-widths (chosen to fit the longest label in each nav).
    Modules with many buttons (tickets, system) use the lower end so the
    nav doesn't overflow on standard laptop widths. */
-.assets-header .header-nav .nav-btn,
 .changes-header .header-nav .nav-btn,
 .domains-header .header-nav .nav-btn,
 .projects-header .header-nav .nav-btn,
@@ -152,6 +151,12 @@ body {
 .watchtower-header .header-nav .nav-btn,
 .workflow-header .header-nav .nav-btn {
     min-width: 130px;
+    justify-content: center;
+}
+
+/* Assets: nine buttons since Leases (3.5.0), so a whisker narrower. */
+.assets-header .header-nav .nav-btn {
+    min-width: 118px;
     justify-content: center;
 }
 

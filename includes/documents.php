@@ -269,6 +269,17 @@ function documentEntityRegistry(): array {
             'can'    => null,
             'filter' => null,
         ],
+        'lease' => [
+            // Assets -> Leases (3.5.0). Scoped data like assets: NULL = Default.
+            'module' => 'assets',
+            'table'  => 'leases',
+            'label'  => 'Lease',
+            'url'    => 'asset-management/leases/view.php?id=%d',
+            'title'  => 'name',
+            'alive'  => null,
+            'can'    => function (PDO $c, int $a, int $id) { require_once __DIR__ . '/leases.php'; return leaseCanView($c, $a, $id); },
+            'filter' => function (PDO $c, int $a, string $alias) { return activeTenantFilter($c, $a, $alias); },
+        ],
         'software_licence' => [
             // ⚠️ THE ONLY ENTRY THAT NEEDS `title_sql`. A licence has no name of
             // its own — `software_licences` holds a type, a key and a renewal

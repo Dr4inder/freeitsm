@@ -70,7 +70,7 @@ $translationNamespaces = ['common', 'asset-management'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars(pageTitle('assets', t('asset-management.nav.settings'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
-    <link rel="stylesheet" href="../../assets/css/inbox.css?v=78">
+    <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
@@ -1028,6 +1028,31 @@ $translationNamespaces = ['common', 'asset-management'];
 
         <?php endif; ?>
 
+        <?php if (settingsTabVisible($visibleTabs, 'leasing')): ?>
+        <!-- Leasing (3.5.0): the outcomes a leased asset can have -->
+        <div class="tab-content<?php echo $activeTabId === 'leasing' ? ' active' : ''; ?>" id="leasing-tab" data-capability="<?php echo Cap::ASSETS_LEASING; ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('asset-management.leases.outcomes_heading')); ?></h2>
+                <button class="add-btn" onclick="openAddModal('lease-outcome')"><?php echo htmlspecialchars(t('asset-management.common.add')); ?></button>
+            </div>
+            <p class="settings-description" style="margin-bottom: 16px;"><?php echo htmlspecialchars(t('asset-management.leases.outcomes_intro')); ?></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th><?php echo htmlspecialchars(t('asset-management.settings.col_name')); ?></th>
+                        <th><?php echo htmlspecialchars(t('asset-management.leases.col_counts_as')); ?></th>
+                        <th><?php echo htmlspecialchars(t('asset-management.settings.col_order')); ?></th>
+                        <th><?php echo htmlspecialchars(t('asset-management.field.status')); ?></th>
+                        <th><?php echo htmlspecialchars(t('asset-management.common.actions')); ?></th>
+                    </tr>
+                </thead>
+                <tbody id="lease-outcomes-list">
+                    <tr><td colspan="5" style="text-align:center;padding:20px;color:#999;"><?php echo htmlspecialchars(t('asset-management.common.loading')); ?></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
+
         <?php if (settingsTabVisible($visibleTabs, 'vcenter')): ?>
         <!-- vCenter Tab -->
         <div class="tab-content<?php echo $activeTabId === 'vcenter' ? ' active' : ''; ?>" id="vcenter-tab" data-capability="<?php echo Cap::ASSETS_VCENTER; ?>">
@@ -1666,9 +1691,25 @@ $translationNamespaces = ['common', 'asset-management'];
                     <label for="itemName"><?php echo htmlspecialchars(t('asset-management.settings.col_name')); ?></label>
                     <input type="text" id="itemName" required>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="itemDescriptionRow">
                     <label for="itemDescription"><?php echo htmlspecialchars(t('asset-management.settings.col_description')); ?></label>
                     <textarea id="itemDescription"></textarea>
+                </div>
+                <?php /* Lease outcomes only (3.5.0). */ ?>
+                <div class="form-group" id="itemKindRow" style="display:none;">
+                    <label for="itemKind"><?php echo htmlspecialchars(t('asset-management.leases.col_counts_as')); ?></label>
+                    <select id="itemKind">
+                        <option value="active"><?php echo htmlspecialchars(t('asset-management.leases.kind_active')); ?></option>
+                        <option value="closed"><?php echo htmlspecialchars(t('asset-management.leases.kind_closed')); ?></option>
+                    </select>
+                    <div class="form-hint"><?php echo htmlspecialchars(t('asset-management.leases.kind_hint')); ?></div>
+                    <label class="toggle-label" style="margin-top:10px;">
+                        <span class="toggle-switch">
+                            <input type="checkbox" id="itemDefault">
+                            <span class="toggle-slider"></span>
+                        </span>
+                        <?php echo htmlspecialchars(t('asset-management.leases.is_default')); ?>
+                    </label>
                 </div>
                 <div class="form-group">
                     <label for="itemOrder"><?php echo htmlspecialchars(t('asset-management.settings.display_order')); ?></label>
@@ -1932,6 +1973,15 @@ $translationNamespaces = ['common', 'asset-management'];
                 key: 'asset_status_types',
                 listId: 'asset-statuses-list',
                 label: window.t('asset-management.settings.label_asset_status')
+            },
+            // Leases (3.5.0): one list for every company - no per-company hiding.
+            'lease-outcome': {
+                get: API_BASE + 'get_lease_outcomes.php',
+                save: API_BASE + 'save_lease_outcome.php',
+                delete: API_BASE + 'delete_lease_outcome.php',
+                key: 'lease_outcomes',
+                listId: 'lease-outcomes-list',
+                label: window.t('asset-management.leases.label_outcome')
             }
         };
 
@@ -1947,6 +1997,7 @@ $translationNamespaces = ['common', 'asset-management'];
             // picker from them, and import builds its default-type dropdown.
             loadItems('asset-type').then(() => { cfLoad(); impInit(); });
             loadItems('asset-status');
+            if (document.getElementById('lease-outcomes-list')) loadItems('lease-outcome');
             loadLocations();
             loadSuppliers();
             loadIntegrationSettings();
@@ -2431,7 +2482,7 @@ $translationNamespaces = ['common', 'asset-management'];
             return `
                 <tr>
                     <td><strong>${escapeHtml(item.name)}</strong></td>
-                    <td>${escapeHtml(item.description || '-')}</td>
+                    <td>${item.kind ? escapeHtml(window.t('asset-management.leases.kind_' + item.kind)) + (item.is_default ? ' <span class="status-badge status-active">' + escapeHtml(window.t('asset-management.leases.default_badge')) + '</span>' : '') : escapeHtml(item.description || '-')}</td>
                     <td>${item.display_order}</td>
                     <td><span class="status-badge status-${item.is_active ? 'active' : 'inactive'}">${item.is_active ? window.t('asset-management.status.active') : window.t('asset-management.status.inactive')}</span></td>
                     <td>
@@ -2539,6 +2590,7 @@ $translationNamespaces = ['common', 'asset-management'];
             document.getElementById('itemOrder').value = '0';
             document.getElementById('itemActive').checked = true;
             icSetup(type, null);
+            leaseKindSetup(type, null);
             document.getElementById('editModal').classList.add('active');
         }
 
@@ -2555,6 +2607,7 @@ $translationNamespaces = ['common', 'asset-management'];
             document.getElementById('itemOrder').value = item.display_order || 0;
             document.getElementById('itemActive').checked = item.is_active;
             icSetup(type, item.icon_id || null);
+            leaseKindSetup(type, item);
             document.getElementById('editModal').classList.add('active');
         }
 
@@ -2600,6 +2653,10 @@ $translationNamespaces = ['common', 'asset-management'];
                 // row is hidden and this stays empty.
                 icon_id: document.getElementById('itemIconId').value || null
             };
+            if (type === 'lease-outcome') {
+                payload.kind = document.getElementById('itemKind').value;
+                payload.is_default = document.getElementById('itemDefault').checked ? 1 : 0;
+            }
             if (id) payload.id = parseInt(id);
 
             try {
@@ -3524,6 +3581,18 @@ $translationNamespaces = ['common', 'asset-management'];
         let icIconsById = null;   // id -> {key, label}
 
         /** Show the picker for asset types; hide it for anything else. */
+        // Lease outcomes (3.5.0) use the shared modal with a "counts as" row in
+        // place of the description.
+        function leaseKindSetup(type, item) {
+            const isOutcome = (type === 'lease-outcome');
+            document.getElementById('itemKindRow').style.display = isOutcome ? '' : 'none';
+            document.getElementById('itemDescriptionRow').style.display = isOutcome ? 'none' : '';
+            if (isOutcome) {
+                document.getElementById('itemKind').value = (item && item.kind) || 'active';
+                document.getElementById('itemDefault').checked = !!(item && item.is_default);
+            }
+        }
+
         function icSetup(type, selectedId) {
             const row = document.getElementById('itemIconRow');
             if (!row) return;

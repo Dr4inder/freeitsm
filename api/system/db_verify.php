@@ -669,6 +669,17 @@ try {
         }
     }
 
+    // Leases (3.5.0): the four starting outcomes, when the list is empty. Renamed,
+    // added to or switched off in Assets -> Settings -> Leasing afterwards.
+    try {
+        if ($conn->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = " . $conn->quote(DB_NAME) . " AND table_name = 'lease_outcomes'")->fetchColumn()
+            && (int)$conn->query("SELECT COUNT(*) FROM lease_outcomes")->fetchColumn() === 0) {
+            $conn->exec("INSERT INTO lease_outcomes (name, kind, is_default, display_order) VALUES
+                ('On lease', 'active', 1, 1), ('Extended', 'active', 0, 2), ('Returned', 'closed', 0, 3), ('Bought out', 'closed', 0, 4)");
+            $results[] = ['table' => 'lease_outcomes', 'status' => 'seeded', 'details' => ['Added the four starting lease outcomes']];
+        }
+    } catch (Exception $e) {}
+
     // Seed default dashboard widgets if table is empty
     $widgetCheck = $conn->prepare("SELECT COUNT(*) as cnt FROM information_schema.tables WHERE table_schema = ? AND table_name = 'asset_dashboard_widgets'");
     $widgetCheck->execute([DB_NAME]);
@@ -2886,6 +2897,15 @@ try {
         ['contracts',            'fk_contracts_cost_centre',      "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_cost_centre FOREIGN KEY (cost_centre_id) REFERENCES cost_centres (id) ON DELETE SET NULL"],
         ['assets',               'fk_assets_cost_centre',         "ALTER TABLE assets ADD CONSTRAINT fk_assets_cost_centre FOREIGN KEY (cost_centre_id) REFERENCES cost_centres (id) ON DELETE SET NULL"],
         ['users',                'fk_users_cost_centre',          "ALTER TABLE users ADD CONSTRAINT fk_users_cost_centre FOREIGN KEY (cost_centre_id) REFERENCES cost_centres (id) ON DELETE SET NULL"],
+        // Leases (3.5.0). Scoped data: a removed company or supplier leaves the lease.
+        ['leases',               'fk_leases_tenant',              "ALTER TABLE leases ADD CONSTRAINT fk_leases_tenant FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE SET NULL"],
+        ['leases',               'fk_leases_supplier',            "ALTER TABLE leases ADD CONSTRAINT fk_leases_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers (id) ON DELETE SET NULL"],
+        ['leases',               'fk_leases_cost_centre',         "ALTER TABLE leases ADD CONSTRAINT fk_leases_cost_centre FOREIGN KEY (cost_centre_id) REFERENCES cost_centres (id) ON DELETE SET NULL"],
+        ['leases',               'fk_leases_contract',            "ALTER TABLE leases ADD CONSTRAINT fk_leases_contract FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE SET NULL"],
+        ['lease_schedules',      'fk_lease_schedules_lease',      "ALTER TABLE lease_schedules ADD CONSTRAINT fk_lease_schedules_lease FOREIGN KEY (lease_id) REFERENCES leases (id) ON DELETE CASCADE"],
+        ['lease_assets',         'fk_lease_assets_schedule',      "ALTER TABLE lease_assets ADD CONSTRAINT fk_lease_assets_schedule FOREIGN KEY (schedule_id) REFERENCES lease_schedules (id) ON DELETE CASCADE"],
+        ['lease_assets',         'fk_lease_assets_asset',         "ALTER TABLE lease_assets ADD CONSTRAINT fk_lease_assets_asset FOREIGN KEY (asset_id) REFERENCES assets (id) ON DELETE CASCADE"],
+        ['lease_assets',         'fk_lease_assets_outcome',       "ALTER TABLE lease_assets ADD CONSTRAINT fk_lease_assets_outcome FOREIGN KEY (outcome_id) REFERENCES lease_outcomes (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_customer_user',    "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_customer_user FOREIGN KEY (customer_user_id) REFERENCES users (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_payment_schedule', "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_payment_schedule FOREIGN KEY (payment_schedule_id) REFERENCES payment_schedules (id) ON DELETE SET NULL"],
         ['contract_term_values', 'fk_ctv_contract',               "ALTER TABLE contract_term_values ADD CONSTRAINT fk_ctv_contract FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE"],

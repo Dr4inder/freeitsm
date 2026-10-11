@@ -97,6 +97,13 @@ return [
                                'asset_lease_surface', 'asset_lease_days'],
         ],
         [
+            // Assets -> Leases (3.5.0): what can become of a leased asset.
+            'id'        => 'leasing',
+            'cap'       => Cap::ASSETS_LEASING,
+            'label_key' => 'asset-management.leases.settings_tab',
+            'grant'     => 'Manage lease outcomes',
+        ],
+        [
             // Designing the handover document (discussion #56). Note this gates
             // DESIGNING it, not producing one — printing a handover for somebody
             // is plain module access, the same as viewing their equipment.

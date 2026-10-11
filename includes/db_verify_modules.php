@@ -64,6 +64,7 @@ $DB_VERIFY_MODULE_PREFIXES = [
     'user_preferences' => 'system',
     'user_sso'         => 'system',
     'cost_centre'      => 'system',   // GH #160 - System -> Cost Centres
+    'lease'            => 'assets',   // Assets -> Leases (3.5.0): leases, lease_schedules, lease_assets, lease_outcomes
     'photo_album'      => 'system',   // System -> Photo Album
     // --- Tickets (and everything that feeds the inbox) ---
     'users_assets'     => 'assets',   // must precede the 'users' fallthrough

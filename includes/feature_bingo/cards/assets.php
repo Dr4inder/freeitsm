@@ -365,6 +365,18 @@ return [
         'link'     => 'asset-management/settings/?tab=warranty',
         'check'    => ['setting', 'asset_lease_surface', 'nonempty'],
     ],
+    [
+        'id'       => 'assets.lease_agreements',
+        'module'   => 'assets',
+        'tier'     => 'extra',
+        'category' => 'governance',
+        'title'    => 'Lease agreements',
+        'what'     => 'Leases kept as agreements in Assets -> Leases - leasing company, schedules with their own dates and cost, and the assets on each - with a Due back list of what has to be returned.',
+        'why'      => 'At the end of a lease you need to know exactly which machines go back, who has them and where they are. Kept on the agreement, that is one list rather than a hunt through the asset register.',
+        'done'     => 'At least one lease has assets on it.',
+        'link'     => 'asset-management/leases/',
+        'check'    => ['rows', 'lease_assets'],
+    ],
 
     // --- People and the physical kit -------------------------------------
     [

@@ -41,7 +41,7 @@ $translationNamespaces = ['common', 'network-mapper'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars(pageTitle('network-mapper', t('network-mapper.editor.browser_title'))); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
-    <link rel="stylesheet" href="../assets/css/inbox.css?v=78">
+    <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <style>
         /* Pin --accent to the module cyan so shared components (focus rings,
            inbox.css modal primitives) read on-brand. The diagram canvas + nodes

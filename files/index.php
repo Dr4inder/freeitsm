@@ -51,7 +51,7 @@ $capStorage = $hasCap(Cap::FILES_STORAGE);
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
-    <link rel="stylesheet" href="../assets/css/inbox.css?v=78">
+    <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/files.css?v=8">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=193">
 </head>

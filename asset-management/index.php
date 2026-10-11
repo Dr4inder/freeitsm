@@ -41,7 +41,7 @@ $translationNamespaces = ['common', 'asset-management'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars(pageTitle('assets')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
-    <link rel="stylesheet" href="../assets/css/inbox.css?v=78">
+    <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
@@ -2404,6 +2404,8 @@ $translationNamespaces = ['common', 'asset-management'];
                             <span class="info-label">${window.t('asset-management.field.lease_expiry')}<span class="expiry-slot" data-expiry-field="lease_expiry">${expiryFlag(selectedAsset.lease_expiry)}</span></span>
                             <input type="date" class="info-value-input" value="${selectedAsset.lease_expiry || ''}" onchange="updateAssetField('lease_expiry', this.value)">
                         </div>
+                        <?php /* Assets -> Leases (3.5.0): which lease it is on. Filled by loadAssetLease(). */ ?>
+                        <div class="info-item" id="assetLeaseLine" style="grid-column:1/-1;display:none;font-size:13px;color:var(--text-muted);"></div>
                     </div>
                     <?php /* Custom fields (docs/design/flexible-asset-fields.md).
                              Sits between the built-in details and Storage: it is
@@ -2505,6 +2507,31 @@ $translationNamespaces = ['common', 'asset-management'];
                 parentId:   assetId,
                 apiBase:    '../api/documents/'
             });
+            loadAssetLease(assetId);
+        }
+
+        /**
+         * Assets -> Leases (3.5.0): "On lease X - schedule" under the lease
+         * dates, linking to the lease. The dates above ARE the lease's for an
+         * asset on one; typing new ones here makes them this asset's own.
+         */
+        async function loadAssetLease(assetId) {
+            const line = document.getElementById('assetLeaseLine');
+            if (!line) return;
+            try {
+                const r = await fetch('../api/assets/leases/for_asset.php?asset_id=' + encodeURIComponent(assetId));
+                const d = await r.json();
+                if (!d.success || !d.leases || !d.leases.length || !selectedAsset || selectedAsset.id != assetId) { line.style.display = 'none'; return; }
+                const l = d.leases[0];
+                const T = k => window.t('asset-management.leases.' + k);
+                // One span: .info-item is a flex column, so loose pieces would stack.
+                line.innerHTML = `<span>${escapeHtml(l.active ? T('panel_on_lease') : T('panel_was_on'))}: `
+                    + `<a href="leases/view.php?id=${l.lease_id}" style="color:var(--accent);text-decoration:none;">${escapeHtml(l.lease_name)}</a>`
+                    + (l.schedule_name ? ` · ${escapeHtml(l.schedule_name)}` : '')
+                    + (l.active ? '' : ` · ${escapeHtml(l.outcome_name || '')}`)
+                    + (l.active && l.own_dates ? ` <em>(${escapeHtml(T('panel_own_dates'))})</em>` : '') + '</span>';
+                line.style.display = '';
+            } catch (e) { line.style.display = 'none'; }
         }
 
         /**
@@ -4153,6 +4180,7 @@ $translationNamespaces = ['common', 'asset-management'];
          * hand it whatever was edited without asking what kind of field it is.
          */
         function refreshExpiryFlag(field, value) {
+            if (field === 'lease_start' || field === 'lease_expiry') { loadAssetLease(selectedAsset && selectedAsset.id); }
             if (field !== 'warranty_expiry' && field !== 'lease_expiry') { return; }
             const slot = document.querySelector(`.expiry-slot[data-expiry-field="${field}"]`);
             if (slot) { slot.innerHTML = expiryFlag(value); }

@@ -35,7 +35,7 @@ $translationNamespaces = ['common', 'change-management'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars(pageTitle('changes', t('change-management.nav.table'))); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
-    <link rel="stylesheet" href="../assets/css/inbox.css?v=78">
+    <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/change-management.css?v=6">
     <link rel="stylesheet" href="../assets/css/data-table.css?v=4">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=193">

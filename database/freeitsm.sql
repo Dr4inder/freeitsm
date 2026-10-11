@@ -7782,6 +7782,103 @@ CREATE TABLE IF NOT EXISTS `cost_centres` (
     CONSTRAINT `fk_cost_centres_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ----------------------------------------------------------
+-- Leases (3.5.0) - Assets -> Leases. A lease agreement, its schedules (each with
+-- its own dates and cost), and the assets on each schedule with what became of
+-- them. See includes/leases.php.
+-- ----------------------------------------------------------
+
+-- What became of a leased asset. A configurable list (Assets -> Settings ->
+-- Leasing). `kind`: 'active' = still on lease (counts towards Due back);
+-- 'closed' = finished with (returned, bought out).
+CREATE TABLE IF NOT EXISTS `lease_outcomes` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `name`             VARCHAR(100) NOT NULL,
+    `kind`             VARCHAR(10) NOT NULL DEFAULT 'active',
+    `is_default`       TINYINT(1) NOT NULL DEFAULT 0,
+    `display_order`    INT NOT NULL DEFAULT 0,
+    `is_active`        TINYINT(1) NOT NULL DEFAULT 1,
+    `created_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `lease_outcomes` (`id`, `name`, `kind`, `is_default`, `display_order`) VALUES
+    (1, 'On lease',   'active', 1, 1),
+    (2, 'Extended',   'active', 0, 2),
+    (3, 'Returned',   'closed', 0, 3),
+    (4, 'Bought out', 'closed', 0, 4);
+
+-- The agreement. Scoped data like assets: NULL tenant = the Default company.
+CREATE TABLE IF NOT EXISTS `leases` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `tenant_id`        INT NULL,
+    `name`             VARCHAR(200) NOT NULL,
+    `reference`        VARCHAR(100) NULL,     -- the lessor's agreement number
+    `supplier_id`      INT NULL,              -- the lessor (shared supplier list)
+    `cost_centre_id`   INT NULL,              -- GH #160: one of the lease's company's
+    `contract_id`      INT NULL,              -- optional, in the same company
+    `notice_days`      INT NULL,              -- notice the lessor needs before an end date
+    `notes`            TEXT NULL,
+    `created_by`       INT NULL,
+    `created_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `ix_leases_tenant` (`tenant_id`),
+    KEY `ix_leases_supplier` (`supplier_id`),
+    KEY `ix_leases_cost_centre` (`cost_centre_id`),
+    KEY `ix_leases_contract` (`contract_id`),
+    CONSTRAINT `fk_leases_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_leases_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_leases_cost_centre` FOREIGN KEY (`cost_centre_id`) REFERENCES `cost_centres` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_leases_contract` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- A group of kit on one agreement with its own dates and cost - 10 PCs from one
+-- date, 10 monitors from another. A simple lease has one.
+CREATE TABLE IF NOT EXISTS `lease_schedules` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `lease_id`         INT NOT NULL,
+    `name`             VARCHAR(200) NULL,
+    `reference`        VARCHAR(100) NULL,     -- the lessor's schedule number
+    `start_date`       DATE NULL,
+    `end_date`         DATE NULL,
+    `cost`             DECIMAL(18,2) NULL,
+    `cost_period`      VARCHAR(10) NOT NULL DEFAULT 'month',   -- month | quarter | year | total
+    `currency`         VARCHAR(3) NULL,
+    `order_number`     VARCHAR(100) NULL,
+    `notes`            TEXT NULL,
+    `display_order`    INT NOT NULL DEFAULT 0,
+    `created_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `ix_lease_schedules_lease` (`lease_id`),
+    KEY `ix_lease_schedules_end` (`end_date`),
+    CONSTRAINT `fk_lease_schedules_lease` FOREIGN KEY (`lease_id`) REFERENCES `leases` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- An asset on a schedule. start_date / end_date are the asset's OWN dates when
+-- they differ from the schedule's (extending one laptop); NULL = the schedule's.
+-- The asset's lease_start / lease_expiry are kept in step with the effective dates.
+CREATE TABLE IF NOT EXISTS `lease_assets` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `schedule_id`      INT NOT NULL,
+    `asset_id`         INT NOT NULL,
+    `outcome_id`       INT NULL,
+    `start_date`       DATE NULL,
+    `end_date`         DATE NULL,
+    `outcome_date`     DATE NULL,             -- when it was returned / bought out
+    `notes`            VARCHAR(500) NULL,
+    `created_by`       INT NULL,
+    `created_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_datetime` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_lease_assets` (`schedule_id`, `asset_id`),
+    KEY `ix_lease_assets_asset` (`asset_id`),
+    KEY `ix_lease_assets_outcome` (`outcome_id`),
+    CONSTRAINT `fk_lease_assets_schedule` FOREIGN KEY (`schedule_id`) REFERENCES `lease_schedules` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_lease_assets_asset` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_lease_assets_outcome` FOREIGN KEY (`outcome_id`) REFERENCES `lease_outcomes` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- System -> Photo Album: a webcam photo turned into ASCII art, in the browser.
 -- 🔑 The PHOTO is never sent here - only the art (text), its colours when the
 -- Colour palette is used, and a small JPEG of the art for the album grid.

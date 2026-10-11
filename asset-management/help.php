@@ -30,7 +30,7 @@ $translationNamespaces = ['common', 'asset-management'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars(pageTitle('assets', t('asset-management.nav.help'))); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
-    <link rel="stylesheet" href="../assets/css/inbox.css?v=78">
+    <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
@@ -123,8 +123,11 @@ $translationNamespaces = ['common', 'asset-management'];
                 <span class="help-nav-num">18</span>
                 <?php echo htmlspecialchars(t('asset-management.help.companies.nav')); ?>
             </a>
+            <a href="#leases" class="help-nav-link" data-section="leases">
+                <span class="help-nav-num">19</span> Leases
+            </a>
             <a href="#tips" class="help-nav-link" data-section="tips">
-                <span class="help-nav-num">19</span>
+                <span class="help-nav-num">20</span>
                 <?php echo htmlspecialchars(t('asset-management.help.nav_tips')); ?>
             </a>
         </div>
@@ -745,9 +748,39 @@ $translationNamespaces = ['common', 'asset-management'];
                     <p class="help-note"><?php echo t('asset-management.help.companies.note'); ?></p>
                 </div>
 
-<div class="help-section" id="tips">
+                <!-- Section 19: Leases (3.5.0) -->
+                <div class="help-section" id="leases">
                     <div class="help-section-header">
                         <span class="help-section-num">19</span>
+                        <h3>Leases</h3>
+                    </div>
+                    <p><strong>Assets &rarr; Leases</strong> holds your lease agreements and shows what has to go back to the leasing company, and when.</p>
+                    <div class="help-steps">
+                        <div class="help-step">
+                            <div class="help-step-num">1</div>
+                            <div><strong>Add the lease</strong> &mdash; its name, the agreement number, the leasing company (from your suppliers), the cost centre it is charged to, the notice period the leasing company needs, and optionally a contract in Contracts that it sits under. Attach the signed agreement in Documents.</div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-num">2</div>
+                            <div><strong>Give it a schedule</strong> &mdash; the start and end dates and the cost. One agreement can cover kit leased at different times (ten laptops from January, ten monitors from March), so add a schedule for each group. A simple lease needs only the one it starts with.</div>
+                        </div>
+                        <div class="help-step">
+                            <div class="help-step-num">3</div>
+                            <div><strong>Put the assets on it</strong> &mdash; <strong>Add</strong> on a schedule finds assets by hostname, tag or model. Their <strong>Lease starts</strong> and <strong>Lease ends</strong> dates fill in from the schedule and follow it if the schedule's dates change.</div>
+                        </div>
+                    </div>
+                    <div class="help-cards">
+                        <div class="help-card row"><div><strong>Keeping one asset longer</strong><p>Change the lease dates on that asset (on the asset itself, or with the pencil on the lease). They become its own dates and are marked <em>Own</em>; the rest of the schedule is untouched. Clear them to go back to the schedule's.</p></div></div>
+                        <div class="help-card row"><div><strong>Outcomes</strong><p>Each asset on a lease has an outcome: <em>On lease</em> and <em>Extended</em> mean it is still out; <em>Returned</em> and <em>Bought out</em> mean it is finished with, and the day is recorded. The list is yours to change in <strong>Settings &rarr; Leasing</strong>.</p></div></div>
+                        <div class="help-card row"><div><strong>Due back</strong><p>Every asset still out whose lease ends in the next 30 days to a year, with who holds it and where it is, soonest first; overdue ones are always shown. <strong>Export</strong> downloads it as a spreadsheet for the collection.</p></div></div>
+                        <div class="help-card row"><div><strong>Notice reminders</strong><p>When lease alerts go to the Calendar (<strong>Settings &rarr; Expiry alerts</strong>), each schedule also gets a <em>Lease notice</em> entry on the last day to give notice - the end date minus the notice period.</p></div></div>
+                    </div>
+                    <p class="help-note">On a multi-company install a lease belongs to one company, and only that company's assets, contracts and cost centres can go on it. An asset can be out on one lease at a time, and one that is out on a lease cannot move to another company until it is returned.</p>
+                </div>
+
+<div class="help-section" id="tips">
+                    <div class="help-section-header">
+                        <span class="help-section-num">20</span>
                         <h3><?php echo htmlspecialchars(t('asset-management.help.nav_tips')); ?></h3>
                     </div>
                     <div class="help-cards">

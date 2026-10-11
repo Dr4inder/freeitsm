@@ -75,6 +75,10 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
                 $leaseReady
             );
 
+            // The "give notice" entries for leases (3.5.0) follow the same switch.
+            require_once __DIR__ . '/leases.php';
+            leaseSyncCalendar($conn);
+
             return ['success' => true, 'synced' => $n];
         } catch (Exception $e) {
             return ['success' => false, 'error' => $e->getMessage()];
