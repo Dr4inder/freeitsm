@@ -40,7 +40,7 @@ try {
     <title><?php echo htmlspecialchars(pageTitle('tickets', t('tickets.nav.help'))); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/help.css?v=3">
+    <link rel="stylesheet" href="../assets/css/help.css?v=6">
     <style>
         /* Tickets is the one module with no accent of its own — it uses the
            application's brand colour, which help.css already reads from

@@ -40,7 +40,7 @@ $translationNamespaces = ['common', 'tickets'];
     <title><?php echo htmlspecialchars(pageTitle('tickets', t('tickets.nav.help'), 'Calendar Sync')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/help.css?v=3">
+    <link rel="stylesheet" href="../assets/css/help.css?v=6">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=193">
 </head>
 <body data-mobile-page="tickets-help-calsync">

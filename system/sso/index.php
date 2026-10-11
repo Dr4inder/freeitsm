@@ -186,7 +186,12 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         .sso-tabs { display: flex; gap: 4px; padding: 0 24px; border-bottom: 1px solid var(--border-soft, #eee); flex: 0 0 auto; overflow-x: auto; }
         .sso-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 12px 14px; cursor: pointer; font-size: 14px; color: var(--text-muted, #666); white-space: nowrap; }
         .sso-tabs button.active { color: var(--accent, #0078d4); border-bottom-color: var(--accent, #0078d4); font-weight: 600; }
-        .sso-tab-intro { margin: 0 0 16px; font-size: 13px; color: var(--text-muted, #666); }
+        .sso-tab-intro { margin: 0 0 12px; font-size: 13px; color: var(--text-muted, #666); }
+        .sso-guide-link { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; margin: 0 0 18px; padding: 10px 12px; border-radius: 6px;
+                          background: var(--info-bg, #e0f2fe); border: 1px solid var(--info-border, #b9def5); font-size: 13px; }
+        .sso-guide-link a { font-weight: 600; color: var(--info-text, #075985); text-decoration: none; }
+        .sso-guide-link a:hover { text-decoration: underline; }
+        .sso-guide-link span { color: var(--info-text, #075985); opacity: .85; }
         .sso-map { width: 100%; border-collapse: collapse; }
         .sso-map th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-muted, #666); padding: 4px 6px; }
         .sso-map td { padding: 4px 6px; vertical-align: top; }
@@ -634,6 +639,11 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                          sign-in (sso_groups_seen) and what a group gives comes from a team. */ ?>
                 <div id="claimMappingFields">
                     <p class="sso-tab-intro"><?php echo htmlspecialchars(t('system.sso.claims_intro')); ?></p>
+                    <?php /* Ed: someone new to this gets lost - point them at the guide. */ ?>
+                    <div class="sso-guide-link">
+                        <a href="../help/sso-groups.php" target="_blank" rel="noopener"><?php echo htmlspecialchars(t('system.sso.claims_guide')); ?> &#8599;</a>
+                        <span><?php echo htmlspecialchars(t('system.sso.claims_guide_hint')); ?></span>
+                    </div>
                     <div class="form-field">
                         <label for="fOidcGroupClaimSel"><?php echo htmlspecialchars(t('system.sso.field_group_claim')); ?></label>
                         <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_group_claim_hint')); ?></div>

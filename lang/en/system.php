@@ -1382,6 +1382,8 @@ return [
         'claims_intro'     => 'Optional. Use the groups your identity provider sends to decide who can be an analyst, who is an administrator, and which teams people are in. Checked again at every sign-in, so access follows the identity provider. What a team can do is set in System → Teams.',
         'field_group_claim'      => 'Where the groups come from',
         'field_group_claim_hint' => 'The part of the sign-in that lists the groups. Most providers call it groups; Keycloak uses realm_access.roles. Your provider may need setting up to send it - see the help.',
+        'claims_guide'      => 'Step-by-step setup guide',
+        'claims_guide_hint' => 'With a checklist for Microsoft Entra, Okta and Keycloak. Opens in a new tab.',
         'claims_off'       => 'Not used',
         'claims_other'     => 'Something else…',
         'claims_other_ph'  => 'The name your provider uses',

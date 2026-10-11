@@ -174,6 +174,21 @@ function getHelpTopics() {
             ],
             'terms' => 'brute force locked out failed attempts hardening rotation ban blocked attachment size limit upload mb php',
         ],
+        // A step-by-step guide, not a System area: no landing card, reached from
+        // the provider dialog's Groups and teams tab and from the Authentication help.
+        'sso-groups' => [
+            'hero' => 'Setting up groups and teams from single sign-on',
+            'sub'  => 'A step-by-step guide, with a checklist to tick off as you go: make your identity provider send its groups, then use them in FreeITSM to decide who can be an analyst, who is an administrator and which teams people are in.',
+            'sections' => [
+                ['id' => 'overview', 'label' => 'How it works'],
+                ['id' => 'before',   'label' => 'Before you start'],
+                ['id' => 'provider', 'label' => 'In your identity provider'],
+                ['id' => 'freeitsm', 'label' => 'In FreeITSM'],
+                ['id' => 'test',     'label' => 'Test it'],
+                ['id' => 'trouble',  'label' => 'If it does not work'],
+            ],
+            'terms' => 'claims groups roles entra azure ad microsoft okta keycloak object id checklist guide setup step by step analyst group administrator group teams',
+        ],
         'sso' => [
             'hero' => 'Authentication',
             'sub'  => 'Choose how people sign in: single sign-on through an identity provider (Microsoft Entra, Google, Okta, Keycloak or any OpenID Connect provider), or against your LDAP / Active Directory. Local passwords keep working as a fallback. A CardDAV address book also lives here, as a source of contact details rather than a way to sign in.',

@@ -42,6 +42,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2306 | System            | Feature     | SSO groups (proposed in PR #174): an OIDC provider reads the groups the identity provider sends - an analyst group (only members sign in as / are created as analysts, as LDAP), an administrator group, and group -> team rows re-applied at every sign-in (teams decide modules, companies and roles); groups chosen from dropdowns of those seen at sign-in, each nameable (Entra sends codes); the provider dialog is now near full-screen with tabs; group names match in any alphabet (LDAP too). |
 | 2307 | System            | Feature     | System -> Branding: a "Back to ..." link (text, http(s) address, portal / analyst / both) shown at the top of the portal and/or every analyst header; addresses validated on save and again when drawn (proposed in PR #174). |
 | 2308 | System            | Improvement | SSO and LDAP providers choose which companies an analyst they auto-create can see: every company (default, as before), only the provider's company, or none; applied only at creation. |
+| 2309 | System            | Improvement | Help: a step-by-step guide to SSO groups and teams (system/help/sso-groups.php) with tabs for Microsoft Entra, Okta, Keycloak and other providers and a tick-off checklist remembered in the browser; every System link opens in a new tab; signposted from the provider dialog's Groups and teams tab. help.css gains shared tab and checklist styles. |
 
 
 

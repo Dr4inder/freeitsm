@@ -43,7 +43,7 @@ $translationNamespaces = ['common', 'checklists'];
     <script src="../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/help.css?v=3">
+    <link rel="stylesheet" href="../assets/css/help.css?v=6">
     <style>
         body {
             --accent:       #0d9488;

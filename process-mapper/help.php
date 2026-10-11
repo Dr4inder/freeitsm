@@ -35,7 +35,7 @@ $translationNamespaces = ['common', 'process-mapper'];
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
-    <link rel="stylesheet" href="../assets/css/help.css?v=3">
+    <link rel="stylesheet" href="../assets/css/help.css?v=6">
     <style>
         /* The only thing a help page should need to say for itself: its colour. */
         body {

@@ -48,7 +48,7 @@ $pplHelpIcon = fn(string $paths) => '<svg xmlns="http://www.w3.org/2000/svg" wid
 <!DOCTYPE html>
 <html lang="<?php echo pplE(I18n::getLocale()); ?>" data-theme="<?php echo pplE(Theme::active()); ?>" data-theme-mode="<?php echo pplE(Theme::mode()); ?>">
 <head>
-    <?php pplHead(t('people.help.title'), ['common', 'people'], ['assets/css/help.css?v=3']); ?>
+    <?php pplHead(t('people.help.title'), ['common', 'people'], ['assets/css/help.css?v=6']); ?>
     <style>
         /* The only thing a help page should need to say for itself: its colour.
            People's accent is local to people.css (--ppl-accent), lifted on dark. */

@@ -182,6 +182,7 @@ require __DIR__ . '/_top.php';
         <li><strong>Administrator group</strong> (optional) - people in it are administrators, people not in it are not. Leave it empty to manage administrators by hand. The last administrator is never removed.</li>
         <li><strong>Teams</strong> - add a row for each group: choose the group, choose the team. What the team can do - its modules, companies and roles - is set in <strong>System &rarr; Teams</strong>, the same as for anyone you add to a team by hand.</li>
     </ol>
+    <div class="help-note ok"><strong>Setting this up for the first time?</strong> Follow the <a href="sso-groups.php">step-by-step guide</a> - it has a checklist for Microsoft Entra, Okta and Keycloak.</div>
     <h4>What happens at each sign-in</h4>
     <ul>
         <li>People are <strong>added</strong> to the teams their groups point to and <strong>taken out</strong> of those teams when they leave the group. Teams with no row here are never changed, so teams you manage by hand are safe.</li>

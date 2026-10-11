@@ -30,7 +30,7 @@ $translationNamespaces = ['common', 'calendar'];
     <title><?php echo htmlspecialchars(pageTitle('calendar', t('calendar.nav.help'))); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/help.css?v=3">
+    <link rel="stylesheet" href="../assets/css/help.css?v=6">
     <style>
         /* The only thing a help page should need to say for itself: its colour. */
         body {
