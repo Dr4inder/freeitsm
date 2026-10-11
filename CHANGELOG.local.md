@@ -36,6 +36,9 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2300 | Assets            | Improvement | The asset panel gets a Financial tab beside Key info holding purchase date and cost, supplier, cost centre, order number, warranty expiry and the lease dates (with the lease line), so Key info is about the machine itself. |
 | 2301 | REST API          | Feature     | Analyst provisioning (PR #174, rewritten from @Kraleemil's design): POST/GET/PATCH /analysts/{id} and GET/PATCH /analysts/{id}/access (admin, modules, companies, capabilities on one API-managed role), ?email= and ?include_inactive=1 on GET /analysts; rules in AnalystsService; writes need an administrator key for all companies; new analysts start with no access; last-admin and self guards. |
 | 2302 | System            | Improvement | System -> Roles shows a role the REST API manages for one analyst marked API and read-only: it cannot be edited, deleted or assigned to anyone else, and it is deleted with its analyst (FK). |
+| 2303 | Self-Service      | Fix         | Security: a requester marked as left could still sign in to the portal (password, two-factor step, SSO) and an open portal session carried on; every way in and every signed-in portal page now checks users.is_active (requesterIsActive). |
+| 2304 | System            | Fix         | Security: a deactivated analyst kept every module (and an admin kept System) until their session ended; an inactive analyst now has no modules and is not an admin, so the next click is refused, and the System page gate asks the database rather than the session flag. |
+| 2305 | REST API          | Improvement | PATCH /users/{id} takes is_active (false = marked as left) and requesters read back with is_active. |
 
 
 

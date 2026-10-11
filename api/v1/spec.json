@@ -12128,13 +12128,19 @@
                     "p": "\/users\/{id}",
                     "perm": "users.update",
                     "s": "Update a requester",
-                    "d": "Updates email and\/or names.",
+                    "d": "Updates email and\/or names, or marks them as left with is_active false (they stay on record, cannot sign in to the portal by any route, and an open portal session ends).",
                     "params": [
                         {
                             "name": "id",
                             "in": "path",
                             "desc": "Requester id",
                             "req": true
+                        },
+                        {
+                            "name": "is_active",
+                            "in": "body",
+                            "desc": "false = marked as left (the same as Mark as left on Assets > Users); true = reactivated",
+                            "req": false
                         },
                         {
                             "name": "email \/ display_name \/ preferred_name",

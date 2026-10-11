@@ -12,7 +12,7 @@ require_once dirname(__DIR__, 3) . '/includes/cost_centre_assign.php';   // GH #
  */
 function apiUserColumns(PDO $conn): string {
     require_once dirname(__DIR__, 3) . '/includes/cost_centre_assign.php';
-    $cols = "id, email, username, display_name, preferred_name, tenant_id, created_at";
+    $cols = "id, email, username, display_name, preferred_name, tenant_id, COALESCE(is_active, 1) AS is_active, created_at";
     if (costCentreReady($conn, 'users')) {
         $cols .= ", cost_centre_id,
                   (SELECT ccu.code FROM cost_centres ccu WHERE ccu.id = users.cost_centre_id) AS cost_centre_code,
@@ -49,6 +49,8 @@ function apiSerializeUser(array $u): array {
         // The company this requester belongs to; null = not known, and tickets
         // they raise land in triage.
         'tenant_id'      => isset($u['tenant_id']) && $u['tenant_id'] !== null ? (int)$u['tenant_id'] : null,
+        // false = marked as left (3.5.0): kept on record, cannot sign in to the portal.
+        'is_active'      => (int)($u['is_active'] ?? 1) === 1,
         // GH #160: the cost centre they are charged to, or null.
         'cost_centre'    => !empty($u['cost_centre_id'])
             ? ['id' => (int)$u['cost_centre_id'], 'code' => $u['cost_centre_code'] ?? null, 'name' => $u['cost_centre_name'] ?? null]
@@ -245,6 +247,15 @@ function apiUsersUpdate(PDO $conn, array $apiKey, array $params, array $body): v
     if (array_key_exists('preferred_name', $body)) {
         $updates[] = 'preferred_name = ?';
         $args[]    = trim((string)$body['preferred_name']) ?: null;
+    }
+    // "Mark as left" from an identity source (3.5.0): false keeps them on record but
+    // stops portal sign-in by every route and ends an open portal session.
+    if (array_key_exists('is_active', $body)) {
+        if (!is_bool($body['is_active']) && !in_array($body['is_active'], [0, 1, '0', '1'], true)) {
+            apiError(422, 'invalid_field', "'is_active' must be true or false.");
+        }
+        $updates[] = 'is_active = ?';
+        $args[]    = (int)(bool)(int)$body['is_active'];
     }
     if (array_key_exists('tenant_id', $body)) {
         if ($body['tenant_id'] === null || $body['tenant_id'] === '') {

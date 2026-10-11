@@ -506,6 +506,11 @@ function completeSelfServiceSso(PDO $conn, array $provider, int $providerId, str
     oidcSyncProfile($conn, $provider, 'users', $user, $claims, $name);
     $user = ssLoadUser($conn, $userId);
 
+    // Marked as left (3.5.0): the identity provider may still say yes; FreeITSM does not.
+    if (!requesterIsActive($conn, (int)$userId)) {
+        ssoBail('Your account is no longer active. Contact the service desk if you think this is a mistake.');
+    }
+
     // --- Success: set the self-service session (SSO bypasses local TOTP) ---
     $displayName = $user['preferred_name'] ?: $user['display_name'] ?: $user['email'];
     sessionPromoteToAuthenticated();   // rotate the session id — see includes/session_security.php

@@ -123,11 +123,20 @@ function getAnalystAllowedModules($conn, $analyst_id) {
     $sources = [];
 
     // 1. The analyst themselves.
+    // 🔴 A DEACTIVATED analyst has no modules at all (3.5.0). Deactivating stops new
+    // sign-ins, but a session already open used to carry on working until it
+    // expired - so taking someone's access away at the source (System -> Analysts,
+    // or PATCH /api/v1/analysts/{id}) did nothing to the person still at their desk.
+    // Every module page and endpoint asks this question, so this is where it ends.
     $analystAll = true;
     try {
-        $a = $conn->prepare("SELECT can_access_all_modules FROM analysts WHERE id = ?");
+        $a = $conn->prepare("SELECT can_access_all_modules, COALESCE(is_active, 1) AS is_active FROM analysts WHERE id = ?");
         $a->execute([$analyst_id]);
-        $analystAll = ((int) $a->fetchColumn() === 1);
+        $me = $a->fetch(PDO::FETCH_ASSOC);
+        if (!$me || (int) $me['is_active'] !== 1) {
+            return $cache[$analyst_id] = [];
+        }
+        $analystAll = ((int) $me['can_access_all_modules'] === 1);
     } catch (Throwable $e) { /* pre-upgrade DB: treat as unrestricted */ }
     if ($analystAll) {
         $sources[] = ['all' => true, 'set' => []];
@@ -202,9 +211,24 @@ function analystIsAdmin(PDO $conn, int $analystId): bool {
     static $cache = [];
     if (array_key_exists($analystId, $cache)) return $cache[$analystId];
 
-    $stmt = $conn->prepare("SELECT is_admin FROM analysts WHERE id = ?");
+    // A deactivated admin is not an admin - see getAnalystAllowedModules() (3.5.0).
+    $stmt = $conn->prepare("SELECT is_admin FROM analysts WHERE id = ? AND COALESCE(is_active, 1) = 1");
     $stmt->execute([$analystId]);
     return $cache[$analystId] = ((int) $stmt->fetchColumn() === 1);
+}
+
+/**
+ * Is this requester still active? "Mark as left" (Assets -> Users, Tickets ->
+ * Users) and PATCH /api/v1/users/{id} clear users.is_active. A requester who has
+ * left cannot sign in to the portal, by any route, and is signed out of an open
+ * portal session on their next page (self-service/includes/auth.php). 3.5.0.
+ * NULL counts as active, as everywhere else.
+ */
+function requesterIsActive(PDO $conn, int $userId): bool {
+    if ($userId <= 0) return false;
+    $stmt = $conn->prepare("SELECT COALESCE(is_active, 1) FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    return (int) $stmt->fetchColumn() === 1;
 }
 
 /**

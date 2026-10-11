@@ -7731,6 +7731,11 @@ return array (
           'nullable' => true,
           'description' => 'Company this requester belongs to. null = not known; tickets they raise in the self-service portal go to triage.',
         ),
+        'is_active' =>
+        array (
+          'type' => 'boolean',
+          'description' => 'false = marked as left: kept on record, cannot sign in to the portal (3.5.0).',
+        ),
         // GH #160: the cost centre they are charged to.
         'cost_centre' =>
         array (
@@ -7821,6 +7826,11 @@ return array (
               'type' => 'integer',
               'nullable' => true,
               'description' => 'Company this requester belongs to. null = not known; tickets they raise in the self-service portal go to triage.',
+            ),
+            'is_active' =>
+            array (
+              'type' => 'boolean',
+              'description' => 'false = marked as left: kept on record, cannot sign in to the portal (3.5.0).',
             ),
             'created_at' =>
             array (
