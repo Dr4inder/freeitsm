@@ -2245,6 +2245,7 @@ $translationNamespaces = ['common', 'asset-management'];
                     </div>
                     <div class="detail-tabs" id="detailTabs">
                         <button class="detail-tab active" onclick="switchDetailTab('keyinfo')" data-dtab="keyinfo">${window.t('asset-management.detail.tab_keyinfo')}</button>
+                        <button class="detail-tab" onclick="switchDetailTab('financial')" data-dtab="financial">${window.t('asset-management.detail.tab_financial')}</button>
                         <button class="detail-tab" onclick="switchDetailTab('devices')" data-dtab="devices">${window.t('asset-management.detail.tab_devices')} <span class="tab-count" id="devicesCountBadge">...</span></button>
                         <button class="detail-tab" onclick="switchDetailTab('software')" data-dtab="software">${window.t('asset-management.detail.tab_software')} <span class="tab-count" id="softwareCountBadge">...</span></button>
                         <button class="detail-tab" onclick="switchDetailTab('tickets')" data-dtab="tickets">${window.t('asset-management.detail.tab_tickets')} <span class="tab-count" id="ticketsCountBadge">...</span></button>
@@ -2366,46 +2367,6 @@ $translationNamespaces = ['common', 'asset-management'];
                             <span class="info-label">${window.t('asset-management.field.last_seen')}</span>
                             <span class="info-value">${seenHtml(selectedAsset.last_seen, true)}</span>
                         </div>
-                        <div class="info-item">
-                            <span class="info-label">${window.t('asset-management.field.purchase_date')}</span>
-                            <input type="date" class="info-value-input" value="${selectedAsset.purchase_date || ''}" onchange="updateAssetField('purchase_date', this.value)">
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">${window.t('asset-management.field.purchase_cost')}</span>
-                            <input type="number" step="0.01" min="0" class="info-value-input" value="${selectedAsset.purchase_cost != null ? selectedAsset.purchase_cost : ''}" placeholder="0.00" onchange="updateAssetField('purchase_cost', this.value)">
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">${window.t('asset-management.field.supplier')}</span>
-                            <select class="info-value-select" onchange="updateAssetField('supplier_id', this.value)">
-                                <option value="">${window.t('asset-management.common.none_option')}</option>
-                                ${assetSuppliers.map(s => `<option value="${s.id}" ${s.id == selectedAsset.supplier_id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">${window.t('asset-management.field.cost_centre')}</span>
-                            <select class="info-value-select" id="assetCostCentre" onchange="updateAssetField('cost_centre_id', this.value)">
-                                <option value="">${window.t('asset-management.common.none_option')}</option>
-                                ${selectedAsset.cost_centre_id ? `<option value="${selectedAsset.cost_centre_id}" selected>${escapeHtml(selectedAsset.cost_centre_label || '')}</option>` : ''}
-                            </select>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">${window.t('asset-management.field.order_number')}</span>
-                            <input type="text" class="info-value-input" value="${escapeHtml(selectedAsset.order_number || '')}" placeholder="-" onchange="updateAssetField('order_number', this.value)">
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">${window.t('asset-management.field.warranty_expiry')}<span class="expiry-slot" data-expiry-field="warranty_expiry">${expiryFlag(selectedAsset.warranty_expiry)}</span></span>
-                            <input type="date" class="info-value-input" value="${selectedAsset.warranty_expiry || ''}" onchange="updateAssetField('warranty_expiry', this.value)">
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">${window.t('asset-management.field.lease_start')}</span>
-                            <input type="date" class="info-value-input" value="${selectedAsset.lease_start || ''}" onchange="updateAssetField('lease_start', this.value)">
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">${window.t('asset-management.field.lease_expiry')}<span class="expiry-slot" data-expiry-field="lease_expiry">${expiryFlag(selectedAsset.lease_expiry)}</span></span>
-                            <input type="date" class="info-value-input" value="${selectedAsset.lease_expiry || ''}" onchange="updateAssetField('lease_expiry', this.value)">
-                        </div>
-                        <?php /* Assets -> Leases (3.5.0): which lease it is on. Filled by loadAssetLease(). */ ?>
-                        <div class="info-item" id="assetLeaseLine" style="grid-column:1/-1;display:none;font-size:13px;color:var(--text-muted);"></div>
                     </div>
                     <?php /* Custom fields (docs/design/flexible-asset-fields.md).
                              Sits between the built-in details and Storage: it is
@@ -2446,6 +2407,52 @@ $translationNamespaces = ['common', 'asset-management'];
                             </div>
                             <div class="disks-grid" id="physicalDisksGrid"></div>
                         </div>
+                    </div>
+                    </div>
+                    <?php /* Financial (3.5.0): purchase, supplier, cost centre, warranty and lease -
+                             everything to do with money, moved out of a busy Key info. */ ?>
+                    <div class="detail-tab-panel detail-tab-panel--scroll" id="financialPanel" data-dtab-panel="financial">
+                    <div class="asset-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.purchase_date')}</span>
+                            <input type="date" class="info-value-input" value="${selectedAsset.purchase_date || ''}" onchange="updateAssetField('purchase_date', this.value)">
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.purchase_cost')}</span>
+                            <input type="number" step="0.01" min="0" class="info-value-input" value="${selectedAsset.purchase_cost != null ? selectedAsset.purchase_cost : ''}" placeholder="0.00" onchange="updateAssetField('purchase_cost', this.value)">
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.supplier')}</span>
+                            <select class="info-value-select" onchange="updateAssetField('supplier_id', this.value)">
+                                <option value="">${window.t('asset-management.common.none_option')}</option>
+                                ${assetSuppliers.map(s => `<option value="${s.id}" ${s.id == selectedAsset.supplier_id ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.cost_centre')}</span>
+                            <select class="info-value-select" id="assetCostCentre" onchange="updateAssetField('cost_centre_id', this.value)">
+                                <option value="">${window.t('asset-management.common.none_option')}</option>
+                                ${selectedAsset.cost_centre_id ? `<option value="${selectedAsset.cost_centre_id}" selected>${escapeHtml(selectedAsset.cost_centre_label || '')}</option>` : ''}
+                            </select>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.order_number')}</span>
+                            <input type="text" class="info-value-input" value="${escapeHtml(selectedAsset.order_number || '')}" placeholder="-" onchange="updateAssetField('order_number', this.value)">
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.warranty_expiry')}<span class="expiry-slot" data-expiry-field="warranty_expiry">${expiryFlag(selectedAsset.warranty_expiry)}</span></span>
+                            <input type="date" class="info-value-input" value="${selectedAsset.warranty_expiry || ''}" onchange="updateAssetField('warranty_expiry', this.value)">
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.lease_start')}</span>
+                            <input type="date" class="info-value-input" value="${selectedAsset.lease_start || ''}" onchange="updateAssetField('lease_start', this.value)">
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.lease_expiry')}<span class="expiry-slot" data-expiry-field="lease_expiry">${expiryFlag(selectedAsset.lease_expiry)}</span></span>
+                            <input type="date" class="info-value-input" value="${selectedAsset.lease_expiry || ''}" onchange="updateAssetField('lease_expiry', this.value)">
+                        </div>
+                        <?php /* Assets -> Leases (3.5.0): which lease it is on. Filled by loadAssetLease(). */ ?>
+                        <div class="info-item" id="assetLeaseLine" style="grid-column:1/-1;display:none;font-size:13px;color:var(--text-muted);"></div>
                     </div>
                     </div>
                     <div class="detail-tab-panel" id="devicesPanel" data-dtab-panel="devices">

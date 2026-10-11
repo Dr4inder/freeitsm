@@ -204,6 +204,7 @@ $translationNamespaces = ['common', 'asset-management'];
                         <div><strong>Header</strong> &mdash; Hostname, service tag, assigned user, and a View History button for the full audit trail</div>
                         <div><strong>Info grid</strong> &mdash; Type, status, manufacturer, model, CPU, memory, operating system, feature release, build number, and BIOS</div>
                         <div><strong>Other details</strong> &mdash; your own <a href="help-custom-fields.php">custom fields</a> for this kind of asset, grouped by set with a &ldquo;3 of 3 filled in&rdquo; count. Only appears when the asset&rsquo;s type records something extra.</div>
+                        <div><strong>Financial tab</strong> &mdash; Purchase date and cost, supplier, cost centre, order number, warranty expiry and the lease dates, with the lease the asset is on (see <a href="#leases">Leases</a>)</div>
                         <div><strong>Storage</strong> &mdash; Drive cards showing capacity, usage percentage with colour-coded bars (green &lt; 75%, amber 75&ndash;90%, red &gt; 90%), and file system</div>
                         <div><strong>Devices tab</strong> &mdash; Every device from Windows Device Manager, grouped by category (Display adapters, Network adapters, etc.) with driver info and status badges. Use the search box to filter.</div>
                         <div><strong>Software tab</strong> &mdash; All installed applications and system components with publisher and version. Toggle between Applications, Components, and All.</div>

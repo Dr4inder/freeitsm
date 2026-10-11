@@ -33,6 +33,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2297 | Assets            | Improvement | Assets get a Lease starts date beside Lease ends (a lease cannot end before it starts); both lease dates are now columns in Assets -> Table, columns in the asset import, and in the REST API; a cost centre change now reads properly in an asset's history. |
 | 2298 | Assets            | Feature     | Assets -> Leases: lease agreements (leasing company, agreement number, cost centre, optional contract in the same company, notice period, documents) split into schedules with their own dates and cost; assets on a schedule have their lease dates kept in step (with per-asset own dates), a configurable outcome (Settings -> Leasing), a Due back list with CSV export, a lease line on the asset panel and calendar notice entries; one company per lease, one active lease per asset. |
 | 2299 | Assets            | Improvement | The Assets navbar buttons are a little narrower so all nine (with Leases) fit comfortably; the Leases pages use the full width. |
+| 2300 | Assets            | Improvement | The asset panel gets a Financial tab beside Key info holding purchase date and cost, supplier, cost centre, order number, warranty expiry and the lease dates (with the lease line), so Key info is about the machine itself. |
 
 
 

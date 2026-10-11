@@ -373,6 +373,7 @@ return [
         'assignment_error'  => 'Error loading assignment',
         'storage'           => 'Storage',
         'tab_keyinfo'       => 'Key info',
+        'tab_financial'     => 'Financial',
         'tab_devices'       => 'Devices',
         'tab_software'      => 'Software',
         'tab_tickets'       => 'Tickets',
