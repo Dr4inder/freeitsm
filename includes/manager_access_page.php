@@ -344,7 +344,7 @@ function managerAccessRender(int $managerId, string $backUrl): void
 
         function paint() {
             const m = S.manager;
-            document.title = T.page_title + ' - ' + m.name;
+            document.title = (document.titleBase = document.titleBase || document.title) + ' - ' + m.name;   // GH #173: appended to the server's pageTitle()
             $('maName').textContent = m.name;
             $('maSub').textContent = [m.job_title, m.department, m.company, m.email].filter(Boolean).join(' · ');
 

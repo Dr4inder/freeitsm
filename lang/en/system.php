@@ -1726,7 +1726,7 @@ return [
     // user-facing word for a tenant; the underlying table/code stays `tenants`.
     // ── REST API keys (system/api/index.php) ────────────────────────────
     'api' => [
-        'browser_title'   => 'Service Desk - API',
+        'browser_title'   => 'API',
         'title'           => 'API',
         'subtitle'        => 'Create and manage keys for the FreeITSM REST API, with granular permissions per key.',
 
@@ -1805,7 +1805,7 @@ return [
     // no plural machinery, so each is two whole sentences instead: a language
     // with three plural forms cannot be served by a suffix.
     'webhooks' => [
-        'browser_title'   => 'Service Desk - Webhooks',
+        'browser_title'   => 'Webhooks',
         'title'           => 'Webhooks',
         'subtitle'        => 'Outbound webhooks &mdash; queued by the <em>Send a webhook</em> workflow action &mdash; are delivered in the background with automatic retries, so a slow or dead endpoint never holds up a ticket. This page shows whether delivery is set up, an overview of delivery health, and the full log where you can inspect every request, its response, and replay any of them.',
 

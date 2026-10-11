@@ -116,7 +116,7 @@ return [
         'widget_removed' => 'Widget dibuang',
     ],
     'library' => [
-        'page_title' => 'Meja Perkhidmatan - Pustaka Widget Perisian',
+        'page_title' => 'Pustaka Widget Perisian',
         'back' => 'Papan Pemuka',
         'heading' => 'Pustaka Widget',
         'search' => 'Cari widget...',

@@ -63,7 +63,7 @@ return [
     'reset_err_both' => 'Fyll ut begge felta.',
     'reset_err_short' => 'Passordet må vere på minst 6 teikn.',
     'reset_err_mismatch' => 'Passorda er ikkje like.',
-    'expired_title' => 'Servicedesk - Byt passord',
+    'expired_title' => 'Byt passord',
     'expired_heading' => 'Passordet har gått ut',
     'expired_intro' => 'Passordet ditt har gått ut og må bytast før du kan halde fram.',
     'expired_current_pw' => 'Noverande passord',

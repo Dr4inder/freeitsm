@@ -63,7 +63,7 @@ return [
     'reset_err_both' => 'Wypełnij oba pola.',
     'reset_err_short' => 'Hasło musi mieć co najmniej 6 znaków.',
     'reset_err_mismatch' => 'Hasła nie są takie same.',
-    'expired_title' => 'Centrum obsługi - Zmiana hasła',
+    'expired_title' => 'Zmiana hasła',
     'expired_heading' => 'Hasło wygasło',
     'expired_intro' => 'Twoje hasło wygasło i musi zostać zmienione, zanim będziesz mógł kontynuować.',
     'expired_current_pw' => 'Aktualne hasło',

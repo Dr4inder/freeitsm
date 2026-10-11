@@ -140,7 +140,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'Service Desk - Edit form',
+        'page_title'       => 'Edit form',
         'title_new'        => 'New form',
         'title_edit'       => 'Edit form',
         'unsaved'          => 'Unsaved changes',
@@ -569,7 +569,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'Service Desk - Fill Form',
+        'page_title'       => 'Fill Form',
         'loading'          => 'Loading form...',
         'no_id'            => 'No form ID specified',
         'logo_alt'         => 'Company Logo',
@@ -684,7 +684,7 @@ return [
         'none_yet'     => 'No collections exist yet. Create one in Forms settings.',
     ],
     'subs' => [
-        'page_title'        => 'Service Desk - Form Submissions',
+        'page_title'        => 'Form Submissions',
         'page_title_named'  => 'Service Desk - {title} Submissions',
         'back'              => 'Back',
         'heading'           => 'Submissions',

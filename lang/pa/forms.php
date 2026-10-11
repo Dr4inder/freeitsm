@@ -70,7 +70,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'ਸਰਵਿਸ ਡੈਸਕ - ਫਾਰਮ ਸੋਧੋ',
+        'page_title'       => 'ਫਾਰਮ ਸੋਧੋ',
         'title_new'        => 'ਨਵਾਂ ਫਾਰਮ',
         'title_edit'       => 'ਫਾਰਮ ਸੋਧੋ',
         'unsaved'          => 'ਅਣ-ਸੰਭਾਲੀਆਂ ਤਬਦੀਲੀਆਂ',
@@ -264,7 +264,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'ਸਰਵਿਸ ਡੈਸਕ - ਫਾਰਮ ਭਰੋ',
+        'page_title'       => 'ਫਾਰਮ ਭਰੋ',
         'loading'          => 'ਫਾਰਮ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...',
         'no_id'            => 'ਕੋਈ ਫਾਰਮ ID ਨਿਰਧਾਰਤ ਨਹੀਂ',
         'logo_alt'         => 'ਕੰਪਨੀ ਲੋਗੋ',
@@ -286,7 +286,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'ਸਰਵਿਸ ਡੈਸਕ - ਫਾਰਮ ਸਬਮਿਸ਼ਨਾਂ',
+        'page_title'        => 'ਫਾਰਮ ਸਬਮਿਸ਼ਨਾਂ',
         'page_title_named'  => 'ਸਰਵਿਸ ਡੈਸਕ - {title} ਸਬਮਿਸ਼ਨਾਂ',
         'back'              => 'ਵਾਪਸ',
         'heading'           => 'ਸਬਮਿਸ਼ਨਾਂ',

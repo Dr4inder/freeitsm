@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'Gagal memadam',
     ],
     'api' => [
-        'browser_title' => 'Meja Perkhidmatan - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'Cipta dan urus kunci untuk API REST FreeITSM, dengan kebenaran terperinci bagi setiap kunci.',
         'base_url' => 'URL asas',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => 'Sudahkah anda menyalin kunci itu? Ia tidak boleh dipaparkan lagi.',
     ],
     'webhooks' => [
-        'browser_title' => 'Meja Perkhidmatan - Webhooks',
+        'browser_title' => 'Webhooks',
         'title' => 'Webhooks',
         'subtitle' => 'Webhook keluar &mdash; dibaris gilir oleh tindakan aliran kerja <em>Hantar webhook</em> &mdash; dihantar di latar belakang dengan cubaan semula automatik, jadi endpoint yang perlahan atau mati tidak pernah melengahkan tiket. Halaman ini menunjukkan sama ada penghantaran telah disediakan, gambaran keseluruhan kesihatan penghantaran, dan log penuh tempat anda boleh memeriksa setiap permintaan, responsnya, dan main semula mana-mana daripadanya.',
         'pill_running' => 'Pekerja penghantaran sedang berjalan',

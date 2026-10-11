@@ -80,7 +80,7 @@ return [
         'result_count_other' => '{n} treff',
     ],
     'detail' => [
-        'page_title' => 'Servicedesk - Vis kontrakt',
+        'page_title' => 'Vis kontrakt',
         'loading' => 'Laster kontrakt...',
         'error_prefix' => 'Feil:',
         'load_failed' => 'Kunne ikke laste kontrakten',
@@ -161,8 +161,8 @@ return [
         'toast_event_save_failed' => 'Kunne ikke lagre hendelsen',
     ],
     'edit' => [
-        'page_title_edit' => 'Servicedesk - Rediger kontrakt',
-        'page_title_add' => 'Servicedesk - Legg til kontrakt',
+        'page_title_edit' => 'Rediger kontrakt',
+        'page_title_add' => 'Legg til kontrakt',
         'heading_edit' => 'Rediger kontrakt',
         'heading_add' => 'Legg til kontrakt',
         'none' => 'Ingen',
@@ -264,7 +264,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Servicedesk - Leverandører',
-        'view_page_title' => 'Servicedesk - Vis leverandør',
+        'view_page_title' => 'Vis leverandør',
         'all_suppliers' => 'Alle leverandører',
         'add_supplier' => 'Legg til leverandør',
         'edit_supplier' => 'Rediger leverandør',
@@ -715,7 +715,7 @@ return [
             'low' => 'lav',
         ],
         'scoring' => [
-            'page_title' => 'Servicedesk - Poengsetting',
+            'page_title' => 'Poengsetting',
             'title' => 'Poengsetting',
             'score_by_category' => 'Poeng per kategori',
             'my_overall' => 'Mitt totalsnitt',
@@ -742,7 +742,7 @@ return [
             'other_analysts' => 'Andre analytikere (snitt)',
         ],
         'documents' => [
-            'page_title' => 'Servicedesk - RFP-dokumenter',
+            'page_title' => 'RFP-dokumenter',
             'rfp' => 'RFP',
             'documents' => 'Dokumenter',
             'heading' => 'Kildedokumenter',
@@ -797,7 +797,7 @@ return [
             'delete_confirm' => 'Slette «{name}»?\\n\\nEventuelle krav som er hentet ut fra dette dokumentet, blir fjernet også.',
         ],
         'document' => [
-            'page_title' => 'Servicedesk - RFP-dokument',
+            'page_title' => 'RFP-dokument',
             'heading' => 'Generert dokument',
             'preview_document' => 'Forhåndsvis dokument',
             'generate_all' => 'Generer alt',
@@ -885,7 +885,7 @@ return [
             'restore_failed_short' => 'Gjenoppretting feilet',
         ],
         'extracted' => [
-            'page_title' => 'Servicedesk - Uthentede krav',
+            'page_title' => 'Uthentede krav',
             'heading' => 'Uthentede krav',
             'total' => 'Totalt',
             'requirements' => 'Krav',
@@ -927,7 +927,7 @@ return [
             'not_generated' => '(Ikke generert ennå.)',
         ],
         'compare' => [
-            'page_title' => 'Servicedesk - Sammenlign',
+            'page_title' => 'Sammenlign',
             'compare' => 'Sammenlign',
             'heading' => 'Sammenlign leverandører',
             'load_failed' => 'Kunne ikke laste sammenligningsdata',
@@ -950,7 +950,7 @@ return [
             'col_winner' => 'Vinner',
         ],
         'coverage' => [
-            'page_title' => 'Servicedesk - Dekningskart',
+            'page_title' => 'Dekningskart',
             'heading' => 'Dekningskart',
             'consolidated_requirements' => 'Konsoliderte krav',
             'load_failed' => 'Kunne ikke laste dekningen',
@@ -969,7 +969,7 @@ return [
             'legend_note' => 'Ett konsolidert krav teller i hver avdeling det har en kilde fra.',
         ],
         'audit' => [
-            'page_title' => 'Servicedesk - KI-revisjonsspor',
+            'page_title' => 'KI-revisjonsspor',
             'audit_trail' => 'Revisjonsspor',
             'heading' => 'KI-revisjonsspor',
             'total_input_tokens' => 'Tokener inn totalt',
@@ -985,7 +985,7 @@ return [
             'col_model' => 'Modell',
         ],
         'consolidate' => [
-            'page_title' => 'Servicedesk - Konsoliderte krav',
+            'page_title' => 'Konsoliderte krav',
             'consolidated' => 'Konsolidert',
             'heading' => 'Konsoliderte krav',
             'add_custom' => 'Legg til egen',

@@ -80,7 +80,7 @@ return [
         'result_count_other' => '{n} résultats',
     ],
     'detail' => [
-        'page_title' => 'Service Desk - Voir le contrat',
+        'page_title' => 'Voir le contrat',
         'loading' => 'Chargement du contrat...',
         'error_prefix' => 'Erreur :',
         'load_failed' => 'Échec du chargement du contrat',
@@ -161,8 +161,8 @@ return [
         'toast_event_save_failed' => 'Échec de l\'enregistrement de l\'événement',
     ],
     'edit' => [
-        'page_title_edit' => 'Service Desk - Modifier le contrat',
-        'page_title_add' => 'Service Desk - Ajouter un contrat',
+        'page_title_edit' => 'Modifier le contrat',
+        'page_title_add' => 'Ajouter un contrat',
         'heading_edit' => 'Modifier le contrat',
         'heading_add' => 'Ajouter un contrat',
         'none' => 'Aucun',
@@ -264,7 +264,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Fournisseurs',
-        'view_page_title' => 'Service Desk - Voir le fournisseur',
+        'view_page_title' => 'Voir le fournisseur',
         'all_suppliers' => 'Tous les fournisseurs',
         'add_supplier' => 'Ajouter un fournisseur',
         'edit_supplier' => 'Modifier le fournisseur',
@@ -719,7 +719,7 @@ Toutes les notes déjà saisies pour lui seront supprimées. La fiche du fournis
             'low' => 'basse',
         ],
         'scoring' => [
-            'page_title' => 'Service Desk - Notation',
+            'page_title' => 'Notation',
             'title' => 'Notation',
             'score_by_category' => 'Note par catégorie',
             'my_overall' => 'Ma note globale',
@@ -746,7 +746,7 @@ Toutes les notes déjà saisies pour lui seront supprimées. La fiche du fournis
             'other_analysts' => 'Autres analystes (moy.)',
         ],
         'documents' => [
-            'page_title' => 'Service Desk - Documents de l\'AO',
+            'page_title' => 'Documents de l\'AO',
             'rfp' => 'AO',
             'documents' => 'Documents',
             'heading' => 'Documents source',
@@ -803,7 +803,7 @@ Toutes les notes déjà saisies pour lui seront supprimées. La fiche du fournis
 Les exigences extraites de ce document seront également supprimées.',
         ],
         'document' => [
-            'page_title' => 'Service Desk - Document d\'AO',
+            'page_title' => 'Document d\'AO',
             'heading' => 'Document généré',
             'preview_document' => 'Aperçu du document',
             'generate_all' => 'Tout générer',
@@ -902,7 +902,7 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'restore_failed_short' => 'Échec de la restauration',
         ],
         'extracted' => [
-            'page_title' => 'Service Desk - Exigences extraites',
+            'page_title' => 'Exigences extraites',
             'heading' => 'Exigences extraites',
             'total' => 'Total',
             'requirements' => 'Exigences',
@@ -946,7 +946,7 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'not_generated' => '(Pas encore généré.)',
         ],
         'compare' => [
-            'page_title' => 'Service Desk - Comparer',
+            'page_title' => 'Comparer',
             'compare' => 'Comparer',
             'heading' => 'Comparer les fournisseurs',
             'load_failed' => 'Échec du chargement des données de comparaison',
@@ -969,7 +969,7 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'col_winner' => 'Gagnant',
         ],
         'coverage' => [
-            'page_title' => 'Service Desk - Carte de couverture',
+            'page_title' => 'Carte de couverture',
             'heading' => 'Carte de couverture',
             'consolidated_requirements' => 'Exigences consolidées',
             'load_failed' => 'Échec du chargement de la couverture',
@@ -988,7 +988,7 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'legend_note' => 'Une exigence consolidée compte dans chaque département dont elle est issue.',
         ],
         'audit' => [
-            'page_title' => 'Service Desk - Journal d\'audit IA',
+            'page_title' => 'Journal d\'audit IA',
             'audit_trail' => 'Journal d\'audit',
             'heading' => 'Journal d\'audit IA',
             'total_input_tokens' => 'Total des jetons d\'entrée',
@@ -1004,7 +1004,7 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'col_model' => 'Modèle',
         ],
         'consolidate' => [
-            'page_title' => 'Service Desk - Exigences consolidées',
+            'page_title' => 'Exigences consolidées',
             'consolidated' => 'Consolidées',
             'heading' => 'Exigences consolidées',
             'add_custom' => 'Ajouter personnalisé',

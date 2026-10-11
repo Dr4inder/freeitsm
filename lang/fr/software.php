@@ -116,7 +116,7 @@ return [
         'widget_removed' => 'Widget supprimé',
     ],
     'library' => [
-        'page_title' => 'Service Desk - Bibliothèque de widgets logiciels',
+        'page_title' => 'Bibliothèque de widgets logiciels',
         'back' => 'Tableau de bord',
         'heading' => 'Bibliothèque de widgets',
         'search' => 'Rechercher des widgets...',

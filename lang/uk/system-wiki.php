@@ -53,7 +53,7 @@ return [
     ],
 
     'search' => [
-        'page_title'           => 'Service Desk - Пошук у вікі',
+        'page_title'           => 'Пошук у вікі',
         'search_placeholder'   => 'Пошук файлів, функцій, таблиць бази даних...',
         'search_btn'           => 'Пошук',
         'tab_files'            => 'Файли',
@@ -70,7 +70,7 @@ return [
     ],
 
     'scan' => [
-        'page_title'      => 'Service Desk - Керування скануванням',
+        'page_title'      => 'Керування скануванням',
         'heading'         => 'Керування скануванням',
         'subtitle'        => 'Запустіть сканер PowerShell для каталогізації кодової бази',
         'run_now'         => 'Сканувати зараз',
@@ -91,7 +91,7 @@ return [
     ],
 
     'file' => [
-        'page_title'         => 'Service Desk - Деталі файлу',
+        'page_title'         => 'Деталі файлу',
         'loading'            => 'Завантаження деталей файлу...',
         'no_id'              => 'ID файлу не вказано.',
         'error_prefix'       => 'Помилка: ',
@@ -125,7 +125,7 @@ return [
     ],
 
     'function' => [
-        'page_title'    => 'Service Desk - Деталі функції',
+        'page_title'    => 'Деталі функції',
         'loading'       => 'Завантаження деталей функції...',
         'no_id'         => 'ID функції не вказано.',
         'error_prefix'  => 'Помилка: ',
@@ -141,7 +141,7 @@ return [
     ],
 
     'table' => [
-        'page_title'        => 'Service Desk - Посилання на таблицю',
+        'page_title'        => 'Посилання на таблицю',
         'loading'           => 'Завантаження посилань на таблицю...',
         'no_name'           => 'Назву таблиці не вказано.',
         'error_prefix'      => 'Помилка: ',
@@ -153,7 +153,7 @@ return [
     ],
 
     'tables' => [
-        'page_title'    => 'Service Desk - Таблиці бази даних',
+        'page_title'    => 'Таблиці бази даних',
         'heading'       => 'Таблиці бази даних',
         'loading'       => 'Завантаження...',
         'col_name'      => 'Назва таблиці',

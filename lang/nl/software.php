@@ -108,7 +108,7 @@ return [
 
     // -- Widget library (dashboard/library.php) ------------------------------
     'library' => [
-        'page_title'   => 'Servicedesk - Software-widgetbibliotheek',
+        'page_title'   => 'Software-widgetbibliotheek',
         'back'         => 'Dashboard',
         'heading'      => 'Widgetbibliotheek',
         'search'       => 'Widgets zoeken...',

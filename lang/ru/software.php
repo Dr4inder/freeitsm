@@ -108,7 +108,7 @@ return [
 
     // -- Widget library (dashboard/library.php) ------------------------------
     'library' => [
-        'page_title'   => 'Service Desk — Библиотека виджетов ПО',
+        'page_title'   => 'Библиотека виджетов ПО',
         'back'         => 'Панель',
         'heading'      => 'Библиотека виджетов',
         'search'       => 'Поиск виджетов...',

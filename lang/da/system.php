@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'Kunne ikke slette',
     ],
     'api' => [
-        'browser_title' => 'Service Desk - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'Opret og håndtér nøgler til FreeITSM REST API, med detaljerede rettigheder pr. nøgle.',
         'base_url' => 'Basis-URL',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => 'Har du kopieret nøglen? Den kan ikke vises igen.',
     ],
     'webhooks' => [
-        'browser_title' => 'Service Desk - Webhooks',
+        'browser_title' => 'Webhooks',
         'title' => 'Webhooks',
         'subtitle' => 'Udgående webhooks &mdash; sat i kø af arbejdsgangshandlingen <em>Send en webhook</em> &mdash; leveres i baggrunden med automatiske gentagelsesforsøg, så et langsomt eller dødt endepunkt aldrig holder en sag tilbage. Denne side viser, om levering er sat op, et overblik over leveringstilstanden, og hele loggen, hvor du kan undersøge hver forespørgsel, dens svar, og gensende en hvilken som helst af dem.',
         'pill_running' => 'Leveringsprocessen kører',

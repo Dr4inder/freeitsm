@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'Löschen fehlgeschlagen',
     ],
     'api' => [
-        'browser_title' => 'Service Desk - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'Schlüssel für die FreeITSM REST API erstellen und verwalten, mit feingranularen Berechtigungen je Schlüssel.',
         'base_url' => 'Basis-URL',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => 'Haben Sie den Schlüssel kopiert? Er kann nicht erneut angezeigt werden.',
     ],
     'webhooks' => [
-        'browser_title' => 'Service Desk - Webhooks',
+        'browser_title' => 'Webhooks',
         'title' => 'Webhooks',
         'subtitle' => 'Ausgehende Webhooks &mdash; eingereiht von der Workflow-Aktion <em>Send a webhook</em> &mdash; werden im Hintergrund mit automatischen Wiederholungen zugestellt, sodass ein langsamer oder toter Endpunkt nie ein Ticket aufhält. Diese Seite zeigt, ob die Zustellung eingerichtet ist, einen Überblick über den Zustellungszustand und das vollständige Protokoll, in dem Sie jede Anfrage und ihre Antwort prüfen und jede davon erneut senden können.',
         'pill_running' => 'Der Zustellungs-Worker läuft',

@@ -70,7 +70,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'Diensbalie - Wysig vorm',
+        'page_title'       => 'Wysig vorm',
         'title_new'        => 'Nuwe vorm',
         'title_edit'       => 'Wysig vorm',
         'unsaved'          => 'Ongestoorde veranderinge',
@@ -264,7 +264,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'Diensbalie - Vul vorm in',
+        'page_title'       => 'Vul vorm in',
         'loading'          => 'Vorm laai...',
         'no_id'            => 'Geen vorm-ID gespesifiseer nie',
         'logo_alt'         => 'Maatskappylogo',
@@ -286,7 +286,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'Diensbalie - Vorm-indienings',
+        'page_title'        => 'Vorm-indienings',
         'page_title_named'  => 'Diensbalie - {title}-indienings',
         'back'              => 'Terug',
         'heading'           => 'Indienings',

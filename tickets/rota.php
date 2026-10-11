@@ -28,7 +28,7 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(t('tickets.rota.page_title')); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('tickets', t('tickets.nav.rota'))); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=78">
     <link rel="stylesheet" href="../assets/css/rota.css?v=4">

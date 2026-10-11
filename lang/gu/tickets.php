@@ -1863,7 +1863,7 @@ return [
         ],
     ],
     'activity' => [
-        'page_title' => 'સેવા ડેસ્ક - મેઈલબોક્સ પ્રવૃત્તિ',
+        'page_title' => 'મેઈલબોક્સ પ્રવૃત્તિ',
         'sidebar_title' => 'મેઈલબોક્સ',
         'filter_placeholder' => 'મેઈલબોક્સ ફિલ્ટર કરો...',
         'back_to_settings' => 'સેટિંગ્સ પર પાછા જાઓ',
@@ -2038,7 +2038,7 @@ return [
             'err_time_grouping' => 'સમય-આધારિત એકત્રીકરણ માટે સમય જૂથબદ્ધતા જરૂરી છે',
         ],
         'library' => [
-            'page_title' => 'સેવા ડેસ્ક - ટિકિટ વિજેટ લાઇબ્રેરી',
+            'page_title' => 'ટિકિટ વિજેટ લાઇબ્રેરી',
             'back_dashboard' => 'ડેશબોર્ડ',
             'heading' => 'વિજેટ લાઇબ્રેરી',
             'search_placeholder' => 'વિજેટ શોધો...',
@@ -2466,7 +2466,7 @@ return [
         ],
     ],
     'help_sla' => [
-        'page_title' => 'સર્વિસ ડેસ્ક - SLA મેનેજમેન્ટ',
+        'page_title' => 'SLA મેનેજમેન્ટ',
         'back_link' => '&larr; ટિકિટ માર્ગદર્શિકા પર પાછા',
         'sidebar_title' => 'SLA માર્ગદર્શિકા',
         'hero_title' => 'SLA મેનેજમેન્ટ',

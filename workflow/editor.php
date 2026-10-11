@@ -89,7 +89,7 @@ foreach ($actionDefs as $actionKey => $def) {
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($id ? t('workflow.editor.edit_title') : t('workflow.editor.new_title')); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('workflow', $id ? t('workflow.editor.edit_title') : t('workflow.editor.new_title'))); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=78">
     <link rel="stylesheet" href="../assets/css/workflow.css?v=11">

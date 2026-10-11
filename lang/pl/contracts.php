@@ -80,7 +80,7 @@ return [
         'result_count_other' => '{n} wyników',
     ],
     'detail' => [
-        'page_title' => 'Centrum obsługi - Wyświetl kontrakt',
+        'page_title' => 'Wyświetl kontrakt',
         'loading' => 'Ładowanie kontraktu...',
         'error_prefix' => 'Błąd:',
         'load_failed' => 'Nie udało się załadować kontraktu',
@@ -161,8 +161,8 @@ return [
         'toast_event_save_failed' => 'Nie udało się zapisać wydarzenia',
     ],
     'edit' => [
-        'page_title_edit' => 'Centrum obsługi - Edytuj kontrakt',
-        'page_title_add' => 'Centrum obsługi - Dodaj kontrakt',
+        'page_title_edit' => 'Edytuj kontrakt',
+        'page_title_add' => 'Dodaj kontrakt',
         'heading_edit' => 'Edytuj kontrakt',
         'heading_add' => 'Dodaj kontrakt',
         'none' => 'Brak',
@@ -264,7 +264,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Centrum obsługi - Dostawcy',
-        'view_page_title' => 'Centrum obsługi - Wyświetl dostawcę',
+        'view_page_title' => 'Wyświetl dostawcę',
         'all_suppliers' => 'Wszyscy dostawcy',
         'add_supplier' => 'Dodaj dostawcę',
         'edit_supplier' => 'Edytuj dostawcę',
@@ -719,7 +719,7 @@ Wszelkie wprowadzone dla niego oceny zostaną usunięte. Sam rekord dostawcy poz
             'low' => 'niski',
         ],
         'scoring' => [
-            'page_title' => 'Centrum obsługi - Ocenianie',
+            'page_title' => 'Ocenianie',
             'title' => 'Ocenianie',
             'score_by_category' => 'Ocena według kategorii',
             'my_overall' => 'Mój wynik ogólny',
@@ -746,7 +746,7 @@ Wszelkie wprowadzone dla niego oceny zostaną usunięte. Sam rekord dostawcy poz
             'other_analysts' => 'Inni analitycy (średnia)',
         ],
         'documents' => [
-            'page_title' => 'Centrum obsługi - Dokumenty RFP',
+            'page_title' => 'Dokumenty RFP',
             'rfp' => 'RFP',
             'documents' => 'Dokumenty',
             'heading' => 'Dokumenty źródłowe',
@@ -803,7 +803,7 @@ Wszelkie wprowadzone dla niego oceny zostaną usunięte. Sam rekord dostawcy poz
 Wyodrębnione z tego dokumentu wymagania również zostaną usunięte.',
         ],
         'document' => [
-            'page_title' => 'Centrum obsługi - Dokument RFP',
+            'page_title' => 'Dokument RFP',
             'heading' => 'Wygenerowany dokument',
             'preview_document' => 'Podgląd dokumentu',
             'generate_all' => 'Generuj wszystko',
@@ -902,7 +902,7 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'restore_failed_short' => 'Przywracanie nie powiodło się',
         ],
         'extracted' => [
-            'page_title' => 'Centrum obsługi - Wyodrębnione wymagania',
+            'page_title' => 'Wyodrębnione wymagania',
             'heading' => 'Wyodrębnione wymagania',
             'total' => 'Łącznie',
             'requirements' => 'Wymagania',
@@ -946,7 +946,7 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'not_generated' => '(Jeszcze nie wygenerowano.)',
         ],
         'compare' => [
-            'page_title' => 'Centrum obsługi - Porównanie',
+            'page_title' => 'Porównanie',
             'compare' => 'Porównanie',
             'heading' => 'Porównaj dostawców',
             'load_failed' => 'Nie udało się wczytać danych porównania',
@@ -969,7 +969,7 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'col_winner' => 'Zwycięzca',
         ],
         'coverage' => [
-            'page_title' => 'Centrum obsługi - Mapa pokrycia',
+            'page_title' => 'Mapa pokrycia',
             'heading' => 'Mapa pokrycia',
             'consolidated_requirements' => 'Skonsolidowane wymagania',
             'load_failed' => 'Nie udało się wczytać danych pokrycia',
@@ -988,7 +988,7 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'legend_note' => 'Jedno skonsolidowane wymaganie liczy się w każdym dziale, z którego pochodzi jedno z jego źródeł.',
         ],
         'audit' => [
-            'page_title' => 'Centrum obsługi - Ścieżka audytu AI',
+            'page_title' => 'Ścieżka audytu AI',
             'audit_trail' => 'Ścieżka audytu',
             'heading' => 'Ścieżka audytu AI',
             'total_input_tokens' => 'Łączne tokeny wejściowe',
@@ -1004,7 +1004,7 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'col_model' => 'Model',
         ],
         'consolidate' => [
-            'page_title' => 'Centrum obsługi - Skonsolidowane wymagania',
+            'page_title' => 'Skonsolidowane wymagania',
             'consolidated' => 'Skonsolidowane',
             'heading' => 'Skonsolidowane wymagania',
             'add_custom' => 'Dodaj własne',

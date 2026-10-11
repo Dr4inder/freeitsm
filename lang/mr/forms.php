@@ -70,7 +70,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'सर्व्हिस डेस्क - फॉर्म संपादित करा',
+        'page_title'       => 'फॉर्म संपादित करा',
         'title_new'        => 'नवीन फॉर्म',
         'title_edit'       => 'फॉर्म संपादित करा',
         'unsaved'          => 'जतन न केलेले बदल',
@@ -264,7 +264,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'सर्व्हिस डेस्क - फॉर्म भरा',
+        'page_title'       => 'फॉर्म भरा',
         'loading'          => 'फॉर्म लोड होत आहे...',
         'no_id'            => 'कोणताही फॉर्म ID निर्दिष्ट केलेला नाही',
         'logo_alt'         => 'कंपनी लोगो',
@@ -286,7 +286,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'सर्व्हिस डेस्क - फॉर्म सबमिशन',
+        'page_title'        => 'फॉर्म सबमिशन',
         'page_title_named'  => 'सर्व्हिस डेस्क - {title} सबमिशन',
         'back'              => 'मागे',
         'heading'           => 'सबमिशन',

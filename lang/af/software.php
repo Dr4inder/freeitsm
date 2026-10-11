@@ -108,7 +108,7 @@ return [
 
     // -- Widget library (dashboard/library.php) ------------------------------
     'library' => [
-        'page_title'   => 'Dienstoonbank - Sagteware-legstukbiblioteek',
+        'page_title'   => 'Sagteware-legstukbiblioteek',
         'back'         => 'Paneelbord',
         'heading'      => 'Legstukbiblioteek',
         'search'       => 'Soek legstukke...',

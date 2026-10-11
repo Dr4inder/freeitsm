@@ -57,7 +57,7 @@ return [
     ],
 
     'search' => [
-        'page_title'           => 'Meja Perkhidmatan - Carian Wiki',
+        'page_title'           => 'Carian Wiki',
         'search_placeholder'   => 'Cari fail, fungsi, jadual pangkalan data...',
         'search_btn'           => 'Cari',
         'tab_files'            => 'Fail',
@@ -74,7 +74,7 @@ return [
     ],
 
     'scan' => [
-        'page_title'      => 'Meja Perkhidmatan - Pengurusan Imbasan',
+        'page_title'      => 'Pengurusan Imbasan',
         'heading'         => 'Pengurusan Imbasan',
         'subtitle'        => 'Jalankan pengimbas PowerShell untuk mengkatalogkan kod sumber',
         'run_now'         => 'Jalankan Imbasan Sekarang',
@@ -95,7 +95,7 @@ return [
     ],
 
     'file' => [
-        'page_title'         => 'Meja Perkhidmatan - Butiran Fail',
+        'page_title'         => 'Butiran Fail',
         'loading'            => 'Memuatkan butiran fail...',
         'no_id'              => 'Tiada ID fail dinyatakan.',
         'error_prefix'       => 'Ralat: ',
@@ -129,7 +129,7 @@ return [
     ],
 
     'function' => [
-        'page_title'    => 'Meja Perkhidmatan - Butiran Fungsi',
+        'page_title'    => 'Butiran Fungsi',
         'loading'       => 'Memuatkan butiran fungsi...',
         'no_id'         => 'Tiada ID fungsi dinyatakan.',
         'error_prefix'  => 'Ralat: ',
@@ -145,7 +145,7 @@ return [
     ],
 
     'table' => [
-        'page_title'        => 'Meja Perkhidmatan - Rujukan Jadual',
+        'page_title'        => 'Rujukan Jadual',
         'loading'           => 'Memuatkan rujukan jadual...',
         'no_name'           => 'Tiada nama jadual dinyatakan.',
         'error_prefix'      => 'Ralat: ',
@@ -157,7 +157,7 @@ return [
     ],
 
     'tables' => [
-        'page_title'    => 'Meja Perkhidmatan - Jadual Pangkalan Data',
+        'page_title'    => 'Jadual Pangkalan Data',
         'heading'       => 'Jadual Pangkalan Data',
         'loading'       => 'Memuatkan...',
         'col_name'      => 'Nama Jadual',

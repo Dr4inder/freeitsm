@@ -23,7 +23,7 @@ $analyst_name = $_SESSION['analyst_name'] ?? 'Analyst';
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= trh('expired_title', 'Service Desk - Change Password') ?></title>
+    <title><?php echo htmlspecialchars(pageTitle(null, tr('expired_title', 'Change Password'))); ?></title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 

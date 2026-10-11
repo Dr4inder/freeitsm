@@ -121,7 +121,7 @@ return [
         'ai_settings_saved' => 'Paramètres IA enregistrés',
     ],
     'editor' => [
-        'page_title' => 'Centre de services - Modifier le formulaire',
+        'page_title' => 'Modifier le formulaire',
         'title_new' => 'Nouveau formulaire',
         'title_edit' => 'Modifier le formulaire',
         'unsaved' => 'Modifications non enregistrées',
@@ -448,7 +448,7 @@ return [
         'unsupported_type' => 'Cette question ne peut pas être affichée ici.',
     ],
     'fill' => [
-        'page_title' => 'Centre de services - Remplir le formulaire',
+        'page_title' => 'Remplir le formulaire',
         'loading' => 'Chargement du formulaire...',
         'no_id' => 'Aucun identifiant de formulaire spécifié',
         'logo_alt' => 'Logo de l\'entreprise',
@@ -543,7 +543,7 @@ return [
         'none_yet' => 'Aucune collection n\'existe pour le moment. Créez-en une dans les paramètres des formulaires.',
     ],
     'subs' => [
-        'page_title' => 'Centre de services - Soumissions de formulaires',
+        'page_title' => 'Soumissions de formulaires',
         'page_title_named' => 'Centre de services - Soumissions de {title}',
         'back' => 'Retour',
         'heading' => 'Soumissions',

@@ -23,7 +23,7 @@ $translationNamespaces = ['common', 'contracts'];
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(t('contracts.rfp.documents.page_title')); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('contracts', t('contracts.nav.rfp_builder'), t('contracts.rfp.documents.page_title'))); ?></title>
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
@@ -295,7 +295,7 @@ $translationNamespaces = ['common', 'contracts'];
                 if (!data.success) throw new Error(data.error);
                 document.getElementById('rfpName').textContent = data.rfp.name;
                 document.getElementById('bcRfp').textContent = data.rfp.name;
-                document.title = window.t('contracts.rfp.documents.title_with_name', { name: data.rfp.name });
+                document.title = (document.titleBase = document.titleBase || document.title) + ' - ' + data.rfp.name;   // GH #173
             } catch (err) {
                 document.getElementById('rfpName').textContent = window.t('contracts.rfp.documents.could_not_load');
             }

@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'Échec de la suppression',
     ],
     'api' => [
-        'browser_title' => 'Service Desk - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'Créez et gérez des clés pour l\'API REST de FreeITSM, avec des permissions détaillées par clé.',
         'base_url' => 'URL de base',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => 'Avez-vous copié la clé ? Elle ne pourra plus être affichée.',
     ],
     'webhooks' => [
-        'browser_title' => 'Service Desk - Webhooks',
+        'browser_title' => 'Webhooks',
         'title' => 'Webhooks',
         'subtitle' => 'Les webhooks sortants &mdash; mis en file d\'attente par l\'action de workflow <em>Envoyer un webhook</em> &mdash; sont livrés en arrière-plan avec des relances automatiques, si bien qu\'un point de terminaison lent ou mort ne bloque jamais un ticket. Cette page indique si la livraison est configurée, donne un aperçu de son état de santé, et présente le journal complet où vous pouvez inspecter chaque requête, sa réponse, et en rejouer n\'importe laquelle.',
         'pill_running' => 'Le worker de livraison fonctionne',

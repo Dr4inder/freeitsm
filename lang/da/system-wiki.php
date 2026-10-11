@@ -47,7 +47,7 @@ return [
         'files_count' => '{n} filer',
     ],
     'search' => [
-        'page_title' => 'Service Desk - Wiki-søgning',
+        'page_title' => 'Wiki-søgning',
         'search_placeholder' => 'Søg i filer, funktioner, databasetabeller...',
         'search_btn' => 'Søg',
         'tab_files' => 'Filer',
@@ -63,7 +63,7 @@ return [
         'refs_across_files' => '{refs} referencer på tværs af {files} filer',
     ],
     'scan' => [
-        'page_title' => 'Service Desk - Scanningsstyring',
+        'page_title' => 'Scanningsstyring',
         'heading' => 'Scanningsstyring',
         'subtitle' => 'Kør PowerShell-scanneren for at katalogisere kodebasen',
         'run_now' => 'Kør scanning nu',
@@ -83,7 +83,7 @@ return [
         'error_prefix' => 'Fejl:',
     ],
     'file' => [
-        'page_title' => 'Service Desk - Filoplysninger',
+        'page_title' => 'Filoplysninger',
         'loading' => 'Indlæser filoplysninger...',
         'no_id' => 'Intet fil-id angivet.',
         'error_prefix' => 'Fejl:',
@@ -116,7 +116,7 @@ return [
         'static' => 'static',
     ],
     'function' => [
-        'page_title' => 'Service Desk - Funktionsoplysninger',
+        'page_title' => 'Funktionsoplysninger',
         'loading' => 'Indlæser funktionsoplysninger...',
         'no_id' => 'Intet funktions-id angivet.',
         'error_prefix' => 'Fejl:',
@@ -131,7 +131,7 @@ return [
         'col_line' => 'Linje',
     ],
     'table' => [
-        'page_title' => 'Service Desk - Tabelreferencer',
+        'page_title' => 'Tabelreferencer',
         'loading' => 'Indlæser tabelreferencer...',
         'no_name' => 'Intet tabelnavn angivet.',
         'error_prefix' => 'Fejl:',
@@ -142,7 +142,7 @@ return [
         'no_references' => 'Ingen referencer fundet for denne tabel.',
     ],
     'tables' => [
-        'page_title' => 'Service Desk - Databasetabeller',
+        'page_title' => 'Databasetabeller',
         'heading' => 'Databasetabeller',
         'loading' => 'Indlæser...',
         'col_name' => 'Tabelnavn',

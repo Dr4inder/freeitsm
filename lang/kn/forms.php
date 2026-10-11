@@ -70,7 +70,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'ಸರ್ವಿಸ್ ಡೆಸ್ಕ್ - ಫಾರ್ಮ್ ಸಂಪಾದಿಸಿ',
+        'page_title'       => 'ಫಾರ್ಮ್ ಸಂಪಾದಿಸಿ',
         'title_new'        => 'ಹೊಸ ಫಾರ್ಮ್',
         'title_edit'       => 'ಫಾರ್ಮ್ ಸಂಪಾದಿಸಿ',
         'unsaved'          => 'ಉಳಿಸದ ಬದಲಾವಣೆಗಳು',
@@ -264,7 +264,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'ಸರ್ವಿಸ್ ಡೆಸ್ಕ್ - ಫಾರ್ಮ್ ಭರ್ತಿ ಮಾಡಿ',
+        'page_title'       => 'ಫಾರ್ಮ್ ಭರ್ತಿ ಮಾಡಿ',
         'loading'          => 'ಫಾರ್ಮ್ ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
         'no_id'            => 'ಯಾವುದೇ ಫಾರ್ಮ್ ID ನಿರ್ದಿಷ್ಟಪಡಿಸಲಾಗಿಲ್ಲ',
         'logo_alt'         => 'ಕಂಪನಿ ಲೋಗೋ',
@@ -286,7 +286,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'ಸರ್ವಿಸ್ ಡೆಸ್ಕ್ - ಫಾರ್ಮ್ ಸಲ್ಲಿಕೆಗಳು',
+        'page_title'        => 'ಫಾರ್ಮ್ ಸಲ್ಲಿಕೆಗಳು',
         'page_title_named'  => 'ಸರ್ವಿಸ್ ಡೆಸ್ಕ್ - {title} ಸಲ್ಲಿಕೆಗಳು',
         'back'              => 'ಹಿಂದೆ',
         'heading'           => 'ಸಲ್ಲಿಕೆಗಳು',

@@ -364,9 +364,8 @@
     }
 
     function renderHeader() {
-        document.title = diagram.title
-            ? t('network-mapper.editor.browser_title_named', { title: diagram.title })
-            : t('network-mapper.editor.browser_title');
+        // GH #173: the diagram's name appended to the server's pageTitle(), captured once.
+        document.title = (document.titleBase = document.titleBase || document.title) + (diagram.title ? ' - ' + diagram.title : '');
         elTitle.textContent = diagram.title || t('network-mapper.editor.untitled');
 
         const label = diagram.version_label || t('network-mapper.editor.version_unknown');

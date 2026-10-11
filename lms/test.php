@@ -54,7 +54,7 @@ $sysName   = function_exists('systemName') ? systemName() : 'FreeITSM';
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
 <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
-<title><?= htmlspecialchars($state === 'invalid' ? tr('title', 'Competency test') : ($snap['title'] ?? tr('title', 'Competency test'))) ?></title>
+<title><?php echo htmlspecialchars(pageTitle(null, $state === 'invalid' ? tr('title', 'Competency test') : ($snap['title'] ?? tr('title', 'Competency test')))); ?></title>
 <style>
 :root {
     --bg: #f4f6fb; --card: #fff; --text: #1f2933; --muted: #5f6b7a; --line: #dde3ec;

@@ -48,7 +48,7 @@ return [
     ],
 
     'search' => [
-        'page_title'           => 'Central de Serviços - Pesquisa na Wiki',
+        'page_title'           => 'Pesquisa na Wiki',
         'search_placeholder'   => 'Pesquisar arquivos, funções, tabelas do banco de dados...',
         'search_btn'           => 'Pesquisar',
         'tab_files'            => 'Arquivos',
@@ -65,7 +65,7 @@ return [
     ],
 
     'scan' => [
-        'page_title'      => 'Central de Serviços - Gerenciamento de varredura',
+        'page_title'      => 'Gerenciamento de varredura',
         'heading'         => 'Gerenciamento de varredura',
         'subtitle'        => 'Execute o scanner do PowerShell para catalogar o código',
         'run_now'         => 'Executar varredura agora',
@@ -86,7 +86,7 @@ return [
     ],
 
     'file' => [
-        'page_title'         => 'Central de Serviços - Detalhes do arquivo',
+        'page_title'         => 'Detalhes do arquivo',
         'loading'            => 'Carregando detalhes do arquivo...',
         'no_id'              => 'Nenhum ID de arquivo especificado.',
         'error_prefix'       => 'Erro: ',
@@ -120,7 +120,7 @@ return [
     ],
 
     'function' => [
-        'page_title'    => 'Central de Serviços - Detalhes da função',
+        'page_title'    => 'Detalhes da função',
         'loading'       => 'Carregando detalhes da função...',
         'no_id'         => 'Nenhum ID de função especificado.',
         'error_prefix'  => 'Erro: ',
@@ -136,7 +136,7 @@ return [
     ],
 
     'table' => [
-        'page_title'        => 'Central de Serviços - Referências da tabela',
+        'page_title'        => 'Referências da tabela',
         'loading'           => 'Carregando referências da tabela...',
         'no_name'           => 'Nenhum nome de tabela especificado.',
         'error_prefix'      => 'Erro: ',
@@ -148,7 +148,7 @@ return [
     ],
 
     'tables' => [
-        'page_title'    => 'Central de Serviços - Tabelas do banco de dados',
+        'page_title'    => 'Tabelas do banco de dados',
         'heading'       => 'Tabelas do banco de dados',
         'loading'       => 'Carregando...',
         'col_name'      => 'Nome da tabela',

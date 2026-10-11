@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'કાઢી નાખવામાં નિષ્ફળ',
     ],
     'api' => [
-        'browser_title' => 'સેવા ડેસ્ક - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'FreeITSM REST API માટે કી બનાવો અને મેનેજ કરો, દરેક કી માટે ગ્રેન્યુલર પરવાનગીઓ સાથે.',
         'base_url' => 'Base URL',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => 'શું તમે કી કૉપિ કરી લીધી? તે ફરી બતાવી શકાશે નહીં.',
     ],
     'webhooks' => [
-        'browser_title' => 'સેવા ડેસ્ક - Webhooks',
+        'browser_title' => 'Webhooks',
         'title' => 'Webhooks',
         'subtitle' => 'આઉટબાઉન્ડ webhooks &mdash; જે <em>Send a webhook</em> વર્કફ્લો ક્રિયા દ્વારા ક્યુમાં મુકાય છે &mdash; આપમેળે ફરી પ્રયાસ સાથે બેકગ્રાઉન્ડમાં ડિલિવર થાય છે, જેથી ધીમું કે બંધ endpoint ક્યારેય ટિકિટને રોકે નહીં. આ પેજ બતાવે છે કે ડિલિવરી સેટ થઈ છે કે નહીં, ડિલિવરી આરોગ્યની ઝલક, અને આખો લોગ જ્યાં તમે દરેક request અને તેનો response તપાસી શકો છો અને તેમાંથી કોઈપણ replay કરી શકો છો.',
         'pill_running' => 'ડિલિવરી worker ચાલી રહ્યું છે',

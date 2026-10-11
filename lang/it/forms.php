@@ -70,7 +70,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'Service Desk - Modifica modulo',
+        'page_title'       => 'Modifica modulo',
         'title_new'        => 'Nuovo modulo',
         'title_edit'       => 'Modifica modulo',
         'unsaved'          => 'Modifiche non salvate',
@@ -264,7 +264,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'Service Desk - Compila modulo',
+        'page_title'       => 'Compila modulo',
         'loading'          => 'Caricamento modulo...',
         'no_id'            => 'Nessun ID modulo specificato',
         'logo_alt'         => 'Logo aziendale',
@@ -286,7 +286,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'Service Desk - Invii dei moduli',
+        'page_title'        => 'Invii dei moduli',
         'page_title_named'  => 'Service Desk - Invii di {title}',
         'back'              => 'Indietro',
         'heading'           => 'Invii',

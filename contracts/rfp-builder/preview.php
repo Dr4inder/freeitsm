@@ -66,7 +66,7 @@ $today = DateFmt::render(new DateTime('now', new DateTimeZone(Tz::current())), '
 <head>
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <meta charset="UTF-8">
-    <title><?= htmlspecialchars(t('contracts.rfp.preview.title_prefix') . ' · ' . $rfp['name'], ENT_QUOTES) ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('contracts', t('contracts.nav.rfp_builder'), t('contracts.rfp.preview.title_prefix') . ' · ' . $rfp['name'])); ?></title>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <style>

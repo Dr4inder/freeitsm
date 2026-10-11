@@ -63,7 +63,7 @@ return [
     'reset_err_both' => 'Bitte füllen Sie beide Felder aus.',
     'reset_err_short' => 'Das Passwort muss mindestens 6 Zeichen lang sein.',
     'reset_err_mismatch' => 'Die Passwörter stimmen nicht überein.',
-    'expired_title' => 'Service Desk - Passwort ändern',
+    'expired_title' => 'Passwort ändern',
     'expired_heading' => 'Passwort abgelaufen',
     'expired_intro' => 'Ihr Passwort ist abgelaufen und muss geändert werden, bevor Sie fortfahren können.',
     'expired_current_pw' => 'Aktuelles Passwort',

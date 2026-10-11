@@ -60,7 +60,7 @@ return [
 
     // Diagram editor shell (diagram.php)
     'editor' => [
-        'browser_title'    => 'FreeITSM — Network Diagram',
+        'browser_title'    => 'Network Diagram',
         'browser_title_named' => 'FreeITSM — {title}',
         'back'             => '← All diagrams',
         'loading'          => 'Loading…',

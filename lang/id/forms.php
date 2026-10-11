@@ -75,7 +75,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'Service Desk - Edit formulir',
+        'page_title'       => 'Edit formulir',
         'title_new'        => 'Formulir baru',
         'title_edit'       => 'Edit formulir',
         'unsaved'          => 'Perubahan belum disimpan',
@@ -269,7 +269,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'Service Desk - Isi Formulir',
+        'page_title'       => 'Isi Formulir',
         'loading'          => 'Memuat formulir...',
         'no_id'            => 'ID formulir tidak ditentukan',
         'logo_alt'         => 'Logo Perusahaan',
@@ -291,7 +291,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'Service Desk - Kiriman Formulir',
+        'page_title'        => 'Kiriman Formulir',
         'page_title_named'  => 'Service Desk - Kiriman {title}',
         'back'              => 'Kembali',
         'heading'           => 'Kiriman',

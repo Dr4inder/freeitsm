@@ -70,7 +70,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'সার্ভিস ডেস্ক - ফর্ম সম্পাদনা',
+        'page_title'       => 'ফর্ম সম্পাদনা',
         'title_new'        => 'নতুন ফর্ম',
         'title_edit'       => 'ফর্ম সম্পাদনা',
         'unsaved'          => 'অসংরক্ষিত পরিবর্তন',
@@ -264,7 +264,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'সার্ভিস ডেস্ক - ফর্ম পূরণ',
+        'page_title'       => 'ফর্ম পূরণ',
         'loading'          => 'ফর্ম লোড হচ্ছে...',
         'no_id'            => 'কোনো ফর্ম আইডি নির্দিষ্ট করা হয়নি',
         'logo_alt'         => 'কোম্পানির লোগো',
@@ -286,7 +286,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'সার্ভিস ডেস্ক - ফর্ম জমা',
+        'page_title'        => 'ফর্ম জমা',
         'page_title_named'  => 'সার্ভিস ডেস্ক - {title} জমা',
         'back'              => 'পিছনে',
         'heading'           => 'জমা',

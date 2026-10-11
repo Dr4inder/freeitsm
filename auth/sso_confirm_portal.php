@@ -51,7 +51,7 @@ function tr(string $key, string $default, array $params = []): string {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(tr('sso_fallback_title', 'No analyst account')); ?> - FreeITSM</title>
+    <title><?php echo htmlspecialchars(pageTitle(null, tr('sso_fallback_title', 'No analyst account'))); ?></title>
     <link rel="icon" type="image/png" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>assets/img/favicon.png">
     <link rel="stylesheet" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>assets/css/theme.css">
     <link rel="stylesheet" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>assets/css/branding.css">

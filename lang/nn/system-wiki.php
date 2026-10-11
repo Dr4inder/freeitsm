@@ -57,7 +57,7 @@ return [
     ],
 
     'search' => [
-        'page_title'           => 'Service Desk - Søk i wikien',
+        'page_title'           => 'Søk i wikien',
         'search_placeholder'   => 'Søk i filer, funksjonar, databasetabellar...',
         'search_btn'           => 'Søk',
         'tab_files'            => 'Filer',
@@ -74,7 +74,7 @@ return [
     ],
 
     'scan' => [
-        'page_title'      => 'Service Desk - Handtering av skanning',
+        'page_title'      => 'Handtering av skanning',
         'heading'         => 'Handtering av skanning',
         'subtitle'        => 'Køyr PowerShell-skannaren for å katalogisere kodebasen',
         'run_now'         => 'Køyr skanning no',
@@ -95,7 +95,7 @@ return [
     ],
 
     'file' => [
-        'page_title'         => 'Service Desk - Fildetaljar',
+        'page_title'         => 'Fildetaljar',
         'loading'            => 'Lastar fildetaljar...',
         'no_id'              => 'Ingen fil-ID er oppgjeven.',
         'error_prefix'       => 'Feil: ',
@@ -129,7 +129,7 @@ return [
     ],
 
     'function' => [
-        'page_title'    => 'Service Desk - Funksjonsdetaljar',
+        'page_title'    => 'Funksjonsdetaljar',
         'loading'       => 'Lastar funksjonsdetaljar...',
         'no_id'         => 'Ingen funksjons-ID er oppgjeven.',
         'error_prefix'  => 'Feil: ',
@@ -145,7 +145,7 @@ return [
     ],
 
     'table' => [
-        'page_title'        => 'Service Desk - Tabellreferansar',
+        'page_title'        => 'Tabellreferansar',
         'loading'           => 'Lastar tabellreferansar...',
         'no_name'           => 'Ingen tabellnamn er oppgjeve.',
         'error_prefix'      => 'Feil: ',
@@ -157,7 +157,7 @@ return [
     ],
 
     'tables' => [
-        'page_title'    => 'Service Desk - Databasetabellar',
+        'page_title'    => 'Databasetabellar',
         'heading'       => 'Databasetabellar',
         'loading'       => 'Lastar...',
         'col_name'      => 'Tabellnamn',

@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'हटाना विफल रहा',
     ],
     'api' => [
-        'browser_title' => 'सेवा डेस्क - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'FreeITSM REST API के लिए कुंजियाँ बनाएँ और प्रबंधित करें, हर कुंजी पर अलग-अलग अनुमतियों के साथ।',
         'base_url' => 'बेस URL',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => 'क्या आपने कुंजी कॉपी कर ली है? यह दोबारा नहीं दिखाई जा सकती।',
     ],
     'webhooks' => [
-        'browser_title' => 'सेवा डेस्क - Webhooks',
+        'browser_title' => 'Webhooks',
         'title' => 'Webhooks',
         'subtitle' => 'आउटबाउंड webhooks &mdash; जिन्हें <em>Send a webhook</em> वर्कफ़्लो एक्शन क्यू में डालता है &mdash; बैकग्राउंड में अपने आप रीट्राई के साथ डिलीवर होते हैं, ताकि कोई धीमा या बंद एंडपॉइंट किसी टिकट को कभी न रोके। यह पेज दिखाता है कि डिलीवरी सेट अप है या नहीं, डिलीवरी हेल्थ का अवलोकन, और पूरा लॉग जहाँ आप हर request और उसका response देख सकते हैं और किसी को भी दोबारा भेज सकते हैं।',
         'pill_running' => 'डिलीवरी worker चल रहा है',

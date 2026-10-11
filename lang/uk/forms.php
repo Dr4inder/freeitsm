@@ -121,7 +121,7 @@ return [
         'ai_settings_saved' => 'Налаштування AI збережено',
     ],
     'editor' => [
-        'page_title' => 'Service Desk - Редагування форми',
+        'page_title' => 'Редагування форми',
         'title_new' => 'Нова форма',
         'title_edit' => 'Редагувати форму',
         'unsaved' => 'Незбережені зміни',
@@ -448,7 +448,7 @@ return [
         'unsupported_type' => 'Це запитання неможливо показати тут.',
     ],
     'fill' => [
-        'page_title' => 'Service Desk - Заповнення форми',
+        'page_title' => 'Заповнення форми',
         'loading' => 'Завантаження форми...',
         'no_id' => 'Не вказано ID форми',
         'logo_alt' => 'Логотип компанії',
@@ -543,7 +543,7 @@ return [
         'none_yet' => 'Колекцій ще немає. Створіть її в налаштуваннях форм.',
     ],
     'subs' => [
-        'page_title' => 'Service Desk - Відповіді на форму',
+        'page_title' => 'Відповіді на форму',
         'page_title_named' => 'Service Desk - Відповіді: {title}',
         'back' => 'Назад',
         'heading' => 'Відповіді',

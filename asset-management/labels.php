@@ -160,7 +160,7 @@ $hostIsLocal = (bool)preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?$/i', $labelHo
 <head>
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars(t('asset-management.labels.browser_title')); ?> · FreeITSM</title>
+    <title><?php echo htmlspecialchars(pageTitle('assets', t('asset-management.labels.browser_title'))); ?></title>
     <script src="../assets/js/qrcode.min.js"></script>
     <style>
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f3f6fa; color: #222; }

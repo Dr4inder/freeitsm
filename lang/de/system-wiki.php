@@ -58,7 +58,7 @@ return [
     ],
 
     'search' => [
-        'page_title'           => 'Service Desk - Wiki-Suche',
+        'page_title'           => 'Wiki-Suche',
         'search_placeholder'   => 'Dateien, Funktionen, Datenbanktabellen suchen...',
         'search_btn'           => 'Suchen',
         'tab_files'            => 'Dateien',
@@ -75,7 +75,7 @@ return [
     ],
 
     'scan' => [
-        'page_title'      => 'Service Desk - Scan-Verwaltung',
+        'page_title'      => 'Scan-Verwaltung',
         'heading'         => 'Scan-Verwaltung',
         'subtitle'        => 'Den PowerShell-Scanner ausführen, um den Quellcode zu katalogisieren',
         'run_now'         => 'Scan jetzt ausführen',
@@ -96,7 +96,7 @@ return [
     ],
 
     'file' => [
-        'page_title'         => 'Service Desk - Dateidetails',
+        'page_title'         => 'Dateidetails',
         'loading'            => 'Dateidetails werden geladen...',
         'no_id'              => 'Keine Datei-ID angegeben.',
         'error_prefix'       => 'Fehler: ',
@@ -130,7 +130,7 @@ return [
     ],
 
     'function' => [
-        'page_title'    => 'Service Desk - Funktionsdetails',
+        'page_title'    => 'Funktionsdetails',
         'loading'       => 'Funktionsdetails werden geladen...',
         'no_id'         => 'Keine Funktions-ID angegeben.',
         'error_prefix'  => 'Fehler: ',
@@ -146,7 +146,7 @@ return [
     ],
 
     'table' => [
-        'page_title'        => 'Service Desk - Tabellenverweise',
+        'page_title'        => 'Tabellenverweise',
         'loading'           => 'Tabellenverweise werden geladen...',
         'no_name'           => 'Kein Tabellenname angegeben.',
         'error_prefix'      => 'Fehler: ',
@@ -158,7 +158,7 @@ return [
     ],
 
     'tables' => [
-        'page_title'    => 'Service Desk - Datenbanktabellen',
+        'page_title'    => 'Datenbanktabellen',
         'heading'       => 'Datenbanktabellen',
         'loading'       => 'Wird geladen...',
         'col_name'      => 'Tabellenname',

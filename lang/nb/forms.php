@@ -121,7 +121,7 @@ return [
         'ai_settings_saved' => 'AI-innstillingene er lagret',
     ],
     'editor' => [
-        'page_title' => 'Servicedesk - Rediger skjema',
+        'page_title' => 'Rediger skjema',
         'title_new' => 'Nytt skjema',
         'title_edit' => 'Rediger skjema',
         'unsaved' => 'Ulagrede endringer',
@@ -448,7 +448,7 @@ return [
         'unsupported_type' => 'Dette spørsmålet kan ikke vises her.',
     ],
     'fill' => [
-        'page_title' => 'Servicedesk - Fyll ut skjema',
+        'page_title' => 'Fyll ut skjema',
         'loading' => 'Laster skjema...',
         'no_id' => 'Ingen skjema-ID er angitt',
         'logo_alt' => 'Firmalogo',
@@ -543,7 +543,7 @@ return [
         'none_yet' => 'Det finnes ingen samlinger ennå. Opprett en i skjemainnstillingene.',
     ],
     'subs' => [
-        'page_title' => 'Servicedesk - Skjemainnsendinger',
+        'page_title' => 'Skjemainnsendinger',
         'page_title_named' => 'Servicedesk - Innsendinger for {title}',
         'back' => 'Tilbake',
         'heading' => 'Innsendinger',

@@ -2514,7 +2514,7 @@ return [
 
     // tickets/activity.php — full-screen mailbox activity log
     'activity' => [
-        'page_title'           => 'Service Desk - Mailbox Activity',
+        'page_title'           => 'Mailbox Activity',
         'sidebar_title'        => 'Mailboxes',
         'filter_placeholder'   => 'Filter mailboxes...',
         'back_to_settings'     => 'Back to Settings',
@@ -2757,7 +2757,7 @@ return [
             'err_time_grouping'     => 'Time grouping is required for time-based aggregates',
         ],
         'library' => [
-            'page_title'          => 'Service Desk - Ticket Widget Library',
+            'page_title'          => 'Ticket Widget Library',
             'back_dashboard'      => 'Dashboard',
             'heading'             => 'Widget Library',
             'search_placeholder'  => 'Search widgets...',
@@ -3238,7 +3238,7 @@ return [
     // tickets/help-sla.php — SLA management deep-dive help page. Prose values
     // contain inline HTML markup and are echoed unescaped.
     'help_sla' => [
-        'page_title'    => 'Service Desk - SLA Management',
+        'page_title'    => 'SLA Management',
         'back_link'     => '&larr; Back to Tickets guide',
         'sidebar_title' => 'SLA Guide',
         'hero_title'    => 'SLA Management',

@@ -44,7 +44,7 @@ return [
         'files_count'        => '{n} archivos',
     ],
     'search' => [
-        'page_title'         => 'Service Desk - Búsqueda en la Wiki',
+        'page_title'         => 'Búsqueda en la Wiki',
         'search_placeholder' => 'Buscar archivos, funciones, tablas de la base de datos...',
         'search_btn'         => 'Buscar',
         'tab_files'          => 'Archivos',
@@ -60,7 +60,7 @@ return [
         'refs_across_files'  => '{refs} referencias en {files} archivos',
     ],
     'scan' => [
-        'page_title'     => 'Service Desk - Gestión de Escaneos',
+        'page_title'     => 'Gestión de Escaneos',
         'heading'        => 'Gestión de Escaneos',
         'subtitle'       => 'Ejecute el escáner de PowerShell para catalogar el código',
         'run_now'        => 'Ejecutar Escaneo Ahora',
@@ -80,7 +80,7 @@ return [
         'error_prefix'   => 'Error:',
     ],
     'file' => [
-        'page_title'       => 'Service Desk - Detalle del Archivo',
+        'page_title'       => 'Detalle del Archivo',
         'loading'          => 'Cargando detalles del archivo...',
         'no_id'            => 'No se especificó ningún ID de archivo.',
         'error_prefix'     => 'Error:',
@@ -113,7 +113,7 @@ return [
         'static'           => 'estático',
     ],
     'function' => [
-        'page_title'   => 'Service Desk - Detalle de la Función',
+        'page_title'   => 'Detalle de la Función',
         'loading'      => 'Cargando detalles de la función...',
         'no_id'        => 'No se especificó ningún ID de función.',
         'error_prefix' => 'Error:',
@@ -128,7 +128,7 @@ return [
         'col_line'     => 'Línea',
     ],
     'table' => [
-        'page_title'        => 'Service Desk - Referencias de la Tabla',
+        'page_title'        => 'Referencias de la Tabla',
         'loading'           => 'Cargando referencias de la tabla...',
         'no_name'           => 'No se especificó ningún nombre de tabla.',
         'error_prefix'      => 'Error:',
@@ -139,7 +139,7 @@ return [
         'no_references'     => 'No se encontraron referencias para esta tabla.',
     ],
     'tables' => [
-        'page_title' => 'Service Desk - Tablas de la Base de Datos',
+        'page_title' => 'Tablas de la Base de Datos',
         'heading'    => 'Tablas de la Base de Datos',
         'loading'    => 'Cargando…',
         'col_name'   => 'Nombre de la Tabla',

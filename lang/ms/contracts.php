@@ -80,7 +80,7 @@ return [
         'result_count_other' => '{n} hasil',
     ],
     'detail' => [
-        'page_title' => 'Meja Bantuan - Lihat kontrak',
+        'page_title' => 'Lihat kontrak',
         'loading' => 'Memuatkan kontrak...',
         'error_prefix' => 'Ralat:',
         'load_failed' => 'Gagal memuatkan kontrak',
@@ -161,8 +161,8 @@ return [
         'toast_event_save_failed' => 'Gagal menyimpan acara',
     ],
     'edit' => [
-        'page_title_edit' => 'Meja Bantuan - Edit kontrak',
-        'page_title_add' => 'Meja Bantuan - Tambah kontrak',
+        'page_title_edit' => 'Edit kontrak',
+        'page_title_add' => 'Tambah kontrak',
         'heading_edit' => 'Edit kontrak',
         'heading_add' => 'Tambah kontrak',
         'none' => 'Tiada',
@@ -264,7 +264,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Meja Bantuan - Pembekal',
-        'view_page_title' => 'Meja Bantuan - Lihat Pembekal',
+        'view_page_title' => 'Lihat Pembekal',
         'all_suppliers' => 'Semua pembekal',
         'add_supplier' => 'Tambah pembekal',
         'edit_supplier' => 'Edit pembekal',
@@ -715,7 +715,7 @@ return [
             'low' => 'rendah',
         ],
         'scoring' => [
-            'page_title' => 'Meja Bantuan - Pemarkahan',
+            'page_title' => 'Pemarkahan',
             'title' => 'Pemarkahan',
             'score_by_category' => 'Markah mengikut kategori',
             'my_overall' => 'Keseluruhan saya',
@@ -742,7 +742,7 @@ return [
             'other_analysts' => 'Penganalisis lain (purata)',
         ],
         'documents' => [
-            'page_title' => 'Meja Bantuan - Dokumen RFP',
+            'page_title' => 'Dokumen RFP',
             'rfp' => 'RFP',
             'documents' => 'Dokumen',
             'heading' => 'Dokumen sumber',
@@ -797,7 +797,7 @@ return [
             'delete_confirm' => 'Padam "{name}"?\\n\\nSebarang keperluan yang diekstrak daripada dokumen ini turut akan dialih keluar.',
         ],
         'document' => [
-            'page_title' => 'Meja Bantuan - Dokumen RFP',
+            'page_title' => 'Dokumen RFP',
             'heading' => 'Dokumen dijana',
             'preview_document' => 'Pratonton dokumen',
             'generate_all' => 'Jana semua',
@@ -885,7 +885,7 @@ return [
             'restore_failed_short' => 'Gagal memulihkan',
         ],
         'extracted' => [
-            'page_title' => 'Meja Bantuan - Keperluan diekstrak',
+            'page_title' => 'Keperluan diekstrak',
             'heading' => 'Keperluan diekstrak',
             'total' => 'Jumlah',
             'requirements' => 'Keperluan',
@@ -927,7 +927,7 @@ return [
             'not_generated' => '(Belum dijana lagi.)',
         ],
         'compare' => [
-            'page_title' => 'Meja Bantuan - Banding',
+            'page_title' => 'Banding',
             'compare' => 'Banding',
             'heading' => 'Banding pembekal',
             'load_failed' => 'Gagal memuatkan data perbandingan',
@@ -950,7 +950,7 @@ return [
             'col_winner' => 'Pemenang',
         ],
         'coverage' => [
-            'page_title' => 'Meja Bantuan - Peta liputan',
+            'page_title' => 'Peta liputan',
             'heading' => 'Peta liputan',
             'consolidated_requirements' => 'Keperluan disatukan',
             'load_failed' => 'Gagal memuatkan liputan',
@@ -969,7 +969,7 @@ return [
             'legend_note' => 'Satu keperluan disatukan dikira dalam setiap jabatan yang menjadi sumbernya.',
         ],
         'audit' => [
-            'page_title' => 'Meja Bantuan - Jejak audit AI',
+            'page_title' => 'Jejak audit AI',
             'audit_trail' => 'Jejak audit',
             'heading' => 'Jejak audit AI',
             'total_input_tokens' => 'Jumlah token input',
@@ -985,7 +985,7 @@ return [
             'col_model' => 'Model',
         ],
         'consolidate' => [
-            'page_title' => 'Meja Bantuan - Keperluan disatukan',
+            'page_title' => 'Keperluan disatukan',
             'consolidated' => 'Disatukan',
             'heading' => 'Keperluan disatukan',
             'add_custom' => 'Tambah tersuai',

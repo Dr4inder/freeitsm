@@ -80,7 +80,7 @@ return [
         'result_count_other' => '{n} resultados',
     ],
     'detail' => [
-        'page_title' => 'Central de Serviços - Ver contrato',
+        'page_title' => 'Ver contrato',
         'loading' => 'Carregando contrato...',
         'error_prefix' => 'Erro:',
         'load_failed' => 'Falha ao carregar contrato',
@@ -161,8 +161,8 @@ return [
         'toast_event_save_failed' => 'Falha ao salvar evento',
     ],
     'edit' => [
-        'page_title_edit' => 'Central de Serviços - Editar contrato',
-        'page_title_add' => 'Central de Serviços - Adicionar contrato',
+        'page_title_edit' => 'Editar contrato',
+        'page_title_add' => 'Adicionar contrato',
         'heading_edit' => 'Editar contrato',
         'heading_add' => 'Adicionar contrato',
         'none' => 'Nenhum',
@@ -264,7 +264,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Central de Serviços - Fornecedores',
-        'view_page_title' => 'Central de Serviços - Ver Fornecedor',
+        'view_page_title' => 'Ver Fornecedor',
         'all_suppliers' => 'Todos os fornecedores',
         'add_supplier' => 'Adicionar fornecedor',
         'edit_supplier' => 'Editar fornecedor',
@@ -715,7 +715,7 @@ return [
             'low' => 'baixa',
         ],
         'scoring' => [
-            'page_title' => 'Central de Serviços - Pontuação',
+            'page_title' => 'Pontuação',
             'title' => 'Pontuação',
             'score_by_category' => 'Pontuação por categoria',
             'my_overall' => 'Minha geral',
@@ -742,7 +742,7 @@ return [
             'other_analysts' => 'Outros analistas (média)',
         ],
         'documents' => [
-            'page_title' => 'Central de Serviços - Documentos de RFP',
+            'page_title' => 'Documentos de RFP',
             'rfp' => 'RFP',
             'documents' => 'Documentos',
             'heading' => 'Documentos de origem',
@@ -797,7 +797,7 @@ return [
             'delete_confirm' => 'Excluir "{name}"?\\n\\nQuaisquer requisitos extraídos deste documento também serão removidos.',
         ],
         'document' => [
-            'page_title' => 'Central de Serviços - Documento de RFP',
+            'page_title' => 'Documento de RFP',
             'heading' => 'Documento gerado',
             'preview_document' => 'Pré-visualizar documento',
             'generate_all' => 'Gerar tudo',
@@ -885,7 +885,7 @@ return [
             'restore_failed_short' => 'Falha ao restaurar',
         ],
         'extracted' => [
-            'page_title' => 'Central de Serviços - Requisitos extraídos',
+            'page_title' => 'Requisitos extraídos',
             'heading' => 'Requisitos extraídos',
             'total' => 'Total',
             'requirements' => 'Requisitos',
@@ -927,7 +927,7 @@ return [
             'not_generated' => '(Ainda não gerado.)',
         ],
         'compare' => [
-            'page_title' => 'Central de Serviços - Comparar',
+            'page_title' => 'Comparar',
             'compare' => 'Comparar',
             'heading' => 'Comparar fornecedores',
             'load_failed' => 'Falha ao carregar dados de comparação',
@@ -950,7 +950,7 @@ return [
             'col_winner' => 'Vencedor',
         ],
         'coverage' => [
-            'page_title' => 'Central de Serviços - Mapa de cobertura',
+            'page_title' => 'Mapa de cobertura',
             'heading' => 'Mapa de cobertura',
             'consolidated_requirements' => 'Requisitos consolidados',
             'load_failed' => 'Falha ao carregar cobertura',
@@ -969,7 +969,7 @@ return [
             'legend_note' => 'Um requisito consolidado conta em cada departamento do qual tem uma origem.',
         ],
         'audit' => [
-            'page_title' => 'Central de Serviços - Trilha de auditoria de IA',
+            'page_title' => 'Trilha de auditoria de IA',
             'audit_trail' => 'Trilha de auditoria',
             'heading' => 'Trilha de auditoria de IA',
             'total_input_tokens' => 'Total de tokens de entrada',
@@ -985,7 +985,7 @@ return [
             'col_model' => 'Modelo',
         ],
         'consolidate' => [
-            'page_title' => 'Central de Serviços - Requisitos consolidados',
+            'page_title' => 'Requisitos consolidados',
             'consolidated' => 'Consolidados',
             'heading' => 'Requisitos consolidados',
             'add_custom' => 'Adicionar personalizado',

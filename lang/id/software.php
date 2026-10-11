@@ -108,7 +108,7 @@ return [
 
     // -- Widget library (dashboard/library.php) ------------------------------
     'library' => [
-        'page_title'   => 'Service Desk - Pustaka Widget Perangkat Lunak',
+        'page_title'   => 'Pustaka Widget Perangkat Lunak',
         'back'         => 'Dasbor',
         'heading'      => 'Pustaka Widget',
         'search'       => 'Cari widget...',

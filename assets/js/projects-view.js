@@ -56,7 +56,7 @@
         comp.hidden = !(L.multi_company && p.company_name);
         comp.textContent = p.company_name || '';
         document.getElementById('pvName').textContent = p.name;
-        document.title = document.title.split(' - ')[0] + ' - ' + p.name;
+        document.title = (document.titleBase = document.titleBase || document.title) + ' - ' + p.name;   // GH #173: appended to the server's pageTitle()
         const goal = document.getElementById('pvGoal');
         goal.textContent = p.goal || '';
         goal.hidden = !p.goal;

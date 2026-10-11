@@ -94,7 +94,7 @@ return [
 
     // View contract (view.php)
     'detail' => [
-        'page_title'                => 'Service Desk - View contract',
+        'page_title'                => 'View contract',
         'loading'                   => 'Loading contract...',
         'error_prefix'              => 'Error:',
         'load_failed'               => 'Failed to load contract',
@@ -180,8 +180,8 @@ return [
 
     // Add/Edit contract (edit.php)
     'edit' => [
-        'page_title_edit'      => 'Service Desk - Edit contract',
-        'page_title_add'       => 'Service Desk - Add contract',
+        'page_title_edit'      => 'Edit contract',
+        'page_title_add'       => 'Add contract',
         'heading_edit'         => 'Edit contract',
         'heading_add'          => 'Add contract',
         'none'                 => 'None',
@@ -327,7 +327,7 @@ return [
     // Suppliers (suppliers/index.php + suppliers/view/index.php)
     'suppliers' => [
         'page_title'           => 'Service Desk - Suppliers',
-        'view_page_title'      => 'Service Desk - View Supplier',
+        'view_page_title'      => 'View Supplier',
         'all_suppliers'        => 'All suppliers',
         'add_supplier'         => 'Add supplier',
         'edit_supplier'        => 'Edit supplier',
@@ -825,7 +825,7 @@ return [
 
         // Scoring (scoring.php)
         'scoring' => [
-            'page_title'          => 'Service Desk - Scoring',
+            'page_title'          => 'Scoring',
             'title'               => 'Scoring',
             'score_by_category'   => 'Score by category',
             'my_overall'          => 'My overall',
@@ -854,7 +854,7 @@ return [
 
         // Source documents (documents.php)
         'documents' => [
-            'page_title'          => 'Service Desk - RFP Documents',
+            'page_title'          => 'RFP Documents',
             'rfp'                 => 'RFP',
             'documents'           => 'Documents',
             'heading'             => 'Source documents',
@@ -911,7 +911,7 @@ return [
 
         // Generated document (document.php)
         'document' => [
-            'page_title'          => 'Service Desk - RFP Document',
+            'page_title'          => 'RFP Document',
             'heading'             => 'Generated document',
             'preview_document'    => 'Preview document',
             'generate_all'        => 'Generate all',
@@ -1001,7 +1001,7 @@ return [
 
         // Extracted requirements (extracted.php)
         'extracted' => [
-            'page_title'        => 'Service Desk - Extracted requirements',
+            'page_title'        => 'Extracted requirements',
             'heading'           => 'Extracted requirements',
             'total'             => 'Total',
             'requirements'      => 'Requirements',
@@ -1047,7 +1047,7 @@ return [
 
         // Compare suppliers (compare.php)
         'compare' => [
-            'page_title'         => 'Service Desk - Compare',
+            'page_title'         => 'Compare',
             'compare'            => 'Compare',
             'heading'            => 'Compare suppliers',
             'load_failed'        => 'Failed to load compare data',
@@ -1072,7 +1072,7 @@ return [
 
         // Coverage heatmap (coverage.php)
         'coverage' => [
-            'page_title'              => 'Service Desk - Coverage map',
+            'page_title'              => 'Coverage map',
             'heading'                 => 'Coverage map',
             'consolidated_requirements' => 'Consolidated requirements',
             'load_failed'             => 'Failed to load coverage',
@@ -1093,7 +1093,7 @@ return [
 
         // AI audit trail (audit.php)
         'audit' => [
-            'page_title'          => 'Service Desk - AI audit trail',
+            'page_title'          => 'AI audit trail',
             'audit_trail'         => 'Audit trail',
             'heading'             => 'AI audit trail',
             'total_input_tokens'  => 'Total input tokens',
@@ -1111,7 +1111,7 @@ return [
 
         // Consolidated requirements (consolidate.php)
         'consolidate' => [
-            'page_title'          => 'Service Desk - Consolidated requirements',
+            'page_title'          => 'Consolidated requirements',
             'consolidated'        => 'Consolidated',
             'heading'             => 'Consolidated requirements',
             'add_custom'          => 'Add custom',

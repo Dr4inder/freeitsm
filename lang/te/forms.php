@@ -70,7 +70,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'సర్వీస్ డెస్క్ - ఫారాన్ని సవరించండి',
+        'page_title'       => 'ఫారాన్ని సవరించండి',
         'title_new'        => 'కొత్త ఫారం',
         'title_edit'       => 'ఫారాన్ని సవరించండి',
         'unsaved'          => 'సేవ్ చేయని మార్పులు',
@@ -264,7 +264,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'సర్వీస్ డెస్క్ - ఫారాన్ని నింపండి',
+        'page_title'       => 'ఫారాన్ని నింపండి',
         'loading'          => 'ఫారం లోడ్ అవుతోంది...',
         'no_id'            => 'ఫారం ID పేర్కొనబడలేదు',
         'logo_alt'         => 'కంపెనీ లోగో',
@@ -286,7 +286,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'సర్వీస్ డెస్క్ - ఫారం సమర్పణలు',
+        'page_title'        => 'ఫారం సమర్పణలు',
         'page_title_named'  => 'సర్వీస్ డెస్క్ - {title} సమర్పణలు',
         'back'              => 'వెనుకకు',
         'heading'           => 'సమర్పణలు',

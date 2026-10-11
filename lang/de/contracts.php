@@ -80,7 +80,7 @@ return [
         'result_count_other' => '{n} Ergebnisse',
     ],
     'detail' => [
-        'page_title' => 'Service Desk - Vertrag anzeigen',
+        'page_title' => 'Vertrag anzeigen',
         'loading' => 'Vertrag wird geladen...',
         'error_prefix' => 'Fehler:',
         'load_failed' => 'Vertrag konnte nicht geladen werden',
@@ -161,8 +161,8 @@ return [
         'toast_event_save_failed' => 'Termin konnte nicht gespeichert werden',
     ],
     'edit' => [
-        'page_title_edit' => 'Service Desk - Vertrag bearbeiten',
-        'page_title_add' => 'Service Desk - Vertrag hinzufügen',
+        'page_title_edit' => 'Vertrag bearbeiten',
+        'page_title_add' => 'Vertrag hinzufügen',
         'heading_edit' => 'Vertrag bearbeiten',
         'heading_add' => 'Vertrag hinzufügen',
         'none' => 'Keine',
@@ -264,7 +264,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Lieferanten',
-        'view_page_title' => 'Service Desk - Lieferant anzeigen',
+        'view_page_title' => 'Lieferant anzeigen',
         'all_suppliers' => 'Alle Lieferanten',
         'add_supplier' => 'Lieferant hinzufügen',
         'edit_supplier' => 'Lieferant bearbeiten',
@@ -719,7 +719,7 @@ Bereits erfasste Bewertungen für ihn werden gelöscht. Der Lieferantendatensatz
             'low' => 'niedrig',
         ],
         'scoring' => [
-            'page_title' => 'Service Desk - Bewertung',
+            'page_title' => 'Bewertung',
             'title' => 'Bewertung',
             'score_by_category' => 'Bewertung nach Kategorie',
             'my_overall' => 'Meine Gesamtbewertung',
@@ -746,7 +746,7 @@ Bereits erfasste Bewertungen für ihn werden gelöscht. Der Lieferantendatensatz
             'other_analysts' => 'Andere Analysten (Ø)',
         ],
         'documents' => [
-            'page_title' => 'Service Desk - RFP-Dokumente',
+            'page_title' => 'RFP-Dokumente',
             'rfp' => 'RFP',
             'documents' => 'Dokumente',
             'heading' => 'Quelldokumente',
@@ -803,7 +803,7 @@ Bereits erfasste Bewertungen für ihn werden gelöscht. Der Lieferantendatensatz
 Alle aus diesem Dokument extrahierten Anforderungen werden ebenfalls entfernt.',
         ],
         'document' => [
-            'page_title' => 'Service Desk - RFP-Dokument',
+            'page_title' => 'RFP-Dokument',
             'heading' => 'Erstelltes Dokument',
             'preview_document' => 'Dokument-Vorschau',
             'generate_all' => 'Alle erstellen',
@@ -902,7 +902,7 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'restore_failed_short' => 'Wiederherstellen fehlgeschlagen',
         ],
         'extracted' => [
-            'page_title' => 'Service Desk - Extrahierte Anforderungen',
+            'page_title' => 'Extrahierte Anforderungen',
             'heading' => 'Extrahierte Anforderungen',
             'total' => 'Gesamt',
             'requirements' => 'Anforderungen',
@@ -946,7 +946,7 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'not_generated' => '(Noch nicht erstellt.)',
         ],
         'compare' => [
-            'page_title' => 'Service Desk - Vergleichen',
+            'page_title' => 'Vergleichen',
             'compare' => 'Vergleichen',
             'heading' => 'Lieferanten vergleichen',
             'load_failed' => 'Vergleichsdaten konnten nicht geladen werden',
@@ -969,7 +969,7 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'col_winner' => 'Sieger',
         ],
         'coverage' => [
-            'page_title' => 'Service Desk - Abdeckungskarte',
+            'page_title' => 'Abdeckungskarte',
             'heading' => 'Abdeckungskarte',
             'consolidated_requirements' => 'Konsolidierte Anforderungen',
             'load_failed' => 'Abdeckung konnte nicht geladen werden',
@@ -988,7 +988,7 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'legend_note' => 'Eine konsolidierte Anforderung zählt in jedem Fachbereich, aus dem sie eine Quelle hat.',
         ],
         'audit' => [
-            'page_title' => 'Service Desk - KI-Audit-Trail',
+            'page_title' => 'KI-Audit-Trail',
             'audit_trail' => 'Audit-Trail',
             'heading' => 'KI-Audit-Trail',
             'total_input_tokens' => 'Eingabe-Tokens gesamt',
@@ -1004,7 +1004,7 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'col_model' => 'Modell',
         ],
         'consolidate' => [
-            'page_title' => 'Service Desk - Konsolidierte Anforderungen',
+            'page_title' => 'Konsolidierte Anforderungen',
             'consolidated' => 'Konsolidiert',
             'heading' => 'Konsolidierte Anforderungen',
             'add_custom' => 'Eigene hinzufügen',

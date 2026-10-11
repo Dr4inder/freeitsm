@@ -44,7 +44,7 @@ function ctHead(string $title): void
     <link rel="icon" type="image/svg+xml" href="<?php echo $b; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(systemName()); ?> - <?php echo htmlspecialchars($title); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('lms', t('lms.nav.tests'), $title)); ?></title>
     <link rel="stylesheet" href="<?php echo $b; ?>assets/css/theme.css?v=27">
     <link rel="stylesheet" href="<?php echo $b; ?>assets/css/inbox.css?v=78">
     <link rel="stylesheet" href="<?php echo $b; ?>assets/css/lms.css?v=10">

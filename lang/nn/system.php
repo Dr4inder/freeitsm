@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'Klarte ikkje å slette',
     ],
     'api' => [
-        'browser_title' => 'Servicedesk - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'Lag og handter nøklar til REST-API-et i FreeITSM, med detaljerte løyve per nøkkel.',
         'base_url' => 'Grunn-URL',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => 'Har du kopiert nøkkelen? Han kan ikkje visast igjen.',
     ],
     'webhooks' => [
-        'browser_title' => 'Servicedesk - Webhooks',
+        'browser_title' => 'Webhooks',
         'title' => 'Webhooks',
         'subtitle' => 'Utgåande webhooks &mdash; lagde i kø av arbeidsflythandlinga <em>Send ein webhook</em> &mdash; blir leverte i bakgrunnen med automatiske nye forsøk, så eit tregt eller dødt endepunkt aldri held ei sak att. Denne sida viser om levering er sett opp, ei oversikt over leveringshelsa, og heile loggen der du kan granske kvar førespurnad, svaret på han, og sende kva som helst av det på nytt.',
         'pill_running' => 'Leveringsarbeidaren køyrer',

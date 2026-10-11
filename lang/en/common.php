@@ -246,6 +246,7 @@ return [
         'wiki'           => ['name' => 'Wiki',        'description' => 'Browse auto-generated codebase documentation'],
         'lms'            => ['name' => 'LMS',         'description' => 'Learning Management System with SCORM course player'],
         'process-mapper' => ['name' => 'Processes',   'description' => 'Visual flowchart and process mapping tool'],
+        'checklists'     => ['name' => 'Checklists',  'description' => 'Step-by-step checklists and SOPs you can run against a ticket or task'],
         'tasks'          => ['name' => 'Tasks',       'description' => 'Kanban board and list view for tracking tasks'],
         'projects'       => ['name' => 'Projects',    'description' => 'Plan and run IT projects, built on your tasks and linked to everything else'],
         'cmdb'           => ['name' => 'CMDB',        'description' => 'Configuration Management Database'],

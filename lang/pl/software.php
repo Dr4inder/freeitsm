@@ -116,7 +116,7 @@ return [
         'widget_removed' => 'Usunięto widżet',
     ],
     'library' => [
-        'page_title' => 'Service Desk - Biblioteka widżetów oprogramowania',
+        'page_title' => 'Biblioteka widżetów oprogramowania',
         'back' => 'Pulpit',
         'heading' => 'Biblioteka widżetów',
         'search' => 'Szukaj widżetów...',

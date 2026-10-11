@@ -28,7 +28,7 @@ $tourStart = !empty($_GET['walk']) ? 'walk' : 'explore';
     <link rel="icon" type="image/svg+xml" href="<?php echo BASE_URL; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(systemName() . ' - ' . t('projects.tutorial.title')); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('projects', t('projects.tutorial.title'))); ?></title>
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <?php // The method filter reads the presets, so it can never disagree with them. ?>

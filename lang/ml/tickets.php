@@ -1863,7 +1863,7 @@ return [
         ],
     ],
     'activity' => [
-        'page_title' => 'Service Desk - മെയിൽബോക്സ് ആക്റ്റിവിറ്റി',
+        'page_title' => 'മെയിൽബോക്സ് ആക്റ്റിവിറ്റി',
         'sidebar_title' => 'മെയിൽബോക്സുകൾ',
         'filter_placeholder' => 'മെയിൽബോക്സുകൾ ഫിൽട്ടർ ചെയ്യുക...',
         'back_to_settings' => 'ക്രമീകരണങ്ങളിലേക്ക് തിരികെ',
@@ -2038,7 +2038,7 @@ return [
             'err_time_grouping' => 'സമയാധിഷ്ഠിത സമാഹരണങ്ങൾക്ക് സമയ ഗ്രൂപ്പിംഗ് നിർബന്ധമാണ്',
         ],
         'library' => [
-            'page_title' => 'Service Desk - ടിക്കറ്റ് വിജറ്റ് ലൈബ്രറി',
+            'page_title' => 'ടിക്കറ്റ് വിജറ്റ് ലൈബ്രറി',
             'back_dashboard' => 'ഡാഷ്‌ബോർഡ്',
             'heading' => 'വിജറ്റ് ലൈബ്രറി',
             'search_placeholder' => 'വിജറ്റുകൾ തിരയുക...',
@@ -2466,7 +2466,7 @@ return [
         ],
     ],
     'help_sla' => [
-        'page_title' => 'സർവീസ് ഡെസ്ക് - SLA മാനേജ്മെന്റ്',
+        'page_title' => 'SLA മാനേജ്മെന്റ്',
         'back_link' => '&larr; ടിക്കറ്റ് ഗൈഡിലേക്ക് തിരികെ',
         'sidebar_title' => 'SLA ഗൈഡ്',
         'hero_title' => 'SLA മാനേജ്മെന്റ്',

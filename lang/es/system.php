@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'Error al eliminar',
     ],
     'api' => [
-        'browser_title' => 'Mesa de servicio - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'Cree y gestione claves para la API REST de FreeITSM, con permisos granulares por clave.',
         'base_url' => 'URL base',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => '¿Ha copiado la clave? No se puede volver a mostrar.',
     ],
     'webhooks' => [
-        'browser_title' => 'Mesa de servicio - Webhooks',
+        'browser_title' => 'Webhooks',
         'title' => 'Webhooks',
         'subtitle' => 'Los webhooks salientes &mdash; puestos en cola por la acción de flujo de trabajo <em>Enviar un webhook</em> &mdash; se entregan en segundo plano con reintentos automáticos, de modo que un endpoint lento o caído nunca retiene un ticket. Esta página muestra si la entrega está configurada, un resumen del estado de las entregas y el registro completo, donde puede inspeccionar cada petición y su respuesta, y repetir cualquiera de ellas.',
         'pill_running' => 'El worker de entrega está en ejecución',

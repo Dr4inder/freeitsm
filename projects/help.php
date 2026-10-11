@@ -85,7 +85,7 @@ $prjHelpIcon = fn(string $paths) => '<svg xmlns="http://www.w3.org/2000/svg" wid
     <link rel="icon" type="image/svg+xml" href="<?php echo BASE_URL; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(systemName() . ' - ' . t('projects.help.title')); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('projects', t('projects.nav.help'))); ?></title>
     <script>window.translations = <?php echo json_encode(I18n::exportForJs(['common', 'projects']), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="<?php echo BASE_URL; ?>assets/js/tz.js?v=5"></script>

@@ -80,7 +80,7 @@ return [
         'result_count_other' => '{n} результатів',
     ],
     'detail' => [
-        'page_title' => 'Service Desk - Перегляд контракту',
+        'page_title' => 'Перегляд контракту',
         'loading' => 'Завантаження контракту...',
         'error_prefix' => 'Помилка:',
         'load_failed' => 'Не вдалося завантажити контракт',
@@ -161,8 +161,8 @@ return [
         'toast_event_save_failed' => 'Не вдалося зберегти подію',
     ],
     'edit' => [
-        'page_title_edit' => 'Service Desk - Редагування контракту',
-        'page_title_add' => 'Service Desk - Додавання контракту',
+        'page_title_edit' => 'Редагування контракту',
+        'page_title_add' => 'Додавання контракту',
         'heading_edit' => 'Редагувати контракт',
         'heading_add' => 'Додати контракт',
         'none' => 'Немає',
@@ -264,7 +264,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Постачальники',
-        'view_page_title' => 'Service Desk - Перегляд постачальника',
+        'view_page_title' => 'Перегляд постачальника',
         'all_suppliers' => 'Усі постачальники',
         'add_supplier' => 'Додати постачальника',
         'edit_supplier' => 'Редагувати постачальника',
@@ -715,7 +715,7 @@ return [
             'low' => 'низький',
         ],
         'scoring' => [
-            'page_title' => 'Service Desk - Оцінювання',
+            'page_title' => 'Оцінювання',
             'title' => 'Оцінювання',
             'score_by_category' => 'Оцінка за категорією',
             'my_overall' => 'Моя загальна',
@@ -742,7 +742,7 @@ return [
             'other_analysts' => 'Інші аналітики (середнє)',
         ],
         'documents' => [
-            'page_title' => 'Service Desk - Документи RFP',
+            'page_title' => 'Документи RFP',
             'rfp' => 'RFP',
             'documents' => 'Документи',
             'heading' => 'Вихідні документи',
@@ -797,7 +797,7 @@ return [
             'delete_confirm' => 'Видалити "{name}"?\\n\\nБудь-які вилучені вимоги з цього документа також будуть видалені.',
         ],
         'document' => [
-            'page_title' => 'Service Desk - Документ RFP',
+            'page_title' => 'Документ RFP',
             'heading' => 'Згенерований документ',
             'preview_document' => 'Попередній перегляд документа',
             'generate_all' => 'Генерувати все',
@@ -885,7 +885,7 @@ return [
             'restore_failed_short' => 'Відновлення не вдалося',
         ],
         'extracted' => [
-            'page_title' => 'Service Desk - Вилучені вимоги',
+            'page_title' => 'Вилучені вимоги',
             'heading' => 'Вилучені вимоги',
             'total' => 'Всього',
             'requirements' => 'Вимоги',
@@ -927,7 +927,7 @@ return [
             'not_generated' => '(Ще не згенеровано.)',
         ],
         'compare' => [
-            'page_title' => 'Service Desk - Порівняння',
+            'page_title' => 'Порівняння',
             'compare' => 'Порівняти',
             'heading' => 'Порівняння постачальників',
             'load_failed' => 'Не вдалося завантажити дані порівняння',
@@ -950,7 +950,7 @@ return [
             'col_winner' => 'Переможець',
         ],
         'coverage' => [
-            'page_title' => 'Service Desk - Карта покриття',
+            'page_title' => 'Карта покриття',
             'heading' => 'Карта покриття',
             'consolidated_requirements' => 'Консолідовані вимоги',
             'load_failed' => 'Не вдалося завантажити покриття',
@@ -969,7 +969,7 @@ return [
             'legend_note' => 'Одна консолідована вимога враховується в кожному відділі, з якого вона має джерело.',
         ],
         'audit' => [
-            'page_title' => 'Service Desk - Журнал аудиту AI',
+            'page_title' => 'Журнал аудиту AI',
             'audit_trail' => 'Журнал аудиту',
             'heading' => 'Журнал аудиту AI',
             'total_input_tokens' => 'Всього вхідних токенів',
@@ -985,7 +985,7 @@ return [
             'col_model' => 'Модель',
         ],
         'consolidate' => [
-            'page_title' => 'Service Desk - Консолідовані вимоги',
+            'page_title' => 'Консолідовані вимоги',
             'consolidated' => 'Консолідовані',
             'heading' => 'Консолідовані вимоги',
             'add_custom' => 'Додати власне',

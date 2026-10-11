@@ -70,7 +70,7 @@ return [
 
     // ── Editor / builder (forms/edit/index.php) ─────────────────────
     'editor' => [
-        'page_title'       => 'Service Desk - Formulier bewerken',
+        'page_title'       => 'Formulier bewerken',
         'title_new'        => 'Nieuw formulier',
         'title_edit'       => 'Formulier bewerken',
         'unsaved'          => 'Niet-opgeslagen wijzigingen',
@@ -264,7 +264,7 @@ return [
 
     // ── Fill page (forms/fill.php) ──────────────────────────────────
     'fill' => [
-        'page_title'       => 'Service Desk - Formulier invullen',
+        'page_title'       => 'Formulier invullen',
         'loading'          => 'Formulier laden...',
         'no_id'            => 'Geen formulier-ID opgegeven',
         'logo_alt'         => 'Bedrijfslogo',
@@ -286,7 +286,7 @@ return [
 
     // ── Submissions page (forms/submissions.php) ────────────────────
     'subs' => [
-        'page_title'        => 'Service Desk - Formulierinzendingen',
+        'page_title'        => 'Formulierinzendingen',
         'page_title_named'  => 'Service Desk - {title} inzendingen',
         'back'              => 'Terug',
         'heading'           => 'Inzendingen',

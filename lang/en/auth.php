@@ -98,7 +98,7 @@ return [
     'reset_err_mismatch'  => 'Passwords do not match.',
 
     // ── Password expired (auth/force_password_change.php) ───────────────
-    'expired_title'       => 'Service Desk - Change Password',
+    'expired_title'       => 'Change Password',
     'expired_heading'     => 'Password Expired',
     'expired_intro'       => 'Your password has expired and must be changed before you can continue.',
     'expired_current_pw'  => 'Current Password',

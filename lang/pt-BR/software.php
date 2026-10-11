@@ -116,7 +116,7 @@ return [
         'widget_removed' => 'Widget removido',
     ],
     'library' => [
-        'page_title' => 'Central de Serviços - Biblioteca de widgets de software',
+        'page_title' => 'Biblioteca de widgets de software',
         'back' => 'Painel',
         'heading' => 'Biblioteca de widgets',
         'search' => 'Pesquisar widgets...',

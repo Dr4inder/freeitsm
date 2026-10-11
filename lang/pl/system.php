@@ -1314,7 +1314,7 @@ return [
         'delete_failed' => 'Nie udało się usunąć',
     ],
     'api' => [
-        'browser_title' => 'Centrum obsługi - API',
+        'browser_title' => 'API',
         'title' => 'API',
         'subtitle' => 'Twórz klucze do API REST FreeITSM i zarządzaj nimi, z osobnymi uprawnieniami dla każdego klucza.',
         'base_url' => 'Bazowy adres URL',
@@ -1375,7 +1375,7 @@ return [
         'confirm_copied' => 'Czy skopiowałeś klucz? Nie da się go już nigdy pokazać.',
     ],
     'webhooks' => [
-        'browser_title' => 'Centrum obsługi - Webhooki',
+        'browser_title' => 'Webhooki',
         'title' => 'Webhooki',
         'subtitle' => 'Wychodzące webhooki &mdash; kolejkowane przez akcję przepływu pracy <em>Wyślij webhook</em> &mdash; są dostarczane w tle z automatycznym ponawianiem, więc wolny albo martwy punkt końcowy nigdy nie blokuje zgłoszenia. Ta strona pokazuje, czy dostarczanie jest skonfigurowane, przegląd jego kondycji oraz pełny dziennik, w którym możesz obejrzeć każde żądanie i jego odpowiedź oraz powtórzyć dowolne z nich.',
         'pill_running' => 'Proces dostarczania działa',

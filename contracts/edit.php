@@ -24,7 +24,7 @@ $contract_id = $_GET['id'] ?? null;
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($contract_id ? t('contracts.edit.page_title_edit') : t('contracts.edit.page_title_add')); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('contracts', $contract_id ? t('contracts.edit.page_title_edit') : t('contracts.edit.page_title_add'))); ?></title>
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>

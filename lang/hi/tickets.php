@@ -1863,7 +1863,7 @@ return [
         ],
     ],
     'activity' => [
-        'page_title' => 'सेवा डेस्क - मेलबॉक्स गतिविधि',
+        'page_title' => 'मेलबॉक्स गतिविधि',
         'sidebar_title' => 'मेलबॉक्स',
         'filter_placeholder' => 'मेलबॉक्स फ़िल्टर करें…',
         'back_to_settings' => 'सेटिंग्स पर वापस जाएँ',
@@ -2038,7 +2038,7 @@ return [
             'err_time_grouping' => 'समय-आधारित एग्रीगेट के लिए समय समूहन आवश्यक है',
         ],
         'library' => [
-            'page_title' => 'सेवा डेस्क - टिकट विजेट लाइब्रेरी',
+            'page_title' => 'टिकट विजेट लाइब्रेरी',
             'back_dashboard' => 'डैशबोर्ड',
             'heading' => 'विजेट लाइब्रेरी',
             'search_placeholder' => 'विजेट खोजें…',
@@ -2466,7 +2466,7 @@ return [
         ],
     ],
     'help_sla' => [
-        'page_title' => 'सेवा डेस्क - SLA प्रबंधन',
+        'page_title' => 'SLA प्रबंधन',
         'back_link' => '&larr; टिकट गाइड पर वापस',
         'sidebar_title' => 'SLA गाइड',
         'hero_title' => 'SLA प्रबंधन',

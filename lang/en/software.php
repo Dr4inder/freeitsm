@@ -135,7 +135,7 @@ return [
 
     // -- Widget library (dashboard/library.php) ------------------------------
     'library' => [
-        'page_title'   => 'Service Desk - Software Widget Library',
+        'page_title'   => 'Software Widget Library',
         'back'         => 'Dashboard',
         'heading'      => 'Widget Library',
         'search'       => 'Search widgets...',

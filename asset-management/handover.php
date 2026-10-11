@@ -86,7 +86,7 @@ if ($data === null) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(t('asset-management.handover.page_title')); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('assets', t('asset-management.handover.page_title'))); ?></title>
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <style>
         body { margin: 0; padding: 32px; background: #f4f6f8; }

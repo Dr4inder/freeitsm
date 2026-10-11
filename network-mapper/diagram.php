@@ -39,7 +39,7 @@ $translationNamespaces = ['common', 'network-mapper'];
     <link rel="icon" type="image/svg+xml" href="<?php echo defined('BASE_URL') ? BASE_URL : '/'; ?>favicon.svg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars(t('network-mapper.editor.browser_title')); ?></title>
+    <title><?php echo htmlspecialchars(pageTitle('network-mapper', t('network-mapper.editor.browser_title'))); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=78">
     <style>
@@ -1659,7 +1659,7 @@ $translationNamespaces = ['common', 'network-mapper'];
     <script src="../assets/js/vendor/html2canvas.min.js"></script>
     <script src="../assets/js/vendor/jspdf.umd.min.js"></script>
     <script src="../assets/js/network-mapper-icons.js"></script>
-    <script src="../assets/js/network-mapper.js?v=4"></script>
+    <script src="../assets/js/network-mapper.js?v=5"></script>
     <script>
         NM.init(<?php echo $diagramId; ?>);
 

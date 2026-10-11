@@ -80,7 +80,7 @@ return [
         'result_count_other' => '{n} resultados',
     ],
     'detail' => [
-        'page_title' => 'Service Desk - Ver contrato',
+        'page_title' => 'Ver contrato',
         'loading' => 'Cargando contrato...',
         'error_prefix' => 'Error:',
         'load_failed' => 'No se pudo cargar el contrato',
@@ -161,8 +161,8 @@ return [
         'toast_event_save_failed' => 'No se pudo guardar el evento',
     ],
     'edit' => [
-        'page_title_edit' => 'Service Desk - Editar contrato',
-        'page_title_add' => 'Service Desk - Añadir contrato',
+        'page_title_edit' => 'Editar contrato',
+        'page_title_add' => 'Añadir contrato',
         'heading_edit' => 'Editar contrato',
         'heading_add' => 'Añadir contrato',
         'none' => 'Ninguno',
@@ -264,7 +264,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Proveedores',
-        'view_page_title' => 'Service Desk - Ver proveedor',
+        'view_page_title' => 'Ver proveedor',
         'all_suppliers' => 'Todos los proveedores',
         'add_supplier' => 'Añadir proveedor',
         'edit_supplier' => 'Editar proveedor',
@@ -719,7 +719,7 @@ Se eliminarán las puntuaciones ya introducidas para él. El registro del provee
             'low' => 'baja',
         ],
         'scoring' => [
-            'page_title' => 'Service Desk - Puntuación',
+            'page_title' => 'Puntuación',
             'title' => 'Puntuación',
             'score_by_category' => 'Puntuación por categoría',
             'my_overall' => 'Mi global',
@@ -746,7 +746,7 @@ Se eliminarán las puntuaciones ya introducidas para él. El registro del provee
             'other_analysts' => 'Otros analistas (media)',
         ],
         'documents' => [
-            'page_title' => 'Service Desk - Documentos de RFP',
+            'page_title' => 'Documentos de RFP',
             'rfp' => 'RFP',
             'documents' => 'Documentos',
             'heading' => 'Documentos de origen',
@@ -803,7 +803,7 @@ Se eliminarán las puntuaciones ya introducidas para él. El registro del provee
 También se eliminarán los requisitos extraídos de este documento.',
         ],
         'document' => [
-            'page_title' => 'Service Desk - Documento de RFP',
+            'page_title' => 'Documento de RFP',
             'heading' => 'Documento generado',
             'preview_document' => 'Vista previa del documento',
             'generate_all' => 'Generar todo',
@@ -902,7 +902,7 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'restore_failed_short' => 'Error al restaurar',
         ],
         'extracted' => [
-            'page_title' => 'Service Desk - Requisitos extraídos',
+            'page_title' => 'Requisitos extraídos',
             'heading' => 'Requisitos extraídos',
             'total' => 'Total',
             'requirements' => 'Requisitos',
@@ -946,7 +946,7 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'not_generated' => '(Aún sin generar.)',
         ],
         'compare' => [
-            'page_title' => 'Service Desk - Comparar',
+            'page_title' => 'Comparar',
             'compare' => 'Comparar',
             'heading' => 'Comparar proveedores',
             'load_failed' => 'No se pudieron cargar los datos de comparación',
@@ -969,7 +969,7 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'col_winner' => 'Ganador',
         ],
         'coverage' => [
-            'page_title' => 'Service Desk - Mapa de cobertura',
+            'page_title' => 'Mapa de cobertura',
             'heading' => 'Mapa de cobertura',
             'consolidated_requirements' => 'Requisitos consolidados',
             'load_failed' => 'No se pudo cargar la cobertura',
@@ -988,7 +988,7 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'legend_note' => 'Un requisito consolidado cuenta en todos los departamentos de los que tiene un origen.',
         ],
         'audit' => [
-            'page_title' => 'Service Desk - Registro de auditoría de IA',
+            'page_title' => 'Registro de auditoría de IA',
             'audit_trail' => 'Registro de auditoría',
             'heading' => 'Registro de auditoría de IA',
             'total_input_tokens' => 'Total de tokens de entrada',
@@ -1004,7 +1004,7 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'col_model' => 'Modelo',
         ],
         'consolidate' => [
-            'page_title' => 'Service Desk - Requisitos consolidados',
+            'page_title' => 'Requisitos consolidados',
             'consolidated' => 'Consolidados',
             'heading' => 'Requisitos consolidados',
             'add_custom' => 'Añadir personalizado',

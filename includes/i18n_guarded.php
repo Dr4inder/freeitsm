@@ -48,6 +48,10 @@ function i18nGuardedInit(string $prefix): void
     } catch (Throwable $e) {
         $GLOBALS['i18nGuardedReady'] = false;   // English it is
     }
+    // pageTitle() for the <title> (GH #173). Loaded on its own, outside the try:
+    // i18n.php normally brings it, but these pages must render when it cannot.
+    // Safe without a database - systemName() falls back to "Service Desk".
+    require_once __DIR__ . '/system_name.php';
 }
 
 /**

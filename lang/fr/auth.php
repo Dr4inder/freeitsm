@@ -63,7 +63,7 @@ return [
     'reset_err_both' => 'Veuillez remplir les deux champs.',
     'reset_err_short' => 'Le mot de passe doit comporter au moins 6 caractères.',
     'reset_err_mismatch' => 'Les mots de passe ne correspondent pas.',
-    'expired_title' => 'Service Desk - Changer le mot de passe',
+    'expired_title' => 'Changer le mot de passe',
     'expired_heading' => 'Mot de passe expiré',
     'expired_intro' => 'Votre mot de passe a expiré et doit être changé avant de pouvoir continuer.',
     'expired_current_pw' => 'Mot de passe actuel',

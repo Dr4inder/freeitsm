@@ -121,7 +121,7 @@ return [
         'ai_settings_saved' => 'AI-indstillinger gemt',
     ],
     'editor' => [
-        'page_title' => 'Service Desk - Redigér formular',
+        'page_title' => 'Redigér formular',
         'title_new' => 'Ny formular',
         'title_edit' => 'Redigér formular',
         'unsaved' => 'Ugemte ændringer',
@@ -448,7 +448,7 @@ return [
         'unsupported_type' => 'Dette spørgsmål kan ikke vises her.',
     ],
     'fill' => [
-        'page_title' => 'Service Desk - Udfyld formular',
+        'page_title' => 'Udfyld formular',
         'loading' => 'Indlæser formular...',
         'no_id' => 'Intet formular-id angivet',
         'logo_alt' => 'Virksomhedslogo',
@@ -543,7 +543,7 @@ return [
         'none_yet' => 'Der findes ingen samlinger endnu. Opret en under Formularindstillinger.',
     ],
     'subs' => [
-        'page_title' => 'Service Desk - Formularbesvarelser',
+        'page_title' => 'Formularbesvarelser',
         'page_title_named' => 'Service Desk - Besvarelser af {title}',
         'back' => 'Tilbage',
         'heading' => 'Besvarelser',

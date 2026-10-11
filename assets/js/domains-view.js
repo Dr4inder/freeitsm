@@ -49,7 +49,7 @@
             + '</div>' + (D.tags ? '<div style="margin-top:6px">' + tags(D.tags) + '</div>' : '') + '</div>'
             + '<div class="count-down"><div class="n ' + cls + '">' + esc(n) + '</div><div class="l">' + esc(l) + '</div>'
             + (D.expiry_date ? '<div class="dom-sub">' + esc(fmtDate(D.expiry_date)) + ' · ' + esc(renewal(D.renewal_mode)) + '</div>' : '') + '</div>';
-        document.title = (D.display_name || D.domain_name) + ' - ' + T('title');
+        document.title = (document.titleBase = document.titleBase || document.title) + ' - ' + (D.display_name || D.domain_name);   // GH #173: appended to the server's pageTitle()
 
         const f = D.findings || [];
         const bad = f.filter(x => x.level === 'fail').length, warn = f.filter(x => x.level === 'warn').length;

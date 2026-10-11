@@ -121,7 +121,7 @@ return [
         'ai_settings_saved' => 'Ustawienia AI zapisane',
     ],
     'editor' => [
-        'page_title' => 'Service Desk - Edytuj formularz',
+        'page_title' => 'Edytuj formularz',
         'title_new' => 'Nowy formularz',
         'title_edit' => 'Edytuj formularz',
         'unsaved' => 'Niezapisane zmiany',
@@ -448,7 +448,7 @@ return [
         'unsupported_type' => 'Tego pytania nie można tu wyświetlić.',
     ],
     'fill' => [
-        'page_title' => 'Service Desk - Wypełnij formularz',
+        'page_title' => 'Wypełnij formularz',
         'loading' => 'Wczytywanie formularza...',
         'no_id' => 'Nie podano identyfikatora formularza',
         'logo_alt' => 'Logo firmy',
@@ -543,7 +543,7 @@ return [
         'none_yet' => 'Nie ma jeszcze żadnych kolekcji. Utwórz jedną w ustawieniach Formularzy.',
     ],
     'subs' => [
-        'page_title' => 'Service Desk - Zgłoszenia formularzy',
+        'page_title' => 'Zgłoszenia formularzy',
         'page_title_named' => 'Service Desk - Zgłoszenia: {title}',
         'back' => 'Wstecz',
         'heading' => 'Zgłoszenia',

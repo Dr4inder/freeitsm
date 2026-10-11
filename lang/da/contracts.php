@@ -76,7 +76,7 @@ return [
         'result_count_other' => '{n} resultater',
     ],
     'detail' => [
-        'page_title' => 'Service Desk - Vis kontrakt',
+        'page_title' => 'Vis kontrakt',
         'loading' => 'Indlæser kontrakt...',
         'error_prefix' => 'Fejl:',
         'load_failed' => 'Kunne ikke hente kontrakten',
@@ -159,8 +159,8 @@ return [
         'toast_event_save_failed' => 'Kunne ikke gemme begivenheden',
     ],
     'edit' => [
-        'page_title_edit' => 'Service Desk - Redigér kontrakt',
-        'page_title_add' => 'Service Desk - Tilføj kontrakt',
+        'page_title_edit' => 'Redigér kontrakt',
+        'page_title_add' => 'Tilføj kontrakt',
         'heading_edit' => 'Redigér kontrakt',
         'heading_add' => 'Tilføj kontrakt',
         'none' => 'Ingen',
@@ -262,7 +262,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Leverandører',
-        'view_page_title' => 'Service Desk - Vis leverandør',
+        'view_page_title' => 'Vis leverandør',
         'all_suppliers' => 'Alle leverandører',
         'add_supplier' => 'Tilføj leverandør',
         'edit_supplier' => 'Redigér leverandør',
@@ -721,7 +721,7 @@ Eventuelle scorer, der allerede er indtastet for dem, slettes. Selve leverandør
             'low' => 'lav',
         ],
         'scoring' => [
-            'page_title' => 'Service Desk - Scoring',
+            'page_title' => 'Scoring',
             'title' => 'Scoring',
             'score_by_category' => 'Score pr. kategori',
             'my_overall' => 'Min samlede score',
@@ -748,7 +748,7 @@ Eventuelle scorer, der allerede er indtastet for dem, slettes. Selve leverandør
             'other_analysts' => 'Andre medarbejdere (gnsn.)',
         ],
         'documents' => [
-            'page_title' => 'Service Desk - RFP-dokumenter',
+            'page_title' => 'RFP-dokumenter',
             'rfp' => 'RFP',
             'documents' => 'Dokumenter',
             'heading' => 'Kildedokumenter',
@@ -805,7 +805,7 @@ Eventuelle scorer, der allerede er indtastet for dem, slettes. Selve leverandør
 Eventuelle udtrukne krav fra dette dokument fjernes også.',
         ],
         'document' => [
-            'page_title' => 'Service Desk - RFP-dokument',
+            'page_title' => 'RFP-dokument',
             'heading' => 'Genereret dokument',
             'preview_document' => 'Forhåndsvis dokument',
             'generate_all' => 'Generér alle',
@@ -904,7 +904,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'restore_failed_short' => 'Gendannelse mislykkedes',
         ],
         'extracted' => [
-            'page_title' => 'Service Desk - Udtrukne krav',
+            'page_title' => 'Udtrukne krav',
             'heading' => 'Udtrukne krav',
             'total' => 'I alt',
             'requirements' => 'Krav',
@@ -948,7 +948,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'not_generated' => '(Endnu ikke genereret.)',
         ],
         'compare' => [
-            'page_title' => 'Service Desk - Sammenlign',
+            'page_title' => 'Sammenlign',
             'compare' => 'Sammenlign',
             'heading' => 'Sammenlign leverandører',
             'load_failed' => 'Kunne ikke indlæse sammenligningsdata',
@@ -971,7 +971,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'col_winner' => 'Vinder',
         ],
         'coverage' => [
-            'page_title' => 'Service Desk - Dækningskort',
+            'page_title' => 'Dækningskort',
             'heading' => 'Dækningskort',
             'consolidated_requirements' => 'Konsoliderede krav',
             'load_failed' => 'Kunne ikke indlæse dækning',
@@ -990,7 +990,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'legend_note' => 'Ét konsolideret krav tæller med i hver afdeling, det har en kilde fra.',
         ],
         'audit' => [
-            'page_title' => 'Service Desk - AI-revisionsspor',
+            'page_title' => 'AI-revisionsspor',
             'audit_trail' => 'Revisionsspor',
             'heading' => 'AI-revisionsspor',
             'total_input_tokens' => 'Input-tokens i alt',
@@ -1006,7 +1006,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'col_model' => 'Model',
         ],
         'consolidate' => [
-            'page_title' => 'Service Desk - Konsoliderede krav',
+            'page_title' => 'Konsoliderede krav',
             'consolidated' => 'Konsolideret',
             'heading' => 'Konsoliderede krav',
             'add_custom' => 'Tilføj brugerdefineret',
