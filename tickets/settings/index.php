@@ -72,43 +72,53 @@ $translationNamespaces = ['common', 'tickets'];
  */
 function renderOversizeFields(string $px, bool $withLimits): void
 {
+    // Styled like the SLA tab's Global settings (Ed, 2026-10-11): a two-column
+    // grid of .form-group cells, plain radio/checkbox labels, muted hints.
     $o = fn(string $k) => htmlspecialchars(t('tickets.settings.oversize.' . $k));
-    if ($withLimits): ?>
-        <div class="ov-grid">
-            <div class="form-group">
-                <label for="<?php echo $px; ?>MaxMb"><?php echo $o('max_mb'); ?></label>
-                <div class="ov-mb"><input type="number" id="<?php echo $px; ?>MaxMb" min="1" max="102400"> MB</div>
-            </div>
-            <div class="form-group">
-                <label for="<?php echo $px; ?>MaxTotalMb"><?php echo $o('max_total_mb'); ?></label>
-                <div class="ov-mb"><input type="number" id="<?php echo $px; ?>MaxTotalMb" min="0" max="102400"> MB</div>
-                <small><?php echo $o('max_total_hint'); ?></small>
-            </div>
+    $opt = 'display:block;font-weight:400;';
+    $hint = 'display:block;color:var(--text-muted, #666);margin-top:4px;';
+    ?>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+    <?php if ($withLimits): ?>
+        <div class="form-group">
+            <label for="<?php echo $px; ?>MaxMb"><?php echo $o('max_mb'); ?></label>
+            <input type="number" id="<?php echo $px; ?>MaxMb" min="1" max="102400" style="max-width:120px;"> MB
+        </div>
+        <div class="form-group">
+            <label for="<?php echo $px; ?>MaxTotalMb"><?php echo $o('max_total_mb'); ?></label>
+            <input type="number" id="<?php echo $px; ?>MaxTotalMb" min="0" max="102400" style="max-width:120px;"> MB
+            <small style="<?php echo $hint; ?>"><?php echo $o('max_total_hint'); ?></small>
         </div>
     <?php endif; ?>
         <div class="form-group">
             <label><?php echo $o('mode'); ?></label>
-            <label class="ov-radio"><input type="radio" name="<?php echo $px; ?>Mode" value="strip"> <?php echo $o('mode_strip'); ?></label>
-            <label class="ov-radio"><input type="radio" name="<?php echo $px; ?>Mode" value="reject"> <?php echo $o('mode_reject'); ?></label>
+            <label style="<?php echo $opt; ?>margin-top:6px;"><input type="radio" name="<?php echo $px; ?>Mode" value="strip"> <?php echo $o('mode_strip'); ?></label>
+            <label style="<?php echo $opt; ?>"><input type="radio" name="<?php echo $px; ?>Mode" value="reject"> <?php echo $o('mode_reject'); ?></label>
         </div>
         <div class="form-group" id="<?php echo $px; ?>OrderGroup">
             <label for="<?php echo $px; ?>Order"><?php echo $o('order'); ?></label>
-            <select id="<?php echo $px; ?>Order">
+            <select id="<?php echo $px; ?>Order" style="max-width:420px;">
                 <option value="largest"><?php echo $o('order_largest'); ?></option>
                 <option value="all"><?php echo $o('order_all'); ?></option>
                 <option value="order"><?php echo $o('order_order'); ?></option>
             </select>
-            <small><?php echo $o('order_hint'); ?></small>
+            <small style="<?php echo $hint; ?>"><?php echo $o('order_hint'); ?></small>
         </div>
         <div class="form-group">
-            <label><?php echo $o('tell'); ?></label>
-            <label class="ov-check"><input type="checkbox" id="<?php echo $px; ?>Alert"> <?php echo $o('alert'); ?></label>
-            <input type="text" id="<?php echo $px; ?>AlertTo" placeholder="it-team@example.com, manager@example.com" style="margin:4px 0 8px 24px;max-width:520px;">
-            <label class="ov-check"><input type="checkbox" id="<?php echo $px; ?>Reply"> <?php echo $o('reply'); ?></label>
-            <textarea id="<?php echo $px; ?>ReplyText" rows="5" style="margin:4px 0 0 24px;max-width:620px;width:calc(100% - 24px);"></textarea>
-            <small style="margin-left:24px;"><?php echo $o('reply_hint'); ?></small>
+            <label><?php echo $o('alert_heading'); ?></label>
+            <label style="<?php echo $opt; ?>margin-top:6px;"><input type="checkbox" id="<?php echo $px; ?>Alert"> <?php echo $o('alert'); ?></label>
+            <input type="text" id="<?php echo $px; ?>AlertTo" placeholder="it-team@example.com, manager@example.com" style="margin-top:6px;max-width:420px;">
         </div>
-        <small><?php echo $o('log_note'); ?></small>
+        <div class="form-group">
+            <label><?php echo $o('reply_heading'); ?></label>
+            <label style="<?php echo $opt; ?>margin-top:6px;"><input type="checkbox" id="<?php echo $px; ?>Reply"> <?php echo $o('reply'); ?></label>
+            <textarea id="<?php echo $px; ?>ReplyText" rows="5" style="margin-top:6px;"></textarea>
+            <small style="<?php echo $hint; ?>"><?php echo $o('reply_hint'); ?></small>
+        </div>
+        <div style="grid-column:span 2;">
+            <small style="<?php echo $hint; ?>"><?php echo $o('log_note'); ?></small>
+        </div>
+    </div>
     <?php
 }
 ?>
@@ -641,17 +651,6 @@ function renderOversizeFields(string $px, bool $withLimits): void
             .activity-modal-content { width: 100%; max-width: none; }
             .activity-log-pane { max-height: calc(100vh - 260px); }
         }
-        /* Oversized emails (GH #170) - the defaults card and the mailbox dialog's section. */
-        .ov-card { margin-top: 28px; padding: 18px 20px; border: 1px solid var(--border, #e0e0e0); border-radius: 8px; background: var(--surface, #fff); max-width: 900px; }
-        .ov-card h3 { margin: 0 0 6px; font-size: 16px; }
-        .ov-intro { margin: 0 0 14px; color: var(--text-muted, #666); font-size: 13px; }
-        .ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .ov-mb { display: flex; align-items: center; gap: 8px; }
-        .ov-mb input { max-width: 160px; }
-        .ov-radio, .ov-check { display: flex !important; align-items: center; gap: 8px; font-weight: 400 !important; margin: 4px 0; cursor: pointer; }
-        .ov-radio input, .ov-check input { width: auto !important; margin: 0; }
-        #oversize small, #mailboxOversizeOwn small { display: block; color: var(--text-muted, #666); margin-top: 4px; }
-        @media (max-width: 700px) { .ov-grid { grid-template-columns: 1fr; } }
     </style>
     <!-- Mobile: LAYER 15e (container, tab strip, fields, all tables scroll).
          data-mobile-shell="own" opts OUT of LAYER 2's flex body — this page
@@ -1378,11 +1377,11 @@ function renderOversizeFields(string $px, bool $withLimits): void
 
             <!-- When an email is too large (GH #170): the install defaults. Each
                  mailbox can override them, limits included, in its own dialog. -->
-            <div class="ov-card" id="oversize">
+            <div class="settings-group" id="oversize" style="margin-top:24px;">
                 <h3><?php echo htmlspecialchars(t('tickets.settings.oversize.heading')); ?></h3>
-                <p class="ov-intro" id="ovdLimitsLine"></p>
+                <p style="color:var(--text-muted, #666);margin-bottom:14px;" id="ovdLimitsLine"></p>
                 <?php renderOversizeFields('ovd', false); ?>
-                <div style="margin-top:12px;"><button type="button" class="btn btn-primary" onclick="saveOversizeDefaults()"><?php echo htmlspecialchars(t('common.save')); ?></button></div>
+                <div style="margin-top:8px;"><button type="button" class="btn btn-primary" onclick="saveOversizeDefaults()"><?php echo htmlspecialchars(t('common.save')); ?></button></div>
             </div>
         </div>
 
@@ -5128,7 +5127,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
         function syncOversizeFields(px) {
             const el = id => document.getElementById(px + id);
             const mode = document.querySelector('input[name="' + px + 'Mode"]:checked');
-            el('OrderGroup').style.display = (mode && mode.value === 'reject') ? 'none' : '';
+            el('OrderGroup').style.visibility = (mode && mode.value === 'reject') ? 'hidden' : '';
             el('AlertTo').style.display = el('Alert').checked ? '' : 'none';
             el('ReplyText').style.display = el('Reply').checked ? '' : 'none';
         }
