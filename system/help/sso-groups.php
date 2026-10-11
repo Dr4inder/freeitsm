@@ -29,6 +29,7 @@ $sso     = sgLink('sso/', 'System &rarr; SSO');
 $teams   = sgLink('teams/', 'System &rarr; Teams');
 $modules = sgLink('modules/', 'System &rarr; Modules');
 $analysts = sgLink('analysts/', 'System &rarr; Analysts');
+$roles    = sgLink('roles/', 'System &rarr; Roles');
 ?>
 
 <!-- 1. How it works -->
@@ -72,6 +73,8 @@ $analysts = sgLink('analysts/', 'System &rarr; Analysts');
             'Create them in ' . $teams . ' (for example <em>Service Desk</em>, <em>Infrastructure</em>).'); ?>
         <?php echo sgCheck('before-modules', 'Each team has the modules it should have',
             'Give modules to teams in ' . $modules . '. A team with no modules gives its members nothing - the commonest reason it "does not work".'); ?>
+        <?php echo sgCheck('before-roles', 'Optional: give teams the right to change settings',
+            'Opening a module lets people work in it; changing its <em>settings</em> (for example Tickets settings) needs a role. In ' . $roles . ', open or create a role, tick what it may change, and add the <strong>team</strong> under <em>Teams</em>. Everyone your groups put in that team gets it - nothing to type.'); ?>
         <?php echo sgCheck('before-local', 'You can still get in another way',
             'Keep <em>Allow local login</em> switched on in ' . $sso . ' while you set this up, so a mistake can never lock you out.'); ?>
     </ul>
@@ -199,6 +202,7 @@ $analysts = sgLink('analysts/', 'System &rarr; Analysts');
             <tr><td>Signed in, but sees no modules</td><td>The team has no modules: give it some in <?php echo $modules; ?>. Or no team row matches one of their groups.</td></tr>
             <tr><td>Sees every module, not just the team's</td><td>The person has <em>all modules</em> of their own (accounts made before you set this up keep what they had). Switch it off in <?php echo $analysts; ?>, or in <?php echo $modules; ?>.</td></tr>
             <tr><td>"Your account is not in the group that gives analyst access"</td><td>They are not in the group chosen as <em>Analyst group</em> - working as intended for a leaver. Otherwise check they are in it in your provider, and that it is the right group in the dropdown.</td></tr>
+            <tr><td>Can open a module but not change its settings</td><td>Settings need a role. Give the team one in <?php echo $roles; ?> (tick the permissions, add the team under <em>Teams</em>).</td></tr>
             <tr><td>A group shows as a code, not a name</td><td>Give it a name under <em>Groups seen</em>.</td></tr>
         </tbody>
     </table></div>
