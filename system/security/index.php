@@ -160,6 +160,17 @@ $translationNamespaces = ['common', 'system'];
         }
 
         .info-note strong { color: var(--text, #333); }
+        .info-note p { margin: 0 0 10px; }
+        .info-note p:last-child { margin-bottom: 0; }
+
+        /* Attachments card: every control sits in the same fixed-width column, so
+           the dropdown and the types box are wide enough to read and the two MB
+           boxes start at the same place. A password manager that inserts its own
+           icon beside a box can then only nudge the unit after it, never the box. */
+        .att-control { flex: 0 0 360px; display: flex; align-items: center; gap: 10px; }
+        .att-control .setting-input.att-wide { width: 100%; text-align: left; }
+        .att-control .setting-unit { min-width: 0; }
+        @media (max-width: 900px) { .att-control { flex-basis: auto; width: 100%; } }
 
         /* ---- Dark mode: pale washes + off-token colours ---- */
         [data-theme-mode="dark"] .btn-primary:hover {
@@ -283,18 +294,22 @@ $translationNamespaces = ['common', 'system'];
                         <strong><?php echo htmlspecialchars(t('system.security.rejected_behaviour')); ?></strong>
                         <?php echo htmlspecialchars(t('system.security.rejected_behaviour_hint')); ?>
                     </div>
-                    <select class="setting-input" id="attachmentRejectedBehaviour">
-                        <option value="store"><?php echo htmlspecialchars(t('system.security.rejected_store')); ?></option>
-                        <option value="drop"><?php echo htmlspecialchars(t('system.security.rejected_drop')); ?></option>
-                    </select>
+                    <div class="att-control">
+                        <select class="setting-input att-wide" id="attachmentRejectedBehaviour">
+                            <option value="store"><?php echo htmlspecialchars(t('system.security.rejected_store')); ?></option>
+                            <option value="drop"><?php echo htmlspecialchars(t('system.security.rejected_drop')); ?></option>
+                        </select>
+                    </div>
                 </div>
                 <div class="setting-row">
                     <div class="setting-label">
                         <strong><?php echo htmlspecialchars(t('system.security.allowed_extensions')); ?></strong>
                         <?php echo htmlspecialchars(t('system.security.allowed_extensions_hint')); ?>
                     </div>
-                    <input type="text" class="setting-input" id="attachmentAllowedExtensions"
-                           placeholder="<?php echo htmlspecialchars(t('system.security.allowed_extensions_ph')); ?>">
+                    <div class="att-control">
+                        <input type="text" class="setting-input att-wide" id="attachmentAllowedExtensions" autocomplete="off"
+                               placeholder="<?php echo htmlspecialchars(t('system.security.allowed_extensions_ph')); ?>">
+                    </div>
                 </div>
                 <?php
                     // Size limits (GH #170). PHP's own limits are shown beside them:
@@ -310,33 +325,33 @@ $translationNamespaces = ['common', 'system'];
                         <strong><?php echo htmlspecialchars(t('system.security.max_attachment')); ?></strong>
                         <?php echo htmlspecialchars(t('system.security.max_attachment_hint')); ?>
                     </div>
-                    <input type="number" class="setting-input" id="attachmentMaxMb" min="1" max="102400" placeholder="10">
-                    <span class="setting-unit">MB</span>
+                    <div class="att-control">
+                        <input type="number" class="setting-input" id="attachmentMaxMb" min="1" max="102400" placeholder="10"
+                               autocomplete="off" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other">
+                        <span class="setting-unit">MB</span>
+                    </div>
                 </div>
                 <div class="setting-row">
                     <div class="setting-label">
                         <strong><?php echo htmlspecialchars(t('system.security.max_total')); ?></strong>
                         <?php echo htmlspecialchars(t('system.security.max_total_hint')); ?>
                     </div>
-                    <input type="number" class="setting-input" id="attachmentMaxTotalMb" min="0" max="102400" placeholder="0">
-                    <span class="setting-unit">MB</span>
+                    <div class="att-control">
+                        <input type="number" class="setting-input" id="attachmentMaxTotalMb" min="0" max="102400" placeholder="0"
+                               autocomplete="off" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other">
+                        <span class="setting-unit">MB</span>
+                    </div>
                 </div>
                 <div class="info-note" id="phpLimitsNote" data-browser-cap="<?php echo $browserCap === PHP_INT_MAX ? 0 : (int)$browserCap; ?>">
-                    <?php echo htmlspecialchars(t('system.security.php_limits', [
+                    <p><?php echo htmlspecialchars(t('system.security.allowed_extensions_note')); ?></p>
+                    <p><?php echo htmlspecialchars(t('system.security.rejected_note')); ?></p>
+                    <p><?php echo htmlspecialchars(t('system.security.php_limits', [
                         'upload' => $phpMb($phpLim['upload_max_filesize']),
                         'post'   => $phpMb($phpLim['post_max_size']),
                         'memory' => $phpMb($phpLim['memory_limit']),
-                    ])); ?>
-                    <span id="phpLimitsWarn" style="display:none;color:var(--danger-text);font-weight:600;"><br><?php echo htmlspecialchars(t('system.security.php_limits_warn')); ?></span>
-                </div>
-                <div class="info-note">
-                    <?php echo t('system.security.oversize_signpost', ['link' => '<a href="' . htmlspecialchars(BASE_URL) . 'tickets/settings/?tab=mailboxes#oversize">' . htmlspecialchars(t('system.security.oversize_signpost_link')) . '</a>']); ?>
-                </div>
-                <div class="info-note">
-                    <?php echo htmlspecialchars(t('system.security.allowed_extensions_note')); ?>
-                </div>
-                <div class="info-note">
-                    <?php echo htmlspecialchars(t('system.security.rejected_note')); ?>
+                    ])); ?></p>
+                    <p id="phpLimitsWarn" style="display:none;color:var(--danger-text);font-weight:600;"><?php echo htmlspecialchars(t('system.security.php_limits_warn')); ?></p>
+                    <p><?php echo t('system.security.oversize_signpost', ['link' => '<a href="' . htmlspecialchars(BASE_URL) . 'tickets/settings/?tab=mailboxes#oversize">' . htmlspecialchars(t('system.security.oversize_signpost_link')) . '</a>']); ?></p>
                 </div>
             </div>
 
