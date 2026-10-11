@@ -208,6 +208,11 @@ return [
         'require_verified_email' => 'TINYINT(1) NOT NULL DEFAULT 0',
         'profile_sync_mode'      => "ENUM('always','initial','never') NOT NULL DEFAULT 'never'",
         'default_modules'        => 'VARCHAR(500) NULL',
+        // SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
+        'oidc_group_claim'       => 'VARCHAR(100) NULL',
+        'oidc_analyst_group'     => 'VARCHAR(255) NULL',
+        'oidc_access_rules'      => 'TEXT NULL',
+        'oidc_groups_last_seen'  => 'TEXT NULL',
         'sort_order'             => 'INT NOT NULL DEFAULT 0',
         'tenant_id'              => 'INT NULL',
         // GH #147 - portal email-first routing. Domains one per line; an

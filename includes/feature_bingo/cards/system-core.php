@@ -381,6 +381,18 @@ return [
         'check'    => ['rows', 'auth_providers', "default_modules IS NOT NULL AND default_modules <> ''"],
     ],
     [
+        'id'       => 'system.sso_claim_mapping',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'security',
+        'title'    => 'Access from identity provider groups',
+        'what'     => 'Single sign-on reads the groups your identity provider sends, to decide who is an analyst and which modules they get - checked again at every sign-in.',
+        'why'      => 'Staff access is managed in one place. Someone who leaves the IT group loses analyst access at their next sign-in, without anyone remembering to change FreeITSM.',
+        'done'     => 'At least one OpenID Connect provider has a group claim set.',
+        'link'     => 'system/help/sso.php#sso-groups',
+        'check'    => ['rows', 'auth_providers', "oidc_group_claim IS NOT NULL AND oidc_group_claim <> ''"],
+    ],
+    [
         'id'       => 'system.sso_verified_email',
         'module'   => 'system',
         'tier'     => 'extra',

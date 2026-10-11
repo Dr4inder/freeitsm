@@ -207,6 +207,11 @@ CREATE TABLE IF NOT EXISTS `auth_providers` (
     `require_verified_email` TINYINT(1) NOT NULL DEFAULT 0,
     `profile_sync_mode`      ENUM('always','initial','never') NOT NULL DEFAULT 'never',
     `default_modules`        VARCHAR(500) NULL,
+    -- SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
+    `oidc_group_claim`       VARCHAR(100) NULL,   -- the claim holding groups/roles, e.g. groups, realm_access.roles
+    `oidc_analyst_group`     VARCHAR(255) NULL,   -- only members may sign in as analysts (as ldap_analyst_group)
+    `oidc_access_rules`      TEXT NULL,           -- "group = grants" per line, applied at every analyst sign-in
+    `oidc_groups_last_seen`  TEXT NULL,           -- JSON: what the last sign-in sent, shown in System -> SSO
     `sort_order`             INT NOT NULL DEFAULT 0,
     `tenant_id`              INT NULL,
     -- Portal email-first routing (GH #147). Email domains, one per line,

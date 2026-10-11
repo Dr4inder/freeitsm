@@ -565,6 +565,27 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                         <option value="always"><?php echo htmlspecialchars(t('system.sso.profile_sync_always')); ?></option>
                     </select>
                 </div>
+                <?php /* SSO claim mapping (3.5.0) - OIDC only. See includes/sso_claims.php. */ ?>
+                <div id="claimMappingFields" style="border:1px solid var(--border,#ddd);border-radius:6px;padding:12px 14px;margin:0 0 16px;">
+                    <div style="font-weight:600;margin-bottom:4px;"><?php echo htmlspecialchars(t('system.sso.claims_heading')); ?></div>
+                    <div style="margin-bottom:10px;font-size:12px;color:var(--text-muted,#666);"><?php echo htmlspecialchars(t('system.sso.claims_intro')); ?></div>
+                    <div class="form-field">
+                        <label for="fOidcGroupClaim"><?php echo htmlspecialchars(t('system.sso.field_group_claim')); ?></label>
+                        <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_group_claim_hint')); ?></div>
+                        <input type="text" id="fOidcGroupClaim" maxlength="100" placeholder="groups">
+                    </div>
+                    <div class="form-field">
+                        <label for="fOidcAnalystGroup"><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group')); ?></label>
+                        <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_claim_analyst_group_hint')); ?></div>
+                        <input type="text" id="fOidcAnalystGroup" maxlength="255" placeholder="IT-Staff">
+                    </div>
+                    <div class="form-field">
+                        <label for="fOidcAccessRules"><?php echo htmlspecialchars(t('system.sso.field_access_rules')); ?></label>
+                        <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_access_rules_hint')); ?></div>
+                        <textarea id="fOidcAccessRules" rows="5" spellcheck="false" placeholder="IT-Service-Desk = tickets, knowledge&#10;IT-Everyone = all-modules&#10;IT-Admins = admin" style="width:100%;padding:8px;border:1px solid var(--border,#ccc);border-radius:4px;background:var(--surface,#fff);color:var(--text,#333);font-family:Consolas,Menlo,monospace;font-size:13px;box-sizing:border-box;"></textarea>
+                    </div>
+                    <div id="oidcLastSeen" style="margin:0;font-size:12px;color:var(--text-muted,#666);"></div>
+                </div>
                 <div class="checkbox-field" id="autoCreateField">
                     <input type="checkbox" id="fAutoCreate">
                     <div class="cb-label"><strong><?php echo htmlspecialchars(t('system.sso.cb_autocreate_users')); ?></strong><span><?php echo htmlspecialchars(t('system.sso.cb_autocreate_users_desc')); ?></span></div>
@@ -849,6 +870,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         $('analystFallbackField').style.display = (isOidc && !autoAnalysts) ? '' : 'none';
         $('profileSyncModeField').style.display = isOidc ? '' : 'none';
         $('portalRoutingFields').style.display = isOidc ? '' : 'none';   // GH #147
+        $('claimMappingFields').style.display = isOidc ? '' : 'none';   // claim mapping (3.5.0)
         // "Default module access for auto-created analysts" describes the
         // accounts JIT sign-in creates, so it only shows while that is on.
         // Nothing signs in through an address book, so there are none.
@@ -938,6 +960,15 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         document.getElementById('fRequireVerified').checked = p ? !!p.require_verified_email : false;
         document.getElementById('fProfileSyncMode').value = (p && p.profile_sync_mode) ? p.profile_sync_mode : 'never';
         document.getElementById('fDefaultModules').value = p ? (p.default_modules || '') : '';
+        // Claim mapping (3.5.0), and what the last sign-in actually sent.
+        $('fOidcGroupClaim').value   = p ? (p.oidc_group_claim || '') : '';
+        $('fOidcAnalystGroup').value = p ? (p.oidc_analyst_group || '') : '';
+        $('fOidcAccessRules').value  = p ? (p.oidc_access_rules || '') : '';
+        const seen = p && p.oidc_groups_last_seen;
+        $('oidcLastSeen').textContent = seen
+            ? window.t('system.sso.claims_last_seen', { who: seen.who || '?', at: window.fmtDateTime ? window.fmtDateTime(seen.at) : seen.at,
+                                                        groups: (seen.groups && seen.groups.length) ? seen.groups.join(', ') : window.t('system.sso.claims_none_sent') })
+            : (p && p.oidc_group_claim ? window.t('system.sso.claims_not_yet') : '');
         $('fPortalDomains').value = p ? (p.portal_email_domains || '') : '';
         $('fPortalShowButton').checked = p ? p.portal_show_button !== 0 : true;
         const tenantSel = document.getElementById('fTenant');
@@ -1162,6 +1193,9 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
             require_verified_email: document.getElementById('fRequireVerified').checked ? 1 : 0,
             profile_sync_mode: document.getElementById('fProfileSyncMode').value || 'never',
             default_modules: document.getElementById('fDefaultModules').value.trim(),
+            oidc_group_claim: $('fOidcGroupClaim').value.trim(),
+            oidc_analyst_group: $('fOidcAnalystGroup').value.trim(),
+            oidc_access_rules: $('fOidcAccessRules').value,
             portal_email_domains: $('fPortalDomains').value,
             portal_show_button: $('fPortalShowButton').checked ? 1 : 0,
             tenant_id: (document.getElementById('fTenant') ? (document.getElementById('fTenant').value || null) : null)

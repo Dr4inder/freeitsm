@@ -93,6 +93,10 @@ $profileSyncMode    = in_array($data['profile_sync_mode'] ?? '', ['always', 'ini
 $defaultModules  = isset($data['default_modules']) && trim($data['default_modules']) !== ''
                    ? trim($data['default_modules']) : null;
 $sortOrder       = (int)($data['sort_order'] ?? 0);
+// SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
+$groupClaimIn    = mb_substr(trim((string)($data['oidc_group_claim'] ?? '')), 0, 100);
+$analystGroupIn  = mb_substr(trim((string)($data['oidc_analyst_group'] ?? '')), 0, 255);
+$accessRulesIn   = trim((string)($data['oidc_access_rules'] ?? ''));
 // Which client company owns this provider. Empty/0 = a global (MSP-internal) one.
 $tenantId        = !empty($data['tenant_id']) ? (int)$data['tenant_id'] : null;
 $id              = isset($data['id']) ? (int)$data['id'] : 0;
@@ -221,6 +225,13 @@ if ($protocol === 'carddav') {
     }
     $scopes = trim($data['scopes'] ?? '');
     if ($scopes === '') $scopes = 'openid email profile';
+    // Claim mapping: refuse a rule that names a module or capability that does
+    // not exist, rather than store something that silently grants nothing.
+    if (array_key_exists('oidc_access_rules', $data)) {
+        require_once '../../includes/sso_claims.php';
+        [, $ruleErrors] = ssoParseAccessRules($accessRulesIn);
+        if ($ruleErrors) bail('Access rules: ' . implode(' ', $ruleErrors));
+    }
 
     $secretInput = $data['client_secret'] ?? '';
     // Directory sync is not an OIDC thing; this provider stores the column
@@ -345,6 +356,12 @@ try {
     $vals[] = $portalDomainList ? implode("\n", $portalDomainList) : null;
     $cols[] = 'portal_show_button';
     $vals[] = $portalShowButton;
+    // Claim mapping (3.5.0): an OIDC provider's; cleared for any other protocol.
+    $isOidcRow = $protocol === 'oidc';
+    array_push($cols, 'oidc_group_claim', 'oidc_analyst_group', 'oidc_access_rules');
+    array_push($vals, $isOidcRow && $groupClaimIn !== '' ? $groupClaimIn : null,
+                      $isOidcRow && $analystGroupIn !== '' ? $analystGroupIn : null,
+                      $isOidcRow && $accessRulesIn !== '' ? $accessRulesIn : null);
 
     // 🔴 ON UPDATE, A SETTING THE REQUEST DOES NOT MENTION KEEPS ITS STORED VALUE.
     //
@@ -373,7 +390,8 @@ try {
             $readable = ['enabled', 'default_modules', 'sort_order', 'tenant_id'];
             if ($protocol === 'oidc') {
                 $readable = array_merge($readable, ['auto_create_users', 'auto_create_analysts', 'analyst_fallback_mode', 'require_verified_email', 'profile_sync_mode', 'issuer_url', 'client_id', 'scopes',
-                                                    'portal_email_domains', 'portal_show_button']);
+                                                    'portal_email_domains', 'portal_show_button',
+                                                    'oidc_group_claim', 'oidc_analyst_group', 'oidc_access_rules']);
             } elseif ($protocol === 'ldap') {
                 $readable = array_merge($readable, ['auto_create_users', 'auto_create_analysts', 'analyst_fallback_mode', 'require_verified_email', 'profile_sync_mode'],
                     array_values(array_filter($cols, fn($c) => strpos($c, 'ldap_') === 0 || strpos($c, 'sync_') === 0)));
@@ -422,6 +440,22 @@ try {
                 array_splice($cols, $i, 1);
                 array_splice($vals, $i, 1);
             }
+        }
+    }
+
+    // Claim mapping: leave the columns out until Database Verification adds them;
+    // otherwise an analyst group or rules need the claim they are read from.
+    require_once '../../includes/sso_claims.php';
+    if (!ssoClaimsReady($conn)) {
+        foreach (['oidc_group_claim', 'oidc_analyst_group', 'oidc_access_rules'] as $c) {
+            $i = array_search($c, $cols, true);
+            if ($i !== false) { array_splice($cols, $i, 1); array_splice($vals, $i, 1); }
+        }
+    } else {
+        $fClaim = $vals[array_search('oidc_group_claim', $cols, true)];
+        if (($fClaim === null || $fClaim === '')
+            && ($vals[array_search('oidc_analyst_group', $cols, true)] || $vals[array_search('oidc_access_rules', $cols, true)])) {
+            bail('Set the group claim first - the analyst group and access rules are read from it.');
         }
     }
 

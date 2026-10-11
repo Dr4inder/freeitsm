@@ -183,6 +183,7 @@ function getHelpTopics() {
                 ['id' => 'multi',      'label' => 'Multi-company (MSP) setup'],
                 ['id' => 'jit-rules',  'label' => 'Auto-create rules'],
                 ['id' => 'profile-sync','label' => 'Profile sync'],
+                ['id' => 'sso-groups', 'label' => 'Groups from the identity provider'],
                 ['id' => 'portal-domains','label' => 'Portal: route by email domain'],
                 ['id' => 'ldap',       'label' => 'LDAP / Active Directory'],
                 ['id' => 'ldap-setup', 'label' => 'Setting up a directory'],

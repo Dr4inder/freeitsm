@@ -39,6 +39,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2303 | Self-Service      | Fix         | Security: a requester marked as left could still sign in to the portal (password, two-factor step, SSO) and an open portal session carried on; every way in and every signed-in portal page now checks users.is_active (requesterIsActive). |
 | 2304 | System            | Fix         | Security: a deactivated analyst kept every module (and an admin kept System) until their session ended; an inactive analyst now has no modules and is not an admin, so the next click is refused, and the System page gate asks the database rather than the session flag. |
 | 2305 | REST API          | Improvement | PATCH /users/{id} takes is_active (false = marked as left) and requesters read back with is_active. |
+| 2306 | System            | Feature     | SSO claim mapping (proposed in PR #174): an OIDC provider's group claim, analyst group (only members sign in as / are created as analysts, as LDAP) and access rules (group = modules / capabilities / all-modules / admin, re-applied at every analyst sign-in); userinfo fetched when a group claim is set; System -> SSO shows what the last sign-in sent; rules validated on save. |
 
 
 

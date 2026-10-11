@@ -109,7 +109,11 @@ try {
     //    thrown away (OpenID Connect Core 1.0 §5.3.2).
     //  - array_merge() puts the ID token LAST, so a signed claim is never
     //    overwritten by an unsigned one.
-    if (($provider['profile_sync_mode'] ?? 'never') !== 'never'
+    //  - Also when a GROUP CLAIM is set (3.5.0): many IdPs put groups or roles
+    //    in userinfo rather than the ID token.
+    require_once __DIR__ . '/../../includes/sso_claims.php';
+    $groupClaim = ssoClaimsReady($conn) ? trim((string)($provider['oidc_group_claim'] ?? '')) : '';
+    if ((($provider['profile_sync_mode'] ?? 'never') !== 'never' || $groupClaim !== '')
         && !empty($disco['userinfo_endpoint']) && !empty($tokens['access_token'])) {
         $userInfo = oidcFetchUserInfo($disco['userinfo_endpoint'], $tokens['access_token']);
         if (!empty($userInfo) && isset($userInfo['sub'], $claims['sub'])
@@ -121,6 +125,16 @@ try {
     // One-time use: invalidate the stashed tokens now that they're consumed.
     unset($_SESSION['oidc_state'], $_SESSION['oidc_nonce'],
           $_SESSION['oidc_code_verifier'], $_SESSION['oidc_provider_id']);
+
+    // --- Groups (claim mapping, 3.5.0) ---
+    // Read once; remembered so System -> SSO can show what the IdP actually sends.
+    $ssoGroups = $groupClaim !== '' ? ssoClaimValues($claims, $groupClaim) : [];
+    $claimsAllowAnalyst = true;
+    if ($groupClaim !== '') {
+        ssoRememberGroups($conn, $providerId, (string)($claims['email'] ?? $claims['preferred_username'] ?? $claims['sub'] ?? ''), $ssoGroups);
+        $analystGroup = trim((string)($provider['oidc_analyst_group'] ?? ''));
+        $claimsAllowAnalyst = $analystGroup === '' || ssoInGroup($ssoGroups, $analystGroup);
+    }
 
     // --- Identity claims ---
     $sub           = $claims['sub'] ?? '';
@@ -205,7 +219,8 @@ try {
             $autoAnalysts = array_key_exists('auto_create_analysts', $provider)
                 ? (int)$provider['auto_create_analysts'] === 1
                 : (int)($provider['auto_create_users'] ?? 0) === 1;
-            if ($autoAnalysts) {
+            // Claim mapping: nobody outside the analyst group is created (3.5.0).
+            if ($autoAnalysts && $claimsAllowAnalyst) {
                 if ($email === '') {
                     ssoBail('Cannot auto-create an account without an email from the provider.');
                 }
@@ -247,8 +262,19 @@ try {
         )->execute([$analystId, $providerId, $sub, $email ?: null]);
     }
 
+    // Claim mapping (3.5.0): an existing analyst who is no longer in the analyst
+    // group is refused - LDAP's rule. Their account is left as it is.
+    if (!$claimsAllowAnalyst) {
+        ssoBail('Your account is not in the group that gives analyst access. Ask an administrator, or use the self-service portal.');
+    }
+
     // Every path above has now passed its access checks, so it is safe to write.
     oidcSyncProfile($conn, $provider, 'analysts', $analyst, $claims, $name);
+
+    // Claim mapping (3.5.0): modules / capabilities / admin follow the groups.
+    if ($groupClaim !== '') {
+        ssoApplyClaimAccess($conn, $provider, (int)$analystId, $ssoGroups);
+    }
     $analyst = oidcLoadAnalyst($conn, $analystId);   // pick up any new full_name for the session
 
     // --- Success: set the session directly (SSO bypasses local MFA) ---
