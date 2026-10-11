@@ -295,6 +295,13 @@ $contract_id = $_GET['id'] ?? null;
             </div>
             <div class="form-card-body">
                 <form id="contractForm" autocomplete="off">
+                    <!-- The company the contract BELONGS to (3.5.0) - who can see it. Hidden
+                         on a single-company install; who it is WITH is set further down. -->
+                    <div class="form-group" id="ownerCompanyGroup" hidden>
+                        <label for="ownerTenantId"><?php echo htmlspecialchars(t('contracts.edit.company')); ?> *</label>
+                        <select id="ownerTenantId"></select>
+                        <small class="party-hint"><?php echo htmlspecialchars(t('contracts.edit.company_hint')); ?></small>
+                    </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="contractNumber"><?php echo htmlspecialchars(t('contracts.edit.contract_number')); ?> *</label>
@@ -585,6 +592,11 @@ $contract_id = $_GET['id'] ?? null;
                 const d = await r.json();
                 if (!d.success) return;
                 multiCompany = d.multi_company;
+                // The owning company: every company the analyst can reach, the active one preselected.
+                const own = document.getElementById('ownerTenantId');
+                document.getElementById('ownerCompanyGroup').hidden = !multiCompany;
+                own.innerHTML = d.companies.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+                if (d.active_company) own.value = String(d.active_company);
                 const sel = document.getElementById('customerTenantId');
                 sel.hidden = !multiCompany;
                 sel.innerHTML = '<option value="">-- ' + escapeHtml(window.t('contracts.party.select_company')) + ' --</option>' +
@@ -702,6 +714,7 @@ $contract_id = $_GET['id'] ?? null;
                 const data = await response.json();
                 if (data.success) {
                     const c = data.contract;
+                    if (c.tenant_id) document.getElementById('ownerTenantId').value = String(c.tenant_id);
                     document.getElementById('contractNumber').value = c.contract_number;
                     document.getElementById('title').value = c.title;
                     document.getElementById('description').value = c.description || '';
@@ -737,6 +750,7 @@ $contract_id = $_GET['id'] ?? null;
             saveBtn.textContent = window.t('common.saving');
 
             const payload = {
+                tenant_id: multiCompany ? (document.getElementById('ownerTenantId').value || null) : null,
                 contract_number: document.getElementById('contractNumber').value.trim(),
                 title: document.getElementById('title').value.trim(),
                 description: document.getElementById('description').value.trim(),

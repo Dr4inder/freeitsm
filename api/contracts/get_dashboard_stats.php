@@ -19,7 +19,8 @@ try {
 
     // Counts include only the contracts this analyst may see: a customer contract
     // for a company they cannot access is not counted either (#153).
-    [$vis, $visParams] = contractVisibilitySql($conn, (int)$_SESSION['analyst_id'], 'c');
+    // The same contracts as the list it sits beside: the active company, or all (3.5.0).
+    [$vis, $visParams] = contractListSql($conn, (int)$_SESSION['analyst_id'], 'c');
     $count = function (string $where) use ($conn, $vis, $visParams) {
         $s = $conn->prepare("SELECT COUNT(*) FROM contracts c WHERE $where$vis");
         $s->execute($visParams);

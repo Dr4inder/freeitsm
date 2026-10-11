@@ -691,16 +691,34 @@ function warbotToolTicketSpike(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/**
+ * contractVisibilitySql() with its company ids written in: these queries bind
+ * NAMED parameters, which cannot be mixed with its "?" ones. Every value is a
+ * company id, cast to int, so writing them in cannot inject anything.
+ */
+function warbotContractScope(PDO $conn, int $analystId, string $alias): string
+{
+    require_once __DIR__ . '/../contract_party.php';
+    [$sql, $ids] = contractVisibilitySql($conn, $analystId, $alias);
+    foreach ($ids as $id) {
+        $sql = preg_replace('/\?/', (string)(int)$id, $sql, 1);
+    }
+    return $sql;
+}
+
 function warbotToolSupplierContact(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
     if ($q === '') return 'Give me a supplier name or something from a contract title.';
     $like = warbotLike($q);
+    // Contracts in companies this analyst cannot reach are never searched or
+    // listed (3.5.0). Suppliers themselves are shared by every company.
+    $cScope = warbotContractScope($conn, $analystId, 'c');
 
     $stmt = $conn->prepare(
         "SELECT DISTINCT s.id, s.trading_name, s.legal_name
            FROM suppliers s
-           LEFT JOIN contracts c ON c.supplier_id = s.id
+           LEFT JOIN contracts c ON c.supplier_id = s.id$cScope
           WHERE s.trading_name LIKE :q1 ESCAPE '\\\\' OR s.legal_name LIKE :q2 ESCAPE '\\\\'
              OR c.title LIKE :q3 ESCAPE '\\\\'
           ORDER BY s.trading_name LIMIT 3"
@@ -717,7 +735,7 @@ function warbotToolSupplierContact(PDO $conn, array $args, int $analystId): stri
         $cs = $conn->prepare(
             "SELECT c.contract_number, c.title, c.contract_end, st.name AS state
                FROM contracts c LEFT JOIN contract_statuses st ON st.id = c.contract_status_id
-              WHERE c.supplier_id = :id ORDER BY c.contract_end DESC LIMIT 3"
+              WHERE c.supplier_id = :id$cScope ORDER BY c.contract_end DESC LIMIT 3"
         );
         $cs->execute([':id' => (int)$s['id']]);
         foreach ($cs->fetchAll(PDO::FETCH_ASSOC) as $c) {

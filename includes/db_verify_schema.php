@@ -4169,14 +4169,18 @@ return [
 
     'contracts' => [
         'id'                        => 'INT NOT NULL AUTO_INCREMENT',
+        // The company that OWNS the contract (3.5.0) - scoped data, like assets:
+        // NULL = the Default company, never "shared". Who it is WITH is the
+        // separate party below. See includes/contract_party.php.
+        'tenant_id'                 => 'INT NULL',
         'contract_number'           => 'VARCHAR(50) NOT NULL',
         'title'                     => 'VARCHAR(255) NOT NULL',
         'description'               => 'LONGTEXT NULL',
         'supplier_id'               => 'INT NULL',
         // Who the contract is WITH (#153). 'supplier' = we buy (supplier_id), as every
         // contract was before; 'customer' = we sell, to a company and/or a person.
-        // Customer contracts can be limited to analysts who can see that company
-        // (contracts_customer_visibility) - see includes/contract_party.php.
+        // Who may SEE a contract is decided by its owning company (tenant_id) since
+        // 3.5.0; until then a customer contract was hidden by its customer's company.
         'party_type'                => "VARCHAR(10) NOT NULL DEFAULT 'supplier'",
         'customer_tenant_id'        => 'INT NULL',
         'customer_user_id'          => 'INT NULL',
@@ -4204,6 +4208,10 @@ return [
     // RFP Builder (feature of the Contracts module)
     'rfps' => [
         'id'                       => 'INT NOT NULL AUTO_INCREMENT',
+        // The company that owns the RFP (3.5.0) - scoped data, NULL = Default.
+        // Everything below an RFP (documents, requirements, sections, scores)
+        // follows its RFP. See includes/rfp_scope.php.
+        'tenant_id'                => 'INT NULL',
         'name'                     => 'VARCHAR(200) NOT NULL',
         'status'                   => "VARCHAR(50) NOT NULL DEFAULT 'draft'",
         'contract_id'              => 'INT NULL',

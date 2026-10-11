@@ -138,7 +138,7 @@ class DomainsService
             if (!array_key_exists($field, $in)) continue;
             if (!self::fieldReady($conn, $field)) continue;   // before Database Verification
             $v = self::validateField($conn, $field, $in[$field], $def, $row, $n['name']);
-            if ($field === 'contract_id') self::assertContractVisible($conn, $ctx, $v);
+            if ($field === 'contract_id') self::assertContractVisible($conn, $ctx, $v, $store);
             $cols[] = $field;
             $vals[] = $v;
         }
@@ -193,7 +193,7 @@ class DomainsService
             if (!self::fieldReady($conn, $field)) continue;   // before Database Verification
             $v = self::validateField($conn, $field, $in[$field], $def, $cur, $cur['domain_name']);
             if (self::same($cur[$field], $v)) continue;
-            if ($field === 'contract_id') self::assertContractVisible($conn, $ctx, $v);
+            if ($field === 'contract_id') self::assertContractVisible($conn, $ctx, $v, $cur['tenant_id'] === null ? null : (int)$cur['tenant_id']);
             $sets[] = "$field = ?"; $args[] = $v;
             $changes[] = [$field, $cur[$field], $v];
         }
@@ -833,17 +833,26 @@ class DomainsService
     }
 
     /**
-     * A domain may only be linked to a contract its editor can see: a CUSTOMER
-     * contract outside their companies (#153) is "unknown", as everywhere else.
+     * A domain may only be linked to a contract its editor can see - one in a
+     * company outside their reach is "unknown", as everywhere else - and, since
+     * contracts belong to a company (3.5.0), only to one in the DOMAIN's company.
+     * $domainTenant is the domain's stored company (NULL = Default).
      */
-    private static function assertContractVisible(PDO $conn, ActorContext $ctx, $contractId): void
+    private static function assertContractVisible(PDO $conn, ActorContext $ctx, $contractId, ?int $domainTenant = null): void
     {
         if ($contractId === null) return;
         [$vis, $args] = contractVisibilitySqlForScope($conn, $ctx->companyScope, 'k');
-        if ($vis === '') return;
-        $st = $conn->prepare("SELECT 1 FROM contracts k WHERE k.id = ?$vis");
-        $st->execute(array_merge([(int)$contractId], $args));
-        if (!$st->fetchColumn()) throw new ServiceError('validation', 'invalid_field', 'Unknown contract id: ' . (int)$contractId);
+        if ($vis !== '') {
+            $st = $conn->prepare("SELECT 1 FROM contracts k WHERE k.id = ?$vis");
+            $st->execute(array_merge([(int)$contractId], $args));
+            if (!$st->fetchColumn()) throw new ServiceError('validation', 'invalid_field', 'Unknown contract id: ' . (int)$contractId);
+        }
+        if (isMultiTenant($conn) && contractTenantReady($conn)) {
+            $mine = $domainTenant ?? getDefaultTenantId($conn);
+            if (contractTenantOf($conn, (int)$contractId) !== $mine) {
+                throw new ServiceError('validation', 'invalid_field', 'That contract belongs to a different company from this domain.');
+            }
+        }
     }
 
     /** Ids stored as names, so the history reads as English a year later. */

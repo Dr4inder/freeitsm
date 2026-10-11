@@ -136,6 +136,20 @@ try {
         $ticketsTenantColWasMissing = ((int)$tkProbe->fetchColumn() === 0);
     } catch (Exception $e) {}
 
+    // Contracts and RFPs get an owning company (3.5.0). Was contracts.tenant_id
+    // absent before this run? If so, the post-schema section files each existing
+    // CUSTOMER contract under its customer's company - ONLY this once. Until now a
+    // customer contract was hidden by its customer's company (#153), so this keeps
+    // every analyst seeing exactly what they saw before. Supplier contracts and every
+    // RFP stay NULL, which is the Default company. Never re-run: afterwards a contract
+    // in Default with a customer elsewhere is a deliberate choice.
+    $contractsTenantColWasMissing = false;
+    try {
+        $ctProbe = $conn->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = 'contracts' AND column_name = 'tenant_id'");
+        $ctProbe->execute([$dbName]);
+        $contractsTenantColWasMissing = ((int)$ctProbe->fetchColumn() === 0);
+    } catch (Exception $e) {}
+
     // SSO JIT split (discussion #155): was auth_providers.auto_create_analysts
     // absent before this run? Before the split, auto_create_users ALSO meant
     // "create an analyst" on the analyst login, so on the run that adds the new
@@ -1603,6 +1617,30 @@ try {
             try { $conn->exec("ALTER TABLE team_tenant_access ADD CONSTRAINT fk_tta_tenant FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE CASCADE"); } catch (Exception $e) {}
         }
     }
+    // contracts.tenant_id - the ONE-TIME filing of customer contracts under their
+    // customer's company (see $contractsTenantColWasMissing). Only when the install
+    // had the old setting at its default ('company'): an install that opened
+    // customer contracts to everyone ('all') keeps them in Default, where everyone
+    // with the Default company still sees them.
+    if ($contractsTenantColWasMissing && $tableExists('contracts') && $colExists('contracts', 'tenant_id')
+        && $colExists('contracts', 'party_type')) {
+        try {
+            $vis = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'contracts_customer_visibility'")->fetchColumn();
+            if ($vis !== 'all') {
+                $n = $conn->exec(
+                    "UPDATE contracts c
+                        SET c.tenant_id = COALESCE(c.customer_tenant_id, (SELECT u.tenant_id FROM users u WHERE u.id = c.customer_user_id))
+                      WHERE c.party_type = 'customer' AND c.tenant_id IS NULL");
+                // The Default company is stored as NULL, like every other scoped table.
+                $def = (int)($conn->query("SELECT id FROM tenants WHERE is_default = 1 ORDER BY id LIMIT 1")->fetchColumn() ?: 0);
+                if ($def > 0) $conn->exec("UPDATE contracts SET tenant_id = NULL WHERE tenant_id = $def");
+                if ($n > 0) {
+                    $results[] = ['table' => 'contracts', 'status' => 'updated', 'details' => ["Filed $n customer contract(s) under their customer's company (contracts now belong to a company)"]];
+                }
+            }
+        } catch (Exception $e) {}
+    }
+
     // tickets.tenant_id — index + FK + a ONE-TIME backfill of existing tickets to
     // the Default company. Like target_mailboxes (and unlike a naive sweep), we
     // backfill ONLY when the column was just added ($ticketsTenantColWasMissing):
@@ -2811,6 +2849,8 @@ try {
         ['contracts',            'fk_contracts_owner',            "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_owner FOREIGN KEY (contract_owner_id) REFERENCES analysts (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_status',           "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_status FOREIGN KEY (contract_status_id) REFERENCES contract_statuses (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_customer_tenant',  "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_customer_tenant FOREIGN KEY (customer_tenant_id) REFERENCES tenants (id) ON DELETE SET NULL"],
+        ['contracts',            'fk_contracts_tenant',           "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_tenant FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE SET NULL"],
+        ['rfps',                 'fk_rfps_tenant',                "ALTER TABLE rfps ADD CONSTRAINT fk_rfps_tenant FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_customer_user',    "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_customer_user FOREIGN KEY (customer_user_id) REFERENCES users (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_payment_schedule', "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_payment_schedule FOREIGN KEY (payment_schedule_id) REFERENCES payment_schedules (id) ON DELETE SET NULL"],
         ['contract_term_values', 'fk_ctv_contract',               "ALTER TABLE contract_term_values ADD CONSTRAINT fk_ctv_contract FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE"],

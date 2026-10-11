@@ -5465,6 +5465,7 @@ CREATE TABLE IF NOT EXISTS `contract_term_tabs` (
 
 CREATE TABLE IF NOT EXISTS `contracts` (
     `id`                        INT NOT NULL AUTO_INCREMENT,
+    `tenant_id`                 INT NULL,   -- the company that owns it (3.5.0); NULL = the Default company
     `contract_number`           VARCHAR(50) NOT NULL,
     `title`                     VARCHAR(255) NOT NULL,
     `description`               LONGTEXT NULL,
@@ -5496,12 +5497,14 @@ CREATE TABLE IF NOT EXISTS `contracts` (
     KEY `ix_contracts_customer_tenant` (`customer_tenant_id`),
     KEY `ix_contracts_customer_user` (`customer_user_id`),
     KEY `ix_contracts_contract_end` (`contract_end`),
+    KEY `ix_contracts_tenant` (`tenant_id`),
     CONSTRAINT `fk_contracts_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_contracts_customer_tenant` FOREIGN KEY (`customer_tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_contracts_customer_user` FOREIGN KEY (`customer_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_contracts_owner` FOREIGN KEY (`contract_owner_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_contracts_status` FOREIGN KEY (`contract_status_id`) REFERENCES `contract_statuses` (`id`) ON DELETE SET NULL,
-    CONSTRAINT `fk_contracts_payment_schedule` FOREIGN KEY (`payment_schedule_id`) REFERENCES `payment_schedules` (`id`) ON DELETE SET NULL
+    CONSTRAINT `fk_contracts_payment_schedule` FOREIGN KEY (`payment_schedule_id`) REFERENCES `payment_schedules` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_contracts_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `contract_term_values` (
@@ -5524,6 +5527,7 @@ CREATE TABLE IF NOT EXISTS `contract_term_values` (
 
 CREATE TABLE IF NOT EXISTS `rfps` (
     `id`                       INT NOT NULL AUTO_INCREMENT,
+    `tenant_id`                INT NULL,   -- the company that owns it (3.5.0); NULL = the Default company
     `name`                     VARCHAR(200) NOT NULL,
     `status`                   VARCHAR(50) NOT NULL DEFAULT 'draft',
     `contract_id`              INT NULL,
@@ -5537,6 +5541,8 @@ CREATE TABLE IF NOT EXISTS `rfps` (
     KEY `idx_rfps_status` (`status`),
     KEY `idx_rfps_contract_id` (`contract_id`),
     KEY `idx_rfps_supplier_id` (`chosen_supplier_id`),
+    KEY `idx_rfps_tenant` (`tenant_id`),
+    CONSTRAINT `fk_rfps_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_rfps_contract` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_rfps_supplier` FOREIGN KEY (`chosen_supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_rfps_creator` FOREIGN KEY (`created_by_analyst_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL

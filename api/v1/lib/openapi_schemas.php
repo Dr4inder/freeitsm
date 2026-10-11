@@ -2941,6 +2941,11 @@ return array (
           'type' => 'string',
           'example' => 'Managed print services',
         ),
+        // The company that owns the contract (3.5.0) - never null: the Default company when unset.
+        'company' =>
+        array (
+          '$ref' => '#/components/schemas/LookupRef',
+        ),
         'description' => 
         array (
           'type' => 'string',

@@ -17,6 +17,7 @@ try {
     $search = $_GET['search'] ?? '';
     $limit = $_GET['limit'] ?? null;
     [$partyCols, $partyJoins] = contractPartySql($conn, 'c');
+    [$ownCols, $ownJoins] = contractOwnerSql($conn, 'c');
 
     $sql = "SELECT c.id, c.contract_number, c.title, c.description, c.supplier_id, c.contract_owner_id,
                    c.contract_status_id, cs.name AS contract_status_name,
@@ -28,16 +29,18 @@ try {
                    c.is_active, c.created_datetime,
                    s.legal_name AS supplier_name, s.trading_name AS supplier_trading_name,
                    a.full_name AS owner_name
-                   $partyCols
+                   $partyCols$ownCols
             FROM contracts c
             LEFT JOIN suppliers s ON c.supplier_id = s.id
             LEFT JOIN analysts a ON c.contract_owner_id = a.id
             LEFT JOIN contract_statuses cs ON c.contract_status_id = cs.id
             LEFT JOIN payment_schedules ps ON c.payment_schedule_id = ps.id
-            $partyJoins";
+            $partyJoins
+            $ownJoins";
 
-    // Customer contracts the analyst may not see are left out entirely (#153).
-    [$visSql, $params] = contractVisibilitySql($conn, (int)$_SESSION['analyst_id'], 'c');
+    // The active company's contracts, or every company the analyst can see when
+    // the switcher says "All companies" (3.5.0) - like Assets and Domains.
+    [$visSql, $params] = contractListSql($conn, (int)$_SESSION['analyst_id'], 'c');
     $sql .= " WHERE 1=1" . $visSql;
     if (!empty($search)) {
         $like = '%' . $search . '%';

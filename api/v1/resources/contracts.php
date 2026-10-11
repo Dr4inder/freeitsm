@@ -22,10 +22,14 @@
  * filters mirror the Watchtower/dashboard SQL shapes (expiring_within_days,
  * notice_within_days, expired).
  *
- * Contracts are install-wide (no tenant_id — matches the UI), EXCEPT a contract
- * with a CUSTOMER (#153): that belongs to its customer's company and is hidden
- * from a key whose company scope does not reach it, as in the UI. No audit trail
- * exists in the product and none is invented here.
+ * Every contract belongs to a COMPANY (3.5.0) - `company` in the payload, NULL
+ * stored as the Default company. A key sees only contracts in companies its
+ * scope reaches (one not reached is a 404, never a 403, so ids cannot be
+ * probed); a new contract lands in `company_id` (checked against the key) or the
+ * key's default company; PATCH with `company_id` moves one, refused while it has
+ * assets, projects or RFPs in its old company. Contract numbers are unique per
+ * company. Who it is WITH is `party_type` / `customer`, set independently. No
+ * audit trail exists in the product and none is invented here.
  *
  * Contract / supplier / term WRITES are delegated to ContractsService
  * (includes/services/contracts.php); the read handlers + serializers, the
@@ -43,6 +47,10 @@ require_once dirname(__DIR__, 3) . '/includes/timezone.php';   // naive_today_sq
 
 function apiContractSelect(PDO $conn): string {
     [$partyCols, $partyJoins] = contractPartySql($conn, 'c');
+    // After c.*, so its effective tenant_id (NULL read as Default) wins the key.
+    [$ownCols, $ownJoins] = contractOwnerSql($conn, 'c');
+    $partyCols .= $ownCols;
+    $partyJoins .= ' ' . $ownJoins;
     return "SELECT c.*,
                    COALESCE(NULLIF(TRIM(s.trading_name), ''), s.legal_name) AS supplier_name,
                    a.full_name AS owner_name,
@@ -71,6 +79,7 @@ function apiSerializeContract(array $r): array {
         'contract_number' => $r['contract_number'],
         'title'           => $r['title'],
         'description'     => $r['description'],
+        'company'         => $rel($r['tenant_id'] ?? null, $r['company_name'] ?? null),
         'party_type'      => $r['party_type'] ?? 'supplier',
         'supplier'        => $rel($r['supplier_id'], $r['supplier_name']),
         'customer'        => ($r['party_type'] ?? 'supplier') === 'customer' ? [
@@ -206,6 +215,14 @@ function apiContractsList(PDO $conn, array $apiKey, array $params, array $body):
             $where[] = '1=0';   // no customer contracts before Database Verification
         }
     }
+    if (isset($_GET['company_id']) && $_GET['company_id'] !== '') {
+        $cid = (int)$_GET['company_id'];
+        if (!apiKeyCanAccessTenant($conn, $apiKey, $cid)) apiError(403, 'forbidden', 'This key cannot access that company.');
+        if (contractTenantReady($conn)) {
+            $where[] = 'COALESCE(c.tenant_id, ?) = ?';
+            array_push($args, getDefaultTenantId($conn), $cid);
+        }
+    }
     foreach (['customer_company_id' => 'c.customer_tenant_id', 'customer_user_id' => 'c.customer_user_id'] as $param => $col) {
         if (isset($_GET[$param]) && $_GET[$param] !== '') {
             $where[] = $partyReady ? "$col = ?" : '1=0';
@@ -287,7 +304,27 @@ function apiContractsGet(PDO $conn, array $apiKey, array $params, array $body): 
 // ---------------------------------------------------------------------------
 // POST /contracts
 // ---------------------------------------------------------------------------
+/**
+ * `company_id` from a request body as the service's tenant_id: checked to exist
+ * and to be in the key's reach (403), or - on a create with none - the key's
+ * default company. On an update with none, nothing: the contract stays put.
+ */
+function apiContractCompany(PDO $conn, array $apiKey, array $body, bool $creating): array {
+    $raw = $body['company_id'] ?? null;
+    unset($body['company_id'], $body['tenant_id']);
+    if ($raw !== null && $raw !== '') {
+        $tid = (int)$raw;
+        if (!getTenantById($conn, $tid)) apiError(422, 'invalid_field', "Unknown company id: {$tid}");
+        if (!apiKeyCanAccessTenant($conn, $apiKey, $tid)) apiError(403, 'forbidden', 'This key cannot put contracts in that company.');
+        $body['tenant_id'] = $tid;
+    } elseif ($creating) {
+        $body['tenant_id'] = apiKeyDefaultTenantId($conn, $apiKey);
+    }
+    return $body;
+}
+
 function apiContractsCreate(PDO $conn, array $apiKey, array $params, array $body): void {
+    $body = apiContractCompany($conn, $apiKey, $body, true);
     try {
         $res = ContractsService::saveContract($conn, ActorContext::fromApiKey($apiKey), $body);
         apiRespond(apiSerializeContract(apiLoadContract($conn, $res['id'], $apiKey)), 201);
@@ -298,6 +335,7 @@ function apiContractsCreate(PDO $conn, array $apiKey, array $params, array $body
 // PATCH /contracts/{id}
 // ---------------------------------------------------------------------------
 function apiContractsUpdate(PDO $conn, array $apiKey, array $params, array $body): void {
+    $body = apiContractCompany($conn, $apiKey, $body, false);
     try {
         $res = ContractsService::saveContract($conn, ActorContext::fromApiKey($apiKey), array_merge($body, ['id' => (int)$params[0]]));
         apiRespond(apiSerializeContract(apiLoadContract($conn, $res['id'], $apiKey)));

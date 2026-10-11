@@ -187,6 +187,7 @@ $translationNamespaces = ['common', 'contracts'];
         /* Supplier or customer (#153) */
         .party-filter { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid var(--border, #ddd); border-radius: 6px; background: var(--surface, #fff); color: var(--text, #333); }
         .party-badge { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; background: var(--con-accent-soft, #fef3c7); color: var(--text, #333); vertical-align: 1px; }
+        .row-company { font-size: 12px; color: var(--text-muted, #777); margin-top: 2px; }
     </style>
     <!-- Mobile layer: linked AFTER this page's own <style> so its @media rules win on ties. -->
     <link rel="stylesheet" href="../assets/css/mobile.css?v=193">
@@ -348,12 +349,15 @@ $translationNamespaces = ['common', 'contracts'];
                 tbody.innerHTML = '<tr><td colspan="7" class="empty-state">' + escapeHtml(window.t('contracts.list.empty')) + '</td></tr>';
                 return;
             }
+            // Name each contract's company only when the list holds more than one
+            // (the "All companies" view) - in one company it would say the same thing on every row.
+            const manyCompanies = new Set(contracts.map(c => c.tenant_id)).size > 1;
             tbody.innerHTML = contracts.map(c => {
                 const status = getContractStatus(c);
                 return `
                     <tr>
                         <td><strong>${escapeHtml(c.contract_number)}</strong></td>
-                        <td>${escapeHtml(c.title)}</td>
+                        <td>${escapeHtml(c.title)}${manyCompanies && c.company_name ? '<div class="row-company">' + escapeHtml(c.company_name) + '</div>' : ''}</td>
                         <td>${escapeHtml(c.party_label || '-')}${c.party_type === 'customer' ? ' <span class="party-badge">' + escapeHtml(window.t('contracts.party.customer')) + '</span>' : ''}</td>
                         <td>${escapeHtml(c.owner_name || '-')}</td>
                         <td>${formatDate(c.contract_end)}</td>

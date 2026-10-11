@@ -1,49 +1,58 @@
 <?php
 /**
- * Who a contract is WITH - a supplier (we buy) or a customer (we sell) - and who
- * may see a customer contract (#153).
+ * Who OWNS a contract, who it is WITH, and who may see it.
  *
- * FreeITSM was built for an IT manager who buys: every contract pointed at a
- * supplier. A contract may now instead be with a CUSTOMER - a company you serve
- * (customer_tenant_id), a person from Users (customer_user_id), or both. Every
- * existing contract is party_type 'supplier' and nothing about it changes.
+ * OWNER (3.5.0) - contracts.tenant_id, the company the contract belongs to. Scoped
+ * data, exactly like assets and tickets: NULL is the Default company, never
+ * "shared". An analyst sees a contract when they can reach its company, and the
+ * contracts list follows the company switcher.
  *
- * VISIBILITY
- * ----------
- * Supplier contracts are your own procurement and stay visible to everyone with
- * Contracts, as before. A customer contract belongs to that customer, so by
- * default only analysts who can see the customer's company see it - the same rule
- * as the customer's tickets and assets. The setting contracts_customer_visibility
- * ('company' default, or 'all') lets an install open them to everyone.
+ * PARTY (#153) - who the contract is WITH: a supplier (we buy, supplier_id) or a
+ * customer (we sell: customer_tenant_id and/or customer_user_id). Set
+ * independently of the owner - a contract owned by your Default company can be
+ * with customer X. It no longer decides visibility.
  *
- * The customer's company is customer_tenant_id, or failing that the customer
- * person's own company. A customer contract with neither (a person from no
- * company) belongs to the Default company, as a NULL tenant does everywhere.
+ * Until 3.5.0 a customer contract was hidden by its CUSTOMER's company, and a
+ * setting (contracts_customer_visibility) could open them to everyone. The first
+ * Database Verification of 3.5.0 filed each existing customer contract under its
+ * customer's company, so nobody's view changed on upgrade; the setting is gone.
  *
- * ⚠️ EVERY place that reads `contracts` must apply contractVisibilitySql() (lists,
- * search) or contractCanView() (one record) - see the developer guide. A read that
- * forgets it shows one customer's contract and value to another customer's analyst.
+ * ⚠️ EVERY place that reads `contracts` must apply contractVisibilitySql() (any
+ * read - search, previews, links), contractListSql() (the contracts list and its
+ * dashboard, which follow the switcher) or contractCanView() (one record). A read
+ * that forgets it shows one company's contract and its value to another's analyst.
  */
 
 require_once __DIR__ . '/tenancy.php';
 
 const CONTRACT_PARTY_SUPPLIER = 'supplier';
 const CONTRACT_PARTY_CUSTOMER = 'customer';
-const CONTRACT_CUSTOMER_VISIBILITY_KEY = 'contracts_customer_visibility';
 
-/** 'company' (default) or 'all'. */
-function contractCustomerVisibility(PDO $conn, bool $reload = false): string
+/** True once Database Verification has added contracts.tenant_id. */
+function contractTenantReady(PDO $conn): bool
 {
-    static $v = null;
-    if ($v !== null && !$reload) return $v;
-    try {
-        $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
-        $s->execute([CONTRACT_CUSTOMER_VISIBILITY_KEY]);
-        $v = $s->fetchColumn() === 'all' ? 'all' : 'company';
-    } catch (Throwable $e) {
-        $v = 'company';
-    }
-    return $v;
+    static $ok = null;
+    if ($ok !== null) return $ok;
+    try { $conn->query("SELECT tenant_id FROM contracts LIMIT 0"); return $ok = true; }
+    catch (Throwable $e) { return $ok = false; }
+}
+
+/** The company a contract belongs to (NULL resolved to Default), or null if there is no such contract. */
+function contractTenantOf(PDO $conn, int $contractId): ?int
+{
+    if (!contractTenantReady($conn)) return getDefaultTenantId($conn);
+    $s = $conn->prepare("SELECT id, tenant_id FROM contracts WHERE id = ?");
+    $s->execute([$contractId]);
+    $r = $s->fetch(PDO::FETCH_ASSOC);
+    if (!$r) return null;
+    return $r['tenant_id'] === null ? getDefaultTenantId($conn) : (int)$r['tenant_id'];
+}
+
+/** How a company is stored on a contract: the Default company is NULL, like every scoped table. */
+function contractStoreTenant(PDO $conn, ?int $tenantId): ?int
+{
+    if ($tenantId === null || $tenantId <= 0) return null;
+    return $tenantId === getDefaultTenantId($conn) ? null : $tenantId;
 }
 
 /** True once Database Verification has added the party columns. */
@@ -65,16 +74,18 @@ function contractCustomerTenantExpr(string $c = 'c'): string
 }
 
 /**
- * " AND (...)" hiding the customer contracts this analyst may not see, for a query
- * over `contracts` aliased $c. Returns ['', []] when nothing needs hiding.
+ * " AND (...)" keeping only contracts in a company this analyst can reach, for a
+ * query over `contracts` aliased $c - every company they may see, whatever the
+ * switcher says. For search, previews, links and anything else that is not the
+ * contracts list itself. ['', []] on a single-company install.
  * @return array{0:string,1:array}
  */
 function contractVisibilitySql(PDO $conn, int $analystId, string $c = 'c'): array
 {
-    if (!contractPartyReady($conn) || !isMultiTenant($conn) || contractCustomerVisibility($conn) === 'all') {
+    if (!contractTenantReady($conn) || !isMultiTenant($conn)) {
         return ['', []];
     }
-    return contractVisibilitySqlForScope($conn, getAccessibleTenantIds($conn, $analystId), $c);
+    return allAccessibleTenantsFilter($conn, $analystId, "$c.tenant_id");
 }
 
 /**
@@ -84,18 +95,30 @@ function contractVisibilitySql(PDO $conn, int $analystId, string $c = 'c'): arra
  */
 function contractVisibilitySqlForScope(PDO $conn, ?array $scope, string $c = 'c'): array
 {
-    if ($scope === null || !contractPartyReady($conn) || !isMultiTenant($conn) || contractCustomerVisibility($conn) === 'all') {
+    if ($scope === null || !contractTenantReady($conn) || !isMultiTenant($conn)) {
         return ['', []];
     }
     $ids = array_values(array_unique(array_map('intval', $scope)));
-    $expr = contractCustomerTenantExpr($c);
     if (!$ids) {
-        // Fail closed: an analyst with no companies sees no customer contracts.
-        return [" AND $c.party_type <> 'customer'", []];
+        return [" AND 1 = 0", []];   // fail closed: no companies, no contracts
     }
     $in = implode(',', array_fill(0, count($ids), '?'));
-    $nullOk = in_array(getDefaultTenantId($conn), $ids, true) ? " OR $expr IS NULL" : '';
-    return [" AND ($c.party_type <> 'customer' OR $expr IN ($in)$nullOk)", $ids];
+    $nullOk = in_array(getDefaultTenantId($conn), $ids, true) ? " OR $c.tenant_id IS NULL" : '';
+    return [" AND ($c.tenant_id IN ($in)$nullOk)", $ids];
+}
+
+/**
+ * The contracts LIST and its dashboard: the active company, or every company the
+ * analyst can see when the switcher says "All companies" - the same as Assets and
+ * Domains. ['', []] on a single-company install.
+ * @return array{0:string,1:array}
+ */
+function contractListSql(PDO $conn, int $analystId, string $c = 'c'): array
+{
+    if (!contractTenantReady($conn) || !isMultiTenant($conn)) {
+        return ['', []];
+    }
+    return activeTenantReadFilter($conn, $analystId, $c);
 }
 
 /** May this analyst see contract $id? (Existence is the caller's business.) */
@@ -105,6 +128,22 @@ function contractCanView(PDO $conn, int $analystId, int $contractId): bool
     $s = $conn->prepare("SELECT 1 FROM contracts c WHERE c.id = ?$sql");
     $s->execute(array_merge([$contractId], $params));
     return (bool)$s->fetchColumn();
+}
+
+/**
+ * The owning company, for alias $c: tenant_id (NULL read as Default) and
+ * company_name. A NULL column before Database Verification, so callers need no
+ * second branch.
+ * @return array{0:string,1:string} [select columns (with leading comma), joins]
+ */
+function contractOwnerSql(PDO $conn, string $c = 'c'): array
+{
+    if (!contractTenantReady($conn)) {
+        return [", NULL AS tenant_id, NULL AS company_name", ''];
+    }
+    $def = getDefaultTenantId($conn);
+    return [", COALESCE($c.tenant_id, $def) AS tenant_id, own_t.name AS company_name",
+            "LEFT JOIN tenants own_t ON own_t.id = COALESCE($c.tenant_id, $def)"];
 }
 
 /**

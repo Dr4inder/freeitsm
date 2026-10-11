@@ -34,7 +34,8 @@ try {
                 if (in_array((int)$t['id'], $ids, true)) $companies[] = ['id' => (int)$t['id'], 'name' => $t['name']];
             }
         }
-        echo json_encode(['success' => true, 'multi_company' => $multi, 'companies' => $companies]);
+        echo json_encode(['success' => true, 'multi_company' => $multi, 'companies' => $companies,
+                          'active_company' => $multi ? getActiveTenantId($conn, $aid) : null]);
         exit;
     }
 

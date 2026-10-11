@@ -556,6 +556,10 @@ $peopleBase = analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analys
                     </div>
                 </div>
                 <div class="contract-details">
+                    ${c.multi_company && c.company_name ? `<div class="detail-group full-width">
+                        <label>${escapeHtml(window.t('contracts.detail.company'))}</label>
+                        <div class="value">${escapeHtml(c.company_name)}</div>
+                    </div>` : ''}
                     <div class="detail-group">
                         <label>${escapeHtml(window.t('contracts.detail.contract_number'))}</label>
                         <div class="value">${escapeHtml(c.contract_number)}</div>

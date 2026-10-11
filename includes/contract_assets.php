@@ -7,12 +7,16 @@
  * handsets and SIMs on it is the worked example from the request.
  *
  * ⚠️ WHY THIS FILE EXISTS RATHER THAN FOUR ENDPOINTS DOING IT THEMSELVES.
- * Assets are company-scoped and contracts are NOT — contracts have no
- * tenant_id at all. So the asset is the only side of the link that can answer
- * "whose is this?", and every read of the asset side has to be filtered to the
- * companies the analyst can reach. Four endpoints filtering separately is four
- * chances to forget; forgetting once puts one customer's equipment on another
- * customer's contract page, and it looks exactly like a working feature.
+ * Every read of the asset side has to be filtered to the companies the analyst
+ * can reach. Four endpoints filtering separately is four chances to forget;
+ * forgetting once puts one customer's equipment on another customer's contract
+ * page, and it looks exactly like a working feature.
+ *
+ * 🔑 ONE COMPANY PER LINK (3.5.0). Contracts belong to a company now, and a
+ * contract covers only assets of its OWN company - checked on every link, even
+ * for an analyst who can reach both companies (that is precisely the analyst
+ * who could otherwise wire two clients together). The picker offers the
+ * contract's company's assets, so the rule is discoverable rather than an error.
  *
  * 🔑 A scoped list is not a gate. `contractAssetCanReach()` is called again on
  * every write and every delete, because the id in a POST body did not
@@ -39,10 +43,19 @@ function contractAssetCanReach(PDO $conn, int $analystId, int $assetId): bool
     if ($assetId <= 0) {
         return false;
     }
-    [$where, $args] = activeTenantFilter($conn, $analystId, 'a');
+    // Every company the analyst can reach, not just the active one (3.5.0): the
+    // contract they are working on may belong to another of their companies, and
+    // contractAssetLink() holds the asset to the contract's company anyway.
+    [$where, $args] = contractAssetReachSql($conn, $analystId);
     $stmt = $conn->prepare("SELECT 1 FROM assets a WHERE a.id = ?" . $where);
     $stmt->execute(array_merge([$assetId], $args));
     return (bool)$stmt->fetchColumn();
+}
+
+/** " AND ..." keeping assets (alias a) in companies this analyst can reach. ['', []] with one company. */
+function contractAssetReachSql(PDO $conn, int $analystId): array
+{
+    return isMultiTenant($conn) ? allAccessibleTenantsFilter($conn, $analystId, 'a.tenant_id') : ['', []];
 }
 
 /** The columns every asset row in this feature shows. One home, so the two directions match. */
@@ -63,8 +76,8 @@ function contractAssetSelect(): string
  */
 function contractAssetsFor(PDO $conn, int $analystId, int $contractId): array
 {
-    if (!contractCanView($conn, $analystId, $contractId)) return [];   // #153
-    [$where, $args] = activeTenantFilter($conn, $analystId, 'a');
+    if (!contractCanView($conn, $analystId, $contractId)) return [];
+    [$where, $args] = contractAssetReachSql($conn, $analystId);
     $stmt = $conn->prepare(
         contractAssetSelect() . " WHERE ca.contract_id = ?" . $where .
         " ORDER BY ty.name, a.hostname, a.asset_tag"
@@ -82,10 +95,8 @@ function contractAssetsFor(PDO $conn, int $analystId, int $contractId): array
 /**
  * Contracts covering an asset.
  *
- * No tenant filter here, and that is not an omission: the caller has already
- * had to reach the asset to be looking at it, and contracts are not
- * company-scoped, so there is nothing further to filter by. If contracts ever
- * gain a tenant_id, this is the function that grows a filter.
+ * Filtered by contractVisibilitySql() for the viewer: a contract in a company
+ * they cannot reach is left out (a link made before 3.5.0 can cross companies).
  */
 function contractsForAsset(PDO $conn, int $assetId, ?int $analystId = null): array
 {
@@ -143,6 +154,15 @@ function contractAssetLink(PDO $conn, int $analystId, int $contractId, int $asse
     if (!contractAssetCanReach($conn, $analystId, $assetId)) {
         // Same message either way. See the header.
         throw new RuntimeException('No such asset');
+    }
+    // Same company, always (see the header). Both are reachable here, so naming
+    // the problem tells the analyst nothing they could not already see.
+    if (isMultiTenant($conn) && contractTenantReady($conn)) {
+        $at = $conn->prepare("SELECT COALESCE(tenant_id, ?) FROM assets WHERE id = ?");
+        $at->execute([getDefaultTenantId($conn), $assetId]);
+        if ((int)$at->fetchColumn() !== contractTenantOf($conn, $contractId)) {
+            throw new RuntimeException('That asset belongs to a different company from this contract.');
+        }
     }
 
     $reference = $reference !== null ? mb_substr(trim($reference), 0, 190) : null;
@@ -219,7 +239,12 @@ function contractAssetLoad(PDO $conn, int $analystId, int $linkId): array
 function contractAssetSearch(PDO $conn, int $analystId, int $contractId, string $q, int $limit = 25): array
 {
     if (!contractCanView($conn, $analystId, $contractId)) return [];   // #153
-    [$where, $args] = activeTenantFilter($conn, $analystId, 'a');
+    // The contract's OWN company's assets (3.5.0), whatever the switcher says -
+    // the only ones it may cover. The analyst can see the contract, so they can
+    // reach its company.
+    [$where, $args] = isMultiTenant($conn) && contractTenantReady($conn)
+        ? tenantScopeSqlFor($conn, (int)contractTenantOf($conn, $contractId), 'a.tenant_id')
+        : ['', []];
 
     $sql =
         "SELECT a.id AS asset_id, a.hostname, a.manufacturer, a.model,

@@ -20,6 +20,7 @@ try {
 
     $conn = connectToDatabase();
     [$partyCols, $partyJoins] = contractPartySql($conn, 'c');
+    [$ownCols, $ownJoins] = contractOwnerSql($conn, 'c');
     [$visSql, $visParams] = contractVisibilitySql($conn, (int)$_SESSION['analyst_id'], 'c');
 
     $sql = "SELECT c.id, c.contract_number, c.title, c.description, c.supplier_id, c.contract_owner_id,
@@ -32,16 +33,19 @@ try {
                    c.is_active, c.created_datetime,
                    s.legal_name AS supplier_name, s.trading_name AS supplier_trading_name,
                    a.full_name AS owner_name
-                   $partyCols
+                   $partyCols$ownCols
             FROM contracts c
             LEFT JOIN suppliers s ON c.supplier_id = s.id
             LEFT JOIN analysts a ON c.contract_owner_id = a.id
             LEFT JOIN contract_statuses cs ON c.contract_status_id = cs.id
             LEFT JOIN payment_schedules ps ON c.payment_schedule_id = ps.id
             $partyJoins
+            $ownJoins
             WHERE c.id = ?$visSql";
 
     // A customer contract the analyst may not see is "not found", like one that does not exist.
+    require_once '../../includes/tenancy.php';
+    $multiCompany = isMultiTenant($conn);
     $stmt = $conn->prepare($sql);
     $stmt->execute(array_merge([$id], $visParams));
     $contract = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -52,6 +56,7 @@ try {
 
     $contract['is_active'] = (bool)$contract['is_active'];
     $contract['party_label'] = contractPartyLabel($contract);
+    $contract['multi_company'] = $multiCompany;   // the view shows the company only when there is a choice
 
     echo json_encode(['success' => true, 'contract' => $contract]);
 } catch (Exception $e) {

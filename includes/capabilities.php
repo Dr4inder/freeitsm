@@ -100,7 +100,7 @@ final class Cap
     const CONTRACTS_CONTRACT_TERMS     = 'contracts.contract_terms';
     const CONTRACTS_RFP_DEPARTMENTS    = 'contracts.rfp_departments';
     const CONTRACTS_RFP_AI             = 'contracts.rfp_ai';              // AI provider + API key
-    const CONTRACTS_CUSTOMER_VISIBILITY = 'contracts.customer_visibility'; // who sees customer contracts - crosses company lines (#153)
+    // contracts.customer_visibility retired in 3.5.0: a contract belongs to a company now, and that decides who sees it.
 
     // ---- Change Management -------------------------------------------------
     const CHANGES_MANAGE     = 'changes.manage';      // umbrella

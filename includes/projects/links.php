@@ -39,7 +39,7 @@ if (!defined('PROJECT_LINKS_LOADED')) {
             'asset'    => ['table' => 'project_assets',             'col' => 'asset_id',       'module' => 'assets',    'scoped' => 'assets'],
             'change'   => ['table' => 'project_changes',            'col' => 'change_id',      'module' => 'changes',   'scoped' => 'changes'],
             'ticket'   => ['table' => 'project_tickets',            'col' => 'ticket_id',      'module' => 'tickets',   'scoped' => 'tickets'],
-            'contract' => ['table' => 'project_contracts',          'col' => 'contract_id',    'module' => 'contracts', 'scoped' => null],
+            'contract' => ['table' => 'project_contracts',          'col' => 'contract_id',    'module' => 'contracts', 'scoped' => 'contracts'],   // a company record since 3.5.0
             'cmdb'     => ['table' => 'project_cmdb_objects',       'col' => 'cmdb_object_id', 'module' => 'cmdb',      'scoped' => 'cmdb_objects'],
             'article'  => ['table' => 'project_knowledge_articles', 'col' => 'article_id',     'module' => 'knowledge', 'scoped' => null],
             'problem'  => ['table' => 'project_problems',           'col' => 'problem_id',     'module' => 'problems',  'scoped' => 'problems'],
@@ -131,9 +131,10 @@ if (!defined('PROJECT_LINKS_LOADED')) {
                 if (!analystCanAccessProblem($conn, $analystId, $targetId)) return false;
                 break;
             case 'contract':
-                $st = $conn->prepare("SELECT 1 FROM contracts WHERE id = ?");
-                $st->execute([$targetId]);
-                return (bool)$st->fetchColumn();
+                // A company record since 3.5.0: visible, and (below) in the project's company.
+                require_once __DIR__ . '/../contract_party.php';
+                if (!contractCanView($conn, $analystId, $targetId)) return false;
+                break;
             case 'article':
                 require_once __DIR__ . '/../knowledge/visibility.php';
                 // 'unarchived', as the analyst article list: a DRAFT can be linked.
@@ -314,8 +315,8 @@ if (!defined('PROJECT_LINKS_LOADED')) {
                 $args = array_merge([$like, $like, (int)preg_replace('/\D/', '', $q), $projectId], $cArgs);
                 break;
             case 'contract':
-                $sql = "SELECT x.id FROM contracts x WHERE (x.title LIKE ? OR x.contract_number LIKE ?) AND $taken ORDER BY x.title LIMIT 40";
-                $args = [$like, $like, $projectId];
+                $sql = "SELECT x.id FROM contracts x WHERE (x.title LIKE ? OR x.contract_number LIKE ?) AND $taken$company ORDER BY x.title LIMIT 40";
+                $args = array_merge([$like, $like, $projectId], $cArgs);
                 break;
             case 'article':
                 require_once __DIR__ . '/../knowledge/visibility.php';

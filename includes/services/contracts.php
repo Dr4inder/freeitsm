@@ -45,12 +45,13 @@ class ContractsService
             $f = self::contractFields($conn, $in, $current);
             $party = self::partyFields($conn, $ctx, $in, $current);
             $f['supplier_id'] = $party['supplier_id'];
-            if ($f['contract_number'] !== $current['contract_number']) {
-                $dup = $conn->prepare("SELECT id FROM contracts WHERE contract_number = ? AND id != ?");
-                $dup->execute([$f['contract_number'], $id]);
-                if ($dup->fetchColumn()) {
-                    throw new ServiceError('conflict', 'conflict', 'Another contract already uses this contract_number.');
-                }
+            // The owning company (3.5.0): unchanged unless the request names one.
+            $tenant = self::ownerTenant($conn, $ctx, $in, $current);
+            if ($tenant !== self::effectiveTenant($conn, $current)) {
+                self::assertMovable($conn, $id, $tenant);
+            }
+            if ($f['contract_number'] !== $current['contract_number'] || $tenant !== self::effectiveTenant($conn, $current)) {
+                self::assertNumberFree($conn, $f['contract_number'], $tenant, $id);
             }
             $conn->prepare(
                 "UPDATE contracts SET contract_number=?, title=?, description=?, supplier_id=?, contract_owner_id=?,
@@ -60,6 +61,7 @@ class ContractsService
                  WHERE id=?"
             )->execute([...self::contractParams($f), $id]);
             self::writeParty($conn, $id, $party);
+            self::writeTenant($conn, $id, $tenant);
             WorkflowEngine::dispatch('contract.updated', ['contract' => ['id' => $id, 'title' => $f['title'] ?? null, 'status_id' => $f['contract_status_id'] ?? null, 'supplier_id' => $f['supplier_id'] ?? null] + self::partyPayload($party)]);
             return ['id' => $id, 'created' => false];
         }
@@ -67,12 +69,10 @@ class ContractsService
         $f = self::contractFields($conn, $in);
         $party = self::partyFields($conn, $ctx, $in, []);
         $f['supplier_id'] = $party['supplier_id'];
-        $dup = $conn->prepare("SELECT id FROM contracts WHERE contract_number = ?");
-        $dup->execute([$f['contract_number']]);
-        $existing = $dup->fetchColumn();
-        if ($existing !== false) {
-            throw new ServiceError('conflict', 'conflict', "A contract with this contract_number already exists (id {$existing}).");
-        }
+        // The owning company (3.5.0): the one named, else the Default company. The
+        // screen always names the active company; the API names the key's default.
+        $tenant = self::ownerTenant($conn, $ctx, $in, []);
+        self::assertNumberFree($conn, $f['contract_number'], $tenant, null);
         $conn->prepare(
             "INSERT INTO contracts (contract_number, title, description, supplier_id, contract_owner_id,
                 contract_status_id, contract_start, contract_end, notice_period_days, notice_date,
@@ -83,6 +83,7 @@ class ContractsService
         )->execute(self::contractParams($f));
         $newId = (int)$conn->lastInsertId();
         self::writeParty($conn, $newId, $party);
+        self::writeTenant($conn, $newId, $tenant);
         WorkflowEngine::dispatch('contract.created', ['contract' => ['id' => $newId, 'title' => $f['title'] ?? null, 'status_id' => $f['contract_status_id'] ?? null, 'supplier_id' => $f['supplier_id'] ?? null] + self::partyPayload($party)]);
         return ['id' => $newId, 'created' => true];
     }
@@ -239,10 +240,104 @@ class ContractsService
     //  Internals
     // ======================================================================
 
-    /** A customer contract the actor may not see is reported as not found (#153). */
+    /** A contract row's company, with NULL read as the Default company. */
+    private static function effectiveTenant(PDO $conn, array $row): int
+    {
+        $t = $row['tenant_id'] ?? null;
+        return $t === null ? getDefaultTenantId($conn) : (int)$t;
+    }
+
+    /**
+     * The company a contract being saved belongs to. A named company must exist
+     * and be one the caller can reach - refused, never quietly replaced with
+     * another. Not named: the current one on an update, Default on a create.
+     */
+    private static function ownerTenant(PDO $conn, ActorContext $ctx, array $in, array $current): int
+    {
+        $raw = $in['tenant_id'] ?? null;
+        if ($raw === null || $raw === '' || !contractTenantReady($conn)) {
+            if ($current) return self::effectiveTenant($conn, $current);
+            // A create that names no company: Default - unless the actor cannot
+            // reach Default, when it is their first company. Never a contract its
+            // own creator could not then see.
+            $def = getDefaultTenantId($conn);
+            if (!isMultiTenant($conn) || $ctx->companyScope === null || in_array($def, $ctx->companyScope, true)) return $def;
+            if (!$ctx->companyScope) throw new ServiceError('forbidden', 'forbidden', 'You cannot add contracts: you have no companies.');
+            return (int)$ctx->companyScope[0];
+        }
+        $tid = (int)$raw;
+        if ($tid <= 0 || !getTenantById($conn, $tid)) {
+            throw new ServiceError('validation', 'invalid_field', 'That company does not exist.');
+        }
+        if (isMultiTenant($conn) && $ctx->companyScope !== null && !in_array($tid, $ctx->companyScope, true)) {
+            throw new ServiceError('forbidden', 'forbidden', 'You cannot put a contract in that company.');
+        }
+        return $tid;
+    }
+
+    /** Contract numbers are unique within a company - two clients can both have C-001. */
+    private static function assertNumberFree(PDO $conn, string $number, int $tenant, ?int $exceptId): void
+    {
+        if (contractTenantReady($conn)) {
+            $sql = "SELECT id FROM contracts WHERE contract_number = ? AND COALESCE(tenant_id, ?) = ?";
+            $args = [$number, getDefaultTenantId($conn), $tenant];
+        } else {
+            $sql = "SELECT id FROM contracts WHERE contract_number = ?";
+            $args = [$number];
+        }
+        if ($exceptId !== null) { $sql .= " AND id <> ?"; $args[] = $exceptId; }
+        $st = $conn->prepare($sql);
+        $st->execute($args);
+        if ($st->fetchColumn() !== false) {
+            throw new ServiceError('conflict', 'conflict', 'Another contract in this company already uses this contract number.');
+        }
+    }
+
+    /**
+     * Moving a contract to another company is refused while anything of the old
+     * company hangs off it - its assets, projects or RFPs would otherwise link
+     * across companies, which nothing here allows. Say what is in the way.
+     */
+    private static function assertMovable(PDO $conn, int $id, int $to): void
+    {
+        $def = getDefaultTenantId($conn);
+        $checks = [
+            'asset(s)'   => "SELECT COUNT(*) FROM contract_assets ca JOIN assets a ON a.id = ca.asset_id WHERE ca.contract_id = ? AND COALESCE(a.tenant_id, $def) <> ?",
+            'project(s)' => "SELECT COUNT(*) FROM project_contracts pc JOIN projects p ON p.id = pc.project_id WHERE pc.contract_id = ? AND COALESCE(p.tenant_id, $def) <> ?",
+            'RFP(s)'     => "SELECT COUNT(*) FROM rfps r WHERE r.contract_id = ? AND COALESCE(r.tenant_id, $def) <> ?",
+        ];
+        $blocked = [];
+        foreach ($checks as $what => $sql) {
+            try {
+                $st = $conn->prepare($sql);
+                $st->execute([$id, $to]);
+                $n = (int)$st->fetchColumn();
+                if ($n > 0) $blocked[] = "$n $what";
+            } catch (Exception $e) { /* table or column absent before Database Verification */ }
+        }
+        if ($blocked) {
+            throw new ServiceError('conflict', 'conflict',
+                'This contract is linked to ' . implode(', ', $blocked) . ' in its current company. Remove those links before moving it to another company.');
+        }
+    }
+
+    private static function writeTenant(PDO $conn, int $id, int $tenant): void
+    {
+        if (!contractTenantReady($conn)) return;
+        $conn->prepare("UPDATE contracts SET tenant_id = ? WHERE id = ?")->execute([contractStoreTenant($conn, $tenant), $id]);
+    }
+
+    /**
+     * A contract in a company the actor cannot reach is reported as not found,
+     * never forbidden, so ids cannot be probed. By the ACTOR's company scope, not
+     * the analyst's: an API key can be narrower than the analyst it acts as.
+     */
     private static function assertVisible(PDO $conn, ActorContext $ctx, int $id): void
     {
-        if (!contractCanView($conn, $ctx->actorId, $id)) {
+        [$sql, $args] = contractVisibilitySqlForScope($conn, $ctx->companyScope, 'c');
+        $st = $conn->prepare("SELECT 1 FROM contracts c WHERE c.id = ?$sql");
+        $st->execute(array_merge([$id], $args));
+        if (!$st->fetchColumn()) {
             throw new ServiceError('not_found', 'not_found', 'Contract not found.');
         }
     }

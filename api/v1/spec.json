@@ -4766,12 +4766,18 @@
                     "p": "\/contracts",
                     "perm": "contracts.read",
                     "s": "List \/ search contracts",
-                    "d": "Contracts with supplier\/owner\/status names. Renewal filters mirror the dashboard and Watchtower windows. A contract is with a supplier (you buy) or a customer (you sell); supplier contracts are install-wide, and a customer contract is hidden from a key whose company scope does not include its customer's company. The RFP Builder is not exposed — it's internal-only by design.",
+                    "d": "Contracts with company\/supplier\/owner\/status names. Renewal filters mirror the dashboard and Watchtower windows. Every contract belongs to a company (3.5.0), and a key sees only contracts in companies its scope reaches. Who a contract is with is separate: a supplier (you buy) or a customer (you sell). The RFP Builder is not exposed — it's internal-only by design.",
                     "params": [
                         {
                             "name": "q",
                             "in": "query",
                             "desc": "Search contract number, title, supplier names and customer company \/ person",
+                            "req": false
+                        },
+                        {
+                            "name": "company_id",
+                            "in": "query",
+                            "desc": "Contracts belonging to one company (403 if the key cannot access it)",
                             "req": false
                         },
                         {
@@ -4874,13 +4880,19 @@
                     "p": "\/contracts",
                     "perm": "contracts.create",
                     "s": "Create a contract",
-                    "d": "contract_number and title are required. A duplicate contract_number is refused (409) — a deliberate API safeguard (the UI has no such check). Lookups validated with friendly 422s; dates YYYY-MM-DD; currency a 3-letter code.",
+                    "d": "contract_number and title are required. A contract_number already used in the same company is refused (409); two companies may share one. The contract belongs to company_id, or the key's default company. Lookups validated with friendly 422s; dates YYYY-MM-DD; currency a 3-letter code.",
                     "params": [
                         {
                             "name": "contract_number",
                             "in": "body",
-                            "desc": "Unique reference",
+                            "desc": "Reference, unique within its company",
                             "req": true
+                        },
+                        {
+                            "name": "company_id",
+                            "in": "body",
+                            "desc": "The company the contract belongs to (403 if the key cannot access it). Default: the key's default company",
+                            "req": false
                         },
                         {
                             "name": "title",
@@ -5059,7 +5071,7 @@
                     "p": "\/contracts\/{id}",
                     "perm": "contracts.update",
                     "s": "Update a contract",
-                    "d": "Send only what changes; null clears nullable fields; changing contract_number to one already in use → 409. Set is_active=false to retire without deleting.",
+                    "d": "Send only what changes; null clears nullable fields; changing contract_number to one already in use in the same company → 409. company_id moves the contract to another company, refused (409) while it has assets, projects or RFPs in its current one. Set is_active=false to retire without deleting.",
                     "params": [
                         {
                             "name": "id",
