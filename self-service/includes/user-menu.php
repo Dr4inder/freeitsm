@@ -367,7 +367,13 @@ if (!$__hasAnalystAccount && !empty($ss_user_email)) {
             <span class="ss-mfa-badge disabled" id="ssMfaBadge"><?php echo htmlspecialchars(t('self-service.menu.mfa_off')); ?></span>
         </button>
         <?php if ($__hasAnalystAccount): ?>
-        <button class="ss-menu-item" onclick="window.open('<?php echo BASE_URL; ?>', '_blank', 'noopener');">
+        <?php /* GH #169: the analyst LOGIN, not "/". "/" sends anyone without an
+                 analyst session to the install's front door (discussion #63), and
+                 on an install whose front door is the portal that reopened the
+                 portal. auth/login.php sends a signed-in analyst on to the console
+                 itself, so this works signed in or not - the same as the analyst
+                 side's link to self-service/. */ ?>
+        <button class="ss-menu-item" onclick="window.open('<?php echo BASE_URL; ?>auth/login.php', '_blank', 'noopener');">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
             <span><?php echo htmlspecialchars(t('self-service.menu.analyst_console')); ?></span>
         </button>
