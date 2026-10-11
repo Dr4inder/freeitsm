@@ -1827,11 +1827,12 @@ function renderOversizeFields(string $px, bool $withLimits): void
             </div>
             <p style="margin-bottom: 20px; color: var(--text-muted, #666);"><?php echo t('tickets.settings.intros.general'); ?></p>
             <form id="generalSettingsForm" style="max-width: 600px;">
-                <div class="form-group">
-                    <label for="systemName"><?php echo htmlspecialchars(t('tickets.settings.general.system_name')); ?></label>
-                    <input type="text" id="systemName" placeholder="<?php echo htmlspecialchars(t('tickets.settings.general.system_name_placeholder')); ?>">
-                    <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.settings.general.system_name_help')); ?></small>
-                </div>
+                <?php /* The system name moved to System -> Branding: it heads every
+                         module's page titles, not just Tickets'. A pointer for anyone
+                         who still looks here. */ ?>
+                <p style="color: var(--text-muted, #666); margin-bottom: 18px;">
+                    <?php echo t('tickets.settings.general.system_name_moved', ['link' => '<a href="' . htmlspecialchars(BASE_URL) . 'system/branding/">' . htmlspecialchars(t('tickets.settings.general.system_name_moved_link')) . '</a>']); ?>
+                </p>
 
                 <div class="form-group">
                     <label><?php echo htmlspecialchars(t('tickets.settings.general.reopen_label')); ?></label>
@@ -6425,7 +6426,6 @@ function renderOversizeFields(string $px, bool $withLimits): void
                 const data = await response.json();
 
                 if (data.success) {
-                    document.getElementById('systemName').value = data.settings.system_name || '';
                     // Absent (never saved) means ON — the requester email template has
                     // always promised a reply reopens the ticket, so the stored default
                     // matches what customers were already told. Mirrors
@@ -6806,7 +6806,6 @@ function renderOversizeFields(string $px, bool $withLimits): void
             e.preventDefault();
 
             const settings = {
-                system_name: document.getElementById('systemName').value,
                 reopen_on_customer_reply: document.getElementById('reopenOnCustomerReply').checked ? '1' : '0',
                 snooze_wake_hour: document.getElementById('snoozeWakeHour').value,
                 ticket_collapse_enabled:       document.getElementById('collapseEnabled').checked ? '1' : '0',

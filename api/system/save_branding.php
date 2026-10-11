@@ -94,8 +94,20 @@ try {
         $filesLogo['files_logo_position'] = $p;
     }
 
+    // System name (moved here from Tickets -> Settings -> General). Only sent by
+    // a form that has the box, so an older client leaves it alone. Blank is a
+    // real value - it means "use the default", which systemName() supplies.
+    $systemName = null;
+    if (array_key_exists('system_name', $_POST)) {
+        $systemName = trim((string)$_POST['system_name']);
+        if (mb_strlen($systemName) > 100) throw new Exception("'system_name' is too long (max 100 characters)");
+    }
+
     foreach ($values as $k => $v) {
         $upsert($conn, 'branding_' . $k, $v);
+    }
+    if ($systemName !== null) {
+        $upsert($conn, 'system_name', $systemName);
     }
     foreach ($filesLogo as $k => $v) {
         $upsert($conn, $k, $v);

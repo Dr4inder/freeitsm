@@ -357,6 +357,8 @@ return [
         'subtitle' => 'Set the organisation logo, the page people land on, and default header/footer text used on diagrams and exported documents',
 
         // Landing page (discussion #63).
+        'system_name_heading' => 'System name',
+        'system_name_desc'    => 'The first part of every page title - the name in the browser tab and in bookmarks, on every page in every module. Leave it blank to use "Service Desk".',
         'landing_heading' => 'Where people start',
         'landing_desc'    => 'Where someone is sent when they open FreeITSM without being logged in.',
         'landing_analyst' => 'Analyst login',

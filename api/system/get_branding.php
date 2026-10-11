@@ -87,6 +87,13 @@ try {
         ],
         // Which front door "/" sends an unauthenticated visitor to (#63).
         'landing_page' => landingInstallDefault($conn),
+        // The first word of every page title (GH #173). Raw - blank means the
+        // default, and the box shows that as its placeholder.
+        'system_name' => (function () use ($conn) {
+            $st = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'system_name'");
+            $st->execute();
+            return (string)$st->fetchColumn();
+        })(),
         // The Files desktop's corner logo (Files module).
         'files_desktop' => (function () use ($conn) {
             $st = $conn->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('files_logo_mode', 'files_logo_position')");

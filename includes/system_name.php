@@ -1,6 +1,6 @@
 <?php
 /**
- * The system's name - Tickets -> Settings -> General -> "System name".
+ * The system's name - System -> Branding -> "System name" (Tickets -> Settings -> General until 3.5.0).
  *
  * It was saved and read by nothing: the setting's help promised the name in
  * the page titles, and 90 pages had "Service Desk" (or "FreeITSM") typed into

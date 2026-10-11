@@ -305,5 +305,5 @@ function t($key, $params = []) {
     return I18n::t($key, $params);
 }
 
-// systemName() - the install's name for page titles (Tickets -> Settings -> General).
+// systemName() - the install's name for page titles (System -> Branding).
 require_once __DIR__ . '/system_name.php';

@@ -336,6 +336,16 @@ $translationNamespaces = ['common', 'system'];
         <p class="page-subtitle">Set the organisation logo and default header/footer text used on diagrams and exported documents</p>
 
         <form id="brandingForm" enctype="multipart/form-data">
+            <!-- System name. Moved here from Tickets -> Settings -> General: it is
+                 the first word of every page title in every module, so it was an
+                 install-wide setting living in one module's settings. -->
+            <div class="settings-card">
+                <h3><?php echo htmlspecialchars(t('system.branding.system_name_heading')); ?></h3>
+                <p class="card-desc"><?php echo htmlspecialchars(t('system.branding.system_name_desc')); ?></p>
+                <input type="text" id="systemName" class="slot-input" maxlength="100" style="max-width:420px;"
+                       placeholder="Service Desk" autocomplete="off">
+            </div>
+
             <!-- Logo -->
             <div class="settings-card">
                 <h3><?php echo htmlspecialchars(t('system.branding.logo_heading')); ?></h3>
@@ -685,6 +695,7 @@ $translationNamespaces = ['common', 'system'];
             document.getElementById('footerRight').value = b.footer_right || '';
             // Sits outside `branding` — it is an install behaviour, not a slot (#63).
             document.getElementById('landingPage').value = data.landing_page || 'analyst';
+            document.getElementById('systemName').value = data.system_name || '';
             const fdk = data.files_desktop || {};
             document.getElementById('filesLogoMode').value = fdk.logo_mode || 'company';
             document.getElementById('filesLogoPosition').value = fdk.logo_position || 'top-right';
@@ -999,6 +1010,7 @@ $translationNamespaces = ['common', 'system'];
         fd.append('footer_center', document.getElementById('footerCenter').value);
         fd.append('footer_right',  document.getElementById('footerRight').value);
         fd.append('landing_page',  document.getElementById('landingPage').value);
+        fd.append('system_name',   document.getElementById('systemName').value.trim());
         fd.append('files_logo_mode',     document.getElementById('filesLogoMode').value);
         fd.append('files_logo_position', document.getElementById('filesLogoPosition').value);
 

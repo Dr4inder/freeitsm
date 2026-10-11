@@ -1714,7 +1714,7 @@ return [
             'reply_templates' => 'Canned responses your analysts can drop into a reply instead of retyping them. These are the shared ones the whole team sees — an analyst\'s own private templates are saved from the reply window and are not listed here.',
             'rota_shifts'     => 'Shifts are the working-pattern templates (e.g. Early, Late, On-call) that analysts are assigned on the staff rota — define them here before building the rota.',
             'analysts'        => 'Analysts are the staff who log in and work tickets — add them, reset passwords, and assign them to teams to control their access.',
-            'general'         => 'General settings control system-wide options such as the service desk name and defaults — adjust them to match your organisation.',
+            'general'         => 'General settings control how tickets behave - reopening, snoozing and how long messages and threads are shown.',
             'statuses'        => 'Workflow states a ticket can be in. Statuses flagged as <em>Closed</em> count as terminal — used by reports, watchtower counters and the closed-datetime auto-set on assign. Exactly one status is the default for new tickets.',
             'priorities'      => 'Priority bands shown on tickets. Exactly one priority is the default for new tickets.',
             'rota_locations'  => 'Where each analyst is working on a given day — used by the staff rota and shown as a coloured badge on every entry. Exactly one location is the default for new rota entries.',
@@ -1930,6 +1930,8 @@ return [
 
         'general' => [
             'system_name'         => 'System name',
+            'system_name_moved'   => 'The system name - the first part of every page title - is set in {link}, because it applies to every module.',
+            'system_name_moved_link' => 'System -> Branding',
             'system_name_placeholder' => 'e.g., Service Desk Ticketing System',
             'system_name_help'    => 'Shown at the start of every page title - the name in the browser tab and in bookmarks. Blank means "Service Desk".',
             'reopen_label'        => 'Reopening',

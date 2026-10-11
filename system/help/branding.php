@@ -19,6 +19,18 @@ require __DIR__ . '/_top.php';
     <div class="help-note"><strong>Where it lives:</strong> System &rarr; Branding. The settings are organisation-wide, so a change here affects every diagram and export across the install.</div>
 </div>
 
+<!-- System name -->
+<div class="help-section" id="name">
+    <div class="help-section-header"><?php echo helpSectionNum('name'); ?>
+        <div>
+            <h3>System name</h3>
+            <p>The first part of every page title - the name in the browser tab and in bookmarks, on every page of every module: <strong>Acme IT - Contracts - Edit contract</strong>. Leave it blank to use <strong>Service Desk</strong>.</p>
+        </div>
+    </div>
+    <p>Type the name in the <strong>System name</strong> card at the top of this page and press <strong>Save</strong>. Titles change the next time each page loads, in every language - only the name itself is yours to set, the rest of each title is translated.</p>
+    <div class="help-note"><strong>Moved in 3.5.0:</strong> it used to be under Tickets &rarr; Settings &rarr; General, which now points here. A name you had already set there is kept.</div>
+</div>
+
 <!-- 2. Logo -->
 <div class="help-section" id="logo">
     <div class="help-section-header"><?php echo helpSectionNum('logo'); ?>
