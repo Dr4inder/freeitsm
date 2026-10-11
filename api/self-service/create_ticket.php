@@ -93,6 +93,18 @@ try {
         ? (int) $user['tenant_id']
         : (isMultiTenant($conn) ? null : getDefaultTenantId($conn));
 
+    // The mailbox (GH #172). ⚠️ RE-CHECKED HERE, like the category below: the
+    // dropdown only offers this user's company's mailboxes and shared ones, but
+    // a hand-posted id could otherwise pick another company's mailbox - and the
+    // ticket would then be answered from that company's address. One not offered
+    // is dropped, so the ticket is still raised and an analyst picks a mailbox.
+    if ($mailboxId !== null) {
+        require_once '../../includes/self_service_mailboxes.php';
+        if (!isset(selfServiceMailboxes($conn, $userId)[$mailboxId])) {
+            $mailboxId = null;
+        }
+    }
+
     // Generate unique ticket number
     $ticketNumber = generateTicketNumber($conn, $ticketTenantId);
 

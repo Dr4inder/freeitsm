@@ -23,6 +23,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2287 | System            | Improvement | AI (GH #171): Azure accepts a pasted Target URI or Foundry project address as the endpoint, and "v1" as the API version (Azure's newer route); the API version help now warns that the date beside a model is the model's version, not the API version. |
 | 2288 | System            | Improvement | Debug tool D014 is now "AI connections" for every provider: it prints each request and answer in full (key hidden), explains the failure, and for a failing Azure deployment finds the API version that works; a failing Test button now says what the error most likely means and links administrators to it. |
 | 2289 | Self-Service      | Fix         | Portal (GH #169): "Analyst console" in the portal's user menu reopened the portal when you were not signed in as an analyst on an install whose front door is the portal; it now opens the analyst login, which goes straight to the console if you are already signed in. |
+| 2290 | Self-Service      | Fix         | Portal (GH #172): on a multi-company install the New Ticket mailbox picker offered every company's mailboxes; it now offers the requester's own company's plus shared ones (only shared for a requester with no company), the server re-checks the posted mailbox, and an empty picker is hidden instead of blocking the form. |
 
 
 

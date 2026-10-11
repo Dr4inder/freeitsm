@@ -874,7 +874,13 @@ let attachments = [];
                     select.value = data.mailboxes[0].id;
                 }
             } else {
-                select.innerHTML = '<option value="">' + escapeHtml(window.t('self-service.new_ticket.mailbox_none')) + '</option>';
+                // Nothing to choose (GH #172: a user with no company sees only
+                // shared mailboxes, and there may be none). Hide the field rather
+                // than leave a required one that can never be filled - that would
+                // stop the person raising a ticket at all.
+                select.innerHTML = '<option value=""></option>';
+                select.required = false;
+                select.closest('.form-group').style.display = 'none';
             }
         } catch (err) {
             select.innerHTML = '<option value="">' + escapeHtml(window.t('self-service.new_ticket.mailbox_failed')) + '</option>';
