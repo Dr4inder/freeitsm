@@ -65,6 +65,8 @@ function personEditorRender(): void
         'edit_title'         => $m('edit_title'),
         'company_auto'       => $m('company_auto'),
         'company_none'       => $m('company_none'),
+        'cost_centre_none'   => $m('cost_centre_none'),
+        'cost_centre_inactive' => $m('cost_centre_inactive'),
         'manager_none'       => $m('manager_none'),
         'manager_search'     => $m('manager_search'),
         'manager_hidden'     => $m('manager_hidden'),
@@ -177,6 +179,13 @@ function personEditorRender(): void
                         <small class="pe-help"><?php echo htmlspecialchars($m('company_help')); ?></small>
                     </div>
 
+                    <!-- GH #160: the cost centre this person is charged to - one of their
+                         company's active ones (no company = the Default company's). -->
+                    <div class="form-group" id="peCostCentreGroup" hidden>
+                        <label for="peCostCentre"><?php echo htmlspecialchars($m('cost_centre')); ?></label>
+                        <select id="peCostCentre"></select>
+                    </div>
+
                     <div class="form-group">
                         <label for="pePassword"><?php echo htmlspecialchars($m('password')); ?></label>
                         <input type="password" id="pePassword" autocomplete="new-password" minlength="8" placeholder="<?php echo htmlspecialchars($m('password_placeholder')); ?>">
@@ -233,6 +242,25 @@ function personEditorRender(): void
             sel.value = (tenantId === null || tenantId === undefined) ? '' : String(tenantId);
             group.hidden = false;
         }
+
+        // ── Cost centre (GH #160) ───────────────────────────────────────────
+        // The company the person is (or will be) in decides the list; changing
+        // the company refills it. Hidden while there are no cost centres at all.
+        let ccCurrent = null;
+        async function paintCostCentres(keepChoice) {
+            const group = $('peCostCentreGroup'), sel = $('peCostCentre');
+            const want = keepChoice ? (sel.value || ccCurrent || '') : (ccCurrent || '');
+            const company = (companies && companies.length >= 2) ? $('peCompany').value : '';
+            try {
+                const d = await getJson(API + 'cost-centres/options.php?' + new URLSearchParams({ company_id: company, keep: ccCurrent || '' }));
+                const list = d.success ? d.cost_centres : [];
+                sel.innerHTML = '<option value="">' + esc(T.cost_centre_none) + '</option>'
+                    + list.map(c => '<option value="' + c.id + '">' + esc(c.code + ' ' + c.name) + (c.is_active ? '' : ' (' + esc(T.cost_centre_inactive) + ')') + '</option>').join('');
+                sel.value = list.some(c => String(c.id) === String(want)) ? String(want) : '';
+                group.hidden = list.length === 0 && !ccCurrent;
+            } catch (e) { group.hidden = true; }
+        }
+        $('peCompany').addEventListener('change', () => paintCostCentres(true));
 
         // ── Manager type-ahead ──────────────────────────────────────────────
         // Searched on get_users.php, which is scoped to the people THIS analyst
@@ -385,6 +413,8 @@ function personEditorRender(): void
                 $('peMgrClear').disabled = owned.includes('manager_id');
             }
             paintCompanies(person.tenant_id ?? null);
+            ccCurrent = person.cost_centre_id || null;
+            await paintCostCentres(false);
             $('pePassword').value = '';
             $('personEditor').classList.add('active');
             $('peEmail').focus();
@@ -422,6 +452,9 @@ function personEditorRender(): void
                 const c = $('peCompany').value;
                 if (c || id) payload.tenant_id = c || null;
             }
+
+            // The cost centre, whenever the box is in play (GH #160).
+            if (!$('peCostCentreGroup').hidden) payload.cost_centre_id = $('peCostCentre').value || null;
 
             const btn = $('peSave');
             btn.disabled = true;

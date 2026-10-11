@@ -25,6 +25,7 @@
 require_once __DIR__ . '/../service_context.php';
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 require_once __DIR__ . '/../contract_party.php';   // supplier or customer, and who may see a customer contract (#153)
+require_once __DIR__ . '/../cost_centre_assign.php';   // GH #160: the cost centre it is charged to
 
 class ContractsService
 {
@@ -53,6 +54,7 @@ class ContractsService
             if ($f['contract_number'] !== $current['contract_number'] || $tenant !== self::effectiveTenant($conn, $current)) {
                 self::assertNumberFree($conn, $f['contract_number'], $tenant, $id);
             }
+            [$ccId, $f['cost_centre']] = self::costCentreFor($conn, $in, $current, $tenant);
             $conn->prepare(
                 "UPDATE contracts SET contract_number=?, title=?, description=?, supplier_id=?, contract_owner_id=?,
                     contract_status_id=?, contract_start=?, contract_end=?, notice_period_days=?, notice_date=?,
@@ -62,6 +64,7 @@ class ContractsService
             )->execute([...self::contractParams($f), $id]);
             self::writeParty($conn, $id, $party);
             self::writeTenant($conn, $id, $tenant);
+            self::writeCostCentre($conn, $id, $ccId);
             WorkflowEngine::dispatch('contract.updated', ['contract' => ['id' => $id, 'title' => $f['title'] ?? null, 'status_id' => $f['contract_status_id'] ?? null, 'supplier_id' => $f['supplier_id'] ?? null] + self::partyPayload($party)]);
             return ['id' => $id, 'created' => false];
         }
@@ -73,6 +76,7 @@ class ContractsService
         // screen always names the active company; the API names the key's default.
         $tenant = self::ownerTenant($conn, $ctx, $in, []);
         self::assertNumberFree($conn, $f['contract_number'], $tenant, null);
+        [$ccId, $f['cost_centre']] = self::costCentreFor($conn, $in, [], $tenant);
         $conn->prepare(
             "INSERT INTO contracts (contract_number, title, description, supplier_id, contract_owner_id,
                 contract_status_id, contract_start, contract_end, notice_period_days, notice_date,
@@ -84,6 +88,7 @@ class ContractsService
         $newId = (int)$conn->lastInsertId();
         self::writeParty($conn, $newId, $party);
         self::writeTenant($conn, $newId, $tenant);
+        self::writeCostCentre($conn, $newId, $ccId);
         WorkflowEngine::dispatch('contract.created', ['contract' => ['id' => $newId, 'title' => $f['title'] ?? null, 'status_id' => $f['contract_status_id'] ?? null, 'supplier_id' => $f['supplier_id'] ?? null] + self::partyPayload($party)]);
         return ['id' => $newId, 'created' => true];
     }
@@ -319,6 +324,51 @@ class ContractsService
             throw new ServiceError('conflict', 'conflict',
                 'This contract is linked to ' . implode(', ', $blocked) . ' in its current company. Remove those links before moving it to another company.');
         }
+    }
+
+    /**
+     * The cost centre a contract is charged to (GH #160), and what is left of the
+     * free text from before 3.5.0. Returns [cost_centre_id, legacy text].
+     *
+     *  - cost_centre_id: an ACTIVE cost centre of the contract's company, or the
+     *    one it already holds (costCentreCheck). Choosing one clears the old text.
+     *  - cost_centre (text): what the API always took. Now a CODE in the
+     *    contract's company - linked if it exists, refused if not; '' clears.
+     *  - Neither sent: unchanged - but a contract moving company cannot take its
+     *    old company's cost centre with it, so that is refused with a reason.
+     */
+    private static function costCentreFor(PDO $conn, array $in, array $current, int $tenant): array
+    {
+        $curId   = isset($current['cost_centre_id']) && $current['cost_centre_id'] !== null ? (int)$current['cost_centre_id'] : null;
+        $curText = isset($current['cost_centre']) && trim((string)$current['cost_centre']) !== '' ? (string)$current['cost_centre'] : null;
+        if (!costCentreReady($conn, 'contracts')) {
+            return [null, array_key_exists('cost_centre', $in) ? (trim((string)$in['cost_centre']) ?: null) : $curText];
+        }
+        if (array_key_exists('cost_centre_id', $in)) {
+            $id = costCentreCheck($conn, $tenant, $in['cost_centre_id'], $curId);
+            return [$id, $id !== null ? null : $curText];
+        }
+        if (array_key_exists('cost_centre', $in)) {
+            $code = trim((string)$in['cost_centre']);
+            if ($code === '') return [null, null];
+            $cc = costCentreByCode($conn, $tenant, $code);
+            if (!$cc) throw new ServiceError('validation', 'invalid_field', "No cost centre with the code \"{$code}\" in this contract's company.");
+            return [costCentreCheck($conn, $tenant, $cc['id'], $curId), null];
+        }
+        if ($curId !== null) {
+            $st = $conn->prepare("SELECT tenant_id FROM cost_centres WHERE id = ?");
+            $st->execute([$curId]);
+            if ((int)$st->fetchColumn() !== $tenant) {
+                throw new ServiceError('validation', 'invalid_field', "This contract's cost centre belongs to its current company. Choose one of the new company's (or none) when moving it.");
+            }
+        }
+        return [$curId, $curText];
+    }
+
+    private static function writeCostCentre(PDO $conn, int $id, ?int $ccId): void
+    {
+        if (!costCentreReady($conn, 'contracts')) return;
+        $conn->prepare("UPDATE contracts SET cost_centre_id = ? WHERE id = ?")->execute([$ccId, $id]);
     }
 
     private static function writeTenant(PDO $conn, int $id, int $tenant): void

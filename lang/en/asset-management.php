@@ -276,6 +276,8 @@ return [
         'purchase_date'    => 'Purchase date',
         'purchase_cost'    => 'Purchase cost',
         'supplier'         => 'Supplier',
+        'cost_centre'      => 'Cost centre',
+        'cost_centre_inactive' => 'inactive',
         'order_number'     => 'Order number',
         'lease_expiry'                => 'Lease ends',
         'warranty_expiry'  => 'Warranty expiry',

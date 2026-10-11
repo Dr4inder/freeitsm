@@ -18,6 +18,8 @@ try {
     $limit = $_GET['limit'] ?? null;
     [$partyCols, $partyJoins] = contractPartySql($conn, 'c');
     [$ownCols, $ownJoins] = contractOwnerSql($conn, 'c');
+    require_once '../../includes/cost_centre_assign.php';
+    $ownCols .= costCentreSelectSql($conn, 'contracts', 'c');   // GH #160
 
     $sql = "SELECT c.id, c.contract_number, c.title, c.description, c.supplier_id, c.contract_owner_id,
                    c.contract_status_id, cs.name AS contract_status_name,

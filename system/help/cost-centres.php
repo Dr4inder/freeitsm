@@ -63,10 +63,28 @@ require __DIR__ . '/_top.php';
         <thead><tr><th></th><th>What happens</th><th>Use it when</th></tr></thead>
         <tbody>
             <tr><td><strong>Inactive</strong></td><td>It stays on everything already charged to it, but is not offered for anything new. You can make it active again at any time.</td><td>The cost centre has been closed or replaced. This is the normal path.</td></tr>
-            <tr><td><strong>Delete</strong></td><td>It is gone. A cost centre with others below it cannot be deleted until they are moved or deleted.</td><td>It was created by mistake.</td></tr>
+            <tr><td><strong>Delete</strong></td><td>It is gone. A cost centre with others below it, or with anything charged to it, cannot be deleted - the message says what is in the way.</td><td>It was created by mistake.</td></tr>
         </tbody>
     </table></div>
     <p>Untick <strong>Show inactive</strong> to hide inactive cost centres from the list.</p>
+</div>
+
+<!-- Charging things -->
+<div class="help-section" id="charging">
+    <div class="help-section-header"><?php echo helpSectionNum('charging'); ?>
+        <div>
+            <h3>Charging assets, contracts and people</h3>
+            <p>Each asset, contract and person can be charged to one cost centre.</p>
+        </div>
+    </div>
+    <ul>
+        <li><strong>Assets</strong> - the <strong>Cost centre</strong> box beside Supplier on an asset. Assets &rarr; Table has a Cost centre column to sort and filter by, and the asset spreadsheet import takes a <strong>Cost centre</strong> column of codes.</li>
+        <li><strong>Contracts</strong> - <strong>Cost centre</strong> under Financial on the contract form.</li>
+        <li><strong>People</strong> - <strong>Cost centre</strong> when you edit someone in Tickets &rarr; Users or Assets &rarr; Users, and shown on their People page.</li>
+    </ul>
+    <p>The list offers the <strong>active</strong> cost centres of the record's own company (someone with no company: the Default company's). Something already charged to a cost centre that has since been made inactive keeps it. Moving a contract or a person to another company needs one of the new company's cost centres, or none.</p>
+    <div class="help-note"><strong>Contracts from before 3.5.0</strong> had a cost centre box you typed into. Where the text matched a cost centre's code it was linked automatically; anything else is shown on the contract as <em>Previously recorded</em> until you choose a cost centre.</div>
+    <p>The REST API takes <code>cost_centre_id</code> on assets, contracts and requesters (contracts also take the code as <code>cost_centre</code>), and the asset import matches on code - so your finance system's codes are all you need.</p>
 </div>
 
 <!-- 5. Import / export -->

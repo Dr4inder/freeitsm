@@ -110,6 +110,7 @@ return [
         'office'      => 'Office',
         'department'  => 'Department',
         'employee_id' => 'Employee ID',
+        'cost_centre' => 'Cost centre',
         'manager'     => 'Manager',
         'reports'     => 'Reports to them',
         'company'     => 'Company',

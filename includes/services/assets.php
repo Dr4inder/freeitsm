@@ -66,6 +66,9 @@ class AssetsService
             'asset_status_id'  => ['audit' => 'status',          'kind' => 'lookup', 'table' => 'asset_status_types', 'label' => 'asset status'],
             'location_id'      => ['audit' => 'location',        'kind' => 'lookup', 'table' => 'asset_locations',    'label' => 'location'],
             'supplier_id'      => ['audit' => 'supplier',        'kind' => 'supplier'],
+            // GH #160: a cost centre of the asset's OWN company, active unless it is
+            // the one already held - checked in updateFields(), where the company is known.
+            'cost_centre_id'   => ['audit' => 'cost_centre',     'kind' => 'cost_centre'],
             'purchase_date'    => ['audit' => 'purchase_date',   'kind' => 'date'],
             'purchase_cost'    => ['audit' => 'purchase_cost',   'kind' => 'decimal'],
             'order_number'     => ['audit' => 'order_number',    'kind' => 'string', 'max' => 100],
@@ -134,6 +137,14 @@ class AssetsService
         $values  = [$hostname];
         foreach ($map as $field => $def) {
             if (!array_key_exists($field, $in)) {
+                continue;
+            }
+            if ($def['kind'] === 'cost_centre') {
+                // GH #160: one of the NEW asset's company, and active.
+                require_once __DIR__ . '/../cost_centre_assign.php';
+                if (!costCentreReady($conn, 'assets')) continue;
+                $columns[] = $field;
+                $values[]  = costCentreCheck($conn, costCentreRecordTenant($conn, $tenantId), $in[$field], null);
                 continue;
             }
             $columns[] = $field;
@@ -210,7 +221,14 @@ class AssetsService
                 continue; // unknown fields ignored, like the internal endpoints
             }
             $def = $map[$field];
-            $newValue = self::validateField($conn, $field, $rawValue, $def);
+            if ($def['kind'] === 'cost_centre') {
+                require_once __DIR__ . '/../cost_centre_assign.php';
+                if (!costCentreReady($conn, 'assets')) continue;   // before Database Verification
+                $newValue = costCentreCheck($conn, costCentreRecordTenant($conn, $current['tenant_id'] ?? null), $rawValue,
+                                            $current['cost_centre_id'] !== null ? (int)$current['cost_centre_id'] : null);
+            } else {
+                $newValue = self::validateField($conn, $field, $rawValue, $def);
+            }
 
             if ($field === 'hostname') {
                 if ($newValue === null) {
@@ -227,7 +245,7 @@ class AssetsService
 
             // Normalise the current value the same way for change detection.
             $oldValue = $current[$field];
-            if (in_array($def['kind'], ['lookup', 'supplier', 'int'], true) && $oldValue !== null) {
+            if (in_array($def['kind'], ['lookup', 'supplier', 'int', 'cost_centre'], true) && $oldValue !== null) {
                 $oldValue = (int)$oldValue;
             }
             $comparableNew = ($def['kind'] === 'decimal' && $newValue !== null) ? (float)$newValue : $newValue;
@@ -742,6 +760,10 @@ class AssetsService
             $stmt->execute([(int)$value]);
             $name = $stmt->fetchColumn();
             return $name !== false ? $name : (string)$value;
+        }
+        if ($def['kind'] === 'cost_centre') {
+            require_once __DIR__ . '/../cost_centre_assign.php';
+            return costCentreLabel(costCentreRef($conn, $value)) ?: (string)$value;
         }
         if ($def['kind'] === 'supplier') {
             $stmt = $conn->prepare("SELECT COALESCE(NULLIF(TRIM(trading_name), ''), legal_name) FROM suppliers WHERE id = ?");

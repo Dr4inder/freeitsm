@@ -150,6 +150,18 @@ try {
         $contractsTenantColWasMissing = ((int)$ctProbe->fetchColumn() === 0);
     } catch (Exception $e) {}
 
+    // GH #160 stage 2: was contracts.cost_centre_id absent before this run? If so,
+    // the post-schema section links each contract's old free-text cost centre to
+    // the real one with that CODE in the contract's company - only this once.
+    // Text that matches nothing stays, shown as "previously recorded" until
+    // somebody chooses a cost centre.
+    $contractsCcColWasMissing = false;
+    try {
+        $ccProbe = $conn->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = 'contracts' AND column_name = 'cost_centre_id'");
+        $ccProbe->execute([$dbName]);
+        $contractsCcColWasMissing = ((int)$ccProbe->fetchColumn() === 0);
+    } catch (Exception $e) {}
+
     // SSO JIT split (discussion #155): was auth_providers.auto_create_analysts
     // absent before this run? Before the split, auto_create_users ALSO meant
     // "create an analyst" on the analyst login, so on the run that adds the new
@@ -1641,6 +1653,24 @@ try {
         } catch (Exception $e) {}
     }
 
+    // contracts.cost_centre_id - the ONE-TIME link of the old free text (see
+    // $contractsCcColWasMissing). Matched on code, in the contract's own company
+    // (codes are unique per company, ignoring case - the column's collation).
+    if ($contractsCcColWasMissing && $tableExists('cost_centres') && $colExists('contracts', 'cost_centre_id')) {
+        try {
+            $def = (int)($conn->query("SELECT id FROM tenants WHERE is_default = 1 ORDER BY id LIMIT 1")->fetchColumn() ?: 0);
+            $tenantExpr = $colExists('contracts', 'tenant_id') ? "COALESCE(c.tenant_id, $def)" : (string)$def;
+            $n = $conn->exec(
+                "UPDATE contracts c
+                   JOIN cost_centres cc ON cc.tenant_id = $tenantExpr AND cc.code = TRIM(c.cost_centre)
+                    SET c.cost_centre_id = cc.id, c.cost_centre = NULL
+                  WHERE c.cost_centre IS NOT NULL AND TRIM(c.cost_centre) <> '' AND c.cost_centre_id IS NULL");
+            if ($n > 0) {
+                $results[] = ['table' => 'contracts', 'status' => 'updated', 'details' => ["Linked the typed-in cost centre of $n contract(s) to the matching cost centre"]];
+            }
+        } catch (Exception $e) {}
+    }
+
     // tickets.tenant_id — index + FK + a ONE-TIME backfill of existing tickets to
     // the Default company. Like target_mailboxes (and unlike a naive sweep), we
     // backfill ONLY when the column was just added ($ticketsTenantColWasMissing):
@@ -2851,6 +2881,11 @@ try {
         ['contracts',            'fk_contracts_customer_tenant',  "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_customer_tenant FOREIGN KEY (customer_tenant_id) REFERENCES tenants (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_tenant',           "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_tenant FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE SET NULL"],
         ['rfps',                 'fk_rfps_tenant',                "ALTER TABLE rfps ADD CONSTRAINT fk_rfps_tenant FOREIGN KEY (tenant_id) REFERENCES tenants (id) ON DELETE SET NULL"],
+        // GH #160 stage 2: what a cost centre is charged with. SET NULL as a backstop -
+        // CostCentresService refuses to delete one that is still in use.
+        ['contracts',            'fk_contracts_cost_centre',      "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_cost_centre FOREIGN KEY (cost_centre_id) REFERENCES cost_centres (id) ON DELETE SET NULL"],
+        ['assets',               'fk_assets_cost_centre',         "ALTER TABLE assets ADD CONSTRAINT fk_assets_cost_centre FOREIGN KEY (cost_centre_id) REFERENCES cost_centres (id) ON DELETE SET NULL"],
+        ['users',                'fk_users_cost_centre',          "ALTER TABLE users ADD CONSTRAINT fk_users_cost_centre FOREIGN KEY (cost_centre_id) REFERENCES cost_centres (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_customer_user',    "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_customer_user FOREIGN KEY (customer_user_id) REFERENCES users (id) ON DELETE SET NULL"],
         ['contracts',            'fk_contracts_payment_schedule', "ALTER TABLE contracts ADD CONSTRAINT fk_contracts_payment_schedule FOREIGN KEY (payment_schedule_id) REFERENCES payment_schedules (id) ON DELETE SET NULL"],
         ['contract_term_values', 'fk_ctv_contract',               "ALTER TABLE contract_term_values ADD CONSTRAINT fk_ctv_contract FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE CASCADE"],

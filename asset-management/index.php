@@ -2382,6 +2382,13 @@ $translationNamespaces = ['common', 'asset-management'];
                             </select>
                         </div>
                         <div class="info-item">
+                            <span class="info-label">${window.t('asset-management.field.cost_centre')}</span>
+                            <select class="info-value-select" id="assetCostCentre" onchange="updateAssetField('cost_centre_id', this.value)">
+                                <option value="">${window.t('asset-management.common.none_option')}</option>
+                                ${selectedAsset.cost_centre_id ? `<option value="${selectedAsset.cost_centre_id}" selected>${escapeHtml(selectedAsset.cost_centre_label || '')}</option>` : ''}
+                            </select>
+                        </div>
+                        <div class="info-item">
                             <span class="info-label">${window.t('asset-management.field.order_number')}</span>
                             <input type="text" class="info-value-input" value="${escapeHtml(selectedAsset.order_number || '')}" placeholder="-" onchange="updateAssetField('order_number', this.value)">
                         </div>
@@ -2478,6 +2485,7 @@ $translationNamespaces = ['common', 'asset-management'];
             loadIntuneDevice(assetId);
             loadAssetTickets(assetId);
             loadAssetContracts(assetId);
+            loadAssetCostCentres(selectedAsset);
             // Projects (3.2.0): the projects this asset is part of.
             if (window.ASSET_SHOW_PROJECTS && window.ProjectLinks) ProjectLinks.mount(document.getElementById('assetProjects'), { kind: 'asset', id: assetId, base: window.APP_BASE || '../', bare: true });
             loadCustomFields(assetId);
@@ -2517,6 +2525,21 @@ $translationNamespaces = ['common', 'asset-management'];
          * different answers and reading one as the other is how somebody
          * concludes a contract was never set up.
          */
+        // The cost centres this asset can be charged to (GH #160): its own
+        // company's active ones, plus its current one if that has been switched off.
+        async function loadAssetCostCentres(asset) {
+            const sel = document.getElementById('assetCostCentre');
+            if (!sel || !asset) return;
+            try {
+                const q = new URLSearchParams({ company_id: asset.tenant_id || '', keep: asset.cost_centre_id || '' });
+                const r = await fetch('../api/cost-centres/options.php?' + q, { credentials: 'same-origin' });
+                const d = await r.json();
+                if (!d.success || document.getElementById('assetCostCentre') !== sel) return;
+                sel.innerHTML = '<option value="">' + escapeHtml(window.t('asset-management.common.none_option')) + '</option>'
+                    + d.cost_centres.map(c => `<option value="${c.id}"${c.id == asset.cost_centre_id ? ' selected' : ''}>${escapeHtml(c.code + ' ' + c.name)}${c.is_active ? '' : ' (' + escapeHtml(window.t('asset-management.field.cost_centre_inactive')) + ')'}</option>`).join('');
+            } catch (e) { /* the current value stays shown */ }
+        }
+
         async function loadAssetContracts(assetId) {
             const list  = document.getElementById('assetContractsList');
             const badge = document.getElementById('contractsCountBadge');

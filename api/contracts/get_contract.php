@@ -21,6 +21,8 @@ try {
     $conn = connectToDatabase();
     [$partyCols, $partyJoins] = contractPartySql($conn, 'c');
     [$ownCols, $ownJoins] = contractOwnerSql($conn, 'c');
+    require_once '../../includes/cost_centre_assign.php';
+    $ownCols .= costCentreSelectSql($conn, 'contracts', 'c');   // GH #160
     [$visSql, $visParams] = contractVisibilitySql($conn, (int)$_SESSION['analyst_id'], 'c');
 
     $sql = "SELECT c.id, c.contract_number, c.title, c.description, c.supplier_id, c.contract_owner_id,

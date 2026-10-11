@@ -59,6 +59,13 @@ try {
     $colCheck->execute([DB_NAME]);
     $leaseReady = (int)$colCheck->fetchColumn() > 0;
     $leaseCol = $leaseReady ? "a.lease_expiry," : "NULL AS lease_expiry,";
+    // The cost centre it is charged to (GH #160), shown as "CODE Name". Same
+    // same-name fallback before Database Verification.
+    require_once '../../includes/cost_centre_assign.php';
+    $ccReady = costCentreReady($conn, 'assets');
+    $ccCol = $ccReady
+        ? "a.cost_centre_id, (SELECT CONCAT(ccx.code, ' ', ccx.name) FROM cost_centres ccx WHERE ccx.id = a.cost_centre_id) AS cost_centre_label,"
+        : "NULL AS cost_centre_id, NULL AS cost_centre_label,";
 
     // The search reaches into locations and contracts, both of which may be
     // absent on an install that has not run Database Verification since the
@@ -93,6 +100,7 @@ try {
                     a.order_number,
                     a.warranty_expiry,
                     {$leaseCol}
+                    {$ccCol}
                     /* When the agent last reported. Stored UTC; the client formats it.
                        Discussion #97 — it was written on every report and shown
                        nowhere but the phone scan page. */
@@ -157,6 +165,7 @@ try {
                     a.order_number,
                     a.warranty_expiry,
                     {$leaseCol}
+                    {$ccCol}
                     /* When the agent last reported. Stored UTC; the client formats it.
                        Discussion #97 — it was written on every report and shown
                        nowhere but the phone scan page. */
@@ -223,7 +232,7 @@ try {
     $params = array_merge($params, $tenantParams);
 
     if ($tableExists) {
-        $groupBy = " GROUP BY a.id, a.hostname, a.manufacturer, a.model, a.memory, a.service_tag, a.operating_system, a.feature_release, a.build_number, a.cpu_name, a.speed, a.bios_version, a.location_id, a.purchase_date, a.purchase_cost, a.supplier_id" . ($leaseReady ? ', a.lease_expiry' : '') . ", a.order_number, a.warranty_expiry, a.first_seen, a.last_seen";
+        $groupBy = " GROUP BY a.id, a.hostname, a.manufacturer, a.model, a.memory, a.service_tag, a.operating_system, a.feature_release, a.build_number, a.cpu_name, a.speed, a.bios_version, a.location_id, a.purchase_date, a.purchase_cost, a.supplier_id" . ($leaseReady ? ', a.lease_expiry' : '') . ($ccReady ? ', a.cost_centre_id' : '') . ", a.order_number, a.warranty_expiry, a.first_seen, a.last_seen";
         if ($typeTableExists) {
             $groupBy .= ", a.asset_type_id, aty.name";
         }

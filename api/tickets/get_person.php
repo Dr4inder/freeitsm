@@ -20,6 +20,7 @@ require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/tenancy.php';
 require_once '../../includes/users.php';   // userDirectoryOwnedFields()
+require_once '../../includes/cost_centre_assign.php';   // GH #160
 
 header('Content-Type: application/json');
 requireAnyModuleAccessJson(['tickets', 'assets']);
@@ -36,7 +37,8 @@ try {
     $stmt = $conn->prepare(
         "SELECT u.id, u.email, u.username, u.display_name, u.preferred_name,
                 u.tenant_id, u.job_title, u.department, u.office, u.phone, u.mobile,
-                u.employee_id, u.manager_id, u.is_active, u.is_managed,
+                u.employee_id, u.manager_id, u.is_active, u.is_managed
+                " . costCentreSelectSql($conn, 'users', 'u') . ",
                 ap.protocol AS managed_protocol, ap.carddav_write_back AS managed_write_back,
                 ap.display_name AS source_name
            FROM users u

@@ -910,7 +910,7 @@
                             "req": false
                         },
                         {
-                            "name": "asset_type_id \/ asset_status_id \/ location_id \/ supplier_id",
+                            "name": "asset_type_id \/ asset_status_id \/ location_id \/ supplier_id \/ cost_centre_id",
                             "in": "query",
                             "desc": "Classification filters",
                             "req": false
@@ -1007,9 +1007,9 @@
                             "req": false
                         },
                         {
-                            "name": "purchase_date \/ purchase_cost \/ supplier_id \/ order_number \/ warranty_expiry",
+                            "name": "purchase_date \/ purchase_cost \/ supplier_id \/ order_number \/ warranty_expiry \/ cost_centre_id",
                             "in": "body",
-                            "desc": "Lifecycle (dates YYYY-MM-DD)",
+                            "desc": "Lifecycle (dates YYYY-MM-DD). cost_centre_id: an ACTIVE cost centre of the asset's own company (422 otherwise)",
                             "req": false
                         },
                         {
@@ -1130,9 +1130,9 @@
                             "req": true
                         },
                         {
-                            "name": "asset_type_id \/ asset_status_id \/ location_id \/ supplier_id",
+                            "name": "asset_type_id \/ asset_status_id \/ location_id \/ supplier_id \/ cost_centre_id",
                             "in": "body",
-                            "desc": "Classification (null clears)",
+                            "desc": "Classification (null clears). cost_centre_id: an active cost centre of the asset's company; an asset may keep one that has since been made inactive",
                             "req": false
                         },
                         {
@@ -4943,9 +4943,9 @@
                             "req": false
                         },
                         {
-                            "name": "cost_centre \/ dms_link \/ terms_status",
+                            "name": "cost_centre_id \/ cost_centre \/ dms_link \/ terms_status",
                             "in": "body",
-                            "desc": "Admin fields (dms_link = external document URL)",
+                            "desc": "cost_centre_id: an ACTIVE cost centre of the contract's company (422 otherwise); or cost_centre: its CODE ('' clears). dms_link = external document URL",
                             "req": false
                         },
                         {
@@ -12073,6 +12073,12 @@
                             "in": "body",
                             "desc": "Preferred first name",
                             "req": false
+                        },
+                        {
+                            "name": "cost_centre_id",
+                            "in": "body",
+                            "desc": "The cost centre they are charged to: an ACTIVE one of their company (no company = the Default company's). 422 otherwise",
+                            "req": false
                         }
                     ],
                     "body": {
@@ -12134,6 +12140,12 @@
                             "name": "email \/ display_name \/ preferred_name",
                             "in": "body",
                             "desc": "Fields to change",
+                            "req": false
+                        },
+                        {
+                            "name": "cost_centre_id",
+                            "in": "body",
+                            "desc": "An active cost centre of the company they will be in, or null. Moving company with tenant_id needs one of the new company's (or null) when they have one",
                             "req": false
                         }
                     ],

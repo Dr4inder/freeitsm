@@ -193,11 +193,12 @@ function peopleCompanyCards(PDO $conn, int $analystId): array
 function personDetail(PDO $conn, int $analystId, int $userId): ?array
 {
     if ($userId <= 0 || !analystCanAccessUser($conn, $analystId, $userId)) return null;
+    require_once __DIR__ . '/cost_centre_assign.php';
     $st = $conn->prepare(
         "SELECT u.id, u.email, u.username, u.display_name, u.preferred_name, u.job_title, u.department,
                 u.office, u.phone, u.mobile, u.employee_id, u.manager_id, u.is_active, u.is_managed,
                 u.deactivated_datetime, u.created_at, u.tenant_id, tn.name AS company_name,
-                ap.display_name AS source_name
+                ap.display_name AS source_name" . costCentreSelectSql($conn, 'users', 'u') . "
            FROM users u
       LEFT JOIN tenants tn ON tn.id = u.tenant_id
       LEFT JOIN auth_providers ap ON ap.id = u.auth_provider_id
@@ -212,6 +213,7 @@ function personDetail(PDO $conn, int $analystId, int $userId): ?array
         'display_name' => $u['display_name'], 'email' => $u['email'], 'username' => $u['username'],
         'job_title' => $u['job_title'], 'department' => $u['department'], 'office' => $u['office'],
         'phone' => $u['phone'], 'mobile' => $u['mobile'], 'employee_id' => $u['employee_id'],
+        'cost_centre' => $u['cost_centre_label'] ?: null,   // GH #160: "CODE Name"
         'is_active' => (int)$u['is_active'] === 1, 'is_managed' => (int)$u['is_managed'] === 1,
         'deactivated_datetime' => $u['deactivated_datetime'], 'created_at' => $u['created_at'],
         'company_id' => $u['tenant_id'] !== null ? (int)$u['tenant_id'] : getDefaultTenantId($conn),

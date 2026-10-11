@@ -190,6 +190,8 @@ return [
         'select_owner'         => 'Select owner',
         'company'              => 'Company',
         'company_hint'         => 'The company this contract belongs to. Only analysts who can see that company see the contract.',
+        'cost_centre_inactive' => 'inactive',
+        'cost_centre_previous' => 'Previously recorded: {text}',
         'contract_number'      => 'Contract number',
         'contract_number_ph'   => 'e.g. CON-001',
         'title_ph'             => 'e.g. Annual Support Agreement',

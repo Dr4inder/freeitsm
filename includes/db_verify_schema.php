@@ -504,6 +504,7 @@ return [
         // land in triage, the same meaning NULL carries on `tickets`. Scoped-data
         // shape, not config: NULL is "not yet known", never "shared".
         'tenant_id'       => 'INT NULL',
+        'cost_centre_id'  => 'INT NULL',   // GH #160: the cost centre it is charged to - see includes/cost_centre_assign.php
         'created_at'      => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
 
         // --- the person, as opposed to the login (directory sync slice 1) ---
@@ -1732,6 +1733,7 @@ return [
         'purchase_date'     => 'DATE NULL',
         'purchase_cost'     => 'DECIMAL(12,2) NULL',
         'supplier_id'       => 'INT NULL',
+        'cost_centre_id'  => 'INT NULL',   // GH #160: the cost centre it is charged to - see includes/cost_centre_assign.php
         'order_number'      => 'VARCHAR(100) NULL',
         'warranty_expiry'   => 'DATE NULL',
         'lease_expiry'      => 'DATE NULL',
@@ -4194,6 +4196,8 @@ return [
         'currency'                  => 'VARCHAR(3) NULL',
         'payment_schedule_id'       => 'INT NULL',
         'cost_centre'               => 'VARCHAR(100) NULL',
+        // 'cost_centre' above is the free text from before 3.5.0, shown until a cost centre is chosen.
+        'cost_centre_id'  => 'INT NULL',   // GH #160: the cost centre it is charged to - see includes/cost_centre_assign.php
         'dms_link'                  => 'VARCHAR(500) NULL',
         'terms_status'              => 'VARCHAR(20) NULL',
         'personal_data_transferred' => 'TINYINT(1) NULL',

@@ -57,6 +57,7 @@ class AssetImportService
         'hostname', 'asset_type_id', 'asset_status_id', 'location_id',
         'manufacturer', 'model', 'service_tag',
         'supplier_id', 'purchase_date', 'purchase_cost', 'order_number', 'warranty_expiry',
+        'cost_centre_id',   // GH #160 - by code, see resolveLookups()
     ];
 
     /**
@@ -234,6 +235,7 @@ class AssetImportService
             'purchase_cost' => ['purchasecost', 'cost', 'price', 'value'],
             'order_number' => ['ordernumber', 'ponumber', 'po'],
             'warranty_expiry' => ['warrantyexpiry', 'warranty', 'warrantyend', 'warrantyends', 'warrantyexpires', 'warrantyuntil'],
+            'cost_centre_id' => ['costcentre', 'costcenter', 'costcentrecode', 'costcentercode', 'costcode', 'kostenstelle'],
         ];
 
         $fields = AssetFieldsService::catalogue($conn, $analystId);
@@ -444,6 +446,21 @@ class AssetImportService
      */
     private static function resolveLookups(PDO $conn, array $core, ?int $tenantId): array
     {
+        // A cost centre (GH #160) is matched by its CODE in the asset's company -
+        // always, never as an id: codes like "0010" are digits too, and reading one
+        // as an id would charge the asset to a different cost centre entirely.
+        // An inactive one is refused by AssetsService, with its code in the message.
+        if (isset($core['cost_centre_id']) && $core['cost_centre_id'] !== '') {
+            require_once __DIR__ . '/../cost_centre_assign.php';
+            $raw = trim((string)$core['cost_centre_id']);
+            $cc = costCentreByCode($conn, costCentreRecordTenant($conn, $tenantId), $raw);
+            if (!$cc) {
+                throw new ServiceError('validation', 'invalid_field',
+                    "No cost centre with the code \"{$raw}\" in this company. Add it in System -> Cost Centres first, or map that column to nothing.");
+            }
+            $core['cost_centre_id'] = $cc['id'];
+        }
+
         $lookups = [
             'asset_type_id'   => ['asset_types',        'asset type'],
             'asset_status_id' => ['asset_status_types', 'asset status'],

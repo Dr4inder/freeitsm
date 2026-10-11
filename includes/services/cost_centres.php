@@ -190,6 +190,16 @@ class CostCentresService
             throw new ServiceError('conflict', 'conflict',
                 "Cost centre {$row['code']} has " . (int)$row['child_count'] . " cost centre(s) below it. Move or delete those first, or make it inactive instead.");
         }
+        // Stage 2: nor while anything is charged to it. Inactive is the way to
+        // retire one - what it was charged with keeps it.
+        require_once __DIR__ . '/../cost_centre_assign.php';
+        $used = costCentreUsage($conn, (int)$id);
+        if ($used) {
+            $parts = [];
+            foreach ($used as $what => $n) $parts[] = "$n $what";
+            throw new ServiceError('conflict', 'conflict',
+                "Cost centre {$row['code']} is still charged with " . implode(', ', $parts) . ". Make it inactive instead, or move those to another cost centre first.");
+        }
         $conn->prepare("DELETE FROM cost_centres WHERE id = ?")->execute([$id]);
     }
 

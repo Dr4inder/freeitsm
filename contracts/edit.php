@@ -402,8 +402,12 @@ $contract_id = $_GET['id'] ?? null;
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="costCentre"><?php echo htmlspecialchars(t('contracts.detail.cost_centre')); ?></label>
-                            <input type="text" id="costCentre">
+                            <label for="costCentreId"><?php echo htmlspecialchars(t('contracts.detail.cost_centre')); ?></label>
+                            <!-- GH #160: a cost centre of the contract's company (System -> Cost Centres). -->
+                            <select id="costCentreId">
+                                <option value="">-- <?php echo htmlspecialchars(t('contracts.edit.none')); ?> --</option>
+                            </select>
+                            <small class="party-hint" id="costCentreLegacy" hidden></small>
                         </div>
                     </div>
 
@@ -543,6 +547,9 @@ $contract_id = $_GET['id'] ?? null;
                 loadContractTermTabs()
             ]);
             if (contractId) await loadContract();
+            await loadCostCentres();
+            // A different company means a different list of cost centres.
+            document.getElementById('ownerTenantId').addEventListener('change', loadCostCentres);
 
             buildTermEditors();
             initTermEditors(() => {
@@ -586,6 +593,25 @@ $contract_id = $_GET['id'] ?? null;
 
         // ── Supplier or customer (#153) ─────────────────────────────────
         let multiCompany = false;
+        // ── Cost centre (GH #160) ───────────────────────────────────────
+        // The contract's company's active cost centres, plus the one it holds if
+        // that has since been made inactive. A choice that is not in the new list
+        // (after changing company) falls back to none.
+        let contractCostCentreId = null;
+        async function loadCostCentres() {
+            const sel = document.getElementById('costCentreId');
+            const keep = sel.value || contractCostCentreId || '';
+            const company = multiCompany ? document.getElementById('ownerTenantId').value : '';
+            try {
+                const r = await fetch('../api/cost-centres/options.php?' + new URLSearchParams({ company_id: company || '', keep: contractCostCentreId || '' }), { credentials: 'same-origin' });
+                const d = await r.json();
+                if (!d.success) return;
+                sel.innerHTML = '<option value="">-- ' + escapeHtml(window.t('contracts.edit.none')) + ' --</option>'
+                    + d.cost_centres.map(c => `<option value="${c.id}">${escapeHtml(c.code + ' ' + c.name)}${c.is_active ? '' : ' (' + escapeHtml(window.t('contracts.edit.cost_centre_inactive')) + ')'}</option>`).join('');
+                sel.value = d.cost_centres.some(c => String(c.id) === String(keep)) ? String(keep) : '';
+            } catch (e) { /* the box keeps what it had */ }
+        }
+
         async function loadCustomerCompanies() {
             try {
                 const r = await fetch(API_BASE + 'customer_lookup.php');
@@ -732,7 +758,12 @@ $contract_id = $_GET['id'] ?? null;
                     document.getElementById('contractValue').value = c.contract_value || '';
                     document.getElementById('currency').value = c.currency || '';
                     document.getElementById('paymentScheduleId').value = c.payment_schedule_id || '';
-                    document.getElementById('costCentre').value = c.cost_centre || '';
+                    contractCostCentreId = c.cost_centre_id || null;
+                    // Typed in before 3.5.0 and matching no cost centre code: shown, so it
+                    // is not lost, until somebody chooses a real one.
+                    const legacy = document.getElementById('costCentreLegacy');
+                    legacy.hidden = !(c.cost_centre && !c.cost_centre_id);
+                    legacy.textContent = legacy.hidden ? '' : window.t('contracts.edit.cost_centre_previous', { text: c.cost_centre });
                     document.getElementById('dmsLink').value = c.dms_link || '';
                     document.getElementById('termsStatus').value = c.terms_status || '';
                     document.getElementById('personalDataTransferred').checked = !!c.personal_data_transferred;
@@ -767,7 +798,7 @@ $contract_id = $_GET['id'] ?? null;
                 contract_value: document.getElementById('contractValue').value || null,
                 currency: document.getElementById('currency').value || null,
                 payment_schedule_id: document.getElementById('paymentScheduleId').value || null,
-                cost_centre: document.getElementById('costCentre').value.trim(),
+                cost_centre_id: document.getElementById('costCentreId').value || null,
                 dms_link: document.getElementById('dmsLink').value.trim(),
                 terms_status: document.getElementById('termsStatus').value || null,
                 personal_data_transferred: document.getElementById('personalDataTransferred').checked ? 1 : 0,

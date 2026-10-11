@@ -31,6 +31,8 @@
         { key: 'purchase_date',     label: tt('field.purchase_date'),       type: 'date',   defaultVisible: false, defaultOrder: 15 },
         { key: 'purchase_cost',     label: tt('table.col_cost'),            type: 'number', defaultVisible: false, defaultOrder: 16 },
         { key: 'supplier_name',     label: tt('field.supplier'),            type: 'string', defaultVisible: false, defaultOrder: 17 },
+        // GH #160: "CODE Name" of the cost centre it is charged to - sortable and filterable like any text column.
+        { key: 'cost_centre_label', label: tt('field.cost_centre'),         type: 'string', defaultVisible: false, defaultOrder: 17.5 },
         { key: 'warranty_expiry',   label: tt('field.warranty_expiry'),     type: 'date',   defaultVisible: false, defaultOrder: 18 },
         // When the inventory agent last reported (discussion #97).
         //

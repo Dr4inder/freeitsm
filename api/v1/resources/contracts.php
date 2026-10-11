@@ -39,6 +39,7 @@
 require_once dirname(__DIR__, 3) . '/includes/service_context.php';
 require_once dirname(__DIR__, 3) . '/includes/services/contracts.php';
 require_once dirname(__DIR__, 3) . '/includes/contract_party.php';
+require_once dirname(__DIR__, 3) . '/includes/cost_centre_assign.php';
 require_once dirname(__DIR__, 3) . '/includes/timezone.php';   // naive_today_sql() — contract_end/notice_date are bare dates (GH #126)
 
 // ---------------------------------------------------------------------------
@@ -51,6 +52,11 @@ function apiContractSelect(PDO $conn): string {
     [$ownCols, $ownJoins] = contractOwnerSql($conn, 'c');
     $partyCols .= $ownCols;
     $partyJoins .= ' ' . $ownJoins;
+    // The cost centre it is charged to (GH #160), once Database Verification has added it.
+    if (costCentreReady($conn, 'contracts')) {
+        $partyCols .= ", ccx.code AS cost_centre_code, ccx.name AS cost_centre_name";
+        $partyJoins .= ' LEFT JOIN cost_centres ccx ON ccx.id = c.cost_centre_id';
+    }
     return "SELECT c.*,
                    COALESCE(NULLIF(TRIM(s.trading_name), ''), s.legal_name) AS supplier_name,
                    a.full_name AS owner_name,
@@ -101,7 +107,11 @@ function apiSerializeContract(array $r): array {
             'amount'   => $r['contract_value'] !== null ? (float)$r['contract_value'] : null,
             'currency' => $r['currency'],
         ],
-        'cost_centre'     => $r['cost_centre'],
+        // GH #160: a string as it always was - the linked cost centre's CODE, or the
+        // free text recorded before 3.5.0 when none is linked yet - plus the link itself.
+        'cost_centre'     => !empty($r['cost_centre_id']) ? ($r['cost_centre_code'] ?? null) : $r['cost_centre'],
+        'cost_centre_id'  => !empty($r['cost_centre_id']) ? (int)$r['cost_centre_id'] : null,
+        'cost_centre_name' => !empty($r['cost_centre_id']) ? ($r['cost_centre_name'] ?? null) : null,
         'dms_link'        => $r['dms_link'],
         'governance'      => [
             'terms_status'              => $r['terms_status'],

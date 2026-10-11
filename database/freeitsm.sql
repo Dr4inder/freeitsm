@@ -757,6 +757,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     -- at registration); deliberately NOT re-derived at ticket time, so editing
     -- a company's domains never silently re-files an existing person.
     `tenant_id`       INT NULL,
+    `cost_centre_id`  INT NULL,   -- GH #160: the cost centre this person is charged to (fk added by db_verify)
     `created_at`      DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
 
     -- ---------------------------------------------------------------------
@@ -826,6 +827,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     -- directories may each contain a `smithj`; the same directory may not.
     UNIQUE KEY `uq_users_dir_username` (`auth_provider_id`, `directory_username`),
     KEY `idx_users_tenant` (`tenant_id`),
+    KEY `idx_users_cost_centre` (`cost_centre_id`),
     KEY `idx_users_manager` (`manager_id`),
     KEY `idx_users_active` (`is_active`),
     KEY `idx_users_department` (`department`),
@@ -2698,6 +2700,7 @@ CREATE TABLE IF NOT EXISTS `assets` (
     `purchase_date`     DATE NULL,
     `purchase_cost`     DECIMAL(12,2) NULL,
     `supplier_id`       INT NULL,
+    `cost_centre_id`    INT NULL,   -- GH #160: the cost centre it is charged to (fk added by db_verify)
     `order_number`      VARCHAR(100) NULL,
     `warranty_expiry`   DATE NULL,
     -- Leased kit. Ed's original lifecycle brief said "warranty/lease expiries"
@@ -2729,6 +2732,7 @@ CREATE TABLE IF NOT EXISTS `assets` (
     PRIMARY KEY (`id`),
     KEY `idx_assets_location` (`location_id`),
     KEY `idx_assets_supplier` (`supplier_id`),
+    KEY `idx_assets_cost_centre` (`cost_centre_id`),
     KEY `idx_assets_tenant` (`tenant_id`),
     -- Lookup only. See the asset_tag comment for why this one is NOT unique.
     KEY `idx_assets_tag` (`tenant_id`, `asset_tag`),
@@ -5483,6 +5487,7 @@ CREATE TABLE IF NOT EXISTS `contracts` (
     `currency`                  VARCHAR(3) NULL,
     `payment_schedule_id`       INT NULL,
     `cost_centre`               VARCHAR(100) NULL,
+    `cost_centre_id`            INT NULL,            -- GH #160: the cost centre it is charged to (fk added by db_verify); cost_centre above is free text from before 3.5.0
     `dms_link`                  VARCHAR(500) NULL,
     `terms_status`              VARCHAR(20) NULL,
     `personal_data_transferred` TINYINT(1) NULL,
@@ -5498,6 +5503,7 @@ CREATE TABLE IF NOT EXISTS `contracts` (
     KEY `ix_contracts_customer_user` (`customer_user_id`),
     KEY `ix_contracts_contract_end` (`contract_end`),
     KEY `ix_contracts_tenant` (`tenant_id`),
+    KEY `ix_contracts_cost_centre` (`cost_centre_id`),
     CONSTRAINT `fk_contracts_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_contracts_customer_tenant` FOREIGN KEY (`customer_tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_contracts_customer_user` FOREIGN KEY (`customer_user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,

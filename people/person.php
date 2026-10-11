@@ -88,6 +88,7 @@ $multi = isMultiTenant($conn);
                         $f('office', $p['office']);
                         $f('department', $p['department']);
                         $f('employee_id', $p['employee_id']);
+                        $f('cost_centre', $p['cost_centre'] ?? null);
                         if ($multi) $f('company', $p['company'] ? '<a href="company.php?id=' . (int)$p['company_id'] . '">' . pplE($p['company']) . '</a>' : null, true);
                         $f('manager', $p['manager'] ? '<a href="person.php?id=' . $p['manager']['id'] . '">' . pplE($p['manager']['name']) . '</a>' : null, true);
                         if ($p['reports']) {

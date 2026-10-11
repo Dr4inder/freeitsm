@@ -35,7 +35,16 @@ require_once dirname(__DIR__, 3) . '/includes/timezone.php';   // naive_today_sq
 // ---------------------------------------------------------------------------
 
 function apiAssetSelect(): string {
-    return "SELECT a.*,
+    // The cost centre it is charged to (GH #160) - joined only once Database
+    // Verification has added the column, so an older install's reads still work.
+    static $cc = null;
+    if ($cc === null) {
+        require_once dirname(__DIR__, 3) . '/includes/cost_centre_assign.php';
+        $cc = costCentreReady(connectToDatabase(), 'assets')
+            ? [", ccx.code AS cost_centre_code, ccx.name AS cost_centre_name", " LEFT JOIN cost_centres ccx ON ccx.id = a.cost_centre_id"]
+            : [", NULL AS cost_centre_code, NULL AS cost_centre_name", ''];
+    }
+    return "SELECT a.*{$cc[0]},
                    at.name  AS type_name,
                    ast.name AS status_name,
                    al.name  AS location_name,
@@ -47,7 +56,7 @@ function apiAssetSelect(): string {
             LEFT JOIN asset_status_types ast ON ast.id = a.asset_status_id
             LEFT JOIN asset_locations    al  ON al.id  = a.location_id
             LEFT JOIN tenants            tn  ON tn.id  = a.tenant_id
-            LEFT JOIN suppliers          s   ON s.id   = a.supplier_id";
+            LEFT JOIN suppliers          s   ON s.id   = a.supplier_id{$cc[1]}";
 }
 
 /** All locations keyed by id — used to build full "UK › London › Office 1" paths. */
@@ -118,6 +127,9 @@ function apiSerializeAsset(PDO $conn, array $r): array {
             'purchase_date'   => $r['purchase_date'],
             'purchase_cost'   => $r['purchase_cost'] !== null ? (float)$r['purchase_cost'] : null,
             'supplier'        => $rel($r['supplier_id'], $r['supplier_name']),
+            'cost_centre'     => !empty($r['cost_centre_id'])
+                ? ['id' => (int)$r['cost_centre_id'], 'code' => $r['cost_centre_code'] ?? null, 'name' => $r['cost_centre_name'] ?? null]
+                : null,
             'order_number'    => $r['order_number'],
             'warranty_expiry' => $r['warranty_expiry'],
         ],
@@ -215,6 +227,7 @@ function apiAssetsList(PDO $conn, array $apiKey, array $params, array $body): vo
         'asset_status_id' => 'a.asset_status_id',
         'location_id'     => 'a.location_id',
         'supplier_id'     => 'a.supplier_id',
+        'cost_centre_id'  => 'a.cost_centre_id',
     ] as $param => $col) {
         if (isset($_GET[$param]) && $_GET[$param] !== '') {
             $where[] = "$col = ?";

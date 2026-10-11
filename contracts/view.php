@@ -617,7 +617,7 @@ $peopleBase = analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analys
                     </div>
                     <div class="detail-group">
                         <label>${escapeHtml(window.t('contracts.detail.cost_centre'))}</label>
-                        <div class="value">${escapeHtml(c.cost_centre || '-')}</div>
+                        <div class="value">${c.cost_centre_label ? escapeHtml(c.cost_centre_label) : (c.cost_centre ? escapeHtml(window.t('contracts.edit.cost_centre_previous', { text: c.cost_centre })) : '-')}</div>
                     </div>
                     <div class="detail-group">
                         <label>${escapeHtml(window.t('contracts.detail.dms_link'))}</label>

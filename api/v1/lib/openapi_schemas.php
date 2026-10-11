@@ -232,6 +232,18 @@ return array (
                 ),
               ),
             ),
+            // GH #160: the cost centre it is charged to.
+            'cost_centre' =>
+            array (
+              'type' => 'object',
+              'nullable' => true,
+              'properties' =>
+              array (
+                'id' => array ('type' => 'integer'),
+                'code' => array ('type' => 'string'),
+                'name' => array ('type' => 'string'),
+              ),
+            ),
             'order_number' => 
             array (
               'type' => 'string',
@@ -708,6 +720,18 @@ return array (
                       'type' => 'string',
                       'nullable' => true,
                     ),
+                  ),
+                ),
+                // GH #160: the cost centre it is charged to.
+                'cost_centre' =>
+                array (
+                  'type' => 'object',
+                  'nullable' => true,
+                  'properties' =>
+                  array (
+                    'id' => array ('type' => 'integer'),
+                    'code' => array ('type' => 'string'),
+                    'name' => array ('type' => 'string'),
                   ),
                 ),
                 'order_number' => 
@@ -3019,7 +3043,18 @@ return array (
         array (
           '$ref' => '#/components/schemas/ContractValue',
         ),
-        'cost_centre' => 
+        // GH #160: the linked cost centre's CODE, or the free text recorded before 3.5.0 when none is linked.
+        'cost_centre' =>
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'cost_centre_id' =>
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'cost_centre_name' =>
         array (
           'type' => 'string',
           'nullable' => true,
@@ -7547,6 +7582,18 @@ return array (
           'nullable' => true,
           'description' => 'Company this requester belongs to. null = not known; tickets they raise in the self-service portal go to triage.',
         ),
+        // GH #160: the cost centre they are charged to.
+        'cost_centre' =>
+        array (
+          'type' => 'object',
+          'nullable' => true,
+          'properties' =>
+          array (
+            'id' => array ('type' => 'integer'),
+            'code' => array ('type' => 'string'),
+            'name' => array ('type' => 'string'),
+          ),
+        ),
         'created_at' =>
         array (
           'type' => 'string',
@@ -7585,6 +7632,18 @@ return array (
           'type' => 'object',
           'properties' => 
           array (
+            // GH #160: the cost centre they are charged to.
+            'cost_centre' =>
+            array (
+              'type' => 'object',
+              'nullable' => true,
+              'properties' =>
+              array (
+                'id' => array ('type' => 'integer'),
+                'code' => array ('type' => 'string'),
+                'name' => array ('type' => 'string'),
+              ),
+            ),
             'tickets' => 
             array (
               '$ref' => '#/components/schemas/RequesterTicketCounts',

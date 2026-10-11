@@ -313,12 +313,13 @@ function getHelpTopics() {
                 ['id' => 'codes',     'label' => 'Codes and leading zeros'],
                 ['id' => 'hierarchy', 'label' => 'Building a hierarchy'],
                 ['id' => 'inactive',  'label' => 'Inactive or delete?'],
+                ['id' => 'charging',  'label' => 'Charging assets, contracts and people'],
                 ['id' => 'import',    'label' => 'Importing and exporting'],
                 ['id' => 'api',       'label' => 'Syncing from your finance system'],
             ],
             'terms' => 'cost center centers nominal code codes finance accounting erp sap datev sage xero budget charge code'
                      . ' kostenstelle excel xlsx csv import export spreadsheet leading zero zeros 0010 hierarchy parent child'
-                     . ' inactive retire sync nightly rest api',
+                     . ' inactive retire sync nightly rest api charge charged asset assets contract contracts person people user users',
         ],
         // Photo Album - just for fun.
         'photo-album' => [

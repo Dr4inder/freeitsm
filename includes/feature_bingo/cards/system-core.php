@@ -646,6 +646,22 @@ return [
         'link'     => 'system/cost-centres/',
         'check'    => ['rows', 'cost_centres', 'is_active = 1 AND is_demo = 0'],
     ],
+    [
+        'id'       => 'system.cost_centre_charging',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'organisation',
+        'title'    => 'Charging things to cost centres',
+        'what'     => 'Assets, contracts and people each charged to one of their company\'s cost centres - set on the record, in the asset import by code, or through the API.',
+        'why'      => 'Finance can see what each budget is carrying - the laptops, the licences, the people - in the codes they already use.',
+        'done'     => 'At least one asset, contract or person is charged to a cost centre.',
+        'link'     => 'system/help/cost-centres.php#charging',
+        'check'    => ['any', [
+            ['rows', 'assets', 'cost_centre_id IS NOT NULL'],
+            ['rows', 'contracts', 'cost_centre_id IS NOT NULL'],
+            ['rows', 'users', 'cost_centre_id IS NOT NULL'],
+        ]],
+    ],
 
     // ───────────────────────── Photo Album (just for fun) ─────────────────────────
     [
