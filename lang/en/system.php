@@ -87,6 +87,9 @@ return [
         // Card search box. Keywords below carry search synonyms so e.g. typing
         // "oidc" finds Single Sign-On; they are never shown, only matched.
         'search_placeholder' => 'Search system areas…',
+        'match_heading'      => 'Matching settings',
+        'match_one'          => '1 setting',
+        'match_many'         => '{n} settings',
         'no_results'         => 'No system areas match your search.',
 
         'help_title' => 'Help & guides',

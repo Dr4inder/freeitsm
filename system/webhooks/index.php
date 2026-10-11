@@ -436,7 +436,7 @@ function whAgo($s) {
 
         <!-- ============ DATA PROTECTION ============ -->
         <div class="card">
-            <h3><?php echo htmlspecialchars(t('system.webhooks.dp_title')); ?></h3>
+            <h3 id="data-protection"><?php echo htmlspecialchars(t('system.webhooks.dp_title')); ?></h3>
             <p class="desc"><?php echo htmlspecialchars(t('system.webhooks.dp_desc')); ?></p>
 
             <?php if ($encryptionOn): ?>

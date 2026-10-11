@@ -106,7 +106,7 @@ requireModuleAccess('system');
         </div>
 
         <div class="pp-panel">
-            <h3><?php echo htmlspecialchars(t('system.portal_profile.fields_heading')); ?></h3>
+            <h3 id="fields"><?php echo htmlspecialchars(t('system.portal_profile.fields_heading')); ?></h3>
             <p><?php echo t('system.portal_profile.fields_desc'); ?></p>
 
             <?php /* Always on, and not a setting: it is how the portal and every
@@ -137,7 +137,7 @@ requireModuleAccess('system');
         </div>
 
         <div class="pp-panel">
-            <h3><?php echo htmlspecialchars(t('system.portal_profile.directory_heading')); ?></h3>
+            <h3 id="directory"><?php echo htmlspecialchars(t('system.portal_profile.directory_heading')); ?></h3>
             <p><?php echo t('system.portal_profile.directory_desc'); ?></p>
 
             <label class="pp-row">

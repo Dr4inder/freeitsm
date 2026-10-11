@@ -129,7 +129,7 @@ requireModuleAccess('system');
         <div class="sp-warn"><?php echo t('system.status_portal.warning'); ?></div>
 
         <div class="sp-panel">
-            <h3><?php echo htmlspecialchars(t('system.status_portal.panel_heading')); ?></h3>
+            <h3 id="panel"><?php echo htmlspecialchars(t('system.status_portal.panel_heading')); ?></h3>
 
             <label class="sp-toggle">
                 <input type="checkbox" id="spEnabled" onchange="syncEnabled()">

@@ -340,7 +340,7 @@ $translationNamespaces = ['common', 'system'];
                  the first word of every page title in every module, so it was an
                  install-wide setting living in one module's settings. -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.branding.system_name_heading')); ?></h3>
+                <h3 id="system-name"><?php echo htmlspecialchars(t('system.branding.system_name_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.branding.system_name_desc')); ?></p>
                 <input type="text" id="systemName" class="slot-input" maxlength="100" style="max-width:420px;"
                        placeholder="Service Desk" autocomplete="off">
@@ -348,7 +348,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Logo -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.branding.logo_heading')); ?></h3>
+                <h3 id="logo"><?php echo htmlspecialchars(t('system.branding.logo_heading')); ?></h3>
                 <p class="card-desc"><?php echo t('system.branding.logo_desc', ['code' => '<code>{{logo}}</code>']); ?></p>
                 <div class="logo-row">
                     <div class="logo-preview" id="logoPreview">
@@ -371,7 +371,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Landing page (discussion #63) -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.branding.landing_heading')); ?></h3>
+                <h3 id="start-page"><?php echo htmlspecialchars(t('system.branding.landing_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.branding.landing_desc')); ?></p>
                 <select id="landingPage" class="slot-input" style="max-width:420px;">
                     <option value="analyst"><?php echo htmlspecialchars(t('system.branding.landing_analyst')); ?></option>
@@ -387,7 +387,7 @@ $translationNamespaces = ['common', 'system'];
                  Each person may only choose their own desktop COLOUR - the logo
                  and its corner are decided here, for everyone. -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.branding.files_heading')); ?></h3>
+                <h3 id="files-desktop"><?php echo htmlspecialchars(t('system.branding.files_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.branding.files_desc')); ?></p>
                 <div style="display:flex;gap:16px;flex-wrap:wrap;">
                     <label style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
@@ -419,7 +419,7 @@ $translationNamespaces = ['common', 'system'];
                  without the server knowing about it.
                  ============================================================ -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.branding.login_heading')); ?></h3>
+                <h3 id="sign-in-screens"><?php echo htmlspecialchars(t('system.branding.login_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.branding.login_desc')); ?></p>
 
                 <!-- Presets. The quickest way from "eighteen empty controls"
@@ -607,7 +607,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Header slots -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.branding.header_heading')); ?></h3>
+                <h3 id="header-text"><?php echo htmlspecialchars(t('system.branding.header_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.branding.header_desc')); ?></p>
                 <div class="slot-grid">
                     <div></div>
@@ -624,7 +624,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Footer slots -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.branding.footer_heading')); ?></h3>
+                <h3 id="footer-text"><?php echo htmlspecialchars(t('system.branding.footer_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.branding.footer_desc')); ?></p>
                 <div class="slot-grid">
                     <div></div>

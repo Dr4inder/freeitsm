@@ -430,7 +430,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
 
         <div class="tab-content active" id="general-tab">
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.language_heading')); ?></h3>
+                <h3 id="language"><?php echo htmlspecialchars(t('system.preferences.language_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.language_desc')); ?></p>
                 <select id="languageSelect" class="pref-language-select">
                     <?php foreach ($locales as $code => $native): ?>
@@ -443,7 +443,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             </div>
 
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.timezone_heading')); ?></h3>
+                <h3 id="timezone"><?php echo htmlspecialchars(t('system.preferences.timezone_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.timezone_desc')); ?></p>
                 <?php
                     // Group IANA zones by region for the dropdown (Europe/London → "Europe").
@@ -475,7 +475,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                      picks WHICH INSTANT, this picks HOW IT IS WRITTEN. Neither changes
                      what is stored. Each option is labelled with its rendered example. */ ?>
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.dateformat_heading')); ?></h3>
+                <h3 id="date-format"><?php echo htmlspecialchars(t('system.preferences.dateformat_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.dateformat_desc')); ?></p>
                 <select id="dateFormatSelect" class="pref-language-select">
                     <option value="" <?php echo $prefs['date_format'] === '' ? 'selected' : ''; ?>>
@@ -493,7 +493,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             </div>
 
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.timeformat_heading')); ?></h3>
+                <h3 id="time-format"><?php echo htmlspecialchars(t('system.preferences.timeformat_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.timeformat_desc')); ?></p>
                 <select id="timeFormatSelect" class="pref-language-select">
                     <option value="" <?php echo $prefs['time_format'] === '' ? 'selected' : ''; ?>>
@@ -528,7 +528,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                  per analyst: the drawer keeps the board visible behind it, the
                  modal gives the description and comments room. -->
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.task_view_heading')); ?></h3>
+                <h3 id="task-view"><?php echo htmlspecialchars(t('system.preferences.task_view_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.task_view_desc')); ?></p>
                 <select id="taskViewSelect" class="pref-language-select">
                     <option value="panel" <?php echo $prefs['tasks_detail_view'] !== 'modal' ? 'selected' : ''; ?>><?php echo htmlspecialchars(t('system.preferences.task_view_panel')); ?></option>
@@ -541,7 +541,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                  because it is the same kind of choice: how a shared UI surface
                  behaves for YOU. Off by default — see the note by the default. -->
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.search_dismiss_heading')); ?></h3>
+                <h3 id="search-panel"><?php echo htmlspecialchars(t('system.preferences.search_dismiss_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.search_dismiss_desc')); ?></p>
                 <label class="toggle-group">
                     <span class="toggle-switch">
@@ -558,7 +558,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                  because that is where somebody looks for a setting they half
                  remember changing, and its neighbour above already is. -->
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.cal_subtasks_heading')); ?></h3>
+                <h3 id="cal-subtasks"><?php echo htmlspecialchars(t('system.preferences.cal_subtasks_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.cal_subtasks_desc')); ?></p>
                 <select id="calSubtaskSelect" class="pref-language-select">
                     <option value=""     <?php echo $prefs['tasks_calendar_subtasks'] === ''     ? 'selected' : ''; ?>><?php echo htmlspecialchars(t('tasks.filter.parents_only')); ?></option>
@@ -570,7 +570,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
 
             <!-- Subtasks listed under their card on the board. -->
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.board_subtasks_heading')); ?></h3>
+                <h3 id="board-subtasks"><?php echo htmlspecialchars(t('system.preferences.board_subtasks_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.board_subtasks_desc')); ?></p>
                 <label class="toggle-group">
                     <span class="toggle-switch">
@@ -583,7 +583,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             </div>
 
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.landing_heading')); ?></h3>
+                <h3 id="start-page"><?php echo htmlspecialchars(t('system.preferences.landing_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.landing_desc')); ?></p>
                 <select id="landingSelect" class="pref-language-select">
                     <option value=""><?php echo htmlspecialchars(t('system.preferences.landing_default', ['name' => $landingDefaultName])); ?></option>
@@ -599,7 +599,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                      genuine judgement call rather than something to decide for
                      everybody — so it is a choice. Default is to keep them. */ ?>
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('watchtower.scope.impersonal_heading')); ?></h3>
+                <h3 id="watchtower"><?php echo htmlspecialchars(t('watchtower.scope.impersonal_heading')); ?></h3>
                 <div class="anim-toggle" id="wtImpersonalToggle">
                     <button class="anim-option" data-wtimp="show"><?php echo htmlspecialchars(t('watchtower.scope.impersonal_show')); ?></button>
                     <button class="anim-option" data-wtimp="hide"><?php echo htmlspecialchars(t('watchtower.scope.impersonal_hide')); ?></button>
@@ -619,7 +619,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 try { $feedAllowed = scheduleFeedAllowed(connectToDatabase()); } catch (Exception $e) {}
             ?>
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.workcal_heading')); ?></h3>
+                <h3 id="working-hours"><?php echo htmlspecialchars(t('system.preferences.workcal_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.workcal_desc')); ?></p>
 
                 <?php if (!$feedAllowed): ?>
@@ -753,7 +753,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             ?>
             <?php if ($notifPrefs): ?>
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.notif_heading')); ?></h3>
+                <h3 id="notifications"><?php echo htmlspecialchars(t('system.preferences.notif_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.notif_desc')); ?></p>
                 <div id="notifTypes" style="display:flex;flex-direction:column;gap:10px;margin-top:12px;max-width:520px;">
                     <?php foreach ($notifPrefs as $key => $on): ?>
@@ -778,7 +778,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                  not about WHICH notifications you get, it is about how you are
                  told about the ones you already chose. -->
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.sound_heading')); ?></h3>
+                <h3 id="sound"><?php echo htmlspecialchars(t('system.preferences.sound_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.sound_desc')); ?></p>
                 <select id="notifSoundSelect" class="pref-language-select">
                     <?php foreach (['off', 'chime', 'ping', 'knock'] as $soundKey): ?>
@@ -798,7 +798,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             <!-- Desktop notifications. Beside the chime because it is the same
                  kind of choice: how you are told about what reaches the bell. -->
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.desktop_heading')); ?></h3>
+                <h3 id="desktop"><?php echo htmlspecialchars(t('system.preferences.desktop_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.desktop_desc')); ?></p>
                 <label class="toggle-group">
                     <span class="toggle-switch">
@@ -814,7 +814,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
 
             <!-- Task assignment by email. -->
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.task_email_heading')); ?></h3>
+                <h3 id="task-email"><?php echo htmlspecialchars(t('system.preferences.task_email_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.task_email_desc')); ?></p>
                 <label class="toggle-group">
                     <span class="toggle-switch">
@@ -827,13 +827,13 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             </div>
 
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.position_heading')); ?></h3>
+                <h3 id="position"><?php echo htmlspecialchars(t('system.preferences.position_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.position_desc')); ?></p>
                 <div class="position-grid" id="toastPositionGrid"></div>
             </div>
 
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.animation_heading')); ?></h3>
+                <h3 id="animation"><?php echo htmlspecialchars(t('system.preferences.animation_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.animation_desc')); ?></p>
                 <div class="anim-toggle" id="animToggle">
                     <button class="anim-option" data-anim="slide"><?php echo htmlspecialchars(t('system.preferences.anim_slide')); ?></button>
@@ -844,7 +844,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
 
         <div class="tab-content" id="display-tab">
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.panels_heading')); ?></h3>
+                <h3 id="left-panels"><?php echo htmlspecialchars(t('system.preferences.panels_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.panels_desc')); ?></p>
                 <!-- One row per module that has a left panel. Rows are built
                      in JS from SIDEBAR_PANELS so adding a module is a one-line
@@ -853,7 +853,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             </div>
 
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.multiselect_heading')); ?></h3>
+                <h3 id="multi-select"><?php echo htmlspecialchars(t('system.preferences.multiselect_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.multiselect_desc')); ?></p>
                 <div class="anim-toggle" id="multiSelectPaneToggle">
                     <button class="anim-option" data-msmode="summary"><?php echo htmlspecialchars(t('system.preferences.multiselect_summary')); ?></button>
@@ -864,7 +864,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             </div>
 
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.mc_heading')); ?></h3>
+                <h3 id="morning-checks"><?php echo htmlspecialchars(t('system.preferences.mc_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.mc_desc')); ?></p>
                 <div class="anim-toggle" id="mcFillToggle">
                     <button class="anim-option" data-fill="plain"><?php echo htmlspecialchars(t('system.preferences.fill_plain')); ?></button>
@@ -879,7 +879,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                  person signing their own name — there is deliberately no shared
                  or install-wide signature to administer. -->
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.details_heading')); ?></h3>
+                <h3 id="my-details"><?php echo htmlspecialchars(t('system.preferences.details_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.details_desc')); ?></p>
                 <div id="detailsManagedNote" class="pref-managed-note" style="display:none;">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
@@ -900,7 +900,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             </div>
 
             <div class="pref-section">
-                <h3><?php echo htmlspecialchars(t('system.preferences.sig_heading')); ?></h3>
+                <h3 id="signature"><?php echo htmlspecialchars(t('system.preferences.sig_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.sig_desc')); ?></p>
 
                 <div id="sigList" class="sig-list"></div>

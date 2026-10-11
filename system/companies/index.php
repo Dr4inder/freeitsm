@@ -194,7 +194,7 @@ $translationNamespaces = ['common', 'system'];
         <!-- Public email domains (global). Only meaningful once there's more
              than one company (shared-intake routing), so hidden at N=1. -->
         <div class="settings-card" id="freemailCard" style="display: none;">
-            <h2 class="card-title"><?php echo htmlspecialchars(t('system.companies.freemail_title')); ?></h2>
+            <h2 id="freemail" class="card-title"><?php echo htmlspecialchars(t('system.companies.freemail_title')); ?></h2>
             <p class="card-hint"><?php echo htmlspecialchars(t('system.companies.freemail_hint')); ?></p>
 
             <div id="customFreemailList"></div>

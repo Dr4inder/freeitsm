@@ -255,7 +255,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
 
         <!-- Global switches -->
         <div class="settings-card">
-            <h3><?php echo htmlspecialchars(t('system.sso.global_heading')); ?></h3>
+            <h3 id="global"><?php echo htmlspecialchars(t('system.sso.global_heading')); ?></h3>
             <p class="card-desc"><?php echo htmlspecialchars(t('system.sso.global_desc')); ?></p>
             <div class="load-error" id="globalLoadError" hidden>
                 <strong><?php echo htmlspecialchars(t('system.sso.global_load_failed')); ?></strong>
@@ -281,7 +281,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
 
         <!-- Redirect URI -->
         <div class="settings-card">
-            <h3><?php echo htmlspecialchars(t('system.sso.redirect_heading')); ?></h3>
+            <h3 id="redirect"><?php echo htmlspecialchars(t('system.sso.redirect_heading')); ?></h3>
             <p class="card-desc"><?php echo htmlspecialchars(t('system.sso.redirect_desc')); ?></p>
             <div class="redirect-uri-box">
                 <code id="redirectUri"><?php echo htmlspecialchars($redirectUri); ?></code>
@@ -308,7 +308,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                      the far right and left the three cards on this page with
                      their buttons in three different places. */ ?>
             <div class="providers-head">
-                <h3 style="margin:0;"><?php echo htmlspecialchars(t('system.sso.providers_heading')); ?></h3>
+                <h3 id="providers" style="margin:0;"><?php echo htmlspecialchars(t('system.sso.providers_heading')); ?></h3>
                 <p class="card-desc" style="margin:4px 0 0;"><?php echo htmlspecialchars(t('system.sso.providers_desc')); ?></p>
                 <button class="add-btn" id="addProviderBtn"><?php echo htmlspecialchars(t('system.sso.add')); ?></button>
             </div>

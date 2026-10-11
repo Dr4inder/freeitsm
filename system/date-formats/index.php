@@ -171,7 +171,7 @@ $sample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current()));
 
         <form id="dateFormatForm">
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.dateformat.date_heading')); ?></h3>
+                <h3 id="date-format"><?php echo htmlspecialchars(t('system.dateformat.date_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.dateformat.date_desc')); ?></p>
                 <div class="fmt-list">
                     <?php foreach (DateFmt::DATE_TEMPLATES as $key => $tpl): ?>
@@ -186,7 +186,7 @@ $sample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current()));
             </div>
 
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.dateformat.time_heading')); ?></h3>
+                <h3 id="time-format"><?php echo htmlspecialchars(t('system.dateformat.time_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.dateformat.time_desc')); ?></p>
                 <div class="fmt-list">
                     <?php foreach (DateFmt::TIME_TEMPLATES as $key => $tpl): ?>

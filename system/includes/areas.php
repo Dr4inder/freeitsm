@@ -339,3 +339,121 @@ function systemAreaIcon($key) {
     $inner = $icons[$key] ?? '<rect x="3" y="3" width="18" height="18" rx="2"></rect>';
     return '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' . $inner . '</svg>';
 }
+
+/**
+ * The settings inside each System card, for the landing page search (#2293).
+ *
+ * url => [ [anchor id, heading key], ... ]. The id is on the heading itself in that
+ * page (<h3 id="system-name">), so a result links straight to it; the key is the
+ * SAME translation key the page prints, so the search matches what the page shows,
+ * in every language. A key starting "=" is a literal, for an English-only page.
+ *
+ * ⚠️ Add a heading here when you add one to a System page - nothing finds it
+ * otherwise. tests/system-settings-search/run.php fails if an id listed here is
+ * missing from its page, so a renamed or deleted heading cannot leave a dead link.
+ */
+function systemAreaSettings(): array
+{
+    return [
+        'api/' => [
+            ['base-url',  'system.api.base_url'],
+            ['openapi',   'system.api.openapi'],
+            ['mcp',       'system.api.mcp'],
+            ['api-keys',  'system.api.keys'],
+        ],
+        'branding/' => [
+            ['system-name',     'system.branding.system_name_heading'],
+            ['logo',            'system.branding.logo_heading'],
+            ['start-page',      'system.branding.landing_heading'],
+            ['files-desktop',   'system.branding.files_heading'],
+            ['sign-in-screens', 'system.branding.login_heading'],
+            ['header-text',     'system.branding.header_heading'],
+            ['footer-text',     'system.branding.footer_heading'],
+        ],
+        'calendar-sync/' => [
+            ['connections',   'system.calsync.conns_heading'],
+            ['inbound',       'system.calsync.inbound_heading'],
+            ['people',        'system.calsync.people_heading'],
+            ['subscriptions', 'system.calsync.feed_heading'],
+        ],
+        'companies/' => [
+            ['freemail', 'system.companies.freemail_title'],
+        ],
+        'date-formats/' => [
+            ['date-format', 'system.dateformat.date_heading'],
+            ['time-format', 'system.dateformat.time_heading'],
+        ],
+        'docker/' => [
+            ['certificate', 'system.docker.form_heading'],
+        ],
+        'managers/' => [
+            ['portal',       'system.managers.on_heading'],
+            ['source',       'system.managers.source_heading'],
+            ['can',          'system.managers.can_heading'],
+            ['confidential', 'system.managers.conf_heading'],
+            ['notify',       'system.managers.notify_heading'],
+            ['leavers',      'system.managers.leavers_heading'],
+            ['who-may-edit', 'system.managers.edit_heading'],
+            ['overview',     'system.managers.overview_heading'],
+        ],
+        'modules/' => [
+            ['conflicts',    '=When grants conflict'],
+            ['access-level', '=Access level'],
+            ['checker',      '=Effective access checker'],
+        ],
+        'portal-profile/' => [
+            ['fields',    'system.portal_profile.fields_heading'],
+            ['directory', 'system.portal_profile.directory_heading'],
+        ],
+        'preferences/' => [
+            ['language',       'system.preferences.language_heading'],
+            ['timezone',       'system.preferences.timezone_heading'],
+            ['date-format',    'system.preferences.dateformat_heading'],
+            ['time-format',    'system.preferences.timeformat_heading'],
+            ['task-view',      'system.preferences.task_view_heading'],
+            ['search-panel',   'system.preferences.search_dismiss_heading'],
+            ['cal-subtasks',   'system.preferences.cal_subtasks_heading'],
+            ['board-subtasks', 'system.preferences.board_subtasks_heading'],
+            ['start-page',     'system.preferences.landing_heading'],
+            ['watchtower',     'watchtower.scope.impersonal_heading'],
+            ['working-hours',  'system.preferences.workcal_heading'],
+            ['notifications',  'system.preferences.notif_heading'],
+            ['sound',          'system.preferences.sound_heading'],
+            ['desktop',        'system.preferences.desktop_heading'],
+            ['task-email',     'system.preferences.task_email_heading'],
+            ['position',       'system.preferences.position_heading'],
+            ['animation',      'system.preferences.animation_heading'],
+            ['left-panels',    'system.preferences.panels_heading'],
+            ['multi-select',   'system.preferences.multiselect_heading'],
+            ['morning-checks', 'system.preferences.mc_heading'],
+            ['my-details',     'system.preferences.details_heading'],
+            ['signature',      'system.preferences.sig_heading'],
+        ],
+        'search/' => [
+            ['index', 'system.search.index_heading'],
+        ],
+        'security/' => [
+            ['self-registration', 'system.security.selfreg_heading'],
+            ['trusted-devices',   'system.security.trusted_heading'],
+            ['passwords',         'system.security.password_heading'],
+            ['lockout',           'system.security.lockout_heading'],
+            ['ip-bans',           'system.security.ipban_heading'],
+            ['attachments',       'system.security.attachments_heading'],
+        ],
+        'self-service/' => [
+            ['appearance', 'system.self_service.appearance_heading'],
+            ['behaviour',  'system.self_service.behaviour_heading'],
+        ],
+        'sso/' => [
+            ['global',    'system.sso.global_heading'],
+            ['redirect',  'system.sso.redirect_heading'],
+            ['providers', 'system.sso.providers_heading'],
+        ],
+        'status-portal/' => [
+            ['panel', 'system.status_portal.panel_heading'],
+        ],
+        'webhooks/' => [
+            ['data-protection', 'system.webhooks.dp_title'],
+        ],
+    ];
+}

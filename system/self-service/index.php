@@ -118,7 +118,7 @@ requireModuleAccess('system');
         </div>
 
         <div class="ssp-panel">
-            <h3><?php echo htmlspecialchars(t('system.self_service.appearance_heading')); ?></h3>
+            <h3 id="appearance"><?php echo htmlspecialchars(t('system.self_service.appearance_heading')); ?></h3>
             <p><?php echo t('system.self_service.appearance_desc'); ?></p>
 
             <div class="ssp-field">
@@ -196,7 +196,7 @@ requireModuleAccess('system');
         </div>
 
         <div class="ssp-panel">
-            <h3><?php echo htmlspecialchars(t('system.self_service.behaviour_heading')); ?></h3>
+            <h3 id="behaviour"><?php echo htmlspecialchars(t('system.self_service.behaviour_heading')); ?></h3>
             <p><?php echo t('system.self_service.behaviour_desc'); ?></p>
 
             <div class="ssp-field">

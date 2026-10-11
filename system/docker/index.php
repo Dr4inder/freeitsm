@@ -235,7 +235,7 @@ $overrideFile = "services:\n  app:\n    ports:\n      - \"8443:443\"\n    volume
     <?php endif; ?>
 
             <div class="panel">
-                <h3><?php echo dk('form_heading'); ?></h3>
+                <h3 id="certificate"><?php echo dk('form_heading'); ?></h3>
                 <p><?php echo dk('browsing_at', ['address' => dkCode(($browser['https'] ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? ''))]); ?></p>
 
                 <form id="tlsForm" autocomplete="off">

@@ -159,7 +159,7 @@ $mcpUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_URL . 
         <p class="page-subtitle"><?php echo htmlspecialchars(t('system.api.subtitle')); ?></p>
 
         <div class="settings-card">
-            <h3><?php echo htmlspecialchars(t('system.api.base_url')); ?></h3>
+            <h3 id="base-url"><?php echo htmlspecialchars(t('system.api.base_url')); ?></h3>
             <p class="card-desc"><?php echo t('system.api.base_url_desc'); ?></p>
             <div class="base-url-box">
                 <code id="apiBaseUrl"><?php echo htmlspecialchars($apiBaseUrl); ?></code>
@@ -172,7 +172,7 @@ $mcpUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_URL . 
         </div>
 
         <div class="settings-card">
-            <h3><?php echo htmlspecialchars(t('system.api.openapi')); ?></h3>
+            <h3 id="openapi"><?php echo htmlspecialchars(t('system.api.openapi')); ?></h3>
             <p class="card-desc">
                 <?php echo t('system.api.openapi_desc'); ?>
             </p>
@@ -184,7 +184,7 @@ $mcpUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_URL . 
         </div>
 
         <div class="settings-card">
-            <h3><?php echo htmlspecialchars(t('system.api.mcp')); ?></h3>
+            <h3 id="mcp"><?php echo htmlspecialchars(t('system.api.mcp')); ?></h3>
             <p class="card-desc"><?php echo t('system.api.mcp_desc'); ?></p>
             <div class="base-url-box">
                 <code id="mcpUrl"><?php echo htmlspecialchars($mcpUrl); ?></code>
@@ -198,7 +198,7 @@ $mcpUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_URL . 
         <div class="settings-card">
             <div class="keys-head">
                 <div>
-                    <h3 style="margin:0;"><?php echo htmlspecialchars(t('system.api.keys')); ?></h3>
+                    <h3 id="api-keys" style="margin:0;"><?php echo htmlspecialchars(t('system.api.keys')); ?></h3>
                     <p class="card-desc" style="margin:4px 0 0;"><?php echo htmlspecialchars(t('system.api.keys_desc')); ?></p>
                 </div>
                 <button class="add-btn" id="addKeyBtn"><?php echo htmlspecialchars(t('common.add')); ?></button>

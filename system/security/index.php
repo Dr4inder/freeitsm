@@ -193,7 +193,7 @@ $translationNamespaces = ['common', 'system'];
         <form id="securityForm">
             <!-- Self-service registration -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.security.selfreg_heading')); ?></h3>
+                <h3 id="self-registration"><?php echo htmlspecialchars(t('system.security.selfreg_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.security.selfreg_desc')); ?></p>
                 <div class="setting-row">
                     <div class="setting-label">
@@ -206,7 +206,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Trusted Device -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.security.trusted_heading')); ?></h3>
+                <h3 id="trusted-devices"><?php echo htmlspecialchars(t('system.security.trusted_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.security.trusted_desc')); ?></p>
                 <div class="setting-row">
                     <div class="setting-label">
@@ -220,7 +220,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Password Policy -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.security.password_heading')); ?></h3>
+                <h3 id="passwords"><?php echo htmlspecialchars(t('system.security.password_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.security.password_desc')); ?></p>
                 <div class="setting-row">
                     <div class="setting-label">
@@ -234,7 +234,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Account Lockout -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.security.lockout_heading')); ?></h3>
+                <h3 id="lockout"><?php echo htmlspecialchars(t('system.security.lockout_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.security.lockout_desc')); ?></p>
                 <div class="setting-row">
                     <div class="setting-label">
@@ -256,7 +256,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- IP Ban -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.security.ipban_heading')); ?></h3>
+                <h3 id="ip-bans"><?php echo htmlspecialchars(t('system.security.ipban_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.security.ipban_desc')); ?></p>
                 <div class="setting-row">
                     <div class="setting-label">
@@ -287,7 +287,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Attachments -->
             <div class="settings-card">
-                <h3><?php echo htmlspecialchars(t('system.security.attachments_heading')); ?></h3>
+                <h3 id="attachments"><?php echo htmlspecialchars(t('system.security.attachments_heading')); ?></h3>
                 <p class="card-desc"><?php echo htmlspecialchars(t('system.security.attachments_desc')); ?></p>
                 <div class="setting-row">
                     <div class="setting-label">

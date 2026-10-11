@@ -26,6 +26,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2290 | Self-Service      | Fix         | Portal (GH #172): on a multi-company install the New Ticket mailbox picker offered every company's mailboxes; it now offers the requester's own company's plus shared ones (only shared for a requester with no company), the server re-checks the posted mailbox, and an empty picker is hidden instead of blocking the form. |
 | 2291 | System            | Improvement | Page titles (GH #173): every analyst page's browser tab now reads "<system name> - <module> - <page>" through one helper, pageTitle(); 449 title strings in 25 languages lost a frozen "Service Desk - " prefix, pages that set a record name in JavaScript append it, Checklists gets a translated module name, and the unused root includes/header.php ("Service Desk Ticketing System") is deleted. |
 | 2292 | System            | Improvement | The system name (the first part of every page title) moved from Tickets -> Settings -> General to System -> Branding, since it applies to every module; administrators-only now, the Tickets tab points to its new home, and System help for Branding gains a section on it. |
+| 2293 | System            | Improvement | The System landing search also finds settings inside each card (68 section headings across 16 cards, by the pages' own translated headings): a matching card shows a count, and hover, keyboard focus or a tap opens a panel of links straight to each section, which is scrolled to and highlighted on arrival; a test guards the anchors. |
 
 
 

@@ -154,8 +154,80 @@ $translationNamespaces = ['common', 'system'];
             margin-top: 8px;
         }
 
-        .system-card.is-hidden {
+        /* Each card sits in a wrapper so a search can hang a panel of matching
+           settings off it: a link cannot hold other links, so the panel is the
+           card's sibling rather than its child. */
+        .system-card-wrap {
+            position: relative;
+            display: flex;
+        }
+        .system-card-wrap > .system-card { flex: 1; }
+        .system-card-wrap.is-hidden {
             display: none;
+        }
+
+        /* The count in the corner while searching - "2 settings". It never
+           changes a card's height, which is the point: the list itself only
+           appears over the card, on hover, focus or a tap. */
+        .card-match-badge {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: none;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.6;
+            background: var(--sys-accent, #546e7a);
+            color: var(--sys-on-accent, #fff);
+            cursor: pointer;
+        }
+        .system-card-wrap.has-matches .card-match-badge { display: block; }
+
+        .card-matches {
+            display: none;
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            top: calc(100% - 10px);
+            z-index: 20;
+            text-align: left;
+            background: var(--surface, #fff);
+            border: 1px solid var(--border, #dde3e8);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px var(--shadow, rgba(0,0,0,0.16));
+            padding: 8px 6px;
+        }
+        .system-card-wrap.has-matches:hover .card-matches,
+        .system-card-wrap.has-matches:focus-within .card-matches,
+        .system-card-wrap.has-matches.open .card-matches { display: block; }
+        .system-card-wrap.has-matches:hover,
+        .system-card-wrap.has-matches:focus-within,
+        .system-card-wrap.has-matches.open { z-index: 21; }
+        .card-matches-label {
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: var(--text-dim, #888);
+            padding: 0 8px 4px;
+        }
+        .card-matches a {
+            display: block;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text, #333);
+            text-decoration: none;
+        }
+        .card-matches a:hover,
+        .card-matches a:focus { background: var(--surface-3, #f1f4f6); outline: none; }
+        .card-matches mark {
+            background: transparent;
+            color: var(--sys-accent, #546e7a);
+            font-weight: 700;
         }
 
         .system-cards {
@@ -345,11 +417,14 @@ $translationNamespaces = ['common', 'system'];
                        aria-label="<?php echo htmlspecialchars(t('system.landing.search_placeholder')); ?>">
             </div>
 
-            <div class="system-cards" id="systemCards">
+            <?php $areaSettings = systemAreaSettings(); ?>
+            <div class="system-cards" id="systemCards"
+                 data-match-one="<?php echo htmlspecialchars(t('system.landing.match_one')); ?>"
+                 data-match-many="<?php echo htmlspecialchars(t('system.landing.match_many')); ?>">
                 <!-- Help is rendered directly (not from the areas registry) so it
                      appears here but never recurses onto the help landing. -->
-                <a href="help/" class="system-card system-card--help"
-                   data-search="help guides guide documentation how to setup instructions manual sso single sign-on">
+                <div class="system-card-wrap" data-search="help guides guide documentation how to setup instructions manual sso single sign-on" data-url="help/" data-settings="[]">
+                <a href="help/" class="system-card system-card--help">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -358,6 +433,7 @@ $translationNamespaces = ['common', 'system'];
                     <h3><?php echo htmlspecialchars(t('system.landing.help_title')); ?></h3>
                     <p><?php echo htmlspecialchars(t('system.landing.help_desc')); ?></p>
                 </a>
+                </div>
                 <?php foreach ($systemAreas as $area): ?>
                     <?php
                     $title = t($area['title']);
@@ -368,13 +444,31 @@ $translationNamespaces = ['common', 'system'];
                     $kw = t($area['keywords']);
                     if ($kw === $area['keywords']) $kw = '';
                     $haystack = mb_strtolower(trim($title . ' ' . $desc . ' ' . $kw));
+                    // The settings inside this card, by the page's own headings,
+                    // so a search can find one and link straight to it (#2293).
+                    $settings = [];
+                    foreach ($areaSettings[$area['url']] ?? [] as [$sid, $skey]) {
+                        $label = $skey[0] === '=' ? substr($skey, 1) : t($skey);
+                        if ($label === '' || $label === $skey) continue;
+                        $settings[] = ['id' => $sid, 'label' => $label];
+                    }
                     ?>
-                    <a href="<?php echo htmlspecialchars($area['url']); ?>" class="system-card"
-                       data-search="<?php echo htmlspecialchars($haystack); ?>">
+                    <div class="system-card-wrap" data-search="<?php echo htmlspecialchars($haystack); ?>"
+                         data-url="<?php echo htmlspecialchars($area['url']); ?>"
+                         data-settings="<?php echo htmlspecialchars(json_encode($settings, JSON_UNESCAPED_UNICODE)); ?>">
+                    <a href="<?php echo htmlspecialchars($area['url']); ?>" class="system-card">
                         <?php echo systemAreaIcon($area['icon']); ?>
                         <h3><?php echo htmlspecialchars($title); ?></h3>
                         <p><?php echo htmlspecialchars($desc); ?></p>
                     </a>
+                    <?php if ($settings): ?>
+                    <button type="button" class="card-match-badge" aria-haspopup="true"></button>
+                    <div class="card-matches" role="menu">
+                        <div class="card-matches-label"><?php echo htmlspecialchars(t('system.landing.match_heading')); ?></div>
+                        <div class="card-matches-list"></div>
+                    </div>
+                    <?php endif; ?>
+                    </div>
                 <?php endforeach; ?>
             </div>
 
@@ -385,27 +479,81 @@ $translationNamespaces = ['common', 'system'];
     <script>
     (function () {
         var input = document.getElementById('systemSearch');
-        var cards = Array.prototype.slice.call(document.querySelectorAll('#systemCards .system-card'));
+        var grid  = document.getElementById('systemCards');
+        var cards = Array.prototype.slice.call(document.querySelectorAll('#systemCards .system-card-wrap'));
         var noResults = document.getElementById('systemNoResults');
         if (!input) return;
+
+        // Each card's own settings (#2293), parsed once: [{id, label, hay}].
+        cards.forEach(function (card) {
+            var list = [];
+            try { list = JSON.parse(card.getAttribute('data-settings') || '[]'); } catch (e) {}
+            card._settings = list.map(function (s) { return { id: s.id, label: s.label, hay: s.label.toLowerCase() }; });
+        });
+
+        function countText(n) {
+            return n === 1 ? grid.getAttribute('data-match-one')
+                           : grid.getAttribute('data-match-many').replace('{n}', n);
+        }
+
+        // The label with the typed text marked - built from text nodes, never HTML.
+        function labelWithMark(a, label, q) {
+            var at = label.toLowerCase().indexOf(q);
+            if (at < 0) { a.textContent = label; return; }
+            var mark = document.createElement('mark');
+            mark.textContent = label.substr(at, q.length);
+            a.appendChild(document.createTextNode(label.substr(0, at)));
+            a.appendChild(mark);
+            a.appendChild(document.createTextNode(label.substr(at + q.length)));
+        }
 
         function filter() {
             var q = input.value.trim().toLowerCase();
             var shown = 0;
             cards.forEach(function (card) {
-                var match = q === '' || (card.getAttribute('data-search') || '').indexOf(q) !== -1;
+                var own = q === '' || (card.getAttribute('data-search') || '').indexOf(q) !== -1;
+                var hits = q === '' ? [] : card._settings.filter(function (s) { return s.hay.indexOf(q) !== -1; });
+                var match = own || hits.length > 0;
                 card.classList.toggle('is-hidden', !match);
+                card.classList.toggle('has-matches', hits.length > 0);
+                card.classList.remove('open');
+                card._hits = hits;
+                var badge = card.querySelector('.card-match-badge');
+                var list  = card.querySelector('.card-matches-list');
+                if (badge && list) {
+                    badge.textContent = hits.length ? countText(hits.length) : '';
+                    list.textContent = '';
+                    var url = card.getAttribute('data-url');
+                    hits.forEach(function (s) {
+                        var a = document.createElement('a');
+                        a.href = url + '#' + s.id;
+                        a.setAttribute('role', 'menuitem');
+                        labelWithMark(a, s.label, q);
+                        list.appendChild(a);
+                    });
+                }
                 if (match) shown++;
             });
             noResults.style.display = shown === 0 ? 'block' : 'none';
         }
 
+        // A tap on the count opens the list - a phone has no hover. Opening one
+        // closes the rest, and a tap anywhere else closes it.
+        grid.addEventListener('click', function (e) {
+            var badge = e.target.closest('.card-match-badge');
+            cards.forEach(function (c) { if (!badge || c !== badge.parentNode) c.classList.remove('open'); });
+            if (badge) badge.parentNode.classList.toggle('open');
+        });
+
         input.addEventListener('input', filter);
-        // Pressing Enter on a single remaining match jumps straight into it.
+        // Enter on a single remaining card opens it - or, when exactly one of its
+        // settings matched, that setting.
         input.addEventListener('keydown', function (e) {
             if (e.key !== 'Enter') return;
             var visible = cards.filter(function (c) { return !c.classList.contains('is-hidden'); });
-            if (visible.length === 1) window.location.href = visible[0].getAttribute('href');
+            if (visible.length !== 1) return;
+            var c = visible[0], hits = c._hits || [];
+            window.location.href = c.getAttribute('data-url') + (hits.length === 1 ? '#' + hits[0].id : '');
         });
     })();
     </script>

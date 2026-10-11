@@ -97,7 +97,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
         <div class="mg-verify" id="mgVerify" hidden><?php echo htmlspecialchars($m('needs_verify')); ?></div>
 
         <div class="mg-panel">
-            <h3><?php echo htmlspecialchars($m('on_heading')); ?></h3>
+            <h3 id="portal"><?php echo htmlspecialchars($m('on_heading')); ?></h3>
             <div class="mg-field">
                 <label class="mg-toggle"><input type="checkbox" id="mgEnabled">
                     <span><span class="mg-label"><?php echo htmlspecialchars($m('enabled')); ?></span>
@@ -107,7 +107,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
 
         <div id="mgRest">
         <div class="mg-panel">
-            <h3><?php echo htmlspecialchars($m('source_heading')); ?></h3>
+            <h3 id="source"><?php echo htmlspecialchars($m('source_heading')); ?></h3>
             <p><?php echo htmlspecialchars($m('source_desc')); ?></p>
             <div class="mg-field">
                 <label class="mg-toggle"><input type="checkbox" id="mgDirectory">
@@ -124,7 +124,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
         </div>
 
         <div class="mg-panel">
-            <h3><?php echo htmlspecialchars($m('can_heading')); ?></h3>
+            <h3 id="can"><?php echo htmlspecialchars($m('can_heading')); ?></h3>
             <p><?php echo htmlspecialchars($m('can_desc')); ?></p>
             <div class="mg-field">
                 <label class="mg-toggle"><input type="checkbox" id="mgCanReply"><span class="mg-label"><?php echo htmlspecialchars($m('can_reply')); ?></span></label>
@@ -135,7 +135,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
         </div>
 
         <div class="mg-panel">
-            <h3><?php echo htmlspecialchars($m('conf_heading')); ?></h3>
+            <h3 id="confidential"><?php echo htmlspecialchars($m('conf_heading')); ?></h3>
             <p><?php echo htmlspecialchars($m('conf_desc')); ?></p>
             <?php foreach (['none', 'stub', 'all'] as $v): ?>
             <label class="mg-radio"><input type="radio" name="mgConf" value="<?php echo $v; ?>">
@@ -146,7 +146,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
 
         <?php /* Telling managers about new team tickets - off by default. */ ?>
         <div class="mg-panel">
-            <h3><?php echo htmlspecialchars($m('notify_heading')); ?></h3>
+            <h3 id="notify"><?php echo htmlspecialchars($m('notify_heading')); ?></h3>
             <p><?php echo htmlspecialchars($m('notify_desc')); ?></p>
             <?php foreach (['none', 'email', 'bell'] as $v): ?>
             <label class="mg-radio"><input type="radio" name="mgNotify" value="<?php echo $v; ?>">
@@ -156,7 +156,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
         </div>
 
         <div class="mg-panel">
-            <h3><?php echo htmlspecialchars($m('leavers_heading')); ?></h3>
+            <h3 id="leavers"><?php echo htmlspecialchars($m('leavers_heading')); ?></h3>
             <div class="mg-field">
                 <label class="mg-toggle"><input type="checkbox" id="mgLeavers">
                     <span><span class="mg-label"><?php echo htmlspecialchars($m('leavers')); ?></span>
@@ -165,7 +165,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
         </div>
 
         <div class="mg-panel">
-            <h3><?php echo htmlspecialchars($m('edit_heading')); ?></h3>
+            <h3 id="who-may-edit"><?php echo htmlspecialchars($m('edit_heading')); ?></h3>
             <p><?php echo htmlspecialchars($m('edit_desc')); ?></p>
             <label class="mg-radio"><input type="radio" name="mgEditBy" value="admins"><span class="mg-label"><?php echo htmlspecialchars($m('edit_admins')); ?></span></label>
             <label class="mg-radio"><input type="radio" name="mgEditBy" value="people_editors"><span class="mg-label"><?php echo htmlspecialchars($m('edit_people')); ?></span></label>
@@ -177,7 +177,7 @@ $m = fn(string $k) => t('system.managers.' . $k);
         </div>
 
         <div class="mg-panel">
-            <h3><?php echo htmlspecialchars($m('overview_heading')); ?></h3>
+            <h3 id="overview"><?php echo htmlspecialchars($m('overview_heading')); ?></h3>
             <p><?php echo htmlspecialchars($m('overview_desc')); ?></p>
             <input type="search" class="mg-search" id="mgSearch" placeholder="<?php echo htmlspecialchars($m('search')); ?>">
             <div id="mgOverview"></div>

@@ -135,7 +135,7 @@ if (!isset($_SESSION['analyst_id'])) {
         </div>
 
         <div class="srch-panel">
-            <h3><?php echo htmlspecialchars(t('system.search.index_heading')); ?></h3>
+            <h3 id="index"><?php echo htmlspecialchars(t('system.search.index_heading')); ?></h3>
             <div id="statusBody" class="srch-muted"><?php echo htmlspecialchars(t('common.loading')); ?></div>
             <div class="srch-progress" id="progress"><span id="progressBar"></span></div>
             <div class="srch-status" id="rebuildStatus"></div>

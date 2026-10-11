@@ -105,7 +105,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Conflict policy -->
             <div class="panel">
-                <h2>When grants conflict</h2>
+                <h2 id="conflicts">When grants conflict</h2>
                 <label class="mode-opt"><input type="radio" name="permMode" value="most" onchange="setMode('most')"> <strong>Most permissive</strong> &mdash; an analyst can use a module if <em>any</em> of their teams, or their own access, grants it. (Recommended default.)</label>
                 <label class="mode-opt"><input type="radio" name="permMode" value="least" onchange="setMode('least')"> <strong>Least permissive (strict)</strong> &mdash; an analyst can use a module only if their own access <em>and every team they're in</em> grant it.</label>
                 <div id="strictExplainer" class="strict-explainer" style="display:none;">
@@ -115,7 +115,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Access level: grant / revoke all-module access without leaving this screen -->
             <div class="panel">
-                <h2>Access level</h2>
+                <h2 id="access-level">Access level</h2>
                 <p style="color:var(--text-muted,#666);font-size:13px;margin:0 0 8px;">Turn <strong>all modules</strong> on or off for a team or analyst right here. <strong>Off</strong> = restrict them to specific modules, which you then grant in the table below.</p>
                 <input type="text" id="lvlFilter" class="lvl-filter" placeholder="Filter by name&hellip;" onkeyup="renderAccessLevels()">
                 <div class="lvl-cols">
@@ -132,7 +132,7 @@ $translationNamespaces = ['common', 'system'];
 
             <!-- Effective access checker -->
             <div class="panel eff-tool">
-                <h2>Effective access checker</h2>
+                <h2 id="checker">Effective access checker</h2>
                 <label for="effAnalyst">Show what an analyst can actually reach, and why:</label>
                 <select id="effAnalyst" onchange="loadEffective()"><option value="">&mdash; choose an analyst &mdash;</option></select>
                 <div id="effResult"></div>

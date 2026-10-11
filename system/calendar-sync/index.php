@@ -151,7 +151,7 @@ $translationNamespaces = ['common', 'system'];
 
         <div id="csMain" style="display:none;">
             <div class="cs-card">
-                <h2><?php echo htmlspecialchars(t('system.calsync.conns_heading')); ?></h2>
+                <h2 id="connections"><?php echo htmlspecialchars(t('system.calsync.conns_heading')); ?></h2>
                 <p><?php echo t('system.calsync.conns_desc'); ?></p>
 
                 <?php /* Any number of connections (#133). The list, then ONE
@@ -271,7 +271,7 @@ $translationNamespaces = ['common', 'system'];
                          and because it is the only setting here that lets a
                          personal action change shared data. */ ?>
                 <div class="cs-inbound">
-                    <h3><?php echo htmlspecialchars(t('system.calsync.inbound_heading')); ?></h3>
+                    <h3 id="inbound"><?php echo htmlspecialchars(t('system.calsync.inbound_heading')); ?></h3>
                     <p class="cs-note"><?php echo t('system.calsync.inbound_desc'); ?></p>
 
                     <?php /* Health. Everything else on this screen reports a
@@ -312,7 +312,7 @@ $translationNamespaces = ['common', 'system'];
                      a colleague's calendar. They choose WHETHER; this chooses
                      WHERE. */ ?>
             <div class="cs-card">
-                <h2><?php echo htmlspecialchars(t('system.calsync.people_heading')); ?></h2>
+                <h2 id="people"><?php echo htmlspecialchars(t('system.calsync.people_heading')); ?></h2>
                 <p id="csPeopleDescMs"><?php echo t('system.calsync.people_desc'); ?></p>
                 <p id="csPeopleDescCalDav" style="display:none;"><?php echo t('system.calsync.people_desc_caldav'); ?></p>
                 <div style="overflow-x:auto;"><table class="cs-people">
@@ -330,7 +330,7 @@ $translationNamespaces = ['common', 'system'];
             </div>
 
             <div class="cs-card">
-                <h2><?php echo htmlspecialchars(t('system.calsync.feed_heading')); ?></h2>
+                <h2 id="subscriptions"><?php echo htmlspecialchars(t('system.calsync.feed_heading')); ?></h2>
                 <p><?php echo t('system.calsync.feed_desc'); ?></p>
 
                 <label class="cs-field">
