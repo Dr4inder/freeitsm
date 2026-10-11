@@ -116,6 +116,10 @@ function settingKeyOwners(): array
         // Which attachment types this install accepts. Narrows the catalogue in
         // includes/uploads.php; it can never widen past it.
         'attachment_allowed_extensions' => ['module' => 'system', 'cap' => null, 'tab' => 'security'],
+        // Size limits (GH #170): the largest attachment anywhere, and the largest
+        // total per inbound email. Read and clamped in includes/attachment_limits.php.
+        'attachment_max_mb'             => ['module' => 'system', 'cap' => null, 'tab' => 'security'],
+        'attachment_max_total_mb'       => ['module' => 'system', 'cap' => null, 'tab' => 'security'],
 
         // --- Tickets: time tracking (discussion #72) ---
         // The INSTALL-WIDE defaults. A company may override either of them —

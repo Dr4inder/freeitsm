@@ -175,6 +175,10 @@ try {
         'rejected_action' => $rejectedAction,
     ];
 
+    // Attachment size limits and what an oversized email does (GH #170) - the
+    // install defaults, or this mailbox's own. See includes/attachment_limits.php.
+    $oversizeRules = oversizeRules($conn, $mailbox);
+
     // Save emails to database
     $savedCount = 0;
     $rejectedCount = 0;
@@ -223,8 +227,57 @@ try {
             continue;
         }
 
+        // ── Size check (GH #170) ─────────────────────────────────────────────
+        // Attachments are fetched HERE, before the email is imported, because
+        // "reject the whole email" has to be decided before a ticket exists. The
+        // same fetched list is handed on to saveEmailToDatabase(), so nothing is
+        // downloaded twice. An email already imported is left to the de-dup below.
+        $prefetched = null;
+        $sizePlan = null;
+        $sizeAtts = [];
+        try {
+            [$prefetched, $sizeAtts] = oversizeMeasure($conn, $email, $accessToken);
+            if ($sizeAtts) $sizePlan = oversizePlan($sizeAtts, $oversizeRules);
+        } catch (Exception $measureEx) {
+            $prefetched = null;   // measuring failed: import exactly as before, and say so
+            $errors[] = 'Could not measure attachments on email from ' . $fromAddress . ': ' . $measureEx->getMessage();
+        }
+
+        if ($sizePlan && $sizePlan['reject']) {
+            $processingLog = ['steps' => [], 'mailbox_settings' => $mailboxSettings];
+            $processingLog['steps'][] = oversizeLogStep($sizeAtts, $sizePlan, $oversizeRules, 'rejected');
+            $postAction = ['step' => 'post_action', 'action' => $rejectedAction];
+            try {
+                $httpCode = handleEmailAfterProcessing($accessToken, $email['id'], $rejectedAction, null, $provider, $mailbox);
+                $postAction['result'] = 'success';
+                $postAction['http_code'] = $httpCode;
+            } catch (Exception $delEx) {
+                $errors[] = 'Failed to handle oversized email from ' . $fromAddress . ': ' . $delEx->getMessage();
+                $postAction['result'] = 'error';
+                $postAction['error'] = $delEx->getMessage();
+            }
+            $processingLog['steps'][] = $postAction;
+            foreach (oversizeNotify($conn, $mailbox, $oversizeRules, $fromAddress, $fromName, $subject, $sizeAtts, $sizePlan, 'rejected') as $s) {
+                $processingLog['steps'][] = $s;
+            }
+            $rejectedCount++;
+            $activityEntries[] = [
+                'action' => 'rejected',
+                'from_address' => $fromAddress,
+                'from_name' => $fromName,
+                'subject' => $subject,
+                'reason' => mb_substr('Too large: ' . oversizeSummary($sizeAtts, $sizePlan), 0, 255),
+                'ticket_id' => null,
+                'processing_log' => json_encode($processingLog)
+            ];
+            continue;
+        }
+
         try {
             $processingLog = ['steps' => [], 'mailbox_settings' => $mailboxSettings];
+            if ($sizePlan && $sizePlan['over']) {
+                $processingLog['steps'][] = oversizeLogStep($sizeAtts, $sizePlan, $oversizeRules, 'stripped');
+            }
 
             if ($hasWhitelist) {
                 $domain = explode('@', $fromAddress)[1] ?? '';
@@ -235,7 +288,8 @@ try {
                 ];
             }
 
-            $importResult = saveEmailToDatabase($conn, $email, $accessToken, $mailboxId);
+            $importResult = saveEmailToDatabase($conn, $email, $accessToken, $mailboxId, $prefetched,
+                                                $sizePlan['strip'] ?? [], (int)$oversizeRules['max_bytes']);
             $ticketId = $importResult['ticket_id'] ?? $importResult;
             $isNewTicket = $importResult['is_new_ticket'] ?? false;
             $processingLog['steps'][] = [
@@ -276,12 +330,22 @@ try {
                 $processingLog['steps'][] = $templateStep;
             }
 
+            // Attachments removed for size: tell whoever the settings say, and
+            // record it on the log row so it is findable without opening it.
+            $sizeReason = null;
+            if ($sizePlan && $sizePlan['over'] && $importResult !== false) {
+                foreach (oversizeNotify($conn, $mailbox, $oversizeRules, $fromAddress, $fromName, $subject, $sizeAtts, $sizePlan, 'stripped', $ticketId ? (int)$ticketId : null) as $s) {
+                    $processingLog['steps'][] = $s;
+                }
+                $sizeReason = mb_substr('Attachments removed (too large): ' . oversizeSummary($sizeAtts, $sizePlan), 0, 255);
+            }
+
             $activityEntries[] = [
                 'action' => 'imported',
                 'from_address' => $fromAddress,
                 'from_name' => $fromName,
                 'subject' => $subject,
-                'reason' => null,
+                'reason' => $sizeReason,
                 'ticket_id' => $ticketId ?: null,
                 'processing_log' => json_encode($processingLog)
             ];
@@ -839,7 +903,7 @@ function fetchEmailAttachments($accessToken, $emailId) {
 /**
  * Save attachment to filesystem and database
  */
-function saveAttachment($conn, $dbEmailId, $attachment) {
+function saveAttachment($conn, $dbEmailId, $attachment, ?int $maxBytes = null) {
     $attachmentId = $attachment['id'] ?? '';
     $filename = $attachment['name'] ?? 'unknown';
     $contentType = $attachment['contentType'] ?? 'application/octet-stream';
@@ -867,7 +931,8 @@ function saveAttachment($conn, $dbEmailId, $attachment) {
         $filename,
         $emailDir,
         attachmentRejectPolicy($conn),
-        attachmentAllowedTypes($conn)
+        attachmentAllowedTypes($conn),
+        $maxBytes   // the mailbox's own limit when it has one; null = the install's
     );
 
     if (!$stored['stored']) {
@@ -944,7 +1009,7 @@ function rewriteCidReferences($bodyContent, $dbEmailId, $attachments) {
 /**
  * Save email to database
  */
-function saveEmailToDatabase($conn, $email, $accessToken, $mailboxId) {
+function saveEmailToDatabase($conn, $email, $accessToken, $mailboxId, ?array $prefetched = null, array $strip = [], ?int $maxBytes = null) {
     // De-dup / stored message id. Providers whose native message id isn't globally
     // unique (IMAP UIDs collide across mailboxes) supply an 'internet_message_id'
     // (the Message-ID header) to key on instead.
@@ -1166,7 +1231,8 @@ function saveEmailToDatabase($conn, $email, $accessToken, $mailboxId) {
     //    IMAP can't re-fetch a part after disconnecting, so they ride along with the
     //    message. (This also fixes Gmail, whose attachments a Graph-only fetch missed.)
     //  - Fetched on demand from Microsoft Graph via a second call.
-    $preloadedAttachments = $email['attachments_inline'] ?? null;
+    // Already fetched by the size check in the main loop: use that list.
+    $preloadedAttachments = $prefetched ?? ($email['attachments_inline'] ?? null);
     if (($hasAttachments || $hasCidReferences) && ($preloadedAttachments !== null || $accessToken)) {
         try {
             $graphAttachments = ($preloadedAttachments !== null)
@@ -1176,9 +1242,17 @@ function saveEmailToDatabase($conn, $email, $accessToken, $mailboxId) {
             $rejectedAttachments = [];
             $quarantinedAttachments = [];
 
+            $fileIndex = -1;
             foreach ($graphAttachments as $attachment) {
                 if (($attachment['@odata.type'] ?? '') === '#microsoft.graph.fileAttachment') {
-                    $savedAttachment = saveAttachment($conn, $dbEmailId, $attachment);
+                    // Removed by the size check (GH #170): not stored, and listed in
+                    // the note at the foot of the message, where it would have been.
+                    $fileIndex++;
+                    if (isset($strip[$fileIndex])) {
+                        $rejectedAttachments[] = ['name' => $attachment['name'] ?? 'attachment', 'reason' => $strip[$fileIndex]];
+                        continue;
+                    }
+                    $savedAttachment = saveAttachment($conn, $dbEmailId, $attachment, $maxBytes);
                     if (!$savedAttachment) continue;
 
                     // A file we would not store is reported, never dropped silently —
@@ -1303,6 +1377,59 @@ function stripInboundThread($bodyContent) {
 /**
  * Log email import to system_logs
  */
+/**
+ * Fetch (or take the pre-loaded) attachments of one email and measure them.
+ * Returns [the attachment list to hand on, [['name','size'], ...] for the file
+ * attachments in order]. Sizes are the DECODED bytes where the content is here,
+ * else the size the provider reports.
+ */
+function oversizeMeasure($conn, array $email, $accessToken): array
+{
+    // Not if it is already in the database: saveEmailToDatabase() skips it anyway,
+    // and measuring it would alert and auto-reply about the same email twice.
+    $st = $conn->prepare("SELECT 1 FROM emails WHERE exchange_message_id = ? LIMIT 1");
+    $st->execute([$email['internet_message_id'] ?? $email['id'] ?? '']);
+    if ($st->fetchColumn()) return [null, []];
+
+    $hasAtt = ($email['hasAttachments'] ?? false) || preg_match('/cid:/i', $email['body']['content'] ?? '');
+    $list = $email['attachments_inline'] ?? null;
+    if ($list === null) {
+        if (!$hasAtt || !$accessToken) return [null, []];
+        $list = fetchEmailAttachments($accessToken, $email['id'] ?? '');
+    }
+    $atts = [];
+    foreach ($list as $a) {
+        if (($a['@odata.type'] ?? '') !== '#microsoft.graph.fileAttachment') continue;
+        $b64 = (string)($a['contentBytes'] ?? '');
+        $size = $b64 !== '' ? (int)floor(strlen($b64) * 3 / 4) - substr_count(substr($b64, -2), '=') : (int)($a['size'] ?? 0);
+        $atts[] = ['name' => (string)($a['name'] ?? 'attachment'), 'size' => max(0, $size)];
+    }
+    return [$list, $atts];
+}
+
+/** The processing-log step describing the size check. */
+function oversizeLogStep(array $atts, array $plan, array $rules, string $outcome): array
+{
+    return [
+        'step'    => 'size_check',
+        'result'  => $outcome,
+        'limits'  => ['per_attachment' => oversizeMbWords((int)$rules['max_bytes']),
+                      'total' => $rules['max_total_bytes'] > 0 ? oversizeMbWords((int)$rules['max_total_bytes']) : 'none',
+                      'from' => $rules['source'], 'mode' => $rules['mode'], 'strip_order' => $rules['strip_order']],
+        'total'   => oversizeMbWords((int)$plan['total']),
+        'details' => array_map(fn($i, $a) => $a['name'] . ' (' . oversizeMbWords((int)$a['size']) . ')' . (isset($plan['reasons'][$i]) ? ' - ' . $plan['reasons'][$i] : ''),
+                               array_keys($atts), $atts),
+    ];
+}
+
+/** "big.zip (40 MB), video.mp4 (30 MB)" - what broke the limits, for the log's reason column. */
+function oversizeSummary(array $atts, array $plan): string
+{
+    $out = [];
+    foreach ($plan['reasons'] as $i => $_) $out[] = $atts[$i]['name'] . ' (' . oversizeMbWords((int)$atts[$i]['size']) . ')';
+    return implode(', ', $out);
+}
+
 function logEmailImport($conn, $mailboxId, $details) {
     try {
         $details['mailbox_id'] = $mailboxId;

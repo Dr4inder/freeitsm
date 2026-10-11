@@ -1651,6 +1651,9 @@ CREATE TABLE IF NOT EXISTS `target_mailboxes` (
     `last_checked_datetime` DATETIME NULL,
     -- 'confidential' = every ticket arriving here is confidential (#62).
     `default_sensitivity`   VARCHAR(20) NOT NULL DEFAULT 'normal',
+    -- This mailbox's own rules for emails over the attachment size limits (#170):
+    -- JSON (includes/attachment_limits.php). NULL = the defaults in Tickets -> Settings.
+    `oversize_policy`       TEXT NULL,
     PRIMARY KEY (`id`),
     KEY `ix_target_mailboxes_tenant_id` (`tenant_id`),
     CONSTRAINT `fk_target_mailboxes_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL,

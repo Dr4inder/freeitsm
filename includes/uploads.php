@@ -121,7 +121,13 @@ const UPLOAD_TYPES_MAIL = [
 const UPLOAD_TYPES_ATTACHMENT = UPLOAD_TYPES_DOCUMENT + UPLOAD_TYPES_IMAGE
                               + UPLOAD_TYPES_AUDIO + UPLOAD_TYPES_VIDEO + UPLOAD_TYPES_MAIL;
 
-const UPLOAD_MAX_BYTES = 10485760;   // 10 MB, matching the issue-tracker cap
+/**
+ * The fallback largest attachment. NOT the live limit any more (GH #170): a caller
+ * that passes no limit gets System -> Security -> Attachments' "largest attachment"
+ * through attachmentMaxBytes(), which starts at this same 10 MB.
+ */
+const UPLOAD_MAX_BYTES = 10485760;
+require_once __DIR__ . '/attachment_limits.php';
 
 /**
  * Validate one $_FILES entry and move it somewhere safe.
@@ -129,12 +135,13 @@ const UPLOAD_MAX_BYTES = 10485760;   // 10 MB, matching the issue-tracker cap
  * @param array  $file     one entry from $_FILES
  * @param string $destDir  absolute directory; created (and protected) if absent
  * @param array  $allowed  ext => [mime, …]; defaults to the everyday set
- * @param int    $maxBytes
+ * @param ?int   $maxBytes  null = the configured limit (attachmentMaxBytes())
  * @return array ['stored_name'=>…, 'original_name'=>…, 'size'=>int, 'mime'=>string, 'path'=>absolute]
  * @throws Exception with a message safe to show a user
  */
-function uploadStoreFile(array $file, string $destDir, array $allowed = UPLOAD_TYPES_ATTACHMENT, int $maxBytes = UPLOAD_MAX_BYTES): array
+function uploadStoreFile(array $file, string $destDir, array $allowed = UPLOAD_TYPES_ATTACHMENT, ?int $maxBytes = null): array
 {
+    $maxBytes = $maxBytes ?? attachmentMaxBytes();
     if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
         throw new Exception(uploadErrorMessage($file['error'] ?? UPLOAD_ERR_NO_FILE));
     }
@@ -781,8 +788,9 @@ function uploadStoreBytes(
     string $destDir,
     string $policy = ATTACHMENT_POLICY_STORE,
     array $allowed = UPLOAD_TYPES_ATTACHMENT,
-    int $maxBytes = UPLOAD_MAX_BYTES
+    ?int $maxBytes = null
 ): array {
+    $maxBytes = $maxBytes ?? attachmentMaxBytes();
     $original = uploadCleanName($originalName);
     $size     = strlen($bytes);
     $mime     = uploadDetectMimeFromBytes($bytes) ?: 'application/octet-stream';

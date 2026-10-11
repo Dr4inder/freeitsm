@@ -25,6 +25,8 @@ try {
     // Confidential mailbox (discussion #62), guarded until Database Verification has run.
     require_once '../../includes/ticket_sensitivity.php';
     $sensCol = ticketSensitivityReady($conn) ? 'default_sensitivity,' : "'normal' AS default_sensitivity,";
+    // A mailbox's own oversized-email rules (GH #170), once Database Verification has added the column.
+    $sensCol .= $conn->query("SHOW COLUMNS FROM target_mailboxes LIKE 'oversize_policy'")->fetch() ? ' oversize_policy,' : ' NULL AS oversize_policy,';
 
     $sql = "SELECT id, name, provider, azure_tenant_id, azure_client_id, azure_client_secret,
                    oauth_redirect_uri, oauth_scopes, imap_server, imap_port, imap_encryption,

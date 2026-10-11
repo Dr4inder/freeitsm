@@ -168,8 +168,9 @@ function getHelpTopics() {
                 ['id' => 'password', 'label' => 'Password expiry'],
                 ['id' => 'lockout',  'label' => 'Account lockout'],
                 ['id' => 'ipban',    'label' => 'IP ban'],
+                ['id' => 'attachments', 'label' => 'Attachments'],
             ],
-            'terms' => 'brute force locked out failed attempts hardening rotation ban blocked',
+            'terms' => 'brute force locked out failed attempts hardening rotation ban blocked attachment size limit upload mb php',
         ],
         'sso' => [
             'hero' => 'Authentication',

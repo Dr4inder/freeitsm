@@ -1004,4 +1004,16 @@ return [
         'link'     => 'tickets/',
         'check'    => ['rows', 'document_links', "parent_type = 'ticket'"],
     ],
+    [
+        'id'       => 'tickets.oversized_email',
+        'module'   => 'tickets',
+        'tier'     => 'extra',
+        'category' => 'communication',
+        'title'    => 'Somebody hears about an email that was too large',
+        'what'     => 'Tickets -> Settings -> Mailboxes -> When an email is too large set to email an alert, reply to the sender, or both - for every mailbox, or one of them.',
+        'why'      => 'Otherwise the attachment that was too big is just a note on a ticket, and the person who sent it never knows to send it another way.',
+        'done'     => 'An alert or a reply is switched on for oversized emails.',
+        'link'     => 'tickets/settings/?tab=mailboxes',
+        'check'    => ['sql', "SELECT (SELECT COUNT(*) FROM system_settings WHERE setting_key IN ('oversize_alert', 'oversize_autoreply') AND setting_value = '1') + (SELECT COUNT(*) FROM target_mailboxes WHERE oversize_policy LIKE '%\"alert\":true%' OR oversize_policy LIKE '%\"autoreply\":true%')"],
+    ],
 ];

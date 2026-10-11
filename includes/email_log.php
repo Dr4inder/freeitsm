@@ -46,6 +46,10 @@ const EMAIL_LOG_ROUTES = [
     // somebody brings to this log — and it is unanswerable if the rows are mixed
     // in with password resets and account verifications.
     'training'       => 'Training reminder',
+    // An inbound email over the attachment limits (GH #170): the alert to the
+    // addresses in the settings, and the reply to the sender.
+    'oversize_alert' => 'Oversized email alert',
+    'oversize_reply' => 'Oversized email reply',
     // Domains (#154): expiry/certificate digests and change-detection warnings.
     'domain_alert'   => 'Domain alert',
     // A task assigned to an analyst who asked to be emailed about it (2.10.0).

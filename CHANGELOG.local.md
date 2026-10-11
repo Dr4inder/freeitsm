@@ -14,6 +14,9 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2281 | Tickets           | Feature     | Configurable attachment size limits (GH #170): System -> Security -> Attachments sets the largest attachment (every upload path that set no limit of its own: email, portal, chat, replies, documents; was a hard-coded 10 MB) and the largest total per inbound email, shows PHP's upload_max_filesize/post_max_size/memory_limit and warns when the limit is higher than PHP accepts from a browser. |
+| 2282 | Tickets           | Feature     | Oversized inbound email handling (GH #170): attachments measured before import; keep the email and strip what is too big (note on the ticket; when over the total: largest first / all / in order, a setting) or reject it like other rejected mail; an alert to chosen addresses and/or a reply to the sender (never to automated senders, the mailbox itself, or more than hourly per sender); recorded in the mailbox log and the send log; defaults in Tickets -> Settings -> Mailboxes with a per-mailbox override (target_mailboxes.oversize_policy), each screen signposting the other. |
+| 2283 | System            | Improvement | Help: System -> Security gains an Attachments section (types and size limits, PHP limits), the mailbox admin guide a Large emails section; a Feature Bingo card for oversized-email alerts. |
 
 
 

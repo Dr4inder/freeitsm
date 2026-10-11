@@ -868,6 +868,33 @@ return [
 
     // tickets/settings/index.php — admin settings page (tabs + section headings)
     'settings' => [
+        // Oversized inbound emails (GH #170). The LIMITS live in System -> Security.
+        'oversize' => [
+            'heading'         => 'When an email is too large',
+            'limits_line'     => 'The limits are {max} per attachment and {total} per email, set in {link} for the whole install. A mailbox can set its own limits and rules in its settings above.',
+            'limits_link'     => 'System -> Security -> Attachments',
+            'no_limit'        => 'no limit',
+            'mode'            => 'What to do with the email',
+            'mode_strip'      => 'Keep it, but leave out the attachments that are too big - a note on the ticket lists them',
+            'mode_reject'     => 'Reject the whole email - no ticket is made, and it is handled like other rejected mail for the mailbox',
+            'order'           => 'When the attachments together are over the limit for one email',
+            'order_largest'   => 'Remove the largest first, until the rest fit',
+            'order_all'       => 'Remove them all',
+            'order_order'     => 'Keep them in the order they were attached, until the next one would not fit',
+            'order_hint'      => 'An attachment over the limit for one attachment is always removed; this decides what else goes.',
+            'tell'            => 'Who to tell',
+            'alert'           => 'Email an alert to',
+            'reply'           => 'Reply to the sender',
+            'reply_hint'      => '{subject}, {limit} and {total_limit} are filled in. Never sent to automated senders (no-reply, mailer-daemon...), or more than once an hour to the same sender.',
+            'log_note'        => 'Every oversized email is recorded in the mailbox log (Logs, at the top of this tab), with what was removed or why it was rejected, and who was told.',
+            'saved'           => 'Saved.',
+            'mailbox_heading' => 'Large emails',
+            'use_defaults'    => 'Use the defaults (Tickets -> Settings -> Mailboxes)',
+            'use_own'         => 'Set limits and rules for this mailbox',
+            'max_mb'          => 'Largest attachment',
+            'max_total_mb'    => 'Largest email',
+            'max_total_hint'  => 'All the attachments together. 0 = no limit.',
+        ],
         'page_title' => 'Service Desk - Settings',
         // Tab labels along the top of the page
         'tabs' => [

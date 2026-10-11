@@ -63,6 +63,54 @@ $path_prefix = '../../';  // Two levels up from tickets/settings/
 
 // Namespaces the inline JS needs (action-button tooltips, etc.)
 $translationNamespaces = ['common', 'tickets'];
+
+/**
+ * The oversized-email fields (GH #170), rendered twice: the install defaults on
+ * the Mailboxes tab (prefix 'ovd') and a mailbox's own rules in its dialog
+ * (prefix 'ovm', which also carries the two limits). files: oversizeFields()/
+ * setOversizeFields() in the script read and fill them by prefix.
+ */
+function renderOversizeFields(string $px, bool $withLimits): void
+{
+    $o = fn(string $k) => htmlspecialchars(t('tickets.settings.oversize.' . $k));
+    if ($withLimits): ?>
+        <div class="ov-grid">
+            <div class="form-group">
+                <label for="<?php echo $px; ?>MaxMb"><?php echo $o('max_mb'); ?></label>
+                <div class="ov-mb"><input type="number" id="<?php echo $px; ?>MaxMb" min="1" max="102400"> MB</div>
+            </div>
+            <div class="form-group">
+                <label for="<?php echo $px; ?>MaxTotalMb"><?php echo $o('max_total_mb'); ?></label>
+                <div class="ov-mb"><input type="number" id="<?php echo $px; ?>MaxTotalMb" min="0" max="102400"> MB</div>
+                <small><?php echo $o('max_total_hint'); ?></small>
+            </div>
+        </div>
+    <?php endif; ?>
+        <div class="form-group">
+            <label><?php echo $o('mode'); ?></label>
+            <label class="ov-radio"><input type="radio" name="<?php echo $px; ?>Mode" value="strip"> <?php echo $o('mode_strip'); ?></label>
+            <label class="ov-radio"><input type="radio" name="<?php echo $px; ?>Mode" value="reject"> <?php echo $o('mode_reject'); ?></label>
+        </div>
+        <div class="form-group" id="<?php echo $px; ?>OrderGroup">
+            <label for="<?php echo $px; ?>Order"><?php echo $o('order'); ?></label>
+            <select id="<?php echo $px; ?>Order">
+                <option value="largest"><?php echo $o('order_largest'); ?></option>
+                <option value="all"><?php echo $o('order_all'); ?></option>
+                <option value="order"><?php echo $o('order_order'); ?></option>
+            </select>
+            <small><?php echo $o('order_hint'); ?></small>
+        </div>
+        <div class="form-group">
+            <label><?php echo $o('tell'); ?></label>
+            <label class="ov-check"><input type="checkbox" id="<?php echo $px; ?>Alert"> <?php echo $o('alert'); ?></label>
+            <input type="text" id="<?php echo $px; ?>AlertTo" placeholder="it-team@example.com, manager@example.com" style="margin:4px 0 8px 24px;max-width:520px;">
+            <label class="ov-check"><input type="checkbox" id="<?php echo $px; ?>Reply"> <?php echo $o('reply'); ?></label>
+            <textarea id="<?php echo $px; ?>ReplyText" rows="5" style="margin:4px 0 0 24px;max-width:620px;width:calc(100% - 24px);"></textarea>
+            <small style="margin-left:24px;"><?php echo $o('reply_hint'); ?></small>
+        </div>
+        <small><?php echo $o('log_note'); ?></small>
+    <?php
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo htmlspecialchars(I18n::getLocale()); ?>" data-theme="<?php echo htmlspecialchars(Theme::active()); ?>" data-theme-mode="<?php echo htmlspecialchars(Theme::mode()); ?>">
@@ -593,6 +641,17 @@ $translationNamespaces = ['common', 'tickets'];
             .activity-modal-content { width: 100%; max-width: none; }
             .activity-log-pane { max-height: calc(100vh - 260px); }
         }
+        /* Oversized emails (GH #170) - the defaults card and the mailbox dialog's section. */
+        .ov-card { margin-top: 28px; padding: 18px 20px; border: 1px solid var(--border, #e0e0e0); border-radius: 8px; background: var(--surface, #fff); max-width: 900px; }
+        .ov-card h3 { margin: 0 0 6px; font-size: 16px; }
+        .ov-intro { margin: 0 0 14px; color: var(--text-muted, #666); font-size: 13px; }
+        .ov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .ov-mb { display: flex; align-items: center; gap: 8px; }
+        .ov-mb input { max-width: 160px; }
+        .ov-radio, .ov-check { display: flex !important; align-items: center; gap: 8px; font-weight: 400 !important; margin: 4px 0; cursor: pointer; }
+        .ov-radio input, .ov-check input { width: auto !important; margin: 0; }
+        #oversize small, #mailboxOversizeOwn small { display: block; color: var(--text-muted, #666); margin-top: 4px; }
+        @media (max-width: 700px) { .ov-grid { grid-template-columns: 1fr; } }
     </style>
     <!-- Mobile: LAYER 15e (container, tab strip, fields, all tables scroll).
          data-mobile-shell="own" opts OUT of LAYER 2's flex body — this page
@@ -1316,6 +1375,15 @@ $translationNamespaces = ['common', 'tickets'];
                     <tr><td colspan="5" style="text-align: center;"><?php echo htmlspecialchars(t('tickets.settings.loading')); ?></td></tr>
                 </tbody>
             </table>
+
+            <!-- When an email is too large (GH #170): the install defaults. Each
+                 mailbox can override them, limits included, in its own dialog. -->
+            <div class="ov-card" id="oversize">
+                <h3><?php echo htmlspecialchars(t('tickets.settings.oversize.heading')); ?></h3>
+                <p class="ov-intro" id="ovdLimitsLine"></p>
+                <?php renderOversizeFields('ovd', false); ?>
+                <div style="margin-top:12px;"><button type="button" class="btn btn-primary" onclick="saveOversizeDefaults()"><?php echo htmlspecialchars(t('common.save')); ?></button></div>
+            </div>
         </div>
 
         <!-- Messaging Tab (WhatsApp etc.) -->
@@ -2618,6 +2686,17 @@ $translationNamespaces = ['common', 'tickets'];
                                 <span class="toggle-slider"></span>
                             </label>
                         </label>
+                    </div>
+                </div>
+
+                <div style="grid-column: span 2; margin-top: 10px; border-top: 1px solid #e0e0e0; padding-top: 15px;">
+                    <label for="mailboxOversizeUse" style="font-weight: 600; margin-bottom: 8px; display: block;"><?php echo htmlspecialchars(t('tickets.settings.oversize.mailbox_heading')); ?></label>
+                    <div class="form-group" style="margin-bottom:0;"><select id="mailboxOversizeUse" onchange="document.getElementById('mailboxOversizeOwn').style.display = this.value === 'own' ? '' : 'none'">
+                        <option value="defaults"><?php echo htmlspecialchars(t('tickets.settings.oversize.use_defaults')); ?></option>
+                        <option value="own"><?php echo htmlspecialchars(t('tickets.settings.oversize.use_own')); ?></option>
+                    </select></div>
+                    <div id="mailboxOversizeOwn" style="display:none;margin-top:10px;">
+                        <?php renderOversizeFields('ovm', true); ?>
                     </div>
                 </div>
 
@@ -5017,6 +5096,71 @@ $translationNamespaces = ['common', 'tickets'];
             } catch (err) { showToast('Failed to save template', 'error'); }
         });
 
+        // ── Oversized emails (GH #170) ─────────────────────────────────────
+        let oversizeDefaults = null;
+        function setOversizeFields(px, s) {
+            const el = id => document.getElementById(px + id);
+            if (el('MaxMb')) { el('MaxMb').value = s.max_mb ?? 10; el('MaxTotalMb').value = s.max_total_mb ?? 0; }
+            document.querySelectorAll('input[name="' + px + 'Mode"]').forEach(r => { r.checked = r.value === (s.mode || 'strip'); });
+            el('Order').value = s.strip_order || 'largest';
+            el('Alert').checked = !!s.alert;
+            el('AlertTo').value = s.alert_to || '';
+            el('Reply').checked = !!s.autoreply;
+            el('ReplyText').value = s.autoreply_text || (oversizeDefaults ? oversizeDefaults.default_reply : '');
+            syncOversizeFields(px);
+        }
+        function oversizeFields(px) {
+            const el = id => document.getElementById(px + id);
+            const mode = document.querySelector('input[name="' + px + 'Mode"]:checked');
+            const out = {
+                mode: mode ? mode.value : 'strip',
+                strip_order: el('Order').value,
+                alert: el('Alert').checked,
+                alert_to: el('AlertTo').value.trim(),
+                autoreply: el('Reply').checked,
+                autoreply_text: el('ReplyText').value
+            };
+            if (el('MaxMb')) { out.max_mb = parseInt(el('MaxMb').value, 10) || 10; out.max_total_mb = parseInt(el('MaxTotalMb').value, 10) || 0; }
+            return out;
+        }
+        // The order only matters when attachments are removed; the address box
+        // and the reply text only when their box is ticked.
+        function syncOversizeFields(px) {
+            const el = id => document.getElementById(px + id);
+            const mode = document.querySelector('input[name="' + px + 'Mode"]:checked');
+            el('OrderGroup').style.display = (mode && mode.value === 'reject') ? 'none' : '';
+            el('AlertTo').style.display = el('Alert').checked ? '' : 'none';
+            el('ReplyText').style.display = el('Reply').checked ? '' : 'none';
+        }
+        ['ovd', 'ovm'].forEach(px => {
+            document.querySelectorAll('input[name="' + px + 'Mode"]').forEach(r => r.addEventListener('change', () => syncOversizeFields(px)));
+            ['Alert', 'Reply'].forEach(id => { const c = document.getElementById(px + id); if (c) c.addEventListener('change', () => syncOversizeFields(px)); });
+        });
+        async function loadOversizeDefaults() {
+            if (!document.getElementById('oversize')) return;
+            try {
+                const r = await (await fetch(API_BASE + 'oversize_settings.php')).json();
+                if (!r.success) return;
+                oversizeDefaults = r.settings;
+                setOversizeFields('ovd', r.settings);
+                document.getElementById('ovdLimitsLine').innerHTML = t('tickets.settings.oversize.limits_line', {
+                    max: r.settings.max_mb + ' MB',
+                    total: r.settings.max_total_mb > 0 ? r.settings.max_total_mb + ' MB' : t('tickets.settings.oversize.no_limit'),
+                    link: '<a href="../../system/security/">' + escapeHtml(t('tickets.settings.oversize.limits_link')) + '</a>'
+                });
+            } catch (e) { console.error('oversize defaults', e); }
+        }
+        async function saveOversizeDefaults() {
+            try {
+                const r = await (await fetch(API_BASE + 'oversize_settings.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(oversizeFields('ovd'))
+                })).json();
+                if (r.success) { showToast(t('tickets.settings.oversize.saved'), 'success'); loadOversizeDefaults(); }
+                else showToast(r.error, 'error');
+            } catch (e) { showToast(e.message, 'error'); }
+        }
+        loadOversizeDefaults();
+
         async function loadMailboxes() {
             try {
                 await loadMailboxCompanies();
@@ -5283,6 +5427,12 @@ $translationNamespaces = ['common', 'tickets'];
             document.getElementById('mailboxFolder').value = mailbox ? mailbox.email_folder : 'INBOX';
             document.getElementById('mailboxMaxEmails').value = mailbox ? mailbox.max_emails_per_check : 10;
             document.getElementById('mailboxRejectedAction').value = mailbox ? (mailbox.rejected_action || 'delete') : 'delete';
+            // Large emails (GH #170): this mailbox's own rules, or the defaults.
+            let ownOversize = null;
+            try { ownOversize = mailbox && mailbox.oversize_policy ? JSON.parse(mailbox.oversize_policy) : null; } catch (e) { ownOversize = null; }
+            document.getElementById('mailboxOversizeUse').value = ownOversize ? 'own' : 'defaults';
+            document.getElementById('mailboxOversizeOwn').style.display = ownOversize ? '' : 'none';
+            setOversizeFields('ovm', ownOversize || Object.assign({}, oversizeDefaults || {}));
             document.getElementById('mailboxImportedAction').value = mailbox ? (mailbox.imported_action || 'delete') : 'delete';
             document.getElementById('mailboxImportedFolder').value = mailbox ? (mailbox.imported_folder || '') : '';
             toggleImportedFolder();
@@ -5769,7 +5919,8 @@ $translationNamespaces = ['common', 'tickets'];
                 // Multi-tenancy: "" (shared intake) when the picker is hidden/unset → NULL server-side.
                 tenant_id: document.getElementById('mailboxCompany').value || null,
                 default_origin_id: document.getElementById('mailboxOrigin').value || null,
-                default_sensitivity: document.getElementById('mailboxConfidential').checked ? 'confidential' : 'normal'
+                default_sensitivity: document.getElementById('mailboxConfidential').checked ? 'confidential' : 'normal',
+                oversize_policy: document.getElementById('mailboxOversizeUse').value === 'own' ? oversizeFields('ovm') : null
             };
 
             try {

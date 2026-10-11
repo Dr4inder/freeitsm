@@ -216,6 +216,26 @@ try {
         $cols['default_sensitivity'] = ticketSensitivityNormalise($data['default_sensitivity']);
     }
 
+    // This mailbox's own oversized-email rules (GH #170): null = use the defaults.
+    // Validated through the same function that reads them, and stored in MB.
+    // Only once Database Verification has added the column.
+    if (array_key_exists('oversize_policy', $data)) {
+        $hasCol = (bool)$conn->query("SHOW COLUMNS FROM target_mailboxes LIKE 'oversize_policy'")->fetch();
+        if ($hasCol) {
+            require_once '../../includes/attachment_limits.php';
+            if (is_array($data['oversize_policy'])) {
+                $p = oversizeNormalisePolicy($data['oversize_policy']);
+                if ($p['alert'] && $p['alert_to'] === '') {
+                    echo json_encode(['success' => false, 'error' => 'Large emails: give at least one valid address for the alert, or switch the alert off.']);
+                    exit;
+                }
+                $cols['oversize_policy'] = json_encode(oversizePolicyForStorage($p), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            } else {
+                $cols['oversize_policy'] = null;
+            }
+        }
+    }
+
     $secretProvided   = !(empty($azure_client_secret)  || preg_match('/^\*+/', $azure_client_secret));
     $passwordProvided = !(empty($imap_password_plain)   || preg_match('/^\*+/', $imap_password_plain));
     if ($secretProvided)   $cols['azure_client_secret'] = encryptValue($azure_client_secret);

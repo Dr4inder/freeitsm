@@ -1167,6 +1167,10 @@ return [
         // Needed on its own: emailed tickets get no department, so an HR mailbox
         // is the only thing that can protect a grievance the moment it lands.
         'default_sensitivity'     => "VARCHAR(20) NOT NULL DEFAULT 'normal'",
+        // This mailbox's own rules for emails over the attachment size limits (GH
+        // #170) - JSON, see includes/attachment_limits.php. NULL = use the defaults
+        // in Tickets -> Settings -> Mailboxes.
+        'oversize_policy'         => 'TEXT NULL',
     ],
 
     'emails' => [

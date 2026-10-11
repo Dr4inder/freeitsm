@@ -296,6 +296,42 @@ $translationNamespaces = ['common', 'system'];
                     <input type="text" class="setting-input" id="attachmentAllowedExtensions"
                            placeholder="<?php echo htmlspecialchars(t('system.security.allowed_extensions_ph')); ?>">
                 </div>
+                <?php
+                    // Size limits (GH #170). PHP's own limits are shown beside them:
+                    // a file PHP refuses never reaches FreeITSM, whatever is set here.
+                    require_once __DIR__ . '/../../includes/attachment_limits.php';
+                    $phpLim = phpUploadLimits();
+                    $phpMb = fn($b) => $b < 0 ? t('system.security.php_unlimited') : oversizeMbWords((int)$b);
+                    $browserCap = min($phpLim['upload_max_filesize'] < 0 ? PHP_INT_MAX : $phpLim['upload_max_filesize'],
+                                      $phpLim['post_max_size'] <= 0 ? PHP_INT_MAX : $phpLim['post_max_size']);
+                ?>
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <strong><?php echo htmlspecialchars(t('system.security.max_attachment')); ?></strong>
+                        <?php echo htmlspecialchars(t('system.security.max_attachment_hint')); ?>
+                    </div>
+                    <input type="number" class="setting-input" id="attachmentMaxMb" min="1" max="102400" placeholder="10">
+                    <span class="setting-unit">MB</span>
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">
+                        <strong><?php echo htmlspecialchars(t('system.security.max_total')); ?></strong>
+                        <?php echo htmlspecialchars(t('system.security.max_total_hint')); ?>
+                    </div>
+                    <input type="number" class="setting-input" id="attachmentMaxTotalMb" min="0" max="102400" placeholder="0">
+                    <span class="setting-unit">MB</span>
+                </div>
+                <div class="info-note" id="phpLimitsNote" data-browser-cap="<?php echo $browserCap === PHP_INT_MAX ? 0 : (int)$browserCap; ?>">
+                    <?php echo htmlspecialchars(t('system.security.php_limits', [
+                        'upload' => $phpMb($phpLim['upload_max_filesize']),
+                        'post'   => $phpMb($phpLim['post_max_size']),
+                        'memory' => $phpMb($phpLim['memory_limit']),
+                    ])); ?>
+                    <span id="phpLimitsWarn" style="display:none;color:var(--danger-text);font-weight:600;"><br><?php echo htmlspecialchars(t('system.security.php_limits_warn')); ?></span>
+                </div>
+                <div class="info-note">
+                    <?php echo t('system.security.oversize_signpost', ['link' => '<a href="' . htmlspecialchars(BASE_URL) . 'tickets/settings/?tab=mailboxes#oversize">' . htmlspecialchars(t('system.security.oversize_signpost_link')) . '</a>']); ?>
+                </div>
                 <div class="info-note">
                     <?php echo htmlspecialchars(t('system.security.allowed_extensions_note')); ?>
                 </div>
@@ -349,6 +385,9 @@ $translationNamespaces = ['common', 'system'];
                 // Empty is a real, meaningful value here ("everything we consider safe"),
                 // so it must NOT fall back to a placeholder list the way the numbers above do.
                 document.getElementById('attachmentAllowedExtensions').value = s.attachment_allowed_extensions || '';
+                document.getElementById('attachmentMaxMb').value = s.attachment_max_mb || '10';
+                document.getElementById('attachmentMaxTotalMb').value = s.attachment_max_total_mb || '0';
+                checkPhpLimits();
             }
         } catch (e) {
             console.error('Failed to load settings', e);
@@ -369,7 +408,9 @@ $translationNamespaces = ['common', 'system'];
             max_ip_attempts: document.getElementById('maxIpAttempts').value,
             min_ip_attempts: document.getElementById('minIpAttempts').value,
             attachment_rejected_behaviour: document.getElementById('attachmentRejectedBehaviour').value,
-            attachment_allowed_extensions: document.getElementById('attachmentAllowedExtensions').value.trim()
+            attachment_allowed_extensions: document.getElementById('attachmentAllowedExtensions').value.trim(),
+            attachment_max_mb: String(Math.max(1, parseInt(document.getElementById('attachmentMaxMb').value, 10) || 10)),
+            attachment_max_total_mb: String(Math.max(0, parseInt(document.getElementById('attachmentMaxTotalMb').value, 10) || 0))
         };
 
         try {
@@ -390,6 +431,15 @@ $translationNamespaces = ['common', 'system'];
 
         btn.disabled = false;
     });
+
+    // Warn when the limit is above what PHP accepts from a browser - those
+    // uploads would be refused before FreeITSM sees them (GH #170).
+    function checkPhpLimits() {
+        const cap = parseInt(document.getElementById('phpLimitsNote').dataset.browserCap, 10) || 0;
+        const mb = parseInt(document.getElementById('attachmentMaxMb').value, 10) || 0;
+        document.getElementById('phpLimitsWarn').style.display = (cap > 0 && mb * 1048576 > cap) ? '' : 'none';
+    }
+    document.getElementById('attachmentMaxMb').addEventListener('input', checkPhpLimits);
 
     loadSettings();
     </script>
