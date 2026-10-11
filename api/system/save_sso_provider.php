@@ -93,6 +93,8 @@ $profileSyncMode    = in_array($data['profile_sync_mode'] ?? '', ['always', 'ini
 $defaultModules  = isset($data['default_modules']) && trim($data['default_modules']) !== ''
                    ? trim($data['default_modules']) : null;
 $sortOrder       = (int)($data['sort_order'] ?? 0);
+// 3.5.0: companies an auto-created analyst can see (ssoApplyJitCompanies()).
+$jitCompanyIn    = in_array($data['jit_company_access'] ?? '', ['all', 'provider', 'none'], true) ? $data['jit_company_access'] : 'all';
 // SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
 $groupClaimIn    = mb_substr(trim((string)($data['oidc_group_claim'] ?? '')), 0, 100);
 $analystGroupIn  = mb_substr(trim((string)($data['oidc_analyst_group'] ?? '')), 0, 255);
@@ -356,6 +358,8 @@ try {
     $vals[] = $portalDomainList ? implode("\n", $portalDomainList) : null;
     $cols[] = 'portal_show_button';
     $vals[] = $portalShowButton;
+    $cols[] = 'jit_company_access';
+    $vals[] = $protocol === 'carddav' ? 'all' : $jitCompanyIn;   // an address book creates nobody
     // Claim mapping (3.5.0): an OIDC provider's; cleared for any other protocol.
     $isOidcRow = $protocol === 'oidc';
     array_push($cols, 'oidc_group_claim', 'oidc_analyst_group', 'oidc_access_rules');
@@ -387,7 +391,7 @@ try {
         if (!$existing) bail('Provider not found');
 
         if ($existing['protocol'] === $protocol) {
-            $readable = ['enabled', 'default_modules', 'sort_order', 'tenant_id'];
+            $readable = ['enabled', 'default_modules', 'sort_order', 'tenant_id', 'jit_company_access'];
             if ($protocol === 'oidc') {
                 $readable = array_merge($readable, ['auto_create_users', 'auto_create_analysts', 'analyst_fallback_mode', 'require_verified_email', 'profile_sync_mode', 'issuer_url', 'client_id', 'scopes',
                                                     'portal_email_domains', 'portal_show_button',
@@ -443,6 +447,10 @@ try {
         }
     }
 
+    if (!ssoJitCompanyReady($conn)) {
+        $i = array_search('jit_company_access', $cols, true);
+        if ($i !== false) { array_splice($cols, $i, 1); array_splice($vals, $i, 1); }
+    }
     // Claim mapping: leave the columns out until Database Verification adds them;
     // otherwise an analyst group or rules need the claim they are read from.
     require_once '../../includes/sso_claims.php';

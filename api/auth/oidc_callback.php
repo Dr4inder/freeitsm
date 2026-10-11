@@ -600,5 +600,7 @@ function oidcCreateAnalyst(PDO $conn, int $providerId, string $preferredUser, st
             try { $ins->execute([$analystId, $m]); } catch (Exception $e) { /* ignore dupes */ }
         }
     }
+    require_once __DIR__ . '/../../includes/sso_identity.php';
+    ssoApplyJitCompanies($conn, $providerId, $analystId);   // which companies (3.5.0)
     return $analystId;
 }

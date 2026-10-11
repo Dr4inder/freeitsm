@@ -30,6 +30,7 @@ try {
     $jitCols = ssoJitColumnsReady($conn)
         ? 'p.auto_create_analysts, p.analyst_fallback_mode, p.profile_sync_mode'
         : "p.auto_create_users AS auto_create_analysts, 'block' AS analyst_fallback_mode, 'never' AS profile_sync_mode";
+    $claimColsJit = ssoJitCompanyReady($conn) ? 'p.jit_company_access' : "'all' AS jit_company_access";
     // And the claim-mapping columns (3.5.0).
     require_once '../../includes/sso_claims.php';
     $claimCols = ssoClaimsReady($conn)
@@ -42,7 +43,7 @@ try {
 
     $stmt = $conn->query(
         "SELECT p.id, p.display_name, p.protocol, p.issuer_url, p.client_id, p.client_secret,
-                p.scopes, p.enabled, p.auto_create_users, $jitCols, $portalCols, $claimCols, p.require_verified_email,
+                p.scopes, p.enabled, p.auto_create_users, $jitCols, $portalCols, $claimCols, $claimColsJit, p.require_verified_email,
                 p.default_modules, p.sort_order, p.tenant_id, t.name AS tenant_name,
                 p.ldap_host, p.ldap_port, p.ldap_encryption, p.ldap_bind_dn, p.ldap_bind_password,
                 p.ldap_base_dn, p.ldap_user_filter, p.ldap_attr_username, p.ldap_attr_email,
@@ -75,6 +76,7 @@ try {
             'portal_email_domains'   => $r['portal_email_domains'] ?? null,
             'portal_show_button'     => (int)($r['portal_show_button'] ?? 1),
             'default_modules'   => $r['default_modules'],
+            'jit_company_access'    => $r['jit_company_access'] ?: 'all',
             // SSO claim mapping (3.5.0) - see includes/sso_claims.php.
             'oidc_group_claim'      => $r['oidc_group_claim'],
             'oidc_analyst_group'    => $r['oidc_analyst_group'],

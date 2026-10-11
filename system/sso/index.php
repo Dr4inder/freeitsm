@@ -599,6 +599,18 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
                     <div class="hint"><?php echo t('system.sso.field_default_modules_hint', ['example' => '<code>tickets, knowledge</code>', 'strong' => '<strong>' . htmlspecialchars(t('system.sso.field_default_modules_strong')) . '</strong>']); ?></div>
                     <input type="text" id="fDefaultModules" placeholder="<?php echo htmlspecialchars(t('system.sso.field_default_modules_placeholder')); ?>">
                 </div>
+                <?php /* 3.5.0: companies for auto-created analysts - multi-company only. */ ?>
+                <?php if ($ssoMultiTenant): ?>
+                <div class="form-field" id="jitCompanyField">
+                    <label for="fJitCompany"><?php echo htmlspecialchars(t('system.sso.field_jit_company')); ?></label>
+                    <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_jit_company_hint')); ?></div>
+                    <select id="fJitCompany" style="width:100%;padding:8px;border:1px solid var(--border,#ccc);border-radius:4px;background:var(--surface,#fff);color:var(--text,#333);">
+                        <option value="all"><?php echo htmlspecialchars(t('system.sso.jit_company_all')); ?></option>
+                        <option value="provider"><?php echo htmlspecialchars(t('system.sso.jit_company_provider')); ?></option>
+                        <option value="none"><?php echo htmlspecialchars(t('system.sso.jit_company_none')); ?></option>
+                    </select>
+                </div>
+                <?php endif; ?>
                 <div class="form-field" id="analystFallbackField">
                     <label><?php echo htmlspecialchars(t('system.sso.field_fallback_mode')); ?></label>
                     <div class="hint"><?php echo htmlspecialchars(t('system.sso.field_fallback_mode_hint')); ?></div>
@@ -875,6 +887,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         // accounts JIT sign-in creates, so it only shows while that is on.
         // Nothing signs in through an address book, so there are none.
         $('defaultModulesField').style.display = (!isCardDav && autoAnalysts) ? '' : 'none';
+        if ($('jitCompanyField')) $('jitCompanyField').style.display = (!isCardDav && autoAnalysts) ? '' : 'none';   // 3.5.0
         // "Shown on the login button" is false for an address book.
         $('displayNameHint').textContent = isCardDav
             ? window.t('system.sso.field_display_name_hint_carddav')
@@ -960,6 +973,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
         document.getElementById('fRequireVerified').checked = p ? !!p.require_verified_email : false;
         document.getElementById('fProfileSyncMode').value = (p && p.profile_sync_mode) ? p.profile_sync_mode : 'never';
         document.getElementById('fDefaultModules').value = p ? (p.default_modules || '') : '';
+        if ($('fJitCompany')) $('fJitCompany').value = (p && p.jit_company_access) ? p.jit_company_access : 'all';
         // Claim mapping (3.5.0), and what the last sign-in actually sent.
         $('fOidcGroupClaim').value   = p ? (p.oidc_group_claim || '') : '';
         $('fOidcAnalystGroup').value = p ? (p.oidc_analyst_group || '') : '';
@@ -1193,6 +1207,7 @@ $signoutPortalUri  = $signoutAnalystUri . 'self-service/login.php';
             require_verified_email: document.getElementById('fRequireVerified').checked ? 1 : 0,
             profile_sync_mode: document.getElementById('fProfileSyncMode').value || 'never',
             default_modules: document.getElementById('fDefaultModules').value.trim(),
+            jit_company_access: $('fJitCompany') ? $('fJitCompany').value : undefined,
             oidc_group_claim: $('fOidcGroupClaim').value.trim(),
             oidc_analyst_group: $('fOidcAnalystGroup').value.trim(),
             oidc_access_rules: $('fOidcAccessRules').value,

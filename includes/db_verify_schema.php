@@ -208,6 +208,8 @@ return [
         'require_verified_email' => 'TINYINT(1) NOT NULL DEFAULT 0',
         'profile_sync_mode'      => "ENUM('always','initial','never') NOT NULL DEFAULT 'never'",
         'default_modules'        => 'VARCHAR(500) NULL',
+        // 3.5.0: companies an auto-created analyst can see - all | provider | none. See ssoApplyJitCompanies().
+        'jit_company_access'     => "VARCHAR(10) NOT NULL DEFAULT 'all'",
         // SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
         'oidc_group_claim'       => 'VARCHAR(100) NULL',
         'oidc_analyst_group'     => 'VARCHAR(255) NULL',

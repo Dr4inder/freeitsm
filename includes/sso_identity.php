@@ -177,3 +177,50 @@ function ssoPortalProviderForEmail(PDO $conn, string $email): ?array {
     }
     return null;
 }
+
+/** True once Database Verification has added auth_providers.jit_company_access (3.5.0). */
+function ssoJitCompanyReady(PDO $conn): bool {
+    static $ready = null;
+    if ($ready === null) {
+        try { $ready = (bool)$conn->query("SHOW COLUMNS FROM auth_providers LIKE 'jit_company_access'")->fetch(); }
+        catch (PDOException $e) { $ready = false; }
+    }
+    return $ready;
+}
+
+/**
+ * Which companies an analyst that SSO or LDAP has just CREATED can see (3.5.0).
+ * Called by oidcCreateAnalyst() and ldapCreateAnalyst() right after the insert.
+ *
+ * analysts.can_access_all_tenants defaults to 1, so until now every analyst a
+ * provider created could see every company. On a multi-company install a
+ * provider can now say:
+ *   all       - every company (the default: what it always did);
+ *   provider  - only the provider's own company (System -> SSO -> Company), or
+ *               the Default company for a provider that belongs to no company;
+ *   none      - no company until an administrator grants some.
+ * Only at creation: an analyst whose access was changed by hand is never touched.
+ * Single-company installs: nothing to decide.
+ */
+function ssoApplyJitCompanies(PDO $conn, int $providerId, int $analystId): void {
+    try {
+        require_once __DIR__ . '/tenancy.php';
+        if (!ssoJitCompanyReady($conn) || !isMultiTenant($conn)) return;
+        $p = $conn->prepare("SELECT jit_company_access, tenant_id FROM auth_providers WHERE id = ?");
+        $p->execute([$providerId]);
+        $row = $p->fetch(PDO::FETCH_ASSOC);
+        $mode = $row['jit_company_access'] ?? 'all';
+        if ($mode !== 'provider' && $mode !== 'none') return;
+        $conn->prepare("UPDATE analysts SET can_access_all_tenants = 0 WHERE id = ?")->execute([$analystId]);
+        $conn->prepare("DELETE FROM analyst_tenant_access WHERE analyst_id = ?")->execute([$analystId]);
+        if ($mode === 'provider') {
+            $tenant = !empty($row['tenant_id']) ? (int)$row['tenant_id'] : getDefaultTenantId($conn);
+            $conn->prepare("INSERT INTO analyst_tenant_access (analyst_id, tenant_id) VALUES (?, ?)")->execute([$analystId, $tenant]);
+        }
+    } catch (Throwable $e) {
+        // Fail CLOSED: an analyst whose companies could not be set sees none,
+        // rather than all of them because a write failed halfway.
+        try { $conn->prepare("UPDATE analysts SET can_access_all_tenants = 0 WHERE id = ?")->execute([$analystId]); } catch (Throwable $e2) {}
+        error_log('ssoApplyJitCompanies: ' . $e->getMessage());
+    }
+}

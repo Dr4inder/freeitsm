@@ -207,6 +207,9 @@ CREATE TABLE IF NOT EXISTS `auth_providers` (
     `require_verified_email` TINYINT(1) NOT NULL DEFAULT 0,
     `profile_sync_mode`      ENUM('always','initial','never') NOT NULL DEFAULT 'never',
     `default_modules`        VARCHAR(500) NULL,
+    -- 3.5.0: which companies an analyst this provider auto-creates can see:
+    -- all (as before) | provider (the provider's company; Default for a global one) | none.
+    `jit_company_access`     VARCHAR(10) NOT NULL DEFAULT 'all',
     -- SSO claim mapping (3.5.0, OIDC only) - see includes/sso_claims.php.
     `oidc_group_claim`       VARCHAR(100) NULL,   -- the claim holding groups/roles, e.g. groups, realm_access.roles
     `oidc_analyst_group`     VARCHAR(255) NULL,   -- only members may sign in as analysts (as ldap_analyst_group)

@@ -106,6 +106,10 @@ function settingKeyOwners(): array
         'self_service_registration_enabled' => ['module' => 'system', 'cap' => null, 'tab' => 'security'],
         // The first word of every page title - System -> Branding (moved from Tickets' General tab).
         'system_name'              => ['module' => 'system', 'cap' => null, 'tab' => 'branding'],
+        // The "Back to ..." link in the headers (3.5.0) - includes/back_link.php.
+        'back_link_label'          => ['module' => 'system', 'cap' => null, 'tab' => 'branding'],
+        'back_link_url'            => ['module' => 'system', 'cap' => null, 'tab' => 'branding'],
+        'back_link_where'          => ['module' => 'system', 'cap' => null, 'tab' => 'branding'],
         'trusted_device_days'      => ['module' => 'system', 'cap' => null, 'tab' => 'security'],
         'password_expiry_days'     => ['module' => 'system', 'cap' => null, 'tab' => 'security'],
         'max_failed_logins'        => ['module' => 'system', 'cap' => null, 'tab' => 'security'],

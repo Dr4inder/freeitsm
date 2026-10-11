@@ -297,6 +297,9 @@ if ($ssLogoOnPage) {
          * empty bell in front of every requester would be clutter that invites a
          * question.
          */
+        // The "Back to ..." link (3.5.0) - System -> Branding. Nothing unless set up.
+        try { require_once __DIR__ . '/../../includes/back_link.php'; echo backLinkHtml(connectToDatabase(), 'portal'); } catch (Throwable $e) {}
+
         $ssShowBell = false;
         try {
             require_once __DIR__ . '/../../includes/managers.php';

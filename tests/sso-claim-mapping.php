@@ -97,6 +97,39 @@ try {
     $plan = ssoApplyClaimAccess($conn, $adminRules, $X, ['Desk']);
     $acc = AnalystsService::access($conn, $X, false);
     ok('the last admin keeps admin, the rest still applies', $acc['is_admin'] === true && $acc['modules'] === ['tickets'] && $plan['is_admin'] === null, json_encode($acc));
+
+    echo "\n-- Companies for analysts a provider creates (jit_company_access)\n";
+    require_once __DIR__ . '/../includes/ldap.php';
+    if (!isMultiTenant($conn) || !ssoJitCompanyReady($conn)) {
+        echo "  SKIP  needs a multi-company install and Database Verification\n";
+    } else {
+        $default = getDefaultTenantId($conn);
+        $client = (int)$conn->query("SELECT id FROM tenants WHERE id <> $default ORDER BY id LIMIT 1")->fetchColumn();
+        $mkProvider = function (string $mode, ?int $tenant) use ($conn): int {
+            $conn->prepare("INSERT INTO auth_providers (display_name, protocol, issuer_url, client_id, jit_company_access, tenant_id) VALUES ('ZZ jit', 'ldap', '', '', ?, ?)")
+                 ->execute([$mode, $tenant]);
+            return (int)$conn->lastInsertId();
+        };
+        $companies = function (int $id) use ($conn): array {
+            $a = $conn->query("SELECT can_access_all_tenants FROM analysts WHERE id = $id")->fetchColumn();
+            $t = $conn->query("SELECT tenant_id FROM analyst_tenant_access WHERE analyst_id = $id ORDER BY tenant_id")->fetchAll(PDO::FETCH_COLUMN);
+            return [(int)$a, array_map('intval', $t)];
+        };
+        $n = 0;
+        $make = function (int $providerId) use ($conn, &$n): int {
+            $n++;
+            return ldapCreateAnalyst($conn, $providerId, "zzjit$n", "ZZ Jit $n", "zzjit$n@example.invalid", null);
+        };
+        ok('"all" (the default): every company, as before', $companies($make($mkProvider('all', null))) === [1, []]);
+        ok('"none": no companies', $companies($make($mkProvider('none', null))) === [0, []]);
+        if ($client) {
+            ok('"provider" on a client company\'s provider: that company only', $companies($make($mkProvider('provider', $client))) === [0, [$client]]);
+        }
+        ok('"provider" on a global provider: the Default company', $companies($make($mkProvider('provider', null))) === [0, [$default]]);
+        $ex = AnalystsService::create($conn, $actor, ['email' => 'zzjitkeep@example.invalid']);
+        $conn->exec("UPDATE analysts SET can_access_all_tenants = 1 WHERE id = $ex");
+        ok('(control) only applied at creation - nobody else is touched', $companies($ex) === [1, []]);
+    }
 } catch (Throwable $e) {
     $fail++;
     echo "  FAIL  unexpected: " . get_class($e) . ': ' . $e->getMessage() . ' @ ' . basename($e->getFile()) . ':' . $e->getLine() . "\n";

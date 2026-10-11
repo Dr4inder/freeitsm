@@ -125,6 +125,7 @@ require __DIR__ . '/_top.php';
         <li><strong>Auto-create portal requesters</strong> &mdash; someone signing in on the <em>self-service portal</em> for the first time gets a portal account. Leave it off if only people you already know (for example, contacts created from tickets) should get in.</li>
         <li><strong>Auto-create IT analysts</strong> &mdash; someone signing in on the <em>analyst</em> login for the first time gets an analyst account. Works for OpenID Connect and LDAP providers.</li>
         <li><strong>Default module access for auto-created analysts</strong> &mdash; shown while the analyst switch is on. List the modules new analysts get (for example <code>tickets, knowledge</code>). Blank means every module, so set it for a pilot.</li>
+        <li><strong>Company access for auto-created analysts</strong> (multi-company installs) &mdash; which companies a new analyst can see: <strong>every company</strong> (the default, as before), <strong>only this provider's company</strong> (the Default company for a provider that belongs to no company), or <strong>none</strong> until an administrator grants some. It only applies when the account is created.</li>
     </ul>
 
     <h4>Someone with no analyst account signs in on the analyst login</h4>

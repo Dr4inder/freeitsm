@@ -758,6 +758,18 @@ return [
         'check'    => ['setting', 'branding_logo_path', 'nonempty'],
     ],
     [
+        'id'       => 'system.branding_back_link',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'look',
+        'title'    => 'A link back to your site',
+        'what'     => 'A small "Back to ..." link at the top of the portal, the analyst screens or both, to the intranet or website people reach FreeITSM from.',
+        'why'      => 'People who arrive from your intranet have an obvious way home, so the portal feels like part of it rather than a separate place.',
+        'done'     => 'A link back has been set up in System -> Branding.',
+        'link'     => 'system/branding/#back-link',
+        'check'    => ['setting', 'back_link_url', 'nonempty'],
+    ],
+    [
         'id'       => 'system.branding_login_design',
         'module'   => 'system',
         'tier'     => 'extra',

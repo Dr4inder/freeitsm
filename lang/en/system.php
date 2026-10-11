@@ -361,6 +361,15 @@ return [
 
         // Landing page (discussion #63).
         'system_name_heading' => 'System name',
+        'back_link_heading'       => 'Link back to your site',
+        'back_link_desc'          => 'A link at the top of the screen back to your own site - the intranet or website people reach FreeITSM from. Leave both boxes blank for no link.',
+        'back_link_label'         => 'Link text',
+        'back_link_label_ph'      => 'Back to the intranet',
+        'back_link_url'           => 'Address',
+        'back_link_where'         => 'Show it on',
+        'back_link_where_portal'  => 'The self-service portal',
+        'back_link_where_analyst' => 'The analyst screens',
+        'back_link_where_both'    => 'Both',
         'system_name_desc'    => 'The first part of every page title - the name in the browser tab and in bookmarks, on every page in every module. Leave it blank to use "Service Desk".',
         'landing_heading' => 'Where people start',
         'landing_desc'    => 'Where someone is sent when they open FreeITSM without being logged in.',
@@ -1362,6 +1371,11 @@ return [
         'profile_sync_initial'         => 'Sync on account creation, allow local edits afterward',
         'profile_sync_never'           => 'Never sync attributes (manage profile locally)',
         'field_default_modules' => 'Default module access for auto-created analysts',
+        'field_jit_company'      => 'Company access for auto-created analysts',
+        'field_jit_company_hint' => 'Which companies an analyst created by this provider can see. Only applies when the account is created; change it afterwards in System → Analysts.',
+        'jit_company_all'        => 'Every company (as before)',
+        'jit_company_provider'   => 'Only this provider\'s company (the Default company for a global provider)',
+        'jit_company_none'       => 'None until an administrator grants some',
         // SSO claim mapping (3.5.0) - see includes/sso_claims.php.
         'claims_heading'   => 'Groups from the identity provider',
         'claims_intro'     => 'Optional. Use the groups your identity provider sends to decide who is an analyst and what they can open. Checked again at every sign-in, so access follows the identity provider.',

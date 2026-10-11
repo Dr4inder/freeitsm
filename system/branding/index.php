@@ -346,6 +346,25 @@ $translationNamespaces = ['common', 'system'];
                        placeholder="Service Desk" autocomplete="off">
             </div>
 
+            <!-- The "Back to ..." link (3.5.0) - includes/back_link.php -->
+            <div class="settings-card">
+                <h3 id="back-link"><?php echo htmlspecialchars(t('system.branding.back_link_heading')); ?></h3>
+                <p class="card-desc"><?php echo htmlspecialchars(t('system.branding.back_link_desc')); ?></p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+                    <label style="flex:1 1 200px;font-size:13px;"><?php echo htmlspecialchars(t('system.branding.back_link_label')); ?>
+                        <input type="text" id="backLinkLabel" class="slot-input" maxlength="60" autocomplete="off"
+                               placeholder="<?php echo htmlspecialchars(t('system.branding.back_link_label_ph')); ?>"></label>
+                    <label style="flex:2 1 280px;font-size:13px;"><?php echo htmlspecialchars(t('system.branding.back_link_url')); ?>
+                        <input type="url" id="backLinkUrl" class="slot-input" maxlength="500" autocomplete="off" placeholder="https://intranet.example.com"></label>
+                    <label style="flex:1 1 180px;font-size:13px;"><?php echo htmlspecialchars(t('system.branding.back_link_where')); ?>
+                        <select id="backLinkWhere" class="slot-input">
+                            <option value="portal"><?php echo htmlspecialchars(t('system.branding.back_link_where_portal')); ?></option>
+                            <option value="analyst"><?php echo htmlspecialchars(t('system.branding.back_link_where_analyst')); ?></option>
+                            <option value="both"><?php echo htmlspecialchars(t('system.branding.back_link_where_both')); ?></option>
+                        </select></label>
+                </div>
+            </div>
+
             <!-- Logo -->
             <div class="settings-card">
                 <h3 id="logo"><?php echo htmlspecialchars(t('system.branding.logo_heading')); ?></h3>
@@ -696,6 +715,10 @@ $translationNamespaces = ['common', 'system'];
             // Sits outside `branding` — it is an install behaviour, not a slot (#63).
             document.getElementById('landingPage').value = data.landing_page || 'analyst';
             document.getElementById('systemName').value = data.system_name || '';
+            const bl = data.back_link || {};
+            document.getElementById('backLinkLabel').value = bl.label || '';
+            document.getElementById('backLinkUrl').value = bl.url || '';
+            document.getElementById('backLinkWhere').value = bl.where || 'portal';
             const fdk = data.files_desktop || {};
             document.getElementById('filesLogoMode').value = fdk.logo_mode || 'company';
             document.getElementById('filesLogoPosition').value = fdk.logo_position || 'top-right';
@@ -1011,6 +1034,9 @@ $translationNamespaces = ['common', 'system'];
         fd.append('footer_right',  document.getElementById('footerRight').value);
         fd.append('landing_page',  document.getElementById('landingPage').value);
         fd.append('system_name',   document.getElementById('systemName').value.trim());
+        fd.append('back_link_label', document.getElementById('backLinkLabel').value.trim());
+        fd.append('back_link_url',   document.getElementById('backLinkUrl').value.trim());
+        fd.append('back_link_where', document.getElementById('backLinkWhere').value);
         fd.append('files_logo_mode',     document.getElementById('filesLogoMode').value);
         fd.append('files_logo_position', document.getElementById('filesLogoPosition').value);
 

@@ -363,6 +363,7 @@ function systemAreaSettings(): array
         ],
         'branding/' => [
             ['system-name',     'system.branding.system_name_heading'],
+            ['back-link',       'system.branding.back_link_heading'],
             ['logo',            'system.branding.logo_heading'],
             ['start-page',      'system.branding.landing_heading'],
             ['files-desktop',   'system.branding.files_heading'],

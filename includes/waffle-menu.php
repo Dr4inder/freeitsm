@@ -1871,6 +1871,8 @@ function renderHeaderRight($analyst_name, $path_prefix) {
     </style>
 
     <div class="header-right">
+        <?php // The "Back to ..." link (3.5.0) - System -> Branding. Nothing unless set up.
+        try { if (!function_exists('connectToDatabase')) require_once __DIR__ . '/functions.php'; require_once __DIR__ . '/back_link.php'; echo backLinkHtml(connectToDatabase(), 'analyst'); } catch (Throwable $e) {} ?>
         <?php echo $__tenantSwitcherHtml; ?>
         <?php renderNotificationBell($path_prefix); ?>
         <?php renderWarRoomAlerts($path_prefix); ?>

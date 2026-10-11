@@ -40,6 +40,8 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2304 | System            | Fix         | Security: a deactivated analyst kept every module (and an admin kept System) until their session ended; an inactive analyst now has no modules and is not an admin, so the next click is refused, and the System page gate asks the database rather than the session flag. |
 | 2305 | REST API          | Improvement | PATCH /users/{id} takes is_active (false = marked as left) and requesters read back with is_active. |
 | 2306 | System            | Feature     | SSO claim mapping (proposed in PR #174): an OIDC provider's group claim, analyst group (only members sign in as / are created as analysts, as LDAP) and access rules (group = modules / capabilities / all-modules / admin, re-applied at every analyst sign-in); userinfo fetched when a group claim is set; System -> SSO shows what the last sign-in sent; rules validated on save. |
+| 2307 | System            | Feature     | System -> Branding: a "Back to ..." link (text, http(s) address, portal / analyst / both) shown at the top of the portal and/or every analyst header; addresses validated on save and again when drawn (proposed in PR #174). |
+| 2308 | System            | Improvement | SSO and LDAP providers choose which companies an analyst they auto-create can see: every company (default, as before), only the provider's company, or none; applied only at creation. |
 
 
 

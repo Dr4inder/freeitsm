@@ -87,6 +87,8 @@ try {
         ],
         // Which front door "/" sends an unauthenticated visitor to (#63).
         'landing_page' => landingInstallDefault($conn),
+        // The "Back to ..." link (3.5.0).
+        'back_link' => (function () use ($conn) { require_once '../../includes/back_link.php'; return backLinkSettings($conn); })(),
         // The first word of every page title (GH #173). Raw - blank means the
         // default, and the box shows that as its placeholder.
         'system_name' => (function () use ($conn) {

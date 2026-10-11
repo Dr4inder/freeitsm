@@ -31,6 +31,21 @@ require __DIR__ . '/_top.php';
     <div class="help-note"><strong>Moved in 3.5.0:</strong> it used to be under Tickets &rarr; Settings &rarr; General, which now points here. A name you had already set there is kept.</div>
 </div>
 
+<!-- Link back to your site (3.5.0) -->
+<div class="help-section" id="back-link">
+    <div class="help-section-header"><?php echo helpSectionNum('back-link'); ?>
+        <div>
+            <h3>Link back to your site</h3>
+            <p>A small link at the top of the screen back to your own site - the intranet or website people reach FreeITSM from.</p>
+        </div>
+    </div>
+    <p>Fill in the <strong>Link text</strong> (for example <em>Back to the intranet</em>) and the <strong>Address</strong>, choose whether it shows on the <strong>self-service portal</strong>, the <strong>analyst screens</strong> or <strong>both</strong>, and press <strong>Save</strong>. Leave both boxes blank for no link.</p>
+    <ul>
+        <li>The address must start with <code>https://</code> or <code>http://</code>.</li>
+        <li>On the analyst screens, where the navigation bar is already full, it shows as just an arrow on screens narrower than about 1700 pixels - the words appear when you point at it. On a phone the portal shows just the arrow too.</li>
+    </ul>
+</div>
+
 <!-- 2. Logo -->
 <div class="help-section" id="logo">
     <div class="help-section-header"><?php echo helpSectionNum('logo'); ?>

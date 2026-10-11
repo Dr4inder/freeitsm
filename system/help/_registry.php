@@ -151,6 +151,7 @@ function getHelpTopics() {
             'sections' => [
                 ['id' => 'overview', 'label' => 'Overview'],
                 ['id' => 'name',     'label' => 'System name'],
+                ['id' => 'back-link', 'label' => 'Link back to your site'],
                 ['id' => 'logo',     'label' => 'Logo'],
                 ['id' => 'slots',    'label' => 'Header & footer text'],
                 ['id' => 'tokens',   'label' => 'Tokens'],
