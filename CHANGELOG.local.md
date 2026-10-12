@@ -18,6 +18,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2314 | Files             | Fix         | Cut and Copy were unavailable whenever a shortcut was among the selected items; shortcuts now cut, copy and paste like files (paste places them as a drag does), and a shortcut's own right-click menu offers Cut and Copy. |
 | 2315 | Files             | Improvement | Search and the "Filter this folder" box accept * and ? as Windows-style wildcards over the whole name (e.g. *.png, report*); plain text still matches anywhere in the name. |
 | 2316 | Files             | Feature     | Shortcuts to Knowledge articles: "Shortcut to article..." on a folder's or the desktop's right-click menu picks an article the person can read; double-clicking opens a sandboxed preview window with "Open in Knowledge" (new tab), and a folder shortcut is only listed for people who can read the article (Knowledge's own visibility clause, no admin floor). |
+| 2317 | Knowledge         | Fix         | Opening a link to an article (?article=N) no longer shows the folder's article list for a moment before the article; the list is hidden from the first paint and only comes back if the article cannot be opened. |
 
 
 

@@ -3153,10 +3153,17 @@ function blobToBase64(blob) {
 
     if (!articleId) return;
 
+    // Keep the list out of sight while the article is on its way - otherwise the
+    // folder's contents show for a moment and then get swapped for the article.
+    // Put back below if the article cannot be opened.
+    const listView = document.getElementById('articleListView');
+    if (listView) listView.style.display = 'none';
+
     const checkAndLoad = setInterval(() => {
         if (articles.length > 0 || document.getElementById('articleList').innerHTML.includes('No articles')) {
             clearInterval(checkAndLoad);
             Promise.resolve(viewArticle(articleId)).then(() => {
+                if (!currentArticle || String(currentArticle.id) !== String(articleId)) { showView('list'); return; }
                 if (!wantEdit) return;
                 // editCurrentArticle populates TinyMCE — wait until the
                 // editor instance is ready so the article body isn't lost.
@@ -3170,7 +3177,11 @@ function blobToBase64(blob) {
             });
         }
     }, 100);
-    setTimeout(() => clearInterval(checkAndLoad), 5000);
+    // Gave up waiting for the list: show it rather than leave an empty page.
+    setTimeout(() => {
+        clearInterval(checkAndLoad);
+        if (!currentArticle && listView && listView.style.display === 'none') showView('list');
+    }, 5000);
 })();
 
 // Server-stamped UTC timestamps (created/modified/archived). Parse as UTC and

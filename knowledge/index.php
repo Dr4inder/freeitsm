@@ -112,8 +112,10 @@ $sidebarHoverClass = $sidebarMode === 'hover' ? ' sidebar-hover' : '';
 
         <!-- Main content area -->
         <div class="knowledge-main">
-            <!-- Article list view -->
-            <div class="article-list-view" id="articleListView">
+            <!-- Article list view. Hidden from the start when the link names an
+                 article, so it does not flash up before the article replaces it
+                 (knowledge.js shows it again if the article cannot be opened). -->
+            <div class="article-list-view" id="articleListView"<?php if (!empty($_GET['article']) || !empty($_GET['id'])) echo ' style="display:none"'; ?>>
                 <!-- Where you are, when you are inside a folder. Hidden at "All
                      articles", which is not a place you can be inside. -->
                 <nav class="kb-breadcrumb" id="kbBreadcrumb" style="display:none;"></nav>
@@ -560,7 +562,7 @@ $sidebarHoverClass = $sidebarMode === 'hover' ? ' sidebar-hover' : '';
     <script>window.KB_SHOW_DOMAINS = <?php echo $showDomains ? 'true' : 'false'; ?>; window.KB_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.KB_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="../assets/js/domain-links.js?v=1"></script>
     <script src="../assets/js/project-links.js?v=1"></script>
-    <script src="../assets/js/knowledge.js?v=59"></script>
+    <script src="../assets/js/knowledge.js?v=60"></script>
     <!-- Prism.js for code syntax highlighting when viewing articles -->
     <script src="../assets/js/vendor/prism.min.js"></script>
     <script src="../assets/js/vendor/prism-powershell.min.js"></script>
