@@ -498,7 +498,9 @@ body[data-navbar="auto"] .fd-navsensor { display: block; position: fixed; top: 0
 .fd-tr-done .fd-tr-bar i { background: var(--success-accent); }
 .fd-tr-error .fd-tr-bar i { background: var(--danger-accent); width: 100% !important; }
 .fd-tr-st { font-size: 11.5px; color: var(--text-dim); }
-.fd-tr-error .fd-tr-st { color: var(--danger-text); }
+.fd-tr-error .fd-tr-st { color: var(--danger-text); overflow-wrap: anywhere; }
+.fd-tr-help { margin-top: 4px; padding: 0; border: 0; background: none; color: var(--fil-accent); font: inherit; font-size: 11.5px; text-decoration: underline; cursor: pointer; }
+.fd-tr-help:hover { color: var(--fil-accent-hover); }
 .fd-tr-x { border: 0; background: transparent; color: var(--text-dim); font-size: 18px; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; }
 .fd-tr-x:hover { background: var(--surface-hover); color: var(--text); }
 .fd-tr-empty { padding: 30px; text-align: center; color: var(--text-dim); }

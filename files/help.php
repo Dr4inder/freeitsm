@@ -34,6 +34,7 @@ $sections = [
     'desktop'     => 5,
     'explorer'    => 7,
     'uploading'   => 4,
+    'upload_errors' => 7,
     'viewing'     => 6,
     'permissions' => 6,
     'inheritance' => 4,
@@ -128,18 +129,23 @@ $para = fn(string $k) => preg_replace(['/\*\*([^*]+)\*\*/', '/`([^`]+)`/'], ['<s
             for (const s of sections) if (s.el.offsetTop - 200 <= scrollTop) current = s.id;
             navLinks.forEach(link => link.classList.toggle('active', link.dataset.section === current));
         });
+        function goTo(id, behavior) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const containerTop = helpMain.getBoundingClientRect().top;
+            helpMain.scrollTo({ top: helpMain.scrollTop + (el.getBoundingClientRect().top - containerTop) - 20, behavior: behavior });
+            navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === id));
+        }
         navLinks.forEach(link => {
             link.addEventListener('click', function (e) {
                 e.preventDefault();
-                const el = document.getElementById(this.dataset.section);
-                if (el) {
-                    const containerTop = helpMain.getBoundingClientRect().top;
-                    helpMain.scrollTo({ top: helpMain.scrollTop + (el.getBoundingClientRect().top - containerTop) - 20, behavior: 'smooth' });
-                }
-                navLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
+                goTo(this.dataset.section, 'smooth');
             });
         });
+        // help.php#upload_errors lands on that section - the Transfers window's
+        // "Get help with this" links here, and changes the hash of an open window.
+        if (location.hash) goTo(location.hash.slice(1), 'auto');
+        window.addEventListener('hashchange', () => goTo(location.hash.slice(1), 'smooth'));
     </script>
     <?php if (!$embed): ?><script src="../assets/js/mobile.js?v=78"></script><?php endif; ?>
 </body>

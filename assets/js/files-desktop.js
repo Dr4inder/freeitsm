@@ -1174,11 +1174,14 @@
                 var row = h('div', 'fd-tr-row fd-tr-' + u.status);
                 row.dataset.up = u.id;
                 row.innerHTML = '<div class="fd-tr-ic">' + FI.file(u.name, 24) + '</div><div class="fd-tr-mid"><div class="fd-tr-name"></div>' +
-                    '<div class="fd-tr-bar"><i></i></div><div class="fd-tr-st"></div></div>' +
+                    '<div class="fd-tr-bar"><i></i></div><div class="fd-tr-st"></div>' +
+                    (u.status === 'error' ? '<button type="button" class="fd-tr-help">' + esc(L('up.get_help', 'Get help with this')) + '</button>' : '') + '</div>' +
                     ((u.status === 'queued' || u.status === 'uploading') ? '<button type="button" class="fd-tr-x" title="' + esc(L('btn.cancel', 'Cancel')) + '">&times;</button>' : '');
                 row.querySelector('.fd-tr-name').textContent = u.name;
                 var x = row.querySelector('.fd-tr-x');
                 if (x) x.addEventListener('click', function () { cancel(u); });
+                var hb = row.querySelector('.fd-tr-help');
+                if (hb) hb.addEventListener('click', function () { openHelp('upload_errors'); });
                 listEl.appendChild(row);
                 paintOne(u);
             });
@@ -1537,11 +1540,17 @@
         });
     }
 
-    function openHelp() {
+    /** Help, optionally at one section (an id in files/help.php, e.g. 'upload_errors'). */
+    function openHelp(section) {
         var w = WM.open({ kind: 'help', single: true, title: L('app.help', 'Help'), icon: FI.app('help', 16), width: 900, height: 600, geometry: geoFor('help') });
-        if (w.loaded) return;
+        var hash = typeof section === 'string' && section ? '#' + section : '';
+        if (w.loaded) {
+            // Already open: changing only the hash scrolls it there without a reload.
+            if (hash) { try { w.body.querySelector('iframe').contentWindow.location.hash = hash; } catch (e) { /* not loaded yet */ } }
+            return;
+        }
         w.loaded = true;
-        w.body.innerHTML = '<iframe class="fd-frame" src="' + esc(B.urls.help) + '" title="' + esc(L('app.help', 'Help')) + '"></iframe>';
+        w.body.innerHTML = '<iframe class="fd-frame" src="' + esc(B.urls.help + hash) + '" title="' + esc(L('app.help', 'Help')) + '"></iframe>';
     }
 
     // ════════════════════════════════════════════════════════════════════════

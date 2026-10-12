@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2313 | Files             | Improvement | Help has a new "When an upload fails" section explaining each upload error and its fix, and a failed row in Transfers has a "Get help with this" link that opens Help at that section. |
 
 
 
