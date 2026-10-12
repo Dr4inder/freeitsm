@@ -149,7 +149,7 @@ return [
         'tip' => 'Shortcut to {path}',
     ],
     'search' => [
-        'hint' => 'Type at least two letters.',
+        'hint' => 'Type at least two letters, or use * and ? as wildcards - for example *.png.',
         'ph' => 'Search names of files and folders you can see',
     ],
     'settings' => [
@@ -288,7 +288,7 @@ return [
             'nav' => 'The desktop',
             'title' => 'The desktop',
             'intro' => 'Windows, a taskbar and a start menu.',
-            'p1' => 'Files opens as a desktop. Double-click an icon to open it: **Documents** is the file manager, **Recent** lists files you opened or uploaded lately, **Search** finds files and folders by name.',
+            'p1' => 'Files opens as a desktop. Double-click an icon to open it: **Documents** is the file manager, **Recent** lists files you opened or uploaded lately, **Search** finds files and folders by name - type part of a name, or use * and ? as wildcards (`*.png` finds every PNG, `report*` everything starting with report).',
             'p2' => 'Windows move by their title bar and resize from any edge or corner. Drag one to the top of the screen to maximise it, or to the left or right edge to fill half the screen. Double-click the title bar to maximise or restore.',
             'p3' => 'Minimised windows sit on the taskbar. Hover over a taskbar button to see a preview of the window; click the preview to bring it back.',
             'p4' => 'The start menu (bottom left, or Ctrl+Esc) has every app, your recent files, the other FreeITSM modules, Help and Sign out - which is how you get around if you hide the top bar.',
@@ -299,7 +299,7 @@ return [
             'title' => 'Working with files and folders',
             'intro' => 'Two panes, two views, a filter in every window.',
             'p1' => 'The Documents window shows your folders on the left and the open folder on the right. Switch between **Icons** and **Details** with the buttons on the right of the toolbar; in Details, click a column heading to sort by it.',
-            'p2' => 'Type in the filter box (top right, or Ctrl+F) to narrow the open folder down to names containing what you typed.',
+            'p2' => 'Type in the filter box (top right, or Ctrl+F) to narrow the open folder down to names containing what you typed. * and ? work as wildcards over the whole name, so `*.pdf` shows only PDFs.',
             'p3' => 'Right-click anything for what you can do with it. Click to select, Ctrl+click to add to the selection, Shift+click for a range, or drag a box around several.',
             'p4' => 'Cut, Copy and Paste work as they do in Windows (Ctrl+X, Ctrl+C, Ctrl+V), and so does dragging: drag files, folders and shortcuts onto a folder (in any window, the folder tree or the address bar) to move them, and hold Ctrl to copy. Drag a file or folder onto the desktop to put a shortcut to it there - nothing is stored on the desktop itself - and drag a desktop shortcut into a folder to move it there. F2 renames, Delete deletes. Deleted items are kept rather than destroyed - a recycle bin to restore them is coming in a later release.',
             'p5' => '"Documents" at the top shows every folder that has been shared with you. If you were given a folder deep inside someone else\'s, it appears here on its own with its full path as a hint - you do not see the folders above it.',

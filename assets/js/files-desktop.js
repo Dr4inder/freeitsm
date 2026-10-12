@@ -52,6 +52,19 @@
             ? L('err.bad_reply', 'The server replied with something other than JSON (HTTP {status}): {text}', { status: status, text: t })
             : L('err.empty_reply', 'The server sent an empty reply (HTTP {status}).', { status: status });
     }
+    /**
+     * A name test for what someone typed. With * or ? it is a Windows-style
+     * wildcard over the WHOLE name (*.png ends in .png, report* starts with
+     * report); without, it is "contains". Case never matters. The same rules
+     * as api/files/search.php, which does this for the Search window.
+     */
+    function hasWildcard(q) { return /[*?]/.test(q); }
+    function nameMatcher(q) {
+        q = String(q).toLowerCase();
+        if (!hasWildcard(q)) return function (name) { return name.toLowerCase().indexOf(q) >= 0; };
+        var re = new RegExp('^' + q.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$', 'i');
+        return function (name) { return re.test(name); };
+    }
     function fail(e) { WM.notify(e && e.message ? e.message : String(e), 'error'); }
     function fmtSize(n) {
         if (n == null) return '';
@@ -390,7 +403,8 @@
         var self = this;
         var all = this.entries();
         var f = this.filter;
-        var shown = f ? all.filter(function (e) { return e.name.toLowerCase().indexOf(f) >= 0; }) : all;
+        var m = f ? nameMatcher(f) : null;
+        var shown = m ? all.filter(function (e) { return m(e.name); }) : all;
         var s = this.sort;
         shown.sort(function (a, b) {
             if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
@@ -1491,7 +1505,7 @@
         var input = w.body.querySelector('input'), out = w.body.querySelector('.fd-search-out');
         var run = debounce(function () {
             var q = input.value.trim();
-            if (q.length < 2) { out.innerHTML = '<div class="fd-pad fd-muted">' + esc(L('search.hint', 'Type at least two letters.')) + '</div>'; return; }
+            if (q.length < 2 && !hasWildcard(q)) { out.innerHTML = '<div class="fd-pad fd-muted">' + esc(L('search.hint', 'Type at least two letters.')) + '</div>'; return; }
             api('search.php?q=' + encodeURIComponent(q)).then(function (r) {
                 resultsTable(out, r.folders.map(function (f) { return Object.assign({ type: 'folder' }, f); })
                     .concat(r.items.map(function (i) { return Object.assign({ type: 'item' }, i); })));

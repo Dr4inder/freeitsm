@@ -16,6 +16,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 |------|-------------------|-------------|-------------|
 | 2313 | Files             | Improvement | Help has a new "When an upload fails" section explaining each upload error and its fix, and a failed row in Transfers has a "Get help with this" link that opens Help at that section. |
 | 2314 | Files             | Fix         | Cut and Copy were unavailable whenever a shortcut was among the selected items; shortcuts now cut, copy and paste like files (paste places them as a drag does), and a shortcut's own right-click menu offers Cut and Copy. |
+| 2315 | Files             | Improvement | Search and the "Filter this folder" box accept * and ? as Windows-style wildcards over the whole name (e.g. *.png, report*); plain text still matches anywhere in the name. |
 
 
 
