@@ -157,7 +157,7 @@
     // ── Shortcuts ──────────────────────────────────────────────────────────
     /** A target's icon with the shortcut arrow over its corner. */
     function shortcutIcon(targetType, targetName, px) {
-        var base = targetType === 'folder' ? FI.folder(px) : FI.file(targetName || '', px);
+        var base = targetType === 'folder' ? FI.folder(px) : targetType === 'article' ? FI.app('knowledge', px) : FI.file(targetName || '', px);
         var a = Math.max(10, Math.round(px * 0.42));
         return '<span class="fi-sc" style="width:' + px + 'px;height:' + px + 'px">' + base +
             '<svg class="fi-sc-arrow" width="' + a + '" height="' + a + '" viewBox="0 0 16 16" aria-hidden="true">' +
@@ -171,15 +171,78 @@
             { label: L('sc.desktop', 'On desktop'), action: function () { createShortcut(type, id, 'desktop'); } }
         ] };
     }
-    function createShortcut(type, id, where) {
-        return api('shortcut.php', { action: 'create', target_type: type, target_id: id, where: where }).then(function (r) {
+    function createShortcut(type, id, where, folderId) {
+        return api('shortcut.php', { action: 'create', target_type: type, target_id: id, where: where, folder_id: folderId || 0 }).then(function (r) {
             if (r.where === 'desktop') {
                 WM.notify(L('sc.made_desktop', 'Shortcut "{name}" put on your desktop.', { name: r.name }));
                 loadDesktopShortcuts();
             } else {
                 changed([r.folder_id]);
             }
+            return r;
         }).catch(fail);
+    }
+    /**
+     * Open what a shortcut points to. A folder opens in `inExplorer` when given
+     * (else a new window); a file in the viewer; a Knowledge article in Knowledge,
+     * in a new tab - where Knowledge's own permissions apply again.
+     */
+    function openShortcutTarget(s, inExplorer) {
+        if (s.target_type === 'article') { previewArticle(s.target_id); return; }
+        if (s.target_type === 'folder') { if (inExplorer) inExplorer(s.target_id); else new Explorer(s.target_id); return; }
+        viewFile(s.target_id);
+    }
+    /**
+     * A Knowledge article in a desktop window, with a button to open it in
+     * Knowledge itself (new tab). ⚠️ Knowledge stores bodies as raw HTML and does
+     * not sanitise them, so the body goes into a SANDBOXED frame - no scripts,
+     * no same-origin access - never into the desktop's own DOM.
+     */
+    function previewArticle(id) {
+        var w = WM.open({ kind: 'kbview', title: L('sc.article_loading', 'Knowledge article'), icon: FI.app('knowledge', 16), width: 760, height: 560, geometry: geoFor('kbview') });
+        w.body.classList.add('fd-kbv');
+        w.body.innerHTML = '<div class="fd-kbv-bar"><span class="fd-kbv-title"></span>' +
+            '<button type="button" class="fd-btn fd-btn-primary">' + esc(L('sc.open_kb', 'Open in Knowledge')) + '</button></div>' +
+            '<iframe class="fd-kbv-frame" sandbox="allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer"></iframe>';
+        w.body.querySelector('.fd-btn').addEventListener('click', function () { window.open(B.base + 'knowledge/?article=' + id, '_blank', 'noopener'); });
+        api('shortcut.php?article=' + id).then(function (r) {
+            var a = r.article;
+            w.setTitle(a.title);
+            w.body.querySelector('.fd-kbv-title').textContent = a.title;
+            // The frame cannot see the theme, so hand it the colours it needs.
+            var cs = getComputedStyle(document.documentElement);
+            var v = function (n, d) { return (cs.getPropertyValue(n) || '').trim() || d; };
+            w.body.querySelector('iframe').srcdoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><base target="_blank">' +
+                '<style>body{margin:0;padding:18px 22px;font:14px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;background:' + v('--surface', '#fff') + ';color:' + v('--text', '#333') + '}' +
+                'img{max-width:100%;height:auto}table{border-collapse:collapse}td,th{border:1px solid ' + v('--border-soft', '#eee') + ';padding:4px 8px}' +
+                'pre,code{white-space:pre-wrap}a{color:' + v('--fil-accent', '#1e3a8a') + '}</style></head><body>' + (a.body || '') + '</body></html>';
+        }).catch(function (e) { w.close(); fail(e); });
+    }
+    /** "Shortcut to article…" - pick a Knowledge article, then place a shortcut to it. */
+    function pickArticle(where, folderId) {
+        var w = WM.open({ kind: 'kbpick', single: true, title: L('sc.article_title', 'Shortcut to article'), icon: FI.app('knowledge', 16), width: 520, height: 440, geometry: geoFor('kbpick') });
+        w.body.classList.add('fd-search');
+        w.body.innerHTML = '<div class="fd-search-bar"><input type="search" class="fd-input" placeholder="' + esc(L('sc.article_ph', 'Search Knowledge articles by title')) + '"></div><div class="fd-search-out fd-scroll"></div>';
+        var input = w.body.querySelector('input'), out = w.body.querySelector('.fd-search-out');
+        var run = debounce(function () {
+            api('shortcut.php?articles=1&q=' + encodeURIComponent(input.value.trim())).then(function (r) {
+                if (!r.articles.length) { out.innerHTML = '<div class="fd-pad fd-muted">' + esc(L('sc.article_none', 'No articles match.')) + '</div>'; return; }
+                out.innerHTML = r.articles.map(function (a) {
+                    return '<button type="button" class="fd-kb-row" data-a="' + a.id + '">' + FI.app('knowledge', 28) +
+                        '<span class="fd-kb-name"></span><span class="fd-kb-meta">' + esc(fmtWhen(a.modified)) + '</span></button>';
+                }).join('');
+                // Titles go in as text, never markup.
+                out.querySelectorAll('.fd-kb-name').forEach(function (n, i) { n.textContent = r.articles[i].title; });
+            }).catch(fail);
+        }, 300);
+        out.addEventListener('click', function (ev) {
+            var b = ev.target.closest('[data-a]');
+            if (!b) return;
+            createShortcut('article', +b.dataset.a, where, folderId).then(function (r) { if (r) w.close(); });
+        });
+        input.addEventListener('input', run);
+        run();
+        input.focus();
     }
     /** Open the folder holding a shortcut's target, with the target selected. */
     function shortcutLocation(s) {
@@ -548,7 +611,7 @@
                 else if (d.folder) openPermissions(d.folder.id);
                 return;
             case 'props':
-                if (sel[0] && sel[0].type === 'shortcut') openProperties(sel[0].target_type, sel[0].target_id);
+                if (sel[0] && sel[0].type === 'shortcut') { if (sel[0].target_type !== 'article') openProperties(sel[0].target_type, sel[0].target_id); }
                 else if (sel[0]) openProperties(sel[0].type, sel[0].id);
                 else if (d.folder) openProperties('folder', d.folder.id);
                 return;
@@ -560,8 +623,8 @@
 
     Explorer.prototype.open = function (e, newWindow) {
         if (e.type === 'shortcut') {
-            if (e.target_type === 'folder') { newWindow ? new Explorer(e.target_id) : this.load(e.target_id); }
-            else viewFile(e.target_id);
+            var self = this;
+            openShortcutTarget(e, newWindow ? null : function (id) { self.load(id); });
             return;
         }
         if (e.type === 'folder') {
@@ -651,7 +714,7 @@
         if (e.type === 'shortcut') {
             WM.menu(ev.clientX, ev.clientY, [
                 { label: L('ex.open', 'Open'), icon: IC.open, action: function () { self.open(e); }, disabled: many },
-                { label: L('ex.open_location', 'Open file location'), icon: IC.location, action: function () { shortcutLocation(e); }, disabled: many },
+                { label: L('ex.open_location', 'Open file location'), icon: IC.location, action: function () { shortcutLocation(e); }, disabled: many || e.target_type === 'article' },
                 { sep: true },
                 { label: L('ex.cut', 'Cut'), icon: IC.cut, shortcut: 'Ctrl+X', action: function () { self.command('cut'); }, disabled: !c.cut },
                 { label: L('ex.copy', 'Copy'), icon: IC.copy, shortcut: 'Ctrl+C', action: function () { self.command('copy'); }, disabled: !c.copy },
@@ -659,7 +722,7 @@
                 { label: L('ex.rename', 'Rename'), icon: IC.rename, shortcut: 'F2', action: function () { self.command('rename'); }, disabled: !c.rename },
                 { label: L('ex.delete', 'Delete'), icon: IC.del, shortcut: 'Del', action: function () { self.command('delete'); }, disabled: !c.del },
                 { sep: true },
-                { label: L('ex.properties', 'Properties'), icon: IC.props, action: function () { openProperties(e.target_type, e.target_id); }, disabled: many }
+                { label: L('ex.properties', 'Properties'), icon: IC.props, action: function () { openProperties(e.target_type, e.target_id); }, disabled: many || e.target_type === 'article' }
             ]);
             return;
         }
@@ -701,6 +764,7 @@
             { sep: true },
             { label: L('ex.new_folder', 'New folder'), icon: IC.newFolder, action: function () { self.newFolder(); }, disabled: !c.newFolder },
             { label: L('ex.upload_files', 'Upload files'), icon: IC.upload, action: function () { self.command('upload'); }, disabled: !c.uploadFiles },
+            B.caps.knowledge ? { label: L('sc.article', 'Shortcut to article...'), icon: IC.shortcut, action: function () { pickArticle('folder', d.folder.id); }, disabled: !c.shortcutHere } : null,
             d && d.folder ? { sep: true } : null,
             d && d.folder ? { label: L('ex.permissions', 'Permissions'), icon: IC.perms, action: function () { openPermissions(d.folder.id); } } : null,
             d && d.folder ? { label: L('ex.properties', 'Properties'), icon: IC.props, action: function () { openProperties('folder', d.folder.id); } } : null
@@ -1628,7 +1692,7 @@
             b.querySelector('span:last-child').textContent = s.name;
             var openIt = function () {
                 if (!s.ok) { WM.notify(L('sc.gone', 'What this shortcut pointed to has been deleted, or is no longer shared with you.'), 'error'); return; }
-                if (s.target_type === 'folder') new Explorer(s.target_id); else viewFile(s.target_id);
+                openShortcutTarget(s);
             };
             var removeIt = function () {
                 WM.dialog({ title: L('ex.delete', 'Delete'), message: L('sc.del_q', 'Delete the shortcut "{name}"? What it points to is not affected.', { name: s.name }),
@@ -1657,7 +1721,7 @@
                 ev.stopPropagation();
                 WM.menu(ev.clientX, ev.clientY, [
                     { label: L('ex.open', 'Open'), icon: IC.open, action: openIt, disabled: !s.ok },
-                    { label: L('ex.open_location', 'Open file location'), icon: IC.location, action: function () { shortcutLocation(s); }, disabled: !s.ok },
+                    { label: L('ex.open_location', 'Open file location'), icon: IC.location, action: function () { shortcutLocation(s); }, disabled: !s.ok || s.target_type === 'article' },
                     { sep: true },
                     { label: L('ex.rename', 'Rename'), icon: IC.rename, action: function () {
                         WM.dialog({ title: L('ex.rename', 'Rename'), input: { value: s.name },
@@ -1666,7 +1730,7 @@
                     } },
                     { label: L('ex.delete', 'Delete'), icon: IC.del, action: removeIt },
                     { sep: true },
-                    { label: L('ex.properties', 'Properties'), icon: IC.props, action: function () { openProperties(s.target_type, s.target_id); }, disabled: !s.ok }
+                    { label: L('ex.properties', 'Properties'), icon: IC.props, action: function () { openProperties(s.target_type, s.target_id); }, disabled: !s.ok || s.target_type === 'article' }
                 ]);
             });
             box.appendChild(b);
@@ -1722,6 +1786,7 @@
         WM.menu(ev.clientX, ev.clientY, [
             { label: L('app.documents', 'Documents'), icon: FI.app('documents', 16), action: function () { new Explorer(0); } },
             { label: L('app.search', 'Search'), icon: FI.app('search', 16), action: openSearch },
+            B.caps.knowledge ? { label: L('sc.article', 'Shortcut to article...'), icon: IC.shortcut, action: function () { pickArticle('desktop'); } } : null,
             { sep: true },
             { label: L('app.personalise', 'Personalise'), icon: FI.app('personalise', 16), action: openPersonalise }
         ]);
@@ -1866,7 +1931,7 @@
             var sc = ev.target.closest('[data-s]');
             if (sc) {
                 var s = (data.shortcuts || []).filter(function (x) { return x.id === +sc.dataset.s; })[0];
-                if (s) { if (s.target_type === 'folder') load(s.target_id); else viewFile(s.target_id); }
+                if (s) openShortcutTarget(s, load);
                 return;
             }
             var i = ev.target.closest('[data-i]');

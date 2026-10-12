@@ -504,6 +504,16 @@ body[data-navbar="auto"] .fd-navsensor { display: block; position: fixed; top: 0
 .fd-tr-x { border: 0; background: transparent; color: var(--text-dim); font-size: 18px; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; }
 .fd-tr-x:hover { background: var(--surface-hover); color: var(--text); }
 .fd-tr-empty { padding: 30px; text-align: center; color: var(--text-dim); }
+/* Knowledge article preview (an article shortcut opened on the desktop) */
+.fd-kbv { display: flex; flex-direction: column; background: var(--surface); }
+.fd-kbv-bar { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-bottom: 1px solid var(--border-soft); }
+.fd-kbv-title { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fd-kbv-frame { flex: 1; width: 100%; border: 0; background: var(--surface); }
+/* "Shortcut to article" picker */
+.fd-kb-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 6px 10px; border: 0; border-radius: 4px; background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.fd-kb-row:hover { background: var(--surface-hover); }
+.fd-kb-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fd-kb-meta { font-size: 11.5px; color: var(--text-dim); white-space: nowrap; }
 .fd-search-bar { padding: 10px; border-bottom: 1px solid var(--border-soft); }
 .fd-search-bar .fd-input { width: 100%; }
 .fd-search-out { flex: 1; }

@@ -89,6 +89,7 @@
         help:        ['#0369a1', '<circle cx="16" cy="16" r="9.5" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M13.2 13.2a3 3 0 1 1 4.3 2.7c-.9.4-1.5 1.1-1.5 2.1v.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="22" r="1.4" fill="#fff"/>'],
         properties:  ['#64748b', '<rect x="8" y="7" width="16" height="18" rx="2" fill="#fff"/><path d="M11.5 12h9M11.5 16h9M11.5 20h6" stroke="#64748b" stroke-width="1.8" stroke-linecap="round"/>'],
         permissions: ['#b45309', '<rect x="9" y="14" width="14" height="11" rx="2" fill="#fff"/><path d="M12 14v-3a4 4 0 0 1 8 0v3" fill="none" stroke="#fff" stroke-width="2.4"/>'],
+        knowledge:   ['#15803d', '<path d="M8 8.5c2.6-.9 5.3-.6 8 1.2v14c-2.7-1.8-5.4-2.1-8-1.2zM24 8.5c-2.6-.9-5.3-.6-8 1.2v14c2.7-1.8 5.4-2.1 8-1.2z" fill="#fff"/><path d="M16 9.7v14" stroke="#15803d" stroke-width="1.4"/>'],
         home:        ['#334155', '<path d="M7 15l9-8 9 8M10 13v11h12V13" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>'],
         signout:     ['#b91c1c', '<path d="M14 8H9a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M18 11l5 5-5 5M23 16H13" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>']
     };

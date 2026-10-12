@@ -52,7 +52,7 @@ $capStorage = $hasCap(Cap::FILES_STORAGE);
     <script src="../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/files.css?v=9">
+    <link rel="stylesheet" href="../assets/css/files.css?v=11">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=193">
 </head>
 <body class="fd-body" data-navbar="<?php echo htmlspecialchars($prefs['navbar']); ?>" data-mobile-module="files" data-mobile-page="files-desktop">
@@ -103,7 +103,7 @@ $capStorage = $hasCap(Cap::FILES_STORAGE);
         'me'         => ['id' => $me, 'name' => $_SESSION['analyst_name'] ?? ''],
         'prefs'      => $prefs,
         'logo'       => $logo,
-        'caps'       => ['folders' => $capFolders, 'storage' => $capStorage],
+        'caps'       => ['folders' => $capFolders, 'storage' => $capStorage, 'knowledge' => analystCanAccessModule($conn, $me, 'knowledge')],
         'chunk'      => FILES_CHUNK_BYTES,
         'maxUpload'  => filesMaxUploadBytes($conn),
         'modules'    => $startModules,
@@ -116,10 +116,10 @@ $capStorage = $hasCap(Cap::FILES_STORAGE);
     ];
     ?>
     <script>window.FILES_BOOT = <?php echo json_encode($boot, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
-    <script src="../assets/js/files-icons.js?v=1"></script>
+    <script src="../assets/js/files-icons.js?v=2"></script>
     <script src="../assets/js/files-wm.js?v=4"></script>
     <script src="../assets/js/files-viewer.js?v=4"></script>
-    <script src="../assets/js/files-desktop.js?v=10"></script>
+    <script src="../assets/js/files-desktop.js?v=12"></script>
     <script src="../assets/js/mobile.js?v=78"></script>
 </body>
 </html>

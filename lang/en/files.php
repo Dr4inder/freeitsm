@@ -138,6 +138,11 @@ return [
         'your_access' => 'Your access',
     ],
     'sc' => [
+        'article' => 'Shortcut to article...',
+        'article_none' => 'No articles match.',
+        'article_ph' => 'Search Knowledge articles by title',
+        'article_loading' => 'Knowledge article',
+        'article_title' => 'Shortcut to article',
         'create' => 'Create shortcut',
         'del_q' => 'Delete the shortcut "{name}"? What it points to is not affected.',
         'desktop' => 'On desktop',
@@ -146,6 +151,7 @@ return [
         'here' => 'In this folder',
         'made_desktop' => 'Shortcut "{name}" put on your desktop.',
         'not_top' => 'Shortcuts go inside a folder or on the desktop.',
+        'open_kb' => 'Open in Knowledge',
         'tip' => 'Shortcut to {path}',
     ],
     'search' => [
@@ -304,7 +310,7 @@ return [
             'p4' => 'Cut, Copy and Paste work as they do in Windows (Ctrl+X, Ctrl+C, Ctrl+V), and so does dragging: drag files, folders and shortcuts onto a folder (in any window, the folder tree or the address bar) to move them, and hold Ctrl to copy. Drag a file or folder onto the desktop to put a shortcut to it there - nothing is stored on the desktop itself - and drag a desktop shortcut into a folder to move it there. F2 renames, Delete deletes. Deleted items are kept rather than destroyed - a recycle bin to restore them is coming in a later release.',
             'p5' => '"Documents" at the top shows every folder that has been shared with you. If you were given a folder deep inside someone else\'s, it appears here on its own with its full path as a hint - you do not see the folders above it.',
             'p6' => 'Double-click a file to open it in the viewer (see Viewing files). Right-click it for Download, Properties and the rest.',
-            'p7' => 'Right-click a file or folder and choose **Create shortcut** to put a shortcut to it **in this folder** (beside it, for everyone who can open the folder) or **on desktop** (on your own desktop only). A shortcut opens what it points to, but gives nobody access: someone who cannot see the target never sees the shortcut either. Deleting a shortcut leaves the original alone.',
+            'p7' => 'Right-click a file or folder and choose **Create shortcut** to put a shortcut to it **in this folder** (beside it, for everyone who can open the folder) or **on desktop** (on your own desktop only). A shortcut opens what it points to, but gives nobody access: someone who cannot see the target never sees the shortcut either. Deleting a shortcut leaves the original alone. To link to a Knowledge article, right-click empty space in a folder (or on the desktop) and choose **Shortcut to article...**; double-clicking it shows the article in a preview window, with **Open in Knowledge** to go to the article itself, and only people who can read that article see the shortcut.',
         ],
         'uploading' => [
             'nav' => 'Uploading',

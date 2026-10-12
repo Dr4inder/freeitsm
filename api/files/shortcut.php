@@ -2,9 +2,11 @@
 /**
  * Shortcuts - Windows-style links to a file or folder.
  *
- *   POST {action: create, target_type: folder|item, target_id, where: folder|desktop}
+ *   POST {action: create, target_type: folder|item|article, target_id, where: folder|desktop, folder_id?}
  *        folder  = beside the target, in the folder that holds it (Upload there).
  *                  Not for a top-level folder - there is nowhere beside it.
+ *                  An article (Knowledge) has no folder of its own, so it goes in
+ *                  folder_id instead.
  *        desktop = on the caller's own desktop. Nobody else sees it.
  *        Either way the caller must be able to see the target.
  *   POST {action: rename, id, name}   folder shortcut: Modify on its folder;
@@ -15,6 +17,10 @@
  *        caller's own desktop.
  *   GET  ?desktop=1                   the caller's desktop shortcuts, each with
  *                                     whether its target can still be opened.
+ *   GET  ?articles=1&q=               Knowledge articles the caller can read, for
+ *                                     the "Shortcut to article" picker.
+ *   GET  ?article=<id>                one of them, title and body, for the preview
+ *                                     window an article shortcut opens.
  *
  * ⚠️ A SHORTCUT GRANTS NOTHING. Opening one goes through the target's own
  * permissions. In a folder listing (list.php) a shortcut whose target the viewer
@@ -24,6 +30,40 @@
 require_once __DIR__ . '/../../includes/files/api_bootstrap.php';
 
 filesApiRun(function () use ($conn, $analystId) {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET['article'])) {
+        // The preview window for an article shortcut. The same read check that
+        // decides whether the shortcut is listed at all; a miss is "not found".
+        $aid = (int)$_GET['article'];
+        if (!filesArticleTarget($conn, $analystId, $aid)) filesApiFail('Article not found.');
+        $st = $conn->prepare("SELECT id, title, body, COALESCE(modified_datetime, created_datetime) AS modified FROM knowledge_articles WHERE id = ?");
+        $st->execute([$aid]);
+        $a = $st->fetch(PDO::FETCH_ASSOC);
+        if (!$a) filesApiFail('Article not found.');
+        // The body is stored as HTML and shown as such - the client renders it in
+        // a sandboxed frame with scripts off, never into the desktop's own DOM.
+        filesApiOk(['article' => ['id' => (int)$a['id'], 'title' => $a['title'], 'body' => (string)$a['body'], 'modified' => $a['modified']]]);
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET['articles'])) {
+        // The "Shortcut to article" picker: Knowledge articles this person can
+        // read, by title - newest first when nothing is typed. Knowledge's own
+        // visibility clause decides, exactly as filesArticleTarget() will later.
+        if (!analystCanAccessModule($conn, $analystId, 'knowledge')) filesApiFail('You do not have access to Knowledge.');
+        require_once __DIR__ . '/../../includes/knowledge/visibility.php';
+        [$sql, $params] = knowledgeVisibilitySql($conn, KnowledgeViewer::forAnalyst($conn, $analystId), 'a', ['no_admin_floor' => true]);
+        $q = trim((string)($_GET['q'] ?? ''));
+        if ($q !== '') {
+            $sql .= ' AND a.title LIKE ?';
+            $params[] = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $q) . '%';
+        }
+        $st = $conn->prepare("SELECT a.id, a.title, COALESCE(a.modified_datetime, a.created_datetime) AS modified
+                                FROM knowledge_articles a WHERE 1 = 1" . $sql . "
+                            ORDER BY " . ($q !== '' ? "a.title" : "COALESCE(a.modified_datetime, a.created_datetime) DESC") . " LIMIT 50");
+        $st->execute($params);
+        filesApiOk(['articles' => array_map(fn($r) => ['id' => (int)$r['id'], 'title' => $r['title'], 'modified' => $r['modified']],
+                                            $st->fetchAll(PDO::FETCH_ASSOC))]);
+    }
+
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $st = $conn->prepare("SELECT id, target_type, target_id, name FROM files_shortcuts
                                WHERE analyst_id = ? AND folder_id IS NULL ORDER BY created_datetime, id");
@@ -49,23 +89,30 @@ filesApiRun(function () use ($conn, $analystId) {
     $action = (string)($in['action'] ?? '');
 
     if ($action === 'create') {
-        $type = ($in['target_type'] ?? '') === 'folder' ? 'folder' : 'item';
+        $type = (string)($in['target_type'] ?? '');
+        if (!in_array($type, ['folder', 'article'], true)) $type = 'item';
         $tid  = (int)($in['target_id'] ?? 0);
         $t = filesShortcutTarget($conn, $analystId, $type, $tid);
-        if (!$t) filesApiFail($type === 'folder' ? 'Folder not found.' : 'File not found.');
+        if (!$t) filesApiFail($type === 'folder' ? 'Folder not found.' : ($type === 'article' ? 'Article not found.' : 'File not found.'));
 
-        $name = filesCleanName($t['name'] . ' - Shortcut');
+        // An article has no copy in Files to tell apart from, so it keeps its title.
+        $name = filesCleanName($type === 'article' ? $t['name'] : $t['name'] . ' - Shortcut');
+        $what = $type === 'folder' ? ['folder_id' => $tid]
+              : ($type === 'article' ? ['path' => '(Knowledge) / ' . $t['name']]
+              : ['folder_id' => $t['folder_id'], 'item_id' => $tid, 'item_name' => $t['name']]);
         if (($in['where'] ?? '') === 'desktop') {
             $conn->prepare("INSERT INTO files_shortcuts (folder_id, analyst_id, target_type, target_id, name, created_by, created_datetime)
                             VALUES (NULL, ?, ?, ?, ?, ?, UTC_TIMESTAMP())")->execute([$analystId, $type, $tid, $name, $analystId]);
             $id = (int)$conn->lastInsertId();
-            filesAudit($conn, $analystId, 'shortcut', $type === 'folder' ? ['folder_id' => $tid] : ['folder_id' => $t['folder_id'], 'item_id' => $tid, 'item_name' => $t['name']],
-                       ['created' => 'desktop', 'name' => $name]);
+            filesAudit($conn, $analystId, 'shortcut', $what, ['created' => 'desktop', 'name' => $name]);
             filesApiOk(['id' => $id, 'name' => $name, 'where' => 'desktop']);
         }
 
-        // Beside the target: in the folder that holds it.
-        $home = $type === 'item' ? $t['folder_id'] : (FilesAcl::tree($conn)[$tid]['parent_id'] ?? null);
+        // A file or folder's goes beside it, in the folder that holds it. An
+        // article lives outside Files, so it goes in the folder the caller names.
+        $home = $type === 'article' ? (int)($in['folder_id'] ?? 0)
+              : ($type === 'item' ? $t['folder_id'] : (FilesAcl::tree($conn)[$tid]['parent_id'] ?? null));
+        if (!$home && $type === 'article') filesApiFail('Shortcuts go inside a folder or on the desktop.');
         if (!$home) filesApiFail('A top-level folder has nowhere beside it for a shortcut. Put it on your desktop instead.');
         filesNeed($conn, $analystId, (int)$home, FilesAcl::UPLOAD, 'shortcut');
         $name = filesFreeName($conn, (int)$home, $name);

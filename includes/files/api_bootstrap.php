@@ -141,6 +141,7 @@ function filesNameTaken(PDO $conn, ?int $parentId, string $name, string $exceptT
  */
 function filesShortcutTarget(PDO $conn, int $analystId, string $type, int $id): ?array
 {
+    if ($type === 'article') return filesArticleTarget($conn, $analystId, $id);
     if ($type === 'folder') {
         $tree = FilesAcl::tree($conn);
         $lvl = FilesAcl::level($conn, $analystId, $id);
@@ -153,6 +154,35 @@ function filesShortcutTarget(PDO $conn, int $analystId, string $type, int $id): 
     if ($lvl < FilesAcl::VIEW) return null;
     return ['name' => $it['name'], 'folder_id' => (int)$it['folder_id'],
             'path' => FilesAcl::path($conn, (int)$it['folder_id']) . ' / ' . $it['name'], 'level' => $lvl];
+}
+
+/**
+ * A Knowledge article as a shortcut target, or null when this person may not
+ * read it (no Knowledge module, another company's, restricted, archived, a draft,
+ * deleted). Knowledge's own visibility rules decide - the same clause its list
+ * uses, WITHOUT the administrator floor: that floor is an audited override for
+ * opening one article in Knowledge, never a reason for it to show up in a folder.
+ */
+function filesArticleTarget(PDO $conn, int $analystId, int $id): ?array
+{
+    static $viewer = [];
+    if ($id <= 0) return null;
+    if (!array_key_exists($analystId, $viewer)) {
+        $viewer[$analystId] = null;
+        try {
+            if (analystCanAccessModule($conn, $analystId, 'knowledge')) {
+                require_once __DIR__ . '/../knowledge/visibility.php';
+                $viewer[$analystId] = KnowledgeViewer::forAnalyst($conn, $analystId);
+            }
+        } catch (Throwable $e) { /* fail closed */ }
+    }
+    if (!$viewer[$analystId]) return null;
+    [$sql, $params] = knowledgeVisibilitySql($conn, $viewer[$analystId], 'a', ['no_admin_floor' => true]);
+    $st = $conn->prepare("SELECT a.title FROM knowledge_articles a WHERE a.id = ?" . $sql . " LIMIT 1");
+    $st->execute(array_merge([$id], $params));
+    $title = $st->fetchColumn();
+    if ($title === false) return null;
+    return ['name' => (string)$title, 'folder_id' => null, 'path' => 'Knowledge / ' . $title, 'level' => FilesAcl::VIEW];
 }
 
 /** "Report.pdf" -> "Report (2).pdf", the first free one. */
