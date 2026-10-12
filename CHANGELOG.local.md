@@ -15,6 +15,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
 | 2310 | Projects | Fix | Demo data import no longer fails on strict MySQL/MariaDB (error 1406) because demo project baselines put sentences in the 12-character reason code column instead of start/change. |
+| 2311 | Projects | Fix | Adding or editing a phase did nothing on Save, and saving a disruption announcement failed, because the stakeholder dialog and the Ask AI panel reused element ids from those dialogs (GH #175). |
 
 
 

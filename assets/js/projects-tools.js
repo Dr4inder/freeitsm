@@ -83,19 +83,19 @@
         stakeMember = ctx.data.members.find(m => String(m.id) === String(id));
         if (!stakeMember) return;
         const lv = (sel, v) => { document.getElementById(sel).innerHTML = '<option value="">' + esc(T('stake.not_set')) + '</option>' + [1, 2, 3, 4, 5].map(n => '<option value="' + n + '"' + (String(v) === String(n) ? ' selected' : '') + '>' + n + ' - ' + esc(T('stake.level_' + n)) + '</option>').join(''); };
-        document.getElementById('psName').textContent = stakeMember.name;
-        lv('psPower', stakeMember.power); lv('psInterest', stakeMember.interest);
-        document.getElementById('psStance').innerHTML = '<option value="">' + esc(T('stake.not_set')) + '</option>' + STANCES.map(s => '<option value="' + s + '"' + (stakeMember.stance === s ? ' selected' : '') + '>' + esc(T('stake.stance_' + s)) + '</option>').join('');
-        document.getElementById('psKeep').value = stakeMember.keep_informed || '';
-        document.getElementById('psError').hidden = true;
+        document.getElementById('pstkName').textContent = stakeMember.name;
+        lv('pstkPower', stakeMember.power); lv('pstkInterest', stakeMember.interest);
+        document.getElementById('pstkStance').innerHTML = '<option value="">' + esc(T('stake.not_set')) + '</option>' + STANCES.map(s => '<option value="' + s + '"' + (stakeMember.stance === s ? ' selected' : '') + '>' + esc(T('stake.stance_' + s)) + '</option>').join('');
+        document.getElementById('pstkKeep').value = stakeMember.keep_informed || '';
+        document.getElementById('pstkError').hidden = true;
         P.openModal('prjStakeModal');
     }
     async function saveStake() {
         try {
-            await call({ action: 'member_update', member_id: stakeMember.id, power: document.getElementById('psPower').value, interest: document.getElementById('psInterest').value,
-                stance: document.getElementById('psStance').value, keep_informed: document.getElementById('psKeep').value });
+            await call({ action: 'member_update', member_id: stakeMember.id, power: document.getElementById('pstkPower').value, interest: document.getElementById('pstkInterest').value,
+                stance: document.getElementById('pstkStance').value, keep_informed: document.getElementById('pstkKeep').value });
             P.closeModal('prjStakeModal'); P.toast(T('stake.saved')); await ctx.refresh();
-        } catch (err) { const el = document.getElementById('psError'); el.textContent = err.message; el.hidden = false; }
+        } catch (err) { const el = document.getElementById('pstkError'); el.textContent = err.message; el.hidden = false; }
     }
 
     let memberKind = 'analyst';
@@ -757,7 +757,7 @@
             document.getElementById('pmPersonResults').hidden = true;
         });
         document.getElementById('pmSave').addEventListener('click', saveMember);
-        document.getElementById('psSave').addEventListener('click', saveStake);
+        document.getElementById('pstkSave').addEventListener('click', saveStake);
         document.getElementById('prType').addEventListener('click', e => { const b = e.target.closest('[data-rtype]'); if (b) setRaidType(b.dataset.rtype); });
         document.getElementById('prSave').addEventListener('click', saveRaid);
         document.getElementById('prjRaidModal').addEventListener('click', e => {

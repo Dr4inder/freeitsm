@@ -51,9 +51,9 @@ $projectId = (int)($_GET['id'] ?? 0);
 
     <!-- The AI project assistant (3.3.0) - the same slide-in panel as Knowledge's Ask AI; projects-assistant.js -->
     <div class="ai-chat-overlay" id="paOverlay"></div>
-    <div class="ai-chat-panel prj-pa" id="paPanel" role="dialog" aria-labelledby="paTitle">
+    <div class="ai-chat-panel prj-pa" id="paPanel" role="dialog" aria-labelledby="paHeading">
         <div class="ai-chat-header">
-            <div class="ai-chat-title" id="paTitle">
+            <div class="ai-chat-title" id="paHeading">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                 <?php echo htmlspecialchars(t('projects.assistant.title')); ?>
             </div>
@@ -568,19 +568,19 @@ $projectId = (int)($_GET['id'] ?? 0);
     <!-- Stakeholder map (3.3.0) - projects-tools.js -->
     <div class="modal" id="prjStakeModal" aria-hidden="true">
         <div class="modal-content" style="max-width:520px">
-            <div class="modal-header"><?php echo htmlspecialchars(t('projects.stake.dialog')); ?>&nbsp;<span id="psName"></span></div>
+            <div class="modal-header"><?php echo htmlspecialchars(t('projects.stake.dialog')); ?>&nbsp;<span id="pstkName"></span></div>
             <div class="modal-body">
                 <div class="prj-form-grid">
-                    <div class="form-group"><label for="psPower"><?php echo htmlspecialchars(t('projects.stake.power_q')); ?></label><select id="psPower"></select></div>
-                    <div class="form-group"><label for="psInterest"><?php echo htmlspecialchars(t('projects.stake.interest_q')); ?></label><select id="psInterest"></select></div>
+                    <div class="form-group"><label for="pstkPower"><?php echo htmlspecialchars(t('projects.stake.power_q')); ?></label><select id="pstkPower"></select></div>
+                    <div class="form-group"><label for="pstkInterest"><?php echo htmlspecialchars(t('projects.stake.interest_q')); ?></label><select id="pstkInterest"></select></div>
                 </div>
-                <div class="form-group"><label for="psStance"><?php echo htmlspecialchars(t('projects.stake.stance')); ?></label><select id="psStance"></select></div>
-                <div class="form-group"><label for="psKeep"><?php echo htmlspecialchars(t('projects.stake.keep_informed')); ?></label><input type="text" id="psKeep" maxlength="255" placeholder="<?php echo htmlspecialchars(t('projects.stake.keep_ph')); ?>"></div>
-                <div class="prj-form-error" id="psError" hidden></div>
+                <div class="form-group"><label for="pstkStance"><?php echo htmlspecialchars(t('projects.stake.stance')); ?></label><select id="pstkStance"></select></div>
+                <div class="form-group"><label for="pstkKeep"><?php echo htmlspecialchars(t('projects.stake.keep_informed')); ?></label><input type="text" id="pstkKeep" maxlength="255" placeholder="<?php echo htmlspecialchars(t('projects.stake.keep_ph')); ?>"></div>
+                <div class="prj-form-error" id="pstkError" hidden></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-prj-close="prjStakeModal"><?php echo htmlspecialchars(t('common.cancel')); ?></button>
-                <button type="button" class="btn btn-primary prj-btn" id="psSave"><?php echo htmlspecialchars(t('common.save')); ?></button>
+                <button type="button" class="btn btn-primary prj-btn" id="pstkSave"><?php echo htmlspecialchars(t('common.save')); ?></button>
             </div>
         </div>
     </div>
@@ -718,7 +718,7 @@ $projectId = (int)($_GET['id'] ?? 0);
     <?php include 'includes/project_form.php'; ?>
 
     <script src="../assets/js/projects.js?v=10"></script>
-    <script src="../assets/js/projects-tools.js?v=11"></script>
+    <script src="../assets/js/projects-tools.js?v=12"></script>
     <script src="../assets/js/projects-targets.js?v=1"></script>
     <script src="../assets/js/projects-budget.js?v=6"></script>
     <script src="../assets/js/projects-control.js?v=1"></script>
