@@ -127,15 +127,13 @@
         clip = entries.length ? { mode: mode, entries: entries, from: from } : null;
         explorers.forEach(function (x) { x.markCut(); });
     }
+    /** Paste is a drop that came via the clipboard: files and folders through
+     *  transfer.php, shortcuts through shortcut.php 'place' (dropEntries). */
     function paste(target) {
         if (!clip) return Promise.resolve();
         var c = clip;
-        return api('transfer.php', { mode: c.mode === 'cut' ? 'move' : 'copy', target: target, entries: c.entries.map(function (e) { return { type: e.type, id: e.id }; }) })
-            .then(function (r) {
-                if (c.mode === 'cut') setClip('cut', []);
-                (r.failed || []).forEach(function (f) { WM.notify(f.error, 'error'); });
-                changed([target, c.from]);
-            }).catch(fail);
+        return dropEntries({ entries: c.entries, from: c.from }, target, c.mode === 'copy')
+            .then(function () { if (c.mode === 'cut') setClip('cut', []); });
     }
     function transfer(mode, entries, from, target) {
         return api('transfer.php', { mode: mode, target: target, entries: entries })
@@ -479,9 +477,9 @@
             newFolder: !!(d.can.upload),
             uploadFiles: !!(d.folder && d.can.upload),
             paste: !!(clip && d.can.upload),
-            // Shortcuts are not cut or copied - make a new one where you want it.
-            cut: min(LV.MODIFY) && sel.every(function (e) { return e.type !== 'shortcut'; }),
-            copy: min(LV.DOWNLOAD) && sel.every(function (e) { return e.type !== 'shortcut'; }),
+            // Shortcuts cut and copy too - paste places them the way a drag does.
+            cut: min(LV.MODIFY),
+            copy: min(LV.DOWNLOAD),
             rename: sel.length === 1 && sel[0].level >= LV.MODIFY,
             del: min(LV.MODIFY),
             download: sel.length > 0 && sel.every(function (e) { return e.type === 'item' && e.level >= LV.DOWNLOAD; }),
@@ -640,6 +638,9 @@
             WM.menu(ev.clientX, ev.clientY, [
                 { label: L('ex.open', 'Open'), icon: IC.open, action: function () { self.open(e); }, disabled: many },
                 { label: L('ex.open_location', 'Open file location'), icon: IC.location, action: function () { shortcutLocation(e); }, disabled: many },
+                { sep: true },
+                { label: L('ex.cut', 'Cut'), icon: IC.cut, shortcut: 'Ctrl+X', action: function () { self.command('cut'); }, disabled: !c.cut },
+                { label: L('ex.copy', 'Copy'), icon: IC.copy, shortcut: 'Ctrl+C', action: function () { self.command('copy'); }, disabled: !c.copy },
                 { sep: true },
                 { label: L('ex.rename', 'Rename'), icon: IC.rename, shortcut: 'F2', action: function () { self.command('rename'); }, disabled: !c.rename },
                 { label: L('ex.delete', 'Delete'), icon: IC.del, shortcut: 'Del', action: function () { self.command('delete'); }, disabled: !c.del },
