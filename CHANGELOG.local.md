@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2312 | Files             | Improvement | A failed upload or action now shows the start of what the server actually sent back (or says the reply was empty) instead of a bare "HTTP 200". |
 
 
 

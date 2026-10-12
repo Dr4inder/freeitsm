@@ -28,6 +28,8 @@ return [
         'type' => 'Type',
     ],
     'err' => [
+        'bad_reply' => 'The server replied with something other than JSON (HTTP {status}): {text}',
+        'empty_reply' => 'The server sent an empty reply (HTTP {status}).',
         'generic' => 'Something went wrong.',
     ],
     'ex' => [

@@ -32,11 +32,25 @@
         var opts = { method: method || (body !== undefined ? 'POST' : 'GET'), credentials: 'same-origin', headers: {} };
         if (body !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
         return fetch(B.api + path, opts).then(function (r) {
-            return r.json().catch(function () { return { success: false, error: 'HTTP ' + r.status }; });
+            return r.text().then(function (t) {
+                try { return JSON.parse(t); } catch (e) { return { success: false, error: badReply(r.status, t) }; }
+            });
         }).then(function (j) {
             if (!j || !j.success) throw new Error((j && j.error) || L('err.generic', 'Something went wrong.'));
             return j;
         });
+    }
+    /**
+     * A reply that was not JSON, said in words. "HTTP 200" alone told nobody
+     * anything: the usual cause is a PHP warning printed ahead of the JSON (with
+     * display_errors on) or a proxy's own page, so show the start of what came back.
+     */
+    function badReply(status, text) {
+        var t = String(text || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+        if (t.length > 300) t = t.slice(0, 300) + '…';
+        return t
+            ? L('err.bad_reply', 'The server replied with something other than JSON (HTTP {status}): {text}', { status: status, text: t })
+            : L('err.empty_reply', 'The server sent an empty reply (HTTP {status}).', { status: status });
     }
     function fail(e) { WM.notify(e && e.message ? e.message : String(e), 'error'); }
     function fmtSize(n) {
@@ -1095,7 +1109,7 @@
                     xhr.onload = function () {
                         var j = null;
                         try { j = JSON.parse(xhr.responseText); } catch (e) { /* not JSON */ }
-                        if (!j || !j.success) { reject(new Error((j && j.error) || ('HTTP ' + xhr.status))); return; }
+                        if (!j || !j.success) { reject(new Error((j && j.error) || badReply(xhr.status, xhr.responseText))); return; }
                         u.sent = j.received;
                         paintOne(u);
                         next(j.received);
