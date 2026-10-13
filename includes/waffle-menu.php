@@ -240,9 +240,12 @@ $modules = [
         border-radius: 8px;
         box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
         padding: 20px;
-        /* Widened to 460px so the 4-column grid (5 rows for 20 modules)
-           has breathing room for the icon + label per cell. */
-        min-width: 460px;
+        /* 5 columns (Ed, 3.6.0): with 26 modules a 4-column grid ran off the bottom
+           of the screen. Widened to fit, and it scrolls inside itself on a short
+           window rather than spilling past the bottom edge. */
+        min-width: 570px;
+        max-height: calc(100vh - 80px);
+        overflow-y: auto;
         z-index: 1000;
         display: none;
     }
@@ -262,7 +265,7 @@ $modules = [
 
     .waffle-modules {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 8px;
     }
 
@@ -553,6 +556,7 @@ $modules = [
             width: 86vw;
             max-width: 360px;
             min-width: 0;
+            max-height: none;           /* the desktop cap would cut the full-height drawer short */
             border-radius: 0;
             padding: 14px 14px calc(16px + env(safe-area-inset-bottom, 0px));
             overflow-y: auto;
