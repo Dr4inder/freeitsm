@@ -9,6 +9,16 @@
  *      the look the wiki is meant to have.
  */
 
+/* TRAP: fill whatever is left under the header, never calc(100vh - <header height>). The header
+   is 62px, not the 48px older pages assume; the extra height made the whole window scroll and
+   pushed the header up against the top edge. */
+body[data-mobile-page="engineering-wiki"] {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
 .ew-app {
     --gh-fg: #1f2328;
     --gh-muted: #59636e;
@@ -28,7 +38,7 @@
     --gh-k: #cf222e; --gh-s: #0a3069; --gh-c: #59636e; --gh-n: #0550ae; --gh-v: #953800;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 48px);
+    flex: 1;
     background: var(--app-bg);
     color: var(--text);
     min-height: 0;
