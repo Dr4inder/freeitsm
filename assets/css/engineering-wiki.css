@@ -227,10 +227,14 @@ html[data-theme-mode="dark"] .ew-app {
     padding: 6px 6px 0;
     background: var(--surface-2);
     border-bottom: 1px solid var(--border);
+    /* The active tab hangs 1px over the strip's border to join the page; without
+       overflow-y hidden that 1px made the strip scroll and showed a tiny scrollbar. */
     overflow-x: auto;
+    overflow-y: hidden;
     flex-shrink: 0;
-    scrollbar-width: thin;
+    scrollbar-width: none;
 }
+.ew-tabs::-webkit-scrollbar { display: none; }
 .ew-tab {
     display: flex;
     align-items: center;
