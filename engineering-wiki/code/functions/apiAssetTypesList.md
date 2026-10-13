@@ -1,5 +1,7 @@
 # apiAssetTypesList()
 
+Reference lookups The reference lists resolve for the key's default company (globals + that company's own; every row at N=1). Suppliers stay a shared registry.
+
 ```php
 function apiAssetTypesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiCalendarEventsDelete()
 
+DELETE /calendar/events/{id}
+
 ```php
 function apiCalendarEventsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

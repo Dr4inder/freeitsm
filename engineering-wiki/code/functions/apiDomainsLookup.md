@@ -1,5 +1,7 @@
 # apiDomainsLookup()
 
+POST /domains/{id}/lookup — ask the registry now
+
 ```php
 function apiDomainsLookup(PDO $conn, array $apiKey, array $params, array $body): void
 ```

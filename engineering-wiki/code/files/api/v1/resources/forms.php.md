@@ -62,18 +62,18 @@ The module's AI form-generation endpoints stay UI-only.
 | [apiLoadForm()](/code/functions/apiLoadForm.md) | 120 |  |
 | [apiSerializeFormSubmission()](/code/functions/apiSerializeFormSubmission.md) | 130 |  |
 | [apiLoadFormSubmission()](/code/functions/apiLoadFormSubmission.md) | 188 |  |
-| [apiFormsList()](/code/functions/apiFormsList.md) | 209 |  |
+| [apiFormsList()](/code/functions/apiFormsList.md) | 209 | GET /forms — one row per chain (the current version), like the module list. |
 | [apiFormsGet()](/code/functions/apiFormsGet.md) | 229 |  |
-| [apiFormsCreate()](/code/functions/apiFormsCreate.md) | 234 |  |
-| [apiFormsUpdate()](/code/functions/apiFormsUpdate.md) | 242 |  |
-| [apiFormsDelete()](/code/functions/apiFormsDelete.md) | 251 |  |
-| [apiFormVersionsList()](/code/functions/apiFormVersionsList.md) | 264 |  |
-| [apiFormVersionsCreate()](/code/functions/apiFormVersionsCreate.md) | 298 |  |
+| [apiFormsCreate()](/code/functions/apiFormsCreate.md) | 234 | POST /forms — mirrors save_form.php's create branch (version_number 1). |
+| [apiFormsUpdate()](/code/functions/apiFormsUpdate.md) | 242 | PATCH /forms/{id} — save_form.php's in-place save (id-based field sync). |
+| [apiFormsDelete()](/code/functions/apiFormsDelete.md) | 251 | DELETE /forms/{id} — one version (leaf only), or the whole chain with ?chain=true. Always transactional, submissions + data removed explicitly. |
+| [apiFormVersionsList()](/code/functions/apiFormVersionsList.md) | 264 | GET /forms/{id}/versions — the whole chain, oldest first (list_versions.php). |
+| [apiFormVersionsCreate()](/code/functions/apiFormVersionsCreate.md) | 298 | POST /forms/{id}/versions — fork the leaf (create_version.php). |
 | [apiFormSubmissionsSelect()](/code/functions/apiFormSubmissionsSelect.md) | 309 |  |
-| [apiFormSubmissionsList()](/code/functions/apiFormSubmissionsList.md) | 317 |  |
+| [apiFormSubmissionsList()](/code/functions/apiFormSubmissionsList.md) | 317 | GET /forms/{id}/submissions — newest first, paginated. |
 | [apiFormSubmissionsGet()](/code/functions/apiFormSubmissionsGet.md) | 350 |  |
-| [apiFormSubmissionsCreate()](/code/functions/apiFormSubmissionsCreate.md) | 356 |  |
-| [apiFormSubmissionsDelete()](/code/functions/apiFormSubmissionsDelete.md) | 366 |  |
+| [apiFormSubmissionsCreate()](/code/functions/apiFormSubmissionsCreate.md) | 356 | POST /forms/{id}/submissions — submit_form.php: per-type validation, then the form.submitted workflow dispatch (after commit, errors swallowed). |
+| [apiFormSubmissionsDelete()](/code/functions/apiFormSubmissionsDelete.md) | 366 | DELETE /forms/{id}/submissions/{sid} — delete_submission.php, but with the data rows removed explicitly (grown installs may lack the cascade FK). |
 
 ## Database
 

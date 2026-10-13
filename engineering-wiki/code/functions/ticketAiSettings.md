@@ -1,5 +1,13 @@
 # ticketAiSettings()
 
+─────────────────────────────────────────────────────────────────────────── SETTINGS
+
+Both features are OFF until somebody turns them on, which is not the usual
+   FreeITSM default. Every other setting in this area changes how something
+   already free is displayed; these two spend money with somebody else's API
+   key, and a feature that starts billing on upgrade is not a good surprise.
+   ───────────────────────────────────────────────────────────────────────────
+
 ```php
 function ticketAiSettings(?PDO $conn = null): array
 ```

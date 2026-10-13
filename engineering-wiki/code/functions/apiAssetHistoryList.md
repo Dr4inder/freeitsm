@@ -1,5 +1,7 @@
 # apiAssetHistoryList()
 
+GET /assets/{id}/history + /custody
+
 ```php
 function apiAssetHistoryList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiTasksUpdate()
 
+PATCH /tasks/{id}
+
 ```php
 function apiTasksUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

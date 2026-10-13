@@ -1,5 +1,7 @@
 # mcpToolSearchKnowledge()
 
+══════════════════════════════════════════════════════════════════════════ KNOWLEDGE - by the KEY's companies (KnowledgeViewer::forApiKey), not the analyst's active company, which an API call does not have. ══════════════════════════════════════════════════════════════════════════
+
 ```php
 function mcpToolSearchKnowledge(PDO $conn, array $args, int $analystId, array $apiKey): string
 ```

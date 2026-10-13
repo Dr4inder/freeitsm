@@ -1,5 +1,7 @@
 # apiTicketAuditList()
 
+Audit log
+
 ```php
 function apiTicketAuditList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

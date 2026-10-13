@@ -19,10 +19,10 @@ FreeITSM REST API v1 — requesters (the `users` table: end users who raise tick
 | [apiUserColumns()](/code/functions/apiUserColumns.md) | 13 | The columns every read of a requester selects - including the cost centre they are charged to (GH #160), once Database Verification has added it. |
 | [apiUserCostCentre()](/code/functions/apiUserCostCentre.md) | 29 | `cost_centre_id` from a request body for a requester in company `$tenantId` (NULL = Default): an ACTIVE one of that company, or the one they hold. 422 otherwise. Returns [sent?, value]. |
 | [apiSerializeUser()](/code/functions/apiSerializeUser.md) | 40 |  |
-| [apiUsersList()](/code/functions/apiUsersList.md) | 63 |  |
-| [apiUsersGet()](/code/functions/apiUsersGet.md) | 108 |  |
-| [apiUsersCreate()](/code/functions/apiUsersCreate.md) | 142 |  |
-| [apiUsersUpdate()](/code/functions/apiUsersUpdate.md) | 206 |  |
+| [apiUsersList()](/code/functions/apiUsersList.md) | 63 | GET /users?q=&email= |
+| [apiUsersGet()](/code/functions/apiUsersGet.md) | 108 | GET /users/{id} |
+| [apiUsersCreate()](/code/functions/apiUsersCreate.md) | 142 | POST /users |
+| [apiUsersUpdate()](/code/functions/apiUsersUpdate.md) | 206 | PATCH /users/{id} |
 
 ## Database
 

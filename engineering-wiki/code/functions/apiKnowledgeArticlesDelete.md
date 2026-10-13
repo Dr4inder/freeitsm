@@ -1,5 +1,7 @@
 # apiKnowledgeArticlesDelete()
 
+DELETE (archive) / restore / permanent purge — the recycle-bin semantics
+
 ```php
 function apiKnowledgeArticlesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

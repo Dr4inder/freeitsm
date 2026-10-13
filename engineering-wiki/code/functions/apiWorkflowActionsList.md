@@ -1,5 +1,7 @@
 # apiWorkflowActionsList()
 
+GET /workflow-actions — every action type with its args spec (labels, required flags, lookup sources, template-variable support).
+
 ```php
 function apiWorkflowActionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

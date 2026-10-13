@@ -1,5 +1,7 @@
 # resolveTokens()
 
+Helper: resolve special tokens
+
 ```php
 function resolveTokens($record, $conn)
 ```

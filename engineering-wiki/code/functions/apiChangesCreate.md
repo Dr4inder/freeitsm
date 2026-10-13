@@ -1,5 +1,7 @@
 # apiChangesCreate()
 
+POST /changes
+
 ```php
 function apiChangesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

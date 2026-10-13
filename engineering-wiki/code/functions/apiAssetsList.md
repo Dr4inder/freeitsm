@@ -1,5 +1,7 @@
 # apiAssetsList()
 
+GET /assets
+
 ```php
 function apiAssetsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

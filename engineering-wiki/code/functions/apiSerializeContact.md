@@ -1,5 +1,7 @@
 # apiSerializeContact()
 
+Supplier contacts
+
 ```php
 function apiSerializeContact(array $c): array
 ```

@@ -1,5 +1,7 @@
 # apiMorningChecksDelete()
 
+DELETE /morning-checks/checks/{id}
+
 ```php
 function apiMorningChecksDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

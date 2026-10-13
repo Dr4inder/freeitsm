@@ -1,5 +1,7 @@
 # apiCalendarEventsCreate()
 
+POST /calendar/events
+
 ```php
 function apiCalendarEventsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

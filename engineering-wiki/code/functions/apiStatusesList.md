@@ -1,5 +1,7 @@
 # apiStatusesList()
 
+GET /statuses
+
 ```php
 function apiStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

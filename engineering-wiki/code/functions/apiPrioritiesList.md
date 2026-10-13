@@ -1,5 +1,7 @@
 # apiPrioritiesList()
 
+GET /priorities
+
 ```php
 function apiPrioritiesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

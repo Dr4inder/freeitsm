@@ -1,5 +1,7 @@
 # apiNmDiagramsList()
 
+GET /network-diagrams — current versions by default; ?all_versions=true for everything.
+
 ```php
 function apiNmDiagramsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiCostCentresGet()
 
+GET /cost-centres/{id}
+
 ```php
 function apiCostCentresGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiSoftwareLicencesDelete()
 
+DELETE /software/licences/{id} — leaf table, mirrors delete_licence.php
+
 ```php
 function apiSoftwareLicencesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

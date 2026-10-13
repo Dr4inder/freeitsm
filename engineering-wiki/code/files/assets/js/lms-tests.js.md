@@ -22,31 +22,31 @@ LMS -> Tests (competency tests). One file for the three analyst pages, chosen by
 | `when(utc)` | 47 |  |
 | `pct(n)` | 48 |  |
 | `opts(list, sel, label)` | 49 |  |
-| `modal(id, title, bodyHtml, actionsHtml)` | 52 |  |
+| `modal(id, title, bodyHtml, actionsHtml)` | 52 | ------------------------------------------------------------------ modal shell |
 | `closeModal(m)` | 66 |  |
-| `questionCard(q, o)` | 72 |  |
+| `questionCard(q, o)` | 72 | ------------------------------------------------------------------ question card |
 | `editQuestion(q, onSaved, testId)` | 95 |  |
 | `readRows()` | 110 |  |
 | `draw()` | 118 |  |
-| `bankFilters(prefix, skills, withStatus)` | 161 |  |
+| `bankFilters(prefix, skills, withStatus)` | 161 | ------------------------------------------------------------------ bank (shared by the tab and the picker) |
 | `bankQuery(prefix, statusOverride)` | 172 |  |
 | `wireFilters(prefix, run)` | 176 |  |
 | `pickFromBank(testId, already, done)` | 185 |  |
 | `count()` | 193 |  |
 | `run()` | 194 |  |
-| `candidatesTable(rows, showTest)` | 220 |  |
+| `candidatesTable(rows, showTest)` | 220 | ------------------------------------------------------------------ candidates table (index tab + builder) |
 | `showLink(link, note, emailed)` | 240 |  |
 | `linkNote(days)` | 255 |  |
 | `wireSittingActions(host, reload)` | 256 |  |
 | `sendToCandidate(testId, canEmail, done)` | 273 |  |
-| `initIndex()` | 295 |  |
+| `initIndex()` | 295 | ================================================================== INDEX |
 | `show(tab)` | 297 |  |
 | `loadTests()` | 305 |  |
 | `loadBank()` | 327 |  |
 | `runBank()` | 338 |  |
 | `bulk()` | 355 |  |
 | `loadCandidates()` | 386 |  |
-| `initEdit()` | 402 |  |
+| `initEdit()` | 402 | ================================================================== EDIT (builder) |
 | `skillRow(sk)` | 408 |  |
 | `readTest()` | 423 |  |
 | `save(quiet)` | 432 |  |
@@ -56,7 +56,7 @@ LMS -> Tests (competency tests). One file for the three analyst pages, chosen by
 | `loadSittings()` | 482 |  |
 | `fill(rows)` | 487 |  |
 | `next()` | 491 |  |
-| `initResult()` | 568 |  |
+| `initResult()` | 568 | ================================================================== RESULT |
 
 ## API endpoints it calls
 

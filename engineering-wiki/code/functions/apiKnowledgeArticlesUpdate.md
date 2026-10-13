@@ -1,5 +1,7 @@
 # apiKnowledgeArticlesUpdate()
 
+PATCH /knowledge/articles/{id}
+
 ```php
 function apiKnowledgeArticlesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

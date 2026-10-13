@@ -1,5 +1,7 @@
 # apiOriginsList()
 
+GET /origins (?company_id= applies the per-company add/hide overrides)
+
 ```php
 function apiOriginsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

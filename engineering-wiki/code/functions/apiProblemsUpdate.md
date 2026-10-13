@@ -1,5 +1,7 @@
 # apiProblemsUpdate()
 
+PATCH /problems/{id}
+
 ```php
 function apiProblemsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

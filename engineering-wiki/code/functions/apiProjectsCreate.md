@@ -1,5 +1,7 @@
 # apiProjectsCreate()
 
+POST /projects (optionally {template: "builtin:office_move" | "saved:12"})
+
 ```php
 function apiProjectsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

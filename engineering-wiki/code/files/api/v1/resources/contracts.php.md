@@ -54,24 +54,24 @@ supplier CONTACTS endpoints, and the read-only lookup lists stay here.
 | [apiSupplierSelect()](/code/functions/apiSupplierSelect.md) | 139 |  |
 | [apiSerializeSupplier()](/code/functions/apiSerializeSupplier.md) | 150 |  |
 | [apiLoadSupplier()](/code/functions/apiLoadSupplier.md) | 184 |  |
-| [apiContractsList()](/code/functions/apiContractsList.md) | 197 |  |
+| [apiContractsList()](/code/functions/apiContractsList.md) | 197 | GET /contracts |
 | [apiContractsGet()](/code/functions/apiContractsGet.md) | 310 |  |
 | [apiContractCompany()](/code/functions/apiContractCompany.md) | 322 | `company_id` from a request body as the service's tenant_id: checked to exist and to be in the key's reach (403), or - on a create with none - the key's default company. On an update with none, nothing: the contract stays put. |
 | [apiContractsCreate()](/code/functions/apiContractsCreate.md) | 336 |  |
-| [apiContractsUpdate()](/code/functions/apiContractsUpdate.md) | 347 |  |
-| [apiContractsDelete()](/code/functions/apiContractsDelete.md) | 358 |  |
-| [apiContractTermsGet()](/code/functions/apiContractTermsGet.md) | 368 |  |
+| [apiContractsUpdate()](/code/functions/apiContractsUpdate.md) | 347 | PATCH /contracts/{id} |
+| [apiContractsDelete()](/code/functions/apiContractsDelete.md) | 358 | DELETE /contracts/{id} — explicit children (the contracts domain had no FKs) |
+| [apiContractTermsGet()](/code/functions/apiContractTermsGet.md) | 368 | Contract terms — GET + bulk upsert (mirrors save_contract_terms.php) |
 | [apiContractTermsSave()](/code/functions/apiContractTermsSave.md) | 387 |  |
-| [apiSuppliersGet()](/code/functions/apiSuppliersGet.md) | 397 |  |
+| [apiSuppliersGet()](/code/functions/apiSuppliersGet.md) | 397 | Suppliers — full CRUD (GET /suppliers stays the lite reference list) |
 | [apiSuppliersCreate()](/code/functions/apiSuppliersCreate.md) | 408 |  |
 | [apiSuppliersUpdate()](/code/functions/apiSuppliersUpdate.md) | 415 |  |
 | [apiSuppliersDelete()](/code/functions/apiSuppliersDelete.md) | 423 | DELETE /suppliers/{id} — mirrors delete_supplier.php's explicit nullify-then-delete. |
-| [apiSerializeContact()](/code/functions/apiSerializeContact.md) | 433 |  |
+| [apiSerializeContact()](/code/functions/apiSerializeContact.md) | 433 | Supplier contacts |
 | [apiSupplierContactsList()](/code/functions/apiSupplierContactsList.md) | 447 |  |
 | [apiSupplierContactsCreate()](/code/functions/apiSupplierContactsCreate.md) | 457 |  |
 | [apiSupplierContactsUpdate()](/code/functions/apiSupplierContactsUpdate.md) | 482 |  |
 | [apiSupplierContactsDelete()](/code/functions/apiSupplierContactsDelete.md) | 514 |  |
-| [apiContractLookupList()](/code/functions/apiContractLookupList.md) | 528 |  |
+| [apiContractLookupList()](/code/functions/apiContractLookupList.md) | 528 | Reference lookups |
 | [apiContractStatusesList()](/code/functions/apiContractStatusesList.md) | 542 |  |
 | [apiPaymentSchedulesList()](/code/functions/apiPaymentSchedulesList.md) | 545 |  |
 | [apiSupplierTypesList()](/code/functions/apiSupplierTypesList.md) | 548 |  |

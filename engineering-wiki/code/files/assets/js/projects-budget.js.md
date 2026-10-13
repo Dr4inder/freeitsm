@@ -14,10 +14,14 @@ re-prices the past - the panel shows the project's own rate history.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 13 |  |
 | `money(v, cur)` | 18 |  |
 | `hours(min)` | 23 |  |
+| `canChange()` | 27 |  |
+| `call(body)` | 28 |  |
 | `render()` | 30 |  |
 | `drawEarned(b, cur)` | 125 | Earned value (3.3.0): planned value (orange - the plan, as on Spend over time), actual cost (blue - what was spent, likewise) and earned value (aqua - the work done, valued at its budget), with today's indices in words as well as numbers. |
+| `word(v, good, bad)` | 132 |  |
 | `drawSpend(b, cur)` | 156 | Spend over time (3.3.0): cumulative planned and actual, the forecast, and what to measure them against. |
 | `drawChart(b, cur)` | 186 | Planned against actual per category; labour's actual is the costed time (3.3.0). |
 | `openLine(line)` | 209 |  |
@@ -25,6 +29,8 @@ re-prices the past - the panel shows the project's own rate history.
 | `deleteLine()` | 246 |  |
 | `changeCurrency()` | 253 |  |
 | `wire()` | 262 |  |
+| `render(c)` | 283 |  |
+| `shown()` | 290 | The tab was shown: the chart measures its width, so it draws now (3.3.0). |
 
 ## Loaded by
 

@@ -1,5 +1,7 @@
 # apiSoftwareLicencesCreate()
 
+POST /software/licences
+
 ```php
 function apiSoftwareLicencesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

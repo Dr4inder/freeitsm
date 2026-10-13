@@ -1,5 +1,7 @@
 # apiKnowledgeTagsList()
 
+GET /knowledge/tags — tag list with published article counts
+
 ```php
 function apiKnowledgeTagsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

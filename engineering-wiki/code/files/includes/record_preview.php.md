@@ -39,14 +39,14 @@ as the contract they are:
 | [recordPreview()](/code/functions/recordPreview.md) | 54 | A preview, or NULL when the type is unknown, the record does not exist, or this analyst may not see it. One answer for all three, deliberately. |
 | [rpField()](/code/functions/rpField.md) | 81 | Shorthand for one line of a preview. |
 | [rpFields()](/code/functions/rpFields.md) | 111 | Drop the empties, so callers can just list every field they might have. |
-| [recordPreviewTicket()](/code/functions/recordPreviewTicket.md) | 117 |  |
-| [recordPreviewTask()](/code/functions/recordPreviewTask.md) | 160 |  |
-| [recordPreviewChange()](/code/functions/recordPreviewChange.md) | 206 |  |
-| [recordPreviewProblem()](/code/functions/recordPreviewProblem.md) | 245 |  |
-| [recordPreviewAsset()](/code/functions/recordPreviewAsset.md) | 281 |  |
-| [recordPreviewContract()](/code/functions/recordPreviewContract.md) | 343 |  |
-| [recordPreviewDomain()](/code/functions/recordPreviewDomain.md) | 381 |  |
-| [recordPreviewKnowledgeArticle()](/code/functions/recordPreviewKnowledgeArticle.md) | 414 |  |
+| [recordPreviewTicket()](/code/functions/recordPreviewTicket.md) | 117 | ── Ticket ────────────────────────────────────────────────────────────────── |
+| [recordPreviewTask()](/code/functions/recordPreviewTask.md) | 160 | ── Task ──────────────────────────────────────────────────────────────────── |
+| [recordPreviewChange()](/code/functions/recordPreviewChange.md) | 206 | ── Change ────────────────────────────────────────────────────────────────── |
+| [recordPreviewProblem()](/code/functions/recordPreviewProblem.md) | 245 | ── Problem ───────────────────────────────────────────────────────────────── |
+| [recordPreviewAsset()](/code/functions/recordPreviewAsset.md) | 281 | ── Asset ─────────────────────────────────────────────────────────────────── |
+| [recordPreviewContract()](/code/functions/recordPreviewContract.md) | 343 | ── Contract ──────────────────────────────────────────────────────────────── |
+| [recordPreviewDomain()](/code/functions/recordPreviewDomain.md) | 381 | ── Domain (#154) ─────────────────────────────────────────────────────────── |
+| [recordPreviewKnowledgeArticle()](/code/functions/recordPreviewKnowledgeArticle.md) | 414 | ── Knowledge article ─────────────────────────────────────────────────────── |
 
 ## Database
 

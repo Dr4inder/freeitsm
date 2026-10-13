@@ -1,5 +1,7 @@
 # apiCmdbObjectsDelete()
 
+DELETE /cmdb/objects/{id} — explicit descendant-tree removal (grown installs have no CMDB FK cascades; see the db_verify FK group added alongside this)
+
 ```php
 function apiCmdbObjectsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

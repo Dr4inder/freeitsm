@@ -48,6 +48,7 @@ editable kinds: 'text' | 'date' | 'datetime' | 'bool' |
 | `loadPreferences()` | 158 |  |
 | `savePreferences()` | 170 |  |
 | `vt(key, fallback, params)` | 216 | Translate, falling back to English — the engine has no i18n of its own. |
+| `fill(s)` | 217 |  |
 | `captureViewConfig()` | 227 | The current state, as a view's config. Filters are Sets, so unpack them. |
 | `applyViewConfig(cfg)` | 246 | Put a saved config back on the table. |
 | `viewsFetch(path, opts)` | 264 |  |
@@ -59,7 +60,9 @@ editable kinds: 'text' | 'date' | 'datetime' | 'bool' |
 | `openViewsLibrary()` | 316 |  |
 | `refreshViewsList()` | 371 |  |
 | `renderViewEntry(v)` | 405 |  |
+| `day(s)` | 414 | Dates are plain calendar timestamps from the server. Show the day, not the minute: on a library the useful question is "is this stale?", and a time of day is noise against that. |
 | `openViewEditor(view)` | 456 | The save / edit dialog. |
+| `syncTeam()` | 509 |  |
 | `deleteView(id)` | 544 |  |
 | `setDefaultView(id)` | 554 |  |
 | `alertViews(msg)` | 565 | Errors go through the host page's toast when it has one. |
@@ -91,7 +94,7 @@ editable kinds: 'text' | 'date' | 'datetime' | 'bool' |
 | `toLocalInput(raw)` | 1162 |  |
 | `fromLocalInput(v)` | 1166 |  |
 | `esc(s)` | 1173 |  |
-| `cssEsc(s)` | 1183 |  |
+| `cssEsc(s)` | 1183 | For querySelector attribute values (data-id) — escape quotes/backslashes. |
 
 ## Loaded by
 

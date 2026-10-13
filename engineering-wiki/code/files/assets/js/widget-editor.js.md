@@ -9,7 +9,7 @@ WidgetEditor — shared form logic for creating/editing dashboard widgets. Used 
 | Function | Line | What it does |
 |---|--:|---|
 | `we(key, english, params)` | 9 | Translate, or the English written at the call site (i18n.js). |
-| `propertyLabel(p)` | 15 |  |
+| `propertyLabel(p)` | 15 | Read through functions, not constants: this file is evaluated at load time, and a constant would freeze whatever window.translations held then. |
 | `propertyInSentence(p)` | 38 | The same property as it reads INSIDE a sentence - not a lower-cased title. |
 | `seriesLabel(s)` | 55 |  |
 | `seriesInSentence(s)` | 58 |  |

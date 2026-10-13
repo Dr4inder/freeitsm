@@ -34,22 +34,22 @@
 | [apiNmResolveRelationshipId()](/code/functions/apiNmResolveRelationshipId.md) | 326 | Resolve cmdb_relationship_id input: null clears, an int is validated, 'auto' finds the existing CMDB relationship between the two objects (either direction; null if none). |
 | [apiNmValidateNodeInput()](/code/functions/apiNmValidateNodeInput.md) | 358 | Validate + normalise one node input row. Returns [cmdb_object_id, x\|null, y\|null, size, icon_override, ref] — null x/y means auto-place. |
 | [apiNmAutoPlacer()](/code/functions/apiNmAutoPlacer.md) | 386 | Auto-placement for nodes sent without coordinates: a fresh column to the right of the current bounding box, stacking downward — legible enough for an agent drop; a human tidies the layout in the editor. |
-| [apiNmDiagramsList()](/code/functions/apiNmDiagramsList.md) | 405 |  |
-| [apiNmDiagramsGet()](/code/functions/apiNmDiagramsGet.md) | 454 |  |
+| [apiNmDiagramsList()](/code/functions/apiNmDiagramsList.md) | 405 | GET /network-diagrams — current versions by default; ?all_versions=true for everything. |
+| [apiNmDiagramsGet()](/code/functions/apiNmDiagramsGet.md) | 454 | GET /network-diagrams/{id} — fully hydrated; ?include_properties=true adds each object's CI properties. |
 | [apiNmObjectProperties()](/code/functions/apiNmObjectProperties.md) | 496 | Typed property values for the distinct objects behind a diagram's nodes, keyed by object id. |
-| [apiNmDiagramsCreate()](/code/functions/apiNmDiagramsCreate.md) | 539 |  |
+| [apiNmDiagramsCreate()](/code/functions/apiNmDiagramsCreate.md) | 539 | POST /network-diagrams — create, optionally with initial contents in one call. |
 | [apiNmRespondFull()](/code/functions/apiNmRespondFull.md) | 548 | Respond with the full hydrated diagram (shared by create/update/version). |
-| [apiNmDiagramsUpdate()](/code/functions/apiNmDiagramsUpdate.md) | 558 |  |
-| [apiNmDiagramsDelete()](/code/functions/apiNmDiagramsDelete.md) | 566 |  |
-| [apiNmVersionsList()](/code/functions/apiNmVersionsList.md) | 579 |  |
-| [apiNmVersionsCreate()](/code/functions/apiNmVersionsCreate.md) | 591 |  |
-| [apiNmSuggestionsList()](/code/functions/apiNmSuggestionsList.md) | 603 |  |
-| [apiNmNodesCreate()](/code/functions/apiNmNodesCreate.md) | 695 |  |
-| [apiNmNodesUpdate()](/code/functions/apiNmNodesUpdate.md) | 757 |  |
-| [apiNmNodesDelete()](/code/functions/apiNmNodesDelete.md) | 791 |  |
-| [apiNmConnectorsCreate()](/code/functions/apiNmConnectorsCreate.md) | 818 |  |
-| [apiNmConnectorsUpdate()](/code/functions/apiNmConnectorsUpdate.md) | 854 |  |
-| [apiNmConnectorsDelete()](/code/functions/apiNmConnectorsDelete.md) | 887 |  |
+| [apiNmDiagramsUpdate()](/code/functions/apiNmDiagramsUpdate.md) | 558 | PATCH /network-diagrams/{id} — partial metadata; sending nodes/connectors = full contents replace. |
+| [apiNmDiagramsDelete()](/code/functions/apiNmDiagramsDelete.md) | 566 | DELETE /network-diagrams/{id} — leaf-only (parent resurfaces as current); ?chain=true deletes the whole chain. |
+| [apiNmVersionsList()](/code/functions/apiNmVersionsList.md) | 579 | GET /network-diagrams/{id}/versions — the whole chain, oldest first. |
+| [apiNmVersionsCreate()](/code/functions/apiNmVersionsCreate.md) | 591 | POST /network-diagrams/{id}/versions — clone the leaf forward (the editor's "New version"). |
+| [apiNmSuggestionsList()](/code/functions/apiNmSuggestionsList.md) | 603 | GET /network-diagrams/{id}/suggestions — CMDB neighbours of on-diagram objects not yet drawn. |
+| [apiNmNodesCreate()](/code/functions/apiNmNodesCreate.md) | 695 | POST /network-diagrams/{id}/nodes — add one node (object) or a batch ({"nodes": [...]}). |
+| [apiNmNodesUpdate()](/code/functions/apiNmNodesUpdate.md) | 757 | PATCH /network-diagrams/{id}/nodes/{node_id} — move / resize / re-icon. |
+| [apiNmNodesDelete()](/code/functions/apiNmNodesDelete.md) | 791 | DELETE /network-diagrams/{id}/nodes/{node_id} — the node and its connectors. |
+| [apiNmConnectorsCreate()](/code/functions/apiNmConnectorsCreate.md) | 818 | POST /network-diagrams/{id}/connectors — endpoints by node id or object id. |
+| [apiNmConnectorsUpdate()](/code/functions/apiNmConnectorsUpdate.md) | 854 | PATCH /network-diagrams/{id}/connectors/{connector_id} — label / style / provenance. |
+| [apiNmConnectorsDelete()](/code/functions/apiNmConnectorsDelete.md) | 887 | DELETE /network-diagrams/{id}/connectors/{connector_id} |
 | [apiCmdbIconsList()](/code/functions/apiCmdbIconsList.md) | 901 |  |
 
 ## Database

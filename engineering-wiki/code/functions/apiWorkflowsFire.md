@@ -1,5 +1,7 @@
 # apiWorkflowsFire()
 
+POST /workflows/{id}/fire — manual test fire with a synthetic payload.
+
 ```php
 function apiWorkflowsFire(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -37,6 +37,7 @@ Units: millimetres throughout. Font sizes are points; PT converts.
 | `tokenise(runs, base, ctx)` | 175 | Runs -> tokens: words, spaces and hard breaks, each with its style and width. |
 | `fieldValue(name, fields)` | 200 |  |
 | `breakLines(tokens, avail)` | 206 | Greedy line breaking. A word wider than the line is split by characters. |
+| `push(hard)` | 209 |  |
 | `mergeRuns(items)` | 245 | Join neighbouring tokens of identical style into one run (fewer SVG/PDF calls). |
 | `sameStyle(a, b)` | 255 |  |
 | `wrapPlain(text, width, st)` | 261 | Plain text wrapped into lines - for table cells and captions. |
@@ -59,6 +60,11 @@ Units: millimetres throughout. Font sizes are points; PT converts.
 | `pageGeometry(design)` | 548 |  |
 | `layoutPart(part, width, theme, ctx)` | 557 | Header/footer/cover laid out for one page's fields. |
 | `paginate(design, dataMap, ctx)` | 574 | The whole pack as pages. design the cleaned design dataMap block id -> {data} \| {error} \| undefined (still loading) ctx {fields: {...}, logo: {w,h}\|null, title, labels: {...}} |
+| `fieldsAt(n, total)` | 577 |  |
+| `spanW(span)` | 586 |  |
+| `bodyTop(p)` | 609 |  |
+| `bodyBottom()` | 610 |  |
+| `newPage()` | 612 |  |
 | `placeRow(r)` | 663 |  |
 | `place(it, part, x)` | 673 | Put a block (or one page's part of it) on the current page at y. |
 | `tocDraw(design, theme, headings, offset, part, G, headerH, footerH)` | 730 |  |
@@ -67,8 +73,11 @@ Units: millimetres throughout. Font sizes are points; PT converts.
 | `measureBlock(b, entry, width, theme, ctx)` | 773 | Measure one block. Returns {h, draw, split?, chart?, rich?, minH?, state?}. |
 | `placeholder(width, top, h, text, theme, isError)` | 828 |  |
 | `tableSplitter(T, title)` | 837 | Splitters: `start()` -> state; take(state, room, minUnits?) -> {n, h, draw, rest, continued} |
+| `take(s, room, force)` | 840 |  |
 | `unitSplitter(units, title)` | 854 |  |
+| `take(s, room, force)` | 857 |  |
 | `textSplitter(m)` | 871 |  |
+| `take(s, room, force)` | 875 |  |
 
 ## Loaded by
 

@@ -1,5 +1,7 @@
 # apiTicketsDelete()
 
+DELETE /tickets/{id} + POST /tickets/{id}/restore (soft delete / trash)
+
 ```php
 function apiTicketsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

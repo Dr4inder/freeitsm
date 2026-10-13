@@ -34,10 +34,14 @@ The optional "Create subtask" item carries data-action="subtask".
 | `openCtx(e, taskId)` | 98 |  |
 | `closeCtx()` | 116 |  |
 | `buildSubmenus(task)` | 123 |  |
+| `T(k)` | 125 |  |
+| `opt(field, value, label, current, swatch)` | 127 |  |
+| `sw(c)` | 132 |  |
+| `ymd(d)` | 184 | ── Due date shortcuts ──────────────────────────────────────────── ⚠️ Built from LOCAL date parts, never `toISOString()`: a due date is a bare date, and `toISOString()` converts to UTC first, so anyone west of Greenwich would get yesterday. Same trap as GH #116, different field. |
 | `onMenuClick(e)` | 222 |  |
 | `moveToCompany(tenantId)` | 317 | Move the task - and everything beneath it - to another company. |
 | `setField(field, value)` | 339 |  |
-| `esc(text)` | 367 |  |
+| `esc(text)` | 367 | ── Local helpers (mirrors of esc/escAttr in tasks.js + tasks-timeline.js) ── |
 | `escAttr(value)` | 373 |  |
 
 ## API endpoints it calls

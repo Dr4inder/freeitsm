@@ -63,6 +63,10 @@ Anything added here later must follow the same rule.
 | `handleConfirm()` | 185 |  |
 | `handleCancel()` | 201 |  |
 | `close()` | 209 |  |
+| `showConfirm(opts)` | 221 |  |
+| `cd(key, english)` | 228 | `tf()` is translate-or-this-English (i18n.js). Guarded because this file is injected by pages that do not all load i18n.js, and a dialog whose buttons read "common.ok" is worse than one reading "OK". |
+| `keyHandler(e)` | 264 |  |
+| `requestAnimationFrame(function()` | 270 |  |
 
 ## Loaded by
 

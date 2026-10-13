@@ -12,8 +12,10 @@ Files → Settings (files/settings/index.php). Both tabs read and write through 
 | `esc(s)` | 9 |  |
 | `api(path, body)` | 10 |  |
 | `fmtSize(n)` | 15 |  |
+| `switchTab(id)` | 22 |  |
 | `loadFolders()` | 33 |  |
 | `renderFolders()` | 38 |  |
+| `go()` | 57 |  |
 
 ## Loaded by
 

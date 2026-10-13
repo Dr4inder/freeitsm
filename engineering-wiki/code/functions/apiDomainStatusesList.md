@@ -1,5 +1,7 @@
 # apiDomainStatusesList()
 
+GET /domain-statuses · GET /domain-registrar-accounts
+
 ```php
 function apiDomainStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiSoftwareAppsGet()
 
+GET /software/apps/{id} — app + licences + compliance numbers
+
 ```php
 function apiSoftwareAppsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

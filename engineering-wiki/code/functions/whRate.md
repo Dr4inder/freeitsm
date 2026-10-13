@@ -1,5 +1,7 @@
 # whRate()
 
+Success-rate cell: delivered vs terminal (delivered + dead); in-flight ignored.
+
 ```php
 function whRate($delivered, $dead)
 ```

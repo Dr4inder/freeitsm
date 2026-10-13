@@ -15,6 +15,7 @@ never a root-relative "/api/…", which 404s on an install in a sub-directory.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 14 |  |
 | `esc(v)` | 16 |  |
 | `api(path, body)` | 21 |  |
 | `fmtDate(d)` | 35 |  |

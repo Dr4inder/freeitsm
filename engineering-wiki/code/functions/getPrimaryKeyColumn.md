@@ -1,5 +1,7 @@
 # getPrimaryKeyColumn()
 
+Helper: get primary key column name for a table
+
 ```php
 function getPrimaryKeyColumn($tableName)
 ```

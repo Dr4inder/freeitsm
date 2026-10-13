@@ -1,5 +1,7 @@
 # apiAnalystsAccessGet()
 
+GET /analysts/{id}/access
+
 ```php
 function apiAnalystsAccessGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

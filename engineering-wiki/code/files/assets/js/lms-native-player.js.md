@@ -14,6 +14,9 @@ be made to lie about it either.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `LMSPlayer(()` | 10 | LMS — the learner's player for an authored course. |
+| `esc(s)` | 35 |  |
+| `elapsed()` | 36 |  |
 | `init()` | 38 |  |
 | `renderToc()` | 68 |  |
 | `renderLesson()` | 86 |  |

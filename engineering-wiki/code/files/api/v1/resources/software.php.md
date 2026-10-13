@@ -42,16 +42,16 @@ below stay here and are called to re-load the affected row after a write.
 | [apiSoftwareAppsList()](/code/functions/apiSoftwareAppsList.md) | 37 |  |
 | [apiSoftwareLoadApp()](/code/functions/apiSoftwareLoadApp.md) | 110 |  |
 | [apiSoftwareInstallCount()](/code/functions/apiSoftwareInstallCount.md) | 121 | Distinct non-system-component hosts for an app — the compliance install count. |
-| [apiSoftwareAppsGet()](/code/functions/apiSoftwareAppsGet.md) | 131 |  |
-| [apiSoftwareAppMachinesList()](/code/functions/apiSoftwareAppMachinesList.md) | 178 |  |
+| [apiSoftwareAppsGet()](/code/functions/apiSoftwareAppsGet.md) | 131 | GET /software/apps/{id} — app + licences + compliance numbers |
+| [apiSoftwareAppMachinesList()](/code/functions/apiSoftwareAppMachinesList.md) | 178 | GET /software/apps/{id}/machines — mirrors get_app_machines.php (+ asset_id) |
 | [apiSoftwareLicenceSelect()](/code/functions/apiSoftwareLicenceSelect.md) | 207 |  |
 | [apiSerializeLicence()](/code/functions/apiSerializeLicence.md) | 217 |  |
 | [apiLoadLicence()](/code/functions/apiLoadLicence.md) | 256 |  |
-| [apiSoftwareLicencesList()](/code/functions/apiSoftwareLicencesList.md) | 267 |  |
+| [apiSoftwareLicencesList()](/code/functions/apiSoftwareLicencesList.md) | 267 | GET /software/licences |
 | [apiSoftwareLicencesGet()](/code/functions/apiSoftwareLicencesGet.md) | 331 |  |
-| [apiSoftwareLicencesCreate()](/code/functions/apiSoftwareLicencesCreate.md) | 336 |  |
-| [apiSoftwareLicencesUpdate()](/code/functions/apiSoftwareLicencesUpdate.md) | 344 |  |
-| [apiSoftwareLicencesDelete()](/code/functions/apiSoftwareLicencesDelete.md) | 352 |  |
+| [apiSoftwareLicencesCreate()](/code/functions/apiSoftwareLicencesCreate.md) | 336 | POST /software/licences |
+| [apiSoftwareLicencesUpdate()](/code/functions/apiSoftwareLicencesUpdate.md) | 344 | PATCH /software/licences/{id} |
+| [apiSoftwareLicencesDelete()](/code/functions/apiSoftwareLicencesDelete.md) | 352 | DELETE /software/licences/{id} — leaf table, mirrors delete_licence.php |
 
 ## Database
 

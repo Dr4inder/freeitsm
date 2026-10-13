@@ -1,5 +1,7 @@
 # apiWorkflowsGet()
 
+GET /workflows/{id}
+
 ```php
 function apiWorkflowsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

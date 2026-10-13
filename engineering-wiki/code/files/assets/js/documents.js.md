@@ -36,4 +36,6 @@ and war-room.js: fall back to English rather than take the page down.
 | `closeInfo()` | 502 |  |
 | `onInfoKey(e)` | 507 |  |
 | `showInfo(apiBase, documentId, baseUrl)` | 509 |  |
+| `mount(el, opts)` | 583 |  |
+| `upload(parentType, parentId, files, apiBase)` | 597 | Attach already-chosen files to a parent, without a panel. |
 

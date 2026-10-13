@@ -1,5 +1,7 @@
 # apiUsersCreate()
 
+POST /users
+
 ```php
 function apiUsersCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

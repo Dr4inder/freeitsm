@@ -16,6 +16,7 @@ do on a single click.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `t(k, p)` | 16 |  |
 | `confirmText(book, person)` | 18 |  |
 | `add(book, userId, person, apiBase, onDone, btn)` | 28 |  |
 | `mount(host, userId, person, apiBase, onDone)` | 62 | Draw the button(s) into `host` if this person can be added anywhere. One address book: one button naming it. Several: one each. None, or a person who is already linked: nothing at all. |

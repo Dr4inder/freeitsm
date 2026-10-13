@@ -1,5 +1,7 @@
 # apiNmVersionsCreate()
 
+POST /network-diagrams/{id}/versions — clone the leaf forward (the editor's "New version").
+
 ```php
 function apiNmVersionsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

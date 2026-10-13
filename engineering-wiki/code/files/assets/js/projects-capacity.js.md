@@ -14,7 +14,9 @@ this file only draws it.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `hrs(h)` | 19 |  |
 | `tiles(c)` | 21 |  |
+| `tile(n, label, cls)` | 27 |  |
 | `cell(w, c)` | 34 |  |
 | `detail(r, c)` | 43 |  |
 | `render()` | 64 |  |

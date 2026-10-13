@@ -1,5 +1,7 @@
 # apiProblemsCreate()
 
+POST /problems
+
 ```php
 function apiProblemsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

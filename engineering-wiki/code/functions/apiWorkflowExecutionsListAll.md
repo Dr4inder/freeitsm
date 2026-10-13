@@ -1,5 +1,7 @@
 # apiWorkflowExecutionsListAll()
 
+GET /workflow-executions — install-wide, including orphaned runs whose workflow has been deleted (filter with ?workflow_id or ?orphaned=true).
+
 ```php
 function apiWorkflowExecutionsListAll(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiSerializeBudgetLine()
 
+Budget
+
 ```php
 function apiSerializeBudgetLine(array $l): array
 ```

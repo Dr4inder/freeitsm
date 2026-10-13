@@ -1,5 +1,7 @@
 # apiCmdbObjectTicketsList()
 
+Ticket links — company-scoped on both the CI and the tickets
+
 ```php
 function apiCmdbObjectTicketsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

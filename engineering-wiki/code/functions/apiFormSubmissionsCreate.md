@@ -1,5 +1,7 @@
 # apiFormSubmissionsCreate()
 
+POST /forms/{id}/submissions — submit_form.php: per-type validation, then the form.submitted workflow dispatch (after commit, errors swallowed).
+
 ```php
 function apiFormSubmissionsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

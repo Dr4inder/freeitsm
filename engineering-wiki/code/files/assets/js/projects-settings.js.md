@@ -14,15 +14,18 @@ or delete a saved one) over api/projects/templates.php.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `switchTab(tab)` | 16 |  |
 | `defaultLabel(key, value)` | 22 |  |
 | `fill()` | 53 |  |
 | `save(tab)` | 83 |  |
 | `renderTemplates()` | 102 |  |
+| `row(t, control)` | 105 |  |
 | `tplCall(body)` | 119 |  |
 | `wireTemplates()` | 132 |  |
 | `renderRoles()` | 168 |  |
 | `openRole(role)` | 181 |  |
-| `renderRates()` | 195 |  |
+| `renderRates()` | 195 | Each from a date: a new rate never re-prices time already logged. |
+| `money(v)` | 199 |  |
 | `rateCall(body)` | 206 |  |
 | `wireRates()` | 210 |  |
 | `roleCall(body)` | 229 |  |

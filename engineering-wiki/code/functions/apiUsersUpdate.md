@@ -1,5 +1,7 @@
 # apiUsersUpdate()
 
+PATCH /users/{id}
+
 ```php
 function apiUsersUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

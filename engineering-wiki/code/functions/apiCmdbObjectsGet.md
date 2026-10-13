@@ -1,5 +1,7 @@
 # apiCmdbObjectsGet()
 
+GET /cmdb/objects/{id} — fully hydrated
+
 ```php
 function apiCmdbObjectsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

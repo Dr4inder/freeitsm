@@ -16,6 +16,7 @@ places at every resolution - the PDF's chart is the screen's chart, sharper.
 |---|--:|---|
 | `colours(data, palette)` | 25 |  |
 | `render(chart, theme, scale, labels)` | 34 | Draw `chart` ({w, h in mm, data, block}) and return a canvas. scale = device pixels per CSS pixel. |
+| `fontPx(pt)` | 53 |  |
 
 ## Loaded by
 

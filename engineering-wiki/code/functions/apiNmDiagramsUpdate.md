@@ -1,5 +1,7 @@
 # apiNmDiagramsUpdate()
 
+PATCH /network-diagrams/{id} — partial metadata; sending nodes/connectors = full contents replace.
+
 ```php
 function apiNmDiagramsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

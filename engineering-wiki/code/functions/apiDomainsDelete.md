@@ -1,5 +1,7 @@
 # apiDomainsDelete()
 
+DELETE /domains/{id}
+
 ```php
 function apiDomainsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

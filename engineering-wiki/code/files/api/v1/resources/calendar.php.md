@@ -47,12 +47,12 @@ the naive-datetime parser (also used by the list filters) stay here.
 | [apiCalendarEventSelect()](/code/functions/apiCalendarEventSelect.md) | 66 |  |
 | [apiSerializeCalendarEvent()](/code/functions/apiSerializeCalendarEvent.md) | 74 |  |
 | [apiLoadCalendarEvent()](/code/functions/apiLoadCalendarEvent.md) | 98 |  |
-| [apiCalendarEventsList()](/code/functions/apiCalendarEventsList.md) | 111 |  |
+| [apiCalendarEventsList()](/code/functions/apiCalendarEventsList.md) | 111 | GET /calendar/events |
 | [apiCalendarEventsGet()](/code/functions/apiCalendarEventsGet.md) | 178 |  |
-| [apiCalendarEventsCreate()](/code/functions/apiCalendarEventsCreate.md) | 185 |  |
-| [apiCalendarEventsUpdate()](/code/functions/apiCalendarEventsUpdate.md) | 195 |  |
-| [apiCalendarEventsDelete()](/code/functions/apiCalendarEventsDelete.md) | 205 |  |
-| [apiCalendarCategoriesList()](/code/functions/apiCalendarCategoriesList.md) | 215 |  |
+| [apiCalendarEventsCreate()](/code/functions/apiCalendarEventsCreate.md) | 185 | POST /calendar/events |
+| [apiCalendarEventsUpdate()](/code/functions/apiCalendarEventsUpdate.md) | 195 | PATCH /calendar/events/{id} |
+| [apiCalendarEventsDelete()](/code/functions/apiCalendarEventsDelete.md) | 205 | DELETE /calendar/events/{id} |
+| [apiCalendarCategoriesList()](/code/functions/apiCalendarCategoriesList.md) | 215 | GET /calendar-categories (reference) |
 
 ## Database
 

@@ -54,7 +54,7 @@ assistant told about a tool it cannot use keeps reaching for it.
 | [mcpToolProjectTasks()](/code/functions/mcpToolProjectTasks.md) | 253 |  |
 | [mcpToolProjectDates()](/code/functions/mcpToolProjectDates.md) | 259 |  |
 | [mcpToolProjectBudget()](/code/functions/mcpToolProjectBudget.md) | 266 | The budget stays MCP-only: Warbot answers in a channel everyone in it can read. |
-| [mcpToolSearchKnowledge()](/code/functions/mcpToolSearchKnowledge.md) | 292 |  |
+| [mcpToolSearchKnowledge()](/code/functions/mcpToolSearchKnowledge.md) | 292 | ══════════════════════════════════════════════════════════════════════════ KNOWLEDGE - by the KEY's companies (KnowledgeViewer::forApiKey), not the analyst's active company, which an API call does not have. ══════════════════════════════════════════════════════════════════════════ |
 
 ## Database
 

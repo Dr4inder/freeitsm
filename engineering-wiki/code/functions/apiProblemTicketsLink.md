@@ -1,5 +1,7 @@
 # apiProblemTicketsLink()
 
+Incident linking — POST /problems/{id}/tickets, DELETE .../{ticket_id}
+
 ```php
 function apiProblemTicketsLink(PDO $conn, array $apiKey, array $params, array $body): void
 ```

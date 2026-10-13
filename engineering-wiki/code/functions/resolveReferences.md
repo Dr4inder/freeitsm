@@ -1,5 +1,7 @@
 # resolveReferences()
 
+Helper: resolve `@table`.ref references to real IDs
+
 ```php
 function resolveReferences($record, $idMap)
 ```

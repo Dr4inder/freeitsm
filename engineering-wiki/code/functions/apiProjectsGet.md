@@ -1,5 +1,7 @@
 # apiProjectsGet()
 
+GET /projects/{id}
+
 ```php
 function apiProjectsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -32,6 +32,8 @@ No external dependencies.
 | `renderRow(value, colour, index)` | 40 |  |
 | `injectStylesOnce()` | 57 |  |
 | `wireRowHandlers(container)` | 147 |  |
+| `renderOptionsEditor(containerId, initialOptions)` | 195 |  |
+| `collectOptionsFromEditor(containerId)` | 219 |  |
 
 ## Loaded by
 

@@ -22,12 +22,14 @@ posts. Modals are built here so both pages share one copy.
 | `get(path, params)` | 32 |  |
 | `post(path, body)` | 39 |  |
 | `fail(e)` | 45 |  |
-| `endBadge(end)` | 48 |  |
-| `modal(title, bodyHtml, onSave, saveLabel)` | 59 |  |
+| `endBadge(end)` | 48 | "Ends" with how near it is: overdue / within 90 days. |
+| `modal(title, bodyHtml, onSave, saveLabel)` | 59 | Modals (one generic builder) |
+| `close()` | 67 |  |
 | `field(label, inner, hint)` | 82 |  |
 | `opts(list, sel, blank)` | 85 |  |
 | `val(w, name)` | 89 |  |
 | `leaseForm(lease)` | 92 |  |
+| `ccList(list)` | 96 |  |
 | `scheduleForm(leaseId, s)` | 130 |  |
 | `assetForm(row, sched)` | 155 |  |
 | `addAssetsForm(sched)` | 173 |  |
@@ -37,9 +39,11 @@ posts. Modals are built here so both pages share one copy.
 | `loadList()` | 232 |  |
 | `dueTable(rows, withLease)` | 258 |  |
 | `loadDue()` | 273 |  |
-| `loadLease()` | 287 |  |
+| `loadLease()` | 287 | One lease |
 | `renderLease(l)` | 297 |  |
 | `wireLease(box, l)` | 357 |  |
+| `sched(el)` | 358 |  |
+| `row(el, s)` | 359 |  |
 
 ## Loaded by
 

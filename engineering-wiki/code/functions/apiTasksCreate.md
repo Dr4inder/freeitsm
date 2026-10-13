@@ -1,5 +1,7 @@
 # apiTasksCreate()
 
+POST /tasks
+
 ```php
 function apiTasksCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

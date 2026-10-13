@@ -1,5 +1,7 @@
 # apiCostCentresSync()
 
+POST /cost-centres/sync — bring a company's list into line, matched on code
+
 ```php
 function apiCostCentresSync(PDO $conn, array $apiKey, array $params, array $body): void
 ```

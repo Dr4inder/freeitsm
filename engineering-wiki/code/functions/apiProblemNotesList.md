@@ -1,5 +1,7 @@
 # apiProblemNotesList()
 
+Notes — append-only journal
+
 ```php
 function apiProblemNotesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

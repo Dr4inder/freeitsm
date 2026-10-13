@@ -1,5 +1,7 @@
 # apiDomainsCheck()
 
+POST /domains/{id}/check — run the health and security checks now
+
 ```php
 function apiDomainsCheck(PDO $conn, array $apiKey, array $params, array $body): void
 ```

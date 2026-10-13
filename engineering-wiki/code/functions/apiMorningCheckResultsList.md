@@ -1,5 +1,7 @@
 # apiMorningCheckResultsList()
 
+GET /morning-checks/results — history; newest first
+
 ```php
 function apiMorningCheckResultsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

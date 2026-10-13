@@ -1,5 +1,7 @@
 # apiChangeAuditList()
 
+GET /changes/{id}/audit
+
 ```php
 function apiChangeAuditList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiCmdbRelationshipTypesList()
 
+Reference: relationship types
+
 ```php
 function apiCmdbRelationshipTypesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

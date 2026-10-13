@@ -1,5 +1,7 @@
 # apiDomainsCreate()
 
+POST /domains
+
 ```php
 function apiDomainsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

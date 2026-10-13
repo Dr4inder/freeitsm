@@ -1,5 +1,7 @@
 # apiFormsUpdate()
 
+PATCH /forms/{id} — save_form.php's in-place save (id-based field sync).
+
 ```php
 function apiFormsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

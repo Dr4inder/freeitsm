@@ -1,5 +1,7 @@
 # processMapperDefaultSize()
 
+Helper: pick canvas-default size for a step type
+
 ```php
 function processMapperDefaultSize($type)
 ```

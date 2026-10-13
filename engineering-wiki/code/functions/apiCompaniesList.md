@@ -1,5 +1,7 @@
 # apiCompaniesList()
 
+GET /companies — the companies (tenants) this key can see.
+
 ```php
 function apiCompaniesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

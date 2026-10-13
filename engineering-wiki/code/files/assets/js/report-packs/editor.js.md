@@ -18,10 +18,12 @@ stored is the model, which the server checks field by field.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 18 |  |
 | `esc(s)` | 20 |  |
-| `runHtml(r)` | 25 |  |
+| `runHtml(r)` | 25 | ── Model -> HTML (for the editor) ───────────────────────────────────── |
 | `docToHtml(doc, logoUrl)` | 42 |  |
-| `hex(colour)` | 74 |  |
+| `closeTo(lv)` | 45 |  |
+| `hex(colour)` | 74 | ── HTML -> model (when editing ends) ────────────────────────────────── |
 | `sizePt(v)` | 84 |  |
 | `styleOf(node, inherited)` | 93 | Read a run style from an element and inherited style. |
 | `pushRun(runs, text, st)` | 115 |  |
@@ -29,6 +31,9 @@ stored is the model, which the server checks field by field.
 | `alignOf(el)` | 153 |  |
 | `trimRuns(runs)` | 158 |  |
 | `htmlToDoc(root)` | 164 |  |
+| `walk(container, listCtx)` | 166 |  |
+| `flushLoose()` | 168 |  |
+| `wrapList(list)` | 224 |  |
 | `restoreRange()` | 242 |  |
 | `open(opts)` | 257 | Open an editor over a rectangle (CSS px, relative to `host`). opts: {host, left, top, width, minHeight, doc, theme, zoom, logoUrl, onDone(doc), onInput} |
 | `scaleFont(node, pxPerMm)` | 295 |  |
@@ -37,9 +42,10 @@ stored is the model, which the server checks field by field.
 | `close(commit)` | 316 | End editing. commit=false (Escape) still keeps the text - Word has no "discard". |
 | `isActive()` | 332 |  |
 | `element()` | 333 |  |
-| `cmd(name, value)` | 336 |  |
+| `cmd(name, value)` | 336 | ── Commands from the ribbon ─────────────────────────────────────────── |
 | `wrapSelection(fn)` | 360 |  |
 | `state()` | 373 | What the cursor is sitting in, so the ribbon can show it (B pressed etc.). |
+| `q(c)` | 375 |  |
 | `setLogoWidth(mm)` | 394 | Set the width (mm) of the logo the cursor is next to. |
 
 ## Loaded by

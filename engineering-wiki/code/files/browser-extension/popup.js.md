@@ -10,7 +10,7 @@ FreeITSM Watchtower — Popup Script
 |---|--:|---|
 | `showNotConfigured()` | 56 |  |
 | `showError(msg)` | 68 |  |
-| `escapeHtml(s)` | 76 |  |
+| `escapeHtml(s)` | 76 | Status names now reach the popup and are written into innerHTML. They are free text an admin types on a server this extension is pointed at, so they are escaped rather than trusted. |
 | `hideError()` | 81 |  |
 | `updateTimestamp(iso)` | 85 |  |
 | `renderDashboard(data)` | 105 |  |

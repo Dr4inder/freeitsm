@@ -1,5 +1,7 @@
 # apiCostCentresDelete()
 
+DELETE /cost-centres/{id}
+
 ```php
 function apiCostCentresDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

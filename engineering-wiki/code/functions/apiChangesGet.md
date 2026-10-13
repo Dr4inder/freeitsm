@@ -1,5 +1,7 @@
 # apiChangesGet()
 
+GET /changes/{id} — detail incl. bodies, PIR, attachments, linked problems
+
 ```php
 function apiChangesGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

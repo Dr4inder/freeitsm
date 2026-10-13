@@ -1,5 +1,7 @@
 # apiKnowledgeArticlesGet()
 
+GET /knowledge/articles/{id}
+
 ```php
 function apiKnowledgeArticlesGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -30,10 +30,11 @@ it - measuring a hidden element returns zeros and the preview is blank.
 | `L(key, english, params)` | 48 |  |
 | `area()` | 49 |  |
 | `clamp(v, lo, hi)` | 50 |  |
-| `Win(opts)` | 53 |  |
+| `Win(opts)` | 53 | ── Windows ──────────────────────────────────────────────────────────── |
+| `done()` | 177 |  |
 | `focusTopmost()` | 235 |  |
 | `saveGeo(w)` | 245 |  |
-| `snapZone(ev)` | 250 |  |
+| `snapZone(ev)` | 250 | ── Drag, snap and resize ────────────────────────────────────────────── |
 | `showGhost(zone)` | 257 |  |
 | `startDrag(w, ev)` | 269 |  |
 | `move(e)` | 279 |  |
@@ -56,6 +57,10 @@ it - measuring a hidden element returns zeros and the preview is blank.
 | `tick()` | 613 |  |
 | `layoutTop()` | 630 |  |
 | `setNavbar(mode)` | 634 |  |
+| `open(opts)` | 658 |  |
+| `windows()` | 667 |  |
+| `active()` | 668 |  |
+| `onGeometry(fn)` | 674 |  |
 
 ## Loaded by
 

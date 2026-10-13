@@ -1,5 +1,7 @@
 # apiFormVersionsList()
 
+GET /forms/{id}/versions — the whole chain, oldest first (list_versions.php).
+
 ```php
 function apiFormVersionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

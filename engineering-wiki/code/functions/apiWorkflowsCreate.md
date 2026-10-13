@@ -1,5 +1,7 @@
 # apiWorkflowsCreate()
 
+POST /workflows
+
 ```php
 function apiWorkflowsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

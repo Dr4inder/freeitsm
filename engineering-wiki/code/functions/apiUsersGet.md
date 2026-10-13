@@ -1,5 +1,7 @@
 # apiUsersGet()
 
+GET /users/{id}
+
 ```php
 function apiUsersGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

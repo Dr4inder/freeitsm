@@ -44,12 +44,12 @@ tickets and tolerances), with `health_mode` saying which.
 | [apiProjectCtx()](/code/functions/apiProjectCtx.md) | 119 |  |
 | [apiProjectTry()](/code/functions/apiProjectTry.md) | 124 | Run a service call; a ServiceError becomes the API's error body. |
 | [apiProjectFields()](/code/functions/apiProjectFields.md) | 134 | Only the fields the service accepts, so a body cannot reach a column it should not. |
-| [apiProjectsList()](/code/functions/apiProjectsList.md) | 141 |  |
-| [apiProjectsGet()](/code/functions/apiProjectsGet.md) | 212 |  |
-| [apiProjectsCreate()](/code/functions/apiProjectsCreate.md) | 219 |  |
-| [apiProjectsUpdate()](/code/functions/apiProjectsUpdate.md) | 243 |  |
-| [apiProjectsDelete()](/code/functions/apiProjectsDelete.md) | 256 |  |
-| [apiSerializeProjectStage()](/code/functions/apiSerializeProjectStage.md) | 266 |  |
+| [apiProjectsList()](/code/functions/apiProjectsList.md) | 141 | GET /projects |
+| [apiProjectsGet()](/code/functions/apiProjectsGet.md) | 212 | GET /projects/{id} |
+| [apiProjectsCreate()](/code/functions/apiProjectsCreate.md) | 219 | POST /projects (optionally {template: "builtin:office_move" \| "saved:12"}) |
+| [apiProjectsUpdate()](/code/functions/apiProjectsUpdate.md) | 243 | PATCH /projects/{id} |
+| [apiProjectsDelete()](/code/functions/apiProjectsDelete.md) | 256 | DELETE /projects/{id} - its tasks are detached, never deleted |
+| [apiSerializeProjectStage()](/code/functions/apiSerializeProjectStage.md) | 266 | Stages (phases / stages / sprints) |
 | [apiProjectStages()](/code/functions/apiProjectStages.md) | 287 |  |
 | [apiProjectStage()](/code/functions/apiProjectStage.md) | 297 |  |
 | [apiProjectStagesList()](/code/functions/apiProjectStagesList.md) | 303 |  |
@@ -57,19 +57,19 @@ tickets and tolerances), with `health_mode` saying which.
 | [apiProjectStagesUpdate()](/code/functions/apiProjectStagesUpdate.md) | 317 |  |
 | [apiProjectStagesDelete()](/code/functions/apiProjectStagesDelete.md) | 327 |  |
 | [apiProjectStagesGate()](/code/functions/apiProjectStagesGate.md) | 336 | POST /projects/{id}/stages/{sid}/gate {decision: go\|go_with_conditions\|stop, notes?} |
-| [apiSerializeProjectItem()](/code/functions/apiSerializeProjectItem.md) | 347 |  |
+| [apiSerializeProjectItem()](/code/functions/apiSerializeProjectItem.md) | 347 | Scope items (deliverables, with MoSCoW) |
 | [apiProjectItem()](/code/functions/apiProjectItem.md) | 362 |  |
 | [apiProjectItemsList()](/code/functions/apiProjectItemsList.md) | 370 |  |
 | [apiProjectItemsCreate()](/code/functions/apiProjectItemsCreate.md) | 376 |  |
 | [apiProjectItemsUpdate()](/code/functions/apiProjectItemsUpdate.md) | 383 |  |
 | [apiProjectItemsDelete()](/code/functions/apiProjectItemsDelete.md) | 393 |  |
-| [apiSerializeProjectRaid()](/code/functions/apiSerializeProjectRaid.md) | 404 |  |
+| [apiSerializeProjectRaid()](/code/functions/apiSerializeProjectRaid.md) | 404 | RAID log |
 | [apiProjectRaidRow()](/code/functions/apiProjectRaidRow.md) | 431 |  |
 | [apiProjectRaidList()](/code/functions/apiProjectRaidList.md) | 439 |  |
 | [apiProjectRaidCreate()](/code/functions/apiProjectRaidCreate.md) | 448 |  |
 | [apiProjectRaidUpdate()](/code/functions/apiProjectRaidUpdate.md) | 455 |  |
 | [apiProjectRaidDelete()](/code/functions/apiProjectRaidDelete.md) | 465 |  |
-| [apiSerializeBudgetLine()](/code/functions/apiSerializeBudgetLine.md) | 476 |  |
+| [apiSerializeBudgetLine()](/code/functions/apiSerializeBudgetLine.md) | 476 | Budget |
 | [apiProjectBudget()](/code/functions/apiProjectBudget.md) | 499 | GET /projects/{id}/budget - totals, labour and lines, in the project's currency. Never one person's rate. |
 | [apiProjectBudgetLine()](/code/functions/apiProjectBudgetLine.md) | 522 |  |
 | [apiProjectBudgetLinesCreate()](/code/functions/apiProjectBudgetLinesCreate.md) | 528 |  |

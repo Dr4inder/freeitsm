@@ -24,77 +24,102 @@ HARD RULE mirror of the CSS: every behaviour here is gated on
 | `setPane(p)` | 197 |  |
 | `currentPane()` | 198 |  |
 | `pushPane(p)` | 199 |  |
+| `selectAsset(assetId)` | 229 |  |
+| `show()` | 235 |  |
 | `syncAssetsBar()` | 245 |  |
-| `initCalendarMobile()` | 280 |  |
-| `tr(key, fallback)` | 286 |  |
+| `initCalendarMobile()` | 280 | ================================================================== CALENDAR (#998) |
+| `tr(key, fallback)` | 286 | Prefer the module's own translations; fall back only if a key is missing (i18n's lookup echoes the key back when it can't resolve). |
 | `buildSheet(cls, title)` | 308 |  |
-| `openSheet(el)` | 328 |  |
+| `openSheet(el)` | 328 | Opening a sheet pushes a history entry so the DEVICE BACK BUTTON closes it, the same move that makes the ticket pane stack feel native rather than like a resized website. |
 | `hideSheets()` | 332 |  |
 | `closeSheet()` | 336 |  |
-| `sidebarIntoSheet()` | 349 |  |
+| `sidebarIntoSheet()` | 349 | Relocated rather than rebuilt so `#categoryFilterList` keeps its id and `renderCategoryFilters()` still finds it, and so the subscribe block keeps its own wiring. Moved lazily on first open and moved BACK when the viewport leaves mobile, so resizing a desktop browser through the breakpoint can't strand the sidebar inside a hidden sheet (16a hides it in the container). |
 | `sidebarBackToPage()` | 357 |  |
 | `localDateLabel(dateStr)` | 374 |  |
 | `renderAgenda()` | 389 |  |
 | `openDaySheet(dateStr)` | 460 |  |
-| `scrollToWorkingHours()` | 490 |  |
+| `openEventModal(eventId, dateStr, hour)` | 469 |  |
+| `scrollToWorkingHours()` | 490 | Week and day views are 24 rows of 60px and open at the top, so a phone lands on 12 AM — three screens above anything that happens in a working day. On a desktop pane you at least see through to ~10 AM; at 360px you see 12 AM to 6 AM and nothing else. Scroll to 7 AM after a render. Mobile only: the desktop start position is untouched. |
+| `renderCalendar()` | 501 |  |
+| `after()` | 503 |  |
 | `syncCalendarBar()` | 512 |  |
-| `initChangesMobile()` | 536 |  |
-| `tr(key, fallback)` | 540 |  |
+| `initChangesMobile()` | 536 | ================================================================== SERVICE STATUS (#1004) |
+| `tr(key, fallback)` | 540 | Local, like every other module branch has: the sibling `tr`s are nested inside THEIR functions and are not in scope here. A missing one is a runtime ReferenceError that no parse check would catch. |
 | `setPane(name)` | 546 |  |
-| `wireRichTextCards()` | 590 |  |
+| `showView(view)` | 556 |  |
+| `wireRichTextCards()` | 590 | ================================================================= Rich text on a phone: CARDS, and ONE editor at a time (#1189) ================================================================= #1187 put the whole tabbed widget full screen. That fixed the typing but left six TinyMCE instances living in the form, and Ed came back with "the tinymce editor is still causing a bit of havoc with the screen layout" — which it was: six iframes, each with its own toolbar, sizing themselves independently inside a 312px column. |
 | `panels()` | 603 |  |
 | `tabFor(key)` | 606 |  |
 | `areaFor(key)` | 609 |  |
 | `liveEditor(id)` | 613 |  |
-| `excerpt(html)` | 622 |  |
+| `excerpt(html)` | 622 | The card shows an EXCERPT, never the stored markup. Assigning it through textContent means no author-written HTML is ever parsed into this page, so the card needs no sanitiser — see the safe-html rule. `innerHTML` on a detached div is only used to let the browser do entity decoding and tag stripping for us. |
 | `renderCards()` | 654 |  |
 | `currentValue(key)` | 696 |  |
 | `openField(key)` | 703 |  |
+| `setup(editor)` | 730 |  |
 | `closeField()` | 740 |  |
+| `initEditors(callback)` | 767 |  |
+| `destroyEditors()` | 784 |  |
+| `setEditorContent(id, content)` | 791 |  |
+| `getEditorContent(id)` | 799 |  |
+| `refreshFormLayout()` | 812 |  |
+| `sync()` | 824 |  |
 | `initProblemsMobile()` | 834 |  |
 | `setPane(name)` | 835 |  |
+| `pmOpenDetail()` | 844 |  |
+| `pmBackToList()` | 859 |  |
+| `sync()` | 867 | Rotating to a desktop width must not leave the sidebar hidden. |
 | `initStatusMobile()` | 872 |  |
 | `tr(key, fallback)` | 876 |  |
 | `setTab(name)` | 902 |  |
 | `syncStatusBar()` | 930 |  |
-| `initKnowledgeMobile()` | 965 |  |
+| `initKnowledgeMobile()` | 965 | ================================================================== KNOWLEDGE (#1000) |
 | `tr(key, fallback)` | 969 |  |
 | `openSheet()` | 998 |  |
 | `hideSheet()` | 1002 |  |
 | `closeSheet()` | 1003 |  |
-| `sidebarIntoPlace()` | 1013 |  |
+| `sidebarIntoPlace()` | 1013 | The search box is MOVED, not copied — `#articleSearch` keeps its id and its inline `onkeyup="debounceSearch()"`, so the module's own search keeps working with no rewiring. Its now-empty section in the sidebar is marked rather than found by position. |
 | `sidebarBackToPage()` | 1024 |  |
 | `syncBackLabel()` | 1052 |  |
-| `wireMetaToggle()` | 1063 |  |
+| `wireMetaToggle()` | 1063 | ---- the collapsible meta block (Gmail-style) ---- The whole meta row is the control: a bigger target than a chevron, and its accessible name is the visible "Modified: …" text, so the toggle needs no label string in 24 languages. The reading pane is rebuilt on every article open, so this re-runs after each render and is idempotent. |
 | `toggle()` | 1072 |  |
-| `wireFullScreenEditor()` | 1100 |  |
+| `renderArticleDetail()` | 1084 |  |
+| `wireFullScreenEditor()` | 1100 | ---- full-screen text editing ---- An "expand" control above the editor, and a Close bar inside it. Both labels reuse existing translated keys, so no new strings: `knowledge.editor.popout_title` already reads "Toggle full-screen view" in all 24 locales (it labels the desktop pop-out button, which is hidden on mobile), and the sheets' Close does the rest. Built after the editor exists, and idempotently — the editor view is not re-rendered, but syncKnowledgeBar can run again on resize. |
 | `setFull(on)` | 1134 |  |
 | `readView()` | 1161 |  |
-| `setKbView(v)` | 1171 |  |
-| `stripEditorPopout()` | 1193 |  |
+| `setKbView(v)` | 1171 | Named setKbView, not setView: the inbox branch has a top-level setView-alike (`setPane`) and a plain `setView` here would read as the calendar module's view toggle. |
+| `showView(view)` | 1176 |  |
+| `stripEditorPopout()` | 1193 | ⚠️ The #762 trap, second sighting. `applyEditorPopoutFromPref()` reads localStorage on every edit and re-applies `.editor-popout`, which gives the form a FIXED 340px property panel — the whole screen at 360px, leaving the editor itself nothing. Neutralise at the source (the CSS in 17d is only the backstop), and leave the stored preference alone so the desktop behaviour is unchanged. |
 | `syncKnowledgeBar()` | 1207 |  |
 | `setPane(p)` | 1232 |  |
 | `currentPane()` | 1233 |  |
-| `pushPane(p)` | 1237 |  |
-| `relocateSections()` | 1384 |  |
+| `pushPane(p)` | 1237 | Navigate INTO a pane, pushing a history entry so the device Back button (and our Back chevron) pops back out of it. |
+| `selectEmail()` | 1252 |  |
+| `loadTicketById()` | 1274 |  |
+| `selectFolder()` | 1285 |  |
+| `syncPopoutToTicketState()` | 1301 |  |
+| `renderAttachmentInfoBar()` | 1312 |  |
+| `relocateSections()` | 1384 | Move each section's node(s) into its sheet and add its toolbar button. Runs after every ticket render (the reading pane is rebuilt each time). Time/CMDB containers may still be empty (populated async) — relocating the container node is fine, its async loader finds it again by id. |
 | `syncLinksCount()` | 1415 |  |
-| `afterTicketRender()` | 1427 |  |
-| `getCurrentEmail()` | 1434 |  |
+| `afterTicketRender()` | 1427 | Run after every ticket render: relocate the section sheets, then apply the reading-pane tidy-ups (subject-only heading + reference in the sub-bar, attachment badge, single-row action bar with a "…" overflow). |
+| `getCurrentEmail()` | 1434 | inbox.js keeps the open ticket in the top-level `currentEmail` binding (shared across classic scripts). Read it defensively. |
 | `decorateReadingPane()` | 1438 |  |
-| `syncAttachBadge()` | 1460 |  |
-| `buildToolbarOverflow()` | 1490 |  |
+| `syncAttachBadge()` | 1460 | Compact yellow attachment badge on the subject row, replacing the full "…has N attachments" bar (hidden on mobile). Tapping it opens the list. |
+| `buildToolbarOverflow()` | 1490 | Keep the action bar to a single row: five icons + a "…" button whose panel holds the rest (with their word labels). The toolbar is rebuilt on every render, so this re-collapses each time. |
+| `showAuditHistory()` | 1553 |  |
 | `openAuditSheet()` | 1559 |  |
-| `splitStamp(text)` | 1575 |  |
+| `splitStamp(text)` | 1575 | Split "Mon, 14 Jul 2026 09:32 AM" (formatFullDateTime's shape) into the day — said once, as a sticky heading — and the time, kept per entry. If the format ever changes and the time can't be found, the whole stamp rides in the time slot and the day headings simply don't appear. |
 | `span(cls, text)` | 1580 |  |
-| `renderAuditFeed(entries)` | 1591 |  |
-| `syncBar()` | 1655 |  |
+| `renderAuditFeed(entries)` | 1591 | Build the day-grouped card feed from the audit rows (newest first, as the endpoint returns them). One card per change: field + time on top, old → new beneath, who did it under that; the date is a sticky heading said once per day. |
+| `syncBar()` | 1655 | Injected chrome (sub-bar + views hamburger) is mobile-only; keep it out of desktop entirely (belt-and-suspenders alongside the `@media`-only styling). |
 | `columns()` | 1691 |  |
 | `build()` | 1695 |  |
 | `mark()` | 1710 |  |
+| `renderBoard()` | 1736 |  |
 | `sync()` | 1743 |  |
 | `labelCardFeed(table, columns)` | 2043 |  |
 | `apply()` | 2087 |  |
-| `wrapLabel(btn)` | 2179 |  |
+| `wrapLabel(btn)` | 2179 | ⚠️ These buttons carry their label as a BARE TEXT NODE beside an <svg>, so `span:not(.action-btn-icon)` — LAYER 5's way of hiding a label — has nothing to match. Wrap it once, idempotently. |
 | `clearOverflow()` | 2200 |  |
 | `buildOverflow()` | 2212 |  |
 | `ensureIcon(btn)` | 2296 |  |
@@ -102,42 +127,44 @@ HARD RULE mirror of the CSS: every behaviour here is gated on
 | `moveOut()` | 2329 |  |
 | `sync()` | 2342 |  |
 | `apply()` | 2403 |  |
-| `clear()` | 2420 |  |
+| `clear()` | 2420 | ⚠️ And take it away again when the viewport leaves mobile, so a desktop browser dragged wide is left exactly as it would have been had it never been narrow. The Calendar round set the precedent for restoring rather than one-way conversion (LAYER 16). It also means the desktop control can assert `[title]` finds nothing here, which is a stronger check than asserting a tooltip does not show. |
+| `onChange()` | 2433 |  |
 | `t(key, fallback)` | 2488 |  |
 | `rowIsRecord(tr)` | 2540 |  |
 | `filter()` | 2547 |  |
 | `clearFilter()` | 2566 |  |
-| `setView(v)` | 2573 |  |
-| `syncChrome()` | 2605 |  |
-| `tr(key, fallback)` | 2671 |  |
+| `setView(v)` | 2573 | ---- view state ------------------------------------------------- |
+| `syncChrome()` | 2605 | ---- and it all goes away above 768px -------------------------- Injected chrome must be hidden off-mobile, and the body attribute has to go with it or a desktop resize would leave the page in a view whose CSS no longer exists — the strip would stay hidden with no switch left to bring it back. The Calendar round set the precedent for restoring rather than converting one way (LAYER 16), and this is the case that makes it non-optional. |
+| `tr(key, fallback)` | 2671 | The panel's own heading is the honest label for the button that opens it — the editor's side panel is headed "Lessons" already, in whatever language the reader is using. |
 | `panelLabel()` | 2676 |  |
 | `open()` | 2693 |  |
 | `close()` | 2704 |  |
-| `sync()` | 2737 |  |
-| `syncTabName()` | 2810 |  |
+| `sync()` | 2737 | ⚠️ And it all goes away above 768px: the button hides and the state attribute is removed, or a desktop resize would leave the page with a panel pinned open over the content and the CSS that positions it gone. The Calendar round set the precedent for restoring rather than converting one way. |
+| `syncTabName()` | 2810 | The lesson's name, kept in step with the field as it is typed and as another lesson is chosen. Truncated by CSS rather than here, so the full name is still the button's accessible label. |
 | `setPage(which)` | 2828 |  |
 | `claim(el)` | 2848 |  |
 | `restore()` | 2853 |  |
 | `gather()` | 2862 |  |
-| `sync()` | 2878 |  |
+| `sync()` | 2878 | ---- and it all goes away above 768px ---- The nodes go back where they came from and the page attribute is removed, or a desktop resize would leave half the lesson hidden with no switch to bring it back. |
 | `tr(key, fallback)` | 2936 |  |
 | `filtersIntoSheet()` | 2973 |  |
 | `filtersBackToPage()` | 2978 |  |
 | `openSheet()` | 2984 |  |
 | `hideSheet()` | 2989 |  |
 | `closeSheet()` | 2990 |  |
-| `progressVisible()` | 2999 |  |
+| `progressVisible()` | 2999 | ---- shown only on the Progress tab, and only on a phone ---- |
 | `sync()` | 3002 |  |
 | `tr(key, fallback)` | 3051 |  |
 | `open()` | 3072 |  |
 | `close()` | 3083 |  |
-| `sync()` | 3140 |  |
+| `sync()` | 3140 | ⚠️ And it all goes away above 768px, or a desktop resize leaves the page with a fixed panel over the canvas and a scrim across it. |
 | `tr(key, fallback)` | 3177 |  |
 | `open()` | 3199 |  |
 | `close()` | 3210 |  |
-| `sync()` | 3266 |  |
+| `setTimeout(function ()` | 3245 |  |
+| `sync()` | 3266 | ⚠️ And it all goes away above 768px, or a desktop resize leaves the page with a scrim across it and the palette parked off-screen. |
 | `sectionOf(link)` | 3318 |  |
-| `readOnly()` | 3433 |  |
+| `readOnly()` | 3433 | Read-only versions: the module's own handlers bail on `is_current`, so a synthesised event is harmless — but a ghost that follows your finger and then does nothing is worse than no gesture at all. |
 | `buzz()` | 3438 |  |
 | `clearTimer()` | 3442 |  |
 | `cleanup()` | 3446 |  |
@@ -146,45 +173,51 @@ HARD RULE mirror of the CSS: every behaviour here is gated on
 | `beginMove(node, pt)` | 3499 |  |
 | `relayMouse(type, pt)` | 3513 |  |
 | `point(e)` | 3523 |  |
-| `sync()` | 3631 |  |
+| `syncDel()` | 3623 |  |
+| `sync()` | 3631 | ⚠️ And a resize out of mobile mid-drag must not strand a ghost, a lifted node, or a drag the module still thinks is in progress. |
 | `reveal()` | 3679 |  |
 | `tr(key, fallback)` | 3752 |  |
 | `open()` | 3791 |  |
 | `hide()` | 3797 |  |
 | `close()` | 3798 |  |
-| `treeIntoSheet()` | 3810 |  |
+| `treeIntoSheet()` | 3810 | Moved LAZILY on first open and moved BACK on the way to desktop. Relocating the real node rather than cloning it is what keeps `#folderTree` unique — a clone would give the page two elements with that id and `loadFolderTree()` would render into whichever came first. |
 | `treeBackToPage()` | 3814 |  |
-| `sync()` | 3857 |  |
-| `tr(key, fallback)` | 3923 |  |
-| `colCount()` | 3930 |  |
+| `sync()` | 3857 | 5. …and it all goes away above 768px, or a desktop resize leaves the folder tree inside a hidden sheet with the page's own copy of it display:none in the container. |
+| `tr(key, fallback)` | 3923 | Prefer the module's own translations; fall back only if a key is missing, which can happen if a page exports fewer namespaces. |
+| `colCount()` | 3930 | Columns per row, read from the class rota.js sets on the grid. |
+| `day()` | 3941 |  |
+| `analyst()` | 3942 |  |
+| `week()` | 3943 |  |
 | `buildBar()` | 3949 |  |
-| `placeActions(intoFooter)` | 3979 |  |
+| `placeActions(intoFooter)` | 3979 | Move the real Copy / Paste buttons, never copies of them: rota.js finds them with getElementById and toggles Paste's display, so a clone would leave it talking to the one still in the header. |
 | `syncBarPressed()` | 3989 |  |
-| `reserveSpace()` | 3999 |  |
+| `reserveSpace()` | 3999 | The footer's height is not a constant - it holds two rows, and Paste appears and disappears. Measure it and let the CSS reserve exactly that much, or the last analyst row hides behind it. |
 | `buildChooser()` | 4006 |  |
-| `renderChooser()` | 4023 |  |
+| `renderChooser()` | 4023 | Labels harvested from the grid's own cells (section 21): the day chips read the day name and number the page already rendered, the analyst chips read the name. Nothing invented, so it is right in all 24 locales. |
 | `syncChooserPressed()` | 4057 |  |
 | `setView(v)` | 4072 |  |
-| `defaults()` | 4081 |  |
+| `defaults()` | 4081 | Day defaults to today when this week holds it; analyst to the first row. |
 | `clearTags()` | 4094 |  |
-| `dayLabel(iso)` | 4109 |  |
+| `dayLabel(iso)` | 4109 | The analyst view labels each stacked cell with its date, and it must be the format the operator chose in preferences. |
 | `apply()` | 4118 |  |
+| `goToThisWeek()` | 4190 |  |
 | `sync()` | 4196 |  |
 | `tr(key, fallback)` | 4273 |  |
-| `buildBack()` | 4285 |  |
+| `buildBack()` | 4285 | 🔴 The open-a-record functions REDRAW the detail pane wholesale, which throws this button away with everything else. Exactly the same fault as the rota chooser: anything injected into a pane a page re-renders has to be put back, and the only reliable trigger is watching the pane. |
 | `showPane(which)` | 4300 |  |
 | `sync()` | 4336 |  |
+| `SVG(paths)` | 4376 |  |
 | `restore()` | 4398 |  |
 | `fill()` | 4411 |  |
 | `sync()` | 4438 |  |
-| `iconFor(el)` | 4484 |  |
+| `iconFor(el)` | 4484 | Which icon belongs to which control, by the handler the page already wrote - not by position, which a future edit would quietly change. |
 | `toIcons()` | 4495 |  |
 | `toText()` | 4510 |  |
 | `sync()` | 4519 |  |
 | `build()` | 4562 |  |
 | `toIcons()` | 4569 |  |
 | `toText()` | 4582 |  |
-| `reserve()` | 4596 |  |
+| `reserve()` | 4596 | The footer is fixed, so the editor needs to reserve its height or the last step sits behind it. Measured rather than assumed - the bar is one row here, but a constant is wrong in whichever state you did not measure. |
 | `sync()` | 4602 |  |
 | `tr(key, fallback)` | 4654 |  |
 | `build()` | 4667 |  |
@@ -202,10 +235,11 @@ HARD RULE mirror of the CSS: every behaviour here is gated on
 | `build()` | 4952 |  |
 | `toIcons()` | 4959 |  |
 | `toText()` | 4974 |  |
-| `reserve()` | 4985 |  |
+| `reserve()` | 4985 | Reserve the footer's real height, so the last card is not behind it. |
 | `sync()` | 4990 |  |
 | `tr(key, fallback)` | 5036 |  |
 | `esc(s)` | 5041 |  |
+| `SVG(p)` | 5044 |  |
 | `buildSheet()` | 5083 |  |
 | `openSheet()` | 5105 |  |
 | `closeSheet()` | 5106 |  |

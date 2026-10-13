@@ -13,6 +13,7 @@ unfiltered list and leaving you to find them.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `esc(s)` | 12 |  |
 | `fmtWhen(s)` | 32 | started_datetime is a server-stamped UTC instant → show in the analyst's zone. |
 | `fmtTook(a, b)` | 39 | How long the run took. Both timestamps are UTC, so the difference is safe. |
 | `statusPill(status, dry)` | 48 |  |

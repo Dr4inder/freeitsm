@@ -1,5 +1,7 @@
 # apiTasksMove()
 
+POST /tasks/{id}/move — kanban move (mirrors reorder.php: NO workflow event)
+
 ```php
 function apiTasksMove(PDO $conn, array $apiKey, array $params, array $body): void
 ```

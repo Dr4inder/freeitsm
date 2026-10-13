@@ -1,5 +1,7 @@
 # apiChangesDelete()
 
+DELETE /changes/{id} — permanent; removes attachment files, cascades children
+
 ```php
 function apiChangesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

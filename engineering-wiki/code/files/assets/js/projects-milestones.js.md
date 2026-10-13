@@ -22,16 +22,19 @@ bell always agree.
 | `canChange()` | 23 |  |
 | `list()` | 26 |  |
 | `diamond(m, size)` | 31 | The diamond, coloured by state. |
+| `daysFromToday(d)` | 35 |  |
 | `phrase(m)` | 38 | "Reached on time" / "Missed" / "In 5 days" - a phrase for the state. |
 | `chip(m)` | 49 | A clickable chip: diamond, name, date. |
 | `chips(stageId)` | 55 | The diamonds in one lane's head (stageId) - '' when it has none. |
 | `projectStrip()` | 61 | The whole project's milestones, above the lanes on the Plan. |
 | `renderOverview()` | 68 |  |
+| `item(m)` | 78 |  |
 | `stageOptions(selected)` | 94 |  |
 | `open(m, defaults)` | 100 | Open the dialog for milestone m, or a new one (defaults: {stage_id, due_date}). |
 | `save(body)` | 121 | Write a milestone (a partial body is fine) and redraw. Returns the server's reply. |
 | `saveDialog()` | 133 |  |
 | `remove()` | 157 |  |
+| `render(c)` | 192 |  |
 
 ## Loaded by
 

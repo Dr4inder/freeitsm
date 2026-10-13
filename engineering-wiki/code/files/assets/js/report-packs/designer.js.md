@@ -23,7 +23,13 @@ the only HTML this file writes is its own fixed markup.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `h(tag, attrs, ...kids)` | 43 |  |
+| `T(k, p)` | 25 |  |
+| `canEdit()` | 40 |  |
+| `h(tag, attrs, ...kids)` | 43 | ── Small helpers ──────────────────────────────────────────────────── |
+| `clone(o)` | 57 |  |
+| `uid()` | 58 |  |
+| `byId(id)` | 59 |  |
+| `idx(id)` | 60 |  |
 | `api(path, body, method)` | 62 |  |
 | `icon(name, size)` | 124 |  |
 | `commit(fn, opts)` | 140 | Every change to the design goes through here. opts.data the change affects what data is fetched (options, criteria) opts.merge coalesce with the previous step if it had the same key (typing in a field) |
@@ -31,25 +37,31 @@ the only HTML this file writes is its own fixed markup.
 | `redo()` | 174 |  |
 | `setDirty(d)` | 183 |  |
 | `loadData()` | 193 |  |
-| `boot()` | 198 |  |
+| `boot()` | 198 | ── Boot ───────────────────────────────────────────────────────────── |
 | `build()` | 220 |  |
 | `iconBtn(name, title, fn, id)` | 259 |  |
-| `ribbonTabs()` | 264 |  |
+| `ribbonTabs()` | 264 | ── The ribbon ─────────────────────────────────────────────────────── |
 | `buildRibbon()` | 275 |  |
 | `rb(iconName, label, fn, opts)` | 290 | A ribbon button. big = icon over label (Office's large buttons). |
 | `sel(options, value, onChange, opts)` | 303 |  |
 | `colourPick(value, onChange, label, opts)` | 311 |  |
+| `textCmd(name, value)` | 323 |  |
 | `homeGroups()` | 325 |  |
+| `ed()` | 326 |  |
 | `insertGroups()` | 372 |  |
 | `marginName(m)` | 404 |  |
 | `layoutGroups()` | 410 |  |
 | `widthGlyph(span)` | 437 |  |
 | `designGroups()` | 443 |  |
+| `set(k)` | 445 |  |
 | `dataGroups()` | 473 |  |
+| `setCr(fn)` | 476 |  |
 | `afterCriteria()` | 499 |  |
 | `refreshRibbonState()` | 504 | Pressed/disabled state of the ribbon, from the selection and the cursor. |
+| `TOOL_ICON(t)` | 524 |  |
 | `buildToolbox()` | 528 |  |
 | `renderTools()` | 543 |  |
+| `match(t)` | 545 |  |
 | `blockFromTool(key)` | 582 | A block made from a toolbox item. |
 | `insertTool(key, at)` | 594 | Double-click / Enter / ribbon: put the block after the selection, or at the end. |
 | `schedulePreview(t, item)` | 608 |  |
@@ -66,11 +78,15 @@ the only HTML this file writes is its own fixed markup.
 | `renderStatus()` | 788 |  |
 | `setZoom(z)` | 807 |  |
 | `fitWidth()` | 812 |  |
-| `select(id, scrollTo)` | 819 |  |
+| `select(id, scrollTo)` | 819 | ── Selection and the properties pane ──────────────────────────────── |
 | `renderProps()` | 828 |  |
+| `field(label, control, hint)` | 832 |  |
+| `check(label, value, onChange)` | 833 |  |
+| `upd(fn, opts)` | 834 |  |
 | `selectCtl(options, value, onChange, ro)` | 904 |  |
 | `optionControl(b, k, def, ro, upd)` | 910 |  |
-| `setSpan(id, span)` | 930 |  |
+| `set(val)` | 912 |  |
+| `setSpan(id, span)` | 930 | ── Block operations ───────────────────────────────────────────────── |
 | `moveBlock(id, dir)` | 934 |  |
 | `deleteBlock(id)` | 944 |  |
 | `clip()` | 956 |  |
@@ -79,25 +95,32 @@ the only HTML this file writes is its own fixed markup.
 | `pasteBlock()` | 969 |  |
 | `duplicateBlock()` | 976 |  |
 | `announce(msg)` | 985 |  |
-| `bindCanvas()` | 991 |  |
+| `bindCanvas()` | 991 | ── Canvas interaction: select, drag, resize, edit ─────────────────── |
 | `dropTarget(cx, cy, movingId)` | 1027 | Where a drop at (clientX, clientY) would land: {index, side, indicator} |
+| `sideable(it)` | 1043 |  |
 | `startDrag(e, what)` | 1072 |  |
+| `move(ev)` | 1077 |  |
+| `up()` | 1095 |  |
 | `showGuide(guide, t)` | 1110 |  |
 | `autoScroll(cy)` | 1121 |  |
 | `stopAutoScroll()` | 1127 |  |
 | `applyDrop(what, t)` | 1130 | Put the dragged block where the guide was. Side drops share the row. |
 | `rowOf(blocks, id)` | 1168 | The blocks sharing a row with `id`, as the engine flows them. |
 | `startResize(e, id, edge)` | 1183 |  |
-| `editBlock(id)` | 1227 |  |
+| `move(ev)` | 1199 |  |
+| `up()` | 1214 |  |
+| `editBlock(id)` | 1227 | ── Editing text in place ──────────────────────────────────────────── |
 | `editHeading(b)` | 1239 |  |
+| `done(keep)` | 1249 |  |
 | `editRegion(kind)` | 1261 |  |
 | `openEditor(what, pageEl, x, y, w, hgt, doc, onSave, label)` | 1281 |  |
 | `outside(e)` | 1305 |  |
 | `contextMenu(x, y, id)` | 1316 |  |
+| `item(label, fn, opts)` | 1319 |  |
 | `menuOutside(e)` | 1343 |  |
 | `closeMenu()` | 1344 |  |
-| `bindKeys()` | 1347 |  |
-| `save(force)` | 1383 |  |
+| `bindKeys()` | 1347 | ── Keyboard ───────────────────────────────────────────────────────── |
+| `save(force)` | 1383 | ── Save, copy, export ─────────────────────────────────────────────── |
 | `conflictDialog(msg)` | 1407 |  |
 | `copyPack()` | 1419 |  |
 | `exportPdf()` | 1426 |  |

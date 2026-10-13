@@ -2,6 +2,8 @@
 
 > PHP - 963 lines
 
+⚠️ application/CDFV2 appears on doc/xls/ppt deliberately. Modern libmagic reports that for any OLE2 compound file it cannot classify further, so a genuine .doc or .xls can arrive claiming it — gate 2 then refused a perfectly ordinary Word document and the sender saw "its contents do not match its doc extension". CDFV2 is the container, not a type: it is equally the shape of .msi and .msg, which is why it is listed only against extensions that are already on the allow-list rather than accepted globally.
+
 ## Functions
 
 | Function | Line | What it does |

@@ -1,5 +1,7 @@
 # apiKnowledgeArticlesCreate()
 
+POST /knowledge/articles
+
 ```php
 function apiKnowledgeArticlesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

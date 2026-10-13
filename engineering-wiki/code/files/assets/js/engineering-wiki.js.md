@@ -18,6 +18,7 @@ The open tabs are remembered in this browser (localStorage) - a convenience only
 
 | Function | Line | What it does |
 |---|--:|---|
+| `narrow()` | 30 |  |
 | `esc(s)` | 44 |  |
 | `splitTarget(t)` | 45 |  |
 | `pageUrl(target)` | 46 |  |
@@ -48,6 +49,7 @@ The open tabs are remembered in this browser (localStorage) - a convenience only
 | `showMenu(x, y, items)` | 338 |  |
 | `linkMenu(x, y, target, paneIdx)` | 355 |  |
 | `copy(text)` | 365 |  |
+| `done()` | 366 |  |
 | `fallbackCopy(text)` | 370 |  |
 | `toast(msg)` | 378 |  |
 | `bindDivider(div)` | 388 |  |

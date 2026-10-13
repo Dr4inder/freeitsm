@@ -42,19 +42,19 @@ and stay here.
 | [apiProblemSelect()](/code/functions/apiProblemSelect.md) | 36 |  |
 | [apiSerializeProblem()](/code/functions/apiSerializeProblem.md) | 52 |  |
 | [apiLoadProblem()](/code/functions/apiLoadProblem.md) | 77 | Load one problem (with joins) enforcing the key's company scope; 404 if not visible. |
-| [apiProblemsList()](/code/functions/apiProblemsList.md) | 98 |  |
-| [apiProblemsGet()](/code/functions/apiProblemsGet.md) | 199 |  |
-| [apiProblemsCreate()](/code/functions/apiProblemsCreate.md) | 251 |  |
-| [apiProblemsUpdate()](/code/functions/apiProblemsUpdate.md) | 281 |  |
-| [apiProblemsDelete()](/code/functions/apiProblemsDelete.md) | 292 |  |
-| [apiProblemNotesList()](/code/functions/apiProblemNotesList.md) | 302 |  |
+| [apiProblemsList()](/code/functions/apiProblemsList.md) | 98 | GET /problems |
+| [apiProblemsGet()](/code/functions/apiProblemsGet.md) | 199 | GET /problems/{id} — full detail incl. linked incidents + changes |
+| [apiProblemsCreate()](/code/functions/apiProblemsCreate.md) | 251 | POST /problems |
+| [apiProblemsUpdate()](/code/functions/apiProblemsUpdate.md) | 281 | PATCH /problems/{id} |
+| [apiProblemsDelete()](/code/functions/apiProblemsDelete.md) | 292 | DELETE /problems/{id} — permanent, mirrors delete.php (cascades children, tidies change_relations which has no FK back to problems) |
+| [apiProblemNotesList()](/code/functions/apiProblemNotesList.md) | 302 | Notes — append-only journal |
 | [apiProblemNotesCreate()](/code/functions/apiProblemNotesCreate.md) | 320 |  |
-| [apiProblemAuditList()](/code/functions/apiProblemAuditList.md) | 334 |  |
-| [apiProblemTicketsLink()](/code/functions/apiProblemTicketsLink.md) | 359 |  |
+| [apiProblemAuditList()](/code/functions/apiProblemAuditList.md) | 334 | GET /problems/{id}/audit |
+| [apiProblemTicketsLink()](/code/functions/apiProblemTicketsLink.md) | 359 | Incident linking — POST /problems/{id}/tickets, DELETE .../{ticket_id} |
 | [apiProblemTicketsUnlink()](/code/functions/apiProblemTicketsUnlink.md) | 366 |  |
-| [apiProblemChangesLink()](/code/functions/apiProblemChangesLink.md) | 377 |  |
+| [apiProblemChangesLink()](/code/functions/apiProblemChangesLink.md) | 377 | Change linking — POST /problems/{id}/changes, DELETE .../{change_id} (shared change_relations table, related_type='problem', relation 'fixes') |
 | [apiProblemChangesUnlink()](/code/functions/apiProblemChangesUnlink.md) | 384 |  |
-| [apiProblemStatusesList()](/code/functions/apiProblemStatusesList.md) | 394 |  |
+| [apiProblemStatusesList()](/code/functions/apiProblemStatusesList.md) | 394 | Reference lookups |
 | [apiProblemPrioritiesList()](/code/functions/apiProblemPrioritiesList.md) | 410 |  |
 
 ## Database

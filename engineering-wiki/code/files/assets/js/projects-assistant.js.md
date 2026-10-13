@@ -21,6 +21,10 @@ or nothing. An assistant message with proposals gets a card: a box per change
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 20 |  |
+| `$(id)` | 24 |  |
+| `md(s)` | 25 |  |
+| `call(body)` | 26 |  |
 | `aiError(r)` | 28 |  |
 | `note(text, bad)` | 33 |  |
 | `chips()` | 42 |  |

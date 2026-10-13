@@ -1,5 +1,7 @@
 # strOrNull()
 
+Helper: get string value or null
+
 ```php
 function strOrNull($data, $key, $maxLen = null)
 ```

@@ -1,5 +1,7 @@
 # apiNmDiagramsGet()
 
+GET /network-diagrams/{id} — fully hydrated; ?include_properties=true adds each object's CI properties.
+
 ```php
 function apiNmDiagramsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

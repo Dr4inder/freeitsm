@@ -14,6 +14,8 @@ marker where real history starts.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 18 |  |
+| `slotOf(i)` | 22 |  |
 | `render(c)` | 24 |  |
 | `draw()` | 36 | Drawn when the Overview is showing - the charts measure their width. |
 

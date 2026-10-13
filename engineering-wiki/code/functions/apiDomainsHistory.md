@@ -1,5 +1,7 @@
 # apiDomainsHistory()
 
+GET /domains/{id}/history
+
 ```php
 function apiDomainsHistory(PDO $conn, array $apiKey, array $params, array $body): void
 ```

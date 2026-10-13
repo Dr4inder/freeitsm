@@ -1,5 +1,7 @@
 # apiNmConnectorsUpdate()
 
+PATCH /network-diagrams/{id}/connectors/{connector_id} — label / style / provenance.
+
 ```php
 function apiNmConnectorsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

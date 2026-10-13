@@ -1,5 +1,7 @@
 # apiCostCentresCreate()
 
+POST /cost-centres
+
 ```php
 function apiCostCentresCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -13,7 +13,13 @@ drawn by `md()` below, which escapes everything first.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 14 |  |
+| `call(body)` | 24 |  |
+| `when(s)` | 25 |  |
 | `md(text)` | 28 | Escape, then the three marks the AI is told to use. Nothing else becomes markup. |
+| `inline(s)` | 29 |  |
+| `flush()` | 33 |  |
+| `close()` | 34 |  |
 | `aiError(r)` | 48 |  |
 | `fetchState()` | 54 |  |
 | `drawBriefing()` | 64 |  |
@@ -33,6 +39,7 @@ drawn by `md()` below, which escapes everything first.
 | `setSchedule()` | 248 |  |
 | `copy()` | 259 |  |
 | `wire()` | 265 |  |
+| `render(c)` | 289 | Called by projects-view.js after every redraw: the Overview's slot is new each time. |
 
 ## Loaded by
 

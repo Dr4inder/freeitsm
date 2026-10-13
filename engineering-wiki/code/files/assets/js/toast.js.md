@@ -20,6 +20,11 @@ Usage: showToast('Message text', 'success') — types: success, error, warning, 
 | `getPosition()` | 65 |  |
 | `getAnimation()` | 69 |  |
 | `getContainer()` | 73 |  |
+| `showToast(message, type, ms)` | 92 | `ms` is optional and defaults to the usual 4 seconds, so every existing two-argument call behaves exactly as before. It exists because some messages are not acknowledgements but instructions — "the address book has a different number, import again to see theirs" cannot be read, understood and acted on inside four seconds, and a toast that vanishes mid-sentence is the same as not having shown it. |
+| `onclick()` | 111 |  |
+| `requestAnimationFrame(function()` | 116 |  |
+| `requestAnimationFrame(function()` | 117 |  |
+| `setTimeout(function()` | 122 |  |
 
 ## Loaded by
 

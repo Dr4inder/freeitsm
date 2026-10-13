@@ -1,5 +1,7 @@
 # apiAnalystsAccessUpdate()
 
+PATCH /analysts/{id}/access
+
 ```php
 function apiAnalystsAccessUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

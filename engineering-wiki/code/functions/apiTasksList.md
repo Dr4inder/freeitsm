@@ -1,5 +1,7 @@
 # apiTasksList()
 
+GET /tasks
+
 ```php
 function apiTasksList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

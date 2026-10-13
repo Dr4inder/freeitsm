@@ -1,5 +1,7 @@
 # apiContractsUpdate()
 
+PATCH /contracts/{id}
+
 ```php
 function apiContractsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

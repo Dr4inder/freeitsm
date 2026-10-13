@@ -13,10 +13,12 @@ a nuisance rather than a problem.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `LMSEditor(()` | 9 | LMS course editor — lessons, questions, and the three AI helpers. |
+| `esc(s)` | 27 |  |
 | `init()` | 31 |  |
 | `initTinyMCE()` | 42 |  |
-| `setEditorBody(html)` | 96 |  |
-| `snapshotBaseline()` | 132 |  |
+| `setEditorBody(html)` | 96 | Write to the editor, or remember it until the editor exists. Every caller goes through here so none of them has to know whether TinyMCE has finished starting up. |
+| `snapshotBaseline()` | 132 | 🔴 WHAT "UNSAVED CHANGES" IS MEASURED AGAINST. It used to be the lesson as the API returned it, compared with `editor.getContent()`. Those two are not the same kind of string: TinyMCE RE-SERIALISES what you give it, and by default (`entity_encoding: 'named'`) it writes non-ASCII characters back as named entities. So a body stored as |
 | `loadLessons()` | 139 |  |
 | `renderLessonList()` | 151 |  |
 | `dropOn(targetId)` | 183 |  |

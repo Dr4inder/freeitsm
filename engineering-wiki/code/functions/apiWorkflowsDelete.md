@@ -1,5 +1,7 @@
 # apiWorkflowsDelete()
 
+DELETE /workflows/{id} — executions survive (the module's audit-trail intent) but are detached explicitly: name snapshot filled, workflow_id NULLed. Explicit rather than FK-reliant so grown installs that haven't re-run Database Verification behave identically.
+
 ```php
 function apiWorkflowsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

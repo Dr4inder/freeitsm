@@ -42,15 +42,15 @@ key could read directly — tighter than the UI, which doesn't check.
 | [apiTaskContractor()](/code/functions/apiTaskContractor.md) | 56 | Contractors (3.3.0): the supplier and the person there, by name - includes/task_contractors.php. |
 | [apiSerializeTask()](/code/functions/apiSerializeTask.md) | 61 |  |
 | [apiLoadTask()](/code/functions/apiLoadTask.md) | 127 |  |
-| [apiTasksList()](/code/functions/apiTasksList.md) | 149 |  |
-| [apiTasksGet()](/code/functions/apiTasksGet.md) | 291 |  |
-| [apiTasksCreate()](/code/functions/apiTasksCreate.md) | 371 |  |
-| [apiTasksUpdate()](/code/functions/apiTasksUpdate.md) | 381 |  |
-| [apiTasksMove()](/code/functions/apiTasksMove.md) | 391 |  |
-| [apiTasksDelete()](/code/functions/apiTasksDelete.md) | 404 |  |
-| [apiTaskCommentsList()](/code/functions/apiTaskCommentsList.md) | 414 |  |
+| [apiTasksList()](/code/functions/apiTasksList.md) | 149 | GET /tasks |
+| [apiTasksGet()](/code/functions/apiTasksGet.md) | 291 | GET /tasks/{id} |
+| [apiTasksCreate()](/code/functions/apiTasksCreate.md) | 371 | POST /tasks |
+| [apiTasksUpdate()](/code/functions/apiTasksUpdate.md) | 381 | PATCH /tasks/{id} |
+| [apiTasksMove()](/code/functions/apiTasksMove.md) | 391 | POST /tasks/{id}/move — kanban move (mirrors reorder.php: NO workflow event) |
+| [apiTasksDelete()](/code/functions/apiTasksDelete.md) | 404 | DELETE /tasks/{id} — hard delete. Children removed explicitly, not via FK cascade: installs grown via Database Verify were missing the parent and comments cascade FKs, which orphaned subtasks/comments (same fix as the UI's delete.php). |
+| [apiTaskCommentsList()](/code/functions/apiTaskCommentsList.md) | 414 | Comments — create-only, like the UI |
 | [apiTaskCommentsCreate()](/code/functions/apiTaskCommentsCreate.md) | 433 |  |
-| [apiTaskStatusesList()](/code/functions/apiTaskStatusesList.md) | 443 |  |
+| [apiTaskStatusesList()](/code/functions/apiTaskStatusesList.md) | 443 | Reference lookups |
 | [apiTaskPrioritiesList()](/code/functions/apiTaskPrioritiesList.md) | 461 |  |
 | [apiTaskTagsList()](/code/functions/apiTaskTagsList.md) | 476 |  |
 

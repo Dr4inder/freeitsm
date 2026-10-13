@@ -30,6 +30,9 @@ A `/** ... */` block straight above a function. The first sentence is the summar
 | `@reads` | tables (and columns) it reads, and why | `@reads lease_assets(outcome_id) - which machines are still out` |
 | `@writes` | tables (and columns) it changes, and why | `@writes assets(lease_start, lease_expiry) - kept in step with the lease` |
 | `@see` | another page worth reading | `@see includes/leases.php` |
+| `@wiki` | the developer guide for this on the GitHub wiki - shown as a link box at the top of the page | `@wiki Leases` |
+
+`@wiki` takes the page name as it appears in the GitHub wiki's address (`Leases`, `Projects-Internals-4-Plan-and-Timeline`) or the whole link. Only the link is shown - the wiki's text stays on GitHub. Any `github.com/edmozley/freeitsm/wiki/...` link already written in a comment is picked up the same way.
 
 ```php
 /**

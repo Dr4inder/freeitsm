@@ -32,11 +32,11 @@ grant its own analyst more than it has.
 |---|--:|---|
 | [apiAnalystsRequireProvisioner()](/code/functions/apiAnalystsRequireProvisioner.md) | 25 | 403 unless this key may provision analysts. |
 | [apiSerializeAnalyst()](/code/functions/apiSerializeAnalyst.md) | 35 |  |
-| [apiAnalystsCreate()](/code/functions/apiAnalystsCreate.md) | 51 |  |
-| [apiAnalystsGet()](/code/functions/apiAnalystsGet.md) | 61 |  |
-| [apiAnalystsUpdate()](/code/functions/apiAnalystsUpdate.md) | 69 |  |
-| [apiAnalystsAccessGet()](/code/functions/apiAnalystsAccessGet.md) | 79 |  |
-| [apiAnalystsAccessUpdate()](/code/functions/apiAnalystsAccessUpdate.md) | 87 |  |
+| [apiAnalystsCreate()](/code/functions/apiAnalystsCreate.md) | 51 | POST /analysts |
+| [apiAnalystsGet()](/code/functions/apiAnalystsGet.md) | 61 | GET /analysts/{id} |
+| [apiAnalystsUpdate()](/code/functions/apiAnalystsUpdate.md) | 69 | PATCH /analysts/{id} |
+| [apiAnalystsAccessGet()](/code/functions/apiAnalystsAccessGet.md) | 79 | GET /analysts/{id}/access |
+| [apiAnalystsAccessUpdate()](/code/functions/apiAnalystsAccessUpdate.md) | 87 | PATCH /analysts/{id}/access |
 
 ## How it hangs together
 

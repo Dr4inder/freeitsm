@@ -1,5 +1,7 @@
 # apiChangeCommentsList()
 
+Comments — append + delete (no edit), always internal, like the UI
+
 ```php
 function apiChangeCommentsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

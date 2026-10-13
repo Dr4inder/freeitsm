@@ -1,5 +1,7 @@
 # apiProblemChangesLink()
 
+Change linking — POST /problems/{id}/changes, DELETE .../{change_id} (shared change_relations table, related_type='problem', relation 'fixes')
+
 ```php
 function apiProblemChangesLink(PDO $conn, array $apiKey, array $params, array $body): void
 ```

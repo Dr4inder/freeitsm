@@ -1,5 +1,7 @@
 # logApiResponse()
 
+Helper function to log errors/responses
+
 ```php
 function logApiResponse($conn, $hostId, $message)
 ```

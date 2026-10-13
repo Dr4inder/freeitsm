@@ -39,17 +39,17 @@ requires the workflow engine for the ticket.* events.)
 | [apiTicketSelect()](/code/functions/apiTicketSelect.md) | 33 |  |
 | [apiSerializeTicket()](/code/functions/apiSerializeTicket.md) | 54 |  |
 | [apiLoadTicket()](/code/functions/apiLoadTicket.md) | 99 | Load one ticket (with joins) enforcing the key's company scope; 404s if not visible. |
-| [apiTicketsList()](/code/functions/apiTicketsList.md) | 120 |  |
-| [apiTicketsGet()](/code/functions/apiTicketsGet.md) | 242 |  |
-| [apiTicketsCreate()](/code/functions/apiTicketsCreate.md) | 260 |  |
-| [apiTicketsUpdate()](/code/functions/apiTicketsUpdate.md) | 294 |  |
-| [apiTicketsDelete()](/code/functions/apiTicketsDelete.md) | 304 |  |
+| [apiTicketsList()](/code/functions/apiTicketsList.md) | 120 | GET /tickets |
+| [apiTicketsGet()](/code/functions/apiTicketsGet.md) | 242 | GET /tickets/{id} |
+| [apiTicketsCreate()](/code/functions/apiTicketsCreate.md) | 260 | POST /tickets |
+| [apiTicketsUpdate()](/code/functions/apiTicketsUpdate.md) | 294 | PATCH /tickets/{id} |
+| [apiTicketsDelete()](/code/functions/apiTicketsDelete.md) | 304 | DELETE /tickets/{id} + POST /tickets/{id}/restore (soft delete / trash) |
 | [apiTicketsRestore()](/code/functions/apiTicketsRestore.md) | 311 |  |
-| [apiTicketNotesList()](/code/functions/apiTicketNotesList.md) | 321 |  |
+| [apiTicketNotesList()](/code/functions/apiTicketNotesList.md) | 321 | Notes |
 | [apiTicketNotesCreate()](/code/functions/apiTicketNotesCreate.md) | 341 |  |
-| [apiTicketThreadList()](/code/functions/apiTicketThreadList.md) | 356 |  |
-| [apiTicketAuditList()](/code/functions/apiTicketAuditList.md) | 385 |  |
-| [apiTicketSlaGet()](/code/functions/apiTicketSlaGet.md) | 410 |  |
+| [apiTicketThreadList()](/code/functions/apiTicketThreadList.md) | 356 | Thread (emails / channel messages) |
+| [apiTicketAuditList()](/code/functions/apiTicketAuditList.md) | 385 | Audit log |
+| [apiTicketSlaGet()](/code/functions/apiTicketSlaGet.md) | 410 | SLA (compute-on-read via includes/sla.php) |
 | [apiRequireTimeTracking()](/code/functions/apiRequireTimeTracking.md) | 432 | Refuse if this ticket's company has switched time tracking off FOR THE API (discussion #72). |
 | [apiTicketTimeEntriesList()](/code/functions/apiTicketTimeEntriesList.md) | 439 |  |
 | [apiTicketTimeEntriesCreate()](/code/functions/apiTicketTimeEntriesCreate.md) | 462 |  |

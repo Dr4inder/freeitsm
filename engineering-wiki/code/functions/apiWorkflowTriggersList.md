@@ -1,5 +1,7 @@
 # apiWorkflowTriggersList()
 
+GET /workflow-triggers — every trigger with its condition fields, each field's type and the operators valid for it.
+
 ```php
 function apiWorkflowTriggersList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

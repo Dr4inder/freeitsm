@@ -12,6 +12,11 @@ review. State and progress come from the server; this file only draws.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 11 |  |
+| `$(id)` | 13 |  |
+| `call(body)` | 19 |  |
+| `canChange()` | 20 |  |
+| `val(v, unit)` | 21 |  |
 | `card(b)` | 23 |  |
 | `render()` | 58 |  |
 | `openBenefit(b)` | 70 |  |
@@ -20,6 +25,7 @@ review. State and progress come from the server; this file only draws.
 | `openMeasure(b)` | 114 |  |
 | `saveMeasure()` | 127 |  |
 | `wire()` | 134 |  |
+| `find(id)` | 137 |  |
 
 ## Loaded by
 

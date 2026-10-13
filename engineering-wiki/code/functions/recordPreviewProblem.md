@@ -1,5 +1,7 @@
 # recordPreviewProblem()
 
+── Problem ─────────────────────────────────────────────────────────────────
+
 ```php
 function recordPreviewProblem(PDO $conn, int $analystId, int $id): ?array
 ```

@@ -1,5 +1,7 @@
 # apiMorningChecksCreate()
 
+POST /morning-checks/checks
+
 ```php
 function apiMorningChecksCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

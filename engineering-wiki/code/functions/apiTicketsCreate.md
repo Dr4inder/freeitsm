@@ -1,5 +1,7 @@
 # apiTicketsCreate()
 
+POST /tickets
+
 ```php
 function apiTicketsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

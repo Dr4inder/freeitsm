@@ -26,6 +26,9 @@ export the whole 'projects' translation namespace to show one panel.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `L(k, en, p)` | 30 |  |
+| `esc(v)` | 31 |  |
+| `toast(m, k)` | 32 |  |
 | `call(base, path, body)` | 39 |  |
 | `row(p, editable, base)` | 47 |  |
 | `mount(host, o)` | 61 |  |

@@ -1,5 +1,7 @@
 # apiAssetsUpdate()
 
+PATCH /assets/{id}
+
 ```php
 function apiAssetsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -33,6 +33,7 @@ Resolves to true only if the text really was copied.
 | Function | Line | What it does |
 |---|--:|---|
 | `legacyCopy(text)` | 31 |  |
+| `copyToClipboard(text)` | 70 |  |
 
 ## Loaded by
 

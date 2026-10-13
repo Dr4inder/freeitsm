@@ -1,6 +1,6 @@
 # includes/engineering_wiki/scanner.php
 
-> PHP - 1178 lines
+> PHP - 1269 lines
 
 Engineering wiki - the scanner that writes the Code map (engineering-wiki/code/).
 

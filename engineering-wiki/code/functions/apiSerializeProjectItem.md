@@ -1,5 +1,7 @@
 # apiSerializeProjectItem()
 
+Scope items (deliverables, with MoSCoW)
+
 ```php
 function apiSerializeProjectItem(array $i): array
 ```

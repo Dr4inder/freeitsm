@@ -14,6 +14,8 @@ shipping them to the browser, and it saves a round-trip.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `Roles(()` | 10 | System → Roles (RBAC Layer 2). |
+| `esc(s)` | 16 |  |
 | `init()` | 20 |  |
 | `load()` | 26 |  |
 | `render()` | 34 |  |

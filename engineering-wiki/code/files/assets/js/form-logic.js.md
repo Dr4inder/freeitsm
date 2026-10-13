@@ -19,7 +19,7 @@ Change one, change the other; tests/forms-logic runs the same cases through both
 
 | Function | Line | What it does |
 |---|--:|---|
-| `lookupLabel(raw)` | 37 |  |
+| `lookupLabel(raw)` | 37 | A lookup answer is JSON: {"id":11,"label":"LT-001"}. The LABEL is what a condition compares against, because 'is LT-001' is what a form builder means — nobody writes a rule against a database id. |
 | `configOf(field)` | 50 | A field's config as an object. |
 | `lookupSource(field)` | 56 |  |
 | `fieldWidth(field)` | 70 | A field's width in twelfths. Absent means full, which is every field that predates the layout work. |

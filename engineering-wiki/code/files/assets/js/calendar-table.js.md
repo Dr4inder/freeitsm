@@ -16,6 +16,7 @@ cell save posts the full in-memory event with the one changed field applied.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k)` | 18 |  |
 | `fmt(raw)` | 20 |  |
 | `loadCategories()` | 44 |  |
 

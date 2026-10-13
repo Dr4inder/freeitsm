@@ -1,5 +1,7 @@
 # apiMorningChecksUpdate()
 
+PATCH /morning-checks/checks/{id}
+
 ```php
 function apiMorningChecksUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

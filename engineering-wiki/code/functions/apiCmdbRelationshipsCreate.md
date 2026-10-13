@@ -1,5 +1,7 @@
 # apiCmdbRelationshipsCreate()
 
+Relationships — POST /cmdb/objects/{id}/relationships, DELETE .../{rel_id}
+
 ```php
 function apiCmdbRelationshipsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

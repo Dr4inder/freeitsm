@@ -28,10 +28,12 @@ only need to load the script, not include duplicate HTML).
 |---|--:|---|
 | `init(config)` | 30 |  |
 | `ensureMarkup()` | 46 |  |
+| `T(k)` | 48 |  |
 | `open(id)` | 63 |  |
 | `close()` | 76 |  |
 | `saveField(field, value)` | 85 |  |
 | `render(task)` | 96 |  |
+| `T(k)` | 98 |  |
 | `esc(text)` | 168 |  |
 
 ## Loaded by

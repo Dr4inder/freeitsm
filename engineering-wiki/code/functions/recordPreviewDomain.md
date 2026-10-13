@@ -1,5 +1,7 @@
 # recordPreviewDomain()
 
+── Domain (#154) ───────────────────────────────────────────────────────────
+
 ```php
 function recordPreviewDomain(PDO $conn, int $analystId, int $id): ?array
 ```

@@ -46,21 +46,21 @@ and stay here.
 | [apiAssetCustomFields()](/code/functions/apiAssetCustomFields.md) | 169 | Custom field values for one asset, as { field_key: value }. |
 | [apiLoadAsset()](/code/functions/apiLoadAsset.md) | 190 | Load one asset (with joins); 404 if unknown OR outside the key's companies (multi-tenancy — the key's company scope gates every by-id read/write; a NULL tenant_id normalises to the Default company; no-op at N=1 / all-access key). |
 | [apiParseDateOnly()](/code/functions/apiParseDateOnly.md) | 205 | Validate a DATE field (YYYY-MM-DD); 422 naming the field on garbage. Null/'' clears. Kept here (not in AssetsService) because contracts.php + tasks.php share it as a generic API date-parameter validator. |
-| [apiAssetsList()](/code/functions/apiAssetsList.md) | 223 |  |
-| [apiAssetsGet()](/code/functions/apiAssetsGet.md) | 323 |  |
-| [apiAssetsCreate()](/code/functions/apiAssetsCreate.md) | 360 |  |
-| [apiAssetsUpdate()](/code/functions/apiAssetsUpdate.md) | 385 |  |
-| [apiAssetAssignmentsList()](/code/functions/apiAssetAssignmentsList.md) | 395 |  |
+| [apiAssetsList()](/code/functions/apiAssetsList.md) | 223 | GET /assets |
+| [apiAssetsGet()](/code/functions/apiAssetsGet.md) | 323 | GET /assets/{id} |
+| [apiAssetsCreate()](/code/functions/apiAssetsCreate.md) | 360 | POST /assets |
+| [apiAssetsUpdate()](/code/functions/apiAssetsUpdate.md) | 385 | PATCH /assets/{id} |
+| [apiAssetAssignmentsList()](/code/functions/apiAssetAssignmentsList.md) | 395 | Assignments — POST/GET /assets/{id}/assignments, DELETE .../{user_id} |
 | [apiAssetAssignmentsCreate()](/code/functions/apiAssetAssignmentsCreate.md) | 419 |  |
 | [apiAssetAssignmentsDelete()](/code/functions/apiAssetAssignmentsDelete.md) | 426 |  |
-| [apiAssetHistoryList()](/code/functions/apiAssetHistoryList.md) | 436 |  |
+| [apiAssetHistoryList()](/code/functions/apiAssetHistoryList.md) | 436 | GET /assets/{id}/history + /custody |
 | [apiAssetCustodyList()](/code/functions/apiAssetCustodyList.md) | 457 |  |
-| [apiAssetDisksList()](/code/functions/apiAssetDisksList.md) | 483 |  |
+| [apiAssetDisksList()](/code/functions/apiAssetDisksList.md) | 483 | Inventory reads — disks, network adapters, devices, software |
 | [apiAssetPhysicalDisksList()](/code/functions/apiAssetPhysicalDisksList.md) | 516 | The physical drives, as opposed to the lettered volumes above (#97). |
 | [apiAssetNetworkAdaptersList()](/code/functions/apiAssetNetworkAdaptersList.md) | 540 |  |
 | [apiAssetDevicesList()](/code/functions/apiAssetDevicesList.md) | 560 |  |
 | [apiAssetSoftwareList()](/code/functions/apiAssetSoftwareList.md) | 580 |  |
-| [apiAssetTypesList()](/code/functions/apiAssetTypesList.md) | 613 |  |
+| [apiAssetTypesList()](/code/functions/apiAssetTypesList.md) | 613 | Reference lookups The reference lists resolve for the key's default company (globals + that company's own; every row at N=1). Suppliers stay a shared registry. |
 | [apiAssetStatusesList()](/code/functions/apiAssetStatusesList.md) | 621 |  |
 | [apiAssetLocationsList()](/code/functions/apiAssetLocationsList.md) | 629 |  |
 | [apiSuppliersList()](/code/functions/apiSuppliersList.md) | 643 |  |

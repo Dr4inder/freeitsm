@@ -14,9 +14,12 @@ are wired here too; everything else is the shared engine.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `formatDate(iso)` | 24 |  |
+| `formatDate(iso)` | 24 | created_datetime is a stored UTC timestamp; render its date in the analyst's chosen display zone (parseUTCDate / tzOpts from assets/js/tz.js). |
 | `loadLookups()` | 55 |  |
 | `loadDropdowns()` | 66 |  |
+| `setFilter(filter)` | 88 |  |
+| `setTeamFilter(id)` | 99 |  |
+| `setAnalystFilter(id)` | 108 |  |
 | `esc(s)` | 118 |  |
 
 ## API endpoints it calls

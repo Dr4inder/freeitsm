@@ -37,7 +37,7 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 | [okbad()](/code/functions/okbad.md) | 35 |  |
 | [endpointLine()](/code/functions/endpointLine.md) | 49 | One discovery-endpoint line, printing the ADDRESS the provider published. |
 | [maskMiddle()](/code/functions/maskMiddle.md) | 72 |  |
-| [maskGuids()](/code/functions/maskGuids.md) | 82 |  |
+| [maskGuids()](/code/functions/maskGuids.md) | 82 | Identifiers (client IDs, tenant GUIDs) aren't secrets, but this report is made to be shared with support — so partially mask them: enough to eyeball- verify, not the full value. Diagnostic signals (match/reachability) are computed on the real values and shown as YES/NO, so nothing is lost. |
 | [maskId()](/code/functions/maskId.md) | 87 |  |
 | [emit_and_exit()](/code/functions/emit_and_exit.md) | 95 |  |
 

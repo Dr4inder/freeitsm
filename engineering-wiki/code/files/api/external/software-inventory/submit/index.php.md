@@ -13,7 +13,7 @@
 
 | Function | Line | What it does |
 |---|--:|---|
-| [logApiResponse()](/code/functions/logApiResponse.md) | 105 |  |
+| [logApiResponse()](/code/functions/logApiResponse.md) | 105 | Helper function to log errors/responses |
 
 ## Database
 

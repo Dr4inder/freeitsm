@@ -1,5 +1,7 @@
 # apiSoftwareLicencesUpdate()
 
+PATCH /software/licences/{id}
+
 ```php
 function apiSoftwareLicencesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

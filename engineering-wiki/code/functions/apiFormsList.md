@@ -1,5 +1,7 @@
 # apiFormsList()
 
+GET /forms — one row per chain (the current version), like the module list.
+
 ```php
 function apiFormsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

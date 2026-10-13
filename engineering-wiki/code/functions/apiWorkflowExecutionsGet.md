@@ -1,5 +1,7 @@
 # apiWorkflowExecutionsGet()
 
+GET /workflow-executions/{id} — full detail with payload + step log.
+
 ```php
 function apiWorkflowExecutionsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

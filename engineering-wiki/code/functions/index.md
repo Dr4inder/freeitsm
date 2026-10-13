@@ -61,135 +61,135 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [analystSignInTeamMethods()](/code/functions/analystSignInTeamMethods.md) | [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | The sign-in methods set by analysts' active teams, grouped by analyst. |
 | [analystSignInVerdict()](/code/functions/analystSignInVerdict.md) | [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | Turn one analyst's team methods into a verdict. |
 | [anthropicResponseText()](/code/functions/anthropicResponseText.md) | [api/cmdb/_ai_helpers.php](/code/files/api/cmdb/_ai_helpers.php.md) | Pull the assistant's text out of the shared client's response shape. |
-| [apiAnalystsAccessGet()](/code/functions/apiAnalystsAccessGet.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) |  |
-| [apiAnalystsAccessUpdate()](/code/functions/apiAnalystsAccessUpdate.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) |  |
-| [apiAnalystsCreate()](/code/functions/apiAnalystsCreate.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) |  |
-| [apiAnalystsGet()](/code/functions/apiAnalystsGet.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) |  |
+| [apiAnalystsAccessGet()](/code/functions/apiAnalystsAccessGet.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) | GET /analysts/{id}/access |
+| [apiAnalystsAccessUpdate()](/code/functions/apiAnalystsAccessUpdate.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) | PATCH /analysts/{id}/access |
+| [apiAnalystsCreate()](/code/functions/apiAnalystsCreate.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) | POST /analysts |
+| [apiAnalystsGet()](/code/functions/apiAnalystsGet.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) | GET /analysts/{id} |
 | [apiAnalystsList()](/code/functions/apiAnalystsList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | FreeITSM REST API v1 — reference data: the lookups an integration needs to build valid ticket writes (statuses, priorities, ticket types, origins, departments), plus analysts and companies. |
 | [apiAnalystsRequireProvisioner()](/code/functions/apiAnalystsRequireProvisioner.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) | 403 unless this key may provision analysts. |
-| [apiAnalystsUpdate()](/code/functions/apiAnalystsUpdate.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) |  |
+| [apiAnalystsUpdate()](/code/functions/apiAnalystsUpdate.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) | PATCH /analysts/{id} |
 | [apiAssetAssignmentsCreate()](/code/functions/apiAssetAssignmentsCreate.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
 | [apiAssetAssignmentsDelete()](/code/functions/apiAssetAssignmentsDelete.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
-| [apiAssetAssignmentsList()](/code/functions/apiAssetAssignmentsList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
+| [apiAssetAssignmentsList()](/code/functions/apiAssetAssignmentsList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | Assignments — POST/GET /assets/{id}/assignments, DELETE .../{user_id} |
 | [apiAssetCustodyList()](/code/functions/apiAssetCustodyList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
 | [apiAssetCustomFields()](/code/functions/apiAssetCustomFields.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | Custom field values for one asset, as { field_key: value }. |
 | [apiAssetDevicesList()](/code/functions/apiAssetDevicesList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
-| [apiAssetDisksList()](/code/functions/apiAssetDisksList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
-| [apiAssetHistoryList()](/code/functions/apiAssetHistoryList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
+| [apiAssetDisksList()](/code/functions/apiAssetDisksList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | Inventory reads — disks, network adapters, devices, software |
+| [apiAssetHistoryList()](/code/functions/apiAssetHistoryList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | GET /assets/{id}/history + /custody |
 | [apiAssetLocationPath()](/code/functions/apiAssetLocationPath.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
 | [apiAssetLocations()](/code/functions/apiAssetLocations.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | All locations keyed by id — used to build full "UK › London › Office 1" paths. |
 | [apiAssetLocationsList()](/code/functions/apiAssetLocationsList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
 | [apiAssetNetworkAdaptersList()](/code/functions/apiAssetNetworkAdaptersList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
 | [apiAssetPhysicalDisksList()](/code/functions/apiAssetPhysicalDisksList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | The physical drives, as opposed to the lettered volumes above (#97). |
-| [apiAssetsCreate()](/code/functions/apiAssetsCreate.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
+| [apiAssetsCreate()](/code/functions/apiAssetsCreate.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | POST /assets |
 | [apiAssetSelect()](/code/functions/apiAssetSelect.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
-| [apiAssetsGet()](/code/functions/apiAssetsGet.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
-| [apiAssetsList()](/code/functions/apiAssetsList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
+| [apiAssetsGet()](/code/functions/apiAssetsGet.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | GET /assets/{id} |
+| [apiAssetsList()](/code/functions/apiAssetsList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | GET /assets |
 | [apiAssetSoftwareList()](/code/functions/apiAssetSoftwareList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
 | [apiAssetStatusesList()](/code/functions/apiAssetStatusesList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
-| [apiAssetsUpdate()](/code/functions/apiAssetsUpdate.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
-| [apiAssetTypesList()](/code/functions/apiAssetTypesList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
+| [apiAssetsUpdate()](/code/functions/apiAssetsUpdate.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | PATCH /assets/{id} |
+| [apiAssetTypesList()](/code/functions/apiAssetTypesList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | Reference lookups The reference lists resolve for the key's default company (globals + that company's own; every row at N=1). Suppliers stay a shared registry. |
 | [apiAuthenticate()](/code/functions/apiAuthenticate.md) | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | Authenticate the request and return the key row (with decoded permissions and company scope). Emits 401/403/429 and stops on failure. |
-| [apiCalendarCategoriesList()](/code/functions/apiCalendarCategoriesList.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
-| [apiCalendarEventsCreate()](/code/functions/apiCalendarEventsCreate.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
-| [apiCalendarEventsDelete()](/code/functions/apiCalendarEventsDelete.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
+| [apiCalendarCategoriesList()](/code/functions/apiCalendarCategoriesList.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | GET /calendar-categories (reference) |
+| [apiCalendarEventsCreate()](/code/functions/apiCalendarEventsCreate.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | POST /calendar/events |
+| [apiCalendarEventsDelete()](/code/functions/apiCalendarEventsDelete.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | DELETE /calendar/events/{id} |
 | [apiCalendarEventSelect()](/code/functions/apiCalendarEventSelect.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
 | [apiCalendarEventsGet()](/code/functions/apiCalendarEventsGet.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
-| [apiCalendarEventsList()](/code/functions/apiCalendarEventsList.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
-| [apiCalendarEventsUpdate()](/code/functions/apiCalendarEventsUpdate.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
-| [apiChangeAuditList()](/code/functions/apiChangeAuditList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
-| [apiChangeCabGet()](/code/functions/apiChangeCabGet.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
+| [apiCalendarEventsList()](/code/functions/apiCalendarEventsList.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | GET /calendar/events |
+| [apiCalendarEventsUpdate()](/code/functions/apiCalendarEventsUpdate.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | PATCH /calendar/events/{id} |
+| [apiChangeAuditList()](/code/functions/apiChangeAuditList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | GET /changes/{id}/audit |
+| [apiChangeCabGet()](/code/functions/apiChangeCabGet.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | CAB — roster + votes |
 | [apiChangeCabSave()](/code/functions/apiChangeCabSave.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | POST /changes/{id}/cab — replace the roster (diff-sync + audit, like save_cab_members.php). |
 | [apiChangeCabVote()](/code/functions/apiChangeCabVote.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | POST /changes/{id}/cab/vote — the key's acts-as analyst votes; mirrors submit_cab_vote.php. |
 | [apiChangeCategoriesList()](/code/functions/apiChangeCategoriesList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
 | [apiChangeCommentsCreate()](/code/functions/apiChangeCommentsCreate.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
 | [apiChangeCommentsDelete()](/code/functions/apiChangeCommentsDelete.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
-| [apiChangeCommentsList()](/code/functions/apiChangeCommentsList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
+| [apiChangeCommentsList()](/code/functions/apiChangeCommentsList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | Comments — append + delete (no edit), always internal, like the UI |
 | [apiChangeImpactsList()](/code/functions/apiChangeImpactsList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
-| [apiChangeLookupList()](/code/functions/apiChangeLookupList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
+| [apiChangeLookupList()](/code/functions/apiChangeLookupList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | Reference lookups |
 | [apiChangeNumber()](/code/functions/apiChangeNumber.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
 | [apiChangePrioritiesList()](/code/functions/apiChangePrioritiesList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
-| [apiChangesCreate()](/code/functions/apiChangesCreate.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
-| [apiChangesDelete()](/code/functions/apiChangesDelete.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
+| [apiChangesCreate()](/code/functions/apiChangesCreate.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | POST /changes |
+| [apiChangesDelete()](/code/functions/apiChangesDelete.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | DELETE /changes/{id} — permanent; removes attachment files, cascades children |
 | [apiChangeSelect()](/code/functions/apiChangeSelect.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
-| [apiChangesGet()](/code/functions/apiChangesGet.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
-| [apiChangesList()](/code/functions/apiChangesList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
+| [apiChangesGet()](/code/functions/apiChangesGet.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | GET /changes/{id} — detail incl. bodies, PIR, attachments, linked problems |
+| [apiChangesList()](/code/functions/apiChangesList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | GET /changes |
 | [apiChangeStatusesList()](/code/functions/apiChangeStatusesList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
-| [apiChangesUpdate()](/code/functions/apiChangesUpdate.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
+| [apiChangesUpdate()](/code/functions/apiChangesUpdate.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | PATCH /changes/{id} |
 | [apiChangeTypesList()](/code/functions/apiChangeTypesList.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) |  |
 | [apiCmdbClassDefs()](/code/functions/apiCmdbClassDefs.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | Property definitions for a class, keyed by property_key. |
 | [apiCmdbClassesGet()](/code/functions/apiCmdbClassesGet.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
 | [apiCmdbClassesList()](/code/functions/apiCmdbClassesList.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
 | [apiCmdbIconsList()](/code/functions/apiCmdbIconsList.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
 | [apiCmdbLoadObject()](/code/functions/apiCmdbLoadObject.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | Load one CI; 404 if unknown OR outside the key's companies (multi-tenancy — the key's company scope gates every by-id read/write; a NULL tenant_id normalises to the Default company; no-op at N=1 / all-access key). |
-| [apiCmdbObjectImpact()](/code/functions/apiCmdbObjectImpact.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCmdbObjectsCreate()](/code/functions/apiCmdbObjectsCreate.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCmdbObjectsDelete()](/code/functions/apiCmdbObjectsDelete.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCmdbObjectsGet()](/code/functions/apiCmdbObjectsGet.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCmdbObjectsList()](/code/functions/apiCmdbObjectsList.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCmdbObjectsUpdate()](/code/functions/apiCmdbObjectsUpdate.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
+| [apiCmdbObjectImpact()](/code/functions/apiCmdbObjectImpact.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | GET /cmdb/objects/{id}/impact — blast radius (mirrors get_object_impact.php) |
+| [apiCmdbObjectsCreate()](/code/functions/apiCmdbObjectsCreate.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | POST /cmdb/objects |
+| [apiCmdbObjectsDelete()](/code/functions/apiCmdbObjectsDelete.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | DELETE /cmdb/objects/{id} — explicit descendant-tree removal (grown installs have no CMDB FK cascades; see the db_verify FK group added alongside this) |
+| [apiCmdbObjectsGet()](/code/functions/apiCmdbObjectsGet.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | GET /cmdb/objects/{id} — fully hydrated |
+| [apiCmdbObjectsList()](/code/functions/apiCmdbObjectsList.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | GET /cmdb/objects |
+| [apiCmdbObjectsUpdate()](/code/functions/apiCmdbObjectsUpdate.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | PATCH /cmdb/objects/{id} |
 | [apiCmdbObjectTicketsLink()](/code/functions/apiCmdbObjectTicketsLink.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCmdbObjectTicketsList()](/code/functions/apiCmdbObjectTicketsList.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
+| [apiCmdbObjectTicketsList()](/code/functions/apiCmdbObjectTicketsList.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | Ticket links — company-scoped on both the CI and the tickets |
 | [apiCmdbObjectTicketsUnlink()](/code/functions/apiCmdbObjectTicketsUnlink.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCmdbRelationshipsCreate()](/code/functions/apiCmdbRelationshipsCreate.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
+| [apiCmdbRelationshipsCreate()](/code/functions/apiCmdbRelationshipsCreate.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | Relationships — POST /cmdb/objects/{id}/relationships, DELETE .../{rel_id} |
 | [apiCmdbRelationshipsDelete()](/code/functions/apiCmdbRelationshipsDelete.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCmdbRelationshipTypesList()](/code/functions/apiCmdbRelationshipTypesList.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
+| [apiCmdbRelationshipTypesList()](/code/functions/apiCmdbRelationshipTypesList.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | Reference: relationship types |
 | [apiCmdbSerializeObject()](/code/functions/apiCmdbSerializeObject.md) | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) |  |
-| [apiCompaniesList()](/code/functions/apiCompaniesList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) |  |
+| [apiCompaniesList()](/code/functions/apiCompaniesList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | GET /companies — the companies (tenants) this key can see. |
 | [apiContractCompany()](/code/functions/apiContractCompany.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | `company_id` from a request body as the service's tenant_id: checked to exist and to be in the key's reach (403), or - on a create with none - the key's default company. On an update with none, nothing: the contract stays put. |
-| [apiContractLookupList()](/code/functions/apiContractLookupList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
+| [apiContractLookupList()](/code/functions/apiContractLookupList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | Reference lookups |
 | [apiContractsCreate()](/code/functions/apiContractsCreate.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
-| [apiContractsDelete()](/code/functions/apiContractsDelete.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
+| [apiContractsDelete()](/code/functions/apiContractsDelete.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | DELETE /contracts/{id} — explicit children (the contracts domain had no FKs) |
 | [apiContractSelect()](/code/functions/apiContractSelect.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiContractsGet()](/code/functions/apiContractsGet.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
-| [apiContractsList()](/code/functions/apiContractsList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
+| [apiContractsList()](/code/functions/apiContractsList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | GET /contracts |
 | [apiContractStatusesList()](/code/functions/apiContractStatusesList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
-| [apiContractsUpdate()](/code/functions/apiContractsUpdate.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
-| [apiContractTermsGet()](/code/functions/apiContractTermsGet.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
+| [apiContractsUpdate()](/code/functions/apiContractsUpdate.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | PATCH /contracts/{id} |
+| [apiContractTermsGet()](/code/functions/apiContractTermsGet.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | Contract terms — GET + bulk upsert (mirrors save_contract_terms.php) |
 | [apiContractTermsSave()](/code/functions/apiContractTermsSave.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiContractTermTabsList()](/code/functions/apiContractTermTabsList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiContractVisibility()](/code/functions/apiContractVisibility.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | The key's view of customer contracts (#153): " AND (...)" + its args. |
 | [apiCostCentreCompany()](/code/functions/apiCostCentreCompany.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | company_id from the body/query, checked against the key - or the key's default company. |
-| [apiCostCentresCreate()](/code/functions/apiCostCentresCreate.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
-| [apiCostCentresDelete()](/code/functions/apiCostCentresDelete.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
+| [apiCostCentresCreate()](/code/functions/apiCostCentresCreate.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | POST /cost-centres |
+| [apiCostCentresDelete()](/code/functions/apiCostCentresDelete.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | DELETE /cost-centres/{id} |
 | [apiCostCentreSelect()](/code/functions/apiCostCentreSelect.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
-| [apiCostCentresGet()](/code/functions/apiCostCentresGet.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
-| [apiCostCentresList()](/code/functions/apiCostCentresList.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
+| [apiCostCentresGet()](/code/functions/apiCostCentresGet.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | GET /cost-centres/{id} |
+| [apiCostCentresList()](/code/functions/apiCostCentresList.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | GET /cost-centres |
 | [apiCostCentresReady()](/code/functions/apiCostCentresReady.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
-| [apiCostCentresSync()](/code/functions/apiCostCentresSync.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
-| [apiCostCentresUpdate()](/code/functions/apiCostCentresUpdate.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
-| [apiDepartmentsList()](/code/functions/apiDepartmentsList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) |  |
+| [apiCostCentresSync()](/code/functions/apiCostCentresSync.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | POST /cost-centres/sync — bring a company's list into line, matched on code |
+| [apiCostCentresUpdate()](/code/functions/apiCostCentresUpdate.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | PATCH /cost-centres/{id} |
+| [apiDepartmentsList()](/code/functions/apiDepartmentsList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | GET /departments |
 | [apiDomainAccountsList()](/code/functions/apiDomainAccountsList.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
 | [apiDomainFindings()](/code/functions/apiDomainFindings.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | Findings with their English title and advice filled in — a machine consumer has no lang file. |
 | [apiDomainRefuseAuthCode()](/code/functions/apiDomainRefuseAuthCode.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsCheck()](/code/functions/apiDomainsCheck.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsCreate()](/code/functions/apiDomainsCreate.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsDelete()](/code/functions/apiDomainsDelete.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
+| [apiDomainsCheck()](/code/functions/apiDomainsCheck.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | POST /domains/{id}/check — run the health and security checks now |
+| [apiDomainsCreate()](/code/functions/apiDomainsCreate.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | POST /domains |
+| [apiDomainsDelete()](/code/functions/apiDomainsDelete.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | DELETE /domains/{id} |
 | [apiDomainSelect()](/code/functions/apiDomainSelect.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsFindings()](/code/functions/apiDomainsFindings.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsGet()](/code/functions/apiDomainsGet.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsHistory()](/code/functions/apiDomainsHistory.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsList()](/code/functions/apiDomainsList.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsLookup()](/code/functions/apiDomainsLookup.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainStatusesList()](/code/functions/apiDomainStatusesList.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
-| [apiDomainsUpdate()](/code/functions/apiDomainsUpdate.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
+| [apiDomainsFindings()](/code/functions/apiDomainsFindings.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | GET /domains/{id}/findings — the last check's findings, with English text |
+| [apiDomainsGet()](/code/functions/apiDomainsGet.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | GET /domains/{id} |
+| [apiDomainsHistory()](/code/functions/apiDomainsHistory.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | GET /domains/{id}/history |
+| [apiDomainsList()](/code/functions/apiDomainsList.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | GET /domains |
+| [apiDomainsLookup()](/code/functions/apiDomainsLookup.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | POST /domains/{id}/lookup — ask the registry now |
+| [apiDomainStatusesList()](/code/functions/apiDomainStatusesList.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | GET /domain-statuses · GET /domain-registrar-accounts |
+| [apiDomainsUpdate()](/code/functions/apiDomainsUpdate.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | PATCH /domains/{id} |
 | [apiEffectiveCompanyScope()](/code/functions/apiEffectiveCompanyScope.md) | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | The companies a key may really reach: its own list, narrowed to its analyst's. |
 | [apiError()](/code/functions/apiError.md) | [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md) | Emit an error response and stop. |
 | [apiExtractKey()](/code/functions/apiExtractKey.md) | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | Pull the key from Authorization: Bearer <key>, a raw Authorization value, or X-Api-Key. |
 | [apiFailFromService()](/code/functions/apiFailFromService.md) | [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md) | Emit the API error response for a ServiceError raised by a shared service (see includes/service_context.php). Maps kind -> HTTP status and passes the code + message through verbatim, so a service-backed handler produces the same error body it did when the logic lived inline. Resolves ServiceError / serviceErrorHttpStatus at call time (the calling resource has required them). |
-| [apiFormsCreate()](/code/functions/apiFormsCreate.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
-| [apiFormsDelete()](/code/functions/apiFormsDelete.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
+| [apiFormsCreate()](/code/functions/apiFormsCreate.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | POST /forms — mirrors save_form.php's create branch (version_number 1). |
+| [apiFormsDelete()](/code/functions/apiFormsDelete.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | DELETE /forms/{id} — one version (leaf only), or the whole chain with ?chain=true. Always transactional, submissions + data removed explicitly. |
 | [apiFormSelect()](/code/functions/apiFormSelect.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
 | [apiFormsGet()](/code/functions/apiFormsGet.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
-| [apiFormsList()](/code/functions/apiFormsList.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
-| [apiFormSubmissionsCreate()](/code/functions/apiFormSubmissionsCreate.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
-| [apiFormSubmissionsDelete()](/code/functions/apiFormSubmissionsDelete.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
+| [apiFormsList()](/code/functions/apiFormsList.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | GET /forms — one row per chain (the current version), like the module list. |
+| [apiFormSubmissionsCreate()](/code/functions/apiFormSubmissionsCreate.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | POST /forms/{id}/submissions — submit_form.php: per-type validation, then the form.submitted workflow dispatch (after commit, errors swallowed). |
+| [apiFormSubmissionsDelete()](/code/functions/apiFormSubmissionsDelete.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | DELETE /forms/{id}/submissions/{sid} — delete_submission.php, but with the data rows removed explicitly (grown installs may lack the cascade FK). |
 | [apiFormSubmissionsGet()](/code/functions/apiFormSubmissionsGet.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
-| [apiFormSubmissionsList()](/code/functions/apiFormSubmissionsList.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
+| [apiFormSubmissionsList()](/code/functions/apiFormSubmissionsList.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | GET /forms/{id}/submissions — newest first, paginated. |
 | [apiFormSubmissionsSelect()](/code/functions/apiFormSubmissionsSelect.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
-| [apiFormsUpdate()](/code/functions/apiFormsUpdate.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
-| [apiFormVersionsCreate()](/code/functions/apiFormVersionsCreate.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
-| [apiFormVersionsList()](/code/functions/apiFormVersionsList.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) |  |
+| [apiFormsUpdate()](/code/functions/apiFormsUpdate.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | PATCH /forms/{id} — save_form.php's in-place save (id-based field sync). |
+| [apiFormVersionsCreate()](/code/functions/apiFormVersionsCreate.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | POST /forms/{id}/versions — fork the leaf (create_version.php). |
+| [apiFormVersionsList()](/code/functions/apiFormVersionsList.md) | [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | GET /forms/{id}/versions — the whole chain, oldest first (list_versions.php). |
 | [apiHandlePing()](/code/functions/apiHandlePing.md) | [api/v1/index.php](/code/files/api/v1/index.php.md) | GET /ping — auth check + what this key can do. |
 | [apiHandleRoot()](/code/functions/apiHandleRoot.md) | [api/v1/index.php](/code/files/api/v1/index.php.md) | GET / — version + endpoint index. |
 | [apiIsoDate()](/code/functions/apiIsoDate.md) | [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md) | DB "YYYY-MM-DD HH:MM:SS" (stored UTC) -> ISO 8601 "YYYY-MM-DDTHH:MM:SSZ", or null. |
@@ -204,19 +204,19 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiKeyKnowledgeFilter()](/code/functions/apiKeyKnowledgeFilter.md) | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | The Knowledge counterpart of `apiKeyTenantFilter()`. |
 | [apiKeyTenantFilter()](/code/functions/apiKeyTenantFilter.md) | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | SQL predicate scoping any tenant_id-carrying list query to the key's companies. Mirrors `ticketTenantFilter()`: NULL tenant_id rows belong to the Default company. Works for tickets ('t'), problems ('p'), and any future tenant-scoped module. |
 | [apiKeyTicketFilter()](/code/functions/apiKeyTicketFilter.md) | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | Back-compat name used by the tickets resource — delegates to the generic filter. |
-| [apiKnowledgeArticlesCreate()](/code/functions/apiKnowledgeArticlesCreate.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
-| [apiKnowledgeArticlesDelete()](/code/functions/apiKnowledgeArticlesDelete.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
-| [apiKnowledgeArticlesGet()](/code/functions/apiKnowledgeArticlesGet.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
-| [apiKnowledgeArticlesList()](/code/functions/apiKnowledgeArticlesList.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
+| [apiKnowledgeArticlesCreate()](/code/functions/apiKnowledgeArticlesCreate.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | POST /knowledge/articles |
+| [apiKnowledgeArticlesDelete()](/code/functions/apiKnowledgeArticlesDelete.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | DELETE (archive) / restore / permanent purge — the recycle-bin semantics |
+| [apiKnowledgeArticlesGet()](/code/functions/apiKnowledgeArticlesGet.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | GET /knowledge/articles/{id} |
+| [apiKnowledgeArticlesList()](/code/functions/apiKnowledgeArticlesList.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | GET /knowledge/articles |
 | [apiKnowledgeArticlesPurge()](/code/functions/apiKnowledgeArticlesPurge.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
 | [apiKnowledgeArticlesRestore()](/code/functions/apiKnowledgeArticlesRestore.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
-| [apiKnowledgeArticlesUpdate()](/code/functions/apiKnowledgeArticlesUpdate.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
+| [apiKnowledgeArticlesUpdate()](/code/functions/apiKnowledgeArticlesUpdate.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | PATCH /knowledge/articles/{id} |
 | [apiKnowledgePurgeExpired()](/code/functions/apiKnowledgePurgeExpired.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | The recycle bin's retention auto-purge (mirrors knowledge_archive.php). |
 | [apiKnowledgeSelect()](/code/functions/apiKnowledgeSelect.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
 | [apiKnowledgeTags()](/code/functions/apiKnowledgeTags.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
-| [apiKnowledgeTagsList()](/code/functions/apiKnowledgeTagsList.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
+| [apiKnowledgeTagsList()](/code/functions/apiKnowledgeTagsList.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | GET /knowledge/tags — tag list with published article counts |
 | [apiKnowledgeVersionsGet()](/code/functions/apiKnowledgeVersionsGet.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
-| [apiKnowledgeVersionsList()](/code/functions/apiKnowledgeVersionsList.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) |  |
+| [apiKnowledgeVersionsList()](/code/functions/apiKnowledgeVersionsList.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | Versions |
 | [apiLoadArticle()](/code/functions/apiLoadArticle.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | Load an article by id, 404ing if it's gone. |
 | [apiLoadAsset()](/code/functions/apiLoadAsset.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | Load one asset (with joins); 404 if unknown OR outside the key's companies (multi-tenancy — the key's company scope gates every by-id read/write; a NULL tenant_id normalises to the Default company; no-op at N=1 / all-access key). |
 | [apiLoadCalendarEvent()](/code/functions/apiLoadCalendarEvent.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
@@ -239,70 +239,70 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiLoadWorkflow()](/code/functions/apiLoadWorkflow.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
 | [apiMorningCheckDate()](/code/functions/apiMorningCheckDate.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | Strict YYYY-MM-DD — 422 on garbage (the UI silently substitutes today). |
 | [apiMorningCheckResultsGet()](/code/functions/apiMorningCheckResultsGet.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
-| [apiMorningCheckResultsList()](/code/functions/apiMorningCheckResultsList.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
-| [apiMorningCheckResultsRecord()](/code/functions/apiMorningCheckResultsRecord.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
-| [apiMorningChecksBoard()](/code/functions/apiMorningChecksBoard.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
-| [apiMorningChecksCreate()](/code/functions/apiMorningChecksCreate.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
-| [apiMorningChecksDelete()](/code/functions/apiMorningChecksDelete.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
+| [apiMorningCheckResultsList()](/code/functions/apiMorningCheckResultsList.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | GET /morning-checks/results — history; newest first |
+| [apiMorningCheckResultsRecord()](/code/functions/apiMorningCheckResultsRecord.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | POST /morning-checks/results — save_check_result.php's upsert: one result per check per date. 201 on first record of the day, 200 on overwrite. |
+| [apiMorningChecksBoard()](/code/functions/apiMorningChecksBoard.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | GET /morning-checks/board?date=YYYY-MM-DD — get_todays_checks.php's view: every active check with its result for the date (or null if not yet done). |
+| [apiMorningChecksCreate()](/code/functions/apiMorningChecksCreate.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | POST /morning-checks/checks |
+| [apiMorningChecksDelete()](/code/functions/apiMorningChecksDelete.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | DELETE /morning-checks/checks/{id} |
 | [apiMorningChecksGet()](/code/functions/apiMorningChecksGet.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
-| [apiMorningChecksList()](/code/functions/apiMorningChecksList.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
-| [apiMorningCheckStatusesList()](/code/functions/apiMorningCheckStatusesList.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
-| [apiMorningChecksUpdate()](/code/functions/apiMorningChecksUpdate.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) |  |
+| [apiMorningChecksList()](/code/functions/apiMorningChecksList.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | GET /morning-checks/checks — all checks (settings view); ?is_active, ?q |
+| [apiMorningCheckStatusesList()](/code/functions/apiMorningCheckStatusesList.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | GET /morning-check-statuses — full list like get_statuses.php (inactive included so historical results can always be resolved). |
+| [apiMorningChecksUpdate()](/code/functions/apiMorningChecksUpdate.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | PATCH /morning-checks/checks/{id} |
 | [apiMorningResultSelect()](/code/functions/apiMorningResultSelect.md) | [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md) | Result rows come from this SELECT so the status join is always present. |
 | [apiNmAutoPlacer()](/code/functions/apiNmAutoPlacer.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Auto-placement for nodes sent without coordinates: a fresh column to the right of the current bounding box, stacking downward — legible enough for an agent drop; a human tidies the layout in the editor. |
 | [apiNmChainIds()](/code/functions/apiNmChainIds.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | The whole version chain containing `$diagramId`: root first. Caps mirror the UI (200 up / 500 total). |
 | [apiNmConnectorHydrated()](/code/functions/apiNmConnectorHydrated.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Load one connector by id fully hydrated (for single-op responses). |
-| [apiNmConnectorsCreate()](/code/functions/apiNmConnectorsCreate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmConnectorsDelete()](/code/functions/apiNmConnectorsDelete.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
+| [apiNmConnectorsCreate()](/code/functions/apiNmConnectorsCreate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | POST /network-diagrams/{id}/connectors — endpoints by node id or object id. |
+| [apiNmConnectorsDelete()](/code/functions/apiNmConnectorsDelete.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | DELETE /network-diagrams/{id}/connectors/{connector_id} |
 | [apiNmConnectorsForDiagram()](/code/functions/apiNmConnectorsForDiagram.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Connectors with endpoint objects + the CMDB relationship verb they represent. |
-| [apiNmConnectorsUpdate()](/code/functions/apiNmConnectorsUpdate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmDiagramsCreate()](/code/functions/apiNmDiagramsCreate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmDiagramsDelete()](/code/functions/apiNmDiagramsDelete.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
+| [apiNmConnectorsUpdate()](/code/functions/apiNmConnectorsUpdate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | PATCH /network-diagrams/{id}/connectors/{connector_id} — label / style / provenance. |
+| [apiNmDiagramsCreate()](/code/functions/apiNmDiagramsCreate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | POST /network-diagrams — create, optionally with initial contents in one call. |
+| [apiNmDiagramsDelete()](/code/functions/apiNmDiagramsDelete.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | DELETE /network-diagrams/{id} — leaf-only (parent resurfaces as current); ?chain=true deletes the whole chain. |
 | [apiNmDiagramSelect()](/code/functions/apiNmDiagramSelect.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmDiagramsGet()](/code/functions/apiNmDiagramsGet.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmDiagramsList()](/code/functions/apiNmDiagramsList.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmDiagramsUpdate()](/code/functions/apiNmDiagramsUpdate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
+| [apiNmDiagramsGet()](/code/functions/apiNmDiagramsGet.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | GET /network-diagrams/{id} — fully hydrated; ?include_properties=true adds each object's CI properties. |
+| [apiNmDiagramsList()](/code/functions/apiNmDiagramsList.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | GET /network-diagrams — current versions by default; ?all_versions=true for everything. |
+| [apiNmDiagramsUpdate()](/code/functions/apiNmDiagramsUpdate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | PATCH /network-diagrams/{id} — partial metadata; sending nodes/connectors = full contents replace. |
 | [apiNmLoadConnector()](/code/functions/apiNmLoadConnector.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
 | [apiNmLoadDiagram()](/code/functions/apiNmLoadDiagram.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
 | [apiNmLoadNode()](/code/functions/apiNmLoadNode.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmNodesCreate()](/code/functions/apiNmNodesCreate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmNodesDelete()](/code/functions/apiNmNodesDelete.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
+| [apiNmNodesCreate()](/code/functions/apiNmNodesCreate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | POST /network-diagrams/{id}/nodes — add one node (object) or a batch ({"nodes": [...]}). |
+| [apiNmNodesDelete()](/code/functions/apiNmNodesDelete.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | DELETE /network-diagrams/{id}/nodes/{node_id} — the node and its connectors. |
 | [apiNmNodeSelect()](/code/functions/apiNmNodeSelect.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmNodesUpdate()](/code/functions/apiNmNodesUpdate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
+| [apiNmNodesUpdate()](/code/functions/apiNmNodesUpdate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | PATCH /network-diagrams/{id}/nodes/{node_id} — move / resize / re-icon. |
 | [apiNmObjectProperties()](/code/functions/apiNmObjectProperties.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Typed property values for the distinct objects behind a diagram's nodes, keyed by object id. |
 | [apiNmRequireLeaf()](/code/functions/apiNmRequireLeaf.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Writes are leaf-only — a version with children is frozen history. |
 | [apiNmResolveEndpoint()](/code/functions/apiNmResolveEndpoint.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Resolve a connector endpoint to a node id on this diagram. Accepts {prefix}_node_id or {prefix}_object_id (422 if the object isn't on the diagram, or is on it more than once — use node ids to disambiguate). |
 | [apiNmResolveRelationshipId()](/code/functions/apiNmResolveRelationshipId.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Resolve cmdb_relationship_id input: null clears, an int is validated, 'auto' finds the existing CMDB relationship between the two objects (either direction; null if none). |
 | [apiNmRespondFull()](/code/functions/apiNmRespondFull.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Respond with the full hydrated diagram (shared by create/update/version). |
-| [apiNmSuggestionsList()](/code/functions/apiNmSuggestionsList.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
+| [apiNmSuggestionsList()](/code/functions/apiNmSuggestionsList.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | GET /network-diagrams/{id}/suggestions — CMDB neighbours of on-diagram objects not yet drawn. |
 | [apiNmValidateIcon()](/code/functions/apiNmValidateIcon.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
 | [apiNmValidateLineStyle()](/code/functions/apiNmValidateLineStyle.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
 | [apiNmValidateNodeInput()](/code/functions/apiNmValidateNodeInput.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | Validate + normalise one node input row. Returns [cmdb_object_id, x\|null, y\|null, size, icon_override, ref] — null x/y means auto-place. |
 | [apiNmValidateObjectExists()](/code/functions/apiNmValidateObjectExists.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
 | [apiNmValidateSize()](/code/functions/apiNmValidateSize.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmVersionsCreate()](/code/functions/apiNmVersionsCreate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiNmVersionsList()](/code/functions/apiNmVersionsList.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
-| [apiOriginsList()](/code/functions/apiOriginsList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) |  |
+| [apiNmVersionsCreate()](/code/functions/apiNmVersionsCreate.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | POST /network-diagrams/{id}/versions — clone the leaf forward (the editor's "New version"). |
+| [apiNmVersionsList()](/code/functions/apiNmVersionsList.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | GET /network-diagrams/{id}/versions — the whole chain, oldest first. |
+| [apiOriginsList()](/code/functions/apiOriginsList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | GET /origins (?company_id= applies the per-company add/hide overrides) |
 | [apiPagination()](/code/functions/apiPagination.md) | [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md) | Pagination from ?page= and ?per_page= (defaults 1 / 25, per_page capped at 100). |
 | [apiParseDate()](/code/functions/apiParseDate.md) | [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md) | Parse an incoming date/time filter or field (ISO 8601, with or without Z, or "YYYY-MM-DD HH:MM:SS") into a UTC DB string. 400s on garbage. |
 | [apiParseDateOnly()](/code/functions/apiParseDateOnly.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | Validate a DATE field (YYYY-MM-DD); 422 naming the field on garbage. Null/'' clears. Kept here (not in AssetsService) because contracts.php + tasks.php share it as a generic API date-parameter validator. |
 | [apiParseNaiveDatetime()](/code/functions/apiParseNaiveDatetime.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | Parse a NAIVE local datetime ("YYYY-MM-DD HH:MM[:SS]", T separator OK, date-only OK). 422s on timezone designators — this resource is naive-local by design (see header). |
 | [apiPaymentSchedulesList()](/code/functions/apiPaymentSchedulesList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
-| [apiPrioritiesList()](/code/functions/apiPrioritiesList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) |  |
-| [apiProblemAuditList()](/code/functions/apiProblemAuditList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemChangesLink()](/code/functions/apiProblemChangesLink.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
+| [apiPrioritiesList()](/code/functions/apiPrioritiesList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | GET /priorities |
+| [apiProblemAuditList()](/code/functions/apiProblemAuditList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | GET /problems/{id}/audit |
+| [apiProblemChangesLink()](/code/functions/apiProblemChangesLink.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | Change linking — POST /problems/{id}/changes, DELETE .../{change_id} (shared change_relations table, related_type='problem', relation 'fixes') |
 | [apiProblemChangesUnlink()](/code/functions/apiProblemChangesUnlink.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
 | [apiProblemNotesCreate()](/code/functions/apiProblemNotesCreate.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemNotesList()](/code/functions/apiProblemNotesList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
+| [apiProblemNotesList()](/code/functions/apiProblemNotesList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | Notes — append-only journal |
 | [apiProblemPrioritiesList()](/code/functions/apiProblemPrioritiesList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemsCreate()](/code/functions/apiProblemsCreate.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemsDelete()](/code/functions/apiProblemsDelete.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
+| [apiProblemsCreate()](/code/functions/apiProblemsCreate.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | POST /problems |
+| [apiProblemsDelete()](/code/functions/apiProblemsDelete.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | DELETE /problems/{id} — permanent, mirrors delete.php (cascades children, tidies change_relations which has no FK back to problems) |
 | [apiProblemSelect()](/code/functions/apiProblemSelect.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemsGet()](/code/functions/apiProblemsGet.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemsList()](/code/functions/apiProblemsList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemStatusesList()](/code/functions/apiProblemStatusesList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemsUpdate()](/code/functions/apiProblemsUpdate.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
-| [apiProblemTicketsLink()](/code/functions/apiProblemTicketsLink.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
+| [apiProblemsGet()](/code/functions/apiProblemsGet.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | GET /problems/{id} — full detail incl. linked incidents + changes |
+| [apiProblemsList()](/code/functions/apiProblemsList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | GET /problems |
+| [apiProblemStatusesList()](/code/functions/apiProblemStatusesList.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | Reference lookups |
+| [apiProblemsUpdate()](/code/functions/apiProblemsUpdate.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | PATCH /problems/{id} |
+| [apiProblemTicketsLink()](/code/functions/apiProblemTicketsLink.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | Incident linking — POST /problems/{id}/tickets, DELETE .../{ticket_id} |
 | [apiProblemTicketsUnlink()](/code/functions/apiProblemTicketsUnlink.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
 | [apiProjectBudget()](/code/functions/apiProjectBudget.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | GET /projects/{id}/budget - totals, labour and lines, in the project's currency. Never one person's rate. |
 | [apiProjectBudgetLine()](/code/functions/apiProjectBudgetLine.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
@@ -324,11 +324,11 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiProjectRaidList()](/code/functions/apiProjectRaidList.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
 | [apiProjectRaidRow()](/code/functions/apiProjectRaidRow.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
 | [apiProjectRaidUpdate()](/code/functions/apiProjectRaidUpdate.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
-| [apiProjectsCreate()](/code/functions/apiProjectsCreate.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
-| [apiProjectsDelete()](/code/functions/apiProjectsDelete.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
+| [apiProjectsCreate()](/code/functions/apiProjectsCreate.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | POST /projects (optionally {template: "builtin:office_move" \| "saved:12"}) |
+| [apiProjectsDelete()](/code/functions/apiProjectsDelete.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | DELETE /projects/{id} - its tasks are detached, never deleted |
 | [apiProjectSelect()](/code/functions/apiProjectSelect.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
-| [apiProjectsGet()](/code/functions/apiProjectsGet.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
-| [apiProjectsList()](/code/functions/apiProjectsList.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
+| [apiProjectsGet()](/code/functions/apiProjectsGet.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | GET /projects/{id} |
+| [apiProjectsList()](/code/functions/apiProjectsList.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | GET /projects |
 | [apiProjectStage()](/code/functions/apiProjectStage.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
 | [apiProjectStages()](/code/functions/apiProjectStages.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
 | [apiProjectStagesCreate()](/code/functions/apiProjectStagesCreate.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
@@ -336,7 +336,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiProjectStagesGate()](/code/functions/apiProjectStagesGate.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | POST /projects/{id}/stages/{sid}/gate {decision: go\|go_with_conditions\|stop, notes?} |
 | [apiProjectStagesList()](/code/functions/apiProjectStagesList.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
 | [apiProjectStagesUpdate()](/code/functions/apiProjectStagesUpdate.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
-| [apiProjectsUpdate()](/code/functions/apiProjectsUpdate.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
+| [apiProjectsUpdate()](/code/functions/apiProjectsUpdate.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | PATCH /projects/{id} |
 | [apiProjectTasks()](/code/functions/apiProjectTasks.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | GET /projects/{id}/tasks - its top-level tasks. Change them through /tasks. |
 | [apiProjectTry()](/code/functions/apiProjectTry.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | Run a service call; a ServiceError becomes the API's error body. |
 | [apiRateLimit()](/code/functions/apiRateLimit.md) | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | Rate limiting — fixed one-minute windows in api_key_rate_limits, same mechanism as the proven api_rate_limits implementation. Default limit comes from system_settings.api_rate_limit_per_minute (fallback 60); a key can carry its own override. Fails open if the rate-limit table errors. |
@@ -346,10 +346,10 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiSerializeAnalyst()](/code/functions/apiSerializeAnalyst.md) | [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md) |  |
 | [apiSerializeArticle()](/code/functions/apiSerializeArticle.md) | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | Summary shape (lists) — preview instead of the full body. Detail adds body_html. |
 | [apiSerializeAsset()](/code/functions/apiSerializeAsset.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
-| [apiSerializeBudgetLine()](/code/functions/apiSerializeBudgetLine.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
+| [apiSerializeBudgetLine()](/code/functions/apiSerializeBudgetLine.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | Budget |
 | [apiSerializeCalendarEvent()](/code/functions/apiSerializeCalendarEvent.md) | [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) |  |
 | [apiSerializeChange()](/code/functions/apiSerializeChange.md) | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | Summary shape (lists). Detail adds the longtext bodies, PIR, attachments, links. |
-| [apiSerializeContact()](/code/functions/apiSerializeContact.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
+| [apiSerializeContact()](/code/functions/apiSerializeContact.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | Supplier contacts |
 | [apiSerializeContract()](/code/functions/apiSerializeContract.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiSerializeCostCentre()](/code/functions/apiSerializeCostCentre.md) | [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) |  |
 | [apiSerializeDomain()](/code/functions/apiSerializeDomain.md) | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) |  |
@@ -365,9 +365,9 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiSerializeNmNode()](/code/functions/apiSerializeNmNode.md) | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) |  |
 | [apiSerializeProblem()](/code/functions/apiSerializeProblem.md) | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) |  |
 | [apiSerializeProject()](/code/functions/apiSerializeProject.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
-| [apiSerializeProjectItem()](/code/functions/apiSerializeProjectItem.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
-| [apiSerializeProjectRaid()](/code/functions/apiSerializeProjectRaid.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
-| [apiSerializeProjectStage()](/code/functions/apiSerializeProjectStage.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) |  |
+| [apiSerializeProjectItem()](/code/functions/apiSerializeProjectItem.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | Scope items (deliverables, with MoSCoW) |
+| [apiSerializeProjectRaid()](/code/functions/apiSerializeProjectRaid.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | RAID log |
+| [apiSerializeProjectStage()](/code/functions/apiSerializeProjectStage.md) | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | Stages (phases / stages / sprints) |
 | [apiSerializeService()](/code/functions/apiSerializeService.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
 | [apiSerializeSupplier()](/code/functions/apiSerializeSupplier.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiSerializeTask()](/code/functions/apiSerializeTask.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
@@ -377,31 +377,31 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiSerializeWorkflowExecution()](/code/functions/apiSerializeWorkflowExecution.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
 | [apiServiceImpactLevelsList()](/code/functions/apiServiceImpactLevelsList.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
 | [apiServiceIncidentSelect()](/code/functions/apiServiceIncidentSelect.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
-| [apiServiceIncidentStatusesList()](/code/functions/apiServiceIncidentStatusesList.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
+| [apiServiceIncidentStatusesList()](/code/functions/apiServiceIncidentStatusesList.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | Reference lookups |
 | [apiServiceStatusFail()](/code/functions/apiServiceStatusFail.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | Map a ServiceError raised by the shared service to the API's error response. |
 | [apiServiceStatusImpactMeta()](/code/functions/apiServiceStatusImpactMeta.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
 | [apiServiceStatusSubquery()](/code/functions/apiServiceStatusSubquery.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | get_dashboard.php's exact worst-open-impact subquery, as a SQL fragment. |
-| [apiSoftwareAppMachinesList()](/code/functions/apiSoftwareAppMachinesList.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
-| [apiSoftwareAppsGet()](/code/functions/apiSoftwareAppsGet.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
+| [apiSoftwareAppMachinesList()](/code/functions/apiSoftwareAppMachinesList.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | GET /software/apps/{id}/machines — mirrors get_app_machines.php (+ asset_id) |
+| [apiSoftwareAppsGet()](/code/functions/apiSoftwareAppsGet.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | GET /software/apps/{id} — app + licences + compliance numbers |
 | [apiSoftwareAppsList()](/code/functions/apiSoftwareAppsList.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
 | [apiSoftwareInstallCount()](/code/functions/apiSoftwareInstallCount.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | Distinct non-system-component hosts for an app — the compliance install count. |
-| [apiSoftwareLicencesCreate()](/code/functions/apiSoftwareLicencesCreate.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
-| [apiSoftwareLicencesDelete()](/code/functions/apiSoftwareLicencesDelete.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
+| [apiSoftwareLicencesCreate()](/code/functions/apiSoftwareLicencesCreate.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | POST /software/licences |
+| [apiSoftwareLicencesDelete()](/code/functions/apiSoftwareLicencesDelete.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | DELETE /software/licences/{id} — leaf table, mirrors delete_licence.php |
 | [apiSoftwareLicenceSelect()](/code/functions/apiSoftwareLicenceSelect.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
 | [apiSoftwareLicencesGet()](/code/functions/apiSoftwareLicencesGet.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
-| [apiSoftwareLicencesList()](/code/functions/apiSoftwareLicencesList.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
-| [apiSoftwareLicencesUpdate()](/code/functions/apiSoftwareLicencesUpdate.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
+| [apiSoftwareLicencesList()](/code/functions/apiSoftwareLicencesList.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | GET /software/licences |
+| [apiSoftwareLicencesUpdate()](/code/functions/apiSoftwareLicencesUpdate.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | PATCH /software/licences/{id} |
 | [apiSoftwareLoadApp()](/code/functions/apiSoftwareLoadApp.md) | [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) |  |
-| [apiStatusesList()](/code/functions/apiStatusesList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) |  |
-| [apiStatusIncidentsCreate()](/code/functions/apiStatusIncidentsCreate.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
+| [apiStatusesList()](/code/functions/apiStatusesList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | GET /statuses |
+| [apiStatusIncidentsCreate()](/code/functions/apiStatusIncidentsCreate.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | POST /service-status/incidents |
 | [apiStatusIncidentsDelete()](/code/functions/apiStatusIncidentsDelete.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
 | [apiStatusIncidentsGet()](/code/functions/apiStatusIncidentsGet.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
-| [apiStatusIncidentsList()](/code/functions/apiStatusIncidentsList.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
-| [apiStatusIncidentsUpdate()](/code/functions/apiStatusIncidentsUpdate.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
+| [apiStatusIncidentsList()](/code/functions/apiStatusIncidentsList.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | GET /service-status/incidents |
+| [apiStatusIncidentsUpdate()](/code/functions/apiStatusIncidentsUpdate.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | PATCH /service-status/incidents/{id} |
 | [apiStatusServicesCreate()](/code/functions/apiStatusServicesCreate.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
 | [apiStatusServicesDelete()](/code/functions/apiStatusServicesDelete.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
 | [apiStatusServicesGet()](/code/functions/apiStatusServicesGet.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
-| [apiStatusServicesList()](/code/functions/apiStatusServicesList.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
+| [apiStatusServicesList()](/code/functions/apiStatusServicesList.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | GET /service-status/services — the health board (derived current_status inline) |
 | [apiStatusServicesUpdate()](/code/functions/apiStatusServicesUpdate.md) | [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) |  |
 | [apiSupplierContactsCreate()](/code/functions/apiSupplierContactsCreate.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiSupplierContactsDelete()](/code/functions/apiSupplierContactsDelete.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
@@ -410,47 +410,47 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiSuppliersCreate()](/code/functions/apiSuppliersCreate.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiSuppliersDelete()](/code/functions/apiSuppliersDelete.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | DELETE /suppliers/{id} — mirrors delete_supplier.php's explicit nullify-then-delete. |
 | [apiSupplierSelect()](/code/functions/apiSupplierSelect.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
-| [apiSuppliersGet()](/code/functions/apiSuppliersGet.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
+| [apiSuppliersGet()](/code/functions/apiSuppliersGet.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | Suppliers — full CRUD (GET /suppliers stays the lite reference list) |
 | [apiSuppliersList()](/code/functions/apiSuppliersList.md) | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) |  |
 | [apiSupplierStatusesList()](/code/functions/apiSupplierStatusesList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiSuppliersUpdate()](/code/functions/apiSuppliersUpdate.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiSupplierTypesList()](/code/functions/apiSupplierTypesList.md) | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) |  |
 | [apiTaskCommentsCreate()](/code/functions/apiTaskCommentsCreate.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
-| [apiTaskCommentsList()](/code/functions/apiTaskCommentsList.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
+| [apiTaskCommentsList()](/code/functions/apiTaskCommentsList.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | Comments — create-only, like the UI |
 | [apiTaskContractor()](/code/functions/apiTaskContractor.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | Contractors (3.3.0): the supplier and the person there, by name - includes/task_contractors.php. |
 | [apiTaskPrioritiesList()](/code/functions/apiTaskPrioritiesList.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
-| [apiTasksCreate()](/code/functions/apiTasksCreate.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
-| [apiTasksDelete()](/code/functions/apiTasksDelete.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
+| [apiTasksCreate()](/code/functions/apiTasksCreate.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | POST /tasks |
+| [apiTasksDelete()](/code/functions/apiTasksDelete.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | DELETE /tasks/{id} — hard delete. Children removed explicitly, not via FK cascade: installs grown via Database Verify were missing the parent and comments cascade FKs, which orphaned subtasks/comments (same fix as the UI's delete.php). |
 | [apiTaskSelect()](/code/functions/apiTaskSelect.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
-| [apiTasksGet()](/code/functions/apiTasksGet.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
-| [apiTasksList()](/code/functions/apiTasksList.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
-| [apiTasksMove()](/code/functions/apiTasksMove.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
-| [apiTaskStatusesList()](/code/functions/apiTaskStatusesList.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
-| [apiTasksUpdate()](/code/functions/apiTasksUpdate.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
+| [apiTasksGet()](/code/functions/apiTasksGet.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | GET /tasks/{id} |
+| [apiTasksList()](/code/functions/apiTasksList.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | GET /tasks |
+| [apiTasksMove()](/code/functions/apiTasksMove.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | POST /tasks/{id}/move — kanban move (mirrors reorder.php: NO workflow event) |
+| [apiTaskStatusesList()](/code/functions/apiTaskStatusesList.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | Reference lookups |
+| [apiTasksUpdate()](/code/functions/apiTasksUpdate.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | PATCH /tasks/{id} |
 | [apiTaskTagsList()](/code/functions/apiTaskTagsList.md) | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) |  |
 | [apiTenantConfigList()](/code/functions/apiTenantConfigList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | Shared list for the tenant-overridable config tables (add/hide model). |
-| [apiTicketAuditList()](/code/functions/apiTicketAuditList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
+| [apiTicketAuditList()](/code/functions/apiTicketAuditList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | Audit log |
 | [apiTicketNotesCreate()](/code/functions/apiTicketNotesCreate.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketNotesList()](/code/functions/apiTicketNotesList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketsCreate()](/code/functions/apiTicketsCreate.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketsDelete()](/code/functions/apiTicketsDelete.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
+| [apiTicketNotesList()](/code/functions/apiTicketNotesList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | Notes |
+| [apiTicketsCreate()](/code/functions/apiTicketsCreate.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | POST /tickets |
+| [apiTicketsDelete()](/code/functions/apiTicketsDelete.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | DELETE /tickets/{id} + POST /tickets/{id}/restore (soft delete / trash) |
 | [apiTicketSelect()](/code/functions/apiTicketSelect.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketsGet()](/code/functions/apiTicketsGet.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketSlaGet()](/code/functions/apiTicketSlaGet.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketsList()](/code/functions/apiTicketsList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
+| [apiTicketsGet()](/code/functions/apiTicketsGet.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | GET /tickets/{id} |
+| [apiTicketSlaGet()](/code/functions/apiTicketSlaGet.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | SLA (compute-on-read via includes/sla.php) |
+| [apiTicketsList()](/code/functions/apiTicketsList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | GET /tickets |
 | [apiTicketsRestore()](/code/functions/apiTicketsRestore.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketsUpdate()](/code/functions/apiTicketsUpdate.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketThreadList()](/code/functions/apiTicketThreadList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
+| [apiTicketsUpdate()](/code/functions/apiTicketsUpdate.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | PATCH /tickets/{id} |
+| [apiTicketThreadList()](/code/functions/apiTicketThreadList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | Thread (emails / channel messages) |
 | [apiTicketTimeEntriesCreate()](/code/functions/apiTicketTimeEntriesCreate.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
 | [apiTicketTimeEntriesDelete()](/code/functions/apiTicketTimeEntriesDelete.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
 | [apiTicketTimeEntriesList()](/code/functions/apiTicketTimeEntriesList.md) | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) |  |
-| [apiTicketTypesList()](/code/functions/apiTicketTypesList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) |  |
+| [apiTicketTypesList()](/code/functions/apiTicketTypesList.md) | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | GET /ticket-types (?company_id= applies the per-company add/hide overrides) |
 | [apiUserColumns()](/code/functions/apiUserColumns.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | The columns every read of a requester selects - including the cost centre they are charged to (GH #160), once Database Verification has added it. |
 | [apiUserCostCentre()](/code/functions/apiUserCostCentre.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | `cost_centre_id` from a request body for a requester in company `$tenantId` (NULL = Default): an ACTIVE one of that company, or the one they hold. 422 otherwise. Returns [sent?, value]. |
-| [apiUsersCreate()](/code/functions/apiUsersCreate.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) |  |
-| [apiUsersGet()](/code/functions/apiUsersGet.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) |  |
-| [apiUsersList()](/code/functions/apiUsersList.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) |  |
-| [apiUsersUpdate()](/code/functions/apiUsersUpdate.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) |  |
+| [apiUsersCreate()](/code/functions/apiUsersCreate.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | POST /users |
+| [apiUsersGet()](/code/functions/apiUsersGet.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | GET /users/{id} |
+| [apiUsersList()](/code/functions/apiUsersList.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | GET /users?q=&email= |
+| [apiUsersUpdate()](/code/functions/apiUsersUpdate.md) | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | PATCH /users/{id} |
 | [apiV1BaseSchemas()](/code/functions/apiV1BaseSchemas.md) | [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md) | Base component schemas that always exist (envelope, error, pagination). |
 | [apiV1BuildOpenApi()](/code/functions/apiV1BuildOpenApi.md) | [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md) | Build the complete OpenAPI 3.0.3 document as a PHP array. |
 | [apiV1BuildOperation()](/code/functions/apiV1BuildOperation.md) | [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md) | Build one OpenAPI Operation Object for a docs endpoint. |
@@ -472,20 +472,20 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [apiValidateWorkflowActions()](/code/functions/apiValidateWorkflowActions.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | Validate an actions array against the engine's action catalogue. |
 | [apiValidateWorkflowConditions()](/code/functions/apiValidateWorkflowConditions.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | Validate a conditions array. Returns it normalised (list of objects). |
 | [apiValidateWorkflowTrigger()](/code/functions/apiValidateWorkflowTrigger.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | Validate a trigger event name against the engine's catalogue. |
-| [apiWorkflowActionsList()](/code/functions/apiWorkflowActionsList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
+| [apiWorkflowActionsList()](/code/functions/apiWorkflowActionsList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | GET /workflow-actions — every action type with its args spec (labels, required flags, lookup sources, template-variable support). |
 | [apiWorkflowExecutionSelect()](/code/functions/apiWorkflowExecutionSelect.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowExecutionsGet()](/code/functions/apiWorkflowExecutionsGet.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowExecutionsList()](/code/functions/apiWorkflowExecutionsList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowExecutionsListAll()](/code/functions/apiWorkflowExecutionsListAll.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
+| [apiWorkflowExecutionsGet()](/code/functions/apiWorkflowExecutionsGet.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | GET /workflow-executions/{id} — full detail with payload + step log. |
+| [apiWorkflowExecutionsList()](/code/functions/apiWorkflowExecutionsList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | GET /workflows/{id}/executions |
+| [apiWorkflowExecutionsListAll()](/code/functions/apiWorkflowExecutionsListAll.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | GET /workflow-executions — install-wide, including orphaned runs whose workflow has been deleted (filter with ?workflow_id or ?orphaned=true). |
 | [apiWorkflowExecutionsRespondList()](/code/functions/apiWorkflowExecutionsRespondList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | Shared list plumbing for both execution list routes. |
-| [apiWorkflowsCreate()](/code/functions/apiWorkflowsCreate.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowsDelete()](/code/functions/apiWorkflowsDelete.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
+| [apiWorkflowsCreate()](/code/functions/apiWorkflowsCreate.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | POST /workflows |
+| [apiWorkflowsDelete()](/code/functions/apiWorkflowsDelete.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | DELETE /workflows/{id} — executions survive (the module's audit-trail intent) but are detached explicitly: name snapshot filled, workflow_id NULLed. Explicit rather than FK-reliant so grown installs that haven't re-run Database Verification behave identically. |
 | [apiWorkflowSelect()](/code/functions/apiWorkflowSelect.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowsFire()](/code/functions/apiWorkflowsFire.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowsGet()](/code/functions/apiWorkflowsGet.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowsList()](/code/functions/apiWorkflowsList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowsUpdate()](/code/functions/apiWorkflowsUpdate.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
-| [apiWorkflowTriggersList()](/code/functions/apiWorkflowTriggersList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) |  |
+| [apiWorkflowsFire()](/code/functions/apiWorkflowsFire.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | POST /workflows/{id}/fire — manual test fire with a synthetic payload. |
+| [apiWorkflowsGet()](/code/functions/apiWorkflowsGet.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | GET /workflows/{id} |
+| [apiWorkflowsList()](/code/functions/apiWorkflowsList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | GET /workflows |
+| [apiWorkflowsUpdate()](/code/functions/apiWorkflowsUpdate.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | PATCH /workflows/{id} |
+| [apiWorkflowTriggersList()](/code/functions/apiWorkflowTriggersList.md) | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | GET /workflow-triggers — every trigger with its condition fields, each field's type and the operators valid for it. |
 | [appBaseUrlDetect()](/code/functions/appBaseUrlDetect.md) | [includes/base_url.php](/code/files/includes/base_url.php.md) |  |
 | [assetDiskHideRulesFor()](/code/functions/assetDiskHideRulesFor.md) | [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md) | The rules that could hide a drive on this asset: its own, plus every estate-wide one, scoped to the analyst's active company. |
 | [assetDiskHideSchemaReady()](/code/functions/assetDiskHideSchemaReady.md) | [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md) | Has Database Verification created the table yet? Everything here answers "nothing is hidden" when it has not, so an install that has pulled the update and not yet verified shows its drives rather than an error. |
@@ -520,7 +520,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [attTextExtractOoxml()](/code/functions/attTextExtractOoxml.md) | [includes/search/extract.php](/code/files/includes/search/extract.php.md) | Text out of a docx/xlsx/pptx. Returns null if the archive cannot be opened. |
 | [attTextNormalise()](/code/functions/attTextNormalise.md) | [includes/search/extract.php](/code/files/includes/search/extract.php.md) | Reduce extracted XML/text to the words worth indexing. |
 | [attTextSupports()](/code/functions/attTextSupports.md) | [includes/search/extract.php](/code/files/includes/search/extract.php.md) | Could this tier read the file at all? Used to answer before opening anything. |
-| [autoLayoutProcessMapper()](/code/functions/autoLayoutProcessMapper.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) |  |
+| [autoLayoutProcessMapper()](/code/functions/autoLayoutProcessMapper.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) | Auto-layout for the process-mapper module: writes x/y/width/height onto each step in `$demoData`['tier2']['process_steps'] using a left-to-right layered placement. Each process is laid out independently. Edges that point "backwards" in JSON authoring order are treated as cycle-closing back-edges and ignored for ranking. |
 | [awcAdoptExistingCategory()](/code/functions/awcAdoptExistingCategory.md) | [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md) | Adopt whatever category this kind of entry is already filed under. |
 | [awcColumnExists()](/code/functions/awcColumnExists.md) | [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md) |  |
 | [awcEnsureCategory()](/code/functions/awcEnsureCategory.md) | [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md) | Which calendar category should this kind of entry use? |
@@ -1125,7 +1125,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [gapUpsertTicket()](/code/functions/gapUpsertTicket.md) | [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | Insert-or-update one knowledge_gap_tickets row from a partial field map. |
 | [gapWindowCounts()](/code/functions/gapWindowCounts.md) | [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | How many tickets are in the window, and how many already have an embedding. |
 | [gapWindowSql()](/code/functions/gapWindowSql.md) | [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | The closed-ticket window this analyst can see. |
-| [generateDemoTicketNumber()](/code/functions/generateDemoTicketNumber.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) |  |
+| [generateDemoTicketNumber()](/code/functions/generateDemoTicketNumber.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) | Helper: generate unique ticket number |
 | [generateEmbedding()](/code/functions/generateEmbedding.md) | [api/knowledge/ai_chat.php](/code/files/api/knowledge/ai_chat.php.md) | Generate embedding for text using OpenAI API |
 | [generateTicketNumber()](/code/functions/generateTicketNumber.md) | [api/self-service/create_ticket.php](/code/files/api/self-service/create_ticket.php.md) | ⚠️ One of THREE copies of this, now all delegating to the single engine in includes/ticket_numbering.php (GH #71). Left as a wrapper rather than deleted so the call sites in this file keep reading naturally; the format, the counter and the uniqueness check all live in one place. |
 | [generateTotpSecret()](/code/functions/generateTotpSecret.md) | [includes/totp.php](/code/files/includes/totp.php.md) | Generate a random TOTP secret (Base32 encoded) |
@@ -1160,7 +1160,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [getModuleRegistry()](/code/functions/getModuleRegistry.md) | [includes/functions.php](/code/files/includes/functions.php.md) | Canonical list of user-facing modules for access control (issue #30), key => name. System is deliberately excluded — it's gated by is_admin, not module access. Keys match the waffle launcher / landing page module keys. |
 | [getOrCreateChannelUser()](/code/functions/getOrCreateChannelUser.md) | [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) | Get-or-create a placeholder requester keyed by phone, so repeat senders map to one user. The users table requires an email, so we synthesise a stable non-routable address ('+44…@whatsapp.local'); the real identity is the display name (the WhatsApp profile name) shown on the ticket. |
 | [getOrCreateUser()](/code/functions/getOrCreateUser.md) | [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | Get or create user by email address Returns the user ID |
-| [getPrimaryKeyColumn()](/code/functions/getPrimaryKeyColumn.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) |  |
+| [getPrimaryKeyColumn()](/code/functions/getPrimaryKeyColumn.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) | Helper: get primary key column name for a table |
 | [getRetentionDays()](/code/functions/getRetentionDays.md) | [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md) |  |
 | [getSystemAreas()](/code/functions/getSystemAreas.md) | [system/includes/areas.php](/code/files/system/includes/areas.php.md) |  |
 | [getTenantById()](/code/functions/getTenantById.md) | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | A single tenant row, or null if not found. |
@@ -1309,7 +1309,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [integrationsTicketPayload()](/code/functions/integrationsTicketPayload.md) | [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | The ticket block every tracker.* event carries, in the same shape the tickets service dispatches — so `{{ticket.requester_email}}` means the same thing whichever trigger a workflow hangs off. |
 | [integrationsTrackerProviders()](/code/functions/integrationsTrackerProviders.md) | [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | Providers that are genuinely issue trackers — the ones an escalation, a "raise an issue" button or a workflow action can target. |
 | [internalTicketEmail()](/code/functions/internalTicketEmail.md) | [includes/template_email.php](/code/files/includes/template_email.php.md) | Send an internal notification ABOUT a ticket to staff addresses - an SLA alert, a closure with fields missing - from the ticket's own mailbox, or the first active mailbox when the ticket has none (a ticket raised by hand or through the API never touched one). |
-| [intOrNull()](/code/functions/intOrNull.md) | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md) |  |
+| [intOrNull()](/code/functions/intOrNull.md) | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md) | Helper: get int/bigint value or null |
 | [intuneCreateAppSyncJob()](/code/functions/intuneCreateAppSyncJob.md) | [includes/intune.php](/code/files/includes/intune.php.md) | Create a new app-sync job for the next batch of candidate assets. Returns ['job_id' => int, 'asset_count' => int, 'reused' => bool]. If a pending/running job already exists, returns it (reused=true). |
 | [intuneFetchDeviceApps()](/code/functions/intuneFetchDeviceApps.md) | [includes/intune.php](/code/files/includes/intune.php.md) | Fetch the detectedApps array for a single Intune-managed device. |
 | [intuneFindPhpExe()](/code/functions/intuneFindPhpExe.md) | [includes/intune.php](/code/files/includes/intune.php.md) | Locate a usable PHP CLI binary so the web request can spawn a worker. Tries: explicit setting → PHP_BINARY's directory → known WAMP layout → 'php' from PATH. Returns the path or throws if nothing works. |
@@ -1491,7 +1491,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [loadMessagingChannel()](/code/functions/loadMessagingChannel.md) | [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md) | Load a messaging_channels row with its credentials decrypted + JSON-decoded. Returns null if not found. Safe to call before db_verify has run the table (returns null rather than throwing). |
 | [loadWhitelist()](/code/functions/loadWhitelist.md) | [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | Load whitelist entries for a mailbox |
 | [loadWorkflowAiConfig()](/code/functions/loadWorkflowAiConfig.md) | [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md) | Load the workflow-specific AI settings from `system_settings`. Throws if no key is configured so the caller can surface "configure your AI provider under Workflow → Settings → AI Integration first" to the user. |
-| [logApiResponse()](/code/functions/logApiResponse.md) | [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md) |  |
+| [logApiResponse()](/code/functions/logApiResponse.md) | [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md) | Helper function to log errors/responses |
 | [logEmailImport()](/code/functions/logEmailImport.md) | [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) |  |
 | [logMailboxActivity()](/code/functions/logMailboxActivity.md) | [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | Log mailbox activity (imports and rejections) |
 
@@ -1542,7 +1542,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [maskDn()](/code/functions/maskDn.md) | [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | A DN carries a person's name in its leading component and the directory's shape in the rest. The shape is what you need to diagnose, the name is not — so mask every attribute VALUE and keep every attribute NAME and the commas. "CN=svc_freeitsm,OU=Service Accounts,DC=cnss,DC=local" -> "CN=sv******m,OU=Se******s,DC=cn***,DC=lo***" |
 | [maskDnList()](/code/functions/maskDnList.md) | [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md) |  |
 | [maskEmail()](/code/functions/maskEmail.md) | [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | Local part masked, domain kept — the domain is the diagnostic half. |
-| [maskGuids()](/code/functions/maskGuids.md) | [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) |  |
+| [maskGuids()](/code/functions/maskGuids.md) | [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | Identifiers (client IDs, tenant GUIDs) aren't secrets, but this report is made to be shared with support — so partially mask them: enough to eyeball- verify, not the full value. Diagnostic signals (match/reachability) are computed on the real values and shown as YES/NO, so nothing is lost. |
 | [maskHost()](/code/functions/maskHost.md) | [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | A hostname is infrastructure, not a person — but strip any user@ prefix. |
 | [maskId()](/code/functions/maskId.md) | [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) |  |
 | [maskMiddle()](/code/functions/maskMiddle.md) | [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) |  |
@@ -1565,7 +1565,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [mcpToolProjectRaid()](/code/functions/mcpToolProjectRaid.md) | [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) |  |
 | [mcpToolProjectTasks()](/code/functions/mcpToolProjectTasks.md) | [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) |  |
 | [mcpTools()](/code/functions/mcpTools.md) | [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) | Every tool: [description, schema, module, company_safe, capability, handler(conn, args, analystId, apiKey)]. |
-| [mcpToolSearchKnowledge()](/code/functions/mcpToolSearchKnowledge.md) | [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) |  |
+| [mcpToolSearchKnowledge()](/code/functions/mcpToolSearchKnowledge.md) | [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) | ══════════════════════════════════════════════════════════════════════════ KNOWLEDGE - by the KEY's companies (KnowledgeViewer::forApiKey), not the analyst's active company, which an API call does not have. ══════════════════════════════════════════════════════════════════════════ |
 | [mcpToolsFor()](/code/functions/mcpToolsFor.md) | [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) | tools/list: what this key may use, in MCP's shape. |
 | [mcpWarbotToolMap()](/code/functions/mcpWarbotToolMap.md) | [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) | name => [module, company_safe] for the Warbot tools. A Warbot tool not listed here is not offered. |
 | [mediaFail()](/code/functions/mediaFail.md) | [api/messaging/media.php](/code/files/api/messaging/media.php.md) |  |
@@ -1765,7 +1765,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [prettyBody()](/code/functions/prettyBody.md) | [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md) | JSON pretty-printed for reading; anything else as it came, trimmed to a length. |
 | [principalName()](/code/functions/principalName.md) | [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | Resolve a principal to something a human can check. |
 | [processInlineImages()](/code/functions/processInlineImages.md) | [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md) | Process inline images in email body Converts image links the customer's mail client could never load into images carried inside the email itself (src="cid:..."). |
-| [processMapperDefaultSize()](/code/functions/processMapperDefaultSize.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) |  |
+| [processMapperDefaultSize()](/code/functions/processMapperDefaultSize.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) | Helper: pick canvas-default size for a step type |
 | [projectAiAsk()](/code/functions/projectAiAsk.md) | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | Ask the model. Returns ['text', 'model']. Throws RuntimeException when AI is not set up ('not_configured') or the provider cannot be reached. |
 | [projectAiBriefingTask()](/code/functions/projectAiBriefingTask.md) | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) |  |
 | [projectAiFacts()](/code/functions/projectAiFacts.md) | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | The facts about one project, as plain text, for the model - only what the analyst may see. `$days` is "the period" a report covers. |
@@ -2012,14 +2012,14 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [recentTrailWrite()](/code/functions/recentTrailWrite.md) | [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | The write itself, with no opinion about what kind of request it is. |
 | [recordMailboxCheckOutcome()](/code/functions/recordMailboxCheckOutcome.md) | [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | Record how a mail check went — stamping the time AND what went wrong. |
 | [recordPreview()](/code/functions/recordPreview.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | A preview, or NULL when the type is unknown, the record does not exist, or this analyst may not see it. One answer for all three, deliberately. |
-| [recordPreviewAsset()](/code/functions/recordPreviewAsset.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) |  |
-| [recordPreviewChange()](/code/functions/recordPreviewChange.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) |  |
-| [recordPreviewContract()](/code/functions/recordPreviewContract.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) |  |
-| [recordPreviewDomain()](/code/functions/recordPreviewDomain.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) |  |
-| [recordPreviewKnowledgeArticle()](/code/functions/recordPreviewKnowledgeArticle.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) |  |
-| [recordPreviewProblem()](/code/functions/recordPreviewProblem.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) |  |
-| [recordPreviewTask()](/code/functions/recordPreviewTask.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) |  |
-| [recordPreviewTicket()](/code/functions/recordPreviewTicket.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) |  |
+| [recordPreviewAsset()](/code/functions/recordPreviewAsset.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | ── Asset ─────────────────────────────────────────────────────────────────── |
+| [recordPreviewChange()](/code/functions/recordPreviewChange.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | ── Change ────────────────────────────────────────────────────────────────── |
+| [recordPreviewContract()](/code/functions/recordPreviewContract.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | ── Contract ──────────────────────────────────────────────────────────────── |
+| [recordPreviewDomain()](/code/functions/recordPreviewDomain.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | ── Domain (#154) ─────────────────────────────────────────────────────────── |
+| [recordPreviewKnowledgeArticle()](/code/functions/recordPreviewKnowledgeArticle.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | ── Knowledge article ─────────────────────────────────────────────────────── |
+| [recordPreviewProblem()](/code/functions/recordPreviewProblem.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | ── Problem ───────────────────────────────────────────────────────────────── |
+| [recordPreviewTask()](/code/functions/recordPreviewTask.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | ── Task ──────────────────────────────────────────────────────────────────── |
+| [recordPreviewTicket()](/code/functions/recordPreviewTicket.md) | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | ── Ticket ────────────────────────────────────────────────────────────────── |
 | [redactKey()](/code/functions/redactKey.md) | [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md) | Replace the key wherever it appears with its hint. |
 | [redact_row()](/code/functions/redact_row.md) | [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md) |  |
 | [refreshAccessToken()](/code/functions/refreshAccessToken.md) | [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md) | Refresh the access token using mailbox configuration |
@@ -2063,14 +2063,14 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [resolveMailFolderId()](/code/functions/resolveMailFolderId.md) | [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | Resolve a folder name to what Graph will accept in a path. |
 | [resolveMergeCodes()](/code/functions/resolveMergeCodes.md) | [includes/template_email.php](/code/files/includes/template_email.php.md) | Replace [merge_code] placeholders with actual values. |
 | [resolveMergedTicket()](/code/functions/resolveMergedTicket.md) | [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | Follow the merge chain to the ticket that is actually live. |
-| [resolveReferences()](/code/functions/resolveReferences.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) |  |
+| [resolveReferences()](/code/functions/resolveReferences.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) | Helper: resolve `@table`.ref references to real IDs |
 | [resolveSlackRequester()](/code/functions/resolveSlackRequester.md) | [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) | Work out who a Slack message is from. Returns [userId\|null, displayName]. |
 | [resolveSnoozeUntil()](/code/functions/resolveSnoozeUntil.md) | [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md) | Turn a preset (or a custom local datetime) into the UTC instant to store. |
 | [resolveTenantForNewUser()](/code/functions/resolveTenantForNewUser.md) | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | Suggest the company for a NEW portal/requester account from its email address. |
 | [resolveTenantIdForAddress()](/code/functions/resolveTenantIdForAddress.md) | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | Resolve an email address to the tenant that owns it, for LOGIN routing (which IdP should this person be sent to). Mirrors the email-routing rule (exact sender address → registered domain), but without the mailbox step. |
 | [resolveTicketTenantForChannel()](/code/functions/resolveTicketTenantForChannel.md) | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | Decide which company a NEW inbound messaging-channel ticket (WhatsApp etc.) belongs to. The channel twin of `resolveTicketTenantForEmail()`: |
 | [resolveTicketTenantForEmail()](/code/functions/resolveTicketTenantForEmail.md) | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | Decide which company (tenant) a NEW inbound-email ticket belongs to. |
-| [resolveTokens()](/code/functions/resolveTokens.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) |  |
+| [resolveTokens()](/code/functions/resolveTokens.md) | [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) | Helper: resolve special tokens |
 | [rewriteCidReferences()](/code/functions/rewriteCidReferences.md) | [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | Rewrite CID references in email body |
 | [rfpAiCall()](/code/functions/rfpAiCall.md) | [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | Generic provider-agnostic call. |
 | [rfpAiCallAnthropic()](/code/functions/rfpAiCallAnthropic.md) | [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) |  |
@@ -2375,7 +2375,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [stripQuotedContent()](/code/functions/stripQuotedContent.md) | [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md) | Strip quoted/nested content from email body (for thread assembly) Relies on our own visible marker text, with generic blockquote fallback |
 | [stripQuotedThread()](/code/functions/stripQuotedThread.md) | [api/tickets/get_ticket_thread.php](/code/files/api/tickets/get_ticket_thread.php.md) | Strip quoted/nested thread content from an email body Relies on our own visible marker text, with generic blockquote fallback |
 | [stripThreadFromBody()](/code/functions/stripThreadFromBody.md) | [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md) | Strip the quoted thread from the email body Looks for the reply marker and returns only the content above it |
-| [strOrNull()](/code/functions/strOrNull.md) | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md) |  |
+| [strOrNull()](/code/functions/strOrNull.md) | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md) | Helper: get string value or null |
 | [supplierContactDetail()](/code/functions/supplierContactDetail.md) | [includes/people.php](/code/files/includes/people.php.md) | Everything about one supplier contact this analyst may see, or null. |
 | [supplierDetail()](/code/functions/supplierDetail.md) | [includes/people.php](/code/files/includes/people.php.md) | Everything about one supplier this analyst may see, or null. |
 | [syncAssetWarrantyCalendar()](/code/functions/syncAssetWarrantyCalendar.md) | [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md) |  |
@@ -2441,7 +2441,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [ticketAiLatestSummary()](/code/functions/ticketAiLatestSummary.md) | [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | The newest stored summary (or briefing) for a ticket, or null. |
 | [ticketAiMessagesSince()](/code/functions/ticketAiMessagesSince.md) | [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | How many messages have arrived since the summary was written. |
 | [ticketAiReadSystemPrompt()](/code/functions/ticketAiReadSystemPrompt.md) | [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | "Read this ticket for me" asks a different question from the summary. |
-| [ticketAiSettings()](/code/functions/ticketAiSettings.md) | [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) |  |
+| [ticketAiSettings()](/code/functions/ticketAiSettings.md) | [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | ─────────────────────────────────────────────────────────────────────────── SETTINGS |
 | [ticketAiSubjectSql()](/code/functions/ticketAiSubjectSql.md) | [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md) | The ticket's subject as an AI may see it: 'Confidential ticket' in place of a confidential one's (under the block policy), so a count or a list stays true while its content stays home. An SQL expression; pass the tickets alias. |
 | [ticketAiSummarySystemPrompt()](/code/functions/ticketAiSummarySystemPrompt.md) | [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | The instructions for the standing summary. |
 | [ticketAiTranscript()](/code/functions/ticketAiTranscript.md) | [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | Turn a ticket into the plain text a model reads. |
@@ -2687,7 +2687,7 @@ Every function defined outside a class, A to Z. Class methods are on their [clas
 | [wf_emit()](/code/functions/wf_emit.md) | [includes/functions.php](/code/files/includes/functions.php.md) | Fire a settings/CRUD workflow event ({entity}.{created\|updated\|deleted}) from a UI settings endpoint, without each file having to require the workflow engine. Lazily loads the engine and is fully self-safe — swallows any Throwable (including a missing engine on a minimal install) so it can NEVER affect the save it follows. Funnels into the exact same WorkflowEngine::dispatch() path as every other event, so a webhook fires identically however it was emitted. |
 | [whAgo()](/code/functions/whAgo.md) | [system/webhooks/index.php](/code/files/system/webhooks/index.php.md) |  |
 | [whLatency()](/code/functions/whLatency.md) | [system/webhooks/index.php](/code/files/system/webhooks/index.php.md) |  |
-| [whRate()](/code/functions/whRate.md) | [system/webhooks/index.php](/code/files/system/webhooks/index.php.md) |  |
+| [whRate()](/code/functions/whRate.md) | [system/webhooks/index.php](/code/files/system/webhooks/index.php.md) | Success-rate cell: delivered vs terminal (delivered + dead); in-flight ignored. |
 | [workflowEffectiveSslVerify()](/code/functions/workflowEffectiveSslVerify.md) | [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md) | Resolve the effective SSL_VERIFYPEER flag for an outbound curl call. |
 | [workflowEmitContractExpiries()](/code/functions/workflowEmitContractExpiries.md) | [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md) | Contracts approaching their end date → `contract.expiring`. |
 | [workflowEmitOnce()](/code/functions/workflowEmitOnce.md) | [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md) | Dispatch a time-based event — but only the FIRST time this exact situation is seen. Returns true if it fired, false if it had already fired. |

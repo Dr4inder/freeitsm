@@ -1,5 +1,7 @@
 # apiSerializeProjectRaid()
 
+RAID log
+
 ```php
 function apiSerializeProjectRaid(array $r): array
 ```

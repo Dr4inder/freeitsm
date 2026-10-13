@@ -1,5 +1,7 @@
 # apiDepartmentsList()
 
+GET /departments
+
 ```php
 function apiDepartmentsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

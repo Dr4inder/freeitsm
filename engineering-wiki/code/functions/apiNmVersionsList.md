@@ -1,5 +1,7 @@
 # apiNmVersionsList()
 
+GET /network-diagrams/{id}/versions — the whole chain, oldest first.
+
 ```php
 function apiNmVersionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiFormsCreate()
 
+POST /forms — mirrors save_form.php's create branch (version_number 1).
+
 ```php
 function apiFormsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

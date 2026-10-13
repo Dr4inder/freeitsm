@@ -38,6 +38,7 @@ do not share a close routine.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `initSearchPanelDismiss(opts)` | 47 |  |
 | `panel()` | 52 |  |
 | `isOpen()` | 54 |  |
 

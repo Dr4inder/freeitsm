@@ -31,7 +31,7 @@ final class EwScanner
     /** Folders that are never code. Anything whose .htaccess denies all is skipped as well (upload folders). */
     private const SKIP_DIRS = ['.git', 'vendor', 'node_modules', 'engineering-wiki', 'lang', 'tests', 'local', 'docs',
                                'database', 'uploads', 'recordings', 'logs', 'data', 'cache', 'tmp', 'releases', 'samples', 'system-wiki'];
-    private const VERSION = 3;   // bump when the parse output changes shape - forces a full re-read
+    private const VERSION = 5;   // bump when the parse output changes shape - forces a full re-read
 
     private string $app;
     private string $out;
@@ -200,6 +200,8 @@ final class EwScanner
         $pendingDoc = null;
         $sqlNotes = [];                // line => "SQL:" text
         $sawCode = false;
+        $lineRun = [];                 // the // lines (or /* */ block) directly above what comes next
+        $topRun = []; $topDone = false; // the comment group at the very top of the file
 
         // SQL: comments first, so a query can find the note above it or on its line.
         foreach ($tokens as $t) {
@@ -222,6 +224,13 @@ final class EwScanner
                 }
                 $pendingDoc = $t[1];
             }
+            if ($tid === T_COMMENT) {
+                $prevWs = $i > 0 && $id($tokens[$i - 1]) === T_WHITESPACE ? substr_count($tokens[$i - 1][1], "
+") : 0;
+                if ($prevWs > 1) $lineRun = [];
+                $lineRun[] = $t[1];
+                if (!$sawCode && !$topDone) { if ($prevWs > 1 && $topRun) $topDone = true; else $topRun[] = $t[1]; }
+            }
             if ($tid === T_COMMENT || $tid === T_DOC_COMMENT) {
                 if (stripos($t[1], 'TRAP:') !== false) {
                     // A // trap usually runs on over the next // lines - take the whole run.
@@ -237,12 +246,18 @@ final class EwScanner
                 continue;
             }
             if ($tid === T_WHITESPACE || $tid === T_OPEN_TAG || $tid === T_INLINE_HTML) {
+                if ($tid === T_WHITESPACE && substr_count($t[1], "
+") > 1) $lineRun = [];
                 if ($tid === T_INLINE_HTML && preg_match_all('#<script[^>]+src=["\']([^"\'?]+\.js)#i', $t[1], $sm)) {
                     foreach ($sm[1] as $s) $d['scripts'][] = $this->resolveRel($rel, $s);
                 }
                 continue;
             }
-            if (!in_array($tid, [T_DECLARE, T_NAMESPACE, ';'], true)) $sawCode = true;
+            if (!$sawCode && !in_array($tid, [T_DECLARE, T_NAMESPACE, ';'], true)) {
+                $sawCode = true;
+                // No /** */ header: a /* */ block or // lines at the top describe the file instead.
+                if ($d['doc'] === null && $topRun && !in_array($tid, [T_FUNCTION, T_CLASS, T_INTERFACE, T_TRAIT, T_ABSTRACT, T_FINAL], true)) $d['doc'] = $this->lineDoc($topRun);
+            }
 
             if ($tid === '{' || $tid === T_CURLY_OPEN || $tid === T_DOLLAR_OPEN_CURLY_BRACES) { $depth++; continue; }
             if ($tid === '}') {
@@ -260,7 +275,7 @@ final class EwScanner
                 if ($nx >= 0 && $id($tokens[$nx]) === T_STRING) {
                     $class = $tokens[$nx][1];
                     $classDepth = $depth;
-                    $d['classes'][] = ['name' => $class, 'line' => $line, 'doc' => $pendingDoc ? $this->parseDoc($pendingDoc) : null,
+                    $d['classes'][] = ['name' => $class, 'line' => $line, 'doc' => $pendingDoc ? $this->parseDoc($pendingDoc) : ($lineRun ? $this->lineDoc($lineRun) : null),
                                        'kind' => strtolower($txt($t))];
                 }
                 $pendingDoc = null;
@@ -281,7 +296,7 @@ final class EwScanner
                     for ($k = $k + 1; $k < $n && !in_array($id($tokens[$k]), ['{', ';'], true); $k++) $ret .= $txt($tokens[$k]);
                 }
                 $d['functions'][] = ['name' => $name, 'class' => $class, 'line' => $line, 'params' => $params, 'return' => trim($ret),
-                                     'doc' => $pendingDoc ? $this->parseDoc($pendingDoc) : null,
+                                     'doc' => $pendingDoc ? $this->parseDoc($pendingDoc) : ($lineRun ? $this->lineDoc($lineRun) : null),
                                      'static' => $this->hasModifier($tokens, $i, $sig, T_STATIC), 'visibility' => $this->visibility($tokens, $i, $sig)];
                 $pendingDoc = null;
                 // find its body
@@ -293,7 +308,7 @@ final class EwScanner
                 }
                 continue;
             }
-            if (!in_array($tid, [T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC, T_ABSTRACT, T_FINAL, T_READONLY, T_ATTRIBUTE], true)) $pendingDoc = null;
+            if (!in_array($tid, [T_PUBLIC, T_PRIVATE, T_PROTECTED, T_STATIC, T_ABSTRACT, T_FINAL, T_READONLY, T_ATTRIBUTE], true)) { $pendingDoc = null; $lineRun = []; }
 
             $inFn = $fnStack ? end($fnStack)[0] : null;
 
@@ -542,6 +557,29 @@ final class EwScanner
         return ['summary' => $summary, 'body' => trim(implode("\n\n", $paras)), 'tags' => $tags];
     }
 
+    /**
+     * A run of // lines, or a plain block comment, used as a description when there is
+     * no doc comment. Decorative rules (// ----, // ====) and a lone TRAP are not descriptions.
+     */
+    private function lineDoc(array $comments): ?array
+    {
+        $lines = [];
+        foreach ($comments as $c) {
+            foreach (explode("
+", str_replace("", '', $c)) as $l) {
+                $l = preg_replace(['#^\s*(//+|\#)\s?#', '#^\s*/\*+\s?#', '#\s*\*+/\s*$#', '#^\s*\*\s?#'], '', $l);
+                if (preg_match('/^\s*[-=~*#]{3,}\s*$/', $l) || preg_match('/^\s*[-=]{3,}.*[-=]{3,}\s*$/', $l)) continue;
+                $lines[] = rtrim($l);
+            }
+        }
+        while ($lines && trim($lines[0]) === '') array_shift($lines);
+        if (!$lines || preg_match('/^(🔴\s*)?TRAP:/u', trim($lines[0]))) return null;
+        return $this->parseDoc("/**
+ * " . implode("
+ * ", $lines) . "
+ */");
+    }
+
     private function trapText(string $raw): string
     {
         $lines = explode("\n", $raw);
@@ -564,11 +602,40 @@ final class EwScanner
     {
         $d = ['kind' => 'js', 'doc' => null, 'functions' => [], 'endpoints' => [], 'traps' => [], 'lines' => substr_count($src, "\n") + 1];
         if (preg_match('#^\s*/\*\*?(.*?)\*/#s', $src, $m)) $d['doc'] = $this->parseDoc('/**' . $m[1] . '*/');
-        if (preg_match_all('#(/\*\*(?:(?!\*/).)*\*/\s*)?(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)#s', $src, $fm, PREG_OFFSET_CAPTURE)) {
-            foreach ($fm[2] as $k => $nm) {
-                $doc = $fm[1][$k][0] !== '' && $fm[1][$k][1] !== -1 ? $this->parseDoc(trim($fm[1][$k][0])) : null;
-                $d['functions'][] = ['name' => $nm[0], 'line' => substr_count(substr($src, 0, $nm[1]), "\n") + 1, 'params' => trim(preg_replace('/\s+/', ' ', $fm[3][$k][0])), 'doc' => $doc];
+        // Functions, line by line, in every shape the codebase writes them:
+        //   function name(a)  |  name = function (a)  |  window.name = function (a)
+        //   const name = (a) =>  |  const name = a =>  |  name: function (a)  |  name(a) {   (a method)
+        // Its description is the /** */ block or the run of // lines directly above it.
+        $lines = explode("\n", str_replace("\r", '', $src));
+        $buf = []; $inBlock = false; $block = [];
+        $keywords = ['if', 'for', 'while', 'switch', 'catch', 'function', 'return', 'else', 'do', 'try', 'with', 'new', 'typeof', 'await'];
+        foreach ($lines as $ln => $l) {
+            $t = trim($l);
+            if ($inBlock) {
+                $block[] = $l;
+                if (strpos($t, '*/') !== false) { $inBlock = false; $buf = ['block', implode("\n", $block)]; }
+                continue;
             }
+            if (strpos($t, '/*') === 0) {
+                $block = [$l];
+                if (strpos($t, '*/', 2) !== false) $buf = ['block', $l]; else $inBlock = true;
+                continue;
+            }
+            if (strpos($t, '//') === 0) { if (($buf[0] ?? '') !== 'line') $buf = ['line', []]; $buf[1][] = $t; continue; }
+            if ($t === '') { $buf = []; continue; }
+            $name = null; $params = '';
+            if (preg_match('/^(?:export\s+)?(?:async\s+)?function\s*\*?\s*([A-Za-z_$][\w$]*)\s*\(([^)]*)\)?/', $t, $m)) { $name = $m[1]; $params = $m[2]; }
+            elseif (preg_match('/^(?:(?:const|let|var)\s+)?((?:window|this|self|[A-Za-z_$][\w$]*)\.)?([A-Za-z_$][\w$]*)\s*=\s*(?:async\s+)?function\b[^(]*\(([^)]*)\)?/', $t, $m)) { $name = $m[2]; $params = $m[3]; }
+            elseif (preg_match('/^(?:(?:const|let|var)\s+)?((?:window|this|self)\.)?([A-Za-z_$][\w$]*)\s*=\s*(?:async\s+)?(?:\(([^)]*)\)|([A-Za-z_$][\w$]*))\s*=>/', $t, $m)) { $name = $m[2]; $params = ($m[3] ?? '') !== '' ? $m[3] : ($m[4] ?? ''); }
+            elseif (preg_match('/^([A-Za-z_$][\w$]*)\s*:\s*(?:async\s+)?function\s*\(([^)]*)\)?/', $t, $m)) { $name = $m[1]; $params = $m[2]; }
+            elseif (preg_match('/^(?:static\s+)?(?:async\s+)?([A-Za-z_$][\w$]*)\s*\(([^)]*)\)\s*\{\s*$/', $t, $m) && !in_array($m[1], $keywords, true)) { $name = $m[1]; $params = $m[2]; }
+            if ($name !== null) {
+                $doc = null;
+                if (($buf[0] ?? '') === 'block') $doc = $this->parseDoc('/**' . preg_replace(['#^\s*/\*+#', '#\*+/\s*$#'], '', $buf[1]) . '*/');
+                elseif (($buf[0] ?? '') === 'line') $doc = $this->lineDoc($buf[1]);
+                $d['functions'][] = ['name' => $name, 'line' => $ln + 1, 'params' => trim(preg_replace('/\s+/', ' ', $params)), 'doc' => $doc];
+            }
+            $buf = [];
         }
         // Endpoints: literal paths, and BASE + 'x.php' where BASE is an api/ folder set in this file.
         $bases = [];
@@ -717,10 +784,34 @@ final class EwScanner
     private function docMd(?array $doc, bool $withSummary = true): string
     {
         if (!$doc) return '';
-        $out = '';
+        $out = $this->wikiLinks($doc);
         if ($withSummary && $doc['summary'] !== '') $out .= $this->prose($doc['summary']) . "\n\n";
         if ($doc['body'] !== '') $out .= $this->prose($doc['body']) . "\n\n";
         return $out;
+    }
+
+    /**
+     * The GitHub wiki pages a comment points at, as a box that stands out at the top of
+     * the page - a LINK only; the wiki's text is never copied into FreeITSM.
+     * From "@wiki Page-Name" (or a full URL) and from any github.com/edmozley/freeitsm/wiki/...
+     * link already written in the comment.
+     */
+    private function wikiLinks(array $doc): string
+    {
+        $base = 'https://github.com/edmozley/freeitsm/wiki/';
+        $pages = [];
+        foreach ($doc['tags'] ?? [] as [$tag, $v]) {
+            if ($tag !== 'wiki' || trim($v) === '') continue;
+            $p = preg_replace('#^.*?/freeitsm/wiki/#', '', trim(preg_split('/\s+/', trim($v))[0]));
+            if ($p === '') continue;
+            $pages[$p] = true;
+        }
+        if (preg_match_all('#github\.com/edmozley/freeitsm/wiki/([A-Za-z0-9._%-]+(?:\#[\w-]+)?)#', $doc['summary'] . "\n" . $doc['body'], $m)) {
+            foreach ($m[1] as $p) if (rtrim($p, '.,;:)') !== '') $pages[rtrim($p, '.,;:)')] = true;
+        }
+        if (!$pages) return '';
+        $links = array_map(fn($p) => '[' . $this->mdText(str_replace(['-', '#'], [' ', ' - '], rawurldecode($p))) . '](' . $base . $p . ')', array_keys($pages));
+        return "> [!TIP]\n> **Developer guide on the GitHub wiki:** " . implode(' · ', $links) . "\n\n";
     }
 
     /** Comment prose into Markdown: keep paragraphs and lists, stop "*" and "_" in code-ish text turning into emphasis. */

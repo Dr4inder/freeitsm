@@ -55,16 +55,16 @@ serializers + the bin's retention auto-purge stay here.
 | [apiSerializeArticle()](/code/functions/apiSerializeArticle.md) | 73 | Summary shape (lists) — preview instead of the full body. Detail adds body_html. |
 | [apiLoadArticle()](/code/functions/apiLoadArticle.md) | 115 | Load an article by id, 404ing if it's gone. |
 | [apiKnowledgePurgeExpired()](/code/functions/apiKnowledgePurgeExpired.md) | 134 | The recycle bin's retention auto-purge (mirrors knowledge_archive.php). |
-| [apiKnowledgeArticlesList()](/code/functions/apiKnowledgeArticlesList.md) | 161 |  |
-| [apiKnowledgeArticlesGet()](/code/functions/apiKnowledgeArticlesGet.md) | 279 |  |
-| [apiKnowledgeArticlesCreate()](/code/functions/apiKnowledgeArticlesCreate.md) | 295 |  |
-| [apiKnowledgeArticlesUpdate()](/code/functions/apiKnowledgeArticlesUpdate.md) | 305 |  |
-| [apiKnowledgeArticlesDelete()](/code/functions/apiKnowledgeArticlesDelete.md) | 315 |  |
+| [apiKnowledgeArticlesList()](/code/functions/apiKnowledgeArticlesList.md) | 161 | GET /knowledge/articles |
+| [apiKnowledgeArticlesGet()](/code/functions/apiKnowledgeArticlesGet.md) | 279 | GET /knowledge/articles/{id} |
+| [apiKnowledgeArticlesCreate()](/code/functions/apiKnowledgeArticlesCreate.md) | 295 | POST /knowledge/articles |
+| [apiKnowledgeArticlesUpdate()](/code/functions/apiKnowledgeArticlesUpdate.md) | 305 | PATCH /knowledge/articles/{id} |
+| [apiKnowledgeArticlesDelete()](/code/functions/apiKnowledgeArticlesDelete.md) | 315 | DELETE (archive) / restore / permanent purge — the recycle-bin semantics |
 | [apiKnowledgeArticlesRestore()](/code/functions/apiKnowledgeArticlesRestore.md) | 322 |  |
 | [apiKnowledgeArticlesPurge()](/code/functions/apiKnowledgeArticlesPurge.md) | 329 |  |
-| [apiKnowledgeVersionsList()](/code/functions/apiKnowledgeVersionsList.md) | 339 |  |
+| [apiKnowledgeVersionsList()](/code/functions/apiKnowledgeVersionsList.md) | 339 | Versions |
 | [apiKnowledgeVersionsGet()](/code/functions/apiKnowledgeVersionsGet.md) | 357 |  |
-| [apiKnowledgeTagsList()](/code/functions/apiKnowledgeTagsList.md) | 381 |  |
+| [apiKnowledgeTagsList()](/code/functions/apiKnowledgeTagsList.md) | 381 | GET /knowledge/tags — tag list with published article counts |
 
 ## Database
 

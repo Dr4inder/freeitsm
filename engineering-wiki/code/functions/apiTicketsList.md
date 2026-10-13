@@ -1,5 +1,7 @@
 # apiTicketsList()
 
+GET /tickets
+
 ```php
 function apiTicketsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

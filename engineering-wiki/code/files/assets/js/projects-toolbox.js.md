@@ -24,6 +24,8 @@ Off for the whole install with Projects -> Settings -> General -> Toolbox
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 23 |  |
+| `hiddenKey(id)` | 30 |  |
 | `isHidden(id)` | 31 |  |
 | `reason(tool, d)` | 34 | Why the project itself suggests a tool, or null. Reads only what get.php already sent. |
 | `render(c)` | 54 |  |

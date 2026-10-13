@@ -1,5 +1,7 @@
 # apiTasksGet()
 
+GET /tasks/{id}
+
 ```php
 function apiTasksGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

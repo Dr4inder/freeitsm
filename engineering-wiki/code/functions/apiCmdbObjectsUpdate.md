@@ -1,5 +1,7 @@
 # apiCmdbObjectsUpdate()
 
+PATCH /cmdb/objects/{id}
+
 ```php
 function apiCmdbObjectsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

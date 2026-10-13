@@ -2,6 +2,9 @@
 
 > PHP - 844 lines
 
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Knowledge Folders and Permissions](https://github.com/edmozley/freeitsm/wiki/Knowledge-Folders-and-Permissions)
+
 Who may READ a Knowledge article — the single place that answers it.
 
 ─────────────────────────────────────────────────────────────────────────────

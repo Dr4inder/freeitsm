@@ -1,5 +1,7 @@
 # apiChangesList()
 
+GET /changes
+
 ```php
 function apiChangesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

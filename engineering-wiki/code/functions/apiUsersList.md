@@ -1,5 +1,7 @@
 # apiUsersList()
 
+GET /users?q=&email=
+
 ```php
 function apiUsersList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

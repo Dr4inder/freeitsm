@@ -26,7 +26,11 @@ exports alongside its own.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 27 |  |
+| `esc(v)` | 28 |  |
+| `fmt(d)` | 29 |  |
 | `call(base, path, body)` | 36 |  |
+| `toast(m, k)` | 43 |  |
 | `pill(days)` | 45 |  |
 | `money(amount, cur)` | 52 |  |
 | `mount(host, o)` | 57 |  |

@@ -1,5 +1,7 @@
 # apiNmConnectorsCreate()
 
+POST /network-diagrams/{id}/connectors — endpoints by node id or object id.
+
 ```php
 function apiNmConnectorsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

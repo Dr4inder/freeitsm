@@ -1,5 +1,7 @@
 # apiDomainsGet()
 
+GET /domains/{id}
+
 ```php
 function apiDomainsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

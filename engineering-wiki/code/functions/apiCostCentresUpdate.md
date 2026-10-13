@@ -1,5 +1,7 @@
 # apiCostCentresUpdate()
 
+PATCH /cost-centres/{id}
+
 ```php
 function apiCostCentresUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

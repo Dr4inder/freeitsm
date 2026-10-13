@@ -25,7 +25,7 @@ a poll and not an EventSource.
 |---|--:|---|
 | `insertedForm(person)` | 53 | What the picker actually types into the box for this person. |
 | `t(key, vars)` | 73 |  |
-| `el(tag, className, text)` | 80 |  |
+| `el(tag, className, text)` | 80 | ── small DOM helpers ──────────────────────────────────────────────────── `el()` takes TEXT, not markup, which is what keeps the XSS rule above from depending on anybody remembering it at each call site. |
 | `clear(node)` | 86 |  |
 | `localTime(utc)` | 89 | Local time from the server's UTC string, via the app's shared tz helper. |
 | `bytes(n)` | 95 |  |
@@ -53,6 +53,7 @@ a poll and not an EventSource.
 | `openDelete(m)` | 641 |  |
 | `messageAction(action, payload)` | 660 |  |
 | `send()` | 683 |  |
+| `done()` | 688 |  |
 | `addressesWarbot(text)` | 738 |  |
 | `askWarbot(messageId)` | 742 |  |
 | `openPanel(title)` | 771 |  |
@@ -63,6 +64,8 @@ a poll and not an EventSource.
 | `field(parent, labelText, node)` | 932 |  |
 | `post(action, payload, onOk, failKey)` | 938 |  |
 | `draw(filter)` | 1028 |  |
+| `post('dm', { analyst_id: p.id }, function (d)` | 1038 |  |
+| `save(value)` | 1097 |  |
 
 ## Loaded by
 

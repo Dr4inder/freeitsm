@@ -1,5 +1,7 @@
 # generateDemoTicketNumber()
 
+Helper: generate unique ticket number
+
 ```php
 function generateDemoTicketNumber($conn)
 ```

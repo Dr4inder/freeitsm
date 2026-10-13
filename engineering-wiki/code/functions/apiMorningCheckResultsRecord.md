@@ -1,5 +1,7 @@
 # apiMorningCheckResultsRecord()
 
+POST /morning-checks/results — save_check_result.php's upsert: one result per check per date. 201 on first record of the day, 200 on overwrite.
+
 ```php
 function apiMorningCheckResultsRecord(PDO $conn, array $apiKey, array $params, array $body): void
 ```

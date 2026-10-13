@@ -1,5 +1,7 @@
 # apiTasksDelete()
 
+DELETE /tasks/{id} — hard delete. Children removed explicitly, not via FK cascade: installs grown via Database Verify were missing the parent and comments cascade FKs, which orphaned subtasks/comments (same fix as the UI's delete.php).
+
 ```php
 function apiTasksDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

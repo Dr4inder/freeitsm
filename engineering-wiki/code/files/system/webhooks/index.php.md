@@ -25,7 +25,7 @@ Read/replay data comes from api/workflow/deliveries.php + deliveries_replay.php
 | Function | Line | What it does |
 |---|--:|---|
 | [whLatency()](/code/functions/whLatency.md) | 152 |  |
-| [whRate()](/code/functions/whRate.md) | 161 |  |
+| [whRate()](/code/functions/whRate.md) | 161 | Success-rate cell: delivered vs terminal (delivered + dead); in-flight ignored. |
 | [whAgo()](/code/functions/whAgo.md) | 177 |  |
 
 ## Database

@@ -1,5 +1,7 @@
 # apiStatusServicesList()
 
+GET /service-status/services — the health board (derived current_status inline)
+
 ```php
 function apiStatusServicesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -26,6 +26,22 @@ Requires window.SCORM_CONFIG = { courseId, analystId, scormVersion, apiEndpoint 
 | `doGetDiagnostic(code)` | 185 |  |
 | `isReadOnly(element)` | 191 |  |
 | `getChildrenFor(element)` | 209 |  |
+| `LMSInitialize(p)` | 221 |  |
+| `LMSFinish(p)` | 222 |  |
+| `LMSGetValue(el)` | 223 |  |
+| `LMSSetValue(el, val)` | 224 |  |
+| `LMSCommit(p)` | 225 |  |
+| `LMSGetLastError()` | 226 |  |
+| `LMSGetErrorString(c)` | 227 |  |
+| `LMSGetDiagnostic(c)` | 228 |  |
+| `Initialize(p)` | 234 |  |
+| `Terminate(p)` | 235 |  |
+| `GetValue(el)` | 236 |  |
+| `SetValue(el, val)` | 237 |  |
+| `Commit(p)` | 238 |  |
+| `GetLastError()` | 239 |  |
+| `GetErrorString(c)` | 240 |  |
+| `GetDiagnostic(c)` | 241 |  |
 
 ## Loaded by
 

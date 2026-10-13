@@ -1,5 +1,7 @@
 # apiAssetAssignmentsList()
 
+Assignments — POST/GET /assets/{id}/assignments, DELETE .../{user_id}
+
 ```php
 function apiAssetAssignmentsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

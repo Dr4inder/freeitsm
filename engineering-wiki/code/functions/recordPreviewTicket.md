@@ -1,5 +1,7 @@
 # recordPreviewTicket()
 
+── Ticket ──────────────────────────────────────────────────────────────────
+
 ```php
 function recordPreviewTicket(PDO $conn, int $analystId, int $id): ?array
 ```

@@ -18,7 +18,10 @@ Starting a project FROM a template is the picker in the project form
 
 | Function | Line | What it does |
 |---|--:|---|
-| `fillFromMode()` | 35 |  |
+| `$(id)` | 29 |  |
+| `mode()` | 32 |  |
+| `projectName()` | 33 |  |
+| `fillFromMode()` | 35 | New: the project's name. Replace: the chosen template's name and description. |
 
 ## Loaded by
 

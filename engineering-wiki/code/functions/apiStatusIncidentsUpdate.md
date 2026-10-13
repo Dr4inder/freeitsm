@@ -1,5 +1,7 @@
 # apiStatusIncidentsUpdate()
 
+PATCH /service-status/incidents/{id}
+
 ```php
 function apiStatusIncidentsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -46,16 +46,16 @@ Install-wide (no company scoping — matches the UI); no audit trail exists.
 | [apiSerializeMorningResult()](/code/functions/apiSerializeMorningResult.md) | 68 |  |
 | [apiLoadMorningResult()](/code/functions/apiLoadMorningResult.md) | 91 |  |
 | [apiMorningCheckDate()](/code/functions/apiMorningCheckDate.md) | 102 | Strict YYYY-MM-DD — 422 on garbage (the UI silently substitutes today). |
-| [apiMorningChecksList()](/code/functions/apiMorningChecksList.md) | 116 |  |
+| [apiMorningChecksList()](/code/functions/apiMorningChecksList.md) | 116 | GET /morning-checks/checks — all checks (settings view); ?is_active, ?q |
 | [apiMorningChecksGet()](/code/functions/apiMorningChecksGet.md) | 135 |  |
-| [apiMorningChecksCreate()](/code/functions/apiMorningChecksCreate.md) | 140 |  |
-| [apiMorningChecksUpdate()](/code/functions/apiMorningChecksUpdate.md) | 148 |  |
-| [apiMorningChecksDelete()](/code/functions/apiMorningChecksDelete.md) | 156 |  |
-| [apiMorningChecksBoard()](/code/functions/apiMorningChecksBoard.md) | 169 |  |
-| [apiMorningCheckResultsList()](/code/functions/apiMorningCheckResultsList.md) | 220 |  |
+| [apiMorningChecksCreate()](/code/functions/apiMorningChecksCreate.md) | 140 | POST /morning-checks/checks |
+| [apiMorningChecksUpdate()](/code/functions/apiMorningChecksUpdate.md) | 148 | PATCH /morning-checks/checks/{id} |
+| [apiMorningChecksDelete()](/code/functions/apiMorningChecksDelete.md) | 156 | DELETE /morning-checks/checks/{id} |
+| [apiMorningChecksBoard()](/code/functions/apiMorningChecksBoard.md) | 169 | GET /morning-checks/board?date=YYYY-MM-DD — get_todays_checks.php's view: every active check with its result for the date (or null if not yet done). |
+| [apiMorningCheckResultsList()](/code/functions/apiMorningCheckResultsList.md) | 220 | GET /morning-checks/results — history; newest first |
 | [apiMorningCheckResultsGet()](/code/functions/apiMorningCheckResultsGet.md) | 270 |  |
-| [apiMorningCheckResultsRecord()](/code/functions/apiMorningCheckResultsRecord.md) | 276 |  |
-| [apiMorningCheckStatusesList()](/code/functions/apiMorningCheckStatusesList.md) | 289 |  |
+| [apiMorningCheckResultsRecord()](/code/functions/apiMorningCheckResultsRecord.md) | 276 | POST /morning-checks/results — save_check_result.php's upsert: one result per check per date. 201 on first record of the day, 200 on overwrite. |
+| [apiMorningCheckStatusesList()](/code/functions/apiMorningCheckStatusesList.md) | 289 | GET /morning-check-statuses — full list like get_statuses.php (inactive included so historical results can always be resolved). |
 
 ## How it hangs together
 

@@ -1,5 +1,7 @@
 # apiProjectsDelete()
 
+DELETE /projects/{id} - its tasks are detached, never deleted
+
 ```php
 function apiProjectsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

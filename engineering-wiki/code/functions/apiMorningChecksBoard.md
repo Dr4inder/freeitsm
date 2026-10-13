@@ -1,5 +1,7 @@
 # apiMorningChecksBoard()
 
+GET /morning-checks/board?date=YYYY-MM-DD — get_todays_checks.php's view: every active check with its result for the date (or null if not yet done).
+
 ```php
 function apiMorningChecksBoard(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiAnalystsCreate()
 
+POST /analysts
+
 ```php
 function apiAnalystsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # apiChangeLookupList()
 
+Reference lookups
+
 ```php
 function apiChangeLookupList(PDO $conn, string $table, bool $hasIsClosed = false): void
 ```

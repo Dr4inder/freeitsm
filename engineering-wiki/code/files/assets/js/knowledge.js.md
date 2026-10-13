@@ -14,18 +14,24 @@ Knowledge Base JavaScript
 | `updateAudienceHint()` | 133 | Spell out what the chosen audience actually means, in the editor. |
 | `resetVisibilityFields()` | 156 | Put the two visibility controls back to the safe default (a new article). |
 | `visibilityPayload()` | 168 | The visibility half of a save payload. |
-| `loadAnalysts()` | 184 |  |
-| `initTinyMCE()` | 208 |  |
+| `loadAnalysts()` | 184 | Load analysts for owner dropdown |
+| `initTinyMCE()` | 208 | Initialize TinyMCE editor |
+| `setup(editor)` | 257 |  |
 | `kbEditorFullScreen()` | 277 | Just the editor, filling the screen - TinyMCE's own fullscreen plugin. |
 | `kbEditorIsFullScreen()` | 283 |  |
-| `initTagInput()` | 296 |  |
+| `initTagInput()` | 296 | Initialize tag input functionality |
 | `loadBrowseModePreference()` | 376 |  |
 | `loadLayoutPreference()` | 387 |  |
 | `applyLayout(save)` | 407 |  |
 | `setLayout(mode)` | 421 |  |
 | `kbSortDetails(col)` | 449 |  |
 | `renderDetailsLayout()` | 456 |  |
+| `val(a, col)` | 463 |  |
+| `arrow(c)` | 474 |  |
 | `renderTreeLayout()` | 524 | The whole shape at once: every folder, expanded, with its articles inside. |
+| `byName(a, b)` | 532 | ⚠️ ALPHABETICAL, and by NAME rather than by whatever order the list happened to arrive in. The articles come back newest-first, which is right for a list you are scanning for recent work and wrong for a tree, where you are looking for a particular thing by its name. |
+| `article(a, depth)` | 543 |  |
+| `walk(parent, depth)` | 554 |  |
 | `applyBrowseMode()` | 584 |  |
 | `loadSidebarModePreference()` | 592 |  |
 | `applySidebarMode(mode)` | 602 |  |
@@ -37,7 +43,9 @@ Knowledge Base JavaScript
 | `loadFolders()` | 687 |  |
 | `folderChildren(parent)` | 718 | Children of `parent`, in the order the server sent them (by name). |
 | `renderFolderTree(rootCount)` | 722 |  |
+| `walk(parent, depth)` | 735 |  |
 | `renderFolderPicker()` | 765 | Fill the editor's folder picker, indented so the shape is readable. |
+| `walk(parent, depth)` | 775 |  |
 | `goUpOneLevel()` | 796 | Up one level. |
 | `selectFolder(value)` | 803 |  |
 | `createFolderPrompt()` | 814 |  |
@@ -58,6 +66,7 @@ Knowledge Base JavaScript
 | `renderBreadcrumb()` | 1101 |  |
 | `renderFolderRows()` | 1129 | Subfolders of wherever we are, as rows above the articles. |
 | `renderCardTags(article)` | 1189 |  |
+| `pill(t)` | 1191 |  |
 | `kbShowAllTags(el)` | 1225 | Show every tag on the article in a small dialog. |
 | `closeTagsModal()` | 1243 |  |
 | `kbFolderLabel(article)` | 1267 | Which folder an article is in, shown on the card at "All articles". |
@@ -76,9 +85,9 @@ Knowledge Base JavaScript
 | `permPost(payload)` | 1514 |  |
 | `permSearch()` | 1534 |  |
 | `loadTags()` | 1553 |  |
-| `loadArticles(search = '', tagIds = [])` | 1568 |  |
-| `renderTagFilters()` | 1634 |  |
-| `toggleTagFilter(tagId)` | 1652 |  |
+| `loadArticles(search = '', tagIds = [])` | 1568 | Load articles |
+| `renderTagFilters()` | 1634 | Render tag filters in sidebar |
+| `toggleTagFilter(tagId)` | 1652 | Toggle tag filter |
 | `kbVisibleArticleIds()` | 1708 | The article ids in the order they are ON SCREEN. |
 | `kbRowEl(id)` | 1714 |  |
 | `kbRenderSelection()` | 1719 | Repaint ticks, row highlighting and the bar from the Set. |
@@ -95,54 +104,56 @@ Knowledge Base JavaScript
 | `kbSelectBox(id)` | 1861 | The tick, rendered the same way in every view that has rows. |
 | `renderBulkBar()` | 1868 |  |
 | `kbRenderBulkFolders()` | 1885 | "Move them to…" — the folder list, rebuilt whenever the bar appears because folders can be created while a selection is held. |
+| `walk(parent, depth)` | 1891 |  |
 | `applyBulkMove()` | 1912 | Move everything selected into one folder. |
 | `applyBulkAudience()` | 1946 |  |
-| `renderArticleList()` | 1989 |  |
-| `debounceSearch()` | 2091 |  |
-| `viewArticle(articleId)` | 2099 |  |
-| `renderArticleDetail()` | 2121 |  |
-| `openCreateArticle()` | 2204 |  |
-| `editCurrentArticle()` | 2231 |  |
-| `toggleEditorPopout()` | 2283 |  |
+| `renderArticleList()` | 1989 | Render article list |
+| `debounceSearch()` | 2091 | Debounced search |
+| `viewArticle(articleId)` | 2099 | View article detail |
+| `renderArticleDetail()` | 2121 | Render article detail |
+| `openCreateArticle()` | 2204 | Open create article view |
+| `editCurrentArticle()` | 2231 | Edit current article |
+| `toggleEditorPopout()` | 2283 | Per-analyst editor popout state — same localStorage pattern the tickets inbox uses for its full-screen toggle. The CSS does all the layout; this just flips a class on .knowledge-container. |
 | `applyEditorPopoutFromPref()` | 2290 |  |
-| `saveAsNewVersion()` | 2299 |  |
-| `saveArticle()` | 2354 |  |
-| `deleteCurrentArticle()` | 2401 |  |
-| `toggleRecycleBin()` | 2430 |  |
+| `saveAsNewVersion()` | 2299 | Save as new version |
+| `saveArticle()` | 2354 | Save article |
+| `deleteCurrentArticle()` | 2401 | Delete current article |
+| `toggleRecycleBin()` | 2430 | Recycle Bin functions |
 | `loadRecycleBin()` | 2451 |  |
 | `restoreArticle(id)` | 2506 |  |
 | `hardDeleteArticle(id, title)` | 2528 |  |
 | `viewArchivedArticle(id)` | 2552 |  |
 | `closeArchivedArticleModal()` | 2578 |  |
-| `cancelEdit()` | 2584 |  |
+| `cancelEdit()` | 2584 | Cancel edit |
 | `syncArticleUrl(view)` | 2621 | Keep the address bar on the article you are actually looking at. |
-| `showView(view)` | 2658 |  |
-| `addTag(tagName)` | 2688 |  |
+| `showView(view)` | 2658 | Show/hide views |
+| `addTag(tagName)` | 2688 | Tag input functions |
 | `removeTag(tagName)` | 2696 |  |
 | `renderSelectedTags()` | 2701 |  |
 | `showTagSuggestions(query)` | 2711 |  |
 | `hideSuggestions()` | 2742 |  |
 | `jsAttr(value)` | 2760 | A JS string literal that is safe INSIDE a double-quoted HTML attribute. |
 | `escapeHtml(text)` | 2782 |  |
-| `toggleShareDropdown()` | 2790 |  |
+| `toggleShareDropdown()` | 2790 | Share dropdown functions |
 | `closeShareDropdownOnClickOutside(e)` | 2802 |  |
 | `closeShareDropdown()` | 2810 |  |
-| `shareArticleLink()` | 2816 |  |
-| `buildArticlePdf()` | 2841 |  |
+| `shareArticleLink()` | 2816 | Share article link - copy to clipboard |
+| `buildArticlePdf()` | 2841 | Build a searchable jsPDF document from the current article |
 | `ensureSpace(needed)` | 2895 |  |
-| `printLines(lines, x, lineH)` | 2900 |  |
+| `printLines(lines, x, lineH)` | 2900 | Print wrapped lines one-by-one, adding pages as needed |
 | `renderNode(node)` | 2908 |  |
-| `shareArticlePdf()` | 3026 |  |
-| `shareArticleBoth()` | 3035 |  |
+| `shareArticlePdf()` | 3026 | Export article as PDF |
+| `shareArticleBoth()` | 3035 | Open email share modal with both link and PDF options |
 | `closeShareEmailModal()` | 3050 |  |
-| `sendShareEmail()` | 3055 |  |
-| `blobToBase64(blob)` | 3118 |  |
-| `formatDate(dateStr)` | 3189 |  |
+| `sendShareEmail()` | 3055 | Send share email |
+| `blobToBase64(blob)` | 3118 | Convert blob to base64 |
+| `formatDate(dateStr)` | 3189 | Server-stamped UTC timestamps (created/modified/archived). Parse as UTC and render in the analyst's chosen zone so the calendar day is correct locally. |
 | `openAiChat()` | 3197 |  |
 | `closeAiChat()` | 3203 |  |
 | `askAi()` | 3208 |  |
 | `formatAiResponse(text, articlesList)` | 3280 |  |
 | `kbFolderOptions(selectedId)` | 3379 |  |
+| `walk(parent, depth)` | 3381 |  |
 | `kbMoveCurrentArticle()` | 3395 |  |
 | `kbCloseMoveModal()` | 3406 |  |
 | `kbConfirmMoveArticle()` | 3411 |  |

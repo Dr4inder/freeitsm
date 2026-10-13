@@ -1,5 +1,7 @@
 # apiChangeCabGet()
 
+CAB — roster + votes
+
 ```php
 function apiChangeCabGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

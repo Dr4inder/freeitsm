@@ -1,5 +1,7 @@
 # recordPreviewChange()
 
+── Change ──────────────────────────────────────────────────────────────────
+
 ```php
 function recordPreviewChange(PDO $conn, int $analystId, int $id): ?array
 ```

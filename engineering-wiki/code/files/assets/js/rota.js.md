@@ -19,7 +19,7 @@ Rota Page JS - Weekly staff rota management
 | `escapeHtml(str)` | 224 |  |
 | `openRotaEntryModal(analystId, date, entryId)` | 233 |  |
 | `closeRotaEntryModal()` | 290 |  |
-| `deleteRotaEntry()` | 328 |  |
+| `deleteRotaEntry()` | 328 | Delete entry |
 | `rotaSetClipboard(cell, line)` | 381 | One clipboard at a time for the grid (Ed). |
 | `rotaEntryAt(analystId, date)` | 386 |  |
 | `rotaDateLabel(date)` | 391 | Format a YYYY-MM-DD for a message, in the analyst's own date arrangement. |
@@ -31,7 +31,6 @@ Rota Page JS - Weekly staff rota management
 | `rotaLineCells(head)` | 455 | The day cells belonging to a column heading or an analyst name cell. |
 | `rotaHoverClear()` | 462 |  |
 | `rotaHoverSet(head)` | 468 | Light up the whole column or row under the pointer. Pass null to unlight. |
-| `wireRotaSelection()` | 479 |  |
 | `openRotaCellMenu(event, cell)` | 543 |  |
 | `openRotaLineMenu(event, head, kind)` | 600 | The same menu, opened on a column heading or an analyst's name: copy the whole line, paste one onto it, or empty it. |
 | `rotaSetLinePasteItem(kind, label)` | 655 | What Paste offers on a column heading or an analyst's name, which depends on what is actually on the clipboard: |

@@ -1,5 +1,7 @@
 # apiNmDiagramsCreate()
 
+POST /network-diagrams — create, optionally with initial contents in one call.
+
 ```php
 function apiNmDiagramsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

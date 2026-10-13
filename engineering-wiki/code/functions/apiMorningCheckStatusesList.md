@@ -1,5 +1,7 @@
 # apiMorningCheckStatusesList()
 
+GET /morning-check-statuses — full list like get_statuses.php (inactive included so historical results can always be resolved).
+
 ```php
 function apiMorningCheckStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

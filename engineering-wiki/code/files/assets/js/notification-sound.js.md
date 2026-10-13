@@ -20,7 +20,7 @@ includes/waffle-menu.php, plus the preview on the Preferences page.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `context()` | 33 |  |
+| `context()` | 33 | Built on first use, not on load: an AudioContext per page would be a resource nearly every analyst never needs, and some browsers log a warning for one created outside a gesture. |
 | `playNotificationSound(key)` | 51 | Play a chime. |
-| `warm()` | 90 |  |
+| `warm()` | 90 | Browsers block audio until the page has been interacted with. A poll callback a minute later is not an interaction, so the context has to be opened while a real gesture is still in hand — otherwise the very first chime of a page is the one nobody hears. Only worth doing for analysts who actually turned a sound on. |
 

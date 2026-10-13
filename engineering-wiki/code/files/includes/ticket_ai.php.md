@@ -36,7 +36,7 @@ history that loss is silent and permanent.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [ticketAiSettings()](/code/functions/ticketAiSettings.md) | 44 |  |
+| [ticketAiSettings()](/code/functions/ticketAiSettings.md) | 44 | ─────────────────────────────────────────────────────────────────────────── SETTINGS |
 | [ticketAiTranscript()](/code/functions/ticketAiTranscript.md) | 121 | Turn a ticket into the plain text a model reads. |
 | [ticketAiMessagesSince()](/code/functions/ticketAiMessagesSince.md) | 203 | How many messages have arrived since the summary was written. |
 | [ticketAiLatestSummary()](/code/functions/ticketAiLatestSummary.md) | 221 | The newest stored summary (or briefing) for a ticket, or null. |

@@ -39,37 +39,45 @@ to files/index.php's <script> tags.
 | `fmtSize(n)` | 49 |  |
 | `icon(path)` | 55 |  |
 | `loadScript(src)` | 67 |  |
+| `onerror()` | 73 |  |
 | `loadPdfjs()` | 80 |  |
 | `fetchBytes(url, cap)` | 91 |  |
 | `sanitise(html)` | 106 |  |
-| `walk(node)` | 109 |  |
 | `extOf(name)` | 153 |  |
 | `kindOf(name)` | 154 |  |
 | `auditEntry(entry, what)` | 160 | Opening or saving something INSIDE a zip happens in the browser - so tell the server, for the audit trail. |
-| `colName(i)` | 165 |  |
+| `colName(i)` | 165 | ── Spreadsheet column letters ───────────────────────────────────────── |
 | `renderInto(host, info, opts)` | 171 | Draw a file into `host` (a window body or the phone overlay). info = view.php's open response. Returns a controller {destroy()}. |
 | `getBytes(cap)` | 177 | The file's bytes - from memory for a zip entry, else from view.php. |
 | `mediaUrl()` | 185 | A URL an <img>/<video> can use: view.php's, or a blob: for a zip entry (typed by us, never SVG). |
+| `baseDestroy()` | 243 |  |
 | `error(e)` | 244 |  |
 | `noPreview()` | 248 |  |
 | `zoomTools(onZoom)` | 256 |  |
-| `renderPdf()` | 279 |  |
+| `renderPdf()` | 279 | ── PDF ──────────────────────────────────────────────────────────── |
 | `fitScale()` | 286 |  |
+| `destroy()` | 315 |  |
 | `layout()` | 341 |  |
 | `draw(pg)` | 355 |  |
 | `updatePage()` | 380 |  |
-| `renderDocx()` | 389 |  |
-| `renderSheet()` | 413 |  |
+| `renderDocx()` | 389 | ── Word ─────────────────────────────────────────────────────────── |
+| `renderSheet()` | 413 | ── Spreadsheets ─────────────────────────────────────────────────── |
 | `show(name)` | 420 |  |
-| `renderImage()` | 460 |  |
+| `renderImage()` | 460 | ── Images ───────────────────────────────────────────────────────── |
 | `fitZoom()` | 470 |  |
 | `apply()` | 471 |  |
-| `renderMedia()` | 478 |  |
-| `renderZip()` | 499 |  |
+| `onload()` | 472 |  |
+| `onerror()` | 473 |  |
+| `renderMedia()` | 478 | ── Video and audio ──────────────────────────────────────────────── |
+| `onerror()` | 487 |  |
+| `destroy()` | 492 |  |
+| `renderZip()` | 499 | ── Zip archives ─────────────────────────────────────────────────── A folder view of the archive; opening an entry swaps the stage for that entry's own viewer, with a way back to the list. Nested zips just work - an entry that is a zip is browsed the same way. |
 | `showList()` | 524 |  |
 | `openEntry(f)` | 552 |  |
-| `renderText()` | 586 |  |
+| `destroy()` | 580 |  |
+| `renderText()` | 586 | ── Text ─────────────────────────────────────────────────────────── |
 | `open(id, versionId, opts)` | 597 | Open a file in a viewer window. versionId optional (Properties -> Versions). |
+| `onClose()` | 606 |  |
 | `openPhone(info)` | 615 | Phones: the same viewer, full screen over the list. |
 
 ## Loaded by

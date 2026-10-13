@@ -37,17 +37,17 @@ not behind a key that may be sitting in a monitoring tool's config file.
 | [apiSerializeDomain()](/code/functions/apiSerializeDomain.md) | 60 |  |
 | [apiLoadDomain()](/code/functions/apiLoadDomain.md) | 132 | The by-id gate: existence + company scope, both failing as 404. |
 | [apiDomainRefuseAuthCode()](/code/functions/apiDomainRefuseAuthCode.md) | 142 |  |
-| [apiDomainsList()](/code/functions/apiDomainsList.md) | 151 |  |
-| [apiDomainsGet()](/code/functions/apiDomainsGet.md) | 236 |  |
-| [apiDomainsCreate()](/code/functions/apiDomainsCreate.md) | 243 |  |
-| [apiDomainsUpdate()](/code/functions/apiDomainsUpdate.md) | 269 |  |
-| [apiDomainsDelete()](/code/functions/apiDomainsDelete.md) | 285 |  |
-| [apiDomainsLookup()](/code/functions/apiDomainsLookup.md) | 298 |  |
-| [apiDomainsCheck()](/code/functions/apiDomainsCheck.md) | 315 |  |
-| [apiDomainsFindings()](/code/functions/apiDomainsFindings.md) | 332 |  |
+| [apiDomainsList()](/code/functions/apiDomainsList.md) | 151 | GET /domains |
+| [apiDomainsGet()](/code/functions/apiDomainsGet.md) | 236 | GET /domains/{id} |
+| [apiDomainsCreate()](/code/functions/apiDomainsCreate.md) | 243 | POST /domains |
+| [apiDomainsUpdate()](/code/functions/apiDomainsUpdate.md) | 269 | PATCH /domains/{id} |
+| [apiDomainsDelete()](/code/functions/apiDomainsDelete.md) | 285 | DELETE /domains/{id} |
+| [apiDomainsLookup()](/code/functions/apiDomainsLookup.md) | 298 | POST /domains/{id}/lookup — ask the registry now |
+| [apiDomainsCheck()](/code/functions/apiDomainsCheck.md) | 315 | POST /domains/{id}/check — run the health and security checks now |
+| [apiDomainsFindings()](/code/functions/apiDomainsFindings.md) | 332 | GET /domains/{id}/findings — the last check's findings, with English text |
 | [apiDomainFindings()](/code/functions/apiDomainFindings.md) | 339 | Findings with their English title and advice filled in — a machine consumer has no lang file. |
-| [apiDomainsHistory()](/code/functions/apiDomainsHistory.md) | 362 |  |
-| [apiDomainStatusesList()](/code/functions/apiDomainStatusesList.md) | 384 |  |
+| [apiDomainsHistory()](/code/functions/apiDomainsHistory.md) | 362 | GET /domains/{id}/history |
+| [apiDomainStatusesList()](/code/functions/apiDomainStatusesList.md) | 384 | GET /domain-statuses · GET /domain-registrar-accounts |
 | [apiDomainAccountsList()](/code/functions/apiDomainAccountsList.md) | 392 |  |
 
 ## Database

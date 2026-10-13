@@ -1,5 +1,7 @@
 # apiNmNodesCreate()
 
+POST /network-diagrams/{id}/nodes — add one node (object) or a batch ({"nodes": [...]}).
+
 ```php
 function apiNmNodesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

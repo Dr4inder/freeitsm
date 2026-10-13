@@ -1,5 +1,7 @@
 # recordPreviewAsset()
 
+── Asset ───────────────────────────────────────────────────────────────────
+
 ```php
 function recordPreviewAsset(PDO $conn, int $analystId, int $id): ?array
 ```

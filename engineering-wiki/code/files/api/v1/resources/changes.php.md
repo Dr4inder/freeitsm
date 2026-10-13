@@ -50,19 +50,19 @@ here. (ChangesService requires the workflow engine for change.approved.)
 | [apiChangeSelect()](/code/functions/apiChangeSelect.md) | 47 |  |
 | [apiSerializeChange()](/code/functions/apiSerializeChange.md) | 73 | Summary shape (lists). Detail adds the longtext bodies, PIR, attachments, links. |
 | [apiLoadChange()](/code/functions/apiLoadChange.md) | 119 |  |
-| [apiChangesList()](/code/functions/apiChangesList.md) | 141 |  |
-| [apiChangesGet()](/code/functions/apiChangesGet.md) | 264 |  |
-| [apiChangesCreate()](/code/functions/apiChangesCreate.md) | 324 |  |
-| [apiChangesUpdate()](/code/functions/apiChangesUpdate.md) | 347 |  |
-| [apiChangesDelete()](/code/functions/apiChangesDelete.md) | 357 |  |
-| [apiChangeCommentsList()](/code/functions/apiChangeCommentsList.md) | 367 |  |
+| [apiChangesList()](/code/functions/apiChangesList.md) | 141 | GET /changes |
+| [apiChangesGet()](/code/functions/apiChangesGet.md) | 264 | GET /changes/{id} — detail incl. bodies, PIR, attachments, linked problems |
+| [apiChangesCreate()](/code/functions/apiChangesCreate.md) | 324 | POST /changes |
+| [apiChangesUpdate()](/code/functions/apiChangesUpdate.md) | 347 | PATCH /changes/{id} |
+| [apiChangesDelete()](/code/functions/apiChangesDelete.md) | 357 | DELETE /changes/{id} — permanent; removes attachment files, cascades children |
+| [apiChangeCommentsList()](/code/functions/apiChangeCommentsList.md) | 367 | Comments — append + delete (no edit), always internal, like the UI |
 | [apiChangeCommentsCreate()](/code/functions/apiChangeCommentsCreate.md) | 385 |  |
 | [apiChangeCommentsDelete()](/code/functions/apiChangeCommentsDelete.md) | 392 |  |
-| [apiChangeAuditList()](/code/functions/apiChangeAuditList.md) | 402 |  |
-| [apiChangeCabGet()](/code/functions/apiChangeCabGet.md) | 427 |  |
+| [apiChangeAuditList()](/code/functions/apiChangeAuditList.md) | 402 | GET /changes/{id}/audit |
+| [apiChangeCabGet()](/code/functions/apiChangeCabGet.md) | 427 | CAB — roster + votes |
 | [apiChangeCabSave()](/code/functions/apiChangeCabSave.md) | 460 | POST /changes/{id}/cab — replace the roster (diff-sync + audit, like save_cab_members.php). |
 | [apiChangeCabVote()](/code/functions/apiChangeCabVote.md) | 468 | POST /changes/{id}/cab/vote — the key's acts-as analyst votes; mirrors submit_cab_vote.php. |
-| [apiChangeLookupList()](/code/functions/apiChangeLookupList.md) | 478 |  |
+| [apiChangeLookupList()](/code/functions/apiChangeLookupList.md) | 478 | Reference lookups |
 | [apiChangeStatusesList()](/code/functions/apiChangeStatusesList.md) | 496 |  |
 | [apiChangeTypesList()](/code/functions/apiChangeTypesList.md) | 499 |  |
 | [apiChangePrioritiesList()](/code/functions/apiChangePrioritiesList.md) | 502 |  |

@@ -1,5 +1,7 @@
 # recordPreviewTask()
 
+── Task ────────────────────────────────────────────────────────────────────
+
 ```php
 function recordPreviewTask(PDO $conn, int $analystId, int $id): ?array
 ```

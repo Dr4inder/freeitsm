@@ -1,5 +1,7 @@
 # apiNmNodesDelete()
 
+DELETE /network-diagrams/{id}/nodes/{node_id} — the node and its connectors.
+
 ```php
 function apiNmNodesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

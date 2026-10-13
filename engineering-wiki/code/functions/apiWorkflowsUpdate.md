@@ -1,5 +1,7 @@
 # apiWorkflowsUpdate()
 
+PATCH /workflows/{id}
+
 ```php
 function apiWorkflowsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

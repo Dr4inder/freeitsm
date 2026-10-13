@@ -1,5 +1,7 @@
 # apiDomainsUpdate()
 
+PATCH /domains/{id}
+
 ```php
 function apiDomainsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

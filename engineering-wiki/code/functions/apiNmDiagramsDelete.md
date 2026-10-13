@@ -1,5 +1,7 @@
 # apiNmDiagramsDelete()
 
+DELETE /network-diagrams/{id} — leaf-only (parent resurfaces as current); ?chain=true deletes the whole chain.
+
 ```php
 function apiNmDiagramsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

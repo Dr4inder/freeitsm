@@ -1,5 +1,7 @@
 # apiWorkflowExecutionsList()
 
+GET /workflows/{id}/executions
+
 ```php
 function apiWorkflowExecutionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

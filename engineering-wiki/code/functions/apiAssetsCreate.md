@@ -1,5 +1,7 @@
 # apiAssetsCreate()
 
+POST /assets
+
 ```php
 function apiAssetsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

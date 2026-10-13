@@ -8,6 +8,9 @@ Projects - a proposal and its approval, on the Overview (3.3.0). Rules: includes
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 9 |  |
+| `$(id)` | 11 |  |
+| `call(body)` | 16 |  |
 | `money(v)` | 17 |  |
 | `render()` | 24 |  |
 | `openDecide(decision)` | 61 |  |

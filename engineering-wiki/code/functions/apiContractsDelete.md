@@ -1,5 +1,7 @@
 # apiContractsDelete()
 
+DELETE /contracts/{id} — explicit children (the contracts domain had no FKs)
+
 ```php
 function apiContractsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

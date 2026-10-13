@@ -1,5 +1,7 @@
 # apiProblemsGet()
 
+GET /problems/{id} — full detail incl. linked incidents + changes
+
 ```php
 function apiProblemsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

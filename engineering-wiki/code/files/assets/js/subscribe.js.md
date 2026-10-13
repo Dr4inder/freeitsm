@@ -23,7 +23,17 @@ missing, which is why its failure is swallowed rather than reported.
 | `t(key, fallback)` | 24 |  |
 | `refresh(id)` | 33 | Rebuild the URL + QR from whatever host is currently typed. |
 | `apply(id, d)` | 59 |  |
+| `oninput()` | 69 |  |
 | `normalise(d)` | 83 | Endpoints differ in shape: the calendar's returns scheme/host/path, the work-calendar one returns a finished url. Accept either, so a caller is not forced to change its API to use this. |
+| `mount(id, endpoint, opts)` | 98 | Register a dialogue. onReset is called after a successful rotation. |
+| `open(id)` | 102 |  |
+| `show()` | 106 |  |
+| `close(id)` | 121 |  |
+| `copy(id)` | 126 |  |
+| `done()` | 130 |  |
+| `reset(id)` | 144 | Rotate the token. Confirmed first, because "Reset" does not convey that every device already subscribed silently stops updating until it is given the new link. |
+| `go(ok)` | 147 |  |
+| `forget(id)` | 177 | Drop the cached URL so the next `open()` re-fetches (after a revoke). |
 
 ## Loaded by
 

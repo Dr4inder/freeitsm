@@ -1,5 +1,7 @@
 # apiProblemsList()
 
+GET /problems
+
 ```php
 function apiProblemsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

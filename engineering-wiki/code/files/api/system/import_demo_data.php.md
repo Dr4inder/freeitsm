@@ -16,12 +16,12 @@ API Endpoint: Import Demo Data Imports sample data for a specific module from da
 
 | Function | Line | What it does |
 |---|--:|---|
-| [getPrimaryKeyColumn()](/code/functions/getPrimaryKeyColumn.md) | 27 |  |
-| [resolveReferences()](/code/functions/resolveReferences.md) | 37 |  |
-| [resolveTokens()](/code/functions/resolveTokens.md) | 51 |  |
-| [processMapperDefaultSize()](/code/functions/processMapperDefaultSize.md) | 83 |  |
-| [autoLayoutProcessMapper()](/code/functions/autoLayoutProcessMapper.md) | 96 |  |
-| [generateDemoTicketNumber()](/code/functions/generateDemoTicketNumber.md) | 202 |  |
+| [getPrimaryKeyColumn()](/code/functions/getPrimaryKeyColumn.md) | 27 | Helper: get primary key column name for a table |
+| [resolveReferences()](/code/functions/resolveReferences.md) | 37 | Helper: resolve `@table`.ref references to real IDs |
+| [resolveTokens()](/code/functions/resolveTokens.md) | 51 | Helper: resolve special tokens |
+| [processMapperDefaultSize()](/code/functions/processMapperDefaultSize.md) | 83 | Helper: pick canvas-default size for a step type |
+| [autoLayoutProcessMapper()](/code/functions/autoLayoutProcessMapper.md) | 96 | Auto-layout for the process-mapper module: writes x/y/width/height onto each step in `$demoData`['tier2']['process_steps'] using a left-to-right layered placement. Each process is laid out independently. Edges that point "backwards" in JSON authoring order are treated as cycle-closing back-edges and ignored for ranking. |
+| [generateDemoTicketNumber()](/code/functions/generateDemoTicketNumber.md) | 202 | Helper: generate unique ticket number |
 
 ## Database
 

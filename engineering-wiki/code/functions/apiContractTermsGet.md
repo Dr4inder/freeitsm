@@ -1,5 +1,7 @@
 # apiContractTermsGet()
 
+Contract terms — GET + bulk upsert (mirrors save_contract_terms.php)
+
 ```php
 function apiContractTermsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

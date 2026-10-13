@@ -1,5 +1,7 @@
 # apiChangesUpdate()
 
+PATCH /changes/{id}
+
 ```php
 function apiChangesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

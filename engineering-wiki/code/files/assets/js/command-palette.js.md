@@ -22,17 +22,19 @@ module + company scoping server-side.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `cp(key, english, params)` | 28 |  |
-| `typeLabel(type)` | 65 |  |
+| `cp(key, english, params)` | 28 | Translate, or the English written right here. The waffle menu injects this file on every in-app page and not all of them export window.translations, so the fallback is the contract, not a nicety. |
+| `typeLabel(type)` | 65 | Built lazily: the palette is constructed on first open, by which point window.translations is certainly in place. |
+| `run()` | 92 |  |
+| `run()` | 102 |  |
 | `esc(s)` | 112 |  |
 | `build()` | 118 |  |
 | `open()` | 148 |  |
 | `close()` | 157 |  |
 | `isOpen()` | 164 |  |
-| `score(text, q)` | 168 |  |
+| `score(text, q)` | 168 | Substring match with a light prefix boost, so "tas" ranks "Tasks" above a module that merely contains the letters. |
 | `matchedModules(q)` | 175 |  |
 | `matchedCommands(q)` | 184 |  |
-| `render(serverResults)` | 192 |  |
+| `render(serverResults)` | 192 | Render the palette body from the current query + optional server results. |
 | `pluralType(type)` | 294 |  |
 | `row(idx, iconSvg, title, sub, tag, extra)` | 320 |  |
 | `setActive(ix)` | 332 |  |

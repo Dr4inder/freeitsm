@@ -1,5 +1,7 @@
 # apiProblemAuditList()
 
+GET /problems/{id}/audit
+
 ```php
 function apiProblemAuditList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

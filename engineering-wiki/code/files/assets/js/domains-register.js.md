@@ -18,10 +18,12 @@ companies — nothing here hides rows for security, only for convenience.
 | `load(withLookups)` | 70 |  |
 | `fillLookups()` | 84 |  |
 | `filtered()` | 115 |  |
+| `v(id)` | 117 |  |
 | `defaultCompanyId()` | 135 |  |
 | `render()` | 140 |  |
 | `renderViews()` | 170 |  |
 | `renderStats()` | 179 |  |
+| `c(fn)` | 180 |  |
 | `renderSelBar()` | 195 |  |
 | `wire()` | 202 |  |
 | `openAdd()` | 256 |  |
@@ -30,13 +32,16 @@ companies — nothing here hides rows for security, only for convenience.
 | `saveMany()` | 298 |  |
 | `showAddResult(boxId, d)` | 322 | "Added 42, skipped 3" then the lookups, in batches, with a progress bar. |
 | `processIds(ids, label, holderId)` | 339 | Look up + check domains in batches of five, drawing progress. Anything not finished (the tab closed, the network dropped) is simply picked up by the scheduled run — a never-looked-up domain is first in its queue. |
+| `draw()` | 351 |  |
 | `openImport()` | 390 |  |
 | `parseCsv(text)` | 400 | RFC 4180-ish: quoted fields, doubled quotes, commas or semicolons. |
 | `readCsv()` | 425 |  |
 | `drawMapping()` | 438 |  |
 | `runImport()` | 454 |  |
 | `saveBulk()` | 478 |  |
+| `put(id, key)` | 480 |  |
 | `bulkDelete()` | 494 |  |
+| `svg(k)` | 524 |  |
 | `ctxMenu()` | 526 |  |
 | `item(action, icon, label, extra)` | 539 |  |
 | `sub(label, icon, opts)` | 543 |  |

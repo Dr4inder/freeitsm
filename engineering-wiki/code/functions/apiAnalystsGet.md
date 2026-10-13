@@ -1,5 +1,7 @@
 # apiAnalystsGet()
 
+GET /analysts/{id}
+
 ```php
 function apiAnalystsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

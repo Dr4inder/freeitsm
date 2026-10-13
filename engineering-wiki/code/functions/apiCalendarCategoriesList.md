@@ -1,5 +1,7 @@
 # apiCalendarCategoriesList()
 
+GET /calendar-categories (reference)
+
 ```php
 function apiCalendarCategoriesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

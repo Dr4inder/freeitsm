@@ -19,5 +19,11 @@ GET and HEAD are left alone, except for EventSource, whose streams can write.
 |---|--:|---|
 | `sameOrigin(url)` | 27 |  |
 | `withQuery(url)` | 30 |  |
-| `stamp(form)` | 77 |  |
+| `fetch(input, init)` | 42 |  |
+| `open(method, url)` | 61 |  |
+| `setRequestHeader(name)` | 66 |  |
+| `send()` | 70 |  |
+| `stamp(form)` | 77 | ── plain HTML forms ───────────────────────────────────────────────────── |
+| `sendBeacon(url, data)` | 99 |  |
+| `ES(url, cfg)` | 103 |  |
 

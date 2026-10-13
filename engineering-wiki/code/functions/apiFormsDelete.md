@@ -1,5 +1,7 @@
 # apiFormsDelete()
 
+DELETE /forms/{id} — one version (leaf only), or the whole chain with ?chain=true. Always transactional, submissions + data removed explicitly.
+
 ```php
 function apiFormsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

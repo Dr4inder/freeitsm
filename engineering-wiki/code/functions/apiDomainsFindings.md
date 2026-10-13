@@ -1,5 +1,7 @@
 # apiDomainsFindings()
 
+GET /domains/{id}/findings — the last check's findings, with English text
+
 ```php
 function apiDomainsFindings(PDO $conn, array $apiKey, array $params, array $body): void
 ```

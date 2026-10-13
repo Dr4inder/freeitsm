@@ -14,6 +14,7 @@ asset — and adds PDF export on top of the shared CSV. Everything else
 
 | Function | Line | What it does |
 |---|--:|---|
+| `tt(k, p)` | 13 |  |
 | `staleDaysFromUrl()` | 97 | "Not seen in N days", arrived at from the Watchtower assets card (#97). |
 | `applyStaleFilter(rows)` | 104 |  |
 

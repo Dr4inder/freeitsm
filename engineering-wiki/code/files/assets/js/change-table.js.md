@@ -20,8 +20,9 @@ plans and risk scoring stay in the full form too. Click any row to open it.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `fmt(raw)` | 29 |  |
-| `fmtNaive(raw)` | 42 |  |
+| `fmt(raw)` | 29 | Server-stamped UTC timestamp (created / modified) → analyst display zone, in the analyst's chosen date and time format (parseUTCDate / fmtDateTime from assets/js/tz.js, loaded before this file). Only the display text is zoned and formatted; the column's `value` (used for sorting) stays the raw UTC string, so neither the zone nor the format can reorder the table. |
+| `fmtNaive(raw)` | 42 | NAIVE wall-clock scheduling datetime (planned work start / end) — shown exactly as typed for every analyst, NO zone conversion (parseNaiveDate from tz.js). Same shape as `fmt()`. |
+| `T(k)` | 49 |  |
 | `loadLookups()` | 88 |  |
 
 ## API endpoints it calls

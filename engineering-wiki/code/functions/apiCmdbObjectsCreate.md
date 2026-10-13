@@ -1,5 +1,7 @@
 # apiCmdbObjectsCreate()
 
+POST /cmdb/objects
+
 ```php
 function apiCmdbObjectsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

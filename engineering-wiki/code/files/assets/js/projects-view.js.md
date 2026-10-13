@@ -22,6 +22,11 @@ there is the one place a task is edited, so this page never grows a second one.
 | `renderBanner()` | 37 |  |
 | `renderOverview()` | 81 |  |
 | `burnupPoints()` | 190 | Scope and done over time, worked out here from the tasks the page already has: each top-level task counts from the day it was created (scope) and the day it was completed (done) - one each, or its estimate in hours. A task moved into the project later counts from its creation; that is the honest reading of what is stored. |
+| `val(t)` | 191 |  |
+| `created(t)` | 194 |  |
+| `doneOn(t)` | 195 |  |
+| `dn(s)` | 199 |  |
+| `iso(n)` | 200 |  |
 | `renderBurnup()` | 210 |  |
 | `stageMini(s)` | 257 |  |
 | `historyItem(h)` | 267 |  |
@@ -41,6 +46,7 @@ there is the one place a task is edited, so this page never grows a second one.
 | `linksSummary()` | 524 | "Connected to" chips on the Overview, one per kind that has links. |
 | `linkRow(kind, r)` | 533 |  |
 | `announcePanel()` | 551 | Service Status (3.2.0, going live safely): disruption this project has announced, and the Announce button. data.announcements is null for somebody who cannot open Service Status - then there is no panel at all. Planned maintenance is not an incident until it starts; the server turns it into one at its start and resolves it at its end. |
+| `when(p)` | 555 |  |
 | `announceRow(serviceId, impactId)` | 573 |  |
 | `openAnnounce()` | 588 |  |
 | `saveAnnounce()` | 606 |  |

@@ -1,5 +1,7 @@
 # apiTicketTypesList()
 
+GET /ticket-types (?company_id= applies the per-company add/hide overrides)
+
 ```php
 function apiTicketTypesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

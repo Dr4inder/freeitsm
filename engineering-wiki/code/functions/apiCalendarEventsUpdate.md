@@ -1,5 +1,7 @@
 # apiCalendarEventsUpdate()
 
+PATCH /calendar/events/{id}
+
 ```php
 function apiCalendarEventsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

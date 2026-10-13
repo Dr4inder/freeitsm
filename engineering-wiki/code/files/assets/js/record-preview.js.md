@@ -48,6 +48,7 @@ and, after changing a record whose preview may be cached:
 | `renderUnavailable(anchor, message)` | 155 |  |
 | `render(anchor, p)` | 162 |  |
 | `show(anchor)` | 190 |  |
+| `forget(type, id)` | 272 | Drop a cached preview after the record behind it has been edited. |
 
 ## API endpoints it calls
 

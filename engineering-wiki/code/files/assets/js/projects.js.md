@@ -15,6 +15,8 @@ never a root-relative "/api/...", which 404s on an install in a sub-directory.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 14 |  |
+| `TC(k, p)` | 15 |  |
 | `esc(v)` | 17 |  |
 | `api(path, body)` | 22 |  |
 | `lookups()` | 38 |  |
@@ -39,9 +41,13 @@ never a root-relative "/api/...", which 404s on an install in a sub-directory.
 | `paintBanner()` | 193 |  |
 | `pick(containerId, attr, value)` | 206 |  |
 | `openProjectForm(project, onSaved)` | 214 |  |
+| `$(id)` | 227 |  |
 | `templateMeta(t)` | 308 | "4 stages · 16 tasks · 12 weeks" - what a template brings. |
+| `n(key, count)` | 309 |  |
 | `chooseTemplate(key)` | 315 |  |
+| `$(id)` | 317 |  |
 | `wireForm()` | 337 |  |
+| `$(id)` | 341 |  |
 | `showFormError(msg)` | 404 |  |
 | `celebrate(fromEl)` | 415 | Confetti from an element, for the moments worth marking (a stage done, a project closed). Pure CSS transforms on a handful of dots, removed after ~1.2s. Respects prefers-reduced-motion by showing nothing but the toast. |
 

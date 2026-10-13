@@ -1,5 +1,7 @@
 # apiFormSubmissionsList()
 
+GET /forms/{id}/submissions — newest first, paginated.
+
 ```php
 function apiFormSubmissionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

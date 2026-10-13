@@ -1,5 +1,7 @@
 # apiTaskCommentsList()
 
+Comments — create-only, like the UI
+
 ```php
 function apiTaskCommentsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -15,13 +15,13 @@
 | Function | Line | What it does |
 |---|--:|---|
 | [apiAnalystsList()](/code/functions/apiAnalystsList.md) | 12 | FreeITSM REST API v1 — reference data: the lookups an integration needs to build valid ticket writes (statuses, priorities, ticket types, origins, departments), plus analysts and companies. |
-| [apiCompaniesList()](/code/functions/apiCompaniesList.md) | 36 |  |
-| [apiStatusesList()](/code/functions/apiStatusesList.md) | 53 |  |
-| [apiPrioritiesList()](/code/functions/apiPrioritiesList.md) | 70 |  |
-| [apiTicketTypesList()](/code/functions/apiTicketTypesList.md) | 85 |  |
-| [apiOriginsList()](/code/functions/apiOriginsList.md) | 90 |  |
+| [apiCompaniesList()](/code/functions/apiCompaniesList.md) | 36 | GET /companies — the companies (tenants) this key can see. |
+| [apiStatusesList()](/code/functions/apiStatusesList.md) | 53 | GET /statuses |
+| [apiPrioritiesList()](/code/functions/apiPrioritiesList.md) | 70 | GET /priorities |
+| [apiTicketTypesList()](/code/functions/apiTicketTypesList.md) | 85 | GET /ticket-types (?company_id= applies the per-company add/hide overrides) |
+| [apiOriginsList()](/code/functions/apiOriginsList.md) | 90 | GET /origins (?company_id= applies the per-company add/hide overrides) |
 | [apiTenantConfigList()](/code/functions/apiTenantConfigList.md) | 95 | Shared list for the tenant-overridable config tables (add/hide model). |
-| [apiDepartmentsList()](/code/functions/apiDepartmentsList.md) | 115 |  |
+| [apiDepartmentsList()](/code/functions/apiDepartmentsList.md) | 115 | GET /departments |
 
 ## Database
 

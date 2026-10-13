@@ -1,5 +1,7 @@
 # apiSoftwareAppMachinesList()
 
+GET /software/apps/{id}/machines — mirrors get_app_machines.php (+ asset_id)
+
 ```php
 function apiSoftwareAppMachinesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

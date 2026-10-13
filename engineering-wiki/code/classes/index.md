@@ -24,7 +24,7 @@
 | [DateFmt](/code/classes/DateFmt.md) | [includes/timezone.php](/code/files/includes/timezone.php.md) | 9 | Per-user date & time FORMAT (GH #105). |
 | [DomainsService](/code/classes/DomainsService.md) | [includes/services/domains.php](/code/files/includes/services/domains.php.md) | 36 |  |
 | [EwMarkdown](/code/classes/EwMarkdown.md) | [includes/engineering_wiki/markdown.php](/code/files/includes/engineering_wiki/markdown.php.md) | 18 | Engineering wiki - a small Markdown renderer written for the wiki, so the pages look and read like GitHub without pulling in a library. |
-| [EwScanner](/code/classes/EwScanner.md) | [includes/engineering_wiki/scanner.php](/code/files/includes/engineering_wiki/scanner.php.md) | 59 |  |
+| [EwScanner](/code/classes/EwScanner.md) | [includes/engineering_wiki/scanner.php](/code/files/includes/engineering_wiki/scanner.php.md) | 61 |  |
 | [FilesAcl](/code/classes/FilesAcl.md) | [includes/files/acl.php](/code/files/includes/files/acl.php.md) | 11 | Files — who may do what to a folder. The ONE place that answers it. |
 | [FormsService](/code/classes/FormsService.md) | [includes/services/forms.php](/code/files/includes/services/forms.php.md) | 56 |  |
 | [FreeitsmProvider](/code/classes/FreeitsmProvider.md) | [includes/messaging/FreeitsmProvider.php](/code/files/includes/messaging/FreeitsmProvider.php.md) | 4 |  |

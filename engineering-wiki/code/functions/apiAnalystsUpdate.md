@@ -1,5 +1,7 @@
 # apiAnalystsUpdate()
 
+PATCH /analysts/{id}
+
 ```php
 function apiAnalystsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

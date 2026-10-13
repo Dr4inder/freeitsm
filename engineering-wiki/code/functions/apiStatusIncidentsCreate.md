@@ -1,5 +1,7 @@
 # apiStatusIncidentsCreate()
 
+POST /service-status/incidents
+
 ```php
 function apiStatusIncidentsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -16,10 +16,11 @@ Problem Management — list / detail / editor SPA.
 | `pmRenderFilters(counts)` | 88 |  |
 | `pmT(key, english, params)` | 103 | Translate, or the English written at the call site. |
 | `pmRenderList(problems)` | 107 |  |
-| `pmFilter(statusId)` | 131 |  |
+| `pmFilter(statusId)` | 131 | Sidebar actions must return to the list view — otherwise, when a problem is open (e.g. deep-linked via ?id=), they'd update the list while it's hidden behind the detail and appear to do nothing. |
 | `pmOpenSearchModal()` | 140 |  |
 | `pmCloseSearchModal()` | 157 |  |
 | `pmInitSearchDrag()` | 168 |  |
+| `onmousedown(e)` | 171 |  |
 | `mm(e)` | 177 |  |
 | `mu()` | 178 |  |
 | `pmPerformSearch()` | 184 |  |
@@ -27,7 +28,7 @@ Problem Management — list / detail / editor SPA.
 | `pmSelectSearchResult(id)` | 221 |  |
 | `pmClearSearch()` | 223 |  |
 | `pmShowListView()` | 229 |  |
-| `pmSetListUrl()` | 236 |  |
+| `pmSetListUrl()` | 236 | Drop the ?problem_id= param when returning to the list (adds a history entry so Back/Forward step between the list and the problem you were viewing). |
 | `pmBackToList()` | 239 |  |
 | `pmOpenDetail(id, fromHistory)` | 245 |  |
 | `pmRenderDetail(data)` | 262 |  |

@@ -1,5 +1,7 @@
 # apiFormSubmissionsDelete()
 
+DELETE /forms/{id}/submissions/{sid} — delete_submission.php, but with the data rows removed explicitly (grown installs may lack the cascade FK).
+
 ```php
 function apiFormSubmissionsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

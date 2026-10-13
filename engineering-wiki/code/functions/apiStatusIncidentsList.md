@@ -1,5 +1,7 @@
 # apiStatusIncidentsList()
 
+GET /service-status/incidents
+
 ```php
 function apiStatusIncidentsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -17,21 +17,21 @@ bar). Rows are grouped by assignee, status, or shown flat.
 | `loadStatuses()` | 102 |  |
 | `loadPriorities()` | 109 |  |
 | `loadTasks()` | 116 |  |
-| `setFilter(filter)` | 130 |  |
+| `setFilter(filter)` | 130 | ── Filters ──────────────────────────────────────────────────────── |
 | `setTeamFilter(teamId)` | 142 |  |
 | `setAnalystFilter(analystId)` | 152 |  |
 | `setGroupBy(value)` | 162 |  |
-| `render()` | 165 |  |
+| `render()` | 165 | ── Rendering ────────────────────────────────────────────────────── |
 | `buildGroups(items)` | 300 |  |
 | `scrollToToday()` | 328 |  |
-| `openTask(id)` | 337 |  |
-| `ymd(d)` | 340 |  |
+| `openTask(id)` | 337 | Row-label clicks, bar mouseup-without-drag, and bar clicks all route here |
+| `ymd(d)` | 340 | ── Utilities ────────────────────────────────────────────────────── |
 | `addDays(ds, n)` | 346 |  |
 | `dayDiff(a, b)` | 352 |  |
 | `fmt(ds)` | 356 |  |
 | `esc(text)` | 360 |  |
 | `addDayStr(ds, n)` | 367 |  |
-| `onBarMouseDown(e)` | 370 |  |
+| `onBarMouseDown(e)` | 370 | ── Drag-to-edit dates ───────────────────────────────────────────── |
 | `onDragMove(e)` | 396 |  |
 | `onDragUp(e)` | 417 |  |
 

@@ -1,5 +1,7 @@
 # apiMorningChecksList()
 
+GET /morning-checks/checks — all checks (settings view); ?is_active, ?q
+
 ```php
 function apiMorningChecksList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

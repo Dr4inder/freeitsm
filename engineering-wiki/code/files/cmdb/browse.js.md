@@ -24,6 +24,8 @@ CMDB Browse page — class sidebar + object table. Click a class to filter; clic
 | `renderRequiredFieldEditors(reqProps)` | 175 |  |
 | `renderFieldEditor(p)` | 189 |  |
 | `wireRefAutocomplete(prop)` | 225 |  |
+| `renderResults()` | 234 |  |
+| `pick(r)` | 255 |  |
 | `collectRequiredFieldValues()` | 294 |  |
 | `createObject()` | 318 |  |
 

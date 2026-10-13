@@ -1,5 +1,7 @@
 # apiSuppliersGet()
 
+Suppliers — full CRUD (GET /suppliers stays the lite reference list)
+
 ```php
 function apiSuppliersGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -1,5 +1,7 @@
 # recordPreviewContract()
 
+── Contract ────────────────────────────────────────────────────────────────
+
 ```php
 function recordPreviewContract(PDO $conn, int $analystId, int $id): ?array
 ```

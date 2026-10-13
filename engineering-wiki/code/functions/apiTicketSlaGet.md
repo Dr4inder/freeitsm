@@ -1,5 +1,7 @@
 # apiTicketSlaGet()
 
+SLA (compute-on-read via includes/sla.php)
+
 ```php
 function apiTicketSlaGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```

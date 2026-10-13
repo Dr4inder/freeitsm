@@ -1,5 +1,7 @@
 # apiTicketsUpdate()
 
+PATCH /tickets/{id}
+
 ```php
 function apiTicketsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

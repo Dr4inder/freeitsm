@@ -8,12 +8,15 @@ LMS — My Courses (learner landing). Lists the courses assigned to me with my o
 
 | Function | Line | What it does |
 |---|--:|---|
+| `esc(s)` | 8 |  |
 | `statusPill(row)` | 26 |  |
+| `label(STATUS_LABEL[row.status] || (()` | 29 |  |
 | `launchLabel(status)` | 33 |  |
 | `progressBar(row)` | 51 | The progress bar, and the reason it always carries words. |
 | `cardHtml(row)` | 72 |  |
 | `render()` | 98 |  |
 | `applyLayout(save)` | 116 |  |
+| `setMycLayout(mode)` | 130 |  |
 | `loadLayoutPreference()` | 136 |  |
 | `load()` | 146 |  |
 

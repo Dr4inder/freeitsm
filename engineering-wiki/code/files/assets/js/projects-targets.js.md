@@ -13,6 +13,11 @@ includes/projects/targets.php; this file only draws and asks.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `canChange()` | 17 |  |
+| `canAssets()` | 18 |  |
+| `get(q)` | 19 |  |
+| `call(body)` | 20 |  |
+| `$(id)` | 21 |  |
 | `scopePhrase(t)` | 25 |  |
 | `rulePhrase(t)` | 32 |  |
 | `spark(t)` | 38 |  |

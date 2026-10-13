@@ -1,5 +1,7 @@
 # apiNmNodesUpdate()
 
+PATCH /network-diagrams/{id}/nodes/{node_id} — move / resize / re-icon.
+
 ```php
 function apiNmNodesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

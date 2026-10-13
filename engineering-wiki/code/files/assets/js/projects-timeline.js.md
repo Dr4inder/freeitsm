@@ -34,6 +34,8 @@ dependencies (prjDepModal); the server refuses loops.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `dayNum(s)` | 49 |  |
+| `ymd(n)` | 50 |  |
 | `labelWidth()` | 55 |  |
 | `canChange()` | 58 |  |
 | `timeboxKind()` | 61 |  |
@@ -41,14 +43,20 @@ dependencies (prjDepModal); the server refuses loops.
 | `stageSpan(s)` | 73 |  |
 | `render(c)` | 78 |  |
 | `draw(box)` | 86 |  |
+| `x(n)` | 117 |  |
+| `diamonds(list)` | 163 |  |
+| `taskRow(t)` | 173 |  |
 | `drawArrows(box, LW)` | 239 | The dependency arrows (3.3.0), drawn from the bars where they landed: from the right end of the task waited for to the left end of the one that waits, as an elbow. Red and dashed where the plan clashes. Under the bars' text, over the grid; never in the way of a click. |
+| `pos(id)` | 251 |  |
 | `openDeps(taskId)` | 280 |  |
+| `name(id)` | 285 |  |
 | `depCall(body)` | 308 |  |
 | `scrollToToday(sc)` | 313 |  |
 | `onDown(e)` | 321 |  |
 | `onMove(e)` | 336 |  |
 | `onUp()` | 349 |  |
 | `click(el)` | 390 | A tap or a click without a drag: open the thing. |
+| `shown()` | 453 | The tab was shown: draw if anything changed while it was hidden. |
 
 ## Loaded by
 

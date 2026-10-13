@@ -57,18 +57,18 @@ the (API-only) ticket-link endpoints stay here.
 | [apiCmdbLoadObject()](/code/functions/apiCmdbLoadObject.md) | 142 | Load one CI; 404 if unknown OR outside the key's companies (multi-tenancy — the key's company scope gates every by-id read/write; a NULL tenant_id normalises to the Default company; no-op at N=1 / all-access key). |
 | [apiCmdbSerializeObject()](/code/functions/apiCmdbSerializeObject.md) | 161 |  |
 | [apiCmdbClassDefs()](/code/functions/apiCmdbClassDefs.md) | 176 | Property definitions for a class, keyed by property_key. |
-| [apiCmdbObjectsList()](/code/functions/apiCmdbObjectsList.md) | 192 |  |
-| [apiCmdbObjectsGet()](/code/functions/apiCmdbObjectsGet.md) | 277 |  |
-| [apiCmdbObjectsCreate()](/code/functions/apiCmdbObjectsCreate.md) | 397 |  |
-| [apiCmdbObjectsUpdate()](/code/functions/apiCmdbObjectsUpdate.md) | 418 |  |
-| [apiCmdbObjectsDelete()](/code/functions/apiCmdbObjectsDelete.md) | 429 |  |
-| [apiCmdbObjectImpact()](/code/functions/apiCmdbObjectImpact.md) | 439 |  |
-| [apiCmdbRelationshipsCreate()](/code/functions/apiCmdbRelationshipsCreate.md) | 468 |  |
+| [apiCmdbObjectsList()](/code/functions/apiCmdbObjectsList.md) | 192 | GET /cmdb/objects |
+| [apiCmdbObjectsGet()](/code/functions/apiCmdbObjectsGet.md) | 277 | GET /cmdb/objects/{id} — fully hydrated |
+| [apiCmdbObjectsCreate()](/code/functions/apiCmdbObjectsCreate.md) | 397 | POST /cmdb/objects |
+| [apiCmdbObjectsUpdate()](/code/functions/apiCmdbObjectsUpdate.md) | 418 | PATCH /cmdb/objects/{id} |
+| [apiCmdbObjectsDelete()](/code/functions/apiCmdbObjectsDelete.md) | 429 | DELETE /cmdb/objects/{id} — explicit descendant-tree removal (grown installs have no CMDB FK cascades; see the db_verify FK group added alongside this) |
+| [apiCmdbObjectImpact()](/code/functions/apiCmdbObjectImpact.md) | 439 | GET /cmdb/objects/{id}/impact — blast radius (mirrors get_object_impact.php) |
+| [apiCmdbRelationshipsCreate()](/code/functions/apiCmdbRelationshipsCreate.md) | 468 | Relationships — POST /cmdb/objects/{id}/relationships, DELETE .../{rel_id} |
 | [apiCmdbRelationshipsDelete()](/code/functions/apiCmdbRelationshipsDelete.md) | 480 |  |
-| [apiCmdbObjectTicketsList()](/code/functions/apiCmdbObjectTicketsList.md) | 490 |  |
+| [apiCmdbObjectTicketsList()](/code/functions/apiCmdbObjectTicketsList.md) | 490 | Ticket links — company-scoped on both the CI and the tickets |
 | [apiCmdbObjectTicketsLink()](/code/functions/apiCmdbObjectTicketsLink.md) | 518 |  |
 | [apiCmdbObjectTicketsUnlink()](/code/functions/apiCmdbObjectTicketsUnlink.md) | 543 |  |
-| [apiCmdbRelationshipTypesList()](/code/functions/apiCmdbRelationshipTypesList.md) | 560 |  |
+| [apiCmdbRelationshipTypesList()](/code/functions/apiCmdbRelationshipTypesList.md) | 560 | Reference: relationship types |
 
 ## Database
 

@@ -1,5 +1,7 @@
 # apiProjectsUpdate()
 
+PATCH /projects/{id}
+
 ```php
 function apiProjectsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```

@@ -21,8 +21,8 @@ Auth: Authorization header with API key (validated against apikeys table).
 
 | Function | Line | What it does |
 |---|--:|---|
-| [strOrNull()](/code/functions/strOrNull.md) | 102 |  |
-| [intOrNull()](/code/functions/intOrNull.md) | 111 |  |
+| [strOrNull()](/code/functions/strOrNull.md) | 102 | Helper: get string value or null |
+| [intOrNull()](/code/functions/intOrNull.md) | 111 | Helper: get int/bigint value or null |
 | [reportHas()](/code/functions/reportHas.md) | 270 | Is there anything in this part of the report? |
 
 ## Database

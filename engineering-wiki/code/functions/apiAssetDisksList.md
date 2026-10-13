@@ -1,5 +1,7 @@
 # apiAssetDisksList()
 
+Inventory reads — disks, network adapters, devices, software
+
 ```php
 function apiAssetDisksList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

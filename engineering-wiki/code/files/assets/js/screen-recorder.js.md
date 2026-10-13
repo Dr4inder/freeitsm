@@ -28,6 +28,7 @@ ONE modal per page — it binds by element id, matching the single partial.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `onClaimed()` | 30 |  |
 | `el(id)` | 44 |  |
 | `t(key, params)` | 46 |  |
 | `escapeHtml(text)` | 50 |  |
@@ -40,6 +41,8 @@ ONE modal per page — it binds by element id, matching the single partial.
 | `close()` | 106 | Closing DISCARDS an unclaimed recording — cancelling should not silently leave something attached. That is the opposite of the submit guard, which blocks: there they were heading onward and might lose work; here they have explicitly said no. |
 | `pickRecorderMime()` | 115 |  |
 | `start()` | 134 |  |
+| `ondataavailable(e)` | 167 |  |
+| `onstop()` | 170 |  |
 | `stop()` | 205 |  |
 | `showPreview()` | 209 |  |
 | `discard()` | 224 |  |

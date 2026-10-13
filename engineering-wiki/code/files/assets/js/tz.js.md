@@ -20,15 +20,38 @@ formatters become timezone-aware by:
 
 | Function | Line | What it does |
 |---|--:|---|
-| `zoneOffsetMs(date, tz)` | 80 |  |
+| `parseUTCDate(dateStr)` | 19 | Parse a DB datetime string as UTC (append Z if it carries no zone marker), returning an absolute-instant Date. Returns null for empty input. |
+| `tzOpts(extra)` | 30 | Merge the analyst's display zone into an Intl.DateTimeFormat / toLocale* options object. Pass the options you'd normally use; the timeZone is added only when the analyst has chosen one. |
+| `ymdInZone(date)` | 38 | 'YYYY-MM-DD' for a Date, evaluated in the analyst's display zone. Use for Today/Yesterday bucketing against the same zone the time is shown in. |
+| `parseNaiveDate(str)` | 49 | Parse a NAIVE wall-clock datetime (a user-entered scheduling value stored WITHOUT a zone — change plan windows, ticket work-start, calendar events, PIR actuals) into a Date built from its literal components, with NO zone interpretation. Format the result WITHOUT tzOpts, so "2pm" reads 2pm for every analyst. These values are NOT UTC instants — never run them through parseUTCDate/tzOpts. See the "Timezones and Time Handling" design note. |
+| `zoneOffsetMs(date, tz)` | 80 | Milliseconds to ADD to a UTC instant to get the wall clock in `tz`. Derived by formatting the instant in that zone and reading the parts back as if they were UTC — the only way to get a named zone's offset, DST and all, without shipping a timezone library. |
+| `nowForInput()` | 95 | 'YYYY-MM-DDTHH:MM' for NOW in the analyst's display zone — the value to prefill a datetime-local input with. |
+| `pad(n)` | 98 |  |
+| `inputToUTC(value)` | 116 | A datetime-local value ('YYYY-MM-DDTHH:MM'), read as a wall clock in the analyst's display zone, converted to an ISO-8601 UTC string ending in Z — which is what the server expects. Sending the raw input value instead hands the server a zone-less string it can only read as UTC, so the entry lands offset by the analyst's whole UTC offset (GH #116). |
+| `utcToInput(dbStr)` | 131 | The inverse: a stored UTC datetime -> 'YYYY-MM-DDTHH:MM' in the analyst's display zone, for prefilling a picker when EDITING an existing value. |
+| `pad(n)` | 135 |  |
 | `cfg()` | 182 |  |
-| `toDate(value)` | 189 |  |
+| `toDate(value)` | 189 | Coerce a call-site argument (DB string, Date, or null) to a Date. |
 | `partsInZone(d)` | 201 |  |
-| `partsNaive(d)` | 224 |  |
-| `isoWeekday(p)` | 234 |  |
+| `partsNaive(d)` | 224 | Components of a NAIVE wall-clock Date exactly as parseNaiveDate built it — no zone interpretation, so "2pm" reads 2pm for every analyst. |
+| `isoWeekday(p)` | 234 | ISO weekday for a y/m/d triple: 1 = Monday .. 7 = Sunday, matching the index order of DateFmt::weekdays(). Computed from the components rather than the Date so it agrees with whichever zone produced them. |
 | `pad2(n)` | 239 |  |
 | `render(p, template)` | 245 |  |
+| `fmtDate(value)` | 274 |  |
+| `fmtTime(value)` | 279 |  |
+| `fmtDateTime(value)` | 284 |  |
+| `fmtDayMonth(value)` | 291 | '25 Aug' — compact chips and list rows where the year is implied. |
+| `fmtMonthYear(value)` | 297 | 'August 2026' — calendar headers. Always the full month name. |
+| `fmtWeekday(value, short)` | 303 | 'Tuesday' / 'Tue' |
 | `naive(value)` | 314 |  |
+| `fmtNaiveDate(value)` | 320 |  |
+| `fmtNaiveTime(value)` | 325 |  |
+| `fmtNaiveDateTime(value)` | 330 |  |
+| `fmtNaiveDayMonth(value)` | 336 |  |
+| `fmtNaiveWeekday(value, short)` | 342 | 'Tuesday' / 'Tue' for a naive wall-clock value. |
+| `fmtNaiveMonthYear(value)` | 349 | 'August 2026' for a naive wall-clock value — calendar headers. |
+| `fmtTemplate(value, template)` | 367 | A few places need a shape none of the functions above produce - a calendar week title that compresses "5 - 11 May 2026", say. Before #105 those wrote their own toLocale* call with a hardcoded locale, which is exactly the drift this work removes. These render an arbitrary TOKEN TEMPLATE (see the token list in includes/timezone.php) through the same renderer and the same localised month and weekday names, so a bespoke label still follows the analyst's language. |
+| `fmtNaiveTemplate(value, template)` | 372 |  |
 
 ## Loaded by
 

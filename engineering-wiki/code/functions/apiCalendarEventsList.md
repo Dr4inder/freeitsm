@@ -1,5 +1,7 @@
 # apiCalendarEventsList()
 
+GET /calendar/events
+
 ```php
 function apiCalendarEventsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

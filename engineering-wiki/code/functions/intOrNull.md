@@ -1,5 +1,7 @@
 # intOrNull()
 
+Helper: get int/bigint value or null
+
 ```php
 function intOrNull($data, $key)
 ```

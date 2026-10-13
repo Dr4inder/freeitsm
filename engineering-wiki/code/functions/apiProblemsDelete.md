@@ -1,5 +1,7 @@
 # apiProblemsDelete()
 
+DELETE /problems/{id} — permanent, mirrors delete.php (cascades children, tidies change_relations which has no FK back to problems)
+
 ```php
 function apiProblemsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```

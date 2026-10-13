@@ -46,17 +46,17 @@ status feed in the product (yet). Install-wide; no audit trail exists.
 | [apiServiceIncidentSelect()](/code/functions/apiServiceIncidentSelect.md) | 101 |  |
 | [apiSerializeIncident()](/code/functions/apiSerializeIncident.md) | 109 |  |
 | [apiLoadIncident()](/code/functions/apiLoadIncident.md) | 148 |  |
-| [apiStatusServicesList()](/code/functions/apiStatusServicesList.md) | 166 |  |
+| [apiStatusServicesList()](/code/functions/apiStatusServicesList.md) | 166 | GET /service-status/services — the health board (derived current_status inline) |
 | [apiStatusServicesGet()](/code/functions/apiStatusServicesGet.md) | 192 |  |
 | [apiStatusServicesCreate()](/code/functions/apiStatusServicesCreate.md) | 211 |  |
 | [apiStatusServicesUpdate()](/code/functions/apiStatusServicesUpdate.md) | 218 |  |
 | [apiStatusServicesDelete()](/code/functions/apiStatusServicesDelete.md) | 225 |  |
-| [apiStatusIncidentsList()](/code/functions/apiStatusIncidentsList.md) | 237 |  |
+| [apiStatusIncidentsList()](/code/functions/apiStatusIncidentsList.md) | 237 | GET /service-status/incidents |
 | [apiStatusIncidentsGet()](/code/functions/apiStatusIncidentsGet.md) | 287 |  |
-| [apiStatusIncidentsCreate()](/code/functions/apiStatusIncidentsCreate.md) | 292 |  |
-| [apiStatusIncidentsUpdate()](/code/functions/apiStatusIncidentsUpdate.md) | 300 |  |
+| [apiStatusIncidentsCreate()](/code/functions/apiStatusIncidentsCreate.md) | 292 | POST /service-status/incidents |
+| [apiStatusIncidentsUpdate()](/code/functions/apiStatusIncidentsUpdate.md) | 300 | PATCH /service-status/incidents/{id} |
 | [apiStatusIncidentsDelete()](/code/functions/apiStatusIncidentsDelete.md) | 307 |  |
-| [apiServiceIncidentStatusesList()](/code/functions/apiServiceIncidentStatusesList.md) | 317 |  |
+| [apiServiceIncidentStatusesList()](/code/functions/apiServiceIncidentStatusesList.md) | 317 | Reference lookups |
 | [apiServiceImpactLevelsList()](/code/functions/apiServiceImpactLevelsList.md) | 334 |  |
 
 ## Database

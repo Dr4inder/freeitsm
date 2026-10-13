@@ -18,14 +18,22 @@ button too). Lines are decoration, redrawn on resize.
 
 | Function | Line | What it does |
 |---|--:|---|
+| `T(k, p)` | 18 |  |
+| `TT(k)` | 19 |  |
+| `esc(s)` | 20 |  |
+| `cfg()` | 52 |  |
 | `mount(el)` | 54 |  |
 | `onClick(e)` | 80 |  |
 | `syncMode()` | 88 |  |
 | `isOff(tool)` | 90 |  |
+| `related(id)` | 91 |  |
 | `draw()` | 93 |  |
 | `nodePanel(id)` | 109 |  |
+| `chips(list)` | 113 |  |
 | `walkPanel()` | 122 |  |
 | `lines()` | 133 | Lines between the lit box and what it feeds / is fed by (explore), or between the step's boxes (walk). |
+| `rect(id)` | 138 |  |
+| `ends(a, b)` | 140 | From edge to edge, so the arrowhead is never under a box: side by side across columns, else top/bottom. |
 
 ## Loaded by
 

@@ -1,5 +1,7 @@
 # apiSoftwareLicencesList()
 
+GET /software/licences
+
 ```php
 function apiSoftwareLicencesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

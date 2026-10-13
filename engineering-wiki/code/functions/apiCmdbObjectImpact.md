@@ -1,5 +1,7 @@
 # apiCmdbObjectImpact()
 
+GET /cmdb/objects/{id}/impact — blast radius (mirrors get_object_impact.php)
+
 ```php
 function apiCmdbObjectImpact(PDO $conn, array $apiKey, array $params, array $body): void
 ```

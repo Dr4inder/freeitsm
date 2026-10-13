@@ -1,5 +1,7 @@
 # apiContractsList()
 
+GET /contracts
+
 ```php
 function apiContractsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

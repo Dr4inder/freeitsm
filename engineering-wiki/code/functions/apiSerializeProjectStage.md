@@ -1,5 +1,7 @@
 # apiSerializeProjectStage()
 
+Stages (phases / stages / sprints)
+
 ```php
 function apiSerializeProjectStage(array $s): array
 ```

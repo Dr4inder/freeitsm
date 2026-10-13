@@ -1,5 +1,7 @@
 # apiNmSuggestionsList()
 
+GET /network-diagrams/{id}/suggestions — CMDB neighbours of on-diagram objects not yet drawn.
+
 ```php
 function apiNmSuggestionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```

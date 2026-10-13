@@ -37,12 +37,12 @@ or the key's default company.
 | [apiLoadCostCentre()](/code/functions/apiLoadCostCentre.md) | 52 | The by-id gate: existence + company scope, both failing as 404. |
 | [apiCostCentreCompany()](/code/functions/apiCostCentreCompany.md) | 63 | company_id from the body/query, checked against the key - or the key's default company. |
 | [apiCostCentresReady()](/code/functions/apiCostCentresReady.md) | 71 |  |
-| [apiCostCentresList()](/code/functions/apiCostCentresList.md) | 80 |  |
-| [apiCostCentresGet()](/code/functions/apiCostCentresGet.md) | 139 |  |
-| [apiCostCentresCreate()](/code/functions/apiCostCentresCreate.md) | 147 |  |
-| [apiCostCentresUpdate()](/code/functions/apiCostCentresUpdate.md) | 162 |  |
-| [apiCostCentresDelete()](/code/functions/apiCostCentresDelete.md) | 181 |  |
-| [apiCostCentresSync()](/code/functions/apiCostCentresSync.md) | 196 |  |
+| [apiCostCentresList()](/code/functions/apiCostCentresList.md) | 80 | GET /cost-centres |
+| [apiCostCentresGet()](/code/functions/apiCostCentresGet.md) | 139 | GET /cost-centres/{id} |
+| [apiCostCentresCreate()](/code/functions/apiCostCentresCreate.md) | 147 | POST /cost-centres |
+| [apiCostCentresUpdate()](/code/functions/apiCostCentresUpdate.md) | 162 | PATCH /cost-centres/{id} |
+| [apiCostCentresDelete()](/code/functions/apiCostCentresDelete.md) | 181 | DELETE /cost-centres/{id} |
+| [apiCostCentresSync()](/code/functions/apiCostCentresSync.md) | 196 | POST /cost-centres/sync — bring a company's list into line, matched on code |
 
 ## Database
 

@@ -18,10 +18,13 @@ the view to refresh.
 | `call(body)` | 20 |  |
 | `kindIcon(kind)` | 23 |  |
 | `renderPeople()` | 25 |  |
+| `roleOpts(sel)` | 28 |  |
 | `quadrant(m)` | 61 |  |
 | `stanceChip(s)` | 62 |  |
 | `stakeMap(members)` | 63 |  |
+| `cell(q)` | 69 | Rows: high power first. Columns: low interest, then high. |
 | `openStake(id)` | 82 |  |
+| `lv(sel, v)` | 85 |  |
 | `saveStake()` | 93 |  |
 | `openMember()` | 102 |  |
 | `loadContractors()` | 115 |  |
@@ -35,6 +38,8 @@ the view to refresh.
 | `saveItem()` | 232 |  |
 | `renderRaci()` | 245 |  |
 | `cycleRaci(btn)` | 276 |  |
+| `raidPlural(t)` | 297 |  |
+| `raidLate(r)` | 299 | A dependency or a decision still open after its date is LATE - it turns health amber. |
 | `scoreClass(s)` | 302 |  |
 | `heatMap(risks)` | 304 |  |
 | `raidRow(r)` | 322 |  |
@@ -47,9 +52,10 @@ the view to refresh.
 | `raidEscalate(btn)` | 426 |  |
 | `raidAction(add, btn)` | 435 |  |
 | `openRaid(r)` | 446 |  |
+| `scale(labels)` | 448 |  |
 | `raidBody()` | 483 |  |
 | `saveRaid()` | 493 |  |
-| `raidKbHtml(r)` | 504 |  |
+| `raidKbHtml(r)` | 504 | A lesson -> a draft Knowledge article; an issue -> a new ticket (3.2.0). Only on a saved entry, only with the other module, only when the project can be changed - the server checks all three again. |
 | `raidRaiseHtml(r)` | 514 |  |
 | `raidAct(action, btn)` | 519 |  |
 | `searchTicket()` | 537 |  |
@@ -60,6 +66,7 @@ the view to refresh.
 | `openGate(stage)` | 623 |  |
 | `saveGate()` | 636 |  |
 | `wire()` | 651 |  |
+| `render(c)` | 798 |  |
 
 ## API endpoints it calls
 

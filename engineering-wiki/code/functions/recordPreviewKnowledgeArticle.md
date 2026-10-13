@@ -1,5 +1,7 @@
 # recordPreviewKnowledgeArticle()
 
+── Knowledge article ───────────────────────────────────────────────────────
+
 ```php
 function recordPreviewKnowledgeArticle(PDO $conn, int $analystId, int $id): ?array
 ```

@@ -1,5 +1,7 @@
 # apiTicketThreadList()
 
+Thread (emails / channel messages)
+
 ```php
 function apiTicketThreadList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
