@@ -23,6 +23,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2319 | Files             | Fix         | The Explorer status bar says "1 item" rather than "1 items". |
 | 2320 | Projects          | Fix         | The earned value line on a project's Budget tab no longer falls when tasks are added: each date's share of work done is measured against today's whole scope, so the line only rises; today's EV, CPI, SPI and EAC are unchanged. |
 | 2321 | Tickets           | Fix         | The Triage queue and Settings -> Activity pages follow dark mode like the rest of Tickets (theme set on the page and their colours moved to theme tokens). |
+| 2322 | System            | Feature     | System -> Engineering wiki: a GitHub-style reader for Markdown pages in engineering-wiki/ (Handbook + Code map), with its own safe Markdown renderer (raw HTML always escaped), browser-style tabs with back/forward, an address line, a split view, a right-click menu on links (Open, Open in new tab, Open beside, Copy link), a page tree and search; administrators only, the .md files never served directly. |
 
 
 
