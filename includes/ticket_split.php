@@ -42,6 +42,8 @@ require_once __DIR__ . '/services/tickets.php';
  * Shared by the preview and the split itself so the dialog can never promise
  * something different from what happens.
  *
+ * @param int $fromEmailId  the chosen message (emails.id); must be on this ticket or an exception is thrown
+ * @param bool $includeNewer  true to take every message received at or after it as well; false for just that one
  * @return array rows of [id, subject, from_name, from_address, received_datetime, direction]
  */
 function splitMessagesFrom(PDO $conn, int $ticketId, int $fromEmailId, bool $includeNewer): array {
@@ -117,6 +119,8 @@ function splitMovableCount(PDO $conn, int $ticketId): int {
  * placeholder, not content) and an id from another ticket — or one that has since moved
  * away — is refused too: a split that quietly moved fewer messages than the analyst
  * ticked would be its own small betrayal. So it throws rather than silently dropping.
+ *
+ * @param array $emailIds  the emails.id values the analyst ticked; split markers and ids not on this ticket throw
  */
 function splitMessagesByIds(PDO $conn, int $ticketId, array $emailIds): array {
     $ids = array_values(array_unique(array_filter(array_map('intval', $emailIds))));
@@ -144,6 +148,11 @@ function splitMessagesByIds(PDO $conn, int $ticketId, array $emailIds): array {
 /**
  * Split messages off a ticket into a brand-new one.
  *
+ * @param int $actorId  the analyst splitting, for the audit and the split record; 0 is stored as NULL
+ * @param int $fromEmailId  the anchor message for the older anchor path; ignored when $emailIds is given
+ * @param bool $includeNewer  anchor path only - take every newer message too
+ * @param ?string $newSubject  the new ticket's subject; null or '' uses the first moved message's subject
+ * @param ?array $emailIds  the ticked emails.id values to move; null falls back to the anchor path
  * @return array {new_ticket_id, new_ticket_number, moved: int}
  */
 function splitTicket(PDO $conn, int $actorId, int $ticketId, int $fromEmailId, bool $includeNewer, ?string $newSubject = null, ?array $emailIds = null): array {
@@ -244,6 +253,11 @@ function splitTicket(PDO $conn, int $actorId, int $ticketId, int $fromEmailId, b
  * is holding the conversation should keep holding both halves until they decide
  * otherwise. Status starts at the install's first OPEN status: the new work is by
  * definition unfinished, even if the original had been resolved.
+ *
+ * @param array $source  the source ticket row as loaded by TicketsService::loadTicket()
+ * @param array $moving  the message rows being moved, oldest first (from splitMessagesFrom/ByIds)
+ * @param int $actorId  the analyst splitting (not stored on the ticket itself)
+ * @param ?string $newSubject  the subject the analyst typed; null or '' falls back as described above
  */
 function splitCreateTicket(PDO $conn, array $source, array $moving, int $actorId, ?string $newSubject): int {
     // TRAP: the install's numbering, never a number made here - see
@@ -297,6 +311,9 @@ function splitCreateTicket(PDO $conn, array $source, array $moving, int $actorId
  * Timestamped to the FIRST moved message so it sits in the gap those messages left
  * rather than jumping to the top of the conversation — the point is to explain the
  * hole, and a marker somewhere else explains nothing.
+ *
+ * @param string $newNumber  the new ticket's number, shown in the marker
+ * @param array $moving  the message rows that moved, oldest first; the first one's time dates the marker
  */
 function splitLeaveMarker(PDO $conn, int $ticketId, string $newNumber, array $moving): int {
     $when  = $moving[0]['received_datetime'] ?? null;
@@ -319,6 +336,10 @@ function splitLeaveMarker(PDO $conn, int $ticketId, string $newNumber, array $mo
  * Writes one ticket_audit row for a split step, best-effort - a failed audit
  * write never stops the split. An actor id of 0 is stored as NULL.
  *
+ * @param int $actorId  the analyst splitting or undoing; 0 is stored as NULL
+ * @param string $field  the audit field name, e.g. 'Split' or 'Split undone'
+ * @param ?string $old  the old value, normally null
+ * @param ?string $new  the text shown in the history
  * @writes ticket_audit - the split shows in each ticket's history
  */
 function splitAudit(PDO $conn, int $ticketId, int $actorId, string $field, ?string $old, ?string $new): void {
@@ -373,6 +394,9 @@ function splitInfoFor(PDO $conn, int $ticketId): array {
  * Splits made before the moved ids were recorded (#915) cannot be undone at all —
  * there is nothing to identify which messages to send back, and guessing would
  * scatter a conversation permanently.
+ *
+ * @param int $actorId  the analyst undoing, recorded as undone_by_id; 0 is stored as NULL
+ * @param int $splitId  the ticket_splits row to reverse
  */
 function undoSplit(PDO $conn, int $actorId, int $splitId): array {
     $ctx = ActorContext::fromSession($conn);

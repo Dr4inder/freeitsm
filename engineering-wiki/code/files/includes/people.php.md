@@ -1,6 +1,6 @@
 # includes/people.php
 
-> PHP - 863 lines
+> PHP - 938 lines
 
 People (#153 step 2) — one page per person and per company.
 
@@ -36,76 +36,76 @@ still applies its own module's company rule.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [peopleScope()](/code/functions/peopleScope.md) | 40 | " AND (<col> IN (accessible) [OR <col> IS NULL])", or '' on a single-company install. |
-| [peopleCompanyMatch()](/code/functions/peopleCompanyMatch.md) | 47 | " AND <col> = ?" for one company - NULL counts as the Default company's. |
-| [peopleName()](/code/functions/peopleName.md) | 55 | The name to show for a person: preferred name, then display name, email, username, or #id. |
-| [peopleListRows()](/code/functions/peopleListRows.md) | 72 | People the analyst can see, newest-relevant first by name. |
-| [peopleCompanies()](/code/functions/peopleCompanies.md) | 112 | The companies this analyst can access, with how many people are in each. |
-| [peopleCompanyCards()](/code/functions/peopleCompanyCards.md) | 140 | The companies page's cards: `peopleCompanies()` plus a few figures for each. |
-| [personDetail()](/code/functions/personDetail.md) | 194 | Everything about one person this analyst may see, or null (unknown or out of reach). |
-| [companyDetail()](/code/functions/companyDetail.md) | 259 | Everything about one company this analyst may see, or null. |
-| [peopleTickets()](/code/functions/peopleTickets.md) | 305 | Tickets raised by the person / in the company: the latest, and how many are open. |
-| [peopleAssets()](/code/functions/peopleAssets.md) | 345 | Assets the person holds now / assets belonging to the company. |
-| [peopleContracts()](/code/functions/peopleContracts.md) | 376 | Contracts where the person / the company is the CUSTOMER (#153 step 1). |
-| [peopleDomains()](/code/functions/peopleDomains.md) | 413 | Domains the person is the customer for / the company holds. |
-| [peopleProjects()](/code/functions/peopleProjects.md) | 445 | Projects (3.2.0): for a person, the projects they are a member of (People tab of a project) with their role and their RACI duties ("Accountable for Phones working on day one"); for a company, its projects. Live ones first. Limited to the companies the analyst can access, like Projects itself. |
-| [peopleCoursesForPerson()](/code/functions/peopleCoursesForPerson.md) | 498 | The person's courses - exactly what their own My courses page shows. |
-| [peopleCoursesForCompany()](/code/functions/peopleCoursesForCompany.md) | 514 | Per course, how many people in the company have finished it and how many are part-way. |
-| [peopleForms()](/code/functions/peopleForms.md) | 539 | Forms the person submitted / people in the company submitted (from the portal). |
-| [peopleCanSeeSuppliers()](/code/functions/peopleCanSeeSuppliers.md) | 584 | Suppliers and contacts are Contracts' records: their pages need Contracts too. |
-| [peopleSupplierName()](/code/functions/peopleSupplierName.md) | 590 | The name to show for a supplier: trading name, else legal name, else #id. |
-| [peopleContactName()](/code/functions/peopleContactName.md) | 597 | The name to show for a supplier contact: first name and surname, else email, else #id. |
-| [peopleSupplierRows()](/code/functions/peopleSupplierRows.md) | 607 | Every supplier, with how many contacts and contracts each has. |
-| [supplierDetail()](/code/functions/supplierDetail.md) | 646 | Everything about one supplier this analyst may see, or null. |
-| [supplierContactDetail()](/code/functions/supplierContactDetail.md) | 686 | Everything about one supplier contact this analyst may see, or null. |
-| [peopleContractorTasks()](/code/functions/peopleContractorTasks.md) | 719 | Tasks given to a supplier, or to one person there, as a contractor (3.3.0, includes/task_contractors.php) - open first. In companies the analyst can access; a task in a members-only project they cannot see is left out. |
-| [peopleSupplierContracts()](/code/functions/peopleSupplierContracts.md) | 753 | Contracts with the supplier - the ordinary, "we buy from them" kind. |
-| [peopleSupplierAssets()](/code/functions/peopleSupplierAssets.md) | 778 | Assets bought from the supplier, in companies the analyst can access. |
-| [peopleSupplierDomains()](/code/functions/peopleSupplierDomains.md) | 810 | Domains a supplier or a contact is involved in, and how: registrar, customer, technical contact. `$who` = ['supplier' => id] or ['contact' => id]. A domain belongs to a company, so only companies the analyst can access count. |
-| [peopleBareDate()](/code/functions/peopleBareDate.md) | 853 | A bare date (a contract end, a domain expiry, a deadline) - shown as stored, never shifted by a timezone. |
+| [peopleScope()](/code/functions/peopleScope.md) | 44 | " AND (<col> IN (accessible) [OR <col> IS NULL])", or '' on a single-company install. |
+| [peopleCompanyMatch()](/code/functions/peopleCompanyMatch.md) | 55 | " AND <col> = ?" for one company - NULL counts as the Default company's. |
+| [peopleName()](/code/functions/peopleName.md) | 67 | The name to show for a person: preferred name, then display name, email, username, or #id. |
+| [peopleListRows()](/code/functions/peopleListRows.md) | 85 | People the analyst can see, newest-relevant first by name. |
+| [peopleCompanies()](/code/functions/peopleCompanies.md) | 125 | The companies this analyst can access, with how many people are in each. |
+| [peopleCompanyCards()](/code/functions/peopleCompanyCards.md) | 153 | The companies page's cards: `peopleCompanies()` plus a few figures for each. |
+| [personDetail()](/code/functions/personDetail.md) | 211 | Everything about one person this analyst may see, or null (unknown or out of reach). |
+| [companyDetail()](/code/functions/companyDetail.md) | 276 | Everything about one company this analyst may see, or null. |
+| [peopleTickets()](/code/functions/peopleTickets.md) | 326 | Tickets raised by the person / in the company: the latest, and how many are open. |
+| [peopleAssets()](/code/functions/peopleAssets.md) | 370 | Assets the person holds now / assets belonging to the company. |
+| [peopleContracts()](/code/functions/peopleContracts.md) | 405 | Contracts where the person / the company is the CUSTOMER (#153 step 1). |
+| [peopleDomains()](/code/functions/peopleDomains.md) | 446 | Domains the person is the customer for / the company holds. |
+| [peopleProjects()](/code/functions/peopleProjects.md) | 480 | Projects (3.2.0): for a person, the projects they are a member of (People tab of a project) with their role and their RACI duties ("Accountable for Phones working on day one"); for a company, its projects. Live ones first. Limited to the companies the analyst can access, like Projects itself. |
+| [peopleCoursesForPerson()](/code/functions/peopleCoursesForPerson.md) | 537 | The person's courses - exactly what their own My courses page shows. |
+| [peopleCoursesForCompany()](/code/functions/peopleCoursesForCompany.md) | 553 | Per course, how many people in the company have finished it and how many are part-way. |
+| [peopleForms()](/code/functions/peopleForms.md) | 582 | Forms the person submitted / people in the company submitted (from the portal). |
+| [peopleCanSeeSuppliers()](/code/functions/peopleCanSeeSuppliers.md) | 627 | Suppliers and contacts are Contracts' records: their pages need Contracts too. |
+| [peopleSupplierName()](/code/functions/peopleSupplierName.md) | 637 | The name to show for a supplier: trading name, else legal name, else #id. |
+| [peopleContactName()](/code/functions/peopleContactName.md) | 648 | The name to show for a supplier contact: first name and surname, else email, else #id. |
+| [peopleSupplierRows()](/code/functions/peopleSupplierRows.md) | 658 | Every supplier, with how many contacts and contracts each has. |
+| [supplierDetail()](/code/functions/supplierDetail.md) | 701 | Everything about one supplier this analyst may see, or null. |
+| [supplierContactDetail()](/code/functions/supplierContactDetail.md) | 745 | Everything about one supplier contact this analyst may see, or null. |
+| [peopleContractorTasks()](/code/functions/peopleContractorTasks.md) | 780 | Tasks given to a supplier, or to one person there, as a contractor (3.3.0, includes/task_contractors.php) - open first. In companies the analyst can access; a task in a members-only project they cannot see is left out. |
+| [peopleSupplierContracts()](/code/functions/peopleSupplierContracts.md) | 818 | Contracts with the supplier - the ordinary, "we buy from them" kind. |
+| [peopleSupplierAssets()](/code/functions/peopleSupplierAssets.md) | 847 | Assets bought from the supplier, in companies the analyst can access. |
+| [peopleSupplierDomains()](/code/functions/peopleSupplierDomains.md) | 881 | Domains a supplier or a contact is involved in, and how: registrar, customer, technical contact. `$who` = ['supplier' => id] or ['contact' => id]. A domain belongs to a company, so only companies the analyst can access count. |
+| [peopleBareDate()](/code/functions/peopleBareDate.md) | 928 | A bare date (a contract end, a domain expiry, a deadline) - shown as stored, never shifted by a timezone. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 93 | `peopleListRows` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
-| 118 | `peopleCompanies` | read [tenants](/code/tables/tenants.md) |  |
-| 122 | `peopleCompanies` | read [users](/code/tables/users.md) |  |
-| 158 | `peopleCompanyCards` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 165 | `peopleCompanyCards` | read [assets](/code/tables/assets.md) |  |
-| 170 | `peopleCompanyCards` | read [users](/code/tables/users.md) |  |
-| 173 | `peopleCompanyCards` | read [tenants](/code/tables/tenants.md) |  |
-| 176 | `peopleCompanyCards` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 202 | `personDetail` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 228 | `personDetail` | read [users](/code/tables/users.md) |  |
-| 233 | `personDetail` | read [users](/code/tables/users.md) |  |
-| 270 | `companyDetail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 276 | `companyDetail` | read [users](/code/tables/users.md) |  |
-| 313 | `peopleTickets` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 322 | `peopleTickets` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
-| 349 | `peopleAssets` | read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 351 | `peopleAssets` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md) |  |
-| 356 | `peopleAssets` | read [assets](/code/tables/assets.md) |  |
-| 357 | `peopleAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
-| 391 | `peopleContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
-| 424 | `peopleDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 457 | `peopleProjects` | read [project_members](/code/tables/project_members.md), read [projects](/code/tables/projects.md), read [project_roles](/code/tables/project_roles.md), read [analysts](/code/tables/analysts.md) |  |
-| 465 | `peopleProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 478 | `peopleProjects` | read [project_raci](/code/tables/project_raci.md), read [project_members](/code/tables/project_members.md), read [project_items](/code/tables/project_items.md) |  |
-| 519 | `peopleCoursesForCompany` | read [lms_progress](/code/tables/lms_progress.md), read [users](/code/tables/users.md), read [lms_courses](/code/tables/lms_courses.md) |  |
-| 551 | `peopleForms` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [users](/code/tables/users.md), read [tickets](/code/tables/tickets.md) |  |
-| 616 | `peopleSupplierRows` | read [contacts](/code/tables/contacts.md) |  |
-| 622 | `peopleSupplierRows` | read [contacts](/code/tables/contacts.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
-| 650 | `supplierDetail` | read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
-| 669 | `supplierDetail` | read [contacts](/code/tables/contacts.md) |  |
-| 690 | `supplierContactDetail` | read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md) |  |
-| 728 | `peopleContractorTasks` | read [projects](/code/tables/projects.md) |  |
-| 732 | `peopleContractorTasks` | read [projects](/code/tables/projects.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [contacts](/code/tables/contacts.md) |  |
-| 758 | `peopleSupplierContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
-| 781 | `peopleSupplierAssets` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 788 | `peopleSupplierAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
-| 820 | `peopleSupplierDomains` | read [contacts](/code/tables/contacts.md) |  |
-| 832 | `peopleSupplierDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 106 | `peopleListRows` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
+| 131 | `peopleCompanies` | read [tenants](/code/tables/tenants.md) |  |
+| 135 | `peopleCompanies` | read [users](/code/tables/users.md) |  |
+| 171 | `peopleCompanyCards` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 178 | `peopleCompanyCards` | read [assets](/code/tables/assets.md) |  |
+| 183 | `peopleCompanyCards` | read [users](/code/tables/users.md) |  |
+| 186 | `peopleCompanyCards` | read [tenants](/code/tables/tenants.md) |  |
+| 189 | `peopleCompanyCards` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 219 | `personDetail` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 245 | `personDetail` | read [users](/code/tables/users.md) |  |
+| 250 | `personDetail` | read [users](/code/tables/users.md) |  |
+| 287 | `companyDetail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 293 | `companyDetail` | read [users](/code/tables/users.md) |  |
+| 334 | `peopleTickets` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 343 | `peopleTickets` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
+| 374 | `peopleAssets` | read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 376 | `peopleAssets` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md) |  |
+| 381 | `peopleAssets` | read [assets](/code/tables/assets.md) |  |
+| 382 | `peopleAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 420 | `peopleContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 457 | `peopleDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 492 | `peopleProjects` | read [project_members](/code/tables/project_members.md), read [projects](/code/tables/projects.md), read [project_roles](/code/tables/project_roles.md), read [analysts](/code/tables/analysts.md) |  |
+| 500 | `peopleProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 513 | `peopleProjects` | read [project_raci](/code/tables/project_raci.md), read [project_members](/code/tables/project_members.md), read [project_items](/code/tables/project_items.md) |  |
+| 558 | `peopleCoursesForCompany` | read [lms_progress](/code/tables/lms_progress.md), read [users](/code/tables/users.md), read [lms_courses](/code/tables/lms_courses.md) |  |
+| 594 | `peopleForms` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [users](/code/tables/users.md), read [tickets](/code/tables/tickets.md) |  |
+| 667 | `peopleSupplierRows` | read [contacts](/code/tables/contacts.md) |  |
+| 673 | `peopleSupplierRows` | read [contacts](/code/tables/contacts.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
+| 705 | `supplierDetail` | read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
+| 724 | `supplierDetail` | read [contacts](/code/tables/contacts.md) |  |
+| 749 | `supplierContactDetail` | read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 789 | `peopleContractorTasks` | read [projects](/code/tables/projects.md) |  |
+| 793 | `peopleContractorTasks` | read [projects](/code/tables/projects.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [contacts](/code/tables/contacts.md) |  |
+| 823 | `peopleSupplierContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 850 | `peopleSupplierAssets` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 857 | `peopleSupplierAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 891 | `peopleSupplierDomains` | read [contacts](/code/tables/contacts.md) |  |
+| 903 | `peopleSupplierDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 ## How it hangs together
 

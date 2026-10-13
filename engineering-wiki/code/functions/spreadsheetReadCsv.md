@@ -6,11 +6,11 @@ CSV in any of the shapes Excel saves: UTF-8 with or without a BOM, or the Window
 function spreadsheetReadCsv(string $path): array
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 78.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 86.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | the CSV file on disk |
 
 **Returns:** `array`
 

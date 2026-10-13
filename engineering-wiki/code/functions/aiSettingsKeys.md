@@ -6,11 +6,11 @@ The system_settings keys for a namespace.
 function aiSettingsKeys(string $ns): array
 ```
 
-Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 120.
+Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ns` | `string` |  |  |
+| `$ns` | `string` |  | the namespace, used as the prefix of every key; not checked against the registry here |
 
 **Returns:** `array`
 

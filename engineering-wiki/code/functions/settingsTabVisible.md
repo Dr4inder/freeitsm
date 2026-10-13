@@ -6,12 +6,12 @@ Is this tab id in the visible set? Use to decide whether to emit its panel.
 function settingsTabVisible(array $visibleTabs, string $tabId): bool
 ```
 
-Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 77.
+Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$visibleTabs` | `array` |  |  |
-| `$tabId` | `string` |  |  |
+| `$visibleTabs` | `array` |  | the tabs from `settingsVisibleTabs()` |
+| `$tabId` | `string` |  | the tab's id from the manifest, e.g. 'vcenter' |
 
 **Returns:** `bool`
 

@@ -6,7 +6,7 @@ DELETE /tasks/{id} — hard delete. Children removed explicitly, not via FK casc
 function apiTasksDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 413.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 415.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

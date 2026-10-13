@@ -21,7 +21,7 @@
 |---|---|---|---|---|
 | [api/rfp-builder/resolve_conflict.php](/code/files/api/rfp-builder/resolve_conflict.php.md):53 |  | update | `resolution`, `resolution_notes`, `resolved_by_analyst_id`, `resolved_datetime` |  |
 | [api/rfp-builder/resolve_conflict.php](/code/files/api/rfp-builder/resolve_conflict.php.md):63 |  | update | `resolution`, `resolution_notes`, `resolved_by_analyst_id`, `resolved_datetime` |  |
-| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):190 |  | insert | `rfp_id`, `consolidated_id_a`, `consolidated_id_b`, `ai_explanation`, `resolution` |  |
+| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):193 |  | insert | `rfp_id`, `consolidated_id_a`, `consolidated_id_b`, `ai_explanation`, `resolution` |  |
 
 ## Read by
 
@@ -30,5 +30,5 @@
 | [api/rfp-builder/get_consolidated.php](/code/files/api/rfp-builder/get_consolidated.php.md) | L87 |  |
 | [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L38 |  |
 | [api/rfp-builder/resolve_conflict.php](/code/files/api/rfp-builder/resolve_conflict.php.md) | L45 |  |
-| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L79 |  |
+| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L98 |  |
 

@@ -6,11 +6,11 @@ Does this message address Warbot? Either "@Warbot …" anywhere in it, or a lead
 function warbotIsAddressed(string $body): bool
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 40.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 42.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `string` |  |  |
+| `$body` | `string` |  | the chat message text as posted |
 
 **Returns:** `bool`
 

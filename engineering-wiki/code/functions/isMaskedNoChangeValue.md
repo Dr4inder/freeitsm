@@ -6,11 +6,11 @@ Treat a save-time value as "leave existing untouched" when it's empty, null, or 
 function isMaskedNoChangeValue($value)
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 110.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
+| `$value` |  |  | the value submitted from a settings form (string or null) |
 
 ## Called from
 

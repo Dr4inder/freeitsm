@@ -25,14 +25,14 @@ function rfpAiGenerateFramingStreaming(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1190.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1240.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rfpId` | `int` |  |  |
-| `$sectionKey` | `string` |  |  |
-| `$onEvent` | `callable` |  |  |
+| `$rfpId` | `int` |  | the rfps id |
+| `$sectionKey` | `string` |  | which framing section: a key of RFP_AI_FRAMING_KEYS (introduction, scope, response_instructions) |
+| `$onEvent` | `callable` |  | fn(string `$eventType`, array `$data`) - passed to `rfpAiCallAnthropicStreaming()` |
 
 **Returns:** `array`
 
@@ -40,9 +40,9 @@ Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1190.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1197 | `rfpAiGenerateFramingStreaming` | read [rfps](/code/tables/rfps.md) |  |
-| 1206 | `rfpAiGenerateFramingStreaming` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md), read [rfp_categories](/code/tables/rfp_categories.md) |  |
-| 1222 | `rfpAiGenerateFramingStreaming` | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
+| 1247 | `rfpAiGenerateFramingStreaming` | read [rfps](/code/tables/rfps.md) |  |
+| 1256 | `rfpAiGenerateFramingStreaming` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md), read [rfp_categories](/code/tables/rfp_categories.md) |  |
+| 1272 | `rfpAiGenerateFramingStreaming` | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
 
 ## Calls
 

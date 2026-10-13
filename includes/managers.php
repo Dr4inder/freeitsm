@@ -105,7 +105,11 @@ function managersActive(PDO $conn): bool
     return $memo = true;
 }
 
-/** The manager's own row, or null if they cannot be a manager (missing, or left). */
+/**
+ * The manager's own row, or null if they cannot be a manager (missing, or left).
+ *
+ * @param int $managerUserId  the manager's users.id (a portal user)
+ */
 function managerRow(PDO $conn, int $managerUserId): ?array
 {
     $st = $conn->prepare("SELECT id, tenant_id, is_active FROM users WHERE id = ?");
@@ -122,6 +126,7 @@ function managerRow(PDO $conn, int $managerUserId): ?array
  *
  * ("No company" is read as the Default company, not as nowhere - see the header.)
  *
+ * @param int $managerUserId  the manager's users.id (a portal user)
  * @return int[]
  */
 function managerTeamUserIds(PDO $conn, int $managerUserId): array
@@ -168,6 +173,10 @@ function managerTeamUserIds(PDO $conn, int $managerUserId): array
  * The people one line refers to, within the base (company, not-self, leavers).
  * Used for both grants and exclusions.
  *
+ * @param array $g  one manager_grants line (grant_type, target_id, target_value); grant_type is everyone, user, group, department or reports
+ * @param int $managerUserId  the manager's users.id - the top of the reporting line for 'reports'
+ * @param string $base  the condition on `users u` from managerReachSql()
+ * @param array $baseArgs  the parameters for $base
  * @return int[]
  */
 function managerGrantMembers(PDO $conn, array $g, int $managerUserId, string $base, array $baseArgs): array
@@ -248,13 +257,19 @@ function managerReachSql(PDO $conn, array $m): array
  * The company a row belongs to, where NO company (NULL) means the Default
  * company - the convention every company-owned row follows. A ticket nobody has
  * routed and a person nobody has filed are both Default's.
+ *
+ * @param mixed $tenantId  a tenant_id as stored (int, numeric string, null or ''); null or '' means the Default company
  */
 function managerCompany(PDO $conn, $tenantId): int
 {
     return ($tenantId === null || $tenantId === '') ? getDefaultTenantId($conn) : (int)$tenantId;
 }
 
-/** Does this portal user manage anybody? Decides whether "Team tickets" is shown. */
+/**
+ * Does this portal user manage anybody? Decides whether "Team tickets" is shown.
+ *
+ * @param int $userId  the portal user's users.id
+ */
 function managerHasTeam(PDO $conn, int $userId): bool
 {
     return managerTeamUserIds($conn, $userId) !== [];
@@ -266,6 +281,7 @@ function managerHasTeam(PDO $conn, int $userId): bool
  * master switch is pretended; a missing table still gives nobody. The memo is
  * put back afterwards, so nothing else in the request sees the pretence.
  *
+ * @param int $managerUserId  the manager's users.id (a portal user)
  * @return int[]
  */
 function managerTeamPreviewIds(PDO $conn, int $managerUserId): array
@@ -297,6 +313,7 @@ function managerLinesEditable(PDO $conn): bool
  * THE question every portal endpoint asks: may this portal user see this ticket,
  * and as whom?
  *
+ * @param int $userId  the signed-in portal user's users.id; 0 or less gives null
  * @return array|null null = no (and the caller answers "not found", never
  *         "forbidden"). Otherwise:
  *         role      'requester' | 'manager'
@@ -435,6 +452,9 @@ function managersNotifyNewTicket(PDO $conn, int $ticketId): void
  * email is created from cron, where there is no request to take a host from.
  *
  * English, like the portal's other system emails (includes/self_service_email.php).
+ *
+ * @param int $managerId  the manager's users.id; nothing is sent if they have no email address
+ * @param array $t  the new ticket (id, ticket_number, subject, requester_name)
  */
 function managersEmailNewTicket(PDO $conn, int $managerId, array $t): bool
 {

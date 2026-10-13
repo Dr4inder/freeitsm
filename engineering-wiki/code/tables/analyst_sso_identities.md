@@ -16,15 +16,15 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):191 |  | update | `last_login_datetime`, `email` |  |
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):260 |  | insert | `analyst_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime` |  |
-| [includes/ldap.php](/code/files/includes/ldap.php.md):601 | `ldapResolveAnalyst` | update | `last_login_datetime`, `email` |  |
-| [includes/ldap.php](/code/files/includes/ldap.php.md):653 | `ldapResolveAnalyst` | insert | `analyst_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime` |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):195 |  | update | `last_login_datetime`, `email` |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):264 |  | insert | `analyst_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime` |  |
+| [includes/ldap.php](/code/files/includes/ldap.php.md):648 | `ldapResolveAnalyst` | update | `last_login_datetime`, `email` |  |
+| [includes/ldap.php](/code/files/includes/ldap.php.md):700 | `ldapResolveAnalyst` | insert | `analyst_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md) | L169 |  |
-| [includes/ldap.php](/code/files/includes/ldap.php.md) | ldapResolveAnalyst L574 |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md) | L173 |  |
+| [includes/ldap.php](/code/files/includes/ldap.php.md) | ldapResolveAnalyst L621 |  |
 

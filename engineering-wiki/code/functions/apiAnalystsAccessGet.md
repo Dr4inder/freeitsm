@@ -6,7 +6,7 @@ GET /analysts/{id}/access
 function apiAnalystsAccessGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), line 83.
+Defined in [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), line 85.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

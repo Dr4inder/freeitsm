@@ -6,12 +6,12 @@ The extra certificate hosts, cleaned: one per entry, only ones that belong to th
 function domainParseSslHosts(?string $raw, string $domain): array
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 105.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `?string` |  |  |
-| `$domain` | `string` |  |  |
+| `$raw` | `?string` |  | the extra hosts as typed - separated by spaces, commas or semicolons; null for none |
+| `$domain` | `string` |  | the stored domain name the hosts must belong to |
 
 **Returns:** `array`
 

@@ -6,11 +6,11 @@ Returns the connector line style when it is a known one, otherwise answers 422 l
 function apiNmValidateLineStyle(string $style): string
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 311.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 356.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$style` | `string` |  |  |
+| `$style` | `string` |  | the requested connector line style - solid or dashed |
 
 **Returns:** `string`
 

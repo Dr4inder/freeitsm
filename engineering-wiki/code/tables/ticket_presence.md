@@ -16,14 +16,14 @@ Collision detection (#934): who is looking at which ticket right now. Ephemeral 
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md):80 | `presenceHeartbeat` | insert | `ticket_id`, `analyst_id`, `last_seen`, `is_composing` |  |
-| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md):133 | `presenceLeave` | delete |  |  |
-| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md):137 | `presenceLeave` | delete |  |  |
-| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md):154 | `presencePurge` | delete |  |  |
+| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md):82 | `presenceHeartbeat` | insert | `ticket_id`, `analyst_id`, `last_seen`, `is_composing` |  |
+| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md):135 | `presenceLeave` | delete |  |  |
+| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md):139 | `presenceLeave` | delete |  |  |
+| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md):156 | `presencePurge` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md) | presenceOthers L101 |  |
+| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md) | presenceOthers L103 |  |
 

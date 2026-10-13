@@ -19,12 +19,12 @@ in everything" would import.
 function cardDavScanBook(array $cfg, string $bookHref): array
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 514.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 536.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$bookHref` | `string` |  |  |
+| `$cfg` | `array` |  | request settings from `cardDavConfigFromProvider()` |
+| `$bookHref` | `string` |  | the address book's href as the server listed it |
 
 **Returns:** `array`
 

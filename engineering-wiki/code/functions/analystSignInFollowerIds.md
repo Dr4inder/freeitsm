@@ -6,7 +6,7 @@ Every analyst who follows their team - used when a provider is deleted.
 function analystSignInFollowerIds(PDO $conn): array
 ```
 
-Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 181.
+Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 186.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 186 | `analystSignInFollowerIds` | read [analysts](/code/tables/analysts.md) |  |
+| 191 | `analystSignInFollowerIds` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

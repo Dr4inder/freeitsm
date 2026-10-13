@@ -150,6 +150,11 @@ function aiProviderChat(array $cfg, array $opts): array
 
 /**
  * Sends one system + user prompt to the Anthropic Messages API and returns the joined text blocks with token counts and the stop reason.
+ *
+ * @param string $model  the Anthropic model id, already trimmed and non-empty
+ * @param string $apiKey  the plaintext API key, sent as x-api-key
+ * @param bool $verify  the feature's verify-SSL setting, passed on to aiProviderHttpPost()
+ * @param array $opts  aiProviderChat()'s options with max_tokens and temperature filled in; system and user are read
  * @return array  {content, tokens_in, tokens_out, finish_reason, reasoning_tokens (always null here)}
  */
 function aiProviderCallAnthropic(string $model, string $apiKey, bool $verify, array $opts): array
@@ -202,6 +207,8 @@ function aiProviderCallAnthropic(string $model, string $apiKey, bool $verify, ar
  * The endpoint is normalised: administrators copy it out of the Azure portal
  * with or without a trailing slash, and sometimes with `/openai` already on the
  * end. Both are the same intention and neither should be a support question.
+ *
+ * @param array $cfg  the AI settings - azure_endpoint, azure_deployment and azure_api_version are read
  */
 function aiAzureChatUrl(array $cfg): string
 {
@@ -230,7 +237,11 @@ function aiAzureChatUrl(array $cfg): string
          . '/chat/completions?api-version=' . rawurlencode($version);
 }
 
-/** An API version of "v1" means Azure's newer route, which has no api-version. */
+/**
+ * An API version of "v1" means Azure's newer route, which has no api-version.
+ *
+ * @param array $cfg  the AI settings - only azure_api_version is read
+ */
 function aiAzureIsV1(array $cfg): bool
 {
     return strtolower(trim((string)($cfg['azure_api_version'] ?? ''))) === 'v1';
@@ -245,6 +256,8 @@ function aiAzureIsV1(array $cfg): bool
  * nothing on that screen says which box was wrong. Used only to EXPLAIN a
  * failure, never to refuse a value: Azure publishes new versions and this list
  * will fall behind, which costs nothing because a working call never asks.
+ *
+ * @param string $v  the api-version as typed by the administrator; '' counts as valid (the default is used)
  */
 function aiAzureApiVersionLooksValid(string $v): bool
 {
@@ -267,6 +280,13 @@ function aiAzureApiVersionLooksValid(string $v): bool
  *
  * An empty $model omits the field entirely, which is what a deployment-based
  * endpoint wants.
+ *
+ * @param string $url  the full chat-completions URL, including Azure's api-version query string where needed
+ * @param string $model  the model id to send; '' leaves the model field out (an Azure deployment-based endpoint)
+ * @param array $authHeaders  the auth header lines - 'Authorization: Bearer ...' or Azure's 'api-key: ...'
+ * @param bool $verify  the feature's verify-SSL setting, passed on to aiProviderHttpPost()
+ * @param array $opts  aiProviderChat()'s options with max_tokens and temperature filled in; system, user, reasoning read
+ * @param array $extraHeaders  further header lines, such as OpenRouter's HTTP-Referer and X-Title; [] for none
  */
 function aiProviderCallOpenAICompatible(string $url, string $model, array $authHeaders, bool $verify, array $opts, array $extraHeaders = []): array
 {
@@ -344,6 +364,11 @@ function aiProviderCallOpenAICompatible(string $url, string $model, array $authH
  * it — so this cannot loop, and it cannot fire on an unrelated 400 such as a bad
  * key or a content filter. $payload is passed by reference so a caller making
  * several calls (tool calling) learns the fix once rather than per round.
+ *
+ * @param string $url  the full chat-completions URL to POST to
+ * @param array $headers  every header line to send, auth and content-type included
+ * @param array $payload  the request body before JSON encoding; by reference, so a corrected field stays corrected
+ * @param bool $verify  the feature's verify-SSL setting, passed on to aiProviderHttpPost()
  */
 function aiOpenAICompatPost(string $url, array $headers, array &$payload, bool $verify): array
 {
@@ -394,6 +419,9 @@ function aiProviderTraceTake(): array
  * on - or '' when the error says it plainly enough already.
  *
  * Shared by the Test button and debug tool D014, so the two never disagree.
+ *
+ * @param array $cfg  the AI settings the call used - provider, model, azure_deployment and azure_api_version are read
+ * @param string $msg  the failure's message, as thrown by aiProviderHttpPost() (includes "(HTTP nnn)")
  */
 function aiExplainFailure(array $cfg, string $msg): string
 {
@@ -468,6 +496,8 @@ function aiExplainFailure(array $cfg, string $msg): string
  * Before this it fell through to api.openai.com with the Azure key, so tool
  * calling - Warbot - could not work on Azure at all.
  *
+ * @param array    $cfg      the AI settings - provider, model, api_key, verify_ssl, base_url and azure_* are read
+ * @param array    $opts     system, user, history, max_rounds (1-6, default 4), max_tokens, temperature, referer, title
  * @param array    $tools    [['name'=>…,'description'=>…,'schema'=>[JSON Schema]], …]
  * @param callable $runTool  fn(string $name, array $args): string
  * @return array ['content','calls'=>[['name','args','result'],…],'tokens_in','tokens_out','provider','model','duration_ms']
@@ -657,7 +687,17 @@ function aiProviderChatTools(array $cfg, array $opts, array $tools, callable $ru
     return aiToolsResult('', $calls, $tokIn, $tokOut, $provider, $model, $start);
 }
 
-/** Shared return shape for aiProviderChatTools. */
+/**
+ * Shared return shape for aiProviderChatTools.
+ *
+ * @param string $content  the model's final answer text; '' when the round limit ran out
+ * @param array $calls  every tool call made, as [['name','args','result'], ...]
+ * @param int $tokIn  input tokens summed over every round
+ * @param int $tokOut  output tokens summed over every round
+ * @param string $provider  the provider used (anthropic, openai, openrouter or azure)
+ * @param string $model  the model id, or the Azure deployment name
+ * @param float $start  microtime(true) when the conversation began, for duration_ms
+ */
 function aiToolsResult(string $content, array $calls, int $tokIn, int $tokOut, string $provider, string $model, float $start): array
 {
     return [
@@ -674,6 +714,11 @@ function aiToolsResult(string $content, array $calls, int $tokIn, int $tokOut, s
 /**
  * POST with retry/backoff on 429 / 5xx / network errors. Ported from
  * rfpAiHttpPostWithRetry so this file stands alone.
+ *
+ * @param string $url  the full URL to POST to
+ * @param array $headers  every header line to send
+ * @param string $body  the request body, already JSON-encoded
+ * @param bool $verifySsl  the feature's verify-SSL setting; not applied - sslApplyCurl() uses the install-wide setting
  */
 function aiProviderHttpPost(string $url, array $headers, string $body, bool $verifySsl): array
 {
@@ -739,6 +784,7 @@ function aiProviderHttpPost(string $url, array $headers, string $body, bool $ver
  * Cached in system_settings as JSON for 24h to keep the model picker snappy.
  * Falls back to a stale cache if a refresh fetch fails.
  *
+ * @param bool $force  true to fetch afresh even when the 24-hour cache is still fresh
  * @return array{models: array<int,array>, cached_at: int, stale: bool}
  *   models: [{id,name,context_length,prompt_price,completion_price}]
  */

@@ -6,11 +6,11 @@ A section's number, from the registry. '' when the registry does not know it.
 function helpNum(string $id): string
 ```
 
-Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 40.
+Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$id` | `string` |  |  |
+| `$id` | `string` |  | the section's key in the topic's 'sections' registry |
 
 **Returns:** `string`
 

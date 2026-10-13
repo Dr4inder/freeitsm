@@ -6,7 +6,7 @@ Index one source row, or update it if already indexed.
 function searchCorpusUpsert(PDO $conn, array $doc): void
 ```
 
-Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 94.
+Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 97.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 101 | `searchCorpusUpsert` | **insert** [search_documents](/code/tables/search_documents.md) (`source_type`, `source_id`, `ticket_id`, `tenant_id`, `tenant_scope`, `is_internal`, `title`, `body`, `source_datetime`, `indexed_datetime`) |  |
+| 104 | `searchCorpusUpsert` | **insert** [search_documents](/code/tables/search_documents.md) (`source_type`, `source_id`, `ticket_id`, `tenant_id`, `tenant_scope`, `is_internal`, `title`, `body`, `source_datetime`, `indexed_datetime`) |  |
 
 ## Called from
 

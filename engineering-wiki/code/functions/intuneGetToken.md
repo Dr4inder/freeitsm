@@ -6,11 +6,11 @@ Acquire a Graph access token via client-credentials. Cached for the lifetime of 
 function intuneGetToken(array $settings): string
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 51.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 53.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$settings` | `array` |  |  |
+| `$settings` | `array` |  | the connection settings from `intuneGetSettings()` (tenant_id, client_id, client_secret are used) |
 
 **Returns:** `string`
 

@@ -6,7 +6,7 @@ Should the time-recording UI appear for a ticket belonging to this company?
 function timeTrackingUiOn(PDO $conn, ?int $tenantId): bool
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 154.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 165.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

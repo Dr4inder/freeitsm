@@ -32,6 +32,8 @@ const SPREADSHEET_MAX_ROWS      = 50000;
  * workbook). Every value is a string exactly as the person sees it, trimmed.
  * Blank rows are dropped.
  *
+ * @param string $path  the uploaded file on disk (the upload's tmp_name) - untrusted content
+ * @param string $originalName  the file name the person uploaded; only its extension is read, to spot an old .xls
  * @throws RuntimeException with a message fit to show a person
  * @return array<int, array<int, string>>
  */
@@ -61,7 +63,11 @@ function spreadsheetRead(string $path, string $originalName): array
     return $out;
 }
 
-/** Strip control characters (bar tab) - a pasted line break must not reach the database. */
+/**
+ * Strip control characters (bar tab) - a pasted line break must not reach the database.
+ *
+ * @param string $v  one cell's text
+ */
 function spreadsheetCleanText(string $v): string
 {
     return preg_replace('/[\x00-\x08\x0B-\x1F\x7F]/u', ' ', $v) ?? $v;
@@ -74,6 +80,8 @@ function spreadsheetCleanText(string $v): string
 /**
  * CSV in any of the shapes Excel saves: UTF-8 with or without a BOM, or the
  * Windows code page; comma, semicolon (Excel in most of Europe) or tab.
+ *
+ * @param string $path  the CSV file on disk
  */
 function spreadsheetReadCsv(string $path): array
 {
@@ -117,6 +125,9 @@ function spreadsheetReadCsv(string $path): array
  * A cell that starts with = + - @ is prefixed with ' so a spreadsheet does not
  * run it as a formula ("CSV injection"); the reader takes the ' off again. A
  * plain negative number is left alone.
+ *
+ * @param array $header  the column headings, in order
+ * @param array $rows  the data rows, each a list of cell values in column order
  */
 function spreadsheetWriteCsv(array $header, array $rows): string
 {
@@ -140,6 +151,9 @@ function spreadsheetWriteCsv(array $header, array $rows): string
  * A one-sheet .xlsx. Every cell is an inline TEXT cell, never a number - that is
  * the point (see the file header). The header row is bold and frozen.
  *
+ * @param string $sheetName  the worksheet's name; cut to 31 characters with \ / ? * [ ] : made spaces
+ * @param array $header  the column headings, in order (bold, frozen row)
+ * @param array $rows  the data rows, each a list of cell values in column order; every cell is written as text
  * @param array<int,int> $widths optional column widths in characters
  */
 function spreadsheetWriteXlsx(string $sheetName, array $header, array $rows, array $widths = []): string
@@ -210,7 +224,11 @@ function spreadsheetWriteXlsx(string $sheetName, array $header, array $rows, arr
     return spreadsheetZipStore($files);
 }
 
-/** A zip with every entry STORED (no compression) - valid, and all Excel needs. */
+/**
+ * A zip with every entry STORED (no compression) - valid, and all Excel needs.
+ *
+ * @param array $files  [path inside the zip => file bytes], written in that order
+ */
 function spreadsheetZipStore(array $files): string
 {
     $data = ''; $central = ''; $n = 0;
@@ -233,7 +251,11 @@ function spreadsheetZipStore(array $files): string
 //  XLSX - read
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** The first worksheet of an .xlsx as rows of display strings. */
+/**
+ * The first worksheet of an .xlsx as rows of display strings.
+ *
+ * @param string $path  the .xlsx file on disk - untrusted content
+ */
 function spreadsheetReadXlsx(string $path): array
 {
     $zip = spreadsheetZipOpen($path);
@@ -315,7 +337,11 @@ function spreadsheetReadXlsx(string $path): array
     return $rows;
 }
 
-/** "BC12" -> 54 (zero-based column). */
+/**
+ * "BC12" -> 54 (zero-based column).
+ *
+ * @param string $ref  a cell reference such as 'BC12' (any case)
+ */
 function spreadsheetColIndex(string $ref): ?int
 {
     if (!preg_match('/^([A-Z]+)\d*$/', strtoupper($ref), $m)) return null;
@@ -324,7 +350,11 @@ function spreadsheetColIndex(string $ref): ?int
     return $n - 1;
 }
 
-/** The text of an <si> or <is>: plain <t>, or rich-text runs <r><t>. Phonetic runs are skipped. */
+/**
+ * The text of an <si> or <is>: plain <t>, or rich-text runs <r><t>. Phonetic runs are skipped.
+ *
+ * @param mixed $node  a SimpleXMLElement for an <si> or <is> element, or null
+ */
 function spreadsheetInlineText($node): string
 {
     if (!$node) return '';
@@ -337,6 +367,8 @@ function spreadsheetInlineText($node): string
 /**
  * Parses one XML part of an .xlsx file safely (no network, no entity expansion); null when
  * empty or not valid XML.
+ *
+ * @param ?string $xml  one XML part's bytes from the workbook - untrusted; null or '' gives null
  */
 function spreadsheetXml(?string $xml)
 {
@@ -351,6 +383,8 @@ function spreadsheetXml(?string $xml)
 
 /**
  * Read a zip's central directory. Returns [bytes, [name => entry]].
+ *
+ * @param string $path  the zip (.xlsx) file on disk - untrusted content
  * @throws RuntimeException
  */
 function spreadsheetZipOpen(string $path): array
@@ -375,7 +409,12 @@ function spreadsheetZipOpen(string $path): array
     return ['bin' => $bin, 'entries' => $entries, 'inflated' => 0];
 }
 
-/** One entry's bytes, or null when it is not there. */
+/**
+ * One entry's bytes, or null when it is not there.
+ *
+ * @param array $zip  the open zip from spreadsheetZipOpen(), by reference - its running inflated total is updated
+ * @param string $name  the entry's path inside the zip, e.g. 'xl/workbook.xml'
+ */
 function spreadsheetZipGet(array &$zip, string $name): ?string
 {
     $h = $zip['entries'][$name] ?? null;

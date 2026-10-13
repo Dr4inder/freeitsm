@@ -97,7 +97,7 @@ function latestBriefing(PDO $conn, int $projectId): ?array
 
 ### shape
 
-*private static* - line 73
+*private static* - line 77
 
 A project_reports row as the API returns it.
 
@@ -107,11 +107,11 @@ function shape(array $r): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | a project_reports row joined with the created_by / updated_by / approved_by names |
 
 ### briefing
 
-*public static* - line 87
+*public static* - line 95
 
 The Overview's briefing: the latest, or a fresh one if it is older than the cooldown.
 
@@ -124,20 +124,20 @@ function briefing(PDO $conn, ActorContext $ctx, int $projectId, bool $refresh): 
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$refresh` | `bool` |  |  |
+| `$refresh` | `bool` |  | true to ask the AI for a new briefing unless the latest is under 10 minutes old; false returns the latest |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 96 | `ProjectReportsService::briefing` | **delete** [project_reports](/code/tables/project_reports.md) |  |
-| 97 | `ProjectReportsService::briefing` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 104 | `ProjectReportsService::briefing` | **delete** [project_reports](/code/tables/project_reports.md) |  |
+| 105 | `ProjectReportsService::briefing` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### draftWithAi
 
-*public static* - line 104
+*public static* - line 117
 
 Draft a report with the AI. Saved as a draft for a person to edit and approve.
 
@@ -156,20 +156,20 @@ function draftWithAi(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
-| `$days` | `int` | `14` |  |
+| `$kind` | `string` |  | the report kind: 'highlight', 'exception', 'checkpoint' or 'closure' |
+| `$days` | `int` | `14` | how many days back the facts cover, clamped to 1..90 |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `ProjectReportsService::draftWithAi` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 126 | `ProjectReportsService::draftWithAi` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### save
 
-*public static* - line 122
+*public static* - line 140
 
 Write a report by hand (no id) or edit a draft (id).
 
@@ -182,20 +182,20 @@ function save(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (an existing draft to edit; absent or 0 writes a new one), title (required, up to 200), body, kind (new reports only, default 'highlight') |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 136 | `ProjectReportsService::save` | **update** [project_reports](/code/tables/project_reports.md) (`title`, `body`, `ai_edited`, `updated_by_id`, `updated_datetime`) |  |
-| 142 | `ProjectReportsService::save` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 154 | `ProjectReportsService::save` | **update** [project_reports](/code/tables/project_reports.md) (`title`, `body`, `ai_edited`, `updated_by_id`, `updated_datetime`) |  |
+| 160 | `ProjectReportsService::save` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### approve
 
-*public static* - line 151
+*public static* - line 173
 
 Approve a draft. The project manager's, the creator's or a Projects manager's.
 
@@ -208,19 +208,19 @@ function approve(PDO $conn, ActorContext $ctx, int $projectId, int $id): void
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the report (project_reports.id) to approve |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 160 | `ProjectReportsService::approve` | **update** [project_reports](/code/tables/project_reports.md) (`status`, `approved_by_id`, `approved_datetime`) |  |
+| 182 | `ProjectReportsService::approve` | **update** [project_reports](/code/tables/project_reports.md) (`status`, `approved_by_id`, `approved_datetime`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### delete
 
-*public static* - line 166
+*public static* - line 192
 
 Delete a draft (anyone who may change the project) or an approved report (those who may approve).
 
@@ -233,19 +233,19 @@ function delete(PDO $conn, ActorContext $ctx, int $projectId, int $id): void
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the report (project_reports.id) to delete |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 177 | `ProjectReportsService::delete` | **delete** [project_reports](/code/tables/project_reports.md) |  |
+| 203 | `ProjectReportsService::delete` | **delete** [project_reports](/code/tables/project_reports.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### scheduleReady
 
-*public static* - line 189
+*public static* - line 215
 
 Have the 3.3.0 columns arrived (projects.report_schedule, project_reports.sent_*)?
 
@@ -261,12 +261,12 @@ function scheduleReady(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 193 | `ProjectReportsService::scheduleReady` | read [projects](/code/tables/projects.md) |  |
-| 193 | `ProjectReportsService::scheduleReady` | read [project_reports](/code/tables/project_reports.md) |  |
+| 219 | `ProjectReportsService::scheduleReady` | read [projects](/code/tables/projects.md) |  |
+| 219 | `ProjectReportsService::scheduleReady` | read [project_reports](/code/tables/project_reports.md) |  |
 
 ### schedule
 
-*public static* - line 200
+*public static* - line 226
 
 The project's schedule: {schedule: off|weekly|fortnightly|monthly, kind}.
 
@@ -283,13 +283,13 @@ function schedule(PDO $conn, int $projectId): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 203 | `ProjectReportsService::schedule` | read [projects](/code/tables/projects.md) |  |
+| 229 | `ProjectReportsService::schedule` | read [projects](/code/tables/projects.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### setSchedule
 
-*public static* - line 210
+*public static* - line 241
 
 Set it - anyone who may change the project.
 
@@ -308,20 +308,20 @@ function setSchedule(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$schedule` | `string` |  |  |
-| `$kind` | `string` |  |  |
+| `$schedule` | `string` |  | 'off', 'weekly', 'fortnightly' or 'monthly' |
+| `$kind` | `string` |  | the kind each scheduled draft is: 'highlight', 'checkpoint' or 'exception' |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 219 | `ProjectReportsService::setSchedule` | **update** [projects](/code/tables/projects.md) (`report_schedule`, `report_schedule_kind`) |  |
+| 250 | `ProjectReportsService::setSchedule` | **update** [projects](/code/tables/projects.md) (`report_schedule`, `report_schedule_kind`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### recipients
 
-*public static* - line 228
+*public static* - line 259
 
 Who a report can be sent to from the project itself: its members with an email address - analysts, the analysts in a member team, and People - and the project manager. Each once, by address.
 
@@ -338,14 +338,14 @@ function recipients(PDO $conn, int $projectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 237 | `ProjectReportsService::recipients` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 242 | `ProjectReportsService::recipients` | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 268 | `ProjectReportsService::recipients` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 273 | `ProjectReportsService::recipients` | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### send
 
-*public static* - line 259
+*public static* - line 294
 
 Email an APPROVED report (3.3.0) - the people who may approve it may send it, to any addresses (the page offers the project's members). Sent one by one through the system mailbox (ssSendSystemEmail, logged as "Project report"). Returns ['sent' => [...], 'failed' => [...]]; what was sent is recorded on the report and in the history.
 
@@ -365,21 +365,21 @@ function send(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$emails` | `array` |  |  |
-| `$note` | `string` | `''` |  |
+| `$id` | `int` |  | the approved report (project_reports.id) to send |
+| `$emails` | `array` |  | addresses to send to; each entry may hold several split by spaces, commas or semicolons (at most 50) |
+| `$note` | `string` | `''` | an optional covering note shown above the report, cut to 2000 characters |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 293 | `ProjectReportsService::send` | **update** [project_reports](/code/tables/project_reports.md) (`sent_datetime`, `sent_by_id`, `sent_to`) |  |
+| 328 | `ProjectReportsService::send` | **update** [project_reports](/code/tables/project_reports.md) (`sent_datetime`, `sent_by_id`, `sent_to`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### emailHtml
 
-*public static* - line 301
+*public static* - line 343
 
 The email: the report as the page shows it (the same three marks), in plain inline styles.
 
@@ -389,14 +389,14 @@ function emailHtml(array $project, array $report, string $sender, string $note):
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `array` |  |  |
-| `$report` | `array` |  |  |
-| `$sender` | `string` |  |  |
-| `$note` | `string` |  |  |
+| `$project` | `array` |  | the project row (needs id and name) |
+| `$report` | `array` |  | the project_reports row (title, body, approved_datetime) |
+| `$sender` | `string` |  | the name shown as "sent by" |
+| `$note` | `string` |  | the covering note; '' for none |
 
 ### markdownHtml
 
-*public static* - line 315
+*public static* - line 361
 
 Escape, then headings, bullets and **bold** - the marks the AI is told to use (projects-reports.js `md()`).
 
@@ -406,11 +406,11 @@ function markdownHtml(string $text): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
+| `$text` | `string` |  | the report body in the AI's limited markdown (headings, bullets, **bold**) - untrusted, escaped here |
 
 ### runSchedules
 
-*public static* - line 340
+*public static* - line 386
 
 Scheduled drafts (3.3.0), from `projectAlertsScan()`: each ACTIVE project with a schedule gets one draft per period - weekly (ISO week), fortnightly (each even-numbered ISO week's pair) or monthly - drafted by the AI when it is set up, otherwise a draft holding the facts to write from. Never approved by itself: the project manager is told (project.report_drafted) and approves, edits or deletes it. One per period on the ledger, however often the scan runs.
 
@@ -427,14 +427,14 @@ function runSchedules(PDO $conn, ?int $projectId = null): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 343 | `ProjectReportsService::runSchedules` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 349 | `ProjectReportsService::runSchedules` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 389 | `ProjectReportsService::runSchedules` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 395 | `ProjectReportsService::runSchedules` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
 
 **Called from:** [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md)
 
 ### periodKey
 
-*public static* - line 377
+*public static* - line 428
 
 This period's ledger fingerprint, or null when this is not a drafting period (fortnightly, odd weeks).
 
@@ -444,12 +444,12 @@ function periodKey(string $schedule, ?int $now = null): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$schedule` | `string` |  |  |
-| `$now` | `?int` | `null` |  |
+| `$schedule` | `string` |  | 'weekly', 'fortnightly' or 'monthly'; anything else gives null |
+| `$now` | `?int` | `null` | a Unix timestamp to work from; null means now |
 
 ### draftScheduled
 
-*private static* - line 390
+*private static* - line 445
 
 One scheduled draft: the AI's when it is set up and answers, otherwise the facts.
 
@@ -460,17 +460,17 @@ function draftScheduled(PDO $conn, array $p): int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$p` | `array` |  |  |
+| `$p` | `array` |  | the projects row (with report_schedule and report_schedule_kind) as loaded by `runSchedules()` |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 411 | `ProjectReportsService::draftScheduled` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 466 | `ProjectReportsService::draftScheduled` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 ### load
 
-*private static* - line 420
+*private static* - line 479
 
 Loads one report (not a briefing) of the project; throws not found otherwise.
 
@@ -482,11 +482,11 @@ function load(PDO $conn, int $projectId, int $id): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the report (project_reports.id) to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 422 | `ProjectReportsService::load` | read [project_reports](/code/tables/project_reports.md) |  |
+| 481 | `ProjectReportsService::load` | read [project_reports](/code/tables/project_reports.md) |  |
 

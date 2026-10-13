@@ -13,12 +13,12 @@ the plan as it stood before the change request that moved it.
 function demoAfterImport(PDO $conn, string $module): void
 ```
 
-Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 36.
+Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 38.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$module` | `string` |  |  |
+| `$module` | `string` |  | the DEMO_MODULES key just imported, e.g. 'tasks'; only 'tasks' does anything |
 
 **Returns:** `void`
 
@@ -26,8 +26,8 @@ Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 38 | `demoAfterImport` | read [project_baselines](/code/tables/project_baselines.md) |  |
-| 43 | `demoAfterImport` | **update** [project_baselines](/code/tables/project_baselines.md) (`snapshot`, `start_date`, `target_end_date`, `budget_planned`, `task_count`, `estimate_hours`, `must_count`) |  |
+| 40 | `demoAfterImport` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 45 | `demoAfterImport` | **update** [project_baselines](/code/tables/project_baselines.md) (`snapshot`, `start_date`, `target_end_date`, `budget_planned`, `task_count`, `estimate_hours`, `must_count`) |  |
 
 ## Calls
 

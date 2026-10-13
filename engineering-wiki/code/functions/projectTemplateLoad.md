@@ -6,13 +6,13 @@
 function projectTemplateLoad(PDO $conn, string $key, bool $evenHidden = false): ?array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 367.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 385.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$evenHidden` | `bool` | `false` |  |
+| `$key` | `string` |  | the template key: 'builtin:<name>' or 'saved:<id>' |
+| `$evenHidden` | `bool` | `false` | true to load a hidden built-in or an inactive saved template too |
 
 **Returns:** `?array`
 
@@ -20,7 +20,7 @@ Defined in [includes/projects/templates.php](/code/files/includes/projects/templ
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 377 | `projectTemplateLoad` | read [project_templates](/code/tables/project_templates.md) |  |
+| 395 | `projectTemplateLoad` | read [project_templates](/code/tables/project_templates.md) |  |
 
 ## Calls
 

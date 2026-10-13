@@ -1,6 +1,6 @@
 # includes/self_service_email.php
 
-> PHP - 160 lines
+> PHP - 180 lines
 
 Self-service system emails (account verification, etc.).
 
@@ -14,11 +14,11 @@ logic (Gmail API / Microsoft Graph / IMAP-SMTP).
 | Function | Line | What it does |
 |---|--:|---|
 | [ssGetSendingMailbox()](/code/functions/ssGetSendingMailbox.md) | 15 | First active, send-capable mailbox (has credentials), decrypted. Null if none. |
-| [ssSendSystemEmail()](/code/functions/ssSendSystemEmail.md) | 32 | Send a system email to one recipient. Returns true on success, false if no mailbox is configured or the send fails (caller decides what to do — the verification flow fails closed rather than pretend it sent). |
-| [ssBuildVerifyUrl()](/code/functions/ssBuildVerifyUrl.md) | 95 | Absolute URL to the self-service email-verification page for a raw token. |
-| [ssBuildResetUrl()](/code/functions/ssBuildResetUrl.md) | 112 | Absolute URL to the self-service password-reset page for a raw token. |
-| [ssResetEmailBody()](/code/functions/ssResetEmailBody.md) | 129 | HTML body for the password-reset email. |
-| [ssVerifyEmailBody()](/code/functions/ssVerifyEmailBody.md) | 146 | HTML body for the verification email. |
+| [ssSendSystemEmail()](/code/functions/ssSendSystemEmail.md) | 37 | Send a system email to one recipient. Returns true on success, false if no mailbox is configured or the send fails (caller decides what to do — the verification flow fails closed rather than pretend it sent). |
+| [ssBuildVerifyUrl()](/code/functions/ssBuildVerifyUrl.md) | 104 | Absolute URL to the self-service email-verification page for a raw token. |
+| [ssBuildResetUrl()](/code/functions/ssBuildResetUrl.md) | 123 | Absolute URL to the self-service password-reset page for a raw token. |
+| [ssResetEmailBody()](/code/functions/ssResetEmailBody.md) | 144 | HTML body for the password-reset email. |
+| [ssVerifyEmailBody()](/code/functions/ssVerifyEmailBody.md) | 166 | HTML body for the verification email. |
 
 ## Database
 

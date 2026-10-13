@@ -1,6 +1,6 @@
 # includes/uploads.php
 
-> PHP - 964 lines
+> PHP - 1005 lines
 
 Safe file uploads — the ONE place the rules live.
 
@@ -29,30 +29,30 @@ protection is the net under the tightrope, not the tightrope.
 | Function | Line | What it does |
 |---|--:|---|
 | [uploadStoreFile()](/code/functions/uploadStoreFile.md) | 142 | Validate one `$_FILES` entry and move it somewhere safe. |
-| [uploadPrepareDir()](/code/functions/uploadPrepareDir.md) | 222 | Create an upload directory and drop execution protection into it. |
-| [uploadPrepareWebServableDir()](/code/functions/uploadPrepareWebServableDir.md) | 365 | Prepare a directory whose contents the BROWSER IS MEANT TO FETCH. |
-| [htaccessUnguardedPhpDirectives()](/code/functions/htaccessUnguardedPhpDirectives.md) | 495 | Line numbers (1-based) of every php_flag / php_value / php_admin_* directive in an .htaccess that is NOT inside an <IfModule> for mod_php. |
-| [htaccessGuardPhpDirectives()](/code/functions/htaccessGuardPhpDirectives.md) | 529 | Wrap every unguarded PHP directive in an .htaccess in <IfModule> blocks for mod_php 8 (mod_php.c) and mod_php 7 (mod_php7.c), keeping its indentation and the file's own line endings. Returns the text unchanged when there is nothing to do, so it is safe to run on every file every time. |
-| [uploadRepairHtaccessFile()](/code/functions/uploadRepairHtaccessFile.md) | 549 | Repair one .htaccess in place. True if it was changed. |
-| [uploadRepairHtaccessTree()](/code/functions/uploadRepairHtaccessTree.md) | 566 | Repair every .htaccess under the upload folders. Returns how many changed. |
-| [uploadCleanName()](/code/functions/uploadCleanName.md) | 594 | The original filename, reduced to something safe to STORE AND DISPLAY. |
-| [uploadDetectMime()](/code/functions/uploadDetectMime.md) | 608 | The file's real mime type, or null if this server cannot tell us. |
-| [uploadErrorMessage()](/code/functions/uploadErrorMessage.md) | 623 | PHP's upload error codes as something a person can act on. |
-| [uploadFormatBytes()](/code/functions/uploadFormatBytes.md) | 638 | A byte count as readable text - "1.5 MB", "300 KB" or "512 bytes". |
-| [attachmentServeRules()](/code/functions/attachmentServeRules.md) | 712 | Decide how to serve a stored attachment, from its filename alone. |
-| [attachmentSendHeaders()](/code/functions/attachmentSendHeaders.md) | 729 | Emit the Content-Type / Content-Disposition / nosniff headers for an attachment. Callers still do their own authorisation and file-existence checks first. |
-| [uploadStoreBytes()](/code/functions/uploadStoreBytes.md) | 786 | Store ingested bytes safely, applying the install's policy for types we do not accept. |
-| [uploadDetectMimeFromBytes()](/code/functions/uploadDetectMimeFromBytes.md) | 866 | The real mime type of bytes held in memory, or null if this server cannot tell. |
-| [attachmentRejectPolicy()](/code/functions/attachmentRejectPolicy.md) | 885 | The install's policy for an attachment whose type we do not accept. |
-| [attachmentAllowedTypes()](/code/functions/attachmentAllowedTypes.md) | 915 | Which attachment types this install actually accepts. |
-| [attachmentIngestNotice()](/code/functions/attachmentIngestNotice.md) | 945 | The block appended to a message body when attachments were not accepted, so the outcome is visible on the ticket instead of a file quietly vanishing. Returns '' when there is nothing to say. |
+| [uploadPrepareDir()](/code/functions/uploadPrepareDir.md) | 224 | Create an upload directory and drop execution protection into it. |
+| [uploadPrepareWebServableDir()](/code/functions/uploadPrepareWebServableDir.md) | 369 | Prepare a directory whose contents the BROWSER IS MEANT TO FETCH. |
+| [htaccessUnguardedPhpDirectives()](/code/functions/htaccessUnguardedPhpDirectives.md) | 500 | Line numbers (1-based) of every php_flag / php_value / php_admin_* directive in an .htaccess that is NOT inside an <IfModule> for mod_php. |
+| [htaccessGuardPhpDirectives()](/code/functions/htaccessGuardPhpDirectives.md) | 536 | Wrap every unguarded PHP directive in an .htaccess in <IfModule> blocks for mod_php 8 (mod_php.c) and mod_php 7 (mod_php7.c), keeping its indentation and the file's own line endings. Returns the text unchanged when there is nothing to do, so it is safe to run on every file every time. |
+| [uploadRepairHtaccessFile()](/code/functions/uploadRepairHtaccessFile.md) | 558 | Repair one .htaccess in place. True if it was changed. |
+| [uploadRepairHtaccessTree()](/code/functions/uploadRepairHtaccessTree.md) | 577 | Repair every .htaccess under the upload folders. Returns how many changed. |
+| [uploadCleanName()](/code/functions/uploadCleanName.md) | 607 | The original filename, reduced to something safe to STORE AND DISPLAY. |
+| [uploadDetectMime()](/code/functions/uploadDetectMime.md) | 625 | The file's real mime type, or null if this server cannot tell us. |
+| [uploadErrorMessage()](/code/functions/uploadErrorMessage.md) | 644 | PHP's upload error codes as something a person can act on. |
+| [uploadFormatBytes()](/code/functions/uploadFormatBytes.md) | 663 | A byte count as readable text - "1.5 MB", "300 KB" or "512 bytes". |
+| [attachmentServeRules()](/code/functions/attachmentServeRules.md) | 738 | Decide how to serve a stored attachment, from its filename alone. |
+| [attachmentSendHeaders()](/code/functions/attachmentSendHeaders.md) | 758 | Emit the Content-Type / Content-Disposition / nosniff headers for an attachment. Callers still do their own authorisation and file-existence checks first. |
+| [uploadStoreBytes()](/code/functions/uploadStoreBytes.md) | 820 | Store ingested bytes safely, applying the install's policy for types we do not accept. |
+| [uploadDetectMimeFromBytes()](/code/functions/uploadDetectMimeFromBytes.md) | 904 | The real mime type of bytes held in memory, or null if this server cannot tell. |
+| [attachmentRejectPolicy()](/code/functions/attachmentRejectPolicy.md) | 923 | The install's policy for an attachment whose type we do not accept. |
+| [attachmentAllowedTypes()](/code/functions/attachmentAllowedTypes.md) | 953 | Which attachment types this install actually accepts. |
+| [attachmentIngestNotice()](/code/functions/attachmentIngestNotice.md) | 986 | The block appended to a message body when attachments were not accepted, so the outcome is visible on the ticket instead of a file quietly vanishing. Returns '' when there is nothing to say. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 890 | `attachmentRejectPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
-| 921 | `attachmentAllowedTypes` | read [system_settings](/code/tables/system_settings.md) |  |
+| 928 | `attachmentRejectPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
+| 959 | `attachmentAllowedTypes` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

@@ -6,11 +6,11 @@ This app's own host[:port], as the browser addresses it: the Host header, and - 
 function csrfOwnHosts(bool $withConfigured = false): array
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 149.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 155.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$withConfigured` | `bool` | `false` |  |
+| `$withConfigured` | `bool` | `false` | true to add the host from the configured public URL (costs a database query) |
 
 **Returns:** `array`
 

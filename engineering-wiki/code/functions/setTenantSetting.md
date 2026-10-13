@@ -11,14 +11,14 @@ the default once it has been given an answer.
 function setTenantSetting(PDO $conn, int $tenantId, string $key, ?string $value): void
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 109.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 119.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$value` | `?string` |  |  |
+| `$key` | `string` |  | the setting key |
+| `$value` | `?string` |  | the company's answer; null deletes it, so the company follows the install-wide value again |
 
 **Returns:** `void`
 
@@ -26,8 +26,8 @@ Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `setTenantSetting` | **delete** [tenant_settings](/code/tables/tenant_settings.md) |  |
-| 118 | `setTenantSetting` | **insert** [tenant_settings](/code/tables/tenant_settings.md) (`tenant_id`, `setting_key`, `setting_value`) |  |
+| 123 | `setTenantSetting` | **delete** [tenant_settings](/code/tables/tenant_settings.md) |  |
+| 128 | `setTenantSetting` | **insert** [tenant_settings](/code/tables/tenant_settings.md) (`tenant_id`, `setting_key`, `setting_value`) |  |
 
 ## Calls
 

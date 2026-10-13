@@ -12,7 +12,7 @@ Resolution order, most trustworthy first:
 function publicBaseUrl(PDO $conn): string
 ```
 
-Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), line 124.
+Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), line 126.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

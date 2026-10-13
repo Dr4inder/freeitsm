@@ -1,6 +1,6 @@
 # includes/projects/intake.php
 
-> PHP - 199 lines
+> PHP - 214 lines
 
 Projects - intake and approval (3.3.0): proposing a project, and approving it before it can start.
 
@@ -33,27 +33,27 @@ proposed or be cancelled (withdrawn). ProjectsService::updateProject() asks
 | Function | Line | What it does |
 |---|--:|---|
 | [projectIntakeReady()](/code/functions/projectIntakeReady.md) | 34 | Has Database Verification added the columns? Everything here is quiet before it. |
-| [projectProposalNeedsApproval()](/code/functions/projectProposalNeedsApproval.md) | 45 | Does a new project wait for approval? `$fromForm` = it was proposed through a form. |
-| [projectProposalNamedApprover()](/code/functions/projectProposalNamedApprover.md) | 53 | The named approver, when the setting names one and they are still an active analyst. |
-| [projectCanDecideProposal()](/code/functions/projectCanDecideProposal.md) | 64 | May this analyst approve or reject proposals? The named approver, and Manage Projects always. |
-| [projectProposalApprovers()](/code/functions/projectProposalApprovers.md) | 75 | Who is told a proposal is waiting: the named approver if there is one, otherwise everybody who holds Manage Projects (admins included). |
-| [projectProposalBlocksStatus()](/code/functions/projectProposalBlocksStatus.md) | 86 | A pending proposal may only stay proposed or be withdrawn (cancelled). |
-| [projectProposalDetail()](/code/functions/projectProposalDetail.md) | 92 | The proposal panel on a project's page; null when it never needed approval. |
-| [projectProposalApprovalColumn()](/code/functions/projectProposalApprovalColumn.md) | 127 | Proposals waiting for a decision, per project id - for the portfolio's view and its chip. |
-| [projectCreateFromAction()](/code/functions/projectCreateFromAction.md) | 139 | The workflow action create_project: a proposal from a form (or any rule). Answers fill what the action leaves blank - the same rule the form-to-ticket path follows: an override always wins, the submission fills the rest. |
+| [projectProposalNeedsApproval()](/code/functions/projectProposalNeedsApproval.md) | 49 | Does a new project wait for approval? `$fromForm` = it was proposed through a form. |
+| [projectProposalNamedApprover()](/code/functions/projectProposalNamedApprover.md) | 57 | The named approver, when the setting names one and they are still an active analyst. |
+| [projectCanDecideProposal()](/code/functions/projectCanDecideProposal.md) | 68 | May this analyst approve or reject proposals? The named approver, and Manage Projects always. |
+| [projectProposalApprovers()](/code/functions/projectProposalApprovers.md) | 79 | Who is told a proposal is waiting: the named approver if there is one, otherwise everybody who holds Manage Projects (admins included). |
+| [projectProposalBlocksStatus()](/code/functions/projectProposalBlocksStatus.md) | 95 | A pending proposal may only stay proposed or be withdrawn (cancelled). |
+| [projectProposalDetail()](/code/functions/projectProposalDetail.md) | 105 | The proposal panel on a project's page; null when it never needed approval. |
+| [projectProposalApprovalColumn()](/code/functions/projectProposalApprovalColumn.md) | 140 | Proposals waiting for a decision, per project id - for the portfolio's view and its chip. |
+| [projectCreateFromAction()](/code/functions/projectCreateFromAction.md) | 154 | The workflow action create_project: a proposal from a form (or any rule). Answers fill what the action leaves blank - the same rule the form-to-ticket path follows: an override always wins, the submission fills the rest. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 38 | `projectIntakeReady` | read [projects](/code/tables/projects.md) |  |
-| 58 | `projectProposalNamedApprover` | read [analysts](/code/tables/analysts.md) |  |
-| 79 | `projectProposalApprovers` | read [analysts](/code/tables/analysts.md) |  |
-| 95 | `projectProposalDetail` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md) |  |
-| 146 | `projectCreateFromAction` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md) |  |
-| 158 | `projectCreateFromAction` | read [users](/code/tables/users.md) |  |
-| 190 | `projectCreateFromAction` | **update** [projects](/code/tables/projects.md) (`form_submission_id`, `proposed_by_name`, `proposed_by_email`, `created_by_id`) |  |
-| 192 | `projectCreateFromAction` | read [projects](/code/tables/projects.md) |  |
+| 62 | `projectProposalNamedApprover` | read [analysts](/code/tables/analysts.md) |  |
+| 83 | `projectProposalApprovers` | read [analysts](/code/tables/analysts.md) |  |
+| 108 | `projectProposalDetail` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md) |  |
+| 161 | `projectCreateFromAction` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md) |  |
+| 173 | `projectCreateFromAction` | read [users](/code/tables/users.md) |  |
+| 205 | `projectCreateFromAction` | **update** [projects](/code/tables/projects.md) (`form_submission_id`, `proposed_by_name`, `proposed_by_email`, `created_by_id`) |  |
+| 207 | `projectCreateFromAction` | read [projects](/code/tables/projects.md) |  |
 
 ## How it hangs together
 

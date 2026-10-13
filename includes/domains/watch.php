@@ -47,6 +47,9 @@ require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
  * not seen before; the first scan stores them as acknowledged, later ones as new
  * and fire domain.certificate_issued.
  *
+ * @param int    $domainId  the domain the certificates are stored against
+ * @param string $name      the stored domain name to ask crt.sh about
+ *
  * @writes domain_certificates - one row per crt.sh certificate id
  * @return array{ok:bool, new:int, total:int, error:?string, first_scan:bool}
  */
@@ -91,7 +94,11 @@ function domainCtScan(PDO $conn, int $domainId, string $name): array
     return ['ok' => true, 'new' => $new, 'total' => count($rows), 'first_scan' => $firstScan, 'error' => null];
 }
 
-/** "C=US, O=Let's Encrypt, CN=R11" → "Let's Encrypt (R11)" */
+/**
+ * "C=US, O=Let's Encrypt, CN=R11" → "Let's Encrypt (R11)"
+ *
+ * @param string $dn  an issuer distinguished name as crt.sh gives it, e.g. "C=US, O=Let's Encrypt, CN=R11"
+ */
 function domainCtIssuer(string $dn): string
 {
     $o = preg_match('/(?:^|,\s*)O=("?)([^,"]+)\1/', $dn, $m) ? trim($m[2]) : '';
@@ -100,7 +107,11 @@ function domainCtIssuer(string $dn): string
     return $o ?: ($cn ?: $dn);
 }
 
-/** Turns a crt.sh timestamp (UTC, with or without a Z) into a 'Y-m-d H:i:s' UTC string, or null. */
+/**
+ * Turns a crt.sh timestamp (UTC, with or without a Z) into a 'Y-m-d H:i:s' UTC string, or null.
+ *
+ * @param mixed $v  a crt.sh timestamp string, e.g. '2026-01-02T03:04:05'; empty or null gives null
+ */
 function domainCtDate($v): ?string
 {
     if (!$v) return null;
@@ -116,6 +127,8 @@ function domainCtDate($v): ?string
  * The look-alike candidates for a name, keyed by candidate => technique.
  * Deliberately bounded (a few hundred at most): every candidate is two DNS
  * queries.
+ *
+ * @param string $name  the stored domain name; the first label is varied and the rest kept as the ending
  */
 function domainLookalikeCandidates(string $name): array
 {
@@ -174,6 +187,11 @@ function domainLookalikeCandidates(string $name): array
 
 /**
  * Resolve the candidates and store the ones that exist.
+ *
+ * @param int    $domainId       the domain the look-alikes are stored against
+ * @param string $name           the stored domain name to make variations of
+ * @param string $resolver       auto | system | google | cloudflare, as for domainDns()
+ * @param float  $budgetSeconds  wall-clock seconds to spend before stopping with the rest unchecked
  *
  * @return array{checked:int, found:int, new:int, with_mx:int}
  */

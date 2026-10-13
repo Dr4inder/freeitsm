@@ -6,12 +6,12 @@ Retrieve emails from Microsoft Graph API
 function getEmails($accessToken, $mailbox)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 569.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 590.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
-| `$mailbox` |  |  |  |
+| `$accessToken` |  |  | the mailbox's Microsoft Graph access token, from `getValidAccessToken()` |
+| `$mailbox` |  |  | the target_mailboxes row - email_folder and max_emails_per_check are read |
 
 ## Calls
 

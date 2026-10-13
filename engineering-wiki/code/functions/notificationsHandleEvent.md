@@ -9,12 +9,12 @@ it. Never re-enters: writing a notification dispatches nothing.
 function notificationsHandleEvent(string $event, array $payload): void
 ```
 
-Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 46.
+Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 49.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `string` |  |  |
-| `$payload` | `array` |  |  |
+| `$event` | `string` |  | the workflow event name, e.g. 'task.assigned'; anything not in NotificationsService::types() is ignored |
+| `$payload` | `array` |  | the event's dispatch payload, as passed to WorkflowEngine::dispatch() |
 
 **Returns:** `void`
 

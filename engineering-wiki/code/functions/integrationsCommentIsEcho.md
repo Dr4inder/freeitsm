@@ -34,12 +34,12 @@ Pure on purpose: the whole decision is provable without a database.
 function integrationsCommentIsEcho(array $event, ?string $accountIdentity): bool
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1142.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1218.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `array` |  |  |
-| `$accountIdentity` | `?string` |  |  |
+| `$event` | `array` |  | a canonical comment event from the provider's `pollChanges()` (reads author_identity) |
+| `$accountIdentity` | `?string` |  | the connection's account_identity - the account the token signs in as; null if unknown |
 
 **Returns:** `bool`
 

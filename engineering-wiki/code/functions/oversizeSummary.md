@@ -6,12 +6,12 @@
 function oversizeSummary(array $atts, array $plan): string
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1426.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1509.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$atts` | `array` |  |  |
-| `$plan` | `array` |  |  |
+| `$atts` | `array` |  | the file attachments as measured: [['name' => string, 'size' => bytes], ...] |
+| `$plan` | `array` |  | the decision from `oversizePlan()`; its reasons say which attachments broke a limit |
 
 **Returns:** `string`
 

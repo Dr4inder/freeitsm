@@ -11,14 +11,14 @@ function oidcValidateIdToken(
 ): array
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 175.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 205.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$idToken` | `string` |  |  |
-| `$disco` | `array` |  |  |
-| `$provider` | `array` |  |  |
-| `$expectedNonce` | `string` |  |  |
+| `$idToken` | `string` |  | the raw ID token (JWT) from the token response |
+| `$disco` | `array` |  | the provider's discovery document - jwks_uri and issuer are used |
+| `$provider` | `array` |  | the auth_providers row - its client_id must be in the audience |
+| `$expectedNonce` | `string` |  | the nonce stored in the session when the sign-in started |
 
 **Returns:** `array`
 

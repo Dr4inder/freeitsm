@@ -6,12 +6,12 @@ Puts records in a stable order so answers compare equal - MX by priority then ho
 function domainDnsSort(string $type, array $recs): array
 ```
 
-Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 136.
+Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 150.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$type` | `string` |  |  |
-| `$recs` | `array` |  |  |
+| `$type` | `string` |  | record type in upper case - decides how the records are ordered |
+| `$recs` | `array` |  | the normalised records, in the shape `domainDns()` describes for that type |
 
 **Returns:** `array`
 

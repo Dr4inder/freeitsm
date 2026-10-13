@@ -6,12 +6,12 @@ An authenticated Gmail API GET, returning ['code' => int, 'body' => array|null].
 function gmailApiGet(string $accessToken, string $url): array
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 154.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 172.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$url` | `string` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token, sent as the Bearer token |
+| `$url` | `string` |  | the full Gmail API URL to GET |
 
 **Returns:** `array`
 

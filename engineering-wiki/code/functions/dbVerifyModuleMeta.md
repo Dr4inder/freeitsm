@@ -6,7 +6,7 @@ Metadata for every known module group: key => {label, color, colorHover}. The fr
 function dbVerifyModuleMeta(): array
 ```
 
-Defined in [includes/db_verify_modules.php](/code/files/includes/db_verify_modules.php.md), line 171.
+Defined in [includes/db_verify_modules.php](/code/files/includes/db_verify_modules.php.md), line 175.
 
 **Returns:** `array`
 

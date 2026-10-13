@@ -1,6 +1,6 @@
 # includes/inbox_display.php
 
-> PHP - 203 lines
+> PHP - 205 lines
 
 What each ticket row in the inbox middle pane shows, and how.
 
@@ -35,18 +35,18 @@ prefers a dot can still choose one — they just have to choose it.
 |---|--:|---|
 | [inboxDisplayRegistry()](/code/functions/inboxDisplayRegistry.md) | 42 | The registry: every field that can appear on a row, and the styles it accepts. |
 | [inboxDisplayDefaults()](/code/functions/inboxDisplayDefaults.md) | 90 | The shipped default, used when neither the install nor the analyst has chosen. |
-| [inboxDisplayNormalise()](/code/functions/inboxDisplayNormalise.md) | 106 | Coerce anything into a valid config. |
-| [inboxDisplayInstallDefault()](/code/functions/inboxDisplayInstallDefault.md) | 130 | The install-wide default an administrator has set, or the shipped one. |
-| [inboxDisplayForAnalyst()](/code/functions/inboxDisplayForAnalyst.md) | 152 | What THIS analyst should see: their own choice, else the install default. |
-| [inboxDisplayIsPersonal()](/code/functions/inboxDisplayIsPersonal.md) | 187 | Has this analyst chosen for themselves, or are they following the install default? |
+| [inboxDisplayNormalise()](/code/functions/inboxDisplayNormalise.md) | 108 | Coerce anything into a valid config. |
+| [inboxDisplayInstallDefault()](/code/functions/inboxDisplayInstallDefault.md) | 132 | The install-wide default an administrator has set, or the shipped one. |
+| [inboxDisplayForAnalyst()](/code/functions/inboxDisplayForAnalyst.md) | 154 | What THIS analyst should see: their own choice, else the install default. |
+| [inboxDisplayIsPersonal()](/code/functions/inboxDisplayIsPersonal.md) | 189 | Has this analyst chosen for themselves, or are they following the install default? |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 133 | `inboxDisplayInstallDefault` | read [system_settings](/code/tables/system_settings.md) |  |
-| 162 | `inboxDisplayForAnalyst` | read [user_preferences](/code/tables/user_preferences.md) |  |
-| 194 | `inboxDisplayIsPersonal` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 135 | `inboxDisplayInstallDefault` | read [system_settings](/code/tables/system_settings.md) |  |
+| 164 | `inboxDisplayForAnalyst` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 196 | `inboxDisplayIsPersonal` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## How it hangs together
 

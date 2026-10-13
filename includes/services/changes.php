@@ -47,6 +47,8 @@ class ChangesService
     /**
      * Create a change in the given (adapter-resolved) company. Returns the new id.
      * The adapter has already resolved + scope-checked $tenantId.
+     *
+     * @param array $in  title (required), lookups as name or <key>_id, category_id, people ids, dates, text bodies, risk, cab_*
      */
     public static function createChange(PDO $conn, ActorContext $ctx, int $tenantId, array $in): int
     {
@@ -161,6 +163,9 @@ class ChangesService
      * every key). Writes the UI's exact per-field audit rows, recomputes risk,
      * and fires change.approved on a genuine manual transition into Approved.
      * Returns void; the adapter reloads for its response.
+     *
+     * @param int $changeId  the change to update
+     * @param array $in  the fields to change, same keys as createChange(); absent keys are left alone
      */
     public static function updateChange(PDO $conn, ActorContext $ctx, int $changeId, array $in): void
     {
@@ -370,7 +375,11 @@ class ChangesService
         }
     }
 
-    /** Delete a change permanently: attachment files + rows, cascade children. */
+    /**
+     * Delete a change permanently: attachment files + rows, cascade children.
+     *
+     * @param int $changeId  the change to delete, with its attachments
+     */
     public static function deleteChange(PDO $conn, ActorContext $ctx, int $changeId): void
     {
         $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
@@ -396,7 +405,12 @@ class ChangesService
     //  Comments
     // ======================================================================
 
-    /** Append an internal comment to a change. Returns the comment id. */
+    /**
+     * Append an internal comment to a change. Returns the comment id.
+     *
+     * @param int $changeId  the change to comment on
+     * @param array $in  text (required) - the comment, stored as internal
+     */
     public static function createComment(PDO $conn, ActorContext $ctx, int $changeId, array $in): int
     {
         self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
@@ -420,6 +434,9 @@ class ChangesService
     /**
      * Delete a comment. $changeId scopes the delete (API route); pass null to
      * delete by comment id alone (the UI's delete_comment.php has no change id).
+     *
+     * @param int $commentId  the change_comments row to delete
+     * @param ?int $changeId  the change it must belong to, or null to look it up from the comment
      */
     public static function deleteComment(PDO $conn, ActorContext $ctx, int $commentId, ?int $changeId = null): void
     {
@@ -446,7 +463,12 @@ class ChangesService
     //  CAB
     // ======================================================================
 
-    /** Replace the CAB roster (diff-sync add/remove/change-required + audit). */
+    /**
+     * Replace the CAB roster (diff-sync add/remove/change-required + audit).
+     *
+     * @param int $changeId  the change whose CAB roster is replaced
+     * @param mixed $members  the whole roster, [{analyst_id, is_required?}] - is_required defaults to true; must be an array
+     */
     public static function saveCab(PDO $conn, ActorContext $ctx, int $changeId, $members): void
     {
         self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
@@ -506,6 +528,9 @@ class ChangesService
      * The acting analyst casts a CAB vote; any required Reject sends the change
      * back to Draft, the all/majority threshold on required members auto-approves.
      * Returns [change_id, vote, status_changed, new_status].
+     *
+     * @param int $changeId  the change being voted on
+     * @param array $in  vote ('Approve', 'Reject' or 'Abstain') and an optional comment
      */
     public static function voteCab(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
     {
@@ -605,7 +630,12 @@ class ChangesService
     //  Incident (ticket) linking  — twin of ProblemsService::linkTicket
     // ======================================================================
 
-    /** Link an incident (ticket) to a change. Returns [change_id, ticket_id, ticket_number, linked]. */
+    /**
+     * Link an incident (ticket) to a change. Returns [change_id, ticket_id, ticket_number, linked].
+     *
+     * @param int $changeId  the change to link to
+     * @param array $in  ticket_id (required) - the incident to link
+     */
     public static function linkTicket(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
     {
         $change = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone / out of scope
@@ -650,7 +680,11 @@ class ChangesService
         return ['change_id' => $changeId, 'ticket_id' => $ticketId, 'ticket_number' => $ticket['ticket_number'], 'linked' => true];
     }
 
-    /** Unlink an incident from a change. 404 if not linked. Audited. */
+    /**
+     * Unlink an incident from a change. 404 if not linked. Audited.
+     *
+     * @param int $changeId  the change to unlink from
+     */
     public static function unlinkTicket(PDO $conn, ActorContext $ctx, int $changeId, int $ticketId): void
     {
         self::loadJoined($conn, $ctx, $changeId);   // 404 if gone / out of scope
@@ -676,6 +710,9 @@ class ChangesService
      * May the actor access this row of a tenant-scoped table (by its company)?
      * Generic mirror of ProblemsService::canAccessTenantRow. $table is a
      * developer literal, never user input.
+     *
+     * @param string $table  a tenant-scoped table name written in code - never user input
+     * @param int $rowId  the row's id in that table
      */
     private static function canAccessTenantRow(PDO $conn, ActorContext $ctx, string $table, int $rowId): bool
     {
@@ -700,6 +737,8 @@ class ChangesService
      * the actor's company scope; 404 if the change is unknown OR outside scope
      * (indistinguishable, by design). NULL tenant_id normalises to the Default
      * company. No-op at N=1.
+     *
+     * @param int $changeId  the change to load
      */
     private static function loadJoined(PDO $conn, ActorContext $ctx, int $changeId): array
     {
@@ -738,7 +777,15 @@ class ChangesService
         return $row;
     }
 
-    /** Records one action or field change in the change's audit trail. */
+    /**
+     * Records one action or field change in the change's audit trail.
+     *
+     * @param int $changeId  the change the entry belongs to
+     * @param string $actionType  change_audit.action_type, e.g. 'field_change', 'status_change', 'comment', 'cab_vote'
+     * @param ?string $field  the field label shown in the trail, e.g. 'Status'; null for a comment
+     * @param ?string $old  the value before, as shown
+     * @param ?string $new  the value after, as shown
+     */
     private static function auditWrite(PDO $conn, int $changeId, int $analystId, string $actionType, ?string $field, ?string $old, ?string $new): void
     {
         $conn->prepare(
@@ -747,7 +794,11 @@ class ChangesService
         )->execute([$changeId, $analystId, $actionType, $field, $old, $new]);
     }
 
-    /** The risk banding (score = likelihood × impact). */
+    /**
+     * The risk banding (score = likelihood × impact).
+     *
+     * @param ?int $score  likelihood x impact (1-25), or null when either is unset
+     */
     private static function riskLevel(?int $score): ?string
     {
         if ($score === null) return null;
@@ -762,6 +813,11 @@ class ChangesService
      * Resolve a change lookup (type/status/priority/impact) by name or id from
      * input keys "<key>" / "<key>_id". Strict: unknown values are a 422. Returns
      * [id, name, extraCol?] or null when neither key was sent.
+     *
+     * @param array $in  the request fields
+     * @param string $key  the input key, e.g. 'status' - '<key>_id' takes an id, '<key>' a name
+     * @param string $table  the lookup table, written in code - never user input
+     * @param string $extraCol  a further integer column to return as the third element (e.g. 'is_closed'); '' for none
      */
     private static function resolveLookup(PDO $conn, array $in, string $key, string $table, string $extraCol = ''): ?array
     {
@@ -795,6 +851,8 @@ class ChangesService
      * ordering as the tickets fix and includes/services/tasks.php — is_active
      * filters, and falling back through display_order means there is always an
      * answer as long as one active row exists.
+     *
+     * @param string $table  the lookup table, written in code - never user input
      */
     private static function lookupDefault(PDO $conn, string $table): array
     {
@@ -805,7 +863,12 @@ class ChangesService
         return $row ? [(int)$row['id'], $row['name']] : [null, null];
     }
 
-    /** Validate a 1-5 risk input. Null/'' clears. */
+    /**
+     * Validate a 1-5 risk input. Null/'' clears.
+     *
+     * @param mixed $value  the 1-5 score from the request; null or '' gives null
+     * @param string $field  the request field name, used in the error message
+     */
     private static function riskInput($value, string $field): ?int
     {
         if ($value === null || $value === '') {
@@ -818,7 +881,11 @@ class ChangesService
         return $v;
     }
 
-    /** Resolve an analyst id to its name; 422 if unknown/inactive (mirrors apiResolveAnalyst). */
+    /**
+     * Resolve an analyst id to its name; 422 if unknown/inactive (mirrors apiResolveAnalyst).
+     *
+     * @param int $analystId  the analyst to look up (a requester, assignee, approver or CAB member) - not the actor
+     */
     private static function resolveAnalyst(PDO $conn, int $analystId): string
     {
         $stmt = $conn->prepare("SELECT full_name FROM analysts WHERE id = ? AND is_active = 1");
@@ -830,7 +897,12 @@ class ChangesService
         return $name;
     }
 
-    /** Parse a date to UTC 'Y-m-d H:i:s' (mirrors the API's apiParseDate; 400 on garbage). */
+    /**
+     * Parse a date to UTC 'Y-m-d H:i:s' (mirrors the API's apiParseDate; 400 on garbage).
+     *
+     * @param string $value  the date or date-time from the request; read as UTC unless it carries an offset
+     * @param string $field  the request field name, used in the error message
+     */
     private static function parseDate(string $value, string $field): string
     {
         $v = trim($value);
@@ -842,7 +914,14 @@ class ChangesService
         }
     }
 
-    /** Fire change.approved (best-effort; the engine swallows its own errors). */
+    /**
+     * Fire change.approved (best-effort; the engine swallows its own errors).
+     *
+     * @param int $changeId  the change that was approved
+     * @param ?string $title  the change's title
+     * @param ?string $riskLevel  the change's risk level, e.g. 'High'
+     * @param ?int $approverId  the change's named approver, or null
+     */
     private static function approvedDispatch(int $changeId, ?string $title, ?string $riskLevel, ?int $approverId): void
     {
         try {

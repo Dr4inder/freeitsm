@@ -18,13 +18,13 @@ Deliberately defensive:
 function analystCanAccessTicket(PDO $conn, int $analystId, $ticketId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 266.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 270.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$ticketId` |  |  |  |
+| `$ticketId` |  |  | the ticket id, any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -32,7 +32,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 266
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 275 | `analystCanAccessTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 279 | `analystCanAccessTicket` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

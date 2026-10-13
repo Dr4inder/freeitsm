@@ -6,7 +6,7 @@ The go-live starter checklist: [kind, title]. The sign-off goes to the project m
 function projectGoLiveStarter(): array
 ```
 
-Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 109.
+Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 115.
 
 **Returns:** `array`
 

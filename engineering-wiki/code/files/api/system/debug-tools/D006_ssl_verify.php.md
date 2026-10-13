@@ -1,6 +1,6 @@
 # api/system/debug-tools/D006_ssl_verify.php
 
-> API endpoint - 319 lines
+> API endpoint - 329 lines
 
 Debug Tool D006 — SSL / HTTPS certificate verification
 
@@ -38,9 +38,9 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 55 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
-| [yn()](/code/functions/yn.md) | 60 | Formats a boolean as YES or NO for the report. |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 65 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [addSection()](/code/functions/addSection.md) | 59 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 68 | Formats a boolean as YES or NO for the report. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 75 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
 
 ## How it hangs together
 

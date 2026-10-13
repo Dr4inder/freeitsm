@@ -10,11 +10,11 @@ one of these is configurable per provider.
 function dsyncAttrDefaults(string $flavour): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 56.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 58.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$flavour` | `string` |  |  |
+| `$flavour` | `string` |  | 'openldap' or 'ad'; anything other than 'openldap' gets the AD names |
 
 **Returns:** `array`
 

@@ -18,14 +18,14 @@ function demoDuplicateExplanation(
 ): string
 ```
 
-Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 168.
+Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 189.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$module` | `string` |  |  |
-| `$table` | `string` |  |  |
-| `$dbMessage` | `string` |  |  |
+| `$module` | `string` |  | the DEMO_MODULES key being imported |
+| `$table` | `string` |  | the table the insert collided in |
+| `$dbMessage` | `string` |  | the database error text; the "Duplicate entry '...'" value is quoted from it |
 
 **Returns:** `string`
 

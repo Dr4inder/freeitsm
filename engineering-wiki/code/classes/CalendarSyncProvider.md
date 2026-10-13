@@ -64,7 +64,7 @@ the single most likely way to get this integration subtly wrong.
 
 ### withAccount
 
-*public* - line 77
+*public* - line 81
 
 Act as this analyst. Returns `$this` so it chains off the factory.
 
@@ -74,11 +74,11 @@ function withAccount(array $account): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$account` | `array` |  |  |
+| `$account` | `array` |  | the analyst's decrypted calendar_enrolments.credentials; [] for a provider that needs none |
 
 ### __construct
 
-*public* - line 97
+*public* - line 105
 
 Keeps the decrypted calendar_connections row (credentials already an array) the provider works from.
 
@@ -88,11 +88,11 @@ function __construct(array $connection)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$connection` | `array` |  |  |
+| `$connection` | `array` |  | the decrypted calendar_connections row, credentials already a PHP array |
 
 ### getProvider
 
-*public* - line 103
+*public* - line 111
 
 Returns the connection's provider key (for example 'microsoft' or 'caldav'), or ''.
 
@@ -102,7 +102,7 @@ function getProvider(): string
 
 ### supports
 
-*public* - line 115
+*public* - line 125
 
 Does this provider do X?
 
@@ -116,11 +116,11 @@ function supports(string $capability): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$capability` | `string` |  |  |
+| `$capability` | `string` |  | a CAP_* key, e.g. CalendarSyncProvider::CAP_ALL_DAY |
 
 ### createEvent
 
-*public* - line 131
+*public* - line 144
 
 Create an event in `$calendarAddress`'s calendar. Returns the provider's id for it, which the caller stores in calendar_sync_events.
 
@@ -135,12 +135,12 @@ function createEvent(string $calendarAddress, array $event): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$event` | `array` |  |  |
+| `$calendarAddress` | `string` |  | whose calendar - a mailbox address for Microsoft, a calendar URL for CalDAV |
+| `$event` | `array` |  | the canonical event shape described at the top of this file |
 
 ### updateEvent
 
-*public* - line 141
+*public* - line 158
 
 Update an event in place.
 
@@ -155,13 +155,13 @@ function updateEvent(string $calendarAddress, string $remoteEventId, array $even
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$remoteEventId` | `string` |  |  |
-| `$event` | `array` |  |  |
+| `$calendarAddress` | `string` |  | whose calendar - a mailbox address for Microsoft, a calendar URL for CalDAV |
+| `$remoteEventId` | `string` |  | the provider's id for the event, as `createEvent()` returned it |
+| `$event` | `array` |  | the canonical event shape described at the top of this file |
 
 ### deleteEvent
 
-*public* - line 150
+*public* - line 170
 
 Remove an event.
 
@@ -175,12 +175,12 @@ function deleteEvent(string $calendarAddress, string $remoteEventId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$remoteEventId` | `string` |  |  |
+| `$calendarAddress` | `string` |  | whose calendar - a mailbox address for Microsoft, a calendar URL for CalDAV |
+| `$remoteEventId` | `string` |  | the provider's id for the event, as `createEvent()` returned it |
 
 ### verifyConnection
 
-*public* - line 163
+*public* - line 183
 
 Prove the connection works at all: credentials valid, permission granted.
 
@@ -198,7 +198,7 @@ function verifyConnection(): void
 
 ### pollChanges
 
-*public* - line 192
+*public* - line 213
 
 What has changed in this calendar since last time (GH #75, bi-directional).
 
@@ -218,14 +218,14 @@ function pollChanges(string $calendarAddress, ?string $token): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
+| `$calendarAddress` | `string` |  | whose calendar - a mailbox address for Microsoft, a calendar URL for CalDAV |
 | `$token` | `?string` |  | opaque provider state from the previous call; null means "no history — take a baseline" |
 
 **Returns:** array [ 'token'    => string|null,   // store this for next time 'baseline' => bool,          // TRUE when there was no usable history and // this call established one. The caller MUST // apply NOTHING on a baseline. 'changed'  => [ ['remote_event_id'=>…, 'start'=>'Y-m-d H:i:s', 'end'=>…, 'all_day'=>bool], … ], 'removed'  => [ 'remote_event_id', … ],
 
 ### createSubscription
 
-*public* - line 214
+*public* - line 236
 
 Ask the provider to tell us when this calendar changes.
 
@@ -241,7 +241,7 @@ function createSubscription(string $calendarAddress, string $notifyUrl, string $
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
+| `$calendarAddress` | `string` |  | whose calendar - a mailbox address for Microsoft, a calendar URL for CalDAV |
 | `$notifyUrl` | `string` |  | publicly reachable HTTPS endpoint |
 | `$secret` | `string` |  | echoed back in every notification; the only thing telling a real callback from anyone on the internet POSTing to a deliberately public URL |
 
@@ -249,7 +249,7 @@ function createSubscription(string $calendarAddress, string $notifyUrl, string $
 
 ### renewSubscription
 
-*public* - line 220
+*public* - line 246
 
 Push an existing subscription's expiry out. Same return as create.
 
@@ -259,11 +259,11 @@ function renewSubscription(string $subscriptionId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$subscriptionId` | `string` |  |  |
+| `$subscriptionId` | `string` |  | the provider's subscription id, as `createSubscription()` returned it |
 
 ### deleteSubscription
 
-*public* - line 229
+*public* - line 257
 
 Stop notifications. An ALREADY-GONE subscription is a success: the desired end state is "not subscribed", and that is satisfied.
 
@@ -273,11 +273,11 @@ function deleteSubscription(string $subscriptionId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$subscriptionId` | `string` |  |  |
+| `$subscriptionId` | `string` |  | the provider's subscription id, as `createSubscription()` returned it |
 
 ### verifyTarget
 
-*public* - line 247
+*public* - line 277
 
 Does this address have a calendar we can write to?
 
@@ -295,5 +295,5 @@ function verifyTarget(string $calendarAddress): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
+| `$calendarAddress` | `string` |  | the address to check - a mailbox address for Microsoft, a calendar URL for CalDAV |
 

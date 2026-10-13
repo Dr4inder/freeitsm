@@ -11,11 +11,11 @@ clamped. Nothing else may be interpolated into CSS.
 function brandingLoginCss(array $d): string
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 307.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 330.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` | `array` |  |  |
+| `$d` | `array` |  | a design from `brandingLoginDesign()`, every value already validated |
 
 **Returns:** `string`
 

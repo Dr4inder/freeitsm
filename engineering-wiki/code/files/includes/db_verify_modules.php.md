@@ -1,6 +1,6 @@
 # includes/db_verify_modules.php
 
-> PHP - 186 lines
+> PHP - 190 lines
 
 Database Verify — table → module grouping.
 
@@ -21,8 +21,8 @@ can never drift the actual verification; a wrong guess just mis-files a card.
 | Function | Line | What it does |
 |---|--:|---|
 | [dbVerifyModuleLabels()](/code/functions/dbVerifyModuleLabels.md) | 124 | Human labels + a neutral fallback colour for groups outside module-colors. |
-| [dbVerifyModuleForTable()](/code/functions/dbVerifyModuleForTable.md) | 154 | Which module a table belongs to. Never throws; unknown tables → 'other'. |
-| [dbVerifyModuleMeta()](/code/functions/dbVerifyModuleMeta.md) | 171 | Metadata for every known module group: key => {label, color, colorHover}. The front end filters this down to the groups that actually have a card. |
+| [dbVerifyModuleForTable()](/code/functions/dbVerifyModuleForTable.md) | 158 | Which module a table belongs to. Never throws; unknown tables → 'other'. |
+| [dbVerifyModuleMeta()](/code/functions/dbVerifyModuleMeta.md) | 175 | Metadata for every known module group: key => {label, color, colorHover}. The front end filters this down to the groups that actually have a card. |
 
 ## How it hangs together
 

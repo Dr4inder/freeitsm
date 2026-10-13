@@ -6,14 +6,14 @@ The projects one record (asset, change, ticket, contract, CI, article) is linked
 function projectsLinkedTo(PDO $conn, ActorContext $ctx, string $kind, int $targetId): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 388.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 426.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
-| `$targetId` | `int` |  |  |
+| `$kind` | `string` |  | the record's link kind, e.g. 'asset' |
+| `$targetId` | `int` |  | the record's id |
 
 **Returns:** `array`
 

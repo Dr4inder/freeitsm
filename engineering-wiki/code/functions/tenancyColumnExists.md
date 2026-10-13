@@ -12,13 +12,13 @@ denies. Uncached in that case, so a blip does not pin the answer.
 function tenancyColumnExists(PDO $conn, string $table, string $column): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 878.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 922.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$column` | `string` |  |  |
+| `$table` | `string` |  | the table name - a developer literal (backticks are stripped) |
+| `$column` | `string` |  | the column to look for |
 
 **Returns:** `bool`
 

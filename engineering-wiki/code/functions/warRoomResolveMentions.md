@@ -25,14 +25,14 @@ snippet of it into their notifications panel.
 function warRoomResolveMentions(PDO $conn, int $channelId, int $authorId, string $body): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 681.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 737.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
-| `$authorId` | `int` |  |  |
-| `$body` | `string` |  |  |
+| `$channelId` | `int` |  | the channel the message is in; only its readers can be mentioned |
+| `$authorId` | `int` |  | the analyst who wrote it, never notified of their own message |
+| `$body` | `string` |  | the message text as typed |
 
 **Returns:** int[] the analyst ids notified
 

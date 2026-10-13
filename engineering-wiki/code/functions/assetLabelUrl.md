@@ -20,11 +20,11 @@ app's folder (publicUrlWithAppPath()), which would otherwise print
 function assetLabelUrl(string $token, ?PDO $conn = null): string
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 157.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 166.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$token` | `string` |  |  |
+| `$token` | `string` |  | the asset's qr_token, appended to the public base as a/<token> |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`

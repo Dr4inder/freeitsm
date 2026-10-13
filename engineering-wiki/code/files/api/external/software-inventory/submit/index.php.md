@@ -1,6 +1,6 @@
 # api/external/software-inventory/submit/index.php
 
-> API endpoint - 469 lines
+> API endpoint - 471 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Asset Reconciliation Developer Guide](https://github.com/edmozley/freeitsm/wiki/Asset-Reconciliation-Developer-Guide)
@@ -27,7 +27,7 @@ are removed from this machine. Every outcome is logged to software_inventory_log
 
 | Function | Line | What it does |
 |---|--:|---|
-| [logApiResponse()](/code/functions/logApiResponse.md) | 120 | Helper function to log errors/responses |
+| [logApiResponse()](/code/functions/logApiResponse.md) | 122 | Helper function to log errors/responses |
 
 ## Database
 
@@ -35,17 +35,17 @@ are removed from this machine. Every outcome is logged to software_inventory_log
 |--:|---|---|---|
 | 60 |  | read [apikeys](/code/tables/apikeys.md) |  |
 | 64 |  | read [apikeys](/code/tables/apikeys.md) |  |
-| 122 | `logApiResponse` | **insert** [software_inventory_log](/code/tables/software_inventory_log.md) (`host_id`, `api_response`) |  |
-| 147 |  | **update** [assets](/code/tables/assets.md) (`last_seen`) |  |
-| 166 |  | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
-| 232 |  | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
-| 285 |  | **update** [software_inventory_apps](/code/tables/software_inventory_apps.md) (`display_name`, `publisher`) |  |
-| 292 |  | **insert** [software_inventory_apps](/code/tables/software_inventory_apps.md) (`display_name`, `publisher`) |  |
-| 296 |  | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
-| 350 |  | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
-| 356 |  | **update** [software_inventory_detail](/code/tables/software_inventory_detail.md) (`display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `last_seen`) |  |
-| 381 |  | **insert** [software_inventory_detail](/code/tables/software_inventory_detail.md) (`host_id`, `app_id`, `display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `created_at`, `last_seen`) |  |
-| 430 |  | **delete** [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 124 | `logApiResponse` | **insert** [software_inventory_log](/code/tables/software_inventory_log.md) (`host_id`, `api_response`) |  |
+| 149 |  | **update** [assets](/code/tables/assets.md) (`last_seen`) |  |
+| 168 |  | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 234 |  | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 287 |  | **update** [software_inventory_apps](/code/tables/software_inventory_apps.md) (`display_name`, `publisher`) |  |
+| 294 |  | **insert** [software_inventory_apps](/code/tables/software_inventory_apps.md) (`display_name`, `publisher`) |  |
+| 298 |  | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 352 |  | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 358 |  | **update** [software_inventory_detail](/code/tables/software_inventory_detail.md) (`display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `last_seen`) |  |
+| 383 |  | **insert** [software_inventory_detail](/code/tables/software_inventory_detail.md) (`host_id`, `app_id`, `display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `created_at`, `last_seen`) |  |
+| 432 |  | **delete** [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
 
 ## How it hangs together
 

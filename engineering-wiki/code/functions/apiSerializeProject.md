@@ -6,12 +6,12 @@ Shapes a decorated project row for the API - code, names, company, status, healt
 function apiSerializeProject(PDO $conn, array $p): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 63.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 69.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$p` | `array` |  |  |
+| `$p` | `array` |  | one project row after `apiProjectDecorate()` - with shown_health, progress, tools, exceptions and _budget |
 
 **Returns:** `array`
 

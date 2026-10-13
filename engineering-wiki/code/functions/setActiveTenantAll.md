@@ -6,11 +6,11 @@ Turn the consolidated view on or off. Needs a writable session.
 function setActiveTenantAll(bool $on): void
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 651.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 679.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$on` | `bool` |  |  |
+| `$on` | `bool` |  | true for the "All companies" view, false for one company |
 
 **Returns:** `void`
 

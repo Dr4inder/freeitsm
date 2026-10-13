@@ -6,12 +6,12 @@ The SQL expression that buckets a ticket date by day, month or year for GROUP BY
 function getDateExpr($timeGrouping, $dateField)
 ```
 
-Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 197.
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 214.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$timeGrouping` |  |  |  |
-| `$dateField` |  |  |  |
+| `$timeGrouping` |  |  | the bucket size: 'day', 'month' or 'year' |
+| `$dateField` |  |  | the tickets date column: 'created_datetime' or 'closed_datetime' |
 
 ## Called from
 

@@ -6,7 +6,7 @@ POST /network-diagrams/{id}/connectors — endpoints by node id or object id.
 function apiNmConnectorsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 852.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 923.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,9 +21,9 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 863 | `apiNmConnectorsCreate` | read [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
-| 875 | `apiNmConnectorsCreate` | **insert** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`diagram_id`, `from_node_id`, `to_node_id`, `cmdb_relationship_id`, `label`, `line_style`) |  |
-| 882 | `apiNmConnectorsCreate` | **update** [network_diagrams](/code/tables/network_diagrams.md) (`updated_datetime`) |  |
+| 934 | `apiNmConnectorsCreate` | read [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
+| 946 | `apiNmConnectorsCreate` | **insert** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`diagram_id`, `from_node_id`, `to_node_id`, `cmdb_relationship_id`, `label`, `line_style`) |  |
+| 953 | `apiNmConnectorsCreate` | **update** [network_diagrams](/code/tables/network_diagrams.md) (`updated_datetime`) |  |
 
 ## Calls
 

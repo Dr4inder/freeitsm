@@ -6,7 +6,7 @@ Handlers, keyed. `module` gates the data; `kinds` lists what it can return (for 
 function rpHandlers(): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 72.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 99.
 
 **Returns:** `array`
 

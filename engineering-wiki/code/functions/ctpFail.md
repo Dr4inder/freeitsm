@@ -6,12 +6,12 @@ Sends an HTTP status and {success: false, error: `$code`} - a short code such as
 function ctpFail(string $code, int $http = 400): void
 ```
 
-Defined in [api/lms/test_public.php](/code/files/api/lms/test_public.php.md), line 28.
+Defined in [api/lms/test_public.php](/code/files/api/lms/test_public.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$code` | `string` |  |  |
-| `$http` | `int` | `400` |  |
+| `$code` | `string` |  | the short error code the candidate page acts on, e.g. 'finished' |
+| `$http` | `int` | `400` | the HTTP status to send |
 
 **Returns:** `void`
 

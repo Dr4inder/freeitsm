@@ -19,7 +19,7 @@
 | [api/intune/sync.php](/code/files/api/intune/sync.php.md):44 |  | update | `status`, `message`, `finished_datetime` |  |
 | [api/intune/sync.php](/code/files/api/intune/sync.php.md):63 |  | insert | `started_datetime`, `status`, `total`, `processed`, `message` |  |
 | [api/intune/sync.php](/code/files/api/intune/sync.php.md):72 |  | update | `status`, `message`, `finished_datetime` |  |
-| [includes/intune.php](/code/files/includes/intune.php.md):439 | `intuneRunSync` | update | `total`, `processed`, `status`, `finished_datetime`, `message` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):455 | `intuneRunSync` | update | `total`, `processed`, `status`, `finished_datetime`, `message` |  |
 
 ## Read by
 

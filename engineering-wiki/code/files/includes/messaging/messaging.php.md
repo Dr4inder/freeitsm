@@ -1,6 +1,6 @@
 # includes/messaging/messaging.php
 
-> PHP - 470 lines
+> PHP - 512 lines
 
 Messaging channels — shared entry point.
 
@@ -21,33 +21,33 @@ own keys out of that array (shapes documented on each provider class).
 
 | Function | Line | What it does |
 |---|--:|---|
-| [messagingProvider()](/code/functions/messagingProvider.md) | 38 | Build the right provider for a channel row (credentials already decrypted into an array by loadMessagingChannel). Throws on an unknown provider. |
-| [loadMessagingChannel()](/code/functions/loadMessagingChannel.md) | 65 | Load a messaging_channels row with its credentials decrypted + JSON-decoded. Returns null if not found. Safe to call before db_verify has run the table (returns null rather than throwing). |
-| [messagingDecodeCredentials()](/code/functions/messagingDecodeCredentials.md) | 91 | Decrypt + JSON-decode a stored credentials blob into an array (never throws). |
-| [messagingPublicBaseUrl()](/code/functions/messagingPublicBaseUrl.md) | 110 | The public base URL (scheme://host[:port]) used to build webhook URLs. Uses the admin-set 'messaging_public_base_url' system setting when present, otherwise derives it from the current request (honouring ngrok/tunnel proxy headers). |
-| [messagingWebhookUrl()](/code/functions/messagingWebhookUrl.md) | 134 | The full public webhook URL for a channel — what gets pasted into the provider. The app root is derived from SCRIPT_NAME so it works under any sub-path. |
-| [messagingOutboundMediaUrl()](/code/functions/messagingOutboundMediaUrl.md) | 164 | A short-lived, unguessable URL to one outbound attachment's bytes — for a provider (Twilio) that fetches media itself rather than accepting an upload. NOT a general-purpose public file host: the token is bound to this ONE attachment id and expires quickly (checked in media.php), so it only stays reachable for the brief window between sending the message and the provider fetching it — not for as long as the ticket exists. |
-| [messagingOutboundMediaToken()](/code/functions/messagingOutboundMediaToken.md) | 194 | HMAC binding one attachment id to one expiry — see `messagingOutboundMediaUrl()` and media.php. |
-| [messagingMediaCategory()](/code/functions/messagingMediaCategory.md) | 202 | The category Meta's Media upload endpoint wants for a mime type ('image'\|'video'\|'audio'\|'document'). |
-| [normaliseChannelIdentifier()](/code/functions/normaliseChannelIdentifier.md) | 223 | Normalise a sender identifier for storage and matching. |
-| [messagingNormaliseLocale()](/code/functions/messagingNormaliseLocale.md) | 272 | Map a raw client-reported language tag (e.g. Telegram's message.from. language_code — the user's own OS/app setting, "uk", "en", "pt-BR", never something they typed) onto one of this install's I18n::SUPPORTED_LOCALES keys. Unrecognised or empty input falls back to English — I18n::tFor() would do that anyway, but resolving it here keeps the fallback visible to the caller (e.g. for deciding whether to bother storing it). |
-| [messagingExtForMime()](/code/functions/messagingExtForMime.md) | 296 | A sensible file extension for a media MIME type (for naming downloaded media). |
-| [messagingTemplateVarCount()](/code/functions/messagingTemplateVarCount.md) | 324 | How many distinct {{n}} placeholders a template body uses (the highest index). e.g. "Hi {{1}}, ref {{2}}" → 2. |
-| [messagingRenderTemplate()](/code/functions/messagingRenderTemplate.md) | 336 | Substitute {{1}}, {{2}}, … in a template body with the given ordered values, for storing/showing what was actually sent. Missing values are left blank. |
-| [messagingBuildTranscript()](/code/functions/messagingBuildTranscript.md) | 350 | Build a plain-text transcript of a channel conversation (oldest first), capped to keep token usage predictable. Used by the AI summary / suggested-reply endpoints. Non-channel (email) rows are excluded. |
-| [messagingReplyAddress()](/code/functions/messagingReplyAddress.md) | 411 | The address to reply to on a conversation row - to_recipients on threaded channels (Slack, Teams, Mattermost), from_address elsewhere. |
-| [channelHasServiceWindow()](/code/functions/channelHasServiceWindow.md) | 422 | True for channels with a reply window (WhatsApp); web chat, Slack, Telegram, Teams and Mattermost have none. |
-| [channelWindowOpen()](/code/functions/channelWindowOpen.md) | 428 | True when the last inbound message (UTC) was under 24 hours ago, so a free-form reply is still allowed. |
-| [messagingAdminMayAdministerChannel()](/code/functions/messagingAdminMayAdministerChannel.md) | 457 | Authorise a request that acts on ONE messaging channel. |
+| [messagingProvider()](/code/functions/messagingProvider.md) | 40 | Build the right provider for a channel row (credentials already decrypted into an array by loadMessagingChannel). Throws on an unknown provider. |
+| [loadMessagingChannel()](/code/functions/loadMessagingChannel.md) | 69 | Load a messaging_channels row with its credentials decrypted + JSON-decoded. Returns null if not found. Safe to call before db_verify has run the table (returns null rather than throwing). |
+| [messagingDecodeCredentials()](/code/functions/messagingDecodeCredentials.md) | 99 | Decrypt + JSON-decode a stored credentials blob into an array (never throws). |
+| [messagingPublicBaseUrl()](/code/functions/messagingPublicBaseUrl.md) | 118 | The public base URL (scheme://host[:port]) used to build webhook URLs. Uses the admin-set 'messaging_public_base_url' system setting when present, otherwise derives it from the current request (honouring ngrok/tunnel proxy headers). |
+| [messagingWebhookUrl()](/code/functions/messagingWebhookUrl.md) | 144 | The full public webhook URL for a channel — what gets pasted into the provider. The app root is derived from SCRIPT_NAME so it works under any sub-path. |
+| [messagingOutboundMediaUrl()](/code/functions/messagingOutboundMediaUrl.md) | 176 | A short-lived, unguessable URL to one outbound attachment's bytes — for a provider (Twilio) that fetches media itself rather than accepting an upload. NOT a general-purpose public file host: the token is bound to this ONE attachment id and expires quickly (checked in media.php), so it only stays reachable for the brief window between sending the message and the provider fetching it — not for as long as the ticket exists. |
+| [messagingOutboundMediaToken()](/code/functions/messagingOutboundMediaToken.md) | 209 | HMAC binding one attachment id to one expiry — see `messagingOutboundMediaUrl()` and media.php. |
+| [messagingMediaCategory()](/code/functions/messagingMediaCategory.md) | 221 | The category Meta's Media upload endpoint wants for a mime type ('image'\|'video'\|'audio'\|'document'). |
+| [normaliseChannelIdentifier()](/code/functions/normaliseChannelIdentifier.md) | 245 | Normalise a sender identifier for storage and matching. |
+| [messagingNormaliseLocale()](/code/functions/messagingNormaliseLocale.md) | 296 | Map a raw client-reported language tag (e.g. Telegram's message.from. language_code — the user's own OS/app setting, "uk", "en", "pt-BR", never something they typed) onto one of this install's I18n::SUPPORTED_LOCALES keys. Unrecognised or empty input falls back to English — I18n::tFor() would do that anyway, but resolving it here keeps the fallback visible to the caller (e.g. for deciding whether to bother storing it). |
+| [messagingExtForMime()](/code/functions/messagingExtForMime.md) | 322 | A sensible file extension for a media MIME type (for naming downloaded media). |
+| [messagingTemplateVarCount()](/code/functions/messagingTemplateVarCount.md) | 352 | How many distinct {{n}} placeholders a template body uses (the highest index). e.g. "Hi {{1}}, ref {{2}}" → 2. |
+| [messagingRenderTemplate()](/code/functions/messagingRenderTemplate.md) | 367 | Substitute {{1}}, {{2}}, … in a template body with the given ordered values, for storing/showing what was actually sent. Missing values are left blank. |
+| [messagingBuildTranscript()](/code/functions/messagingBuildTranscript.md) | 381 | Build a plain-text transcript of a channel conversation (oldest first), capped to keep token usage predictable. Used by the AI summary / suggested-reply endpoints. Non-channel (email) rows are excluded. |
+| [messagingReplyAddress()](/code/functions/messagingReplyAddress.md) | 445 | The address to reply to on a conversation row - to_recipients on threaded channels (Slack, Teams, Mattermost), from_address elsewhere. |
+| [channelHasServiceWindow()](/code/functions/channelHasServiceWindow.md) | 458 | True for channels with a reply window (WhatsApp); web chat, Slack, Telegram, Teams and Mattermost have none. |
+| [channelWindowOpen()](/code/functions/channelWindowOpen.md) | 468 | True when the last inbound message (UTC) was under 24 hours ago, so a free-form reply is still allowed. |
+| [messagingAdminMayAdministerChannel()](/code/functions/messagingAdminMayAdministerChannel.md) | 499 | Authorise a request that acts on ONE messaging channel. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 68 | `loadMessagingChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
-| 113 | `messagingPublicBaseUrl` | read [system_settings](/code/tables/system_settings.md) |  |
-| 353 | `messagingBuildTranscript` | read [emails](/code/tables/emails.md) |  |
-| 463 | `messagingAdminMayAdministerChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 72 | `loadMessagingChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 121 | `messagingPublicBaseUrl` | read [system_settings](/code/tables/system_settings.md) |  |
+| 384 | `messagingBuildTranscript` | read [emails](/code/tables/emails.md) |  |
+| 505 | `messagingAdminMayAdministerChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
 
 ## How it hangs together
 

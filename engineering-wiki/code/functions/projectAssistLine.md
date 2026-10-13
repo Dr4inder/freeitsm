@@ -6,11 +6,11 @@ One project as a single line of text for the assistant - code, name, status, hea
 function projectAssistLine(array $p): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 100.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `array` |  |  |
+| `$p` | `array` |  | a project row decorated by `projectDecorate()`, with owner_name |
 
 **Returns:** `string`
 

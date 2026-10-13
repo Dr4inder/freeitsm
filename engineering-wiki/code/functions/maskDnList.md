@@ -6,11 +6,11 @@ Masks a newline-separated list of DNs, one `maskDn()` per line - ['(none)'] when
 function maskDnList($raw)
 ```
 
-Defined in [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md), line 105.
+Defined in [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` |  |  |  |
+| `$raw` |  |  | DNs one per line, as stored in the provider's settings |
 
 ## Calls
 

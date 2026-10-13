@@ -11,12 +11,12 @@ system openssl.cnf, which on some PHP builds is missing altogether.
 function dockerTlsOpensslConfig(string $host, ?string $ip): string
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 245.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 272.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$host` | `string` |  |  |
-| `$ip` | `?string` |  |  |
+| `$host` | `string` |  | the host name for the subjectAltName and the authority's name constraint |
+| `$ip` | `?string` |  | an IP address to add to both as well, or null for a name only |
 
 **Returns:** `string`
 

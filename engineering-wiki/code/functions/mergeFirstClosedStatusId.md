@@ -6,7 +6,7 @@ The install's first closed status id, or null if none is flagged.
 function mergeFirstClosedStatusId(PDO $conn): ?int
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 603.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 620.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 605 | `mergeFirstClosedStatusId` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 622 | `mergeFirstClosedStatusId` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Called from
 

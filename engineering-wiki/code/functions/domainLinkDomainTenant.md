@@ -6,13 +6,13 @@ The domain's company (Default for NULL), or a not-found for a domain out of reac
 function domainLinkDomainTenant(PDO $conn, int $analystId, int $domainId): int
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 121.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 140.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$domainId` | `int` |  |  |
+| `$domainId` | `int` |  | the domain whose company is wanted |
 
 **Returns:** `int`
 

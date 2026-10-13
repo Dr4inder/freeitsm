@@ -1,6 +1,6 @@
 # includes/projects/milestones.php
 
-> PHP - 86 lines
+> PHP - 93 lines
 
 Projects - milestones (3.3.0): the dates a project promises, as diamonds on the Timeline, the Overview, the Calendar and in the health.
 
@@ -23,18 +23,18 @@ never makes a project red on its own - that is what the time tolerance is for.
 | Function | Line | What it does |
 |---|--:|---|
 | [projectMilestonesReady()](/code/functions/projectMilestonesReady.md) | 22 | Has Database Verification created the table? Everything here is quiet before it. |
-| [projectMilestoneState()](/code/functions/projectMilestoneState.md) | 33 | done \| missed \| due - see the header. |
-| [projectMilestones()](/code/functions/projectMilestones.md) | 40 | One project's milestones in date order, each with its state, for the project page. |
-| [projectMilestoneStats()](/code/functions/projectMilestoneStats.md) | 64 | Per project: how many milestones are missed, and the next one still to come ({id, name, due_date} or null) - for health and the portfolio card. |
+| [projectMilestoneState()](/code/functions/projectMilestoneState.md) | 38 | done \| missed \| due - see the header. |
+| [projectMilestones()](/code/functions/projectMilestones.md) | 45 | One project's milestones in date order, each with its state, for the project page. |
+| [projectMilestoneStats()](/code/functions/projectMilestoneStats.md) | 71 | Per project: how many milestones are missed, and the next one still to come ({id, name, due_date} or null) - for health and the portfolio card. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 26 | `projectMilestonesReady` | read [project_milestones](/code/tables/project_milestones.md) |  |
-| 43 | `projectMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [project_stages](/code/tables/project_stages.md), read [analysts](/code/tables/analysts.md) |  |
-| 70 | `projectMilestoneStats` | read [project_milestones](/code/tables/project_milestones.md) |  |
-| 75 | `projectMilestoneStats` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 48 | `projectMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [project_stages](/code/tables/project_stages.md), read [analysts](/code/tables/analysts.md) |  |
+| 77 | `projectMilestoneStats` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 82 | `projectMilestoneStats` | read [project_milestones](/code/tables/project_milestones.md) |  |
 
 ## How it hangs together
 

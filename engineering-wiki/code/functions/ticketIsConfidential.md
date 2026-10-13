@@ -6,7 +6,7 @@ Is this ticket confidential? False before Database Verification (no column).
 function ticketIsConfidential(PDO $conn, int $ticketId): bool
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 160.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 169.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensiti
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 164 | `ticketIsConfidential` | read [tickets](/code/tables/tickets.md) |  |
+| 173 | `ticketIsConfidential` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

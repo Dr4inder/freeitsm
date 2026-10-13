@@ -6,11 +6,11 @@ Extract ticket reference from subject
 function extractTicketReference($subject)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 796.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 839.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$subject` |  |  |  |
+| `$subject` |  |  | the inbound email's subject, which may carry an [SDREF:...] tag |
 
 ## Called from
 

@@ -14,12 +14,12 @@ to gate on, or null for "let it through as normal".
 function catalogueApprovalGate(array $form, ?int $portalUserId): ?int
 ```
 
-Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 51.
+Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$form` | `array` |  |  |
-| `$portalUserId` | `?int` |  |  |
+| `$form` | `array` |  | the forms row being submitted - only requires_approval and approver_id are read |
+| `$portalUserId` | `?int` |  | users.id of the portal requester; null when an analyst filled the form internally |
 
 **Returns:** `?int`
 

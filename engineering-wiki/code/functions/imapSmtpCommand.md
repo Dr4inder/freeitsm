@@ -6,13 +6,13 @@ Send one SMTP command line and assert the reply code.
 function imapSmtpCommand($fp, string $command, array $expected): string
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 533.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 595.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fp` |  |  |  |
-| `$command` | `string` |  |  |
-| `$expected` | `array` |  |  |
+| `$fp` |  |  | the open SMTP socket |
+| `$command` | `string` |  | the command line to send, without the CRLF |
+| `$expected` | `array` |  | the reply codes that count as success; anything else throws |
 
 **Returns:** `string`
 

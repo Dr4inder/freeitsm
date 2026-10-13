@@ -23,6 +23,11 @@ class TwilioProvider extends MessagingProvider
     /**
      * Checks the X-Twilio-Signature header: an HMAC-SHA1 of the URL and the sorted POST
      * fields, keyed with the auth token.
+     *
+     * @param string $rawBody  the raw request body (not used - Twilio signs the parsed fields)
+     * @param array $headers  the request headers, lower-cased keys - x-twilio-signature is checked
+     * @param array $params  the parsed POST fields, all part of the signed string
+     * @param string $url  the full public URL Twilio called, exactly as configured - it is part of the signed string
      */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
@@ -45,6 +50,9 @@ class TwilioProvider extends MessagingProvider
     /**
      * Turns a Twilio WhatsApp webhook into an inbound message with its media URLs; status
      * callbacks give nothing.
+     *
+     * @param string $rawBody  the raw request body (not used)
+     * @param array $params  the parsed POST fields (From, To, Body, MessageSid, ProfileName, NumMedia, MediaUrl{n}, ...)
      */
     public function parseInbound(string $rawBody, array $params): array
     {
@@ -78,7 +86,12 @@ class TwilioProvider extends MessagingProvider
         ]];
     }
 
-    /** Sends a WhatsApp text message through Twilio and returns the message SID. */
+    /**
+     * Sends a WhatsApp text message through Twilio and returns the message SID.
+     *
+     * @param string $to  the recipient's WhatsApp number, with or without the leading +
+     * @param string $body  the message text
+     */
     public function sendMessage(string $to, string $body): string
     {
         $sid   = $this->channel['credentials']['account_sid'] ?? '';
@@ -116,6 +129,13 @@ class TwilioProvider extends MessagingProvider
      * after this call returns. $publicUrl (messagingOutboundMediaUrl()) is
      * therefore REQUIRED here, unlike Meta/Telegram which take the bytes
      * directly; $filePath is unused.
+     *
+     * @param string $to  the recipient's WhatsApp number, with or without the leading +
+     * @param string $filePath  not used - Twilio fetches the file from $publicUrl
+     * @param string $mimeType  the file's MIME type (not sent - Twilio reads it from the download)
+     * @param string $caption  text sent with the file; '' for none
+     * @param string $publicUrl  a public URL Twilio can fetch the file from - required
+     * @param string $filename  not used - Twilio names the file itself
      */
     public function sendMedia(string $to, string $filePath, string $mimeType, string $caption = '', string $publicUrl = '', string $filename = ''): string
     {
@@ -158,6 +178,10 @@ class TwilioProvider extends MessagingProvider
     /**
      * Sends an approved WhatsApp template by its Content SID, with $vars as numbered
      * content variables, and returns the message SID.
+     *
+     * @param string $to  the recipient's WhatsApp number, with or without the leading +
+     * @param array $template  a messaging_templates row - provider_ref is the Twilio Content SID
+     * @param array $vars  ordered values for the template's {{1}}, {{2}}, ...
      */
     public function sendTemplate(string $to, array $template, array $vars): string
     {
@@ -203,7 +227,11 @@ class TwilioProvider extends MessagingProvider
         return $json['sid'] ?? '';
     }
 
-    /** Downloads an inbound media item with account authentication, naming the file after its Media SID. */
+    /**
+     * Downloads an inbound media item with account authentication, naming the file after its Media SID.
+     *
+     * @param array $item  one entry from parseInbound()'s 'media' list (url, content_type)
+     */
     public function downloadMedia(array $item): array
     {
         $sid   = $this->channel['credentials']['account_sid'] ?? '';
@@ -272,7 +300,11 @@ class TwilioProvider extends MessagingProvider
         return $detail;
     }
 
-    /** Drop Twilio's "whatsapp:" channel prefix, leaving the bare number. */
+    /**
+     * Drop Twilio's "whatsapp:" channel prefix, leaving the bare number.
+     *
+     * @param string $addr  a Twilio address, e.g. 'whatsapp:+447700900123'
+     */
     private function stripPrefix(string $addr): string
     {
         $addr = trim($addr);
@@ -282,7 +314,11 @@ class TwilioProvider extends MessagingProvider
         return trim($addr);
     }
 
-    /** Puts a single leading + on a phone number. */
+    /**
+     * Puts a single leading + on a phone number.
+     *
+     * @param string $number  a phone number, with or without a leading +
+     */
     private function ensurePlus(string $number): string
     {
         $number = ltrim(trim($number), '+');

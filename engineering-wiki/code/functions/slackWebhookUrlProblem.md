@@ -11,11 +11,11 @@ challenge parameter" in Slack's UI into a sentence that names the problem.
 function slackWebhookUrlProblem(string $webhookUrl): string
 ```
 
-Defined in [includes/messaging/slack_manifest.php](/code/files/includes/messaging/slack_manifest.php.md), line 122.
+Defined in [includes/messaging/slack_manifest.php](/code/files/includes/messaging/slack_manifest.php.md), line 126.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$webhookUrl` | `string` |  |  |
+| `$webhookUrl` | `string` |  | the public webhook URL that Slack will be given |
 
 **Returns:** string '' when it looks usable, otherwise the reason it will not work
 

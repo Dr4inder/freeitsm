@@ -9,13 +9,13 @@ rendering a shorter channel list. Anything unexpected fails CLOSED.
 function warRoomCanAccessChannel(PDO $conn, int $analystId, int $channelId): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 233.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 242.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
+| `$channelId` | `int` |  | the warroom_channels id |
 
 **Returns:** `bool`
 
@@ -23,7 +23,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 233
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 243 | `warRoomCanAccessChannel` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 252 | `warRoomCanAccessChannel` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ Answer a CORS preflight and exit. Call at the very top of each public endpoint.
 function webchatHandlePreflight(): void
 ```
 
-Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 75.
+Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 77.
 
 **Returns:** `void`
 

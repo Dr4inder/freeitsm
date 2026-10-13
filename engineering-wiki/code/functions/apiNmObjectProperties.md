@@ -6,12 +6,12 @@ Typed property values for the distinct objects behind a diagram's nodes, keyed b
 function apiNmObjectProperties(PDO $conn, array $nodeRows): array
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 530.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 596.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$nodeRows` | `array` |  |  |
+| `$nodeRows` | `array` |  | node rows as `apiNmNodeSelect()` loads them (needs cmdb_object_id and class_id) |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 539 | `apiNmObjectProperties` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 605 | `apiNmObjectProperties` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ## Calls
 

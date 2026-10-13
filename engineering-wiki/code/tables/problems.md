@@ -26,11 +26,11 @@ Problem Management A Problem is the root cause behind one or more incidents (tic
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):70 | `ProblemsService::createProblem` | insert | `tenant_id`, `title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `root_cause`, `workaround`, `is_known_error`, `created_by_id` |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):81 | `ProblemsService::createProblem` | update | `problem_number` |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):202 | `ProblemsService::updateProblem` | update |  |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):235 | `ProblemsService::deleteProblem` | delete |  |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):451 | `ProblemsService::touch` | update | `updated_datetime` |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):73 | `ProblemsService::createProblem` | insert | `tenant_id`, `title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `root_cause`, `workaround`, `is_known_error`, `created_by_id` |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):84 | `ProblemsService::createProblem` | update | `problem_number` |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):210 | `ProblemsService::updateProblem` | update |  |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):247 | `ProblemsService::deleteProblem` | delete |  |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):504 | `ProblemsService::touch` | update | `updated_datetime` |  |
 
 ## Read by
 
@@ -45,12 +45,12 @@ Problem Management A Problem is the root cause behind one or more incidents (tic
 | [api/problem-management/list_linkable_tickets.php](/code/files/api/problem-management/list_linkable_tickets.php.md) | L27 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L243 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L204 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L310 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L184 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L211, projectLinkSearch L331 |  |
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L441 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewProblem L256 |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L388 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessProblem L338 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolKnownErrors L632 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L320 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L190 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L233, projectLinkSearch L362 |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L457 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewProblem L273 |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L426 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessProblem L346 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolKnownErrors L665 |  |
 

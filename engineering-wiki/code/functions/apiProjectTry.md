@@ -6,11 +6,11 @@ Run a service call; a ServiceError becomes the API's error body.
 function apiProjectTry(callable $fn)
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 133.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 147.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fn` | `callable` |  |  |
+| `$fn` | `callable` |  | the service call to run, taking no arguments; its return value is passed back |
 
 ## Calls
 

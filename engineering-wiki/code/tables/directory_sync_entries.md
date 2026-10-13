@@ -19,7 +19,7 @@ What a run did to each PERSON. "47 updated" is a number; this is the answer to "
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):467 | `dsyncLogEntry` | insert | `run_id`, `action`, `user_id`, `directory_username`, `display_name`, `detail`, `created_datetime` |  |
+| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):522 | `dsyncLogEntry` | insert | `run_id`, `action`, `user_id`, `directory_username`, `display_name`, `detail`, `created_datetime` |  |
 
 ## Read by
 

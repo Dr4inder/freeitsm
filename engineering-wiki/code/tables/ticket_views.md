@@ -19,11 +19,11 @@ Who has looked at a ticket (discussion #62, step 2). ONE ROW PER VIEWER PER DAY 
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/ticket_views.php](/code/files/includes/ticket_views.php.md):63 | `ticketViewRecord` | insert | `ticket_id`, `viewer_type`, `viewer_id`, `view_date`, `first_viewed_datetime`, `last_viewed_datetime`, `view_count` |  |
+| [includes/ticket_views.php](/code/files/includes/ticket_views.php.md):64 | `ticketViewRecord` | insert | `ticket_id`, `viewer_type`, `viewer_id`, `view_date`, `first_viewed_datetime`, `last_viewed_datetime`, `view_count` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/ticket_views.php](/code/files/includes/ticket_views.php.md) | ticketViewsReady L38, ticketViewsAsAuditRows L87, ticketViewsForRequester L134 |  |
+| [includes/ticket_views.php](/code/files/includes/ticket_views.php.md) | ticketViewsReady L38, ticketViewsAsAuditRows L88, ticketViewsForRequester L136 |  |
 

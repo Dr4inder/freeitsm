@@ -9,11 +9,11 @@ Formats a boolean as YES or NO for the report.
 function yn($v)
 ```
 
-Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 39.
+Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | any value, judged as true or false |
 
 ## Called from
 

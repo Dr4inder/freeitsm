@@ -6,7 +6,7 @@ How many seconds to wait for Tika, from the override or the system setting, kept
 function tikaTimeout(PDO $conn): int
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 86.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 91 | `tikaTimeout` | read [system_settings](/code/tables/system_settings.md) |  |
+| 93 | `tikaTimeout` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

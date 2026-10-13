@@ -27,12 +27,12 @@ worse than either of them being wrong on its own.
 function lmsIsOverdue(?string $deadline, string $status): bool
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 161.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 177.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$deadline` | `?string` |  |  |
-| `$status` | `string` |  |  |
+| `$deadline` | `?string` |  | the assignment deadline as stored (a date, read as a whole local day); null or '' is never overdue |
+| `$status` | `string` |  | the learner's progress status; 'completed' and 'passed' are never overdue |
 
 **Returns:** `bool`
 

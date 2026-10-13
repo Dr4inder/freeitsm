@@ -6,13 +6,13 @@
 function warbotContractScope(PDO $conn, int $analystId, string $alias): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 724.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 761.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` |  |  |
+| `$alias` | `string` |  | the alias the calling query gives the contracts table |
 
 **Returns:** `string`
 

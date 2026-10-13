@@ -6,13 +6,13 @@ This viewer's role on a pack: 'owner', 'edit', 'view', or null (no access, or no
 function rpRole(PDO $conn, int $analystId, int $packId): ?string
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 85.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$packId` | `int` |  |  |
+| `$packId` | `int` |  | the report_packs id |
 
 **Returns:** `?string`
 
@@ -20,8 +20,8 @@ Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 87 | `rpRole` | read [report_packs](/code/tables/report_packs.md) |  |
-| 98 | `rpRole` | read [report_pack_shares](/code/tables/report_pack_shares.md) |  |
+| 95 | `rpRole` | read [report_packs](/code/tables/report_packs.md) |  |
+| 106 | `rpRole` | read [report_pack_shares](/code/tables/report_pack_shares.md) |  |
 
 ## Calls
 

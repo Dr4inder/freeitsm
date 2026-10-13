@@ -17,9 +17,9 @@ Tickets ↔ assets (discussion #57). Two nullable creator columns because a link
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md):174 | `contractAssetLink` | insert | `contract_id`, `asset_id`, `reference`, `linked_by_id`, `created_datetime` |  |
-| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md):196 | `contractAssetSetReference` | update | `reference` |  |
-| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md):209 | `contractAssetUnlink` | delete |  |  |
+| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md):179 | `contractAssetLink` | insert | `contract_id`, `asset_id`, `reference`, `linked_by_id`, `created_datetime` |  |
+| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md):203 | `contractAssetSetReference` | update | `reference` |  |
+| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md):217 | `contractAssetUnlink` | delete |  |  |
 
 ## Read by
 
@@ -27,6 +27,6 @@ Tickets ↔ assets (discussion #57). Two nullable creator columns because a link
 |---|---|---|
 | [api/assets/get_assets.php](/code/files/api/assets/get_assets.php.md) | L225 |  |
 | [api/assets/search_linkable_contracts.php](/code/files/api/assets/search_linkable_contracts.php.md) | L62 |  |
-| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractAssetSelect L64, contractsForAsset L109, contractAssetLink L179, contractAssetLoad L219, contractAssetSearch L250 |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::assertMovable L310 |  |
+| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractAssetSelect L64, contractsForAsset L111, contractAssetLink L184, contractAssetLoad L228, contractAssetSearch L263 |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::assertMovable L347 |  |
 

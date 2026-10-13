@@ -11,12 +11,12 @@ one request and a few thousand.
 function cardDavFetchCards(array $cfg, string $bookHref): array
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 328.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 335.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$bookHref` | `string` |  |  |
+| `$cfg` | `array` |  | request settings from `cardDavConfigFromProvider()` |
+| `$bookHref` | `string` |  | the address book's href as the server listed it, absolute or relative to `$cfg`['url'] |
 
 **Returns:** array ['ok'=>bool, 'cards'=>[['href'=>…,'etag'=>…,'vcard'=>…]], 'error'=>…, 'status'=>int]
 

@@ -6,7 +6,7 @@ Audit log
 function apiTicketAuditList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 398.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 400.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 401 | `apiTicketAuditList` | read [ticket_audit](/code/tables/ticket_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 403 | `apiTicketAuditList` | read [ticket_audit](/code/tables/ticket_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

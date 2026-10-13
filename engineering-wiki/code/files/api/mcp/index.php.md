@@ -1,6 +1,6 @@
 # api/mcp/index.php
 
-> API endpoint - 139 lines
+> API endpoint - 153 lines
 
 FreeITSM MCP server (3.2.0) - the Model Context Protocol, so an AI assistant (Claude Code, Claude Desktop, any MCP client) can read FreeITSM as the analyst an API key belongs to.
 
@@ -39,9 +39,9 @@ page can never send a credential here. This check is a second, cheap fence.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [mcpReply()](/code/functions/mcpReply.md) | 46 | Sends an HTTP status and, when given, a JSON body, then stops. |
-| [mcpResult()](/code/functions/mcpResult.md) | 56 | Sends a JSON-RPC 2.0 success response for request `$id`, then stops. |
-| [mcpRpcError()](/code/functions/mcpRpcError.md) | 61 | Sends a JSON-RPC 2.0 error response (code and message) for request `$id` with HTTP 200, as JSON-RPC expects, then stops. |
+| [mcpReply()](/code/functions/mcpReply.md) | 51 | Sends an HTTP status and, when given, a JSON body, then stops. |
+| [mcpResult()](/code/functions/mcpResult.md) | 66 | Sends a JSON-RPC 2.0 success response for request `$id`, then stops. |
+| [mcpRpcError()](/code/functions/mcpRpcError.md) | 75 | Sends a JSON-RPC 2.0 error response (code and message) for request `$id` with HTTP 200, as JSON-RPC expects, then stops. |
 
 ## How it hangs together
 

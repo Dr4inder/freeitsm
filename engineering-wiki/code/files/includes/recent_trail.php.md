@@ -1,6 +1,6 @@
 # includes/recent_trail.php
 
-> PHP - 556 lines
+> PHP - 572 lines
 
 The recent trail — "how did I get here", not "what did I look at".
 
@@ -61,40 +61,40 @@ would quietly drop records the analyst is perfectly entitled to open.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [entityVisit()](/code/functions/entityVisit.md) | 127 | Record that this analyst has just looked at this record — the PAGE LOAD path. |
-| [recentTrailWrite()](/code/functions/recentTrailWrite.md) | 152 | The write itself, with no opinion about what kind of request it is. |
-| [recentTrailShouldRecord()](/code/functions/recentTrailShouldRecord.md) | 220 | Is this request a person opening a record page? |
-| [recentTrailPrune()](/code/functions/recentTrailPrune.md) | 240 | Keep the log to its cap, by count and by age. |
-| [entityRecentTrail()](/code/functions/entityRecentTrail.md) | 280 | The analyst's trail, resolved and grouped into level-1 headings. |
-| [recentTrailWithinGap()](/code/functions/recentTrailWithinGap.md) | 359 | Are two visits close enough in time to belong to the same sitting? |
-| [recentTrailLabels()](/code/functions/recentTrailLabels.md) | 387 | Resolve a batch of trail rows to labels, dropping every one the analyst may not see. |
-| [recentTrailLabelsForType()](/code/functions/recentTrailLabelsForType.md) | 421 | One query for the labels of one type, then the record gate on each. |
+| [entityVisit()](/code/functions/entityVisit.md) | 130 | Record that this analyst has just looked at this record — the PAGE LOAD path. |
+| [recentTrailWrite()](/code/functions/recentTrailWrite.md) | 158 | The write itself, with no opinion about what kind of request it is. |
+| [recentTrailShouldRecord()](/code/functions/recentTrailShouldRecord.md) | 226 | Is this request a person opening a record page? |
+| [recentTrailPrune()](/code/functions/recentTrailPrune.md) | 246 | Keep the log to its cap, by count and by age. |
+| [entityRecentTrail()](/code/functions/entityRecentTrail.md) | 286 | The analyst's trail, resolved and grouped into level-1 headings. |
+| [recentTrailWithinGap()](/code/functions/recentTrailWithinGap.md) | 370 | Are two visits close enough in time to belong to the same sitting? |
+| [recentTrailLabels()](/code/functions/recentTrailLabels.md) | 398 | Resolve a batch of trail rows to labels, dropping every one the analyst may not see. |
+| [recentTrailLabelsForType()](/code/functions/recentTrailLabelsForType.md) | 437 | One query for the labels of one type, then the record gate on each. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 175 | `recentTrailWrite` | read [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
-| 186 | `recentTrailWrite` | **update** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) (`visited_datetime`) |  |
-| 197 | `recentTrailWrite` | **insert** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) (`analyst_id`, `entity_type`, `entity_id`, `visited_datetime`) |  |
-| 243 | `recentTrailPrune` | **delete** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
-| 253 | `recentTrailPrune` | **delete** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
-| 287 | `entityRecentTrail` | read [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
-| 430 | `recentTrailLabelsForType` | read [tickets](/code/tables/tickets.md) |  |
-| 436 | `recentTrailLabelsForType` | read [tasks](/code/tables/tasks.md) |  |
-| 441 | `recentTrailLabelsForType` | read [problems](/code/tables/problems.md) |  |
-| 447 | `recentTrailLabelsForType` | read [changes](/code/tables/changes.md) |  |
-| 454 | `recentTrailLabelsForType` | read [assets](/code/tables/assets.md) |  |
-| 463 | `recentTrailLabelsForType` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 468 | `recentTrailLabelsForType` | read [domains](/code/tables/domains.md) |  |
-| 474 | `recentTrailLabelsForType` | read [projects](/code/tables/projects.md) |  |
-| 476 | `recentTrailLabelsForType` | read [projects](/code/tables/projects.md) |  |
-| 487 | `recentTrailLabelsForType` | read [users](/code/tables/users.md) |  |
-| 492 | `recentTrailLabelsForType` | read [tenants](/code/tables/tenants.md) |  |
-| 499 | `recentTrailLabelsForType` | read [suppliers](/code/tables/suppliers.md) |  |
-| 504 | `recentTrailLabelsForType` | read [contacts](/code/tables/contacts.md) |  |
-| 512 | `recentTrailLabelsForType` | read [contracts](/code/tables/contracts.md) |  |
-| 525 | `recentTrailLabelsForType` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 181 | `recentTrailWrite` | read [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
+| 192 | `recentTrailWrite` | **update** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) (`visited_datetime`) |  |
+| 203 | `recentTrailWrite` | **insert** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) (`analyst_id`, `entity_type`, `entity_id`, `visited_datetime`) |  |
+| 249 | `recentTrailPrune` | **delete** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
+| 259 | `recentTrailPrune` | **delete** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
+| 293 | `entityRecentTrail` | read [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
+| 446 | `recentTrailLabelsForType` | read [tickets](/code/tables/tickets.md) |  |
+| 452 | `recentTrailLabelsForType` | read [tasks](/code/tables/tasks.md) |  |
+| 457 | `recentTrailLabelsForType` | read [problems](/code/tables/problems.md) |  |
+| 463 | `recentTrailLabelsForType` | read [changes](/code/tables/changes.md) |  |
+| 470 | `recentTrailLabelsForType` | read [assets](/code/tables/assets.md) |  |
+| 479 | `recentTrailLabelsForType` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 484 | `recentTrailLabelsForType` | read [domains](/code/tables/domains.md) |  |
+| 490 | `recentTrailLabelsForType` | read [projects](/code/tables/projects.md) |  |
+| 492 | `recentTrailLabelsForType` | read [projects](/code/tables/projects.md) |  |
+| 503 | `recentTrailLabelsForType` | read [users](/code/tables/users.md) |  |
+| 508 | `recentTrailLabelsForType` | read [tenants](/code/tables/tenants.md) |  |
+| 515 | `recentTrailLabelsForType` | read [suppliers](/code/tables/suppliers.md) |  |
+| 520 | `recentTrailLabelsForType` | read [contacts](/code/tables/contacts.md) |  |
+| 528 | `recentTrailLabelsForType` | read [contracts](/code/tables/contracts.md) |  |
+| 541 | `recentTrailLabelsForType` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

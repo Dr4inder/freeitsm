@@ -1,6 +1,6 @@
 # includes/projects/calendar.php
 
-> PHP - 116 lines
+> PHP - 124 lines
 
 Projects - the dates that matter, as all-day Calendar entries (3.2.0). Three kinds:
 
@@ -41,7 +41,7 @@ Domains entries are. The category name is the part an operator can change.
 | Function | Line | What it does |
 |---|--:|---|
 | [projectSyncCalendar()](/code/functions/projectSyncCalendar.md) | 46 | Redraw both kinds. Never throws: a calendar that is out of step must never stop a project being saved. |
-| [projectSyncCalendarKind()](/code/functions/projectSyncCalendarKind.md) | 97 | One kind: adopt its category, clear its entries, and - when on - draw one all-day entry per row. |
+| [projectSyncCalendarKind()](/code/functions/projectSyncCalendarKind.md) | 105 | One kind: adopt its category, clear its entries, and - when on - draw one all-day entry per row. |
 
 ## Database
 
@@ -53,8 +53,8 @@ Domains entries are. The category name is the part an operator can change.
 | 73 | `projectSyncCalendar` | read [projects](/code/tables/projects.md) |  |
 | 81 | `projectSyncCalendar` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
 | 86 | `projectSyncCalendar` | read [projects](/code/tables/projects.md) |  |
-| 100 | `projectSyncCalendarKind` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
-| 105 | `projectSyncCalendarKind` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
+| 108 | `projectSyncCalendarKind` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
+| 113 | `projectSyncCalendarKind` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
 
 ## How it hangs together
 

@@ -13,11 +13,11 @@ survives long enough to be useful on a machine somebody uses every day.
 function landingSetCookie(?string $key): void
 ```
 
-Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 102.
+Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 108.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `?string` |  |  |
+| `$key` | `?string` |  | 'analyst' or 'portal' to remember, or null to clear the cookie |
 
 **Returns:** `void`
 

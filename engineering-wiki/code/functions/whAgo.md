@@ -6,11 +6,11 @@ An age in seconds as translated "n seconds/minutes/hours/days ago" text; empty w
 function whAgo($s)
 ```
 
-Defined in [system/webhooks/index.php](/code/files/system/webhooks/index.php.md), line 179.
+Defined in [system/webhooks/index.php](/code/files/system/webhooks/index.php.md), line 189.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | the age in seconds; null for none |
 
 ## Calls
 

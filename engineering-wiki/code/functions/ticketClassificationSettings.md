@@ -9,7 +9,7 @@ against one company and the third against another.
 function ticketClassificationSettings(PDO $conn, ?int $tenantId): array
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 261.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 272.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

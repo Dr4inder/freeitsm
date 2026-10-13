@@ -15,12 +15,12 @@ the internet catch that and answer 404 rather than a fatal.
 function messagingOutboundMediaToken(int $attachmentId, int $expires): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 194.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 209.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$attachmentId` | `int` |  |  |
-| `$expires` | `int` |  |  |
+| `$attachmentId` | `int` |  | the attachment id the token is bound to |
+| `$expires` | `int` |  | the Unix timestamp the link stops working |
 
 **Returns:** `string`
 

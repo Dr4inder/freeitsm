@@ -27,6 +27,8 @@ require_once '../../includes/uploads.php';   // attachmentSendHeaders()
 /**
  * Sends the given HTTP status with a plain "Not found", then stops - every refusal looks
  * the same, so nothing is revealed about why.
+ *
+ * @param int $code  the HTTP status to send, e.g. 400, 404 or 410 for an expired link
  */
 function mediaFail(int $code): void
 {

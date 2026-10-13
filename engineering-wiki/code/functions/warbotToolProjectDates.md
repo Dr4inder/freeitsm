@@ -6,12 +6,12 @@ project_dates: one project's key dates via `projectAssistDates()`, scoped to the
 function warbotToolProjectDates(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 994.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 1073.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$args` | `array` |  |  |
+| `$args` | `array` |  | the model's arguments - untrusted: days (how far ahead, default 14, max 90) |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`

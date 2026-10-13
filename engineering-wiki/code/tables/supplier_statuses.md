@@ -30,6 +30,6 @@
 | [api/rfp-builder/create_prospective_supplier.php](/code/files/api/rfp-builder/create_prospective_supplier.php.md) | L55 |  |
 | [api/rfp-builder/get_available_suppliers.php](/code/files/api/rfp-builder/get_available_suppliers.php.md) | L31 |  |
 | [api/rfp-builder/get_invited_suppliers.php](/code/files/api/rfp-builder/get_invited_suppliers.php.md) | L32 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiSupplierSelect L151 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleSupplierRows L622, supplierDetail L650 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiSupplierSelect L157 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleSupplierRows L673, supplierDetail L705 |  |
 

@@ -6,18 +6,18 @@ App-only access token via the client-credentials flow (no user, no interactive s
 function mailboxAppOnlyToken($conn, $mailbox)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 29.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 31.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row, decrypted (azure_tenant_id, azure_client_id, azure_client_secret, token_data, id) |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 66 | `mailboxAppOnlyToken` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
+| 68 | `mailboxAppOnlyToken` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
 
 ## Calls
 

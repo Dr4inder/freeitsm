@@ -9,12 +9,12 @@ Whether a table exists in this database - false on any error, so an older instal
 function tableExists(PDO $c, $table)
 ```
 
-Defined in [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md), line 175.
+Defined in [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md), line 206.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `PDO` |  |  |
-| `$table` |  |  |  |
+| `$c` | `PDO` |  | the database connection |
+| `$table` |  |  | the table name to look for |
 
 ## Called from
 

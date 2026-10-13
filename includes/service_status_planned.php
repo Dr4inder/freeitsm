@@ -58,7 +58,11 @@ function statusPlannedReady(PDO $conn): bool
     return $ready;
 }
 
-/** 'Y-m-d H:i:s' UTC from anything strtotime() reads as UTC (the page sends ISO from inputToUTC()). */
+/**
+ * 'Y-m-d H:i:s' UTC from anything strtotime() reads as UTC (the page sends ISO from inputToUTC()).
+ *
+ * @param mixed $v  a date and time from the request, UTC unless it carries its own offset; null or '' gives null
+ */
 function statusPlannedUtc($v): ?string
 {
     if ($v === null || $v === '') return null;
@@ -72,6 +76,8 @@ function statusPlannedUtc($v): ?string
  * $in: title, comment, start, end?, services [{service_id, impact_level_id}],
  *      project_id?. A start that has already passed starts it at once.
  * Returns the id.
+ *
+ * @param array $in  the request fields: id (0 or absent = new), title, comment, start, end, services, project_id
  */
 function statusPlannedSave(PDO $conn, ActorContext $ctx, array $in): int
 {
@@ -116,7 +122,11 @@ function statusPlannedSave(PDO $conn, ActorContext $ctx, array $in): int
     return $id;
 }
 
-/** Cancel planned maintenance that has not started. */
+/**
+ * Cancel planned maintenance that has not started.
+ *
+ * @param int $id  the status_planned row to cancel; must still be 'scheduled'
+ */
 function statusPlannedCancel(PDO $conn, ActorContext $ctx, int $id): void
 {
     $cur = statusPlannedLoad($conn, $id);
@@ -124,7 +134,11 @@ function statusPlannedCancel(PDO $conn, ActorContext $ctx, int $id): void
     $conn->prepare("UPDATE status_planned SET state = 'cancelled', updated_datetime = UTC_TIMESTAMP() WHERE id = ? AND state = 'scheduled'")->execute([$id]);
 }
 
-/** Loads one planned maintenance row; throws not found when it does not exist. */
+/**
+ * Loads one planned maintenance row; throws not found when it does not exist.
+ *
+ * @param int $id  the status_planned row to load
+ */
 function statusPlannedLoad(PDO $conn, int $id): array
 {
     $st = $conn->prepare("SELECT * FROM status_planned WHERE id = ?");
@@ -137,6 +151,8 @@ function statusPlannedLoad(PDO $conn, int $id): array
 /**
  * Planned maintenance for a list: scheduled and in progress by default, soonest
  * first, each with its services. $opts: project_id, states, limit.
+ *
+ * @param array $opts  project_id (only that project's), states (default scheduled + started), limit (1-500, default 100)
  */
 function statusPlannedList(PDO $conn, array $opts = []): array
 {
@@ -196,6 +212,8 @@ function statusPlannedDue(PDO $conn): void
 
 /**
  * Start what is due and finish what has ended. $onlyId = one plan (just saved).
+ *
+ * @param ?int $onlyId  a status_planned id to act on alone, or null for every plan that is due
  * @return array{started:int, finished:int}
  */
 function statusPlannedRun(PDO $conn, ?int $onlyId = null): array
@@ -236,7 +254,11 @@ function statusPlannedRun(PDO $conn, ?int $onlyId = null): array
     return $out;
 }
 
-/** The person who scheduled it, as the actor of the incident's history. */
+/**
+ * The person who scheduled it, as the actor of the incident's history.
+ *
+ * @param array $p  the status_planned row; its created_by_id names the analyst
+ */
 function statusPlannedActor(PDO $conn, array $p): ActorContext
 {
     $id = (int)($p['created_by_id'] ?? 0);
@@ -265,6 +287,7 @@ function statusPlannedStatusId(PDO $conn): ?int
  * Starts a planned maintenance: opens an external incident on its services and backdates it
  * to the planned start.
  *
+ * @param array $p  the status_planned row being started, as read by statusPlannedRun()
  * @writes status_incidents, status_incident_updates(created_datetime),
  *     status_planned(incident_id)
  */
@@ -294,6 +317,8 @@ function statusPlannedStart(PDO $conn, array $p): void
  * backdates the end to the planned end.
  *
  * Does nothing if the incident is gone, already resolved, or no resolved status exists.
+ *
+ * @param array $p  the status_planned row being finished, with its incident_id and planned_end_datetime
  */
 function statusPlannedFinish(PDO $conn, array $p): void
 {

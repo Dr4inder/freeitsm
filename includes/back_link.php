@@ -14,7 +14,11 @@
 
 const BACK_LINK_PLACES = ['portal', 'analyst', 'both'];
 
-/** True when $url is a plain http(s) address - the only kind ever rendered. */
+/**
+ * True when $url is a plain http(s) address - the only kind ever rendered.
+ *
+ * @param string $url  the stored or posted address to check
+ */
 function backLinkUrlValid(string $url): bool
 {
     return (bool)preg_match('#^https?://[^\s<>"]+$#i', $url) && filter_var($url, FILTER_VALIDATE_URL) !== false;
@@ -37,6 +41,8 @@ function backLinkSettings(PDO $conn): array
 /**
  * The link's HTML for a header ('portal' or 'analyst'), or '' when it is not set
  * up, not meant for this side, or its address is not a plain http(s) one.
+ *
+ * @param string $side  which header is asking - 'portal' or 'analyst' (also used in the link's class name)
  */
 function backLinkHtml(PDO $conn, string $side): string
 {

@@ -6,13 +6,13 @@ The company clause plus members-only (3.3.0): a pack carries a members-only proj
 function rpProjectClause(PDO $conn, int $analystId, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 59.
+Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 67.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$tenant` |  |  |  |
+| `$tenant` |  |  | the pack's company: 'active', 'all' or a company id |
 
 **Returns:** `array`
 

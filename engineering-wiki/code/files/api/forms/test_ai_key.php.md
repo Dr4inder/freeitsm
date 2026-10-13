@@ -1,6 +1,6 @@
 # api/forms/test_ai_key.php
 
-> API endpoint - 168 lines
+> API endpoint - 176 lines
 
 API: Send a tiny "say ok" prompt to the chosen provider so the user can verify their key + model BEFORE saving. Supports both Anthropic and OpenAI. If the masked placeholder ("****abcd") is submitted, the stored key is decrypted and used — so the user can test the saved config without re-typing the secret.
 
@@ -17,8 +17,8 @@ Mirrors api/workflow/test_ai_key.php.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [formsTestAnthropic()](/code/functions/formsTestAnthropic.md) | 84 | Sends a tiny prompt to the Anthropic Messages API to prove the key and model work, and returns the reply text with the token counts. |
-| [formsTestOpenAI()](/code/functions/formsTestOpenAI.md) | 132 | Sends a tiny prompt to the OpenAI Chat Completions API to prove the key and model work, and returns the reply text with the token counts. |
+| [formsTestAnthropic()](/code/functions/formsTestAnthropic.md) | 88 | Sends a tiny prompt to the Anthropic Messages API to prove the key and model work, and returns the reply text with the token counts. |
+| [formsTestOpenAI()](/code/functions/formsTestOpenAI.md) | 140 | Sends a tiny prompt to the OpenAI Chat Completions API to prove the key and model work, and returns the reply text with the token counts. |
 
 ## Database
 

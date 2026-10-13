@@ -15,7 +15,7 @@ function renderDocumentsPanel(
 ): void
 ```
 
-Defined in [includes/documents_panel.php](/code/files/includes/documents_panel.php.md), line 54.
+Defined in [includes/documents_panel.php](/code/files/includes/documents_panel.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

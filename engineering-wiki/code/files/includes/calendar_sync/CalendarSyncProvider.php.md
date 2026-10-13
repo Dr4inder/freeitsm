@@ -1,6 +1,6 @@
 # includes/calendar_sync/CalendarSyncProvider.php
 
-> PHP - 269 lines
+> PHP - 299 lines
 
 CalendarSyncProvider — the provider-agnostic contract for putting an analyst's scheduled work into the calendar they actually live in (GH discussion #75).
 
@@ -47,8 +47,8 @@ the single most likely way to get this integration subtly wrong.
 ## Classes
 
 - [CalendarSyncProvider](/code/classes/CalendarSyncProvider.md) (class, line 47) - CalendarSyncProvider — the provider-agnostic contract for putting an analyst's scheduled work into the calendar they actually live in (GH discussion #75).
-- [CalendarEventMissing](/code/classes/CalendarEventMissing.md) (class, line 260) - The event we were told to update is no longer there.
-- [CalendarSubscriptionMissing](/code/classes/CalendarSubscriptionMissing.md) (class, line 268) - The subscription we tried to renew has already lapsed.
+- [CalendarEventMissing](/code/classes/CalendarEventMissing.md) (class, line 290) - The event we were told to update is no longer there.
+- [CalendarSubscriptionMissing](/code/classes/CalendarSubscriptionMissing.md) (class, line 298) - The subscription we tried to renew has already lapsed.
 
 ## How it hangs together
 

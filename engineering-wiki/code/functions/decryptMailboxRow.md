@@ -6,7 +6,7 @@ Decrypt all encrypted columns in a target_mailboxes row.
 function decryptMailboxRow($row)
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 313.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 323.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

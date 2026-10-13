@@ -1,6 +1,6 @@
 # api/tickets/manager_access.php
 
-> API endpoint - 357 lines
+> API endpoint - 369 lines
 
 API: one manager's management lines - the full-screen Manager access page (includes/manager_access_page.php), discussion #62 step 3.
 
@@ -35,35 +35,35 @@ not a check, an id in a JSON body is any integer.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [maFail()](/code/functions/maFail.md) | 39 | Refuse, in the one shape every refusal takes here. |
-| [maManager()](/code/functions/maManager.md) | 46 | The manager, if this analyst may see them. |
-| [maReady()](/code/functions/maReady.md) | 60 | Are the tables there? Before DB Verify there is nothing to show or change. |
-| [maState()](/code/functions/maState.md) | 67 | Everything the page shows for one manager. |
+| [maFail()](/code/functions/maFail.md) | 43 | Refuse, in the one shape every refusal takes here. |
+| [maManager()](/code/functions/maManager.md) | 54 | The manager, if this analyst may see them. |
+| [maReady()](/code/functions/maReady.md) | 68 | Are the tables there? Before DB Verify there is nothing to show or change. |
+| [maState()](/code/functions/maState.md) | 79 | Everything the page shows for one manager. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 50 | `maManager` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
-| 62 | `maReady` | read [manager_grants](/code/tables/manager_grants.md) |  |
-| 96 | `maState` | read [manager_grants](/code/tables/manager_grants.md), read [users](/code/tables/users.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [analysts](/code/tables/analysts.md) |  |
-| 137 | `maState` | read [users](/code/tables/users.md) |  |
-| 174 |  | read [users](/code/tables/users.md) |  |
-| 188 |  | read [users](/code/tables/users.md) |  |
-| 212 |  | read [manager_grants](/code/tables/manager_grants.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 248 |  | read [users](/code/tables/users.md) |  |
-| 251 |  | read [users](/code/tables/users.md) |  |
-| 263 |  | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [users](/code/tables/users.md) |  |
-| 266 |  | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 269 |  | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 281 |  | read [users](/code/tables/users.md) |  |
-| 284 |  | read [users](/code/tables/users.md) |  |
-| 301 |  | **delete** [manager_grants](/code/tables/manager_grants.md) |  |
-| 317 |  | read [users](/code/tables/users.md) |  |
-| 322 |  | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 331 |  | **delete** [manager_grants](/code/tables/manager_grants.md) |  |
-| 337 |  | read [manager_grants](/code/tables/manager_grants.md) |  |
-| 343 |  | **insert** [manager_grants](/code/tables/manager_grants.md) (`manager_user_id`, `grant_type`, `target_id`, `target_value`, `is_exclusion`, `created_by_analyst_id`, `created_datetime`) |  |
+| 58 | `maManager` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
+| 70 | `maReady` | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 108 | `maState` | read [manager_grants](/code/tables/manager_grants.md), read [users](/code/tables/users.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [analysts](/code/tables/analysts.md) |  |
+| 149 | `maState` | read [users](/code/tables/users.md) |  |
+| 186 |  | read [users](/code/tables/users.md) |  |
+| 200 |  | read [users](/code/tables/users.md) |  |
+| 224 |  | read [manager_grants](/code/tables/manager_grants.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 260 |  | read [users](/code/tables/users.md) |  |
+| 263 |  | read [users](/code/tables/users.md) |  |
+| 275 |  | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [users](/code/tables/users.md) |  |
+| 278 |  | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 281 |  | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 293 |  | read [users](/code/tables/users.md) |  |
+| 296 |  | read [users](/code/tables/users.md) |  |
+| 313 |  | **delete** [manager_grants](/code/tables/manager_grants.md) |  |
+| 329 |  | read [users](/code/tables/users.md) |  |
+| 334 |  | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 343 |  | **delete** [manager_grants](/code/tables/manager_grants.md) |  |
+| 349 |  | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 355 |  | **insert** [manager_grants](/code/tables/manager_grants.md) (`manager_user_id`, `grant_type`, `target_id`, `target_value`, `is_exclusion`, `created_by_analyst_id`, `created_datetime`) |  |
 
 ## How it hangs together
 

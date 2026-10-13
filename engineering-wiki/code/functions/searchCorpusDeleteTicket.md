@@ -6,7 +6,7 @@ Remove every row for a ticket. The FK cascades on ticket DELETE; this is for sof
 function searchCorpusDeleteTicket(PDO $conn, int $ticketId): void
 ```
 
-Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 135.
+Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 143.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 136 | `searchCorpusDeleteTicket` | **delete** [search_documents](/code/tables/search_documents.md) |  |
+| 144 | `searchCorpusDeleteTicket` | **delete** [search_documents](/code/tables/search_documents.md) |  |
 
 ## Called from
 

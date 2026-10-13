@@ -19,15 +19,15 @@ function splitCreateTicket(
 ): int
 ```
 
-Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 248.
+Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 262.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$source` | `array` |  |  |
-| `$moving` | `array` |  |  |
-| `$actorId` | `int` |  |  |
-| `$newSubject` | `?string` |  |  |
+| `$source` | `array` |  | the source ticket row as loaded by TicketsService::loadTicket() |
+| `$moving` | `array` |  | the message rows being moved, oldest first (from splitMessagesFrom/ByIds) |
+| `$actorId` | `int` |  | the analyst splitting (not stored on the ticket itself) |
+| `$newSubject` | `?string` |  | the subject the analyst typed; null or '' falls back as described above |
 
 **Returns:** `int`
 
@@ -35,8 +35,8 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 268 | `splitCreateTicket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 273 | `splitCreateTicket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_analyst_id`, `origin_id`, `user_id`, `owner_id`, `tenant_id`, `created_datetime`) |  |
+| 282 | `splitCreateTicket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 287 | `splitCreateTicket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_analyst_id`, `origin_id`, `user_id`, `owner_id`, `tenant_id`, `created_datetime`) |  |
 
 ## Called from
 
@@ -45,5 +45,5 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 ## Traps
 
 > [!WARNING]
-> **Line 249, in `splitCreateTicket`:** the install's numbering, never a number made here - see `messagingGenerateTicketNumber()` for what went wrong when it was.
+> **Line 263, in `splitCreateTicket`:** the install's numbering, never a number made here - see `messagingGenerateTicketNumber()` for what went wrong when it was.
 

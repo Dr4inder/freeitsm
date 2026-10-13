@@ -6,14 +6,14 @@ A GET that returns the body on success, or null on any failure (per-item problem
 function vcdTryGet(array $c, string $token, string $path, array $headers): ?string
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 116.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 146.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
-| `$token` | `string` |  |  |
-| `$path` | `string` |  |  |
-| `$headers` | `array` |  |  |
+| `$c` | `array` |  | the connection row from `vcdLoadConnection()` |
+| `$token` | `string` |  | the session token from `vcdLogin()` |
+| `$path` | `string` |  | the path after the host, starting with '/' |
+| `$headers` | `array` |  | the Accept header lines (vcdAcceptJson() or `vcdAcceptXml()`) |
 
 **Returns:** `?string`
 

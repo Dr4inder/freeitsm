@@ -28,7 +28,11 @@ require_once __DIR__ . '/hypervisor_http.php';
 const PROXMOX_MIN_VMS_FOR_GUARD = 5;
 const PROXMOX_MIN_SEEN_RATIO    = 0.5;
 
-/** Decrypted connection row, or throws. Never returns the password to a caller that will display it. */
+/**
+ * Decrypted connection row, or throws. Never returns the password to a caller that will display it.
+ *
+ * @param int $connectionId  the proxmox_connections id
+ */
 function proxmoxLoadConnection(PDO $conn, int $connectionId): array
 {
     $stmt = $conn->prepare("SELECT * FROM proxmox_connections WHERE id = ?");
@@ -44,13 +48,19 @@ function proxmoxLoadConnection(PDO $conn, int $connectionId): array
 /**
  * A username containing "!" is an API token: "user@realm!tokenid", with the token's
  * secret typed into the password field. Token auth needs no login and no CSRF token.
+ *
+ * @param array $c  the connection row - username is read
  */
 function proxmoxIsApiToken(array $c): bool
 {
     return strpos((string)($c['username'] ?? ''), '!') !== false;
 }
 
-/** Authentication for this server: an API token header, or a login ticket for a user. */
+/**
+ * Authentication for this server: an API token header, or a login ticket for a user.
+ *
+ * @param array $c  the connection row from proxmoxLoadConnection(), password decrypted
+ */
 function proxmoxLogin(array $c): array
 {
     if (proxmoxIsApiToken($c)) {
@@ -67,7 +77,15 @@ function proxmoxLogin(array $c): array
     return ['ticket' => $data['ticket'], 'csrf' => $data['CSRFPreventionToken'] ?? ''];
 }
 
-/** One API call. $auth is null for the login call itself. Throws with a readable message. */
+/**
+ * One API call. $auth is null for the login call itself. Throws with a readable message.
+ *
+ * @param array $c  the connection row - host and verify_ssl are read
+ * @param string $method  the HTTP method, e.g. 'GET' or 'POST'
+ * @param string $path  the API path from the host, starting '/api2/json/...'
+ * @param ?array $form  form fields to send as the body; null for none
+ * @param ?array $auth  what proxmoxLogin() returned (a token header, or ticket and csrf); null for the login call itself
+ */
 function proxmoxCall(array $c, string $method, string $path, ?array $form = null, ?array $auth = null): array
 {
     $headers = [];
@@ -103,7 +121,13 @@ function proxmoxCall(array $c, string $method, string $path, ?array $form = null
     return is_array($json) ? $json : [];
 }
 
-/** GET a resource and return its data, or null if this node/VM cannot answer (not an error for the whole sync). */
+/**
+ * GET a resource and return its data, or null if this node/VM cannot answer (not an error for the whole sync).
+ *
+ * @param array $c  the connection row
+ * @param array $auth  what proxmoxLogin() returned
+ * @param string $path  the path after '/api2/json', e.g. '/cluster/status'
+ */
 function proxmoxTryGet(array $c, array $auth, string $path)
 {
     try {
@@ -113,7 +137,11 @@ function proxmoxTryGet(array $c, array $auth, string $path)
     }
 }
 
-/** Test the connection without writing anything: login, then read the node list. */
+/**
+ * Test the connection without writing anything: login, then read the node list.
+ *
+ * @param array $c  the connection row from proxmoxLoadConnection(), password decrypted
+ */
 function proxmoxTestConnection(array $c): string
 {
     $auth = proxmoxLogin($c);
@@ -132,6 +160,8 @@ function proxmoxTestConnection(array $c): string
 /**
  * Sync one server. Returns a summary and records it on the connection row.
  * Never throws for a per-VM or per-node problem: those are counted and reported.
+ *
+ * @param int $connectionId  the proxmox_connections id to sync
  */
 function proxmoxSyncConnection(PDO $conn, int $connectionId): array
 {
@@ -266,7 +296,17 @@ function proxmoxSyncConnection(PDO $conn, int $connectionId): array
     return $summary;
 }
 
-/** Everything we keep about one VM, from its list entry plus its config (and guest agent for IPs). */
+/**
+ * Everything we keep about one VM, from its list entry plus its config (and guest agent for IPs).
+ *
+ * @param array $c  the connection row
+ * @param array $auth  what proxmoxLogin() returned
+ * @param string $type  'qemu' for a VM or 'lxc' for a container
+ * @param string $node  the node name the VM is on
+ * @param int $vmid  the VM's Proxmox id
+ * @param array $listEntry  the VM's entry from the node's qemu or lxc list (name, status, maxmem)
+ * @param string $clusterName  the cluster's name, or the node's when it is not in a cluster
+ */
 function proxmoxVmDetails(array $c, array $auth, string $type, string $node, int $vmid, array $listEntry, string $clusterName): array
 {
     $base = '/nodes/' . rawurlencode($node) . '/' . $type . '/' . $vmid;
@@ -341,6 +381,10 @@ function proxmoxVmDetails(array $c, array $auth, string $type, string $node, int
  * The disks, adapters and guest interfaces in the shape the asset detail view reads
  * (the same shape the vCenter sync stores as raw_data), so Proxmox VMs show the same
  * sections without any special casing in the page.
+ *
+ * @param array $cfg  the VM's config as Proxmox returns it (disk, net and other keys)
+ * @param string $type  'qemu' or 'lxc'
+ * @param array $guestIfaces  the guest agent's interfaces, shaped by proxmoxVmDetails(); [] when there is no agent
  */
 function proxmoxVmDetailBlock(array $cfg, string $type, array $guestIfaces): array
 {
@@ -384,13 +428,23 @@ function proxmoxVmDetailBlock(array $cfg, string $type, array $guestIfaces): arr
     ];
 }
 
-/** Proxmox size suffix to GB: K, M, G, T (no suffix means GB). */
+/**
+ * Proxmox size suffix to GB: K, M, G, T (no suffix means GB).
+ *
+ * @param float $n  the size number from a Proxmox size= value
+ * @param string $unit  its suffix, upper case: 'K', 'M', 'G', 'T', or '' for GB
+ */
 function proxmoxSizeToGb(float $n, string $unit): float
 {
     return $unit === 'T' ? $n * 1024 : ($unit === 'M' ? $n / 1024 : ($unit === 'K' ? $n / 1048576 : $n));
 }
 
-/** Provisioned disk size in GB, from the config keys (not live usage). */
+/**
+ * Provisioned disk size in GB, from the config keys (not live usage).
+ *
+ * @param array $cfg  the VM's config as Proxmox returns it
+ * @param string $type  'qemu' or 'lxc' - decides which keys are disks
+ */
 function proxmoxDiskGb(array $cfg, string $type): ?float
 {
     $total = 0.0;
@@ -422,6 +476,8 @@ function proxmoxDiskGb(array $cfg, string $type): ?float
  *   It is stored only through encryptValue(), never returned to the browser
  *   (proxmoxConnectionOut() says has_password and nothing more), and a blank or
  *   all-asterisks value on edit keeps the stored one.
+ *
+ * @param array $in  the settings form's fields (untrusted): id, name, host, username, password, verify_ssl, is_active, sync_interval_minutes
  */
 function proxmoxSaveConnection(PDO $conn, array $in): int
 {
@@ -472,7 +528,11 @@ function proxmoxSaveConnection(PDO $conn, array $in): int
     return (int)$conn->lastInsertId();
 }
 
-/** A server as the browser may see it: never the password, only whether there is one. */
+/**
+ * A server as the browser may see it: never the password, only whether there is one.
+ *
+ * @param array $r  a proxmox_connections row
+ */
 function proxmoxConnectionOut(array $r): array
 {
     return [

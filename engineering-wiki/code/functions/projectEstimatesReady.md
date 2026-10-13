@@ -6,7 +6,7 @@ Has Database Verification added tasks.estimate_hours (3.3.0)? Reads stay working
 function projectEstimatesReady(PDO $conn): bool
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 334.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 358.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 338 | `projectEstimatesReady` | read [tasks](/code/tables/tasks.md) |  |
+| 362 | `projectEstimatesReady` | read [tasks](/code/tables/tasks.md) |  |
 
 ## Called from
 

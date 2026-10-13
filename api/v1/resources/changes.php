@@ -40,7 +40,11 @@ require_once dirname(__DIR__, 3) . '/includes/services/changes.php';
 // Shared helpers
 // ---------------------------------------------------------------------------
 
-/** The display reference of a change, such as CHG-0042. */
+/**
+ * The display reference of a change, such as CHG-0042.
+ *
+ * @param int $id  the changes row id
+ */
 function apiChangeNumber(int $id): string {
     return 'CHG-' . str_pad((string)$id, 4, '0', STR_PAD_LEFT);
 }
@@ -74,7 +78,11 @@ function apiChangeSelect(): string {
             LEFT JOIN tenants           tn  ON tn.id = c.tenant_id";
 }
 
-/** Summary shape (lists). Detail adds the longtext bodies, PIR, attachments, links. */
+/**
+ * Summary shape (lists). Detail adds the longtext bodies, PIR, attachments, links.
+ *
+ * @param array $r  the changes row as apiChangeSelect() loads it, with the lookup and people names
+ */
 function apiSerializeChange(array $r): array {
     $rel = function ($id, $name, array $extra = []) {
         return $id === null ? null : array_merge(['id' => (int)$id, 'name' => $name], $extra);
@@ -124,6 +132,8 @@ function apiSerializeChange(array $r): array {
 /**
  * Loads one change row (apiChangeSelect), or answers 404 and stops - including for a
  * change in a company the key cannot reach.
+ *
+ * @param int $changeId  the changes id
  */
 function apiLoadChange(PDO $conn, array $apiKey, int $changeId): array {
     // Company isolation: a change outside the key's scope is "not found".
@@ -486,6 +496,8 @@ function apiChangeCabVote(PDO $conn, array $apiKey, array $params, array $body):
 // ---------------------------------------------------------------------------
 // Reference lookups
 // ---------------------------------------------------------------------------
+// @param string $table  the change lookup table to list (change_statuses, change_types ...) - fixed by the caller, never input
+// @param bool $hasIsClosed  true to include the table's is_closed column (change_statuses only)
 function apiChangeLookupList(PDO $conn, string $table, bool $hasIsClosed = false): void {
     $cols = 'id, name, colour, is_default, is_active' . ($hasIsClosed ? ', is_closed' : '');
     $rows = $conn->query("SELECT $cols FROM `$table` ORDER BY display_order, name")->fetchAll(PDO::FETCH_ASSOC);

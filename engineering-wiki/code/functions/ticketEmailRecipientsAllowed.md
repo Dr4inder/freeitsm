@@ -13,7 +13,7 @@ back. A deny-list could not work here: nobody can list who must not see it.
 function ticketEmailRecipientsAllowed(PDO $conn, int $ticketId, string $to): bool
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 277.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 292.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -27,8 +27,8 @@ Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensiti
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 285 | `ticketEmailRecipientsAllowed` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
-| 289 | `ticketEmailRecipientsAllowed` | read [analysts](/code/tables/analysts.md) |  |
+| 300 | `ticketEmailRecipientsAllowed` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
+| 304 | `ticketEmailRecipientsAllowed` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

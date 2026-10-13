@@ -6,7 +6,7 @@ The windows we announce an expiry at. A contract expiring in 45 days crosses the
 function workflowExpiryWindows(): array
 ```
 
-Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 105.
+Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 110.
 
 **Returns:** `array`
 

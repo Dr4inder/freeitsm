@@ -6,12 +6,12 @@ Has Database Verification added cost_centre_id to `$table` yet?
 function costCentreReady(PDO $conn, string $table): bool
 ```
 
-Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 28.
+Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 32.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
+| `$table` | `string` |  | the table to probe, e.g. 'assets' (trusted - put straight into SQL) |
 
 **Returns:** `bool`
 

@@ -30,18 +30,18 @@ Benefits realisation (3.3.0) - includes/projects/benefits.php.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):100 | `ProjectTemplatesService::createFromTemplate` | insert | `project_id`, `title`, `measure`, `unit`, `direction`, `target_value`, `target_date`, `review_date`, `review_months`, `status` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1284 | `ProjectToolsService::saveBenefit` | update | `title`, `measure`, `unit`, `direction`, `baseline_value`, `target_value`, `target_date`, `owner_analyst_id`, `review_date`, `review_months` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1292 | `ProjectToolsService::saveBenefit` | insert | `title`, `measure`, `unit`, `direction`, `baseline_value`, `target_value`, `target_date`, `owner_analyst_id`, `review_date`, `review_months` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1309 | `ProjectToolsService::deleteBenefit` | delete |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1334 | `ProjectToolsService::addBenefitMeasure` | update | `review_date`, `updated_datetime` |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):104 | `ProjectTemplatesService::createFromTemplate` | insert | `project_id`, `title`, `measure`, `unit`, `direction`, `target_value`, `target_date`, `review_date`, `review_months`, `status` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1414 | `ProjectToolsService::saveBenefit` | update | `title`, `measure`, `unit`, `direction`, `baseline_value`, `target_value`, `target_date`, `owner_analyst_id`, `review_date`, `review_months` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1422 | `ProjectToolsService::saveBenefit` | insert | `title`, `measure`, `unit`, `direction`, `baseline_value`, `target_value`, `target_date`, `owner_analyst_id`, `review_date`, `review_months` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1443 | `ProjectToolsService::deleteBenefit` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1471 | `ProjectToolsService::addBenefitMeasure` | update | `review_date`, `updated_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md) | projectBenefitsReady L38, projectBenefits L72, projectBenefitStats L113, projectAlertsBenefits L146 |  |
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L474 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::saveBenefit L1291, ProjectToolsService::benefit L1356 |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::deleteProject L252 |  |
+| [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md) | projectBenefitsReady L38, projectBenefits L78, projectBenefitStats L123, projectAlertsBenefits L166 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L495 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::saveBenefit L1421, ProjectToolsService::benefit L1502 |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::deleteProject L264 |  |
 

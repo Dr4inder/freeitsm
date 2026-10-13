@@ -6,11 +6,11 @@ A bare date (a contract end, a domain expiry, a deadline) - shown as stored, nev
 function peopleBareDate(?string $d): string
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 853.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 928.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` | `?string` |  |  |
+| `$d` | `?string` |  | a 'Y-m-d' date (anything after the first 10 characters is ignored); null or '' gives '' |
 
 **Returns:** `string`
 

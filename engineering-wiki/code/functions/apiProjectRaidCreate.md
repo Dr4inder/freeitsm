@@ -6,7 +6,7 @@ POST /projects/{id}/raid - adds a RAID entry through ProjectToolsService and ret
 function apiProjectRaidCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 486.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 517.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,12 +6,12 @@ project_overview: one project's overview via `projectAssistOverview()`, scoped t
 function warbotToolProjectOverview(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 973.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 1040.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$args` | `array` |  |  |
+| `$args` | `array` |  | the model's arguments - untrusted: project (code, id or part of the name) |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`

@@ -6,13 +6,13 @@ Saves one Projects setting to system_settings (insert or update).
 function projectSettingWrite(PDO $conn, string $key, string $value): void
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 178.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 191.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$value` | `string` |  |  |
+| `$key` | `string` |  | the setting key, e.g. 'project_currency' |
+| `$value` | `string` |  | the value to store, already checked by `projectSettingValidate()` |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/projects/settings.php](/code/files/includes/projects/settin
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 181 | `projectSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 194 | `projectSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## Called from
 

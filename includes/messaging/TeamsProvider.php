@@ -83,6 +83,11 @@ class TeamsProvider extends MessagingProvider
      * Checks an inbound Bot Framework activity: the bearer JWT's signature, issuer and
      * audience (the app id), and that its service URL is an allowed Microsoft host matching
      * the token.
+     *
+     * @param string $rawBody  the raw JSON activity, read for serviceUrl and the sender's tenant
+     * @param array $headers  the request headers, lower-cased keys - 'authorization' carries the Bot Framework JWT
+     * @param array $params  the parsed POST parameters (not used)
+     * @param string $url  the public URL that was hit (not used)
      */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
@@ -121,7 +126,12 @@ class TeamsProvider extends MessagingProvider
         return $tenant !== '' && $from === $tenant;
     }
 
-    /** An https URL whose host is one of $hosts (exact, or a suffix starting with a dot). */
+    /**
+     * An https URL whose host is one of $hosts (exact, or a suffix starting with a dot).
+     *
+     * @param string $url  the URL to check; only https passes
+     * @param array $hosts  allowed hosts - an exact name, or a suffix starting with a dot
+     */
     private static function hostAllowed(string $url, array $hosts): bool
     {
         $p = parse_url($url);
@@ -137,7 +147,11 @@ class TeamsProvider extends MessagingProvider
         return false;
     }
 
-    /** "<serviceUrl>|<conversationId>" -> [serviceUrl, conversationId]. A bare id uses the default region. */
+    /**
+     * "<serviceUrl>|<conversationId>" -> [serviceUrl, conversationId]. A bare id uses the default region.
+     *
+     * @param string $to  the reply address "<serviceUrl>|<conversationId>", or a bare conversation id
+     */
     private static function splitAddress(string $to): array
     {
         $bar = strrpos($to, '|');
@@ -153,6 +167,9 @@ class TeamsProvider extends MessagingProvider
      *
      * Group chats and channels are ignored, since one conversation there is shared by many
      * people.
+     *
+     * @param string $rawBody  the raw JSON Bot Framework activity
+     * @param array $params  the parsed POST parameters (not used)
      */
     public function parseInbound(string $rawBody, array $params): array
     {
@@ -225,6 +242,10 @@ class TeamsProvider extends MessagingProvider
     /**
      * The rating question as an Adaptive Card with five buttons, 1 to 5. A press
      * comes back as a message whose value carries csat.r (response id) and csat.v (rating).
+     *
+     * @param string $to  the reply address "<serviceUrl>|<conversationId>"
+     * @param string $text  the rating question
+     * @param int $responseId  the ticket_csat_responses id each button carries back
      */
     public function sendRatingRequest(string $to, string $text, int $responseId): string
     {
@@ -251,7 +272,12 @@ class TeamsProvider extends MessagingProvider
         ]);
     }
 
-    /** Sends a text reply into the Teams conversation and returns the activity id. */
+    /**
+     * Sends a text reply into the Teams conversation and returns the activity id.
+     *
+     * @param string $to  the reply address "<serviceUrl>|<conversationId>"; '' throws
+     * @param string $body  the reply text
+     */
     public function sendMessage(string $to, string $body): string
     {
         if ($to === '') {
@@ -265,6 +291,13 @@ class TeamsProvider extends MessagingProvider
      * a public https address — messagingOutboundMediaUrl() provides one, which is
      * why images are the only kind this sends. Other files are refused with a
      * plain message, not sent as a broken attachment.
+     *
+     * @param string $to  the reply address "<serviceUrl>|<conversationId>"
+     * @param string $filePath  the file on this server's disk; only its name is used
+     * @param string $mimeType  the file's MIME type - anything but image/* is refused
+     * @param string $caption  text sent with the image; '' for none
+     * @param string $publicUrl  a public https URL to the image - required, Teams fetches it from there
+     * @param string $filename  the name the recipient sees; '' uses the stored name
      */
     public function sendMedia(string $to, string $filePath, string $mimeType, string $caption = '', string $publicUrl = '', string $filename = ''): string
     {
@@ -285,7 +318,11 @@ class TeamsProvider extends MessagingProvider
         ]);
     }
 
-    /** Inbound images: fetch with the bot's token — Teams does not serve them anonymously. */
+    /**
+     * Inbound images: fetch with the bot's token — Teams does not serve them anonymously.
+     *
+     * @param array $item  one entry from parseInbound()'s 'media' list (url, content_type, filename)
+     */
     public function downloadMedia(array $item): array
     {
         $url = (string)($item['url'] ?? '');
@@ -366,6 +403,9 @@ class TeamsProvider extends MessagingProvider
      * is an address the organisation issued. `email` first; the sign-in name
      * (userPrincipalName) only when it is shaped like an address, which in most
      * tenants it is the same thing.
+     *
+     * @param string $to  the reply address "<serviceUrl>|<conversationId>" of the chat the person is in
+     * @param string $memberId  the sender's Teams id (the message's sender_id)
      */
     public function lookupUser(string $to, string $memberId): array
     {
@@ -401,6 +441,9 @@ class TeamsProvider extends MessagingProvider
      *
      * Throws when the address is incomplete, the host is not allowed, or Teams rejects the
      * message.
+     *
+     * @param string $to  the reply address "<serviceUrl>|<conversationId>"
+     * @param array $activity  the Bot Framework activity to post, e.g. ['type' => 'message', 'text' => ...]
      */
     private function postActivity(string $to, array $activity): string
     {

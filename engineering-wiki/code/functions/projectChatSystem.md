@@ -13,16 +13,16 @@ function projectChatSystem(
 ): string
 ```
 
-Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 146.
+Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 163.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row the conversation is about |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$maturity` | `array` |  |  |
-| `$summary` | `?string` |  |  |
-| `$canChange` | `bool` |  |  |
+| `$maturity` | `array` |  | the set-up checklist from `projectChatMaturity()` |
+| `$summary` | `?string` |  | the thread's memory (project_ai_threads.summary); null when nothing has been folded in yet |
+| `$canChange` | `bool` |  | whether the analyst may change the project - decides whether propose_* tools are offered |
 
 **Returns:** `string`
 
@@ -30,7 +30,7 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 148 | `projectChatSystem` | read [analysts](/code/tables/analysts.md) |  |
+| 165 | `projectChatSystem` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

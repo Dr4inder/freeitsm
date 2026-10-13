@@ -6,7 +6,7 @@
 function tenantScopeSqlFor(PDO $conn, int $tenantId, string $qualified): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 859.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 900.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

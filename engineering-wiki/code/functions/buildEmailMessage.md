@@ -6,16 +6,16 @@ Build email message structure for Graph API
 function buildEmailMessage($to, $cc, $subject, $body, $attachments, $ticketId)
 ```
 
-Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 316.
+Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 334.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$to` |  |  |  |
-| `$cc` |  |  |  |
-| `$subject` |  |  |  |
-| `$body` |  |  |  |
-| `$attachments` |  |  |  |
-| `$ticketId` |  |  |  |
+| `$to` |  |  | the To addresses as typed, separated by ; or , |
+| `$cc` |  |  | the Cc addresses as typed, separated by ; or ,; empty for none |
+| `$subject` |  |  | the email subject |
+| `$body` |  |  | the HTML body to send, thread included for a reply or forward |
+| `$attachments` |  |  | the files the analyst attached, from the request: [{name, type, content (base64)}, ...] |
+| `$ticketId` |  |  | the ticket being emailed from; only its own stored pictures are embedded |
 
 ## Calls
 

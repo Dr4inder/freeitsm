@@ -6,12 +6,12 @@ Groups this provider has sent: [['group' => code, 'label' => name|null, 'last_se
 function ssoSeenGroups(PDO $conn, int $providerId): array
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 144.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 166.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
+| `$providerId` | `int` |  | the sign-in provider (auth_providers.id) |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 147 | `ssoSeenGroups` | read [sso_groups_seen](/code/tables/sso_groups_seen.md) |  |
+| 169 | `ssoSeenGroups` | read [sso_groups_seen](/code/tables/sso_groups_seen.md) |  |
 
 ## Calls
 

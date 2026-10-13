@@ -6,7 +6,7 @@ Apply a set of FreeITSM field changes to a card, surgically.
 function cardDavApplyPersonEdits(string $raw, array $changes): array
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 474.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 506.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

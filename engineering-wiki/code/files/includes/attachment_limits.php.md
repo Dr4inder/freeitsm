@@ -1,6 +1,6 @@
 # includes/attachment_limits.php
 
-> PHP - 323 lines
+> PHP - 362 lines
 
 Attachment size limits, and what happens to an inbound email that breaks them (GH #170). The ONE place the numbers and the rules are read and applied.
 
@@ -38,27 +38,27 @@ memory while it is processed, so memory_limit matters for very large mail.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [attachmentSetting()](/code/functions/attachmentSetting.md) | 40 | One setting, cached per request. |
-| [attachmentMb()](/code/functions/attachmentMb.md) | 58 | A whole number of MB from a setting, clamped to something sane (0 allowed only where it means "no limit"). |
-| [attachmentMaxBytes()](/code/functions/attachmentMaxBytes.md) | 67 | The install-wide largest single attachment, in bytes. What uploads.php uses when a caller sets none. |
-| [oversizeDefaultReplyText()](/code/functions/oversizeDefaultReplyText.md) | 73 | The default text of the auto-reply. {subject}, {limit} and {total_limit} are filled in. |
-| [oversizeRules()](/code/functions/oversizeRules.md) | 82 | The rules for one mailbox: the install defaults, overridden by the mailbox's own oversize_policy when it has one. Limits in BYTES (total 0 = no limit). |
-| [oversizeNormalisePolicy()](/code/functions/oversizeNormalisePolicy.md) | 107 | A policy as posted by a settings screen (MB, strings), made safe. Used for the mailbox override on save and on read, so a hand-edited row cannot break a check. |
-| [oversizeCleanAddresses()](/code/functions/oversizeCleanAddresses.md) | 126 | "a@x.com; b@y.com, junk" -> "a@x.com, b@y.com" - valid addresses only. |
-| [oversizePlan()](/code/functions/oversizePlan.md) | 149 | Decide what to do with one email's attachments. |
-| [oversizeMbWords()](/code/functions/oversizeMbWords.md) | 191 | Formats a byte count as megabytes for messages - whole numbers without a decimal ("10 MB"), otherwise one place ("2.5 MB"). |
-| [phpUploadLimits()](/code/functions/phpUploadLimits.md) | 198 | What PHP on this server will accept, for the settings screen. |
-| [oversizeNotify()](/code/functions/oversizeNotify.md) | 231 | Tell people about an oversized email: the alert to the configured addresses, and the reply to the sender. Returns processing-log steps for the inbound log. |
-| [oversizeReplySkipReason()](/code/functions/oversizeReplySkipReason.md) | 290 | Why NOT to auto-reply to this sender, or null to go ahead. |
-| [oversizePolicyForStorage()](/code/functions/oversizePolicyForStorage.md) | 310 | A normalised policy in the shape stored on a mailbox (MB, not bytes) and read back by `oversizeNormalisePolicy()`. |
+| [attachmentSetting()](/code/functions/attachmentSetting.md) | 45 | One setting, cached per request. |
+| [attachmentMb()](/code/functions/attachmentMb.md) | 69 | A whole number of MB from a setting, clamped to something sane (0 allowed only where it means "no limit"). |
+| [attachmentMaxBytes()](/code/functions/attachmentMaxBytes.md) | 78 | The install-wide largest single attachment, in bytes. What uploads.php uses when a caller sets none. |
+| [oversizeDefaultReplyText()](/code/functions/oversizeDefaultReplyText.md) | 84 | The default text of the auto-reply. {subject}, {limit} and {total_limit} are filled in. |
+| [oversizeRules()](/code/functions/oversizeRules.md) | 95 | The rules for one mailbox: the install defaults, overridden by the mailbox's own oversize_policy when it has one. Limits in BYTES (total 0 = no limit). |
+| [oversizeNormalisePolicy()](/code/functions/oversizeNormalisePolicy.md) | 123 | A policy as posted by a settings screen (MB, strings), made safe. Used for the mailbox override on save and on read, so a hand-edited row cannot break a check. |
+| [oversizeCleanAddresses()](/code/functions/oversizeCleanAddresses.md) | 146 | "a@x.com; b@y.com, junk" -> "a@x.com, b@y.com" - valid addresses only. |
+| [oversizePlan()](/code/functions/oversizePlan.md) | 170 | Decide what to do with one email's attachments. |
+| [oversizeMbWords()](/code/functions/oversizeMbWords.md) | 214 | Formats a byte count as megabytes for messages - whole numbers without a decimal ("10 MB"), otherwise one place ("2.5 MB"). |
+| [phpUploadLimits()](/code/functions/phpUploadLimits.md) | 221 | What PHP on this server will accept, for the settings screen. |
+| [oversizeNotify()](/code/functions/oversizeNotify.md) | 260 | Tell people about an oversized email: the alert to the configured addresses, and the reply to the sender. Returns processing-log steps for the inbound log. |
+| [oversizeReplySkipReason()](/code/functions/oversizeReplySkipReason.md) | 325 | Why NOT to auto-reply to this sender, or null to go ahead. |
+| [oversizePolicyForStorage()](/code/functions/oversizePolicyForStorage.md) | 349 | A normalised policy in the shape stored on a mailbox (MB, not bytes) and read back by `oversizeNormalisePolicy()`. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 48 | `attachmentSetting` | read [system_settings](/code/tables/system_settings.md) |  |
-| 244 | `oversizeNotify` | read [tickets](/code/tables/tickets.md) |  |
-| 300 | `oversizeReplySkipReason` | read [mailbox_activity_log](/code/tables/mailbox_activity_log.md) |  |
+| 53 | `attachmentSetting` | read [system_settings](/code/tables/system_settings.md) |  |
+| 273 | `oversizeNotify` | read [tickets](/code/tables/tickets.md) |  |
+| 335 | `oversizeReplySkipReason` | read [mailbox_activity_log](/code/tables/mailbox_activity_log.md) |  |
 
 ## How it hangs together
 

@@ -20,25 +20,25 @@ Domains module (GitHub #154) — see the matching block in freeitsm.sql for what
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):832 |  | insert | `name`, `colour`, `alerts_enabled`, `display_order` |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):524 | `DomainsService::saveStatus` | update | `name`, `colour`, `alerts_enabled`, `is_active`, `display_order` |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):528 | `DomainsService::saveStatus` | insert | `name`, `colour`, `alerts_enabled`, `is_active`, `display_order`, `created_datetime` |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):541 | `DomainsService::deleteStatus` | delete |  |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):558 | `DomainsService::saveStatus` | update | `name`, `colour`, `alerts_enabled`, `is_active`, `display_order` |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):562 | `DomainsService::saveStatus` | insert | `name`, `colour`, `alerts_enabled`, `is_active`, `display_order`, `created_datetime` |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):579 | `DomainsService::deleteStatus` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/domains/bulk_add.php](/code/files/api/domains/bulk_add.php.md) | domainImportResolveNames L57 |  |
+| [api/domains/bulk_add.php](/code/files/api/domains/bulk_add.php.md) | domainImportResolveNames L60 |  |
 | [api/domains/statuses.php](/code/files/api/domains/statuses.php.md) | L13 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L830 |  |
-| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L48, apiDomainStatusesList L398 |  |
-| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L85, domainRenewalActionsRun L359 |  |
-| [includes/domains/calendar.php](/code/files/includes/domains/calendar.php.md) | domainSyncCalendarKind L78 |  |
-| [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkDomainRows L314 |  |
-| [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L39, domainApiLookups L188 |  |
-| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusRow L86 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleDomains L424, peopleSupplierDomains L832 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewDomain L387 |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::createDomain L153, DomainsService::saveStatus L519, DomainsService::auditDisplay L899 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L607, getWatchtowerData L641 |  |
+| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L48, apiDomainStatusesList L409 |  |
+| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L104, domainRenewalActionsRun L411 |  |
+| [includes/domains/calendar.php](/code/files/includes/domains/calendar.php.md) | domainSyncCalendarKind L87 |  |
+| [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkDomainRows L365 |  |
+| [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L39, domainApiLookups L198 |  |
+| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusRow L92 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleDomains L457, peopleSupplierDomains L903 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewDomain L407 |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::createDomain L157, DomainsService::saveStatus L553, DomainsService::auditDisplay L1012 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L610, getWatchtowerData L644 |  |
 

@@ -6,7 +6,7 @@ GET /projects/{id}/links - what it is connected to, only the kinds the key's ana
 function apiProjectLinks(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 641.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 676.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

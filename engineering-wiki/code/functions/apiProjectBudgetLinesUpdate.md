@@ -6,7 +6,7 @@ PATCH /projects/{id}/budget-lines/{lineId} - updates a budget line through Proje
 function apiProjectBudgetLinesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 589.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 624.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

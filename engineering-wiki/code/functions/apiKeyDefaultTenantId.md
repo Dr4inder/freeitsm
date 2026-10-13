@@ -6,7 +6,7 @@ The company a NEW ticket created by this key belongs to when the request doesn't
 function apiKeyDefaultTenantId(PDO $conn, array $apiKey): int
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 333.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 365.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ POST /users
 function apiUsersCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 146.
+Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 150.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,11 +21,11 @@ Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 171 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
-| 178 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
-| 199 | `apiUsersCreate` | **insert** [users](/code/tables/users.md) (`email`, `username`, `display_name`, `preferred_name`, `tenant_id`, `created_at`) |  |
-| 202 | `apiUsersCreate` | **update** [users](/code/tables/users.md) (`cost_centre_id`) |  |
-| 204 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
+| 175 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
+| 182 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
+| 203 | `apiUsersCreate` | **insert** [users](/code/tables/users.md) (`email`, `username`, `display_name`, `preferred_name`, `tenant_id`, `created_at`) |  |
+| 206 | `apiUsersCreate` | **update** [users](/code/tables/users.md) (`cost_centre_id`) |  |
+| 208 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

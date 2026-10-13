@@ -10,7 +10,7 @@ function sla_business_minutes(
 ): int
 ```
 
-Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 268.
+Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 286.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

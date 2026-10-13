@@ -6,12 +6,12 @@ Parse an incoming date/time filter or field (ISO 8601, with or without Z, or "YY
 function apiParseDate(string $value, string $field): string
 ```
 
-Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 73.
+Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 95.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` | `string` |  |  |
-| `$field` | `string` |  |  |
+| `$value` | `string` |  | the caller-supplied date/time text (untrusted); no offset is read as UTC |
+| `$field` | `string` |  | the field or query parameter name, quoted in the 400 message |
 
 **Returns:** `string`
 

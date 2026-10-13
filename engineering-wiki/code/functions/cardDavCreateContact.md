@@ -6,13 +6,13 @@ Add a person to an address book and link them to it.
 function cardDavCreateContact(PDO $conn, int $userId, int $providerId, ?int $analystId): array
 ```
 
-Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php.md), line 169.
+Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php.md), line 186.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
-| `$providerId` | `int` |  |  |
+| `$userId` | `int` |  | users.id of the person to add |
+| `$providerId` | `int` |  | auth_providers.id of the address book to add them to; must be one `cardDavCreateTargets()` offers |
 | `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array ['ok'=>bool, 'error'=>string, 'code'=>string, 'existing'=>string] code: '' | not_allowed | duplicate | failed | out_of_scope
@@ -21,8 +21,8 @@ Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 174 | `cardDavCreateContact` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
-| 319 | `cardDavCreateContact` | **update** [users](/code/tables/users.md) (`is_managed`, `auth_provider_id`, `last_seen_in_source`, `sync_missed_count`) |  |
+| 191 | `cardDavCreateContact` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
+| 336 | `cardDavCreateContact` | **update** [users](/code/tables/users.md) (`is_managed`, `auth_provider_id`, `last_seen_in_source`, `sync_missed_count`) |  |
 
 ## Calls
 

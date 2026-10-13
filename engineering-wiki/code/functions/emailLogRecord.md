@@ -18,17 +18,17 @@ function emailLogRecord(
 ): void
 ```
 
-Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 71.
+Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 77.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `?array` |  |  |
-| `$route` | `string` |  |  |
-| `$to` | `string` |  |  |
-| `$subject` | `string` |  |  |
+| `$mailbox` | `?array` |  | the target_mailboxes row used (id, provider, auth_mode read), or null if none |
+| `$route` | `string` |  | a key of EMAIL_LOG_ROUTES saying which path sent it (cut to 30 characters) |
+| `$to` | `string` |  | the recipient address(es) as sent (cut to 255 characters) |
+| `$subject` | `string` |  | the email's subject line (cut to 500 characters) |
 | `$sent` |  |  | bool for sent/failed, or a status string |
-| `$error` | `?string` | `null` |  |
+| `$error` | `?string` | `null` | the provider's error or the skip reason, null for a successful send (cut to 2000) |
 | `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
@@ -37,7 +37,7 @@ Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 85 | `emailLogRecord` | **insert** [email_send_log](/code/tables/email_send_log.md) (`mailbox_id`, `ticket_id`, `route`, `provider`, `auth_mode`, `to_address`, `subject`, `status`, `error_message`, `created_datetime`) |  |
+| 91 | `emailLogRecord` | **insert** [email_send_log](/code/tables/email_send_log.md) (`mailbox_id`, `ticket_id`, `route`, `provider`, `auth_mode`, `to_address`, `subject`, `status`, `error_message`, `created_datetime`) |  |
 
 ## Called from
 

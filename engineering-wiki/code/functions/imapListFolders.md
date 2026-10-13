@@ -9,12 +9,12 @@ Names come back in modified UTF-7 (IMAP's own encoding), so a folder called
 function imapListFolders($stream, array $mailbox): array
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 563.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 632.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$stream` |  |  |  |
-| `$mailbox` | `array` |  |  |
+| `$stream` |  |  | an open IMAP stream for the mailbox |
+| `$mailbox` | `array` |  | the target_mailboxes row, used to build the server reference |
 
 **Returns:** array<int, array{name:string, delimiter:string}>
 

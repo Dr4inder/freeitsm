@@ -6,11 +6,11 @@ Turns a widget's department filter into a t.department_id IN (...) condition wit
 function buildDepartmentWhere($deptFilter)
 ```
 
-Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 188.
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 200.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$deptFilter` |  |  |  |
+| `$deptFilter` |  |  | the widget's department ids, decoded from department_filter; null or empty for none |
 
 ## Called from
 

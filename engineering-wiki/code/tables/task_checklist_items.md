@@ -23,17 +23,17 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):533 | `ChecklistsService::copyTemplateToTask` | insert | `task_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order` |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):573 | `ChecklistsService::reorderTaskChecklistItems` | update | `sort_order` |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):617 | `ChecklistsService::toggleTaskItem` | update | `is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime` |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):624 | `ChecklistsService::toggleTaskItem` | update | `is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime` |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):642 | `ChecklistsService::removeTaskChecklist` | delete |  |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):664 | `ChecklistsService::deleteForTasks` | delete |  |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):786 | `ChecklistsService::copyTaskChecklists` | insert | `task_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):556 | `ChecklistsService::copyTemplateToTask` | insert | `task_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):603 | `ChecklistsService::reorderTaskChecklistItems` | update | `sort_order` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):659 | `ChecklistsService::toggleTaskItem` | update | `is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):666 | `ChecklistsService::toggleTaskItem` | update | `is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):688 | `ChecklistsService::removeTaskChecklist` | delete |  |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):710 | `ChecklistsService::deleteForTasks` | delete |  |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):835 | `ChecklistsService::copyTaskChecklists` | insert | `task_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::taskChecklists L463, ChecklistsService::taskIdForItem L582, ChecklistsService::toggleTaskItem L604, ChecklistsService::toggleTaskItem L630, ChecklistsService::taskOutstandingMandatorySteps L679, ChecklistsService::copyTaskChecklists L786 |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::taskChecklists L477, ChecklistsService::taskIdForItem L616, ChecklistsService::toggleTaskItem L646, ChecklistsService::toggleTaskItem L672, ChecklistsService::taskOutstandingMandatorySteps L725, ChecklistsService::copyTaskChecklists L835 |  |
 

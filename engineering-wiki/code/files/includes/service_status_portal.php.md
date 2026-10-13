@@ -1,6 +1,6 @@
 # includes/service_status_portal.php
 
-> PHP - 209 lines
+> PHP - 217 lines
 
 What the self-service portal shows about service status (discussion #99).
 
@@ -25,21 +25,21 @@ administrator turns it on under System once they have looked.
 | Function | Line | What it does |
 |---|--:|---|
 | [ssPortalSettings()](/code/functions/ssPortalSettings.md) | 43 | All three settings, with defaults filled in for anything unset. |
-| [ssPortalSetting()](/code/functions/ssPortalSetting.md) | 64 | One setting, falling back to its default. |
-| [ssPortalUpdatesEnabled()](/code/functions/ssPortalUpdatesEnabled.md) | 70 | Are incidents shown on the portal at all? |
-| [ssPortalIncidents()](/code/functions/ssPortalIncidents.md) | 81 | Incidents the portal may show, newest first, each with its EXTERNAL updates. |
-| [ssPortalIncidentUpdates()](/code/functions/ssPortalIncidentUpdates.md) | 186 | The EXTERNAL updates on one incident, oldest first — the progression from "we are looking at it" to "it is fixed", which is what a status page is for. |
+| [ssPortalSetting()](/code/functions/ssPortalSetting.md) | 68 | One setting, falling back to its default. |
+| [ssPortalUpdatesEnabled()](/code/functions/ssPortalUpdatesEnabled.md) | 74 | Are incidents shown on the portal at all? |
+| [ssPortalIncidents()](/code/functions/ssPortalIncidents.md) | 87 | Incidents the portal may show, newest first, each with its EXTERNAL updates. |
+| [ssPortalIncidentUpdates()](/code/functions/ssPortalIncidentUpdates.md) | 194 | The EXTERNAL updates on one incident, oldest first — the progression from "we are looking at it" to "it is fixed", which is what a status page is for. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 49 | `ssPortalSettings` | read [system_settings](/code/tables/system_settings.md) |  |
-| 95 | `ssPortalIncidents` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 112 | `ssPortalIncidents` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 133 | `ssPortalIncidents` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 160 | `ssPortalIncidents` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 193 | `ssPortalIncidentUpdates` | read [status_incident_updates](/code/tables/status_incident_updates.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 101 | `ssPortalIncidents` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 118 | `ssPortalIncidents` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 139 | `ssPortalIncidents` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 166 | `ssPortalIncidents` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 201 | `ssPortalIncidentUpdates` | read [status_incident_updates](/code/tables/status_incident_updates.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
 
 ## How it hangs together
 

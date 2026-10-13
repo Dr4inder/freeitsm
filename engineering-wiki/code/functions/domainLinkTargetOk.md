@@ -12,15 +12,15 @@ function domainLinkTargetOk(
 ): bool
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 95.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
-| `$targetId` | `int` |  |  |
-| `$domainTenant` | `?int` |  |  |
+| `$kind` | `string` |  | the link kind - cmdb \| service \| ticket \| article |
+| `$targetId` | `int` |  | the id of the record on the other end (a CI, service, ticket or article) |
+| `$domainTenant` | `?int` |  | the domain's company to match for a CI or ticket; null skips the company check |
 
 **Returns:** `bool`
 
@@ -28,8 +28,8 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 105 | `domainLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
-| 110 | `domainLinkTargetOk` | read [status_services](/code/tables/status_services.md) |  |
+| 120 | `domainLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
+| 125 | `domainLinkTargetOk` | read [status_services](/code/tables/status_services.md) |  |
 
 ## Calls
 

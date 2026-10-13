@@ -13,16 +13,16 @@ function apiV1BuildOperation(
 ): array
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 133.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ep` | `array` |  |  |
-| `$section` | `string` |  |  |
-| `$extras` | `array` |  |  |
-| `$endpointToHandler` | `array` |  |  |
-| `$handlerSuccess` | `array` |  |  |
-| `$schemas` | `array` |  |  |
+| `$ep` | `array` |  | one endpoint from spec.json: m (method), p (path template), s, d, params, perm |
+| `$section` | `string` |  | the spec.json section the endpoint is listed under, used as its tag |
+| `$extras` | `array` |  | that endpoint's entry in spec.json extras - examples and specific errors; may be empty |
+| `$endpointToHandler` | `array` |  | 'METHOD /path' => handler function, from `apiV1MapEndpointsToHandlers()` |
+| `$handlerSuccess` | `array` |  | handler function => the success codes its `apiRespond()` calls use |
+| `$schemas` | `array` |  | the typed schemas from openapi_schemas.php: schemas, responses and requestBodies |
 
 **Returns:** `array`
 

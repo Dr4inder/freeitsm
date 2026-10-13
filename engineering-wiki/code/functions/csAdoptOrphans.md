@@ -13,7 +13,7 @@ connection.
 function csAdoptOrphans(PDO $conn): void
 ```
 
-Defined in [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md), line 113.
+Defined in [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,8 +25,8 @@ Defined in [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 117 | `csAdoptOrphans` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`) |  |
-| 118 | `csAdoptOrphans` | **update** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`connection_id`) |  |
+| 121 | `csAdoptOrphans` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`) |  |
+| 122 | `csAdoptOrphans` | **update** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`connection_id`) |  |
 
 ## Calls
 

@@ -6,11 +6,11 @@ A page path from a request, made safe, or null. Accepts "handbook/start", "/hand
 function ewSafePath(string $p): ?string
 ```
 
-Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 34.
+Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 36.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `string` |  |  |
+| `$p` | `string` |  | the page path as received - untrusted request input |
 
 **Returns:** `?string`
 

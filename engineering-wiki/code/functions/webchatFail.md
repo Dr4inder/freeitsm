@@ -6,12 +6,12 @@ Emit a JSON error and stop.
 function webchatFail(string $msg, int $code = 400): void
 ```
 
-Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 87.
+Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 94.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$msg` | `string` |  |  |
-| `$code` | `int` | `400` |  |
+| `$msg` | `string` |  | the error text for the widget, safe to show a visitor |
+| `$code` | `int` | `400` | the HTTP status code |
 
 **Returns:** `void`
 

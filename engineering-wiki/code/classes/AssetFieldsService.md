@@ -85,7 +85,7 @@ function schemaReady(PDO $conn): bool
 
 ### setsForAsset
 
-*public static* - line 108
+*public static* - line 109
 
 The sets that apply to an asset: those attached to its TYPE, plus those attached to the asset itself.
 
@@ -101,7 +101,7 @@ function setsForAsset(PDO $conn, int $assetId, ?int $assetTypeId): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$assetTypeId` | `?int` |  |  |
+| `$assetTypeId` | `?int` |  | the asset's type, whose attached sets are included; null when it has no type |
 
 **Returns:** array Sets in display order, each with `via` = 'type' | 'asset'. A set attached BOTH ways appears once, marked 'type'.
 
@@ -109,14 +109,14 @@ function setsForAsset(PDO $conn, int $assetId, ?int $assetTypeId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 118 | `AssetFieldsService::setsForAsset` | read [asset_type_field_sets](/code/tables/asset_type_field_sets.md), read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
-| 132 | `AssetFieldsService::setsForAsset` | read [asset_field_set_assets](/code/tables/asset_field_set_assets.md), read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 119 | `AssetFieldsService::setsForAsset` | read [asset_type_field_sets](/code/tables/asset_type_field_sets.md), read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 133 | `AssetFieldsService::setsForAsset` | read [asset_field_set_assets](/code/tables/asset_field_set_assets.md), read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
 
 **Called from:** [api/assets/get_asset_custom_fields.php](/code/files/api/assets/get_asset_custom_fields.php.md)
 
 ### fieldsForAsset
 
-*public static* - line 159
+*public static* - line 162
 
 Canonical TypedFields definitions for an asset, keyed by field_key.
 
@@ -133,13 +133,13 @@ function fieldsForAsset(PDO $conn, int $assetId, ?int $assetTypeId): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$assetTypeId` | `?int` |  |  |
+| `$assetTypeId` | `?int` |  | the asset's type, whose attached sets are included; null when it has no type |
 
 **Called from:** [api/assets/get_asset_custom_fields.php](/code/files/api/assets/get_asset_custom_fields.php.md), [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md)
 
 ### fieldsForSets
 
-*public static* - line 169
+*public static* - line 176
 
 Canonical definitions for a list of set ids, keyed by field_key.
 
@@ -150,19 +150,19 @@ function fieldsForSets(PDO $conn, array $setIds): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$setIds` | `array` |  |  |
+| `$setIds` | `array` |  | asset_field_sets ids; duplicates and non-integers are tidied |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 177 | `AssetFieldsService::fieldsForSets` | read [asset_field_set_fields](/code/tables/asset_field_set_fields.md), read [asset_fields](/code/tables/asset_fields.md), read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 184 | `AssetFieldsService::fieldsForSets` | read [asset_field_set_fields](/code/tables/asset_field_set_fields.md), read [asset_fields](/code/tables/asset_fields.md), read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
 
 **Called from:** [includes/services/assets.php](/code/files/includes/services/assets.php.md)
 
 ### toDef
 
-*private static* - line 204
+*private static* - line 215
 
 One catalogue row (joined to its set membership) -> a canonical definition.
 
@@ -172,11 +172,11 @@ function toDef(array $r): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | one asset_fields row joined to its asset_field_set_fields and asset_field_sets row |
 
 ### valuesForAsset
 
-*public static* - line 243
+*public static* - line 256
 
 Values for ONE asset, as [field_key => value]. Convenience over the batched reader — for a LIST, call `readForAssets()` once instead.
 
@@ -188,13 +188,13 @@ function valuesForAsset(PDO $conn, int $assetId, array $defs): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$defs` | `array` |  |  |
+| `$defs` | `array` |  | field definitions keyed by field_key, as from `fieldsForAsset()` |
 
 **Called from:** [api/assets/get_asset_custom_fields.php](/code/files/api/assets/get_asset_custom_fields.php.md), [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md)
 
 ### readForAssets
 
-*public static* - line 256
+*public static* - line 272
 
 Values for many assets in one query: [assetId => [field_key => value]].
 
@@ -209,14 +209,14 @@ function readForAssets(PDO $conn, array $assetIds, array $defs): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$assetIds` | `array` |  |  |
-| `$defs` | `array` |  |  |
+| `$assetIds` | `array` |  | the assets whose values to read |
+| `$defs` | `array` |  | field definitions keyed by field_key covering every field any of them may hold |
 
 **Called from:** [api/assets/get_assets.php](/code/files/api/assets/get_assets.php.md), [includes/services/assets.php](/code/files/includes/services/assets.php.md)
 
 ### saveValues
 
-*public static* - line 276
+*public static* - line 294
 
 Validate + store values for one asset.
 
@@ -238,13 +238,13 @@ function saveValues(PDO $conn, ActorContext $ctx, int $assetId, array $values): 
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$values` | `array` |  |  |
+| `$values` | `array` |  | [field_key => value] from the request; keys that do not apply to the asset are refused |
 
 **Called from:** [api/assets/save_asset_custom_fields.php](/code/files/api/assets/save_asset_custom_fields.php.md), [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md)
 
 ### assertUnique
 
-*private static* - line 325
+*private static* - line 346
 
 Enforce `is_unique` across the estate.
 
@@ -261,18 +261,18 @@ function assertUnique(PDO $conn, int $assetId, array $defs, array $values): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$defs` | `array` |  |  |
-| `$values` | `array` |  |  |
+| `$defs` | `array` |  | the asset's field definitions keyed by field_key |
+| `$values` | `array` |  | [field_key => value] about to be saved; blank values are never checked |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 343 | `AssetFieldsService::assertUnique` | read [asset_field_values](/code/tables/asset_field_values.md), read [assets](/code/tables/assets.md) |  |
+| 364 | `AssetFieldsService::assertUnique` | read [asset_field_values](/code/tables/asset_field_values.md), read [assets](/code/tables/assets.md) |  |
 
 ### logChanges
 
-*private static* - line 371
+*private static* - line 396
 
 One asset_history row per changed field.
 
@@ -296,19 +296,19 @@ function logChanges(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$defs` | `array` |  |  |
-| `$before` | `array` |  |  |
-| `$after` | `array` |  |  |
+| `$defs` | `array` |  | the asset's field definitions keyed by field_key; only these keys are compared |
+| `$before` | `array` |  | [field_key => value] before the save |
+| `$after` | `array` |  | [field_key => value] after the save |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 378 | `AssetFieldsService::logChanges` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`) |  |
+| 403 | `AssetFieldsService::logChanges` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`) |  |
 
 ### historyText
 
-*private static* - line 395
+*private static* - line 424
 
 A value as it should read in the history table. NULL stays NULL — "not set".
 
@@ -318,11 +318,11 @@ function historyText($v): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | a stored field value; bools become '1'/'0', text is cut to 500 characters |
 
 ### attachSetToAsset
 
-*public static* - line 411
+*public static* - line 444
 
 Attach a set to ONE asset. Idempotent.
 
@@ -335,19 +335,19 @@ function attachSetToAsset(PDO $conn, ActorContext $ctx, int $assetId, int $setId
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$setId` | `int` |  |  |
+| `$setId` | `int` |  | the asset_field_sets row to attach |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 416 | `AssetFieldsService::attachSetToAsset` | **insert** [asset_field_set_assets](/code/tables/asset_field_set_assets.md) (`asset_id`, `set_id`, `created_by_analyst_id`) |  |
+| 449 | `AssetFieldsService::attachSetToAsset` | **insert** [asset_field_set_assets](/code/tables/asset_field_set_assets.md) (`asset_id`, `set_id`, `created_by_analyst_id`) |  |
 
 **Called from:** [api/assets/set_asset_field_set.php](/code/files/api/assets/set_asset_field_set.php.md), [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md)
 
 ### detachSetFromAsset
 
-*public static* - line 432
+*public static* - line 467
 
 Detach a set from one asset.
 
@@ -365,19 +365,19 @@ function detachSetFromAsset(PDO $conn, int $assetId, int $setId): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$setId` | `int` |  |  |
+| `$setId` | `int` |  | the asset_field_sets row to detach |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 434 | `AssetFieldsService::detachSetFromAsset` | **delete** [asset_field_set_assets](/code/tables/asset_field_set_assets.md) |  |
+| 469 | `AssetFieldsService::detachSetFromAsset` | **delete** [asset_field_set_assets](/code/tables/asset_field_set_assets.md) |  |
 
 **Called from:** [api/assets/set_asset_field_set.php](/code/files/api/assets/set_asset_field_set.php.md)
 
 ### saveField
 
-*public static* - line 455
+*public static* - line 493
 
 Create or update a field in the catalogue.
 
@@ -399,20 +399,20 @@ function saveField(PDO $conn, ActorContext $ctx, array $in): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the request fields: id (0 = new), label, field_type, field_key, config, help_text, is_unique, is_searchable, show_in_list, options |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 484 | `AssetFieldsService::saveField` | **update** [asset_fields](/code/tables/asset_fields.md) (`label`, `field_type`, `config`, `help_text`, `is_unique`, `is_searchable`, `show_in_list`) |  |
-| 508 | `AssetFieldsService::saveField` | **insert** [asset_fields](/code/tables/asset_fields.md) (`field_key`, `label`, `field_type`, `config`, `help_text`, `is_unique`, `is_searchable`, `show_in_list`, `tenant_id`) |  |
+| 522 | `AssetFieldsService::saveField` | **update** [asset_fields](/code/tables/asset_fields.md) (`label`, `field_type`, `config`, `help_text`, `is_unique`, `is_searchable`, `show_in_list`) |  |
+| 546 | `AssetFieldsService::saveField` | **insert** [asset_fields](/code/tables/asset_fields.md) (`field_key`, `label`, `field_type`, `config`, `help_text`, `is_unique`, `is_searchable`, `show_in_list`, `tenant_id`) |  |
 
 **Called from:** [api/assets/save_asset_field.php](/code/files/api/assets/save_asset_field.php.md)
 
 ### deleteField
 
-*public static* - line 533
+*public static* - line 573
 
 Retire a field. SOFT delete, always.
 
@@ -428,20 +428,20 @@ function deleteField(PDO $conn, int $id): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the asset_fields row to retire |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 536 | `AssetFieldsService::deleteField` | **update** [asset_fields](/code/tables/asset_fields.md) (`is_deleted`) |  |
-| 537 | `AssetFieldsService::deleteField` | **delete** [asset_field_set_fields](/code/tables/asset_field_set_fields.md) |  |
+| 576 | `AssetFieldsService::deleteField` | **update** [asset_fields](/code/tables/asset_fields.md) (`is_deleted`) |  |
+| 577 | `AssetFieldsService::deleteField` | **delete** [asset_field_set_fields](/code/tables/asset_field_set_fields.md) |  |
 
 **Called from:** [api/assets/delete_asset_field.php](/code/files/api/assets/delete_asset_field.php.md)
 
 ### saveSet
 
-*public static* - line 541
+*public static* - line 585
 
 Create or update a field set.
 
@@ -453,20 +453,20 @@ function saveSet(PDO $conn, ActorContext $ctx, array $in): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the request fields: id (0 = new), name, description, display_order |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 553 | `AssetFieldsService::saveSet` | **update** [asset_field_sets](/code/tables/asset_field_sets.md) (`name`, `description`, `display_order`) |  |
-| 558 | `AssetFieldsService::saveSet` | **insert** [asset_field_sets](/code/tables/asset_field_sets.md) (`name`, `description`, `display_order`, `tenant_id`) |  |
+| 597 | `AssetFieldsService::saveSet` | **update** [asset_field_sets](/code/tables/asset_field_sets.md) (`name`, `description`, `display_order`) |  |
+| 602 | `AssetFieldsService::saveSet` | **insert** [asset_field_sets](/code/tables/asset_field_sets.md) (`name`, `description`, `display_order`, `tenant_id`) |  |
 
 **Called from:** [api/assets/save_asset_field_set.php](/code/files/api/assets/save_asset_field_set.php.md)
 
 ### deleteSet
 
-*public static* - line 570
+*public static* - line 616
 
 Retire a set. Soft delete, and its attachments go with it.
 
@@ -481,21 +481,21 @@ function deleteSet(PDO $conn, int $id): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the asset_field_sets row to retire |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 573 | `AssetFieldsService::deleteSet` | **update** [asset_field_sets](/code/tables/asset_field_sets.md) (`is_deleted`) |  |
-| 574 | `AssetFieldsService::deleteSet` | **delete** [asset_type_field_sets](/code/tables/asset_type_field_sets.md) |  |
-| 575 | `AssetFieldsService::deleteSet` | **delete** [asset_field_set_assets](/code/tables/asset_field_set_assets.md) |  |
+| 619 | `AssetFieldsService::deleteSet` | **update** [asset_field_sets](/code/tables/asset_field_sets.md) (`is_deleted`) |  |
+| 620 | `AssetFieldsService::deleteSet` | **delete** [asset_type_field_sets](/code/tables/asset_type_field_sets.md) |  |
+| 621 | `AssetFieldsService::deleteSet` | **delete** [asset_field_set_assets](/code/tables/asset_field_set_assets.md) |  |
 
 **Called from:** [api/assets/delete_asset_field_set.php](/code/files/api/assets/delete_asset_field_set.php.md)
 
 ### setSetFields
 
-*public static* - line 584
+*public static* - line 633
 
 Replace the field list of a set.
 
@@ -509,21 +509,21 @@ function setSetFields(PDO $conn, int $setId, array $rows): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$setId` | `int` |  |  |
-| `$rows` | `array` |  |  |
+| `$setId` | `int` |  | the asset_field_sets row whose field list is replaced |
+| `$rows` | `array` |  | the new list in order, each {field_id, sort_order?, is_required?, default_value?} |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 593 | `AssetFieldsService::setSetFields` | **delete** [asset_field_set_fields](/code/tables/asset_field_set_fields.md) |  |
-| 595 | `AssetFieldsService::setSetFields` | **insert** [asset_field_set_fields](/code/tables/asset_field_set_fields.md) (`set_id`, `field_id`, `sort_order`, `is_required`, `default_value`) |  |
+| 642 | `AssetFieldsService::setSetFields` | **delete** [asset_field_set_fields](/code/tables/asset_field_set_fields.md) |  |
+| 644 | `AssetFieldsService::setSetFields` | **insert** [asset_field_set_fields](/code/tables/asset_field_set_fields.md) (`set_id`, `field_id`, `sort_order`, `is_required`, `default_value`) |  |
 
 **Called from:** [api/assets/save_asset_field_set.php](/code/files/api/assets/save_asset_field_set.php.md)
 
 ### setTypeSets
 
-*public static* - line 624
+*public static* - line 678
 
 Replace which sets are attached to an asset type.
 
@@ -534,21 +534,21 @@ function setTypeSets(PDO $conn, int $assetTypeId, array $setIds): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$assetTypeId` | `int` |  |  |
-| `$setIds` | `array` |  |  |
+| `$assetTypeId` | `int` |  | the asset type whose attached sets are replaced |
+| `$setIds` | `array` |  | the asset_field_sets ids to attach, in display order |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 631 | `AssetFieldsService::setTypeSets` | **delete** [asset_type_field_sets](/code/tables/asset_type_field_sets.md) |  |
-| 633 | `AssetFieldsService::setTypeSets` | **insert** [asset_type_field_sets](/code/tables/asset_type_field_sets.md) (`asset_type_id`, `set_id`, `sort_order`) |  |
+| 685 | `AssetFieldsService::setTypeSets` | **delete** [asset_type_field_sets](/code/tables/asset_type_field_sets.md) |  |
+| 687 | `AssetFieldsService::setTypeSets` | **insert** [asset_type_field_sets](/code/tables/asset_type_field_sets.md) (`asset_type_id`, `set_id`, `sort_order`) |  |
 
 **Called from:** [api/assets/save_type_field_sets.php](/code/files/api/assets/save_type_field_sets.php.md)
 
 ### assertType
 
-*private static* - line 659
+*private static* - line 718
 
 Validates a custom field type; a link field must also name a valid ref_kind.
 
@@ -558,12 +558,12 @@ function assertType(string $type, array $config): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$type` | `string` |  |  |
-| `$config` | `array` |  |  |
+| `$type` | `string` |  | the field type asked for; must be one of self::TYPES |
+| `$config` | `array` |  | the field's config; a 'ref' field must carry a valid ref_kind |
 
 ### makeKey
 
-*private static* - line 676
+*private static* - line 739
 
 A stable machine key from a label: lowercase, underscores, no leading digit.
 
@@ -574,11 +574,11 @@ function makeKey(PDO $conn, string $seed): string
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$seed` | `string` |  |  |
+| `$seed` | `string` |  | the field_key asked for, or the label when none was given |
 
 ### assertKeyFree
 
-*private static* - line 693
+*private static* - line 758
 
 ⚠️ Application-level uniqueness, because the UNIQUE index cannot do it: MySQL treats NULLs as distinct, so two GLOBAL fields could both claim `serial_number` while the index looked like it was guarding them. Exactly the trap documented on assets.asset_tag.
 
@@ -589,19 +589,19 @@ function assertKeyFree(PDO $conn, string $key, ?int $tenantId): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the field_key the new field would take |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 696 | `AssetFieldsService::assertKeyFree` | read [asset_fields](/code/tables/asset_fields.md) |  |
-| 700 | `AssetFieldsService::assertKeyFree` | read [asset_fields](/code/tables/asset_fields.md) |  |
+| 761 | `AssetFieldsService::assertKeyFree` | read [asset_fields](/code/tables/asset_fields.md) |  |
+| 765 | `AssetFieldsService::assertKeyFree` | read [asset_fields](/code/tables/asset_fields.md) |  |
 
 ### configTenantForCreate
 
-*private static* - line 711
+*private static* - line 776
 
 Which company a new catalogue row belongs to. NULL = a global default.
 
@@ -616,7 +616,7 @@ function configTenantForCreate(PDO $conn, ActorContext $ctx): ?int
 
 ### saveOptions
 
-*private static* - line 729
+*private static* - line 798
 
 Replaces a dropdown field's option list, skipping blanks and duplicates; a field that is not a dropdown loses its options.
 
@@ -629,21 +629,21 @@ function saveOptions(PDO $conn, int $fieldId, string $type, $options): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$fieldId` | `int` |  |  |
-| `$type` | `string` |  |  |
-| `$options` |  |  |  |
+| `$fieldId` | `int` |  | the asset_fields row whose options are replaced |
+| `$type` | `string` |  | the field's type; anything but 'dropdown' clears its options |
+| `$options` |  |  | the options from the request, each a string or {option_value, colour}; null leaves them alone |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 737 | `AssetFieldsService::saveOptions` | **delete** [asset_field_options](/code/tables/asset_field_options.md) |  |
-| 740 | `AssetFieldsService::saveOptions` | **delete** [asset_field_options](/code/tables/asset_field_options.md) |  |
-| 742 | `AssetFieldsService::saveOptions` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `colour`, `display_order`) |  |
+| 806 | `AssetFieldsService::saveOptions` | **delete** [asset_field_options](/code/tables/asset_field_options.md) |  |
+| 809 | `AssetFieldsService::saveOptions` | **delete** [asset_field_options](/code/tables/asset_field_options.md) |  |
+| 811 | `AssetFieldsService::saveOptions` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `colour`, `display_order`) |  |
 
 ### fieldHasValues
 
-*private static* - line 757
+*private static* - line 830
 
 True when any asset has a value stored for the field.
 
@@ -654,17 +654,17 @@ function fieldHasValues(PDO $conn, int $fieldId): bool
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$fieldId` | `int` |  |  |
+| `$fieldId` | `int` |  | the asset_fields row to check |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 759 | `AssetFieldsService::fieldHasValues` | read [asset_field_values](/code/tables/asset_field_values.md) |  |
+| 832 | `AssetFieldsService::fieldHasValues` | read [asset_field_values](/code/tables/asset_field_values.md) |  |
 
 ### loadField
 
-*private static* - line 765
+*private static* - line 842
 
 Loads one custom field that has not been deleted; throws not found otherwise.
 
@@ -675,17 +675,17 @@ function loadField(PDO $conn, int $id): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the asset_fields row to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 767 | `AssetFieldsService::loadField` | read [asset_fields](/code/tables/asset_fields.md) |  |
+| 844 | `AssetFieldsService::loadField` | read [asset_fields](/code/tables/asset_fields.md) |  |
 
 ### nullIfBlank
 
-*private static* - line 777
+*private static* - line 858
 
 Trimmed text, or null when blank.
 
@@ -695,11 +695,11 @@ function nullIfBlank($v): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | the value from the request |
 
 ### catalogue
 
-*public static* - line 788
+*public static* - line 869
 
 Every field in the catalogue visible to this company (global + own).
 
@@ -716,7 +716,7 @@ function catalogue(PDO $conn, int $analystId): array
 
 ### sets
 
-*public static* - line 806
+*public static* - line 887
 
 Every field set visible to this company (global + own).
 
@@ -733,7 +733,7 @@ function sets(PDO $conn, int $analystId): array
 
 ### loadAsset
 
-*private static* - line 824
+*private static* - line 905
 
 Loads an asset's id, type and company; throws not found when it does not exist.
 
@@ -750,11 +750,11 @@ function loadAsset(PDO $conn, int $assetId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 826 | `AssetFieldsService::loadAsset` | read [assets](/code/tables/assets.md) |  |
+| 907 | `AssetFieldsService::loadAsset` | read [assets](/code/tables/assets.md) |  |
 
 ### loadSet
 
-*private static* - line 836
+*private static* - line 921
 
 Loads one field set that has not been deleted; throws not found otherwise.
 
@@ -765,17 +765,17 @@ function loadSet(PDO $conn, int $setId): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$setId` | `int` |  |  |
+| `$setId` | `int` |  | the asset_field_sets row to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 838 | `AssetFieldsService::loadSet` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 923 | `AssetFieldsService::loadSet` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
 
 ### tenantOfAsset
 
-*private static* - line 848
+*private static* - line 933
 
 The company id of an asset, or null.
 
@@ -792,5 +792,5 @@ function tenantOfAsset(PDO $conn, int $assetId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 850 | `AssetFieldsService::tenantOfAsset` | read [assets](/code/tables/assets.md) |  |
+| 935 | `AssetFieldsService::tenantOfAsset` | read [assets](/code/tables/assets.md) |  |
 

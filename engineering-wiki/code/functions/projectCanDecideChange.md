@@ -11,14 +11,14 @@ function projectCanDecideChange(
 ): bool
 ```
 
-Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 209.
+Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 238.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
-| `$raisedBy` | `?int` | `null` |  |
+| `$project` | `array` |  | the projects row - owner_analyst_id is read |
+| `$raisedBy` | `?int` | `null` | the analyst who raised the change request; null when unknown or not asking about one |
 
 **Returns:** `bool`
 

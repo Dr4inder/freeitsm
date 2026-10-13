@@ -1,6 +1,6 @@
 # includes/projects/assistant.php
 
-> PHP - 288 lines
+> PHP - 333 lines
 
 Projects for an assistant (3.3.0): the read-only answers the MCP server (includes/mcp/tools.php) and Warbot (includes/warbot/tools.php) both give - which projects are off track, how one is going, its RAID log, its tasks.
 
@@ -26,30 +26,30 @@ and an MCP client reads it either way.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [projectAssistRows()](/code/functions/projectAssistRows.md) | 31 | Decorated project rows (health, progress, exceptions, budget totals) for a WHERE, inside `$scope`. |
-| [projectAssistFind()](/code/functions/projectAssistFind.md) | 50 | One project inside `$scope`, by code (PRJ-0042), id or a unique part of its name. Throws ServiceError. |
-| [projectAssistMoney()](/code/functions/projectAssistMoney.md) | 71 | Formats an amount with its currency to two decimals; null shows as "-". |
-| [projectAssistWhy()](/code/functions/projectAssistWhy.md) | 77 | Why a project is the colour it is, in words. |
-| [projectAssistLine()](/code/functions/projectAssistLine.md) | 100 | One project as a single line of text for the assistant - code, name, status, health, priority, progress, target date, manager and why it needs attention. |
-| [projectAssistList()](/code/functions/projectAssistList.md) | 110 | args: status (live \| all \| a status), health, q, limit. |
-| [projectAssistOverview()](/code/functions/projectAssistOverview.md) | 139 | One project in full. `$withBudget`: the money line - the MCP server gives it to the key's analyst; Warbot leaves it out, because its answer is read by everyone in the channel. |
-| [projectAssistRaid()](/code/functions/projectAssistRaid.md) | 209 | args: project, type (risk \| assumption \| issue \| dependency \| decision \| lesson), status (open \| closed \| all). |
-| [projectAssistTasks()](/code/functions/projectAssistTasks.md) | 232 | args: project, open_only (default true). Overdue first, then by due date. |
-| [projectAssistDates()](/code/functions/projectAssistDates.md) | 262 | The project dates coming up across every project in `$scope` - stage ends, milestones and target finishes in the next N days (default 14), and milestones already missed. Warbot's "is anything big happening this week?". |
+| [projectAssistRows()](/code/functions/projectAssistRows.md) | 38 | Decorated project rows (health, progress, exceptions, budget totals) for a WHERE, inside `$scope`. |
+| [projectAssistFind()](/code/functions/projectAssistFind.md) | 62 | One project inside `$scope`, by code (PRJ-0042), id or a unique part of its name. Throws ServiceError. |
+| [projectAssistMoney()](/code/functions/projectAssistMoney.md) | 88 | Formats an amount with its currency to two decimals; null shows as "-". |
+| [projectAssistWhy()](/code/functions/projectAssistWhy.md) | 98 | Why a project is the colour it is, in words. |
+| [projectAssistLine()](/code/functions/projectAssistLine.md) | 123 | One project as a single line of text for the assistant - code, name, status, health, priority, progress, target date, manager and why it needs attention. |
+| [projectAssistList()](/code/functions/projectAssistList.md) | 138 | args: status (live \| all \| a status), health, q, limit. |
+| [projectAssistOverview()](/code/functions/projectAssistOverview.md) | 171 | One project in full. `$withBudget`: the money line - the MCP server gives it to the key's analyst; Warbot leaves it out, because its answer is read by everyone in the channel. |
+| [projectAssistRaid()](/code/functions/projectAssistRaid.md) | 246 | args: project, type (risk \| assumption \| issue \| dependency \| decision \| lesson), status (open \| closed \| all). |
+| [projectAssistTasks()](/code/functions/projectAssistTasks.md) | 274 | args: project, open_only (default true). Overdue first, then by due date. |
+| [projectAssistDates()](/code/functions/projectAssistDates.md) | 307 | The project dates coming up across every project in `$scope` - stage ends, milestones and target finishes in the next N days (default 14), and milestones already missed. Warbot's "is anything big happening this week?". |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 34 | `projectAssistRows` | read [project_stages](/code/tables/project_stages.md) |  |
-| 36 | `projectAssistRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 151 | `projectAssistOverview` | read [project_stages](/code/tables/project_stages.md) |  |
-| 183 | `projectAssistOverview` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
-| 236 | `projectAssistTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md) |  |
-| 269 | `projectAssistDates` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
-| 271 | `projectAssistDates` | read [projects](/code/tables/projects.md) |  |
-| 275 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
-| 277 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
+| 41 | `projectAssistRows` | read [project_stages](/code/tables/project_stages.md) |  |
+| 43 | `projectAssistRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 183 | `projectAssistOverview` | read [project_stages](/code/tables/project_stages.md) |  |
+| 215 | `projectAssistOverview` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 278 | `projectAssistTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 314 | `projectAssistDates` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
+| 316 | `projectAssistDates` | read [projects](/code/tables/projects.md) |  |
+| 320 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
+| 322 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
 
 ## How it hangs together
 

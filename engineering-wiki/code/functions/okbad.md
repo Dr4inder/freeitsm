@@ -9,13 +9,13 @@ Formats a boolean as one of two words - OK or MISSING unless others are given.
 function okbad($v, $ok = 'OK', $bad = 'MISSING')
 ```
 
-Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 41.
+Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
-| `$ok` |  | `'OK'` |  |
-| `$bad` |  | `'MISSING'` |  |
+| `$v` |  |  | any value, judged as true or false |
+| `$ok` |  | `'OK'` | the word printed when `$v` is true |
+| `$bad` |  | `'MISSING'` | the word printed when `$v` is false |
 
 ## Called from
 

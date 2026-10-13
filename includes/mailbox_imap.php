@@ -28,6 +28,9 @@ function imapExtensionAvailable(): bool {
 /**
  * Build the IMAP connection reference string, e.g. {mail.example.com:993/imap/ssl}INBOX.
  * Encryption: 'ssl' → implicit TLS, 'tls' → STARTTLS, anything else → plaintext.
+ *
+ * @param array $mailbox  the target_mailboxes row (imap_server, imap_port, imap_encryption, email_folder)
+ * @param ?string $folder  the folder to open; null uses the mailbox's email_folder, or INBOX; '' gives the server root
  */
 function imapMailboxRef(array $mailbox, ?string $folder = null): string {
     $host = $mailbox['imap_server'] ?? '';
@@ -51,6 +54,9 @@ function imapMailboxRef(array $mailbox, ?string $folder = null): string {
  * Open (and cache within the request) an IMAP stream for a mailbox/folder.
  * The cache lets the inbound poll reuse one authenticated connection across the
  * fetch + per-email post-actions rather than logging in repeatedly.
+ *
+ * @param array $mailbox  the target_mailboxes row, decrypted (imap_* settings and password, id)
+ * @param ?string $folder  the folder to open; null uses the mailbox's email_folder, or INBOX
  */
 function imapStreamFor(array $mailbox, ?string $folder = null) {
     static $cache = [];
@@ -86,6 +92,8 @@ function imapStreamFor(array $mailbox, ?string $folder = null) {
  * Fetch unread messages, normalised to the Graph-like structure the importer expects.
  * Bodies are fetched with FT_PEEK so messages stay UNSEEN until the configured
  * post-import action runs (mark read / delete / move).
+ *
+ * @param array $mailbox  the target_mailboxes row, decrypted (max_emails_per_check caps how many are read)
  */
 function imapGetEmails(array $mailbox): array {
     $stream = imapStreamFor($mailbox);
@@ -114,6 +122,10 @@ function imapGetEmails(array $mailbox): array {
 
 /**
  * Build one normalised (Graph-like) message array from a UID.
+ *
+ * @param mixed $stream  the open IMAP stream from imapStreamFor()
+ * @param int $uid  the message's IMAP UID
+ * @param array $mailbox  the target_mailboxes row (its id makes the fallback de-duplication key)
  */
 function imapNormaliseMessage($stream, int $uid, array $mailbox): ?array {
     $overview = imap_fetch_overview($stream, (string) $uid, FT_UID);
@@ -202,6 +214,14 @@ function imapNormaliseMessage($stream, int $uid, array $mailbox): ?array {
 /**
  * Recursively walk an imap_fetchstructure() tree, accumulating decoded HTML/plain
  * body text and Graph-shaped attachment entries.
+ *
+ * @param mixed $stream  the open IMAP stream
+ * @param int $uid  the message's IMAP UID
+ * @param mixed $part  one node of the imap_fetchstructure() tree (an object)
+ * @param string $partNo  the IMAP part number of $part, e.g. '1.2'; '' for the top of the message
+ * @param string $html  collects the decoded HTML body, by reference
+ * @param string $plain  collects the decoded plain-text body, by reference
+ * @param array $attachments  collects Graph-shaped fileAttachment arrays, by reference
  */
 function imapWalkStructure($stream, int $uid, $part, string $partNo, string &$html, string &$plain, array &$attachments): void {
     $type = $part->type ?? 0; // 0=text 1=multipart 2=message 3=application 5=image ...
@@ -281,7 +301,12 @@ function imapWalkStructure($stream, int $uid, $part, string $partNo, string &$ht
     }
 }
 
-/** Decode a transfer-encoded body part (base64 / quoted-printable / raw). */
+/**
+ * Decode a transfer-encoded body part (base64 / quoted-printable / raw).
+ *
+ * @param string $data  the part as fetched
+ * @param int $encoding  IMAP's transfer encoding code - 3 base64, 4 quoted-printable, anything else returned as is
+ */
 function imapDecodePart(string $data, int $encoding): string {
     switch ($encoding) {
         case 3: // base64
@@ -293,7 +318,12 @@ function imapDecodePart(string $data, int $encoding): string {
     }
 }
 
-/** Convert a string to UTF-8 from the part's declared charset (best effort). */
+/**
+ * Convert a string to UTF-8 from the part's declared charset (best effort).
+ *
+ * @param string $data  the decoded text
+ * @param string $charset  the part's declared charset; blank is read as UTF-8
+ */
 function imapToUtf8(string $data, string $charset): string {
     $charset = trim($charset) ?: 'UTF-8';
     if (strcasecmp($charset, 'UTF-8') === 0 || strcasecmp($charset, 'US-ASCII') === 0) {
@@ -314,7 +344,11 @@ function imapToUtf8(string $data, string $charset): string {
     return $data;
 }
 
-/** Decode a MIME-encoded header value (e.g. =?UTF-8?B?...?=) to a UTF-8 string. */
+/**
+ * Decode a MIME-encoded header value (e.g. =?UTF-8?B?...?=) to a UTF-8 string.
+ *
+ * @param string $value  a raw header value, possibly MIME-encoded words
+ */
 function imapDecodeHeader(string $value): string {
     if ($value === '') {
         return '';
@@ -336,6 +370,8 @@ function imapDecodeHeader(string $value): string {
 /**
  * Parse an RFC 2822 address-list header into the Graph-like recipient shape.
  * Uses imap_rfc822_parse_adrlist when available; falls back to a light regex.
+ *
+ * @param string $raw  a raw address-list header, e.g. 'Name <a@b>, c@d'
  */
 function imapParseAddressList(string $raw): array {
     $raw = trim($raw);
@@ -374,6 +410,11 @@ function imapParseAddressList(string $raw): array {
 /**
  * Apply the post-import (or post-reject) action to a message by UID.
  * Mirrors handleEmailAfterProcessing()'s action vocabulary for Microsoft/Google.
+ *
+ * @param array $mailbox  the target_mailboxes row, decrypted
+ * @param int $uid  the message's IMAP UID
+ * @param string $action  'mark_read', 'move_to_folder', 'move_to_deleted' or 'delete'; anything else deletes
+ * @param ?string $folderName  the folder to move to for 'move_to_folder'; null or '' deletes instead
  */
 function imapHandleAfterProcessing(array $mailbox, int $uid, string $action, ?string $folderName = null): int {
     $stream = imapStreamFor($mailbox);
@@ -412,6 +453,13 @@ function imapHandleAfterProcessing(array $mailbox, int $uid, string $action, ?st
  * $to / $cc are semicolon/comma separated address strings. $parts is the list of
  * attachments and inline images, Graph-shaped — see includes/mime_message.php.
  * Before GH #158 there was no $parts, and an analyst's attachment never left.
+ *
+ * @param array $mailbox  the target_mailboxes row, decrypted (smtp_* settings, falling back to the imap_* login)
+ * @param string $to  recipient addresses, separated by ; or ,
+ * @param string $cc  copy addresses, separated by ; or ,; '' for none
+ * @param string $subject  the subject line
+ * @param string $htmlBody  the HTML body
+ * @param array $parts  attachments and inline images, Graph-shaped - see includes/mime_message.php
  */
 function imapSmtpSend(array $mailbox, string $to, string $cc, string $subject, string $htmlBody, array $parts = []): void {
     $host = $mailbox['smtp_server'] ?? '';
@@ -511,13 +559,21 @@ function imapSmtpSend(array $mailbox, string $to, string $cc, string $subject, s
 }
 
 
-/** Derive a sensible EHLO hostname from the sender address. */
+/**
+ * Derive a sensible EHLO hostname from the sender address.
+ *
+ * @param string $from  the sender address; its domain is used, or 'localhost' when it has none
+ */
 function imapSmtpClientHostname(string $from): string {
     $domain = substr(strrchr($from, '@') ?: '', 1);
     return $domain !== '' ? $domain : 'localhost';
 }
 
-/** Split a "a@b; c@d, e@f" string into a list of valid addresses. */
+/**
+ * Split a "a@b; c@d, e@f" string into a list of valid addresses.
+ *
+ * @param string $raw  addresses separated by ; or ,; invalid ones are dropped
+ */
 function imapSplitAddresses(string $raw): array {
     $out = [];
     foreach (preg_split('/[;,]/', $raw) as $addr) {
@@ -529,13 +585,24 @@ function imapSplitAddresses(string $raw): array {
     return $out;
 }
 
-/** Send one SMTP command line and assert the reply code. */
+/**
+ * Send one SMTP command line and assert the reply code.
+ *
+ * @param mixed $fp  the open SMTP socket
+ * @param string $command  the command line to send, without the CRLF
+ * @param array $expected  the reply codes that count as success; anything else throws
+ */
 function imapSmtpCommand($fp, string $command, array $expected): string {
     fwrite($fp, $command . "\r\n");
     return imapSmtpExpect($fp, $expected);
 }
 
-/** Read a (possibly multi-line) SMTP reply and assert its status code. */
+/**
+ * Read a (possibly multi-line) SMTP reply and assert its status code.
+ *
+ * @param mixed $fp  the open SMTP socket
+ * @param array $expected  the reply codes that count as success; anything else throws
+ */
 function imapSmtpExpect($fp, array $expected): string {
     $response = '';
     while (($line = fgets($fp, 515)) !== false) {
@@ -558,6 +625,8 @@ function imapSmtpExpect($fp, array $expected): string {
  * Names come back in modified UTF-7 (IMAP's own encoding), so a folder called
  * "Anfragen" or "Support/Übergabe" would otherwise be reported back mangled.
  *
+ * @param mixed $stream  an open IMAP stream for the mailbox
+ * @param array $mailbox  the target_mailboxes row, used to build the server reference
  * @return array<int, array{name:string, delimiter:string}>
  */
 function imapListFolders($stream, array $mailbox): array {
@@ -607,6 +676,8 @@ function imapListFolders($stream, array $mailbox): array {
  * folders that DO exist: on servers with an "INBOX." personal namespace the real
  * name is "INBOX.Support", and "Support" alone genuinely will not open.
  *
+ * @param array $mailbox  the target_mailboxes row, decrypted
+ * @param string $folderName  the folder as typed in the mailbox settings
  * @return array{displayName:string, totalItemCount:int|null, unreadItemCount:int}
  * @throws Exception naming the folder, or explaining the connection failure.
  */

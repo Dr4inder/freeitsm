@@ -6,13 +6,13 @@ Raw GET request - returns decoded JSON without unwrapping 'value' key so we can 
 function vcenterGetRaw($baseUrl, $path, $sessionToken)
 ```
 
-Defined in [api/assets/debug_vcenter.php](/code/files/api/assets/debug_vcenter.php.md), line 222.
+Defined in [api/assets/debug_vcenter.php](/code/files/api/assets/debug_vcenter.php.md), line 230.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$baseUrl` |  |  |  |
-| `$path` |  |  |  |
-| `$sessionToken` |  |  |  |
+| `$baseUrl` |  |  | the vCenter address with scheme and no trailing slash |
+| `$path` |  |  | the API path to fetch, starting with a slash, e.g. /api/vcenter/vm |
+| `$sessionToken` |  |  | the session id returned by `vcenterAuth()` |
 
 ## Calls
 

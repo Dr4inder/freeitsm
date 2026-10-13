@@ -13,7 +13,7 @@ all of them. Cached per request.
 function ssoJitColumnsReady(PDO $conn): bool
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 59.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 63.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,7 +25,7 @@ Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 63 | `ssoJitColumnsReady` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 67 | `ssoJitColumnsReady` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Called from
 

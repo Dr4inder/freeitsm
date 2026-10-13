@@ -402,6 +402,8 @@ try {
 
 /**
  * Get mailbox configuration from database
+ *
+ * @param mixed $mailboxId  the target_mailboxes id to load
  */
 function getMailboxConfig($conn, $mailboxId) {
     $sql = "SELECT * FROM target_mailboxes WHERE id = ?";
@@ -420,6 +422,9 @@ function getMailboxConfig($conn, $mailboxId) {
 
 /**
  * Get valid access token (refresh if expired)
+ *
+ * @param mixed $mailbox  the target_mailboxes row, decrypted (id and the azure_* columns are used for a refresh)
+ * @param mixed $tokenData  the mailbox's decoded token_data: access_token, refresh_token, expires_at (Unix time)
  */
 function getValidAccessToken($conn, $mailbox, $tokenData) {
     if (!$tokenData || !isset($tokenData['access_token'])) {
@@ -442,6 +447,9 @@ function getValidAccessToken($conn, $mailbox, $tokenData) {
 
 /**
  * Refresh the access token using refresh token
+ *
+ * @param mixed $mailbox  the target_mailboxes row, decrypted - azure_tenant_id, azure_client_id/secret, oauth_scopes
+ * @param mixed $refreshToken  the OAuth refresh token to trade for a new access token
  */
 function refreshAccessToken($mailbox, $refreshToken) {
     $tokenUrl = 'https://login.microsoftonline.com/' . $mailbox['azure_tenant_id'] . '/oauth2/v2.0/token';
@@ -493,6 +501,9 @@ function refreshAccessToken($mailbox, $refreshToken) {
 
 /**
  * Save token data to database
+ *
+ * @param mixed $mailboxId  the target_mailboxes id to update
+ * @param mixed $tokenData  the token array to store (encrypted) in token_data, as built by refreshAccessToken()
  */
 function saveTokenData($conn, $mailboxId, $tokenData) {
     // Encrypted at rest — see ENCRYPTED_MAILBOX_COLUMNS; decryptMailboxRow() reverses it.
@@ -524,6 +535,7 @@ function saveTokenData($conn, $mailboxId, $tokenData) {
  * the reason buried in an errors array nobody was reading. A check that fetched
  * mail it could not turn into tickets has not worked, whatever its status said.
  *
+ * @param mixed $mailboxId  the target_mailboxes id the check was for
  * @param ?string $error null on a clean run; the reason otherwise.
  */
 function recordMailboxCheckOutcome($conn, $mailboxId, ?string $error = null) {
@@ -549,6 +561,10 @@ function recordMailboxCheckOutcome($conn, $mailboxId, ?string $error = null) {
  *
  * One function rather than a recording line beside each of the eight exits,
  * because the exit somebody forgets to update is exactly the silent one.
+ *
+ * @param mixed $mailboxId  the target_mailboxes id the check was for
+ * @param string $error  the reason, recorded on the mailbox and sent back as the error
+ * @param array $extra  more fields to add to the JSON reply
  */
 function failMailboxCheck($conn, $mailboxId, string $error, array $extra = []) {
     recordMailboxCheckOutcome($conn, $mailboxId, $error);
@@ -558,6 +574,8 @@ function failMailboxCheck($conn, $mailboxId, string $error, array $extra = []) {
 
 /**
  * Update last checked datetime (clean run).
+ *
+ * @param mixed $mailboxId  the target_mailboxes id the check was for
  */
 function updateLastChecked($conn, $mailboxId) {
     recordMailboxCheckOutcome($conn, $mailboxId, null);
@@ -565,6 +583,9 @@ function updateLastChecked($conn, $mailboxId) {
 
 /**
  * Retrieve emails from Microsoft Graph API
+ *
+ * @param mixed $accessToken  the mailbox's Microsoft Graph access token, from getValidAccessToken()
+ * @param mixed $mailbox  the target_mailboxes row - email_folder and max_emails_per_check are read
  */
 function getEmails($accessToken, $mailbox) {
     // The configured folder is a NAME a person typed. Graph wants an id (or one of
@@ -614,6 +635,9 @@ function getEmails($accessToken, $mailbox) {
 
 /**
  * Delete an email from the mailbox via Microsoft Graph API
+ *
+ * @param mixed $accessToken  the mailbox's Microsoft Graph access token, from getValidAccessToken()
+ * @param mixed $messageId  the Graph message id to delete for good
  */
 function deleteEmailFromMailbox($accessToken, $messageId) {
     $graphUrl = 'https://graph.microsoft.com/v1.0' . mailboxGraphBase() . '/messages/' . $messageId;
@@ -651,6 +675,9 @@ function deleteEmailFromMailbox($accessToken, $messageId) {
  * two disagreed: Verify resolved "freeitsm" happily while the code that actually
  * READ the mailbox never called either of them (GH #77). One implementation now,
  * so the button and the fetch can no longer answer differently.
+ *
+ * @param mixed $accessToken  the mailbox's Microsoft Graph access token, from getValidAccessToken()
+ * @param mixed $folderName  the folder name as typed in the mailbox settings, or a well-known alias such as 'deleteditems'
  */
 function resolveMailFolderId($accessToken, $folderName) {
     return mailboxResolveFolderId($folderName,
@@ -659,6 +686,10 @@ function resolveMailFolderId($accessToken, $folderName) {
 
 /**
  * Move an email to a folder via Microsoft Graph API
+ *
+ * @param mixed $accessToken  the mailbox's Microsoft Graph access token, from getValidAccessToken()
+ * @param mixed $messageId  the Graph message id to move
+ * @param mixed $folderName  the destination folder name, or a well-known alias such as 'deleteditems'
  */
 function moveEmailToFolder($accessToken, $messageId, $folderName) {
     $destinationId = resolveMailFolderId($accessToken, $folderName);
@@ -697,6 +728,9 @@ function moveEmailToFolder($accessToken, $messageId, $folderName) {
 
 /**
  * Mark an email as read via Microsoft Graph API
+ *
+ * @param mixed $accessToken  the mailbox's Microsoft Graph access token, from getValidAccessToken()
+ * @param mixed $messageId  the Graph message id to mark as read
  */
 function markEmailAsRead($accessToken, $messageId) {
     $graphUrl = 'https://graph.microsoft.com/v1.0' . mailboxGraphBase() . '/messages/' . $messageId;
@@ -732,6 +766,13 @@ function markEmailAsRead($accessToken, $messageId) {
 /**
  * Handle email after processing based on action setting
  * Actions: 'delete' (permanent), 'move_to_deleted' (Deleted Items), 'mark_read' (leave in inbox), 'move_to_folder' (custom folder)
+ *
+ * @param mixed $accessToken  the provider access token (Graph or Gmail); unused for IMAP
+ * @param mixed $messageId  the provider's message id - the IMAP UID for a basic mailbox
+ * @param mixed $action  'delete', 'move_to_deleted', 'mark_read' or 'move_to_folder'
+ * @param mixed $folderName  the folder for 'move_to_folder'; without one the email is deleted instead (Microsoft)
+ * @param mixed $provider  'microsoft', 'google' or 'imap'
+ * @param mixed $mailbox  the target_mailboxes row; needed only for IMAP
  */
 function handleEmailAfterProcessing($accessToken, $messageId, $action, $folderName = null, $provider = 'microsoft', $mailbox = null) {
     if ($provider === 'imap') {
@@ -792,6 +833,8 @@ function generateTicketNumber($conn, ?int $tenantId = null) {
 
 /**
  * Extract ticket reference from subject
+ *
+ * @param mixed $subject  the inbound email's subject, which may carry an [SDREF:...] tag
  */
 function extractTicketReference($subject) {
     // ⚠️ FORMAT-AGNOSTIC, and it has to stay that way. This used to look for
@@ -816,6 +859,8 @@ function extractTicketReference($subject) {
  *
  * This is the single point every inbound reply passes through, which is exactly why
  * the redirect belongs here rather than at each call site.
+ *
+ * @param mixed $ticketNumber  the ticket number taken from the subject tag; old and renumbered numbers are found too
  */
 function findTicketByNumber($conn, $ticketNumber) {
     // 🔑 Looks in ticket_number_history as well as tickets (GH #71). A ticket
@@ -839,6 +884,9 @@ function findTicketByNumber($conn, $ticketNumber) {
 /**
  * Get or create user by email address
  * Returns the user ID
+ *
+ * @param mixed $email  the sender's address; lower-cased and trimmed before use
+ * @param mixed $displayName  the sender's name from the email; empty leaves an existing name alone
  */
 function getOrCreateUser($conn, $email, $displayName) {
     // Normalize email to lowercase
@@ -870,6 +918,9 @@ function getOrCreateUser($conn, $email, $displayName) {
 
 /**
  * Fetch attachments from Graph API
+ *
+ * @param mixed $accessToken  the mailbox's Microsoft Graph access token, from getValidAccessToken()
+ * @param mixed $emailId  the Graph message id whose attachments are wanted
  */
 function fetchEmailAttachments($accessToken, $emailId) {
     $graphUrl = 'https://graph.microsoft.com/v1.0' . mailboxGraphBase() . '/messages/' . $emailId . '/attachments';
@@ -902,6 +953,10 @@ function fetchEmailAttachments($accessToken, $emailId) {
 
 /**
  * Save attachment to filesystem and database
+ *
+ * @param mixed $dbEmailId  the emails.id the attachment belongs to; also names its folder on disk
+ * @param mixed $attachment  one Graph fileAttachment: name, contentType, contentId, isInline, contentBytes (base64)
+ * @param ?int $maxBytes  the mailbox's per-attachment limit in bytes; null uses the install's
  */
 function saveAttachment($conn, $dbEmailId, $attachment, ?int $maxBytes = null) {
     $attachmentId = $attachment['id'] ?? '';
@@ -977,6 +1032,10 @@ function saveAttachment($conn, $dbEmailId, $attachment, ?int $maxBytes = null) {
 
 /**
  * Rewrite CID references in email body
+ *
+ * @param mixed $bodyContent  the email's HTML body
+ * @param mixed $dbEmailId  the emails.id the attachments were saved under
+ * @param mixed $attachments  the saved attachment rows; each content_id is pointed at get_attachment.php
  */
 function rewriteCidReferences($bodyContent, $dbEmailId, $attachments) {
     foreach ($attachments as $attachment) {
@@ -1008,6 +1067,13 @@ function rewriteCidReferences($bodyContent, $dbEmailId, $attachments) {
 
 /**
  * Save email to database
+ *
+ * @param mixed $email  one message in Graph's shape (id, subject, from, body, hasAttachments...); IMAP adds internet_message_id
+ * @param mixed $accessToken  the provider access token, used to fetch attachments on Microsoft
+ * @param mixed $mailboxId  the target_mailboxes id the email came in through
+ * @param ?array $prefetched  the attachment list already fetched by oversizeMeasure(); null fetches it here
+ * @param array $strip  attachments to leave out, file-attachment index => reason, from oversizePlan()
+ * @param ?int $maxBytes  the mailbox's per-attachment limit in bytes; null uses the install's
  */
 function saveEmailToDatabase($conn, $email, $accessToken, $mailboxId, ?array $prefetched = null, array $strip = [], ?int $maxBytes = null) {
     // De-dup / stored message id. Providers whose native message id isn't globally
@@ -1338,6 +1404,8 @@ function saveEmailToDatabase($conn, $email, $accessToken, $mailboxId, ?array $pr
  * Strip the quoted thread from an inbound reply
  * Relies on our own visible marker text which survives all email clients,
  * with a generic blockquote fallback
+ *
+ * @param mixed $bodyContent  the reply's HTML body, with the quoted thread still in it
  */
 function stripInboundThread($bodyContent) {
     $stripped = null;
@@ -1382,6 +1450,9 @@ function stripInboundThread($bodyContent) {
  * Returns [the attachment list to hand on, [['name','size'], ...] for the file
  * attachments in order]. Sizes are the DECODED bytes where the content is here,
  * else the size the provider reports.
+ *
+ * @param array $email  one message in Graph's shape; attachments_inline is used when the provider supplied them
+ * @param mixed $accessToken  the Graph access token, used to fetch attachments when they are not inline
  */
 function oversizeMeasure($conn, array $email, $accessToken): array
 {
@@ -1407,7 +1478,14 @@ function oversizeMeasure($conn, array $email, $accessToken): array
     return [$list, $atts];
 }
 
-/** The processing-log step describing the size check. */
+/**
+ * The processing-log step describing the size check.
+ *
+ * @param array $atts  the file attachments as measured: [['name' => string, 'size' => bytes], ...]
+ * @param array $plan  the decision from oversizePlan() - total and reasons are read
+ * @param array $rules  the mailbox's rules from oversizeRules()
+ * @param string $outcome  what happened to the email, e.g. 'rejected' or 'stripped'
+ */
 function oversizeLogStep(array $atts, array $plan, array $rules, string $outcome): array
 {
     return [
@@ -1422,7 +1500,12 @@ function oversizeLogStep(array $atts, array $plan, array $rules, string $outcome
     ];
 }
 
-/** "big.zip (40 MB), video.mp4 (30 MB)" - what broke the limits, for the log's reason column. */
+/**
+ * "big.zip (40 MB), video.mp4 (30 MB)" - what broke the limits, for the log's reason column.
+ *
+ * @param array $atts  the file attachments as measured: [['name' => string, 'size' => bytes], ...]
+ * @param array $plan  the decision from oversizePlan(); its reasons say which attachments broke a limit
+ */
 function oversizeSummary(array $atts, array $plan): string
 {
     $out = [];
@@ -1433,6 +1516,9 @@ function oversizeSummary(array $atts, array $plan): string
 /**
  * Writes one email_import row to system_logs with the mailbox id added to the details. A
  * logging failure goes to the PHP error log and never stops the import.
+ *
+ * @param mixed $mailboxId  the target_mailboxes id the email came in through
+ * @param mixed $details  what to log, as an array; stored as JSON with mailbox_id added
  */
 function logEmailImport($conn, $mailboxId, $details) {
     try {
@@ -1449,6 +1535,8 @@ function logEmailImport($conn, $mailboxId, $details) {
 
 /**
  * Load whitelist entries for a mailbox
+ *
+ * @param mixed $mailboxId  the target_mailboxes id whose whitelist is wanted
  */
 function loadWhitelist($conn, $mailboxId) {
     $stmt = $conn->prepare("SELECT entry_type, entry_value FROM mailbox_email_whitelist WHERE mailbox_id = ?");
@@ -1472,6 +1560,9 @@ function loadWhitelist($conn, $mailboxId) {
 
 /**
  * Check if a sender address is whitelisted
+ *
+ * @param mixed $fromAddress  the sender's address, any case
+ * @param mixed $whitelist  the lists from loadWhitelist(): ['domains' => [...], 'emails' => [...]], lower-case
  */
 function isWhitelisted($fromAddress, $whitelist) {
     $fromAddress = strtolower(trim($fromAddress));
@@ -1495,6 +1586,9 @@ function isWhitelisted($fromAddress, $whitelist) {
 
 /**
  * Log mailbox activity (imports and rejections)
+ *
+ * @param mixed $mailboxId  the target_mailboxes id the activity belongs to
+ * @param mixed $entries  one row per email: action, from_address, from_name, subject, reason, ticket_id, processing_log
  */
 function logMailboxActivity($conn, $mailboxId, $entries) {
     try {

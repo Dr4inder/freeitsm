@@ -17,5 +17,5 @@ Projects joined to the rest of FreeITSM (3.2.0) - one join table per kind.
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetSql L120 |  |
+| [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetSql L125 |  |
 

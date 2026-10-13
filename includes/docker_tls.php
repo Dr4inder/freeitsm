@@ -55,6 +55,8 @@ const DOCKER_TLS_CA_DAYS = 3650;
  * Forgiving about what people paste — "https://FreeITSM.internal:8443/" becomes
  * "freeitsm.internal" — and strict about the result, because it goes into a
  * certificate and an OpenSSL config file.
+ *
+ * @param string $input  what the administrator typed (untrusted) - may include a scheme, port or path
  */
 function dockerTlsNormaliseHost(string $input): ?string
 {
@@ -77,7 +79,11 @@ function dockerTlsNormaliseHost(string $input): ?string
     return $h;
 }
 
-/** A valid IPv4 or IPv6 address, or null. Empty input is allowed and gives null. */
+/**
+ * A valid IPv4 or IPv6 address, or null. Empty input is allowed and gives null.
+ *
+ * @param string $input  what the administrator typed (untrusted); surrounding spaces and [ ] are stripped
+ */
 function dockerTlsNormaliseIp(string $input): ?string
 {
     $ip = trim($input, " \t\n\r\0\x0B[]");
@@ -120,14 +126,22 @@ function dockerTlsRequestIsHttps(): bool
     return !empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off';
 }
 
-/** Lower-case hex with no separators, so PHP's and the openssl CLI's agree. */
+/**
+ * Lower-case hex with no separators, so PHP's and the openssl CLI's agree.
+ *
+ * @param string $fp  a fingerprint in any format, e.g. "SHA256 Fingerprint=AB:CD:..." from openssl or bare hex from PHP
+ */
 function dockerTlsFingerprintNormalise(string $fp): string
 {
     if (strpos($fp, '=') !== false) $fp = substr($fp, strpos($fp, '=') + 1);
     return strtolower(preg_replace('/[^0-9a-f]/i', '', $fp));
 }
 
-/** Read one PEM certificate's details, or null. */
+/**
+ * Read one PEM certificate's details, or null.
+ *
+ * @param string $pem  one certificate in PEM text form
+ */
 function dockerTlsCertInfo(string $pem): ?array
 {
     $x = @openssl_x509_read($pem);
@@ -146,6 +160,8 @@ function dockerTlsCertInfo(string $pem): ?array
 
 /**
  * Everything the screen needs to know, in one place.
+ *
+ * @param string $dir  the certificate folder, normally DOCKER_TLS_DIR (/var/www/tls)
  */
 function dockerTlsState(string $dir = DOCKER_TLS_DIR): array
 {
@@ -211,6 +227,10 @@ function dockerTlsState(string $dir = DOCKER_TLS_DIR): array
  * True when there is none yet, when it was made for something else (it is
  * name-constrained, so it cannot sign anything else), or when it would expire
  * before the new server certificate does.
+ *
+ * @param string  $host  the host name the certificate is for, already through dockerTlsNormaliseHost()
+ * @param ?string $ip    the IP address it also covers, or null for a name only
+ * @param string  $dir   the certificate folder, normally DOCKER_TLS_DIR
  */
 function dockerTlsNeedsNewCa(string $host, ?string $ip, string $dir = DOCKER_TLS_DIR): bool
 {
@@ -226,7 +246,11 @@ function dockerTlsNeedsNewCa(string $host, ?string $ip, string $dir = DOCKER_TLS
     return $ca['valid_to'] < time() + DOCKER_TLS_SERVER_DAYS * 86400;
 }
 
-/** The netmask that pins a name constraint to exactly one address. */
+/**
+ * The netmask that pins a name constraint to exactly one address.
+ *
+ * @param string $ip  a valid IPv4 or IPv6 address - decides which kind of mask comes back
+ */
 function dockerTlsSingleAddressMask(string $ip): string
 {
     return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
@@ -241,6 +265,9 @@ function dockerTlsSingleAddressMask(string $ip): string
  * constraints and so on) through a config file, so one is written to a temp
  * file for the duration. Passing it explicitly also avoids depending on the
  * system openssl.cnf, which on some PHP builds is missing altogether.
+ *
+ * @param string  $host  the host name for the subjectAltName and the authority's name constraint
+ * @param ?string $ip    an IP address to add to both as well, or null for a name only
  */
 function dockerTlsOpensslConfig(string $host, ?string $ip): string
 {
@@ -273,7 +300,13 @@ subjectAltName         = {$san}
 CNF;
 }
 
-/** Write a file by renaming a temp copy over it, so a reader never sees half of one. */
+/**
+ * Write a file by renaming a temp copy over it, so a reader never sees half of one.
+ *
+ * @param string $path      absolute path of the file to replace
+ * @param string $contents  the whole new contents
+ * @param int    $mode      Unix permissions for it, e.g. 0600 for a private key
+ */
 function dockerTlsWriteFile(string $path, string $contents, int $mode): void
 {
     $tmp = $path . '.tmp-' . bin2hex(random_bytes(4));
@@ -292,6 +325,10 @@ function dockerTlsWriteFile(string $path, string $contents, int $mode): void
  *
  * Reuses the existing authority when it was made for the same name and IP, so
  * renewing the server certificate never means visiting the PCs again.
+ *
+ * @param string  $host  the host name, already through dockerTlsNormaliseHost()
+ * @param ?string $ip    the IP address to include too, already through dockerTlsNormaliseIp(), or null for none
+ * @param string  $dir   the certificate folder to write into, normally DOCKER_TLS_DIR
  *
  * @throws RuntimeException with a message fit to show an administrator.
  */

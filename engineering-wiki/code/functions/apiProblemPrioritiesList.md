@@ -6,7 +6,7 @@ GET /problem-priorities - the problem priorities, in display order.
 function apiProblemPrioritiesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 428.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 434.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 430 | `apiProblemPrioritiesList` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 436 | `apiProblemPrioritiesList` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
 
 ## Calls
 

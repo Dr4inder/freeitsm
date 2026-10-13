@@ -1,6 +1,6 @@
 # includes/domains/read.php
 
-> PHP - 208 lines
+> PHP - 218 lines
 
 Domains — the reads the screens share: the register list and one domain.
 
@@ -18,10 +18,10 @@ in the "All companies" view). A row the analyst may not see is never sent.
 |---|--:|---|
 | [domainListSelect()](/code/functions/domainListSelect.md) | 18 | The columns + joins every register read uses. |
 | [domainListRows()](/code/functions/domainListRows.md) | 71 | The register, scoped to what this analyst may see. |
-| [domainShapeRow()](/code/functions/domainShapeRow.md) | 97 | Types, and the derived numbers every screen wants (days left, attention). |
-| [domainNeedsAttention()](/code/functions/domainNeedsAttention.md) | 124 | The reasons a domain belongs on the "needs attention" list — one place, so the register filter, the dashboard and Watchtower cannot disagree. |
-| [domainDetail()](/code/functions/domainDetail.md) | 139 | One domain for its page: everything but the auth code's value. |
-| [domainApiLookups()](/code/functions/domainApiLookups.md) | 173 | Statuses, owners, registrars, accounts, purposes — for filters and forms. |
+| [domainShapeRow()](/code/functions/domainShapeRow.md) | 101 | Types, and the derived numbers every screen wants (days left, attention). |
+| [domainNeedsAttention()](/code/functions/domainNeedsAttention.md) | 130 | The reasons a domain belongs on the "needs attention" list — one place, so the register filter, the dashboard and Watchtower cannot disagree. |
+| [domainDetail()](/code/functions/domainDetail.md) | 149 | One domain for its page: everything but the auth code's value. |
+| [domainApiLookups()](/code/functions/domainApiLookups.md) | 183 | Statuses, owners, registrars, accounts, purposes — for filters and forms. |
 
 ## Database
 
@@ -30,13 +30,13 @@ in the "All companies" view). A row the analyst may not see is never sent.
 | 25 | `domainListSelect` | read [users](/code/tables/users.md) |  |
 | 32 | `domainListSelect` | read [suppliers](/code/tables/suppliers.md), read [contacts](/code/tables/contacts.md), read [analysts](/code/tables/analysts.md) |  |
 | 39 | `domainListSelect` | read [domain_lookalikes](/code/tables/domain_lookalikes.md), read [domain_certificates](/code/tables/domain_certificates.md), read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [suppliers](/code/tables/suppliers.md), read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md), read [analysts](/code/tables/analysts.md), read [contacts](/code/tables/contacts.md), read [tenants](/code/tables/tenants.md) |  |
-| 150 | `domainDetail` | read [contracts](/code/tables/contracts.md), read [domains](/code/tables/domains.md) |  |
-| 181 | `domainApiLookups` | read [contracts](/code/tables/contracts.md) |  |
-| 185 | `domainApiLookups` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
-| 188 | `domainApiLookups` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 189 | `domainApiLookups` | read [analysts](/code/tables/analysts.md) |  |
-| 190 | `domainApiLookups` | read [suppliers](/code/tables/suppliers.md) |  |
-| 201 | `domainApiLookups` | read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 160 | `domainDetail` | read [contracts](/code/tables/contracts.md), read [domains](/code/tables/domains.md) |  |
+| 191 | `domainApiLookups` | read [contracts](/code/tables/contracts.md) |  |
+| 195 | `domainApiLookups` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 198 | `domainApiLookups` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 199 | `domainApiLookups` | read [analysts](/code/tables/analysts.md) |  |
+| 200 | `domainApiLookups` | read [suppliers](/code/tables/suppliers.md) |  |
+| 211 | `domainApiLookups` | read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md) |  |
 
 ## How it hangs together
 

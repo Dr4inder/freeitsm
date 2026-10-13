@@ -1,6 +1,6 @@
 # includes/rfp_scope.php
 
-> PHP - 123 lines
+> PHP - 145 lines
 
 Which company an RFP belongs to, and who may see it (3.5.0).
 
@@ -26,29 +26,29 @@ stay shared by every company, as they are for contracts and assets.
 | Function | Line | What it does |
 |---|--:|---|
 | [rfpTenantReady()](/code/functions/rfpTenantReady.md) | 26 | True once Database Verification has added rfps.tenant_id. |
-| [rfpVisibilitySql()](/code/functions/rfpVisibilitySql.md) | 35 | " AND ..." keeping RFPs (alias `$r`) in companies this analyst can reach. |
-| [rfpListSql()](/code/functions/rfpListSql.md) | 42 | The RFP LIST: the active company, or every company the analyst can see under "All companies". |
-| [rfpTenantOf()](/code/functions/rfpTenantOf.md) | 49 | The company an RFP belongs to (NULL read as Default), or null if there is no such RFP. |
-| [rfpCanView()](/code/functions/rfpCanView.md) | 59 | May this analyst see RFP `$id`? False for one that does not exist - the same answer, deliberately. |
-| [rfpIdOf()](/code/functions/rfpIdOf.md) | 72 | The RFP a child row belongs to. `$kind` names the table the id is for; every one carries rfp_id except section history (through its section). |
-| [rfpGate()](/code/functions/rfpGate.md) | 99 | The gate every RFP endpoint passes. Reads the id named `$key` from the query string, the form, or the JSON body; resolves it to its RFP; and answers "not found" - never forbidden, so ids cannot be probed - when the analyst cannot see that RFP. A missing id is left to the endpoint's own validation. With `$key` naming a LIST (merge's `ids`), every id must resolve to RFPs the analyst can see. |
+| [rfpVisibilitySql()](/code/functions/rfpVisibilitySql.md) | 39 | " AND ..." keeping RFPs (alias `$r`) in companies this analyst can reach. |
+| [rfpListSql()](/code/functions/rfpListSql.md) | 50 | The RFP LIST: the active company, or every company the analyst can see under "All companies". |
+| [rfpTenantOf()](/code/functions/rfpTenantOf.md) | 61 | The company an RFP belongs to (NULL read as Default), or null if there is no such RFP. |
+| [rfpCanView()](/code/functions/rfpCanView.md) | 75 | May this analyst see RFP `$id`? False for one that does not exist - the same answer, deliberately. |
+| [rfpIdOf()](/code/functions/rfpIdOf.md) | 91 | The RFP a child row belongs to. `$kind` names the table the id is for; every one carries rfp_id except section history (through its section). |
+| [rfpGate()](/code/functions/rfpGate.md) | 121 | The gate every RFP endpoint passes. Reads the id named `$key` from the query string, the form, or the JSON body; resolves it to its RFP; and answers "not found" - never forbidden, so ids cannot be probed - when the analyst cannot see that RFP. A missing id is left to the endpoint's own validation. With `$key` naming a LIST (merge's `ids`), every id must resolve to RFPs the analyst can see. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 30 | `rfpTenantReady` | read [rfps](/code/tables/rfps.md) |  |
-| 51 | `rfpTenantOf` | read [rfps](/code/tables/rfps.md) |  |
-| 51 | `rfpTenantOf` | read [rfps](/code/tables/rfps.md) |  |
-| 63 | `rfpCanView` | read [rfps](/code/tables/rfps.md) |  |
-| 75 | `rfpIdOf` | read [rfps](/code/tables/rfps.md) |  |
-| 76 | `rfpIdOf` | read [rfp_documents](/code/tables/rfp_documents.md) |  |
-| 77 | `rfpIdOf` | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md) |  |
-| 78 | `rfpIdOf` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 79 | `rfpIdOf` | read [rfp_conflicts](/code/tables/rfp_conflicts.md) |  |
-| 80 | `rfpIdOf` | read [rfp_output_sections](/code/tables/rfp_output_sections.md) |  |
-| 81 | `rfpIdOf` | read [rfp_document_sections](/code/tables/rfp_document_sections.md) |  |
-| 82 | `rfpIdOf` | read [rfp_invited_suppliers](/code/tables/rfp_invited_suppliers.md) |  |
+| 63 | `rfpTenantOf` | read [rfps](/code/tables/rfps.md) |  |
+| 63 | `rfpTenantOf` | read [rfps](/code/tables/rfps.md) |  |
+| 79 | `rfpCanView` | read [rfps](/code/tables/rfps.md) |  |
+| 94 | `rfpIdOf` | read [rfps](/code/tables/rfps.md) |  |
+| 95 | `rfpIdOf` | read [rfp_documents](/code/tables/rfp_documents.md) |  |
+| 96 | `rfpIdOf` | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md) |  |
+| 97 | `rfpIdOf` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 98 | `rfpIdOf` | read [rfp_conflicts](/code/tables/rfp_conflicts.md) |  |
+| 99 | `rfpIdOf` | read [rfp_output_sections](/code/tables/rfp_output_sections.md) |  |
+| 100 | `rfpIdOf` | read [rfp_document_sections](/code/tables/rfp_document_sections.md) |  |
+| 101 | `rfpIdOf` | read [rfp_invited_suppliers](/code/tables/rfp_invited_suppliers.md) |  |
 
 ## How it hangs together
 

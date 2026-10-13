@@ -12,13 +12,13 @@ Returns true if the assignment is SAFE.
 function userManagerIsSafe(PDO $conn, int $userId, ?int $managerId): bool
 ```
 
-Defined in [includes/users.php](/code/files/includes/users.php.md), line 391.
+Defined in [includes/users.php](/code/files/includes/users.php.md), line 403.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
-| `$managerId` | `?int` |  |  |
+| `$userId` | `int` |  | the person (users.id) being given a manager |
+| `$managerId` | `?int` |  | the proposed manager's users.id; null (no manager) is always safe |
 
 **Returns:** `bool`
 
@@ -26,7 +26,7 @@ Defined in [includes/users.php](/code/files/includes/users.php.md), line 391.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 398 | `userManagerIsSafe` | read [users](/code/tables/users.md) |  |
+| 410 | `userManagerIsSafe` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

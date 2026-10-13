@@ -6,7 +6,7 @@ All tenants as rows [id, name, slug, is_default, is_active].
 function getAllTenants(PDO $conn, bool $activeOnly = false): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 152.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 154.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 152
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 154 | `getAllTenants` | read [tenants](/code/tables/tenants.md) |  |
+| 156 | `getAllTenants` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

@@ -6,11 +6,11 @@ The chart-type option for a block, offering every chart type with `$default` sel
 function rpChartOpt(string $default): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 61.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$default` | `string` |  |  |
+| `$default` | `string` |  | the chart type chosen by default, one of RP_CHART_TYPES |
 
 **Returns:** `array`
 

@@ -11,13 +11,13 @@ TRAP: a bare digit is usually NOT a rating. "Which floor?" "3" is an answer
 function csatPendingRequestForChat(PDO $conn, int $channelId, string $from): ?int
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 208.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 221.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
-| `$from` | `string` |  |  |
+| `$channelId` | `int` |  | messaging_channels.id the digit arrived on |
+| `$from` | `string` |  | the sender's id on that channel (from_address) |
 
 **Returns:** `?int`
 
@@ -25,8 +25,8 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 208.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 211 | `csatPendingRequestForChat` | read [ticket_csat_responses](/code/tables/ticket_csat_responses.md) |  |
-| 214 | `csatPendingRequestForChat` | read [emails](/code/tables/emails.md) |  |
+| 224 | `csatPendingRequestForChat` | read [ticket_csat_responses](/code/tables/ticket_csat_responses.md) |  |
+| 227 | `csatPendingRequestForChat` | read [emails](/code/tables/emails.md) |  |
 
 ## Called from
 

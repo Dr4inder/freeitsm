@@ -6,7 +6,7 @@ Every enabled, analyst-facing LDAP provider, in display order. tenant_id IS NULL
 function ldapAnalystProviders(PDO $conn): array
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 482.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 520.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 482.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 485 | `ldapAnalystProviders` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 523 | `ldapAnalystProviders` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Calls
 

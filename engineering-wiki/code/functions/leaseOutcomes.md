@@ -6,12 +6,12 @@ Outcomes, in order. `$activeOnly` drops switched-off ones (still shown where in 
 function leaseOutcomes(PDO $conn, bool $activeOnly = false): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 121.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 157.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$activeOnly` | `bool` | `false` |  |
+| `$activeOnly` | `bool` | `false` | true to leave out outcomes that have been switched off |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 121.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 124 | `leaseOutcomes` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 160 | `leaseOutcomes` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
 
 ## Calls
 

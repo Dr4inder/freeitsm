@@ -6,13 +6,13 @@ May this analyst see this project row (needs id, owner_analyst_id, created_by_id
 function projectVisibleTo(PDO $conn, int $analystId, array $project): bool
 ```
 
-Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 81.
+Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 92.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row - id, owner_analyst_id, created_by_id and visibility are read |
 
 **Returns:** `bool`
 

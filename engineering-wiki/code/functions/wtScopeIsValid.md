@@ -6,11 +6,11 @@ True when `$scope` is one of the three Watchtower scopes: mine, team or all.
 function wtScopeIsValid(string $scope): bool
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 60.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$scope` | `string` |  |  |
+| `$scope` | `string` |  | the scope to check, e.g. a stored preference or a request value |
 
 **Returns:** `bool`
 

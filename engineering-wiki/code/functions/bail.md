@@ -6,11 +6,11 @@ Answers {success: false, error} as JSON and stops.
 function bail(string $msg): void
 ```
 
-Defined in [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md), line 40.
+Defined in [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$msg` | `string` |  |  |
+| `$msg` | `string` |  | the error shown to the admin |
 
 **Returns:** `void`
 

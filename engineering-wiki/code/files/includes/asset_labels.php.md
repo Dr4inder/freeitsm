@@ -1,6 +1,6 @@
 # includes/asset_labels.php
 
-> PHP - 295 lines
+> PHP - 306 lines
 
 QR asset labels — the tag people read, and the token machines read.
 
@@ -35,16 +35,16 @@ characters is a bigger, more forgiving code.
 |---|--:|---|
 | [assetLabelsSchemaReady()](/code/functions/assetLabelsSchemaReady.md) | 50 | Does this database have the label columns yet? Cached per request. |
 | [assetEnsureToken()](/code/functions/assetEnsureToken.md) | 69 | The token for an asset, minting one if it has never been labelled. |
-| [assetIdForToken()](/code/functions/assetIdForToken.md) | 103 | Resolve a scanned token to an asset id. Returns null for unknown tokens. |
-| [assetTagAvailable()](/code/functions/assetTagAvailable.md) | 128 | Is this asset tag free within its company? |
-| [assetLabelUrl()](/code/functions/assetLabelUrl.md) | 157 | The URL a label's QR encodes. |
-| [assetPublicBaseUrl()](/code/functions/assetPublicBaseUrl.md) | 162 | The install's public base, including any sub-folder - see `assetLabelUrl()`. |
-| [assetLabelSheetSpecs()](/code/functions/assetLabelSheetSpecs.md) | 171 | Canonical commercial A4 label sheet stock specifications. |
-| [assetLabelQrEcLevel()](/code/functions/assetLabelQrEcLevel.md) | 187 | Determine QR code error-correction level based on logo presence. |
-| [assetLabelCustomFields()](/code/functions/assetLabelCustomFields.md) | 195 | Custom asset fields a label can print: key ('cf_' + field_key) => its own label. |
-| [assetLabelAvailableFields()](/code/functions/assetLabelAvailableFields.md) | 217 | Every field a label can print, with the name the SETTINGS picker shows - built-in fields in the reader's language, custom fields marked as such. |
-| [assetLabelPrintFields()](/code/functions/assetLabelPrintFields.md) | 232 | The short names printed ON the label beside each value - space on a 38mm sticker is tight, so "Serial" rather than "Serial / service tag". |
-| [assetLabelSettings()](/code/functions/assetLabelSettings.md) | 247 | The label settings for a company: header, footer, which fields in which order, whether to print their names, and the logo inside the QR. |
+| [assetIdForToken()](/code/functions/assetIdForToken.md) | 107 | Resolve a scanned token to an asset id. Returns null for unknown tokens. |
+| [assetTagAvailable()](/code/functions/assetTagAvailable.md) | 135 | Is this asset tag free within its company? |
+| [assetLabelUrl()](/code/functions/assetLabelUrl.md) | 166 | The URL a label's QR encodes. |
+| [assetPublicBaseUrl()](/code/functions/assetPublicBaseUrl.md) | 171 | The install's public base, including any sub-folder - see `assetLabelUrl()`. |
+| [assetLabelSheetSpecs()](/code/functions/assetLabelSheetSpecs.md) | 180 | Canonical commercial A4 label sheet stock specifications. |
+| [assetLabelQrEcLevel()](/code/functions/assetLabelQrEcLevel.md) | 198 | Determine QR code error-correction level based on logo presence. |
+| [assetLabelCustomFields()](/code/functions/assetLabelCustomFields.md) | 206 | Custom asset fields a label can print: key ('cf_' + field_key) => its own label. |
+| [assetLabelAvailableFields()](/code/functions/assetLabelAvailableFields.md) | 228 | Every field a label can print, with the name the SETTINGS picker shows - built-in fields in the reader's language, custom fields marked as such. |
+| [assetLabelPrintFields()](/code/functions/assetLabelPrintFields.md) | 243 | The short names printed ON the label beside each value - space on a 38mm sticker is tight, so "Serial" rather than "Serial / service tag". |
+| [assetLabelSettings()](/code/functions/assetLabelSettings.md) | 258 | The label settings for a company: header, footer, which fields in which order, whether to print their names, and the logo inside the QR. |
 
 ## Database
 
@@ -53,9 +53,9 @@ characters is a bigger, more forgiving code.
 | 54 | `assetLabelsSchemaReady` | read [assets](/code/tables/assets.md) |  |
 | 72 | `assetEnsureToken` | read [assets](/code/tables/assets.md) |  |
 | 83 | `assetEnsureToken` | **update** [assets](/code/tables/assets.md) (`qr_token`) |  |
-| 109 | `assetIdForToken` | read [assets](/code/tables/assets.md) |  |
-| 132 | `assetTagAvailable` | read [assets](/code/tables/assets.md) |  |
-| 198 | `assetLabelCustomFields` | read [asset_fields](/code/tables/asset_fields.md) |  |
+| 113 | `assetIdForToken` | read [assets](/code/tables/assets.md) |  |
+| 139 | `assetTagAvailable` | read [assets](/code/tables/assets.md) |  |
+| 209 | `assetLabelCustomFields` | read [asset_fields](/code/tables/asset_fields.md) |  |
 
 ## How it hangs together
 

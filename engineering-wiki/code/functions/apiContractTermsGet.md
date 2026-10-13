@@ -6,7 +6,7 @@ Contract terms — GET + bulk upsert (mirrors save_contract_terms.php)
 function apiContractTermsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 389.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 403.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contrac
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 392 | `apiContractTermsGet` | read [contract_term_tabs](/code/tables/contract_term_tabs.md), read [contract_term_values](/code/tables/contract_term_values.md) |  |
+| 406 | `apiContractTermsGet` | read [contract_term_tabs](/code/tables/contract_term_tabs.md), read [contract_term_values](/code/tables/contract_term_values.md) |  |
 
 ## Calls
 

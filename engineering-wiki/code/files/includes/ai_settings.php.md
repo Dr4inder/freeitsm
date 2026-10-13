@@ -1,6 +1,6 @@
 # includes/ai_settings.php
 
-> PHP - 273 lines
+> PHP - 288 lines
 
 Per-namespace AI configuration storage, shared by every module that offers an AI provider/model/key panel.
 
@@ -24,20 +24,20 @@ abused to read or overwrite arbitrary system_settings (e.g. other secrets).
 | Function | Line | What it does |
 |---|--:|---|
 | [aiSettingsRegistry()](/code/functions/aiSettingsRegistry.md) | 30 | Allowlisted AI config namespaces. Adding a module = one line here + dropping renderAiSettingsPanel('<ns>') on its settings page. The <ns>_api_key MUST also be added to ENCRYPTED_SETTING_KEYS + MASKED_SETTING_KEYS in encryption.php. |
-| [aiSettingsIsValidNs()](/code/functions/aiSettingsIsValidNs.md) | 102 | True when `$ns` is a namespace registered in `aiSettingsRegistry()`. |
-| [aiSettingsEntry()](/code/functions/aiSettingsEntry.md) | 110 | Returns a namespace's registry entry (label, default provider and model); throws RuntimeException for an unknown namespace. |
-| [aiSettingsKeys()](/code/functions/aiSettingsKeys.md) | 120 | The system_settings keys for a namespace. |
-| [aiSettingsLoad()](/code/functions/aiSettingsLoad.md) | 148 | Load a ready-to-use config (decrypted key) for `aiProviderChat()`. Defaults: provider/model from the registry; verify_ssl from the row, else the global SSL_VERIFY_PEER constant (preserves existing localhost behaviour). |
-| [aiSettingsForUi()](/code/functions/aiSettingsForUi.md) | 208 | UI-safe view of the config — never returns the plaintext key, only a mask and a has_key flag. |
-| [aiSettingsSave()](/code/functions/aiSettingsSave.md) | 232 | Persist a config. Validates provider; encrypts the key; honours masked/empty "no change" so saving provider+model alone never wipes the key. |
+| [aiSettingsIsValidNs()](/code/functions/aiSettingsIsValidNs.md) | 106 | True when `$ns` is a namespace registered in `aiSettingsRegistry()`. |
+| [aiSettingsEntry()](/code/functions/aiSettingsEntry.md) | 116 | Returns a namespace's registry entry (label, default provider and model); throws RuntimeException for an unknown namespace. |
+| [aiSettingsKeys()](/code/functions/aiSettingsKeys.md) | 130 | The system_settings keys for a namespace. |
+| [aiSettingsLoad()](/code/functions/aiSettingsLoad.md) | 160 | Load a ready-to-use config (decrypted key) for `aiProviderChat()`. Defaults: provider/model from the registry; verify_ssl from the row, else the global SSL_VERIFY_PEER constant (preserves existing localhost behaviour). |
+| [aiSettingsForUi()](/code/functions/aiSettingsForUi.md) | 222 | UI-safe view of the config — never returns the plaintext key, only a mask and a has_key flag. |
+| [aiSettingsSave()](/code/functions/aiSettingsSave.md) | 247 | Persist a config. Validates provider; encrypts the key; honours masked/empty "no change" so saving provider+model alone never wipes the key. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 155 | `aiSettingsLoad` | read [system_settings](/code/tables/system_settings.md) |  |
-| 245 | `aiSettingsSave` | **update** [system_settings](/code/tables/system_settings.md) (`setting_value`) |  |
-| 248 | `aiSettingsSave` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 167 | `aiSettingsLoad` | read [system_settings](/code/tables/system_settings.md) |  |
+| 260 | `aiSettingsSave` | **update** [system_settings](/code/tables/system_settings.md) (`setting_value`) |  |
+| 263 | `aiSettingsSave` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## How it hangs together
 

@@ -12,15 +12,15 @@ function projectLinkTargetOk(
 ): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 112.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
-| `$targetId` | `int` |  |  |
-| `$projectTenant` | `?int` |  |  |
+| `$kind` | `string` |  | the link kind, e.g. 'ticket' |
+| `$targetId` | `int` |  | the id of the record at the other end |
+| `$projectTenant` | `?int` |  | the project's company; null skips the same-company check (the record's own page) |
 
 **Returns:** `bool`
 
@@ -28,7 +28,7 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 127 | `projectLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
+| 144 | `projectLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

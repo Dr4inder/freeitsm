@@ -10,14 +10,14 @@ that is the only safe way to use this.
 function wtScopeClause(PDO $conn, int $analystId, string $scope, string $column): array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 235.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 248.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `string` |  |  |
-| `$column` | `string` |  |  |
+| `$scope` | `string` |  | WT_SCOPE_MINE, WT_SCOPE_TEAM or WT_SCOPE_ALL ('all' gives no clause) |
+| `$column` | `string` |  | the owner column with its alias, e.g. 't.assigned_analyst_id' - always a literal, never input |
 
 **Returns:** `array`
 

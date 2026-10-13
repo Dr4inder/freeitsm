@@ -11,11 +11,11 @@ client the operator actually uses.
 function cardDavDetectEol(string $raw): string
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 255.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 268.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the card exactly as the server returned it |
 
 **Returns:** `string`
 

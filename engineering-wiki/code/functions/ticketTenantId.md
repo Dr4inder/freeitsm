@@ -6,7 +6,7 @@ The company a ticket belongs to, or null. Used to resolve both of the above.
 function ticketTenantId(PDO $conn, int $ticketId): ?int
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 271.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 282.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 274 | `ticketTenantId` | read [tickets](/code/tables/tickets.md) |  |
+| 285 | `ticketTenantId` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Called from
 

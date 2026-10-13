@@ -9,13 +9,13 @@ parent while its own children fall off the end of the depth cap.
 function ticketCategorySubtreeDepth(PDO $conn, int $id, int $guard = 0): int
 ```
 
-Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md), line 256.
+Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md), line 262.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$guard` | `int` | `0` |  |
+| `$id` | `int` |  | the category whose subtree to measure |
+| `$guard` | `int` | `0` | the recursion depth so far - callers leave it at 0 |
 
 **Returns:** `int`
 
@@ -23,7 +23,7 @@ Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categori
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 260 | `ticketCategorySubtreeDepth` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 266 | `ticketCategorySubtreeDepth` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
 
 ## Called from
 

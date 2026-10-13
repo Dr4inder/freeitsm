@@ -14,7 +14,7 @@ same order.
 function portalKnowledgeScope(PDO $conn, ?int $tenantId, string $alias = 'a'): array
 ```
 
-Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), line 69.
+Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), line 71.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,12 +6,12 @@ Choices for a 'multi' option's source (the Properties pane's checkboxes).
 function rpOptionSource(PDO $conn, string $source, int $analystId = 0): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 373.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 415.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$source` | `string` |  |  |
+| `$source` | `string` |  | the option's source: 'projects' or 'status_services'; anything else gives [] |
 | `$analystId` | `int` | `0` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
@@ -20,7 +20,7 @@ Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 380 | `rpOptionSource` | read [status_services](/code/tables/status_services.md) |  |
+| 422 | `rpOptionSource` | read [status_services](/code/tables/status_services.md) |  |
 
 ## Calls
 

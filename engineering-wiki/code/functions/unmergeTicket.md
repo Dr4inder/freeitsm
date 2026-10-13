@@ -29,13 +29,13 @@ are cheap to re-add by hand.
 function unmergeTicket(PDO $conn, int $actorId, int $mergeId): array
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 169.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 172.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$actorId` | `int` |  |  |
-| `$mergeId` | `int` |  |  |
+| `$actorId` | `int` |  | the analyst undoing the merge, for the audit rows |
+| `$mergeId` | `int` |  | the merge to undo (ticket_merges.id) |
 
 **Returns:** `array`
 
@@ -43,17 +43,17 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 172 | `unmergeTicket` | read [ticket_merges](/code/tables/ticket_merges.md) |  |
-| 195 | `unmergeTicket` | read [emails](/code/tables/emails.md) |  |
-| 207 | `unmergeTicket` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
-| 226 | `unmergeTicket` | read [email_attachments](/code/tables/email_attachments.md) |  |
-| 232 | `unmergeTicket` | **delete** [email_attachments](/code/tables/email_attachments.md) |  |
-| 233 | `unmergeTicket` | **delete** [emails](/code/tables/emails.md) |  |
-| 240 | `unmergeTicket` | **update** [tickets](/code/tables/tickets.md) (`merged_into_id`, `status_id`, `closed_datetime`, `updated_datetime`) |  |
-| 254 | `unmergeTicket` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
-| 263 | `unmergeTicket` | read [ticket_merges](/code/tables/ticket_merges.md) |  |
-| 267 | `unmergeTicket` | read [emails](/code/tables/emails.md) |  |
-| 274 | `unmergeTicket` | **update** [ticket_merges](/code/tables/ticket_merges.md) (`undone_datetime`, `undone_by_id`) |  |
+| 175 | `unmergeTicket` | read [ticket_merges](/code/tables/ticket_merges.md) |  |
+| 198 | `unmergeTicket` | read [emails](/code/tables/emails.md) |  |
+| 210 | `unmergeTicket` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
+| 229 | `unmergeTicket` | read [email_attachments](/code/tables/email_attachments.md) |  |
+| 235 | `unmergeTicket` | **delete** [email_attachments](/code/tables/email_attachments.md) |  |
+| 236 | `unmergeTicket` | **delete** [emails](/code/tables/emails.md) |  |
+| 243 | `unmergeTicket` | **update** [tickets](/code/tables/tickets.md) (`merged_into_id`, `status_id`, `closed_datetime`, `updated_datetime`) |  |
+| 257 | `unmergeTicket` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 266 | `unmergeTicket` | read [ticket_merges](/code/tables/ticket_merges.md) |  |
+| 270 | `unmergeTicket` | read [emails](/code/tables/emails.md) |  |
+| 277 | `unmergeTicket` | **update** [ticket_merges](/code/tables/ticket_merges.md) (`undone_datetime`, `undone_by_id`) |  |
 
 ## Calls
 

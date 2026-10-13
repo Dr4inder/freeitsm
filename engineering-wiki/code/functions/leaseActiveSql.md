@@ -6,12 +6,12 @@ SQL: this lease_assets row (alias `$la`, outcome alias `$lo`) is still out on le
 function leaseActiveSql(string $la = 'la', string $lo = 'lo'): string
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 99.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$la` | `string` | `'la'` |  |
-| `$lo` | `string` | `'lo'` |  |
+| `$la` | `string` | `'la'` | the lease_assets alias in the calling query |
+| `$lo` | `string` | `'lo'` | the lease_outcomes alias (LEFT JOINed on la.outcome_id) in the calling query |
 
 **Returns:** `string`
 

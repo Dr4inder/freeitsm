@@ -10,12 +10,12 @@ to work that out is more code and more ways to be wrong.
 function integrationsSaveMaps(PDO $conn, int $connectionId, array $maps): void
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 957.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1016.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connectionId` | `int` |  |  |
+| `$connectionId` | `int` |  | the integration_connections id whose mappings are replaced |
 | `$maps` | `array` |  | [map_type => [local_key => external_key]] |
 
 **Returns:** `void`
@@ -24,8 +24,8 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 971 | `integrationsSaveMaps` | **delete** [integration_field_maps](/code/tables/integration_field_maps.md) |  |
-| 975 | `integrationsSaveMaps` | **insert** [integration_field_maps](/code/tables/integration_field_maps.md) (`connection_id`, `map_type`, `local_key`, `external_key`) |  |
+| 1030 | `integrationsSaveMaps` | **delete** [integration_field_maps](/code/tables/integration_field_maps.md) |  |
+| 1034 | `integrationsSaveMaps` | **insert** [integration_field_maps](/code/tables/integration_field_maps.md) (`connection_id`, `map_type`, `local_key`, `external_key`) |  |
 
 ## Calls
 

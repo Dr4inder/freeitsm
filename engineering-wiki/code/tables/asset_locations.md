@@ -40,11 +40,11 @@ Arbitrary-depth physical location tree (adjacency list). Self-ref FK + parent in
 | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52, apiAssetLocations L72 |  |
 | [asset-management/labels.php](/code/files/asset-management/labels.php.md) | L104 |  |
 | [asset-management/scan.php](/code/files/asset-management/scan.php.md) | L65 |  |
-| [includes/asset_locations.php](/code/files/includes/asset_locations.php.md) | assetLocationIsShared L61 |  |
-| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractAssetSelect L64, contractAssetSearch L250 |  |
-| [includes/leases.php](/code/files/includes/leases.php.md) | leaseDueBack L690 |  |
-| [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetAssets L265, projectTargetOptions L283 |  |
+| [includes/asset_locations.php](/code/files/includes/asset_locations.php.md) | assetLocationIsShared L65 |  |
+| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractAssetSelect L64, contractAssetSearch L263 |  |
+| [includes/leases.php](/code/files/includes/leases.php.md) | leaseDueBack L778 |  |
+| [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetAssets L297, projectTargetOptions L319 |  |
 | [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | L19 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::moveToCompany L655, AssetsService::assetsForUser L1077 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L546 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::moveToCompany L679, AssetsService::assetsForUser L1135 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L569 |  |
 

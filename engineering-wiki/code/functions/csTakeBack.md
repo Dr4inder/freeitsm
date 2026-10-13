@@ -12,12 +12,12 @@ carries on. Nobody's feed link is affected.
 function csTakeBack(PDO $conn, array $existing): void
 ```
 
-Defined in [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md), line 69.
+Defined in [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md), line 73.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$existing` | `array` |  |  |
+| `$existing` | `array` |  | the calendar_connections row as it stands before the change (id and provider are read) |
 
 **Returns:** `void`
 
@@ -25,9 +25,9 @@ Defined in [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 74 | `csTakeBack` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
-| 84 | `csTakeBack` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
-| 93 | `csTakeBack` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`mode`, `calendar_address`, `credentials`, `connection_id`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`, `updated_datetime`) |  |
+| 78 | `csTakeBack` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
+| 88 | `csTakeBack` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 97 | `csTakeBack` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`mode`, `calendar_address`, `credentials`, `connection_id`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`, `updated_datetime`) |  |
 
 ## Calls
 

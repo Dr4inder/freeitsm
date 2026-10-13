@@ -13,11 +13,11 @@ goes missing and everything still looks like it worked.
 function cardDavUnfold(string $vcard): array
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 407.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 419.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$vcard` | `string` |  |  |
+| `$vcard` | `string` |  | one raw vCard as the server sent it, any line endings |
 
 **Returns:** `array`
 

@@ -1,6 +1,6 @@
 # api/v1/resources/software.php
 
-> API endpoint - 378 lines
+> API endpoint - 392 lines
 
 FreeITSM REST API v1 — software resource (inventory + licences).
 
@@ -40,18 +40,18 @@ below stay here and are called to re-load the affected row after a write.
 | Function | Line | What it does |
 |---|--:|---|
 | [apiSoftwareAppsList()](/code/functions/apiSoftwareAppsList.md) | 45 | GET /software/apps - the discovered applications with install and licence counts, paginated. |
-| [apiSoftwareLoadApp()](/code/functions/apiSoftwareLoadApp.md) | 119 | Loads one discovered application row, or answers 404 and stops. |
-| [apiSoftwareInstallCount()](/code/functions/apiSoftwareInstallCount.md) | 130 | Distinct non-system-component hosts for an app — the compliance install count. |
-| [apiSoftwareAppsGet()](/code/functions/apiSoftwareAppsGet.md) | 140 | GET /software/apps/{id} — app + licences + compliance numbers |
-| [apiSoftwareAppMachinesList()](/code/functions/apiSoftwareAppMachinesList.md) | 187 | GET /software/apps/{id}/machines — mirrors get_app_machines.php (+ asset_id) |
-| [apiSoftwareLicenceSelect()](/code/functions/apiSoftwareLicenceSelect.md) | 220 | The SELECT for software licences, with the application's name and publisher, the creator's name and how many machines have the application installed. |
-| [apiSerializeLicence()](/code/functions/apiSerializeLicence.md) | 235 | Shapes a licence row for the API, adding renewal_status - overdue, due_soon (inside the notice period, 30 days by default) or ok - computed the way the licence screen colours it. |
-| [apiLoadLicence()](/code/functions/apiLoadLicence.md) | 275 | Loads one licence row (apiSoftwareLicenceSelect), or answers 404 and stops. |
-| [apiSoftwareLicencesList()](/code/functions/apiSoftwareLicencesList.md) | 286 | GET /software/licences |
-| [apiSoftwareLicencesGet()](/code/functions/apiSoftwareLicencesGet.md) | 351 | GET /software/licences/{id} - one licence. |
-| [apiSoftwareLicencesCreate()](/code/functions/apiSoftwareLicencesCreate.md) | 356 | POST /software/licences |
-| [apiSoftwareLicencesUpdate()](/code/functions/apiSoftwareLicencesUpdate.md) | 364 | PATCH /software/licences/{id} |
-| [apiSoftwareLicencesDelete()](/code/functions/apiSoftwareLicencesDelete.md) | 372 | DELETE /software/licences/{id} — leaf table, mirrors delete_licence.php |
+| [apiSoftwareLoadApp()](/code/functions/apiSoftwareLoadApp.md) | 123 | Loads one discovered application row, or answers 404 and stops. |
+| [apiSoftwareInstallCount()](/code/functions/apiSoftwareInstallCount.md) | 138 | Distinct non-system-component hosts for an app — the compliance install count. |
+| [apiSoftwareAppsGet()](/code/functions/apiSoftwareAppsGet.md) | 148 | GET /software/apps/{id} — app + licences + compliance numbers |
+| [apiSoftwareAppMachinesList()](/code/functions/apiSoftwareAppMachinesList.md) | 195 | GET /software/apps/{id}/machines — mirrors get_app_machines.php (+ asset_id) |
+| [apiSoftwareLicenceSelect()](/code/functions/apiSoftwareLicenceSelect.md) | 228 | The SELECT for software licences, with the application's name and publisher, the creator's name and how many machines have the application installed. |
+| [apiSerializeLicence()](/code/functions/apiSerializeLicence.md) | 245 | Shapes a licence row for the API, adding renewal_status - overdue, due_soon (inside the notice period, 30 days by default) or ok - computed the way the licence screen colours it. |
+| [apiLoadLicence()](/code/functions/apiLoadLicence.md) | 289 | Loads one licence row (apiSoftwareLicenceSelect), or answers 404 and stops. |
+| [apiSoftwareLicencesList()](/code/functions/apiSoftwareLicencesList.md) | 300 | GET /software/licences |
+| [apiSoftwareLicencesGet()](/code/functions/apiSoftwareLicencesGet.md) | 365 | GET /software/licences/{id} - one licence. |
+| [apiSoftwareLicencesCreate()](/code/functions/apiSoftwareLicencesCreate.md) | 370 | POST /software/licences |
+| [apiSoftwareLicencesUpdate()](/code/functions/apiSoftwareLicencesUpdate.md) | 378 | PATCH /software/licences/{id} |
+| [apiSoftwareLicencesDelete()](/code/functions/apiSoftwareLicencesDelete.md) | 386 | DELETE /software/licences/{id} — leaf table, mirrors delete_licence.php |
 
 ## Database
 
@@ -59,12 +59,12 @@ below stay here and are called to re-load the affected row after a write.
 |--:|---|---|---|
 | 78 | `apiSoftwareAppsList` | read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
 | 88 | `apiSoftwareAppsList` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
-| 120 | `apiSoftwareLoadApp` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
-| 132 | `apiSoftwareInstallCount` | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
-| 145 | `apiSoftwareAppsGet` | read [software_licences](/code/tables/software_licences.md) |  |
-| 194 | `apiSoftwareAppMachinesList` | read [software_inventory_detail](/code/tables/software_inventory_detail.md), read [assets](/code/tables/assets.md) |  |
-| 221 | `apiSoftwareLicenceSelect` | read [software_inventory_detail](/code/tables/software_inventory_detail.md), read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [analysts](/code/tables/analysts.md) |  |
-| 335 | `apiSoftwareLicencesList` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 124 | `apiSoftwareLoadApp` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 140 | `apiSoftwareInstallCount` | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 153 | `apiSoftwareAppsGet` | read [software_licences](/code/tables/software_licences.md) |  |
+| 202 | `apiSoftwareAppMachinesList` | read [software_inventory_detail](/code/tables/software_inventory_detail.md), read [assets](/code/tables/assets.md) |  |
+| 229 | `apiSoftwareLicenceSelect` | read [software_inventory_detail](/code/tables/software_inventory_detail.md), read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [analysts](/code/tables/analysts.md) |  |
+| 349 | `apiSoftwareLicencesList` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ## How it hangs together
 

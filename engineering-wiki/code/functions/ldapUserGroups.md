@@ -17,13 +17,13 @@ bind may not be permitted to read group objects.
 function ldapUserGroups($ds, array $p, string $userDn): array
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 218.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 246.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ds` |  |  |  |
-| `$p` | `array` |  |  |
-| `$userDn` | `string` |  |  |
+| `$ds` |  |  | a connection from `ldapOpen()`, bound as the service account |
+| `$p` | `array` |  | the provider row (ldap_group_filter, ldap_group_base_dn, ldap_base_dn) |
+| `$userDn` | `string` |  | the user's full DN, substituted (escaped) for %s in the group filter |
 
 **Returns:** `array`
 

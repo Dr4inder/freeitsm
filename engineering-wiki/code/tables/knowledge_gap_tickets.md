@@ -19,12 +19,12 @@ Knowledge gaps — the Knowledge assistant. One closed ticket says almost nothin
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):75 | `gapUpsertTicket` | insert |  |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):81 | `gapUpsertTicket` | insert |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/knowledge/gap_clusters.php](/code/files/api/knowledge/gap_clusters.php.md) | L119 |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapWindowCounts L90, gapEmbedBatch L116, gapEmbedBatch L152, gapAnalyse L186 |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapWindowCounts L100, gapEmbedBatch L130, gapEmbedBatch L166, gapAnalyse L202 |  |
 

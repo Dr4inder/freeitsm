@@ -20,15 +20,15 @@ Project templates saved from a project (3.2.0); built-ins live in code.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):188 | `ProjectTemplatesService::saveFromProject` | update | `name`, `description`, `content`, `updated_datetime` |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):192 | `ProjectTemplatesService::saveFromProject` | insert | `name`, `description`, `content`, `is_active`, `created_by_analyst_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):207 | `ProjectTemplatesService::update` | update | `name`, `description`, `is_active`, `updated_datetime` |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):217 | `ProjectTemplatesService::delete` | delete |  |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):200 | `ProjectTemplatesService::saveFromProject` | update | `name`, `description`, `content`, `updated_datetime` |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):204 | `ProjectTemplatesService::saveFromProject` | insert | `name`, `description`, `content`, `is_active`, `created_by_analyst_id`, `created_datetime`, `updated_datetime` |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):224 | `ProjectTemplatesService::update` | update | `name`, `description`, `is_active`, `updated_datetime` |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):238 | `ProjectTemplatesService::delete` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplatesReady L62, projectTemplateList L354, projectTemplateLoad L377 |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md) | ProjectTemplatesService::row L254 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplatesReady L62, projectTemplateList L367, projectTemplateLoad L395 |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md) | ProjectTemplatesService::row L288 |  |
 

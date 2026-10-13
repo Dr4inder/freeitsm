@@ -42,46 +42,46 @@
 | [api/messaging/send_attachment.php](/code/files/api/messaging/send_attachment.php.md):178 |  | delete |  |  |
 | [api/messaging/send_message.php](/code/files/api/messaging/send_message.php.md):102 |  | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial` |  |
 | [api/messaging/send_template.php](/code/files/api/messaging/send_template.php.md):79 |  | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial` |  |
-| [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md):206 | `simCleanup` | delete |  |  |
+| [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md):225 | `simCleanup` | delete |  |  |
 | [api/self-service/create_ticket.php](/code/files/api/self-service/create_ticket.php.md):204 |  | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance` |  |
 | [api/self-service/create_ticket.php](/code/files/api/self-service/create_ticket.php.md):271 |  | update | `body_content`, `has_attachments` |  |
 | [api/self-service/reply_ticket.php](/code/files/api/self-service/reply_ticket.php.md):132 |  | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance` |  |
 | [api/self-service/reply_ticket.php](/code/files/api/self-service/reply_ticket.php.md):226 |  | update | `body_content`, `has_attachments` |  |
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md):366 |  | delete |  |  |
-| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md):1151 | `saveEmailToDatabase` | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `cc_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type` |  |
-| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md):1287 | `saveEmailToDatabase` | update | `body_content`, `has_attachments` |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md):376 |  | delete |  |  |
+| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md):1217 | `saveEmailToDatabase` | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `cc_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type` |  |
+| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md):1353 | `saveEmailToDatabase` | update | `body_content`, `has_attachments` |  |
 | [api/tickets/empty_trash.php](/code/files/api/tickets/empty_trash.php.md):74 |  | delete |  |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md):194 |  | update | `is_read` |  |
 | [api/tickets/permanently_delete_ticket.php](/code/files/api/tickets/permanently_delete_ticket.php.md):84 |  | delete |  |  |
-| [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md):769 | `saveSentEmail` | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `cc_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial` |  |
-| [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md):872 | `saveSentAttachments` | update | `has_attachments` |  |
-| [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md):881 | `saveSentAttachments` | update | `body_content` |  |
-| [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md):313 | `catalogueCreateTicketFromSubmission` | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):185 | `ingestInboundMessage` | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):248 | `ingestInboundMessage` | update | `has_attachments` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):250 | `ingestInboundMessage` | update | `body_content` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):257 | `ingestInboundMessage` | update | `body_content` |  |
-| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md):247 | `TicketsService::createTicket` | insert | `mailbox_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments` |  |
-| [includes/template_email.php](/code/files/includes/template_email.php.md):712 | `templateSaveSentEmail` | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction` |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):207 | `unmergeTicket` | update | `ticket_id` |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):233 | `unmergeTicket` | delete |  |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):491 | `mergeOneTicket` | update | `ticket_id` |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):746 | `mergeAttachSnapshot` | insert | `subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction` |  |
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):201 | `splitTicket` | update | `ticket_id` |  |
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):309 | `splitLeaveMarker` | insert | `subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction` |  |
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):430 | `undoSplit` | update | `ticket_id` |  |
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):434 | `undoSplit` | delete |  |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):245 | `webchatInsertInbound` | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read` |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):281 | `webchatInsertOutbound` | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read` |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):495 | `webchatPromoteToTicket` | update | `has_attachments` |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2607 | `WorkflowEngine::action_create_ticket` | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance` |  |
+| [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md):820 | `saveSentEmail` | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `cc_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial` |  |
+| [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md):926 | `saveSentAttachments` | update | `has_attachments` |  |
+| [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md):935 | `saveSentAttachments` | update | `body_content` |  |
+| [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md):323 | `catalogueCreateTicketFromSubmission` | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):189 | `ingestInboundMessage` | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):252 | `ingestInboundMessage` | update | `has_attachments` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):254 | `ingestInboundMessage` | update | `body_content` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):261 | `ingestInboundMessage` | update | `body_content` |  |
+| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md):253 | `TicketsService::createTicket` | insert | `mailbox_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments` |  |
+| [includes/template_email.php](/code/files/includes/template_email.php.md):750 | `templateSaveSentEmail` | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction` |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):210 | `unmergeTicket` | update | `ticket_id` |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):236 | `unmergeTicket` | delete |  |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):508 | `mergeOneTicket` | update | `ticket_id` |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):774 | `mergeAttachSnapshot` | insert | `subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction` |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):210 | `splitTicket` | update | `ticket_id` |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):326 | `splitLeaveMarker` | insert | `subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction` |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):454 | `undoSplit` | update | `ticket_id` |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):458 | `undoSplit` | delete |  |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):280 | `webchatInsertInbound` | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read` |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):320 | `webchatInsertOutbound` | insert | `exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read` |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):560 | `webchatPromoteToTicket` | update | `has_attachments` |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2772 | `WorkflowEngine::action_create_ticket` | insert | `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/integrations/escalate_ticket.php](/code/files/api/integrations/escalate_ticket.php.md) | L108 |  |
-| [api/messaging/media.php](/code/files/api/messaging/media.php.md) | L73 |  |
+| [api/messaging/media.php](/code/files/api/messaging/media.php.md) | L75 |  |
 | [api/messaging/send_attachment.php](/code/files/api/messaging/send_attachment.php.md) | L70 |  |
 | [api/messaging/send_message.php](/code/files/api/messaging/send_message.php.md) | L50 |  |
 | [api/messaging/send_template.php](/code/files/api/messaging/send_template.php.md) | L41 |  |
@@ -91,12 +91,12 @@
 | [api/self-service/get_ticket_detail.php](/code/files/api/self-service/get_ticket_detail.php.md) | L141 |  |
 | [api/self-service/get_tickets.php](/code/files/api/self-service/get_tickets.php.md) | L30 |  |
 | [api/self-service/reply_ticket.php](/code/files/api/self-service/reply_ticket.php.md) | L114 |  |
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L228, L280, L327 |  |
-| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L450 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L238, L290, L337 |  |
+| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L473 |  |
 | [api/system/search_status.php](/code/files/api/system/search_status.php.md) | L102 |  |
-| [api/tickets/ai_cleanup_reply.php](/code/files/api/tickets/ai_cleanup_reply.php.md) | L143 |  |
-| [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L103 |  |
-| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | saveEmailToDatabase L1019, oversizeMeasure L1390 |  |
+| [api/tickets/ai_cleanup_reply.php](/code/files/api/tickets/ai_cleanup_reply.php.md) | L146 |  |
+| [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L106 |  |
+| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | saveEmailToDatabase L1085, oversizeMeasure L1461 |  |
 | [api/tickets/empty_trash.php](/code/files/api/tickets/empty_trash.php.md) | L48, L73 |  |
 | [api/tickets/get_attachment.php](/code/files/api/tickets/get_attachment.php.md) | L61 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L113, L118 |  |
@@ -109,23 +109,23 @@
 | [api/tickets/resolve_triage.php](/code/files/api/tickets/resolve_triage.php.md) | L125, L146 |  |
 | [api/tickets/search_content.php](/code/files/api/tickets/search_content.php.md) | L85 |  |
 | [api/tickets/search_tickets.php](/code/files/api/tickets/search_tickets.php.md) | L67 |  |
-| [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md) | getMailboxForTicket L209, getAttachmentById L520, getAttachmentByCid L542, buildFullEmailBody L664 |  |
+| [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md) | getMailboxForTicket L211, getAttachmentById L546, getAttachmentByCid L572, buildFullEmailBody L705 |  |
 | [api/tickets/split_ticket_preview.php](/code/files/api/tickets/split_ticket_preview.php.md) | L50 |  |
-| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketsGet L256, apiTicketThreadList L372 |  |
+| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketsGet L258, apiTicketThreadList L374 |  |
 | [api/webchat/poll.php](/code/files/api/webchat/poll.php.md) | L53 |  |
-| [includes/csat.php](/code/files/includes/csat.php.md) | csatTicketChannel L126, csatPendingRequestForChat L214 |  |
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | integrationsTicketAttachments L692 |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapBulkRichness L360 |  |
-| [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md) | writeupTicketBundle L245, writeupEmbeddingText L369 |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) | ingestInboundMessage L42, findOpenChannelTicket L299, messagingTelegramLinkPhone L669 |  |
-| [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md) | messagingBuildTranscript L353 |  |
-| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md) | extractQueueDrain L166 |  |
-| [includes/search/indexer.php](/code/files/includes/search/indexer.php.md) | searchIndexTicket L91, searchIndexTicketAttachments L161 |  |
-| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_emit_workflow_event L166 |  |
-| [includes/template_email.php](/code/files/includes/template_email.php.md) | templateGetMailboxForTicket L461 |  |
-| [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | ticketAiTranscript L132, ticketAiTranscript L144, ticketAiMessagesSince L206, ticketAiMessagesSince L212 |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | unmergeTicket L195, unmergeTicket L267, mergeOneTicket L487, mergeBuildSnapshotHtml L662 |  |
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md) | splitMessagesFrom L49, splitMessagesFrom L65, splitMovableCount L106, splitMessagesByIds L132, undoSplit L405, undoSplit L411 |  |
-| [includes/webchat/public.php](/code/files/includes/webchat/public.php.md) | webchatRateLimitSend L168 |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatMirrorAgentReplies L449 |  |
+| [includes/csat.php](/code/files/includes/csat.php.md) | csatTicketChannel L131, csatPendingRequestForChat L227 |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | integrationsTicketAttachments L736 |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapBulkRichness L378 |  |
+| [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md) | writeupTicketBundle L252, writeupEmbeddingText L378 |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) | ingestInboundMessage L46, findOpenChannelTicket L308, messagingTelegramLinkPhone L709 |  |
+| [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md) | messagingBuildTranscript L384 |  |
+| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md) | extractQueueDrain L172 |  |
+| [includes/search/indexer.php](/code/files/includes/search/indexer.php.md) | searchIndexTicket L92, searchIndexTicketAttachments L164 |  |
+| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_emit_workflow_event L170 |  |
+| [includes/template_email.php](/code/files/includes/template_email.php.md) | templateGetMailboxForTicket L482 |  |
+| [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | ticketAiTranscript L132, ticketAiTranscript L144, ticketAiMessagesSince L210, ticketAiMessagesSince L216 |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | unmergeTicket L198, unmergeTicket L270, mergeOneTicket L504, mergeBuildSnapshotHtml L686 |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md) | splitMessagesFrom L51, splitMessagesFrom L67, splitMovableCount L108, splitMessagesByIds L136, undoSplit L429, undoSplit L435 |  |
+| [includes/webchat/public.php](/code/files/includes/webchat/public.php.md) | webchatRateLimitSend L184 |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatMirrorAgentReplies L509 |  |
 

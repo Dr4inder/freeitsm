@@ -1,6 +1,6 @@
 # includes/services/mandatory_fields.php
 
-> PHP - 290 lines
+> PHP - 303 lines
 
 Mandatory fields at closure.
 
@@ -45,9 +45,9 @@ ticket behind it, so such a field is skipped for that ticket.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 159 | `MandatoryFieldsService::fieldAvailable` | read [teams](/code/tables/teams.md) |  |
-| 236 | `MandatoryFieldsService::writeNote` | **insert** [ticket_notes](/code/tables/ticket_notes.md) (`ticket_id`, `analyst_id`, `note_text`, `is_internal`, `created_datetime`) |  |
-| 242 | `MandatoryFieldsService::writeNote` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 164 | `MandatoryFieldsService::fieldAvailable` | read [teams](/code/tables/teams.md) |  |
+| 243 | `MandatoryFieldsService::writeNote` | **insert** [ticket_notes](/code/tables/ticket_notes.md) (`ticket_id`, `analyst_id`, `note_text`, `is_internal`, `created_datetime`) |  |
+| 249 | `MandatoryFieldsService::writeNote` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ## How it hangs together
 

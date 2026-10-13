@@ -20,13 +20,13 @@ function webchatAiReply(
 ): array
 ```
 
-Defined in [includes/webchat/ai.php](/code/files/includes/webchat/ai.php.md), line 41.
+Defined in [includes/webchat/ai.php](/code/files/includes/webchat/ai.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$question` | `string` |  |  |
-| `$history` | `array` | `[]` |  |
+| `$question` | `string` |  | the visitor's latest message - untrusted |
+| `$history` | `array` | `[]` | earlier messages, each ['sender' => 'visitor'\|..., 'body' => text]; the last six are used |
 | `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`

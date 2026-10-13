@@ -1,6 +1,6 @@
 # includes/carddav_create.php
 
-> PHP - 335 lines
+> PHP - 352 lines
 
 CardDAV — ADD a person to an address book (a new card), and link them.
 
@@ -45,21 +45,21 @@ the next import finds the person by UID and neither creates nor adopts.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [cardDavCreateTargets()](/code/functions/cardDavCreateTargets.md) | 51 | Address books this person could be added to right now, and why not if none. |
-| [cardDavCreatePreview()](/code/functions/cardDavCreatePreview.md) | 85 | What the new card would carry, for the confirm step and for the card itself. |
-| [cardDavNewUid()](/code/functions/cardDavNewUid.md) | 104 | A random RFC 4122 v4 UUID - the card's UID, and its resource name. |
-| [cardDavBuildCard()](/code/functions/cardDavBuildCard.md) | 118 | Build the new card. vCard 3.0: what the fixture, Baikal, Nextcloud and iCloud all store, and what `cdsyncMapCard()` reads. |
-| [cardDavFindCardByUid()](/code/functions/cardDavFindCardByUid.md) | 154 | Find a card in a fetched book by UID. |
-| [cardDavCreateContact()](/code/functions/cardDavCreateContact.md) | 169 | Add a person to an address book and link them to it. |
+| [cardDavCreateTargets()](/code/functions/cardDavCreateTargets.md) | 52 | Address books this person could be added to right now, and why not if none. |
+| [cardDavCreatePreview()](/code/functions/cardDavCreatePreview.md) | 91 | What the new card would carry, for the confirm step and for the card itself. |
+| [cardDavNewUid()](/code/functions/cardDavNewUid.md) | 110 | A random RFC 4122 v4 UUID - the card's UID, and its resource name. |
+| [cardDavBuildCard()](/code/functions/cardDavBuildCard.md) | 128 | Build the new card. vCard 3.0: what the fixture, Baikal, Nextcloud and iCloud all store, and what `cdsyncMapCard()` reads. |
+| [cardDavFindCardByUid()](/code/functions/cardDavFindCardByUid.md) | 169 | Find a card in a fetched book by UID. |
+| [cardDavCreateContact()](/code/functions/cardDavCreateContact.md) | 186 | Add a person to an address book and link them to it. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 57 | `cardDavCreateTargets` | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 66 | `cardDavCreateTargets` | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 174 | `cardDavCreateContact` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
-| 319 | `cardDavCreateContact` | **update** [users](/code/tables/users.md) (`is_managed`, `auth_provider_id`, `last_seen_in_source`, `sync_missed_count`) |  |
+| 58 | `cardDavCreateTargets` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 67 | `cardDavCreateTargets` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 191 | `cardDavCreateContact` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
+| 336 | `cardDavCreateContact` | **update** [users](/code/tables/users.md) (`is_managed`, `auth_provider_id`, `last_seen_in_source`, `sync_missed_count`) |  |
 
 ## How it hangs together
 

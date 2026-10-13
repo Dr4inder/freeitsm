@@ -6,7 +6,7 @@ Has this analyst chosen for themselves, or are they following the install defaul
 function inboxDisplayIsPersonal(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.md), line 187.
+Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.md), line 189.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 194 | `inboxDisplayIsPersonal` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 196 | `inboxDisplayIsPersonal` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Called from
 

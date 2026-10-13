@@ -6,11 +6,11 @@ The best marks a question offers - what a full score on it means.
 function lmsCtMaxMarks(array $answers): int
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 152.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 171.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$answers` | `array` |  |  |
+| `$answers` | `array` |  | the question's answers, each with 'marks' |
 
 **Returns:** `int`
 

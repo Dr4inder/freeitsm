@@ -6,7 +6,7 @@ Holds Manage Projects (admins always do - analystHasCapability short-circuits is
 function projectIsManager(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 389.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 419.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

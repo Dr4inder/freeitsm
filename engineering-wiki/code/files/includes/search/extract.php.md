@@ -1,6 +1,6 @@
 # includes/search/extract.php
 
-> PHP - 216 lines
+> PHP - 234 lines
 
 Pull readable text out of an attachment — the dependency-free tier (discussion #53, tier 1 of the wiki's §8.2).
 
@@ -38,11 +38,11 @@ below, which that parser has no reason to carry.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [attTextExtension()](/code/functions/attTextExtension.md) | 89 | The extension, lowercased, or '' if there isn't one. |
-| [attTextSupports()](/code/functions/attTextSupports.md) | 95 | Could this tier read the file at all? Used to answer before opening anything. |
-| [attTextNormalise()](/code/functions/attTextNormalise.md) | 107 | Reduce extracted XML/text to the words worth indexing. |
-| [attTextExtractFile()](/code/functions/attTextExtractFile.md) | 124 | Read the text of one file. |
-| [attTextExtractOoxml()](/code/functions/attTextExtractOoxml.md) | 175 | Text out of a docx/xlsx/pptx. Returns null if the archive cannot be opened. |
+| [attTextExtension()](/code/functions/attTextExtension.md) | 93 | The extension, lowercased, or '' if there isn't one. |
+| [attTextSupports()](/code/functions/attTextSupports.md) | 103 | Could this tier read the file at all? Used to answer before opening anything. |
+| [attTextNormalise()](/code/functions/attTextNormalise.md) | 117 | Reduce extracted XML/text to the words worth indexing. |
+| [attTextExtractFile()](/code/functions/attTextExtractFile.md) | 137 | Read the text of one file. |
+| [attTextExtractOoxml()](/code/functions/attTextExtractOoxml.md) | 193 | Text out of a docx/xlsx/pptx. Returns null if the archive cannot be opened. |
 
 ## How it hangs together
 

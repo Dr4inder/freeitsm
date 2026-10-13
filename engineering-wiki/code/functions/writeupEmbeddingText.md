@@ -12,13 +12,13 @@ ticket look similar to every other long ticket, and clusters collapse into
 function writeupEmbeddingText(PDO $conn, int $ticketId, ?string $subject = null): string
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 360.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 369.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$subject` | `?string` | `null` |  |
+| `$subject` | `?string` | `null` | the ticket's subject if the caller has it; null reads it from tickets |
 
 **Returns:** `string`
 
@@ -26,8 +26,8 @@ Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/wr
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 363 | `writeupEmbeddingText` | read [tickets](/code/tables/tickets.md) |  |
-| 369 | `writeupEmbeddingText` | read [emails](/code/tables/emails.md) |  |
+| 372 | `writeupEmbeddingText` | read [tickets](/code/tables/tickets.md) |  |
+| 378 | `writeupEmbeddingText` | read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

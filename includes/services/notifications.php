@@ -66,13 +66,19 @@ class NotificationsService
     /**
      * A portal user as a recipient. Anything else passed where a recipient is
      * expected is an analyst id, so every existing caller is unchanged.
+     *
+     * @param int $userId  the portal user's id (users.id), not an analyst id
      */
     public static function portalUser(int $userId): array
     {
         return ['portal_user' => $userId];
     }
 
-    /** [table, id column, id, is portal] for a recipient. The ONLY place that choice is made. */
+    /**
+     * [table, id column, id, is portal] for a recipient. The ONLY place that choice is made.
+     *
+     * @param mixed $recipient  an analyst id (int), or a portal user as made by portalUser()
+     */
     private static function who($recipient): array
     {
         if (is_array($recipient) && isset($recipient['portal_user'])) {
@@ -84,7 +90,11 @@ class NotificationsService
     private static bool $bulkMode = false;
     private static int $bulkSuppressed = 0;
 
-    /** Run $fn with bulk suppression on, restoring the previous state whatever happens. */
+    /**
+     * Run $fn with bulk suppression on, restoring the previous state whatever happens.
+     *
+     * @param callable $fn  the bulk work to run; its return value is passed back
+     */
     public static function duringBulk(callable $fn)
     {
         $prevMode = self::$bulkMode;
@@ -218,7 +228,11 @@ class NotificationsService
         ];
     }
 
-    /** True when this analyst wants this type in their bell. */
+    /**
+     * True when this analyst wants this type in their bell.
+     *
+     * @param string $eventType  the event type key, e.g. 'ticket.assigned' - anything not in types() is never enabled
+     */
     public static function typeEnabled(PDO $conn, int $analystId, string $eventType): bool
     {
         $types = self::types();
@@ -277,6 +291,9 @@ class NotificationsService
      *
      * $in: analyst_id (or portal_user_id), event_type, entity_type, entity_id,
      *      entity_ref, title, body, actor_id, actor_name
+     *
+     * @param array $in  the notification: analyst_id or portal_user_id, event_type, entity_type (default 'ticket'),
+     *     entity_id, entity_ref, title, body, actor_id (or actor_user_id for portal), actor_name
      */
     public static function notify(PDO $conn, array $in): ?int
     {
@@ -369,7 +386,11 @@ class NotificationsService
         }
     }
 
-    /** Unread count for the badge. Cheap — this is polled by every open tab. */
+    /**
+     * Unread count for the badge. Cheap — this is polled by every open tab.
+     *
+     * @param mixed $recipient  an analyst id (int), or a portal user as made by portalUser()
+     */
     public static function unreadCount(PDO $conn, $recipient): int
     {
         [$table, $col, $id] = self::who($recipient);
@@ -384,7 +405,12 @@ class NotificationsService
         }
     }
 
-    /** Newest first. Unread first is deliberately NOT done — recency is the useful order. */
+    /**
+     * Newest first. Unread first is deliberately NOT done — recency is the useful order.
+     *
+     * @param mixed $recipient  an analyst id (int), or a portal user as made by portalUser()
+     * @param int $limit  how many rows to return, clamped to 1..LIST_LIMIT (50)
+     */
     public static function listFor(PDO $conn, $recipient, int $limit = self::LIST_LIMIT): array
     {
         [$table, $col, $id, $isPortal] = self::who($recipient);
@@ -418,6 +444,9 @@ class NotificationsService
      * Relative to the app root. Tickets deep-link to the ticket in the inbox;
      * anything without a known destination returns null and the bell renders it
      * as text rather than a dead link.
+     *
+     * @param string $entityType  what the notification is about, e.g. 'ticket', 'task', 'project'
+     * @param int $entityId  the id of that record
      */
     public static function linkFor(string $entityType, int $entityId): ?string
     {
@@ -436,13 +465,21 @@ class NotificationsService
      * Where a portal user's notification goes. Only tickets so far; the ticket
      * page itself decides - through portalTicketAccess() - whether they may see
      * it, so a stale notification can never be a way in.
+     *
+     * @param string $entityType  what the notification is about - only 'ticket' gets a link
+     * @param int $entityId  the ticket id
      */
     public static function portalLinkFor(string $entityType, int $entityId): ?string
     {
         return $entityType === 'ticket' ? 'self-service/tickets.php?view=team&id=' . $entityId : null;
     }
 
-    /** Mark specific ids read. Scoped to the analyst, so ids from elsewhere do nothing. */
+    /**
+     * Mark specific ids read. Scoped to the analyst, so ids from elsewhere do nothing.
+     *
+     * @param mixed $recipient  an analyst id (int), or a portal user as made by portalUser()
+     * @param array $ids  notification ids to mark; non-positive values are dropped, other people's ids match nothing
+     */
     public static function markRead(PDO $conn, $recipient, array $ids): int
     {
         [$table, $col, $analystId] = self::who($recipient);
@@ -462,6 +499,8 @@ class NotificationsService
     /**
      * Marks every unread notification for the recipient (an analyst, or a portal user) as
      * read and returns how many.
+     *
+     * @param mixed $recipient  an analyst id (int), or a portal user as made by portalUser()
      */
     public static function markAllRead(PDO $conn, $recipient): int
     {
@@ -486,6 +525,9 @@ class NotificationsService
      * Scoped to the analyst for the same reason markRead() is: ids belonging to
      * somebody else match nothing rather than erroring, which keeps a stale open
      * tab harmless.
+     *
+     * @param mixed $recipient  an analyst id (int), or a portal user as made by portalUser()
+     * @param array $ids  notification ids to delete; non-positive values are dropped, other people's ids match nothing
      */
     public static function clear(PDO $conn, $recipient, array $ids): int
     {
@@ -509,6 +551,9 @@ class NotificationsService
      * Clearing is irreversible, and the rows most worth keeping are precisely the
      * ones nobody has looked at yet — so unless the analyst deliberately ticks the
      * box in the confirmation, unread news survives a Clear all.
+     *
+     * @param mixed $recipient  an analyst id (int), or a portal user as made by portalUser()
+     * @param bool $includeUnread  true to delete unread rows too; false (default) keeps them
      */
     public static function clearAll(PDO $conn, $recipient, bool $includeUnread = false): int
     {
@@ -522,7 +567,12 @@ class NotificationsService
         return $stmt->rowCount();
     }
 
-    /** Trimmed text cut to $max characters, or null when blank. */
+    /**
+     * Trimmed text cut to $max characters, or null when blank.
+     *
+     * @param mixed $value  the text to tidy (any scalar, or null)
+     * @param int $max  the most characters to keep
+     */
     private static function clip($value, int $max): ?string
     {
         if ($value === null) {

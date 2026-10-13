@@ -15,14 +15,14 @@ Three things are worth saying about each, and only the first was ever said:
 function endpointLine(string $key, array $doc, string $issuerUrl, string $what): string
 ```
 
-Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 55.
+Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
-| `$doc` | `array` |  |  |
-| `$issuerUrl` | `string` |  |  |
-| `$what` | `string` |  |  |
+| `$key` | `string` |  | the discovery document key, e.g. 'authorization_endpoint' |
+| `$doc` | `array` |  | the provider's decoded OIDC discovery document |
+| `$issuerUrl` | `string` |  | the provider's configured issuer URL, to compare hosts with |
+| `$what` | `string` |  | a short note on what the endpoint is for, printed under the line |
 
 **Returns:** `string`
 

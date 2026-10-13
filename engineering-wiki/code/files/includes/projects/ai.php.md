@@ -1,6 +1,6 @@
 # includes/projects/ai.php
 
-> PHP - 372 lines
+> PHP - 379 lines
 
 Projects - the AI project manager (3.2.0).
 
@@ -32,26 +32,26 @@ draft that a person reads before approving: nothing is written anywhere else.
 |---|--:|---|
 | [projectAiReportKinds()](/code/functions/projectAiReportKinds.md) | 34 | The report kinds a person can ask the AI to draft, with what each must contain. |
 | [projectAiLanguage()](/code/functions/projectAiLanguage.md) | 56 | The language the analyst reads FreeITSM in, as a name the model understands. |
-| [projectAiFacts()](/code/functions/projectAiFacts.md) | 69 | The facts about one project, as plain text, for the model - only what the analyst may see. `$days` is "the period" a report covers. |
-| [projectAiSystemPrompt()](/code/functions/projectAiSystemPrompt.md) | 325 | The standing rules every prompt starts with. |
-| [projectAiAsk()](/code/functions/projectAiAsk.md) | 340 | Ask the model. Returns ['text', 'model']. Throws RuntimeException when AI is not set up ('not_configured') or the provider cannot be reached. |
-| [projectAiReady()](/code/functions/projectAiReady.md) | 356 | Is AI set up for Projects? |
-| [projectAiBriefingTask()](/code/functions/projectAiBriefingTask.md) | 365 | The instruction given to the AI for a project's Monday briefing - a few short bullets, most important first. |
+| [projectAiFacts()](/code/functions/projectAiFacts.md) | 72 | The facts about one project, as plain text, for the model - only what the analyst may see. `$days` is "the period" a report covers. |
+| [projectAiSystemPrompt()](/code/functions/projectAiSystemPrompt.md) | 328 | The standing rules every prompt starts with. |
+| [projectAiAsk()](/code/functions/projectAiAsk.md) | 347 | Ask the model. Returns ['text', 'model']. Throws RuntimeException when AI is not set up ('not_configured') or the provider cannot be reached. |
+| [projectAiReady()](/code/functions/projectAiReady.md) | 363 | Is AI set up for Projects? |
+| [projectAiBriefingTask()](/code/functions/projectAiBriefingTask.md) | 372 | The instruction given to the AI for a project's Monday briefing - a few short bullets, most important first. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 81 | `projectAiFacts` | read [analysts](/code/tables/analysts.md) |  |
-| 110 | `projectAiFacts` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
-| 124 | `projectAiFacts` | read [project_stages](/code/tables/project_stages.md) |  |
-| 150 | `projectAiFacts` | read [suppliers](/code/tables/suppliers.md) |  |
-| 153 | `projectAiFacts` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md) |  |
-| 248 | `projectAiFacts` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 270 | `projectAiFacts` | read [project_stages](/code/tables/project_stages.md) |  |
-| 282 | `projectAiFacts` | read [suppliers](/code/tables/suppliers.md) |  |
-| 283 | `projectAiFacts` | read [project_members](/code/tables/project_members.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md), read [users](/code/tables/users.md) |  |
-| 306 | `projectAiFacts` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 84 | `projectAiFacts` | read [analysts](/code/tables/analysts.md) |  |
+| 113 | `projectAiFacts` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
+| 127 | `projectAiFacts` | read [project_stages](/code/tables/project_stages.md) |  |
+| 153 | `projectAiFacts` | read [suppliers](/code/tables/suppliers.md) |  |
+| 156 | `projectAiFacts` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 251 | `projectAiFacts` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 273 | `projectAiFacts` | read [project_stages](/code/tables/project_stages.md) |  |
+| 285 | `projectAiFacts` | read [suppliers](/code/tables/suppliers.md) |  |
+| 286 | `projectAiFacts` | read [project_members](/code/tables/project_members.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md), read [users](/code/tables/users.md) |  |
+| 309 | `projectAiFacts` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 
@@ -64,5 +64,5 @@ draft that a person reads before approving: nothing is written anywhere else.
 ## Traps
 
 > [!WARNING]
-> **Line 195, in `projectAiFacts`:** `projectAlertRows()` rows carry no '_budget' (only the assistant's rows do), so reading it from `$p` meant the budget never reached the model - worked out here instead.
+> **Line 198, in `projectAiFacts`:** `projectAlertRows()` rows carry no '_budget' (only the assistant's rows do), so reading it from `$p` meant the budget never reached the model - worked out here instead.
 

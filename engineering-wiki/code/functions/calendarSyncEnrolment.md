@@ -14,7 +14,7 @@ mailbox.
 function calendarSyncEnrolment(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 268.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 301.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -27,8 +27,8 @@ Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 277 | `calendarSyncEnrolment` | read [analysts](/code/tables/analysts.md) |  |
-| 307 | `calendarSyncEnrolment` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 310 | `calendarSyncEnrolment` | read [analysts](/code/tables/analysts.md) |  |
+| 340 | `calendarSyncEnrolment` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
 
 ## Calls
 

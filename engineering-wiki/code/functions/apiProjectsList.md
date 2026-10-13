@@ -6,7 +6,7 @@ GET /projects
 function apiProjectsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 150.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 164.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 199 | `apiProjectsList` | read [projects](/code/tables/projects.md) |  |
+| 213 | `apiProjectsList` | read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

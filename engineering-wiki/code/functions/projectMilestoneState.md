@@ -6,12 +6,12 @@ done | missed | due - see the header.
 function projectMilestoneState(array $m, ?string $today = null): string
 ```
 
-Defined in [includes/projects/milestones.php](/code/files/includes/projects/milestones.php.md), line 33.
+Defined in [includes/projects/milestones.php](/code/files/includes/projects/milestones.php.md), line 38.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$m` | `array` |  |  |
-| `$today` | `?string` | `null` |  |
+| `$m` | `array` |  | a project_milestones row - due_date and done_date are read |
+| `$today` | `?string` | `null` | the date to judge against, 'Y-m-d'; null means today (UTC) |
 
 **Returns:** `string`
 

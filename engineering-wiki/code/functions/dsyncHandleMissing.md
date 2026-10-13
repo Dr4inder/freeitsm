@@ -16,15 +16,15 @@ function dsyncHandleMissing(
 ): int
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 828.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 910.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
-| `$seenUserIds` | `array` |  |  |
-| `$runId` | `int` |  |  |
-| `$preview` | `bool` |  |  |
+| `$provider` | `array` |  | the auth_providers row - id and sync_deactivate_after are read |
+| `$seenUserIds` | `array` |  | users.id of everyone this run found |
+| `$runId` | `int` |  | directory_sync_runs.id to log against |
+| `$preview` | `bool` |  | true to count and log without writing to users |
 
 **Returns:** `int`
 
@@ -32,9 +32,9 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 833 | `dsyncHandleMissing` | read [users](/code/tables/users.md) |  |
-| 856 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`is_active`, `deactivated_datetime`, `sync_missed_count`) |  |
-| 865 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`sync_missed_count`) |  |
+| 915 | `dsyncHandleMissing` | read [users](/code/tables/users.md) |  |
+| 938 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`is_active`, `deactivated_datetime`, `sync_missed_count`) |  |
+| 947 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`sync_missed_count`) |  |
 
 ## Calls
 

@@ -6,14 +6,14 @@ At an analyst sign-in: admin from the admin group, team membership from the mapp
 function ssoApplyGroupAccess(PDO $conn, array $provider, int $analystId, array $groups): array
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 199.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 237.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
-| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$groups` | `array` |  |  |
+| `$provider` | `array` |  | the auth_providers row (id, oidc_admin_group) |
+| `$analystId` | `int` |  | the analyst signing in, whose teams and administrator flag are set |
+| `$groups` | `array` |  | the group values the sign-in sent, from `ssoClaimValues()` |
 
 **Returns:** `array`
 
@@ -21,9 +21,9 @@ Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 213 | `ssoApplyGroupAccess` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 216 | `ssoApplyGroupAccess` | **insert** [analyst_teams](/code/tables/analyst_teams.md) (`analyst_id`, `team_id`, `created_datetime`) |  |
-| 217 | `ssoApplyGroupAccess` | **delete** [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 251 | `ssoApplyGroupAccess` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 254 | `ssoApplyGroupAccess` | **insert** [analyst_teams](/code/tables/analyst_teams.md) (`analyst_id`, `team_id`, `created_datetime`) |  |
+| 255 | `ssoApplyGroupAccess` | **delete** [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Calls
 

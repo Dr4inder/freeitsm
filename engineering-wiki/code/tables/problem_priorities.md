@@ -31,7 +31,7 @@
 | [api/problem-management/get_problem_priorities.php](/code/files/api/problem-management/get_problem_priorities.php.md) | L16 |  |
 | [api/problem-management/list.php](/code/files/api/problem-management/list.php.md) | L28 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2493 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L184, apiProblemPrioritiesList L430 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L190, apiProblemPrioritiesList L436 |  |
 | [includes/feature_bingo/cards/problems.php](/code/files/includes/feature_bingo/cards/problems.php.md) | L127 |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L388, ProblemsService::resolvePriority L480, ProblemsService::resolvePriority L483 |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L426, ProblemsService::resolvePriority L541, ProblemsService::resolvePriority L544 |  |
 

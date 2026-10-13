@@ -12,7 +12,7 @@ stale id here simply matches no row.
 function splitMarkerEmailIds(PDO $conn, int $ticketId): array
 ```
 
-Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 85.
+Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 87.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,7 +25,7 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 88 | `splitMarkerEmailIds` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
+| 90 | `splitMarkerEmailIds` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
 
 ## Called from
 

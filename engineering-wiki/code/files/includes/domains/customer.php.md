@@ -1,6 +1,6 @@
 # includes/domains/customer.php
 
-> PHP - 110 lines
+> PHP - 120 lines
 
 Domains — the CUSTOMER a domain is looked after for (#153).
 
@@ -25,9 +25,9 @@ keeps working without the columns instead of failing every domain query.
 |---|--:|---|
 | [domainCustomerReady()](/code/functions/domainCustomerReady.md) | 24 | Has Database Verification added domains.customer_user_id yet? |
 | [domainPartiesReady()](/code/functions/domainPartiesReady.md) | 34 | Has Database Verification added the #162 columns (customer_supplier_id, customer_contact_id, tech_analyst_id) yet? All three arrive together. |
-| [domainCustomerPersonOk()](/code/functions/domainCustomerPersonOk.md) | 47 | May `$userId` be the customer of a domain in company `$tenantId`? An active user in that company; on a single-company install, any active user. A user with no company counts as the Default company's, as everywhere else. |
-| [domainCustomerSupplierSearch()](/code/functions/domainCustomerSupplierSearch.md) | 65 | Suppliers and supplier contacts matching `$q`, for the same picker (#162). A contact carries its supplier, so choosing one sets both. |
-| [domainCustomerSearch()](/code/functions/domainCustomerSearch.md) | 93 | People who could be the customer of a domain in company `$tenantId`, matching `$q`. |
+| [domainCustomerPersonOk()](/code/functions/domainCustomerPersonOk.md) | 49 | May `$userId` be the customer of a domain in company `$tenantId`? An active user in that company; on a single-company install, any active user. A user with no company counts as the Default company's, as everywhere else. |
+| [domainCustomerSupplierSearch()](/code/functions/domainCustomerSupplierSearch.md) | 71 | Suppliers and supplier contacts matching `$q`, for the same picker (#162). A contact carries its supplier, so choosing one sets both. |
+| [domainCustomerSearch()](/code/functions/domainCustomerSearch.md) | 103 | People who could be the customer of a domain in company `$tenantId`, matching `$q`. |
 
 ## Database
 
@@ -35,10 +35,10 @@ keeps working without the columns instead of failing every domain query.
 |--:|---|---|---|
 | 28 | `domainCustomerReady` | read [domains](/code/tables/domains.md) |  |
 | 38 | `domainPartiesReady` | read [domains](/code/tables/domains.md) |  |
-| 49 | `domainCustomerPersonOk` | read [users](/code/tables/users.md) |  |
-| 69 | `domainCustomerSupplierSearch` | read [suppliers](/code/tables/suppliers.md) |  |
-| 76 | `domainCustomerSupplierSearch` | read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md) |  |
-| 96 | `domainCustomerSearch` | read [users](/code/tables/users.md) |  |
+| 51 | `domainCustomerPersonOk` | read [users](/code/tables/users.md) |  |
+| 75 | `domainCustomerSupplierSearch` | read [suppliers](/code/tables/suppliers.md) |  |
+| 82 | `domainCustomerSupplierSearch` | read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 106 | `domainCustomerSearch` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

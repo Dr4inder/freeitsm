@@ -57,7 +57,11 @@ final class FilesAcl
         self::$levels = [];
     }
 
-    /** The short key for a permission level ('view', 'download', 'upload', 'modify', 'full'), or 'none'. */
+    /**
+     * The short key for a permission level ('view', 'download', 'upload', 'modify', 'full'), or 'none'.
+     *
+     * @param int $level  a level 0-5 (FilesAcl::NONE to FilesAcl::FULL); anything else gives 'none'
+     */
     public static function levelKey(int $level): string
     {
         switch ($level) {
@@ -166,13 +170,22 @@ final class FilesAcl
         return self::$levels[$analystId] = $out;
     }
 
-    /** The analyst's effective level on one folder - 0 when they have no grant there. */
+    /**
+     * The analyst's effective level on one folder - 0 when they have no grant there.
+     *
+     * @param int $folderId  the files_folders id; a deleted or unknown folder gives 0
+     */
     public static function level(PDO $conn, int $analystId, int $folderId): int
     {
         return self::levels($conn, $analystId)[$folderId] ?? 0;
     }
 
-    /** True when the analyst's level on the folder is at least $need (levels are cumulative). */
+    /**
+     * True when the analyst's level on the folder is at least $need (levels are cumulative).
+     *
+     * @param int $folderId  the files_folders id; a deleted or unknown folder never passes
+     * @param int $need      the lowest level that will do, one of FilesAcl::VIEW to FilesAcl::FULL
+     */
     public static function can(PDO $conn, int $analystId, int $folderId, int $need): bool
     {
         return self::level($conn, $analystId, $folderId) >= $need;
@@ -182,6 +195,8 @@ final class FilesAcl
      * Every entry that applies to a folder, for the Permissions window: its own
      * rows, then (while inheriting) each ancestor's, marked with where they came
      * from. Names are resolved here so the window needs nothing else.
+     *
+     * @param int $folderId  the files_folders id; a deleted or unknown folder gives an empty list
      */
     public static function entries(PDO $conn, int $folderId): array
     {
@@ -232,6 +247,8 @@ final class FilesAcl
      * that says on or off decides; NULL means "as the parent", and nothing set
      * anywhere means off. Follows the folder tree, NOT permission inheritance -
      * a folder that stops inheriting permissions still sits inside its parent.
+     *
+     * @param int $folderId  the files_folders id of the folder holding the file; unknown gives false
      */
     public static function watermark(PDO $conn, int $folderId): bool
     {
@@ -245,7 +262,11 @@ final class FilesAcl
         return false;
     }
 
-    /** "Finance / Invoices / 2026" - for audit rows, tooltips and the address bar. */
+    /**
+     * "Finance / Invoices / 2026" - for audit rows, tooltips and the address bar.
+     *
+     * @param ?int $folderId  the files_folders id; null (the top level) or a deleted folder gives ''
+     */
     public static function path(PDO $conn, ?int $folderId): string
     {
         if ($folderId === null) return '';
@@ -260,7 +281,11 @@ final class FilesAcl
         return implode(' / ', $parts);
     }
 
-    /** Ids of a folder and everything beneath it (live folders only). */
+    /**
+     * Ids of a folder and everything beneath it (live folders only).
+     *
+     * @param int $folderId  the files_folders id at the top; it is always in the result, even if unknown
+     */
     public static function descendants(PDO $conn, int $folderId): array
     {
         $tree = self::tree($conn);

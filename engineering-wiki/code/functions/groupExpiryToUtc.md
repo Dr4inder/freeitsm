@@ -16,11 +16,11 @@ away a day early — on the morning of the day they were told they still had.
 function groupExpiryToUtc(string $date): ?string
 ```
 
-Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 433.
+Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 450.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$date` | `string` |  |  |
+| `$date` | `string` |  | the last day of access as YYYY-MM-DD in the install's time zone; empty means no expiry |
 
 **Returns:** string|null NULL for "no expiry" (a blank box), and also for a date that cannot be read — the caller separates the two.
 

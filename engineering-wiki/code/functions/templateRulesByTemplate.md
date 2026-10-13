@@ -6,12 +6,12 @@ Sender rules for the given templates, keyed by template id, values lowercased.
 function templateRulesByTemplate(PDO $conn, array $templateIds): array
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 306.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 322.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$templateIds` | `array` |  |  |
+| `$templateIds` | `array` |  | ticket_email_templates ids |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 311 | `templateRulesByTemplate` | read [ticket_email_template_rules](/code/tables/ticket_email_template_rules.md) |  |
+| 327 | `templateRulesByTemplate` | read [ticket_email_template_rules](/code/tables/ticket_email_template_rules.md) |  |
 
 ## Called from
 

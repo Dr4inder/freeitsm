@@ -6,14 +6,14 @@ tools/call. Returns [text, isError]. An unknown or forbidden tool is null - the 
 function mcpRunTool(PDO $conn, array $apiKey, string $name, array $args): ?array
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 194.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 209.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$apiKey` | `array` |  |  |
-| `$name` | `string` |  |  |
-| `$args` | `array` |  |  |
+| `$apiKey` | `array` |  | the authenticated api_keys row, company_scope already narrowed |
+| `$name` | `string` |  | the tool name the client asked for |
+| `$args` | `array` |  | the tool arguments from the client - untrusted |
 
 **Returns:** `?array`
 

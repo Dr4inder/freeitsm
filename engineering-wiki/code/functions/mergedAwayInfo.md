@@ -6,7 +6,7 @@ Is this ticket a merged-away one? Returns the target row, or null.
 function mergedAwayInfo(PDO $conn, int $ticketId): ?array
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 298.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 301.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 304 | `mergedAwayInfo` | read [tickets](/code/tables/tickets.md), read [ticket_merges](/code/tables/ticket_merges.md) |  |
+| 307 | `mergedAwayInfo` | read [tickets](/code/tables/tickets.md), read [ticket_merges](/code/tables/ticket_merges.md) |  |
 
 ## Called from
 

@@ -6,7 +6,7 @@ Remove every corpus row whose ticket has since been deleted or trashed. The fore
 function searchBackfillPrune(PDO $conn): int
 ```
 
-Defined in [includes/search/backfill.php](/code/files/includes/search/backfill.php.md), line 158.
+Defined in [includes/search/backfill.php](/code/files/includes/search/backfill.php.md), line 159.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/search/backfill.php](/code/files/includes/search/backfill.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 159 | `searchBackfillPrune` | **delete** [search_documents](/code/tables/search_documents.md), read [tickets](/code/tables/tickets.md) |  |
+| 160 | `searchBackfillPrune` | **delete** [search_documents](/code/tables/search_documents.md), read [tickets](/code/tables/tickets.md) |  |
 
 ## Called from
 

@@ -15,7 +15,7 @@
 |---|---|---|---|---|
 | [api/system/role.php](/code/files/api/system/role.php.md):96 |  | delete |  |  |
 | [api/system/role.php](/code/files/api/system/role.php.md):97 |  | insert | `analyst_id`, `role_id`, `created_datetime` |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):283 | `AnalystsService::writeManagedRole` | insert | `analyst_id`, `role_id`, `created_datetime` |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):302 | `AnalystsService::writeManagedRole` | insert | `analyst_id`, `role_id`, `created_datetime` |  |
 
 ## Read by
 

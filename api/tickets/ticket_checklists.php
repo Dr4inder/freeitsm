@@ -44,6 +44,8 @@ function checklistTicketGate(PDO $conn, int $ticketId): void
 /**
  * Returns the ticket a checklist item belongs to, or 0 when the item does not exist - so
  * the caller can run the ticket access gate.
+ *
+ * @param int $itemId  the ticket_checklist_items id
  */
 function checklistTicketForItem(PDO $conn, int $itemId): int
 {
@@ -54,6 +56,8 @@ function checklistTicketForItem(PDO $conn, int $itemId): int
 /**
  * Returns the ticket a checklist belongs to, or 0 when it does not exist - so the caller
  * can run the ticket access gate.
+ *
+ * @param int $checklistId  the ticket_checklists id
  */
 function checklistTicketForChecklist(PDO $conn, int $checklistId): int
 {

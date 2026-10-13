@@ -10,14 +10,14 @@ blank for everyone who ever left is not a history anybody can use.
 function knowledgeAuditHistory(PDO $conn, string $type, int $id, int $limit = 200): array
 ```
 
-Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.php.md), line 110.
+Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$type` | `string` |  |  |
-| `$id` | `int` |  |  |
-| `$limit` | `int` | `200` |  |
+| `$type` | `string` |  | 'article' or 'folder' |
+| `$id` | `int` |  | the article or folder id |
+| `$limit` | `int` | `200` | the most entries returned, clamped to 1-500 |
 
 **Returns:** `array`
 
@@ -25,9 +25,9 @@ Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 114 | `knowledgeAuditHistory` | read [knowledge_audit](/code/tables/knowledge_audit.md) |  |
-| 129 | `knowledgeAuditHistory` | read [analysts](/code/tables/analysts.md) |  |
-| 132 | `knowledgeAuditHistory` | read [users](/code/tables/users.md) |  |
+| 122 | `knowledgeAuditHistory` | read [knowledge_audit](/code/tables/knowledge_audit.md) |  |
+| 137 | `knowledgeAuditHistory` | read [analysts](/code/tables/analysts.md) |  |
+| 140 | `knowledgeAuditHistory` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

@@ -33,17 +33,17 @@ function getTenantConfigRowsByCompany(
 ): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 679.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 712.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$entityType` | `string` |  |  |
-| `$cols` | `string` | `'*'` |  |
-| `$activeWhere` | `string` | `''` |  |
-| `$orderBy` | `string` | `'display_order, name'` |  |
+| `$table` | `string` |  | the config table, e.g. 'ticket_types' - a developer literal |
+| `$entityType` | `string` |  | the key used in tenant_config_hidden, e.g. 'ticket_type' |
+| `$cols` | `string` | `'*'` | the columns to select (default '*') |
+| `$activeWhere` | `string` | `''` | an extra filter with no leading AND, e.g. 'is_active = 1'; '' for none |
+| `$orderBy` | `string` | `'display_order, name'` | the ORDER BY body, no keyword |
 
 **Returns:** array<int, array<int, array>> company id => rows
 

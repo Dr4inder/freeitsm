@@ -6,7 +6,7 @@ GET /assets/{id}/network-adapters - the network adapters the inventory agent rep
 function apiAssetNetworkAdaptersList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 557.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 568.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 560 | `apiAssetNetworkAdaptersList` | read [asset_network_adapters](/code/tables/asset_network_adapters.md) |  |
+| 571 | `apiAssetNetworkAdaptersList` | read [asset_network_adapters](/code/tables/asset_network_adapters.md) |  |
 
 ## Calls
 

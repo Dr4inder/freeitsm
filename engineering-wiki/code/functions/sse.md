@@ -9,12 +9,12 @@ Sends one server-sent event (an event name and a JSON data line) and flushes it 
 function sse(string $event, array $data): void
 ```
 
-Defined in [api/rfp-builder/generate_framing.php](/code/files/api/rfp-builder/generate_framing.php.md), line 44.
+Defined in [api/rfp-builder/generate_framing.php](/code/files/api/rfp-builder/generate_framing.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `string` |  |  |
-| `$data` | `array` |  |  |
+| `$event` | `string` |  | the event name the browser listens for: 'phase', 'complete' or 'error' |
+| `$data` | `array` |  | the payload, sent as one JSON line |
 
 **Returns:** `void`
 

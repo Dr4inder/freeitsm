@@ -6,7 +6,7 @@ POST /knowledge/articles/{id}/restore - brings an article back from the recycle 
 function apiKnowledgeArticlesRestore(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 328.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 340.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

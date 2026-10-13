@@ -6,7 +6,7 @@ Build a plain-text transcript of a channel conversation (oldest first), capped t
 function messagingBuildTranscript(PDO $conn, int $ticketId): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 350.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 381.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/mes
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 353 | `messagingBuildTranscript` | read [emails](/code/tables/emails.md) |  |
+| 384 | `messagingBuildTranscript` | read [emails](/code/tables/emails.md) |  |
 
 ## Called from
 

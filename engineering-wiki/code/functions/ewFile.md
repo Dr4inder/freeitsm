@@ -6,11 +6,11 @@ The file behind a safe page path, if it exists and really is inside the wiki.
 function ewFile(string $page): ?string
 ```
 
-Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 47.
+Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 53.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$page` | `string` |  |  |
+| `$page` | `string` |  | a page path already passed through `ewSafePath()`, e.g. "handbook/start" |
 
 **Returns:** `?string`
 

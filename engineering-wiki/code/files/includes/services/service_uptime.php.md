@@ -1,6 +1,6 @@
 # includes/services/service_uptime.php
 
-> PHP - 624 lines
+> PHP - 659 lines
 
 Service history and uptime, DERIVED from incidents (discussion #59).
 
@@ -49,14 +49,14 @@ it does not have.
 |--:|---|---|---|
 | 57 | `ServiceUptime::defaultWindowDays` | read [system_settings](/code/tables/system_settings.md) |  |
 | 73 | `ServiceUptime::shownInPortal` | read [system_settings](/code/tables/system_settings.md) |  |
-| 105 | `ServiceUptime::incidentsFor` | read [status_incident_update_services](/code/tables/status_incident_update_services.md), read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 110 | `ServiceUptime::incidentsFor` | read [status_incidents](/code/tables/status_incidents.md), read [status_incident_services](/code/tables/status_incident_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 182 | `ServiceUptime::updateLogAvailable` | read [status_incident_update_services](/code/tables/status_incident_update_services.md) |  |
-| 210 | `ServiceUptime::segmentsFor` | read [status_incident_updates](/code/tables/status_incident_updates.md), read [status_incident_update_services](/code/tables/status_incident_update_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 379 | `ServiceUptime::dailyStrip` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 444 | `ServiceUptime::incidentsBetween` | read [status_incident_update_services](/code/tables/status_incident_update_services.md), read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 449 | `ServiceUptime::incidentsBetween` | read [status_incidents](/code/tables/status_incidents.md), read [status_incident_services](/code/tables/status_incident_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 545 | `ServiceUptime::dailyStripBetween` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 107 | `ServiceUptime::incidentsFor` | read [status_incident_update_services](/code/tables/status_incident_update_services.md), read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 112 | `ServiceUptime::incidentsFor` | read [status_incidents](/code/tables/status_incidents.md), read [status_incident_services](/code/tables/status_incident_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 184 | `ServiceUptime::updateLogAvailable` | read [status_incident_update_services](/code/tables/status_incident_update_services.md) |  |
+| 216 | `ServiceUptime::segmentsFor` | read [status_incident_updates](/code/tables/status_incident_updates.md), read [status_incident_update_services](/code/tables/status_incident_update_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 389 | `ServiceUptime::dailyStrip` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 458 | `ServiceUptime::incidentsBetween` | read [status_incident_update_services](/code/tables/status_incident_update_services.md), read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 463 | `ServiceUptime::incidentsBetween` | read [status_incidents](/code/tables/status_incidents.md), read [status_incident_services](/code/tables/status_incident_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 569 | `ServiceUptime::dailyStripBetween` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## How it hangs together
 

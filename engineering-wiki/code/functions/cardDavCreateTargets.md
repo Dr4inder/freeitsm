@@ -6,12 +6,12 @@ Address books this person could be added to right now, and why not if none.
 function cardDavCreateTargets(PDO $conn, array $user): array
 ```
 
-Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php.md), line 51.
+Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php.md), line 52.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$user` | `array` |  |  |
+| `$user` | `array` |  | the users row - auth_provider_id, email and tenant_id are read |
 
 **Returns:** array ['books' => [provider rows], 'reason' => '' | why nothing is offered]
 
@@ -19,8 +19,8 @@ Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 57 | `cardDavCreateTargets` | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 66 | `cardDavCreateTargets` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 58 | `cardDavCreateTargets` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 67 | `cardDavCreateTargets` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Called from
 

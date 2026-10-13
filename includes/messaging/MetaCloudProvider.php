@@ -28,6 +28,8 @@ class MetaCloudProvider extends MessagingProvider
     /**
      * Answers Meta's webhook subscription check: returns the challenge when the verify
      * token matches, else null.
+     *
+     * @param array $get  the request's query parameters - hub.mode, hub.verify_token, hub.challenge (PHP may turn the dots into _)
      */
     public function verifyChallenge(array $get): ?string
     {
@@ -41,7 +43,14 @@ class MetaCloudProvider extends MessagingProvider
         return null;
     }
 
-    /** Checks the X-Hub-Signature-256 HMAC of the raw body against the app secret. */
+    /**
+     * Checks the X-Hub-Signature-256 HMAC of the raw body against the app secret.
+     *
+     * @param string $rawBody  the raw request body, exactly as received - the HMAC is over these bytes
+     * @param array $headers  the request headers, lower-cased keys (x-hub-signature-256)
+     * @param array $params  the parsed POST parameters (not used)
+     * @param string $url  the public URL that was hit (not used)
+     */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
         $sig = $headers['x-hub-signature-256'] ?? '';
@@ -56,6 +65,9 @@ class MetaCloudProvider extends MessagingProvider
     /**
      * Turns a WhatsApp Cloud API webhook into inbound messages - text, or media to download
      * later with the caption as the body.
+     *
+     * @param string $rawBody  the raw JSON webhook body from Meta
+     * @param array $params  the parsed POST parameters (not used)
      */
     public function parseInbound(string $rawBody, array $params): array
     {
@@ -105,7 +117,12 @@ class MetaCloudProvider extends MessagingProvider
         return $out;
     }
 
-    /** Sends a WhatsApp text message through the Graph API and returns Meta's message id. */
+    /**
+     * Sends a WhatsApp text message through the Graph API and returns Meta's message id.
+     *
+     * @param string $to  the recipient's WhatsApp number, with or without the leading +
+     * @param string $body  the message text
+     */
     public function sendMessage(string $to, string $body): string
     {
         $phoneId = $this->channel['credentials']['phone_number_id'] ?? '';
@@ -141,6 +158,13 @@ class MetaCloudProvider extends MessagingProvider
      * Two Graph API calls: upload the bytes to get a media id, then send a
      * message referencing it. $filePath is used directly (multipart upload);
      * $publicUrl is Twilio's requirement, not Meta's, and is ignored here.
+     *
+     * @param string $to  the recipient's WhatsApp number, with or without the leading +
+     * @param string $filePath  the file on this server's disk, already validated
+     * @param string $mimeType  the file's MIME type - also decides image, video, audio or document
+     * @param string $caption  text sent with the file; '' for none, and never sent with audio
+     * @param string $publicUrl  not used - Meta takes an upload
+     * @param string $filename  the name the recipient sees on a document; '' uses the stored name
      */
     public function sendMedia(string $to, string $filePath, string $mimeType, string $caption = '', string $publicUrl = '', string $filename = ''): string
     {
@@ -210,6 +234,10 @@ class MetaCloudProvider extends MessagingProvider
      * Meta's message id.
      *
      * Needed to message someone outside the 24-hour service window.
+     *
+     * @param string $to  the recipient's WhatsApp number, with or without the leading +
+     * @param array $template  a messaging_templates row (provider_ref = the Meta template name, language)
+     * @param array $vars  ordered values for the template's {{1}}, {{2}}, ...
      */
     public function sendTemplate(string $to, array $template, array $vars): string
     {
@@ -261,6 +289,8 @@ class MetaCloudProvider extends MessagingProvider
     /**
      * Downloads an inbound media item: resolves its id to a URL, then fetches the bytes
      * with the access token.
+     *
+     * @param array $item  one entry from parseInbound()'s 'media' list (id, content_type, filename)
      */
     public function downloadMedia(array $item): array
     {
@@ -329,7 +359,11 @@ class MetaCloudProvider extends MessagingProvider
         return 'Connected to Meta WhatsApp number ' . ($name !== '' ? "\"$name\" ($number)." : "$number.");
     }
 
-    /** Puts a single leading + on a phone number; blank stays blank. */
+    /**
+     * Puts a single leading + on a phone number; blank stays blank.
+     *
+     * @param string $number  a phone number, with or without a leading +
+     */
     private function ensurePlus(string $number): string
     {
         $number = ltrim(trim($number), '+');

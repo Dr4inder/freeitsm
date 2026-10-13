@@ -274,6 +274,8 @@ function domainRunChecks(array $d, array $settings): array
  * turns the score into a grade, A+ to F; an expired, redemption or NXDOMAIN
  * finding is always F.
  *
+ * @param array $findings  the check findings, each with at least 'key' and 'weight' (points taken off)
+ *
  * @return array{0:int,1:string}
  */
 function domainGrade(array $findings): array
@@ -295,7 +297,11 @@ function domainGrade(array $findings): array
     return [$score, $grade];
 }
 
-/** "v=DMARC1; p=reject; rua=mailto:x" → ['v'=>'DMARC1','p'=>'reject','rua'=>'mailto:x'] */
+/**
+ * "v=DMARC1; p=reject; rua=mailto:x" → ['v'=>'DMARC1','p'=>'reject','rua'=>'mailto:x']
+ *
+ * @param string $record  a tag=value record such as DMARC; parts without an "=" are skipped
+ */
 function domainParseTags(string $record): array
 {
     $out = [];
@@ -311,7 +317,11 @@ function domainParseTags(string $record): array
  * at 10; past that, receivers treat the record as a permanent error — i.e. SPF
  * silently stops protecting the domain). Follows include: and redirect=.
  *
+ * @param string $spf       the SPF record text, e.g. "v=spf1 include:_spf.example.com -all"
+ * @param string $resolver  auto | system | google | cloudflare, as for domainDns()
+ * @param int    $depth     how deep in the include/redirect chain this is - 0 for the top; past 10 counts nothing
  * @param array $broken collects include/redirect targets that have no SPF record
+ * @param array  $seen      targets already followed (filled in as it goes), so a loop is counted once
  */
 function domainSpfLookupCount(string $spf, string $resolver, int $depth, array &$broken, array &$seen = []): int
 {

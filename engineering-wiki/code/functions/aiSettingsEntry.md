@@ -6,11 +6,11 @@ Returns a namespace's registry entry (label, default provider and model); throws
 function aiSettingsEntry(string $ns): array
 ```
 
-Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 110.
+Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ns` | `string` |  |  |
+| `$ns` | `string` |  | a namespace key from `aiSettingsRegistry()`, e.g. 'workflow_ai' |
 
 **Returns:** `array`
 

@@ -17,12 +17,12 @@ worse than either.
 function handlePreview(PDO $conn, string $target): void
 ```
 
-Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), line 88.
+Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), line 90.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$target` | `string` |  |  |
+| `$target` | `string` |  | the model to compare against, from ?model= - 'filing', anything else meaning 'containers' |
 
 **Returns:** `void`
 
@@ -30,10 +30,10 @@ Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 107 | `handlePreview` | read [analysts](/code/tables/analysts.md) |  |
-| 114 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 126 | `handlePreview` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 144 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 109 | `handlePreview` | read [analysts](/code/tables/analysts.md) |  |
+| 116 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 128 | `handlePreview` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 146 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## Calls
 

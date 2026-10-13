@@ -1,6 +1,6 @@
 # includes/domains/tls.php
 
-> PHP - 99 lines
+> PHP - 108 lines
 
 Domains — reading the certificate a web server presents.
 
@@ -20,8 +20,8 @@ that domain, so this cannot be pointed at an arbitrary address.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [domainTlsCertificate()](/code/functions/domainTlsCertificate.md) | 29 | Reads the certificate a host presents - subject, issuer, dates, days left and names - then says whether it matches the host name and whether the chain verifies against the trusted CA bundle. |
-| [domainTlsNameMatches()](/code/functions/domainTlsNameMatches.md) | 86 | Does `$host` appear in the certificate's names (with one-label wildcards)? |
+| [domainTlsCertificate()](/code/functions/domainTlsCertificate.md) | 33 | Reads the certificate a host presents - subject, issuer, dates, days left and names - then says whether it matches the host name and whether the chain verifies against the trusted CA bundle. |
+| [domainTlsNameMatches()](/code/functions/domainTlsNameMatches.md) | 95 | Does `$host` appear in the certificate's names (with one-label wildcards)? |
 
 ## How it hangs together
 

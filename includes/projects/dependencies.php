@@ -43,7 +43,12 @@ function projectDependencies(PDO $conn, int $projectId): array
         $st->fetchAll(PDO::FETCH_ASSOC));
 }
 
-/** Would task -> dependsOn close a loop (dependsOn already waits, directly or not, for task)? */
+/**
+ * Would task -> dependsOn close a loop (dependsOn already waits, directly or not, for task)?
+ *
+ * @param array $deps  the project's dependencies as projectDependencies() returns them (task_id, depends_on_id)
+ * @param int $dependsOnId  the task it would wait for
+ */
 function projectDependencyMakesCycle(array $deps, int $taskId, int $dependsOnId): bool
 {
     $preds = [];
@@ -62,6 +67,9 @@ function projectDependencyMakesCycle(array $deps, int $taskId, int $dependsOnId)
 /**
  * Per task: depends_on [{id, lag}], waiting_on [ids], clash (bool), critical
  * (bool), slack (days or null). $tasks need id, start_date, due_date, is_closed.
+ *
+ * @param array $tasks  the project's tasks - id, start_date, due_date, is_closed
+ * @param array $deps  the project's dependencies: task_id, depends_on_id, lag_days
  */
 function projectDependencyAnalysis(array $tasks, array $deps): array
 {

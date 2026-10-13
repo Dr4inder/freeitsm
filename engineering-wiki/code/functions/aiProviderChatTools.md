@@ -37,12 +37,12 @@ calling - Warbot - could not work on Azure at all.
 function aiProviderChatTools(array $cfg, array $opts, array $tools, callable $runTool): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 475.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 505.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$opts` | `array` |  |  |
+| `$cfg` | `array` |  | the AI settings - provider, model, api_key, verify_ssl, base_url and azure_* are read |
+| `$opts` | `array` |  | system, user, history, max_rounds (1-6, default 4), max_tokens, temperature, referer, title |
 | `$tools` | `array` |  | [['name'=>…,'description'=>…,'schema'=>[JSON Schema]], …] |
 | `$runTool` | `callable` |  | fn(string `$name`, array `$args`): string |
 

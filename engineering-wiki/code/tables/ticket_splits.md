@@ -21,12 +21,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):208 | `splitTicket` | insert | `source_ticket_id`, `source_ticket_number`, `new_ticket_id`, `new_ticket_number`, `message_count`, `moved_email_ids`, `marker_email_id`, `split_by_id`, `split_datetime` |  |
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):448 | `undoSplit` | update | `undone_datetime`, `undone_by_id` |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):217 | `splitTicket` | insert | `source_ticket_id`, `source_ticket_number`, `new_ticket_id`, `new_ticket_number`, `message_count`, `moved_email_ids`, `marker_email_id`, `split_by_id`, `split_datetime` |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):472 | `undoSplit` | update | `undone_datetime`, `undone_by_id` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md) | splitMarkerEmailIds L88, splitInfoFor L343, splitInfoFor L349, undoSplit L380 |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md) | splitMarkerEmailIds L90, splitInfoFor L364, splitInfoFor L370, undoSplit L404 |  |
 

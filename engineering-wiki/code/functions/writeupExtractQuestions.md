@@ -6,11 +6,11 @@ Pull the "- " question lines out of a NOT_ENOUGH body.
 function writeupExtractQuestions(string $body): array
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 783.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 823.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `string` |  |  |
+| `$body` | `string` |  | the body of a NOT_ENOUGH response, from `writeupParseResponse()` |
 
 **Returns:** `array`
 

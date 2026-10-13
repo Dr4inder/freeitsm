@@ -6,14 +6,14 @@ People who could be the customer of a domain in company `$tenantId`, matching `$
 function domainCustomerSearch(PDO $conn, ?int $tenantId, string $q, int $limit = 25): array
 ```
 
-Defined in [includes/domains/customer.php](/code/files/includes/domains/customer.php.md), line 93.
+Defined in [includes/domains/customer.php](/code/files/includes/domains/customer.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$q` | `string` |  |  |
-| `$limit` | `int` | `25` |  |
+| `$q` | `string` |  | what the user typed; matched anywhere in display name, preferred name and e-mail |
+| `$limit` | `int` | `25` | most people to return |
 
 **Returns:** array<int,array{id:int,name:string,email:?string}>
 
@@ -21,7 +21,7 @@ Defined in [includes/domains/customer.php](/code/files/includes/domains/customer
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 96 | `domainCustomerSearch` | read [users](/code/tables/users.md) |  |
+| 106 | `domainCustomerSearch` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

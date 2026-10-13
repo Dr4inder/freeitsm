@@ -1,6 +1,6 @@
 # includes/lms/knowledge_source.php
 
-> PHP - 66 lines
+> PHP - 68 lines
 
 Which Knowledge articles the LMS may build a lesson from.
 
@@ -34,13 +34,13 @@ picker hides must not be readable by posting its id to the author endpoint.
 | Function | Line | What it does |
 |---|--:|---|
 | [lmsSharedOnlySql()](/code/functions/lmsSharedOnlySql.md) | 41 | SQL fragment restricting a knowledge_articles query to shared articles. |
-| [lmsCanUseArticle()](/code/functions/lmsCanUseArticle.md) | 52 | True when the LMS may read `$articleId`'s body. Fails CLOSED: no row, wrong company, or an unexpected error => false. |
+| [lmsCanUseArticle()](/code/functions/lmsCanUseArticle.md) | 54 | True when the LMS may read `$articleId`'s body. Fails CLOSED: no row, wrong company, or an unexpected error => false. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 56 | `lmsCanUseArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 58 | `lmsCanUseArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

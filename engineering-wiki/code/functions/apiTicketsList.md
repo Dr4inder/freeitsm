@@ -6,7 +6,7 @@ GET /tickets
 function apiTicketsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 128.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 226 | `apiTicketsList` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [users](/code/tables/users.md) |  |
+| 228 | `apiTicketsList` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

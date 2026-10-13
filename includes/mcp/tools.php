@@ -150,6 +150,8 @@ function mcpTools(): array
  *
  * The endpoint stores the result back in $apiKey['company_scope'] straight after
  * authenticating, so every tool and helper below reads the narrowed value.
+ *
+ * @param array $apiKey  the authenticated api_keys row (analyst_id, company_scope)
  */
 function mcpEffectiveScope(PDO $conn, array $apiKey): ?array
 {
@@ -159,7 +161,12 @@ function mcpEffectiveScope(PDO $conn, array $apiKey): ?array
     return apiEffectiveCompanyScope($conn, (int)$apiKey['analyst_id'], $apiKey['company_scope'] ?? null);
 }
 
-/** May this key run this tool? (permission is checked once, by the endpoint) */
+/**
+ * May this key run this tool? (permission is checked once, by the endpoint)
+ *
+ * @param array $apiKey  the authenticated api_keys row, company_scope already narrowed by mcpEffectiveScope()
+ * @param array $t  the tool's entry from mcpTools() (module, capability, company_safe)
+ */
 function mcpToolAllowed(PDO $conn, array $apiKey, array $t): bool
 {
     $analystId = (int)$apiKey['analyst_id'];
@@ -169,7 +176,11 @@ function mcpToolAllowed(PDO $conn, array $apiKey, array $t): bool
     return true;
 }
 
-/** tools/list: what this key may use, in MCP's shape. */
+/**
+ * tools/list: what this key may use, in MCP's shape.
+ *
+ * @param array $apiKey  the authenticated api_keys row, company_scope already narrowed
+ */
 function mcpToolsFor(PDO $conn, array $apiKey): array
 {
     $out = [];
@@ -190,6 +201,10 @@ function mcpToolsFor(PDO $conn, array $apiKey): array
 /**
  * tools/call. Returns [text, isError]. An unknown or forbidden tool is null -
  * the endpoint answers that as a protocol error, not as tool output.
+ *
+ * @param array $apiKey  the authenticated api_keys row, company_scope already narrowed
+ * @param string $name  the tool name the client asked for
+ * @param array $args  the tool arguments from the client - untrusted
  */
 function mcpRunTool(PDO $conn, array $apiKey, string $name, array $args): ?array
 {
@@ -211,7 +226,11 @@ function mcpRunTool(PDO $conn, array $apiKey, string $name, array $args): ?array
    scope (the key's effective companies) and the budget are the MCP server's.
    ══════════════════════════════════════════════════════════════════════════ */
 
-/** " AND p.tenant_id ..." for the key's companies (NULL company = the Default one). */
+/**
+ * " AND p.tenant_id ..." for the key's companies (NULL company = the Default one).
+ *
+ * @param array $apiKey  the authenticated api_keys row (analyst_id, narrowed company_scope)
+ */
 function mcpProjectScopeSql(PDO $conn, array $apiKey): array
 {
     // Members-only projects (3.3.0): as the key's analyst.
@@ -226,6 +245,8 @@ function mcpProjectScopeSql(PDO $conn, array $apiKey): array
  *
  * Returns ['', []] when multi-tenancy is off or the key covers every company; a key with no
  * companies sees nothing. Projects with no company count as the Default company's.
+ *
+ * @param array $apiKey  the authenticated api_keys row; a null company_scope means every company
  */
 function mcpProjectCompanySql(PDO $conn, array $apiKey): array
 {
@@ -238,42 +259,72 @@ function mcpProjectCompanySql(PDO $conn, array $apiKey): array
         : [" AND p.tenant_id IN ($ph)", $ids];
 }
 
-/** MCP tool: lists the projects the API key may see. */
+/**
+ * MCP tool: lists the projects the API key may see.
+ *
+ * @param array $args  the tool arguments from the client - status, health, q, limit; see projectAssistList()
+ * @param array $apiKey  the authenticated api_keys row, used for the project scope
+ */
 function mcpToolListProjects(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistList($conn, mcpProjectScopeSql($conn, $apiKey), $args);
 }
 
-/** MCP tool: one project's overview. */
+/**
+ * MCP tool: one project's overview.
+ *
+ * @param array $args  the tool arguments from the client - 'project' names the project
+ * @param array $apiKey  the authenticated api_keys row, used for the project scope
+ */
 function mcpToolProjectOverview(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistOverview($conn, mcpProjectScopeSql($conn, $apiKey), $analystId, $args, true);
 }
 
-/** MCP tool: a project's RAID log - risks, assumptions, issues and dependencies. */
+/**
+ * MCP tool: a project's RAID log - risks, assumptions, issues and dependencies.
+ *
+ * @param array $args  the tool arguments from the client - 'project' names the project
+ * @param array $apiKey  the authenticated api_keys row, used for the project scope
+ */
 function mcpToolProjectRaid(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistRaid($conn, mcpProjectScopeSql($conn, $apiKey), $args);
 }
 
-/** MCP tool: a project's tasks. */
+/**
+ * MCP tool: a project's tasks.
+ *
+ * @param array $args  the tool arguments from the client - 'project' names the project
+ * @param array $apiKey  the authenticated api_keys row, used for the project scope
+ */
 function mcpToolProjectTasks(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistTasks($conn, mcpProjectScopeSql($conn, $apiKey), $args);
 }
 
-/** MCP tool: a project's key dates. */
+/**
+ * MCP tool: a project's key dates.
+ *
+ * @param array $args  the tool arguments from the client - days ahead (1-90, default 14); covers every project in scope
+ * @param array $apiKey  the authenticated api_keys row, used for the project scope
+ */
 function mcpToolProjectDates(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistDates($conn, mcpProjectScopeSql($conn, $apiKey), $args);
 }
 
-/** The budget stays MCP-only: Warbot answers in a channel everyone in it can read. */
+/**
+ * The budget stays MCP-only: Warbot answers in a channel everyone in it can read.
+ *
+ * @param array $args  the tool arguments from the client - 'project' names the project
+ * @param array $apiKey  the authenticated api_keys row, used for the project scope
+ */
 function mcpToolProjectBudget(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
@@ -299,6 +350,8 @@ function mcpToolProjectBudget(PDO $conn, array $args, int $analystId, array $api
 /* ══════════════════════════════════════════════════════════════════════════
    KNOWLEDGE - by the KEY's companies (KnowledgeViewer::forApiKey), not the
    analyst's active company, which an API call does not have.
+   @param array $args  the tool arguments from the client - query is matched against article titles
+   @param array $apiKey  the authenticated api_keys row; its companies decide which articles are searched
    ══════════════════════════════════════════════════════════════════════════ */
 function mcpToolSearchKnowledge(PDO $conn, array $args, int $analystId, array $apiKey): string
 {

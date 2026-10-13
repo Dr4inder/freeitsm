@@ -99,7 +99,11 @@ function assetEnsureToken(PDO $conn, int $assetId): ?string {
     return null;
 }
 
-/** Resolve a scanned token to an asset id. Returns null for unknown tokens. */
+/**
+ * Resolve a scanned token to an asset id. Returns null for unknown tokens.
+ *
+ * @param string $token  the QR token from a scanned label (untrusted); must be 8-64 hex characters to be looked up
+ */
 function assetIdForToken(PDO $conn, string $token): ?int {
     if (!assetLabelsSchemaReady($conn)) return null;
     $token = trim($token);
@@ -124,6 +128,9 @@ function assetIdForToken(PDO $conn, string $token): ?int {
  *
  * A check in code needs serialising against a concurrent write - every caller
  * that WRITES a tag goes through AssetTagsService::withLock() (PR #164).
+ *
+ * @param string $tag  the asset tag to check, trimmed here; '' is always available
+ * @param ?int $exceptAssetId  the asset being edited, so its own tag does not count as taken; null for a new asset
  */
 function assetTagAvailable(PDO $conn, ?int $tenantId, string $tag, ?int $exceptAssetId = null): bool {
     if (!assetLabelsSchemaReady($conn)) return true;
@@ -153,6 +160,8 @@ function assetTagAvailable(PDO $conn, ?int $tenantId, string $tag, ?int $exceptA
  * address. It also copes with a configured address that already carries the
  * app's folder (publicUrlWithAppPath()), which would otherwise print
  * …/freeitsm-app/freeitsm-app/a/<token> onto physical labels.
+ *
+ * @param string $token  the asset's qr_token, appended to the public base as a/<token>
  */
 function assetLabelUrl(string $token, ?PDO $conn = null): string {
     return publicAbsoluteUrl($conn ?? connectToDatabase(), 'a/' . $token);
@@ -183,6 +192,8 @@ function assetLabelSheetSpecs(): array {
  * Invariants:
  * - No logo: standard Level M (15% redundancy) for maximum module clarity
  * - With logo: high Level H (30% redundancy) to guarantee reliable scanning with 22% center overlay
+ *
+ * @param bool $hasLogo  true when the label prints a logo in the middle of the QR code
  */
 function assetLabelQrEcLevel(bool $hasLogo): string {
     return $hasLogo ? 'H' : 'M';

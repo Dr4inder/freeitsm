@@ -53,6 +53,9 @@ set_time_limit(0);
 /**
  * Sends one server-sent event (an event name and a JSON data line) and flushes it to the
  * browser straight away.
+ *
+ * @param string $event  the event name the browser listens for: 'text', 'usage', 'done', 'unconfigured' or 'error'
+ * @param array $data  the payload, sent as one JSON line
  */
 function sse_send(string $event, array $data): void
 {

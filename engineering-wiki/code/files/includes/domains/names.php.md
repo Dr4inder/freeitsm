@@ -1,6 +1,6 @@
 # includes/domains/names.php
 
-> PHP - 161 lines
+> PHP - 181 lines
 
 Domains — turning whatever somebody typed or pasted into a domain name.
 
@@ -18,14 +18,14 @@ Two spellings of one name must never become two rows.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [domainNormalise()](/code/functions/domainNormalise.md) | 23 | Turns a typed or pasted URL, e-mail address or name into the one stored domain name - lower case, no scheme, path, port, root dot or leading www., internationalised names as punycode with the Unicode form as the display name. |
-| [domainTld()](/code/functions/domainTld.md) | 83 | The last label: "co.uk" is not a TLD, "uk" is. |
-| [domainHostBelongsTo()](/code/functions/domainHostBelongsTo.md) | 94 | Is `$host` this domain or one of its sub-domains? Used to keep the "extra hosts to check certificates on" list from being pointed at somebody else's server — or at an internal address, which would make this a way to probe the network. |
-| [domainParseSslHosts()](/code/functions/domainParseSslHosts.md) | 105 | The extra certificate hosts, cleaned: one per entry, only ones that belong to the domain, de-duplicated. The apex and www are always checked and are not listed here. |
-| [domainNormaliseHost()](/code/functions/domainNormaliseHost.md) | 120 | A host name (may be a sub-domain, keeps "www."), or null when it is not one. |
-| [domainPurposes()](/code/functions/domainPurposes.md) | 138 | Purposes a domain can be registered for. The keys drive checks; labels are in lang. |
-| [domainPurposeIsNonMail()](/code/functions/domainPurposeIsNonMail.md) | 151 | Purposes that should never send or receive mail, so get "lock it down" advice. |
-| [domainRenewalModes()](/code/functions/domainRenewalModes.md) | 157 | auto \| manual \| do_not_renew \| unknown |
+| [domainNormalise()](/code/functions/domainNormalise.md) | 25 | Turns a typed or pasted URL, e-mail address or name into the one stored domain name - lower case, no scheme, path, port, root dot or leading www., internationalised names as punycode with the Unicode form as the display name. |
+| [domainTld()](/code/functions/domainTld.md) | 89 | The last label: "co.uk" is not a TLD, "uk" is. |
+| [domainHostBelongsTo()](/code/functions/domainHostBelongsTo.md) | 103 | Is `$host` this domain or one of its sub-domains? Used to keep the "extra hosts to check certificates on" list from being pointed at somebody else's server — or at an internal address, which would make this a way to probe the network. |
+| [domainParseSslHosts()](/code/functions/domainParseSslHosts.md) | 117 | The extra certificate hosts, cleaned: one per entry, only ones that belong to the domain, de-duplicated. The apex and www are always checked and are not listed here. |
+| [domainNormaliseHost()](/code/functions/domainNormaliseHost.md) | 136 | A host name (may be a sub-domain, keeps "www."), or null when it is not one. |
+| [domainPurposes()](/code/functions/domainPurposes.md) | 154 | Purposes a domain can be registered for. The keys drive checks; labels are in lang. |
+| [domainPurposeIsNonMail()](/code/functions/domainPurposeIsNonMail.md) | 171 | Purposes that should never send or receive mail, so get "lock it down" advice. |
+| [domainRenewalModes()](/code/functions/domainRenewalModes.md) | 177 | auto \| manual \| do_not_renew \| unknown |
 
 ## How it hangs together
 

@@ -18,12 +18,12 @@ those call sites.
 function integrationsAbsoluteUrl(PDO $conn, string $path): string
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 197.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 199.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | a path inside this install, e.g. 'tickets/?id=409' - a leading slash is optional |
 
 **Returns:** `string`
 

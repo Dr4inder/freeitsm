@@ -15,8 +15,8 @@
 |---|---|---|---|---|
 | [api/system/role.php](/code/files/api/system/role.php.md):92 |  | delete |  |  |
 | [api/system/role.php](/code/files/api/system/role.php.md):93 |  | insert | `role_id`, `capability_key` |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):280 | `AnalystsService::writeManagedRole` | delete |  |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):281 | `AnalystsService::writeManagedRole` | insert | `role_id`, `capability_key` |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):299 | `AnalystsService::writeManagedRole` | delete |  |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):300 | `AnalystsService::writeManagedRole` | insert | `role_id`, `capability_key` |  |
 
 ## Read by
 
@@ -26,5 +26,5 @@
 | [api/system/roles.php](/code/files/api/system/roles.php.md) | L28 |  |
 | [includes/feature_bingo/cards/system-core.php](/code/files/includes/feature_bingo/cards/system-core.php.md) | L169 |  |
 | [includes/rbac.php](/code/files/includes/rbac.php.md) | getAnalystCapabilities L63 |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md) | AnalystsService::access L151 |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md) | AnalystsService::access L163 |  |
 

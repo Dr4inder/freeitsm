@@ -6,11 +6,11 @@ A globally unique Message-ID on the sender's own domain, e.g. <3f9c...e1.1790805
 function mimeMessageId(string $from): string
 ```
 
-Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 38.
+Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$from` | `string` |  |  |
+| `$from` | `string` |  | the From email address whose domain the id uses |
 
 **Returns:** `string`
 

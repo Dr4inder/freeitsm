@@ -60,7 +60,11 @@ function ticketSensitivityReady(PDO $conn): bool
     return $ready;
 }
 
-/** Anything unrecognised reads as normal - the column's own default. */
+/**
+ * Anything unrecognised reads as normal - the column's own default.
+ *
+ * @param mixed $value  a sensitivity as stored or submitted; anything not in TICKET_SENSITIVITIES gives 'normal'
+ */
 function ticketSensitivityNormalise($value): string
 {
     $v = strtolower(trim((string)$value));
@@ -73,6 +77,8 @@ function ticketSensitivityNormalise($value): string
  *
  * The audit entry has no analyst (NULL): a rule did this, not a person, and the
  * value names the rule so nobody has to wonder how it got there.
+ *
+ * @param string $reason  why, in words; stored in the audit row as "Confidential - <reason>"
  */
 function ticketSensitivityRaise(PDO $conn, int $ticketId, string $reason): bool
 {
@@ -100,6 +106,8 @@ function ticketSensitivityRaise(PDO $conn, int $ticketId, string $reason): bool
  * Apply the automatic defaults to a ticket: its service-desk department's, and
  * the mailbox it arrived through, if there was one. Call after every insert, and
  * after every change of department.
+ *
+ * @param ?int $mailboxId  the target_mailboxes id the ticket arrived through; null when it did not come by email
  */
 function ticketSensitivityApplyDefaults(PDO $conn, int $ticketId, ?int $mailboxId = null): bool
 {
@@ -132,7 +140,8 @@ function ticketSensitivityApplyDefaults(PDO $conn, int $ticketId, ?int $mailboxI
  * A ticket made from, or combined with, others is confidential if any of them
  * was. Used by split (one source) and merge (several).
  *
- * @param int[] $sourceIds
+ * @param int[] $sourceIds  the ticket(s) it was split or merged from; empty means nothing to inherit
+ * @param string $reason  why, in words, for the audit row if the ticket is raised
  */
 function ticketSensitivityInherit(PDO $conn, int $ticketId, array $sourceIds, string $reason): bool
 {
@@ -199,6 +208,8 @@ const TICKET_AI_CONFIDENTIAL_ERROR = 'This ticket is confidential, so it is not 
  * problems, knowledge gap analysis, Warbot): an SQL condition that leaves the
  * confidential ones out, or '' when the policy allows them or the column does
  * not exist yet. Pass the tickets table's alias.
+ *
+ * @param string $alias  the alias the calling query gives the tickets table
  */
 function ticketAiExclusionSql(PDO $conn, string $alias = 't'): string
 {
@@ -210,6 +221,8 @@ function ticketAiExclusionSql(PDO $conn, string $alias = 't'): string
  * The ticket's subject as an AI may see it: 'Confidential ticket' in place of a
  * confidential one's (under the block policy), so a count or a list stays true
  * while its content stays home. An SQL expression; pass the tickets alias.
+ *
+ * @param string $alias  the alias the calling query gives the tickets table
  */
 function ticketAiSubjectSql(PDO $conn, string $alias = 't'): string
 {
@@ -227,6 +240,8 @@ function ticketAiSubjectSql(PDO $conn, string $alias = 't'): string
  *
  * Never a setting: unlike AI, nobody chooses to post an HR ticket's subject into
  * a team channel, and a chat post cannot be taken back.
+ *
+ * @param array $payload  the workflow event payload; the ticket id is read from ticket.id or ticket_id
  */
 function ticketRedactForOutbound(PDO $conn, array $payload): array
 {
@@ -304,6 +319,8 @@ const TICKET_EMAIL_CONFIDENTIAL_SKIP = 'Not sent: the ticket is confidential, an
 /**
  * The SELECT expression for a ticket's sensitivity that is safe before
  * Database Verification has added the column. Pass the tickets alias.
+ *
+ * @param string $alias  the alias the calling query gives the tickets table
  */
 function ticketSensitivitySelectSql(PDO $conn, string $alias = 't'): string
 {

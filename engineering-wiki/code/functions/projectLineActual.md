@@ -6,12 +6,12 @@ One line's actual and where it came from: [amount|null, 'typed'|'contract'|null,
 function projectLineActual(array $r, string $currency): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 213.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 228.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
-| `$currency` | `string` |  |  |
+| `$r` | `array` |  | a project_budget_lines row, with the linked contract's contract_value and contract_currency |
+| `$currency` | `string` |  | the project's currency code, e.g. 'GBP' |
 
 **Returns:** `array`
 

@@ -14,15 +14,15 @@ function dsyncApplyToExisting(
 ): string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 702.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 766.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
-| `$existing` | `array` |  |  |
-| `$p` | `array` |  |  |
-| `$preview` | `bool` |  |  |
+| `$provider` | `array` |  | the auth_providers row being synced (its ldap_attr_* and sync_* columns) |
+| `$existing` | `array` |  | the person's users row as `dsyncFindExisting()` found it |
+| `$p` | `array` |  | the person as `dsyncMapPerson()` (or the CardDAV mapper) returns it |
+| `$preview` | `bool` |  | true to work out the changes without writing anything |
 
 **Returns:** `string`
 
@@ -32,7 +32,7 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 755 | `dsyncApplyToExisting` | **update** [users](/code/tables/users.md) |  |
+| 819 | `dsyncApplyToExisting` | **update** [users](/code/tables/users.md) |  |
 
 ## Calls
 

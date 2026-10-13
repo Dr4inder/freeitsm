@@ -1,6 +1,6 @@
 # api/system/tika_settings.php
 
-> API endpoint - 126 lines
+> API endpoint - 131 lines
 
 API: read, save and test the Apache Tika connection (discussion #53, tier 2).
 
@@ -25,15 +25,15 @@ more, so there is no secret to encrypt.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [tikaSettingPut()](/code/functions/tikaSettingPut.md) | 24 | Write one system_settings row. |
+| [tikaSettingPut()](/code/functions/tikaSettingPut.md) | 29 | Write one system_settings row. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 26 | `tikaSettingPut` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 92 |  | read [attachment_text](/code/tables/attachment_text.md), read [email_attachments](/code/tables/email_attachments.md) |  |
-| 105 |  | **update** [attachment_text](/code/tables/attachment_text.md) (`status`) |  |
+| 31 | `tikaSettingPut` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 97 |  | read [attachment_text](/code/tables/attachment_text.md), read [email_attachments](/code/tables/email_attachments.md) |  |
+| 110 |  | **update** [attachment_text](/code/tables/attachment_text.md) (`status`) |  |
 
 ## How it hangs together
 

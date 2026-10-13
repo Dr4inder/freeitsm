@@ -14,17 +14,17 @@ function imapWalkStructure(
 ): void
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 206.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 226.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$stream` |  |  |  |
-| `$uid` | `int` |  |  |
-| `$part` |  |  |  |
-| `$partNo` | `string` |  |  |
-| `$html` | `string` |  |  |
-| `$plain` | `string` |  |  |
-| `$attachments` | `array` |  |  |
+| `$stream` |  |  | the open IMAP stream |
+| `$uid` | `int` |  | the message's IMAP UID |
+| `$part` |  |  | one node of the `imap_fetchstructure()` tree (an object) |
+| `$partNo` | `string` |  | the IMAP part number of `$part`, e.g. '1.2'; '' for the top of the message |
+| `$html` | `string` |  | collects the decoded HTML body, by reference |
+| `$plain` | `string` |  | collects the decoded plain-text body, by reference |
+| `$attachments` | `array` |  | collects Graph-shaped fileAttachment arrays, by reference |
 
 **Returns:** `void`
 

@@ -6,13 +6,13 @@ Move an email to a folder via Microsoft Graph API
 function moveEmailToFolder($accessToken, $messageId, $folderName)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 663.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 694.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
-| `$messageId` |  |  |  |
-| `$folderName` |  |  |  |
+| `$accessToken` |  |  | the mailbox's Microsoft Graph access token, from `getValidAccessToken()` |
+| `$messageId` |  |  | the Graph message id to move |
+| `$folderName` |  |  | the destination folder name, or a well-known alias such as 'deleteditems' |
 
 ## Calls
 

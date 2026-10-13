@@ -60,7 +60,7 @@ Never pass HTML in and expect it to survive — pass the text, use the blocks.
 
 ### link
 
-*public static* - line 52
+*public static* - line 57
 
 A link, for use inside `para()`. Returns the inline marker `para()` understands.
 
@@ -70,14 +70,14 @@ function link(string $href, string $text): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$href` | `string` |  |  |
-| `$text` | `string` |  |  |
+| `$href` | `string` |  | the link's URL |
+| `$text` | `string` |  | the link text, plain |
 
 **Called from:** [api/integrations/escalate_ticket.php](/code/files/api/integrations/escalate_ticket.php.md), [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md)
 
 ### heading
 
-*public* - line 58
+*public* - line 67
 
 Adds a heading block; blank text is ignored.
 
@@ -87,11 +87,11 @@ function heading(string $text): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
+| `$text` | `string` |  | the heading, plain text |
 
 ### para
 
-*public* - line 72
+*public* - line 83
 
 A paragraph of inline parts. Each part is either a plain string or the array returned by self::link(). Empty parts are dropped; a paragraph that ends up with nothing in it is not added at all (an empty paragraph is invalid in ADF, and pointless everywhere else).
 
@@ -101,11 +101,11 @@ function para(...$parts): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `...$parts` |  |  |  |
+| `...$parts` |  |  | plain strings and `link()` arrays, in reading order |
 
 ### bullets
 
-*public* - line 98
+*public* - line 109
 
 Adds a bullet list, dropping blank items; nothing is added if every item is blank.
 
@@ -115,11 +115,11 @@ function bullets(array $items): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$items` | `array` |  |  |
+| `$items` | `array` |  | the list items, plain text |
 
 ### code
 
-*public* - line 112
+*public* - line 127
 
 Adds a code block; an empty string is ignored.
 
@@ -129,11 +129,11 @@ function code(string $text): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
+| `$text` | `string` |  | the code, kept verbatim |
 
 ### rule
 
-*public* - line 121
+*public* - line 136
 
 Adds a horizontal rule, unless the document is empty or already ends with one.
 
@@ -143,7 +143,7 @@ function rule(): self
 
 ### isEmpty
 
-*public* - line 132
+*public* - line 147
 
 True when no block has been added.
 
@@ -153,7 +153,7 @@ function isEmpty(): bool
 
 ### blocks
 
-*public* - line 138
+*public* - line 153
 
 The raw block list. For tests and for a connector that needs its own renderer.
 
@@ -163,7 +163,7 @@ function blocks(): array
 
 ### toAdf
 
-*public* - line 153
+*public* - line 168
 
 Atlassian Document Format (Jira Cloud v3). Returns the PHP array — the caller JSON-encodes it, because it is usually one field inside a bigger request body.
 
@@ -176,7 +176,7 @@ function toAdf(): array
 
 ### adfInlines
 
-*private* - line 195
+*private* - line 214
 
 Converts a paragraph's parts to ADF text nodes, giving links a link mark.
 
@@ -186,11 +186,11 @@ function adfInlines(array $inlines): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$inlines` | `array` |  |  |
+| `$inlines` | `array` |  | a paragraph's parts as `para()` stored them - strings and `link()` arrays |
 
 ### toMarkdown
 
-*public* - line 213
+*public* - line 232
 
 GitHub, GitLab.
 
@@ -200,7 +200,7 @@ function toMarkdown(): string
 
 ### toWikiMarkup
 
-*public* - line 248
+*public* - line 267
 
 Jira Data Center / Server (v2 API).
 
@@ -210,7 +210,7 @@ function toWikiMarkup(): string
 
 ### toHtml
 
-*public* - line 283
+*public* - line 302
 
 Azure DevOps (System.Description is HTML).
 
@@ -220,7 +220,7 @@ function toHtml(): string
 
 ### toPlainText
 
-*public* - line 318
+*public* - line 337
 
 Plain text — for the escalate preview, and for logs.
 
@@ -230,7 +230,7 @@ function toPlainText(): string
 
 ### h
 
-*private* - line 353
+*private* - line 376
 
 HTML-escapes text for `toHtml()`.
 
@@ -240,11 +240,11 @@ function h(string $s): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `string` |  |  |
+| `$s` | `string` |  | plain text to escape |
 
 ### mdEscape
 
-*private* - line 363
+*private* - line 388
 
 Markdown: neutralise the characters that would otherwise turn a ticket's text into formatting. A requester writing "use the * wildcard" must not produce italics, and "[see notes]" must not look like a broken link.
 
@@ -254,11 +254,11 @@ function mdEscape(string $s): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `string` |  |  |
+| `$s` | `string` |  | plain text to escape |
 
 ### wikiEscape
 
-*private* - line 369
+*private* - line 398
 
 Jira wiki markup: the same idea, different character set.
 
@@ -268,5 +268,5 @@ function wikiEscape(string $s): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `string` |  |  |
+| `$s` | `string` |  | plain text to escape |
 

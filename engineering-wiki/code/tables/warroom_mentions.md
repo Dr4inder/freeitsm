@@ -15,13 +15,13 @@ Who was named in a message. One row PER RECIPIENT — `@everyone` is expanded at
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md):574 | `warRoomEditMessage` | delete |  |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):605 | `warRoomDeleteMessage` | delete |  |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):779 | `warRoomStoreMentions` | insert | `message_id`, `analyst_id`, `created_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):615 | `warRoomEditMessage` | delete |  |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):649 | `warRoomDeleteMessage` | delete |  |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):842 | `warRoomStoreMentions` | insert | `message_id`, `analyst_id`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomMyMentions L799, warRoomMentionCounts L855 |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomMyMentions L864, warRoomMentionCounts L920 |  |
 

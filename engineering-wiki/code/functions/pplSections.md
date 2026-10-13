@@ -6,12 +6,12 @@ Every section present, in a fixed order.
 function pplSections(array $sections, bool $person): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 243.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 331.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sections` | `array` |  |  |
-| `$person` | `bool` |  |  |
+| `$sections` | `array` |  | the page's sections from includes/people.php, keyed by section |
+| `$person` | `bool` |  | true on a person's page, false on a company page |
 
 **Returns:** `string`
 

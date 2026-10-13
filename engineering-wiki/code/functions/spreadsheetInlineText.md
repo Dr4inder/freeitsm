@@ -6,11 +6,11 @@ The text of an <si> or <is>: plain <t>, or rich-text runs <r><t>. Phonetic runs 
 function spreadsheetInlineText($node): string
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 328.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 358.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$node` |  |  |  |
+| `$node` |  |  | a SimpleXMLElement for an <si> or <is> element, or null |
 
 **Returns:** `string`
 

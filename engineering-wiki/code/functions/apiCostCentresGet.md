@@ -6,7 +6,7 @@ GET /cost-centres/{id}
 function apiCostCentresGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 151.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 161.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

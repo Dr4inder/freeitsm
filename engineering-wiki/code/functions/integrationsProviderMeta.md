@@ -6,11 +6,11 @@ One registry entry, or null if the key is not a provider we ship.
 function integrationsProviderMeta(string $key): ?array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 223.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 230.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the provider key, e.g. 'jira' or 'azuredevops' |
 
 **Returns:** `?array`
 

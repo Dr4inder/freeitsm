@@ -1,6 +1,6 @@
 # includes/public_url.php
 
-> PHP - 166 lines
+> PHP - 172 lines
 
 Where is this installation reachable from, seen from outside?
 
@@ -40,10 +40,10 @@ is a separate job with its own testing.
 | Function | Line | What it does |
 |---|--:|---|
 | [publicBaseUrlSetting()](/code/functions/publicBaseUrlSetting.md) | 50 | The address an administrator has explicitly configured, or '' if none. |
-| [publicUrlWithAppPath()](/code/functions/publicUrlWithAppPath.md) | 90 | Make sure the configured address carries the app's sub-path exactly once. |
-| [publicBaseUrlForget()](/code/functions/publicBaseUrlForget.md) | 109 | Forget the cached root - after the setting is saved, or between test cases. |
-| [publicBaseUrl()](/code/functions/publicBaseUrl.md) | 124 | The root every outbound link should be built on, without a trailing slash. |
-| [publicAbsoluteUrl()](/code/functions/publicAbsoluteUrl.md) | 162 | An absolute URL for an app-relative path, e.g. 'self-service/tickets.php?id=9'. |
+| [publicUrlWithAppPath()](/code/functions/publicUrlWithAppPath.md) | 92 | Make sure the configured address carries the app's sub-path exactly once. |
+| [publicBaseUrlForget()](/code/functions/publicBaseUrlForget.md) | 111 | Forget the cached root - after the setting is saved, or between test cases. |
+| [publicBaseUrl()](/code/functions/publicBaseUrl.md) | 126 | The root every outbound link should be built on, without a trailing slash. |
+| [publicAbsoluteUrl()](/code/functions/publicAbsoluteUrl.md) | 168 | An absolute URL for an app-relative path, e.g. 'self-service/tickets.php?id=9'. |
 
 ## Database
 

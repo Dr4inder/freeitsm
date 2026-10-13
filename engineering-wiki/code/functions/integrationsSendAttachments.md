@@ -16,14 +16,14 @@ function integrationsSendAttachments(
 ): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 753.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 804.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connection` | `array` |  |  |
-| `$link` | `array` |  |  |
-| `$attachments` | `array` |  |  |
+| `$connection` | `array` |  | the connection row as loaded by `integrationsLoadConnection()` |
+| `$link` | `array` |  | the integration_links row for the issue just created (needs external_id) |
+| `$attachments` | `array` |  | the list from `integrationsTicketAttachments()`; entries with a skip_reason are counted, not sent |
 
 **Returns:** array ['sent'=>int, 'failed'=>int, 'skipped'=>int, 'notes'=>string[]]
 

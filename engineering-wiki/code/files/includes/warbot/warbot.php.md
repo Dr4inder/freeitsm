@@ -1,6 +1,6 @@
 # includes/warbot/warbot.php
 
-> PHP - 353 lines
+> PHP - 372 lines
 
 Warbot — the war room's assistant.
 
@@ -31,23 +31,23 @@ obeying that last one — it is the belt to the read-only braces.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [warbotIsAddressed()](/code/functions/warbotIsAddressed.md) | 40 | Does this message address Warbot? Either "@Warbot …" anywhere in it, or a leading slash command. |
-| [warbotCommands()](/code/functions/warbotCommands.md) | 54 | The commands that work with NO internet. |
-| [warbotHelpText()](/code/functions/warbotHelpText.md) | 89 | The one-screen help, GENERATED from the command table. |
-| [warbotTryCommand()](/code/functions/warbotTryCommand.md) | 115 | Run a slash command. Returns null if the text is not one. 🔑 NO MODEL INVOLVED — this is the path that still works during the outage. |
-| [warbotSystemPrompt()](/code/functions/warbotSystemPrompt.md) | 149 | The system prompt. |
-| [warbotAnswer()](/code/functions/warbotAnswer.md) | 194 | Answer a question. Returns the text to post, or null if there is nothing to say. |
-| [warbotLooksLikeStatusNotice()](/code/functions/warbotLooksLikeStatusNotice.md) | 299 | Is this one of Warbot's own "I am degraded" notices? |
-| [warbotNoBrain()](/code/functions/warbotNoBrain.md) | 306 | What Warbot says when the brain is unreachable but the hands still work. |
-| [warbotPost()](/code/functions/warbotPost.md) | 321 | Post Warbot's reply into a channel. |
-| [warbotAlreadyAnswered()](/code/functions/warbotAlreadyAnswered.md) | 347 | Has Warbot already answered this message? |
+| [warbotIsAddressed()](/code/functions/warbotIsAddressed.md) | 42 | Does this message address Warbot? Either "@Warbot …" anywhere in it, or a leading slash command. |
+| [warbotCommands()](/code/functions/warbotCommands.md) | 56 | The commands that work with NO internet. |
+| [warbotHelpText()](/code/functions/warbotHelpText.md) | 91 | The one-screen help, GENERATED from the command table. |
+| [warbotTryCommand()](/code/functions/warbotTryCommand.md) | 119 | Run a slash command. Returns null if the text is not one. 🔑 NO MODEL INVOLVED — this is the path that still works during the outage. |
+| [warbotSystemPrompt()](/code/functions/warbotSystemPrompt.md) | 155 | The system prompt. |
+| [warbotAnswer()](/code/functions/warbotAnswer.md) | 201 | Answer a question. Returns the text to post, or null if there is nothing to say. |
+| [warbotLooksLikeStatusNotice()](/code/functions/warbotLooksLikeStatusNotice.md) | 308 | Is this one of Warbot's own "I am degraded" notices? |
+| [warbotNoBrain()](/code/functions/warbotNoBrain.md) | 319 | What Warbot says when the brain is unreachable but the hands still work. |
+| [warbotPost()](/code/functions/warbotPost.md) | 338 | Post Warbot's reply into a channel. |
+| [warbotAlreadyAnswered()](/code/functions/warbotAlreadyAnswered.md) | 366 | Has Warbot already answered this message? |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 328 | `warbotPost` | **insert** [warroom_messages](/code/tables/warroom_messages.md) (`channel_id`, `analyst_id`, `body`, `is_bot`, `reply_to_id`, `created_datetime`) |  |
-| 349 | `warbotAlreadyAnswered` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 345 | `warbotPost` | **insert** [warroom_messages](/code/tables/warroom_messages.md) (`channel_id`, `analyst_id`, `body`, `is_bot`, `reply_to_id`, `created_datetime`) |  |
+| 368 | `warbotAlreadyAnswered` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
 
 ## How it hangs together
 

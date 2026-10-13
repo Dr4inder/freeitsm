@@ -6,13 +6,13 @@ One view, if this analyst may see it.
 function tableViewLoad(PDO $conn, int $analystId, int $viewId): array
 ```
 
-Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 115.
+Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 124.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$viewId` | `int` |  |  |
+| `$viewId` | `int` |  | the view (table_views.id) to load |
 
 **Returns:** `array`
 

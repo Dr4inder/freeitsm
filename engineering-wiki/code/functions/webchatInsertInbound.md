@@ -13,16 +13,16 @@ function webchatInsertInbound(
 ): int
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 230.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 265.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$conversation` | `array` |  |  |
-| `$channel` | `array` |  |  |
-| `$body` | `string` |  |  |
-| `$isInitial` | `bool` |  |  |
+| `$conversation` | `array` |  | the webchat_conversations row (visitor details and token) |
+| `$channel` | `array` |  | the widget/channel row (id and name) |
+| `$body` | `string` |  | the visitor's message as plain text; blank is stored as '[empty message]' |
+| `$isInitial` | `bool` |  | true for the ticket's opening message, which also gets the subject |
 
 **Returns:** `int`
 
@@ -30,8 +30,8 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 245 | `webchatInsertInbound` | **insert** [emails](/code/tables/emails.md) (`exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `processed_datetime`, `ticket_id`) |  |
-| 265 | `webchatInsertInbound` | **update** [messaging_channels](/code/tables/messaging_channels.md) (`last_inbound_datetime`) |  |
+| 280 | `webchatInsertInbound` | **insert** [emails](/code/tables/emails.md) (`exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `processed_datetime`, `ticket_id`) |  |
+| 300 | `webchatInsertInbound` | **update** [messaging_channels](/code/tables/messaging_channels.md) (`last_inbound_datetime`) |  |
 
 ## Calls
 

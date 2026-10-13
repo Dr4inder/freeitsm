@@ -89,7 +89,11 @@ try {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 
-/** Validate credentials with the provider (read-only). */
+/**
+ * Validate credentials with the provider (read-only).
+ *
+ * @param array $channel  the messaging_channels row as loaded by loadMessagingChannel()
+ */
 function testCredentials(array $channel): array
 {
     try {
@@ -100,7 +104,11 @@ function testCredentials(array $channel): array
     }
 }
 
-/** Confirm the channel's own public webhook URL is reachable from the internet. */
+/**
+ * Confirm the channel's own public webhook URL is reachable from the internet.
+ *
+ * @param int $channelId  the messaging_channels id whose webhook URL is probed
+ */
 function testReachability(PDO $conn, int $channelId): array
 {
     $url  = messagingWebhookUrl($conn, $channelId);
@@ -144,7 +152,11 @@ function testReachability(PDO $conn, int $channelId): array
     return ['ok' => false, 'detail' => "Reached $host but got HTTP $code with an unexpected response — a proxy, firewall or login page may be intercepting the URL before it reaches FreeITSM."];
 }
 
-/** Run a synthetic inbound message through ingest, then clean up everything it created. */
+/**
+ * Run a synthetic inbound message through ingest, then clean up everything it created.
+ *
+ * @param array $channel  the messaging_channels row as loaded by loadMessagingChannel()
+ */
 function testSimulation(PDO $conn, array $channel): array
 {
     $channelType = $channel['channel_type'] ?? 'whatsapp';
@@ -198,7 +210,14 @@ function testSimulation(PDO $conn, array $channel): array
     }
 }
 
-/** Remove everything a simulation created (ticket, its messages, the placeholder user) and restore the channel stamp. */
+/**
+ * Remove everything a simulation created (ticket, its messages, the placeholder user) and restore the channel stamp.
+ *
+ * @param string $sender  the fake sender the simulation used (a phone number or Telegram chat id)
+ * @param string $channelType  the channel type, e.g. 'whatsapp' or 'telegram' - picks how $sender is normalised
+ * @param int $channelId  the messaging_channels id whose last-inbound stamp is restored
+ * @param mixed $prevStamp  the channel's last_inbound_datetime before the test; empty restores NULL
+ */
 function simCleanup(PDO $conn, ?int $ticketId, string $sender, string $channelType, int $channelId, $prevStamp): void
 {
     try {

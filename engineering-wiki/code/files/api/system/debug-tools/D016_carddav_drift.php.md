@@ -1,6 +1,6 @@
 # api/system/debug-tools/D016_carddav_drift.php
 
-> API endpoint - 249 lines
+> API endpoint - 259 lines
 
 Debug Tool D016 — Where do FreeITSM and the address book disagree?
 
@@ -36,16 +36,16 @@ Output: plain text, section-delimited with === HEADERS ===.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 59 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 67 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
-| [shownVal()](/code/functions/shownVal.md) | 72 | Show a value, or say plainly that there isn't one. Never a bare blank. |
+| [addSection()](/code/functions/addSection.md) | 63 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 73 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [shownVal()](/code/functions/shownVal.md) | 82 | Show a value, or say plainly that there isn't one. Never a bare blank. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 79 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 133 |  | read [users](/code/tables/users.md), read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 89 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 143 |  | read [users](/code/tables/users.md), read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
 
 ## How it hangs together
 

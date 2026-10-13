@@ -6,12 +6,12 @@ True when the LMS may read `$articleId`'s body. Fails CLOSED: no row, wrong comp
 function lmsCanUseArticle(PDO $conn, int $articleId): bool
 ```
 
-Defined in [includes/lms/knowledge_source.php](/code/files/includes/lms/knowledge_source.php.md), line 52.
+Defined in [includes/lms/knowledge_source.php](/code/files/includes/lms/knowledge_source.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$articleId` | `int` |  |  |
+| `$articleId` | `int` |  | the knowledge article id; only a published, unarchived, shared one passes |
 
 **Returns:** `bool`
 
@@ -19,7 +19,7 @@ Defined in [includes/lms/knowledge_source.php](/code/files/includes/lms/knowledg
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 56 | `lmsCanUseArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 58 | `lmsCanUseArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

@@ -48,13 +48,22 @@ class IssueDoc
 
     // ---------------------------------------------------------------- building
 
-    /** A link, for use inside para(). Returns the inline marker para() understands. */
+    /**
+     * A link, for use inside para(). Returns the inline marker para() understands.
+     *
+     * @param string $href  the link's URL
+     * @param string $text  the link text, plain
+     */
     public static function link(string $href, string $text): array
     {
         return ['_link' => true, 'href' => $href, 'text' => $text];
     }
 
-    /** Adds a heading block; blank text is ignored. */
+    /**
+     * Adds a heading block; blank text is ignored.
+     *
+     * @param string $text  the heading, plain text
+     */
     public function heading(string $text): self
     {
         if (trim($text) !== '') {
@@ -68,6 +77,8 @@ class IssueDoc
      * array returned by self::link(). Empty parts are dropped; a paragraph that
      * ends up with nothing in it is not added at all (an empty paragraph is
      * invalid in ADF, and pointless everywhere else).
+      *
+      * @param mixed ...$parts  plain strings and link() arrays, in reading order
      */
     public function para(...$parts): self
     {
@@ -93,7 +104,7 @@ class IssueDoc
     /**
      * Adds a bullet list, dropping blank items; nothing is added if every item is blank.
      *
-     * @param string[] $items
+     * @param string[] $items  the list items, plain text
      */
     public function bullets(array $items): self
     {
@@ -108,7 +119,11 @@ class IssueDoc
         return $this;
     }
 
-    /** Adds a code block; an empty string is ignored. */
+    /**
+     * Adds a code block; an empty string is ignored.
+     *
+     * @param string $text  the code, kept verbatim
+     */
     public function code(string $text): self
     {
         if ($text !== '') {
@@ -191,7 +206,11 @@ class IssueDoc
         return ['type' => 'doc', 'version' => 1, 'content' => $content];
     }
 
-    /** Converts a paragraph's parts to ADF text nodes, giving links a link mark. */
+    /**
+     * Converts a paragraph's parts to ADF text nodes, giving links a link mark.
+     *
+     * @param array $inlines  a paragraph's parts as para() stored them - strings and link() arrays
+     */
     private function adfInlines(array $inlines): array
     {
         $out = [];
@@ -349,7 +368,11 @@ class IssueDoc
 
     // ---------------------------------------------------------------- escaping
 
-    /** HTML-escapes text for toHtml(). */
+    /**
+     * HTML-escapes text for toHtml().
+     *
+     * @param string $s  plain text to escape
+     */
     private function h(string $s): string
     {
         return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
@@ -359,13 +382,19 @@ class IssueDoc
      * Markdown: neutralise the characters that would otherwise turn a ticket's
      * text into formatting. A requester writing "use the * wildcard" must not
      * produce italics, and "[see notes]" must not look like a broken link.
+      *
+      * @param string $s  plain text to escape
      */
     private function mdEscape(string $s): string
     {
         return preg_replace('/([\\\\`*_\[\]()#+\-!>|~])/', '\\\\$1', $s);
     }
 
-    /** Jira wiki markup: the same idea, different character set. */
+    /**
+     * Jira wiki markup: the same idea, different character set.
+     *
+     * @param string $s  plain text to escape
+     */
     private function wikiEscape(string $s): string
     {
         return preg_replace('/([\[\]{}*_+\-|!^~?])/', '\\\\$1', $s);

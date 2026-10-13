@@ -6,7 +6,7 @@ The Health tab's thresholds, as numbers.
 function projectHealthConfig(PDO $conn): array
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 171.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 182.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

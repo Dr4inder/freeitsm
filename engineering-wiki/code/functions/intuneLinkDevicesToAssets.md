@@ -26,12 +26,12 @@ hostname, with the placeholder-serial list and the laptop-refresh rule.
 function intuneLinkDevicesToAssets(PDO $conn, ?int $companyId = null): array
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 278.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 290.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$companyId` | `?int` | `null` |  |
+| `$companyId` | `?int` | `null` | the company new stubs go in and unlinked devices may match within; null uses the Intune setting |
 
 **Returns:** `array`
 
@@ -39,10 +39,10 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 278.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 303 | `intuneLinkDevicesToAssets` | read [intune_devices](/code/tables/intune_devices.md), read [assets](/code/tables/assets.md) |  |
-| 315 | `intuneLinkDevicesToAssets` | read [intune_devices](/code/tables/intune_devices.md) |  |
-| 323 | `intuneLinkDevicesToAssets` | **update** [intune_devices](/code/tables/intune_devices.md) (`asset_id`) |  |
-| 348 | `intuneLinkDevicesToAssets` | read [intune_devices](/code/tables/intune_devices.md) |  |
+| 315 | `intuneLinkDevicesToAssets` | read [intune_devices](/code/tables/intune_devices.md), read [assets](/code/tables/assets.md) |  |
+| 327 | `intuneLinkDevicesToAssets` | read [intune_devices](/code/tables/intune_devices.md) |  |
+| 335 | `intuneLinkDevicesToAssets` | **update** [intune_devices](/code/tables/intune_devices.md) (`asset_id`) |  |
+| 360 | `intuneLinkDevicesToAssets` | read [intune_devices](/code/tables/intune_devices.md) |  |
 
 ## Calls
 

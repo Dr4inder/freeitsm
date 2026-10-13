@@ -1,6 +1,6 @@
 # api/messaging/test_channel.php
 
-> API endpoint - 228 lines
+> API endpoint - 247 lines
 
 API Endpoint: test a messaging channel. Three read-mostly checks, each safe to run:
 
@@ -25,23 +25,23 @@ No real WhatsApp message is ever sent.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [testCredentials()](/code/functions/testCredentials.md) | 93 | Validate credentials with the provider (read-only). |
-| [testReachability()](/code/functions/testReachability.md) | 104 | Confirm the channel's own public webhook URL is reachable from the internet. |
-| [testSimulation()](/code/functions/testSimulation.md) | 148 | Run a synthetic inbound message through ingest, then clean up everything it created. |
-| [simCleanup()](/code/functions/simCleanup.md) | 202 | Remove everything a simulation created (ticket, its messages, the placeholder user) and restore the channel stamp. |
+| [testCredentials()](/code/functions/testCredentials.md) | 97 | Validate credentials with the provider (read-only). |
+| [testReachability()](/code/functions/testReachability.md) | 112 | Confirm the channel's own public webhook URL is reachable from the internet. |
+| [testSimulation()](/code/functions/testSimulation.md) | 160 | Run a synthetic inbound message through ingest, then clean up everything it created. |
+| [simCleanup()](/code/functions/simCleanup.md) | 221 | Remove everything a simulation created (ticket, its messages, the placeholder user) and restore the channel stamp. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 164 | `testSimulation` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
-| 191 | `testSimulation` | read [tickets](/code/tables/tickets.md) |  |
-| 206 | `simCleanup` | **delete** [emails](/code/tables/emails.md) |  |
-| 207 | `simCleanup` | **delete** [tickets](/code/tables/tickets.md) |  |
-| 213 | `simCleanup` | read [users](/code/tables/users.md) |  |
-| 217 | `simCleanup` | read [tickets](/code/tables/tickets.md) |  |
-| 220 | `simCleanup` | **delete** [users](/code/tables/users.md) |  |
-| 224 | `simCleanup` | **update** [messaging_channels](/code/tables/messaging_channels.md) (`last_inbound_datetime`) |  |
+| 176 | `testSimulation` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 203 | `testSimulation` | read [tickets](/code/tables/tickets.md) |  |
+| 225 | `simCleanup` | **delete** [emails](/code/tables/emails.md) |  |
+| 226 | `simCleanup` | **delete** [tickets](/code/tables/tickets.md) |  |
+| 232 | `simCleanup` | read [users](/code/tables/users.md) |  |
+| 236 | `simCleanup` | read [tickets](/code/tables/tickets.md) |  |
+| 239 | `simCleanup` | **delete** [users](/code/tables/users.md) |  |
+| 243 | `simCleanup` | **update** [messaging_channels](/code/tables/messaging_channels.md) (`last_inbound_datetime`) |  |
 
 ## How it hangs together
 

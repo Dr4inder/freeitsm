@@ -1,6 +1,6 @@
 # includes/projects/capacity.php
 
-> PHP - 252 lines
+> PHP - 264 lines
 
 Projects - capacity (3.3.0): who is over-committed in the weeks ahead, once project work and service-desk duty are put side by side.
 
@@ -42,22 +42,22 @@ work that nobody has picked up.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [projectCapacityWorkdays()](/code/functions/projectCapacityWorkdays.md) | 47 | The working days from `$from` to `$to` inclusive, as Y-m-d. `$days`: ISO weekdays (1 = Monday), Monday to Friday by default. |
-| [projectCapacityShiftHours()](/code/functions/projectCapacityShiftHours.md) | 57 | Length of a rota shift in hours; a shift that ends at or before it starts runs past midnight. |
-| [projectCapacity()](/code/functions/projectCapacity.md) | 71 | The capacity view: each analyst's project hours and rota desk hours, week by week for the next `$weeks` weeks, plus open tickets and work given to contractors. |
+| [projectCapacityWorkdays()](/code/functions/projectCapacityWorkdays.md) | 53 | The working days from `$from` to `$to` inclusive, as Y-m-d. `$days`: ISO weekdays (1 = Monday), Monday to Friday by default. |
+| [projectCapacityShiftHours()](/code/functions/projectCapacityShiftHours.md) | 68 | Length of a rota shift in hours; a shift that ends at or before it starts runs past midnight. |
+| [projectCapacity()](/code/functions/projectCapacity.md) | 83 | The capacity view: each analyst's project hours and rota desk hours, week by week for the next `$weeks` weeks, plus open tickets and work given to contractors. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 101 | `projectCapacity` | read [projects](/code/tables/projects.md) |  |
-| 110 | `projectCapacity` | read [projects](/code/tables/projects.md) |  |
-| 124 | `projectCapacity` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 128 | `projectCapacity` | read [suppliers](/code/tables/suppliers.md) |  |
-| 143 | `projectCapacity` | read [project_members](/code/tables/project_members.md) |  |
-| 201 | `projectCapacity` | read [analysts](/code/tables/analysts.md) |  |
-| 209 | `projectCapacity` | read [ticket_rota_entries](/code/tables/ticket_rota_entries.md), read [ticket_rota_shifts](/code/tables/ticket_rota_shifts.md) |  |
-| 219 | `projectCapacity` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 113 | `projectCapacity` | read [projects](/code/tables/projects.md) |  |
+| 122 | `projectCapacity` | read [projects](/code/tables/projects.md) |  |
+| 136 | `projectCapacity` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 140 | `projectCapacity` | read [suppliers](/code/tables/suppliers.md) |  |
+| 155 | `projectCapacity` | read [project_members](/code/tables/project_members.md) |  |
+| 213 | `projectCapacity` | read [analysts](/code/tables/analysts.md) |  |
+| 221 | `projectCapacity` | read [ticket_rota_entries](/code/tables/ticket_rota_entries.md), read [ticket_rota_shifts](/code/tables/ticket_rota_shifts.md) |  |
+| 231 | `projectCapacity` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## How it hangs together
 

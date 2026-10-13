@@ -12,13 +12,13 @@ tickets.
 function searchCorpusQuery(PDO $conn, string $rawQuery, array $scope, array $opts = []): array
 ```
 
-Defined in [includes/search/search.php](/code/files/includes/search/search.php.md), line 247.
+Defined in [includes/search/search.php](/code/files/includes/search/search.php.md), line 255.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rawQuery` | `string` |  |  |
-| `$scope` | `array` |  |  |
+| `$rawQuery` | `string` |  | the search text as the user typed it - untrusted |
+| `$scope` | `array` |  | the scope structure built by `searchScopeForAnalyst()` |
 | `$opts` | `array` | `[]` | limit, offset, title_only, snippet_chars |
 
 **Returns:** array{total:int,results:array,query:array,ok:bool,reason:?string}
@@ -27,11 +27,11 @@ Defined in [includes/search/search.php](/code/files/includes/search/search.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 271 | `searchCorpusQuery` | read [tickets](/code/tables/tickets.md) |  |
-| 278 | `searchCorpusQuery` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 286 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
-| 293 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
-| 308 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
+| 279 | `searchCorpusQuery` | read [tickets](/code/tables/tickets.md) |  |
+| 286 | `searchCorpusQuery` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 294 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
+| 301 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
+| 316 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
 
 ## Calls
 

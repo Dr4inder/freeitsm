@@ -6,11 +6,11 @@ A sitting row as the analyst pages see it - never the token hash.
 function ctSittingRow(array $s): array
 ```
 
-Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 38.
+Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 51.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
+| `$s` | `array` |  | an lms_ct_sittings row, ideally with test_title joined in (as `ctLoadSitting()` loads it) |
 
 **Returns:** `array`
 

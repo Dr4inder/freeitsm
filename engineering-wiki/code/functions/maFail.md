@@ -6,11 +6,11 @@ Refuse, in the one shape every refusal takes here.
 function maFail(string $error): void
 ```
 
-Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md), line 39.
+Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md), line 43.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$error` | `string` |  |  |
+| `$error` | `string` |  | the error shown to the analyst |
 
 **Returns:** `void`
 

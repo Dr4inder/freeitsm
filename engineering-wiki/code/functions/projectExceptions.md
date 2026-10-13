@@ -6,12 +6,12 @@ A project's tolerance breaches - PRINCE2-style "manage by exception". Only for a
 function projectExceptions(array $p, array $stats): array
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 213.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 227.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `array` |  |  |
-| `$stats` | `array` |  |  |
+| `$p` | `array` |  | the projects row with `projectExceptionColumns()` added (tol_time, tol_risk, tol_cost, max_risk, active_stage_end) |
+| `$stats` | `array` |  | the project's counts from `projectTaskStats()`, budget included |
 
 **Returns:** `array`
 

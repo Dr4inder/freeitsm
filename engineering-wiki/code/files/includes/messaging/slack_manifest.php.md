@@ -1,6 +1,6 @@
 # includes/messaging/slack_manifest.php
 
-> PHP - 142 lines
+> PHP - 146 lines
 
 The Slack app manifest for THIS install.
 
@@ -28,8 +28,8 @@ offers the manifest second.
 |---|--:|---|
 | [slackManifestScopes()](/code/functions/slackManifestScopes.md) | 34 | The scopes we ask for, and — just as importantly — why. |
 | [slackBuildManifest()](/code/functions/slackBuildManifest.md) | 53 | Build the manifest for one channel row. |
-| [slackManifestJson()](/code/functions/slackManifestJson.md) | 104 | The manifest as the JSON string a person pastes into Slack. Pretty-printed because a human reads it before pasting, and unescaped slashes because an escaped URL (https:\/\/…) looks broken and invites "fixing". |
-| [slackWebhookUrlProblem()](/code/functions/slackWebhookUrlProblem.md) | 122 | Is this install's public URL usable as a Slack request URL? |
+| [slackManifestJson()](/code/functions/slackManifestJson.md) | 107 | The manifest as the JSON string a person pastes into Slack. Pretty-printed because a human reads it before pasting, and unescaped slashes because an escaped URL (https:\/\/…) looks broken and invites "fixing". |
+| [slackWebhookUrlProblem()](/code/functions/slackWebhookUrlProblem.md) | 126 | Is this install's public URL usable as a Slack request URL? |
 
 ## How it hangs together
 

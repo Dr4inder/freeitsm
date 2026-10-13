@@ -6,13 +6,13 @@ Emit a success response and stop. `$meta` (pagination etc.) is optional.
 function apiRespond($data, int $status = 200, ?array $meta = null): void
 ```
 
-Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 13.
+Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 19.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$data` |  |  |  |
-| `$status` | `int` | `200` |  |
-| `$meta` | `?array` | `null` |  |
+| `$data` |  |  | the payload, sent as the body's "data" member (any JSON-encodable value) |
+| `$status` | `int` | `200` | HTTP status code, 200 by default |
+| `$meta` | `?array` | `null` | extra "meta" member such as pagination totals; null leaves it out |
 
 **Returns:** `void`
 

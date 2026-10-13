@@ -10,7 +10,7 @@ Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categori
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rows` | `array` |  |  |
+| `$rows` | `array` |  | ticket_categories rows keyed by id (id, parent_id, name, display_order) |
 
 **Returns:** array<int,array>
 

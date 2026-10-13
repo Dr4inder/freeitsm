@@ -6,7 +6,7 @@ One project's benefits with their measurements, state and progress - for its Ben
 function projectBenefits(PDO $conn, int $projectId): array
 ```
 
-Defined in [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md), line 69.
+Defined in [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/projects/benefits.php](/code/files/includes/projects/benefi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 72 | `projectBenefits` | read [project_benefits](/code/tables/project_benefits.md), read [analysts](/code/tables/analysts.md) |  |
-| 79 | `projectBenefits` | read [project_benefit_measures](/code/tables/project_benefit_measures.md), read [analysts](/code/tables/analysts.md) |  |
+| 78 | `projectBenefits` | read [project_benefits](/code/tables/project_benefits.md), read [analysts](/code/tables/analysts.md) |  |
+| 85 | `projectBenefits` | read [project_benefit_measures](/code/tables/project_benefit_measures.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

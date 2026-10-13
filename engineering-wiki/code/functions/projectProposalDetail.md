@@ -6,12 +6,12 @@ The proposal panel on a project's page; null when it never needed approval.
 function projectProposalDetail(PDO $conn, array $project, int $analystId): ?array
 ```
 
-Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 92.
+Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row - only its id is read |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?array`
@@ -20,7 +20,7 @@ Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 95 | `projectProposalDetail` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md) |  |
+| 108 | `projectProposalDetail` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md) |  |
 
 ## Calls
 

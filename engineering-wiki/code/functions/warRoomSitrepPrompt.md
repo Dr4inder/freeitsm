@@ -14,12 +14,12 @@ name.
 function warRoomSitrepPrompt(array $lines, string $sinceLabel): string
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1331.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1421.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
-| `$sinceLabel` | `string` |  |  |
+| `$lines` | `array` |  | the transcript lines from `warRoomTranscriptSince()` |
+| `$sinceLabel` | `string` |  | how far back the transcript goes, in words, e.g. '30 minutes ago' |
 
 **Returns:** `string`
 

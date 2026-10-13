@@ -67,7 +67,7 @@ function reset(): void
 
 ### levelKey
 
-*public static* - line 61
+*public static* - line 65
 
 The short key for a permission level ('view', 'download', 'upload', 'modify', 'full'), or 'none'.
 
@@ -77,13 +77,13 @@ function levelKey(int $level): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$level` | `int` |  |  |
+| `$level` | `int` |  | a level 0-5 (FilesAcl::NONE to FilesAcl::FULL); anything else gives 'none' |
 
 **Called from:** [api/files/download.php](/code/files/api/files/download.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md)
 
 ### tree
 
-*public static* - line 74
+*public static* - line 78
 
 Every live (not deleted) folder, keyed by id.
 
@@ -99,13 +99,13 @@ function tree(PDO $conn): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 78 | `FilesAcl::tree` | read [files_folders](/code/tables/files_folders.md) |  |
+| 82 | `FilesAcl::tree` | read [files_folders](/code/tables/files_folders.md) |  |
 
 **Called from:** [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/list.php](/code/files/api/files/list.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [api/files/search.php](/code/files/api/files/search.php.md), [api/files/settings.php](/code/files/api/files/settings.php.md), [api/files/shortcut.php](/code/files/api/files/shortcut.php.md), [api/files/transfer.php](/code/files/api/files/transfer.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md)
 
 ### teamIds
 
-*public static* - line 111
+*public static* - line 115
 
 The teams an analyst is in (active teams only).
 
@@ -122,11 +122,11 @@ function teamIds(PDO $conn, int $analystId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `FilesAcl::teamIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 117 | `FilesAcl::teamIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
 
 ### levels
 
-*public static* - line 124
+*public static* - line 128
 
 This analyst's level on every folder they can see at all: [folderId => level]. A folder missing from the result is invisible to them.
 
@@ -143,13 +143,13 @@ function levels(PDO $conn, int $analystId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 132 | `FilesAcl::levels` | read [files_permissions](/code/tables/files_permissions.md) |  |
+| 136 | `FilesAcl::levels` | read [files_permissions](/code/tables/files_permissions.md) |  |
 
 **Called from:** [api/files/list.php](/code/files/api/files/list.php.md), [api/files/recent.php](/code/files/api/files/recent.php.md), [api/files/search.php](/code/files/api/files/search.php.md), [api/files/settings.php](/code/files/api/files/settings.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md)
 
 ### level
 
-*public static* - line 170
+*public static* - line 178
 
 The analyst's effective level on one folder - 0 when they have no grant there.
 
@@ -161,13 +161,13 @@ function level(PDO $conn, int $analystId, int $folderId): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `int` |  |  |
+| `$folderId` | `int` |  | the files_folders id; a deleted or unknown folder gives 0 |
 
 **Called from:** [api/files/download.php](/code/files/api/files/download.php.md), [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [api/files/properties.php](/code/files/api/files/properties.php.md), [api/files/transfer.php](/code/files/api/files/transfer.php.md), [api/files/view.php](/code/files/api/files/view.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md)
 
 ### can
 
-*public static* - line 176
+*public static* - line 189
 
 True when the analyst's level on the folder is at least `$need` (levels are cumulative).
 
@@ -179,12 +179,12 @@ function can(PDO $conn, int $analystId, int $folderId, int $need): bool
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `int` |  |  |
-| `$need` | `int` |  |  |
+| `$folderId` | `int` |  | the files_folders id; a deleted or unknown folder never passes |
+| `$need` | `int` |  | the lowest level that will do, one of FilesAcl::VIEW to FilesAcl::FULL |
 
 ### entries
 
-*public static* - line 186
+*public static* - line 201
 
 Every entry that applies to a folder, for the Permissions window: its own rows, then (while inheriting) each ancestor's, marked with where they came from. Names are resolved here so the window needs nothing else.
 
@@ -195,19 +195,19 @@ function entries(PDO $conn, int $folderId): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `int` |  |  |
+| `$folderId` | `int` |  | the files_folders id; a deleted or unknown folder gives an empty list |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 201 | `FilesAcl::entries` | read [files_permissions](/code/tables/files_permissions.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
+| 216 | `FilesAcl::entries` | read [files_permissions](/code/tables/files_permissions.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
 
 **Called from:** [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md)
 
 ### watermark
 
-*public static* - line 236
+*public static* - line 253
 
 Is the viewer watermark on for files in this folder? The nearest folder that says on or off decides; NULL means "as the parent", and nothing set anywhere means off. Follows the folder tree, NOT permission inheritance - a folder that stops inheriting permissions still sits inside its parent.
 
@@ -218,13 +218,13 @@ function watermark(PDO $conn, int $folderId): bool
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `int` |  |  |
+| `$folderId` | `int` |  | the files_folders id of the folder holding the file; unknown gives false |
 
 **Called from:** [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [api/files/view.php](/code/files/api/files/view.php.md)
 
 ### path
 
-*public static* - line 249
+*public static* - line 270
 
 "Finance / Invoices / 2026" - for audit rows, tooltips and the address bar.
 
@@ -235,13 +235,13 @@ function path(PDO $conn, ?int $folderId): string
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `?int` |  |  |
+| `$folderId` | `?int` |  | the files_folders id; null (the top level) or a deleted folder gives '' |
 
 **Called from:** [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/list.php](/code/files/api/files/list.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [api/files/properties.php](/code/files/api/files/properties.php.md), [api/files/recent.php](/code/files/api/files/recent.php.md), [api/files/search.php](/code/files/api/files/search.php.md), [api/files/settings.php](/code/files/api/files/settings.php.md), [api/files/shortcut.php](/code/files/api/files/shortcut.php.md), [api/files/transfer.php](/code/files/api/files/transfer.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), [includes/files/audit.php](/code/files/includes/files/audit.php.md)
 
 ### descendants
 
-*public static* - line 264
+*public static* - line 289
 
 Ids of a folder and everything beneath it (live folders only).
 
@@ -252,7 +252,7 @@ function descendants(PDO $conn, int $folderId): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `int` |  |  |
+| `$folderId` | `int` |  | the files_folders id at the top; it is always in the result, even if unknown |
 
 **Called from:** [api/files/properties.php](/code/files/api/files/properties.php.md), [api/files/transfer.php](/code/files/api/files/transfer.php.md)
 

@@ -6,12 +6,12 @@ Sends an HTTP status (200 by default) and {success: false, error} as JSON, then 
 function paFail(string $message, int $status = 200): void
 ```
 
-Defined in [api/system/photo_album.php](/code/files/api/system/photo_album.php.md), line 36.
+Defined in [api/system/photo_album.php](/code/files/api/system/photo_album.php.md), line 41.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$message` | `string` |  |  |
-| `$status` | `int` | `200` |  |
+| `$message` | `string` |  | the error shown to the user |
+| `$status` | `int` | `200` | the HTTP status to send |
 
 **Returns:** `void`
 

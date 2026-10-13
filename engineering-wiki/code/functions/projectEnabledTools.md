@@ -6,11 +6,11 @@ The tools switched on for one project: its method's defaults, then its tailoring
 function projectEnabledTools(array $project): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 89.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 97.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row - methodology and tailoring (JSON) are read |
 
 **Returns:** `array`
 

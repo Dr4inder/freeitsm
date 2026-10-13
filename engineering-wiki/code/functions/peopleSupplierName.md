@@ -6,11 +6,11 @@ The name to show for a supplier: trading name, else legal name, else #id.
 function peopleSupplierName(array $r): string
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 590.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 637.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | a suppliers row - trading_name, legal_name and id are read |
 
 **Returns:** `string`
 

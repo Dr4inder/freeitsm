@@ -27,9 +27,9 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/software.php](/code/files/includes/services/software.php.md):48 | `SoftwareService::saveLicence` | update | `app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date` |  |
-| [includes/services/software.php](/code/files/includes/services/software.php.md):64 | `SoftwareService::saveLicence` | insert | `app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date` |  |
-| [includes/services/software.php](/code/files/includes/services/software.php.md):84 | `SoftwareService::deleteLicence` | delete |  |  |
+| [includes/services/software.php](/code/files/includes/services/software.php.md):51 | `SoftwareService::saveLicence` | update | `app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date` |  |
+| [includes/services/software.php](/code/files/includes/services/software.php.md):67 | `SoftwareService::saveLicence` | insert | `app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date` |  |
+| [includes/services/software.php](/code/files/includes/services/software.php.md):91 | `SoftwareService::deleteLicence` | delete |  |  |
 
 ## Read by
 
@@ -38,9 +38,9 @@
 | [api/software/delete_app.php](/code/files/api/software/delete_app.php.md) | L47 |  |
 | [api/software/get_apps.php](/code/files/api/software/get_apps.php.md) | L46 |  |
 | [api/software/get_licences.php](/code/files/api/software/get_licences.php.md) | L21 |  |
-| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareAppsList L88, apiSoftwareAppsGet L145, apiSoftwareLicenceSelect L221, apiSoftwareLicencesList L335 |  |
-| [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md) | rpSoftwareKpis L70, rpSoftwareLicences L89 |  |
-| [includes/services/software.php](/code/files/includes/services/software.php.md) | SoftwareService::loadLicenceRow L121 |  |
+| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareAppsList L88, apiSoftwareAppsGet L153, apiSoftwareLicenceSelect L229, apiSoftwareLicencesList L349 |  |
+| [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md) | rpSoftwareKpis L91, rpSoftwareLicences L114 |  |
+| [includes/services/software.php](/code/files/includes/services/software.php.md) | SoftwareService::loadLicenceRow L132 |  |
 | [includes/software_licence_calendar.php](/code/files/includes/software_licence_calendar.php.md) | syncSoftwareLicenceCalendar L72 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L534, getWatchtowerData L538, getWatchtowerData L544, getWatchtowerData L556 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L537, getWatchtowerData L541, getWatchtowerData L547, getWatchtowerData L559 |  |
 

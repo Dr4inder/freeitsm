@@ -45,21 +45,33 @@ function leaseReady(PDO $conn): bool
     catch (Throwable $e) { return $ok = false; }
 }
 
-/** " AND (...)" - leases in any company this analyst can reach. For links, the asset panel, documents. */
+/**
+ * " AND (...)" - leases in any company this analyst can reach. For links, the asset panel, documents.
+ *
+ * @param string $l  the leases table's alias in the calling query
+ */
 function leaseVisibilitySql(PDO $conn, int $analystId, string $l = 'l'): array
 {
     if (!isMultiTenant($conn)) return ['', []];
     return allAccessibleTenantsFilter($conn, $analystId, "$l.tenant_id");
 }
 
-/** The Leases list and Due back: follow the company switcher, like Assets. */
+/**
+ * The Leases list and Due back: follow the company switcher, like Assets.
+ *
+ * @param string $l  the leases table's alias in the calling query
+ */
 function leaseListSql(PDO $conn, int $analystId, string $l = 'l'): array
 {
     if (!isMultiTenant($conn)) return ['', []];
     return activeTenantReadFilter($conn, $analystId, $l);
 }
 
-/** True when the lease is in a company the analyst may read. */
+/**
+ * True when the lease is in a company the analyst may read.
+ *
+ * @param int $leaseId  the leases id
+ */
 function leaseCanView(PDO $conn, int $analystId, int $leaseId): bool
 {
     [$sql, $p] = leaseVisibilitySql($conn, $analystId, 'l');
@@ -68,7 +80,11 @@ function leaseCanView(PDO $conn, int $analystId, int $leaseId): bool
     return (bool)$s->fetchColumn();
 }
 
-/** A lease row the analyst may see, or a not_found ServiceError (never reveals another company's). */
+/**
+ * A lease row the analyst may see, or a not_found ServiceError (never reveals another company's).
+ *
+ * @param int $leaseId  the leases id
+ */
 function leaseLoad(PDO $conn, int $analystId, int $leaseId): array
 {
     [$sql, $p] = leaseVisibilitySql($conn, $analystId, 'l');
@@ -79,13 +95,22 @@ function leaseLoad(PDO $conn, int $analystId, int $leaseId): array
     return $r;
 }
 
-/** The lease's company as a real id (NULL read as Default). */
+/**
+ * The lease's company as a real id (NULL read as Default).
+ *
+ * @param array $lease  the leases row, as from leaseLoad()
+ */
 function leaseTenant(PDO $conn, array $lease): int
 {
     return $lease['tenant_id'] === null ? getDefaultTenantId($conn) : (int)$lease['tenant_id'];
 }
 
-/** A schedule and its lease, both visible to the analyst. @return array{0:array,1:array} [schedule, lease] */
+/**
+ * A schedule and its lease, both visible to the analyst.
+ *
+ * @param int $scheduleId  the lease_schedules id
+ * @return array{0:array,1:array} [schedule, lease]
+ */
 function leaseLoadSchedule(PDO $conn, int $analystId, int $scheduleId): array
 {
     $s = $conn->prepare("SELECT * FROM lease_schedules WHERE id = ?");
@@ -95,7 +120,12 @@ function leaseLoadSchedule(PDO $conn, int $analystId, int $scheduleId): array
     return [$sch, leaseLoad($conn, $analystId, (int)$sch['lease_id'])];
 }
 
-/** SQL: this lease_assets row (alias $la, outcome alias $lo) is still out on lease. */
+/**
+ * SQL: this lease_assets row (alias $la, outcome alias $lo) is still out on lease.
+ *
+ * @param string $la  the lease_assets alias in the calling query
+ * @param string $lo  the lease_outcomes alias (LEFT JOINed on la.outcome_id) in the calling query
+ */
 function leaseActiveSql(string $la = 'la', string $lo = 'lo'): string
 {
     return "($la.outcome_id IS NULL OR $lo.kind = 'active')";
@@ -108,6 +138,8 @@ function leaseActiveSql(string $la = 'la', string $lo = 'lo'): string
  * TRAP: a returned asset keeps lease_expiry as the record of what happened (see
  * the header), so anything that alerts on lease_expiry must skip these, or a
  * machine handed back in March is "due back" for ever. Call only when leaseReady().
+ *
+ * @param string $a  the alias the calling query gives the assets table
  */
 function leaseGoneBackSql(string $a = 'a'): string
 {
@@ -117,7 +149,11 @@ function leaseGoneBackSql(string $a = 'a'): string
                              WHERE gb2.asset_id = $a.id AND " . leaseActiveSql('gb2', 'gbo') . "))";
 }
 
-/** Outcomes, in order. $activeOnly drops switched-off ones (still shown where in use). */
+/**
+ * Outcomes, in order. $activeOnly drops switched-off ones (still shown where in use).
+ *
+ * @param bool $activeOnly  true to leave out outcomes that have been switched off
+ */
 function leaseOutcomes(PDO $conn, bool $activeOnly = false): array
 {
     if (!leaseReady($conn)) return [];
@@ -138,6 +174,9 @@ function leaseDefaultOutcomeId(PDO $conn): ?int
 /**
  * Validates an optional YYYY-MM-DD date; blank gives null, anything else invalid throws a
  * validation error naming $label.
+ *
+ * @param mixed $v  untrusted input; null or '' gives null, otherwise only the first 10 characters are checked
+ * @param string $label  the field's name, used in the validation message
  */
 function leaseDate($v, string $label): ?string
 {
@@ -150,7 +189,12 @@ function leaseDate($v, string $label): ?string
     return $v;
 }
 
-/** Trims optional text and cuts it to $max characters; blank gives null. */
+/**
+ * Trims optional text and cuts it to $max characters; blank gives null.
+ *
+ * @param mixed $v  untrusted input; null or blank after trimming gives null
+ * @param int $max  the most characters kept
+ */
 function leaseText($v, int $max): ?string
 {
     $v = trim((string)($v ?? ''));
@@ -164,6 +208,9 @@ function leaseText($v, int $max): ?string
 /**
  * Create or update a lease. $in: id?, name, reference, supplier_id, cost_centre_id,
  * contract_id, notice_days, notes, company_id (create; or a move while it has no assets).
+ *
+ * @param array $in  the posted fields: id (0 or absent creates), name, reference, supplier_id, cost_centre_id, contract_id,
+ *        notice_days, notes, company_id; a key left out keeps the current value
  */
 function leaseSave(PDO $conn, ActorContext $ctx, array $in): int
 {
@@ -259,6 +306,8 @@ function leaseSave(PDO $conn, ActorContext $ctx, array $in): int
  * Delete a lease, its schedules and its asset rows. The assets themselves keep
  * the lease dates they were given - deleting a record of the agreement does not
  * rewrite what the asset says happened.
+ *
+ * @param int $id  the leases id
  */
 function leaseDelete(PDO $conn, ActorContext $ctx, int $id): void
 {
@@ -271,7 +320,11 @@ function leaseDelete(PDO $conn, ActorContext $ctx, int $id): void
     leaseSyncCalendar($conn);
 }
 
-/** The Leases list: one row per lease with its schedule dates, asset counts and next end. */
+/**
+ * The Leases list: one row per lease with its schedule dates, asset counts and next end.
+ *
+ * @param string $search  text matched (LIKE) against the lease name, reference and supplier names; '' for all
+ */
 function leaseList(PDO $conn, int $analystId, string $search = ''): array
 {
     [$sql, $p] = leaseListSql($conn, $analystId, 'l');
@@ -309,7 +362,11 @@ function leaseList(PDO $conn, int $analystId, string $search = ''): array
     return $rows;
 }
 
-/** One lease with its schedules and every asset on them. */
+/**
+ * One lease with its schedules and every asset on them.
+ *
+ * @param int $id  the leases id
+ */
 function leaseGet(PDO $conn, int $analystId, int $id): array
 {
     $l = leaseLoad($conn, $analystId, $id);
@@ -388,7 +445,12 @@ function leaseGet(PDO $conn, int $analystId, int $id): array
 // Schedules
 // ============================================================================
 
-/** Create or update a schedule. $in: id? | lease_id, name, reference, start_date, end_date, cost, cost_period, currency, order_number, notes. */
+/**
+ * Create or update a schedule. $in: id? | lease_id, name, reference, start_date, end_date, cost, cost_period, currency, order_number, notes.
+ *
+ * @param array $in  the posted fields: id (update) or lease_id (create), name, reference, start_date, end_date, cost,
+ *        cost_period, currency, order_number, notes; a key left out keeps the current value
+ */
 function leaseScheduleSave(PDO $conn, ActorContext $ctx, array $in): int
 {
     $aid = $ctx->actorId;
@@ -456,7 +518,11 @@ function leaseScheduleSave(PDO $conn, ActorContext $ctx, array $in): int
     return $newId;
 }
 
-/** Delete a schedule and its asset rows (the assets keep their dates). The last schedule cannot go. */
+/**
+ * Delete a schedule and its asset rows (the assets keep their dates). The last schedule cannot go.
+ *
+ * @param int $id  the lease_schedules id
+ */
 function leaseScheduleDelete(PDO $conn, ActorContext $ctx, int $id): void
 {
     [, $lease] = leaseLoadSchedule($conn, $ctx->actorId, $id);
@@ -477,6 +543,9 @@ function leaseScheduleDelete(PDO $conn, ActorContext $ctx, int $id): void
  * Put assets on a schedule. Each must be in the lease's company, visible to the
  * actor, and not already out on another lease. An asset that was on this
  * schedule before and was returned is put back on it.
+ *
+ * @param int $scheduleId  the lease_schedules id to put the assets on
+ * @param array $assetIds  the asset ids to add (cast to int, duplicates and 0 ignored)
  * @return array{added:int, refused:array<int,string>} refused: asset id => reason
  */
 function leaseAssetsAdd(PDO $conn, ActorContext $ctx, int $scheduleId, array $assetIds): array
@@ -520,7 +589,12 @@ function leaseAssetsAdd(PDO $conn, ActorContext $ctx, int $scheduleId, array $as
     return ['added' => $added, 'refused' => $refused];
 }
 
-/** Load a lease_assets row the actor may touch. @return array{0:array,1:array,2:array} [row, schedule, lease] */
+/**
+ * Load a lease_assets row the actor may touch.
+ *
+ * @param int $id  the lease_assets row id (not the asset id)
+ * @return array{0:array,1:array,2:array} [row, schedule, lease]
+ */
 function leaseLoadAssetRow(PDO $conn, int $analystId, int $id): array
 {
     $s = $conn->prepare("SELECT * FROM lease_assets WHERE id = ?");
@@ -535,6 +609,9 @@ function leaseLoadAssetRow(PDO $conn, int $analystId, int $id): array
  * Change one asset on a schedule: outcome_id, outcome_date, start_date / end_date
  * (its own dates - blank = the schedule's), notes. Moving it to a CLOSED outcome
  * stamps today as the outcome date if none is given.
+ *
+ * @param int $id  the lease_assets row id (not the asset id)
+ * @param array $in  any of outcome_id, outcome_date, start_date, end_date, notes; a key left out keeps the current value
  */
 function leaseAssetUpdate(PDO $conn, ActorContext $ctx, int $id, array $in): void
 {
@@ -581,7 +658,11 @@ function leaseAssetUpdate(PDO $conn, ActorContext $ctx, int $id, array $in): voi
     leaseSyncAllCalendar($conn);
 }
 
-/** Take an asset off a schedule altogether (a mistake, not a return - use an outcome for that). */
+/**
+ * Take an asset off a schedule altogether (a mistake, not a return - use an outcome for that).
+ *
+ * @param int $id  the lease_assets row id (not the asset id)
+ */
 function leaseAssetRemove(PDO $conn, ActorContext $ctx, int $id): void
 {
     leaseLoadAssetRow($conn, $ctx->actorId, $id);
@@ -619,7 +700,11 @@ function leaseSyncAsset(PDO $conn, ActorContext $ctx, int $assetId): void
         $assetId, ['lease_start' => $row['start_date'], 'lease_expiry' => $row['end_date']]);
 }
 
-/** Every active asset on a schedule, after its dates change. */
+/**
+ * Every active asset on a schedule, after its dates change.
+ *
+ * @param int $scheduleId  the lease_schedules id whose dates changed
+ */
 function leaseSyncSchedule(PDO $conn, ActorContext $ctx, int $scheduleId): void
 {
     $act = leaseActiveSql();
@@ -676,6 +761,9 @@ function leaseHistoryForAsset(PDO $conn, int $analystId, int $assetId): array
 /**
  * Assets still out on lease whose (effective) end falls in a window: $days ahead
  * of today, overdue ones always included. $days 0 = everything still out.
+ *
+ * @param int $days  how many days ahead of today to look; overdue rows are always included, 0 = everything still out
+ * @param int $leaseId  limit to one lease; 0 for every lease
  */
 function leaseDueBack(PDO $conn, int $analystId, int $days = 90, int $leaseId = 0): array
 {

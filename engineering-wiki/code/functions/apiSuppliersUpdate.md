@@ -6,7 +6,7 @@ PATCH /suppliers/{id} - updates a supplier through ContractsService and returns 
 function apiSuppliersUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 442.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 456.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

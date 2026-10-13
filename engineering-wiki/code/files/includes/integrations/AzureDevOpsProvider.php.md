@@ -1,6 +1,6 @@
 # includes/integrations/AzureDevOpsProvider.php
 
-> PHP - 872 lines
+> PHP - 979 lines
 
 AzureDevOpsProvider — Azure DevOps Services (cloud) and Server (on-prem).
 

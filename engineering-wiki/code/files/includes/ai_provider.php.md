@@ -1,6 +1,6 @@
 # includes/ai_provider.php
 
-> PHP - 820 lines
+> PHP - 866 lines
 
 Reusable, storage-agnostic AI provider client.
 
@@ -42,26 +42,26 @@ intentionally independent so the RFP builder isn't affected.
 | Function | Line | What it does |
 |---|--:|---|
 | [aiProviderChat()](/code/functions/aiProviderChat.md) | 66 | Send a one-shot chat request and return a normalised result. |
-| [aiProviderCallAnthropic()](/code/functions/aiProviderCallAnthropic.md) | 155 | Sends one system + user prompt to the Anthropic Messages API and returns the joined text blocks with token counts and the stop reason. |
-| [aiAzureChatUrl()](/code/functions/aiAzureChatUrl.md) | 206 | Build the URL for an Azure OpenAI deployment-based chat call. |
-| [aiAzureIsV1()](/code/functions/aiAzureIsV1.md) | 234 | An API version of "v1" means Azure's newer route, which has no api-version. |
-| [aiAzureApiVersionLooksValid()](/code/functions/aiAzureApiVersionLooksValid.md) | 249 | Whether an API version looks like one Azure publishes. |
-| [aiProviderCallOpenAICompatible()](/code/functions/aiProviderCallOpenAICompatible.md) | 271 | The OpenAI chat-completions wire format, at whatever URL and behind whatever auth header the caller names. |
-| [aiOpenAICompatPost()](/code/functions/aiOpenAICompatPost.md) | 348 | POST an OpenAI-format chat request, putting right the two parameters newer models refuse by name. |
-| [aiProviderTraceStart()](/code/functions/aiProviderTraceStart.md) | 379 | Record every HTTP exchange this file makes until `aiProviderTraceTake()`. |
-| [aiProviderTraceTake()](/code/functions/aiProviderTraceTake.md) | 385 | Stop recording and return what was recorded. |
-| [aiExplainFailure()](/code/functions/aiExplainFailure.md) | 398 | What a failed call most likely means, in a sentence an administrator can act on - or '' when the error says it plainly enough already. |
-| [aiProviderChatTools()](/code/functions/aiProviderChatTools.md) | 475 | ─── Tool calling ──────────────────────────────────────────────────────────── |
-| [aiToolsResult()](/code/functions/aiToolsResult.md) | 661 | Shared return shape for aiProviderChatTools. |
-| [aiProviderHttpPost()](/code/functions/aiProviderHttpPost.md) | 678 | POST with retry/backoff on 429 / 5xx / network errors. Ported from rfpAiHttpPostWithRetry so this file stands alone. |
-| [aiProviderListOpenRouterModels()](/code/functions/aiProviderListOpenRouterModels.md) | 745 | Fetch (and cache) the OpenRouter model catalogue. No API key required. Cached in system_settings as JSON for 24h to keep the model picker snappy. Falls back to a stale cache if a refresh fetch fails. |
+| [aiProviderCallAnthropic()](/code/functions/aiProviderCallAnthropic.md) | 160 | Sends one system + user prompt to the Anthropic Messages API and returns the joined text blocks with token counts and the stop reason. |
+| [aiAzureChatUrl()](/code/functions/aiAzureChatUrl.md) | 213 | Build the URL for an Azure OpenAI deployment-based chat call. |
+| [aiAzureIsV1()](/code/functions/aiAzureIsV1.md) | 245 | An API version of "v1" means Azure's newer route, which has no api-version. |
+| [aiAzureApiVersionLooksValid()](/code/functions/aiAzureApiVersionLooksValid.md) | 262 | Whether an API version looks like one Azure publishes. |
+| [aiProviderCallOpenAICompatible()](/code/functions/aiProviderCallOpenAICompatible.md) | 291 | The OpenAI chat-completions wire format, at whatever URL and behind whatever auth header the caller names. |
+| [aiOpenAICompatPost()](/code/functions/aiOpenAICompatPost.md) | 373 | POST an OpenAI-format chat request, putting right the two parameters newer models refuse by name. |
+| [aiProviderTraceStart()](/code/functions/aiProviderTraceStart.md) | 404 | Record every HTTP exchange this file makes until `aiProviderTraceTake()`. |
+| [aiProviderTraceTake()](/code/functions/aiProviderTraceTake.md) | 410 | Stop recording and return what was recorded. |
+| [aiExplainFailure()](/code/functions/aiExplainFailure.md) | 426 | What a failed call most likely means, in a sentence an administrator can act on - or '' when the error says it plainly enough already. |
+| [aiProviderChatTools()](/code/functions/aiProviderChatTools.md) | 505 | ─── Tool calling ──────────────────────────────────────────────────────────── |
+| [aiToolsResult()](/code/functions/aiToolsResult.md) | 701 | Shared return shape for aiProviderChatTools. |
+| [aiProviderHttpPost()](/code/functions/aiProviderHttpPost.md) | 723 | POST with retry/backoff on 429 / 5xx / network errors. Ported from rfpAiHttpPostWithRetry so this file stands alone. |
+| [aiProviderListOpenRouterModels()](/code/functions/aiProviderListOpenRouterModels.md) | 791 | Fetch (and cache) the OpenRouter model catalogue. No API key required. Cached in system_settings as JSON for 24h to keep the model picker snappy. Falls back to a stale cache if a refresh fetch fails. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 748 | `aiProviderListOpenRouterModels` | read [system_settings](/code/tables/system_settings.md) |  |
-| 800 | `aiProviderListOpenRouterModels` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 794 | `aiProviderListOpenRouterModels` | read [system_settings](/code/tables/system_settings.md) |  |
+| 846 | `aiProviderListOpenRouterModels` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## How it hangs together
 

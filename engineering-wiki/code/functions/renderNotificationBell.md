@@ -13,11 +13,11 @@ that matters, not the cost of opening it.
 function renderNotificationBell($path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1232.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1238.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path_prefix` |  |  |  |
+| `$path_prefix` |  |  | relative path from the page to the app root, e.g. '../', for the API and link URLs |
 
 ## Calls
 

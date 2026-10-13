@@ -10,13 +10,13 @@ money on synthetic data.
 function gapAnalyse(PDO $conn, int $analystId, array $opts = []): array
 ```
 
-Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 177.
+Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$opts` | `array` | `[]` |  |
+| `$opts` | `array` | `[]` | optional: lookback_days (int, else the setting) and force_wording (true runs the free wording engine) |
 
 **Returns:** `array`
 
@@ -24,8 +24,8 @@ Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 186 | `gapAnalyse` | read [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
-| 217 | `gapAnalyse` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 202 | `gapAnalyse` | read [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
+| 233 | `gapAnalyse` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

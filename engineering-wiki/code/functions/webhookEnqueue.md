@@ -6,12 +6,12 @@ Queue a webhook for asynchronous delivery. `$d` keys: workflow_id, execution_id,
 function webhookEnqueue(PDO $conn, array $d): int
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 245.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 263.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$d` | `array` |  |  |
+| `$d` | `array` |  | the delivery: workflow_id, execution_id, preset, url, method, headers, body, max_attempts (default 6) |
 
 **Returns:** `int`
 
@@ -19,7 +19,7 @@ Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 247 | `webhookEnqueue` | **insert** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`workflow_id`, `execution_id`, `preset`, `url`, `method`, `request_headers`, `request_body`, `status`, `attempts`, `max_attempts`, `next_attempt_at`, `created_datetime`) |  |
+| 265 | `webhookEnqueue` | **insert** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`workflow_id`, `execution_id`, `preset`, `url`, `method`, `request_headers`, `request_body`, `status`, `attempts`, `max_attempts`, `next_attempt_at`, `created_datetime`) |  |
 
 ## Calls
 

@@ -6,11 +6,11 @@ Subject and HTML body for one reminder.
 function lmsReminderMessage(array $row): array
 ```
 
-Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 274.
+Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 286.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | one entry from `lmsRemindersDue()` (name, course_title, due_day, reminder_kind, days_left, learner_type) |
 
 **Returns:** `array`
 

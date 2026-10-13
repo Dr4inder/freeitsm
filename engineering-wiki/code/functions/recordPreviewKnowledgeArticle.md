@@ -6,13 +6,13 @@
 function recordPreviewKnowledgeArticle(PDO $conn, int $analystId, int $id): ?array
 ```
 
-Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 414.
+Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 435.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the knowledge_articles id |
 
 **Returns:** `?array`
 
@@ -20,7 +20,7 @@ Defined in [includes/record_preview.php](/code/files/includes/record_preview.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 423 | `recordPreviewKnowledgeArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 444 | `recordPreviewKnowledgeArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

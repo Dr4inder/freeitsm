@@ -6,12 +6,12 @@ Loads one morning check result row, or answers 404 and stops.
 function apiLoadMorningResult(PDO $conn, int $resultId): array
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 98.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$resultId` | `int` |  |  |
+| `$resultId` | `int` |  | the morningChecks_Results ResultID |
 
 **Returns:** `array`
 

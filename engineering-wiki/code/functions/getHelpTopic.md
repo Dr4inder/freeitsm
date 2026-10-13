@@ -6,11 +6,11 @@ One topic by slug, or null. Slug comes from the page (`$helpSlug`) or the URL.
 function getHelpTopic($slug)
 ```
 
-Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 539.
+Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 540.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$slug` |  |  |  |
+| `$slug` |  |  | the help page slug, e.g. 'sso-groups'; unknown slugs give null |
 
 **Returns:** array<string,mixed>|null
 

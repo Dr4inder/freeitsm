@@ -6,11 +6,11 @@ Which module a table belongs to. Never throws; unknown tables → 'other'.
 function dbVerifyModuleForTable(string $table): string
 ```
 
-Defined in [includes/db_verify_modules.php](/code/files/includes/db_verify_modules.php.md), line 154.
+Defined in [includes/db_verify_modules.php](/code/files/includes/db_verify_modules.php.md), line 158.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$table` | `string` |  |  |
+| `$table` | `string` |  | a database table name, e.g. 'ticket_audit' |
 
 **Returns:** `string`
 

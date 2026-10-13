@@ -6,7 +6,7 @@ Public base URL + app root used to build widget asset / API URLs. Reuses the mes
 function webchatBaseUrl(PDO $conn): string
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 53.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,12 +6,12 @@ Cosine similarity of two equal-ish length vectors (0 if either is a zero vector)
 function kbCosineSimilarity(array $a, array $b): float
 ```
 
-Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md), line 23.
+Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md), line 28.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` | `array` |  |  |
-| `$b` | `array` |  |  |
+| `$a` | `array` |  | an embedding vector (list of floats) |
+| `$b` | `array` |  | another embedding vector; only the shorter length of the two is compared |
 
 **Returns:** `float`
 

@@ -6,11 +6,11 @@ Human description, shown in System -> Roles. Enum twin: `$cap`->label().
 function capLabel(string $key): string
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 440.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 454.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a capability key; an unknown one is returned as its own label |
 
 **Returns:** `string`
 

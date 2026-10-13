@@ -6,11 +6,11 @@ Can this card narrow to a person or a team at all?
 function wtCardCanScope(string $cardKey): bool
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 104.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cardKey` | `string` |  |  |
+| `$cardKey` | `string` |  | a card key from `wtCardKeys()`, e.g. 'tickets' |
 
 **Returns:** `bool`
 

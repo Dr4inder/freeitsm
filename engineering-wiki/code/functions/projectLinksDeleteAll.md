@@ -6,7 +6,7 @@ Remove every link a project holds - called when the project is deleted.
 function projectLinksDeleteAll(PDO $conn, int $projectId): void
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 436.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 478.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

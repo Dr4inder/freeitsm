@@ -6,12 +6,12 @@ Everything the Change control tab shows. null before Database Verification.
 function projectControlDetail(PDO $conn, array $project, int $analystId): ?array
 ```
 
-Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 269.
+Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 310.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?array`
@@ -20,8 +20,8 @@ Defined in [includes/projects/control.php](/code/files/includes/projects/control
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 274 | `projectControlDetail` | read [project_baselines](/code/tables/project_baselines.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md), read [project_change_requests](/code/tables/project_change_requests.md) |  |
-| 292 | `projectControlDetail` | read [project_change_requests](/code/tables/project_change_requests.md), read [analysts](/code/tables/analysts.md), read [project_baselines](/code/tables/project_baselines.md) |  |
+| 315 | `projectControlDetail` | read [project_baselines](/code/tables/project_baselines.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md), read [project_change_requests](/code/tables/project_change_requests.md) |  |
+| 333 | `projectControlDetail` | read [project_change_requests](/code/tables/project_change_requests.md), read [analysts](/code/tables/analysts.md), read [project_baselines](/code/tables/project_baselines.md) |  |
 
 ## Calls
 

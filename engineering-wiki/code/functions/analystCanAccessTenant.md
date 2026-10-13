@@ -6,7 +6,7 @@ May this analyst access this tenant?
 function analystCanAccessTenant(PDO $conn, int $analystId, int $tenantId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 247.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 249.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

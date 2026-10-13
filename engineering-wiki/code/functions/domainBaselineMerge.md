@@ -6,12 +6,12 @@ Keep the previous value of a field when this run could not see it, so a one-off 
 function domainBaselineMerge(?array $old, array $new): array
 ```
 
-Defined in [includes/domains/monitor.php](/code/files/includes/domains/monitor.php.md), line 77.
+Defined in [includes/domains/monitor.php](/code/files/includes/domains/monitor.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$old` | `?array` |  |  |
-| `$new` | `array` |  |  |
+| `$old` | `?array` |  | the previous baseline from domains.watch_baseline, or null on the first run |
+| `$new` | `array` |  | the baseline `domainBaseline()` just built |
 
 **Returns:** `array`
 

@@ -10,11 +10,11 @@ with more fields still renders correctly on an older one, and vice versa.
 function inboxDisplayNormalise($raw): array
 ```
 
-Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.md), line 106.
+Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.md), line 108.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` |  |  |  |
+| `$raw` |  |  | a saved config - a JSON string or an array of field => style; anything else gives the defaults |
 
 **Returns:** `array`
 

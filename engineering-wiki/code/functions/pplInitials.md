@@ -6,11 +6,11 @@ Two letters for an avatar.
 function pplInitials(string $name): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 280.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 377.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
+| `$name` | `string` |  | a name or an email address |
 
 **Returns:** `string`
 

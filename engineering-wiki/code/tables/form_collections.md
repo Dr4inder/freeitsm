@@ -18,11 +18,11 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):811 | `FormsService::saveCollection` | update | `name`, `description`, `modified_date` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):822 | `FormsService::saveCollection` | insert | `name`, `description`, `created_by`, `created_date`, `modified_date` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):842 | `FormsService::setCollectionClosed` | update | `closed_datetime`, `closed_by`, `modified_date` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):843 | `FormsService::setCollectionClosed` | update | `closed_datetime`, `closed_by`, `modified_date` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):873 | `FormsService::deleteCollection` | delete |  |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):844 | `FormsService::saveCollection` | update | `name`, `description`, `modified_date` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):855 | `FormsService::saveCollection` | insert | `name`, `description`, `created_by`, `created_date`, `modified_date` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):878 | `FormsService::setCollectionClosed` | update | `closed_datetime`, `closed_by`, `modified_date` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):879 | `FormsService::setCollectionClosed` | update | `closed_datetime`, `closed_by`, `modified_date` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):911 | `FormsService::deleteCollection` | delete |  |  |
 
 ## Read by
 
@@ -31,5 +31,5 @@
 | [api/forms/get_collection_submissions.php](/code/files/api/forms/get_collection_submissions.php.md) | L28 |  |
 | [api/forms/get_forms.php](/code/files/api/forms/get_forms.php.md) | L50 |  |
 | [includes/feature_bingo/cards/forms.php](/code/files/includes/feature_bingo/cards/forms.php.md) | L170 |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md) | FormsService::listCollections L570, FormsService::setCollectionForms L620, FormsService::formsForPicker L694, FormsService::saveCollection L804, FormsService::saveCollection L814, FormsService::setCollectionClosed L848 ... |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md) | FormsService::listCollections L592, FormsService::setCollectionForms L647, FormsService::formsForPicker L721, FormsService::saveCollection L837, FormsService::saveCollection L847, FormsService::setCollectionClosed L884 ... |  |
 

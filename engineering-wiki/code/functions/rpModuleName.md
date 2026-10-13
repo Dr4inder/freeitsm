@@ -6,11 +6,11 @@ A module's display name, for "You do not have access to X".
 function rpModuleName(string $key): string
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 366.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 404.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the module key, e.g. 'contracts' |
 
 **Returns:** `string`
 

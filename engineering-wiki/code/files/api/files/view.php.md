@@ -1,6 +1,6 @@
 # api/files/view.php
 
-> API endpoint - 192 lines
+> API endpoint - 196 lines
 
 The viewer's door to a file's bytes.
 
@@ -40,14 +40,14 @@ video can seek and pdf.js can fetch only the pages it needs.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [filesViewKind()](/code/functions/filesViewKind.md) | 43 | Which viewer draws a file, by extension. Anything else gets "no preview". |
+| [filesViewKind()](/code/functions/filesViewKind.md) | 47 | Which viewer draws a file, by extension. Anything else gets "no preview". |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 92 |  | read [files_versions](/code/tables/files_versions.md) |  |
-| 139 |  | read [files_versions](/code/tables/files_versions.md) |  |
+| 96 |  | read [files_versions](/code/tables/files_versions.md) |  |
+| 143 |  | read [files_versions](/code/tables/files_versions.md) |  |
 
 ## How it hangs together
 

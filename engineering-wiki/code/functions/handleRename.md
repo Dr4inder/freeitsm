@@ -6,13 +6,13 @@ Renames a knowledge folder the caller can read, and audits the change.
 function handleRename(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 193.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 208.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request: id and the new name |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 200 | `handleRename` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`name`, `modified_datetime`) |  |
+| 215 | `handleRename` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`name`, `modified_datetime`) |  |
 
 ## Calls
 

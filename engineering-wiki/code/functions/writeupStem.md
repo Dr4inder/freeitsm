@@ -17,11 +17,11 @@ colliding) is much worse here than under-stemming.
 function writeupStem(string $w): string
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 421.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 432.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$w` | `string` |  |  |
+| `$w` | `string` |  | one lower-case word from a subject line |
 
 **Returns:** `string`
 

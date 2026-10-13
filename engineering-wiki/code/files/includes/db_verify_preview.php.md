@@ -1,6 +1,6 @@
 # includes/db_verify_preview.php
 
-> PHP - 221 lines
+> PHP - 240 lines
 
 Database Verification — READ-ONLY preview of what a run would change.
 
@@ -38,17 +38,17 @@ that promise, and the test suite asserts the two files agree.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [dbPreviewTableExists()](/code/functions/dbPreviewTableExists.md) | 73 | Does this table exist? |
-| [dbPreviewColumnExists()](/code/functions/dbPreviewColumnExists.md) | 81 | Does this column exist? |
-| [dbPreviewIndexExists()](/code/functions/dbPreviewIndexExists.md) | 89 | Does this index exist? |
-| [dbPreviewRepairs()](/code/functions/dbPreviewRepairs.md) | 119 | Row repairs db_verify.php would carry out, counted against this database. |
-| [dbVerifyPreview()](/code/functions/dbVerifyPreview.md) | 157 | Works out, without changing anything, what a Database Verification run would do - tables to create, columns to add, drops whose target is present, and data repairs with rows to rewrite. |
+| [dbPreviewTableExists()](/code/functions/dbPreviewTableExists.md) | 78 | Does this table exist? |
+| [dbPreviewColumnExists()](/code/functions/dbPreviewColumnExists.md) | 92 | Does this column exist? |
+| [dbPreviewIndexExists()](/code/functions/dbPreviewIndexExists.md) | 106 | Does this index exist? |
+| [dbPreviewRepairs()](/code/functions/dbPreviewRepairs.md) | 137 | Row repairs db_verify.php would carry out, counted against this database. |
+| [dbVerifyPreview()](/code/functions/dbVerifyPreview.md) | 176 | Works out, without changing anything, what a Database Verification run would do - tables to create, columns to add, drops whose target is present, and data repairs with rows to rewrite. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 130 | `dbPreviewRepairs` | read [assets](/code/tables/assets.md), read [asset_history](/code/tables/asset_history.md) |  |
+| 148 | `dbPreviewRepairs` | read [assets](/code/tables/assets.md), read [asset_history](/code/tables/asset_history.md) |  |
 
 ## How it hangs together
 

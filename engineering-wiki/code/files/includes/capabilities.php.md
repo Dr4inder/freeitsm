@@ -1,6 +1,6 @@
 # includes/capabilities.php
 
-> PHP - 621 lines
+> PHP - 659 lines
 
 RBAC Layer 2 — the capability registry.
 
@@ -51,23 +51,23 @@ If you add a helper, name it after the method it would be on the enum.
 | Function | Line | What it does |
 |---|--:|---|
 | [settingsManifests()](/code/functions/settingsManifests.md) | 314 | Every module's settings manifest, loaded once. |
-| [settingsManifestFor()](/code/functions/settingsManifestFor.md) | 329 | The manifest for one module, or null. |
-| [capModules()](/code/functions/capModules.md) | 341 | Modules that own capabilities, and how to name them in the Roles picker. DERIVED from the manifests. Keys are the Layer 1 module slugs. |
-| [capRegistry()](/code/functions/capRegistry.md) | 360 | The capability registry — DERIVED from the manifests. |
-| [capAliases()](/code/functions/capAliases.md) | 401 | Retired keys -> their current replacement. |
-| [capAll()](/code/functions/capAll.md) | 413 | Every declared capability key. Enum twin: Capability::cases(). |
-| [capExists()](/code/functions/capExists.md) | 419 | Is this a capability the code defines? Enum twin: Capability::tryFrom() !== null. |
-| [capFromKey()](/code/functions/capFromKey.md) | 431 | Resolve a key that came from OUTSIDE the code (a DB row, a form post) to a known capability, or null if the code no longer defines it. Enum twin: Capability::tryFrom(). |
-| [capLabel()](/code/functions/capLabel.md) | 440 | Human description, shown in System -> Roles. Enum twin: `$cap`->label(). |
-| [capModule()](/code/functions/capModule.md) | 446 | The module this capability administers. Enum twin: `$cap`->module(). |
-| [capModuleLabel()](/code/functions/capModuleLabel.md) | 452 | Display name for a module slug. Enum twin: `$module`->label(). |
-| [capIsSensitive()](/code/functions/capIsSensitive.md) | 458 | Does granting this need a second thought? Enum twin: `$cap`->isSensitive(). |
-| [capsForModule()](/code/functions/capsForModule.md) | 464 | Every capability belonging to a module. Enum twin: Capability::forModule(). |
-| [capUmbrella()](/code/functions/capUmbrella.md) | 474 | The module's umbrella capability ('<module>.manage'), or null if it has none. |
-| [capExpandUmbrellas()](/code/functions/capExpandUmbrellas.md) | 494 | Expand umbrella grants: holding '<module>.manage' means holding every capability in that module. |
-| [capGroups()](/code/functions/capGroups.md) | 513 | The registry shaped for the System -> Roles picker: grouped by module, labelled, with the umbrella first so "manage everything here" reads as the headline choice. |
-| [capSelfCheck()](/code/functions/capSelfCheck.md) | 557 | Self-check: the things derivation CANNOT rule out. |
-| [capIsUmbrella()](/code/functions/capIsUmbrella.md) | 617 | Is this capability its module's umbrella? |
+| [settingsManifestFor()](/code/functions/settingsManifestFor.md) | 333 | The manifest for one module, or null. |
+| [capModules()](/code/functions/capModules.md) | 345 | Modules that own capabilities, and how to name them in the Roles picker. DERIVED from the manifests. Keys are the Layer 1 module slugs. |
+| [capRegistry()](/code/functions/capRegistry.md) | 364 | The capability registry — DERIVED from the manifests. |
+| [capAliases()](/code/functions/capAliases.md) | 405 | Retired keys -> their current replacement. |
+| [capAll()](/code/functions/capAll.md) | 417 | Every declared capability key. Enum twin: Capability::cases(). |
+| [capExists()](/code/functions/capExists.md) | 427 | Is this a capability the code defines? Enum twin: Capability::tryFrom() !== null. |
+| [capFromKey()](/code/functions/capFromKey.md) | 441 | Resolve a key that came from OUTSIDE the code (a DB row, a form post) to a known capability, or null if the code no longer defines it. Enum twin: Capability::tryFrom(). |
+| [capLabel()](/code/functions/capLabel.md) | 454 | Human description, shown in System -> Roles. Enum twin: `$cap`->label(). |
+| [capModule()](/code/functions/capModule.md) | 464 | The module this capability administers. Enum twin: `$cap`->module(). |
+| [capModuleLabel()](/code/functions/capModuleLabel.md) | 474 | Display name for a module slug. Enum twin: `$module`->label(). |
+| [capIsSensitive()](/code/functions/capIsSensitive.md) | 484 | Does granting this need a second thought? Enum twin: `$cap`->isSensitive(). |
+| [capsForModule()](/code/functions/capsForModule.md) | 494 | Every capability belonging to a module. Enum twin: Capability::forModule(). |
+| [capUmbrella()](/code/functions/capUmbrella.md) | 508 | The module's umbrella capability ('<module>.manage'), or null if it has none. |
+| [capExpandUmbrellas()](/code/functions/capExpandUmbrellas.md) | 528 | Expand umbrella grants: holding '<module>.manage' means holding every capability in that module. |
+| [capGroups()](/code/functions/capGroups.md) | 547 | The registry shaped for the System -> Roles picker: grouped by module, labelled, with the umbrella first so "manage everything here" reads as the headline choice. |
+| [capSelfCheck()](/code/functions/capSelfCheck.md) | 591 | Self-check: the things derivation CANNOT rule out. |
+| [capIsUmbrella()](/code/functions/capIsUmbrella.md) | 655 | Is this capability its module's umbrella? |
 
 ## Classes
 

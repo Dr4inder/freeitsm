@@ -39,14 +39,23 @@ function projectApiBody(): array
     return $b;
 }
 
-/** Sends a success JSON reply ({success: true} plus $data) and ends the request. */
+/**
+ * Sends a success JSON reply ({success: true} plus $data) and ends the request.
+ *
+ * @param array $data  extra keys to send beside success: true
+ */
 function projectApiOk(array $data = []): void
 {
     echo json_encode(['success' => true] + $data);
     exit;
 }
 
-/** Sends a failure JSON reply ({success: false, error}) with an optional HTTP status, and ends the request. */
+/**
+ * Sends a failure JSON reply ({success: false, error}) with an optional HTTP status, and ends the request.
+ *
+ * @param string $message  the error text sent as 'error'
+ * @param int $status  the HTTP status to send; 200 leaves it alone
+ */
 function projectApiFail(string $message, int $status = 200): void
 {
     if ($status !== 200) http_response_code($status);
@@ -63,6 +72,8 @@ function projectApiRequirePost(): void
 /**
  * The company a NEW project belongs to: the one the request names (checked
  * against what this analyst may reach), else the analyst's active company.
+ *
+ * @param mixed $requested  the company id the request asked for (untrusted); null, '' or 0 means the active company
  */
 function projectApiTenantForCreate(PDO $conn, int $analystId, $requested): int
 {
@@ -76,7 +87,11 @@ function projectApiTenantForCreate(PDO $conn, int $analystId, $requested): int
     return getActiveTenantId($conn, $analystId);
 }
 
-/** Run a service call and turn any failure into the UI's {success:false} shape. */
+/**
+ * Run a service call and turn any failure into the UI's {success:false} shape.
+ *
+ * @param callable $fn  the work to run; a ServiceError or any other failure becomes a {success:false} reply
+ */
 function projectApiRun(callable $fn): void
 {
     try {

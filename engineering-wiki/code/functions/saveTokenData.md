@@ -9,19 +9,19 @@ Save token data to database
 function saveTokenData($conn, $mailboxId, $tokenData)
 ```
 
-Defined in [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md), line 330.
+Defined in [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md), line 353.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailboxId` |  |  |  |
-| `$tokenData` |  |  |  |
+| `$mailboxId` |  |  | the target_mailboxes id to update |
+| `$tokenData` |  |  | the token array to store (encrypted) in token_data, as built by `refreshAccessToken()` |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 334 | `saveTokenData` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
+| 357 | `saveTokenData` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
 
 ## Calls
 

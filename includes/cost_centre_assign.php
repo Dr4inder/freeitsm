@@ -24,7 +24,11 @@
 require_once __DIR__ . '/tenancy.php';
 require_once __DIR__ . '/service_context.php';
 
-/** Has Database Verification added cost_centre_id to $table yet? */
+/**
+ * Has Database Verification added cost_centre_id to $table yet?
+ *
+ * @param string $table  the table to probe, e.g. 'assets' (trusted - put straight into SQL)
+ */
 function costCentreReady(PDO $conn, string $table): bool
 {
     static $ok = [];
@@ -33,7 +37,11 @@ function costCentreReady(PDO $conn, string $table): bool
     catch (Throwable $e) { return $ok[$table] = false; }
 }
 
-/** A record's company for cost centre purposes: its tenant_id, or Default when NULL. */
+/**
+ * A record's company for cost centre purposes: its tenant_id, or Default when NULL.
+ *
+ * @param mixed $tenantId  the record's raw tenant_id column value; null, '' or 0 mean the Default company
+ */
 function costCentreRecordTenant(PDO $conn, $tenantId): int
 {
     return ($tenantId === null || $tenantId === '' || (int)$tenantId <= 0) ? getDefaultTenantId($conn) : (int)$tenantId;
@@ -42,6 +50,8 @@ function costCentreRecordTenant(PDO $conn, $tenantId): int
 /**
  * What a picker offers for a record in company $tenantId: its active cost
  * centres, plus $keepId when that is the record's current one and inactive.
+ *
+ * @param ?int $keepId  the record's current cost_centres.id, listed even when inactive; null for none
  * @return array<int,array{id:int,code:string,name:string,is_active:bool}>
  */
 function costCentreOptions(PDO $conn, int $tenantId, ?int $keepId = null): array
@@ -61,6 +71,9 @@ function costCentreOptions(PDO $conn, int $tenantId, ?int $keepId = null): array
  * Validate a cost centre being given to a record in company $tenantId.
  * Returns the id to store (null = none). Throws ServiceError otherwise.
  * $currentId is what the record holds now: keeping an inactive one is fine.
+ *
+ * @param mixed $value  the submitted cost centre id (untrusted); null, '', 0 or '0' mean none
+ * @param ?int $currentId  the cost_centres.id the record holds now; null for a new record or none
  */
 function costCentreCheck(PDO $conn, int $tenantId, $value, ?int $currentId = null): ?int
 {
@@ -82,7 +95,11 @@ function costCentreCheck(PDO $conn, int $tenantId, $value, ?int $currentId = nul
     return $id;
 }
 
-/** A cost centre of company $tenantId by its CODE (ignoring case), or null. */
+/**
+ * A cost centre of company $tenantId by its CODE (ignoring case), or null.
+ *
+ * @param string $code  the cost centre code to find, e.g. from an import; trimmed, empty gives null
+ */
 function costCentreByCode(PDO $conn, int $tenantId, string $code): ?array
 {
     $code = trim($code);
@@ -93,7 +110,11 @@ function costCentreByCode(PDO $conn, int $tenantId, string $code): ?array
     return $r ? ['id' => (int)$r['id'], 'code' => $r['code'], 'name' => $r['name'], 'is_active' => (bool)$r['is_active']] : null;
 }
 
-/** {id, code, name} for display and the API, or null. */
+/**
+ * {id, code, name} for display and the API, or null.
+ *
+ * @param mixed $id  a cost_centres.id as stored on a record; null or 0 gives null
+ */
 function costCentreRef(PDO $conn, $id): ?array
 {
     if ($id === null || (int)$id <= 0) return null;
@@ -106,6 +127,9 @@ function costCentreRef(PDO $conn, $id): ?array
 /**
  * Columns for any SELECT over a table with cost_centre_id, alias $a:
  * cost_centre_id and cost_centre_label ("CODE Name"). NULLs before Verification.
+ *
+ * @param string $table  the table being selected from, e.g. 'assets' - used to check the column exists
+ * @param string $a  the alias the calling query gives that table (trusted - put straight into SQL)
  */
 function costCentreSelectSql(PDO $conn, string $table, string $a): string
 {
@@ -114,7 +138,11 @@ function costCentreSelectSql(PDO $conn, string $table, string $a): string
         : ", NULL AS cost_centre_id, NULL AS cost_centre_label";
 }
 
-/** "CODE Name", or '' - one display form everywhere. */
+/**
+ * "CODE Name", or '' - one display form everywhere.
+ *
+ * @param ?array $ref  a cost centre as costCentreRef() returns it; null gives ''
+ */
 function costCentreLabel(?array $ref): string
 {
     return $ref ? trim($ref['code'] . ' ' . $ref['name']) : '';
@@ -123,6 +151,8 @@ function costCentreLabel(?array $ref): string
 /**
  * How many things are charged to cost centre $id, per kind, leaving out the
  * zeros. Empty means it is free to delete.
+ *
+ * @param int $id  cost_centres.id to count usage of
  * @return array<string,int> e.g. ['asset(s)' => 3, 'person/people' => 1]
  */
 function costCentreUsage(PDO $conn, int $id): array

@@ -6,12 +6,12 @@ Contractors (3.3.0): the tasks given to a supplier, or to one person there.
 function pplSectionContractorTasks(array $s, bool $byContact): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 226.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 309.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
-| `$byContact` | `bool` |  |  |
+| `$s` | `array` |  | the contractor tasks section from includes/people.php: rows, total, open |
+| `$byContact` | `bool` |  | true on a contact's page; false (supplier page) adds the contact column |
 
 **Returns:** `string`
 

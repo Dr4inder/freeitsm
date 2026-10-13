@@ -165,6 +165,9 @@ function resolveMergedTicket(PDO $conn, int $ticketId): int {
  * "which ones came from the source" is genuinely ambiguous afterwards). This is a
  * known limitation rather than an oversight; the alternative is guessing, and links
  * are cheap to re-add by hand.
+ *
+ * @param int $actorId  the analyst undoing the merge, for the audit rows
+ * @param int $mergeId  the merge to undo (ticket_merges.id)
  */
 function unmergeTicket(PDO $conn, int $actorId, int $mergeId): array {
     $ctx = ActorContext::fromSession($conn);
@@ -324,6 +327,7 @@ function mergedAwayInfo(PDO $conn, int $ticketId): ?array {
 /**
  * Merge one or more source tickets into a target.
  *
+ * @param int $actorId  the analyst doing the merge, for the audit rows
  * @param int[] $sourceIds tickets to fold away
  * @param int   $targetId  the ticket the analyst chose to keep
  * @return array {target_id, target_number, merged: int[], created_new: bool}
@@ -432,7 +436,12 @@ function mergeTickets(PDO $conn, int $actorId, array $sourceIds, int $targetId):
     }
 }
 
-/** Create the brand-new ticket that everything folds into ('new' reference mode). */
+/**
+ * Create the brand-new ticket that everything folds into ('new' reference mode).
+ *
+ * @param array $model  the nominated ticket's row (from TicketsService::loadTicket()), whose properties the new ticket copies
+ * @param int $actorId  the analyst doing the merge, for the audit row
+ */
 function mergeCreateTargetTicket(PDO $conn, array $model, int $actorId): int {
     // Reuse the service's own generator via a plain insert: the service's createTicket
     // would also raise an initial email row and fire workflow triggers, neither of
@@ -470,7 +479,15 @@ function mergeCreateTargetTicket(PDO $conn, array $model, int $actorId): int {
     return $newId;
 }
 
-/** Fold a single source into the target. Assumes the caller holds a transaction. */
+/**
+ * Fold a single source into the target. Assumes the caller holds a transaction.
+ *
+ * @param int $actorId  the analyst doing the merge, for the audit rows
+ * @param int $sourceId  the ticket being folded away
+ * @param int $targetId  the ticket it is folded into
+ * @param array $source  the source ticket's row, as loaded by TicketsService::loadTicket()
+ * @param array $settings  the merge policy from mergeSettings(): reference_mode, originals_mode, ai_summary
+ */
 function mergeOneTicket(PDO $conn, int $actorId, int $sourceId, int $targetId, array $source, array $settings): void {
     $moveMessages = ($settings['originals_mode'] !== 'html');
     $makeSnapshot = ($settings['originals_mode'] !== 'thread');
@@ -624,6 +641,10 @@ function mergeTicketNumber(PDO $conn, int $ticketId): string {
  * Writes one ticket_audit row for a merge step, best-effort - a failed audit
  * write never stops the merge. An actor id of 0 is stored as NULL.
  *
+ * @param int $actorId  the analyst doing the merge; 0 is stored as NULL
+ * @param string $field  the audit field: 'Ticket Created', 'Merged' or 'Merge undone'
+ * @param ?string $old  the value before, or null
+ * @param ?string $new  the value after, or null
  * @writes ticket_audit - the merge shows in each ticket's history
  */
 function mergeAudit(PDO $conn, int $ticketId, int $actorId, string $field, ?string $old, ?string $new): void {
@@ -651,6 +672,9 @@ function mergeAudit(PDO $conn, int $ticketId, int $actorId, string $field, ?stri
  * Stripping <script> alone would NOT be enough: `onerror` on a surviving tag fires
  * with no script element anywhere. That is why this uses the one shared allow-list
  * rather than a hand-rolled strip.
+ *
+ * @param int $sourceId  the ticket whose conversation and notes to render
+ * @param array $source  that ticket's row (ticket_number, subject, created_datetime)
  */
 function mergeBuildSnapshotHtml(PDO $conn, int $sourceId, array $source): string {
     require_once __DIR__ . '/html_sanitise.php';
@@ -738,6 +762,10 @@ function mergeBuildSnapshotHtml(PDO $conn, int $sourceId, array $source): string
  * That is not a workaround dressed as a design: it puts the snapshot in the
  * conversation where an analyst will notice it AND in the Attachments list, from one
  * insert, downloadable through the same endpoint as every other attachment.
+ *
+ * @param int $targetId  the ticket the snapshot is attached to
+ * @param array $source  the source ticket's row (ticket_number, id) - its number names the file
+ * @param string $html  the snapshot document from mergeBuildSnapshotHtml()
  */
 function mergeAttachSnapshot(PDO $conn, int $targetId, array $source, string $html): int {
     $ref = $source['ticket_number'] ?? ('ticket-' . (int)($source['id'] ?? 0));

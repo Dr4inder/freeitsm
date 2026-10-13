@@ -6,13 +6,13 @@ Who has polled recently, and whether they are in THIS channel or elsewhere in th
 function warRoomPresent(PDO $conn, int $excludeAnalystId, int $channelId): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1089.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1171.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$excludeAnalystId` | `int` |  |  |
-| `$channelId` | `int` |  |  |
+| `$excludeAnalystId` | `int` |  | the analyst asking, left out of both lists; 0 leaves nobody out |
+| `$channelId` | `int` |  | the channel that counts as "here" |
 
 **Returns:** array{here:string[],elsewhere:string[]}
 
@@ -20,7 +20,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 108
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1092 | `warRoomPresent` | read [warroom_presence](/code/tables/warroom_presence.md), read [analysts](/code/tables/analysts.md) |  |
+| 1174 | `warRoomPresent` | read [warroom_presence](/code/tables/warroom_presence.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Called from
 

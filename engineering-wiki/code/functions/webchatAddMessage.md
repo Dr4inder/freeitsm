@@ -12,15 +12,15 @@ function webchatAddMessage(
 ): int
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 388.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 439.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$conversationId` | `int` |  |  |
-| `$sender` | `string` |  |  |
-| `$body` | `string` |  |  |
-| `$sourceEmailId` | `?int` | `null` |  |
+| `$conversationId` | `int` |  | the webchat_conversations id |
+| `$sender` | `string` |  | 'visitor', 'ai', 'agent' or 'system' |
+| `$body` | `string` |  | the message text |
+| `$sourceEmailId` | `?int` | `null` | the emails.id a mirrored analyst reply came from; null otherwise |
 
 **Returns:** `int`
 
@@ -28,8 +28,8 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 391 | `webchatAddMessage` | **insert** [webchat_messages](/code/tables/webchat_messages.md) (`conversation_id`, `sender`, `body`, `source_email_id`, `created_datetime`) |  |
-| 396 | `webchatAddMessage` | **update** [webchat_conversations](/code/tables/webchat_conversations.md) (`last_activity_datetime`) |  |
+| 442 | `webchatAddMessage` | **insert** [webchat_messages](/code/tables/webchat_messages.md) (`conversation_id`, `sender`, `body`, `source_email_id`, `created_datetime`) |  |
+| 447 | `webchatAddMessage` | **update** [webchat_conversations](/code/tables/webchat_conversations.md) (`last_activity_datetime`) |  |
 
 ## Called from
 

@@ -6,12 +6,12 @@ The address to reply to on a conversation row - to_recipients on threaded channe
 function messagingReplyAddress(string $channelType, array $row): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 411.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 445.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$channelType` | `string` |  |  |
-| `$row` | `array` |  |  |
+| `$channelType` | `string` |  | the channel type, e.g. 'slack' or 'whatsapp' |
+| `$row` | `array` |  | the customer's latest inbound emails row - needs from_address and to_recipients |
 
 **Returns:** `string`
 

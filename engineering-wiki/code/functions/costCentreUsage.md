@@ -6,12 +6,12 @@ How many things are charged to cost centre `$id`, per kind, leaving out the zero
 function costCentreUsage(PDO $conn, int $id): array
 ```
 
-Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 128.
+Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 158.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | cost_centres.id to count usage of |
 
 **Returns:** array<string,int> e.g. ['asset(s)' => 3, 'person/people' => 1]
 
@@ -19,10 +19,10 @@ Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_as
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 132 | `costCentreUsage` | read [assets](/code/tables/assets.md) |  |
-| 133 | `costCentreUsage` | read [contracts](/code/tables/contracts.md) |  |
-| 134 | `costCentreUsage` | read [users](/code/tables/users.md) |  |
-| 135 | `costCentreUsage` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 162 | `costCentreUsage` | read [assets](/code/tables/assets.md) |  |
+| 163 | `costCentreUsage` | read [contracts](/code/tables/contracts.md) |  |
+| 164 | `costCentreUsage` | read [users](/code/tables/users.md) |  |
+| 165 | `costCentreUsage` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
 
 ## Called from
 

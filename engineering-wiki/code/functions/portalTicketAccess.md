@@ -6,12 +6,12 @@ THE question every portal endpoint asks: may this portal user see this ticket, a
 function portalTicketAccess(PDO $conn, int $userId, int $ticketId): ?array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 307.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 324.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the signed-in portal user's users.id; 0 or less gives null |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array|null null = no (and the caller answers "not found", never "forbidden"). Otherwise: role      'requester' | 'manager' stub      true = a manager sees only that a confidential ticket exists can_reply / can_close ticket    the row (id, user_id, tenant_id, sensitivity)
@@ -20,7 +20,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 3
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 311 | `portalTicketAccess` | read [tickets](/code/tables/tickets.md) |  |
+| 328 | `portalTicketAccess` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

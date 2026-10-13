@@ -6,13 +6,13 @@ May this analyst see contract `$id`? (Existence is the caller's business.)
 function contractCanView(PDO $conn, int $analystId, int $contractId): bool
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 125.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$contractId` | `int` |  |  |
+| `$contractId` | `int` |  | contracts.id to check; a missing contract also returns false |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 128 | `contractCanView` | read [contracts](/code/tables/contracts.md) |  |
+| 145 | `contractCanView` | read [contracts](/code/tables/contracts.md) |  |
 
 ## Calls
 

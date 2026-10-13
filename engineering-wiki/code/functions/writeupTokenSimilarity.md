@@ -21,12 +21,12 @@ removes the whole class of false cluster.
 function writeupTokenSimilarity(array $a, array $b): float
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 505.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 521.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` | `array` |  |  |
-| `$b` | `array` |  |  |
+| `$a` | `array` |  | a token list from `writeupSubjectTokens()` |
+| `$b` | `array` |  | another token list from `writeupSubjectTokens()` |
 
 **Returns:** `float`
 

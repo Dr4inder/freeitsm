@@ -6,11 +6,11 @@ The real mime type of bytes held in memory, or null if this server cannot tell.
 function uploadDetectMimeFromBytes(string $bytes): ?string
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 866.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 904.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bytes` | `string` |  |  |
+| `$bytes` | `string` |  | the file's contents |
 
 **Returns:** `?string`
 

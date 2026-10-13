@@ -6,12 +6,12 @@ The company a contract belongs to (NULL resolved to Default), or null if there i
 function contractTenantOf(PDO $conn, int $contractId): ?int
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 41.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 45.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$contractId` | `int` |  |  |
+| `$contractId` | `int` |  | contracts.id to look up |
 
 **Returns:** `?int`
 
@@ -19,7 +19,7 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 44 | `contractTenantOf` | read [contracts](/code/tables/contracts.md) |  |
+| 48 | `contractTenantOf` | read [contracts](/code/tables/contracts.md) |  |
 
 ## Calls
 

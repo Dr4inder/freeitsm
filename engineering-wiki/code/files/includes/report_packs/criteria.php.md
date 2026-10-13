@@ -1,6 +1,6 @@
 # includes/report_packs/criteria.php
 
-> PHP - 140 lines
+> PHP - 153 lines
 
 Report Packs: what a pack is ABOUT - its date range and its company.
 
@@ -18,10 +18,10 @@ day near midnight lands in the month the reader would expect.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [rpResolveRange()](/code/functions/rpResolveRange.md) | 33 | Resolve a pack's range into local dates (for display) and UTC bounds (for SQL). The end is EXCLUSIVE: [from, to). A custom range is inclusive of both days the reader picked, so its end is the day after. |
-| [rpParseDate()](/code/functions/rpParseDate.md) | 85 | Parses a YYYY-MM-DD string as midnight in the given timezone; null when it is not a valid date. |
-| [rpTenantClause()](/code/functions/rpTenantClause.md) | 106 | The company a pack reports on, as a WHERE fragment for `$qualified`. |
-| [rpTenantLabel()](/code/functions/rpTenantLabel.md) | 130 | The company's name for the header field {{company}}. |
+| [rpResolveRange()](/code/functions/rpResolveRange.md) | 35 | Resolve a pack's range into local dates (for display) and UTC bounds (for SQL). The end is EXCLUSIVE: [from, to). A custom range is inclusive of both days the reader picked, so its end is the day after. |
+| [rpParseDate()](/code/functions/rpParseDate.md) | 92 | Parses a YYYY-MM-DD string as midnight in the given timezone; null when it is not a valid date. |
+| [rpTenantClause()](/code/functions/rpTenantClause.md) | 115 | The company a pack reports on, as a WHERE fragment for `$qualified`. |
+| [rpTenantLabel()](/code/functions/rpTenantLabel.md) | 143 | The company's name for the header field {{company}}. |
 
 ## How it hangs together
 

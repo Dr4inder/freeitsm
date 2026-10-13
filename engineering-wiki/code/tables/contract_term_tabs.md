@@ -26,5 +26,5 @@
 |---|---|---|
 | [api/contracts/delete_contract_term_tab.php](/code/files/api/contracts/delete_contract_term_tab.php.md) | L33 |  |
 | [api/contracts/get_contract_term_tabs.php](/code/files/api/contracts/get_contract_term_tabs.php.md) | L19 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractTermsGet L392 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractTermsGet L406 |  |
 

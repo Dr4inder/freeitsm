@@ -1,6 +1,6 @@
 # api/assets/debug_vcenter.php
 
-> API endpoint - 267 lines
+> API endpoint - 278 lines
 
 Debug Endpoint: Dump ALL raw fields from vCenter REST API Read-only - does NOT write to the database Shows every field returned by the API, including ones not used in get_vcenter.php
 
@@ -16,9 +16,9 @@ Debug Endpoint: Dump ALL raw fields from vCenter REST API Read-only - does NOT w
 
 | Function | Line | What it does |
 |---|--:|---|
-| [vcenterAuth()](/code/functions/vcenterAuth.md) | 188 | Authenticate with vCenter REST API |
-| [vcenterGetRaw()](/code/functions/vcenterGetRaw.md) | 222 | Raw GET request - returns decoded JSON without unwrapping 'value' key so we can see the exact API response structure |
-| [vcenterLogout()](/code/functions/vcenterLogout.md) | 252 | Logout from vCenter session |
+| [vcenterAuth()](/code/functions/vcenterAuth.md) | 192 | Authenticate with vCenter REST API |
+| [vcenterGetRaw()](/code/functions/vcenterGetRaw.md) | 230 | Raw GET request - returns decoded JSON without unwrapping 'value' key so we can see the exact API response structure |
+| [vcenterLogout()](/code/functions/vcenterLogout.md) | 263 | Logout from vCenter session |
 
 ## Database
 

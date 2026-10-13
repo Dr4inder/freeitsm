@@ -1,6 +1,6 @@
 # api/v1/resources/calendar.php
 
-> API endpoint - 240 lines
+> API endpoint - 249 lines
 
 FreeITSM REST API v1 — calendar resource (the standalone team calendar).
 
@@ -43,24 +43,24 @@ the naive-datetime parser (also used by the list filters) stay here.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiParseNaiveDatetime()](/code/functions/apiParseNaiveDatetime.md) | 45 | Parse a NAIVE local datetime ("YYYY-MM-DD HH:MM[:SS]", T separator OK, date-only OK). 422s on timezone designators — this resource is naive-local by design (see header). |
-| [apiCalendarEventSelect()](/code/functions/apiCalendarEventSelect.md) | 67 | The SELECT for calendar events, with the category's name and colour and the creator's name. |
-| [apiSerializeCalendarEvent()](/code/functions/apiSerializeCalendarEvent.md) | 80 | Shapes a calendar event row for the API - times stay naive server-local, source says whether it was generated (null = typed in), and created_by is null for generated events. |
-| [apiLoadCalendarEvent()](/code/functions/apiLoadCalendarEvent.md) | 105 | Loads one calendar event row (apiCalendarEventSelect), or answers 404 and stops. |
-| [apiCalendarEventsList()](/code/functions/apiCalendarEventsList.md) | 118 | GET /calendar/events |
-| [apiCalendarEventsGet()](/code/functions/apiCalendarEventsGet.md) | 186 | GET /calendar/events/{id} - one calendar event. |
-| [apiCalendarEventsCreate()](/code/functions/apiCalendarEventsCreate.md) | 193 | POST /calendar/events |
-| [apiCalendarEventsUpdate()](/code/functions/apiCalendarEventsUpdate.md) | 203 | PATCH /calendar/events/{id} |
-| [apiCalendarEventsDelete()](/code/functions/apiCalendarEventsDelete.md) | 213 | DELETE /calendar/events/{id} |
-| [apiCalendarCategoriesList()](/code/functions/apiCalendarCategoriesList.md) | 223 | GET /calendar-categories (reference) |
+| [apiParseNaiveDatetime()](/code/functions/apiParseNaiveDatetime.md) | 48 | Parse a NAIVE local datetime ("YYYY-MM-DD HH:MM[:SS]", T separator OK, date-only OK). 422s on timezone designators — this resource is naive-local by design (see header). |
+| [apiCalendarEventSelect()](/code/functions/apiCalendarEventSelect.md) | 70 | The SELECT for calendar events, with the category's name and colour and the creator's name. |
+| [apiSerializeCalendarEvent()](/code/functions/apiSerializeCalendarEvent.md) | 85 | Shapes a calendar event row for the API - times stay naive server-local, source says whether it was generated (null = typed in), and created_by is null for generated events. |
+| [apiLoadCalendarEvent()](/code/functions/apiLoadCalendarEvent.md) | 114 | Loads one calendar event row (apiCalendarEventSelect), or answers 404 and stops. |
+| [apiCalendarEventsList()](/code/functions/apiCalendarEventsList.md) | 127 | GET /calendar/events |
+| [apiCalendarEventsGet()](/code/functions/apiCalendarEventsGet.md) | 195 | GET /calendar/events/{id} - one calendar event. |
+| [apiCalendarEventsCreate()](/code/functions/apiCalendarEventsCreate.md) | 202 | POST /calendar/events |
+| [apiCalendarEventsUpdate()](/code/functions/apiCalendarEventsUpdate.md) | 212 | PATCH /calendar/events/{id} |
+| [apiCalendarEventsDelete()](/code/functions/apiCalendarEventsDelete.md) | 222 | DELETE /calendar/events/{id} |
+| [apiCalendarCategoriesList()](/code/functions/apiCalendarCategoriesList.md) | 232 | GET /calendar-categories (reference) |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 68 | `apiCalendarEventSelect` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md), read [analysts](/code/tables/analysts.md) |  |
-| 171 | `apiCalendarEventsList` | read [calendar_events](/code/tables/calendar_events.md) |  |
-| 225 | `apiCalendarCategoriesList` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 71 | `apiCalendarEventSelect` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md), read [analysts](/code/tables/analysts.md) |  |
+| 180 | `apiCalendarEventsList` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 234 | `apiCalendarCategoriesList` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md) |  |
 
 ## How it hangs together
 

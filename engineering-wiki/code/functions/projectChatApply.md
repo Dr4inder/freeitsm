@@ -13,16 +13,16 @@ function projectChatApply(
 ): array
 ```
 
-Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 459.
+Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 503.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
-| `$messageId` | `int` |  |  |
-| `$indexes` | `array` |  |  |
-| `$dismiss` | `bool` | `false` |  |
+| `$project` | `array` |  | the projects row the message belongs to |
+| `$messageId` | `int` |  | the project_ai_messages id holding the proposals |
+| `$indexes` | `array` |  | positions in that message's proposals list; any not still pending are skipped |
+| `$dismiss` | `bool` | `false` | true to mark them dismissed instead of applying them |
 
 **Returns:** `array`
 
@@ -30,8 +30,8 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 464 | `projectChatApply` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
-| 486 | `projectChatApply` | **update** [project_ai_messages](/code/tables/project_ai_messages.md) (`proposals`) |  |
+| 508 | `projectChatApply` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
+| 530 | `projectChatApply` | **update** [project_ai_messages](/code/tables/project_ai_messages.md) (`proposals`) |  |
 
 ## Calls
 

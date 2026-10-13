@@ -10,12 +10,12 @@ name merely ends the same way.
 function dsyncDnIsUnder(string $dn, string $ancestor): bool
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 187.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 204.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dn` | `string` |  |  |
-| `$ancestor` | `string` |  |  |
+| `$dn` | `string` |  | the entry's distinguished name (compared case-insensitively) |
+| `$ancestor` | `string` |  | the branch DN to test against; empty always gives false |
 
 **Returns:** `bool`
 

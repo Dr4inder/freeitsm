@@ -6,11 +6,11 @@ Build the full public URL the user clicks. Uses the host the request came in on 
 function csatBuildUrl(string $token): string
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 57.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$token` | `string` |  |  |
+| `$token` | `string` |  | the survey token from ticket_csat_responses.token; URL-encoded here |
 
 **Returns:** `string`
 

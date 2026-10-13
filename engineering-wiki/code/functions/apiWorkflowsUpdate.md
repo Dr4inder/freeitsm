@@ -6,7 +6,7 @@ PATCH /workflows/{id}
 function apiWorkflowsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 254.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 276.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 281 | `apiWorkflowsUpdate` | **update** [workflows](/code/tables/workflows.md) (`name`, `description`, `trigger_event`, `conditions`, `actions`, `is_active`, `updated_datetime`) |  |
+| 303 | `apiWorkflowsUpdate` | **update** [workflows](/code/tables/workflows.md) (`name`, `description`, `trigger_event`, `conditions`, `actions`, `is_active`, `updated_datetime`) |  |
 
 ## Calls
 

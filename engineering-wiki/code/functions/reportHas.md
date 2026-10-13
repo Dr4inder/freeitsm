@@ -22,11 +22,11 @@ response rather than looking like a successful sync of nothing.
 function reportHas($value): bool
 ```
 
-Defined in [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md), line 270.
+Defined in [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md), line 277.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
+| `$value` |  |  | one section of the report, e.g. `$data`['disks']; only a non-empty array counts |
 
 **Returns:** `bool`
 

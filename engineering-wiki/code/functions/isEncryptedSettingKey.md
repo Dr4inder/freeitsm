@@ -28,11 +28,11 @@ the next save. db_verify re-encrypts the existing ones in place.
 function isEncryptedSettingKey($key)
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 184.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 192.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` |  |  |  |
+| `$key` |  |  | a system_settings.setting_key |
 
 ## Calls
 

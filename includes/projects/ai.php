@@ -65,6 +65,9 @@ function projectAiLanguage(): string
 /**
  * The facts about one project, as plain text, for the model - only what the
  * analyst may see. $days is "the period" a report covers.
+ *
+ * @param array $project  the projects row (goal, summary, business_case and intake fields are read from it)
+ * @param int $days  how many days back "the period" reaches
  */
 function projectAiFacts(PDO $conn, array $project, int $analystId, int $days = 14): string
 {
@@ -336,6 +339,10 @@ function projectAiSystemPrompt(): string
 /**
  * Ask the model. Returns ['text', 'model']. Throws RuntimeException when AI is
  * not set up ('not_configured') or the provider cannot be reached.
+ *
+ * @param string $task  the instruction for the model, e.g. projectAiBriefingTask() or a report kind's wording
+ * @param string $facts  the project facts from projectAiFacts(), wrapped in <project_data> for the model
+ * @param int $maxTokens  the most tokens the reply may use
  */
 function projectAiAsk(PDO $conn, string $task, string $facts, int $maxTokens): array
 {

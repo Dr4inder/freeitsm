@@ -6,7 +6,7 @@ GET /network-diagrams/{id}/versions — the whole chain, oldest first.
 function apiNmVersionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 613.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 684.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

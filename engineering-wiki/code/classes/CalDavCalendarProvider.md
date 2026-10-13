@@ -40,7 +40,7 @@
 
 ### supports
 
-*public* - line 60
+*public* - line 64
 
 CalDAV supports all-day events, checking a target calendar, and per-analyst accounts.
 
@@ -50,11 +50,11 @@ function supports(string $capability): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$capability` | `string` |  |  |
+| `$capability` | `string` |  | a CalendarSyncProvider::CAP_* key - true for all_day, verify_target and per_analyst |
 
 ### serverUrl
 
-*public* - line 72
+*public* - line 76
 
 The configured server, always ending in a slash.
 
@@ -64,7 +64,7 @@ function serverUrl(): string
 
 ### authMode
 
-*private* - line 79
+*private* - line 83
 
 Returns the configured HTTP auth mode - 'auto', 'digest' or 'basic' (anything else reads as 'auto').
 
@@ -74,7 +74,7 @@ function authMode(): string
 
 ### cfg
 
-*private* - line 91
+*private* - line 96
 
 Request settings for `cardDavRequest()`, signed in as the current analyst.
 
@@ -84,12 +84,12 @@ function cfg(string $url, bool $interactive = true): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
+| `$url` | `string` |  | the absolute URL the request goes to, copied into the settings |
 | `$interactive` | `bool` | `true` | short timeouts - true for anything that runs inside somebody's Save, false for the cron |
 
 ### sameOrigin
 
-*public static* - line 113
+*public static* - line 121
 
 Same scheme, host and port.
 
@@ -104,14 +104,14 @@ function sameOrigin(string $a, string $b): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` | `string` |  |  |
-| `$b` | `string` |  |  |
+| `$a` | `string` |  | the first absolute URL (untrusted - may be an analyst's saved address) |
+| `$b` | `string` |  | the second absolute URL - a missing port is read as 443 for https, 80 otherwise |
 
 **Called from:** [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md)
 
 ### calendarUrl
 
-*public* - line 128
+*public* - line 140
 
 A calendar address, checked and normalised to end in a slash.
 
@@ -121,11 +121,11 @@ function calendarUrl(string $address): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$address` | `string` |  |  |
+| `$address` | `string` |  | the calendar address as saved under Preferences (untrusted); must be on the configured server |
 
 ### eventUrl
 
-*private* - line 141
+*private* - line 158
 
 The URL of one of our events. Refuses any id FreeITSM did not mint.
 
@@ -135,12 +135,12 @@ function eventUrl(string $calendarAddress, string $remoteEventId): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$remoteEventId` | `string` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's calendar address, checked by `calendarUrl()` |
+| `$remoteEventId` | `string` |  | the event's 'freeitsm-<hex>' id; any other shape throws |
 
 ### xpath
 
-*private static* - line 150
+*private static* - line 171
 
 Parse a DAV XML body, or null. External entities are never loaded.
 
@@ -150,11 +150,11 @@ function xpath(string $xml): ?DOMXPath
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$xml` | `string` |  |  |
+| `$xml` | `string` |  | a response body from the DAV server; blank or unparseable gives null |
 
 ### text
 
-*private static* - line 166
+*private static* - line 193
 
 Returns the trimmed text of the first node an XPath query matches (optionally inside `$ctx`), or ''.
 
@@ -164,13 +164,13 @@ function text(DOMXPath $xp, string $query, ?DOMNode $ctx = null): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$xp` | `DOMXPath` |  |  |
-| `$query` | `string` |  |  |
-| `$ctx` | `?DOMNode` | `null` |  |
+| `$xp` | `DOMXPath` |  | the parsed document from `xpath()` |
+| `$query` | `string` |  | an XPath query using the d: (DAV) and c: (CalDAV) prefixes |
+| `$ctx` | `?DOMNode` | `null` | the node a relative query runs inside (one d:response); null searches the whole document |
 
 ### buildCalendar
 
-*private* - line 175
+*private* - line 207
 
 One whole VCALENDAR holding our event. No METHOD: RFC 4791 forbids it in a stored object.
 
@@ -180,12 +180,12 @@ function buildCalendar(string $uid, array $event): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$uid` | `string` |  |  |
-| `$event` | `array` |  |  |
+| `$uid` | `string` |  | the 'freeitsm-<hex>' id, written as the iCalendar UID |
+| `$event` | `array` |  | the canonical event shape (see CalendarSyncProvider) |
 
 ### eventLines
 
-*private* - line 186
+*private* - line 223
 
 BEGIN:VEVENT … END:VEVENT for the canonical event (see CalendarSyncProvider).
 
@@ -195,12 +195,12 @@ function eventLines(string $uid, array $event): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$uid` | `string` |  |  |
-| `$event` | `array` |  |  |
+| `$uid` | `string` |  | the 'freeitsm-<hex>' id, written as the iCalendar UID |
+| `$event` | `array` |  | the canonical event shape (see CalendarSyncProvider); 'timezone' defaults to PHP's zone |
 
 ### unfold
 
-*public static* - line 204
+*public static* - line 245
 
 RFC 5545 unfolding: a line starting with a space or tab continues the one before.
 
@@ -210,11 +210,11 @@ function unfold(string $ics): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ics` | `string` |  |  |
+| `$ics` | `string` |  | raw iCalendar text, CRLF or LF line endings |
 
 ### propName
 
-*private static* - line 211
+*private static* - line 256
 
 The property name of a content line, upper-cased: "DTSTART;TZID=…:x" -> "DTSTART".
 
@@ -224,11 +224,11 @@ function propName(string $line): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$line` | `string` |  |  |
+| `$line` | `string` |  | one unfolded content line |
 
 ### rewriteEvent
 
-*public static* - line 223
+*public static* - line 271
 
 Replace the lines FreeITSM owns in an event and keep everything else.
 
@@ -242,12 +242,12 @@ function rewriteEvent(string $ics, array $newEventLines): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ics` | `string` |  |  |
-| `$newEventLines` | `array` |  |  |
+| `$ics` | `string` |  | the event's calendar data as the server sent it back |
+| `$newEventLines` | `array` |  | fresh VEVENT lines from `eventLines()`; their BEGIN, END and UID lines are ignored |
 
 ### createEvent
 
-*public* - line 268
+*public* - line 319
 
 PUTs a new event under a random 'freeitsm-...' name with If-None-Match, so nothing existing is overwritten; retries once on a name clash.
 
@@ -257,14 +257,14 @@ function createEvent(string $calendarAddress, array $event): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$event` | `array` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's calendar address, checked by `calendarUrl()` |
+| `$event` | `array` |  | the canonical event shape (see CalendarSyncProvider) |
 
 **Returns:** string  the event's uid, kept as the remote id
 
 ### updateEvent
 
-*public* - line 293
+*public* - line 348
 
 Reads the event, replaces only the properties FreeITSM owns and PUTs it back with If-Match, rereading once if it changed meanwhile.
 
@@ -276,13 +276,13 @@ function updateEvent(string $calendarAddress, string $remoteEventId, array $even
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$remoteEventId` | `string` |  |  |
-| `$event` | `array` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's calendar address, checked by `calendarUrl()` |
+| `$remoteEventId` | `string` |  | the 'freeitsm-<hex>' id `createEvent()` returned |
+| `$event` | `array` |  | the canonical event shape (see CalendarSyncProvider) |
 
 ### deleteEvent
 
-*public* - line 334
+*public* - line 394
 
 Deletes the event; one already gone counts as success.
 
@@ -292,12 +292,12 @@ function deleteEvent(string $calendarAddress, string $remoteEventId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$remoteEventId` | `string` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's calendar address, checked by `calendarUrl()` |
+| `$remoteEventId` | `string` |  | the 'freeitsm-<hex>' id `createEvent()` returned |
 
 ### pollChanges
 
-*public* - line 361
+*public* - line 424
 
 What changed in this calendar since last time.
 
@@ -320,12 +320,12 @@ function pollChanges(string $calendarAddress, ?string $token): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$token` | `?string` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's calendar address, checked by `calendarUrl()` |
+| `$token` | `?string` |  | the token the last poll returned ('sync:...' or 'etags:{json}'); null or '' takes a baseline |
 
 ### currentSyncToken
 
-*private* - line 367
+*private* - line 434
 
 The calendar's own sync-token right now, or '' when it does not say.
 
@@ -335,11 +335,11 @@ function currentSyncToken(string $calendar): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendar` | `string` |  |  |
+| `$calendar` | `string` |  | the calendar URL, already checked by `calendarUrl()` |
 
 ### pollChangesOnce
 
-*private* - line 383
+*private* - line 452
 
 One pass of `pollChanges()` - sync-collection when the server supports it, otherwise a comparison of our events' ETags - returning token, baseline, changed and removed.
 
@@ -349,13 +349,13 @@ function pollChangesOnce(string $calendarAddress, ?string $token, bool $retried)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$token` | `?string` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's calendar address, checked by `calendarUrl()` |
+| `$token` | `?string` |  | the token the last poll returned ('sync:...' or 'etags:{json}'); null or '' takes a baseline |
 | `$retried` | `bool` |  | true on the second look after a suspicious "no changes" |
 
 ### idFromHref
 
-*private static* - line 500
+*private static* - line 573
 
 The event id in an href, or null when the href is not one of ours.
 
@@ -365,11 +365,11 @@ function idFromHref(string $href): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$href` | `string` |  |  |
+| `$href` | `string` |  | a d:href from a multistatus response, absolute or server-relative |
 
 ### fetchChanges
 
-*private* - line 514
+*private* - line 588
 
 Read the new times of changed events, in batches.
 
@@ -379,14 +379,14 @@ function fetchChanges(string $calendar, array $hrefs): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendar` | `string` |  |  |
+| `$calendar` | `string` |  | the calendar URL, already checked by `calendarUrl()` |
 | `$hrefs` | `array` |  | id => href as the server reported it |
 
 **Returns:** array the 'changed' shape `pollChanges()` returns
 
 ### eventTimes
 
-*public static* - line 550
+*public static* - line 626
 
 The start, end and all-day flag of the first VEVENT, as FreeITSM stores them: naive wall clock in `$tz`, all-day as 00:00 to 23:59:59 of the last day.
 
@@ -396,14 +396,14 @@ function eventTimes(string $ics, string $tz): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ics` | `string` |  |  |
-| `$tz` | `string` |  |  |
+| `$ics` | `string` |  | one event's calendar data as the server sent it |
+| `$tz` | `string` |  | the PHP zone name the times are converted into (FreeITSM's own zone) |
 
 **Returns:** array|null ['start'=>…, 'end'=>…, 'all_day'=>bool]
 
 ### parseDate
 
-*private static* - line 621
+*private static* - line 700
 
 One DTSTART/DTEND line, converted to `$tz`.
 
@@ -423,12 +423,12 @@ function parseDate(string $line, string $tz): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$line` | `string` |  |  |
-| `$tz` | `string` |  |  |
+| `$line` | `string` |  | one unfolded DTSTART or DTEND line, parameters included |
+| `$tz` | `string` |  | the PHP zone name to convert into; also how floating times and unknown TZIDs are read |
 
 ### verifyConnection
 
-*public* - line 663
+*public* - line 742
 
 Is the configured address a DAV server at all?
 
@@ -442,7 +442,7 @@ function verifyConnection(): void
 
 ### verifyTarget
 
-*public* - line 678
+*public* - line 761
 
 True when the signed-in analyst can write events into this calendar (see `checkCalendar()`).
 
@@ -452,11 +452,11 @@ function verifyTarget(string $calendarAddress): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
+| `$calendarAddress` | `string` |  | the calendar address to test, as the analyst chose it |
 
 ### checkCalendar
 
-*public* - line 692
+*public* - line 776
 
 Can the signed-in analyst write events into this calendar?
 
@@ -466,13 +466,13 @@ function checkCalendar(string $calendarAddress): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
+| `$calendarAddress` | `string` |  | the calendar address to test, as the analyst chose it |
 
 **Returns:** array ['ok'=>bool, 'name'=>string, 'error'=>string]
 
 ### discoverCalendars
 
-*public* - line 721
+*public* - line 805
 
 The calendars this sign-in can write events into.
 
@@ -490,7 +490,7 @@ function discoverCalendars(): array
 
 ### calendarPropfind
 
-*private static* - line 777
+*private static* - line 861
 
 The PROPFIND body asking a collection for its name, type, supported components and the analyst's privileges.
 
@@ -500,7 +500,7 @@ function calendarPropfind(): string
 
 ### describeCalendar
 
-*private static* - line 792
+*private static* - line 880
 
 What one PROPFIND response says about a collection.
 
@@ -514,13 +514,13 @@ function describeCalendar(DOMXPath $xp, DOMNode $resp, string $url): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$xp` | `DOMXPath` |  |  |
-| `$resp` | `DOMNode` |  |  |
-| `$url` | `string` |  |  |
+| `$xp` | `DOMXPath` |  | the parsed multistatus document |
+| `$resp` | `DOMNode` |  | one d:response element in it |
+| `$url` | `string` |  | the collection's absolute URL - its last path segment is the name when no displayname is given |
 
 ### explain
 
-*private* - line 821
+*private* - line 913
 
 One readable sentence for a failed request, without calling it a contacts problem.
 
@@ -530,5 +530,5 @@ function explain(array $res): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$res` | `array` |  |  |
+| `$res` | `array` |  | the result of `cardDavRequest()` - 'status' and 'error' are read |
 

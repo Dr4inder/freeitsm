@@ -47,7 +47,11 @@ if (!defined('PROJECT_VISIBILITY_LOADED')) {
         return $ready;
     }
 
-    /** p.visibility, or 'everyone' before Verification - for a SELECT list. */
+    /**
+     * p.visibility, or 'everyone' before Verification - for a SELECT list.
+     *
+     * @param string $alias  the alias the calling query gives the projects table
+     */
     function projectVisibilityColumn(PDO $conn, string $alias = 'p'): string
     {
         return projectVisibilityReady($conn) ? "$alias.visibility" : "'everyone' AS visibility";
@@ -64,6 +68,9 @@ if (!defined('PROJECT_VISIBILITY_LOADED')) {
     /**
      * " AND (...)" limiting $alias to the projects this analyst may see, with its
      * arguments. Empty when nothing is hidden from them.
+     *
+     * @param string $alias  the alias the calling query gives the projects table
+     * @param bool $systemSeesAll  when there is no analyst (0, the system): true hides nothing, false hides members-only projects
      */
     function projectVisibleSql(PDO $conn, int $analystId, string $alias = 'p', bool $systemSeesAll = true): array
     {
@@ -77,7 +84,11 @@ if (!defined('PROJECT_VISIBILITY_LOADED')) {
                 [$analystId, $analystId, $analystId, $analystId]];
     }
 
-    /** May this analyst see this project row (needs id, owner_analyst_id, created_by_id, visibility)? */
+    /**
+     * May this analyst see this project row (needs id, owner_analyst_id, created_by_id, visibility)?
+     *
+     * @param array $project  the projects row - id, owner_analyst_id, created_by_id and visibility are read
+     */
     function projectVisibleTo(PDO $conn, int $analystId, array $project): bool
     {
         if (($project['visibility'] ?? 'everyone') !== 'members') return true;

@@ -1,6 +1,6 @@
 # includes/docker_tls.php
 
-> PHP - 392 lines
+> PHP - 429 lines
 
 HTTPS for the Docker image, with a certificate FreeITSM makes itself.
 
@@ -43,19 +43,19 @@ or mismatched certificate leaves the container on plain HTTP, never down.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [dockerTlsNormaliseHost()](/code/functions/dockerTlsNormaliseHost.md) | 59 | Tidy what someone typed into a bare host name, or null if it is not one. |
-| [dockerTlsNormaliseIp()](/code/functions/dockerTlsNormaliseIp.md) | 81 | A valid IPv4 or IPv6 address, or null. Empty input is allowed and gives null. |
-| [dockerTlsBrowserAddress()](/code/functions/dockerTlsBrowserAddress.md) | 95 | What the browser used to reach this page: host, port and whether host is an IP. |
-| [dockerTlsRequestIsHttps()](/code/functions/dockerTlsRequestIsHttps.md) | 118 | True when this request arrived over HTTPS, as PHP reports it in `$_SERVER`['HTTPS']. |
-| [dockerTlsFingerprintNormalise()](/code/functions/dockerTlsFingerprintNormalise.md) | 124 | Lower-case hex with no separators, so PHP's and the openssl CLI's agree. |
-| [dockerTlsCertInfo()](/code/functions/dockerTlsCertInfo.md) | 131 | Read one PEM certificate's details, or null. |
-| [dockerTlsState()](/code/functions/dockerTlsState.md) | 150 | Everything the screen needs to know, in one place. |
-| [dockerTlsNeedsNewCa()](/code/functions/dockerTlsNeedsNewCa.md) | 215 | Would making a certificate for this name and IP need a NEW authority? |
-| [dockerTlsSingleAddressMask()](/code/functions/dockerTlsSingleAddressMask.md) | 230 | The netmask that pins a name constraint to exactly one address. |
-| [dockerTlsOpensslConfig()](/code/functions/dockerTlsOpensslConfig.md) | 245 | The OpenSSL config both certificates are made from. |
-| [dockerTlsWriteFile()](/code/functions/dockerTlsWriteFile.md) | 277 | Write a file by renaming a temp copy over it, so a reader never sees half of one. |
-| [dockerTlsGenerate()](/code/functions/dockerTlsGenerate.md) | 298 | Make the certificates. Returns ['new_ca' => bool, 'server' => info, 'ca' => info]. |
-| [dockerTlsOpensslError()](/code/functions/dockerTlsOpensslError.md) | 386 | Drain OpenSSL's error queue into one line. |
+| [dockerTlsNormaliseHost()](/code/functions/dockerTlsNormaliseHost.md) | 61 | Tidy what someone typed into a bare host name, or null if it is not one. |
+| [dockerTlsNormaliseIp()](/code/functions/dockerTlsNormaliseIp.md) | 87 | A valid IPv4 or IPv6 address, or null. Empty input is allowed and gives null. |
+| [dockerTlsBrowserAddress()](/code/functions/dockerTlsBrowserAddress.md) | 101 | What the browser used to reach this page: host, port and whether host is an IP. |
+| [dockerTlsRequestIsHttps()](/code/functions/dockerTlsRequestIsHttps.md) | 124 | True when this request arrived over HTTPS, as PHP reports it in `$_SERVER`['HTTPS']. |
+| [dockerTlsFingerprintNormalise()](/code/functions/dockerTlsFingerprintNormalise.md) | 134 | Lower-case hex with no separators, so PHP's and the openssl CLI's agree. |
+| [dockerTlsCertInfo()](/code/functions/dockerTlsCertInfo.md) | 145 | Read one PEM certificate's details, or null. |
+| [dockerTlsState()](/code/functions/dockerTlsState.md) | 166 | Everything the screen needs to know, in one place. |
+| [dockerTlsNeedsNewCa()](/code/functions/dockerTlsNeedsNewCa.md) | 235 | Would making a certificate for this name and IP need a NEW authority? |
+| [dockerTlsSingleAddressMask()](/code/functions/dockerTlsSingleAddressMask.md) | 254 | The netmask that pins a name constraint to exactly one address. |
+| [dockerTlsOpensslConfig()](/code/functions/dockerTlsOpensslConfig.md) | 272 | The OpenSSL config both certificates are made from. |
+| [dockerTlsWriteFile()](/code/functions/dockerTlsWriteFile.md) | 310 | Write a file by renaming a temp copy over it, so a reader never sees half of one. |
+| [dockerTlsGenerate()](/code/functions/dockerTlsGenerate.md) | 335 | Make the certificates. Returns ['new_ca' => bool, 'server' => info, 'ca' => info]. |
+| [dockerTlsOpensslError()](/code/functions/dockerTlsOpensslError.md) | 423 | Drain OpenSSL's error queue into one line. |
 
 ## How it hangs together
 

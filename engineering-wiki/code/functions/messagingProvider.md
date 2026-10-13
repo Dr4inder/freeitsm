@@ -6,11 +6,11 @@ Build the right provider for a channel row (credentials already decrypted into a
 function messagingProvider(array $channel): MessagingProvider
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 38.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 40.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$channel` | `array` |  |  |
+| `$channel` | `array` |  | a messaging_channels row with credentials already decoded; 'provider' picks the class (default twilio) |
 
 **Returns:** `MessagingProvider`
 

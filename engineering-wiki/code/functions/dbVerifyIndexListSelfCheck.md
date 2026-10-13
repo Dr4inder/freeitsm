@@ -9,12 +9,12 @@ it) — we never cry drift when we can't see the source of truth.
 function dbVerifyIndexListSelfCheck(?string $sqlPath = null, ?string $listPath = null): array
 ```
 
-Defined in [includes/db_verify_index_parse.php](/code/files/includes/db_verify_index_parse.php.md), line 67.
+Defined in [includes/db_verify_index_parse.php](/code/files/includes/db_verify_index_parse.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sqlPath` | `?string` | `null` |  |
-| `$listPath` | `?string` | `null` |  |
+| `$sqlPath` | `?string` | `null` | path to freeitsm.sql; null means database/freeitsm.sql in this install |
+| `$listPath` | `?string` | `null` | path to the generated index list; null means includes/db_verify_indexes.php |
 
 **Returns:** `array`
 

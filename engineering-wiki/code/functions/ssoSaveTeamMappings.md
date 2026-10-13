@@ -6,13 +6,13 @@ Replace a provider's group -> team rows. `$rows`: [['group' => .., 'team_id' => 
 function ssoSaveTeamMappings(PDO $conn, int $providerId, array $rows): void
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 122.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
-| `$rows` | `array` |  |  |
+| `$providerId` | `int` |  | the sign-in provider (auth_providers.id) |
+| `$rows` | `array` |  | the new mappings, as [['group' => name, 'team_id' => int], ...]; rows with neither are skipped |
 
 **Returns:** `void`
 
@@ -20,9 +20,9 @@ Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 125 | `ssoSaveTeamMappings` | read [teams](/code/tables/teams.md) |  |
-| 135 | `ssoSaveTeamMappings` | **delete** [sso_group_teams](/code/tables/sso_group_teams.md) |  |
-| 136 | `ssoSaveTeamMappings` | **insert** [sso_group_teams](/code/tables/sso_group_teams.md) (`provider_id`, `group_name`, `team_id`) |  |
+| 145 | `ssoSaveTeamMappings` | read [teams](/code/tables/teams.md) |  |
+| 155 | `ssoSaveTeamMappings` | **delete** [sso_group_teams](/code/tables/sso_group_teams.md) |  |
+| 156 | `ssoSaveTeamMappings` | **insert** [sso_group_teams](/code/tables/sso_group_teams.md) (`provider_id`, `group_name`, `team_id`) |  |
 
 ## Called from
 

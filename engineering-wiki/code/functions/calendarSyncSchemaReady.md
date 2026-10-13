@@ -12,7 +12,7 @@ everyday work and must never be taken down by an unrelated missing table.
 function calendarSyncSchemaReady(PDO $conn): bool
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 101.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Are incidents shown on the portal at all?
 function ssPortalUpdatesEnabled(PDO $conn): bool
 ```
 
-Defined in [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md), line 70.
+Defined in [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,12 +6,12 @@ Stops the request with a JSON refusal unless the signed-in analyst holds the cap
 function domainRequireCap(PDO $conn, string $cap): void
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 59.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 72.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$cap` | `string` |  |  |
+| `$cap` | `string` |  | a capability key, normally a Cap::DOMAINS_* constant |
 
 **Returns:** `void`
 

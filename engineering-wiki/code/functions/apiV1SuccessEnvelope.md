@@ -6,11 +6,11 @@ Wrap a data schema (or a generic object) in the { data, meta? } envelope.
 function apiV1SuccessEnvelope(?array $dataSchema): array
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 247.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 268.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dataSchema` | `?array` |  |  |
+| `$dataSchema` | `?array` |  | the typed schema for the data member; null gives a generic payload |
 
 **Returns:** `array`
 

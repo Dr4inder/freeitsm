@@ -6,13 +6,13 @@ Is this analyst on the project's team: its manager, its creator or a member? (Me
 function projectIsTeam(PDO $conn, int $analystId, array $project): bool
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 414.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 446.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row - id, owner_analyst_id and created_by_id are read |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/projects/settings.php](/code/files/includes/projects/settin
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 419 | `projectIsTeam` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 451 | `projectIsTeam` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Called from
 

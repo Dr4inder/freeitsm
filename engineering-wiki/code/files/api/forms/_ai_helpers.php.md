@@ -1,6 +1,6 @@
 # api/forms/_ai_helpers.php
 
-> API endpoint - 69 lines
+> API endpoint - 71 lines
 
 Forms AI helpers — Stage 2 of the per-module AI billing model.
 
@@ -28,8 +28,8 @@ settings page and the test endpoint stay in sync.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [formsEffectiveSslVerify()](/code/functions/formsEffectiveSslVerify.md) | 46 | Apply the global SSL_VERIFY_PEER kill switch on top of the per-form toggle. Same behaviour as the equivalent helper on Workflow. |
-| [loadFormsAiConfig()](/code/functions/loadFormsAiConfig.md) | 59 | Load `forms_ai_*` settings. Throws if no key is saved so callers can surface a clear "configure AI under Forms → Settings → AI" message. |
+| [formsEffectiveSslVerify()](/code/functions/formsEffectiveSslVerify.md) | 48 | Apply the global SSL_VERIFY_PEER kill switch on top of the per-form toggle. Same behaviour as the equivalent helper on Workflow. |
+| [loadFormsAiConfig()](/code/functions/loadFormsAiConfig.md) | 61 | Load `forms_ai_*` settings. Throws if no key is saved so callers can surface a clear "configure AI under Forms → Settings → AI" message. |
 
 ## How it hangs together
 

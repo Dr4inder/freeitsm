@@ -1,6 +1,6 @@
 # includes/services/software.php
 
-> PHP - 202 lines
+> PHP - 221 lines
 
 SoftwareService — the single home for the software module's write rules.
 
@@ -33,11 +33,11 @@ purchase_date, vendor_contact, notes, status). The UI already sends these.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 48 | `SoftwareService::saveLicence` | **update** [software_licences](/code/tables/software_licences.md) (`app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date`, `vendor_contact`, `notes`) |  |
-| 64 | `SoftwareService::saveLicence` | **insert** [software_licences](/code/tables/software_licences.md) (`app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date`, `vendor_contact`, `notes`) |  |
-| 84 | `SoftwareService::deleteLicence` | **delete** [software_licences](/code/tables/software_licences.md) |  |
-| 121 | `SoftwareService::loadLicenceRow` | read [software_licences](/code/tables/software_licences.md) |  |
-| 146 | `SoftwareService::collectFields` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 51 | `SoftwareService::saveLicence` | **update** [software_licences](/code/tables/software_licences.md) (`app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date`, `vendor_contact`, `notes`) |  |
+| 67 | `SoftwareService::saveLicence` | **insert** [software_licences](/code/tables/software_licences.md) (`app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date`, `vendor_contact`, `notes`) |  |
+| 91 | `SoftwareService::deleteLicence` | **delete** [software_licences](/code/tables/software_licences.md) |  |
+| 132 | `SoftwareService::loadLicenceRow` | read [software_licences](/code/tables/software_licences.md) |  |
+| 160 | `SoftwareService::collectFields` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ## How it hangs together
 

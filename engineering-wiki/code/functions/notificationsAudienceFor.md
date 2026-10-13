@@ -24,13 +24,13 @@ it" is the firehose that was rejected.
 function notificationsAudienceFor(PDO $conn, string $event, array $payload): array
 ```
 
-Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 135.
+Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 140.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$event` | `string` |  |  |
-| `$payload` | `array` |  |  |
+| `$event` | `string` |  | the workflow event name, e.g. 'task.comment_added' or 'ticket.team_assigned' |
+| `$payload` | `array` |  | the event's dispatch payload - reads notify_ids, task, team_id, ticket, domain or project from it |
 
 **Returns:** array<int> analyst ids, de-duplicated. Empty when nobody can be named.
 
@@ -38,8 +38,8 @@ Defined in [includes/notifications_router.php](/code/files/includes/notification
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 160 | `notificationsAudienceFor` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 192 | `notificationsAudienceFor` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 165 | `notificationsAudienceFor` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 197 | `notificationsAudienceFor` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Calls
 

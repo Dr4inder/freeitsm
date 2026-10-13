@@ -6,7 +6,7 @@ The JSON body of a POST.
 function rpInput(): array
 ```
 
-Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 32.
+Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 42.
 
 **Returns:** `array`
 

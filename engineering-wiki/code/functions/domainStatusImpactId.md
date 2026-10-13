@@ -10,12 +10,12 @@ the service is fine.
 function domainStatusImpactId(PDO $conn, int $chosen): int
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 191.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 216.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$chosen` | `int` |  |  |
+| `$chosen` | `int` |  | the domain_status_impact setting as an id; 0 means none chosen |
 
 **Returns:** `int`
 
@@ -23,8 +23,8 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 194 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 200 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 219 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 225 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## Called from
 

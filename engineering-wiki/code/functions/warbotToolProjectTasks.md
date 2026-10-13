@@ -6,12 +6,12 @@ project_tasks: one project's tasks via `projectAssistTasks()`, scoped to the pro
 function warbotToolProjectTasks(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 987.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 1062.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$args` | `array` |  |  |
+| `$args` | `array` |  | the model's arguments - untrusted: project, open_only (default true) |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`

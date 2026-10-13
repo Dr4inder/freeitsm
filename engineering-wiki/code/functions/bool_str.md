@@ -9,11 +9,11 @@ Formats a boolean as YES or NO for the report.
 function bool_str($v)
 ```
 
-Defined in [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md), line 32.
+Defined in [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md), line 40.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | any value, judged as true or false |
 
 ## Called from
 

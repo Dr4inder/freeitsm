@@ -6,12 +6,12 @@ Every bucket key (day, month or year) from the start of the date range to today,
 function getTimeLabels($dateRange, $timeGrouping)
 ```
 
-Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 211.
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 231.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dateRange` |  |  |  |
-| `$timeGrouping` |  |  |  |
+| `$dateRange` |  |  | the widget's date range: '7d', '30d', 'this_month', '3m', '6m', '12m', 'this_year' or 'all' |
+| `$timeGrouping` |  |  | the bucket size: 'day', 'month' or 'year' |
 
 ## Called from
 

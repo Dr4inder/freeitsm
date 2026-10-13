@@ -65,7 +65,11 @@ class AssetTagsService
     /** @var array|null test / preview override, bypassing the stored settings */
     private static $override = null;
 
-    /** Run with a specific configuration — used by the tests. */
+    /**
+     * Run with a specific configuration — used by the tests.
+     *
+     * @param ?array $settings  setting keys (as DEFAULTS) to use instead of the stored ones; null goes back to the stored ones
+     */
     public static function withSettings(?array $settings): void
     {
         self::$override = $settings;
@@ -106,6 +110,8 @@ class AssetTagsService
     /**
      * What is wrong with a format, in words an administrator can act on. Empty
      * means it is usable.
+     *
+     * @param string $format  the proposed tag format, e.g. 'AST-{#####}'
      */
     public static function validateFormat(string $format): array
     {
@@ -134,7 +140,13 @@ class AssetTagsService
         return $problems;
     }
 
-    /** A few example tags for a proposed configuration. Writes nothing. */
+    /**
+     * A few example tags for a proposed configuration. Writes nothing.
+     *
+     * @param array $cfg  the proposed settings; only asset_tag_format is used
+     * @param int $start  the number of the first example (at least 1)
+     * @param int $count  how many examples to return
+     */
     public static function preview(array $cfg, int $start, int $count = 3): array
     {
         // A preview has no company, so {COMPANY} gets a stand-in: an empty one
@@ -158,7 +170,11 @@ class AssetTagsService
         return $tenantId === getDefaultTenantId($conn) ? null : $tenantId;
     }
 
-    /** Which counter a company draws from. */
+    /**
+     * Which counter a company draws from.
+     *
+     * @param array $cfg  the company's settings from config(); asset_tag_scope 'global' shares one counter
+     */
     public static function counterKey(PDO $conn, array $cfg, ?int $tenantId): string
     {
         if (($cfg['asset_tag_scope'] ?? 'per_company') === 'global') {
@@ -182,14 +198,23 @@ class AssetTagsService
         return $last === false ? max(1, (int)$cfg['asset_tag_start']) : (int)$last + 1;
     }
 
-    /** Make the next generated tag at least $next. Only ever forward. */
+    /**
+     * Make the next generated tag at least $next. Only ever forward.
+     *
+     * @param int $next  the number the next generated tag should carry at least
+     */
     public static function setNextNumber(PDO $conn, ?int $tenantId, int $next): void
     {
         $cfg = self::config($conn, $tenantId);
         self::windCounterTo($conn, self::counterKey($conn, $cfg, $tenantId), max(1, $next) - 1);
     }
 
-    /** Moves the tag counter forward to $lastIssued, never back. */
+    /**
+     * Moves the tag counter forward to $lastIssued, never back.
+     *
+     * @param string $key  the asset_tag_counters key, from counterKey()
+     * @param int $lastIssued  the number to treat as already issued; a lower value leaves the counter alone
+     */
     private static function windCounterTo(PDO $conn, string $key, int $lastIssued): void
     {
         $conn->prepare(
@@ -198,7 +223,12 @@ class AssetTagsService
         )->execute([$key, $lastIssued]);
     }
 
-    /** Claim the next number. Same statement, and the same rowCount() trap, as TicketNumbering::claimNext(). */
+    /**
+     * Claim the next number. Same statement, and the same rowCount() trap, as TicketNumbering::claimNext().
+     *
+     * @param string $key  the asset_tag_counters key, from counterKey()
+     * @param int $start  the number to issue when the counter does not exist yet
+     */
     private static function claimNext(PDO $conn, string $key, int $start): int
     {
         $stmt = $conn->prepare(
@@ -256,6 +286,8 @@ class AssetTagsService
      * A tag typed by hand that has the generated SHAPE and a number ahead of the
      * counter winds the counter past it, so the generator never has to skip it
      * later. Anything else is left alone.
+     *
+     * @param string $tag  the tag that was typed by hand
      */
     public static function noteManualTag(PDO $conn, ?int $tenantId, string $tag): void
     {
@@ -281,7 +313,7 @@ class AssetTagsService
      * be had is an error, never "carry on unguarded".
      *
      * @template T
-     * @param callable():T $fn
+     * @param callable():T $fn  the work to do while the lock is held; what it returns is passed back
      * @return T
      */
     public static function withLock(PDO $conn, ?int $tenantId, callable $fn)
@@ -299,7 +331,13 @@ class AssetTagsService
         }
     }
 
-    /** The plain message for a tag that is taken, naming where. */
+    /**
+     * The plain message for a tag that is taken, naming where.
+     *
+     * @param ?int $storeTenant  the company as assets store it - null for the Default company
+     * @param string $tag  the tag that is already taken
+     * @param ?int $exceptAssetId  an asset to ignore (the one being changed), or null
+     */
     public static function clashMessage(PDO $conn, ?int $storeTenant, string $tag, ?int $exceptAssetId = null): string
     {
         $sql = "SELECT hostname FROM assets WHERE tenant_id <=> ? AND asset_tag = ?";
@@ -319,6 +357,7 @@ class AssetTagsService
      * the caller's, if it already has one - so the counter claim, the insert and
      * whatever $insert audits succeed or fail together.
      *
+     * @param ?string $manualTag  the tag typed in (trimmed, up to 64 characters); null or '' generates one if switched on
      * @param callable(?string):int $insert writes the asset with the given tag, returns its id
      * @return array{id:int, tag:?string}
      */
@@ -362,6 +401,7 @@ class AssetTagsService
      * it. Recorded in the asset's history. The caller has already checked the
      * analyst may see the asset.
      *
+     * @param string $tag  the new tag as typed; '' clears it
      * @return array{asset_tag:string, unchanged:bool}
      */
     public static function assign(PDO $conn, ActorContext $ctx, int $assetId, string $tag): array

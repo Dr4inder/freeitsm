@@ -6,12 +6,12 @@ Returns one Domains setting as a string, from the cached settings (its default w
 function domainSetting(PDO $conn, string $key): string
 ```
 
-Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 160.
+Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 166.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a key from `domainSettingDefinitions()`, or DOMAIN_SETTING_LAST_RUN; unknown gives '' |
 
 **Returns:** `string`
 

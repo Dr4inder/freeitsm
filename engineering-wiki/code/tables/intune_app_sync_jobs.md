@@ -18,9 +18,9 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/intune/create_app_sync_job.php](/code/files/api/intune/create_app_sync_job.php.md):52 |  | update | `status`, `message`, `finished_datetime` |  |
-| [includes/intune.php](/code/files/includes/intune.php.md):649 | `intuneCreateAppSyncJob` | update | `status`, `message`, `finished_datetime` |  |
-| [includes/intune.php](/code/files/includes/intune.php.md):667 | `intuneCreateAppSyncJob` | insert | `started_datetime`, `status`, `total`, `processed`, `failed`, `message` |  |
-| [includes/intune.php](/code/files/includes/intune.php.md):774 | `intuneRunAppSyncJob` | update | `status`, `processed`, `failed`, `finished_datetime`, `message` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):676 | `intuneCreateAppSyncJob` | update | `status`, `message`, `finished_datetime` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):694 | `intuneCreateAppSyncJob` | insert | `started_datetime`, `status`, `total`, `processed`, `failed`, `message` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):808 | `intuneRunAppSyncJob` | update | `status`, `processed`, `failed`, `finished_datetime`, `message` |  |
 
 ## Read by
 
@@ -28,5 +28,5 @@
 |---|---|---|
 | [api/intune/app_sync_job_status.php](/code/files/api/intune/app_sync_job_status.php.md) | L30, L36 |  |
 | [api/intune/list_app_sync_jobs.php](/code/files/api/intune/list_app_sync_jobs.php.md) | L25 |  |
-| [includes/intune.php](/code/files/includes/intune.php.md) | intuneGetAppSyncCandidates L604, intuneCreateAppSyncJob L639 |  |
+| [includes/intune.php](/code/files/includes/intune.php.md) | intuneGetAppSyncCandidates L631, intuneCreateAppSyncJob L666 |  |
 

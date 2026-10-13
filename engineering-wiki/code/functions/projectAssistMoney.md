@@ -6,12 +6,12 @@ Formats an amount with its currency to two decimals; null shows as "-".
 function projectAssistMoney(?float $v, string $cur): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 71.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` | `?float` |  |  |
-| `$cur` | `string` |  |  |
+| `$v` | `?float` |  | the amount; null shows as "-" |
+| `$cur` | `string` |  | the currency code shown before it, e.g. 'GBP' |
 
 **Returns:** `string`
 

@@ -6,7 +6,7 @@ The tools the model may call. Read tools run at once; propose_* tools only recor
 function projectChatTools(): array
 ```
 
-Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 181.
+Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 198.
 
 **Returns:** `array`
 

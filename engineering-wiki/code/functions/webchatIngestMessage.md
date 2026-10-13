@@ -12,15 +12,15 @@ function webchatIngestMessage(
 ): int
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 303.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 347.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$conversation` | `array` |  |  |
-| `$channel` | `array` |  |  |
-| `$body` | `string` |  |  |
-| `$emailId` | `?int` | `null` |  |
+| `$conversation` | `array` |  | the webchat_conversations row; its ticket_id decides open or append |
+| `$channel` | `array` |  | the widget/channel row |
+| `$body` | `string` |  | the visitor's message - untrusted plain text |
+| `$emailId` | `?int` | `null` | out: set to the stored inbound emails.id |
 
 **Returns:** `int`
 
@@ -28,8 +28,8 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 319 | `webchatIngestMessage` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`, `last_inbound_at`) |  |
-| 325 | `webchatIngestMessage` | **update** [webchat_conversations](/code/tables/webchat_conversations.md) (`last_activity_datetime`) |  |
+| 363 | `webchatIngestMessage` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`, `last_inbound_at`) |  |
+| 369 | `webchatIngestMessage` | **update** [webchat_conversations](/code/tables/webchat_conversations.md) (`last_activity_datetime`) |  |
 
 ## Calls
 

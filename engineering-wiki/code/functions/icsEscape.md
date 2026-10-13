@@ -6,11 +6,11 @@ Escape a text value per RFC 5545 (backslash, newline, comma, semicolon).
 function icsEscape($s): string
 ```
 
-Defined in [includes/ics.php](/code/files/includes/ics.php.md), line 18.
+Defined in [includes/ics.php](/code/files/includes/ics.php.md), line 22.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | the text value, cast to string; null gives '' |
 
 **Returns:** `string`
 

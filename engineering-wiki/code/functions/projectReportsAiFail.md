@@ -6,11 +6,11 @@ A provider problem in words the page can show.
 function projectReportsAiFail(RuntimeException $e): void
 ```
 
-Defined in [api/projects/reports.php](/code/files/api/projects/reports.php.md), line 25.
+Defined in [api/projects/reports.php](/code/files/api/projects/reports.php.md), line 29.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `RuntimeException` |  |  |
+| `$e` | `RuntimeException` |  | the AI call's failure; the message 'not_configured' means no provider is set up |
 
 **Returns:** `void`
 

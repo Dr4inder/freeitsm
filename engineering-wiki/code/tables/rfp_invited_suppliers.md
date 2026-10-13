@@ -19,7 +19,7 @@
 | [api/rfp-builder/invite_supplier.php](/code/files/api/rfp-builder/invite_supplier.php.md):52 |  | insert | `rfp_id`, `supplier_id`, `demo_date`, `notes` |  |
 | [api/rfp-builder/remove_invited_supplier.php](/code/files/api/rfp-builder/remove_invited_supplier.php.md):53 |  | delete |  |  |
 | [api/rfp-builder/update_invited_supplier.php](/code/files/api/rfp-builder/update_invited_supplier.php.md):41 |  | update | `demo_date`, `notes` |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):227 | `ContractsService::deleteSupplier` | delete |  |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):248 | `ContractsService::deleteSupplier` | delete |  |  |
 
 ## Read by
 
@@ -35,5 +35,5 @@
 | [api/rfp-builder/remove_invited_supplier.php](/code/files/api/rfp-builder/remove_invited_supplier.php.md) | L39 |  |
 | [api/rfp-builder/save_score.php](/code/files/api/rfp-builder/save_score.php.md) | L61 |  |
 | [api/rfp-builder/update_invited_supplier.php](/code/files/api/rfp-builder/update_invited_supplier.php.md) | L35 |  |
-| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L82 |  |
+| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L101 |  |
 

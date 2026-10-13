@@ -39,7 +39,7 @@ A "normalised inbound message" (the shape parseInbound returns) is:
 
 ### __construct
 
-*public* - line 29
+*public* - line 33
 
 Keeps the decrypted messaging_channels row the provider works with.
 
@@ -49,11 +49,11 @@ function __construct(array $channel)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$channel` | `array` |  |  |
+| `$channel` | `array` |  | the messaging_channels row, decrypted (credentials already a PHP array) |
 
 ### getType
 
-*public* - line 35
+*public* - line 39
 
 Channel type this instance serves, e.g. 'whatsapp'.
 
@@ -63,7 +63,7 @@ function getType(): string
 
 ### verifyWebhook
 
-*public* - line 49
+*public* - line 53
 
 Verify an inbound webhook is genuinely from the provider (signature / shared-secret check). Return false to reject — the endpoint will 403.
 
@@ -80,7 +80,7 @@ function verifyWebhook(string $rawBody, array $headers, array $params, string $u
 
 ### verifyChallenge
 
-*public* - line 55
+*public* - line 61
 
 Meta-style GET verification handshake (hub.challenge). Return the challenge string to echo, or null if this provider/request doesn't use it (Twilio).
 
@@ -90,11 +90,11 @@ function verifyChallenge(array $get): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$get` | `array` |  |  |
+| `$get` | `array` |  | the request's query parameters (`$_GET`) |
 
 ### parseInbound
 
-*public* - line 65
+*public* - line 74
 
 Parse an inbound webhook into zero or more normalised messages (see the file header for the shape). Returns [] for non-message events (status callbacks, etc.) so the caller can simply skip them.
 
@@ -104,12 +104,12 @@ function parseInbound(string $rawBody, array $params): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawBody` | `string` |  |  |
-| `$params` | `array` |  |  |
+| `$rawBody` | `string` |  | the raw request body |
+| `$params` | `array` |  | the parsed POST parameters (form-posting providers such as Twilio) |
 
 ### sendMessage
 
-*public* - line 71
+*public* - line 83
 
 Send a free-text message to a recipient (within the 24h service window). Returns the provider's message id. Throws on failure.
 
@@ -119,12 +119,12 @@ function sendMessage(string $to, string $body): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$to` | `string` |  |  |
-| `$body` | `string` |  |  |
+| `$to` | `string` |  | the recipient, in the provider's address form (e.g. '+447700900123') |
+| `$body` | `string` |  | the plain-text message |
 
 ### sendTemplate
 
-*public* - line 81
+*public* - line 93
 
 Send a pre-approved template message (the 24h-window escape hatch).
 
@@ -142,7 +142,7 @@ function sendTemplate(string $to, array $template, array $vars): string
 
 ### sendRatingRequest
 
-*public* - line 92
+*public* - line 108
 
 Ask the customer to rate the service 1–5 (CSAT). Default: a plain message saying to reply with one digit, which the webhook then records (see `csatPendingRequestForChat()`). A channel with real buttons overrides this to show them; `$responseId` ties a button press back to its csat row.
 
@@ -152,13 +152,13 @@ function sendRatingRequest(string $to, string $text, int $responseId): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$to` | `string` |  |  |
-| `$text` | `string` |  |  |
-| `$responseId` | `int` |  |  |
+| `$to` | `string` |  | the recipient, in the provider's address form |
+| `$text` | `string` |  | the question to send |
+| `$responseId` | `int` |  | the ticket_csat_responses id a button press is tied back to |
 
 ### sendMedia
 
-*public* - line 120
+*public* - line 143
 
 Send a single local file (image, document, …) to a recipient — the outbound twin of `downloadMedia()`. Returns the provider's message id. Throws on failure, and by default for any provider that doesn't support this yet.
 
@@ -192,16 +192,16 @@ function sendMedia(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$to` | `string` |  |  |
-| `$filePath` | `string` |  |  |
-| `$mimeType` | `string` |  |  |
-| `$caption` | `string` | `''` |  |
-| `$publicUrl` | `string` | `''` |  |
-| `$filename` | `string` | `''` |  |
+| `$to` | `string` |  | the recipient, in the provider's address form |
+| `$filePath` | `string` |  | the file on this server's disk, already validated |
+| `$mimeType` | `string` |  | the file's MIME type |
+| `$caption` | `string` | `''` | text sent with the file; '' for none |
+| `$publicUrl` | `string` | `''` | a short-lived URL to the same file, for providers that fetch it themselves; '' if none |
+| `$filename` | `string` | `''` | the name the recipient sees; '' uses the stored name |
 
 ### testConnection
 
-*public* - line 131
+*public* - line 154
 
 Verify the channel's credentials against the provider with a lightweight, read-only API call (no message is sent). Returns a short human-readable success detail (e.g. the account/number it reached). Throws on failure with a message suitable for showing the analyst.
 
@@ -211,7 +211,7 @@ function testConnection(): string
 
 ### downloadMedia
 
-*public* - line 141
+*public* - line 166
 
 Download one inbound media item (an entry from parseInbound's 'media' array). Returns ['data' => binary, 'content_type' => string, 'filename' => string]. Throws on failure.
 
@@ -221,11 +221,11 @@ function downloadMedia(array $item): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$item` | `array` |  |  |
+| `$item` | `array` |  | one entry from `parseInbound()`'s 'media' list |
 
 ### httpRequest
 
-*protected* - line 155
+*protected* - line 181
 
 Shared cURL helper. Returns [httpCode, bodyString]. No exceptions on HTTP error codes — the caller decides what a bad status means.
 
@@ -235,12 +235,12 @@ function httpRequest(string $url, array $opts = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
+| `$url` | `string` |  | the full URL to call |
 | `$opts` | `array` | `[]` | ['method'=>'POST', 'headers'=>[], 'body'=>string, 'auth'=>'user:pass'] |
 
 ### httpMultipart
 
-*protected* - line 211
+*protected* - line 238
 
 POST multipart/form-data — for uploading a file to a provider. Returns [httpCode, bodyString], like `httpRequest()`.
 
@@ -259,13 +259,13 @@ function httpMultipart(string $url, array $fields, array $headers = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
+| `$url` | `string` |  | the full URL to POST to |
 | `$fields` | `array` |  | form fields; a file is a CURLFile |
 | `$headers` | `array` | `[]` | extra headers, e.g. ["Authorization: Bearer …"] |
 
 ### outboundFilename
 
-*protected* - line 234
+*protected* - line 266
 
 The name a recipient sees for an outbound file: the given one, else the stored one.
 
@@ -275,6 +275,6 @@ function outboundFilename(string $filePath, string $filename): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filePath` | `string` |  |  |
-| `$filename` | `string` |  |  |
+| `$filePath` | `string` |  | the file's path on disk; its base name is the fallback |
+| `$filename` | `string` |  | the name asked for; CR, LF and double quotes are stripped |
 

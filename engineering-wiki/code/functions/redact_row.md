@@ -9,12 +9,12 @@ function redact_row(
 )
 ```
 
-Defined in [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md), line 46.
+Defined in [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` |  |  |  |
-| `$redactCols` |  | `['password_hash', 'totp_secret', 'username', 'email', 'full_name', 'display_name', 'preferred_name']` |  |
+| `$row` |  |  | a database row as an array; anything else is returned untouched |
+| `$redactCols` |  | `['password_hash', 'totp_secret', 'username', 'email', 'full_name', 'display_name', 'preferred_name']` | the column names whose values are replaced |
 
 ## Called from
 

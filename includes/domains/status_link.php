@@ -58,6 +58,8 @@ if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
     /**
      * What is wrong with this domain right now, as far as Service Status is
      * concerned. Each: kind ('expired' | 'cert'), fingerprint (the date), date.
+     *
+     * @param array $row  the domain row from domainStatusRow() (expiry_date, ssl_expiry_date, renewal_mode, alerts_enabled)
      */
     function domainStatusProblems(PDO $conn, array $row): array
     {
@@ -79,7 +81,11 @@ if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
         return $out;
     }
 
-    /** One domain row with the fields the problem test needs (alerts_enabled from its status). */
+    /**
+     * One domain row with the fields the problem test needs (alerts_enabled from its status).
+     *
+     * @param int $domainId  the domain to load; a missing one gives null
+     */
     function domainStatusRow(PDO $conn, int $domainId): ?array
     {
         $st = $conn->prepare(
@@ -90,7 +96,11 @@ if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
         return $st->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
-    /** The services linked to a domain, ids only (install-wide records). */
+    /**
+     * The services linked to a domain, ids only (install-wide records).
+     *
+     * @param int $domainId  the domain whose active linked services to list
+     */
     function domainStatusServiceIds(PDO $conn, int $domainId): array
     {
         $st = $conn->prepare("SELECT ds.service_id FROM domain_status_services ds JOIN status_services ss ON ss.id = ds.service_id
@@ -99,7 +109,11 @@ if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
         return array_map('intval', $st->fetchAll(PDO::FETCH_COLUMN));
     }
 
-    /** The incident this domain raised that is still open, or null. */
+    /**
+     * The incident this domain raised that is still open, or null.
+     *
+     * @param int $domainId  the domain whose open, domain-raised incident to find
+     */
     function domainStatusOpenIncident(PDO $conn, int $domainId): ?array
     {
         $st = $conn->prepare(
@@ -116,6 +130,8 @@ if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
      * For the domain's page: the mode, the trouble, the linked services at
      * risk, an open incident if there is one, and whether this analyst may raise
      * one (Service Status module access).
+     *
+     * @param int $domainId  the domain whose page is being drawn
      */
     function domainStatusState(PDO $conn, int $analystId, int $domainId): array
     {
@@ -130,7 +146,12 @@ if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
         return $out;
     }
 
-    /** The title and opening comment, in plain words (stored data: what customers may read). */
+    /**
+     * The title and opening comment, in plain words (stored data: what customers may read).
+     *
+     * @param array $row       the domain row from domainStatusRow() (domain_name, display_name)
+     * @param array $problems  the non-empty list from domainStatusProblems(), each array{kind:string,fingerprint:string,date:string}
+     */
     function domainStatusWording(array $row, array $problems): array
     {
         $name = $row['display_name'] ?: $row['domain_name'];
@@ -153,6 +174,8 @@ if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
      * record it against every current problem. Returns the incident id, or the
      * open one it already raised. Throws ServiceError when there is nothing to
      * raise (no trouble, or no services linked).
+     *
+     * @param int $domainId  the domain whose trouble to raise an incident for
      */
     function domainStatusRaise(PDO $conn, ActorContext $ctx, int $domainId): int
     {
@@ -187,6 +210,8 @@ if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
      * 🔴 Not Service Status's own default level: on a stock install that is
      * "Operational", so falling back to it would raise an incident that says
      * the service is fine.
+     *
+     * @param int $chosen  the domain_status_impact setting as an id; 0 means none chosen
      */
     function domainStatusImpactId(PDO $conn, int $chosen): int
     {

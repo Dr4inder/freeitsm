@@ -15,18 +15,18 @@ function lmsCtGenerate(
 ): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 386.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 465.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$role` | `string` |  |  |
-| `$skill` | `string` |  |  |
-| `$difficulty` | `string` |  |  |
-| `$format` | `string` |  |  |
-| `$count` | `int` |  |  |
-| `$avoid` | `array` |  |  |
-| `$marks` | `array` |  |  |
+| `$cfg` | `array` |  | the AI settings for the LMS, from aiSettingsLoad(`$conn`, 'lms_ai') |
+| `$role` | `string` |  | the role being recruited for, as described on the test; '' if none |
+| `$skill` | `string` |  | the skill the questions must test |
+| `$difficulty` | `string` |  | 'beginner', 'intermediate' or 'advanced' |
+| `$format` | `string` |  | 'choice' (one correct answer) or 'graded' (four answers, best first) |
+| `$count` | `int` |  | how many questions to ask for, clamped to 1-20 |
+| `$avoid` | `array` |  | question texts already in the bank on this skill, so they are not repeated (first 40 sent) |
+| `$marks` | `array` |  | the graded marks, best first, from `lmsCtGradedMarks()` |
 
 **Returns:** `array`
 

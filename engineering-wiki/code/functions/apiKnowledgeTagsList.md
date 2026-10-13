@@ -6,7 +6,7 @@ GET /knowledge/tags — tag list with published article counts
 function apiKnowledgeTagsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 395.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 407.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowled
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 397 | `apiKnowledgeTagsList` | read [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 409 | `apiKnowledgeTagsList` | read [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

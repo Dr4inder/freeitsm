@@ -13,13 +13,13 @@ they fall through to whatever the caller supplied.
 function integrationsEntityRouting(PDO $conn, string $entityType, int $entityId): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1071.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1144.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$entityType` | `string` |  |  |
-| `$entityId` | `int` |  |  |
+| `$entityType` | `string` |  | 'ticket', 'problem' or 'change'; only 'ticket' returns anything but nulls |
+| `$entityId` | `int` |  | the id of that work item |
 
 **Returns:** `array`
 
@@ -27,7 +27,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1076 | `integrationsEntityRouting` | read [tickets](/code/tables/tickets.md) |  |
+| 1149 | `integrationsEntityRouting` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Called from
 

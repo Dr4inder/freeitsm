@@ -6,13 +6,13 @@ Name the groups a provider has sent. `$labels`: [['group' => code, 'label' => na
 function ssoSaveGroupLabels(PDO $conn, int $providerId, array $labels): void
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 158.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 183.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
-| `$labels` | `array` |  |  |
+| `$providerId` | `int` |  | the sign-in provider (auth_providers.id) |
+| `$labels` | `array` |  | [['group' => code, 'label' => name], ...]; a blank label clears it |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 160 | `ssoSaveGroupLabels` | **update** [sso_groups_seen](/code/tables/sso_groups_seen.md) (`label`) |  |
+| 185 | `ssoSaveGroupLabels` | **update** [sso_groups_seen](/code/tables/sso_groups_seen.md) (`label`) |  |
 
 ## Called from
 

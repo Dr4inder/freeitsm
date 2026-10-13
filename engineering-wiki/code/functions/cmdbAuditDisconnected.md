@@ -14,7 +14,7 @@ which is what this check is about.
 function cmdbAuditDisconnected(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 170.
+Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 177.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -27,7 +27,7 @@ Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 172 | `cmdbAuditDisconnected` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 179 | `cmdbAuditDisconnected` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
 
 ## Calls
 

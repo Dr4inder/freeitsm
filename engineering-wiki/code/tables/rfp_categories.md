@@ -16,15 +16,15 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):131 |  | delete |  |  |
-| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):135 |  | insert | `rfp_id`, `name`, `description`, `sort_order` |  |
+| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):134 |  | delete |  |  |
+| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):138 |  | insert | `rfp_id`, `name`, `description`, `sort_order` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/rfp-builder/add_consolidated.php](/code/files/api/rfp-builder/add_consolidated.php.md) | L58 |  |
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L136 |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L139 |  |
 | [api/rfp-builder/get_compare_data.php](/code/files/api/rfp-builder/get_compare_data.php.md) | L41 |  |
 | [api/rfp-builder/get_consolidated.php](/code/files/api/rfp-builder/get_consolidated.php.md) | L37 |  |
 | [api/rfp-builder/get_coverage.php](/code/files/api/rfp-builder/get_coverage.php.md) | L38 |  |
@@ -33,9 +33,9 @@
 | [api/rfp-builder/get_section_history.php](/code/files/api/rfp-builder/get_section_history.php.md) | L32 |  |
 | [api/rfp-builder/get_sections.php](/code/files/api/rfp-builder/get_sections.php.md) | L37 |  |
 | [api/rfp-builder/merge_consolidated.php](/code/files/api/rfp-builder/merge_consolidated.php.md) | L77 |  |
-| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md) | L94 |  |
+| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md) | L97 |  |
 | [api/rfp-builder/split_consolidated.php](/code/files/api/rfp-builder/split_consolidated.php.md) | L81 |  |
 | [api/rfp-builder/update_consolidated.php](/code/files/api/rfp-builder/update_consolidated.php.md) | L56 |  |
 | [contracts/rfp-builder/preview.php](/code/files/contracts/rfp-builder/preview.php.md) | L61 |  |
-| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L966, rfpAiGenerateFramingStreaming L1206 |  |
+| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L1012, rfpAiGenerateFramingStreaming L1256 |  |
 

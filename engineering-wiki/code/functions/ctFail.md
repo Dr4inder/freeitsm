@@ -6,12 +6,12 @@ Sends an HTTP status and {success: false, error}, then stops.
 function ctFail(string $e, int $code = 400): void
 ```
 
-Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 35.
+Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `string` |  |  |
-| `$code` | `int` | `400` |  |
+| `$e` | `string` |  | the error message, shown to the analyst |
+| `$code` | `int` | `400` | the HTTP status to send |
 
 **Returns:** `void`
 

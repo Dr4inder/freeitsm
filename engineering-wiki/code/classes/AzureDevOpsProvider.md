@@ -67,7 +67,7 @@ function baseUrl(): string
 
 ### apiUrl
 
-*protected* - line 97
+*protected* - line 101
 
 An organisation-scoped API URL: `{base}/_apis/{path}`.
 
@@ -82,13 +82,13 @@ function apiUrl(string $path, array $query = [], string $version = self::API_VER
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
-| `$query` | `array` | `[]` |  |
-| `$version` | `string` | `self::API_VERSION` |  |
+| `$path` | `string` |  | the route under `_apis/`, e.g. 'wit/workitems/42'; a leading slash is dropped |
+| `$query` | `array` | `[]` | query-string parameters; api-version is added and wins over any given |
+| `$version` | `string` | `self::API_VERSION` | the api-version to send - one of the API_VERSION* constants |
 
 ### projectUrl
 
-*protected* - line 104
+*protected* - line 115
 
 A project-scoped API URL: `{base}/{project}/_apis/{path}`.
 
@@ -103,14 +103,14 @@ function projectUrl(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `string` |  |  |
-| `$path` | `string` |  |  |
-| `$query` | `array` | `[]` |  |
-| `$version` | `string` | `self::API_VERSION` |  |
+| `$project` | `string` |  | the project name (or GUID); URL-encoded here |
+| `$path` | `string` |  | the route under the project's `_apis/`; a leading slash is dropped |
+| `$query` | `array` | `[]` | query-string parameters; api-version is added and wins over any given |
+| `$version` | `string` | `self::API_VERSION` | the api-version to send - one of the API_VERSION* constants |
 
 ### browseUrl
 
-*public* - line 112
+*public* - line 128
 
 The human-facing link stored on the link row and shown in the panel.
 
@@ -120,12 +120,12 @@ function browseUrl(string $project, string $id): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `string` |  |  |
-| `$id` | `string` |  |  |
+| `$project` | `string` |  | the name of the project the work item lives in |
+| `$id` | `string` |  | the numeric work item id |
 
 ### devopsRequest
 
-*protected* - line 126
+*protected* - line 147
 
 Auth is a Personal Access Token as HTTP Basic with an EMPTY username — `Authorization: Basic base64(":" + PAT)`. Azure DevOps ignores the username entirely; sending the user's email in it also works, which is why a wrong implementation can appear to succeed on a developer's own account and fail on a service account.
 
@@ -140,14 +140,14 @@ function devopsRequest(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$method` | `string` |  |  |
-| `$url` | `string` |  |  |
-| `$json` | `?array` | `null` |  |
-| `$contentType` | `?string` | `null` |  |
+| `$method` | `string` |  | the HTTP method - 'GET', 'POST' or 'PATCH' |
+| `$url` | `string` |  | the full URL, from `apiUrl()` or `projectUrl()` |
+| `$json` | `?array` | `null` | the body to JSON-encode; null sends no body |
+| `$contentType` | `?string` | `null` | the body's Content-Type; null means application/json |
 
 ### patchRequest
 
-*protected* - line 151
+*protected* - line 178
 
 A JSON Patch write. Separated because the content type is the whole trick.
 
@@ -157,13 +157,13 @@ function patchRequest(string $method, string $url, array $ops): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$method` | `string` |  |  |
-| `$url` | `string` |  |  |
-| `$ops` | `array` |  |  |
+| `$method` | `string` |  | 'POST' to create a work item, 'PATCH' to change one |
+| `$url` | `string` |  | the full URL, from `apiUrl()` or `projectUrl()` |
+| `$ops` | `array` |  | the JSON Patch operations, e.g. built by `addOp()` |
 
 ### extractError
 
-*protected* - line 165
+*protected* - line 195
 
 An Azure DevOps error into something an analyst can act on.
 
@@ -179,12 +179,12 @@ function extractError(int $code, string $rawBody): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$code` | `int` |  |  |
-| `$rawBody` | `string` |  |  |
+| `$code` | `int` |  | the HTTP status code |
+| `$rawBody` | `string` |  | the response body as received - JSON, or an HTML sign-in page |
 
 ### renderDoc
 
-*public* - line 185
+*public* - line 217
 
 Azure DevOps fields are HTML — both the description and comment bodies. `System.Description` is rendered as rich text on every work item form.
 
@@ -194,11 +194,11 @@ function renderDoc(IssueDoc $doc)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$doc` | `IssueDoc` |  |  |
+| `$doc` | `IssueDoc` |  | the description or comment to render as HTML |
 
 ### bodyFieldFor
 
-*protected* - line 206
+*protected* - line 241
 
 Which field holds the body for this work item type.
 
@@ -219,12 +219,12 @@ function bodyFieldFor(string $project, string $type): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `string` |  |  |
-| `$type` | `string` |  |  |
+| `$project` | `string` |  | the project name |
+| `$type` | `string` |  | the work item type name, e.g. 'Bug' |
 
 ### buildCreatePatch
 
-*protected* - line 237
+*protected* - line 278
 
 Build the JSON Patch document for a create.
 
@@ -237,14 +237,14 @@ function buildCreatePatch(array $target, string $summary, IssueDoc $body, array 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$target` | `array` |  |  |
-| `$summary` | `string` |  |  |
-| `$body` | `IssueDoc` |  |  |
-| `$fields` | `array` | `[]` |  |
+| `$target` | `array` |  | array{project:string, work_item_type?:string, issue_type?:string, area_path?:string, iteration_path?:string} - the escalation target |
+| `$summary` | `string` |  | the title; `trimTitle()` collapses whitespace and caps it at 255 characters |
+| `$body` | `IssueDoc` |  | the description, written to the type's body field (see `bodyFieldFor()`) |
+| `$fields` | `array` | `[]` | mapped fields, field reference name => value; keys that are not strings are skipped |
 
 ### targetType
 
-*protected* - line 280
+*protected* - line 323
 
 Which work item type to create.
 
@@ -266,11 +266,11 @@ function targetType(array $target): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$target` | `array` |  |  |
+| `$target` | `array` |  | the escalation target; its work_item_type, else issue_type, is read |
 
 ### addOp
 
-*protected* - line 292
+*protected* - line 340
 
 One JSON Patch add operation against a field.
 
@@ -280,12 +280,12 @@ function addOp(string $refName, $value): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$refName` | `string` |  |  |
-| `$value` |  |  |  |
+| `$refName` | `string` |  | the field reference name, e.g. 'System.Title' |
+| `$value` |  |  | the value to set |
 
 ### trimTitle
 
-*protected* - line 302
+*protected* - line 352
 
 ⚠️ System.Title is capped at 255 characters and Azure DevOps rejects the whole create if it is longer — so a ticket with a very long subject would fail to escalate at all rather than arrive with a shortened title.
 
@@ -295,11 +295,11 @@ function trimTitle(string $summary): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$summary` | `string` |  |  |
+| `$summary` | `string` |  | the ticket subject |
 
 ### createIssue
 
-*public* - line 314
+*public* - line 369
 
 Creates a work item of the target's type in the target project and returns it parsed.
 
@@ -311,14 +311,14 @@ function createIssue(array $target, string $summary, IssueDoc $body, array $fiel
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$target` | `array` |  |  |
-| `$summary` | `string` |  |  |
-| `$body` | `IssueDoc` |  |  |
-| `$fields` | `array` | `[]` |  |
+| `$target` | `array` |  | the escalation target, shaped as for `buildCreatePatch()` - project is required |
+| `$summary` | `string` |  | the ticket subject, used as the title |
+| `$body` | `IssueDoc` |  | the description |
+| `$fields` | `array` | `[]` | mapped fields, field reference name => value |
 
 ### parseWorkItem
 
-*protected* - line 345
+*protected* - line 402
 
 Azure DevOps' work item JSON → our normalised shape.
 
@@ -331,11 +331,11 @@ function parseWorkItem(array $wi): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$wi` | `array` |  |  |
+| `$wi` | `array` |  | one work item as Azure DevOps returns it - id plus fields keyed by reference name |
 
 ### stateCategory
 
-*protected* - line 375
+*protected* - line 436
 
 A state NAME → its category, for this project's process and this type.
 
@@ -352,13 +352,13 @@ function stateCategory(string $project, string $type, string $state): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `string` |  |  |
-| `$type` | `string` |  |  |
-| `$state` | `string` |  |  |
+| `$project` | `string` |  | the project name |
+| `$type` | `string` |  | the work item type name, e.g. 'Bug' |
+| `$state` | `string` |  | the state name, e.g. 'Resolved'; matched without regard to case |
 
 ### mapStateCategory
 
-*protected* - line 424
+*protected* - line 487
 
 Azure DevOps' five state categories → our four.
 
@@ -389,11 +389,11 @@ function mapStateCategory(string $category): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$category` | `string` |  |  |
+| `$category` | `string` |  | the Azure DevOps state category - Proposed, InProgress, Resolved, Completed or Removed |
 
 ### resolvedMeans
 
-*public* - line 437
+*public* - line 500
 
 The connection's answer for `Resolved`, validated against our closed set.
 
@@ -403,7 +403,7 @@ function resolvedMeans(): string
 
 ### readFields
 
-*protected* - line 446
+*protected* - line 509
 
 The fields worth asking for. Narrower than the default, which returns everything.
 
@@ -413,7 +413,7 @@ function readFields(): string
 
 ### fetchIssue
 
-*public* - line 452
+*public* - line 519
 
 Reads one work item by its numeric id and returns it parsed for the escalation panel.
 
@@ -423,11 +423,11 @@ function fetchIssue(string $externalId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the numeric work item id; anything else throws |
 
 ### fetchIssues
 
-*public* - line 468
+*public* - line 537
 
 Batch read — one call for the whole watch list, because this is the poll cron's hot path.
 
@@ -440,11 +440,11 @@ function fetchIssues(array $externalIds): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalIds` | `array` |  |  |
+| `$externalIds` | `array` |  | work item ids to read; ones that are not numeric are dropped |
 
 ### projectOf
 
-*protected* - line 502
+*protected* - line 573
 
 Comments are project-scoped even though work item ids are not, so we have to know which project the item lives in. Resolved from the item itself and cached, rather than requiring every caller to carry it.
 
@@ -454,11 +454,11 @@ function projectOf(string $externalId): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the numeric work item id |
 
 ### addComment
 
-*public* - line 517
+*public* - line 593
 
 Posts a comment, rendered to HTML, on a work item and returns the new comment's id.
 
@@ -468,12 +468,12 @@ function addComment(string $externalId, IssueDoc $body): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
-| `$body` | `IssueDoc` |  |  |
+| `$externalId` | `string` |  | the numeric work item id |
+| `$body` | `IssueDoc` |  | the comment, rendered to HTML |
 
 ### fetchComments
 
-*public* - line 532
+*public* - line 609
 
 Comments on one work item, normalised.
 
@@ -483,13 +483,13 @@ function fetchComments(string $externalId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the numeric work item id |
 
 **Returns:** array [['comment_id'=>…, 'comment_body'=>plain text, 'author_identity'=>…, 'author_name'=>…, 'created_ts'=>?int], …]
 
 ### parseComment
 
-*protected* - line 557
+*protected* - line 636
 
 One Azure DevOps comment → the fields the canonical comment_added event needs.
 
@@ -507,11 +507,11 @@ function parseComment(array $c): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
+| `$c` | `array` |  | one entry of the comments response - id, text (HTML), createdBy, createdDate |
 
 ### htmlToText
 
-*protected* - line 579
+*protected* - line 660
 
 A comment's HTML → plain text for the internal note.
 
@@ -526,11 +526,11 @@ function htmlToText(string $html): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$html` | `string` |  |  |
+| `$html` | `string` |  | a comment's text as HTML |
 
 ### addAttachment
 
-*public* - line 599
+*public* - line 681
 
 Two steps, and the second is the one that is easy to miss.
 
@@ -545,12 +545,12 @@ function addAttachment(string $externalId, array $file): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the numeric id of the work item to attach the file to |
 | `$file` | `array` |  | ['data'=>binary, 'filename'=>string, 'content_type'=>string] |
 
 ### safeFilename
 
-*protected* - line 645
+*protected* - line 731
 
 Azure DevOps takes the filename verbatim; strip anything path- or header-breaking.
 
@@ -560,11 +560,11 @@ function safeFilename(string $filename): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filename` | `string` |  |  |
+| `$filename` | `string` |  | the file's original name |
 
 ### updateFields
 
-*public* - line 661
+*public* - line 750
 
 ⚠️ A flat map of reference name => value, translated into `add` ops.
 
@@ -579,12 +579,12 @@ function updateFields(string $externalId, array $fields): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
-| `$fields` | `array` |  |  |
+| `$externalId` | `string` |  | the numeric work item id |
+| `$fields` | `array` |  | field reference name => value; each becomes an `add` op |
 
 ### pollChanges
 
-*public* - line 691
+*public* - line 783
 
 Which watched work items changed, and what was said on them.
 
@@ -607,12 +607,12 @@ function pollChanges(?string $since, array $externalIds = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$since` | `?string` |  |  |
-| `$externalIds` | `array` | `[]` |  |
+| `$since` | `?string` |  | UTC 'Y-m-d H:i:s' watermark (last_poll_watermark); null on the first run returns nothing |
+| `$externalIds` | `array` | `[]` | ids of the work items this connection holds links to; non-numeric ones are dropped |
 
 ### pollCutoff
 
-*protected* - line 736
+*protected* - line 831
 
 The window boundary: the watermark, less a small overlap, and never more than the cap. Pure, so the capping rule is provable without a clock.
 
@@ -626,12 +626,12 @@ function pollCutoff(int $sinceTs, ?int $nowTs = null): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sinceTs` | `int` |  |  |
-| `$nowTs` | `?int` | `null` |  |
+| `$sinceTs` | `int` |  | the watermark as a Unix timestamp |
+| `$nowTs` | `?int` | `null` | the current time as a Unix timestamp; null means `time()` |
 
 ### wiqlTimestamp
 
-*protected* - line 745
+*protected* - line 844
 
 WIQL is UTC when the literal says so. Format it that way, always.
 
@@ -641,11 +641,11 @@ function wiqlTimestamp(int $ts): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ts` | `int` |  |  |
+| `$ts` | `int` |  | a Unix timestamp |
 
 ### searchChangedSince
 
-*protected* - line 757
+*protected* - line 858
 
 Asks WIQL which of the watched work items changed since `$cutoff`, in chunks.
 
@@ -657,14 +657,14 @@ function searchChangedSince(array $ids, int $cutoff): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ids` | `array` |  |  |
-| `$cutoff` | `int` |  |  |
+| `$ids` | `array` |  | numeric work item ids to check |
+| `$cutoff` | `int` |  | a Unix timestamp; items changed at or after it are returned |
 
 **Returns:** string[] ids of watched work items changed since `$cutoff`
 
 ### testConnection
 
-*public* - line 790
+*public* - line 891
 
 Confirm the credentials and capture who we are.
 
@@ -680,7 +680,7 @@ function testConnection(): array
 
 ### listProjects
 
-*public* - line 817
+*public* - line 918
 
 Lists the organisation's well-formed projects for the mapping dropdowns, a page of 100 at a time up to 1,000.
 
@@ -692,7 +692,7 @@ function listProjects(): array
 
 ### listIssueTypes
 
-*public* - line 846
+*public* - line 949
 
 The work item types this project's process defines.
 
@@ -706,11 +706,11 @@ function listIssueTypes(string $project): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `string` |  |  |
+| `$project` | `string` |  | the project name, as `listProjects()` returns it in `key` |
 
 ### isInternalType
 
-*protected* - line 863
+*protected* - line 970
 
 Types that exist for tooling rather than for people to be assigned work.
 
@@ -720,5 +720,5 @@ function isInternalType(string $name): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
+| `$name` | `string` |  | the work item type name |
 

@@ -6,7 +6,7 @@ Have the GH #147 portal routing columns (portal_email_domains, portal_show_butto
 function ssoPortalRoutingColumnsReady(PDO $conn): bool
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 109.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `ssoPortalRoutingColumnsReady` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 120 | `ssoPortalRoutingColumnsReady` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Called from
 

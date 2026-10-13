@@ -16,14 +16,14 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):553 | `AssetFieldsService::saveSet` | update | `name`, `description`, `display_order` |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):558 | `AssetFieldsService::saveSet` | insert | `name`, `description`, `display_order`, `tenant_id` |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):573 | `AssetFieldsService::deleteSet` | update | `is_deleted` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):597 | `AssetFieldsService::saveSet` | update | `name`, `description`, `display_order` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):602 | `AssetFieldsService::saveSet` | insert | `name`, `description`, `display_order`, `tenant_id` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):619 | `AssetFieldsService::deleteSet` | update | `is_deleted` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::setsForAsset L118, AssetFieldsService::setsForAsset L132, AssetFieldsService::fieldsForSets L177, AssetFieldsService::loadSet L838 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1117 |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::setsForAsset L119, AssetFieldsService::setsForAsset L133, AssetFieldsService::fieldsForSets L184, AssetFieldsService::loadSet L923 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1175 |  |
 

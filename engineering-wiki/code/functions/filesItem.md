@@ -6,12 +6,12 @@ A live file row, or null.
 function filesItem(PDO $conn, int $itemId): ?array
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 86.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 106.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$itemId` | `int` |  |  |
+| `$itemId` | `int` |  | the files_items id; null comes back if it or any folder above it is deleted |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_boo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 88 | `filesItem` | read [files_items](/code/tables/files_items.md) |  |
+| 108 | `filesItem` | read [files_items](/code/tables/files_items.md) |  |
 
 ## Called from
 

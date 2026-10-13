@@ -6,11 +6,11 @@ Parses an XML response body quietly; null for an empty or unparseable body.
 function vcdXml(?string $body): ?SimpleXMLElement
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 127.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 161.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `?string` |  |  |
+| `$body` | `?string` |  | a response body from `vcdTryGet()`; null when the request failed |
 
 **Returns:** `?SimpleXMLElement`
 

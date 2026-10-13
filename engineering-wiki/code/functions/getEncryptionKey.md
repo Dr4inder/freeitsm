@@ -6,7 +6,7 @@ Load the encryption key from the key file
 function getEncryptionKey()
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 202.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 212.
 
 ## Called from
 

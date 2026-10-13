@@ -11,12 +11,12 @@ function directorySyncRun(
 ): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 488.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 544.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
+| `$provider` | `array` |  | the auth_providers row being synced (its ldap_attr_* and sync_* columns) |
 | `$mode` | `string` | `'live'` | 'live' \| 'preview' |
 | `$analystId` | `?int` | `null` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
@@ -26,8 +26,8 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 494 | `directorySyncRun` | **insert** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id`) |  |
-| 645 | `directorySyncRun` | **update** [auth_providers](/code/tables/auth_providers.md) (`sync_last_run_datetime`, `sync_last_count`) |  |
+| 550 | `directorySyncRun` | **insert** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id`) |  |
+| 701 | `directorySyncRun` | **update** [auth_providers](/code/tables/auth_providers.md) (`sync_last_run_datetime`, `sync_last_count`) |  |
 
 ## Calls
 

@@ -1,6 +1,6 @@
 # includes/files/audit.php
 
-> PHP - 77 lines
+> PHP - 79 lines
 
 Files — the audit trail. The ONE writer of files_audit.
 
@@ -21,14 +21,14 @@ nobody would notice.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [filesAudit()](/code/functions/filesAudit.md) | 39 | Writes one row to the Files audit log, with the analyst's name, the target's path, IP address and user agent. |
+| [filesAudit()](/code/functions/filesAudit.md) | 41 | Writes one row to the Files audit log, with the analyst's name, the target's path, IP address and user agent. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 53 | `filesAudit` | read [analysts](/code/tables/analysts.md) |  |
-| 58 | `filesAudit` | **insert** [files_audit](/code/tables/files_audit.md) (`analyst_id`, `analyst_name`, `action`, `folder_id`, `item_id`, `version_id`, `target_path`, `detail`, `ip_address`, `user_agent`, `created_datetime`) |  |
+| 55 | `filesAudit` | read [analysts](/code/tables/analysts.md) |  |
+| 60 | `filesAudit` | **insert** [files_audit](/code/tables/files_audit.md) (`analyst_id`, `analyst_name`, `action`, `folder_id`, `item_id`, `version_id`, `target_path`, `detail`, `ip_address`, `user_agent`, `created_datetime`) |  |
 
 ## How it hangs together
 

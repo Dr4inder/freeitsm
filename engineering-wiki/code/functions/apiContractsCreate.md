@@ -6,7 +6,7 @@ POST /contracts - creates a contract through ContractsService in the company nam
 function apiContractsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 357.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 371.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

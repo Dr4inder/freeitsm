@@ -28,6 +28,10 @@ require_once __DIR__ . '/calendar.php';
  * The Domains scheduled job, within a time budget - registry lookups that are due, daily health checks, the weekly certificate and look-alike watches, then alerts, the expiry calendar and Service Status.
  *
  * Stops starting new work when the budget runs low and says so in out_of_time.
+ *
+ * @param float $budgetSeconds   wall-clock seconds the run may use; 240 for cron, 25 for the page-load run
+ * @param bool  $includeWatches  false skips the slow Certificate Transparency and look-alike scans
+ *
  * @return array  counts for each stage, the alerts and calendar results, and the seconds taken
  */
 function domainScheduledRun(PDO $conn, float $budgetSeconds = 240, bool $includeWatches = true): array
@@ -115,6 +119,10 @@ function domainScheduledRun(PDO $conn, float $budgetSeconds = 240, bool $include
  * The weekly watches keep their "last scanned" in the domain's audit trail
  * rather than two more columns: one row per scan, source 'check'. A domain with
  * no such row in $days days is due.
+ *
+ * @param string $marker  the domain_audit field_name the watch records, 'ct_scanned' or 'lookalikes_scanned'
+ * @param int    $days    how many days since the last marker make a domain due
+ * @param string $where   an extra SQL condition on domains (alias d) - interpolated, so only literals from here
  */
 function domainWatchDue(PDO $conn, string $marker, int $days, string $where): array
 {
@@ -131,6 +139,10 @@ function domainWatchDue(PDO $conn, string $marker, int $days, string $where): ar
 
 /**
  * Records that a weekly watch ran for a domain today, keeping only the latest marker row.
+ *
+ * @param int    $id      the domain that was scanned
+ * @param string $marker  the watch's marker name, 'ct_scanned' or 'lookalikes_scanned'
+ *
  * @writes domain_audit - the marker row domainWatchDue() reads
  */
 function domainWatchMark(PDO $conn, int $id, string $marker): void

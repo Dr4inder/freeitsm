@@ -6,12 +6,12 @@ The team as it WOULD be with managers switched on - for the admin screens, so an
 function managerTeamPreviewIds(PDO $conn, int $managerUserId): array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 271.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 287.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$managerUserId` | `int` |  |  |
+| `$managerUserId` | `int` |  | the manager's users.id (a portal user) |
 
 **Returns:** int[]
 

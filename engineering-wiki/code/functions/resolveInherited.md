@@ -11,13 +11,13 @@ things.
 function resolveInherited(PDO $conn, string $type, int $id): ?array
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 150.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 159.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$type` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$type` | `string` |  | 'folder' or 'article' |
+| `$id` | `int` |  | that folder's or article's id |
 
 **Returns:** `?array`
 
@@ -25,9 +25,9 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 156 | `resolveInherited` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 170 | `resolveInherited` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 174 | `resolveInherited` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 165 | `resolveInherited` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 179 | `resolveInherited` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 183 | `resolveInherited` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
 
 ## Calls
 

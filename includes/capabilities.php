@@ -325,7 +325,11 @@ function settingsManifests(): array
     return $manifests;
 }
 
-/** The manifest for one module, or null. */
+/**
+ * The manifest for one module, or null.
+ *
+ * @param string $module  a Layer 1 module slug, e.g. 'assets', as named in its settings/manifest.php
+ */
 function settingsManifestFor(string $module): ?array
 {
     foreach (settingsManifests() as $m) {
@@ -415,7 +419,11 @@ function capAll(): array
     return array_keys(capRegistry());
 }
 
-/** Is this a capability the code defines? Enum twin: Capability::tryFrom() !== null. */
+/**
+ * Is this a capability the code defines? Enum twin: Capability::tryFrom() !== null.
+ *
+ * @param string $key  a capability key, e.g. 'assets.manage'
+ */
 function capExists(string $key): bool
 {
     return isset(capRegistry()[$key]);
@@ -427,6 +435,8 @@ function capExists(string $key): bool
  *
  * This is the trust boundary: everything read from rbac_role_capabilities goes through
  * here, so a stale or hand-inserted key can never grant anything.
+ *
+ * @param string $key  a capability key read from outside the code (rbac_role_capabilities or a form post) - untrusted
  */
 function capFromKey(string $key): ?string
 {
@@ -436,31 +446,51 @@ function capFromKey(string $key): ?string
     return null;
 }
 
-/** Human description, shown in System -> Roles. Enum twin: $cap->label(). */
+/**
+ * Human description, shown in System -> Roles. Enum twin: $cap->label().
+ *
+ * @param string $key  a capability key; an unknown one is returned as its own label
+ */
 function capLabel(string $key): string
 {
     return capRegistry()[$key]['label'] ?? $key;
 }
 
-/** The module this capability administers. Enum twin: $cap->module(). */
+/**
+ * The module this capability administers. Enum twin: $cap->module().
+ *
+ * @param string $key  a capability key; an unknown one gives null
+ */
 function capModule(string $key): ?string
 {
     return capRegistry()[$key]['module'] ?? null;
 }
 
-/** Display name for a module slug. Enum twin: $module->label(). */
+/**
+ * Display name for a module slug. Enum twin: $module->label().
+ *
+ * @param string $module  a Layer 1 module slug; an unknown one is returned as its own label
+ */
 function capModuleLabel(string $module): string
 {
     return capModules()[$module] ?? $module;
 }
 
-/** Does granting this need a second thought? Enum twin: $cap->isSensitive(). */
+/**
+ * Does granting this need a second thought? Enum twin: $cap->isSensitive().
+ *
+ * @param string $key  a capability key; an unknown one is not sensitive
+ */
 function capIsSensitive(string $key): bool
 {
     return (bool) (capRegistry()[$key]['sensitive'] ?? false);
 }
 
-/** Every capability belonging to a module. Enum twin: Capability::forModule(). */
+/**
+ * Every capability belonging to a module. Enum twin: Capability::forModule().
+ *
+ * @param string $module  a Layer 1 module slug, e.g. 'assets'
+ */
 function capsForModule(string $module): array
 {
     $out = [];
@@ -470,7 +500,11 @@ function capsForModule(string $module): array
     return $out;
 }
 
-/** The module's umbrella capability ('<module>.manage'), or null if it has none. */
+/**
+ * The module's umbrella capability ('<module>.manage'), or null if it has none.
+ *
+ * @param string $module  a Layer 1 module slug, e.g. 'assets'
+ */
 function capUmbrella(string $module): ?string
 {
     foreach (capRegistry() as $key => $meta) {
@@ -613,7 +647,11 @@ function capSelfCheck(): array
     return $problems;
 }
 
-/** Is this capability its module's umbrella? */
+/**
+ * Is this capability its module's umbrella?
+ *
+ * @param string $key  a capability key; an unknown one is not an umbrella
+ */
 function capIsUmbrella(string $key): bool
 {
     return (bool) (capRegistry()[$key]['umbrella'] ?? false);

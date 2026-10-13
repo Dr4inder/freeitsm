@@ -6,12 +6,12 @@ The configured attribute name for one field, falling back to the flavour default
 function dsyncAttr(array $provider, string $field): string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 108.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
-| `$field` | `string` |  |  |
+| `$provider` | `array` |  | the auth_providers row |
+| `$field` | `string` |  | a `dsyncAttrDefaults()` key, e.g. 'email' - read from the ldap_attr_<field> column |
 
 **Returns:** `string`
 

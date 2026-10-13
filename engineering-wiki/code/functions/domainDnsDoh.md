@@ -6,13 +6,13 @@ Answers a DNS question over DNS-over-HTTPS JSON from Google or Cloudflare, norma
 function domainDnsDoh(string $name, string $type, string $provider): array
 ```
 
-Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 91.
+Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 102.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
-| `$type` | `string` |  |  |
-| `$provider` | `string` |  |  |
+| `$name` | `string` |  | the DNS name to ask about |
+| `$type` | `string` |  | record type in upper case |
+| `$provider` | `string` |  | 'cloudflare' for Cloudflare; anything else asks Google |
 
 **Returns:** `array`
 

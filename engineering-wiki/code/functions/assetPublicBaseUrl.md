@@ -6,7 +6,7 @@ The install's public base, including any sub-folder - see `assetLabelUrl()`.
 function assetPublicBaseUrl(?PDO $conn = null): string
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 162.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 171.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

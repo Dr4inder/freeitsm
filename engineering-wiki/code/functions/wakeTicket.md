@@ -6,14 +6,14 @@ Wake a ticket early. Returns true if it was actually asleep, so a caller can sta
 function wakeTicket(PDO $conn, int $ticketId, ?int $analystId, string $why = ''): bool
 ```
 
-Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 232.
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 242.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$why` | `string` | `''` |  |
+| `$why` | `string` | `''` | the audit trail text; '' records 'Woken' |
 
 **Returns:** `bool`
 
@@ -21,8 +21,8 @@ Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 236 | `wakeTicket` | read [tickets](/code/tables/tickets.md) |  |
-| 242 | `wakeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
+| 246 | `wakeTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 252 | `wakeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
 
 ## Calls
 

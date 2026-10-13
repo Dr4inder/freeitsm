@@ -6,13 +6,13 @@ The assistant's opening line, in plain English.
 function gapSummarySentence(int $read, int $days, int $clusters): string
 ```
 
-Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 524.
+Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 550.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$read` | `int` |  |  |
-| `$days` | `int` |  |  |
-| `$clusters` | `int` |  |  |
+| `$read` | `int` |  | how many closed tickets were read |
+| `$days` | `int` |  | the look-back window in days |
+| `$clusters` | `int` |  | how many gap clusters were found |
 
 **Returns:** `string`
 

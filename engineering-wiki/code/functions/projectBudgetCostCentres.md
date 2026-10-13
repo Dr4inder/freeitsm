@@ -6,12 +6,12 @@ Active cost centres of the project's company (NULL company = the Default one).
 function projectBudgetCostCentres(PDO $conn, array $project): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 471.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 513.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row - tenant_id picks the company |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 475 | `projectBudgetCostCentres` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 517 | `projectBudgetCostCentres` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## Calls
 

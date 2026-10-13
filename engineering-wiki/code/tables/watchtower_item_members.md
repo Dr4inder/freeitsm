@@ -24,5 +24,5 @@ Which statuses/priorities feed one Watchtower item. Rows rather than a flag on t
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtItemMembers L341 |  |
+| [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtItemMembers L356 |  |
 

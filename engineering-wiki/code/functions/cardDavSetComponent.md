@@ -17,14 +17,14 @@ town lands in `street`.
 function cardDavSetComponent(string $value, int $index, int $arity, string $escapedNew): string
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 404.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 433.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` | `string` |  |  |
-| `$index` | `int` |  |  |
+| `$value` | `string` |  | the property's current value after the colon, still escaped; '' for a new line |
+| `$index` | `int` |  | which component to set, from 0 (ORG department is 1, ADR town is 3) |
 | `$arity` | `int` |  | how many components the property is defined to have, so a padded value is not left shorter than parsers expect |
-| `$escapedNew` | `string` |  |  |
+| `$escapedNew` | `string` |  | the new component, already escaped with `cardDavEscapeText()`; '' blanks it |
 
 **Returns:** `string`
 

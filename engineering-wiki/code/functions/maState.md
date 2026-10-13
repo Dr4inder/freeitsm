@@ -6,12 +6,12 @@ Everything the page shows for one manager.
 function maState(PDO $conn, array $m): array
 ```
 
-Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md), line 67.
+Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md), line 79.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$m` | `array` |  |  |
+| `$m` | `array` |  | the manager as loaded by `maManager()` |
 
 **Returns:** `array`
 
@@ -19,8 +19,8 @@ Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_acce
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 96 | `maState` | read [manager_grants](/code/tables/manager_grants.md), read [users](/code/tables/users.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [analysts](/code/tables/analysts.md) |  |
-| 137 | `maState` | read [users](/code/tables/users.md) |  |
+| 108 | `maState` | read [manager_grants](/code/tables/manager_grants.md), read [users](/code/tables/users.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [analysts](/code/tables/analysts.md) |  |
+| 149 | `maState` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

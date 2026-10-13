@@ -1,6 +1,6 @@
 # setup/index.php
 
-> PHP - 745 lines
+> PHP - 747 lines
 
 FreeITSM Setup Verification Checks that the system is correctly configured before going live. DELETE THIS FOLDER once your system is in production.
 
@@ -8,7 +8,7 @@ FreeITSM Setup Verification Checks that the system is correctly configured befor
 
 | Function | Line | What it does |
 |---|--:|---|
-| [setupSafeDbError()](/code/functions/setupSafeDbError.md) | 38 | Keep the diagnostic part of a PDO connection error, drop the reconnaissance. PDO reports e.g. "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost'": the code is what tells an installer what to fix, the tail names the account and host. |
+| [setupSafeDbError()](/code/functions/setupSafeDbError.md) | 40 | Keep the diagnostic part of a PDO connection error, drop the reconnaissance. PDO reports e.g. "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost'": the code is what tells an installer what to fix, the tail names the account and host. |
 
 ## How it hangs together
 

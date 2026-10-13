@@ -6,7 +6,7 @@ Put `csrfHeadTags()` into every HTML page without editing each one: the page's o
 function csrfStartPageInjection(): void
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 272.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 283.
 
 **Returns:** `void`
 

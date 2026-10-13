@@ -14,7 +14,7 @@ urgent from somebody who never opened the settings.
 function wtImpersonalOnMine(PDO $conn, int $analystId): string
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 121.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -27,7 +27,7 @@ Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 126 | `wtImpersonalOnMine` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 134 | `wtImpersonalOnMine` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Called from
 

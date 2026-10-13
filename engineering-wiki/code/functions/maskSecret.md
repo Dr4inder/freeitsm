@@ -6,11 +6,11 @@ Produce a "****<last4>" mask. Empty input returns ''.
 function maskSecret($value)
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 99.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
+| `$value` |  |  | the plaintext secret (string or null); under 4 characters gives just "****" |
 
 ## Called from
 

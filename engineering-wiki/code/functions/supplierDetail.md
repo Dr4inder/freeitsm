@@ -6,13 +6,13 @@ Everything about one supplier this analyst may see, or null.
 function supplierDetail(PDO $conn, int $analystId, int $supplierId): ?array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 646.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 701.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$supplierId` | `int` |  |  |
+| `$supplierId` | `int` |  | the suppliers id |
 
 **Returns:** `?array`
 
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 646.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 650 | `supplierDetail` | read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
-| 669 | `supplierDetail` | read [contacts](/code/tables/contacts.md) |  |
+| 705 | `supplierDetail` | read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
+| 724 | `supplierDetail` | read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

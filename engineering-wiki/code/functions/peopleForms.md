@@ -6,13 +6,13 @@ Forms the person submitted / people in the company submitted (from the portal).
 function peopleForms(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 539.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 582.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$who` | `array` |  |  |
+| `$who` | `array` |  | ['user' => users id] for the submitter, or ['company' => tenant id] |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 539.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 551 | `peopleForms` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [users](/code/tables/users.md), read [tickets](/code/tables/tickets.md) |  |
+| 594 | `peopleForms` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [users](/code/tables/users.md), read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

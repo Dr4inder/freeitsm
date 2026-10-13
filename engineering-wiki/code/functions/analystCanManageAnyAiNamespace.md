@@ -10,7 +10,7 @@ AI can fetch the list; nobody else can.
 function analystCanManageAnyAiNamespace(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 236.
+Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 239.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

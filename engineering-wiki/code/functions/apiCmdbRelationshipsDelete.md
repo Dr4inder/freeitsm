@@ -6,7 +6,7 @@ DELETE /cmdb/objects/{id}/relationships/{relId} - deletes a relationship through
 function apiCmdbRelationshipsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 489.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 500.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

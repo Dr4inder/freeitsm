@@ -60,7 +60,7 @@ function fieldMap(): array
 
 ### saveProject
 
-*public static* - line 76
+*public static* - line 80
 
 Create (no id) or update (id present). Returns ['id', 'created'].
 
@@ -72,14 +72,14 @@ function saveProject(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId = n
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the project fields from `fieldMap()`; with id it updates that project, without one it creates |
 | `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/projects/save.php](/code/files/api/projects/save.php.md)
 
 ### createProject
 
-*public static* - line 91
+*public static* - line 98
 
 Creates a project for a company and returns its id.
 
@@ -95,20 +95,20 @@ function createProject(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId):
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the project fields from `fieldMap()` (name required); methodology, visibility and owner_analyst_id default from settings and the creator; _from_form marks a proposal made on a form |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 137 | `ProjectsService::createProject` | **insert** [projects](/code/tables/projects.md) |  |
+| 144 | `ProjectsService::createProject` | **insert** [projects](/code/tables/projects.md) |  |
 
 **Called from:** [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md)
 
 ### updateProject
 
-*public static* - line 159
+*public static* - line 169
 
 Changes a project's fields, records each change in its history, refreshes the calendar, fires project.updated and checks health and tolerances.
 
@@ -123,20 +123,20 @@ function updateProject(PDO $conn, ActorContext $ctx, int $id, array $in): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$in` | `array` |  |  |
+| `$id` | `int` |  | the project to change |
+| `$in` | `array` |  | only the fields to change, keyed as in `fieldMap()`; unchanged values are skipped |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 207 | `ProjectsService::updateProject` | **update** [projects](/code/tables/projects.md) |  |
+| 217 | `ProjectsService::updateProject` | **update** [projects](/code/tables/projects.md) |  |
 
 **Called from:** [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### deleteProject
 
-*public static* - line 236
+*public static* - line 248
 
 Delete a project. Its tasks are DETACHED, never deleted; its stages and history go with it. Returns ['id', 'tasks_detached'].
 
@@ -148,24 +148,24 @@ function deleteProject(PDO $conn, ActorContext $ctx, int $id): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the project to delete |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 245 | `ProjectsService::deleteProject` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`) |  |
-| 252 | `ProjectsService::deleteProject` | **delete** [project_benefit_measures](/code/tables/project_benefit_measures.md), read [project_benefits](/code/tables/project_benefits.md) |  |
-| 254 | `ProjectsService::deleteProject` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md), read [project_raid](/code/tables/project_raid.md) |  |
-| 268 | `ProjectsService::deleteProject` | **delete** [project_labour_rates](/code/tables/project_labour_rates.md) |  |
-| 272 | `ProjectsService::deleteProject` | **update** [status_planned](/code/tables/status_planned.md) (`project_id`) |  |
-| 273 | `ProjectsService::deleteProject` | **delete** [projects](/code/tables/projects.md) |  |
+| 257 | `ProjectsService::deleteProject` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`) |  |
+| 264 | `ProjectsService::deleteProject` | **delete** [project_benefit_measures](/code/tables/project_benefit_measures.md), read [project_benefits](/code/tables/project_benefits.md) |  |
+| 266 | `ProjectsService::deleteProject` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md), read [project_raid](/code/tables/project_raid.md) |  |
+| 280 | `ProjectsService::deleteProject` | **delete** [project_labour_rates](/code/tables/project_labour_rates.md) |  |
+| 284 | `ProjectsService::deleteProject` | **update** [status_planned](/code/tables/status_planned.md) (`project_id`) |  |
+| 285 | `ProjectsService::deleteProject` | **delete** [projects](/code/tables/projects.md) |  |
 
 **Called from:** [api/projects/delete.php](/code/files/api/projects/delete.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md)
 
 ### applyMethodology
 
-*private static* - line 291
+*private static* - line 305
 
 Relabel the OPEN time boxes to the preset's kind. Closed ones are history and keep the name they were run under.
 
@@ -177,19 +177,19 @@ function applyMethodology(PDO $conn, int $projectId, string $method): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$method` | `string` |  |  |
+| `$method` | `string` |  | the new methodology key from `projectMethodologies()`; an unknown key does nothing |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 295 | `ProjectsService::applyMethodology` | **update** [project_stages](/code/tables/project_stages.md) (`kind`, `updated_datetime`) |  |
-| 301 | `ProjectsService::applyMethodology` | read [project_stages](/code/tables/project_stages.md) |  |
-| 307 | `ProjectsService::applyMethodology` | **update** [project_stages](/code/tables/project_stages.md) (`status`) |  |
+| 309 | `ProjectsService::applyMethodology` | **update** [project_stages](/code/tables/project_stages.md) (`kind`, `updated_datetime`) |  |
+| 315 | `ProjectsService::applyMethodology` | read [project_stages](/code/tables/project_stages.md) |  |
+| 321 | `ProjectsService::applyMethodology` | **update** [project_stages](/code/tables/project_stages.md) (`status`) |  |
 
 ### saveStage
 
-*public static* - line 317
+*public static* - line 336
 
 Create or update a time box. Returns its id.
 
@@ -202,22 +202,22 @@ function saveStage(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (a stage to change; absent for new), name (up to 150), goal, start_date, end_date, status - fields left out keep their value |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 340 | `ProjectsService::saveStage` | read [project_stages](/code/tables/project_stages.md) |  |
-| 348 | `ProjectsService::saveStage` | **update** [project_stages](/code/tables/project_stages.md) (`name`, `goal`, `start_date`, `end_date`, `status`, `updated_datetime`) |  |
-| 361 | `ProjectsService::saveStage` | read [project_stages](/code/tables/project_stages.md) |  |
-| 362 | `ProjectsService::saveStage` | **insert** [project_stages](/code/tables/project_stages.md) (`project_id`, `kind`, `name`, `goal`, `start_date`, `end_date`, `position`, `status`, `created_datetime`, `updated_datetime`) |  |
+| 359 | `ProjectsService::saveStage` | read [project_stages](/code/tables/project_stages.md) |  |
+| 367 | `ProjectsService::saveStage` | **update** [project_stages](/code/tables/project_stages.md) (`name`, `goal`, `start_date`, `end_date`, `status`, `updated_datetime`) |  |
+| 380 | `ProjectsService::saveStage` | read [project_stages](/code/tables/project_stages.md) |  |
+| 381 | `ProjectsService::saveStage` | **insert** [project_stages](/code/tables/project_stages.md) (`project_id`, `kind`, `name`, `goal`, `start_date`, `end_date`, `position`, `status`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/stage_save.php](/code/files/api/projects/stage_save.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### deleteStage
 
-*public static* - line 375
+*public static* - line 398
 
 Delete a time box. Its tasks stay in the project, unassigned to any stage.
 
@@ -230,22 +230,22 @@ function deleteStage(PDO $conn, ActorContext $ctx, int $projectId, int $stageId)
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$stageId` | `int` |  |  |
+| `$stageId` | `int` |  | the stage (project_stages.id) to delete; must belong to the project |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 382 | `ProjectsService::deleteStage` | **update** [tasks](/code/tables/tasks.md) (`project_stage_id`) |  |
-| 384 | `ProjectsService::deleteStage` | **update** [project_milestones](/code/tables/project_milestones.md) (`stage_id`) |  |
-| 386 | `ProjectsService::deleteStage` | **delete** [project_gate_items](/code/tables/project_gate_items.md) |  |
-| 387 | `ProjectsService::deleteStage` | **delete** [project_stages](/code/tables/project_stages.md) |  |
+| 405 | `ProjectsService::deleteStage` | **update** [tasks](/code/tables/tasks.md) (`project_stage_id`) |  |
+| 407 | `ProjectsService::deleteStage` | **update** [project_milestones](/code/tables/project_milestones.md) (`stage_id`) |  |
+| 409 | `ProjectsService::deleteStage` | **delete** [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 410 | `ProjectsService::deleteStage` | **delete** [project_stages](/code/tables/project_stages.md) |  |
 
 **Called from:** [api/projects/stage_delete.php](/code/files/api/projects/stage_delete.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md)
 
 ### reorderStages
 
-*public static* - line 400
+*public static* - line 427
 
 Put the project's time boxes in the given order (ids not listed keep their place after).
 
@@ -258,19 +258,19 @@ function reorderStages(PDO $conn, ActorContext $ctx, int $projectId, array $ids)
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$ids` | `array` |  |  |
+| `$ids` | `array` |  | stage ids in their new order; positions are renumbered from 1, ids of other projects match nothing |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 403 | `ProjectsService::reorderStages` | **update** [project_stages](/code/tables/project_stages.md) (`position`) |  |
+| 430 | `ProjectsService::reorderStages` | **update** [project_stages](/code/tables/project_stages.md) (`position`) |  |
 
 **Called from:** [api/projects/stage_reorder.php](/code/files/api/projects/stage_reorder.php.md)
 
 ### assignTask
 
-*public static* - line 420
+*public static* - line 450
 
 Put a task in a project (and optionally a stage), or take it out (null). The task and the project must belong to the same company - a project is one company's work, and a task cannot carry another company's plan.
 
@@ -289,22 +289,22 @@ function assignTask(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
-| `$projectId` | `?int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$stageId` | `?int` | `null` |  |
+| `$projectId` | `?int` |  | the project to put the task in; null or 0 takes it out of its project |
+| `$stageId` | `?int` | `null` | a stage of that project to put it in; null or 0 for none |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 422 | `ProjectsService::assignTask` | read [tasks](/code/tables/tasks.md) |  |
-| 438 | `ProjectsService::assignTask` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`, `updated_datetime`) |  |
-| 453 | `ProjectsService::assignTask` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`, `updated_datetime`) |  |
+| 452 | `ProjectsService::assignTask` | read [tasks](/code/tables/tasks.md) |  |
+| 468 | `ProjectsService::assignTask` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`, `updated_datetime`) |  |
+| 483 | `ProjectsService::assignTask` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/task_assign.php](/code/files/api/projects/task_assign.php.md)
 
 ### createTaskInProject
 
-*public static* - line 466
+*public static* - line 499
 
 Create a task straight into a project (and optionally a stage).
 
@@ -328,20 +328,20 @@ function createTaskInProject(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$stageId` | `?int` |  |  |
-| `$in` | `array` |  |  |
+| `$stageId` | `?int` |  | a stage of the project to put the task in; null or 0 for none |
+| `$in` | `array` |  | the task fields as TasksService::saveTask() takes them; id, ticket_id, parent_task_id and tenant_id are ignored |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 492 | `ProjectsService::createTaskInProject` | **update** [tasks](/code/tables/tasks.md) (`tenant_id`, `project_id`, `project_stage_id`) |  |
+| 525 | `ProjectsService::createTaskInProject` | **update** [tasks](/code/tables/tasks.md) (`tenant_id`, `project_id`, `project_stage_id`) |  |
 
 **Called from:** [api/projects/task_create.php](/code/files/api/projects/task_create.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### loadRow
 
-*public static* - line 504
+*public static* - line 541
 
 Loads one project; throws not found when it does not exist.
 
@@ -352,19 +352,19 @@ function loadRow(PDO $conn, int $id): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the project to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 506 | `ProjectsService::loadRow` | read [projects](/code/tables/projects.md) |  |
+| 543 | `ProjectsService::loadRow` | read [projects](/code/tables/projects.md) |  |
 
 **Called from:** [api/projects/assistant_chat.php](/code/files/api/projects/assistant_chat.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), [includes/projects/links.php](/code/files/includes/projects/links.php.md), [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md)
 
 ### loadForActor
 
-*public static* - line 514
+*public static* - line 555
 
 Load a project the caller may touch - out of scope reads as not found.
 
@@ -376,13 +376,13 @@ function loadForActor(PDO $conn, ActorContext $ctx, int $id): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the project to load |
 
 **Called from:** [api/projects/assistant_chat.php](/code/files/api/projects/assistant_chat.php.md), [api/projects/export.php](/code/files/api/projects/export.php.md), [api/projects/get.php](/code/files/api/projects/get.php.md), [api/projects/reports.php](/code/files/api/projects/reports.php.md), [api/projects/tools.php](/code/files/api/projects/tools.php.md), [includes/projects/links.php](/code/files/includes/projects/links.php.md), [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md), [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### loadStage
 
-*public static* - line 525
+*public static* - line 570
 
 Loads one project stage; throws not found when it does not exist.
 
@@ -393,17 +393,17 @@ function loadStage(PDO $conn, int $id): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the stage (project_stages.id) to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 527 | `ProjectsService::loadStage` | read [project_stages](/code/tables/project_stages.md) |  |
+| 572 | `ProjectsService::loadStage` | read [project_stages](/code/tables/project_stages.md) |  |
 
 ### assertCanChange
 
-*public static* - line 540
+*public static* - line 587
 
 May this caller change this project? Projects -> Settings -> General decides (its team, or everyone with the module); people who manage Projects always may. A system actor (actorId 0 - demo import, scheduled work) is not a person and is not asked.
 
@@ -415,13 +415,13 @@ function assertCanChange(PDO $conn, ActorContext $ctx, array $project): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row, as loaded by `loadForActor()` |
 
 **Called from:** [includes/projects/links.php](/code/files/includes/projects/links.php.md), [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### assertScope
 
-*private static* - line 549
+*private static* - line 601
 
 Throws not found with `$notFound` when the row's company is outside the actor's companies.
 
@@ -433,12 +433,12 @@ function assertScope(PDO $conn, ActorContext $ctx, array $row, string $notFound)
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
-| `$notFound` | `string` |  |  |
+| `$row` | `array` |  | any row with a tenant_id column (a project or a task) |
+| `$notFound` | `string` |  | the not-found message to throw, e.g. 'Project not found.' |
 
 ### sameTenant
 
-*private static* - line 559
+*private static* - line 616
 
 True when two company ids are the same company, treating NULL as the Default company.
 
@@ -449,12 +449,12 @@ function sameTenant(PDO $conn, $a, $b): bool
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$a` |  |  |  |
-| `$b` |  |  |  |
+| `$a` |  |  | a tenant_id as stored (null = the Default company) |
+| `$b` |  |  | the other tenant_id as stored (null = the Default company) |
 
 ### storeTenant
 
-*private static* - line 569
+*private static* - line 626
 
 The Default company is stored as NULL, the way every scoped table does.
 
@@ -469,7 +469,7 @@ function storeTenant(PDO $conn, ?int $tenantId): ?int
 
 ### validateField
 
-*private static* - line 583
+*private static* - line 644
 
 Validates and cleans one project field according to its type in `fieldMap()`, and returns the value to store.
 
@@ -480,19 +480,19 @@ function validateField(PDO $conn, string $field, $v, array $def)
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$v` |  |  |  |
-| `$def` | `array` |  |  |
+| `$field` | `string` |  | the project column, a key of `fieldMap()` |
+| `$v` |  |  | the value as sent |
+| `$def` | `array` |  | that field's rule from `fieldMap()`: type, plus max, values or required |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 622 | `ProjectsService::validateField` | read [analysts](/code/tables/analysts.md) |  |
+| 683 | `ProjectsService::validateField` | read [analysts](/code/tables/analysts.md) |  |
 
 ### date
 
-*private static* - line 631
+*private static* - line 696
 
 Validates an optional YYYY-MM-DD date; blank gives null.
 
@@ -502,11 +502,11 @@ function date($v): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | the date as typed (YYYY-MM-DD); null or blank gives null, anything else invalid throws |
 
 ### assertDates
 
-*private static* - line 641
+*private static* - line 711
 
 Throws when the end date is before the start date.
 
@@ -516,12 +516,12 @@ function assertDates(?string $start, ?string $end): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$start` | `?string` |  |  |
-| `$end` | `?string` |  |  |
+| `$start` | `?string` |  | the start date (YYYY-MM-DD), or null |
+| `$end` | `?string` |  | the end date (YYYY-MM-DD), or null |
 
 ### str
 
-*private static* - line 649
+*private static* - line 724
 
 Trimmed text cut to `$max` characters, or null when blank.
 
@@ -531,12 +531,12 @@ function str($v, int $max): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
-| `$max` | `int` |  |  |
+| `$v` |  |  | the text as sent; null or blank gives null |
+| `$max` | `int` |  | the most characters to keep |
 
 ### same
 
-*private static* - line 658
+*private static* - line 738
 
 True when two values are equal as strings; null only equals null.
 
@@ -546,12 +546,12 @@ function same($a, $b): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` |  |  |  |
-| `$b` |  |  |  |
+| `$a` |  |  | the stored value |
+| `$b` |  |  | the new value |
 
 ### source
 
-*private static* - line 665
+*private static* - line 745
 
 The history source for the actor: 'api' or 'app'.
 
@@ -565,7 +565,7 @@ function source(ActorContext $ctx): string
 
 ### syncCalendar
 
-*public static* - line 674
+*public static* - line 754
 
 Keep the shared Calendar in step (includes/projects/calendar.php). Call it AFTER the write, outside any transaction; it never throws.
 
@@ -581,7 +581,7 @@ function syncCalendar(PDO $conn): void
 
 ### afterChange
 
-*public static* - line 689
+*public static* - line 769
 
 After a change to one project: fire what its health and tolerances now say (includes/projects/alerts.php). Runs as the person who made the change, so the bell does not tell them about it. Never throws.
 
@@ -598,7 +598,7 @@ function afterChange(PDO $conn, int $projectId): void
 
 ### stageClosed
 
-*public static* - line 700
+*public static* - line 786
 
 project.stage_closed - by its gate (`$decision`) or by hand (null).
 
@@ -616,15 +616,15 @@ function stageClosed(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$stageId` | `int` |  |  |
-| `$decision` | `?string` |  |  |
-| `$next` | `?string` |  |  |
+| `$stageId` | `int` |  | the stage (project_stages.id) that closed |
+| `$decision` | `?string` |  | the gate decision that closed it ('go', 'go_with_conditions'), or null when closed by hand |
+| `$next` | `?string` |  | the name of the stage the gate started, or null |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### raidEscalated
 
-*public static* - line 724
+*public static* - line 814
 
 project.raid_escalated - a RAID entry needs somebody above the project manager (3.3.0).
 
@@ -636,13 +636,13 @@ function raidEscalated(PDO $conn, int $projectId, array $r): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the project_raid row just escalated, including escalation_note |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### signoffEvent
 
-*public static* - line 742
+*public static* - line 836
 
 project.signoff_requested (3.3.0): somebody is named to sign off an item at a stage gate.
 
@@ -654,19 +654,19 @@ function signoffEvent(PDO $conn, int $projectId, int $itemId): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$itemId` | `int` |  |  |
+| `$itemId` | `int` |  | the gate checklist item (project_gate_items.id) that needs signing; no event if nobody is named |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 747 | `ProjectsService::signoffEvent` | read [project_gate_items](/code/tables/project_gate_items.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 841 | `ProjectsService::signoffEvent` | read [project_gate_items](/code/tables/project_gate_items.md), read [project_stages](/code/tables/project_stages.md) |  |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### decideProposal
 
-*public static* - line 769
+*public static* - line 866
 
 Approve or reject a proposal (3.3.0, includes/projects/intake.php). Approving records who and when and - when project_proposal_on_approve is 'active' - starts the project; rejecting cancels it. Either way it is audited and the proposer is told. Compare-and-set, so two approvers decide it once.
 
@@ -685,20 +685,20 @@ function decideProposal(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$decision` | `string` |  |  |
-| `$notes` |  |  |  |
+| `$decision` | `string` |  | 'approved' or 'rejected' |
+| `$notes` |  |  | the decision notes (cut to 20000 characters); required to reject |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 780 | `ProjectsService::decideProposal` | **update** [projects](/code/tables/projects.md) (`approval_status`, `approval_by_id`, `approval_datetime`, `approval_notes`, `status`, `closed_datetime`) |  |
+| 877 | `ProjectsService::decideProposal` | **update** [projects](/code/tables/projects.md) (`approval_status`, `approval_by_id`, `approval_datetime`, `approval_notes`, `status`, `closed_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### proposalEvent
 
-*public static* - line 800
+*public static* - line 899
 
 project.proposal_submitted (to the approvers) / project.proposal_decided (to whoever proposed it, when that was an analyst) - 3.3.0. The payload carries the proposer's email so a workflow can tell somebody who asked on a form and has no bell.
 
@@ -710,19 +710,19 @@ function proposalEvent(PDO $conn, int $projectId, string $event): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$event` | `string` |  |  |
+| `$event` | `string` |  | 'project.proposal_submitted' or 'project.proposal_decided' |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 807 | `ProjectsService::proposalEvent` | read [projects](/code/tables/projects.md) |  |
+| 906 | `ProjectsService::proposalEvent` | read [projects](/code/tables/projects.md) |  |
 
 **Called from:** [includes/projects/intake.php](/code/files/includes/projects/intake.php.md)
 
 ### changeEvent
 
-*public static* - line 839
+*public static* - line 941
 
 project.change_raised / project.change_decided (3.3.0) - a change request was raised, or approved or rejected. includes/projects/control.php.
 
@@ -734,14 +734,14 @@ function changeEvent(PDO $conn, int $projectId, string $event, array $cr): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$event` | `string` |  |  |
-| `$cr` | `array` |  |  |
+| `$event` | `string` |  | 'project.change_raised' or 'project.change_decided' |
+| `$cr` | `array` |  | the project_change_requests row |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### milestoneReached
 
-*public static* - line 861
+*public static* - line 967
 
 project.milestone_reached - somebody marked a milestone done (3.3.0).
 
@@ -753,13 +753,13 @@ function milestoneReached(PDO $conn, int $projectId, array $m): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$m` | `array` |  |  |
+| `$m` | `array` |  | the project_milestones row, with done_date set |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### eventFor
 
-*private static* - line 879
+*private static* - line 989
 
 The project as its events carry it, with the health it shows; null if it is gone.
 
@@ -770,11 +770,11 @@ function eventFor(PDO $conn, int $id): ?array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the project |
 
 ### dispatch
 
-*private static* - line 892
+*private static* - line 1008
 
 Fires a project workflow event with the project's details.
 
@@ -785,13 +785,13 @@ function dispatch(PDO $conn, string $event, int $id, array $extra = []): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$event` | `string` |  |  |
-| `$id` | `int` |  |  |
-| `$extra` | `array` | `[]` |  |
+| `$event` | `string` |  | the workflow event name, e.g. 'project.created' |
+| `$id` | `int` |  | the project |
+| `$extra` | `array` | `[]` | more payload keys added beside 'project', e.g. ['changed' => 'name,status'] |
 
 ### touchProject
 
-*public static* - line 899
+*public static* - line 1015
 
 Sets the project's updated time to now, for the other project services.
 
@@ -808,7 +808,7 @@ function touchProject(PDO $conn, int $projectId): void
 
 ### touch
 
-*private static* - line 905
+*private static* - line 1021
 
 Sets the project's updated time to now.
 
@@ -825,11 +825,11 @@ function touch(PDO $conn, int $projectId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 907 | `ProjectsService::touch` | **update** [projects](/code/tables/projects.md) (`updated_datetime`) |  |
+| 1023 | `ProjectsService::touch` | **update** [projects](/code/tables/projects.md) (`updated_datetime`) |  |
 
 ### audit
 
-*public static* - line 915
+*public static* - line 1035
 
 Records one change in a project's history; a failure is logged, never thrown.
 
@@ -850,10 +850,10 @@ function audit(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$old` |  |  |  |
-| `$new` |  |  |  |
-| `$source` | `string` | `'app'` |  |
+| `$field` | `string` |  | what changed: a project column or an action key such as 'stage_added' |
+| `$old` |  |  | the value before (cut to 1000 characters), or null |
+| `$new` |  |  | the value after (cut to 1000 characters), or null |
+| `$source` | `string` | `'app'` | where it came from: 'app', 'api' or 'system' |
 
 **Writes:** project_audit - the project's history
 
@@ -861,13 +861,13 @@ function audit(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 918 | `ProjectsService::audit` | **insert** [project_audit](/code/tables/project_audit.md) (`project_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
+| 1038 | `ProjectsService::audit` | **insert** [project_audit](/code/tables/project_audit.md) (`project_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
 
 **Called from:** [includes/projects/control.php](/code/files/includes/projects/control.php.md), [includes/projects/links.php](/code/files/includes/projects/links.php.md), [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md), [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### auditDisplay
 
-*private static* - line 929
+*private static* - line 1054
 
 What the history shows for a value: names, not ids; a line, not a paragraph.
 
@@ -878,12 +878,12 @@ function auditDisplay(PDO $conn, string $field, $v): ?string
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$v` |  |  |  |
+| `$field` | `string` |  | the project column the value belongs to |
+| `$v` |  |  | the stored value |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 933 | `ProjectsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
+| 1058 | `ProjectsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
 

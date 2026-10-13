@@ -12,7 +12,7 @@ leave them, and surface them here.
 function cmdbAuditRequiredMissing(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 82.
+Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,7 +25,7 @@ Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 84 | `cmdbAuditRequiredMissing` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
+| 91 | `cmdbAuditRequiredMissing` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
 
 ## Calls
 

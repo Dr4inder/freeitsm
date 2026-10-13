@@ -9,7 +9,7 @@ something needs doing.
 function calendarSyncEnsureSubscription(PDO $conn, int $analystId): string
 ```
 
-Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 382.
+Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 417.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,13 +6,13 @@ For System -> API: refuse a company list the key's analyst cannot reach, so a ke
 function apiKeyCheckCompanies(PDO $conn, int $analystId, ?array $companyIds): void
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 193.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 207.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$companyIds` | `?array` |  |  |
+| `$analystId` | `int` |  | the analyst the API key will act as - not whoever is signed in |
+| `$companyIds` | `?array` |  | the company ids chosen for the key, as integers; null means no limit |
 
 **Returns:** `void`
 
@@ -20,8 +20,8 @@ Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 193.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 197 | `apiKeyCheckCompanies` | read [tenants](/code/tables/tenants.md) |  |
-| 205 | `apiKeyCheckCompanies` | read [tenants](/code/tables/tenants.md) |  |
+| 211 | `apiKeyCheckCompanies` | read [tenants](/code/tables/tenants.md) |  |
+| 219 | `apiKeyCheckCompanies` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

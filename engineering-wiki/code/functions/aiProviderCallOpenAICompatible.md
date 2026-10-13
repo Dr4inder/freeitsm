@@ -23,16 +23,16 @@ function aiProviderCallOpenAICompatible(
 ): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 271.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 291.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
-| `$model` | `string` |  |  |
-| `$authHeaders` | `array` |  |  |
-| `$verify` | `bool` |  |  |
-| `$opts` | `array` |  |  |
-| `$extraHeaders` | `array` | `[]` |  |
+| `$url` | `string` |  | the full chat-completions URL, including Azure's api-version query string where needed |
+| `$model` | `string` |  | the model id to send; '' leaves the model field out (an Azure deployment-based endpoint) |
+| `$authHeaders` | `array` |  | the auth header lines - 'Authorization: Bearer ...' or Azure's 'api-key: ...' |
+| `$verify` | `bool` |  | the feature's verify-SSL setting, passed on to `aiProviderHttpPost()` |
+| `$opts` | `array` |  | `aiProviderChat()`'s options with max_tokens and temperature filled in; system, user, reasoning read |
+| `$extraHeaders` | `array` | `[]` | further header lines, such as OpenRouter's HTTP-Referer and X-Title; [] for none |
 
 **Returns:** `array`
 

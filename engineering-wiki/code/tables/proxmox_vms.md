@@ -26,8 +26,8 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/assets/proxmox_connections.php](/code/files/api/assets/proxmox_connections.php.md):46 |  | delete |  |  |
-| [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md):199 | `proxmoxSyncConnection` | insert | `connection_id`, `vmid`, `vm_type`, `node_name`, `cluster_name`, `name`, `status`, `vcpus`, `memory_mb`, `disk_gb` |  |
-| [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md):243 | `proxmoxSyncConnection` | delete |  |  |
+| [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md):229 | `proxmoxSyncConnection` | insert | `connection_id`, `vmid`, `vm_type`, `node_name`, `cluster_name`, `name`, `status`, `vcpus`, `memory_mb`, `disk_gb` |  |
+| [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md):273 | `proxmoxSyncConnection` | delete |  |  |
 
 ## Read by
 
@@ -35,5 +35,5 @@
 |---|---|---|
 | [api/assets/get_servers.php](/code/files/api/assets/get_servers.php.md) | L34 |  |
 | [api/assets/proxmox_vms.php](/code/files/api/assets/proxmox_vms.php.md) | L28 |  |
-| [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md) | proxmoxSyncConnection L225 |  |
+| [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md) | proxmoxSyncConnection L255 |  |
 

@@ -6,12 +6,12 @@ Replace [merge_code] placeholders with actual values.
 function resolveMergeCodes(string $template, array $mergeData): string
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 412.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 431.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$template` | `string` |  |  |
-| `$mergeData` | `array` |  |  |
+| `$template` | `string` |  | the template text (subject or body) holding [merge_code] placeholders |
+| `$mergeData` | `array` |  | [code => value]; values are put in as they are, not escaped |
 
 **Returns:** `string`
 

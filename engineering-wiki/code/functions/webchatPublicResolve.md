@@ -6,12 +6,12 @@ Load the widget for a public request, enforce active + origin allowlist, and set
 function webchatPublicResolve(PDO $conn, string $key): array
 ```
 
-Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 99.
+Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 108.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the public widget key from the request - untrusted; '' fails with 404 |
 
 **Returns:** `array`
 

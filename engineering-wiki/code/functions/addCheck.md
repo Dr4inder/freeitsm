@@ -12,15 +12,15 @@ function addCheck(
 ): void
 ```
 
-Defined in [api/messaging/slack_diagnose.php](/code/files/api/messaging/slack_diagnose.php.md), line 73.
+Defined in [api/messaging/slack_diagnose.php](/code/files/api/messaging/slack_diagnose.php.md), line 79.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
-| `$label` | `string` |  |  |
-| `$status` | `string` |  |  |
-| `$detail` | `string` |  |  |
-| `$fix` | `string` | `''` |  |
+| `$key` | `string` |  | a stable id for the check, used by the page |
+| `$label` | `string` |  | the check's name as shown |
+| `$status` | `string` |  | 'ok', 'warn', 'fail' or 'skip' |
+| `$detail` | `string` |  | what was found, in plain words |
+| `$fix` | `string` | `''` | what to do about it; empty when there is nothing to do |
 
 **Returns:** `void`
 

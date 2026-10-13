@@ -26,21 +26,21 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):61 | `ProjectToolsService::addMember` | insert | `project_id`, `$col`, `role_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):90 | `ProjectToolsService::addContractorMember` | insert | `project_id`, `supplier_id`, `contact_id`, `role_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):143 | `ProjectToolsService::updateMember` | update |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):179 | `ProjectToolsService::removeMember` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):66 | `ProjectToolsService::addMember` | insert | `project_id`, `$col`, `role_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):97 | `ProjectToolsService::addContractorMember` | insert | `project_id`, `supplier_id`, `contact_id`, `role_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):154 | `ProjectToolsService::updateMember` | update |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):194 | `ProjectToolsService::removeMember` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/projects/settings.php](/code/files/api/projects/settings.php.md) | projectRolesForSettings L31 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L457, peopleProjects L478 |  |
-| [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L283 |  |
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMaturity L118 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L143 |  |
-| [includes/projects/settings.php](/code/files/includes/projects/settings.php.md) | projectIsTeam L419 |  |
-| [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md) | projectVisibleSql L73 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addMember L56, ProjectToolsService::addMember L60, ProjectToolsService::addContractorMember L77, ProjectToolsService::addContractorMember L85, ProjectToolsService::addContractorMember L89, ProjectToolsService::contractorMemberSql L103 ... |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L492, peopleProjects L513 |  |
+| [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L286 |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMaturity L128 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L155 |  |
+| [includes/projects/settings.php](/code/files/includes/projects/settings.php.md) | projectIsTeam L451 |  |
+| [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md) | projectVisibleSql L80 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addMember L61, ProjectToolsService::addMember L65, ProjectToolsService::addContractorMember L84, ProjectToolsService::addContractorMember L92, ProjectToolsService::addContractorMember L96, ProjectToolsService::contractorMemberSql L110 ... |  |
 

@@ -10,13 +10,13 @@ function buildReplyCleanupSystemPrompt(
 ): string
 ```
 
-Defined in [includes/reply_cleanup_prompt.php](/code/files/includes/reply_cleanup_prompt.php.md), line 28.
+Defined in [includes/reply_cleanup_prompt.php](/code/files/includes/reply_cleanup_prompt.php.md), line 34.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$greetingName` | `string` |  |  |
-| `$toneDescription` | `string` |  |  |
-| `$customInstructions` | `string` | `''` |  |
+| `$greetingName` | `string` |  | the name after "Dear" - the requester's, or a placeholder on the settings page |
+| `$toneDescription` | `string` |  | the tone clause from `replyCleanupToneDescription()` |
+| `$customInstructions` | `string` | `''` | the organisation's extra rules from settings, appended last; '' for none |
 
 **Returns:** `string`
 

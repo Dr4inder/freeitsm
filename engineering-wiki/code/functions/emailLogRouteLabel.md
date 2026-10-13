@@ -6,11 +6,11 @@ Human label for a route key, falling back to the key itself for unknown ones.
 function emailLogRouteLabel(string $route): string
 ```
 
-Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 123.
+Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$route` | `string` |  |  |
+| `$route` | `string` |  | a route key as stored in email_send_log.route, e.g. 'reply' or 'sla' |
 
 **Returns:** `string`
 

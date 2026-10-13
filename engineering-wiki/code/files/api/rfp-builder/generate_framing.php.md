@@ -1,6 +1,6 @@
 # api/rfp-builder/generate_framing.php
 
-> API endpoint - 183 lines
+> API endpoint - 186 lines
 
 Generate one document framing section (introduction / scope / response_instructions) as a Server-Sent Events stream — same pattern as generate_section.php but for the framing rows that sit above the per-category sections in the eventual document.
 
@@ -26,17 +26,17 @@ want consolidation drifting underneath us.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse()](/code/functions/sse.md) | 44 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
+| [sse()](/code/functions/sse.md) | 47 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 83 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 103 |  | read [rfp_document_sections](/code/tables/rfp_document_sections.md) |  |
-| 144 |  | **update** [rfp_document_sections](/code/tables/rfp_document_sections.md) (`section_title`, `section_content`, `sort_order`, `is_manually_edited`, `inputs_hash`, `generated_datetime`, `edited_datetime`) |  |
-| 158 |  | **insert** [rfp_document_sections](/code/tables/rfp_document_sections.md) (`rfp_id`, `section_key`, `section_title`, `section_content`, `sort_order`, `inputs_hash`) |  |
-| 166 |  | **update** [rfps](/code/tables/rfps.md) (`updated_datetime`) |  |
+| 86 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 106 |  | read [rfp_document_sections](/code/tables/rfp_document_sections.md) |  |
+| 147 |  | **update** [rfp_document_sections](/code/tables/rfp_document_sections.md) (`section_title`, `section_content`, `sort_order`, `is_manually_edited`, `inputs_hash`, `generated_datetime`, `edited_datetime`) |  |
+| 161 |  | **insert** [rfp_document_sections](/code/tables/rfp_document_sections.md) (`rfp_id`, `section_key`, `section_title`, `section_content`, `sort_order`, `inputs_hash`) |  |
+| 169 |  | **update** [rfps](/code/tables/rfps.md) (`updated_datetime`) |  |
 
 ## How it hangs together
 

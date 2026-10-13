@@ -19,14 +19,14 @@ the correct move is to fetch it, not to write over it.
 function cardDavPutCard(array $cfg, string $cardUrl, string $vcard, string $etag): array
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 70.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$cardUrl` | `string` |  |  |
-| `$vcard` | `string` |  |  |
-| `$etag` | `string` |  |  |
+| `$cfg` | `array` |  | request settings from `cardDavConfigFromProvider()` |
+| `$cardUrl` | `string` |  | the card's absolute URL |
+| `$vcard` | `string` |  | the whole card to store, already edited |
+| `$etag` | `string` |  | the ETag the card had when it was read, sent as If-Match; '' refuses the write |
 
 **Returns:** array ['ok'=>bool, 'status'=>int, 'etag'=>string, 'conflict'=>bool, 'error'=>string]  `etag` is the card's NEW tag when the server returned one; '' means re-read before writing again.
 

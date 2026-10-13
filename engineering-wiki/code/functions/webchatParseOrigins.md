@@ -6,11 +6,11 @@ Parse the stored allowed_origins blob into a clean list of origins. Accepts one 
 function webchatParseOrigins(?string $raw): array
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 115.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 131.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `?string` |  |  |
+| `$raw` | `?string` |  | the stored allowed_origins text: one origin per line or comma-separated, '#' for comments |
 
 **Returns:** `array`
 

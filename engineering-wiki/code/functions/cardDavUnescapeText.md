@@ -23,11 +23,11 @@ would gain a backslash on every run.
 function cardDavUnescapeText(string $v): string
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 437.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 451.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` | `string` |  |  |
+| `$v` | `string` |  | an escaped vCard TEXT value as it appears after the colon |
 
 **Returns:** `string`
 

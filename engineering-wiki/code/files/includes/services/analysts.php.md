@@ -1,6 +1,6 @@
 # includes/services/analysts.php
 
-> PHP - 395 lines
+> PHP - 452 lines
 
 AnalystsService — creating analysts and setting what they may do (3.5.0).
 
@@ -37,27 +37,27 @@ are the ones that hold whoever calls:
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 40 | `AnalystsService::load` | read [analysts](/code/tables/analysts.md) |  |
-| 71 | `AnalystsService::create` | **insert** [analysts](/code/tables/analysts.md) (`username`, `password_hash`, `full_name`, `email`, `is_active`, `auth_provider_id`, `is_admin`, `can_access_all_modules`, `can_access_all_tenants`, `created_datetime`, `last_modified_datetime`) |  |
-| 130 | `AnalystsService::update` | **update** [analysts](/code/tables/analysts.md) |  |
-| 145 | `AnalystsService::access` | read [analyst_modules](/code/tables/analyst_modules.md) |  |
-| 147 | `AnalystsService::access` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
-| 151 | `AnalystsService::access` | read [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) |  |
-| 204 | `AnalystsService::setAccess` | **update** [analysts](/code/tables/analysts.md) (`is_admin`, `can_access_all_modules`, `can_access_all_tenants`, `last_modified_datetime`) |  |
-| 209 | `AnalystsService::setAccess` | **delete** [analyst_modules](/code/tables/analyst_modules.md) |  |
-| 210 | `AnalystsService::setAccess` | **insert** [analyst_modules](/code/tables/analyst_modules.md) (`analyst_id`, `module_key`) |  |
-| 214 | `AnalystsService::setAccess` | **delete** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
-| 215 | `AnalystsService::setAccess` | **insert** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) (`analyst_id`, `tenant_id`) |  |
-| 232 | `AnalystsService::managedRoleId` | read [rbac_roles](/code/tables/rbac_roles.md) |  |
-| 247 | `AnalystsService::assertNotLastAdmin` | read [analysts](/code/tables/analysts.md) |  |
-| 270 | `AnalystsService::writeManagedRole` | **insert** [rbac_roles](/code/tables/rbac_roles.md) (`name`, `description`, `is_active`, `created_by_id`, `managed_for_analyst_id`, `created_datetime`, `updated_datetime`) |  |
-| 280 | `AnalystsService::writeManagedRole` | **delete** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) |  |
-| 281 | `AnalystsService::writeManagedRole` | **insert** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) (`role_id`, `capability_key`) |  |
-| 283 | `AnalystsService::writeManagedRole` | **insert** [rbac_analyst_roles](/code/tables/rbac_analyst_roles.md) (`analyst_id`, `role_id`, `created_datetime`) |  |
-| 285 | `AnalystsService::writeManagedRole` | **update** [rbac_roles](/code/tables/rbac_roles.md) (`updated_datetime`) |  |
-| 363 | `AnalystsService::assertEmailFree` | read [analysts](/code/tables/analysts.md) |  |
-| 375 | `AnalystsService::providerId` | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 388 | `AnalystsService::uniqueUsername` | read [analysts](/code/tables/analysts.md) |  |
+| 44 | `AnalystsService::load` | read [analysts](/code/tables/analysts.md) |  |
+| 77 | `AnalystsService::create` | **insert** [analysts](/code/tables/analysts.md) (`username`, `password_hash`, `full_name`, `email`, `is_active`, `auth_provider_id`, `is_admin`, `can_access_all_modules`, `can_access_all_tenants`, `created_datetime`, `last_modified_datetime`) |  |
+| 139 | `AnalystsService::update` | **update** [analysts](/code/tables/analysts.md) |  |
+| 157 | `AnalystsService::access` | read [analyst_modules](/code/tables/analyst_modules.md) |  |
+| 159 | `AnalystsService::access` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
+| 163 | `AnalystsService::access` | read [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) |  |
+| 219 | `AnalystsService::setAccess` | **update** [analysts](/code/tables/analysts.md) (`is_admin`, `can_access_all_modules`, `can_access_all_tenants`, `last_modified_datetime`) |  |
+| 224 | `AnalystsService::setAccess` | **delete** [analyst_modules](/code/tables/analyst_modules.md) |  |
+| 225 | `AnalystsService::setAccess` | **insert** [analyst_modules](/code/tables/analyst_modules.md) (`analyst_id`, `module_key`) |  |
+| 229 | `AnalystsService::setAccess` | **delete** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
+| 230 | `AnalystsService::setAccess` | **insert** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) (`analyst_id`, `tenant_id`) |  |
+| 247 | `AnalystsService::managedRoleId` | read [rbac_roles](/code/tables/rbac_roles.md) |  |
+| 264 | `AnalystsService::assertNotLastAdmin` | read [analysts](/code/tables/analysts.md) |  |
+| 289 | `AnalystsService::writeManagedRole` | **insert** [rbac_roles](/code/tables/rbac_roles.md) (`name`, `description`, `is_active`, `created_by_id`, `managed_for_analyst_id`, `created_datetime`, `updated_datetime`) |  |
+| 299 | `AnalystsService::writeManagedRole` | **delete** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) |  |
+| 300 | `AnalystsService::writeManagedRole` | **insert** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) (`role_id`, `capability_key`) |  |
+| 302 | `AnalystsService::writeManagedRole` | **insert** [rbac_analyst_roles](/code/tables/rbac_analyst_roles.md) (`analyst_id`, `role_id`, `created_datetime`) |  |
+| 304 | `AnalystsService::writeManagedRole` | **update** [rbac_roles](/code/tables/rbac_roles.md) (`updated_datetime`) |  |
+| 411 | `AnalystsService::assertEmailFree` | read [analysts](/code/tables/analysts.md) |  |
+| 427 | `AnalystsService::providerId` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 445 | `AnalystsService::uniqueUsername` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

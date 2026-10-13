@@ -17,11 +17,11 @@ guard at all.
 function dbVerifyNormaliseColumnType(string $def): string
 ```
 
-Defined in [includes/db_verify_column_parse.php](/code/files/includes/db_verify_column_parse.php.md), line 79.
+Defined in [includes/db_verify_column_parse.php](/code/files/includes/db_verify_column_parse.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$def` | `string` |  |  |
+| `$def` | `string` |  | a column definition after the name, e.g. "varchar(100) NOT NULL DEFAULT ''" |
 
 **Returns:** `string`
 

@@ -21,11 +21,11 @@
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3612 |  | insert | `name`, `colour`, `is_default`, `severity_order`, `display_order`, `counts_as_downtime` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3637 |  | update | `counts_as_downtime` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3667 |  | insert | `name`, `severity_order`, `display_order` |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):603 | `ServiceStatusService::saveImpactLevel` | update | `is_default` |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):609 | `ServiceStatusService::saveImpactLevel` | update | `name`, `colour`, `is_default`, `severity_order`, `display_order`, `is_active`, `counts_as_downtime` |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):613 | `ServiceStatusService::saveImpactLevel` | insert | `name`, `colour`, `is_default`, `severity_order`, `display_order`, `is_active`, `counts_as_downtime` |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):619 | `ServiceStatusService::saveImpactLevel` | update | `is_default` |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):646 | `ServiceStatusService::deleteImpactLevel` | delete |  |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):663 | `ServiceStatusService::saveImpactLevel` | update | `is_default` |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):669 | `ServiceStatusService::saveImpactLevel` | update | `name`, `colour`, `is_default`, `severity_order`, `display_order`, `is_active`, `counts_as_downtime` |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):673 | `ServiceStatusService::saveImpactLevel` | insert | `name`, `colour`, `is_default`, `severity_order`, `display_order`, `is_active`, `counts_as_downtime` |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):679 | `ServiceStatusService::saveImpactLevel` | update | `is_default` |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):710 | `ServiceStatusService::deleteImpactLevel` | delete |  |  |
 
 ## Read by
 
@@ -36,16 +36,16 @@
 | [api/service-status/get_impact_levels.php](/code/files/api/service-status/get_impact_levels.php.md) | L20 |  |
 | [api/service-status/get_incident_updates.php](/code/files/api/service-status/get_incident_updates.php.md) | L60 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3610, L3667, L3673, L3680 |  |
-| [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | apiServiceStatusSubquery L50, apiServiceStatusImpactMeta L65, apiSerializeIncident L125, apiServiceImpactLevelsList L364 |  |
+| [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | apiServiceStatusSubquery L54, apiServiceStatusImpactMeta L69, apiSerializeIncident L137, apiServiceImpactLevelsList L380 |  |
 | [domains/settings/index.php](/code/files/domains/settings/index.php.md) | L183 |  |
-| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusImpactId L194, domainStatusImpactId L200 |  |
+| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusImpactId L219, domainStatusImpactId L225 |  |
 | [includes/feature_bingo/cards/service-status.php](/code/files/includes/feature_bingo/cards/service-status.php.md) | L116 |  |
-| [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) | rpStatusIncidentLog L131, rpStatusIncidentSummary L193 |  |
+| [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) | rpStatusIncidentLog L151, rpStatusIncidentSummary L219 |  |
 | [includes/service_impact_levels.php](/code/files/includes/service_impact_levels.php.md) | defaultImpactLevel L37, defaultImpactLevel L44 |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedList L160 |  |
-| [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md) | ssPortalIncidents L133 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::announcements L1842 |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md) | ServiceStatusService::validateIncidentServices L311, ServiceStatusService::validateIncidentServices L320, ServiceStatusService::saveImpactLevel L617, ServiceStatusService::deleteImpactLevel L635, ServiceStatusService::deleteImpactLevel L645 |  |
-| [includes/services/service_uptime.php](/code/files/includes/services/service_uptime.php.md) | ServiceUptime::incidentsFor L110, ServiceUptime::segmentsFor L210, ServiceUptime::dailyStrip L379, ServiceUptime::incidentsBetween L449, ServiceUptime::dailyStripBetween L545 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L432 |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedList L176 |  |
+| [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md) | ssPortalIncidents L139 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::announcements L2077 |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md) | ServiceStatusService::validateIncidentServices L345, ServiceStatusService::validateIncidentServices L354, ServiceStatusService::saveImpactLevel L677, ServiceStatusService::deleteImpactLevel L699, ServiceStatusService::deleteImpactLevel L709 |  |
+| [includes/services/service_uptime.php](/code/files/includes/services/service_uptime.php.md) | ServiceUptime::incidentsFor L112, ServiceUptime::segmentsFor L216, ServiceUptime::dailyStrip L389, ServiceUptime::incidentsBetween L463, ServiceUptime::dailyStripBetween L569 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L435 |  |
 

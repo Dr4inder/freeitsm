@@ -6,13 +6,13 @@ Columns for any SELECT over a table with cost_centre_id, alias `$a`: cost_centre
 function costCentreSelectSql(PDO $conn, string $table, string $a): string
 ```
 
-Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 110.
+Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$a` | `string` |  |  |
+| `$table` | `string` |  | the table being selected from, e.g. 'assets' - used to check the column exists |
+| `$a` | `string` |  | the alias the calling query gives that table (trusted - put straight into SQL) |
 
 **Returns:** `string`
 
@@ -20,7 +20,7 @@ Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_as
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `costCentreSelectSql` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 137 | `costCentreSelectSql` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## Calls
 

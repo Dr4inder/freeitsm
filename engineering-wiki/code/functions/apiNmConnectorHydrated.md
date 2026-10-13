@@ -6,13 +6,13 @@ Load one connector by id fully hydrated (for single-op responses).
 function apiNmConnectorHydrated(PDO $conn, int $diagramId, int $connectorId): array
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 264.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 302.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$diagramId` | `int` |  |  |
-| `$connectorId` | `int` |  |  |
+| `$diagramId` | `int` |  | the network_diagrams id |
+| `$connectorId` | `int` |  | the network_diagram_connectors id on that diagram |
 
 **Returns:** `array`
 

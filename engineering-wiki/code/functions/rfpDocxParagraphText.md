@@ -6,12 +6,12 @@ Concatenate all text runs in a single <w:p>, preserving tab characters where <w:
 function rfpDocxParagraphText(DOMElement $p, string $ns): string
 ```
 
-Defined in [includes/rfp_docx_parser.php](/code/files/includes/rfp_docx_parser.php.md), line 105.
+Defined in [includes/rfp_docx_parser.php](/code/files/includes/rfp_docx_parser.php.md), line 111.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `DOMElement` |  |  |
-| `$ns` | `string` |  |  |
+| `$p` | `DOMElement` |  | one <w:p> paragraph element |
+| `$ns` | `string` |  | the WordprocessingML namespace URI |
 
 **Returns:** `string`
 

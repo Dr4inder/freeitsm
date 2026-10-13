@@ -19,7 +19,7 @@
 |---|---|---|---|---|
 | [api/change-management/delete_attachment.php](/code/files/api/change-management/delete_attachment.php.md):47 |  | delete |  |  |
 | [api/change-management/upload_attachment.php](/code/files/api/change-management/upload_attachment.php.md):71 |  | insert | `change_id`, `file_name`, `file_path`, `file_size`, `file_type`, `uploaded_by_id`, `uploaded_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):386 | `ChangesService::deleteChange` | delete |  |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):395 | `ChangesService::deleteChange` | delete |  |  |
 
 ## Read by
 
@@ -28,6 +28,6 @@
 | [api/change-management/delete_attachment.php](/code/files/api/change-management/delete_attachment.php.md) | L30 |  |
 | [api/change-management/get.php](/code/files/api/change-management/get.php.md) | L68 |  |
 | [api/change-management/get_attachment.php](/code/files/api/change-management/get_attachment.php.md) | L28 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L292 |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::deleteChange L378 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L302 |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::deleteChange L387 |  |
 

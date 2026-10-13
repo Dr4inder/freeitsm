@@ -84,6 +84,8 @@ function apiContractVisibility(PDO $conn, array $apiKey): array {
 /**
  * Shapes a contract row for the API - number, title, company, supplier or customer
  * (company and person), owner, status, dates, value and the rest of the record.
+ *
+ * @param array $r  the contracts row as apiContractSelect() loads it, with supplier, customer, owner, status and company names
  */
 function apiSerializeContract(array $r): array {
     $rel = function ($id, $name) {
@@ -134,7 +136,11 @@ function apiSerializeContract(array $r): array {
     ];
 }
 
-/** Loads one contract row the key may see (apiContractVisibility), or answers 404 and stops. */
+/**
+ * Loads one contract row the key may see (apiContractVisibility), or answers 404 and stops.
+ *
+ * @param int $contractId  the contracts id
+ */
 function apiLoadContract(PDO $conn, int $contractId, array $apiKey): array {
     [$vis, $visArgs] = apiContractVisibility($conn, $apiKey);
     $stmt = $conn->prepare(apiContractSelect($conn) . " WHERE c.id = ?$vis");
@@ -161,6 +167,8 @@ function apiSupplierSelect(): string {
 /**
  * Shapes a supplier row for the API - legal, trading and display name, registration
  * numbers, type, status, address and counts.
+ *
+ * @param array $r  the suppliers row as apiSupplierSelect() loads it, with type and status names and the counts
  */
 function apiSerializeSupplier(array $r): array {
     $rel = function ($id, $name) {
@@ -196,7 +204,11 @@ function apiSerializeSupplier(array $r): array {
     ];
 }
 
-/** Loads one supplier row (apiSupplierSelect), or answers 404 and stops. */
+/**
+ * Loads one supplier row (apiSupplierSelect), or answers 404 and stops.
+ *
+ * @param int $supplierId  the suppliers id
+ */
 function apiLoadSupplier(PDO $conn, int $supplierId): array {
     $stmt = $conn->prepare(apiSupplierSelect() . " WHERE s.id = ?");
     $stmt->execute([$supplierId]);
@@ -335,6 +347,8 @@ function apiContractsGet(PDO $conn, array $apiKey, array $params, array $body): 
  * `company_id` from a request body as the service's tenant_id: checked to exist
  * and to be in the key's reach (403), or - on a create with none - the key's
  * default company. On an update with none, nothing: the contract stays put.
+ *
+ * @param bool $creating  true for a create, where a missing company_id falls back to the key's default company
  */
 function apiContractCompany(PDO $conn, array $apiKey, array $body, bool $creating): array {
     $raw = $body['company_id'] ?? null;
@@ -457,6 +471,7 @@ function apiSuppliersDelete(PDO $conn, array $apiKey, array $params, array $body
 // ---------------------------------------------------------------------------
 // Supplier contacts
 // ---------------------------------------------------------------------------
+// @param array $c  a contacts row (a supplier's contact person)
 function apiSerializeContact(array $c): array {
     return [
         'id'          => (int)$c['id'],
@@ -562,6 +577,7 @@ function apiSupplierContactsDelete(PDO $conn, array $apiKey, array $params, arra
 // ---------------------------------------------------------------------------
 // Reference lookups
 // ---------------------------------------------------------------------------
+// @param string $table  the lookup table to list (contract_statuses, payment_schedules ...) - fixed by the caller
 function apiContractLookupList(PDO $conn, string $table): void {
     $rows = $conn->query(
         "SELECT id, name, description, is_active FROM `$table` ORDER BY display_order, name"

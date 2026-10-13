@@ -6,12 +6,12 @@ For AI features that read MANY tickets (problem root cause, suggested problems, 
 function ticketAiExclusionSql(PDO $conn, string $alias = 't'): string
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 203.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 214.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` | `'t'` |  |
+| `$alias` | `string` | `'t'` | the alias the calling query gives the tickets table |
 
 **Returns:** `string`
 

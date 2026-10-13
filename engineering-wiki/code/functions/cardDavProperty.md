@@ -11,12 +11,12 @@ because the spec says property names are.
 function cardDavProperty(array $lines, string $name): array
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 481.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 500.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
-| `$name` | `string` |  |  |
+| `$lines` | `array` |  | the card's unfolded lines from `cardDavUnfold()` |
+| `$name` | `string` |  | the property name to find, e.g. 'CATEGORIES' - any case |
 
 **Returns:** `array`
 

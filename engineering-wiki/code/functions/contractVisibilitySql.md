@@ -6,13 +6,13 @@
 function contractVisibilitySql(PDO $conn, int $analystId, string $c = 'c'): array
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 83.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 91.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$c` | `string` | `'c'` |  |
+| `$c` | `string` | `'c'` | the alias the calling query gives the contracts table (trusted - put straight into SQL) |
 
 **Returns:** array{0:string,1:array}
 

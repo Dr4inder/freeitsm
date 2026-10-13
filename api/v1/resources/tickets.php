@@ -58,6 +58,8 @@ function apiTicketSelect(): string {
 /**
  * Shapes a ticket row for the API - number, subject, status (with is_closed), priority,
  * type, origin, department, analyst, requester and the rest of the record.
+ *
+ * @param array $r  the tickets row as apiTicketSelect() loads it, with the lookup, analyst, requester and company names
  */
 function apiSerializeTicket(array $r): array {
     $rel = function ($id, $name, array $extra = []) {

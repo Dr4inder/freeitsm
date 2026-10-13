@@ -6,12 +6,12 @@ The incident this domain raised that is still open, or null.
 function domainStatusOpenIncident(PDO $conn, int $domainId): ?array
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 103.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$domainId` | `int` |  |  |
+| `$domainId` | `int` |  | the domain whose open, domain-raised incident to find |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 106 | `domainStatusOpenIncident` | read [domain_status_incidents](/code/tables/domain_status_incidents.md), read [status_incidents](/code/tables/status_incidents.md) |  |
+| 120 | `domainStatusOpenIncident` | read [domain_status_incidents](/code/tables/domain_status_incidents.md), read [status_incidents](/code/tables/status_incidents.md) |  |
 
 ## Called from
 

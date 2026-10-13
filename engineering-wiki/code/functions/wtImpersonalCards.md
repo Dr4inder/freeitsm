@@ -12,7 +12,7 @@ assigned assets" would therefore be empty for most people, which reads as
 function wtImpersonalCards(): array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 74.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 78.
 
 **Returns:** `array`
 

@@ -35,6 +35,8 @@ function apiAnalystsRequireProvisioner(PDO $conn, array $apiKey): void
 /**
  * Shapes an analyst row for the API - id, username, name, email, active and admin flags,
  * sign-in provider and dates. Never the password hash or MFA secret.
+ *
+ * @param array $a  the analysts row as AnalystsService::load returns it
  */
 function apiSerializeAnalyst(array $a): array
 {

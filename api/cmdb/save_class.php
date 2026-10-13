@@ -23,6 +23,8 @@ requireCapabilityJson(Cap::CMDB_CLASSES);   // settings tab — see docs/design/
 /**
  * Turns a class name into a lower-case key of letters, digits and underscores, falling
  * back to 'class' when nothing is left.
+ *
+ * @param mixed $name  the class name as typed
  */
 function slugify($name) {
     $slug = strtolower(trim($name));

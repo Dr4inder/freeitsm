@@ -6,7 +6,7 @@ Answers 503 and stops when the cost centre tables are not there yet (Database Ve
 function apiCostCentresReady(PDO $conn): void
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 83.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

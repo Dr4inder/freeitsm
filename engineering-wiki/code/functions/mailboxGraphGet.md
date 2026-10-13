@@ -6,12 +6,12 @@ An authenticated Graph GET, shaped for `mailboxResolveFolderId()`. Every caller 
 function mailboxGraphGet($accessToken, $url)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 294.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 322.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
-| `$url` |  |  |  |
+| `$accessToken` |  |  | a Graph access token for the mailbox |
+| `$url` |  |  | the full Graph URL to GET |
 
 ## Calls
 

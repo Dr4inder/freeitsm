@@ -6,13 +6,13 @@ Open the panel: a greeting for an empty conversation, a catch-up after a while, 
 function projectChatOpen(PDO $conn, ActorContext $ctx, array $project): array
 ```
 
-Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 405.
+Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 441.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row the panel is open on |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 409 | `projectChatOpen` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
+| 445 | `projectChatOpen` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
 
 ## Calls
 

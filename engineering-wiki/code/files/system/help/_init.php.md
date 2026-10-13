@@ -1,6 +1,6 @@
 # system/help/_init.php
 
-> PHP - 82 lines
+> PHP - 84 lines
 
 Shared boot for System help topic pages. Include at the very TOP of a topic page (top-level scope, not inside a function) so config/i18n globals and the waffle-menu chain resolve correctly:
 
@@ -38,7 +38,7 @@ is written inline rather than via i18n keys.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [helpSectionNum()](/code/functions/helpSectionNum.md) | 72 | The number badge for a section, derived from the page's registry entry. |
+| [helpSectionNum()](/code/functions/helpSectionNum.md) | 74 | The number badge for a section, derived from the page's registry entry. |
 
 ## How it hangs together
 

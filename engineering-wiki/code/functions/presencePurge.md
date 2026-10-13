@@ -12,7 +12,7 @@ correctness, and the cutoff is deliberately far beyond the stale window.
 function presencePurge(PDO $conn): void
 ```
 
-Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md), line 151.
+Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md), line 153.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,7 +24,7 @@ Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 154 | `presencePurge` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
+| 156 | `presencePurge` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
 
 ## Calls
 

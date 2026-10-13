@@ -22,5 +22,5 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/template_email.php](/code/files/includes/template_email.php.md) | templateRulesByTemplate L311 |  |
+| [includes/template_email.php](/code/files/includes/template_email.php.md) | templateRulesByTemplate L327 |  |
 

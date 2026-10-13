@@ -10,7 +10,7 @@ would look like it had done nothing.
 function formLogicVisibility(array $fields, array $valuesByFieldId): array
 ```
 
-Defined in [includes/form_logic.php](/code/files/includes/form_logic.php.md), line 101.
+Defined in [includes/form_logic.php](/code/files/includes/form_logic.php.md), line 111.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,12 +6,12 @@ Shapes a submission for the API with every answer beside its field - checkbox an
 function apiSerializeFormSubmission(PDO $conn, array $r): array
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 148.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 159.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the form_submissions row as `apiLoadFormSubmission()` loads it, with form_title and submitted_by_name |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 152 | `apiSerializeFormSubmission` | read [form_submission_data](/code/tables/form_submission_data.md), read [form_fields](/code/tables/form_fields.md) |  |
+| 163 | `apiSerializeFormSubmission` | read [form_submission_data](/code/tables/form_submission_data.md), read [form_fields](/code/tables/form_fields.md) |  |
 
 ## Calls
 

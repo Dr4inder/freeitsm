@@ -6,12 +6,12 @@ Everything the Budget tab shows.
 function projectBudgetDetail(PDO $conn, array $project, int $analystId): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 399.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 437.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
@@ -20,7 +20,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 403 | `projectBudgetDetail` | read [project_budget_lines](/code/tables/project_budget_lines.md), read [contracts](/code/tables/contracts.md), read [cost_centres](/code/tables/cost_centres.md) |  |
+| 441 | `projectBudgetDetail` | read [project_budget_lines](/code/tables/project_budget_lines.md), read [contracts](/code/tables/contracts.md), read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## Calls
 

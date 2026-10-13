@@ -26,5 +26,5 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.php.md) | knowledgeAuditView L88, knowledgeAuditHistory L114 |  |
+| [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.php.md) | knowledgeAuditView L92, knowledgeAuditHistory L122 |  |
 

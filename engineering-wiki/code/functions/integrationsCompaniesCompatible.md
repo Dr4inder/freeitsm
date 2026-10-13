@@ -32,13 +32,13 @@ function integrationsCompaniesCompatible(
 ): bool
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 407.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 434.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$entityTenantId` | `?int` |  |  |
-| `$connectionTenantId` | `?int` |  |  |
-| `$defaultTenantId` | `?int` | `null` |  |
+| `$entityTenantId` | `?int` |  | the work item's company; null means the Default company |
+| `$connectionTenantId` | `?int` |  | the connection's company; null means shared by every company |
+| `$defaultTenantId` | `?int` | `null` | the Default company's id, used in place of a null `$entityTenantId` |
 
 **Returns:** `bool`
 

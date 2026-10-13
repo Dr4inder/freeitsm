@@ -22,7 +22,7 @@ Never throws; a manager's notification is never worth the ticket.
 function managersNotifyNewTicket(PDO $conn, int $ticketId): void
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 368.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 385.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -35,9 +35,9 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 3
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 376 | `managersNotifyNewTicket` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
-| 388 | `managersNotifyNewTicket` | read [users](/code/tables/users.md) |  |
-| 398 | `managersNotifyNewTicket` | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 393 | `managersNotifyNewTicket` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
+| 405 | `managersNotifyNewTicket` | read [users](/code/tables/users.md) |  |
+| 415 | `managersNotifyNewTicket` | read [manager_grants](/code/tables/manager_grants.md) |  |
 
 ## Calls
 

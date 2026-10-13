@@ -9,11 +9,11 @@ Masks a value for a report that will be sent on - all stars when very short, oth
 function mask($s)
 ```
 
-Defined in [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md), line 70.
+Defined in [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md), line 80.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | the value to mask; empty gives (empty) |
 
 ## Called from
 

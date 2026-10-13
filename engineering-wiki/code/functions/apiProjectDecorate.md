@@ -6,12 +6,12 @@ Decorate rows (health, progress, exceptions, budget) the way the portfolio does.
 function apiProjectDecorate(PDO $conn, array $rows): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 52.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rows` | `array` |  |  |
+| `$rows` | `array` |  | projects rows as `apiProjectSelect()` loads them |
 
 **Returns:** `array`
 

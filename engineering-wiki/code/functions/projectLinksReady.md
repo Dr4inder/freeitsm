@@ -6,12 +6,12 @@ Before Database Verification the tables are not there: no links, never an error.
 function projectLinksReady(PDO $conn, ?string $kind = null): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 54.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `?string` | `null` |  |
+| `$kind` | `?string` | `null` | one link kind to check, e.g. 'problem'; null asks whether any kind is usable |
 
 **Returns:** `bool`
 

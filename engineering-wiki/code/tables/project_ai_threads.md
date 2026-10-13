@@ -19,14 +19,14 @@ The AI project assistant (3.3.0) - includes/projects/assistant_chat.php.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):86 | `projectChatThread` | insert | `project_id`, `analyst_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):399 | `projectChatTurn` | update | `updated_datetime` |  |
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):448 | `projectChatSummarise` | update | `summary`, `summary_upto_id` |  |
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):607 | `projectChatClear` | delete |  |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):90 | `projectChatThread` | insert | `project_id`, `analyst_id`, `created_datetime`, `updated_datetime` |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):431 | `projectChatTurn` | update | `updated_datetime` |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):487 | `projectChatSummarise` | update | `summary`, `summary_upto_id` |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):661 | `projectChatClear` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatReady L70, projectChatThread L81, projectChatThread L82, projectChatSummarise L426 |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatReady L70, projectChatThread L85, projectChatThread L86, projectChatSummarise L465 |  |
 

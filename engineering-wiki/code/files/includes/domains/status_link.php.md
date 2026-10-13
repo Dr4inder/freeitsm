@@ -1,6 +1,6 @@
 # includes/domains/status_link.php
 
-> PHP - 276 lines
+> PHP - 301 lines
 
 Domains -> Service Status (3.0.0): what a domain's trouble does to the services linked to it (domain_status_services). Everything here is decided by Domains -> Settings -> Service Status.
 
@@ -34,16 +34,16 @@ one raised by hand.
 | Function | Line | What it does |
 |---|--:|---|
 | [domainStatusReady()](/code/functions/domainStatusReady.md) | 43 | True once Database Verification has created the domain_status_incidents and domain_status_services tables; checked once per request. |
-| [domainStatusProblems()](/code/functions/domainStatusProblems.md) | 62 | What is wrong with this domain right now, as far as Service Status is concerned. Each: kind ('expired' \| 'cert'), fingerprint (the date), date. |
-| [domainStatusRow()](/code/functions/domainStatusRow.md) | 83 | One domain row with the fields the problem test needs (alerts_enabled from its status). |
-| [domainStatusServiceIds()](/code/functions/domainStatusServiceIds.md) | 94 | The services linked to a domain, ids only (install-wide records). |
-| [domainStatusOpenIncident()](/code/functions/domainStatusOpenIncident.md) | 103 | The incident this domain raised that is still open, or null. |
-| [domainStatusState()](/code/functions/domainStatusState.md) | 120 | For the domain's page: the mode, the trouble, the linked services at risk, an open incident if there is one, and whether this analyst may raise one (Service Status module access). |
-| [domainStatusWording()](/code/functions/domainStatusWording.md) | 134 | The title and opening comment, in plain words (stored data: what customers may read). |
-| [domainStatusRaise()](/code/functions/domainStatusRaise.md) | 157 | Raise one incident for a domain's trouble on its linked services, and record it against every current problem. Returns the incident id, or the open one it already raised. Throws ServiceError when there is nothing to raise (no trouble, or no services linked). |
-| [domainStatusImpactId()](/code/functions/domainStatusImpactId.md) | 191 | The impact level to record. The chosen one if it still exists; otherwise the MOST severe active level that counts as downtime. |
-| [domainStatusResolvedName()](/code/functions/domainStatusResolvedName.md) | 208 | The first active "resolved" incident status, by its own order. |
-| [domainStatusRun()](/code/functions/domainStatusRun.md) | 219 | The scheduled part: raise (mode auto) and resolve (domain_status_auto_resolve). The actor is the system - actorId 0, which ServiceStatusService stores as the creator rather than inventing a member of staff. |
+| [domainStatusProblems()](/code/functions/domainStatusProblems.md) | 64 | What is wrong with this domain right now, as far as Service Status is concerned. Each: kind ('expired' \| 'cert'), fingerprint (the date), date. |
+| [domainStatusRow()](/code/functions/domainStatusRow.md) | 89 | One domain row with the fields the problem test needs (alerts_enabled from its status). |
+| [domainStatusServiceIds()](/code/functions/domainStatusServiceIds.md) | 104 | The services linked to a domain, ids only (install-wide records). |
+| [domainStatusOpenIncident()](/code/functions/domainStatusOpenIncident.md) | 117 | The incident this domain raised that is still open, or null. |
+| [domainStatusState()](/code/functions/domainStatusState.md) | 136 | For the domain's page: the mode, the trouble, the linked services at risk, an open incident if there is one, and whether this analyst may raise one (Service Status module access). |
+| [domainStatusWording()](/code/functions/domainStatusWording.md) | 155 | The title and opening comment, in plain words (stored data: what customers may read). |
+| [domainStatusRaise()](/code/functions/domainStatusRaise.md) | 180 | Raise one incident for a domain's trouble on its linked services, and record it against every current problem. Returns the incident id, or the open one it already raised. Throws ServiceError when there is nothing to raise (no trouble, or no services linked). |
+| [domainStatusImpactId()](/code/functions/domainStatusImpactId.md) | 216 | The impact level to record. The chosen one if it still exists; otherwise the MOST severe active level that counts as downtime. |
+| [domainStatusResolvedName()](/code/functions/domainStatusResolvedName.md) | 233 | The first active "resolved" incident status, by its own order. |
+| [domainStatusRun()](/code/functions/domainStatusRun.md) | 244 | The scheduled part: raise (mode auto) and resolve (domain_status_auto_resolve). The actor is the system - actorId 0, which ServiceStatusService stores as the creator rather than inventing a member of staff. |
 
 ## Database
 
@@ -51,19 +51,19 @@ one raised by hand.
 |--:|---|---|---|
 | 48 | `domainStatusReady` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
 | 49 | `domainStatusReady` | read [domain_status_services](/code/tables/domain_status_services.md) |  |
-| 86 | `domainStatusRow` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 96 | `domainStatusServiceIds` | read [domain_status_services](/code/tables/domain_status_services.md), read [status_services](/code/tables/status_services.md) |  |
-| 106 | `domainStatusOpenIncident` | read [domain_status_incidents](/code/tables/domain_status_incidents.md), read [status_incidents](/code/tables/status_incidents.md) |  |
-| 178 | `domainStatusRaise` | **insert** [domain_status_incidents](/code/tables/domain_status_incidents.md) (`domain_id`, `incident_id`, `trigger_kind`, `fingerprint`) |  |
-| 194 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 200 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 210 | `domainStatusResolvedName` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 227 | `domainStatusRun` | read [domain_status_services](/code/tables/domain_status_services.md) |  |
-| 236 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
-| 246 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
-| 250 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
-| 255 | `domainStatusRun` | read [status_incidents](/code/tables/status_incidents.md) |  |
-| 266 | `domainStatusRun` | **update** [domain_status_incidents](/code/tables/domain_status_incidents.md) (`resolved_datetime`) |  |
+| 92 | `domainStatusRow` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 106 | `domainStatusServiceIds` | read [domain_status_services](/code/tables/domain_status_services.md), read [status_services](/code/tables/status_services.md) |  |
+| 120 | `domainStatusOpenIncident` | read [domain_status_incidents](/code/tables/domain_status_incidents.md), read [status_incidents](/code/tables/status_incidents.md) |  |
+| 201 | `domainStatusRaise` | **insert** [domain_status_incidents](/code/tables/domain_status_incidents.md) (`domain_id`, `incident_id`, `trigger_kind`, `fingerprint`) |  |
+| 219 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 225 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 235 | `domainStatusResolvedName` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 252 | `domainStatusRun` | read [domain_status_services](/code/tables/domain_status_services.md) |  |
+| 261 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
+| 271 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
+| 275 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
+| 280 | `domainStatusRun` | read [status_incidents](/code/tables/status_incidents.md) |  |
+| 291 | `domainStatusRun` | **update** [domain_status_incidents](/code/tables/domain_status_incidents.md) (`resolved_datetime`) |  |
 
 ## How it hangs together
 

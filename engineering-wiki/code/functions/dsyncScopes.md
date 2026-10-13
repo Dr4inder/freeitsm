@@ -16,11 +16,11 @@ exactly who it imported yesterday.
 function dsyncScopes(array $provider): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 156.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 170.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
+| `$provider` | `array` |  | the auth_providers row - sync_ou_includes, sync_ou_excludes, sync_base_dn, ldap_base_dn are read |
 
 **Returns:** `array`
 

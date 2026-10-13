@@ -48,7 +48,11 @@ function apiProjectSelect(PDO $conn): string {
          LEFT JOIN tenants tn ON tn.id = p.tenant_id";
 }
 
-/** Decorate rows (health, progress, exceptions, budget) the way the portfolio does. */
+/**
+ * Decorate rows (health, progress, exceptions, budget) the way the portfolio does.
+ *
+ * @param array $rows  projects rows as apiProjectSelect() loads them
+ */
 function apiProjectDecorate(PDO $conn, array $rows): array {
     if (!$rows) return [];
     $stats = projectTaskStats($conn, array_map(fn($r) => (int)$r['id'], $rows));
@@ -59,6 +63,8 @@ function apiProjectDecorate(PDO $conn, array $rows): array {
 /**
  * Shapes a decorated project row for the API - code, names, company, status, health,
  * dates, tools, progress, active stage, exceptions and budget totals.
+ *
+ * @param array $p  one project row after apiProjectDecorate() - with shown_health, progress, tools, exceptions and _budget
  */
 function apiSerializeProject(PDO $conn, array $p): array {
     $rel = fn($id, $name) => $id === null ? null : ['id' => (int)$id, 'name' => $name];
@@ -112,7 +118,11 @@ function apiSerializeProject(PDO $conn, array $p): array {
     ];
 }
 
-/** The by-id gate: existence + company scope, both failing as 404. */
+/**
+ * The by-id gate: existence + company scope, both failing as 404.
+ *
+ * @param int $id  the projects id
+ */
 function apiLoadProject(PDO $conn, array $apiKey, int $id): array {
     $st = $conn->prepare(apiProjectSelect($conn) . " WHERE p.id = ?");
     $st->execute([$id]);
@@ -129,7 +139,11 @@ function apiProjectCtx(array $apiKey): ActorContext {
     return ActorContext::fromApiKey($apiKey);
 }
 
-/** Run a service call; a ServiceError becomes the API's error body. */
+/**
+ * Run a service call; a ServiceError becomes the API's error body.
+ *
+ * @param callable $fn  the service call to run, taking no arguments; its return value is passed back
+ */
 function apiProjectTry(callable $fn) {
     try {
         return $fn();
@@ -272,6 +286,7 @@ function apiProjectsDelete(PDO $conn, array $apiKey, array $params, array $body)
 // ---------------------------------------------------------------------------
 // Stages (phases / stages / sprints)
 // ---------------------------------------------------------------------------
+// @param array $s  a project_stages row as apiProjectStages() loads it, with task_total and task_done
 function apiSerializeProjectStage(array $s): array {
     return [
         'id'          => (int)$s['id'],
@@ -307,7 +322,11 @@ function apiProjectStages(PDO $conn, int $projectId): array {
     return $s->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/** One stage of a project (apiProjectStages), or answers 404 and stops. */
+/**
+ * One stage of a project (apiProjectStages), or answers 404 and stops.
+ *
+ * @param int $stageId  the project_stages id, which must belong to the project
+ */
 function apiProjectStage(PDO $conn, int $projectId, int $stageId): array {
     foreach (apiProjectStages($conn, $projectId) as $s) if ((int)$s['id'] === $stageId) return $s;
     apiError(404, 'not_found', 'Stage not found.');
@@ -368,6 +387,7 @@ function apiProjectStagesGate(PDO $conn, array $apiKey, array $params, array $bo
 // ---------------------------------------------------------------------------
 // Scope items (deliverables, with MoSCoW)
 // ---------------------------------------------------------------------------
+// @param array $i  a scope item row as ProjectToolsService::items() returns it, with stage_name
 function apiSerializeProjectItem(array $i): array {
     return [
         'id'                  => (int)$i['id'],
@@ -383,7 +403,12 @@ function apiSerializeProjectItem(array $i): array {
     ];
 }
 
-/** One scope item of a project, or answers 404 and stops. */
+/**
+ * One scope item of a project, or answers 404 and stops.
+ *
+ * @param int $pid  the projects id
+ * @param int $itemId  the scope item id, which must belong to that project
+ */
 function apiProjectItem(PDO $conn, int $pid, int $itemId): array {
     foreach (ProjectToolsService::items($conn, $pid) as $i) if ((int)$i['id'] === $itemId) return $i;
     apiError(404, 'not_found', 'Scope item not found.');
@@ -433,6 +458,7 @@ function apiProjectItemsDelete(PDO $conn, array $apiKey, array $params, array $b
 // ---------------------------------------------------------------------------
 // RAID log
 // ---------------------------------------------------------------------------
+// @param array $r  a RAID row as ProjectToolsService::raid() returns it, with owner, ticket, escalation and actions
 function apiSerializeProjectRaid(array $r): array {
     return [
         'id'            => (int)$r['id'],
@@ -460,7 +486,12 @@ function apiSerializeProjectRaid(array $r): array {
     ];
 }
 
-/** One RAID entry of a project, or answers 404 and stops. */
+/**
+ * One RAID entry of a project, or answers 404 and stops.
+ *
+ * @param int $pid  the projects id
+ * @param int $rid  the RAID entry id, which must belong to that project
+ */
 function apiProjectRaidRow(PDO $conn, int $pid, int $rid): array {
     foreach (ProjectToolsService::raid($conn, $pid) as $r) if ((int)$r['id'] === $rid) return $r;
     apiError(404, 'not_found', 'RAID entry not found.');
@@ -516,6 +547,7 @@ function apiProjectRaidDelete(PDO $conn, array $apiKey, array $params, array $bo
 // ---------------------------------------------------------------------------
 // Budget
 // ---------------------------------------------------------------------------
+// @param array $l  one entry of projectBudgetDetail()'s 'lines' list, already worked out (actual source, contract, forecast)
 function apiSerializeBudgetLine(array $l): array {
     return [
         'id'              => $l['id'],
@@ -565,6 +597,9 @@ function apiProjectBudget(PDO $conn, array $apiKey, array $params, array $body):
 /**
  * One budget line of a project as the analyst sees it in the budget detail, or answers
  * 404 and stops.
+ *
+ * @param array $p  the decorated project row as apiLoadProject() returns it
+ * @param int $lineId  the budget line id, which must belong to that project
  */
 function apiProjectBudgetLine(PDO $conn, array $p, int $lineId, int $analystId): array {
     foreach (projectBudgetDetail($conn, $p, $analystId)['lines'] as $l) if ($l['id'] === $lineId) return $l;

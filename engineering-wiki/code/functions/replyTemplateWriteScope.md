@@ -13,13 +13,13 @@ at the call site.
 function replyTemplateWriteScope(PDO $conn, int $analystId, int $templateId): ?string
 ```
 
-Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.php.md), line 142.
+Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.php.md), line 147.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$templateId` | `int` |  |  |
+| `$templateId` | `int` |  | the ticket_reply_templates id |
 
 **Returns:** `?string`
 
@@ -27,7 +27,7 @@ Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 144 | `replyTemplateWriteScope` | read [ticket_reply_templates](/code/tables/ticket_reply_templates.md) |  |
+| 149 | `replyTemplateWriteScope` | read [ticket_reply_templates](/code/tables/ticket_reply_templates.md) |  |
 
 ## Called from
 

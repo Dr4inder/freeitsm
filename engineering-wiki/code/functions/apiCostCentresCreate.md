@@ -6,7 +6,7 @@ POST /cost-centres
 function apiCostCentresCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 159.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 169.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

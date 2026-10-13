@@ -12,15 +12,15 @@ function projectAssistOverview(
 ): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 139.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 171.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `array` |  |  |
+| `$scope` | `array` |  | [sql, args]: the caller's company filter on alias p |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$args` | `array` |  |  |
-| `$withBudget` | `bool` |  |  |
+| `$args` | `array` |  | the tool's arguments: project (code, id or name) |
+| `$withBudget` | `bool` |  | true to include the money line and budget history (MCP); false for Warbot, read by a whole channel |
 
 **Returns:** `string`
 
@@ -28,8 +28,8 @@ Defined in [includes/projects/assistant.php](/code/files/includes/projects/assis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 151 | `projectAssistOverview` | read [project_stages](/code/tables/project_stages.md) |  |
-| 183 | `projectAssistOverview` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 183 | `projectAssistOverview` | read [project_stages](/code/tables/project_stages.md) |  |
+| 215 | `projectAssistOverview` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

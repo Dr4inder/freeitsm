@@ -6,13 +6,13 @@ Add progress, counts and the health actually shown to a project row.
 function projectDecorate(array $p, array $stats, ?array $cfg = null): array
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 240.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 260.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `array` |  |  |
-| `$stats` | `array` |  |  |
-| `$cfg` | `?array` | `null` |  |
+| `$p` | `array` |  | the projects row, ideally with `projectExceptionColumns()` added |
+| `$stats` | `array` |  | the project's counts from `projectTaskStats()`; [] when it has none |
+| `$cfg` | `?array` | `null` | the health thresholds from `projectHealthConfig()`; null uses the built-in defaults |
 
 **Returns:** `array`
 

@@ -11,14 +11,14 @@ function callAnthropic(
 ): array
 ```
 
-Defined in [api/cmdb/_ai_helpers.php](/code/files/api/cmdb/_ai_helpers.php.md), line 36.
+Defined in [api/cmdb/_ai_helpers.php](/code/files/api/cmdb/_ai_helpers.php.md), line 41.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$systemPrompt` | `string` |  |  |
-| `$userMessage` | `string` |  |  |
-| `$maxTokens` | `int` | `1500` |  |
+| `$cfg` | `array` |  | the AI connection settings (provider, model, key...) as passed to `aiProviderChat()` |
+| `$systemPrompt` | `string` |  | the system prompt |
+| `$userMessage` | `string` |  | the user message |
+| `$maxTokens` | `int` | `1500` | the most tokens the reply may use |
 
 **Returns:** `array`
 

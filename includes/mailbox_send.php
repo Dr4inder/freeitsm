@@ -19,6 +19,12 @@ require_once __DIR__ . '/email_log.php';
  * Microsoft Graph) and logs it.
  *
  * Returns null on success, or the error message when sending failed.
+ *
+ * @param array $mailbox  the target_mailboxes row, decrypted; its provider ('imap', 'google', else Microsoft) picks the route
+ * @param string $to  one recipient address
+ * @param string $subject  the subject line
+ * @param string $htmlBody  the HTML body
+ * @param string $route  what the send log records it as, e.g. 'oversize_alert' or 'oversize_reply'
  */
 function mailboxSendSimple(PDO $conn, array $mailbox, string $to, string $subject, string $htmlBody, string $route, ?int $ticketId = null): ?string
 {

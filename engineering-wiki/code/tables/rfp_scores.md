@@ -19,7 +19,7 @@
 |---|---|---|---|---|
 | [api/rfp-builder/remove_invited_supplier.php](/code/files/api/rfp-builder/remove_invited_supplier.php.md):50 |  | delete |  |  |
 | [api/rfp-builder/save_score.php](/code/files/api/rfp-builder/save_score.php.md):67 |  | insert | `rfp_id`, `supplier_id`, `analyst_id`, `consolidated_id`, `score`, `notes` |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):228 | `ContractsService::deleteSupplier` | delete |  |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):249 | `ContractsService::deleteSupplier` | delete |  |  |
 
 ## Read by
 

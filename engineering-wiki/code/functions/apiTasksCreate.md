@@ -6,7 +6,7 @@ POST /tasks
 function apiTasksCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 380.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 382.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

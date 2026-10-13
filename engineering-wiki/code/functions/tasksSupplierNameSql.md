@@ -6,11 +6,11 @@ The name a supplier goes by.
 function tasksSupplierNameSql(string $alias = 'sp'): string
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 42.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 46.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$alias` | `string` | `'sp'` |  |
+| `$alias` | `string` | `'sp'` | the alias the calling query gives the suppliers table |
 
 **Returns:** `string`
 

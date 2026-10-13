@@ -6,11 +6,11 @@ Renders the OpenAPI document as YAML, with a generated-file header line.
 function apiV1OpenApiToYaml(array $data): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 380.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 421.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$data` | `array` |  |  |
+| `$data` | `array` |  | the OpenAPI document as built by `apiV1BuildOpenApi()` |
 
 **Returns:** `string`
 

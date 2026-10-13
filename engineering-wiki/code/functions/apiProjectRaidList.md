@@ -6,7 +6,7 @@ GET /projects/{id}/raid - the project's RAID log (risks, assumptions, issues, de
 function apiProjectRaidList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 476.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 507.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

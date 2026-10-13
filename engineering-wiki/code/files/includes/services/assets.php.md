@@ -1,6 +1,6 @@
 # includes/services/assets.php
 
-> PHP - 1382 lines
+> PHP - 1459 lines
 
 AssetsService — the shared write rules for assets: create, per-field update (with audit trail + warranty-calendar sync), and user assignment / removal (with the custody trail).
 
@@ -37,55 +37,55 @@ Assets are install-wide (no tenant_id), so companyScope is not consulted.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 128 | `AssetsService::createAsset` | read [assets](/code/tables/assets.md) |  |
-| 186 | `AssetsService::createAsset` | **insert** [assets](/code/tables/assets.md) |  |
-| 241 | `AssetsService::updateFields` | read [assets](/code/tables/assets.md) |  |
-| 279 | `AssetsService::updateFields` | **update** [assets](/code/tables/assets.md) |  |
-| 319 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 322 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 339 | `AssetsService::assignAnalyst` | read [users_assets](/code/tables/users_assets.md) |  |
-| 348 | `AssetsService::assignAnalyst` | **insert** [users_assets](/code/tables/users_assets.md) (`asset_id`, `analyst_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime`) |  |
-| 357 | `AssetsService::assignAnalyst` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `notes`, `action_datetime`) |  |
-| 364 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 394 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
-| 397 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
-| 412 | `AssetsService::assignUser` | read [users_assets](/code/tables/users_assets.md) |  |
-| 419 | `AssetsService::assignUser` | **insert** [users_assets](/code/tables/users_assets.md) (`asset_id`, `user_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime`) |  |
-| 426 | `AssetsService::assignUser` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `notes`, `action_datetime`) |  |
-| 434 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
-| 466 | `AssetsService::unassignUser` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
-| 476 | `AssetsService::unassignUser` | **delete** [users_assets](/code/tables/users_assets.md) |  |
-| 480 | `AssetsService::unassignUser` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `action_datetime`) |  |
-| 506 | `AssetsService::unassignAnalyst` | read [users_assets](/code/tables/users_assets.md), read [analysts](/code/tables/analysts.md) |  |
-| 516 | `AssetsService::unassignAnalyst` | **delete** [users_assets](/code/tables/users_assets.md) |  |
-| 524 | `AssetsService::unassignAnalyst` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `action_datetime`) |  |
-| 542 | `AssetsService::dispatch` | read [assets](/code/tables/assets.md) |  |
-| 612 | `AssetsService::moveToCompany` | read [assets](/code/tables/assets.md) |  |
-| 619 | `AssetsService::moveToCompany` | read [assets](/code/tables/assets.md) |  |
-| 628 | `AssetsService::moveToCompany` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
-| 642 | `AssetsService::moveToCompany` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 655 | `AssetsService::moveToCompany` | read [asset_locations](/code/tables/asset_locations.md) |  |
-| 675 | `AssetsService::moveToCompany` | **update** [assets](/code/tables/assets.md) |  |
-| 698 | `AssetsService::loadRow` | read [assets](/code/tables/assets.md) |  |
-| 717 | `AssetsService::auditWrite` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 750 | `AssetsService::validateField` | read [suppliers](/code/tables/suppliers.md) |  |
-| 812 | `AssetsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
-| 862 | `AssetsService::usersHoldingAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [assets](/code/tables/assets.md) |  |
-| 944 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md) |  |
-| 952 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 1023 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 1061 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md) |  |
-| 1077 | `AssetsService::assetsForUser` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md), read [analysts](/code/tables/analysts.md) |  |
-| 1117 | `AssetsService::assetsForUser` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
-| 1176 | `AssetsService::getIgnoredServiceTags` | read [system_settings](/code/tables/system_settings.md) |  |
-| 1235 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1246 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1252 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1262 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1289 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
-| 1296 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
-| 1300 | `AssetsService::updateAssetHostname` | **update** [assets](/code/tables/assets.md) (`hostname`) |  |
-| 1360 | `AssetsService::createDiscoveredAsset` | **insert** [assets](/code/tables/assets.md) |  |
+| 133 | `AssetsService::createAsset` | read [assets](/code/tables/assets.md) |  |
+| 191 | `AssetsService::createAsset` | **insert** [assets](/code/tables/assets.md) |  |
+| 248 | `AssetsService::updateFields` | read [assets](/code/tables/assets.md) |  |
+| 286 | `AssetsService::updateFields` | **update** [assets](/code/tables/assets.md) |  |
+| 328 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 331 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 348 | `AssetsService::assignAnalyst` | read [users_assets](/code/tables/users_assets.md) |  |
+| 357 | `AssetsService::assignAnalyst` | **insert** [users_assets](/code/tables/users_assets.md) (`asset_id`, `analyst_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime`) |  |
+| 366 | `AssetsService::assignAnalyst` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `notes`, `action_datetime`) |  |
+| 373 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 405 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
+| 408 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
+| 423 | `AssetsService::assignUser` | read [users_assets](/code/tables/users_assets.md) |  |
+| 430 | `AssetsService::assignUser` | **insert** [users_assets](/code/tables/users_assets.md) (`asset_id`, `user_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime`) |  |
+| 437 | `AssetsService::assignUser` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `notes`, `action_datetime`) |  |
+| 445 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
+| 480 | `AssetsService::unassignUser` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 490 | `AssetsService::unassignUser` | **delete** [users_assets](/code/tables/users_assets.md) |  |
+| 494 | `AssetsService::unassignUser` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `action_datetime`) |  |
+| 523 | `AssetsService::unassignAnalyst` | read [users_assets](/code/tables/users_assets.md), read [analysts](/code/tables/analysts.md) |  |
+| 533 | `AssetsService::unassignAnalyst` | **delete** [users_assets](/code/tables/users_assets.md) |  |
+| 541 | `AssetsService::unassignAnalyst` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `action_datetime`) |  |
+| 565 | `AssetsService::dispatch` | read [assets](/code/tables/assets.md) |  |
+| 636 | `AssetsService::moveToCompany` | read [assets](/code/tables/assets.md) |  |
+| 643 | `AssetsService::moveToCompany` | read [assets](/code/tables/assets.md) |  |
+| 652 | `AssetsService::moveToCompany` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 666 | `AssetsService::moveToCompany` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 679 | `AssetsService::moveToCompany` | read [asset_locations](/code/tables/asset_locations.md) |  |
+| 699 | `AssetsService::moveToCompany` | **update** [assets](/code/tables/assets.md) |  |
+| 722 | `AssetsService::loadRow` | read [assets](/code/tables/assets.md) |  |
+| 745 | `AssetsService::auditWrite` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 789 | `AssetsService::validateField` | read [suppliers](/code/tables/suppliers.md) |  |
+| 860 | `AssetsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
+| 913 | `AssetsService::usersHoldingAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [assets](/code/tables/assets.md) |  |
+| 1000 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md) |  |
+| 1008 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1081 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1119 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md) |  |
+| 1135 | `AssetsService::assetsForUser` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md), read [analysts](/code/tables/analysts.md) |  |
+| 1175 | `AssetsService::assetsForUser` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 1238 | `AssetsService::getIgnoredServiceTags` | read [system_settings](/code/tables/system_settings.md) |  |
+| 1304 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1315 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1321 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1331 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1360 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
+| 1367 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
+| 1371 | `AssetsService::updateAssetHostname` | **update** [assets](/code/tables/assets.md) (`hostname`) |  |
+| 1437 | `AssetsService::createDiscoveredAsset` | **insert** [assets](/code/tables/assets.md) |  |
 
 ## How it hangs together
 

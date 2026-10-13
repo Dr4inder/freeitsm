@@ -6,11 +6,11 @@ Strip control characters (bar tab) - a pasted line break must not reach the data
 function spreadsheetCleanText(string $v): string
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 65.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 71.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` | `string` |  |  |
+| `$v` | `string` |  | one cell's text |
 
 **Returns:** `string`
 

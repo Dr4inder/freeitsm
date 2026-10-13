@@ -11,13 +11,13 @@ batch collecting timeouts.
 function documentTextDrain(PDO $conn, int $limit = 5, float $deadline = 0): array
 ```
 
-Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 158.
+Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 173.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$limit` | `int` | `5` |  |
-| `$deadline` | `float` | `0` |  |
+| `$limit` | `int` | `5` | the most queued documents to read this run |
+| `$deadline` | `float` | `0` | a microtime(true) moment to stop by; 0 means no time limit |
 
 **Returns:** `array`
 
@@ -25,10 +25,10 @@ Defined in [includes/search/documents_index.php](/code/files/includes/search/doc
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 166 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`) |  |
-| 171 | `documentTextDrain` | read [document_text](/code/tables/document_text.md), read [documents](/code/tables/documents.md) |  |
-| 191 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`, `extracted_datetime`) |  |
-| 235 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime`) |  |
+| 181 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`) |  |
+| 186 | `documentTextDrain` | read [document_text](/code/tables/document_text.md), read [documents](/code/tables/documents.md) |  |
+| 206 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`, `extracted_datetime`) |  |
+| 250 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime`) |  |
 
 ## Calls
 

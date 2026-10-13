@@ -1,6 +1,6 @@
 # includes/ticket_presence.php
 
-> PHP - 169 lines
+> PHP - 175 lines
 
 Collision detection — who else is in this ticket right now.
 
@@ -41,21 +41,21 @@ answer it.
 | Function | Line | What it does |
 |---|--:|---|
 | [presenceSchemaReady()](/code/functions/presenceSchemaReady.md) | 58 | Does this database have the presence table yet? |
-| [presenceHeartbeat()](/code/functions/presenceHeartbeat.md) | 76 | Record that this analyst is on this ticket. Upserts onto the (ticket, analyst) unique key, so a ticket left open all afternoon is one row, not a thousand. |
-| [presenceOthers()](/code/functions/presenceOthers.md) | 97 | Everyone ELSE currently on this ticket, most recently seen first. |
-| [presenceLeave()](/code/functions/presenceLeave.md) | 129 | Drop this analyst's row — the optimisation that makes leaving instant. |
-| [presencePurge()](/code/functions/presencePurge.md) | 151 | Bin rows nobody will ever read again. |
-| [presenceInitials()](/code/functions/presenceInitials.md) | 160 | "Sarah Williams" -> "SW". Mirrors the header avatar in includes/waffle-menu.php. |
+| [presenceHeartbeat()](/code/functions/presenceHeartbeat.md) | 78 | Record that this analyst is on this ticket. Upserts onto the (ticket, analyst) unique key, so a ticket left open all afternoon is one row, not a thousand. |
+| [presenceOthers()](/code/functions/presenceOthers.md) | 99 | Everyone ELSE currently on this ticket, most recently seen first. |
+| [presenceLeave()](/code/functions/presenceLeave.md) | 131 | Drop this analyst's row — the optimisation that makes leaving instant. |
+| [presencePurge()](/code/functions/presencePurge.md) | 153 | Bin rows nobody will ever read again. |
+| [presenceInitials()](/code/functions/presenceInitials.md) | 166 | "Sarah Williams" -> "SW". Mirrors the header avatar in includes/waffle-menu.php. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 80 | `presenceHeartbeat` | **insert** [ticket_presence](/code/tables/ticket_presence.md) (`ticket_id`, `analyst_id`, `last_seen`, `is_composing`) |  |
-| 101 | `presenceOthers` | read [ticket_presence](/code/tables/ticket_presence.md), read [analysts](/code/tables/analysts.md) |  |
-| 133 | `presenceLeave` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
-| 137 | `presenceLeave` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
-| 154 | `presencePurge` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
+| 82 | `presenceHeartbeat` | **insert** [ticket_presence](/code/tables/ticket_presence.md) (`ticket_id`, `analyst_id`, `last_seen`, `is_composing`) |  |
+| 103 | `presenceOthers` | read [ticket_presence](/code/tables/ticket_presence.md), read [analysts](/code/tables/analysts.md) |  |
+| 135 | `presenceLeave` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
+| 139 | `presenceLeave` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
+| 156 | `presencePurge` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
 
 ## How it hangs together
 

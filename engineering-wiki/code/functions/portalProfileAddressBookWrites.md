@@ -6,7 +6,7 @@ May an address-book contact change those fields, their change being sent back?
 function portalProfileAddressBookWrites(PDO $conn): bool
 ```
 
-Defined in [includes/users.php](/code/files/includes/users.php.md), line 286.
+Defined in [includes/users.php](/code/files/includes/users.php.md), line 293.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

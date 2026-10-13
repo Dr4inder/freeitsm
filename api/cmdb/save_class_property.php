@@ -23,6 +23,8 @@ const VALID_PROPERTY_TYPES = ['text', 'number', 'date', 'boolean', 'dropdown', '
 /**
  * Turns a property name into a lower-case key of letters, digits and underscores,
  * falling back to 'property' when nothing is left.
+ *
+ * @param mixed $name  the property name as typed
  */
 function slugifyProp($name) {
     $slug = strtolower(trim($name));

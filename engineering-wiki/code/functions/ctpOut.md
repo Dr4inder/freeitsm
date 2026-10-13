@@ -6,11 +6,11 @@ Echoes {success: true} merged with `$a` as JSON, then stops.
 function ctpOut(array $a): void
 ```
 
-Defined in [api/lms/test_public.php](/code/files/api/lms/test_public.php.md), line 23.
+Defined in [api/lms/test_public.php](/code/files/api/lms/test_public.php.md), line 27.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` | `array` |  |  |
+| `$a` | `array` |  | the fields to send alongside success: true |
 
 **Returns:** `void`
 

@@ -15,7 +15,7 @@ Defensive to a fault: a customer's message must never fail because waking did.
 function wakeSnoozedTicketOnCustomerReply(PDO $conn, int $ticketId): bool
 ```
 
-Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 263.
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 273.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

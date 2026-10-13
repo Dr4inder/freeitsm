@@ -6,7 +6,7 @@ Set the analyst's active company context. The caller must have a writable sessio
 function setActiveTenantId(int $tenantId): void
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 619.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 643.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -11,13 +11,13 @@ honoured, so the worst a crafted request gets is the active company's lists.
 function requestedTenantId(PDO $conn, int $analystId, string $param = 'for_tenant'): int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 845.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 886.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$param` | `string` | `'for_tenant'` |  |
+| `$param` | `string` | `'for_tenant'` | the query-string parameter that names the company (default 'for_tenant') - untrusted |
 
 **Returns:** `int`
 

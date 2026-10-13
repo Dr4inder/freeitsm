@@ -6,14 +6,14 @@ Open a ticket for a web chat conversation and pin the conversation to it (one co
 function webchatOpenTicket(PDO $conn, array $conversation, array $channel, string $subject): int
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 190.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 220.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$conversation` | `array` |  |  |
-| `$channel` | `array` |  |  |
-| `$subject` | `string` |  |  |
+| `$conversation` | `array` |  | the webchat_conversations row, pinned to the new ticket |
+| `$channel` | `array` |  | the widget/channel row (its tenant_id sets the ticket's company) |
+| `$subject` | `string` |  | the ticket subject, from `buildChannelSubject()` |
 
 **Returns:** `int`
 
@@ -21,8 +21,8 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 201 | `webchatOpenTicket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `created_datetime`, `updated_datetime`, `last_inbound_at`, `user_id`, `tenant_id`, `origin_id`), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 219 | `webchatOpenTicket` | **update** [webchat_conversations](/code/tables/webchat_conversations.md) (`ticket_id`, `last_activity_datetime`) |  |
+| 231 | `webchatOpenTicket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `created_datetime`, `updated_datetime`, `last_inbound_at`, `user_id`, `tenant_id`, `origin_id`), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 249 | `webchatOpenTicket` | **update** [webchat_conversations](/code/tables/webchat_conversations.md) (`ticket_id`, `last_activity_datetime`) |  |
 
 ## Calls
 

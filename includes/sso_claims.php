@@ -57,6 +57,9 @@ function ssoCommonGroupClaims(): array
  * objects ("realm_access.roles"); a claim whose own name has dots (a URL) is
  * matched whole first. An array gives its scalar members; a string gives itself.
  * Works on the decoded ID token (nested parts are stdClass) and on userinfo.
+ *
+ * @param array $claims  the decoded ID token or userinfo claims (nested parts may be stdClass)
+ * @param string $path  the claim name, or a dotted path into nested objects, e.g. 'groups' or 'realm_access.roles'
  * @return string[]
  */
 function ssoClaimValues(array $claims, string $path): array
@@ -87,14 +90,24 @@ function ssoClaimValues(array $claims, string $path): array
     return array_values(array_unique($out));
 }
 
-/** The same group, ignoring case in any alphabet and stray spaces. */
+/**
+ * The same group, ignoring case in any alphabet and stray spaces.
+ *
+ * @param string $a  one group name or id
+ * @param string $b  the other; a blank $a never matches
+ */
 function ssoSameGroup(string $a, string $b): bool
 {
     $a = trim($a); $b = trim($b);
     return $a !== '' && mb_strtolower($a, 'UTF-8') === mb_strtolower($b, 'UTF-8');
 }
 
-/** Is $wanted among $groups? */
+/**
+ * Is $wanted among $groups?
+ *
+ * @param array $groups  the group values the sign-in sent, from ssoClaimValues()
+ * @param string $wanted  the group to look for, matched with ssoSameGroup()
+ */
 function ssoInGroup(array $groups, string $wanted): bool
 {
     foreach ($groups as $g) {
@@ -103,7 +116,11 @@ function ssoInGroup(array $groups, string $wanted): bool
     return false;
 }
 
-/** A provider's group -> team rows, with the team names. */
+/**
+ * A provider's group -> team rows, with the team names.
+ *
+ * @param int $providerId  the sign-in provider (auth_providers.id)
+ */
 function ssoTeamMappings(PDO $conn, int $providerId): array
 {
     if (!ssoClaimsReady($conn)) return [];
@@ -118,6 +135,9 @@ function ssoTeamMappings(PDO $conn, int $providerId): array
 /**
  * Replace a provider's group -> team rows. $rows: [['group' => .., 'team_id' => ..]].
  * Blank rows are skipped; an unknown team is refused (ServiceError).
+ *
+ * @param int $providerId  the sign-in provider (auth_providers.id)
+ * @param array $rows  the new mappings, as [['group' => name, 'team_id' => int], ...]; rows with neither are skipped
  */
 function ssoSaveTeamMappings(PDO $conn, int $providerId, array $rows): void
 {
@@ -140,6 +160,8 @@ function ssoSaveTeamMappings(PDO $conn, int $providerId, array $rows): void
 /**
  * Groups this provider has sent: [['group' => code, 'label' => name|null,
  * 'last_seen' => datetime]], named ones first, then most recently seen.
+ *
+ * @param int $providerId  the sign-in provider (auth_providers.id)
  */
 function ssoSeenGroups(PDO $conn, int $providerId): array
 {
@@ -154,6 +176,9 @@ function ssoSeenGroups(PDO $conn, int $providerId): array
 /**
  * Name the groups a provider has sent. $labels: [['group' => code, 'label' => name]].
  * Only groups it has actually sent can be named; a blank name clears it.
+ *
+ * @param int $providerId  the sign-in provider (auth_providers.id)
+ * @param array $labels  [['group' => code, 'label' => name], ...]; a blank label clears it
  */
 function ssoSaveGroupLabels(PDO $conn, int $providerId, array $labels): void
 {
@@ -166,7 +191,12 @@ function ssoSaveGroupLabels(PDO $conn, int $providerId, array $labels): void
     }
 }
 
-/** A group's name if it has one, else the code - for messages and the last-sign-in line. */
+/**
+ * A group's name if it has one, else the code - for messages and the last-sign-in line.
+ *
+ * @param array $seen  the provider's groups, from ssoSeenGroups()
+ * @param string $group  the group code to name
+ */
 function ssoGroupDisplay(array $seen, string $group): string
 {
     foreach ($seen as $s) {
@@ -178,6 +208,10 @@ function ssoGroupDisplay(array $seen, string $group): string
 /**
  * Record what a sign-in sent: the last sign-in line on the provider, and each
  * group in sso_groups_seen for the dropdowns. Best effort - never fails a sign-in.
+ *
+ * @param int $providerId  the sign-in provider (auth_providers.id)
+ * @param string $who  who signed in, for the last-sign-in line: their email, preferred_username or sub claim
+ * @param array $groups  the group values the sign-in sent, from ssoClaimValues()
  */
 function ssoRememberGroups(PDO $conn, int $providerId, string $who, array $groups): void
 {
@@ -195,6 +229,10 @@ function ssoRememberGroups(PDO $conn, int $providerId, string $who, array $group
  * At an analyst sign-in: admin from the admin group, team membership from the
  * mappings. Returns what changed, for the log and the tests:
  *   ['admin' => true|false|null, 'added' => [team ids], 'removed' => [team ids]]
+ *
+ * @param array $provider  the auth_providers row (id, oidc_admin_group)
+ * @param int $analystId  the analyst signing in, whose teams and administrator flag are set
+ * @param array $groups  the group values the sign-in sent, from ssoClaimValues()
  */
 function ssoApplyGroupAccess(PDO $conn, array $provider, int $analystId, array $groups): array
 {
@@ -249,6 +287,10 @@ function ssoApplyGroupAccess(PDO $conn, array $provider, int $analystId, array $
  * they start with no modules of their own (the account would otherwise have
  * every module, and the teams could add nothing to that). Called by
  * oidcCreateAnalyst() right after the insert.
+ *
+ * @param int $providerId  the sign-in provider (auth_providers.id) that created the analyst
+ * @param int $analystId  the analyst just created by the sign-in
+ * @param ?string $defaultModules  the provider's default modules setting; anything non-blank leaves the analyst alone
  */
 function ssoJitStartForTeams(PDO $conn, int $providerId, int $analystId, ?string $defaultModules): void
 {

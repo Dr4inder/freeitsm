@@ -10,13 +10,13 @@ than reporting a loss after the fact.
 function handleSetMode(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 234.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 248.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request: object_type, object_id, and optionally is_restricted and inherits |
 
 **Returns:** `void`
 
@@ -24,8 +24,8 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 244 | `handleSetMode` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 247 | `handleSetMode` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 258 | `handleSetMode` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 261 | `handleSetMode` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
 
 ## Calls
 

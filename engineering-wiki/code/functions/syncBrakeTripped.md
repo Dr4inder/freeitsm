@@ -13,13 +13,13 @@ and refusing to import anybody the first time would make the feature unusable.
 function syncBrakeTripped(array $provider, int $seen, ?array $words = null): ?string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 434.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 480.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
-| `$seen` | `int` |  |  |
-| `$words` | `?array` | `null` |  |
+| `$provider` | `array` |  | the auth_providers row - sync_brake_percent and sync_last_count are read |
+| `$seen` | `int` |  | how many people this run found |
+| `$words` | `?array` | `null` | optional wording for the message: source (e.g. 'address book') and causes; null keeps the LDAP wording |
 
 **Returns:** `?string`
 

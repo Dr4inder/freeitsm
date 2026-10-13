@@ -19,13 +19,13 @@ never lose the ticket.
 function resolveSlackRequester(PDO $conn, array $channel, string $slackUserId): array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 334.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 346.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channel` | `array` |  |  |
-| `$slackUserId` | `string` |  |  |
+| `$channel` | `array` |  | the Slack messaging_channels row, decrypted |
+| `$slackUserId` | `string` |  | the sender's Slack user id |
 
 **Returns:** `array`
 
@@ -33,7 +33,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 373 | `resolveSlackRequester` | **update** [users](/code/tables/users.md) (`display_name`) |  |
+| 385 | `resolveSlackRequester` | **update** [users](/code/tables/users.md) (`display_name`) |  |
 
 ## Calls
 

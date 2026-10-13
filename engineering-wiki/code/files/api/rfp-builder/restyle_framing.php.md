@@ -1,6 +1,6 @@
 # api/rfp-builder/restyle_framing.php
 
-> API endpoint - 150 lines
+> API endpoint - 153 lines
 
 Restyle one framing section (introduction / scope / response_instructions). Same pattern as restyle_section.php, but for the rfp_document_sections table. Framing has no version table, so we just overwrite — the analyst can re-generate from scratch if they don't like the restyle.
 
@@ -19,16 +19,16 @@ Inputs:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse()](/code/functions/sse.md) | 38 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
+| [sse()](/code/functions/sse.md) | 41 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 75 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 89 |  | read [rfp_document_sections](/code/tables/rfp_document_sections.md) |  |
-| 124 |  | **update** [rfp_document_sections](/code/tables/rfp_document_sections.md) (`section_content`, `is_manually_edited`, `edited_datetime`, `generated_datetime`) |  |
-| 133 |  | **update** [rfps](/code/tables/rfps.md) (`updated_datetime`) |  |
+| 78 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 92 |  | read [rfp_document_sections](/code/tables/rfp_document_sections.md) |  |
+| 127 |  | **update** [rfp_document_sections](/code/tables/rfp_document_sections.md) (`section_content`, `is_manually_edited`, `edited_datetime`, `generated_datetime`) |  |
+| 136 |  | **update** [rfps](/code/tables/rfps.md) (`updated_datetime`) |  |
 
 ## How it hangs together
 

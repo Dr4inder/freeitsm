@@ -12,15 +12,15 @@ function managerGrantMembers(
 ): array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 173.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 182.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$g` | `array` |  |  |
-| `$managerUserId` | `int` |  |  |
-| `$base` | `string` |  |  |
-| `$baseArgs` | `array` |  |  |
+| `$g` | `array` |  | one manager_grants line (grant_type, target_id, target_value); grant_type is everyone, user, group, department or reports |
+| `$managerUserId` | `int` |  | the manager's users.id - the top of the reporting line for 'reports' |
+| `$base` | `string` |  | the condition on `users u` from `managerReachSql()` |
+| `$baseArgs` | `array` |  | the parameters for `$base` |
 
 **Returns:** int[]
 
@@ -28,11 +28,11 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 1
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 182 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 184 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 189 | `managerGrantMembers` | read [users](/code/tables/users.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 199 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 210 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 191 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 193 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 198 | `managerGrantMembers` | read [users](/code/tables/users.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 208 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 219 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

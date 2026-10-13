@@ -11,14 +11,14 @@ function sla_compute_resolution(
 ): array
 ```
 
-Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 198.
+Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 211.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ticket` | `array` |  |  |
-| `$priority` | `array` |  |  |
-| `$calendar` | `array` |  |  |
-| `$timeline` | `array` |  |  |
+| `$ticket` | `array` |  | the ticket row as loaded by `sla_get_state()`; closed_datetime stops the clock |
+| `$priority` | `array` |  | the ticket_priorities row; sla_resolution_minutes is the target |
+| `$calendar` | `array` |  | the SLA calendar from `sla_load_calendar()`: timezone, hours, holidays |
+| `$timeline` | `array` |  | status segments [{start: DateTimeImmutable UTC, status: name, pauses: bool}], oldest first |
 
 **Returns:** `array`
 

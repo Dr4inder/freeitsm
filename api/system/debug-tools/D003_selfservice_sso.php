@@ -30,14 +30,28 @@ $sections = [];
 /**
  * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
  * string or an array of lines.
+ *
+ * @param mixed $sections  the report so far, a list of section strings - appended to by reference
+ * @param mixed $title  the section heading, printed between === marks
+ * @param mixed $body  the section text - a string, or an array of lines
  */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
     $sections[] = "=== {$title} ===\n" . rtrim($body, "\n");
 }
-/** Formats a boolean as YES or NO for the report. */
+/**
+ * Formats a boolean as YES or NO for the report.
+ *
+ * @param mixed $v  any value, judged as true or false
+ */
 function yn($v) { return $v ? 'YES' : 'NO'; }
-/** Formats a boolean as one of two words - OK or MISSING unless others are given. */
+/**
+ * Formats a boolean as one of two words - OK or MISSING unless others are given.
+ *
+ * @param mixed $v  any value, judged as true or false
+ * @param mixed $ok  the word printed when $v is true
+ * @param mixed $bad  the word printed when $v is false
+ */
 function okbad($v, $ok = 'OK', $bad = 'MISSING') { return $v ? $ok : $bad; }
 
 /**
@@ -51,6 +65,11 @@ function okbad($v, $ok = 'OK', $bad = 'MISSING') { return $v ? $ok : $bad; }
  *   - a host that differs from the issuer's. Perfectly legal (Entra and Okta
  *     both do it), so it is a note and never a failure — but when somebody is
  *     staring at an unexpected domain it is the line that explains it.
+ *
+ * @param string $key  the discovery document key, e.g. 'authorization_endpoint'
+ * @param array $doc  the provider's decoded OIDC discovery document
+ * @param string $issuerUrl  the provider's configured issuer URL, to compare hosts with
+ * @param string $what  a short note on what the endpoint is for, printed under the line
  */
 function endpointLine(string $key, array $doc, string $issuerUrl, string $what): string {
     $pad   = str_pad($key, 22);
@@ -78,6 +97,8 @@ function endpointLine(string $key, array $doc, string $issuerUrl, string $what):
 /**
  * Shortens a value to its first and last four characters (the first two for a short
  * one), so a shared report shows enough to recognise it but not the whole value.
+ *
+ * @param mixed $s  the value to shorten; empty gives '(empty)'
  */
 function maskMiddle($s) {
     $s = (string)$s;
@@ -89,6 +110,7 @@ function maskMiddle($s) {
 // made to be shared with support — so partially mask them: enough to eyeball-
 // verify, not the full value. Diagnostic signals (match/reachability) are
 // computed on the real values and shown as YES/NO, so nothing is lost.
+// @param mixed $s  text that may contain GUIDs; each one is shortened, the rest is left alone
 function maskGuids($s) {
     return preg_replace_callback('/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/', function ($m) {
         return substr($m[0], 0, 8) . '…' . substr($m[0], -4);
@@ -97,6 +119,8 @@ function maskGuids($s) {
 /**
  * Partially masks a client or tenant id - GUIDs and long opaque ids through
  * maskMiddle(), short readable names shown as they are.
+ *
+ * @param mixed $s  a client or tenant id; empty gives '(empty!)'
  */
 function maskId($s) {
     $s = (string)$s;
@@ -109,6 +133,8 @@ function maskId($s) {
 /**
  * Prints every section, separated by blank lines, and stops - the end of the report, and
  * the early exit when a check cannot go on.
+ *
+ * @param mixed $sections  the report, a list of section strings as built by addSection()
  */
 function emit_and_exit($sections) {
     if (!headers_sent()) {

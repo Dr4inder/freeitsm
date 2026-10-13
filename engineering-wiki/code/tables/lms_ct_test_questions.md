@@ -13,15 +13,15 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):240 |  | delete |  |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):313 |  | delete |  |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):321 |  | update | `sort_order` |  |
-| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md):206 | `lmsCtAttach` | insert | `test_id`, `question_id`, `sort_order` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):255 |  | delete |  |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):328 |  | delete |  |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):336 |  | update | `sort_order` |  |
+| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md):248 | `lmsCtAttach` | insert | `test_id`, `question_id`, `sort_order` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md) | L79, L118, L257, L265 |  |
-| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md) | lmsCtTestQuestions L185, lmsCtNextSort L197 |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md) | L94, L133, L272, L280 |  |
+| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md) | lmsCtTestQuestions L218, lmsCtNextSort L234 |  |
 

@@ -6,11 +6,11 @@ Encrypt a credentials array for storage.
 function calendarSyncEncodeCredentials(array $credentials): string
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 87.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 109.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$credentials` | `array` |  |  |
+| `$credentials` | `array` |  | the secrets to store, e.g. ['username' => ..., 'password' => ...] |
 
 **Returns:** `string`
 

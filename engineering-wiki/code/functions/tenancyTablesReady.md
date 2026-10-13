@@ -20,7 +20,7 @@ must not pin the answer for the rest of the request.
 function tenancyTablesReady(PDO $conn): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 78.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 80.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -32,7 +32,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 78.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 82 | `tenancyTablesReady` | read [tenants](/code/tables/tenants.md) |  |
+| 84 | `tenancyTablesReady` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

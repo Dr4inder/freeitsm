@@ -10,12 +10,12 @@ identical answers in the room.
 function warbotAlreadyAnswered(PDO $conn, int $messageId): bool
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 347.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 366.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$messageId` | `int` |  |  |
+| `$messageId` | `int` |  | the warroom_messages id of the question |
 
 **Returns:** `bool`
 
@@ -23,7 +23,7 @@ Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 349 | `warbotAlreadyAnswered` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 368 | `warbotAlreadyAnswered` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
 
 ## Called from
 

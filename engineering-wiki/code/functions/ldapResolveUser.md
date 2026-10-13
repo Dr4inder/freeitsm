@@ -31,13 +31,13 @@ THREE DELIBERATE DIVERGENCES FROM THE ANALYST VERSION
 function ldapResolveUser(PDO $conn, array $provider, array $ldapUser): array
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 693.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 743.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
-| `$ldapUser` | `array` |  |  |
+| `$provider` | `array` |  | the provider row from `ldapGetProvider()` |
+| `$ldapUser` | `array` |  | the 'user' from a successful `ldapAuthenticate()` (guid, username, email, name) |
 
 **Returns:** `array`
 
@@ -45,15 +45,15 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 693.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 704 | `ldapResolveUser` | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
-| 712 | `ldapResolveUser` | read [users](/code/tables/users.md) |  |
-| 728 | `ldapResolveUser` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`last_login_datetime`, `email`) |  |
-| 733 | `ldapResolveUser` | **update** [users](/code/tables/users.md) (`email`) |  |
-| 747 | `ldapResolveUser` | read [users](/code/tables/users.md) |  |
-| 758 | `ldapResolveUser` | **update** [users](/code/tables/users.md) (`auth_provider_id`) |  |
-| 766 | `ldapResolveUser` | **update** [users](/code/tables/users.md) (`username`) |  |
-| 798 | `ldapResolveUser` | **insert** [users](/code/tables/users.md) (`email`, `username`, `display_name`, `auth_provider_id`, `tenant_id`, `created_at`) |  |
-| 811 | `ldapResolveUser` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
+| 754 | `ldapResolveUser` | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 762 | `ldapResolveUser` | read [users](/code/tables/users.md) |  |
+| 778 | `ldapResolveUser` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`last_login_datetime`, `email`) |  |
+| 783 | `ldapResolveUser` | **update** [users](/code/tables/users.md) (`email`) |  |
+| 797 | `ldapResolveUser` | read [users](/code/tables/users.md) |  |
+| 808 | `ldapResolveUser` | **update** [users](/code/tables/users.md) (`auth_provider_id`) |  |
+| 816 | `ldapResolveUser` | **update** [users](/code/tables/users.md) (`username`) |  |
+| 848 | `ldapResolveUser` | **insert** [users](/code/tables/users.md) (`email`, `username`, `display_name`, `auth_provider_id`, `tenant_id`, `created_at`) |  |
+| 861 | `ldapResolveUser` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
 
 ## Calls
 

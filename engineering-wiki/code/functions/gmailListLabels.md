@@ -6,11 +6,11 @@ Every label on the account, as Gmail returns them (id, name, type, ...).
 function gmailListLabels(string $accessToken): array
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 171.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
 
 **Returns:** `array`
 

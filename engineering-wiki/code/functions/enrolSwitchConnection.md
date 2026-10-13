@@ -21,15 +21,15 @@ function enrolSwitchConnection(
 ): bool
 ```
 
-Defined in [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md), line 125.
+Defined in [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$enrolment` | `array` |  |  |
-| `$current` | `?array` |  |  |
-| `$target` | `array` |  |  |
+| `$enrolment` | `array` |  | the analyst's calendar_enrolments row, as from `calendarSyncEnrolment()` |
+| `$current` | `?array` |  | the calendar_connections row the analyst is on now; null when none |
+| `$target` | `array` |  | the calendar_connections row to move them onto |
 
 **Returns:** `bool`
 
@@ -37,8 +37,8 @@ Defined in [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 131 | `enrolSwitchConnection` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`) |  |
-| 151 | `enrolSwitchConnection` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`, `mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`, `updated_datetime`) |  |
+| 135 | `enrolSwitchConnection` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`) |  |
+| 155 | `enrolSwitchConnection` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`, `mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`, `updated_datetime`) |  |
 
 ## Calls
 

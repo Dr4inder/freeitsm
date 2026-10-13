@@ -6,12 +6,12 @@ Shapes a workflow execution for the API - workflow, trigger, status, times and e
 function apiSerializeWorkflowExecution(array $r, bool $full): array
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 108.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
-| `$full` | `bool` |  |  |
+| `$r` | `array` |  | the workflow_executions row as `apiWorkflowExecutionSelect()` loads it, with resolved_workflow_name |
+| `$full` | `bool` |  | true to add the decoded trigger_payload and step_log |
 
 **Returns:** `array`
 

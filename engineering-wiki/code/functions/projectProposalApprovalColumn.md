@@ -6,7 +6,7 @@ Proposals waiting for a decision, per project id - for the portfolio's view and 
 function projectProposalApprovalColumn(PDO $conn): string
 ```
 
-Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 127.
+Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 140.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

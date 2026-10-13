@@ -11,11 +11,11 @@ sync can never make the log throw.
 function dsyncFieldLabel(string $col): string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 662.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 720.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$col` | `string` |  |  |
+| `$col` | `string` |  | a users column name, e.g. 'job_title' |
 
 **Returns:** `string`
 

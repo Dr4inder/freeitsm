@@ -16,15 +16,15 @@ function filesCopyFolderTree(
 ): int
 ```
 
-Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line 165.
+Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line 184.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$srcId` | `int` |  |  |
-| `$parentId` | `?int` |  |  |
-| `$name` | `string` |  |  |
+| `$srcId` | `int` |  | the folder being copied |
+| `$parentId` | `?int` |  | the folder the copy goes into; null for the top level |
+| `$name` | `string` |  | the new folder's name, already made unique where it lands |
 
 **Returns:** `int`
 
@@ -34,8 +34,8 @@ Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 167 | `filesCopyFolderTree` | **insert** [files_folders](/code/tables/files_folders.md) (`parent_id`, `name`, `inherit_permissions`, `created_by`, `created_datetime`) |  |
-| 175 | `filesCopyFolderTree` | read [files_items](/code/tables/files_items.md) |  |
+| 186 | `filesCopyFolderTree` | **insert** [files_folders](/code/tables/files_folders.md) (`parent_id`, `name`, `inherit_permissions`, `created_by`, `created_datetime`) |  |
+| 194 | `filesCopyFolderTree` | read [files_items](/code/tables/files_items.md) |  |
 
 > [!CAUTION]
 > The comment names `files_versions` but no SQL in this function touches it - the comment may be out of date (or the SQL is built elsewhere).

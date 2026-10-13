@@ -17,12 +17,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):373 |  | delete |  |  |
-| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):374 |  | insert | `asset_id`, `name`, `mac_address`, `ip_address`, `subnet_mask`, `gateway`, `dhcp_enabled` |  |
+| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):380 |  | delete |  |  |
+| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):381 |  | insert | `asset_id`, `name`, `mac_address`, `ip_address`, `subnet_mask`, `gateway`, `dhcp_enabled` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetNetworkAdaptersList L560 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetNetworkAdaptersList L571 |  |
 

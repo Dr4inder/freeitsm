@@ -6,13 +6,13 @@ The tenant_id of a ticket / problem / change, or null.
 function integrationsEntityTenantId(PDO $conn, string $entityType, int $entityId): ?int
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 420.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 452.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$entityType` | `string` |  |  |
-| `$entityId` | `int` |  |  |
+| `$entityType` | `string` |  | 'ticket', 'problem' or 'change'; anything else gives null |
+| `$entityId` | `int` |  | the id of that work item |
 
 **Returns:** `?int`
 

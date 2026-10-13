@@ -12,13 +12,13 @@ function warbotAnswer(
 ): array
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 194.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 201.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
+| `$channelId` | `int` |  | the warroom_channels id the question was asked in, for its name in the prompt |
 | `$question` | `string` |  | the message addressed to Warbot, with the @Warbot removed |
 | `$recent` | `array` | `[]` | recent messages for context: [['author'=>…,'body'=>…], …] |
 

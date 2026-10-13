@@ -17,7 +17,12 @@
  * tickets namespace to JavaScript.
  */
 
-/** Print the page body (below the module header). Call once, inside <body>. */
+/**
+ * Print the page body (below the module header). Call once, inside <body>.
+ *
+ * @param int $managerId  the manager's users.id (the portal user whose access lines are shown)
+ * @param string $backUrl  where the Back button goes; escaped when printed
+ */
 function managerAccessRender(int $managerId, string $backUrl): void
 {
     $base = defined('BASE_URL') ? BASE_URL : '/';

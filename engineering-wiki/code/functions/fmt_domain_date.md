@@ -6,11 +6,11 @@
 function fmt_domain_date(?string $ymd): string
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 294.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 339.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ymd` | `?string` |  |  |
+| `$ymd` | `?string` |  | a 'YYYY-MM-DD' date (anything after the first 10 characters is ignored); null or '' gives '' |
 
 **Returns:** `string`
 

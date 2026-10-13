@@ -1,6 +1,6 @@
 # includes/directory_sync.php
 
-> PHP - 949 lines
+> PHP - 1047 lines
 
 Directory sync — bring people in from LDAP / Active Directory.
 
@@ -38,52 +38,52 @@ See the wiki: Directory sync — importing people from Active Directory.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [dsyncAttrDefaults()](/code/functions/dsyncAttrDefaults.md) | 56 | Attribute defaults, per directory flavour. These are the names the fixture in docker/ldap-test uses, and the ones real installs overwhelmingly have. |
-| [dsyncFlavour()](/code/functions/dsyncFlavour.md) | 99 | Which flavour is this provider? |
-| [dsyncAttr()](/code/functions/dsyncAttr.md) | 108 | The configured attribute name for one field, falling back to the flavour default. |
-| [dsyncDnList()](/code/functions/dsyncDnList.md) | 133 | Split a stored DN list into an array. One per line, blanks dropped. |
-| [dsyncScopes()](/code/functions/dsyncScopes.md) | 156 | Where this provider imports from: which branches, minus which carve-outs. |
-| [dsyncDnIsUnder()](/code/functions/dsyncDnIsUnder.md) | 187 | Is `$dn` inside the subtree rooted at `$ancestor` (or the ancestor itself)? |
-| [dsyncMissingScopes()](/code/functions/dsyncMissingScopes.md) | 209 | Which of the stored branches no longer exist in the directory. |
-| [dsyncMissingScopeMessage()](/code/functions/dsyncMissingScopeMessage.md) | 228 | Say which branches are gone, and lead with the one that changes who gets in. |
-| [dsyncFetchPeople()](/code/functions/dsyncFetchPeople.md) | 253 | Reads every person under the provider's ticked directory branches with a paged LDAP search, skipping carved-out branches and counting each DN once. |
-| [dsyncDnIsExcluded()](/code/functions/dsyncDnIsExcluded.md) | 319 | Does this DN sit inside any carved-out branch? |
-| [dsyncValue()](/code/functions/dsyncValue.md) | 328 | One attribute off a raw entry, as a plain string ('' when absent). |
-| [dsyncMapPerson()](/code/functions/dsyncMapPerson.md) | 342 | Turn a raw directory entry into the fields FreeITSM stores. Returns null when the entry has no usable identity at all. |
-| [dsyncFindExisting()](/code/functions/dsyncFindExisting.md) | 383 | Find the FreeITSM record for a directory person, in order of reliability. |
-| [syncBrakeTripped()](/code/functions/syncBrakeTripped.md) | 434 | Has the directory returned so much less than last time that we should refuse to act on it? |
-| [dsyncLogEntry()](/code/functions/dsyncLogEntry.md) | 463 | Record one thing a run did to one person. |
-| [directorySyncRun()](/code/functions/directorySyncRun.md) | 488 | Run a sync. |
-| [dsyncFieldLabel()](/code/functions/dsyncFieldLabel.md) | 662 | A readable name for a person column, for the run log. |
-| [dsyncNewPersonSummary()](/code/functions/dsyncNewPersonSummary.md) | 685 | What a person arriving for the first time will actually hold. |
-| [dsyncApplyToExisting()](/code/functions/dsyncApplyToExisting.md) | 702 | Brings an existing person in line with the directory - the fields it owns, leaver or returner status, and the sync bookkeeping - and returns the changes in plain words. |
-| [dsyncCreate()](/code/functions/dsyncCreate.md) | 763 | Create a person. Returns the new id, 0 on a preview, or null on failure. |
-| [dsyncLinkIdentity()](/code/functions/dsyncLinkIdentity.md) | 791 | Store the directory's own id for this person, so a rename or OU move is survivable. |
-| [dsyncHandleMissing()](/code/functions/dsyncHandleMissing.md) | 828 | People this provider manages who were NOT in this run's results. |
-| [dsyncResolveManagers()](/code/functions/dsyncResolveManagers.md) | 888 | Second pass: turn each person's manager DN into a manager_id. |
-| [dsyncFinishRun()](/code/functions/dsyncFinishRun.md) | 928 | Close a run off. |
-| [dsyncGetRun()](/code/functions/dsyncGetRun.md) | 943 | Read a run back. |
+| [dsyncAttrDefaults()](/code/functions/dsyncAttrDefaults.md) | 58 | Attribute defaults, per directory flavour. These are the names the fixture in docker/ldap-test uses, and the ones real installs overwhelmingly have. |
+| [dsyncFlavour()](/code/functions/dsyncFlavour.md) | 103 | Which flavour is this provider? |
+| [dsyncAttr()](/code/functions/dsyncAttr.md) | 117 | The configured attribute name for one field, falling back to the flavour default. |
+| [dsyncDnList()](/code/functions/dsyncDnList.md) | 144 | Split a stored DN list into an array. One per line, blanks dropped. |
+| [dsyncScopes()](/code/functions/dsyncScopes.md) | 170 | Where this provider imports from: which branches, minus which carve-outs. |
+| [dsyncDnIsUnder()](/code/functions/dsyncDnIsUnder.md) | 204 | Is `$dn` inside the subtree rooted at `$ancestor` (or the ancestor itself)? |
+| [dsyncMissingScopes()](/code/functions/dsyncMissingScopes.md) | 229 | Which of the stored branches no longer exist in the directory. |
+| [dsyncMissingScopeMessage()](/code/functions/dsyncMissingScopeMessage.md) | 252 | Say which branches are gone, and lead with the one that changes who gets in. |
+| [dsyncFetchPeople()](/code/functions/dsyncFetchPeople.md) | 278 | Reads every person under the provider's ticked directory branches with a paged LDAP search, skipping carved-out branches and counting each DN once. |
+| [dsyncDnIsExcluded()](/code/functions/dsyncDnIsExcluded.md) | 349 | Does this DN sit inside any carved-out branch? |
+| [dsyncValue()](/code/functions/dsyncValue.md) | 363 | One attribute off a raw entry, as a plain string ('' when absent). |
+| [dsyncMapPerson()](/code/functions/dsyncMapPerson.md) | 380 | Turn a raw directory entry into the fields FreeITSM stores. Returns null when the entry has no usable identity at all. |
+| [dsyncFindExisting()](/code/functions/dsyncFindExisting.md) | 424 | Find the FreeITSM record for a directory person, in order of reliability. |
+| [syncBrakeTripped()](/code/functions/syncBrakeTripped.md) | 480 | Has the directory returned so much less than last time that we should refuse to act on it? |
+| [dsyncLogEntry()](/code/functions/dsyncLogEntry.md) | 518 | Record one thing a run did to one person. |
+| [directorySyncRun()](/code/functions/directorySyncRun.md) | 544 | Run a sync. |
+| [dsyncFieldLabel()](/code/functions/dsyncFieldLabel.md) | 720 | A readable name for a person column, for the run log. |
+| [dsyncNewPersonSummary()](/code/functions/dsyncNewPersonSummary.md) | 745 | What a person arriving for the first time will actually hold. |
+| [dsyncApplyToExisting()](/code/functions/dsyncApplyToExisting.md) | 766 | Brings an existing person in line with the directory - the fields it owns, leaver or returner status, and the sync bookkeeping - and returns the changes in plain words. |
+| [dsyncCreate()](/code/functions/dsyncCreate.md) | 833 | Create a person. Returns the new id, 0 on a preview, or null on failure. |
+| [dsyncLinkIdentity()](/code/functions/dsyncLinkIdentity.md) | 868 | Store the directory's own id for this person, so a rename or OU move is survivable. |
+| [dsyncHandleMissing()](/code/functions/dsyncHandleMissing.md) | 910 | People this provider manages who were NOT in this run's results. |
+| [dsyncResolveManagers()](/code/functions/dsyncResolveManagers.md) | 975 | Second pass: turn each person's manager DN into a manager_id. |
+| [dsyncFinishRun()](/code/functions/dsyncFinishRun.md) | 1022 | Close a run off. |
+| [dsyncGetRun()](/code/functions/dsyncGetRun.md) | 1041 | Read a run back. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 389 | `dsyncFindExisting` | read [user_sso_identities](/code/tables/user_sso_identities.md), read [users](/code/tables/users.md) |  |
-| 398 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
-| 411 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
-| 414 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
-| 467 | `dsyncLogEntry` | **insert** [directory_sync_entries](/code/tables/directory_sync_entries.md) (`run_id`, `action`, `user_id`, `directory_username`, `display_name`, `detail`, `created_datetime`) |  |
-| 494 | `directorySyncRun` | **insert** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id`) |  |
-| 645 | `directorySyncRun` | **update** [auth_providers](/code/tables/auth_providers.md) (`sync_last_run_datetime`, `sync_last_count`) |  |
-| 755 | `dsyncApplyToExisting` | **update** [users](/code/tables/users.md) |  |
-| 768 | `dsyncCreate` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `job_title`, `department`, `office`, `phone`, `mobile`, `employee_id`, `directory_username`, `auth_provider_id`, `tenant_id`, `is_managed`) |  |
-| 801 | `dsyncLinkIdentity` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `source_ref`, `source_etag`, `linked_datetime`) |  |
-| 833 | `dsyncHandleMissing` | read [users](/code/tables/users.md) |  |
-| 856 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`is_active`, `deactivated_datetime`, `sync_missed_count`) |  |
-| 865 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`sync_missed_count`) |  |
-| 914 | `dsyncResolveManagers` | **update** [users](/code/tables/users.md) (`manager_id`) |  |
-| 931 | `dsyncFinishRun` | **update** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `adopted_count`, `deactivated_count`, `conflict_count`, `error_count`, `message`) |  |
-| 945 | `dsyncGetRun` | read [directory_sync_runs](/code/tables/directory_sync_runs.md) |  |
+| 430 | `dsyncFindExisting` | read [user_sso_identities](/code/tables/user_sso_identities.md), read [users](/code/tables/users.md) |  |
+| 439 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 452 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 455 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 522 | `dsyncLogEntry` | **insert** [directory_sync_entries](/code/tables/directory_sync_entries.md) (`run_id`, `action`, `user_id`, `directory_username`, `display_name`, `detail`, `created_datetime`) |  |
+| 550 | `directorySyncRun` | **insert** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id`) |  |
+| 701 | `directorySyncRun` | **update** [auth_providers](/code/tables/auth_providers.md) (`sync_last_run_datetime`, `sync_last_count`) |  |
+| 819 | `dsyncApplyToExisting` | **update** [users](/code/tables/users.md) |  |
+| 838 | `dsyncCreate` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `job_title`, `department`, `office`, `phone`, `mobile`, `employee_id`, `directory_username`, `auth_provider_id`, `tenant_id`, `is_managed`) |  |
+| 878 | `dsyncLinkIdentity` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `source_ref`, `source_etag`, `linked_datetime`) |  |
+| 915 | `dsyncHandleMissing` | read [users](/code/tables/users.md) |  |
+| 938 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`is_active`, `deactivated_datetime`, `sync_missed_count`) |  |
+| 947 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`sync_missed_count`) |  |
+| 1001 | `dsyncResolveManagers` | **update** [users](/code/tables/users.md) (`manager_id`) |  |
+| 1025 | `dsyncFinishRun` | **update** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `adopted_count`, `deactivated_count`, `conflict_count`, `error_count`, `message`) |  |
+| 1043 | `dsyncGetRun` | read [directory_sync_runs](/code/tables/directory_sync_runs.md) |  |
 
 ## How it hangs together
 

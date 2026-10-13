@@ -6,11 +6,11 @@ Formats a UTC date and time in the viewer's own format and timezone; '' for none
 function rpFmtDateTime(?string $utc): string
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 265.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 311.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$utc` | `?string` |  |  |
+| `$utc` | `?string` |  | a UTC 'Y-m-d H:i:s' timestamp; null or '' gives '' |
 
 **Returns:** `string`
 

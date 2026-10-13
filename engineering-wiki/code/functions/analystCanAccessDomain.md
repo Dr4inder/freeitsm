@@ -6,13 +6,13 @@ May this analyst access this *domain* (#154)? The Domains-module twin of `analys
 function analystCanAccessDomain(PDO $conn, int $analystId, $domainId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 501.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 521.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$domainId` |  |  |  |
+| `$domainId` |  |  | the domain (domains.id), any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 501
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 510 | `analystCanAccessDomain` | read [domains](/code/tables/domains.md) |  |
+| 530 | `analystCanAccessDomain` | read [domains](/code/tables/domains.md) |  |
 
 ## Calls
 

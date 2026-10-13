@@ -1,6 +1,6 @@
 # api/v1/resources/reference.php
 
-> API endpoint - 128 lines
+> API endpoint - 133 lines
 
 FreeITSM REST API v1 — reference data: the lookups an integration needs to build valid ticket writes (statuses, priorities, ticket types, origins, departments), plus analysts and companies.
 
@@ -22,8 +22,8 @@ FreeITSM REST API v1 — reference data: the lookups an integration needs to bui
 | [apiPrioritiesList()](/code/functions/apiPrioritiesList.md) | 70 | GET /priorities |
 | [apiTicketTypesList()](/code/functions/apiTicketTypesList.md) | 85 | GET /ticket-types (?company_id= applies the per-company add/hide overrides) |
 | [apiOriginsList()](/code/functions/apiOriginsList.md) | 90 | GET /origins (?company_id= applies the per-company add/hide overrides) |
-| [apiTenantConfigList()](/code/functions/apiTenantConfigList.md) | 95 | Shared list for the tenant-overridable config tables (add/hide model). |
-| [apiDepartmentsList()](/code/functions/apiDepartmentsList.md) | 115 | GET /departments |
+| [apiTenantConfigList()](/code/functions/apiTenantConfigList.md) | 100 | Shared list for the tenant-overridable config tables (add/hide model). |
+| [apiDepartmentsList()](/code/functions/apiDepartmentsList.md) | 120 | GET /departments |
 
 ## Database
 
@@ -32,7 +32,7 @@ FreeITSM REST API v1 — reference data: the lookups an integration needs to bui
 | 22 | `apiAnalystsList` | read [analysts](/code/tables/analysts.md) |  |
 | 55 | `apiStatusesList` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 | 72 | `apiPrioritiesList` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 117 | `apiDepartmentsList` | read [departments](/code/tables/departments.md) |  |
+| 122 | `apiDepartmentsList` | read [departments](/code/tables/departments.md) |  |
 
 ## How it hangs together
 

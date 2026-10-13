@@ -21,14 +21,14 @@ function integrationsApplyCommentEvent(
 ): string
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1245.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1338.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connection` | `array` |  |  |
-| `$link` | `array` |  |  |
-| `$event` | `array` |  |  |
+| `$connection` | `array` |  | the connection row as loaded by `integrationsLoadConnection()` |
+| `$link` | `array` |  | the integration_links row the comment belongs to |
+| `$event` | `array` |  | a canonical comment event from the provider's `pollChanges()` |
 
 **Returns:** string '' if imported, otherwise the reason it was skipped
 
@@ -36,10 +36,10 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1263 | `integrationsApplyCommentEvent` | **insert** [integration_comment_map](/code/tables/integration_comment_map.md) (`link_id`, `direction`, `external_comment_id`, `author_identity`, `author_name`, `created_datetime`) |  |
-| 1281 | `integrationsApplyCommentEvent` | **insert** [ticket_notes](/code/tables/ticket_notes.md) (`ticket_id`, `analyst_id`, `note_text`, `is_internal`, `created_datetime`) |  |
-| 1286 | `integrationsApplyCommentEvent` | **update** [integration_comment_map](/code/tables/integration_comment_map.md) (`local_note_id`) |  |
-| 1288 | `integrationsApplyCommentEvent` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
+| 1356 | `integrationsApplyCommentEvent` | **insert** [integration_comment_map](/code/tables/integration_comment_map.md) (`link_id`, `direction`, `external_comment_id`, `author_identity`, `author_name`, `created_datetime`) |  |
+| 1374 | `integrationsApplyCommentEvent` | **insert** [ticket_notes](/code/tables/ticket_notes.md) (`ticket_id`, `analyst_id`, `note_text`, `is_internal`, `created_datetime`) |  |
+| 1379 | `integrationsApplyCommentEvent` | **update** [integration_comment_map](/code/tables/integration_comment_map.md) (`local_note_id`) |  |
+| 1381 | `integrationsApplyCommentEvent` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
 
 ## Calls
 

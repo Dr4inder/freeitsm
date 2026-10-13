@@ -12,13 +12,13 @@ function domainScheduledRun(
 ): array
 ```
 
-Defined in [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md), line 33.
+Defined in [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md), line 37.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$budgetSeconds` | `float` | `240` |  |
-| `$includeWatches` | `bool` | `true` |  |
+| `$budgetSeconds` | `float` | `240` | wall-clock seconds the run may use; 240 for cron, 25 for the page-load run |
+| `$includeWatches` | `bool` | `true` | false skips the slow Certificate Transparency and look-alike scans |
 
 **Returns:** array  counts for each stage, the alerts and calendar results, and the seconds taken
 
@@ -26,8 +26,8 @@ Defined in [includes/domains/scheduler.php](/code/files/includes/domains/schedul
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 46 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
-| 67 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
+| 50 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
+| 71 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
 
 ## Calls
 

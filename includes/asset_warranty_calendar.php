@@ -103,6 +103,15 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
      * Clearing happens even when the kind is switched OFF, and even when the
      * column is missing: that is what makes turning it off actually remove the
      * entries instead of leaving the last set behind for ever.
+     *
+     * @param string $source  the calendar_events.source tag for this kind - 'asset_warranty' or 'asset_lease'
+     * @param string $surface  where this kind is shown - off, dashboard, calendar or both; only calendar/both write entries
+     * @param string $column  the assets date column to read - warranty_expiry or lease_expiry (interpolated, never user input)
+     * @param string $categoryName  the calendar category's default name, used when one has to be found or made
+     * @param string $categoryColour  the colour (#rrggbb) for a newly created category only
+     * @param string $titlePrefix  put before the hostname in each entry's title, e.g. 'Warranty expiry: '
+     * @param string $description  the description stored on every entry of this kind
+     * @param bool $ready  whether $column exists yet; false clears the entries and writes none
      */
     function awcSyncKind(
         PDO $conn,
@@ -186,6 +195,10 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
      * Colour is only ever set at creation. Changing it afterwards is somebody
      * expressing a preference, and a sync that reset it every night would be
      * quietly overruling them.
+     *
+     * @param string $source  the entry kind ('asset_warranty' or 'asset_lease'); the category id is remembered under <source>_category_id
+     * @param string $name  the default category name to look for, and to create with
+     * @param string $colour  the colour (#rrggbb) used only when the category is created
      */
     function awcEnsureCategory(PDO $conn, string $source, string $name, string $colour): ?int
     {
@@ -232,6 +245,8 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
      * anybody to do; the entries themselves say where they live.
      *
      * Does nothing once an id is recorded, and nothing if there are no entries.
+     *
+     * @param string $source  the entry kind ('asset_warranty' or 'asset_lease') whose existing entries are checked
      */
     function awcAdoptExistingCategory(PDO $conn, string $source): void
     {
@@ -254,7 +269,12 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
         } catch (Exception $e) { /* the name lookup will cope */ }
     }
 
-    /** Remember a value; best-effort, because losing it only costs one lookup. */
+    /**
+     * Remember a value; best-effort, because losing it only costs one lookup.
+     *
+     * @param string $key  the system_settings key to write
+     * @param string $value  the value to store
+     */
     function awcSetSetting(PDO $conn, string $key, string $value): void
     {
         try {
@@ -265,7 +285,12 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
         } catch (Exception $e) { /* next sync will work it out again */ }
     }
 
-    /** Reads one system_settings value, returning $default when it is missing, empty or unreadable. */
+    /**
+     * Reads one system_settings value, returning $default when it is missing, empty or unreadable.
+     *
+     * @param string $key  the system_settings key to read
+     * @param string $default  returned when the row is missing, empty or cannot be read
+     */
     function awcGetSetting(PDO $conn, string $key, string $default): string
     {
         try {
@@ -280,6 +305,9 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
 
     /**
      * True when the table has the column (information_schema), so the sync can wait for Database Verification instead of failing.
+     *
+     * @param string $table  the table name in the current database
+     * @param string $col  the column name to look for
      */
     function awcColumnExists(PDO $conn, string $table, string $col): bool
     {

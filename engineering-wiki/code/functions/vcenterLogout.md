@@ -9,12 +9,12 @@ Logout from vCenter session
 function vcenterLogout($baseUrl, $sessionToken)
 ```
 
-Defined in [api/assets/debug_vcenter.php](/code/files/api/assets/debug_vcenter.php.md), line 252.
+Defined in [api/assets/debug_vcenter.php](/code/files/api/assets/debug_vcenter.php.md), line 263.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$baseUrl` |  |  |  |
-| `$sessionToken` |  |  |  |
+| `$baseUrl` |  |  | the vCenter address with scheme and no trailing slash |
+| `$sessionToken` |  |  | the session id returned by `vcenterAuth()`, ended by this call |
 
 ## Calls
 

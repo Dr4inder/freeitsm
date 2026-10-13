@@ -1,6 +1,6 @@
 # api/system/debug-tools/D010_signin_methods.php
 
-> API endpoint - 465 lines
+> API endpoint - 496 lines
 
 Debug Tool D010 — Sign-in methods, and how you are actually signed in
 
@@ -35,35 +35,35 @@ Output: plain text, section-delimited with === HEADERS ===.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 54 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
-| [yn()](/code/functions/yn.md) | 59 | Formats a boolean as YES or NO for the report. |
-| [mask()](/code/functions/mask.md) | 70 | Masks a value for a report that will be sent on - all stars when very short, otherwise the first one or two characters (and the last, for a long value) with stars between. |
-| [maskEmail()](/code/functions/maskEmail.md) | 79 | Local part masked, domain kept — the domain is the diagnostic half. |
-| [maskDn()](/code/functions/maskDn.md) | 94 | A DN carries a person's name in its leading component and the directory's shape in the rest. The shape is what you need to diagnose, the name is not — so mask every attribute VALUE and keep every attribute NAME and the commas. "CN=svc_freeitsm,OU=Service Accounts,DC=cnss,DC=local" -> "CN=sv******m,OU=Se******s,DC=cn***,DC=lo***" |
-| [maskGuids()](/code/functions/maskGuids.md) | 111 | A tenant GUID in an issuer URL names the ORGANISATION, which is more than this report needs to be useful — and D003 already masks them for the same reason. The rest of the URL (which IdP, which realm shape) is the diagnostic half. |
-| [maskHost()](/code/functions/maskHost.md) | 118 | A hostname is infrastructure, not a person — but strip any user@ prefix. |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 129 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
-| [colExists()](/code/functions/colExists.md) | 163 | Whether a column exists in this database - false on any error, so an older install reads as not ready rather than breaking the report. |
-| [tableExists()](/code/functions/tableExists.md) | 175 | Whether a table exists in this database - false on any error, so an older install reads as not ready rather than breaking the report. |
+| [addSection()](/code/functions/addSection.md) | 58 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 67 | Formats a boolean as YES or NO for the report. |
+| [mask()](/code/functions/mask.md) | 80 | Masks a value for a report that will be sent on - all stars when very short, otherwise the first one or two characters (and the last, for a long value) with stars between. |
+| [maskEmail()](/code/functions/maskEmail.md) | 93 | Local part masked, domain kept — the domain is the diagnostic half. |
+| [maskDn()](/code/functions/maskDn.md) | 110 | A DN carries a person's name in its leading component and the directory's shape in the rest. The shape is what you need to diagnose, the name is not — so mask every attribute VALUE and keep every attribute NAME and the commas. "CN=svc_freeitsm,OU=Service Accounts,DC=cnss,DC=local" -> "CN=sv******m,OU=Se******s,DC=cn***,DC=lo***" |
+| [maskGuids()](/code/functions/maskGuids.md) | 129 | A tenant GUID in an issuer URL names the ORGANISATION, which is more than this report needs to be useful — and D003 already masks them for the same reason. The rest of the URL (which IdP, which realm shape) is the diagnostic half. |
+| [maskHost()](/code/functions/maskHost.md) | 140 | A hostname is infrastructure, not a person — but strip any user@ prefix. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 153 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [colExists()](/code/functions/colExists.md) | 191 | Whether a column exists in this database - false on any error, so an older install reads as not ready rather than breaking the report. |
+| [tableExists()](/code/functions/tableExists.md) | 206 | Whether a table exists in this database - false on any error, so an older install reads as not ready rather than breaking the report. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 232 |  | read [analysts](/code/tables/analysts.md) |  |
-| 267 |  | read [system_settings](/code/tables/system_settings.md) |  |
-| 280 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 316 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 410 |  | read [analysts](/code/tables/analysts.md) |  |
-| 411 |  | read [analysts](/code/tables/analysts.md) |  |
-| 412 |  | read [analysts](/code/tables/analysts.md) |  |
-| 413 |  | read [analysts](/code/tables/analysts.md) |  |
-| 415 |  | read [analysts](/code/tables/analysts.md) |  |
-| 422 |  | read [users](/code/tables/users.md) |  |
-| 423 |  | read [users](/code/tables/users.md) |  |
-| 424 |  | read [users](/code/tables/users.md) |  |
-| 426 |  | read [users](/code/tables/users.md) |  |
-| 429 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 263 |  | read [analysts](/code/tables/analysts.md) |  |
+| 298 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 311 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 347 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 441 |  | read [analysts](/code/tables/analysts.md) |  |
+| 442 |  | read [analysts](/code/tables/analysts.md) |  |
+| 443 |  | read [analysts](/code/tables/analysts.md) |  |
+| 444 |  | read [analysts](/code/tables/analysts.md) |  |
+| 446 |  | read [analysts](/code/tables/analysts.md) |  |
+| 453 |  | read [users](/code/tables/users.md) |  |
+| 454 |  | read [users](/code/tables/users.md) |  |
+| 455 |  | read [users](/code/tables/users.md) |  |
+| 457 |  | read [users](/code/tables/users.md) |  |
+| 460 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
 
 ## How it hangs together
 

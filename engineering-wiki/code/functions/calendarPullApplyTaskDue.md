@@ -11,14 +11,14 @@ deadline could move and nobody would ever know where it went.
 function calendarPullApplyTaskDue(PDO $conn, array $row, string $newDay, string $address): void
 ```
 
-Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 284.
+Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 308.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
-| `$newDay` | `string` |  |  |
-| `$address` | `string` |  |  |
+| `$row` | `array` |  | the calendar_sync_events row (kind 'due') joined to its task's due_date |
+| `$newDay` | `string` |  | the new due date, 'Y-m-d', taken from the moved event's start |
+| `$address` | `string` |  | the analyst's calendar address, quoted in the audit text only |
 
 **Returns:** `void`
 
@@ -26,7 +26,7 @@ Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 286 | `calendarPullApplyTaskDue` | **update** [tasks](/code/tables/tasks.md) (`due_date`, `updated_datetime`) |  |
+| 310 | `calendarPullApplyTaskDue` | **update** [tasks](/code/tables/tasks.md) (`due_date`, `updated_datetime`) |  |
 
 ## Calls
 

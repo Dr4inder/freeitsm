@@ -1,6 +1,6 @@
 # api/tickets/schedule_feed.php
 
-> API endpoint - 251 lines
+> API endpoint - 254 lines
 
 API Endpoint: an analyst's own scheduled work as an iCalendar feed (GH #75).
 
@@ -42,15 +42,15 @@ customers and problems. Hence:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [feed_deny()](/code/functions/feed_deny.md) | 43 | Sends an HTTP status and a plain-text message, then stops - the feed's only error path, since a calendar app shows nothing richer. |
+| [feed_deny()](/code/functions/feed_deny.md) | 46 | Sends an HTTP status and a plain-text message, then stops - the feed's only error path, since a calendar app shows nothing richer. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 60 |  | read [user_preferences](/code/tables/user_preferences.md) |  |
-| 80 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 119 |  | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [task_priorities](/code/tables/task_priorities.md) |  |
+| 63 |  | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 83 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 122 |  | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [task_priorities](/code/tables/task_priorities.md) |  |
 
 ## How it hangs together
 

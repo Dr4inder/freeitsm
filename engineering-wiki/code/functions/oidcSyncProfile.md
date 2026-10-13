@@ -21,16 +21,16 @@ function oidcSyncProfile(
 ): void
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 347.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 363.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
+| `$provider` | `array` |  | the sso_providers row the user signed in with; only profile_sync_mode is read |
 | `$table` | `string` |  | 'analysts' or 'users' - never user input |
-| `$record` | `array` |  |  |
-| `$claims` | `array` |  |  |
-| `$name` | `string` |  |  |
+| `$record` | `array` |  | the local account row as loaded (analysts or users), including id and the current profile values |
+| `$claims` | `array` |  | the validated ID token claims, topped up from userinfo when sync is on |
+| `$name` | `string` |  | the display name worked out from the claims; empty means leave the name alone |
 
 **Returns:** `void`
 

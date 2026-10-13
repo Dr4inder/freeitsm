@@ -6,11 +6,11 @@ The definition (table, column, module) of one link kind; throws a validation err
 function projectLinkKind(string $kind): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 74.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$kind` | `string` |  |  |
+| `$kind` | `string` |  | the link kind: asset, change, ticket, contract, cmdb, article or problem |
 
 **Returns:** `array`
 

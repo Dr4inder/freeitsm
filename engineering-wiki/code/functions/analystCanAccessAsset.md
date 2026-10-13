@@ -6,13 +6,13 @@ May this analyst access this *asset* (by its owning company)? The Asset Manageme
 function analystCanAccessAsset(PDO $conn, int $analystId, $assetId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 529.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 551.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$assetId` |  |  |  |
+| `$assetId` |  |  | the asset id, any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 529
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 538 | `analystCanAccessAsset` | read [assets](/code/tables/assets.md) |  |
+| 560 | `analystCanAccessAsset` | read [assets](/code/tables/assets.md) |  |
 
 ## Calls
 

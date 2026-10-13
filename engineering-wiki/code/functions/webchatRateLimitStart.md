@@ -6,12 +6,12 @@ Cap new conversations per IP per minute. Exits (429) on breach.
 function webchatRateLimitStart(PDO $conn, string $ip): void
 ```
 
-Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 143.
+Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 159.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ip` | `string` |  |  |
+| `$ip` | `string` |  | the visitor's IP address; '' skips the check |
 
 **Returns:** `void`
 
@@ -19,7 +19,7 @@ Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 150 | `webchatRateLimitStart` | read [webchat_conversations](/code/tables/webchat_conversations.md) |  |
+| 166 | `webchatRateLimitStart` | read [webchat_conversations](/code/tables/webchat_conversations.md) |  |
 
 ## Calls
 

@@ -6,11 +6,11 @@ Authentication for this server: an API token header, or a login ticket for a use
 function proxmoxLogin(array $c): array
 ```
 
-Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 54.
+Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
+| `$c` | `array` |  | the connection row from `proxmoxLoadConnection()`, password decrypted |
 
 **Returns:** `array`
 

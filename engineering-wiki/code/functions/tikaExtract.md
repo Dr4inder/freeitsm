@@ -17,13 +17,13 @@ would be quietly wrong forever and nothing would say so.
 function tikaExtract(PDO $conn, string $path, string $filename): array
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 124.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 132.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$path` | `string` |  |  |
-| `$filename` | `string` |  |  |
+| `$path` | `string` |  | the full path of the file on disk, already checked to be inside the attachments directory |
+| `$filename` | `string` |  | the original file name, sent to Tika as a hint for choosing a parser |
 
 **Returns:** array{ok:bool,text:string,retry:bool,error:string}
 

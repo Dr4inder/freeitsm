@@ -6,11 +6,11 @@ One line naming who a contract is with, for lists, previews and payloads: the su
 function contractPartyLabel(array $row): string
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 175.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 199.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | a contract row carrying the `contractPartySql()` columns plus supplier_name and supplier_trading_name |
 
 **Returns:** `string`
 

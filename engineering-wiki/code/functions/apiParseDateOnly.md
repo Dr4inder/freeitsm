@@ -6,12 +6,12 @@ Validate a DATE field (YYYY-MM-DD); 422 naming the field on garbage. Null/'' cle
 function apiParseDateOnly($value, string $field): ?string
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 215.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 226.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
-| `$field` | `string` |  |  |
+| `$value` |  |  | the caller-supplied date (untrusted); null or '' clears the field |
+| `$field` | `string` |  | the field name, quoted in the 422 message |
 
 **Returns:** `?string`
 

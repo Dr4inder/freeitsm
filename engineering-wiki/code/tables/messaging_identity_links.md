@@ -19,15 +19,15 @@ Which requester a chat belongs to, on ONE channel (Telegram, PR #159). Keyed per
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):566 | `messagingTelegramResolveIdentity` | insert | `channel_id`, `channel_type`, `external_id`, `user_id`, `phone`, `locale` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):608 | `messagingTelegramResolveIdentity` | update | `locale` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):636 | `messagingTelegramLinkPhone` | update | `phone` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):661 | `messagingTelegramLinkPhone` | update | `user_id` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):600 | `messagingTelegramResolveIdentity` | insert | `channel_id`, `channel_type`, `external_id`, `user_id`, `phone`, `locale` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):642 | `messagingTelegramResolveIdentity` | update | `locale` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):676 | `messagingTelegramLinkPhone` | update | `phone` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):701 | `messagingTelegramLinkPhone` | update | `user_id` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/csat.php](/code/files/includes/csat.php.md) | csatChannelLocale L161 |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) | messagingIdentityLinksReady L507, messagingTelegramResolveIdentity L554, messagingTelegramLinkPhone L684 |  |
+| [includes/csat.php](/code/files/includes/csat.php.md) | csatChannelLocale L169 |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) | messagingIdentityLinksReady L527, messagingTelegramResolveIdentity L588, messagingTelegramLinkPhone L724 |  |
 

@@ -1,6 +1,6 @@
 # system/help/sso-groups.php
 
-> PHP - 258 lines
+> PHP - 269 lines
 
 System Help — Setting up groups and teams from single sign-on (3.5.0).
 
@@ -18,8 +18,8 @@ open beside the screen being set up.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sgLink()](/code/functions/sgLink.md) | 20 | A "System -> X" link that opens in a new tab. |
-| [sgCheck()](/code/functions/sgCheck.md) | 24 | One tick-off step. |
+| [sgLink()](/code/functions/sgLink.md) | 25 | A "System -> X" link that opens in a new tab. |
+| [sgCheck()](/code/functions/sgCheck.md) | 35 | One tick-off step. |
 
 ## How it hangs together
 

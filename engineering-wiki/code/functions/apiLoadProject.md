@@ -6,13 +6,13 @@ The by-id gate: existence + company scope, both failing as 404.
 function apiLoadProject(PDO $conn, array $apiKey, int $id): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 116.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 126.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the projects id |
 
 **Returns:** `array`
 

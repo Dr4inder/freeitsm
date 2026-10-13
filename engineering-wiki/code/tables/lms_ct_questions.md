@@ -24,15 +24,15 @@ LMS competency tests (3.0.0) The question bank. answers_json is [{"text":..., "m
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):332 |  | update | `skill`, `difficulty`, `format`, `question_text`, `answers_json`, `explanation`, `status`, `updated_datetime` |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):349 |  | update | `status`, `updated_datetime` |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):357 |  | delete |  |  |
-| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md):171 | `lmsCtInsertQuestion` | insert | `skill`, `difficulty`, `format`, `question_text`, `answers_json`, `explanation`, `status`, `source`, `role_context`, `created_by_analyst_id` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):347 |  | update | `skill`, `difficulty`, `format`, `question_text`, `answers_json`, `explanation`, `status`, `updated_datetime` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):364 |  | update | `status`, `updated_datetime` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):372 |  | delete |  |  |
+| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md):200 | `lmsCtInsertQuestion` | insert | `skill`, `difficulty`, `format`, `question_text`, `answers_json`, `explanation`, `status`, `source`, `role_context`, `created_by_analyst_id` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md) | L79, L118, L128, L257, L265, L281 ... |  |
-| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md) | lmsCtTestQuestions L185 |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md) | L94, L133, L143, L272, L280, L296 ... |  |
+| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md) | lmsCtTestQuestions L218 |  |
 

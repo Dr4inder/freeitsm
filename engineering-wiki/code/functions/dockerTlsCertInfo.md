@@ -6,11 +6,11 @@ Read one PEM certificate's details, or null.
 function dockerTlsCertInfo(string $pem): ?array
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 131.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 145.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$pem` | `string` |  |  |
+| `$pem` | `string` |  | one certificate in PEM text form |
 
 **Returns:** `?array`
 

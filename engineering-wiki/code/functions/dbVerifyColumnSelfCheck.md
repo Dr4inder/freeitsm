@@ -16,13 +16,13 @@ function dbVerifyColumnSelfCheck(
 ): array
 ```
 
-Defined in [includes/db_verify_column_parse.php](/code/files/includes/db_verify_column_parse.php.md), line 102.
+Defined in [includes/db_verify_column_parse.php](/code/files/includes/db_verify_column_parse.php.md), line 110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sqlPath` | `?string` | `null` |  |
-| `$schemaPath` | `?string` | `null` |  |
-| `$maxPerKind` | `int` | `6` |  |
+| `$sqlPath` | `?string` | `null` | path to freeitsm.sql; null means database/freeitsm.sql in this install |
+| `$schemaPath` | `?string` | `null` | path to the schema file; null means includes/db_verify_schema.php |
+| `$maxPerKind` | `int` | `6` | most problems listed per category before the rest are summarised |
 
 **Returns:** `array`
 

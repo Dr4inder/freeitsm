@@ -11,13 +11,13 @@ department or team (see api/tickets/search_tickets.php), so neither is this.
 function searchScopeForAnalyst(PDO $conn, int $analystId, array $overrides = []): array
 ```
 
-Defined in [includes/search/search.php](/code/files/includes/search/search.php.md), line 130.
+Defined in [includes/search/search.php](/code/files/includes/search/search.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$overrides` | `array` | `[]` |  |
+| `$overrides` | `array` | `[]` | scope keys to replace after the defaults, e.g. ['include_internal' => false, 'source_types' => [...]] |
 
 **Returns:** `array`
 

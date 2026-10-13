@@ -23,7 +23,7 @@
 
 ### resolveTenantId
 
-*private static* - line 55
+*private static* - line 57
 
 Validate a submitted company for an article.
 
@@ -42,11 +42,11 @@ function resolveTenantId(PDO $conn, ActorContext $ctx, $raw): ?int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$raw` |  |  |  |
+| `$raw` |  |  | the tenant_id from the request; '', null or 0 means shared with every company |
 
 ### resolveFolderId
 
-*private static* - line 85
+*private static* - line 89
 
 Validate a submitted folder.
 
@@ -66,17 +66,17 @@ function resolveFolderId(PDO $conn, $raw): ?int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$raw` |  |  |  |
+| `$raw` |  |  | the folder_id from the request; '', null or 0 means the root |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 91 | `KnowledgeService::resolveFolderId` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 95 | `KnowledgeService::resolveFolderId` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
 
 ### resolveAudience
 
-*private static* - line 110
+*private static* - line 116
 
 Validate a submitted audience. Unlike the read path — which normalises junk down to 'internal' so a bad value can never widen visibility — a WRITE with a bogus audience is a caller bug and is rejected outright, so nobody silently saves an article as internal while believing they published it.
 
@@ -86,11 +86,11 @@ function resolveAudience($raw): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` |  |  |  |
+| `$raw` |  |  | the audience from the request, an Audience value; '' or null means internal |
 
 ### assertCanAccessArticle
 
-*private static* - line 131
+*private static* - line 139
 
 Refuse to touch an article belonging to a company this actor cannot reach.
 
@@ -110,17 +110,17 @@ function assertCanAccessArticle(PDO $conn, ActorContext $ctx, int $articleId): v
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$articleId` | `int` |  |  |
+| `$articleId` | `int` |  | the knowledge article being changed |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 136 | `KnowledgeService::assertCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 144 | `KnowledgeService::assertCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ### saveArticle
 
-*public static* - line 152
+*public static* - line 165
 
 Create (no id) or update (id present) an article. Returns ['id','created','embedding_generated'].
 
@@ -132,21 +132,21 @@ function saveArticle(PDO $conn, ActorContext $ctx, array $in): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (absent = new), title, body_html, owner_id, next_review_date, tenant_id, audience, folder_id, tags, is_published, save_as_version - on update only keys sent are changed |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 218 | `KnowledgeService::saveArticle` | **insert** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) (`article_id`, `version`, `title`, `body`, `saved_by_id`, `saved_datetime`), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 224 | `KnowledgeService::saveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 280 | `KnowledgeService::saveArticle` | **insert** [knowledge_articles](/code/tables/knowledge_articles.md) (`title`, `body`, `author_id`, `owner_id`, `next_review_date`, `created_datetime`, `modified_datetime`, `is_published`, `view_count`, `tenant_id`, `audience`, `folder_id`) |  |
+| 231 | `KnowledgeService::saveArticle` | **insert** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) (`article_id`, `version`, `title`, `body`, `saved_by_id`, `saved_datetime`), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 237 | `KnowledgeService::saveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 293 | `KnowledgeService::saveArticle` | **insert** [knowledge_articles](/code/tables/knowledge_articles.md) (`title`, `body`, `author_id`, `owner_id`, `next_review_date`, `created_datetime`, `modified_datetime`, `is_published`, `view_count`, `tenant_id`, `audience`, `folder_id`) |  |
 
 **Called from:** [api/knowledge/knowledge_bulk_audience.php](/code/files/api/knowledge/knowledge_bulk_audience.php.md), [api/knowledge/knowledge_save.php](/code/files/api/knowledge/knowledge_save.php.md), [api/knowledge/writeup_save.php](/code/files/api/knowledge/writeup_save.php.md), [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### reindexForSearch
 
-*private static* - line 333
+*private static* - line 348
 
 Keep the search corpus in step with an article (discussion #53).
 
@@ -166,11 +166,11 @@ function reindexForSearch(PDO $conn, int $articleId): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$articleId` | `int` |  |  |
+| `$articleId` | `int` |  | the knowledge article to reindex (or remove from the index) |
 
 ### archiveArticle
 
-*public static* - line 345
+*public static* - line 364
 
 Soft-archive an article (move to recycle bin). 404 if gone, 409 if already archived.
 
@@ -182,19 +182,19 @@ function archiveArticle(PDO $conn, ActorContext $ctx, int $id): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the knowledge article to move to the recycle bin |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 350 | `KnowledgeService::archiveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`is_archived`, `archived_datetime`, `archived_by_id`) |  |
+| 369 | `KnowledgeService::archiveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`is_archived`, `archived_datetime`, `archived_by_id`) |  |
 
 **Called from:** [api/knowledge/knowledge_delete.php](/code/files/api/knowledge/knowledge_delete.php.md), [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md)
 
 ### restoreArticle
 
-*public static* - line 367
+*public static* - line 390
 
 Restore an archived article. 404 if gone, 409 if not archived.
 
@@ -206,19 +206,19 @@ function restoreArticle(PDO $conn, ActorContext $ctx, int $id): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the archived knowledge article to restore |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 372 | `KnowledgeService::restoreArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`is_archived`, `archived_datetime`, `archived_by_id`) |  |
+| 395 | `KnowledgeService::restoreArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`is_archived`, `archived_datetime`, `archived_by_id`) |  |
 
 **Called from:** [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md), [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md)
 
 ### purgeArticle
 
-*public static* - line 386
+*public static* - line 413
 
 Permanently delete an archived article (+ versions/tags, orphan-tag cleanup). 404/409 guards.
 
@@ -230,22 +230,22 @@ function purgeArticle(PDO $conn, ActorContext $ctx, int $id): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the archived knowledge article to delete for good |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 394 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
-| 395 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 396 | `KnowledgeService::purgeArticle` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 397 | `KnowledgeService::purgeArticle` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 421 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
+| 422 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 423 | `KnowledgeService::purgeArticle` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 424 | `KnowledgeService::purgeArticle` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
 
 **Called from:** [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md), [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md)
 
 ### loadArticleRow
 
-*private static* - line 414
+*private static* - line 445
 
 Loads one Knowledge article; throws not found when it does not exist.
 
@@ -256,17 +256,17 @@ function loadArticleRow(PDO $conn, int $id): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the knowledge article to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 416 | `KnowledgeService::loadArticleRow` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 447 | `KnowledgeService::loadArticleRow` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ### setTags
 
-*private static* - line 426
+*private static* - line 462
 
 Replace the article's tag set: get-or-create each name, relink (mirrors knowledge_save.php).
 
@@ -277,21 +277,21 @@ function setTags(PDO $conn, int $articleId, array $tags): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$articleId` | `int` |  |  |
-| `$tags` | `array` |  |  |
+| `$articleId` | `int` |  | the knowledge article whose tags are replaced |
+| `$tags` | `array` |  | tag names; blanks and names over 50 characters are skipped, new names are created |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 428 | `KnowledgeService::setTags` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 434 | `KnowledgeService::setTags` | read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
-| 438 | `KnowledgeService::setTags` | **insert** [knowledge_tags](/code/tables/knowledge_tags.md) (`name`, `created_datetime`) |  |
-| 441 | `KnowledgeService::setTags` | **insert** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) (`article_id`, `tag_id`) |  |
+| 464 | `KnowledgeService::setTags` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 470 | `KnowledgeService::setTags` | read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
+| 474 | `KnowledgeService::setTags` | **insert** [knowledge_tags](/code/tables/knowledge_tags.md) (`name`, `created_datetime`) |  |
+| 477 | `KnowledgeService::setTags` | **insert** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) (`article_id`, `tag_id`) |  |
 
 ### updateEmbedding
 
-*private static* - line 451
+*private static* - line 491
 
 Regenerate the article's OpenAI embedding — best-effort, after commit, silent on failure. Returns true only if an embedding was stored. No-ops unless `decryptValue()` is loaded and a key is configured (see class header).
 
@@ -302,20 +302,20 @@ function updateEmbedding(PDO $conn, int $articleId, string $title, string $body)
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$articleId` | `int` |  |  |
-| `$title` | `string` |  |  |
-| `$body` | `string` |  |  |
+| `$articleId` | `int` |  | the knowledge article |
+| `$title` | `string` |  | the article's title |
+| `$body` | `string` |  | the article's body as HTML; tags are stripped before it is sent |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 454 | `KnowledgeService::updateEmbedding` | read [system_settings](/code/tables/system_settings.md) |  |
-| 486 | `KnowledgeService::updateEmbedding` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`embedding`, `embedding_updated`) |  |
+| 494 | `KnowledgeService::updateEmbedding` | read [system_settings](/code/tables/system_settings.md) |  |
+| 526 | `KnowledgeService::updateEmbedding` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`embedding`, `embedding_updated`) |  |
 
 ### resolveAnalyst
 
-*private static* - line 498
+*private static* - line 542
 
 Validate an analyst id exists + is active (throwing twin of apiResolveAnalyst).
 
@@ -326,17 +326,17 @@ function resolveAnalyst(PDO $conn, int $analystId): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | the analyst named as the article's owner - not the actor |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 500 | `KnowledgeService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 544 | `KnowledgeService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ### parseDateOnly
 
-*private static* - line 508
+*private static* - line 557
 
 Validate an optional YYYY-MM-DD date (throwing twin of apiParseDateOnly).
 
@@ -346,6 +346,6 @@ function parseDateOnly($value, string $field): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
-| `$field` | `string` |  |  |
+| `$value` |  |  | the date from the request, Y-m-d; null or '' gives null |
+| `$field` | `string` |  | the request field name, used in the error message |
 

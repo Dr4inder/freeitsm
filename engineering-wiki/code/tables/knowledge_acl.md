@@ -18,16 +18,16 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):273 | `handleDelete` | delete |  |  |
-| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md):247 | `handleSetMode` | delete |  |  |
-| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md):279 | `handleAdd` | insert | `object_type`, `object_id`, `principal_type`, `principal_id`, `created_by_id`, `created_datetime` |  |
-| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md):302 | `handleRemove` | delete |  |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):292 | `handleDelete` | delete |  |  |
+| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md):261 | `handleSetMode` | delete |  |  |
+| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md):294 | `handleAdd` | insert | `object_type`, `object_id`, `principal_type`, `principal_id`, `created_by_id`, `created_datetime` |  |
+| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md):319 | `handleRemove` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md) | handleExceptions L406, handleExceptions L423 |  |
-| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | handleGet L110, resolveInherited L174, handleSetMode L244, handleRemove L312 |  |
-| [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeAclHasAnyRows L790, knowledgeAclIndex L809 |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md) | handleExceptions L433, handleExceptions L450 |  |
+| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | handleGet L116, resolveInherited L183, handleSetMode L258, handleRemove L329 |  |
+| [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeAclHasAnyRows L847, knowledgeAclIndex L866 |  |
 

@@ -6,7 +6,7 @@ Every signature belonging to one analyst, default first.
 function signaturesForAnalyst(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/signatures.php](/code/files/includes/signatures.php.md), line 90.
+Defined in [includes/signatures.php](/code/files/includes/signatures.php.md), line 92.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/signatures.php](/code/files/includes/signatures.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 93 | `signaturesForAnalyst` | read [analyst_signatures](/code/tables/analyst_signatures.md) |  |
+| 95 | `signaturesForAnalyst` | read [analyst_signatures](/code/tables/analyst_signatures.md) |  |
 
 ## Called from
 

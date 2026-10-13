@@ -6,7 +6,7 @@ What one analyst's teams say, without changing anything.
 function analystSignInFromTeams(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 118.
+Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 119.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

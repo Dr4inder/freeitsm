@@ -16,13 +16,13 @@ what to deal with first.
 function demoBlockingModules(PDO $conn, string $table, string $exceptModule): array
 ```
 
-Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 130.
+Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 147.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$exceptModule` | `string` |  |  |
+| `$table` | `string` |  | the table whose demo rows could not be cleared |
+| `$exceptModule` | `string` |  | the DEMO_MODULES key being imported, left out of the answer |
 
 **Returns:** `array`
 

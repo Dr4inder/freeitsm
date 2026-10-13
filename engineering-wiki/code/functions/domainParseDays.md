@@ -6,11 +6,11 @@
 function domainParseDays(string $raw): array
 ```
 
-Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 239.
+Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 255.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | numbers of days separated by commas or spaces, e.g. "60, 30, 7"; over 365 is dropped |
 
 **Returns:** `array`
 

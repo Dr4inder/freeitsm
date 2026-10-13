@@ -6,7 +6,7 @@ Load one asset (with joins); 404 if unknown OR outside the key's companies (mult
 function apiLoadAsset(PDO $conn, array $apiKey, int $assetId): array
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 200.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 208.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

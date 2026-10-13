@@ -1,6 +1,6 @@
 # includes/messaging/TeamsProvider.php
 
-> PHP - 454 lines
+> PHP - 497 lines
 
 TeamsProvider — Microsoft Teams one-to-one chats with the FreeITSM bot, via the Bot Framework. Contributed by turbay-a in PR #166; see the Teams and Mattermost developer guide for what changed at merge.
 

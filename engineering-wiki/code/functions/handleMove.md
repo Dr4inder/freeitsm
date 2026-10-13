@@ -12,13 +12,13 @@ than tolerated later.
 function handleMove(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 215.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 232.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request: id, and parent_id (empty or null for the top level) |
 
 **Returns:** `void`
 
@@ -26,7 +26,7 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 237 | `handleMove` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `modified_datetime`) |  |
+| 254 | `handleMove` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `modified_datetime`) |  |
 
 ## Calls
 

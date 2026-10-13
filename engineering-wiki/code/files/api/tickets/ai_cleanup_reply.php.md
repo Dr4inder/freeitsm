@@ -1,6 +1,6 @@
 # api/tickets/ai_cleanup_reply.php
 
-> API endpoint - 217 lines
+> API endpoint - 220 lines
 
 API: Tickets — AI Reply Cleanup (streaming)
 
@@ -25,15 +25,15 @@ its own line on the Anthropic billing dashboard.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse_send()](/code/functions/sse_send.md) | 43 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
+| [sse_send()](/code/functions/sse_send.md) | 46 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 102 |  | read [system_settings](/code/tables/system_settings.md) |  |
-| 120 |  | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
-| 143 |  | read [emails](/code/tables/emails.md) |  |
+| 105 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 123 |  | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
+| 146 |  | read [emails](/code/tables/emails.md) |  |
 
 ## How it hangs together
 

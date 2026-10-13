@@ -6,11 +6,11 @@ Lower-case hex with no separators, so PHP's and the openssl CLI's agree.
 function dockerTlsFingerprintNormalise(string $fp): string
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 124.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fp` | `string` |  |  |
+| `$fp` | `string` |  | a fingerprint in any format, e.g. "SHA256 Fingerprint=AB:CD:..." from openssl or bare hex from PHP |
 
 **Returns:** `string`
 

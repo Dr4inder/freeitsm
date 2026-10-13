@@ -6,13 +6,13 @@ Records that a weekly watch ran for a domain today, keeping only the latest mark
 function domainWatchMark(PDO $conn, int $id, string $marker): void
 ```
 
-Defined in [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md), line 136.
+Defined in [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$marker` | `string` |  |  |
+| `$id` | `int` |  | the domain that was scanned |
+| `$marker` | `string` |  | the watch's marker name, 'ct_scanned' or 'lookalikes_scanned' |
 
 **Returns:** `void`
 
@@ -22,7 +22,7 @@ Defined in [includes/domains/scheduler.php](/code/files/includes/domains/schedul
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 140 | `domainWatchMark` | **delete** [domain_audit](/code/tables/domain_audit.md) |  |
+| 152 | `domainWatchMark` | **delete** [domain_audit](/code/tables/domain_audit.md) |  |
 
 ## Called from
 

@@ -1,6 +1,6 @@
 # includes/tenant_settings.php
 
-> PHP - 282 lines
+> PHP - 293 lines
 
 Per-company settings, falling back to the install-wide value.
 
@@ -30,31 +30,31 @@ time-tracking flag with a table around it.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [tenantSetting()](/code/functions/tenantSetting.md) | 35 | The value of a setting for one company. |
-| [tenantSettingForget()](/code/functions/tenantSettingForget.md) | 88 | Forget every cached setting - after a write, or between test cases. |
-| [tenantSettingOn()](/code/functions/tenantSettingOn.md) | 95 | Convenience for a yes/no setting. Anything but '0' is on. |
-| [setTenantSetting()](/code/functions/setTenantSetting.md) | 109 | Set (or clear) one company's answer. |
-| [tenantSettingsForKey()](/code/functions/tenantSettingsForKey.md) | 131 | Every company's answer for one key, for rendering a settings table. |
-| [timeTrackingUiOn()](/code/functions/timeTrackingUiOn.md) | 154 | Should the time-recording UI appear for a ticket belonging to this company? |
-| [timeTrackingApiOn()](/code/functions/timeTrackingApiOn.md) | 160 | Should the REST API serve time entries for a ticket belonging to this company? |
-| [ticketChecklistClosureMode()](/code/functions/ticketChecklistClosureMode.md) | 200 | 'warn' (default) or 'block' — how closure with outstanding mandatory steps behaves. |
-| [ticketChecklistEmptyClosureMode()](/code/functions/ticketChecklistEmptyClosureMode.md) | 210 | 'off' (default), 'warn', or 'block' — when closing a ticket with no SOP attached. |
-| [ticketCategoryOn()](/code/functions/ticketCategoryOn.md) | 236 | Should the "reported as" category field show on a ticket for this company? |
-| [ticketClosureCategoryOn()](/code/functions/ticketClosureCategoryOn.md) | 242 | Should the "turned out to be" category field show when closing a ticket? |
-| [ticketResolutionCodeOn()](/code/functions/ticketResolutionCodeOn.md) | 248 | Should the resolution code field show when closing a ticket? |
-| [ticketClassificationSettings()](/code/functions/ticketClassificationSettings.md) | 261 | All three answers at once, for a page that is about to render a ticket. |
-| [ticketTenantId()](/code/functions/ticketTenantId.md) | 271 | The company a ticket belongs to, or null. Used to resolve both of the above. |
+| [tenantSetting()](/code/functions/tenantSetting.md) | 37 | The value of a setting for one company. |
+| [tenantSettingForget()](/code/functions/tenantSettingForget.md) | 90 | Forget every cached setting - after a write, or between test cases. |
+| [tenantSettingOn()](/code/functions/tenantSettingOn.md) | 102 | Convenience for a yes/no setting. Anything but '0' is on. |
+| [setTenantSetting()](/code/functions/setTenantSetting.md) | 119 | Set (or clear) one company's answer. |
+| [tenantSettingsForKey()](/code/functions/tenantSettingsForKey.md) | 142 | Every company's answer for one key, for rendering a settings table. |
+| [timeTrackingUiOn()](/code/functions/timeTrackingUiOn.md) | 165 | Should the time-recording UI appear for a ticket belonging to this company? |
+| [timeTrackingApiOn()](/code/functions/timeTrackingApiOn.md) | 171 | Should the REST API serve time entries for a ticket belonging to this company? |
+| [ticketChecklistClosureMode()](/code/functions/ticketChecklistClosureMode.md) | 211 | 'warn' (default) or 'block' — how closure with outstanding mandatory steps behaves. |
+| [ticketChecklistEmptyClosureMode()](/code/functions/ticketChecklistEmptyClosureMode.md) | 221 | 'off' (default), 'warn', or 'block' — when closing a ticket with no SOP attached. |
+| [ticketCategoryOn()](/code/functions/ticketCategoryOn.md) | 247 | Should the "reported as" category field show on a ticket for this company? |
+| [ticketClosureCategoryOn()](/code/functions/ticketClosureCategoryOn.md) | 253 | Should the "turned out to be" category field show when closing a ticket? |
+| [ticketResolutionCodeOn()](/code/functions/ticketResolutionCodeOn.md) | 259 | Should the resolution code field show when closing a ticket? |
+| [ticketClassificationSettings()](/code/functions/ticketClassificationSettings.md) | 272 | All three answers at once, for a page that is about to render a ticket. |
+| [ticketTenantId()](/code/functions/ticketTenantId.md) | 282 | The company a ticket belongs to, or null. Used to resolve both of the above. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 47 | `tenantSetting` | read [tenant_settings](/code/tables/tenant_settings.md) |  |
-| 61 | `tenantSetting` | read [system_settings](/code/tables/system_settings.md) |  |
-| 113 | `setTenantSetting` | **delete** [tenant_settings](/code/tables/tenant_settings.md) |  |
-| 118 | `setTenantSetting` | **insert** [tenant_settings](/code/tables/tenant_settings.md) (`tenant_id`, `setting_key`, `setting_value`) |  |
-| 135 | `tenantSettingsForKey` | read [tenant_settings](/code/tables/tenant_settings.md) |  |
-| 274 | `ticketTenantId` | read [tickets](/code/tables/tickets.md) |  |
+| 49 | `tenantSetting` | read [tenant_settings](/code/tables/tenant_settings.md) |  |
+| 63 | `tenantSetting` | read [system_settings](/code/tables/system_settings.md) |  |
+| 123 | `setTenantSetting` | **delete** [tenant_settings](/code/tables/tenant_settings.md) |  |
+| 128 | `setTenantSetting` | **insert** [tenant_settings](/code/tables/tenant_settings.md) (`tenant_id`, `setting_key`, `setting_value`) |  |
+| 146 | `tenantSettingsForKey` | read [tenant_settings](/code/tables/tenant_settings.md) |  |
+| 285 | `ticketTenantId` | read [tickets](/code/tables/tickets.md) |  |
 
 ## How it hangs together
 

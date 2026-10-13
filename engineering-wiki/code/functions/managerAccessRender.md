@@ -6,12 +6,12 @@ Print the page body (below the module header). Call once, inside <body>.
 function managerAccessRender(int $managerId, string $backUrl): void
 ```
 
-Defined in [includes/manager_access_page.php](/code/files/includes/manager_access_page.php.md), line 21.
+Defined in [includes/manager_access_page.php](/code/files/includes/manager_access_page.php.md), line 26.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$managerId` | `int` |  |  |
-| `$backUrl` | `string` |  |  |
+| `$managerId` | `int` |  | the manager's users.id (the portal user whose access lines are shown) |
+| `$backUrl` | `string` |  | where the Back button goes; escaped when printed |
 
 **Returns:** `void`
 

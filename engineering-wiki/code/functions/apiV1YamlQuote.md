@@ -6,11 +6,11 @@ Double-quotes a string for YAML, escaping backslashes, quotes, newlines, tabs an
 function apiV1YamlQuote(string $s): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 452.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 504.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `string` |  |  |
+| `$s` | `string` |  | the string to quote |
 
 **Returns:** `string`
 

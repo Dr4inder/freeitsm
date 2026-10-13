@@ -6,7 +6,7 @@ The install-wide default, or 'analyst' when unset — the historical behaviour.
 function landingInstallDefault(PDO $conn): string
 ```
 
-Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 60.
+Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 60.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 63 | `landingInstallDefault` | read [system_settings](/code/tables/system_settings.md) |  |
+| 67 | `landingInstallDefault` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

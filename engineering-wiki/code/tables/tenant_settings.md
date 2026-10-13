@@ -16,13 +16,13 @@ Per-company answers to settings that otherwise live install-wide in system_setti
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md):113 | `setTenantSetting` | delete |  |  |
-| [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md):118 | `setTenantSetting` | insert | `tenant_id`, `setting_key`, `setting_value` |  |
+| [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md):123 | `setTenantSetting` | delete |  |  |
+| [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md):128 | `setTenantSetting` | insert | `tenant_id`, `setting_key`, `setting_value` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [includes/feature_bingo/cards/tickets-core.php](/code/files/includes/feature_bingo/cards/tickets-core.php.md) | L17, L910 |  |
-| [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md) | tenantSetting L47, tenantSettingsForKey L135 |  |
+| [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md) | tenantSetting L49, tenantSettingsForKey L146 |  |
 

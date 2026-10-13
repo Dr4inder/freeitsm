@@ -11,7 +11,7 @@ string. Map it here and those grants keep working; omit it and they are silently
 function capAliases(): array
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 401.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 405.
 
 **Returns:** `array`
 

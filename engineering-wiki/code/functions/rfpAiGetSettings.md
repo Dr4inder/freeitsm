@@ -6,7 +6,7 @@ Load the configured provider, model, decrypted API key and SSL-verify flag. Thro
 function rfpAiGetSettings(PDO $conn): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 62.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 62.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 65 | `rfpAiGetSettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 67 | `rfpAiGetSettings` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

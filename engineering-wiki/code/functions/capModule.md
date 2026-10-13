@@ -6,11 +6,11 @@ The module this capability administers. Enum twin: `$cap`->module().
 function capModule(string $key): ?string
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 446.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 464.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a capability key; an unknown one gives null |
 
 **Returns:** `?string`
 

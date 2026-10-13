@@ -1,6 +1,6 @@
 # includes/projects/methodologies.php
 
-> PHP - 167 lines
+> PHP - 175 lines
 
 Projects - the methodology presets, the palette and the icon set (3.2.0).
 
@@ -22,18 +22,18 @@ a PRINCE2-STYLE approach. Never copy text from the manual into this module.
 | Function | Line | What it does |
 |---|--:|---|
 | [projectsSchemaReady()](/code/functions/projectsSchemaReady.md) | 28 | Has Database Verification created the Projects schema yet? |
-| [projectColourHex()](/code/functions/projectColourHex.md) | 44 | The first colour of a project's palette key - for a dot or a chip outside the module. |
-| [projectMethodologies()](/code/functions/projectMethodologies.md) | 56 | The presets. 'timebox' is the project_stages.kind used for new and open time boxes; 'single_active' allows only one active time box at a time. |
-| [projectToolDefinitions()](/code/functions/projectToolDefinitions.md) | 74 | The tools a project can switch on (phase 2). A method turns a set on by default ('tools' in `projectMethodologies()`); a project can TAILOR that - PRINCE2's own "tailor to suit the project" principle - and its choices are stored as JSON in projects.tailoring ({"raci": true, "raid": false}). Switching a tool off HIDES it; nothing it holds is deleted. |
-| [projectEnabledTools()](/code/functions/projectEnabledTools.md) | 89 | The tools switched on for one project: its method's defaults, then its tailoring. |
-| [projectStatuses()](/code/functions/projectStatuses.md) | 101 | Every status a project can have. |
-| [projectPriorities()](/code/functions/projectPriorities.md) | 108 | Project priorities, lowest first (3.3.0). Stored as these keys; shown as projectScaleLabels('priority'). |
-| [projectFinishedStatuses()](/code/functions/projectFinishedStatuses.md) | 114 | The project statuses that count as finished: closed and cancelled. |
-| [projectHealthValues()](/code/functions/projectHealthValues.md) | 120 | The health values a project can be set to; 'auto' means work it out. |
-| [projectStageKinds()](/code/functions/projectStageKinds.md) | 126 | The kinds of stage a project plan can have: phase, stage or sprint. |
-| [projectStageStatuses()](/code/functions/projectStageStatuses.md) | 132 | The statuses a stage can have: planned, active or closed. |
-| [projectColours()](/code/functions/projectColours.md) | 143 | The colour a project picks for its card: a fixed palette, never free CSS, so a stored value can only ever be one of these keys. |
-| [projectIcons()](/code/functions/projectIcons.md) | 163 | The icons a project can pick. Keys only - the SVG lives in assets/js/projects.js so the stored value is never markup. |
+| [projectColourHex()](/code/functions/projectColourHex.md) | 48 | The first colour of a project's palette key - for a dot or a chip outside the module. |
+| [projectMethodologies()](/code/functions/projectMethodologies.md) | 60 | The presets. 'timebox' is the project_stages.kind used for new and open time boxes; 'single_active' allows only one active time box at a time. |
+| [projectToolDefinitions()](/code/functions/projectToolDefinitions.md) | 78 | The tools a project can switch on (phase 2). A method turns a set on by default ('tools' in `projectMethodologies()`); a project can TAILOR that - PRINCE2's own "tailor to suit the project" principle - and its choices are stored as JSON in projects.tailoring ({"raci": true, "raid": false}). Switching a tool off HIDES it; nothing it holds is deleted. |
+| [projectEnabledTools()](/code/functions/projectEnabledTools.md) | 97 | The tools switched on for one project: its method's defaults, then its tailoring. |
+| [projectStatuses()](/code/functions/projectStatuses.md) | 109 | Every status a project can have. |
+| [projectPriorities()](/code/functions/projectPriorities.md) | 116 | Project priorities, lowest first (3.3.0). Stored as these keys; shown as projectScaleLabels('priority'). |
+| [projectFinishedStatuses()](/code/functions/projectFinishedStatuses.md) | 122 | The project statuses that count as finished: closed and cancelled. |
+| [projectHealthValues()](/code/functions/projectHealthValues.md) | 128 | The health values a project can be set to; 'auto' means work it out. |
+| [projectStageKinds()](/code/functions/projectStageKinds.md) | 134 | The kinds of stage a project plan can have: phase, stage or sprint. |
+| [projectStageStatuses()](/code/functions/projectStageStatuses.md) | 140 | The statuses a stage can have: planned, active or closed. |
+| [projectColours()](/code/functions/projectColours.md) | 151 | The colour a project picks for its card: a fixed palette, never free CSS, so a stored value can only ever be one of these keys. |
+| [projectIcons()](/code/functions/projectIcons.md) | 171 | The icons a project can pick. Keys only - the SVG lives in assets/js/projects.js so the stored value is never markup. |
 
 ## How it hangs together
 

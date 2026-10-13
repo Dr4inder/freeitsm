@@ -6,7 +6,7 @@ GET /task-priorities - the task priorities, in display order.
 function apiTaskPrioritiesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 472.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 474.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 474 | `apiTaskPrioritiesList` | read [task_priorities](/code/tables/task_priorities.md) |  |
+| 476 | `apiTaskPrioritiesList` | read [task_priorities](/code/tables/task_priorities.md) |  |
 
 ## Calls
 

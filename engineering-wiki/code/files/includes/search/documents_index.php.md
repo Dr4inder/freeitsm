@@ -1,6 +1,6 @@
 # includes/search/documents_index.php
 
-> PHP - 281 lines
+> PHP - 298 lines
 
 Getting attached documents into search (discussion #76).
 
@@ -30,26 +30,26 @@ whole reason a stuck queue is visible instead of looking like an empty one.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [documentTextReadable()](/code/functions/documentTextReadable.md) | 44 | Can ANYTHING read this file — either tier? |
-| [documentTextEnqueue()](/code/functions/documentTextEnqueue.md) | 57 | Queue a document for text extraction. |
-| [documentTextQueueDepth()](/code/functions/documentTextQueueDepth.md) | 80 | How many documents are waiting for their text. Drives the "indexing" state. |
-| [searchIndexDocument()](/code/functions/searchIndexDocument.md) | 99 | Put one document into the search corpus. |
-| [searchUnindexDocument()](/code/functions/searchUnindexDocument.md) | 144 | Drop a document from the index — used when its last link goes. |
-| [documentTextDrain()](/code/functions/documentTextDrain.md) | 158 | Extract text for up to `$limit` queued documents, then index each one. |
-| [documentSearchVisibilityClause()](/code/functions/documentSearchVisibilityClause.md) | 267 | The SQL that stops search returning a document you may not see. |
+| [documentTextReadable()](/code/functions/documentTextReadable.md) | 46 | Can ANYTHING read this file — either tier? |
+| [documentTextEnqueue()](/code/functions/documentTextEnqueue.md) | 63 | Queue a document for text extraction. |
+| [documentTextQueueDepth()](/code/functions/documentTextQueueDepth.md) | 86 | How many documents are waiting for their text. Drives the "indexing" state. |
+| [searchIndexDocument()](/code/functions/searchIndexDocument.md) | 107 | Put one document into the search corpus. |
+| [searchUnindexDocument()](/code/functions/searchUnindexDocument.md) | 156 | Drop a document from the index — used when its last link goes. |
+| [documentTextDrain()](/code/functions/documentTextDrain.md) | 173 | Extract text for up to `$limit` queued documents, then index each one. |
+| [documentSearchVisibilityClause()](/code/functions/documentSearchVisibilityClause.md) | 284 | The SQL that stops search returning a document you may not see. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 68 | `documentTextEnqueue` | **insert** [document_text](/code/tables/document_text.md) (`document_id`, `status`, `extracted_datetime`) |  |
-| 83 | `documentTextQueueDepth` | read [document_text](/code/tables/document_text.md) |  |
-| 104 | `searchIndexDocument` | read [documents](/code/tables/documents.md), read [document_text](/code/tables/document_text.md) |  |
-| 166 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`) |  |
-| 171 | `documentTextDrain` | read [document_text](/code/tables/document_text.md), read [documents](/code/tables/documents.md) |  |
-| 191 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`, `extracted_datetime`) |  |
-| 235 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime`) |  |
-| 276 | `documentSearchVisibilityClause` | read [documents](/code/tables/documents.md) |  |
+| 74 | `documentTextEnqueue` | **insert** [document_text](/code/tables/document_text.md) (`document_id`, `status`, `extracted_datetime`) |  |
+| 89 | `documentTextQueueDepth` | read [document_text](/code/tables/document_text.md) |  |
+| 112 | `searchIndexDocument` | read [documents](/code/tables/documents.md), read [document_text](/code/tables/document_text.md) |  |
+| 181 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`) |  |
+| 186 | `documentTextDrain` | read [document_text](/code/tables/document_text.md), read [documents](/code/tables/documents.md) |  |
+| 206 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`, `extracted_datetime`) |  |
+| 250 | `documentTextDrain` | **update** [document_text](/code/tables/document_text.md) (`status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime`) |  |
+| 293 | `documentSearchVisibilityClause` | read [documents](/code/tables/documents.md) |  |
 
 ## How it hangs together
 

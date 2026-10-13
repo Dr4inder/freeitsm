@@ -6,11 +6,11 @@ Read a zip's central directory. Returns [bytes, [name => entry]].
 function spreadsheetZipOpen(string $path): array
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 356.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 390.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | the zip (.xlsx) file on disk - untrusted content |
 
 **Returns:** `array`
 

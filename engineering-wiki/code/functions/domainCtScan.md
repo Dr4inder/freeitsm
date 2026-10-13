@@ -6,13 +6,13 @@ Asks crt.sh for the unexpired certificates issued for a domain and stores any no
 function domainCtScan(PDO $conn, int $domainId, string $name): array
 ```
 
-Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 53.
+Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$domainId` | `int` |  |  |
-| `$name` | `string` |  |  |
+| `$domainId` | `int` |  | the domain the certificates are stored against |
+| `$name` | `string` |  | the stored domain name to ask crt.sh about |
 
 **Returns:** array{ok:bool, new:int, total:int, error:?string, first_scan:bool}
 
@@ -22,8 +22,8 @@ Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 62 | `domainCtScan` | read [domain_certificates](/code/tables/domain_certificates.md) |  |
-| 67 | `domainCtScan` | **insert** [domain_certificates](/code/tables/domain_certificates.md) (`domain_id`, `crtsh_id`, `common_name`, `name_value`, `issuer`, `not_before`, `not_after`, `first_seen_datetime`, `acknowledged`) |  |
+| 65 | `domainCtScan` | read [domain_certificates](/code/tables/domain_certificates.md) |  |
+| 70 | `domainCtScan` | **insert** [domain_certificates](/code/tables/domain_certificates.md) (`domain_id`, `crtsh_id`, `common_name`, `name_value`, `issuer`, `not_before`, `not_after`, `first_seen_datetime`, `acknowledged`) |  |
 
 ## Calls
 

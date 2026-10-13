@@ -1,6 +1,6 @@
 # includes/service_context.php
 
-> PHP - 161 lines
+> PHP - 177 lines
 
 Service-layer shared primitives.
 
@@ -18,18 +18,18 @@ the UI to {success:false,error}.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [serviceErrorHttpStatus()](/code/functions/serviceErrorHttpStatus.md) | 150 | Map a ServiceError kind to the HTTP status the API adapter should return. |
+| [serviceErrorHttpStatus()](/code/functions/serviceErrorHttpStatus.md) | 166 | Map a ServiceError kind to the HTTP status the API adapter should return. |
 
 ## Classes
 
 - [ActorContext](/code/classes/ActorContext.md) (class, line 20) - Who is acting, and what they may see — the only auth-derived facts a service needs. Both adapters produce the same shape from their own transport.
-- [ServiceError](/code/classes/ServiceError.md) (class, line 130) - A business-rule failure raised by a service. `$kind` drives the HTTP status the API adapter emits; `$code` + the message are passed through verbatim so the API's existing error bodies stay byte-identical.
+- [ServiceError](/code/classes/ServiceError.md) (class, line 138) - A business-rule failure raised by a service. `$kind` drives the HTTP status the API adapter emits; `$code` + the message are passed through verbatim so the API's existing error bodies stay byte-identical.
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 115 | `ActorContext::sessionCompanyScope` | read [analysts](/code/tables/analysts.md) |  |
+| 123 | `ActorContext::sessionCompanyScope` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

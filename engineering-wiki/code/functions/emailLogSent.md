@@ -13,15 +13,15 @@ function emailLogSent(
 ): void
 ```
 
-Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 113.
+Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 126.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `?array` |  |  |
-| `$route` | `string` |  |  |
-| `$to` | `string` |  |  |
-| `$subject` | `string` |  |  |
+| `$mailbox` | `?array` |  | the target_mailboxes row that sent it, or null if none was resolved |
+| `$route` | `string` |  | a key of EMAIL_LOG_ROUTES saying which path sent it |
+| `$to` | `string` |  | the recipient address(es) as sent |
+| `$subject` | `string` |  | the email's subject line |
 | `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

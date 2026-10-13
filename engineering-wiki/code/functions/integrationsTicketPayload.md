@@ -6,7 +6,7 @@ The ticket block every tracker.* event carries, in the same shape the tickets se
 function integrationsTicketPayload(PDO $conn, int $ticketId): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 803.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 854.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 818 | `integrationsTicketPayload` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
+| 869 | `integrationsTicketPayload` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
 
 ## Called from
 

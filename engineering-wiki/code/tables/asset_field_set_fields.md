@@ -15,14 +15,14 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):537 | `AssetFieldsService::deleteField` | delete |  |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):593 | `AssetFieldsService::setSetFields` | delete |  |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):595 | `AssetFieldsService::setSetFields` | insert | `set_id`, `field_id`, `sort_order`, `is_required`, `default_value` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):577 | `AssetFieldsService::deleteField` | delete |  |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):642 | `AssetFieldsService::setSetFields` | delete |  |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):644 | `AssetFieldsService::setSetFields` | insert | `set_id`, `field_id`, `sort_order`, `is_required`, `default_value` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_fields.php](/code/files/api/assets/get_asset_fields.php.md) | L50, L75 |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::fieldsForSets L177 |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::fieldsForSets L184 |  |
 

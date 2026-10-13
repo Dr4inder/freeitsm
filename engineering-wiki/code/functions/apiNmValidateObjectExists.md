@@ -6,13 +6,13 @@ Answers 422 and stops unless the CMDB object exists and, when a key is given, be
 function apiNmValidateObjectExists(PDO $conn, int $objectId, ?array $apiKey = null): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 280.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 321.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$objectId` | `int` |  |  |
-| `$apiKey` | `?array` | `null` | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
+| `$objectId` | `int` |  | the cmdb_objects id the caller wants on a diagram (untrusted) |
+| `$apiKey` | `?array` | `null` | the calling API key; null skips the company check and only tests existence |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 281 | `apiNmValidateObjectExists` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 322 | `apiNmValidateObjectExists` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ GET /assets/{id}/history + /custody
 function apiAssetHistoryList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 448.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 459.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 451 | `apiAssetHistoryList` | read [asset_history](/code/tables/asset_history.md), read [analysts](/code/tables/analysts.md) |  |
+| 462 | `apiAssetHistoryList` | read [asset_history](/code/tables/asset_history.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

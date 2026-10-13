@@ -21,14 +21,14 @@ several calls (tool calling) learns the fix once rather than per round.
 function aiOpenAICompatPost(string $url, array $headers, array &$payload, bool $verify): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 348.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 373.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
-| `$headers` | `array` |  |  |
-| `$payload` | `array` |  |  |
-| `$verify` | `bool` |  |  |
+| `$url` | `string` |  | the full chat-completions URL to POST to |
+| `$headers` | `array` |  | every header line to send, auth and content-type included |
+| `$payload` | `array` |  | the request body before JSON encoding; by reference, so a corrected field stays corrected |
+| `$verify` | `bool` |  | the feature's verify-SSL setting, passed on to `aiProviderHttpPost()` |
 
 **Returns:** `array`
 

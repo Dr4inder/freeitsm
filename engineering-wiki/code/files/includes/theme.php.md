@@ -1,6 +1,6 @@
 # includes/theme.php
 
-> PHP - 135 lines
+> PHP - 149 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Theming and Dark Mode](https://github.com/edmozley/freeitsm/wiki/Theming-and-Dark-Mode)
@@ -27,8 +27,8 @@ so a user can run one palette everywhere, or pick a different one per module
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 91 | `Theme::active` | read [users](/code/tables/users.md) |  |
-| 114 | `Theme::active` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 105 | `Theme::active` | read [users](/code/tables/users.md) |  |
+| 128 | `Theme::active` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## How it hangs together
 

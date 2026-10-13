@@ -6,7 +6,7 @@ DELETE /cmdb/objects/{id} — explicit descendant-tree removal (grown installs h
 function apiCmdbObjectsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 437.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 448.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

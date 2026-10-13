@@ -6,12 +6,12 @@ Open (and cache within the request) an IMAP stream for a mailbox/folder. The cac
 function imapStreamFor(array $mailbox, ?string $folder = null)
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 55.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` | `array` |  |  |
-| `$folder` | `?string` | `null` |  |
+| `$mailbox` | `array` |  | the target_mailboxes row, decrypted (imap_* settings and password, id) |
+| `$folder` | `?string` | `null` | the folder to open; null uses the mailbox's email_folder, or INBOX |
 
 ## Calls
 

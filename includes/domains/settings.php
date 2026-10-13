@@ -127,6 +127,8 @@ if (!defined('DOMAIN_SETTINGS_LOADED')) {
      * Cached for the rest of the request; pass $fresh = true after a save (the
      * settings endpoint does) so the answer reflects what was just written.
      *
+     * @param bool $fresh  true to re-read from the database instead of using this request's cached copy
+     *
      * @return array<string,string>
      */
     function domainSettings(PDO $conn, bool $fresh = false): array
@@ -156,13 +158,22 @@ if (!defined('DOMAIN_SETTINGS_LOADED')) {
         return $cache = $out;
     }
 
-    /** Returns one Domains setting as a string, from the cached settings (its default when not saved). */
+    /**
+     * Returns one Domains setting as a string, from the cached settings (its default when not saved).
+     *
+     * @param string $key  a key from domainSettingDefinitions(), or DOMAIN_SETTING_LAST_RUN; unknown gives ''
+     */
     function domainSetting(PDO $conn, string $key): string
     {
         return (string)(domainSettings($conn)[$key] ?? '');
     }
 
-    /** Write one setting (no validation — callers go through domainSettingValidate()). */
+    /**
+     * Write one setting (no validation — callers go through domainSettingValidate()).
+     *
+     * @param string $key    the system_settings key to write
+     * @param string $value  the value to store, already validated
+     */
     function domainSettingWrite(PDO $conn, string $key, string $value): void
     {
         $conn->prepare(
@@ -175,6 +186,9 @@ if (!defined('DOMAIN_SETTINGS_LOADED')) {
     /**
      * Validate and normalise one incoming value. Returns the value to store, or
      * throws InvalidArgumentException with a message fit to show the operator.
+     *
+     * @param string $key  a key from domainSettingDefinitions(); unknown throws
+     * @param mixed  $raw  the submitted value (untrusted) - a string, number or bool
      */
     function domainSettingValidate(string $key, $raw): string
     {
@@ -235,6 +249,8 @@ if (!defined('DOMAIN_SETTINGS_LOADED')) {
     /**
      * "60, 30, 7" → [60, 30, 7] — sorted high to low, de-duplicated, nonsense
      * dropped. 0 is allowed and means "on the day".
+     *
+     * @param string $raw  numbers of days separated by commas or spaces, e.g. "60, 30, 7"; over 365 is dropped
      */
     function domainParseDays(string $raw): array
     {

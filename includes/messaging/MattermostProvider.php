@@ -44,6 +44,11 @@ class MattermostProvider extends MessagingProvider
      * else the channel's webhook token.
      *
      * Refuses everything when the channel has no token yet.
+     *
+     * @param string $rawBody  the raw request body - JSON for a button press, else form-encoded or JSON
+     * @param array $headers  the request headers (not used - Mattermost sends its token in the body)
+     * @param array $params  the parsed POST parameters, where the webhook token normally arrives
+     * @param string $url  the public URL that was hit (not used)
      */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
@@ -62,7 +67,12 @@ class MattermostProvider extends MessagingProvider
         return $presented !== '' && hash_equals($expected, $presented);
     }
 
-    /** Turns a Mattermost webhook into inbound messages - a CSAT rating press, or a post in the channel. */
+    /**
+     * Turns a Mattermost webhook into inbound messages - a CSAT rating press, or a post in the channel.
+     *
+     * @param string $rawBody  the raw request body - JSON for a button press, else form-encoded or JSON
+     * @param array $params  the parsed POST parameters (form-encoded outgoing webhook fields)
+     */
     public function parseInbound(string $rawBody, array $params): array
     {
         // A CSAT button press: the context we attached to the button, sent back by Mattermost.
@@ -122,7 +132,12 @@ class MattermostProvider extends MessagingProvider
         ]];
     }
 
-    /** Posts a text reply in the conversation's thread and returns the post id. */
+    /**
+     * Posts a text reply in the conversation's thread and returns the post id.
+     *
+     * @param string $to  the reply address "<channelId>:<postId>" - the thread to answer in
+     * @param string $body  the reply text
+     */
     public function sendMessage(string $to, string $body): string
     {
         return $this->postInThread($to, ['message' => $body]);
@@ -132,6 +147,10 @@ class MattermostProvider extends MessagingProvider
      * The rating question with five buttons, in the customer's thread. Each
      * button calls this install's webhook with its context, signed with the
      * webhook token, so a press cannot be forged.
+     *
+     * @param string $to  the reply address "<channelId>:<postId>"
+     * @param string $text  the rating question
+     * @param int $responseId  the ticket_csat_responses id each button carries back
      */
     public function sendRatingRequest(string $to, string $text, int $responseId): string
     {
@@ -152,7 +171,11 @@ class MattermostProvider extends MessagingProvider
         ]);
     }
 
-    /** HMAC over the response id and rating, keyed by the webhook token. */
+    /**
+     * HMAC over the response id and rating, keyed by the webhook token.
+     *
+     * @param array $context  the button context - csat_response_id and csat_rating are signed
+     */
     private function csatSignature(array $context): string
     {
         $key = (string)($this->channel['verify_token'] ?? '');
@@ -166,7 +189,16 @@ class MattermostProvider extends MessagingProvider
         return messagingWebhookUrl(connectToDatabase(), (int)$this->channel['id']);
     }
 
-    /** Upload the file to the support channel, then post it in the customer's thread. */
+    /**
+     * Upload the file to the support channel, then post it in the customer's thread.
+     *
+     * @param string $to  the reply address "<channelId>:<postId>"
+     * @param string $filePath  the file on this server's disk, already validated
+     * @param string $mimeType  the file's MIME type
+     * @param string $caption  the message posted with the file; '' for none
+     * @param string $publicUrl  not used - the file is uploaded to Mattermost
+     * @param string $filename  the name the customer sees; '' uses the stored name
+     */
     public function sendMedia(string $to, string $filePath, string $mimeType, string $caption = '', string $publicUrl = '', string $filename = ''): string
     {
         if (!is_file($filePath)) {
@@ -199,7 +231,11 @@ class MattermostProvider extends MessagingProvider
 
     // ── internals ──────────────────────────────────────────────────────────────
 
-    /** "<channelId>:<postId>" -> [channelId, postId]. */
+    /**
+     * "<channelId>:<postId>" -> [channelId, postId].
+     *
+     * @param string $to  the reply address "<channelId>:<postId>"; both parts must be 26-character Mattermost ids
+     */
     private function splitAddress(string $to): array
     {
         $parts = explode(':', $to, 2);
@@ -211,7 +247,12 @@ class MattermostProvider extends MessagingProvider
         return [$channelId, $postId];
     }
 
-    /** Post into the thread the address names, under that thread's root. */
+    /**
+     * Post into the thread the address names, under that thread's root.
+     *
+     * @param string $to  the reply address "<channelId>:<postId>"
+     * @param array $fields  the post fields to send (message, props, file_ids); channel_id and root_id are added here
+     */
     private function postInThread(string $to, array $fields): string
     {
         [$channelId, $postId] = $this->splitAddress($to);
@@ -223,6 +264,8 @@ class MattermostProvider extends MessagingProvider
      * The root of the thread a post is in. TRAP: Mattermost refuses a root_id that
      * is itself a reply, and the outgoing webhook never says which a post is - so
      * ask, rather than threading under whatever post came in last.
+     *
+     * @param string $postId  the Mattermost post id the address names
      */
     private function rootOf(string $postId): string
     {
@@ -234,7 +277,13 @@ class MattermostProvider extends MessagingProvider
         return self::$rootCache[$postId];
     }
 
-    /** A field from the webhook body: form-encoded (Mattermost's default) or JSON. */
+    /**
+     * A field from the webhook body: form-encoded (Mattermost's default) or JSON.
+     *
+     * @param string $rawBody  the raw request body, read as JSON when the field is not in $params
+     * @param array $params  the parsed POST parameters, checked first
+     * @param string $key  the field name, e.g. 'token' or 'channel_id'
+     */
     private function webhookField(string $rawBody, array $params, string $key): string
     {
         if (array_key_exists($key, $params)) {
@@ -257,7 +306,11 @@ class MattermostProvider extends MessagingProvider
         return $url;
     }
 
-    /** A Mattermost API v4 address for $path. */
+    /**
+     * A Mattermost API v4 address for $path.
+     *
+     * @param string $path  the API path after /api/v4/, e.g. 'posts'
+     */
     private function apiUrl(string $path): string
     {
         return $this->serverUrl() . '/api/v4/' . ltrim($path, '/');
@@ -273,7 +326,13 @@ class MattermostProvider extends MessagingProvider
         return 'Authorization: Bearer ' . $token;
     }
 
-    /** A JSON REST call. Throws with Mattermost's own message on failure. */
+    /**
+     * A JSON REST call. Throws with Mattermost's own message on failure.
+     *
+     * @param string $method  the HTTP method, e.g. 'GET' or 'POST'
+     * @param string $path  the API path after /api/v4/
+     * @param mixed $body  data sent as the JSON body; null sends none
+     */
     private function api(string $method, string $path, $body = null): array
     {
         $headers = [$this->authHeader()];
@@ -302,6 +361,8 @@ class MattermostProvider extends MessagingProvider
      *   ceo@yourcompany.com would have their chats filed under the real CEO.
      *   An empty email (the server hides addresses from this bot) is normal -
      *   the person simply gets a named contact instead.
+     *
+     * @param string $userId  the Mattermost user id
      */
     public function lookupUser(string $userId): array
     {
@@ -333,7 +394,12 @@ class MattermostProvider extends MessagingProvider
         return self::$botIdCache[$key];
     }
 
-    /** Test hook: set the bot id without asking a server. */
+    /**
+     * Test hook: set the bot id without asking a server.
+     *
+     * @param int $channelId  the messaging_channels id
+     * @param string $botId  the bot user id to remember for that channel
+     */
     public static function setBotIdForTest(int $channelId, string $botId): void
     {
         self::$botIdCache[(string)$channelId] = $botId;

@@ -6,13 +6,13 @@ Rewrite CID references in email body
 function rewriteCidReferences($bodyContent, $dbEmailId, $attachments)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 981.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1040.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bodyContent` |  |  |  |
-| `$dbEmailId` |  |  |  |
-| `$attachments` |  |  |  |
+| `$bodyContent` |  |  | the email's HTML body |
+| `$dbEmailId` |  |  | the emails.id the attachments were saved under |
+| `$attachments` |  |  | the saved attachment rows; each content_id is pointed at get_attachment.php |
 
 ## Called from
 

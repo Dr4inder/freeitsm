@@ -1,6 +1,6 @@
 # includes/projects/alerts.php
 
-> PHP - 362 lines
+> PHP - 377 lines
 
 Projects - events and alerts (3.2.0): what a project tells Workflows, webhooks and the notification bell.
 
@@ -63,32 +63,32 @@ about what they just did.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [projectEventPayload()](/code/functions/projectEventPayload.md) | 66 | The project as every project event carries it. |
-| [projectDispatch()](/code/functions/projectDispatch.md) | 84 | Dispatch, never throwing: an event must not break the change that caused it. |
-| [projectAlertsAsSystem()](/code/functions/projectAlertsAsSystem.md) | 94 | Run `$fn` with nobody signed in, as cron does - see the TRAP above. |
-| [projectAlertRows()](/code/functions/projectAlertRows.md) | 109 | Live projects decorated with their health and exceptions, plus what the scan saw last. |
-| [projectAlertsScan()](/code/functions/projectAlertsScan.md) | 137 | Compare each live project with what was seen last, and fire what changed. `$projectId` = one project (after a change to it); null = all of them. |
-| [projectStageDueWindows()](/code/functions/projectStageDueWindows.md) | 211 | The two warnings before a stage ends. |
-| [projectAlertsStagesDue()](/code/functions/projectAlertsStagesDue.md) | 221 | Stages ending soon -> project.stage_due, once per window per end date. Only the nearest window fires: a stage first seen a day out gets "tomorrow", not a week's notice as well. |
-| [projectAlertsRun()](/code/functions/projectAlertsRun.md) | 265 | The whole scan as nobody - what cron and the portfolio fallback call. |
-| [projectAlertsOpportunistic()](/code/functions/projectAlertsOpportunistic.md) | 274 | For installs with no cron: opening the portfolio runs the scan, at most every 15 minutes. Never throws; the portfolio must load whatever happens here. |
-| [projectMilestoneEventFields()](/code/functions/projectMilestoneEventFields.md) | 291 | A milestone as its events carry it (3.3.0). state: due \| missed \| done. |
-| [projectAlertsMilestones()](/code/functions/projectAlertsMilestones.md) | 313 | Milestones (3.3.0), on the same ledger as stage ends: project.milestone_due 7 days before, then the day before (nearest window only) project.milestone_missed once, the first scan after its date passes without it being reached. Moving the date re-arms both - the fingerprint is the due date. A milestone that was already past when it was ADDED is not news to anybody, so "missed" only fires for dates in the last 14 days. |
+| [projectEventPayload()](/code/functions/projectEventPayload.md) | 70 | The project as every project event carries it. |
+| [projectDispatch()](/code/functions/projectDispatch.md) | 93 | Dispatch, never throwing: an event must not break the change that caused it. |
+| [projectAlertsAsSystem()](/code/functions/projectAlertsAsSystem.md) | 107 | Run `$fn` with nobody signed in, as cron does - see the TRAP above. |
+| [projectAlertRows()](/code/functions/projectAlertRows.md) | 122 | Live projects decorated with their health and exceptions, plus what the scan saw last. |
+| [projectAlertsScan()](/code/functions/projectAlertsScan.md) | 150 | Compare each live project with what was seen last, and fire what changed. `$projectId` = one project (after a change to it); null = all of them. |
+| [projectStageDueWindows()](/code/functions/projectStageDueWindows.md) | 224 | The two warnings before a stage ends. |
+| [projectAlertsStagesDue()](/code/functions/projectAlertsStagesDue.md) | 234 | Stages ending soon -> project.stage_due, once per window per end date. Only the nearest window fires: a stage first seen a day out gets "tomorrow", not a week's notice as well. |
+| [projectAlertsRun()](/code/functions/projectAlertsRun.md) | 278 | The whole scan as nobody - what cron and the portfolio fallback call. |
+| [projectAlertsOpportunistic()](/code/functions/projectAlertsOpportunistic.md) | 287 | For installs with no cron: opening the portfolio runs the scan, at most every 15 minutes. Never throws; the portfolio must load whatever happens here. |
+| [projectMilestoneEventFields()](/code/functions/projectMilestoneEventFields.md) | 306 | A milestone as its events carry it (3.3.0). state: due \| missed \| done. |
+| [projectAlertsMilestones()](/code/functions/projectAlertsMilestones.md) | 328 | Milestones (3.3.0), on the same ledger as stage ends: project.milestone_due 7 days before, then the day before (nearest window only) project.milestone_missed once, the first scan after its date passes without it being reached. Moving the date re-arms both - the fingerprint is the due date. A milestone that was already past when it was ADDED is not news to anybody, so "missed" only fires for dates in the last 14 days. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 118 | `projectAlertRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 141 | `projectAlertsScan` | read [projects](/code/tables/projects.md) |  |
-| 155 | `projectAlertsScan` | **update** [projects](/code/tables/projects.md) (`alert_health`, `alert_exceptions`) |  |
-| 190 | `projectAlertsScan` | read [projects](/code/tables/projects.md) |  |
-| 225 | `projectAlertsStagesDue` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 240 | `projectAlertsStagesDue` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
-| 277 | `projectAlertsOpportunistic` | read [system_settings](/code/tables/system_settings.md) |  |
-| 281 | `projectAlertsOpportunistic` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 319 | `projectAlertsMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 334 | `projectAlertsMilestones` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 131 | `projectAlertRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 154 | `projectAlertsScan` | read [projects](/code/tables/projects.md) |  |
+| 168 | `projectAlertsScan` | **update** [projects](/code/tables/projects.md) (`alert_health`, `alert_exceptions`) |  |
+| 203 | `projectAlertsScan` | read [projects](/code/tables/projects.md) |  |
+| 238 | `projectAlertsStagesDue` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 253 | `projectAlertsStagesDue` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 290 | `projectAlertsOpportunistic` | read [system_settings](/code/tables/system_settings.md) |  |
+| 294 | `projectAlertsOpportunistic` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 334 | `projectAlertsMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 349 | `projectAlertsMilestones` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
 
 ## How it hangs together
 

@@ -16,10 +16,10 @@
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3673 |  | update | `impact_level_id` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3680 |  | update | `impact_level_id` |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):75 | `ServiceStatusService::deleteService` | delete |  |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):246 | `ServiceStatusService::deleteIncident` | delete |  |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):436 | `ServiceStatusService::replaceIncidentServices` | delete |  |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):438 | `ServiceStatusService::replaceIncidentServices` | insert | `incident_id`, `service_id`, `impact_level_id` |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):84 | `ServiceStatusService::deleteService` | delete |  |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):271 | `ServiceStatusService::deleteIncident` | delete |  |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):481 | `ServiceStatusService::replaceIncidentServices` | delete |  |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md):483 | `ServiceStatusService::replaceIncidentServices` | insert | `incident_id`, `service_id`, `impact_level_id` |  |
 
 ## Read by
 
@@ -28,11 +28,11 @@
 | [api/self-service/get_dashboard.php](/code/files/api/self-service/get_dashboard.php.md) | L102 |  |
 | [api/service-status/get_dashboard.php](/code/files/api/service-status/get_dashboard.php.md) | L34, L76 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3667 |  |
-| [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | apiServiceStatusSubquery L50, apiSerializeIncident L125, apiStatusServicesGet L216, apiStatusIncidentsList L271 |  |
-| [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) | rpStatusIncidentSummary L193 |  |
-| [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md) | ssPortalIncidents L133 |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md) | ServiceStatusService::incidentServicesDiffer L343, ServiceStatusService::recordIncidentUpdate L474, ServiceStatusService::deleteImpactLevel L639 |  |
-| [includes/services/service_uptime.php](/code/files/includes/services/service_uptime.php.md) | ServiceUptime::incidentsFor L110, ServiceUptime::incidentsBetween L449 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolServiceStatus L445 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L432 |  |
+| [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | apiServiceStatusSubquery L54, apiSerializeIncident L137, apiStatusServicesGet L232, apiStatusIncidentsList L287 |  |
+| [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) | rpStatusIncidentSummary L219 |  |
+| [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md) | ssPortalIncidents L139 |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md) | ServiceStatusService::incidentServicesDiffer L380, ServiceStatusService::recordIncidentUpdate L523, ServiceStatusService::deleteImpactLevel L703 |  |
+| [includes/services/service_uptime.php](/code/files/includes/services/service_uptime.php.md) | ServiceUptime::incidentsFor L112, ServiceUptime::incidentsBetween L463 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolServiceStatus L456 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L435 |  |
 

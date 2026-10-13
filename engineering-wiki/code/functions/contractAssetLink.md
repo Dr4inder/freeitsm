@@ -16,15 +16,15 @@ function contractAssetLink(
 ): int
 ```
 
-Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 147.
+Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 152.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$contractId` | `int` |  |  |
+| `$contractId` | `int` |  | contracts.id to link the asset to |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$reference` | `?string` |  |  |
+| `$reference` | `?string` |  | free-text note on the link (e.g. a line or serial on the agreement); trimmed, cut to 190 characters, empty or null stores NULL |
 
 **Returns:** `int`
 
@@ -32,9 +32,9 @@ Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 161 | `contractAssetLink` | read [assets](/code/tables/assets.md) |  |
-| 174 | `contractAssetLink` | **insert** [contract_assets](/code/tables/contract_assets.md) (`contract_id`, `asset_id`, `reference`, `linked_by_id`, `created_datetime`) |  |
-| 179 | `contractAssetLink` | read [contract_assets](/code/tables/contract_assets.md) |  |
+| 166 | `contractAssetLink` | read [assets](/code/tables/assets.md) |  |
+| 179 | `contractAssetLink` | **insert** [contract_assets](/code/tables/contract_assets.md) (`contract_id`, `asset_id`, `reference`, `linked_by_id`, `created_datetime`) |  |
+| 184 | `contractAssetLink` | read [contract_assets](/code/tables/contract_assets.md) |  |
 
 ## Calls
 

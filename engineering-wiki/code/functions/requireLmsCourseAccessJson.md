@@ -6,12 +6,12 @@ Hard gate for a learner course API: 403 unless the caller may access `$courseId`
 function requireLmsCourseAccessJson(PDO $conn, int $courseId): void
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 286.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 311.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$courseId` | `int` |  |  |
+| `$courseId` | `int` |  | the lms_courses id the request is about |
 
 **Returns:** `void`
 

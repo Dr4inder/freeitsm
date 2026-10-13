@@ -6,7 +6,7 @@ GET /forms/{id} - one form with its fields.
 function apiFormsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 249.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 265.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

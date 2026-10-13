@@ -49,6 +49,7 @@ function ticketViewsReady(PDO $conn): bool
  * recorded must not stop the ticket from opening.
  *
  * @param string $viewerType 'analyst' or 'user' (a self-service portal user)
+ * @param int $viewerId  analysts.id or users.id, according to $viewerType; 0 or less records nothing
  */
 function ticketViewRecord(PDO $conn, int $ticketId, string $viewerType, int $viewerId): void
 {
@@ -123,6 +124,7 @@ function ticketViewsAsAuditRows(PDO $conn, int $ticketId): array
  * requester is shown under "Who has seen this ticket". Analysts are
  * deliberately absent (see the header).
  *
+ * @param int $requesterUserId  the requester's users.id, left out of the list
  * @return array<int, array{name:string, first:string, last:string, count:int}>
  */
 function ticketViewsForRequester(PDO $conn, int $ticketId, int $requesterUserId): array

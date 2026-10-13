@@ -1,6 +1,6 @@
 # includes/messaging/SlackProvider.php
 
-> PHP - 528 lines
+> PHP - 566 lines
 
 SlackProvider — Slack as a messaging channel, via a Slack app the CUSTOMER owns.
 
@@ -44,5 +44,5 @@ verifyWebhook, which also enforces the replay window Slack requires.
 ## Traps
 
 > [!WARNING]
-> **Line 285, in `SlackProvider::downloadMedia`:** trap: HTML back means the token wasn't accepted.
+> **Line 302, in `SlackProvider::downloadMedia`:** trap: HTML back means the token wasn't accepted.
 

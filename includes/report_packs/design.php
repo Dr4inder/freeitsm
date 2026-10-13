@@ -35,13 +35,22 @@ const RP_FONTS = ['helvetica', 'times', 'courier'];
 const RP_PALETTES = ['default', 'ocean', 'sunset', 'forest', 'mono', 'vivid'];
 const RP_FIELDS = ['page', 'pages', 'date_from', 'date_to', 'today', 'title', 'company'];
 
-/** A paragraph of plain text, for the starter design. */
+/**
+ * A paragraph of plain text, for the starter design.
+ *
+ * @param string $text  the paragraph's text
+ * @param array $extra  paragraph keys that override the defaults, e.g. ['a' => 'center', 'r' => [...]]
+ */
 function rpPara(string $text, array $extra = []): array
 {
     return $extra + ['t' => 'p', 'a' => 'left', 'r' => [['x' => $text]]];
 }
 
-/** The design a new pack starts from: a header like Enrique's, a footer, one heading. */
+/**
+ * The design a new pack starts from: a header like Enrique's, a footer, one heading.
+ *
+ * @param string $name  the pack's name, shown in the starter header
+ */
 function rpDefaultDesign(string $name): array
 {
     return [
@@ -79,17 +88,34 @@ function rpDefaultDesign(string $name): array
     ];
 }
 
-/** A #rrggbb colour in lower case, or $default when the value is not one. */
+/**
+ * A #rrggbb colour in lower case, or $default when the value is not one.
+ *
+ * @param mixed $v  the value to check (untrusted)
+ * @param ?string $default  what to return when it is not a #rrggbb colour; may be null
+ */
 function rpColour($v, ?string $default): ?string
 {
     return (is_string($v) && preg_match('/^#[0-9a-fA-F]{6}$/', $v)) ? strtolower($v) : $default;
 }
-/** A number clamped between $min and $max, or $default when the value is not numeric. */
+/**
+ * A number clamped between $min and $max, or $default when the value is not numeric.
+ *
+ * @param mixed $v  the value to check (untrusted)
+ * @param float $min  the smallest value allowed
+ * @param float $max  the largest value allowed
+ * @param float $default  what to return when it is not numeric
+ */
 function rpNum($v, float $min, float $max, float $default): float
 {
     return is_numeric($v) ? max($min, min($max, (float)$v)) : $default;
 }
-/** A string cut to $max characters, with control and zero-width characters removed. */
+/**
+ * A string cut to $max characters, with control and zero-width characters removed.
+ *
+ * @param mixed $v  the value to clean (untrusted); a number is turned into text, anything else gives ''
+ * @param int $max  the most characters to keep
+ */
 function rpStr($v, int $max): string
 {
     $s = is_string($v) ? $v : (is_numeric($v) ? (string)$v : '');
@@ -99,13 +125,24 @@ function rpStr($v, int $max): string
     $s = preg_replace('/[\x{200B}\x{FEFF}]/u', '', $s) ?? '';
     return mb_substr($s, 0, $max);
 }
-/** The value when it is one of $allowed, else $default. */
+/**
+ * The value when it is one of $allowed, else $default.
+ *
+ * @param mixed $v  the value to check (untrusted)
+ * @param array $allowed  the values accepted
+ * @param string $default  what to return when it is not one of them
+ */
 function rpPick($v, array $allowed, string $default): string
 {
     return (is_string($v) && in_array($v, $allowed, true)) ? $v : $default;
 }
 
-/** Check a rich-text document. Anything unrecognised is dropped, not kept. */
+/**
+ * Check a rich-text document. Anything unrecognised is dropped, not kept.
+ *
+ * @param mixed $doc  the rich-text document from the browser (untrusted): a list of paragraphs
+ * @param int $budget  paragraphs still allowed across the whole design; counted down as each is read
+ */
 function rpCleanDoc($doc, int &$budget): array
 {
     $out = [];
@@ -149,6 +186,9 @@ function rpCleanDoc($doc, int &$budget): array
 /**
  * Check a whole design from the browser. Returns the cleaned design; throws
  * InvalidArgumentException when it is not a design at all or is too large.
+ *
+ * @param mixed $d  the whole design from the browser (untrusted)
+ * @param string $name  the pack's name, for the defaults the design falls back on
  */
 function rpCleanDesign($d, string $name): array
 {

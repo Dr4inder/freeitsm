@@ -6,7 +6,7 @@ GET /calendar/events
 function apiCalendarEventsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 118.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 127.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 171 | `apiCalendarEventsList` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 180 | `apiCalendarEventsList` | read [calendar_events](/code/tables/calendar_events.md) |  |
 
 ## Calls
 

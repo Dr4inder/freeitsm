@@ -6,7 +6,7 @@ The two warnings before a stage ends.
 function projectStageDueWindows(): array
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 211.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 224.
 
 **Returns:** `array`
 

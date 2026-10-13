@@ -6,7 +6,7 @@ GET /workflow-executions/{id} — full detail with payload + step log.
 function apiWorkflowExecutionsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 392.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 420.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

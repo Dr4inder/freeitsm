@@ -32,7 +32,12 @@ const PA_STYLES   = ['braille', 'classic', 'blocks'];
 const PA_PALETTES = ['green', 'amber', 'paper', 'colour'];
 const PA_THUMB_MAX = 200 * 1024;   // bytes of JPEG, decoded
 
-/** Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops. */
+/**
+ * Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops.
+ *
+ * @param string $message  the error shown to the user
+ * @param int $status  the HTTP status to send
+ */
 function paFail(string $message, int $status = 200): void
 {
     http_response_code($status);
@@ -40,7 +45,11 @@ function paFail(string $message, int $status = 200): void
     exit;
 }
 
-/** Every character of a style's art must be one that style can produce. */
+/**
+ * Every character of a style's art must be one that style can produce.
+ *
+ * @param string $style  the picture's style: 'braille', 'blocks', or anything else for plain ASCII ('classic')
+ */
 function paStylePattern(string $style): string
 {
     switch ($style) {

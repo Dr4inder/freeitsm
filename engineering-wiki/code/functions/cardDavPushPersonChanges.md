@@ -52,12 +52,12 @@ function cardDavPushPersonChanges(
 ): array
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 646.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 688.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | users.id of the person whose card is updated |
 | `$changes` | `array` |  | field => the value just saved |
 | `$previous` | `array` |  | field => the value FreeITSM held BEFORE this save |
 | `$analystId` | `?int` | `null` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
@@ -69,8 +69,8 @@ Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 659 | `cardDavPushPersonChanges` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md), read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
-| 786 | `cardDavPushPersonChanges` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`source_etag`) |  |
+| 701 | `cardDavPushPersonChanges` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md), read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 828 | `cardDavPushPersonChanges` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`source_etag`) |  |
 
 ## Calls
 

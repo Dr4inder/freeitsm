@@ -28,6 +28,6 @@
 |---|---|---|
 | [api/tickets/get_close_message_config.php](/code/files/api/tickets/get_close_message_config.php.md) | L40 |  |
 | [api/tickets/get_email_templates.php](/code/files/api/tickets/get_email_templates.php.md) | L22 |  |
-| [includes/csat.php](/code/files/includes/csat.php.md) | sendCsatSurvey L306 |  |
-| [includes/template_email.php](/code/files/includes/template_email.php.md) | templateSelectForRecipient L257 |  |
+| [includes/csat.php](/code/files/includes/csat.php.md) | sendCsatSurvey L336 |  |
+| [includes/template_email.php](/code/files/includes/template_email.php.md) | templateSelectForRecipient L269 |  |
 

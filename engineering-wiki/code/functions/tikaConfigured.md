@@ -6,7 +6,7 @@ Is tier 2 switched on at all?
 function tikaConfigured(PDO $conn): bool
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 99.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 101.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

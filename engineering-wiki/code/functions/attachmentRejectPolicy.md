@@ -12,7 +12,7 @@ worse surprise.
 function attachmentRejectPolicy(PDO $conn): string
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 885.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 923.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,7 +24,7 @@ Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 885
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 890 | `attachmentRejectPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
+| 928 | `attachmentRejectPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

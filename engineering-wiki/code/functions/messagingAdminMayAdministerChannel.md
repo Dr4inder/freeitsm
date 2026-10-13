@@ -20,12 +20,12 @@ check", which then produces the standard error.
 function messagingAdminMayAdministerChannel(PDO $conn, int $channelId): bool
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 457.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 499.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
+| `$channelId` | `int` |  | the messaging_channels id being acted on; 0 or less is always refused |
 
 **Returns:** `bool`
 
@@ -33,7 +33,7 @@ Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/mes
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 463 | `messagingAdminMayAdministerChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 505 | `messagingAdminMayAdministerChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
 
 ## Calls
 

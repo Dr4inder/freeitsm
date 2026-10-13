@@ -56,6 +56,8 @@ function apiProblemSelect(): string {
 /**
  * Shapes a problem row for the API - number, title, status (with is_closed), priority,
  * analyst, known-error flag, root cause, workaround, company and the rest of the record.
+ *
+ * @param array $r  the problems row as apiProblemSelect() loads it, with the lookup and people names and ticket_count
  */
 function apiSerializeProblem(array $r): array {
     $rel = function ($id, $name, array $extra = []) {
@@ -81,7 +83,11 @@ function apiSerializeProblem(array $r): array {
     ];
 }
 
-/** Load one problem (with joins) enforcing the key's company scope; 404 if not visible. */
+/**
+ * Load one problem (with joins) enforcing the key's company scope; 404 if not visible.
+ *
+ * @param int $problemId  the problems id
+ */
 function apiLoadProblem(PDO $conn, array $apiKey, int $problemId): array {
     if (!apiKeyCanAccessProblem($conn, $apiKey, $problemId)) {
         apiError(404, 'not_found', 'Problem not found.');

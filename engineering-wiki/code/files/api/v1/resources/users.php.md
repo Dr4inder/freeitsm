@@ -1,6 +1,6 @@
 # api/v1/resources/users.php
 
-> API endpoint - 306 lines
+> API endpoint - 310 lines
 
 FreeITSM REST API v1 — requesters (the `users` table: end users who raise tickets, distinct from analysts).
 
@@ -17,33 +17,33 @@ FreeITSM REST API v1 — requesters (the `users` table: end users who raise tick
 | Function | Line | What it does |
 |---|--:|---|
 | [apiUserColumns()](/code/functions/apiUserColumns.md) | 13 | The columns every read of a requester selects - including the cost centre they are charged to (GH #160), once Database Verification has added it. |
-| [apiUserCostCentre()](/code/functions/apiUserCostCentre.md) | 29 | `cost_centre_id` from a request body for a requester in company `$tenantId` (NULL = Default): an ACTIVE one of that company, or the one they hold. 422 otherwise. Returns [sent?, value]. |
-| [apiSerializeUser()](/code/functions/apiSerializeUser.md) | 44 | Shapes a requester (users row) for the API - email (null for a directory user with no mailbox), names, company, active flag, cost centre and created date. |
-| [apiUsersList()](/code/functions/apiUsersList.md) | 67 | GET /users?q=&email= |
-| [apiUsersGet()](/code/functions/apiUsersGet.md) | 112 | GET /users/{id} |
-| [apiUsersCreate()](/code/functions/apiUsersCreate.md) | 146 | POST /users |
-| [apiUsersUpdate()](/code/functions/apiUsersUpdate.md) | 210 | PATCH /users/{id} |
+| [apiUserCostCentre()](/code/functions/apiUserCostCentre.md) | 31 | `cost_centre_id` from a request body for a requester in company `$tenantId` (NULL = Default): an ACTIVE one of that company, or the one they hold. 422 otherwise. Returns [sent?, value]. |
+| [apiSerializeUser()](/code/functions/apiSerializeUser.md) | 48 | Shapes a requester (users row) for the API - email (null for a directory user with no mailbox), names, company, active flag, cost centre and created date. |
+| [apiUsersList()](/code/functions/apiUsersList.md) | 71 | GET /users?q=&email= |
+| [apiUsersGet()](/code/functions/apiUsersGet.md) | 116 | GET /users/{id} |
+| [apiUsersCreate()](/code/functions/apiUsersCreate.md) | 150 | POST /users |
+| [apiUsersUpdate()](/code/functions/apiUsersUpdate.md) | 214 | PATCH /users/{id} |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 17 | `apiUserColumns` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 94 | `apiUsersList` | read [users](/code/tables/users.md) |  |
-| 101 | `apiUsersList` | read [users](/code/tables/users.md) |  |
-| 120 | `apiUsersGet` | read [users](/code/tables/users.md) |  |
-| 131 | `apiUsersGet` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 171 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
-| 178 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
-| 199 | `apiUsersCreate` | **insert** [users](/code/tables/users.md) (`email`, `username`, `display_name`, `preferred_name`, `tenant_id`, `created_at`) |  |
-| 202 | `apiUsersCreate` | **update** [users](/code/tables/users.md) (`cost_centre_id`) |  |
-| 204 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
-| 225 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
-| 239 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
-| 278 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
-| 290 | `apiUsersUpdate` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 300 | `apiUsersUpdate` | **update** [users](/code/tables/users.md) |  |
-| 302 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
+| 98 | `apiUsersList` | read [users](/code/tables/users.md) |  |
+| 105 | `apiUsersList` | read [users](/code/tables/users.md) |  |
+| 124 | `apiUsersGet` | read [users](/code/tables/users.md) |  |
+| 135 | `apiUsersGet` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 175 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
+| 182 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
+| 203 | `apiUsersCreate` | **insert** [users](/code/tables/users.md) (`email`, `username`, `display_name`, `preferred_name`, `tenant_id`, `created_at`) |  |
+| 206 | `apiUsersCreate` | **update** [users](/code/tables/users.md) (`cost_centre_id`) |  |
+| 208 | `apiUsersCreate` | read [users](/code/tables/users.md) |  |
+| 229 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
+| 243 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
+| 282 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
+| 294 | `apiUsersUpdate` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 304 | `apiUsersUpdate` | **update** [users](/code/tables/users.md) |  |
+| 306 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

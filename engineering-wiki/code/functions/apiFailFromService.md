@@ -6,11 +6,11 @@ Emit the API error response for a ServiceError raised by a shared service (see i
 function apiFailFromService(ServiceError $e): void
 ```
 
-Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 41.
+Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `ServiceError` |  |  |
+| `$e` | `ServiceError` |  | the error a shared service threw - its kind picks the status, errorCode and message pass through |
 
 **Returns:** `void`
 

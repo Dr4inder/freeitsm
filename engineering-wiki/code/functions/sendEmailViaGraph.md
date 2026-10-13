@@ -6,12 +6,12 @@ Send email via Microsoft Graph API
 function sendEmailViaGraph($accessToken, $message)
 ```
 
-Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 592.
+Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 627.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
-| `$message` |  |  |  |
+| `$accessToken` |  |  | the mailbox's Microsoft Graph access token, from `getValidAccessToken()` |
+| `$message` |  |  | the sendMail request as built by `buildEmailMessage()` |
 
 ## Calls
 

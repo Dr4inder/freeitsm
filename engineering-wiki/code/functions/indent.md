@@ -6,12 +6,12 @@ Indents every line of a block of text by `$pad`.
 function indent(string $s, string $pad = ' '): string
 ```
 
-Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 89.
+Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 114.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `string` |  |  |
-| `$pad` | `string` | `' '` |  |
+| `$s` | `string` |  | the text to indent |
+| `$pad` | `string` | `' '` | what to put before each line |
 
 **Returns:** `string`
 

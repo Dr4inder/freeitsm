@@ -8,7 +8,7 @@ The single entry point for BOTH the workflow action and the manual button.
 function integrationsEscalate(PDO $conn, array $opts): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 485.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 528.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 599 | `integrationsEscalate` | **insert** [integration_links](/code/tables/integration_links.md) (`connection_id`, `entity_type`, `entity_id`, `external_id`, `external_key`, `external_url`, `status_name`, `status_category`, `assignee_name`, `last_synced_datetime`, `last_error`, `created_by`) |  |
-| 636 | `integrationsEscalate` | **update** [integration_links](/code/tables/integration_links.md) (`last_error`) |  |
+| 642 | `integrationsEscalate` | **insert** [integration_links](/code/tables/integration_links.md) (`connection_id`, `entity_type`, `entity_id`, `external_id`, `external_key`, `external_url`, `status_name`, `status_category`, `assignee_name`, `last_synced_datetime`, `last_error`, `created_by`) |  |
+| 679 | `integrationsEscalate` | **update** [integration_links](/code/tables/integration_links.md) (`last_error`) |  |
 
 ## Calls
 

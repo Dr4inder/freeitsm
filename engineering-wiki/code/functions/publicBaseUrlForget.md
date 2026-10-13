@@ -6,7 +6,7 @@ Forget the cached root - after the setting is saved, or between test cases.
 function publicBaseUrlForget(): void
 ```
 
-Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), line 109.
+Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), line 111.
 
 **Returns:** `void`
 

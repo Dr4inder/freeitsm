@@ -6,13 +6,13 @@ The coloured strip of counts across the top of a page.
 function pplStats(array $sections, bool $person, array $labels = []): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 21.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sections` | `array` |  |  |
-| `$person` | `bool` |  |  |
-| `$labels` | `array` | `[]` |  |
+| `$sections` | `array` |  | the page's sections from includes/people.php, keyed by section ('tickets', 'assets'...) |
+| `$person` | `bool` |  | true on a person's page (person wording for assets, domains, projects), false elsewhere |
+| `$labels` | `array` | `[]` | section key => label, replacing the standard label for that figure |
 
 **Returns:** `string`
 

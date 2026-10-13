@@ -1,6 +1,6 @@
 # includes/cost_centre_assign.php
 
-> PHP - 146 lines
+> PHP - 176 lines
 
 Charging things to a cost centre (GH #160, stage 2) - the rules, ONCE.
 
@@ -26,29 +26,29 @@ Deleting a cost centre is refused while anything is charged to it - see
 
 | Function | Line | What it does |
 |---|--:|---|
-| [costCentreReady()](/code/functions/costCentreReady.md) | 28 | Has Database Verification added cost_centre_id to `$table` yet? |
-| [costCentreRecordTenant()](/code/functions/costCentreRecordTenant.md) | 37 | A record's company for cost centre purposes: its tenant_id, or Default when NULL. |
-| [costCentreOptions()](/code/functions/costCentreOptions.md) | 47 | What a picker offers for a record in company `$tenantId`: its active cost centres, plus `$keepId` when that is the record's current one and inactive. |
-| [costCentreCheck()](/code/functions/costCentreCheck.md) | 65 | Validate a cost centre being given to a record in company `$tenantId`. Returns the id to store (null = none). Throws ServiceError otherwise. `$currentId` is what the record holds now: keeping an inactive one is fine. |
-| [costCentreByCode()](/code/functions/costCentreByCode.md) | 86 | A cost centre of company `$tenantId` by its CODE (ignoring case), or null. |
-| [costCentreRef()](/code/functions/costCentreRef.md) | 97 | {id, code, name} for display and the API, or null. |
-| [costCentreSelectSql()](/code/functions/costCentreSelectSql.md) | 110 | Columns for any SELECT over a table with cost_centre_id, alias `$a`: cost_centre_id and cost_centre_label ("CODE Name"). NULLs before Verification. |
-| [costCentreLabel()](/code/functions/costCentreLabel.md) | 118 | "CODE Name", or '' - one display form everywhere. |
-| [costCentreUsage()](/code/functions/costCentreUsage.md) | 128 | How many things are charged to cost centre `$id`, per kind, leaving out the zeros. Empty means it is free to delete. |
+| [costCentreReady()](/code/functions/costCentreReady.md) | 32 | Has Database Verification added cost_centre_id to `$table` yet? |
+| [costCentreRecordTenant()](/code/functions/costCentreRecordTenant.md) | 45 | A record's company for cost centre purposes: its tenant_id, or Default when NULL. |
+| [costCentreOptions()](/code/functions/costCentreOptions.md) | 57 | What a picker offers for a record in company `$tenantId`: its active cost centres, plus `$keepId` when that is the record's current one and inactive. |
+| [costCentreCheck()](/code/functions/costCentreCheck.md) | 78 | Validate a cost centre being given to a record in company `$tenantId`. Returns the id to store (null = none). Throws ServiceError otherwise. `$currentId` is what the record holds now: keeping an inactive one is fine. |
+| [costCentreByCode()](/code/functions/costCentreByCode.md) | 103 | A cost centre of company `$tenantId` by its CODE (ignoring case), or null. |
+| [costCentreRef()](/code/functions/costCentreRef.md) | 118 | {id, code, name} for display and the API, or null. |
+| [costCentreSelectSql()](/code/functions/costCentreSelectSql.md) | 134 | Columns for any SELECT over a table with cost_centre_id, alias `$a`: cost_centre_id and cost_centre_label ("CODE Name"). NULLs before Verification. |
+| [costCentreLabel()](/code/functions/costCentreLabel.md) | 146 | "CODE Name", or '' - one display form everywhere. |
+| [costCentreUsage()](/code/functions/costCentreUsage.md) | 158 | How many things are charged to cost centre `$id`, per kind, leaving out the zeros. Empty means it is free to delete. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 50 | `costCentreOptions` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 72 | `costCentreCheck` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 90 | `costCentreByCode` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 100 | `costCentreRef` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 113 | `costCentreSelectSql` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 132 | `costCentreUsage` | read [assets](/code/tables/assets.md) |  |
-| 133 | `costCentreUsage` | read [contracts](/code/tables/contracts.md) |  |
-| 134 | `costCentreUsage` | read [users](/code/tables/users.md) |  |
-| 135 | `costCentreUsage` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 60 | `costCentreOptions` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 85 | `costCentreCheck` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 107 | `costCentreByCode` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 121 | `costCentreRef` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 137 | `costCentreSelectSql` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 162 | `costCentreUsage` | read [assets](/code/tables/assets.md) |  |
+| 163 | `costCentreUsage` | read [contracts](/code/tables/contracts.md) |  |
+| 164 | `costCentreUsage` | read [users](/code/tables/users.md) |  |
+| 165 | `costCentreUsage` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
 
 ## How it hangs together
 

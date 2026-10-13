@@ -6,12 +6,12 @@ Fetch attachments from Graph API
 function fetchEmailAttachments($accessToken, $emailId)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 874.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 925.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
-| `$emailId` |  |  |  |
+| `$accessToken` |  |  | the mailbox's Microsoft Graph access token, from `getValidAccessToken()` |
+| `$emailId` |  |  | the Graph message id whose attachments are wanted |
 
 ## Calls
 

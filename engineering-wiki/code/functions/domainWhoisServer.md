@@ -6,12 +6,12 @@ The WHOIS server for a TLD, from IANA's referral, cached with the bootstrap.
 function domainWhoisServer(PDO $conn, string $tld): ?string
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 322.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 355.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$tld` | `string` |  |  |
+| `$tld` | `string` |  | the top-level domain without a dot, e.g. 'de' |
 
 **Returns:** `?string`
 
@@ -19,8 +19,8 @@ Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 329 | `domainWhoisServer` | read [system_settings](/code/tables/system_settings.md) |  |
-| 339 | `domainWhoisServer` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 362 | `domainWhoisServer` | read [system_settings](/code/tables/system_settings.md) |  |
+| 372 | `domainWhoisServer` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## Calls
 

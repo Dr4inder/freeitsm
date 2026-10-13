@@ -43,6 +43,8 @@ require_once __DIR__ . '/visibility.php';
  * The portal session carries only ss_user_id, so this is a lookup rather than
  * something the caller can pass in — which also means a caller cannot pass in
  * somebody else's company.
+ *
+ * @param int $userId  the portal user's users.id (from the session's ss_user_id)
  */
 function portalUserTenantId(PDO $conn, int $userId): ?int {
     $stmt = $conn->prepare("SELECT tenant_id FROM users WHERE id = ?");
@@ -98,6 +100,9 @@ function portalKnowledgeScope(PDO $conn, ?int $tenantId, string $alias = 'a'): a
  * pushed in front of every tag first, then the run is collapsed — which keeps
  * strip_tags() (and its tolerance of malformed markup) rather than swapping in
  * a hand-rolled tag regex.
+ *
+ * @param ?string $body  the article body HTML; null gives ''
+ * @param int $length  the most characters kept before an ellipsis is added
  */
 function portalArticlePreview(?string $body, int $length = 400): string {
     $raw = preg_replace('#<(script|style)\b[^>]*>.*?</\1>#is', ' ', (string) $body);

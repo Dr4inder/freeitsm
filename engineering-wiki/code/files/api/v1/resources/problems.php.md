@@ -1,6 +1,6 @@
 # api/v1/resources/problems.php
 
-> API endpoint - 442 lines
+> API endpoint - 448 lines
 
 FreeITSM REST API v1 — problems resource (Problem Management).
 
@@ -40,35 +40,35 @@ and stay here.
 | Function | Line | What it does |
 |---|--:|---|
 | [apiProblemSelect()](/code/functions/apiProblemSelect.md) | 40 | The SELECT for problems, with status, priority, analyst, creator and company names and how many tickets are linked. |
-| [apiSerializeProblem()](/code/functions/apiSerializeProblem.md) | 60 | Shapes a problem row for the API - number, title, status (with is_closed), priority, analyst, known-error flag, root cause, workaround, company and the rest of the record. |
-| [apiLoadProblem()](/code/functions/apiLoadProblem.md) | 85 | Load one problem (with joins) enforcing the key's company scope; 404 if not visible. |
-| [apiProblemsList()](/code/functions/apiProblemsList.md) | 106 | GET /problems |
-| [apiProblemsGet()](/code/functions/apiProblemsGet.md) | 207 | GET /problems/{id} — full detail incl. linked incidents + changes |
-| [apiProblemsCreate()](/code/functions/apiProblemsCreate.md) | 259 | POST /problems |
-| [apiProblemsUpdate()](/code/functions/apiProblemsUpdate.md) | 289 | PATCH /problems/{id} |
-| [apiProblemsDelete()](/code/functions/apiProblemsDelete.md) | 300 | DELETE /problems/{id} — permanent, mirrors delete.php (cascades children, tidies change_relations which has no FK back to problems) |
-| [apiProblemNotesList()](/code/functions/apiProblemNotesList.md) | 310 | Notes — append-only journal |
-| [apiProblemNotesCreate()](/code/functions/apiProblemNotesCreate.md) | 329 | POST /problems/{id}/notes - adds a note to the problem through ProblemsService. |
-| [apiProblemAuditList()](/code/functions/apiProblemAuditList.md) | 343 | GET /problems/{id}/audit |
-| [apiProblemTicketsLink()](/code/functions/apiProblemTicketsLink.md) | 368 | Incident linking — POST /problems/{id}/tickets, DELETE .../{ticket_id} |
-| [apiProblemTicketsUnlink()](/code/functions/apiProblemTicketsUnlink.md) | 379 | DELETE /problems/{id}/tickets/{ticketId} - unlinks a ticket from the problem through ProblemsService. |
-| [apiProblemChangesLink()](/code/functions/apiProblemChangesLink.md) | 390 | Change linking — POST /problems/{id}/changes, DELETE .../{change_id} (shared change_relations table, related_type='problem', relation 'fixes') |
-| [apiProblemChangesUnlink()](/code/functions/apiProblemChangesUnlink.md) | 401 | DELETE /problems/{id}/changes/{changeId} - unlinks a change from the problem through ProblemsService. |
-| [apiProblemStatusesList()](/code/functions/apiProblemStatusesList.md) | 411 | Reference lookups |
-| [apiProblemPrioritiesList()](/code/functions/apiProblemPrioritiesList.md) | 428 | GET /problem-priorities - the problem priorities, in display order. |
+| [apiSerializeProblem()](/code/functions/apiSerializeProblem.md) | 62 | Shapes a problem row for the API - number, title, status (with is_closed), priority, analyst, known-error flag, root cause, workaround, company and the rest of the record. |
+| [apiLoadProblem()](/code/functions/apiLoadProblem.md) | 91 | Load one problem (with joins) enforcing the key's company scope; 404 if not visible. |
+| [apiProblemsList()](/code/functions/apiProblemsList.md) | 112 | GET /problems |
+| [apiProblemsGet()](/code/functions/apiProblemsGet.md) | 213 | GET /problems/{id} — full detail incl. linked incidents + changes |
+| [apiProblemsCreate()](/code/functions/apiProblemsCreate.md) | 265 | POST /problems |
+| [apiProblemsUpdate()](/code/functions/apiProblemsUpdate.md) | 295 | PATCH /problems/{id} |
+| [apiProblemsDelete()](/code/functions/apiProblemsDelete.md) | 306 | DELETE /problems/{id} — permanent, mirrors delete.php (cascades children, tidies change_relations which has no FK back to problems) |
+| [apiProblemNotesList()](/code/functions/apiProblemNotesList.md) | 316 | Notes — append-only journal |
+| [apiProblemNotesCreate()](/code/functions/apiProblemNotesCreate.md) | 335 | POST /problems/{id}/notes - adds a note to the problem through ProblemsService. |
+| [apiProblemAuditList()](/code/functions/apiProblemAuditList.md) | 349 | GET /problems/{id}/audit |
+| [apiProblemTicketsLink()](/code/functions/apiProblemTicketsLink.md) | 374 | Incident linking — POST /problems/{id}/tickets, DELETE .../{ticket_id} |
+| [apiProblemTicketsUnlink()](/code/functions/apiProblemTicketsUnlink.md) | 385 | DELETE /problems/{id}/tickets/{ticketId} - unlinks a ticket from the problem through ProblemsService. |
+| [apiProblemChangesLink()](/code/functions/apiProblemChangesLink.md) | 396 | Change linking — POST /problems/{id}/changes, DELETE .../{change_id} (shared change_relations table, related_type='problem', relation 'fixes') |
+| [apiProblemChangesUnlink()](/code/functions/apiProblemChangesUnlink.md) | 407 | DELETE /problems/{id}/changes/{changeId} - unlinks a change from the problem through ProblemsService. |
+| [apiProblemStatusesList()](/code/functions/apiProblemStatusesList.md) | 417 | Reference lookups |
+| [apiProblemPrioritiesList()](/code/functions/apiProblemPrioritiesList.md) | 434 | GET /problem-priorities - the problem priorities, in display order. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 41 | `apiProblemSelect` | read [problem_tickets](/code/tables/problem_tickets.md), read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md), read [problem_priorities](/code/tables/problem_priorities.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
-| 184 | `apiProblemsList` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md), read [problem_priorities](/code/tables/problem_priorities.md) |  |
-| 212 | `apiProblemsGet` | read [problem_tickets](/code/tables/problem_tickets.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 235 | `apiProblemsGet` | read [change_relations](/code/tables/change_relations.md), read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
-| 313 | `apiProblemNotesList` | read [problem_notes](/code/tables/problem_notes.md), read [analysts](/code/tables/analysts.md) |  |
-| 346 | `apiProblemAuditList` | read [problem_audit](/code/tables/problem_audit.md), read [analysts](/code/tables/analysts.md) |  |
-| 413 | `apiProblemStatusesList` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 430 | `apiProblemPrioritiesList` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 190 | `apiProblemsList` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md), read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 218 | `apiProblemsGet` | read [problem_tickets](/code/tables/problem_tickets.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 241 | `apiProblemsGet` | read [change_relations](/code/tables/change_relations.md), read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 319 | `apiProblemNotesList` | read [problem_notes](/code/tables/problem_notes.md), read [analysts](/code/tables/analysts.md) |  |
+| 352 | `apiProblemAuditList` | read [problem_audit](/code/tables/problem_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 419 | `apiProblemStatusesList` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 436 | `apiProblemPrioritiesList` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
 
 ## How it hangs together
 

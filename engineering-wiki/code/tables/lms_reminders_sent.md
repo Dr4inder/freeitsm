@@ -18,12 +18,12 @@ The fire-once record for training reminders. See freeitsm.sql — the unique key
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md):381 | `lmsRemindersRun` | insert | `learner_type`, `learner_id`, `course_id`, `reminder_kind`, `fingerprint`, `sent_datetime` |  |
-| [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md):407 | `lmsRemindersRun` | delete |  |  |
+| [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md):399 | `lmsRemindersRun` | insert | `learner_type`, `learner_id`, `course_id`, `reminder_kind`, `fingerprint`, `sent_datetime` |  |
+| [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md):425 | `lmsRemindersRun` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md) | lmsRemindersDue L239 |  |
+| [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md) | lmsRemindersDue L247 |  |
 

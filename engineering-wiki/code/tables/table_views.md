@@ -22,14 +22,14 @@ Saved table views (#96). `config` is the data-table engine's own state as JSON -
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/table_views.php](/code/files/includes/table_views.php.md):187 | `tableViewSave` | update | `name`, `description`, `visibility`, `team_id`, `config`, `updated_datetime` |  |
-| [includes/table_views.php](/code/files/includes/table_views.php.md):196 | `tableViewSave` | insert | `table_key`, `name`, `description`, `owner_id`, `visibility`, `team_id`, `config`, `created_datetime`, `updated_datetime` |  |
-| [includes/table_views.php](/code/files/includes/table_views.php.md):210 | `tableViewDelete` | delete |  |  |
-| [includes/table_views.php](/code/files/includes/table_views.php.md):228 | `tableViewTouch` | update | `last_used_datetime` |  |
+| [includes/table_views.php](/code/files/includes/table_views.php.md):198 | `tableViewSave` | update | `name`, `description`, `visibility`, `team_id`, `config`, `updated_datetime` |  |
+| [includes/table_views.php](/code/files/includes/table_views.php.md):207 | `tableViewSave` | insert | `table_key`, `name`, `description`, `owner_id`, `visibility`, `team_id`, `config`, `created_datetime`, `updated_datetime` |  |
+| [includes/table_views.php](/code/files/includes/table_views.php.md):223 | `tableViewDelete` | delete |  |  |
+| [includes/table_views.php](/code/files/includes/table_views.php.md):243 | `tableViewTouch` | update | `last_used_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/table_views.php](/code/files/includes/table_views.php.md) | tableViewSelect L60, tableViewSave L180 |  |
+| [includes/table_views.php](/code/files/includes/table_views.php.md) | tableViewSelect L60, tableViewSave L191 |  |
 

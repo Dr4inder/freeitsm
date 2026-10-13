@@ -6,7 +6,7 @@ Words too common on a service desk to carry any signal.
 function writeupStopWords(): array
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 391.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 400.
 
 **Returns:** `array`
 

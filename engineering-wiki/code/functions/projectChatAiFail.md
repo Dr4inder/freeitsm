@@ -6,11 +6,11 @@ A provider problem in words the panel can show (as reports.php).
 function projectChatAiFail(RuntimeException $e): void
 ```
 
-Defined in [api/projects/assistant_chat.php](/code/files/api/projects/assistant_chat.php.md), line 22.
+Defined in [api/projects/assistant_chat.php](/code/files/api/projects/assistant_chat.php.md), line 26.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `RuntimeException` |  |  |
+| `$e` | `RuntimeException` |  | the AI call's failure; the message 'not_configured' means no provider is set up |
 
 **Returns:** `void`
 

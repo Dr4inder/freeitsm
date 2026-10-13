@@ -6,15 +6,15 @@ Permission changes are the rows people actually come looking for. Never silent.
 function permAudit(PDO $conn, string $type, int $id, int $analystId, array $detail): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 359.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 384.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$type` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$type` | `string` |  | 'folder' or 'article' |
+| `$id` | `int` |  | that folder's or article's id |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$detail` | `array` |  |  |
+| `$detail` | `array` |  | what changed, stored as JSON on the audit row |
 
 **Returns:** `void`
 

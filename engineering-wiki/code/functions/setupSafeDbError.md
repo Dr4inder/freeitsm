@@ -6,11 +6,11 @@ Keep the diagnostic part of a PDO connection error, drop the reconnaissance. PDO
 function setupSafeDbError(string $message): string
 ```
 
-Defined in [setup/index.php](/code/files/setup/index.php.md), line 38.
+Defined in [setup/index.php](/code/files/setup/index.php.md), line 40.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$message` | `string` |  |  |
+| `$message` | `string` |  | the PDOException message; '' comes back when it has no SQLSTATE prefix |
 
 **Returns:** `string`
 

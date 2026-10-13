@@ -6,12 +6,12 @@ Load a widget row joined to its channel, keyed by public widget key. Null if mis
 function webchatLoadByKey(PDO $conn, string $widgetKey): ?array
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 94.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 108.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$widgetKey` | `string` |  |  |
+| `$widgetKey` | `string` |  | the public widget key - untrusted |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 98 | `webchatLoadByKey` | read [webchat_widgets](/code/tables/webchat_widgets.md), read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 112 | `webchatLoadByKey` | read [webchat_widgets](/code/tables/webchat_widgets.md), read [messaging_channels](/code/tables/messaging_channels.md) |  |
 
 ## Called from
 

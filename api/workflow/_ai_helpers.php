@@ -66,6 +66,8 @@ const WORKFLOW_AI_MODEL_OPTIONS = [
  * per-form toggle only when you genuinely need to opt out of verification
  * for a single integration (e.g. corporate inspecting proxy with a
  * self-signed cert).
+ *
+ * @param bool $perCallVerify  the form's or provider's own verify-SSL tick; ignored (false) when SSL_VERIFY_PEER is false
  */
 function workflowEffectiveSslVerify(bool $perCallVerify): bool
 {
@@ -92,6 +94,11 @@ function loadWorkflowAiConfig(PDO $conn): array
 /**
  * Provider-agnostic one-shot call via the shared client (Anthropic / OpenAI /
  * OpenRouter). Returns the assistant's response text (a plain string).
+ *
+ * @param array $cfg  the workflow AI settings from loadWorkflowAiConfig() - provider, model, api_key, verify_ssl
+ * @param string $systemPrompt  the system prompt sent ahead of the user message
+ * @param string $userMessage  the single user message to answer
+ * @param int $maxTokens  the most tokens the reply may use
  */
 function callWorkflowAi(array $cfg, string $systemPrompt, string $userMessage, int $maxTokens = 2500): string
 {
@@ -113,6 +120,11 @@ function callWorkflowAi(array $cfg, string $systemPrompt, string $userMessage, i
  *
  * Throws on a network error or a non-200 answer, with the provider's own message where
  * it gave one.
+ *
+ * @param array $cfg  the AI settings - model, api_key and verify_ssl are read
+ * @param string $systemPrompt  the system prompt sent as the Messages API "system" field
+ * @param string $userMessage  the single user message to answer
+ * @param int $maxTokens  the most tokens the reply may use
  */
 function wfCallAnthropic(array $cfg, string $systemPrompt, string $userMessage, int $maxTokens): string
 {
@@ -162,6 +174,11 @@ function wfCallAnthropic(array $cfg, string $systemPrompt, string $userMessage, 
  *
  * Throws on a network error or a non-200 answer, with the provider's own message where
  * it gave one.
+ *
+ * @param array $cfg  the AI settings - model, api_key and verify_ssl are read
+ * @param string $systemPrompt  the system prompt, sent as the first "system" chat message
+ * @param string $userMessage  the single user message to answer
+ * @param int $maxTokens  the most tokens the reply may use
  */
 function wfCallOpenAI(array $cfg, string $systemPrompt, string $userMessage, int $maxTokens): string
 {
@@ -211,6 +228,8 @@ function wfCallOpenAI(array $cfg, string $systemPrompt, string $userMessage, int
  * the first { or [ - and decodes it.
  *
  * Throws when there is no JSON or it cannot be decoded.
+ *
+ * @param string $text  the AI's raw reply, possibly wrapped in ```json fences or preceded by prose
  */
 function parseClaudeJson(string $text): array
 {

@@ -6,7 +6,7 @@ GET /contract-term-tabs - the contract term tabs.
 function apiContractTermTabsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 596.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 612.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

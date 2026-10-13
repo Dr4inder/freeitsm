@@ -76,7 +76,11 @@ class I18n {
     /** Two-level cache: [locale][namespace] => array */
     private static $cache = [];
 
-    /** Set the active locale for this request. Unsupported values silently fall back to DEFAULT_LOCALE. */
+    /**
+     * Set the active locale for this request. Unsupported values silently fall back to DEFAULT_LOCALE.
+     *
+     * @param mixed $locale  a locale code from SUPPORTED_LOCALES, e.g. 'de' or 'pt-BR' (case-sensitive)
+     */
     public static function setLocale($locale) {
         self::$locale = array_key_exists($locale, self::SUPPORTED_LOCALES) ? $locale : self::DEFAULT_LOCALE;
     }
@@ -145,6 +149,9 @@ class I18n {
      * Look up a translation by dotted key. Returns the key itself if nothing
      * resolves so missing strings are visible during development rather than
      * silently rendering as empty.
+     *
+     * @param mixed $key     'namespace.dotted.path', e.g. 'common.save' - the namespace is the lang/<locale>/ file
+     * @param mixed $params  placeholder values, name => value, substituted for {name} in the text
      */
     public static function t($key, $params = []) {
         $parts = explode('.', $key, 2);
@@ -170,6 +177,10 @@ class I18n {
      * e.g. a Telegram bot reply in the customer's own language_code, where
      * there is no session locale for them at all (the webhook has no session).
      * An unsupported/unknown locale code falls back to English, same as t().
+     *
+     * @param mixed $locale  the recipient's locale code, e.g. 'de' or 'pt-BR'; unsupported gives English
+     * @param mixed $key     'namespace.dotted.path', as for t()
+     * @param mixed $params  placeholder values, name => value, substituted for {name} in the text
      */
     public static function tFor($locale, $key, $params = []) {
         $parts = explode('.', $key, 2);
@@ -196,6 +207,8 @@ class I18n {
      * the namespaces the current page actually needs.
      *
      *   I18n::exportForJs(['common', 'process-mapper'])
+     *
+     * @param array $namespaces  the lang/ file names the page needs; invalid names are skipped
      */
     public static function exportForJs(array $namespaces) {
         $out = [];
@@ -212,7 +225,13 @@ class I18n {
     // Internals
     // -----------------------------------------------------------------------
 
-    /** Looks up one dotted key in a namespace for a locale; null when it is missing or not a string. */
+    /**
+     * Looks up one dotted key in a namespace for a locale; null when it is missing or not a string.
+     *
+     * @param mixed $namespace  the lang/ file name, e.g. 'common'
+     * @param mixed $path       the rest of the key after the namespace, dot-separated, e.g. 'buttons.save'
+     * @param mixed $locale     the locale code to look in, e.g. 'de'
+     */
     private static function resolve($namespace, $path, $locale) {
         $translations = self::loadNamespace($namespace, $locale);
         $cursor = $translations;
@@ -228,6 +247,9 @@ class I18n {
      *
      * An unknown namespace or locale, a missing file, or a file that does not return an
      * array gives an empty list.
+     *
+     * @param mixed $namespace  the lang/ file name without .php, e.g. 'common'; must match [a-z0-9_-]+
+     * @param mixed $locale     the locale code, i.e. the lang/ folder, e.g. 'pt-BR'
      */
     private static function loadNamespace($namespace, $locale) {
         if (!self::isValidNamespace($namespace)) return [];
@@ -244,12 +266,21 @@ class I18n {
         return self::$cache[$locale][$namespace];
     }
 
-    /** Only allow simple namespace identifiers — prevents path traversal via t() arg. */
+    /**
+     * Only allow simple namespace identifiers — prevents path traversal via t() arg.
+     *
+     * @param mixed $namespace  the namespace to check (untrusted - it becomes part of a file path)
+     */
     private static function isValidNamespace($namespace) {
         return is_string($namespace) && preg_match('/^[a-z0-9_-]+$/', $namespace) === 1;
     }
 
-    /** {name}-style substitution. Unknown placeholders are left as-is so they're visible. */
+    /**
+     * {name}-style substitution. Unknown placeholders are left as-is so they're visible.
+     *
+     * @param mixed $value   the translated text holding {name} placeholders
+     * @param mixed $params  name => value; a non-array or empty array leaves the text unchanged
+     */
     private static function interpolate($value, $params) {
         if (!is_array($params) || empty($params)) return $value;
         foreach ($params as $k => $v) {
@@ -258,7 +289,12 @@ class I18n {
         return $value;
     }
 
-    /** Overlay merges into base, recursively. Used to lay the active locale on top of English fallback. */
+    /**
+     * Overlay merges into base, recursively. Used to lay the active locale on top of English fallback.
+     *
+     * @param array $base     the English namespace array
+     * @param array $overlay  the active locale's namespace array; its keys win
+     */
     private static function deepMerge(array $base, array $overlay) {
         foreach ($overlay as $k => $v) {
             if (is_array($v) && isset($base[$k]) && is_array($base[$k])) {
@@ -270,7 +306,11 @@ class I18n {
         return $base;
     }
 
-    /** Pick the best supported locale from an Accept-Language header. Exact matches first, then primary subtag. */
+    /**
+     * Pick the best supported locale from an Accept-Language header. Exact matches first, then primary subtag.
+     *
+     * @param mixed $header  the browser's Accept-Language header, e.g. 'en-GB,en;q=0.9,de;q=0.8' (untrusted)
+     */
     private static function matchAcceptLanguage($header) {
         $entries = [];
         foreach (explode(',', $header) as $part) {
@@ -309,7 +349,12 @@ class I18n {
     }
 }
 
-/** Global shorthand. Recommended call style in views and modules. */
+/**
+ * Global shorthand. Recommended call style in views and modules.
+ *
+ * @param mixed $key     'namespace.dotted.path', e.g. 'common.save'
+ * @param mixed $params  placeholder values, name => value, substituted for {name} in the text
+ */
 function t($key, $params = []) {
     return I18n::t($key, $params);
 }

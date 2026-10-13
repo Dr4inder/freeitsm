@@ -10,12 +10,12 @@ stripped, or their contents survive as text and every ticket ends up
 function searchCorpusPlainText(?string $html, int $maxChars = 1000000): string
 ```
 
-Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 72.
+Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$html` | `?string` |  |  |
-| `$maxChars` | `int` | `1000000` |  |
+| `$html` | `?string` |  | the stored HTML (a message body, note or article); null or '' gives '' |
+| `$maxChars` | `int` | `1000000` | the most characters to keep; 0 or less keeps everything |
 
 **Returns:** `string`
 

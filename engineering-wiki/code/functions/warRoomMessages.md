@@ -13,14 +13,14 @@ than blank or "Unknown" so the reader can tell WHICH case it is.
 function warRoomMessages(PDO $conn, int $channelId, int $sinceId = 0, int $limit = 200): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 450.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 488.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
-| `$sinceId` | `int` | `0` |  |
-| `$limit` | `int` | `200` |  |
+| `$channelId` | `int` |  | the warroom_channels id; the caller has already checked access |
+| `$sinceId` | `int` | `0` | the newest message id the page holds; 0 for the first load (the latest `$limit`) |
+| `$limit` | `int` | `200` | the most messages to return, 1-500 |
 
 **Returns:** `array`
 
@@ -28,10 +28,10 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 450
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 469 | `warRoomMessages` | read [analysts](/code/tables/analysts.md) |  |
-| 473 | `warRoomMessages` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
-| 481 | `warRoomMessages` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
-| 527 | `warRoomMessages` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 507 | `warRoomMessages` | read [analysts](/code/tables/analysts.md) |  |
+| 511 | `warRoomMessages` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 519 | `warRoomMessages` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 565 | `warRoomMessages` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
 
 ## Calls
 

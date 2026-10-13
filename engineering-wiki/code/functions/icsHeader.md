@@ -6,13 +6,13 @@ The VCALENDAR header lines. `$name` is what the client shows as the calendar's n
 function icsHeader(string $name, string $tz, int $refreshHours = 6): array
 ```
 
-Defined in [includes/ics.php](/code/files/includes/ics.php.md), line 50.
+Defined in [includes/ics.php](/code/files/includes/ics.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
-| `$tz` | `string` |  |  |
-| `$refreshHours` | `int` | `6` |  |
+| `$name` | `string` |  | the calendar's display name (X-WR-CALNAME) |
+| `$tz` | `string` |  | the feed's IANA time zone name, e.g. 'Europe/London' (X-WR-TIMEZONE) |
+| `$refreshHours` | `int` | `6` | how often clients are asked to refresh, in hours - only a hint |
 
 **Returns:** `array`
 

@@ -6,11 +6,11 @@ Turn retrieved articles into a plain-text context block for the AI system prompt
 function kbBuildContext(array $articles): string
 ```
 
-Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md), line 160.
+Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md), line 178.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$articles` | `array` |  |  |
+| `$articles` | `array` |  | the 'articles' list from `kbRetrieveArticles()` - rows with title and HTML body |
 
 **Returns:** `string`
 

@@ -6,13 +6,13 @@ Change detection's e-mail. Called by DomainsService::runChecks() when something 
 function domainAlertOnChange(PDO $conn, array $row, array $serious): void
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 306.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 354.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
-| `$serious` | `array` |  |  |
+| `$row` | `array` |  | the domain row as loaded by DomainsService::runChecks() |
+| `$serious` | `array` |  | the changes `domainChangeIsSerious()` kept, each array{field:string,old:string,new:string} |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 315 | `domainAlertOnChange` | read [analysts](/code/tables/analysts.md) |  |
+| 363 | `domainAlertOnChange` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

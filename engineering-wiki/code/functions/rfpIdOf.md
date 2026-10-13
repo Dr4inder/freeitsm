@@ -6,13 +6,13 @@ The RFP a child row belongs to. `$kind` names the table the id is for; every one
 function rfpIdOf(PDO $conn, string $kind, int $id): ?int
 ```
 
-Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 72.
+Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 91.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$kind` | `string` |  | which table the id is for: rfp, document, extracted, consolidated, conflict, section, framing or invited |
+| `$id` | `int` |  | the row's id in that table |
 
 **Returns:** `?int`
 
@@ -20,14 +20,14 @@ Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 75 | `rfpIdOf` | read [rfps](/code/tables/rfps.md) |  |
-| 76 | `rfpIdOf` | read [rfp_documents](/code/tables/rfp_documents.md) |  |
-| 77 | `rfpIdOf` | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md) |  |
-| 78 | `rfpIdOf` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 79 | `rfpIdOf` | read [rfp_conflicts](/code/tables/rfp_conflicts.md) |  |
-| 80 | `rfpIdOf` | read [rfp_output_sections](/code/tables/rfp_output_sections.md) |  |
-| 81 | `rfpIdOf` | read [rfp_document_sections](/code/tables/rfp_document_sections.md) |  |
-| 82 | `rfpIdOf` | read [rfp_invited_suppliers](/code/tables/rfp_invited_suppliers.md) |  |
+| 94 | `rfpIdOf` | read [rfps](/code/tables/rfps.md) |  |
+| 95 | `rfpIdOf` | read [rfp_documents](/code/tables/rfp_documents.md) |  |
+| 96 | `rfpIdOf` | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md) |  |
+| 97 | `rfpIdOf` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 98 | `rfpIdOf` | read [rfp_conflicts](/code/tables/rfp_conflicts.md) |  |
+| 99 | `rfpIdOf` | read [rfp_output_sections](/code/tables/rfp_output_sections.md) |  |
+| 100 | `rfpIdOf` | read [rfp_document_sections](/code/tables/rfp_document_sections.md) |  |
+| 101 | `rfpIdOf` | read [rfp_invited_suppliers](/code/tables/rfp_invited_suppliers.md) |  |
 
 ## Called from
 

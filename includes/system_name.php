@@ -54,6 +54,9 @@ if (!function_exists('pageTitle')) {
      * heading is the module name does not say it twice.
      *
      * Returns plain text - escape it where it is printed.
+     *
+     * @param ?string $module  the module's key in common.modules, e.g. 'contracts'; null or '' for a page outside any module
+     * @param ?string ...$parts  the page's own words, e.g. 'Edit contract'; blanks and repeats of earlier parts are dropped
      */
     function pageTitle(?string $module = null, ?string ...$parts): string
     {

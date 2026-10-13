@@ -6,11 +6,11 @@ Returns the node size when it is a known size class, otherwise answers 422 listi
 function apiNmValidateSize(string $size): string
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 300.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 343.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$size` | `string` |  |  |
+| `$size` | `string` |  | the requested node size class - small, medium or large |
 
 **Returns:** `string`
 

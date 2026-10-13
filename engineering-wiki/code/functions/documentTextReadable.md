@@ -11,12 +11,12 @@ read" — permanently — when the truth was "we never asked the thing that coul
 function documentTextReadable(PDO $conn, string $filename): bool
 ```
 
-Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 44.
+Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 46.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$filename` | `string` |  |  |
+| `$filename` | `string` |  | the file's name - only its extension is judged |
 
 **Returns:** `bool`
 

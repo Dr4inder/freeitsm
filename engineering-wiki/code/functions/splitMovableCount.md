@@ -6,7 +6,7 @@ How many movable (non-marker) messages a ticket has. This is the number that dec
 function splitMovableCount(PDO $conn, int $ticketId): int
 ```
 
-Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 102.
+Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 104.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 106 | `splitMovableCount` | read [emails](/code/tables/emails.md) |  |
+| 108 | `splitMovableCount` | read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

@@ -108,6 +108,8 @@ function featureBingoModules(): array
 /**
  * Every card, validated. A card with a missing field or an unknown module or
  * tier is left out and reported in $problems, never shown half-formed.
+ *
+ * @param ?array $problems  out: reset to [] and filled with one "file#index: what is wrong" string per bad card
  */
 function featureBingoCards(?array &$problems = null): array
 {
@@ -146,6 +148,10 @@ function featureBingoCards(?array &$problems = null): array
 /**
  * Run one check. Returns true / false; an error (missing table or column, a
  * malformed check) is false and is written to $error.
+ *
+ * @param array $check  a card's check: ['rows', table, where, min], ['setting', key, op, value],
+ *   ['sql', select, min], or ['any'|'all', [check, ...]] - nests
+ * @param ?string $error  out: null, or why the check could not run (sub-check errors joined with "; ")
  */
 function featureBingoRunCheck(PDO $conn, array $check, ?string &$error = null)
 {
@@ -203,6 +209,8 @@ function featureBingoRunCheck(PDO $conn, array $check, ?string &$error = null)
  * A card's SQL is read-only by construction, and this makes sure of it: one
  * statement, beginning SELECT. Cards are code in the repository, not user
  * input - this guards against a mistake, not an attacker.
+ *
+ * @param string $sql  the full statement a card's check will run; throws if it is not a single SELECT
  */
 function featureBingoAssertReadOnly(string $sql): void
 {

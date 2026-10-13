@@ -11,7 +11,7 @@ turns it off without anyone having had to opt in first.
 function scheduleFeedMode(PDO $conn): string
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 354.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 387.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 360 | `scheduleFeedMode` | read [system_settings](/code/tables/system_settings.md) |  |
+| 393 | `scheduleFeedMode` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

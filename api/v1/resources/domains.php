@@ -65,6 +65,8 @@ function apiDomainSelect(?PDO $conn = null): string {
  * Shapes a domain row for the API - names, company, status, registrar and account, dates
  * with days to expiry, and the rest of the record. The auth code itself is never
  * included - only auth_code_set.
+ *
+ * @param array $r  the domains row as apiDomainSelect() loads it, with the lookup, contact and company names
  */
 function apiSerializeDomain(array $r): array {
     $rel = function ($id, $name) { return $id === null ? null : ['id' => (int)$id, 'name' => $name]; };
@@ -137,7 +139,11 @@ function apiSerializeDomain(array $r): array {
     ];
 }
 
-/** The by-id gate: existence + company scope, both failing as 404. */
+/**
+ * The by-id gate: existence + company scope, both failing as 404.
+ *
+ * @param int $id  the domains id
+ */
 function apiLoadDomain(PDO $conn, array $apiKey, int $id): array {
     $stmt = $conn->prepare(apiDomainSelect($conn) . " WHERE d.id = ?");
     $stmt->execute([$id]);
@@ -348,7 +354,12 @@ function apiDomainsFindings(PDO $conn, array $apiKey, array $params, array $body
     apiRespond(apiDomainFindings($cr['findings'] ?? []), 200, ['checked_at' => isset($cr['at']) ? apiIsoDate($cr['at']) : null]);
 }
 
-/** Findings with their English title and advice filled in — a machine consumer has no lang file. */
+/**
+ * Findings with their English title and advice filled in — a machine consumer has no lang file.
+ *
+ * @param array $findings  the 'findings' list from the domain's stored check_results JSON - each with key, area, level,
+ *     weight and optional params for the text placeholders
+ */
 function apiDomainFindings(array $findings): array {
     static $lang = null;
     if ($lang === null) $lang = require dirname(__DIR__, 3) . '/lang/en/domains.php';

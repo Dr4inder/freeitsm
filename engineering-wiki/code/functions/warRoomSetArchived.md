@@ -6,13 +6,13 @@ Archive or restore a custom channel. Team and all-hands channels cannot be archi
 function warRoomSetArchived(PDO $conn, int $channelId, bool $archived): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 340.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 366.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
-| `$archived` | `bool` |  |  |
+| `$channelId` | `int` |  | the warroom_channels id; only custom and DM channels change |
+| `$archived` | `bool` |  | true to archive, false to restore |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 340
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 343 | `warRoomSetArchived` | **update** [warroom_channels](/code/tables/warroom_channels.md) (`archived_datetime`) |  |
+| 369 | `warRoomSetArchived` | **update** [warroom_channels](/code/tables/warroom_channels.md) (`archived_datetime`) |  |
 
 ## Called from
 

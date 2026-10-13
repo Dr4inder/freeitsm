@@ -6,12 +6,12 @@ Sends an HTTP status and, when given, a JSON body, then stops.
 function mcpReply(int $status, ?array $body = null): void
 ```
 
-Defined in [api/mcp/index.php](/code/files/api/mcp/index.php.md), line 46.
+Defined in [api/mcp/index.php](/code/files/api/mcp/index.php.md), line 51.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$status` | `int` |  |  |
-| `$body` | `?array` | `null` |  |
+| `$status` | `int` |  | the HTTP status to send |
+| `$body` | `?array` | `null` | the JSON body to send; null sends no body |
 
 **Returns:** `void`
 

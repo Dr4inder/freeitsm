@@ -9,12 +9,12 @@ Sends an HTTP status and a plain-text message, then stops - the feed's only erro
 function feed_deny($code, $msg)
 ```
 
-Defined in [api/calendar/feed.php](/code/files/api/calendar/feed.php.md), line 22.
+Defined in [api/calendar/feed.php](/code/files/api/calendar/feed.php.md), line 25.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$code` |  |  |  |
-| `$msg` |  |  |  |
+| `$code` |  |  | the HTTP status line after the protocol, e.g. '404 Not Found' |
+| `$msg` |  |  | the plain-text body the calendar app receives |
 
 ## Called from
 

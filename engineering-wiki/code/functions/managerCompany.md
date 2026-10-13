@@ -6,12 +6,12 @@ The company a row belongs to, where NO company (NULL) means the Default company 
 function managerCompany(PDO $conn, $tenantId): int
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 252.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 263.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$tenantId` |  |  |  |
+| `$tenantId` |  |  | a tenant_id as stored (int, numeric string, null or ''); null or '' means the Default company |
 
 **Returns:** `int`
 

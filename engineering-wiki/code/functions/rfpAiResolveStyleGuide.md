@@ -6,12 +6,12 @@ Resolve the style guide for an RFP. Order of precedence: 1. The RFP's own `rfps.
 function rfpAiResolveStyleGuide(PDO $conn, int $rfpId): string
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 38.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 40.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rfpId` | `int` |  |  |
+| `$rfpId` | `int` |  | the rfps id |
 
 **Returns:** `string`
 
@@ -19,8 +19,8 @@ Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 38.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 40 | `rfpAiResolveStyleGuide` | read [rfps](/code/tables/rfps.md) |  |
-| 47 | `rfpAiResolveStyleGuide` | read [system_settings](/code/tables/system_settings.md) |  |
+| 42 | `rfpAiResolveStyleGuide` | read [rfps](/code/tables/rfps.md) |  |
+| 49 | `rfpAiResolveStyleGuide` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

@@ -1,6 +1,6 @@
 # includes/db_verify_index_parse.php
 
-> PHP - 106 lines
+> PHP - 114 lines
 
 Shared parser + drift self-check for the index backfill list.
 
@@ -20,9 +20,9 @@ disagree. Mirrors the `capSelfCheck()` / settings-manifest self-check pattern.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [dbVerifyParseIndexesFromSql()](/code/functions/dbVerifyParseIndexesFromSql.md) | 28 | Extract every named secondary index from freeitsm.sql text: [table, name, type, columns]. Skips PRIMARY KEY, FOREIGN KEY, CONSTRAINT. |
-| [dbVerifyIndexTypeOf()](/code/functions/dbVerifyIndexTypeOf.md) | 54 | Normalise an index type from either list format. |
-| [dbVerifyIndexListSelfCheck()](/code/functions/dbVerifyIndexListSelfCheck.md) | 67 | Compare the committed generated list against a fresh parse of freeitsm.sql. Returns human-readable problem strings; an empty array means they're in sync. |
+| [dbVerifyParseIndexesFromSql()](/code/functions/dbVerifyParseIndexesFromSql.md) | 30 | Extract every named secondary index from freeitsm.sql text: [table, name, type, columns]. Skips PRIMARY KEY, FOREIGN KEY, CONSTRAINT. |
+| [dbVerifyIndexTypeOf()](/code/functions/dbVerifyIndexTypeOf.md) | 59 | Normalise an index type from either list format. |
+| [dbVerifyIndexListSelfCheck()](/code/functions/dbVerifyIndexListSelfCheck.md) | 75 | Compare the committed generated list against a fresh parse of freeitsm.sql. Returns human-readable problem strings; an empty array means they're in sync. |
 
 ## How it hangs together
 

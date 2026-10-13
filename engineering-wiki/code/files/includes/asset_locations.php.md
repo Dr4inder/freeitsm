@@ -1,6 +1,6 @@
 # includes/asset_locations.php
 
-> PHP - 65 lines
+> PHP - 69 lines
 
 Asset locations: which ones a company can see, including SHARED ones (2.6.0).
 
@@ -35,13 +35,13 @@ install that has pulled the update but not run it yet.
 |---|--:|---|
 | [assetLocationsSharedReady()](/code/functions/assetLocationsSharedReady.md) | 34 | Has Database Verification added asset_locations.is_shared yet? |
 | [assetLocationScope()](/code/functions/assetLocationScope.md) | 44 | The locations one company may see: its own plus every shared one. |
-| [assetLocationIsShared()](/code/functions/assetLocationIsShared.md) | 57 | Is this location shared? False for a missing row or an un-verified install. |
+| [assetLocationIsShared()](/code/functions/assetLocationIsShared.md) | 61 | Is this location shared? False for a missing row or an un-verified install. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 61 | `assetLocationIsShared` | read [asset_locations](/code/tables/asset_locations.md) |  |
+| 65 | `assetLocationIsShared` | read [asset_locations](/code/tables/asset_locations.md) |  |
 
 ## How it hangs together
 

@@ -6,13 +6,13 @@ company_id from the body/query, checked against the key - or the key's default c
 function apiCostCentreCompany(PDO $conn, array $apiKey, $raw): int
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 71.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 81.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
-| `$raw` |  |  |  |
+| `$raw` |  |  | the caller's company_id (untrusted); null or '' means the key's default company |
 
 **Returns:** `int`
 

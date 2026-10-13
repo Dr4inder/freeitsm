@@ -1,6 +1,6 @@
 # includes/reply_templates.php
 
-> PHP - 156 lines
+> PHP - 161 lines
 
 Canned responses — the reply text an analyst inserts instead of retyping it.
 
@@ -37,16 +37,16 @@ authored it), the values substituted into it never are.
 | Function | Line | What it does |
 |---|--:|---|
 | [replyTemplateMergeCodes()](/code/functions/replyTemplateMergeCodes.md) | 44 | The merge codes offered in the UI, in the order they are listed. |
-| [renderReplyTemplate()](/code/functions/renderReplyTemplate.md) | 70 | Resolve a template body against a ticket, escaping every substituted value. |
-| [replyTemplatesVisibleTo()](/code/functions/replyTemplatesVisibleTo.md) | 100 | Every template this analyst may insert, shared first then their own. |
-| [replyTemplateWriteScope()](/code/functions/replyTemplateWriteScope.md) | 142 | May this analyst write to this template? |
+| [renderReplyTemplate()](/code/functions/renderReplyTemplate.md) | 72 | Resolve a template body against a ticket, escaping every substituted value. |
+| [replyTemplatesVisibleTo()](/code/functions/replyTemplatesVisibleTo.md) | 103 | Every template this analyst may insert, shared first then their own. |
+| [replyTemplateWriteScope()](/code/functions/replyTemplateWriteScope.md) | 147 | May this analyst write to this template? |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 115 | `replyTemplatesVisibleTo` | read [ticket_reply_templates](/code/tables/ticket_reply_templates.md) |  |
-| 144 | `replyTemplateWriteScope` | read [ticket_reply_templates](/code/tables/ticket_reply_templates.md) |  |
+| 118 | `replyTemplatesVisibleTo` | read [ticket_reply_templates](/code/tables/ticket_reply_templates.md) |  |
+| 149 | `replyTemplateWriteScope` | read [ticket_reply_templates](/code/tables/ticket_reply_templates.md) |  |
 
 ## How it hangs together
 

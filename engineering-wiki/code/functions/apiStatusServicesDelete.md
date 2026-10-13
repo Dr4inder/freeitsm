@@ -6,7 +6,7 @@ DELETE /service-status/services/{id} - deletes a service through ServiceStatusSe
 function apiStatusServicesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 250.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 266.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

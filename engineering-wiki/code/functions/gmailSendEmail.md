@@ -24,17 +24,17 @@ function gmailSendEmail(
 ): void
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 94.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 109.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$to` | `string` |  |  |
-| `$subject` | `string` |  |  |
-| `$htmlBody` | `string` |  |  |
-| `$from` | `string` | `''` |  |
-| `$cc` | `string` | `''` |  |
-| `$parts` | `array` | `[]` |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
+| `$to` | `string` |  | recipient addresses, semicolon/comma separated; invalid ones are dropped |
+| `$subject` | `string` |  | the email subject |
+| `$htmlBody` | `string` |  | the HTML body |
+| `$from` | `string` | `''` | the sender address (the mailbox address) |
+| `$cc` | `string` | `''` | CC addresses, semicolon/comma separated; invalid ones are dropped |
+| `$parts` | `array` | `[]` | attachments and inline images, Graph-shaped (includes/mime_message.php) |
 
 **Returns:** `void`
 

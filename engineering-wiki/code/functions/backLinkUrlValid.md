@@ -6,11 +6,11 @@ True when `$url` is a plain http(s) address - the only kind ever rendered.
 function backLinkUrlValid(string $url): bool
 ```
 
-Defined in [includes/back_link.php](/code/files/includes/back_link.php.md), line 18.
+Defined in [includes/back_link.php](/code/files/includes/back_link.php.md), line 22.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
+| `$url` | `string` |  | the stored or posted address to check |
 
 **Returns:** `bool`
 

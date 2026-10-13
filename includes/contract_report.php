@@ -127,6 +127,9 @@ function contractReportBody(array $contract, array $assets): string
  * A hostname is the usual answer and a SIM card has none, so the fallbacks
  * matter. Falling through to a bare id would be a line nobody can identify —
  * which on a printed report nobody can then look up either.
+ *
+ * @param array $a  an asset row as contractAssetsFor() returns it (hostname, asset_tag, service_tag,
+ *     manufacturer, model, asset_id)
  */
 function contractReportAssetName(array $a): string
 {
@@ -139,6 +142,8 @@ function contractReportAssetName(array $a): string
 /**
  * The contract, with the supplier and owner names the report shows.
  * Returns null when there is no such contract.
+ *
+ * @param int $contractId  contracts.id to load
  */
 function contractReportLoad(PDO $conn, int $contractId, ?int $analystId = null): ?array
 {

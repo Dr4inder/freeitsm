@@ -36,6 +36,10 @@
  *
  * $table is a caller-supplied literal and is checked against a fixed list; it
  * never comes from request input.
+ *
+ * @param string $table  'analyst_sso_identities' or 'user_sso_identities' - a developer literal; anything else throws
+ * @param int $providerId  the sign-in provider (auth_providers.id)
+ * @param string $sub  the subject (sub claim) the provider sent for this person
  */
 function ssoClearDanglingLink(PDO $conn, string $table, int $providerId, string $sub): void {
     if (!in_array($table, ['analyst_sso_identities', 'user_sso_identities'], true)) {
@@ -78,6 +82,9 @@ function ssoJitColumnsReady(PDO $conn): bool {
  * Deliberately NOT true for LDAP or CardDAV: they keep records up to date
  * their own way (directory sync, address-book write-back), with their own
  * rules about what is editable - see portalProfileAccess().
+ *
+ * @param ?string $protocol  the provider's protocol, e.g. 'oidc' or 'ldap'
+ * @param ?string $syncMode  the provider's profile_sync_mode; only 'always' locks
  */
 function ssoProfileSyncLocks(?string $protocol, ?string $syncMode): bool {
     return strtolower((string)$protocol) === 'oidc' && $syncMode === 'always';
@@ -129,6 +136,8 @@ function ssoPortalRoutingColumnsReady(PDO $conn): bool {
  * Matching is on the WHOLE domain: "acme.com" does not cover "uk.acme.com".
  * A subdomain is a separate line. Predictable beats clever here - a suffix
  * match would quietly route addresses nobody listed.
+ *
+ * @param mixed $value  what the admin typed (one domain per line, commas or semicolons), or an array of domains
  */
 function ssoParseEmailDomains($value): array {
     // Lines, commas and semicolons - not spaces, so a typo such as "not a domain"
@@ -156,6 +165,8 @@ function ssoParseEmailDomains($value): array {
  *
  * Enabled OIDC providers only: an LDAP directory has nowhere to redirect to.
  * Safe before Database Verification (answers null).
+ *
+ * @param string $email  the address typed on the portal sign-in page - untrusted; only its domain is used
  */
 function ssoPortalProviderForEmail(PDO $conn, string $email): ?array {
     if (!ssoPortalRoutingColumnsReady($conn)) return null;
@@ -201,6 +212,9 @@ function ssoJitCompanyReady(PDO $conn): bool {
  *   none      - no company until an administrator grants some.
  * Only at creation: an analyst whose access was changed by hand is never touched.
  * Single-company installs: nothing to decide.
+ *
+ * @param int $providerId  the sign-in provider (auth_providers.id) that created the analyst
+ * @param int $analystId  the analyst just created by the sign-in
  */
 function ssoApplyJitCompanies(PDO $conn, int $providerId, int $analystId): void {
     try {

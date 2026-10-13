@@ -6,12 +6,12 @@ related_tickets: the tickets linked to a ticket number, with the link type, dire
 function warbotToolRelatedTickets(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 865.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 916.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$args` | `array` |  |  |
+| `$args` | `array` |  | the model's arguments - untrusted: ticket (the ticket number, e.g. as shown on the ticket) |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
@@ -20,8 +20,8 @@ Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 871 | `warbotToolRelatedTickets` | read [tickets](/code/tables/tickets.md) |  |
-| 879 | `warbotToolRelatedTickets` | read [ticket_links](/code/tables/ticket_links.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 922 | `warbotToolRelatedTickets` | read [tickets](/code/tables/tickets.md) |  |
+| 930 | `warbotToolRelatedTickets` | read [ticket_links](/code/tables/ticket_links.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Calls
 

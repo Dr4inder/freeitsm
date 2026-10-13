@@ -11,14 +11,14 @@ until the day somebody adds a second caller.
 function catalogueOverrideOrDefault(PDO $conn, array $overrides, string $key, string $table): ?int
 ```
 
-Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 338.
+Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 353.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$overrides` | `array` |  |  |
-| `$key` | `string` |  |  |
-| `$table` | `string` |  |  |
+| `$overrides` | `array` |  | the caller's ticket overrides, keyed by column name |
+| `$key` | `string` |  | the override key to look for, e.g. 'status_id' |
+| `$table` | `string` |  | the lookup table to take the default from (trusted - interpolated into the SQL), e.g. 'ticket_statuses'; needs is_active, is_default and display_order columns |
 
 **Returns:** `?int`
 

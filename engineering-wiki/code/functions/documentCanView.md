@@ -12,14 +12,14 @@ and guessing an integer is not hard.
 function documentCanView(PDO $conn, int $analystId, ?array $allowedModules, int $documentId): bool
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 468.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 484.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$allowedModules` | `?array` |  |  |
-| `$documentId` | `int` |  |  |
+| `$allowedModules` | `?array` |  | the analyst's allowed module keys (`$_SESSION`['allowed_modules']); null means all |
+| `$documentId` | `int` |  | the documents.id asked for - untrusted, often straight from the URL |
 
 **Returns:** `bool`
 
@@ -27,7 +27,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 473 | `documentCanView` | read [document_links](/code/tables/document_links.md) |  |
+| 489 | `documentCanView` | read [document_links](/code/tables/document_links.md) |  |
 
 ## Calls
 

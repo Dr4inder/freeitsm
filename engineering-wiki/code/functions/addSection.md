@@ -9,13 +9,13 @@ Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` i
 function addSection(&$sections, $title, $body)
 ```
 
-Defined in [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md), line 27.
+Defined in [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md), line 31.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sections` |  |  |  |
-| `$title` |  |  |  |
-| `$body` |  |  |  |
+| `$sections` |  |  | the report so far, a list of section strings - appended to by reference |
+| `$title` |  |  | the section heading, printed between === marks |
+| `$body` |  |  | the section text - a string, or an array of lines |
 
 ## Called from
 

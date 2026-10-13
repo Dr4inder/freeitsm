@@ -6,11 +6,11 @@ Split a stored answer into a scalar string + a list, so one operator works for b
 function formLogicNormaliseValue($raw): array
 ```
 
-Defined in [includes/form_logic.php](/code/files/includes/form_logic.php.md), line 26.
+Defined in [includes/form_logic.php](/code/files/includes/form_logic.php.md), line 31.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` |  |  |  |
+| `$raw` |  |  | one field's answer - a string, a JSON array string (checkboxes), a lookup's {"id","label"} JSON string, a PHP array, or null |
 
 **Returns:** `array`
 

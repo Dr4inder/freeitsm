@@ -6,11 +6,11 @@ Strip the quoted thread from an inbound reply Relies on our own visible marker t
 function stripInboundThread($bodyContent)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1342.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1410.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bodyContent` |  |  |  |
+| `$bodyContent` |  |  | the reply's HTML body, with the quoted thread still in it |
 
 ## Called from
 

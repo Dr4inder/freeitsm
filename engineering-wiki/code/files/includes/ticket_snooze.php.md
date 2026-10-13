@@ -1,6 +1,6 @@
 # includes/ticket_snooze.php
 
-> PHP - 312 lines
+> PHP - 327 lines
 
 Snoozing a ticket — "I can't do anything with this until Thursday."
 
@@ -45,14 +45,14 @@ It does not change status, and it does not hide the ticket from search.
 | [snoozeSchemaReady()](/code/functions/snoozeSchemaReady.md) | 56 | Does this database have the snooze columns yet? |
 | [scheduleSchemaReady()](/code/functions/scheduleSchemaReady.md) | 79 | Does this database have the scheduling columns yet? (#1161) |
 | [snoozeWakeHour()](/code/functions/snoozeWakeHour.md) | 98 | The hour "Tomorrow" and "Next week" land on — Tickets → Settings → General, default 09:00. Interpreted in the *snoozing analyst's* timezone, so a desk spread across zones each gets their own start of day rather than the server's. |
-| [snoozeHiddenSql()](/code/functions/snoozeHiddenSql.md) | 119 | SQL fragment hiding sleeping tickets. Append to any WHERE (or LEFT JOIN ON) that lists or counts the working queue. No placeholders, so it never disturbs a caller's parameter ordering — the same property that lets the trashed-ticket predicate be appended to `$ttSql` in get_ticket_counts.php. |
-| [snoozeOnlySql()](/code/functions/snoozeOnlySql.md) | 132 | The complement: only sleeping tickets. Drives the Snoozed folder and its count. Note the pre-upgrade answer is `1=0` and NOT the empty string — an empty fragment here would turn "only the sleeping ones" into "every ticket you own", which is the one failure mode worse than the folder simply being empty. |
-| [resolveSnoozeUntil()](/code/functions/resolveSnoozeUntil.md) | 151 | Turn a preset (or a custom local datetime) into the UTC instant to store. |
-| [snoozeTicket()](/code/functions/snoozeTicket.md) | 215 | Put one ticket to sleep. Caller has already checked access. Deliberately does NOT bump updated_datetime — snoozing is the desk deciding not to act, not activity on the ticket, and shoving it to the top of a sort by last-updated on its way out of the list would be a lie. |
-| [wakeTicket()](/code/functions/wakeTicket.md) | 232 | Wake a ticket early. Returns true if it was actually asleep, so a caller can stay quiet rather than announcing a wake that woke nothing. |
-| [wakeSnoozedTicketOnCustomerReply()](/code/functions/wakeSnoozedTicketOnCustomerReply.md) | 263 | The customer came back while the ticket was asleep — wake it. |
-| [snoozeStateFor()](/code/functions/snoozeStateFor.md) | 277 | Read the sleep state of one ticket for the reading pane: null when it is awake, otherwise the wake time (UTC), who put it there and why. |
-| [snoozeAudit()](/code/functions/snoozeAudit.md) | 304 | Best-effort trail entry. Never fails the action it is recording. |
+| [snoozeHiddenSql()](/code/functions/snoozeHiddenSql.md) | 121 | SQL fragment hiding sleeping tickets. Append to any WHERE (or LEFT JOIN ON) that lists or counts the working queue. No placeholders, so it never disturbs a caller's parameter ordering — the same property that lets the trashed-ticket predicate be appended to `$ttSql` in get_ticket_counts.php. |
+| [snoozeOnlySql()](/code/functions/snoozeOnlySql.md) | 136 | The complement: only sleeping tickets. Drives the Snoozed folder and its count. Note the pre-upgrade answer is `1=0` and NOT the empty string — an empty fragment here would turn "only the sleeping ones" into "every ticket you own", which is the one failure mode worse than the folder simply being empty. |
+| [resolveSnoozeUntil()](/code/functions/resolveSnoozeUntil.md) | 156 | Turn a preset (or a custom local datetime) into the UTC instant to store. |
+| [snoozeTicket()](/code/functions/snoozeTicket.md) | 223 | Put one ticket to sleep. Caller has already checked access. Deliberately does NOT bump updated_datetime — snoozing is the desk deciding not to act, not activity on the ticket, and shoving it to the top of a sort by last-updated on its way out of the list would be a lie. |
+| [wakeTicket()](/code/functions/wakeTicket.md) | 242 | Wake a ticket early. Returns true if it was actually asleep, so a caller can stay quiet rather than announcing a wake that woke nothing. |
+| [wakeSnoozedTicketOnCustomerReply()](/code/functions/wakeSnoozedTicketOnCustomerReply.md) | 273 | The customer came back while the ticket was asleep — wake it. |
+| [snoozeStateFor()](/code/functions/snoozeStateFor.md) | 287 | Read the sleep state of one ticket for the reading pane: null when it is awake, otherwise the wake time (UTC), who put it there and why. |
+| [snoozeAudit()](/code/functions/snoozeAudit.md) | 319 | Best-effort trail entry. Never fails the action it is recording. |
 
 ## Database
 
@@ -61,11 +61,11 @@ It does not change status, and it does not hide the ticket from search.
 | 60 | `snoozeSchemaReady` | read [tickets](/code/tables/tickets.md) |  |
 | 83 | `scheduleSchemaReady` | read [tickets](/code/tables/tickets.md) |  |
 | 102 | `snoozeWakeHour` | read [system_settings](/code/tables/system_settings.md) |  |
-| 220 | `snoozeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
-| 236 | `wakeTicket` | read [tickets](/code/tables/tickets.md) |  |
-| 242 | `wakeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
-| 281 | `snoozeStateFor` | read [tickets](/code/tables/tickets.md), read [analysts](/code/tables/analysts.md) |  |
-| 307 | `snoozeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 228 | `snoozeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
+| 246 | `wakeTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 252 | `wakeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
+| 291 | `snoozeStateFor` | read [tickets](/code/tables/tickets.md), read [analysts](/code/tables/analysts.md) |  |
+| 322 | `snoozeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ## How it hangs together
 

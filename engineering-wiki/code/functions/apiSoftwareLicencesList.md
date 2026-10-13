@@ -6,7 +6,7 @@ GET /software/licences
 function apiSoftwareLicencesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 286.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 300.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 335 | `apiSoftwareLicencesList` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 349 | `apiSoftwareLicencesList` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ## Calls
 

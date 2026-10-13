@@ -6,7 +6,7 @@ The built-in list of public free-email / consumer domains. These are ALWAYS trea
 function freemailBuiltinDomains(): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1214.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1265.
 
 **Returns:** `array`
 

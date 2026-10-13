@@ -9,14 +9,14 @@ fixed.
 function oaf_patch(&$node, $data, &$schemas, $depth = 0)
 ```
 
-Defined in [api/v1/dev/openapi_fix.php](/code/files/api/v1/dev/openapi_fix.php.md), line 63.
+Defined in [api/v1/dev/openapi_fix.php](/code/files/api/v1/dev/openapi_fix.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$node` |  |  |  |
-| `$data` |  |  |  |
-| `$schemas` |  |  |  |
-| `$depth` |  | `0` |  |
+| `$node` |  |  | the schema node to correct, by reference |
+| `$data` |  |  | the live value that node should describe |
+| `$schemas` |  |  | the shared component schemas, by reference, so a `$ref` target is corrected too |
+| `$depth` |  | `0` | how deep the recursion is; it stops past 40 |
 
 ## Calls
 

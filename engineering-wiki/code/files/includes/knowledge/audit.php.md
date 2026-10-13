@@ -1,6 +1,6 @@
 # includes/knowledge/audit.php
 
-> PHP - 154 lines
+> PHP - 162 lines
 
 The Knowledge history — the ONE place a row is written.
 
@@ -36,18 +36,18 @@ still exact, because it comes from view_count and never from here.
 | Function | Line | What it does |
 |---|--:|---|
 | [knowledgeAuditLog()](/code/functions/knowledgeAuditLog.md) | 49 | Record one thing that happened. |
-| [knowledgeAuditView()](/code/functions/knowledgeAuditView.md) | 83 | Record that somebody read an article — at most once per person per day. |
-| [knowledgeAuditHistory()](/code/functions/knowledgeAuditHistory.md) | 110 | The history of one object, newest first, with the names filled in. |
+| [knowledgeAuditView()](/code/functions/knowledgeAuditView.md) | 87 | Record that somebody read an article — at most once per person per day. |
+| [knowledgeAuditHistory()](/code/functions/knowledgeAuditHistory.md) | 118 | The history of one object, newest first, with the names filled in. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 61 | `knowledgeAuditLog` | **insert** [knowledge_audit](/code/tables/knowledge_audit.md) (`object_type`, `object_id`, `action`, `analyst_id`, `user_id`, `detail`, `ip_address`) |  |
-| 88 | `knowledgeAuditView` | read [knowledge_audit](/code/tables/knowledge_audit.md) |  |
-| 114 | `knowledgeAuditHistory` | read [knowledge_audit](/code/tables/knowledge_audit.md) |  |
-| 129 | `knowledgeAuditHistory` | read [analysts](/code/tables/analysts.md) |  |
-| 132 | `knowledgeAuditHistory` | read [users](/code/tables/users.md) |  |
+| 92 | `knowledgeAuditView` | read [knowledge_audit](/code/tables/knowledge_audit.md) |  |
+| 122 | `knowledgeAuditHistory` | read [knowledge_audit](/code/tables/knowledge_audit.md) |  |
+| 137 | `knowledgeAuditHistory` | read [analysts](/code/tables/analysts.md) |  |
+| 140 | `knowledgeAuditHistory` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

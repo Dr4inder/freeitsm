@@ -16,16 +16,16 @@ function mailboxSendSimple(
 ): ?string
 ```
 
-Defined in [includes/mailbox_send.php](/code/files/includes/mailbox_send.php.md), line 23.
+Defined in [includes/mailbox_send.php](/code/files/includes/mailbox_send.php.md), line 29.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `array` |  |  |
-| `$to` | `string` |  |  |
-| `$subject` | `string` |  |  |
-| `$htmlBody` | `string` |  |  |
-| `$route` | `string` |  |  |
+| `$mailbox` | `array` |  | the target_mailboxes row, decrypted; its provider ('imap', 'google', else Microsoft) picks the route |
+| `$to` | `string` |  | one recipient address |
+| `$subject` | `string` |  | the subject line |
+| `$htmlBody` | `string` |  | the HTML body |
+| `$route` | `string` |  | what the send log records it as, e.g. 'oversize_alert' or 'oversize_reply' |
 | `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?string`

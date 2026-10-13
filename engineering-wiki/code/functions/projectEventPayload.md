@@ -6,11 +6,11 @@ The project as every project event carries it.
 function projectEventPayload(array $p): array
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 66.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 70.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `array` |  |  |
+| `$p` | `array` |  | a projects row as `projectAlertRows()` gives it (shown_health and owner_name included when present) |
 
 **Returns:** `array`
 

@@ -6,12 +6,12 @@ The manager's own row, or null if they cannot be a manager (missing, or left).
 function managerRow(PDO $conn, int $managerUserId): ?array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 109.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 113.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$managerUserId` | `int` |  |  |
+| `$managerUserId` | `int` |  | the manager's users.id (a portal user) |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 1
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 111 | `managerRow` | read [users](/code/tables/users.md) |  |
+| 115 | `managerRow` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

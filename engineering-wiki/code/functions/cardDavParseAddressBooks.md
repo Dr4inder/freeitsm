@@ -10,11 +10,11 @@ collapsed: the first is a wrong URL, the second is an empty account.
 function cardDavParseAddressBooks(string $xml): ?array
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 269.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 274.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$xml` | `string` |  |  |
+| `$xml` | `string` |  | the PROPFIND multistatus body as the server sent it |
 
 **Returns:** `?array`
 

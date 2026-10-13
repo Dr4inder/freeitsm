@@ -19,15 +19,15 @@ Management lines (discussion #62, step 3): who a portal user may see the tickets
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md):301 |  | delete |  |  |
-| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md):331 |  | delete |  |  |
-| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md):343 |  | insert | `manager_user_id`, `grant_type`, `target_id`, `target_value`, `is_exclusion`, `created_by_analyst_id`, `created_datetime` |  |
+| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md):313 |  | delete |  |  |
+| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md):343 |  | delete |  |  |
+| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md):355 |  | insert | `manager_user_id`, `grant_type`, `target_id`, `target_value`, `is_exclusion`, `created_by_analyst_id`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/system/managers.php](/code/files/api/system/managers.php.md) | managersStatus L48, L98, L113, L128 |  |
-| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md) | maReady L62, maState L96, L212, L337 |  |
-| [includes/managers.php](/code/files/includes/managers.php.md) | managersActive L101, managerTeamUserIds L138, managersNotifyNewTicket L398 |  |
+| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md) | maReady L70, maState L108, L224, L349 |  |
+| [includes/managers.php](/code/files/includes/managers.php.md) | managersActive L101, managerTeamUserIds L143, managersNotifyNewTicket L415 |  |
 

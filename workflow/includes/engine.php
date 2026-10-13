@@ -279,6 +279,11 @@ class WorkflowEngine
      * {entityKey: {id, name}} payload matching the entity's condition fields.
      * $action is 'created' | 'updated' | 'deleted'. dispatch() is self-safe, so
      * call sites need no try/catch — a workflow hiccup can't affect the write.
+     *
+     * @param string $entityKey  the entity's key in crudEntities(), e.g. 'department'; also the payload key
+     * @param string $action  'created', 'updated' or 'deleted'
+     * @param int $id  the record's id
+     * @param ?string $name  the record's display name; null when there is none (e.g. after a delete)
      */
     public static function emitCrud(string $entityKey, string $action, int $id, ?string $name = null): void
     {
@@ -289,6 +294,8 @@ class WorkflowEngine
      * Per-trigger field hints — the dotted paths into the payload that
      * are valid for `condition.field`. Used to populate the editor's
      * field dropdown so users aren't guessing.
+     *
+     * @param string $trigger  the trigger event key, e.g. 'ticket.created'; an unknown one gives []
      */
     public static function availableFields(string $trigger): array
     {
@@ -602,6 +609,10 @@ class WorkflowEngine
      * into the payload). Instead we DECODE the template, walk it, substitute
      * inside the string VALUES, and re-encode — so json_encode does the
      * escaping, exactly as the old hardcoded array-then-encode approach did.
+     *
+     * @param string $template  the format's JSON body template with {{message}} and other merge codes
+     * @param string $message  the action's rendered message, put into {{message}}
+     * @param array $payload  the run's event payload, for the other merge codes
      */
     private static function renderFormatBody(string $template, string $message, array $payload): string
     {
@@ -650,6 +661,8 @@ class WorkflowEngine
      * a human-facing reference. Cached; never clobbers a value the host module
      * already supplied (problem.* triggers ship `problem.problem_number`
      * themselves, and that stays authoritative).
+     *
+     * @param array $payload  the event payload; ticket.id and problem.id gain a .number beside them
      */
     public static function enrichWithReferences(PDO $conn, array $payload): array
     {
@@ -684,6 +697,8 @@ class WorkflowEngine
      * ONE entry point, called by the engine at run time AND by the Send-test
      * preview — so the preview cannot drift from what production actually sends
      * (the failure that made the old hand-written sample payload a liability).
+     *
+     * @param array $payload  the event payload as dispatched (plus {{event}})
      */
     public static function enrichPayloadForTemplates(PDO $conn, array $payload): array
     {
@@ -699,6 +714,8 @@ class WorkflowEngine
      *   approver.id               → approver.name
      *
      * Returns null if there's nothing sensible to derive.
+     *
+     * @param string $idPath  a lookup id's dotted path, e.g. 'ticket.priority_id'
      */
     private static function lookupNamePath(string $idPath): ?string
     {
@@ -712,6 +729,9 @@ class WorkflowEngine
      * Resolve one lookup id to its human label (cached per request — a ticket
      * payload touches ~6 of these and the same status/priority recurs across a
      * fan-out, so the cache earns its keep).
+     *
+     * @param array $spec  a FIELD_LOOKUP_TABLES entry (table, label_col)
+     * @param int $id  the lookup row's id
      */
     private static function lookupLabel(PDO $conn, array $spec, int $id): ?string
     {
@@ -745,6 +765,8 @@ class WorkflowEngine
      * NEVER CLOBBERS an existing value: `form.submitted` already ships a real
      * `form.name` in its payload, and the host module's value wins over anything
      * we'd derive from `form.id`.
+     *
+     * @param array $payload  the event payload; each lookup id in FIELD_LOOKUP_TABLES gains a _name twin
      */
     public static function enrichWithLookupNames(PDO $conn, array $payload): array
     {
@@ -764,7 +786,13 @@ class WorkflowEngine
         return $payload;
     }
 
-    /** Dotted-path setter — the write twin of dotGet(). */
+    /**
+     * Dotted-path setter — the write twin of dotGet().
+     *
+     * @param array $haystack  the array to write into, by reference; missing levels are created
+     * @param string $path  the dotted path, e.g. 'ticket.number'
+     * @param mixed $value  the value to put there
+     */
     private static function dotSet(array &$haystack, string $path, $value): void
     {
         $parts = explode('.', $path);
@@ -792,6 +820,8 @@ class WorkflowEngine
      * only the codes the trigger can really resolve is what stops that.
      *
      * Returns [['path' => ..., 'label' => ..., 'note' => ...], ...].
+     *
+     * @param string $trigger  the trigger event key, e.g. 'ticket.created'
      */
     public static function availableVariables(string $trigger): array
     {
@@ -886,6 +916,8 @@ class WorkflowEngine
      *
      * The editor uses this so its unknown-variable warning doesn't cry wolf
      * over a legitimate {{submission.fields.Start date}}.
+     *
+     * @param string $trigger  the trigger event key, e.g. 'form.submitted'
      */
     public static function variablePrefixes(string $trigger): array
     {
@@ -919,6 +951,8 @@ class WorkflowEngine
      * 'ticket.requester_email' → 'Ticket · Requester email'.
      * Derived rather than hand-mapped so it stays correct as the trigger
      * catalogue grows — a hand-written label map would rot immediately.
+     *
+     * @param string $path  a dotted payload path, e.g. 'ticket.requester_email'
      */
     private static function humaniseFieldPath(string $path): string
     {
@@ -926,7 +960,11 @@ class WorkflowEngine
         return implode(' · ', array_map([self::class, 'humaniseSegment'], $parts));
     }
 
-    /** One dot-path segment as a label: underscores to spaces, a trailing " id" dropped, first letter capitalised ("id" alone becomes "ID"). */
+    /**
+     * One dot-path segment as a label: underscores to spaces, a trailing " id" dropped, first letter capitalised ("id" alone becomes "ID").
+     *
+     * @param string $seg  one segment of a dotted path, e.g. 'requester_email'
+     */
     private static function humaniseSegment(string $seg): string
     {
         $s = str_replace('_', ' ', $seg);
@@ -1080,6 +1118,8 @@ class WorkflowEngine
      * everything else as text. New fields added to availableFields() get
      * a sensible default without needing an explicit FIELD_TYPES entry,
      * but it's the explicit entry that's authoritative.
+     *
+     * @param string $fieldPath  a condition field's dotted path, e.g. 'ticket.priority_id'
      */
     public static function fieldType(string $fieldPath): string
     {
@@ -1097,6 +1137,8 @@ class WorkflowEngine
      * are handled by the editor with their own friendly relabelling (is /
      * is not / is empty / is not empty mapping to in / not_in / is_empty /
      * is_not_empty), so we just return the underlying slugs here.
+     *
+     * @param string $type  'lookup', 'numeric' or 'text' (from fieldType()); anything else is treated as text
      */
     public static function operatorsForFieldType(string $type): array
     {
@@ -1117,6 +1159,8 @@ class WorkflowEngine
      * editor falls back to a plain text input in that case). Returns null
      * defensively if the lookup table doesn't exist (older installs that
      * haven't migrated yet) so the editor still works.
+     *
+     * @param string $fieldPath  a condition field's dotted path; only keys of FIELD_LOOKUP_TABLES give values
      */
     public static function availableValuesForField(string $fieldPath): ?array
     {
@@ -1404,6 +1448,8 @@ class WorkflowEngine
      * Resolve a named action-arg lookup to its {id, label} pairs.
      * Returns null for unknown keys — the editor falls back to a text input
      * in that case so the workflow editor never breaks on a stale spec.
+     *
+     * @param string $key  an action arg's lookup name, a key of ACTION_ARG_LOOKUPS, e.g. 'mailbox'
      */
     public static function availableActionLookup(string $key): ?array
     {
@@ -1423,6 +1469,9 @@ class WorkflowEngine
      * Errors are swallowed (logged into the workflow_executions row but
      * not re-thrown) so a buggy workflow can never break the host module's
      * request.
+     *
+     * @param string $event  the trigger event key, e.g. 'ticket.created'
+     * @param array $payload  the event's data, shaped as availableFields() lists for that trigger
      */
     public static function dispatch(string $event, array $payload): void
     {
@@ -1474,6 +1523,10 @@ class WorkflowEngine
      *
      * Returns the workflow_executions row as an array (for the API to
      * surface back to the caller).
+     *
+     * @param int $workflowId  the workflows id to run
+     * @param array $samplePayload  the payload to run against, standing in for a real event
+     * @param bool $dryRun  true to record what the actions would do without running them
      */
     public static function manualFire(int $workflowId, array $samplePayload = [], bool $dryRun = false): array
     {
@@ -1496,6 +1549,12 @@ class WorkflowEngine
      * runs (see the class-level notes), recording a blocked attempt as an
      * 'aborted' execution row, and otherwise manages the request-scoped
      * counters around the real run.
+     *
+     * @param array $wf  the workflows row
+     * @param string $event  the trigger event key
+     * @param array $payload  the event payload
+     * @param bool $isManual  true for "Test fire", which leaves the workflow's run statistics alone
+     * @param bool $dryRun  true to preview the actions without running them
      */
     private static function run(array $wf, string $event, array $payload, bool $isManual, bool $dryRun = false): array
     {
@@ -1533,6 +1592,13 @@ class WorkflowEngine
      * 'aborted' execution row (status / step_log / error_message) so the
      * block is visible in the execution audit, and stamps the parent
      * workflow's last-run state for non-manual runs. Never throws.
+     *
+     * @param array $wf  the workflows row that was refused
+     * @param string $event  the trigger event key
+     * @param array $payload  the event payload, stored with the aborted row
+     * @param bool $isManual  true for "Test fire", which leaves the workflow's last-run state alone
+     * @param bool $dryRun  true when the refused run was a dry run
+     * @param string $message  why loop protection refused it
      */
     private static function recordAbortedRun(array $wf, string $event, array $payload, bool $isManual, bool $dryRun, string $message): array
     {
@@ -1580,6 +1646,11 @@ class WorkflowEngine
      * "failed". Last-run stats on the workflow are updated only for real,
      * non-manual runs.
      *
+     * @param array $wf  the workflows row (id, name, conditions and actions as JSON)
+     * @param string $event  the trigger event key
+     * @param array $payload  the event payload
+     * @param bool $isManual  true for "Test fire", which leaves the workflow's run statistics alone
+     * @param bool $dryRun  true to preview the actions without running them
      * @writes workflow_executions - one row per run, with the payload and step log
      * @writes workflows(last_run_datetime, last_run_status, run_count)
      * @return array execution_id, workflow_id, status, is_dry_run, step_log, error_message
@@ -1678,6 +1749,8 @@ class WorkflowEngine
      * The catalogue label for an action type — what a dry run reports it
      * "would have" done. Falls back to the raw type for an action the
      * catalogue no longer knows about.
+     *
+     * @param string $type  the action type, e.g. 'send_email'
      */
     private static function describeAction(string $type): string
     {
@@ -1691,6 +1764,9 @@ class WorkflowEngine
      *
      * The signing secret is redacted — a dry run is a debugging surface and
      * must not become a way to read a secret back out of a saved workflow.
+     *
+     * @param array $args  the action's saved args
+     * @param array $payload  the run's payload, for the {{merge codes}}
      */
     private static function previewArgs(array $args, array $payload): array
     {
@@ -1713,6 +1789,10 @@ class WorkflowEngine
      * True when every condition matches the payload (AND), or there are none.
      * Each condition checked is added to the step log, and checking stops at the
      * first that fails.
+     *
+     * @param array $conditions  the workflow's conditions, each [field, op, value]
+     * @param array $payload  the run's payload the fields are read from
+     * @param array $stepLog  the run's step log, by reference; one entry is added per condition checked
      */
     private static function evaluateConditions(array $conditions, array $payload, array &$stepLog): bool
     {
@@ -1739,7 +1819,13 @@ class WorkflowEngine
         return true;
     }
 
-    /** Applies one condition operator to the payload value and the configured value; numeric operators need both sides numeric. */
+    /**
+     * Applies one condition operator to the payload value and the configured value; numeric operators need both sides numeric.
+     *
+     * @param string $op  an operator key from availableOperators(); an unknown one fails the condition
+     * @param mixed $actual  the value found in the payload (null when the field is absent)
+     * @param mixed $value  the value the condition was configured with
+     */
     private static function evaluateOperator(string $op, $actual, $value): bool
     {
         switch ($op) {
@@ -1766,6 +1852,9 @@ class WorkflowEngine
      * array, a comma-separated string, or a single scalar. Comparison uses
      * loose-equal (string cast both sides) so ids stored as numbers in the
      * payload match the strings the form serialises.
+     *
+     * @param mixed $actual  the value found in the payload
+     * @param mixed $list  the allowed values: an array, a comma-separated string or a single value
      */
     private static function value_in_list($actual, $list): bool
     {
@@ -1782,7 +1871,12 @@ class WorkflowEngine
         return false;
     }
 
-    /** Compares two values as strings, so a typed-in "4" equals a numeric id 4; null also equals an empty string. */
+    /**
+     * Compares two values as strings, so a typed-in "4" equals a numeric id 4; null also equals an empty string.
+     *
+     * @param mixed $a  one value, e.g. the payload's
+     * @param mixed $b  the other, e.g. the configured one
+     */
     private static function loose_equal($a, $b): bool
     {
         // Cast both to string for comparison so the editor's typed-in values
@@ -1795,7 +1889,13 @@ class WorkflowEngine
     //  Action handlers
     // -----------------------------------------------------------------
 
-    /** Hands one action to its action_* handler by type and returns the handler's result; an unknown type throws. */
+    /**
+     * Hands one action to its action_* handler by type and returns the handler's result; an unknown type throws.
+     *
+     * @param string $type  the action type, e.g. 'send_email'
+     * @param array $args  the action's saved args, not yet rendered
+     * @param array $payload  the run's payload, including earlier steps' results
+     */
     private static function executeAction(string $type, array $args, array $payload)
     {
         switch ($type) {
@@ -1839,6 +1939,10 @@ class WorkflowEngine
      * $payload and $stepLog are by reference: the payload accumulates each
      * step's result for the steps after it, and the caller owns the log.
      *
+     * @param array $actions  the actions in order, each [type, args]
+     * @param array $payload  the run's payload, by reference; each step's result is added for the next
+     * @param array $stepLog  the run's step log, by reference
+     * @param bool $dryRun  true to record what each action would do without running it
      * @return array{0: string, 1: ?string} [status, errorMessage]
      */
     private static function executeActionList(array $actions, array &$payload, array &$stepLog, bool $dryRun = false): array
@@ -1909,6 +2013,10 @@ class WorkflowEngine
      * Never throws: the caller is a form submission or an approval decision,
      * and neither may fail because a rule someone configured is wrong.
      *
+     * @param string $label  the name stored as workflow_name in the run history, e.g. the form's name
+     * @param string $event  the event key it ran for, e.g. 'form.submitted'
+     * @param array $actions  the actions in order, each [type, args]
+     * @param array $payload  the event payload
      * @return array{status: string, execution_id: ?int, steps: array}
      */
     public static function runActionList(string $label, string $event, array $actions, array $payload): array
@@ -1970,6 +2078,10 @@ class WorkflowEngine
      * Nothing is merged for a failed action (the chain stops there anyway) or a
      * dry run (nothing ran, so there is no result to speak of — a later action's
      * preview shows the merge code unresolved, which is honest).
+     *
+     * @param array $payload  the run's payload, by reference
+     * @param int $index  the action's zero-based position; stored one-based under steps
+     * @param mixed $result  what the action returned; anything but a non-empty array is ignored
      */
     private static function mergeStepResult(array &$payload, int $index, $result): void
     {
@@ -1981,6 +2093,9 @@ class WorkflowEngine
     /**
      * Replaces each {{path.to.field}} in a string with the payload value at that
      * dot path - empty when missing, JSON when the value is an array.
+     *
+     * @param string $tmpl  the text with {{path.to.field}} merge codes
+     * @param array $payload  the run's payload the paths are read from
      */
     private static function renderTemplate(string $tmpl, array $payload): string
     {
@@ -1994,6 +2109,10 @@ class WorkflowEngine
     /**
      * Resolve a single arg to a (rendered) string and trim it. Returns
      * '' if the arg is missing — handlers decide whether that's fatal.
+     *
+     * @param array $args  the action's saved args
+     * @param string $key  the arg to read
+     * @param array $payload  the run's payload, for the {{merge codes}}
      */
     private static function argString(array $args, string $key, array $payload): string
     {
@@ -2006,6 +2125,10 @@ class WorkflowEngine
     /**
      * Resolve a single arg to an int, or null if blank / non-numeric.
      * (Handler enforces required-ness if the arg matters.)
+     *
+     * @param array $args  the action's saved args
+     * @param string $key  the arg to read
+     * @param array $payload  the run's payload, for the {{merge codes}}
      */
     private static function argInt(array $args, string $key, array $payload): ?int
     {
@@ -2022,6 +2145,11 @@ class WorkflowEngine
      * safety-shaped option like skip_if_linked default to ON for rules written
      * before it was added. Strings are tolerated because hand-edited JSON and
      * older saves can carry "0"/"false".
+     *
+     * @param array $args  the action's saved args
+     * @param string $key  the arg to read
+     * @param array $payload  the run's payload (not used - a checkbox holds no merge codes)
+     * @param bool $default  the answer when the arg is missing, null or ''
      */
     private static function argBool(array $args, string $key, array $payload, bool $default = false): bool
     {
@@ -2038,6 +2166,8 @@ class WorkflowEngine
      * onto the ticket, skipping templates already attached. No templates chosen
      * is a skip, not an error.
      *
+     * @param array $args  the action's args: ticket_id, template_ids (array or comma-separated)
+     * @param array $payload  the run's payload, for the {{merge codes}}
      * @writes ticket_checklists, ticket_checklist_items - the attached copies
      */
     private static function action_attach_checklist(array $args, array $payload): array
@@ -2107,7 +2237,12 @@ class WorkflowEngine
         ];
     }
 
-    /** log_message: puts the rendered message into the run's step log and changes nothing else. */
+    /**
+     * log_message: puts the rendered message into the run's step log and changes nothing else.
+     *
+     * @param array $args  the action's args: message
+     * @param array $payload  the run's payload, for the {{merge codes}}
+     */
     private static function action_log_message(array $args, array $payload): array
     {
         $message = self::argString($args, 'message', $payload);
@@ -2122,6 +2257,8 @@ class WorkflowEngine
      * Closing applies the same gates as an analyst closing it - mandatory SOP
      * steps and mandatory fields - and the action fails when they block.
      *
+     * @param array $args  the action's args: ticket_id, status_id
+     * @param array $payload  the run's payload, for the {{merge codes}}
      * @writes tickets(status_id, closed_datetime, updated_datetime)
      */
     private static function action_set_ticket_status(array $args, array $payload): array
@@ -2185,7 +2322,12 @@ class WorkflowEngine
         return ['ticket_id' => $ticketId, 'status_id' => $statusId, 'status_name' => $sRow['name']];
     }
 
-    /** set_ticket_priority: sets the ticket's priority after checking the priority id exists. */
+    /**
+     * set_ticket_priority: sets the ticket's priority after checking the priority id exists.
+     *
+     * @param array $args  the action's args: ticket_id, priority_id
+     * @param array $payload  the run's payload, for the {{merge codes}}
+     */
     private static function action_set_ticket_priority(array $args, array $payload): array
     {
         $ticketId   = self::argInt($args, 'ticket_id', $payload);
@@ -2202,7 +2344,12 @@ class WorkflowEngine
         return ['ticket_id' => $ticketId, 'priority_id' => $priorityId, 'priority_name' => $pRow['name']];
     }
 
-    /** assign_ticket: sets both the assigned analyst and the owner of the ticket to one analyst, so the two stay in step. */
+    /**
+     * assign_ticket: sets both the assigned analyst and the owner of the ticket to one analyst, so the two stay in step.
+     *
+     * @param array $args  the action's args: ticket_id, analyst_id
+     * @param array $payload  the run's payload, for the {{merge codes}}
+     */
     private static function action_assign_ticket(array $args, array $payload): array
     {
         $ticketId  = self::argInt($args, 'ticket_id', $payload);
@@ -2226,6 +2373,8 @@ class WorkflowEngine
      * add_ticket_note: adds the rendered note to the ticket's audit trail as a
      * "Workflow Note" with no analyst.
      *
+     * @param array $args  the action's args: ticket_id, note
+     * @param array $payload  the run's payload, for the {{merge codes}}
      * @writes ticket_audit
      */
     private static function action_add_ticket_note(array $args, array $payload): array
@@ -2255,6 +2404,9 @@ class WorkflowEngine
      * copy is filed on the ticket; without one it is a plain styled email. A
      * confidential ticket's email to anyone but its requester or an analyst is
      * skipped. Every send, or failed send, is written to the email log.
+     *
+     * @param array $args  the action's args: ticket_id or mailbox_id, subject, body, to (blank = the requester)
+     * @param array $payload  the run's payload, for the {{merge codes}} and the ticket's confidentiality
      */
     private static function action_send_email(array $args, array $payload): array
     {
@@ -2409,6 +2561,8 @@ class WorkflowEngine
      * Mirrors buildTemplateEmailBody()'s wrapper so a standalone message looks
      * like every other email FreeITSM sends; it just omits the trailer that only
      * means something when there is a ticket to reply onto.
+     *
+     * @param string $bodyContent  the email body; plain text is escaped and its line breaks kept, HTML is used as it is
      */
     private static function plainEmailBody(string $bodyContent): string
     {
@@ -2425,6 +2579,8 @@ class WorkflowEngine
      * default status and priority when none is chosen and placing it at the end
      * of its board column.
      *
+     * @param array $args  the action's args: title, description, status_id, priority_id, assignee_id, ticket_id
+     * @param array $payload  the run's payload, for the {{merge codes}}
      * @writes tasks
      */
     private static function action_create_task(array $args, array $payload): array
@@ -2482,7 +2638,13 @@ class WorkflowEngine
         ];
     }
 
-    /** A project proposal (3.3.0) - the rules are includes/projects/intake.php's. */
+    /**
+     * A project proposal (3.3.0) - the rules are includes/projects/intake.php's.
+     *
+     * @param array $args  the action's args: name, summary, business_case, estimated_cost, estimated_benefit,
+     *     target_end_date, methodology, priority, owner_analyst_id
+     * @param array $payload  the run's payload, for the {{merge codes}} and passed on to projectCreateFromAction()
+     */
     private static function action_create_project(array $args, array $payload): array
     {
         $a = [];
@@ -2503,6 +2665,9 @@ class WorkflowEngine
      * confidential defaults and adds the opening message and a "Ticket Created"
      * audit row, all in one transaction.
      *
+     * @param array $args  the action's args: subject, body, priority_id, department_id, type_id, assigned_team_id,
+     *     assigned_analyst_id, from_email, from_name
+     * @param array $payload  the run's payload; a submission.id sends the job down the form-to-ticket path
      * @writes tickets, emails, ticket_audit, users - a requester row for a new email address
      */
     private static function action_create_ticket(array $args, array $payload): array
@@ -2650,6 +2815,9 @@ class WorkflowEngine
      * timeout (a dead URL fails fast rather than hanging the host request); a
      * non-2xx response or transport error marks the step failed and is visible
      * in the execution log. An async delivery queue with retries is planned.
+     *
+     * @param array $args  the action's args: preset, url and secret (stored encrypted), message, body
+     * @param array $payload  the run's payload; cut down first for a confidential ticket
      */
     private static function action_send_webhook(array $args, array $payload): array
     {
@@ -2721,6 +2889,9 @@ class WorkflowEngine
      *
      * Dry run never reaches this method — runInner() short-circuits before
      * executeAction(), so a workflow test cannot mint a real issue.
+     *
+     * @param array $args  the action's args: ticket_id, connection_id, project, issue_type, summary, body, skip_if_linked
+     * @param array $payload  the run's payload, for the {{merge codes}} and the default description
      */
     private static function action_escalate_to_tracker(array $args, array $payload): array
     {
@@ -2804,6 +2975,9 @@ class WorkflowEngine
      * Does nothing (rather than failing) when there is no link: a rule like "when
      * the status changes, tell the dev team" will fire on plenty of tickets that
      * were never escalated, and that is not an error.
+     *
+     * @param array $args  the action's args: ticket_id, note
+     * @param array $payload  the run's payload, for the {{merge codes}}
      */
     private static function action_send_note_to_tracker(array $args, array $payload): array
     {
@@ -2861,6 +3035,8 @@ class WorkflowEngine
      * is never stored — only the resulting X-FreeITSM-Signature header travels
      * on (retries reuse it: same body → same signature).
      *
+     * @param array $args  the send_webhook args with url and secret already decrypted: preset, url, secret, message, body
+     * @param array $payload  the run's payload (with <key>.full for the Full record format)
      * @return array{preset:string,url:string,body:string,headers:array<int,string>,signed:bool}
      */
     public static function buildWebhookRequest(array $args, array $payload): array
@@ -2928,6 +3104,8 @@ class WorkflowEngine
      * Extend $registry to cover more trigger object types — one entry per resource
      * is the single, typed source of truth for its shape. Best-effort: a load
      * failure is swallowed so the webhook still sends (just without .full).
+     *
+     * @param array $payload  the event payload; each object fullObjectLoaders() knows gains a .full
      */
     public static function enrichWithFullObjects(PDO $conn, array $payload): array
     {
@@ -2993,6 +3171,9 @@ class WorkflowEngine
 
     /**
      * Dotted-path getter — `dotGet(['ticket' => ['id' => 5]], 'ticket.id')` → 5.
+     *
+     * @param array $haystack  the array to read
+     * @param string $path  the dotted path, e.g. 'ticket.id'; '' or a missing level gives null
      */
     private static function dotGet(array $haystack, string $path)
     {
@@ -3009,7 +3190,11 @@ class WorkflowEngine
         return $cur;
     }
 
-    /** A JSON column (a workflow's conditions or actions) decoded to an array; [] when empty or not valid JSON. */
+    /**
+     * A JSON column (a workflow's conditions or actions) decoded to an array; [] when empty or not valid JSON.
+     *
+     * @param mixed $raw  the stored JSON text, or null
+     */
     private static function decodeJsonField($raw): array
     {
         if ($raw === null || $raw === '') return [];

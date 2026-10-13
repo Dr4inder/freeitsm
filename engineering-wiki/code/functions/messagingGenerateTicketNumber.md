@@ -13,7 +13,7 @@ TRAP: never make a ticket number here, or anywhere else, by hand. This used
 function messagingGenerateTicketNumber(PDO $conn, ?int $tenantId = null): string
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 951.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 1024.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

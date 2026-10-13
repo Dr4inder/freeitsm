@@ -6,12 +6,12 @@ An absolute URL for an app-relative path, e.g. 'self-service/tickets.php?id=9'.
 function publicAbsoluteUrl(PDO $conn, string $path): string
 ```
 
-Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), line 162.
+Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), line 168.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | an app-relative path, e.g. 'self-service/tickets.php?id=9'; a leading slash is ignored |
 
 **Returns:** `string`
 

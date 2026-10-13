@@ -6,7 +6,7 @@ GET /software/apps/{id} — app + licences + compliance numbers
 function apiSoftwareAppsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 140.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 145 | `apiSoftwareAppsGet` | read [software_licences](/code/tables/software_licences.md) |  |
+| 153 | `apiSoftwareAppsGet` | read [software_licences](/code/tables/software_licences.md) |  |
 
 ## Calls
 

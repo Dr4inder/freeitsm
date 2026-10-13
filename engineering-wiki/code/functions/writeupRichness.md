@@ -18,11 +18,11 @@ reset no matter how many words were typed.
 function writeupRichness(array $p): int
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 190.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 197.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `array` |  |  |
+| `$p` | `array` |  | message_count, notes_len, resolution_len, minutes (ints) and has_problem (bool); missing keys count as 0 |
 
 **Returns:** `int`
 

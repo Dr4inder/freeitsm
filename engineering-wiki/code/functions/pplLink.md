@@ -6,12 +6,12 @@ A link to an app-relative URL, or just the escaped text when the reader has nowh
 function pplLink(?string $url, string $text): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 64.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `?string` |  |  |
-| `$text` | `string` |  |  |
+| `$url` | `?string` |  | a path relative to the app root; null for plain text with no link |
+| `$text` | `string` |  | the link text, escaped here |
 
 **Returns:** `string`
 

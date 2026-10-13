@@ -6,12 +6,12 @@ Resolve the company a walk is allowed to stay inside, or null when the install i
 function cmdbImpactTenantScope(PDO $conn, int $rootId): ?int
 ```
 
-Defined in [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md), line 105.
+Defined in [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rootId` | `int` |  |  |
+| `$rootId` | `int` |  | cmdb_objects.id the walk starts from; its company (NULL read as the Default) is the scope |
 
 **Returns:** `?int`
 
@@ -19,7 +19,7 @@ Defined in [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 109 | `cmdbImpactTenantScope` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 111 | `cmdbImpactTenantScope` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ## Calls
 

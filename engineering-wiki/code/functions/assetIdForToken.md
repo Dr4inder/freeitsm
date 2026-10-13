@@ -6,12 +6,12 @@ Resolve a scanned token to an asset id. Returns null for unknown tokens.
 function assetIdForToken(PDO $conn, string $token): ?int
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 103.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$token` | `string` |  |  |
+| `$token` | `string` |  | the QR token from a scanned label (untrusted); must be 8-64 hex characters to be looked up |
 
 **Returns:** `?int`
 
@@ -19,7 +19,7 @@ Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 109 | `assetIdForToken` | read [assets](/code/tables/assets.md) |  |
+| 113 | `assetIdForToken` | read [assets](/code/tables/assets.md) |  |
 
 ## Calls
 

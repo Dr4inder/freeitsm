@@ -14,15 +14,15 @@ function projectLinkRemove(
 ): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 279.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 307.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
-| `$targetId` | `int` |  |  |
+| `$kind` | `string` |  | the link kind, e.g. 'asset' |
+| `$targetId` | `int` |  | the id of the linked record |
 
 **Returns:** `bool`
 

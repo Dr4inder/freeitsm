@@ -11,13 +11,13 @@ single choke-point `getAnalystAllowedModules()`, which this just consults.
 function analystCanAccessModule(PDO $conn, int $analystId, string $moduleKey): bool
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 278.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 284.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$moduleKey` | `string` |  |  |
+| `$moduleKey` | `string` |  | the module key, e.g. 'tickets', 'assets', 'files'; 'system' means administrators only |
 
 **Returns:** `bool`
 

@@ -6,7 +6,7 @@ True once Database Verification has added the party columns.
 function contractPartyReady(PDO $conn): bool
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 59.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 63.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 63 | `contractPartyReady` | read [contracts](/code/tables/contracts.md) |  |
+| 67 | `contractPartyReady` | read [contracts](/code/tables/contracts.md) |  |
 
 ## Called from
 

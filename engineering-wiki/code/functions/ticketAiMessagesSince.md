@@ -6,13 +6,13 @@ How many messages have arrived since the summary was written.
 function ticketAiMessagesSince(PDO $conn, int $ticketId, ?int $lastEmailId): int
 ```
 
-Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line 203.
+Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line 207.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$lastEmailId` | `?int` |  |  |
+| `$lastEmailId` | `?int` |  | the last emails.id the summary read; null counts every message on the ticket |
 
 **Returns:** `int`
 
@@ -20,8 +20,8 @@ Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 206 | `ticketAiMessagesSince` | read [emails](/code/tables/emails.md) |  |
-| 212 | `ticketAiMessagesSince` | read [emails](/code/tables/emails.md) |  |
+| 210 | `ticketAiMessagesSince` | read [emails](/code/tables/emails.md) |  |
+| 216 | `ticketAiMessagesSince` | read [emails](/code/tables/emails.md) |  |
 
 ## Called from
 

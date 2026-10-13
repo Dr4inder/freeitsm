@@ -25,7 +25,7 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_tickets.php](/code/files/api/assets/get_asset_tickets.php.md) | L50, L75 |  |
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L334 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L344 |  |
 | [api/tickets/delete_ticket_asset.php](/code/files/api/tickets/delete_ticket_asset.php.md) | L35 |  |
 | [api/tickets/get_ticket_assets.php](/code/files/api/tickets/get_ticket_assets.php.md) | L39 |  |
 | [api/tickets/search_linkable_assets.php](/code/files/api/tickets/search_linkable_assets.php.md) | L58 |  |

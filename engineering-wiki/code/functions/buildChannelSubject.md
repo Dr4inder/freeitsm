@@ -6,13 +6,13 @@ A short, human ticket subject from the first line of the first message.
 function buildChannelSubject(string $channelType, string $displayName, string $body): string
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 925.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 998.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$channelType` | `string` |  |  |
-| `$displayName` | `string` |  |  |
-| `$body` | `string` |  |  |
+| `$channelType` | `string` |  | the channel type, used as the subject's label |
+| `$displayName` | `string` |  | the sender's name, used when the message has no text |
+| `$body` | `string` |  | the first message's text; its first line, cut to 80 characters, becomes the subject |
 
 **Returns:** `string`
 

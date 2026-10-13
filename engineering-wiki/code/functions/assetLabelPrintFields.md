@@ -6,7 +6,7 @@ The short names printed ON the label beside each value - space on a 38mm sticker
 function assetLabelPrintFields(PDO $conn, ?int $tenantId = null): array
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 232.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 243.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

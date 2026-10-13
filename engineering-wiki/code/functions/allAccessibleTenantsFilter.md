@@ -10,7 +10,7 @@ dormant" and hand every company's rows to everybody.
 function allAccessibleTenantsFilter(PDO $conn, int $analystId, string $qualified): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 773.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 809.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

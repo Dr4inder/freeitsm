@@ -6,12 +6,12 @@ Sends {success: false, error} as JSON, with an HTTP status when one other than 2
 function domainApiFail(string $message, int $status = 200): void
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 51.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 60.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$message` | `string` |  |  |
-| `$status` | `int` | `200` |  |
+| `$message` | `string` |  | the error text, shown to the user as it stands |
+| `$status` | `int` | `200` | HTTP status code; 200 leaves the status alone |
 
 **Returns:** `void`
 

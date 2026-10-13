@@ -10,11 +10,11 @@ data:, mailto:) and which some PHP builds accept without a host.
 function oidcIsAbsoluteHttpUrl(string $url): bool
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 115.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
+| `$url` | `string` |  | the URL to check, e.g. an endpoint from a discovery document |
 
 **Returns:** `bool`
 

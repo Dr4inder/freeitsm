@@ -10,13 +10,13 @@ that impossible in a way that only breaks on one code path.
 function gapWindowSql(PDO $conn, int $analystId, int $lookbackDays): array
 ```
 
-Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 48.
+Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 50.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$lookbackDays` | `int` |  |  |
+| `$lookbackDays` | `int` |  | how many days back from now a ticket's closed_datetime may be |
 
 **Returns:** `array`
 
@@ -24,7 +24,7 @@ Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 56 | `gapWindowSql` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 58 | `gapWindowSql` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Calls
 

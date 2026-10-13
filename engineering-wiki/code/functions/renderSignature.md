@@ -12,12 +12,12 @@ have `[my_mobile]` appear at the bottom of every email they ever send.
 function renderSignature(PDO $conn, string $body, int $analystId): string
 ```
 
-Defined in [includes/signatures.php](/code/files/includes/signatures.php.md), line 78.
+Defined in [includes/signatures.php](/code/files/includes/signatures.php.md), line 80.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$body` | `string` |  |  |
+| `$body` | `string` |  | the signature's stored HTML, with [my_*] merge codes |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`

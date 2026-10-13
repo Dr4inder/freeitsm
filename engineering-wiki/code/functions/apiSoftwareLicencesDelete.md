@@ -6,7 +6,7 @@ DELETE /software/licences/{id} — leaf table, mirrors delete_licence.php
 function apiSoftwareLicencesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 372.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 386.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

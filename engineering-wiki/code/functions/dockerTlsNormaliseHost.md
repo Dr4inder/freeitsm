@@ -10,11 +10,11 @@ certificate and an OpenSSL config file.
 function dockerTlsNormaliseHost(string $input): ?string
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 59.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$input` | `string` |  |  |
+| `$input` | `string` |  | what the administrator typed (untrusted) - may include a scheme, port or path |
 
 **Returns:** `?string`
 

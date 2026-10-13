@@ -6,11 +6,11 @@ Why a project is the colour it is, in words.
 function projectAssistWhy(array $p): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 77.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 98.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `array` |  |  |
+| `$p` | `array` |  | a project row decorated by `projectDecorate()` (health, exceptions, task and RAID counts) |
 
 **Returns:** `string`
 

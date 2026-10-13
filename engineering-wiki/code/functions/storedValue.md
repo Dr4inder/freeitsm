@@ -6,14 +6,14 @@ Describe what is actually stored, keeping the three "blank" cases apart: the col
 function storedValue(array $row, string $col, array $apCols, bool $maskIt = false)
 ```
 
-Defined in [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md), line 288.
+Defined in [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md), line 318.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
-| `$col` | `string` |  |  |
-| `$apCols` | `array` |  |  |
-| `$maskIt` | `bool` | `false` |  |
+| `$row` | `array` |  | the auth_providers row as read back |
+| `$col` | `string` |  | the column to describe |
+| `$apCols` | `array` |  | the columns auth_providers really has, keyed by lower-case name |
+| `$maskIt` | `bool` | `false` | true to mask the value with `mask()` rather than print it |
 
 ## Calls
 

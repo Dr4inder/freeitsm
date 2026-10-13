@@ -6,7 +6,7 @@ Inventory reads — disks, network adapters, devices, software
 function apiAssetDisksList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 496.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 507.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 499 | `apiAssetDisksList` | read [asset_disks](/code/tables/asset_disks.md) |  |
+| 510 | `apiAssetDisksList` | read [asset_disks](/code/tables/asset_disks.md) |  |
 
 ## Calls
 

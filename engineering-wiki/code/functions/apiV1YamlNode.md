@@ -6,12 +6,12 @@ Renders one value as YAML at the given indent - lists as "- " items with the fir
 function apiV1YamlNode($value, int $indent): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 388.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 432.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
-| `$indent` | `int` |  |  |
+| `$value` |  |  | the value to render - an array (list or mapping) or a scalar |
+| `$indent` | `int` |  | the nesting level; each level is two spaces |
 
 **Returns:** `string`
 

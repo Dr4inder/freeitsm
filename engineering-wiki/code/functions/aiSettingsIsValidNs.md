@@ -6,11 +6,11 @@ True when `$ns` is a namespace registered in `aiSettingsRegistry()`.
 function aiSettingsIsValidNs(string $ns): bool
 ```
 
-Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 102.
+Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 106.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ns` | `string` |  |  |
+| `$ns` | `string` |  | the namespace to check, possibly from the request (e.g. 'knowledge_ai') |
 
 **Returns:** `bool`
 

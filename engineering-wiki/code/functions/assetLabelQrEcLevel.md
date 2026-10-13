@@ -10,11 +10,11 @@ Invariants:
 function assetLabelQrEcLevel(bool $hasLogo): string
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 187.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 198.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$hasLogo` | `bool` |  |  |
+| `$hasLogo` | `bool` |  | true when the label prints a logo in the middle of the QR code |
 
 **Returns:** `string`
 

@@ -21,12 +21,12 @@ Bounded so it can run opportunistically without becoming the cost of a page load
 function documentsCollectOrphans(PDO $conn, int $limit = 200): array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 630.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 657.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$limit` | `int` | `200` |  |
+| `$limit` | `int` | `200` | most rows to delete per entity type, and most documents to collect, in one run (at least 1) |
 
 **Returns:** array{links_removed:int,documents_orphaned:int,files_removed:int,errors:string[]}
 
@@ -34,10 +34,10 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 643 | `documentsCollectOrphans` | **delete** [document_links](/code/tables/document_links.md) |  |
-| 663 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
-| 673 | `documentsCollectOrphans` | **update** [documents](/code/tables/documents.md) (`deleted_datetime`) |  |
-| 684 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md) |  |
+| 670 | `documentsCollectOrphans` | **delete** [document_links](/code/tables/document_links.md) |  |
+| 690 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
+| 700 | `documentsCollectOrphans` | **update** [documents](/code/tables/documents.md) (`deleted_datetime`) |  |
+| 711 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md) |  |
 
 ## Calls
 

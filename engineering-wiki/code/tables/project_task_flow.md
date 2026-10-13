@@ -16,12 +16,12 @@ Task flow (3.3.0) - includes/projects/flow.php.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/projects/flow.php](/code/files/includes/projects/flow.php.md):39 | `projectFlowSnapshot` | delete |  |  |
-| [includes/projects/flow.php](/code/files/includes/projects/flow.php.md):40 | `projectFlowSnapshot` | insert | `project_id`, `day`, `status_id`, `task_count` |  |
+| [includes/projects/flow.php](/code/files/includes/projects/flow.php.md):43 | `projectFlowSnapshot` | delete |  |  |
+| [includes/projects/flow.php](/code/files/includes/projects/flow.php.md):44 | `projectFlowSnapshot` | insert | `project_id`, `day`, `status_id`, `task_count` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/flow.php](/code/files/includes/projects/flow.php.md) | projectFlowReady L22, projectFlow L60 |  |
+| [includes/projects/flow.php](/code/files/includes/projects/flow.php.md) | projectFlowReady L22, projectFlow L66 |  |
 

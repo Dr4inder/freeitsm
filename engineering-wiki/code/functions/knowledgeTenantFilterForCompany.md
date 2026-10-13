@@ -29,13 +29,13 @@ does not exist and every article is shared by definition.
 function knowledgeTenantFilterForCompany(PDO $conn, ?int $tenantId, string $alias = 'a'): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 924.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 969.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` | `'a'` |  |
+| `$alias` | `string` | `'a'` | the knowledge_articles alias in the calling query; '' for none |
 
 **Returns:** array [sqlFragment, params]
 

@@ -6,12 +6,12 @@ Is this requester still active? "Mark as left" (Assets -> Users, Tickets -> User
 function requesterIsActive(PDO $conn, int $userId): bool
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 227.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 231.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the requester's users.id; 0 or less, or an unknown id, gives false |
 
 **Returns:** `bool`
 
@@ -19,7 +19,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 229 | `requesterIsActive` | read [users](/code/tables/users.md) |  |
+| 233 | `requesterIsActive` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

@@ -10,11 +10,11 @@ renames the channel, and there is no stored name that can quietly become wrong.
 function warRoomChannelName(array $row): string
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 191.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 194.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | a channel row with kind, name, team_name and other_members (the other DM members' names) |
 
 **Returns:** `string`
 

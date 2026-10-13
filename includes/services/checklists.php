@@ -112,6 +112,8 @@ class ChecklistsService
      * 🔑 Strictest wins, and a ticket carrying several checklists is resolved a
      * checklist at a time by assertClosureAllowed() — so one Critical checklist
      * blocks the close even if three Standard ones would have warned.
+     *
+     * @param string $mode  the checklist's own closure_mode, 'block' (Critical) or 'warn' (Standard); anything else reads as warn
      */
     public static function effectiveClosureMode(PDO $conn, string $mode, ?int $tenantId = null): string
     {
@@ -272,6 +274,8 @@ class ChecklistsService
      * person adding a third kind of closure note.
      *
      * UTC at rest (GH #126).
+     *
+     * @param string $note  the note text to record against the ticket
      */
     private static function writeClosureNote(PDO $conn, ActorContext $ctx, int $ticketId, string $note): void
     {
@@ -309,7 +313,11 @@ class ChecklistsService
         'role'     => ['table' => 'checklist_roles',      'label' => 'Role'],
     ];
 
-    /** The table and label of a checklist settings list; throws for an unknown list. */
+    /**
+     * The table and label of a checklist settings list; throws for an unknown list.
+     *
+     * @param string $kind  'category' or 'role'
+     */
     private static function lookup(string $kind): array
     {
         if (!isset(self::LOOKUPS[$kind])) {
@@ -325,6 +333,9 @@ class ChecklistsService
      * TEXT (`checklist_templates.category`) and steps store their suggested role
      * the same way, so the rows have to be carried across with the rename or the
      * list silently orphans every template that used the old name.
+     *
+     * @param string $kind  'category' or 'role'
+     * @param array $in  id (absent or 0 = new) and name (up to 100 characters)
      */
     public static function saveLookup(PDO $conn, ActorContext $ctx, string $kind, array $in): int
     {
@@ -380,6 +391,9 @@ class ChecklistsService
      * The rows that reference it by name are left alone deliberately: a template
      * filed under a category you retire keeps saying what it said. Losing the
      * list entry should not silently re-file somebody's SOP.
+     *
+     * @param string $kind  'category' or 'role'
+     * @param int $id  the checklist_categories or checklist_roles row to delete
      */
     public static function deleteLookup(PDO $conn, ActorContext $ctx, string $kind, int $id): void
     {
@@ -498,6 +512,8 @@ class ChecklistsService
      *
      * The copy is the point, exactly as on a ticket: rewriting a procedure must
      * not change a task already half-way through it.
+     *
+     * @param int $templateId  the checklist_templates row to copy; its scope must be 'task' or 'both'
      */
     public static function attachTemplateToTask(PDO $conn, ActorContext $ctx, int $taskId, int $templateId): int
     {
@@ -514,7 +530,14 @@ class ChecklistsService
             (string)$t['closure_mode'], $ctx->actorId > 0 ? $ctx->actorId : null);
     }
 
-    /** The one place a task checklist is written: parent, then its steps, in one transaction. */
+    /**
+     * The one place a task checklist is written: parent, then its steps, in one transaction.
+     *
+     * @param int $templateId  the checklist_templates row whose steps are copied
+     * @param string $title  the checklist's title as shown on the task
+     * @param string $closureMode  'block' or anything else for warn
+     * @param ?int $createdBy  the analyst who attached it, or null for none
+     */
     private static function copyTemplateToTask(PDO $conn, int $taskId, int $templateId, string $title,
                                                string $closureMode, ?int $createdBy): int
     {
@@ -558,6 +581,8 @@ class ChecklistsService
      * Put a task's checklists in a new order. $ids is the whole list, top first.
      * Each UPDATE is pinned to the task, so an id from another task matches
      * nothing - the caller gates on $taskId and that gate then covers every row.
+     *
+     * @param array $ids  every task_checklists id on the task, top first
      */
     public static function reorderTaskChecklists(PDO $conn, int $taskId, array $ids): void
     {
@@ -567,7 +592,12 @@ class ChecklistsService
         }
     }
 
-    /** The same for the steps inside one checklist, pinned to that checklist. */
+    /**
+     * The same for the steps inside one checklist, pinned to that checklist.
+     *
+     * @param int $checklistId  the task_checklists row whose steps are reordered
+     * @param array $ids  every task_checklist_items id in it, top first
+     */
     public static function reorderTaskChecklistItems(PDO $conn, int $checklistId, array $ids): void
     {
         $st = $conn->prepare("UPDATE task_checklist_items SET sort_order = ? WHERE id = ? AND task_checklist_id = ?");
@@ -576,7 +606,11 @@ class ChecklistsService
         }
     }
 
-    /** Which task does this step / checklist belong to? 0 if neither exists. Callers gate on the task. */
+    /**
+     * Which task does this step / checklist belong to? 0 if neither exists. Callers gate on the task.
+     *
+     * @param int $itemId  a task_checklist_items id
+     */
     public static function taskIdForItem(PDO $conn, int $itemId): int
     {
         $st = $conn->prepare("SELECT c.task_id FROM task_checklist_items i
@@ -584,7 +618,11 @@ class ChecklistsService
         $st->execute([$itemId]);
         return (int)($st->fetchColumn() ?: 0);
     }
-    /** The task a checklist is attached to, or 0. */
+    /**
+     * The task a checklist is attached to, or 0.
+     *
+     * @param int $checklistId  a task_checklists id
+     */
     public static function taskIdForChecklist(PDO $conn, int $checklistId): int
     {
         $st = $conn->prepare("SELECT task_id FROM task_checklists WHERE id = ?");
@@ -598,6 +636,10 @@ class ChecklistsService
      * empty answer is a record that says something was checked when it was not.
      *
      * UTC at rest (GH #126). Returns the stored row.
+     *
+     * @param int $itemId  the task_checklist_items row to tick or untick
+     * @param bool $completed  true to tick, false to untick (which clears the answer)
+     * @param ?string $value  the answer for a step that asks for one; ignored on other steps
      */
     public static function toggleTaskItem(PDO $conn, ActorContext $ctx, int $itemId, bool $completed, ?string $value): array
     {
@@ -633,7 +675,11 @@ class ChecklistsService
         return $back->fetch(PDO::FETCH_ASSOC) ?: [];
     }
 
-    /** Remove one checklist from a task: its steps first (no FK to rely on), then it. */
+    /**
+     * Remove one checklist from a task: its steps first (no FK to rely on), then it.
+     *
+     * @param int $checklistId  the task_checklists row to remove, with its steps
+     */
     public static function removeTaskChecklist(PDO $conn, int $checklistId): void
     {
         $own = !$conn->inTransaction();
@@ -653,7 +699,7 @@ class ChecklistsService
      * which deletes a whole subtask tree. Children explicitly, then parents;
      * tolerant of the tables not existing yet.
      *
-     * @param int[] $taskIds
+     * @param int[] $taskIds  the tasks being deleted; non-integers and zeros are dropped
      */
     public static function deleteForTasks(PDO $conn, array $taskIds): void
     {
@@ -761,6 +807,9 @@ class ChecklistsService
      * picks up this month's version of the procedure; a checklist whose template
      * has since been deleted is copied from the finished task's own steps
      * instead, rather than silently vanishing from the series.
+     *
+     * @param int $fromTaskId  the finished occurrence whose checklists are copied
+     * @param int $toTaskId  the new occurrence that receives fresh, unticked copies
      */
     public static function copyTaskChecklists(PDO $conn, int $fromTaskId, int $toTaskId): void
     {

@@ -6,11 +6,11 @@ Shapes a problem row for the API - number, title, status (with is_closed), prior
 function apiSerializeProblem(array $r): array
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 60.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the problems row as `apiProblemSelect()` loads it, with the lookup and people names and ticket_count |
 
 **Returns:** `array`
 

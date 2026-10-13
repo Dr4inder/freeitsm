@@ -6,13 +6,13 @@ The automatic health of a live project, from what is actually happening: red - p
 function projectAutoHealth(array $p, array $stats, ?array $cfg = null): ?string
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 131.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 137.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `array` |  |  |
-| `$stats` | `array` |  |  |
-| `$cfg` | `?array` | `null` |  |
+| `$p` | `array` |  | the projects row - status and target_end_date are read |
+| `$stats` | `array` |  | the project's counts from `projectTaskStats()` |
+| `$cfg` | `?array` | `null` | the health thresholds from `projectHealthConfig()`; null uses the built-in defaults |
 
 **Returns:** `?string`
 

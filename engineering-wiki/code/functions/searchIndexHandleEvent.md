@@ -9,12 +9,12 @@ their ticket, their note or their reply.
 function searchIndexHandleEvent(string $event, array $payload): void
 ```
 
-Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php.md), line 385.
+Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php.md), line 394.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `string` |  |  |
-| `$payload` | `array` |  |  |
+| `$event` | `string` |  | the workflow event name, e.g. 'ticket.note_added'; most are ignored |
+| `$payload` | `array` |  | the event payload; the ticket id is read from ['ticket']['id'] or ['ticket_id'] |
 
 **Returns:** `void`
 

@@ -6,12 +6,12 @@ Absolute link to a domain, for mail sent by a cron with no request host.
 function domainPublicLink(PDO $conn, int $id): string
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 235.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 267.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain's id |
 
 **Returns:** `string`
 

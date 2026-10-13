@@ -6,7 +6,7 @@ DELETE /problems/{id}/changes/{changeId} - unlinks a change from the problem thr
 function apiProblemChangesUnlink(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 401.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 407.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

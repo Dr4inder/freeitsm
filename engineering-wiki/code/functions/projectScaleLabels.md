@@ -6,12 +6,12 @@ The words to show for a scale: the saved ones, or the translated defaults.
 function projectScaleLabels(PDO $conn, string $scale): array
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 378.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 408.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scale` | `string` |  |  |
+| `$scale` | `string` |  | 'probability', 'impact' or 'priority' |
 
 **Returns:** `array`
 

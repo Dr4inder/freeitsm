@@ -6,13 +6,13 @@ The language to write a customer-facing rating message in. Telegram has the cust
 function csatChannelLocale(PDO $conn, array $channel, string $from): string
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 156.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 164.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channel` | `array` |  |  |
-| `$from` | `string` |  |  |
+| `$channel` | `array` |  | the messaging_channels row as `loadMessagingChannel()` returns it |
+| `$from` | `string` |  | the customer's id on that channel (the inbound message's from_address) |
 
 **Returns:** `string`
 
@@ -20,7 +20,7 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 156.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 161 | `csatChannelLocale` | read [messaging_identity_links](/code/tables/messaging_identity_links.md) |  |
+| 169 | `csatChannelLocale` | read [messaging_identity_links](/code/tables/messaging_identity_links.md) |  |
 
 ## Called from
 

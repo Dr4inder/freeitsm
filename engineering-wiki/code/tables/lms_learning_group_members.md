@@ -24,5 +24,5 @@
 |---|---|---|
 | [api/lms/assignment_targets.php](/code/files/api/lms/assignment_targets.php.md) | L81 |  |
 | [api/lms/groups.php](/code/files/api/lms/groups.php.md) | L19, L29 |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAssignmentReachSql L218, lmsAssignedLearnersSql L483 |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAssignmentReachSql L235, lmsAssignedLearnersSql L514 |  |
 

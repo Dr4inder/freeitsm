@@ -1,6 +1,6 @@
 # includes/functions.php
 
-> PHP - 439 lines
+> PHP - 454 lines
 
 Shared Functions Include this file in any script that needs common functionality
 
@@ -14,29 +14,29 @@ Usage: require_once '../includes/functions.php'; (from api folder)
 | [connectToDatabase()](/code/functions/connectToDatabase.md) | 58 | Connect to MySQL database using PDO |
 | [getModuleRegistry()](/code/functions/getModuleRegistry.md) | 79 | Canonical list of user-facing modules for access control (issue #30), key => name. System is deliberately excluded — it's gated by is_admin, not module access. Keys match the waffle launcher / landing page module keys. |
 | [getModulePermissionMode()](/code/functions/getModulePermissionMode.md) | 95 | Site-wide policy for combining module grants from several sources (issue #30): 'most' (default) — an analyst may use a module if ANY source grants it (union). 'least' — only if their own access AND every team allow it (intersection). |
-| [getAnalystAllowedModules()](/code/functions/getAnalystAllowedModules.md) | 117 | Resolve an analyst's EFFECTIVE module access (issue #30) from every source: the analyst's own grant (all-modules flag, or analyst_modules rows) plus each team they belong to (the team's all-modules flag, or team_modules rows), combined per `getModulePermissionMode()`. Mirrors `getAccessibleTenantIds()` for companies. |
-| [analystIsAdmin()](/code/functions/analystIsAdmin.md) | 203 | Is this analyst an administrator? Admins are the only accounts allowed into the System module (analyst/team/company management, SSO, security, DB verify, etc.). Authoritative DB check — use this for server-side enforcement (no session lag). |
-| [requesterIsActive()](/code/functions/requesterIsActive.md) | 227 | Is this requester still active? "Mark as left" (Assets -> Users, Tickets -> Users) and PATCH /api/v1/users/{id} clear users.is_active. A requester who has left cannot sign in to the portal, by any route, and is signed out of an open portal session on their next page (self-service/includes/auth.php). 3.5.0. NULL counts as active, as everywhere else. |
-| [sessionIsAdmin()](/code/functions/sessionIsAdmin.md) | 242 | Cosmetic (UI-layer) admin check for pages: "should this analyst see System?". Reads `$_SESSION`['is_admin']; if absent (e.g. a session created before this upgrade) it self-heals by looking the flag up once and caching it in the session, so no login-path changes are needed and no admin is ever locked out. Requires a writable session (not read_and_close). For hard enforcement on APIs use `requireAdminJson()` instead, which re-checks the DB every call. |
-| [requireAdminJson()](/code/functions/requireAdminJson.md) | 260 | Hard gate for System JSON APIs: refuse non-admins with a 403. Authoritative (DB-checked) so a just-demoted analyst can't keep acting on a stale session. Call right after connecting, e.g. requireAdminJson(`$conn`); |
-| [analystCanAccessModule()](/code/functions/analystCanAccessModule.md) | 278 | Module access — the enforcement half of issue #30. Mirrors the admin gate above. True if `$analystId` may use `$moduleKey` under the current most/least policy. |
-| [requireModuleAccess()](/code/functions/requireModuleAccess.md) | 293 | Page gate: bounce an analyst who can't use `$moduleKey` back to the launcher, so a restricted user can't simply type the module's URL and walk in. Authoritative (DB-checked) — a just-restricted analyst is stopped even on a stale session. Call near the top of a module's page after functions.php is loaded and the "are you logged in?" check. Passes `$conn` if you already have one, else connects. |
-| [requireAnyModuleAccessJson()](/code/functions/requireAnyModuleAccessJson.md) | 325 | Hard gate for an endpoint shared by SEVERAL modules: allow if the analyst can use ANY of them, refuse otherwise. |
-| [requireModuleAccessJson()](/code/functions/requireModuleAccessJson.md) | 357 | Hard gate for a module's JSON write APIs: refuse a denied analyst with a 403. Authoritative (DB-checked). The API twin of `requireModuleAccess()`. Call right after connecting, e.g. requireModuleAccessJson('assets', `$conn`); Shared READ endpoints that other modules or the login page depend on must NOT call this — guarding those would break normal cross-module flows. |
-| [wf_emit()](/code/functions/wf_emit.md) | 386 | Fire a settings/CRUD workflow event ({entity}.{created\|updated\|deleted}) from a UI settings endpoint, without each file having to require the workflow engine. Lazily loads the engine and is fully self-safe — swallows any Throwable (including a missing engine on a minimal install) so it can NEVER affect the save it follows. Funnels into the exact same WorkflowEngine::dispatch() path as every other event, so a webhook fires identically however it was emitted. |
-| [oauthTokenErrorMessage()](/code/functions/oauthTokenErrorMessage.md) | 419 | Turn a refused OAuth token response into something an administrator can act on. |
+| [getAnalystAllowedModules()](/code/functions/getAnalystAllowedModules.md) | 119 | Resolve an analyst's EFFECTIVE module access (issue #30) from every source: the analyst's own grant (all-modules flag, or analyst_modules rows) plus each team they belong to (the team's all-modules flag, or team_modules rows), combined per `getModulePermissionMode()`. Mirrors `getAccessibleTenantIds()` for companies. |
+| [analystIsAdmin()](/code/functions/analystIsAdmin.md) | 205 | Is this analyst an administrator? Admins are the only accounts allowed into the System module (analyst/team/company management, SSO, security, DB verify, etc.). Authoritative DB check — use this for server-side enforcement (no session lag). |
+| [requesterIsActive()](/code/functions/requesterIsActive.md) | 231 | Is this requester still active? "Mark as left" (Assets -> Users, Tickets -> Users) and PATCH /api/v1/users/{id} clear users.is_active. A requester who has left cannot sign in to the portal, by any route, and is signed out of an open portal session on their next page (self-service/includes/auth.php). 3.5.0. NULL counts as active, as everywhere else. |
+| [sessionIsAdmin()](/code/functions/sessionIsAdmin.md) | 246 | Cosmetic (UI-layer) admin check for pages: "should this analyst see System?". Reads `$_SESSION`['is_admin']; if absent (e.g. a session created before this upgrade) it self-heals by looking the flag up once and caching it in the session, so no login-path changes are needed and no admin is ever locked out. Requires a writable session (not read_and_close). For hard enforcement on APIs use `requireAdminJson()` instead, which re-checks the DB every call. |
+| [requireAdminJson()](/code/functions/requireAdminJson.md) | 264 | Hard gate for System JSON APIs: refuse non-admins with a 403. Authoritative (DB-checked) so a just-demoted analyst can't keep acting on a stale session. Call right after connecting, e.g. requireAdminJson(`$conn`); |
+| [analystCanAccessModule()](/code/functions/analystCanAccessModule.md) | 284 | Module access — the enforcement half of issue #30. Mirrors the admin gate above. True if `$analystId` may use `$moduleKey` under the current most/least policy. |
+| [requireModuleAccess()](/code/functions/requireModuleAccess.md) | 301 | Page gate: bounce an analyst who can't use `$moduleKey` back to the launcher, so a restricted user can't simply type the module's URL and walk in. Authoritative (DB-checked) — a just-restricted analyst is stopped even on a stale session. Call near the top of a module's page after functions.php is loaded and the "are you logged in?" check. Passes `$conn` if you already have one, else connects. |
+| [requireAnyModuleAccessJson()](/code/functions/requireAnyModuleAccessJson.md) | 333 | Hard gate for an endpoint shared by SEVERAL modules: allow if the analyst can use ANY of them, refuse otherwise. |
+| [requireModuleAccessJson()](/code/functions/requireModuleAccessJson.md) | 367 | Hard gate for a module's JSON write APIs: refuse a denied analyst with a 403. Authoritative (DB-checked). The API twin of `requireModuleAccess()`. Call right after connecting, e.g. requireModuleAccessJson('assets', `$conn`); Shared READ endpoints that other modules or the login page depend on must NOT call this — guarding those would break normal cross-module flows. |
+| [wf_emit()](/code/functions/wf_emit.md) | 401 | Fire a settings/CRUD workflow event ({entity}.{created\|updated\|deleted}) from a UI settings endpoint, without each file having to require the workflow engine. Lazily loads the engine and is fully self-safe — swallows any Throwable (including a missing engine on a minimal install) so it can NEVER affect the save it follows. Funnels into the exact same WorkflowEngine::dispatch() path as every other event, so a webhook fires identically however it was emitted. |
+| [oauthTokenErrorMessage()](/code/functions/oauthTokenErrorMessage.md) | 434 | Turn a refused OAuth token response into something an administrator can act on. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 99 | `getModulePermissionMode` | read [system_settings](/code/tables/system_settings.md) |  |
-| 133 | `getAnalystAllowedModules` | read [analysts](/code/tables/analysts.md) |  |
-| 144 | `getAnalystAllowedModules` | read [analyst_modules](/code/tables/analyst_modules.md) |  |
-| 153 | `getAnalystAllowedModules` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
-| 161 | `getAnalystAllowedModules` | read [team_modules](/code/tables/team_modules.md) |  |
-| 215 | `analystIsAdmin` | read [analysts](/code/tables/analysts.md) |  |
-| 229 | `requesterIsActive` | read [users](/code/tables/users.md) |  |
+| 135 | `getAnalystAllowedModules` | read [analysts](/code/tables/analysts.md) |  |
+| 146 | `getAnalystAllowedModules` | read [analyst_modules](/code/tables/analyst_modules.md) |  |
+| 155 | `getAnalystAllowedModules` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 163 | `getAnalystAllowedModules` | read [team_modules](/code/tables/team_modules.md) |  |
+| 217 | `analystIsAdmin` | read [analysts](/code/tables/analysts.md) |  |
+| 233 | `requesterIsActive` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

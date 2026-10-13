@@ -6,13 +6,13 @@ The TXT records at `$name` that start with `$prefix` (case-insensitive), e.g. "v
 function domainTxtStartingWith(string $name, string $prefix, string $resolver): array
 ```
 
-Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 149.
+Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 169.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
-| `$prefix` | `string` |  |  |
-| `$resolver` | `string` |  |  |
+| `$name` | `string` |  | the DNS name whose TXT records to read |
+| `$prefix` | `string` |  | the start to match, ignoring case and leading spaces, e.g. 'v=spf1' |
+| `$resolver` | `string` |  | auto \| system \| google \| cloudflare, as for `domainDns()` |
 
 **Returns:** `array`
 

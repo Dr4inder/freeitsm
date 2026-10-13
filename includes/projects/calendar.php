@@ -93,7 +93,15 @@ function projectSyncCalendar(PDO $conn): array
     }
 }
 
-/** One kind: adopt its category, clear its entries, and - when on - draw one all-day entry per row. */
+/**
+ * One kind: adopt its category, clear its entries, and - when on - draw one all-day entry per row.
+ *
+ * @param string $source  the calendar_events.source this kind owns, e.g. 'project_milestone'
+ * @param bool $on  whether this kind is switched on; false only clears its entries
+ * @param string $sql  a trusted SELECT giving one row per entry, with on_date and whatever $title and $description read
+ * @param callable $title  fn(row): string - the entry's title (cut to 255 characters)
+ * @param callable $description  fn(row): string - the entry's description
+ */
 function projectSyncCalendarKind(PDO $conn, string $source, bool $on, string $sql, callable $title, callable $description): int
 {
     awcAdoptExistingCategory($conn, $source);                       // BEFORE the delete - see its comment

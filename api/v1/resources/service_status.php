@@ -29,7 +29,11 @@ require_once dirname(__DIR__, 3) . '/includes/service_context.php';
 require_once dirname(__DIR__, 3) . '/includes/services/service_status.php';
 require_once dirname(__DIR__, 3) . '/includes/service_impact_levels.php';
 
-/** Map a ServiceError raised by the shared service to the API's error response. */
+/**
+ * Map a ServiceError raised by the shared service to the API's error response.
+ *
+ * @param ServiceError $e  the error ServiceStatusService threw - its kind picks the status, errorCode and message pass through
+ */
 function apiServiceStatusFail(ServiceError $e): void {
     apiError(serviceErrorHttpStatus($e->kind), $e->errorCode, $e->getMessage());
 }
@@ -72,6 +76,8 @@ function apiServiceStatusImpactMeta(PDO $conn): array {
 /**
  * Shapes a service row for the API, with its current status (the default impact level
  * when nothing is affecting it) and that status's colour and severity.
+ *
+ * @param array $r  a status_services row, with current_status from apiServiceStatusSubquery() (null = default level)
  */
 function apiSerializeService(PDO $conn, array $r): array {
     $meta = apiServiceStatusImpactMeta($conn);
@@ -90,7 +96,11 @@ function apiSerializeService(PDO $conn, array $r): array {
     ];
 }
 
-/** Loads one service row with its current status, or answers 404 and stops. */
+/**
+ * Loads one service row with its current status, or answers 404 and stops.
+ *
+ * @param int $serviceId  the status_services id
+ */
 function apiLoadService(PDO $conn, int $serviceId): array {
     $stmt = $conn->prepare(
         "SELECT ss.*, " . apiServiceStatusSubquery($conn) . " AS current_status
@@ -119,6 +129,8 @@ function apiServiceIncidentSelect(): string {
 /**
  * Shapes an incident row for the API, with every service it affects and the impact on
  * each, worst first.
+ *
+ * @param array $r  the status_incidents row as apiServiceIncidentSelect() loads it, with status and creator names
  */
 function apiSerializeIncident(PDO $conn, array $r): array {
     $svc = $conn->prepare(
@@ -159,7 +171,11 @@ function apiSerializeIncident(PDO $conn, array $r): array {
     ];
 }
 
-/** Loads one incident row (apiServiceIncidentSelect), or answers 404 and stops. */
+/**
+ * Loads one incident row (apiServiceIncidentSelect), or answers 404 and stops.
+ *
+ * @param int $incidentId  the status_incidents id
+ */
 function apiLoadIncident(PDO $conn, int $incidentId): array {
     $stmt = $conn->prepare(apiServiceIncidentSelect() . " WHERE si.id = ?");
     $stmt->execute([$incidentId]);

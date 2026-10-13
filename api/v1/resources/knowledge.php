@@ -60,7 +60,11 @@ function apiKnowledgeSelect(): string {
             LEFT JOIN tenants tn ON tn.id = a.tenant_id";
 }
 
-/** The names of an article's tags, alphabetically. */
+/**
+ * The names of an article's tags, alphabetically.
+ *
+ * @param int $articleId  the knowledge_articles id
+ */
 function apiKnowledgeTags(PDO $conn, int $articleId): array {
     $stmt = $conn->prepare(
         "SELECT t.name FROM knowledge_article_tags at
@@ -71,7 +75,12 @@ function apiKnowledgeTags(PDO $conn, int $articleId): array {
     return $stmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
-/** Summary shape (lists) — preview instead of the full body. Detail adds body_html. */
+/**
+ * Summary shape (lists) — preview instead of the full body. Detail adds body_html.
+ *
+ * @param array $r  the knowledge_articles row as apiKnowledgeSelect() loads it, with people and company names
+ * @param bool $detail  true for the single-article shape (full body_html and has_embedding); false gives a 300-character preview
+ */
 function apiSerializeArticle(PDO $conn, array $r, bool $detail = false): array {
     $rel = function ($id, $name) {
         return $id === null ? null : ['id' => (int)$id, 'name' => $name];
@@ -113,6 +122,9 @@ function apiSerializeArticle(PDO $conn, array $r, bool $detail = false): array {
  * company the key can't reach — reported as 404, not 403, so an id can't be used
  * to probe which articles exist elsewhere. The post-write callers omit it: the
  * service layer has already run the same check by then.
+ *
+ * @param int $articleId  the knowledge_articles id
+ * @param ?array $apiKey  the calling API key on a read path; null skips the read check (post-write callers, already checked)
  */
 function apiLoadArticle(PDO $conn, int $articleId, ?array $apiKey = null): array {
     $stmt = $conn->prepare(apiKnowledgeSelect() . " WHERE a.id = ?");

@@ -6,7 +6,7 @@ Per-person desktop preferences, in user_preferences with a files_ prefix.
 function filesGetPrefs(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 115.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 140.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 117 | `filesGetPrefs` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 142 | `filesGetPrefs` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Called from
 

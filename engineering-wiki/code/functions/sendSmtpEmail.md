@@ -16,16 +16,16 @@ function sendSmtpEmail(
 )
 ```
 
-Defined in [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md), line 121.
+Defined in [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md), line 128.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$settings` |  |  |  |
-| `$toEmail` |  |  |  |
-| `$subject` |  |  |  |
-| `$htmlBody` |  |  |  |
-| `$pdfData` |  | `null` |  |
-| `$pdfFilename` |  | `null` |  |
+| `$settings` |  |  | the email settings keyed by name (smtp_host, smtp_from_email, smtp_from_name, ...) |
+| `$toEmail` |  |  | the recipient address |
+| `$subject` |  |  | the email subject |
+| `$htmlBody` |  |  | the email body as HTML |
+| `$pdfData` |  | `null` | the PDF to attach, base64-encoded; null sends no attachment |
+| `$pdfFilename` |  | `null` | the attachment's file name; only used with `$pdfData` |
 
 ## Called from
 

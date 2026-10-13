@@ -6,7 +6,7 @@ Drop this analyst's row — the optimisation that makes leaving instant.
 function presenceLeave(PDO $conn, int $ticketId, int $analystId): void
 ```
 
-Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md), line 129.
+Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md), line 131.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 133 | `presenceLeave` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
-| 137 | `presenceLeave` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
+| 135 | `presenceLeave` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
+| 139 | `presenceLeave` | **delete** [ticket_presence](/code/tables/ticket_presence.md) |  |
 
 ## Calls
 

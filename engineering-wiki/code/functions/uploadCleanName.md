@@ -11,11 +11,11 @@ or any path segment.
 function uploadCleanName(string $name): string
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 594.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 607.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
+| `$name` | `string` |  | the filename as the sender gave it - untrusted, may hold a path |
 
 **Returns:** `string`
 

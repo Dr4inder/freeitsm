@@ -13,15 +13,15 @@ function warRoomCreateChannel(
 ): int
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 288.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$name` | `string` |  |  |
-| `$topic` | `string` | `''` |  |
-| `$isPrivate` | `bool` | `false` |  |
+| `$name` | `string` |  | the channel name; blank throws 'name_required'; spaces collapsed, cut to 120 characters |
+| `$topic` | `string` | `''` | an optional topic; blank stores NULL; cut to 255 characters |
+| `$isPrivate` | `bool` | `false` | true for a members-only channel |
 | `$memberIds` | `array` | `[]` | ignored unless `$isPrivate`; the creator is always added |
 
 **Returns:** int the new channel id
@@ -30,7 +30,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 288
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 299 | `warRoomCreateChannel` | **insert** [warroom_channels](/code/tables/warroom_channels.md) (`kind`, `name`, `topic`, `is_private`, `created_by`, `created_datetime`) |  |
+| 317 | `warRoomCreateChannel` | **insert** [warroom_channels](/code/tables/warroom_channels.md) (`kind`, `name`, `topic`, `is_private`, `created_by`, `created_datetime`) |  |
 
 ## Calls
 

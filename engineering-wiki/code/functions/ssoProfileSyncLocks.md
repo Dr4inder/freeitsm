@@ -14,12 +14,12 @@ rules about what is editable - see `portalProfileAccess()`.
 function ssoProfileSyncLocks(?string $protocol, ?string $syncMode): bool
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 82.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$protocol` | `?string` |  |  |
-| `$syncMode` | `?string` |  |  |
+| `$protocol` | `?string` |  | the provider's protocol, e.g. 'oidc' or 'ldap' |
+| `$syncMode` | `?string` |  | the provider's profile_sync_mode; only 'always' locks |
 
 **Returns:** `bool`
 

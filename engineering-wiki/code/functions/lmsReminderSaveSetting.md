@@ -6,13 +6,13 @@ Write one setting.
 function lmsReminderSaveSetting(PDO $conn, string $key, string $value): void
 ```
 
-Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 93.
+Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 98.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$value` | `string` |  |  |
+| `$key` | `string` |  | the system_settings key, one of the LMS_REM_* constants |
+| `$value` | `string` |  | the value to store, as text |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 95 | `lmsReminderSaveSetting` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 100 | `lmsReminderSaveSetting` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## Called from
 

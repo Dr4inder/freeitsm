@@ -10,12 +10,12 @@ other reasons too (a legal hold). The screen says "likely registry-locked".
 function domainDeriveFlags(array &$r, string $name = ''): void
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 252.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 270.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
-| `$name` | `string` | `''` |  |
+| `$r` | `array` |  | the lookup result being built (domainBlankResult() shape) - its lock and state flags are set in place |
+| `$name` | `string` | `''` | the domain name, used only to spot TLDs where a transfer lock does not apply ('' for none) |
 
 **Returns:** `void`
 

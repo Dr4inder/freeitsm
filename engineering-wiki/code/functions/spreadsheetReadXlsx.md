@@ -6,11 +6,11 @@ The first worksheet of an .xlsx as rows of display strings.
 function spreadsheetReadXlsx(string $path): array
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 237.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 259.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | the .xlsx file on disk - untrusted content |
 
 **Returns:** `array`
 

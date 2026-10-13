@@ -26,26 +26,26 @@ Messaging channel "inbox" — the channel twin of target_mailboxes. One row per 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/messaging/delete_channel.php](/code/files/api/messaging/delete_channel.php.md):46 |  | delete |  |  |
-| [api/messaging/save_channel.php](/code/files/api/messaging/save_channel.php.md):217 |  | update | `name`, `channel_type`, `provider`, `phone_number`, `credentials`, `verify_token`, `ingress_mode`, `relay_secret`, `tenant_id`, `is_active` |  |
-| [api/messaging/save_channel.php](/code/files/api/messaging/save_channel.php.md):229 |  | insert | `name`, `channel_type`, `provider`, `phone_number`, `credentials`, `verify_token`, `ingress_mode`, `relay_secret`, `tenant_id`, `is_active` |  |
-| [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md):224 | `simCleanup` | update | `last_inbound_datetime` |  |
+| [api/messaging/save_channel.php](/code/files/api/messaging/save_channel.php.md):221 |  | update | `name`, `channel_type`, `provider`, `phone_number`, `credentials`, `verify_token`, `ingress_mode`, `relay_secret`, `tenant_id`, `is_active` |  |
+| [api/messaging/save_channel.php](/code/files/api/messaging/save_channel.php.md):233 |  | insert | `name`, `channel_type`, `provider`, `phone_number`, `credentials`, `verify_token`, `ingress_mode`, `relay_secret`, `tenant_id`, `is_active` |  |
+| [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md):243 | `simCleanup` | update | `last_inbound_datetime` |  |
 | [api/webchat/delete_widget.php](/code/files/api/webchat/delete_widget.php.md):50 |  | delete |  |  |
 | [api/webchat/save_widget.php](/code/files/api/webchat/save_widget.php.md):124 |  | update | `name`, `tenant_id`, `is_active` |  |
 | [api/webchat/save_widget.php](/code/files/api/webchat/save_widget.php.md):148 |  | insert | `name`, `channel_type`, `provider`, `tenant_id`, `is_active` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):264 | `ingestInboundMessage` | update | `last_inbound_datetime` |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):265 | `webchatInsertInbound` | update | `last_inbound_datetime` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):268 | `ingestInboundMessage` | update | `last_inbound_datetime` |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):300 | `webchatInsertInbound` | update | `last_inbound_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/messaging/get_channels.php](/code/files/api/messaging/get_channels.php.md) | L58, L59 |  |
-| [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md) | testSimulation L164 |  |
+| [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md) | testSimulation L176 |  |
 | [api/tickets/get_ticket_thread.php](/code/files/api/tickets/get_ticket_thread.php.md) | L150 |  |
 | [api/webchat/get_widgets.php](/code/files/api/webchat/get_widgets.php.md) | L30 |  |
-| [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md) | loadMessagingChannel L68, messagingAdminMayAdministerChannel L463 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessChannel L463, resolveTicketTenantForChannel L1144 |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatLoadByChannel L80, webchatLoadByKey L98 |  |
+| [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md) | loadMessagingChannel L72, messagingAdminMayAdministerChannel L505 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessChannel L479, resolveTicketTenantForChannel L1193 |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatLoadByChannel L90, webchatLoadByKey L112 |  |
 | [system/integrations/index.php](/code/files/system/integrations/index.php.md) | L58 |  |
 | [system/integrations/slack.php](/code/files/system/integrations/slack.php.md) | L45 |  |
 

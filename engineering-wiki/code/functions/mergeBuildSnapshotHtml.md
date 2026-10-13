@@ -20,13 +20,13 @@ rather than a hand-rolled strip.
 function mergeBuildSnapshotHtml(PDO $conn, int $sourceId, array $source): string
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 655.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 679.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$sourceId` | `int` |  |  |
-| `$source` | `array` |  |  |
+| `$sourceId` | `int` |  | the ticket whose conversation and notes to render |
+| `$source` | `array` |  | that ticket's row (ticket_number, subject, created_datetime) |
 
 **Returns:** `string`
 
@@ -34,8 +34,8 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 662 | `mergeBuildSnapshotHtml` | read [emails](/code/tables/emails.md) |  |
-| 672 | `mergeBuildSnapshotHtml` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
+| 686 | `mergeBuildSnapshotHtml` | read [emails](/code/tables/emails.md) |  |
+| 696 | `mergeBuildSnapshotHtml` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

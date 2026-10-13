@@ -115,7 +115,11 @@ class FormsService
     const IMAGE_MAX_WIDTHS = [100, 75, 50, 25];
     const IMAGE_MAX_DEFAULT = 100;
 
-    /** Does this field type collect an answer? */
+    /**
+     * Does this field type collect an answer?
+     *
+     * @param ?string $type  the field_type; null counts as not answerable
+     */
     public static function isAnswerable(?string $type): bool
     {
         return $type !== null && !in_array($type, self::PRESENTATIONAL_TYPES, true);
@@ -128,6 +132,8 @@ class FormsService
      * new question type is then included automatically, and only a new
      * presentational type has to be declared — which is the direction that fails
      * safe. The opposite shape is what left 'grid' out of three lists.
+     *
+     * @param string $column  the field-type column as the calling query names it, written in code
      */
     public static function presentationalSqlExclusion(string $column = 'field_type'): string
     {
@@ -300,7 +306,11 @@ class FormsService
     // Both were in the original pitch. They are worth having — they are just not
     // one-line additions, and a half-scoped source is worse than no source.
 
-    /** Which source this lookup points at, or null if it is not configured yet. */
+    /**
+     * Which source this lookup points at, or null if it is not configured yet.
+     *
+     * @param array $field  a form_fields row or payload field; config may be an array or JSON text
+     */
     public static function lookupSourceOf(array $field): ?string
     {
         $config = $field['config'] ?? null;
@@ -318,6 +328,8 @@ class FormsService
      *   2. the field itself has `config.portal_lookup` set — off by default, so
      *      nothing is ever exposed by accident. The person building the form
      *      decides, because they know what that form is for.
+     *
+     * @param array $field  a form_fields row or payload field; config may be an array or JSON text
      */
     public static function lookupPortalAllowed(array $field): bool
     {
@@ -340,6 +352,7 @@ class FormsService
      * a single-company install, where every row is NULL, that is what makes the
      * feature work at all.
      *
+     * @param array $meta  the source's LOOKUP_SOURCES entry; its tenant_col is used
      * @param int[] $tenantIds non-empty; callers handle null/empty themselves.
      * @return array{0:string,1:array} [sql clause, params]
      */
@@ -363,11 +376,14 @@ class FormsService
      * rather than derived here, because the two callers know different things:
      * an analyst has accessible companies, a portal user has exactly one.
      *
+     * @param string $source  a LOOKUP_SOURCES key, e.g. 'asset'; anything else returns []
+     * @param string $term  the text typed - untrusted, matched with LIKE; '' lists the first rows
      * @param int[]|null $tenantIds  companies whose rows may be returned.
      *                               `null` means UNRESTRICTED and is only ever
      *                               correct for an analyst who can see every
      *                               company. There is no "all" string — a typo
      *                               in a string would silently mean everything.
+     * @param int $limit  the most rows to return (1-50)
      * @return array [['id'=>int,'label'=>string], …]
      */
     public static function lookupSearch(PDO $conn, string $source, string $term, ?array $tenantIds, int $limit = 20): array
@@ -433,6 +449,10 @@ class FormsService
      * built at answer time. Without it the stored id is whatever the client
      * posted, and a crafted submission could name a record from another company
      * that then appears, resolved and labelled, on a submission an analyst reads.
+     *
+     * @param string $source  a LOOKUP_SOURCES key
+     * @param int $id  the record id that was posted
+     * @param ?array $tenantIds  companies whose rows may be picked; null means unrestricted, [] means none
      */
     public static function lookupValueAllowed(PDO $conn, string $source, int $id, ?array $tenantIds): bool
     {
@@ -476,6 +496,8 @@ class FormsService
     /**
      * The mode a 'datetime' field is in, defaulting for a field saved before modes
      * existed or by an adapter that didn't send one.
+     *
+     * @param array $field  a form_fields row or payload field; config may be an array or JSON text
      */
     public static function dateModeOf(array $field): string
     {
@@ -581,7 +603,11 @@ class FormsService
         return $q->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /** The leaf forms currently paired to a collection, for the settings list. */
+    /**
+     * The leaf forms currently paired to a collection, for the settings list.
+     *
+     * @param int $collectionId  the form_collections row
+     */
     public static function collectionForms(PDO $conn, int $collectionId): array
     {
         if (!self::collectionsAvailable($conn)) return [];
@@ -610,6 +636,7 @@ class FormsService
      * they were filed under: unlinking a form here must not rewrite history,
      * which is the entire point of the second column.
      *
+     * @param int $collectionId  the form_collections row whose forms are set
      * @param  int[] $formIds leaf form ids that should be in the collection
      * @return array{added:int,removed:int,moved:array}
      */
@@ -709,6 +736,8 @@ class FormsService
      * joining through the form. A submission made while the form was in this
      * collection belongs here whatever the form says today, and one made before
      * it was paired does not. That is the whole reason for the second column.
+     *
+     * @param int $collectionId  the form_collections row
      */
     public static function collectionSubmissions(PDO $conn, int $collectionId): array
     {
@@ -782,7 +811,11 @@ class FormsService
         }
     }
 
-    /** Create or rename. Returns the id. */
+    /**
+     * Create or rename. Returns the id.
+     *
+     * @param array $in  id (0 or absent = new), name (required, unique ignoring case), description
+     */
     public static function saveCollection(PDO $conn, ActorContext $ctx, array $in): int
     {
         self::requireCollections($conn);
@@ -833,6 +866,9 @@ class FormsService
      * on - including one deliberately kept off the portal. What closing means
      * is asked at the moment somebody tries to fill the form in; see
      * submissionsBlockedBy() and portalHiddenBy().
+     *
+     * @param int $id  the form_collections row
+     * @param bool $closed  true to close it, false to reopen it
      */
     public static function setCollectionClosed(PDO $conn, ActorContext $ctx, int $id, bool $closed): void
     {
@@ -859,6 +895,8 @@ class FormsService
      * 🔑 A collection holding submissions is CLOSABLE, not deletable. The
      * database enforces this too (no ON DELETE rule on the submission FK), but
      * a raw constraint error is not an explanation, so say it here.
+     *
+     * @param int $id  the form_collections row to delete; refused while it holds submissions
      */
     public static function deleteCollection(PDO $conn, ActorContext $ctx, int $id): void
     {
@@ -882,6 +920,8 @@ class FormsService
      * 🔑 Asked at the moment it matters, never stored. `is_active` remains the
      * form's OWN switch - two independent reasons a form may be shut, and
      * neither overwrites the other.
+     *
+     * @param int $formId  the form someone is about to fill in
      */
     public static function submissionsBlockedBy(PDO $conn, int $formId): ?string
     {
@@ -909,6 +949,8 @@ class FormsService
      *
      * ⚠️ NOT EXISTS rather than a LEFT JOIN with IS NULL: a form with no
      * collection at all must stay in the catalogue, and that is the common case.
+     *
+     * @param string $formsAlias  the alias the calling query gives the forms table, written in code
      */
     public static function portalCatalogueFilter(PDO $conn, string $formsAlias = 'f'): string
     {
@@ -923,6 +965,9 @@ class FormsService
      * Creates a form, or updates the current version of one, with its fields.
      *
      * Historical versions cannot be edited.
+     *
+     * @param array $in  id (absent = new), title, description, is_active, is_portal_visible, requires_approval, approver_id,
+     *     submission_actions, collection_id, fields - on update only keys sent are changed
      */
     public static function saveForm(PDO $conn, ActorContext $ctx, array $in): array
     {
@@ -1040,7 +1085,12 @@ class FormsService
         return ['id' => $formId, 'created' => true];
     }
 
-    /** Delete one version (leaf only) or the whole chain. Returns ['id','versions_deleted']. */
+    /**
+     * Delete one version (leaf only) or the whole chain. Returns ['id','versions_deleted'].
+     *
+     * @param int $id  the form version to delete
+     * @param bool $chain  true to delete every version of the form, false for this (leaf) version only
+     */
     public static function deleteForm(PDO $conn, ActorContext $ctx, int $id, bool $chain = false): array
     {
         $current = self::loadFormRow($conn, $id);              // 404 if gone
@@ -1108,6 +1158,8 @@ class FormsService
      * the three known keys holding lists of {type, args}, so a malformed or
      * hostile payload cannot put arbitrary structure into the column that the
      * engine will later hand to an action handler.
+     *
+     * @param mixed $value  submission_actions as an array or JSON: {submitted, approved, rejected: [{type, args}]}; null or '' stores NULL
      */
     private static function encodeActionLists($value): ?string
     {
@@ -1154,6 +1206,7 @@ class FormsService
      * A malformed value is treated as NULL rather than thrown: a form must stay
      * submittable even if its configuration is nonsense.
      *
+     * @param int $formId  the form
      * @return array{submitted: ?array, approved: ?array, rejected: ?array}
      */
     public static function actionLists(PDO $conn, int $formId): array
@@ -1176,7 +1229,11 @@ class FormsService
         return $none;
     }
 
-    /** Fork the leaf into a new version. Returns ['id','version_number']. */
+    /**
+     * Fork the leaf into a new version. Returns ['id','version_number'].
+     *
+     * @param int $parentId  the current (leaf) version to copy
+     */
     public static function createVersion(PDO $conn, ActorContext $ctx, int $parentId): array
     {
         if ($parentId <= 0) {
@@ -1351,6 +1408,8 @@ class FormsService
      * Validate + record a submission, then dispatch form.submitted. $data is a
      * field_id => value map. Returns the submission id.
      *
+     * @param int $formId  the form being submitted
+     * @param array $data  the answers, [form_fields id => value]
      * @param ?int $portalUserId  a REQUESTER (users.id) submitting through the
      *   self-service request catalogue, or null for the analyst paths.
      *
@@ -1768,7 +1827,12 @@ class FormsService
         return $submissionId;
     }
 
-    /** Delete a submission (+ its data). $formId scopes the 404 when supplied. Returns the id. */
+    /**
+     * Delete a submission (+ its data). $formId scopes the 404 when supplied. Returns the id.
+     *
+     * @param int $submissionId  the form_submissions row to delete
+     * @param ?int $formId  the form it must belong to, or null for any
+     */
     public static function deleteSubmission(PDO $conn, ActorContext $ctx, int $submissionId, ?int $formId = null): int
     {
         if ($formId !== null) {
@@ -1800,7 +1864,11 @@ class FormsService
     //  Internals
     // ======================================================================
 
-    /** Load a form row (with child_count for the leaf check), or throw 404. */
+    /**
+     * Load a form row (with child_count for the leaf check), or throw 404.
+     *
+     * @param int $id  the form to load
+     */
     private static function loadFormRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare(
@@ -1815,7 +1883,11 @@ class FormsService
         return $row;
     }
 
-    /** 409 unless the form is the chain leaf (the current editable version). */
+    /**
+     * 409 unless the form is the chain leaf (the current editable version).
+     *
+     * @param array $formRow  the form row from loadFormRow(), with child_count
+     */
     private static function requireLeaf(array $formRow): void
     {
         if (((int)$formRow['child_count']) > 0) {
@@ -1835,6 +1907,8 @@ class FormsService
      * string "idx:N", meaning "the field at position N of THIS payload" — needed
      * because a rule can point at a question that is itself being created by this
      * same save and has no id yet. syncFields() resolves "idx:N" once the ids exist.
+     *
+     * @param array $fields  the payload's question list, each {id?, label, field_type, options, is_required, config}
      */
     private static function validateFields(array $fields): array
     {
@@ -1919,6 +1993,8 @@ class FormsService
      * split "A, B" into one option and shown it as two on screen — the two
      * halves of one rule disagreeing, which is the failure this codebase keeps
      * writing warnings about.
+     *
+     * @param mixed $raw  the options as an array or a JSON array string
      */
     private static function parseOptionList($raw): array
     {
@@ -1936,7 +2012,11 @@ class FormsService
             $parsed
         ), fn($v) => $v !== ''));
     }
-    /** A grid field's column definitions from its config, keyed by column id. */
+    /**
+     * A grid field's column definitions from its config, keyed by column id.
+     *
+     * @param array $field  the grid field; its config (array or JSON) holds 'columns'
+     */
     public static function gridColumns(array $field): array
     {
         $cfg = $field['config'] ?? null;
@@ -1951,7 +2031,11 @@ class FormsService
         return $out;
     }
 
-    /** The columns a NEW row may be filled in against — retired ones excluded. */
+    /**
+     * The columns a NEW row may be filled in against — retired ones excluded.
+     *
+     * @param array $field  the grid field; its config (array or JSON) holds 'columns'
+     */
     public static function gridLiveColumns(array $field): array
     {
         return array_filter(self::gridColumns($field), fn($c) => empty($c['deleted']));
@@ -1975,6 +2059,9 @@ class FormsService
      * ⚠️ Labels come from gridColumns(), which INCLUDES retired ones — a value
      * stored against a column since withdrawn still says what it was, rather
      * than appearing as an unexplained extra.
+     *
+     * @param array $field  the grid field, for its column labels
+     * @param mixed $raw  the stored answer: JSON or an array, {rows: [...]} or a bare list of rows
      */
     public static function gridToText(array $field, $raw): string
     {
@@ -1992,7 +2079,11 @@ class FormsService
         }
         return implode("\n", $lines);
     }
-    /** A grid answer's rows, from JSON or an array, as {"rows": [...]} or a bare list. */
+    /**
+     * A grid answer's rows, from JSON or an array, as {"rows": [...]} or a bare list.
+     *
+     * @param mixed $raw  the stored answer: JSON or an array, {rows: [...]} or a bare list of rows
+     */
     public static function gridRows($raw): array
     {
         if (is_string($raw)) $raw = json_decode($raw, true);
@@ -2041,7 +2132,11 @@ class FormsService
         return $known;
     }
 
-    /** The people groups a form is restricted to. Empty means everyone. */
+    /**
+     * The people groups a form is restricted to. Empty means everyone.
+     *
+     * @param int $formId  the form
+     */
     public static function formAudiences(PDO $conn, int $formId): array
     {
         if (!self::audiencesAvailable($conn)) return [];
@@ -2060,6 +2155,9 @@ class FormsService
      * typo that stored a group id which does not exist would restrict the form
      * to nobody — and it would look identical to "restricted to a group" from
      * the outside, which is the worst kind of wrong.
+     *
+     * @param int $formId  the form whose audience is replaced
+     * @param array $groupIds  knowledge_user_groups ids allowed to request it; [] means everyone
      */
     public static function setFormAudiences(PDO $conn, int $formId, array $groupIds): void
     {
@@ -2112,6 +2210,8 @@ class FormsService
      *
      * ⚠️ The membership check honours `expires_at`: a people group carries a
      * per-member expiry and a lapsed member is not a member.
+     *
+     * @param string $formAlias  the alias the calling query gives the forms table, written in code
      */
     public static function portalAudienceSql(PDO $conn, string $formAlias = 'f'): string
     {
@@ -2131,7 +2231,12 @@ class FormsService
                  ))";
     }
 
-    /** The same decision as a yes/no, for an endpoint that already has one form. */
+    /**
+     * The same decision as a yes/no, for an endpoint that already has one form.
+     *
+     * @param int $formId  the form
+     * @param int $userId  the portal user (users.id) asking
+     */
     public static function portalCanUseForm(PDO $conn, int $formId, int $userId): bool
     {
         if (!self::audiencesAvailable($conn)) return true;
@@ -2176,6 +2281,11 @@ class FormsService
      * SUBMIT, which is a different act. What IS enforced is the shape — keys
      * must be field ids belonging to this form, so a crafted post cannot use a
      * draft as somewhere to park arbitrary data.
+     *
+     * @param int $formId  the form version the draft belongs to
+     * @param string $ownerKind  'analyst' or 'portal' - which id space $ownerId is in
+     * @param int $ownerId  analysts.id for 'analyst', users.id for 'portal'
+     * @param array $answers  [form_fields id => value]; ids not on this form are dropped
      */
     public static function saveDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId, array $answers): array
     {
@@ -2241,6 +2351,10 @@ class FormsService
      * one people fill in — the caller must SAY SO rather than load the answers
      * into a newer form, where they would attach to whatever now holds those
      * ids, or to nothing at all.
+     *
+     * @param int $formId  the form version
+     * @param string $ownerKind  'analyst' or 'portal'
+     * @param int $ownerId  analysts.id for 'analyst', users.id for 'portal'
      */
     public static function loadDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId): ?array
     {
@@ -2272,7 +2386,13 @@ class FormsService
         ];
     }
 
-    /** Throw a draft away. Idempotent — deleting one that is gone is not an error. */
+    /**
+     * Throw a draft away. Idempotent — deleting one that is gone is not an error.
+     *
+     * @param int $formId  the form version
+     * @param string $ownerKind  'analyst' or 'portal'
+     * @param int $ownerId  analysts.id for 'analyst', users.id for 'portal'
+     */
     public static function deleteDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId): void
     {
         if (!self::draftsAvailable($conn)) return;
@@ -2281,7 +2401,12 @@ class FormsService
              ->execute([$formId, $ownerKind, $ownerId]);
     }
 
-    /** Which of these forms this person has a draft of, as form_id => modified_date. */
+    /**
+     * Which of these forms this person has a draft of, as form_id => modified_date.
+     *
+     * @param string $ownerKind  'analyst' or 'portal'
+     * @param int $ownerId  analysts.id for 'analyst', users.id for 'portal'
+     */
     public static function draftsForOwner(PDO $conn, string $ownerKind, int $ownerId): array
     {
         if (!self::draftsAvailable($conn)) return [];
@@ -2332,6 +2457,8 @@ class FormsService
      * predates layouts stores NULL, derives this, and renders exactly as it did
      * — the packing here is the same arithmetic the CSS grid already does when
      * it wraps, so the derived rows describe what is already on the screen.
+     *
+     * @param array $fields  the form's fields in sort_order, each with id and config
      */
     public static function deriveLayout(array $fields): array
     {
@@ -2357,7 +2484,11 @@ class FormsService
         return ['type' => self::LAYOUT_TYPE_DEFAULT, 'rows' => $rows];
     }
 
-    /** A field's width in twelfths, defaulting to full. Absent is every old field. */
+    /**
+     * A field's width in twelfths, defaulting to full. Absent is every old field.
+     *
+     * @param array $field  a form_fields row or payload field; config may be an array or JSON text
+     */
     public static function fieldWidthOf(array $field): int
     {
         $config = $field['config'] ?? null;
@@ -2376,6 +2507,9 @@ class FormsService
      * Two sources that can disagree is the drift this codebase keeps being bitten
      * by, so the rule is one sentence long and written down here: **if a layout
      * exists, it wins; if it does not, sort_order does.**
+     *
+     * @param mixed $stored  forms.layout as JSON text or an array; null or '' derives one
+     * @param array $fields  the form's live fields in sort_order
      */
     public static function layoutFor($stored, array $fields): array
     {
@@ -2398,6 +2532,9 @@ class FormsService
      * the same silent-drop failure as an untaught type, arriving by a different
      * road. Unplaced fields are therefore appended as their own rows, and cells
      * pointing at a field that is gone are dropped.
+     *
+     * @param array $layout  the decoded stored layout, {type, rows: [{cells: [...]}]}
+     * @param array $fields  the form's live fields in sort_order
      */
     private static function reconcileLayout(array $layout, array $fields): array
     {
@@ -2437,7 +2574,12 @@ class FormsService
         return ['type' => $type, 'rows' => $rows];
     }
 
-    /** One cell, with every value forced into range. */
+    /**
+     * One cell, with every value forced into range.
+     *
+     * @param array $cell  one stored cell, {field, width, rowspan}
+     * @param ?array $field  the field it places, or null for an empty spacer cell
+     */
     private static function normaliseCell(array $cell, ?array $field): array
     {
         $w = isset($cell['width']) ? (int)$cell['width'] : null;
@@ -2464,6 +2606,9 @@ class FormsService
      * whose field is not in the map keeps its old id and is therefore dropped on
      * read — which is right: it refers to a field that did not come forward
      * (a retired one), and inventing a reference would place the wrong question.
+     *
+     * @param string $json  the stored layout JSON
+     * @param array $idMap  [old form_fields id => new id]
      */
     public static function remapLayoutFields(string $json, array $idMap): string
     {
@@ -2481,7 +2626,11 @@ class FormsService
         return json_encode($layout);
     }
 
-    /** Every field id a layout places, in the order it places them. */
+    /**
+     * Every field id a layout places, in the order it places them.
+     *
+     * @param array $layout  a layout, {rows: [{cells: [{field}]}]}
+     */
     public static function layoutFieldOrder(array $layout): array
     {
         $out = [];
@@ -2497,6 +2646,12 @@ class FormsService
      * Validates and cleans one field's config JSON - width, label position, the settings of
      * notes, images, date fields and grids, and its visible_if rule - and returns it, or
      * null when empty.
+     *
+     * @param mixed $config  the field's config as sent - an array, JSON text, or null/'' for none
+     * @param int $i  the field's position in the payload, for error messages and the earlier-field rule
+     * @param array $fields  the whole payload's question list, to check visible_if targets
+     * @param array $indexById  [existing form_fields id => position in the payload]
+     * @param string $type  the field's field_type, which decides which settings apply
      */
     private static function validateFieldConfig($config, int $i, array $fields, array $indexById, string $type = 'text'): ?array
     {
@@ -2792,6 +2947,9 @@ class FormsService
      *
      * Two passes: the ids have to exist before a condition that points at a
      * brand-new field ("idx:N") can be resolved to one.
+     *
+     * @param int $formId  the form whose fields are written
+     * @param array $fields  the validated list from validateFields(), in order
      */
     private static function syncFields(PDO $conn, int $formId, array $fields): void
     {

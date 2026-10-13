@@ -21,5 +21,5 @@
 | [api/assets/get_asset_fields.php](/code/files/api/assets/get_asset_fields.php.md) | L51 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L167 |  |
 | [asset-management/labels.php](/code/files/asset-management/labels.php.md) | L129 |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::schemaReady L84, AssetFieldsService::assertUnique L343, AssetFieldsService::fieldHasValues L759 |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::schemaReady L84, AssetFieldsService::assertUnique L364, AssetFieldsService::fieldHasValues L832 |  |
 

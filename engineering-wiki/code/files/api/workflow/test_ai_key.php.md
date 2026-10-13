@@ -1,6 +1,6 @@
 # api/workflow/test_ai_key.php
 
-> API endpoint - 167 lines
+> API endpoint - 175 lines
 
 API: Send a tiny "say ok" prompt to the chosen provider so the user can verify their key + model BEFORE saving. Supports both Anthropic and OpenAI. If the masked placeholder ("****abcd") is submitted, the stored key is used instead — so the user can test the saved config without re-typing the secret.
 
@@ -17,8 +17,8 @@ Mirrors the test pattern from api/rfp-builder/test_ai_connection.php.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [wfTestAnthropic()](/code/functions/wfTestAnthropic.md) | 81 | Sends a tiny prompt to the Anthropic Messages API to prove the key and model work, and returns the reply text with the token counts. |
-| [wfTestOpenAI()](/code/functions/wfTestOpenAI.md) | 131 | Sends a tiny prompt to the OpenAI Chat Completions API to prove the key and model work, and returns the reply text with the token counts. |
+| [wfTestAnthropic()](/code/functions/wfTestAnthropic.md) | 85 | Sends a tiny prompt to the Anthropic Messages API to prove the key and model work, and returns the reply text with the token counts. |
+| [wfTestOpenAI()](/code/functions/wfTestOpenAI.md) | 139 | Sends a tiny prompt to the OpenAI Chat Completions API to prove the key and model work, and returns the reply text with the token counts. |
 
 ## Database
 

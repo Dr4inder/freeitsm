@@ -18,16 +18,16 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):280 |  | delete |  |  |
-| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):281 |  | insert | `asset_id`, `drive`, `label`, `file_system`, `size_bytes`, `free_bytes`, `used_percent`, `source` |  |
-| [includes/intune.php](/code/files/includes/intune.php.md):396 | `intuneSyncDisks` | delete |  |  |
-| [includes/intune.php](/code/files/includes/intune.php.md):398 | `intuneSyncDisks` | insert | `asset_id`, `drive`, `label`, `file_system`, `size_bytes`, `free_bytes`, `used_percent`, `source` |  |
+| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):287 |  | delete |  |  |
+| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):288 |  | insert | `asset_id`, `drive`, `label`, `file_system`, `size_bytes`, `free_bytes`, `used_percent`, `source` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):410 | `intuneSyncDisks` | delete |  |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):412 | `intuneSyncDisks` | insert | `asset_id`, `drive`, `label`, `file_system`, `size_bytes`, `free_bytes`, `used_percent`, `source` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_disks.php](/code/files/api/assets/get_asset_disks.php.md) | L42 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetDisksList L499 |  |
-| [includes/intune.php](/code/files/includes/intune.php.md) | intuneSyncDisks L381 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetDisksList L510 |  |
+| [includes/intune.php](/code/files/includes/intune.php.md) | intuneSyncDisks L395 |  |
 

@@ -11,11 +11,11 @@ in the right place and takes the fold with it.
 function cardDavLineSpans(string $raw): array
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 273.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 287.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the card exactly as the server returned it |
 
 **Returns:** array of ['logical' => string, 'start' => int, 'end' => int] where the offsets are byte positions into `$raw` and `end` is exclusive of the line ending.
 

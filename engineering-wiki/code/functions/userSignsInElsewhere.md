@@ -19,12 +19,12 @@ be planted on the account.
 function userSignsInElsewhere(PDO $conn, $providerId): bool
 ```
 
-Defined in [includes/users.php](/code/files/includes/users.php.md), line 173.
+Defined in [includes/users.php](/code/files/includes/users.php.md), line 175.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` |  |  |  |
+| `$providerId` |  |  | the person's users.auth_provider_id; null or 0 means not linked |
 
 **Returns:** `bool`
 
@@ -32,7 +32,7 @@ Defined in [includes/users.php](/code/files/includes/users.php.md), line 173.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 178 | `userSignsInElsewhere` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 180 | `userSignsInElsewhere` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Called from
 

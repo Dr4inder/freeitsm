@@ -6,12 +6,12 @@ Is this location shared? False for a missing row or an un-verified install.
 function assetLocationIsShared(PDO $conn, int $locationId): bool
 ```
 
-Defined in [includes/asset_locations.php](/code/files/includes/asset_locations.php.md), line 57.
+Defined in [includes/asset_locations.php](/code/files/includes/asset_locations.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$locationId` | `int` |  |  |
+| `$locationId` | `int` |  | the asset_locations id to check |
 
 **Returns:** `bool`
 
@@ -19,7 +19,7 @@ Defined in [includes/asset_locations.php](/code/files/includes/asset_locations.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 61 | `assetLocationIsShared` | read [asset_locations](/code/tables/asset_locations.md) |  |
+| 65 | `assetLocationIsShared` | read [asset_locations](/code/tables/asset_locations.md) |  |
 
 ## Calls
 

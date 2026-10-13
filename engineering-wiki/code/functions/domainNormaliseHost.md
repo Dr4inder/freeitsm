@@ -6,11 +6,11 @@ A host name (may be a sub-domain, keeps "www."), or null when it is not one.
 function domainNormaliseHost(string $h): ?string
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 120.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 136.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$h` | `string` |  |  |
+| `$h` | `string` |  | one host as typed - a scheme, path and port are stripped; Unicode becomes punycode |
 
 **Returns:** `?string`
 

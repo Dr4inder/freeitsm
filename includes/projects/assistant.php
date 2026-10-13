@@ -27,7 +27,14 @@ require_once __DIR__ . '/read.php';
 require_once __DIR__ . '/methodologies.php';
 require_once __DIR__ . '/../service_context.php';   // ServiceError
 
-/** Decorated project rows (health, progress, exceptions, budget totals) for a WHERE, inside $scope. */
+/**
+ * Decorated project rows (health, progress, exceptions, budget totals) for a WHERE, inside $scope.
+ *
+ * @param array $scope  [sql, args]: the caller's company filter on alias p, e.g. [' AND p.tenant_id IN (?)', [3]]
+ * @param string $where  the SQL condition on projects p, with ? placeholders
+ * @param array $args  the values for $where's placeholders
+ * @param int $limit  the most rows to return (kept between 1 and 500)
+ */
 function projectAssistRows(PDO $conn, array $scope, string $where, array $args, int $limit): array
 {
     [$sSql, $sArgs] = $scope;
@@ -46,7 +53,12 @@ function projectAssistRows(PDO $conn, array $scope, string $where, array $args, 
     return array_map(fn($r) => projectDecorate($r, $stats[(int)$r['id']] ?? [], $cfg) + ['_budget' => $stats[(int)$r['id']]['budget'] ?? null], $rows);
 }
 
-/** One project inside $scope, by code (PRJ-0042), id or a unique part of its name. Throws ServiceError. */
+/**
+ * One project inside $scope, by code (PRJ-0042), id or a unique part of its name. Throws ServiceError.
+ *
+ * @param array $scope  [sql, args]: the caller's company filter on alias p
+ * @param mixed $ref  what the assistant was told: a code (PRJ-0042), an id, or part of the name (untrusted)
+ */
 function projectAssistFind(PDO $conn, array $scope, $ref): array
 {
     $ref = trim((string)$ref);
@@ -67,13 +79,22 @@ function projectAssistFind(PDO $conn, array $scope, $ref): array
     return $rows[0];
 }
 
-/** Formats an amount with its currency to two decimals; null shows as "-". */
+/**
+ * Formats an amount with its currency to two decimals; null shows as "-".
+ *
+ * @param ?float $v  the amount; null shows as "-"
+ * @param string $cur  the currency code shown before it, e.g. 'GBP'
+ */
 function projectAssistMoney(?float $v, string $cur): string
 {
     return $v === null ? '-' : $cur . ' ' . number_format($v, 2);
 }
 
-/** Why a project is the colour it is, in words. */
+/**
+ * Why a project is the colour it is, in words.
+ *
+ * @param array $p  a project row decorated by projectDecorate() (health, exceptions, task and RAID counts)
+ */
 function projectAssistWhy(array $p): string
 {
     $why = [];
@@ -96,6 +117,8 @@ function projectAssistWhy(array $p): string
 /**
  * One project as a single line of text for the assistant - code, name, status, health,
  * priority, progress, target date, manager and why it needs attention.
+ *
+ * @param array $p  a project row decorated by projectDecorate(), with owner_name
  */
 function projectAssistLine(array $p): string
 {
@@ -106,7 +129,12 @@ function projectAssistLine(array $p): string
         $why !== '' ? ' - ' . $why : '');
 }
 
-/** args: status (live | all | a status), health, q, limit. */
+/**
+ * args: status (live | all | a status), health, q, limit.
+ *
+ * @param array $scope  [sql, args]: the caller's company filter on alias p
+ * @param array $args  the tool's arguments: status (live, all or one status), health, q, limit (1-100, default 25)
+ */
 function projectAssistList(PDO $conn, array $scope, array $args): string
 {
     $status = trim((string)($args['status'] ?? 'live')) ?: 'live';
@@ -135,6 +163,10 @@ function projectAssistList(PDO $conn, array $scope, array $args): string
  * One project in full. $withBudget: the money line - the MCP server gives it to
  * the key's analyst; Warbot leaves it out, because its answer is read by
  * everyone in the channel.
+ *
+ * @param array $scope  [sql, args]: the caller's company filter on alias p
+ * @param array $args  the tool's arguments: project (code, id or name)
+ * @param bool $withBudget  true to include the money line and budget history (MCP); false for Warbot, read by a whole channel
  */
 function projectAssistOverview(PDO $conn, array $scope, int $analystId, array $args, bool $withBudget): string
 {
@@ -205,7 +237,12 @@ function projectAssistOverview(PDO $conn, array $scope, int $analystId, array $a
     return implode("\n", $out);
 }
 
-/** args: project, type (risk | assumption | issue | dependency | decision | lesson), status (open | closed | all). */
+/**
+ * args: project, type (risk | assumption | issue | dependency | decision | lesson), status (open | closed | all).
+ *
+ * @param array $scope  [sql, args]: the caller's company filter on alias p
+ * @param array $args  the tool's arguments: project, type (risk, issue, ...; '' for all), status (open, closed or all; default open)
+ */
 function projectAssistRaid(PDO $conn, array $scope, array $args): string
 {
     require_once __DIR__ . '/../services/project_tools.php';
@@ -228,7 +265,12 @@ function projectAssistRaid(PDO $conn, array $scope, array $args): string
     return implode("\n", $lines);
 }
 
-/** args: project, open_only (default true). Overdue first, then by due date. */
+/**
+ * args: project, open_only (default true). Overdue first, then by due date.
+ *
+ * @param array $scope  [sql, args]: the caller's company filter on alias p
+ * @param array $args  the tool's arguments: project, open_only (default true)
+ */
 function projectAssistTasks(PDO $conn, array $scope, array $args): string
 {
     $p = projectAssistFind($conn, $scope, $args['project'] ?? '');
@@ -258,6 +300,9 @@ function projectAssistTasks(PDO $conn, array $scope, array $args): string
  * The project dates coming up across every project in $scope - stage ends,
  * milestones and target finishes in the next N days (default 14), and
  * milestones already missed. Warbot's "is anything big happening this week?".
+ *
+ * @param array $scope  [sql, args]: the caller's company filter on alias p
+ * @param array $args  the tool's arguments: days ahead to look (1-90, default 14)
  */
 function projectAssistDates(PDO $conn, array $scope, array $args): string
 {

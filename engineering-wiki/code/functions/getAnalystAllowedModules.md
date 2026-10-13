@@ -9,21 +9,21 @@ Cached per request. System is deliberately excluded (gated by is_admin instead).
 function getAnalystAllowedModules($conn, $analyst_id)
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 117.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 119.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$analyst_id` |  |  |  |
+| `$analyst_id` |  |  | the analyst whose access to resolve (cast to int); deactivated or unknown gives [] |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 133 | `getAnalystAllowedModules` | read [analysts](/code/tables/analysts.md) |  |
-| 144 | `getAnalystAllowedModules` | read [analyst_modules](/code/tables/analyst_modules.md) |  |
-| 153 | `getAnalystAllowedModules` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
-| 161 | `getAnalystAllowedModules` | read [team_modules](/code/tables/team_modules.md) |  |
+| 135 | `getAnalystAllowedModules` | read [analysts](/code/tables/analysts.md) |  |
+| 146 | `getAnalystAllowedModules` | read [analyst_modules](/code/tables/analyst_modules.md) |  |
+| 155 | `getAnalystAllowedModules` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 163 | `getAnalystAllowedModules` | read [team_modules](/code/tables/team_modules.md) |  |
 
 ## Calls
 

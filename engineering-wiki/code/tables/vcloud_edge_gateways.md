@@ -19,8 +19,8 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/assets/vcloud_connections.php](/code/files/api/assets/vcloud_connections.php.md):47 |  | delete |  |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):265 | `vcdSyncConnection` | insert | `connection_id`, `gateway_id`, `name`, `org_vdc`, `status`, `uplink_ips`, `details_json`, `last_seen_datetime` |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):289 | `vcdSyncConnection` | delete |  |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):308 | `vcdSyncConnection` | insert | `connection_id`, `gateway_id`, `name`, `org_vdc`, `status`, `uplink_ips`, `details_json`, `last_seen_datetime` |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):332 | `vcdSyncConnection` | delete |  |  |
 
 ## Read by
 

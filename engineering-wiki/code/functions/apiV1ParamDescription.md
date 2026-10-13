@@ -6,13 +6,13 @@ Pull a parameter description from the docs params for a given name/in.
 function apiV1ParamDescription(array $ep, string $name, string $in): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 305.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 340.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ep` | `array` |  |  |
-| `$name` | `string` |  |  |
-| `$in` | `string` |  |  |
+| `$ep` | `array` |  | one endpoint from spec.json: m (method), p (path template), s, d, params, perm |
+| `$name` | `string` |  | the parameter's name |
+| `$in` | `string` |  | where it goes: 'path' or 'query' |
 
 **Returns:** `string`
 

@@ -6,7 +6,7 @@ The tenant ids an analyst may access. Company access is ADDITIVE from two source
 function getAccessibleTenantIds(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 191.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,11 +19,11 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 191
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 200 | `getAccessibleTenantIds` | read [tenants](/code/tables/tenants.md) |  |
-| 204 | `getAccessibleTenantIds` | read [analysts](/code/tables/analysts.md) |  |
-| 214 | `getAccessibleTenantIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
-| 228 | `getAccessibleTenantIds` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md), read [team_tenant_access](/code/tables/team_tenant_access.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 238 | `getAccessibleTenantIds` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
+| 202 | `getAccessibleTenantIds` | read [tenants](/code/tables/tenants.md) |  |
+| 206 | `getAccessibleTenantIds` | read [analysts](/code/tables/analysts.md) |  |
+| 216 | `getAccessibleTenantIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 230 | `getAccessibleTenantIds` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md), read [team_tenant_access](/code/tables/team_tenant_access.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 240 | `getAccessibleTenantIds` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
 
 ## Calls
 

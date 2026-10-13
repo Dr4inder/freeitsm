@@ -6,13 +6,13 @@ A record's company with NULL read as the Default company.
 function projectLinkTenantOf(PDO $conn, string $table, int $id): ?int
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 91.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 104.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$table` | `string` |  | the record's table (trusted - from `projectLinkKinds()`, never from input) |
+| `$id` | `int` |  | the record's id in that table |
 
 **Returns:** `?int`
 

@@ -10,7 +10,7 @@ CMDB foreign keys at all, so nothing at the database level prevents it.
 function cmdbAuditBrokenReferences(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 111.
+Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `cmdbAuditBrokenReferences` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 120 | `cmdbAuditBrokenReferences` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
 
 ## Calls
 

@@ -39,20 +39,33 @@ final class LmsLearner
     /** @var int analysts.id or users.id, per $type */
     private $id;
 
-    /** Private: learners are built with analyst() or user(). */
+    /**
+     * Private: learners are built with analyst() or user().
+     *
+     * @param string $type  'analyst' or 'user' (self::ANALYST or self::USER)
+     * @param int $id  the analysts.id or users.id, matching $type
+     */
     private function __construct(string $type, int $id)
     {
         $this->type = $type;
         $this->id   = $id;
     }
 
-    /** A learner for an analyst id, or null when the id is not positive. */
+    /**
+     * A learner for an analyst id, or null when the id is not positive.
+     *
+     * @param int $id  the analysts.id; 0 or less gives null
+     */
     public static function analyst(int $id): ?self
     {
         return $id > 0 ? new self(self::ANALYST, $id) : null;
     }
 
-    /** A learner for a self-service user id, or null when the id is not positive. */
+    /**
+     * A learner for a self-service user id, or null when the id is not positive.
+     *
+     * @param int $id  the self-service users.id; 0 or less gives null
+     */
     public static function user(int $id): ?self
     {
         return $id > 0 ? new self(self::USER, $id) : null;
@@ -157,6 +170,9 @@ function lmsCanManage(PDO $conn, int $analystId): bool {
  * 🔑 One function, called by both the learner's view and the manager's Progress
  * tab, because the two screens disagreeing about whether somebody is late is
  * worse than either of them being wrong on its own.
+ *
+ * @param ?string $deadline  the assignment deadline as stored (a date, read as a whole local day); null or '' is never overdue
+ * @param string $status  the learner's progress status; 'completed' and 'passed' are never overdue
  */
 function lmsIsOverdue(?string $deadline, string $status): bool
 {
@@ -207,6 +223,7 @@ function lmsUserGroupsAvailable(PDO $conn): bool {
  * spelled the same three-table join out in five places; they agreed then, and
  * the first person to add a target type would have found out that they don't.
  *
+ * @param LmsLearner $learner  the person whose assignments are wanted
  * @return array{0:string,1:array}
  */
 function lmsAssignmentReachSql(PDO $conn, LmsLearner $learner): array
@@ -249,6 +266,9 @@ function lmsAssignmentReachSql(PDO $conn, LmsLearner $learner): array
 /**
  * Is this course assigned to this learner? This is what they are *entitled* to
  * take, by any of the routes above.
+ *
+ * @param LmsLearner $learner  the person to check
+ * @param int $courseId  the lms_courses id; 0 or less gives false
  */
 function lmsCourseAssignedTo(PDO $conn, LmsLearner $learner, int $courseId): bool {
     if ($courseId <= 0) return false;
@@ -271,6 +291,9 @@ function lmsCourseAssignedTo(PDO $conn, LmsLearner $learner, int $courseId): boo
  * `users` row — passing it in would ask whether analyst #12 is an LMS manager
  * while holding portal user #12, and answer about the wrong person entirely.
  * A portal learner has no Preview and no override: assigned, or nothing.
+ *
+ * @param LmsLearner $learner  the person to check; an analyst who manages the LMS may open any course
+ * @param int $courseId  the lms_courses id
  */
 function lmsCanAccessCourse(PDO $conn, LmsLearner $learner, int $courseId): bool {
     if ($learner->isAnalyst() && lmsCanManage($conn, $learner->id())) return true;
@@ -282,6 +305,8 @@ function lmsCanAccessCourse(PDO $conn, LmsLearner $learner, int $courseId): bool
  * $courseId. Resolves the learner from whichever session is present, so one
  * guard covers both the analyst app and the portal.
  * Assumes the session check and module gate have already run.
+ *
+ * @param int $courseId  the lms_courses id the request is about
  */
 function requireLmsCourseAccessJson(PDO $conn, int $courseId): void {
     $learner = LmsLearner::fromRequest();
@@ -305,6 +330,7 @@ function requireLmsCourseAccessJson(PDO $conn, int $courseId): void {
  * group membership instead would multiply the row by every group that reaches
  * it, which the old GROUP BY was quietly there to mop up.
  *
+ * @param LmsLearner $learner  the person whose assigned courses are listed
  * @return array<int,array<string,mixed>>
  */
 function lmsMyCourses(PDO $conn, LmsLearner $learner): array {
@@ -359,6 +385,8 @@ function lmsMyCourses(PDO $conn, LmsLearner $learner): array {
  *
  * Adds `lesson_count` and `lesson_position` to each row, both 0 when unknown.
  * One extra query for the whole page, not one per course.
+ *
+ * @param array $rows  course rows (id, content_type, status, bookmark), changed in place - lesson_count and lesson_position are added
  */
 function lmsAttachLessonProgress(PDO $conn, array &$rows): void
 {
@@ -422,6 +450,9 @@ function lmsAttachLessonProgress(PDO $conn, array &$rows): void
  * column still exists it must not go stale, or the next person to write a report
  * against the obvious-looking column gets a partial answer with no hint that it
  * is partial. It goes at the next MAJOR, and this line goes with it.
+ *
+ * @param LmsLearner $learner  the person taking the course
+ * @param int $courseId  the lms_courses id
  */
 function lmsProgressRowFor(PDO $conn, LmsLearner $learner, int $courseId): array
 {
@@ -546,6 +577,9 @@ const LMS_TARGET_TYPES = ['learning_group', 'user_group', 'all_users', 'analyst'
  * accepted happily and the assignment reaches nobody at all — which looks
  * exactly like the feature not working, and is the worst kind of silence:
  * the row is there on the screen, and nothing ever happens because of it.
+ *
+ * @param string $targetType  one of LMS_TARGET_TYPES - 'learning_group', 'user_group', 'all_users', 'analyst', 'user'
+ * @param int $groupId  the target's id, whose meaning depends on $targetType (ignored for 'all_users')
  */
 function lmsAssignmentTargetProblem(PDO $conn, string $targetType, int $groupId): ?string
 {

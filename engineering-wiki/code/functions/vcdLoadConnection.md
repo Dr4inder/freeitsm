@@ -6,12 +6,12 @@ One vCloud Director connection row with its password decrypted into 'password'. 
 function vcdLoadConnection(PDO $conn, int $connectionId): array
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 39.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 40.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connectionId` | `int` |  |  |
+| `$connectionId` | `int` |  | the vcloud_connections id |
 
 **Returns:** `array`
 
@@ -21,7 +21,7 @@ Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 41 | `vcdLoadConnection` | read [vcloud_connections](/code/tables/vcloud_connections.md) |  |
+| 42 | `vcdLoadConnection` | read [vcloud_connections](/code/tables/vcloud_connections.md) |  |
 
 ## Calls
 

@@ -11,11 +11,11 @@ personal address even when its domain can't be mapped).
 function normaliseEmailAddress(string $raw): string
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1294.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1351.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the address as typed - may carry 'mailto:' or angle brackets |
 
 **Returns:** `string`
 

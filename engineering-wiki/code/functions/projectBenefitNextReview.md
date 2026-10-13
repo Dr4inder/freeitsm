@@ -6,12 +6,12 @@ The next review after `$from`, `$months` on; null when it does not repeat.
 function projectBenefitNextReview(string $from, ?int $months): ?string
 ```
 
-Defined in [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md), line 122.
+Defined in [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md), line 137.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$from` | `string` |  |  |
-| `$months` | `?int` |  |  |
+| `$from` | `string` |  | the date the review is counted from, 'Y-m-d' |
+| `$months` | `?int` |  | the review interval in months; null or 0 means it does not repeat |
 
 **Returns:** `?string`
 

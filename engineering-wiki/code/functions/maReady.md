@@ -6,7 +6,7 @@ Are the tables there? Before DB Verify there is nothing to show or change.
 function maReady(PDO $conn): bool
 ```
 
-Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md), line 60.
+Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_acce
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 62 | `maReady` | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 70 | `maReady` | read [manager_grants](/code/tables/manager_grants.md) |  |
 
 ## Called from
 

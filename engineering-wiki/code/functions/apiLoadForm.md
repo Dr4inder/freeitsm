@@ -6,12 +6,12 @@ Loads one form row (apiFormSelect), or answers 404 and stops.
 function apiLoadForm(PDO $conn, int $formId): array
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 133.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$formId` | `int` |  |  |
+| `$formId` | `int` |  | the forms id |
 
 **Returns:** `array`
 

@@ -56,7 +56,11 @@ const WT_SCOPE_MINE = 'mine';
 const WT_SCOPE_TEAM = 'team';
 const WT_SCOPE_ALL  = 'all';
 
-/** True when $scope is one of the three Watchtower scopes: mine, team or all. */
+/**
+ * True when $scope is one of the three Watchtower scopes: mine, team or all.
+ *
+ * @param string $scope  the scope to check, e.g. a stored preference or a request value
+ */
 function wtScopeIsValid(string $scope): bool
 {
     return in_array($scope, [WT_SCOPE_MINE, WT_SCOPE_TEAM, WT_SCOPE_ALL], true);
@@ -100,7 +104,11 @@ function wtImpersonalCards(): array
     ];
 }
 
-/** Can this card narrow to a person or a team at all? */
+/**
+ * Can this card narrow to a person or a team at all?
+ *
+ * @param string $cardKey  a card key from wtCardKeys(), e.g. 'tickets'
+ */
 function wtCardCanScope(string $cardKey): bool
 {
     return !in_array($cardKey, wtImpersonalCards(), true);
@@ -193,6 +201,8 @@ function wtTeamAnalystIds(PDO $conn, int $analystId): array
  * group pointed at a team I am in.
  *
  * Expects the query to expose `c` (checks) and `g` (groups, LEFT JOINed).
+ *
+ * @param string $scope  WT_SCOPE_MINE, WT_SCOPE_TEAM or WT_SCOPE_ALL ('all' gives no clause)
  */
 function wtMorningCheckScope(PDO $conn, int $analystId, string $scope): array
 {
@@ -231,6 +241,9 @@ function wtMorningCheckScope(PDO $conn, int $analystId, string $scope): array
  * ⚠️ The column is INTERPOLATED, so it must never come from a request. Every
  * caller passes a literal — `t.assigned_analyst_id`, `c.assigned_to_id` — and
  * that is the only safe way to use this.
+ *
+ * @param string $scope  WT_SCOPE_MINE, WT_SCOPE_TEAM or WT_SCOPE_ALL ('all' gives no clause)
+ * @param string $column  the owner column with its alias, e.g. 't.assigned_analyst_id' - always a literal, never input
  */
 function wtScopeClause(PDO $conn, int $analystId, string $scope, string $column): array
 {
@@ -325,6 +338,8 @@ function wtVisibleCards(PDO $conn): array
  *
  * Ids are checked against the live lookup table, so a status deleted after being
  * selected drops out instead of being counted as a member that no longer exists.
+ *
+ * @param string $itemKey  a key of wtSelectableItems(), e.g. 'tickets.by_status'; an unknown key gives null
  */
 function wtItemMembers(PDO $conn, string $itemKey): ?array
 {
@@ -350,7 +365,11 @@ function wtItemMembers(PDO $conn, string $itemKey): ?array
     }
 }
 
-/** A safe `IN (…)` fragment from a list of ints. '(0)' when empty, so it matches nothing. */
+/**
+ * A safe `IN (…)` fragment from a list of ints. '(0)' when empty, so it matches nothing.
+ *
+ * @param array $ids  the ids to list; cast to int, so untrusted values are safe
+ */
 function wtIdListSql(array $ids): string
 {
     $ids = array_values(array_unique(array_map('intval', $ids)));

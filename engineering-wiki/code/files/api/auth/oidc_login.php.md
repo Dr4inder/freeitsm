@@ -1,6 +1,6 @@
 # api/auth/oidc_login.php
 
-> API endpoint - 81 lines
+> API endpoint - 85 lines
 
 SSO login entry point. GET ?provider=<id>
 
@@ -20,13 +20,13 @@ the browser to the provider's authorization endpoint.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [ssoBail()](/code/functions/ssoBail.md) | 22 | Bounce back to the right portal's login page with an error message. |
+| [ssoBail()](/code/functions/ssoBail.md) | 26 | Bounce back to the right portal's login page with an error message. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 39 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 43 |  | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

@@ -25,5 +25,5 @@
 |---|---|---|
 | [api/lms/course_content.php](/code/files/api/lms/course_content.php.md) | L64 |  |
 | [api/lms/lessons.php](/code/files/api/lms/lessons.php.md) | L48 |  |
-| [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md) | L120 |  |
+| [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md) | L134 |  |
 

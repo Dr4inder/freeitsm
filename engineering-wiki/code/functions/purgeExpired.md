@@ -6,7 +6,7 @@ Permanently deletes articles that have been in the recycle bin longer than the r
 function purgeExpired($conn)
 ```
 
-Defined in [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md), line 113.
+Defined in [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md), line 121.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,11 +18,11 @@ Defined in [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowl
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 120 | `purgeExpired` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 129 | `purgeExpired` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
-| 130 | `purgeExpired` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 131 | `purgeExpired` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 134 | `purgeExpired` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 128 | `purgeExpired` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 137 | `purgeExpired` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
+| 138 | `purgeExpired` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 139 | `purgeExpired` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 142 | `purgeExpired` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
 
 ## Calls
 

@@ -9,11 +9,11 @@ Bounce back to the originating portal's login page with an error message.
 function ssoBail(string $msg): void
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 23.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 27.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$msg` | `string` |  |  |
+| `$msg` | `string` |  | the error shown on the login page, in plain text |
 
 **Returns:** `void`
 

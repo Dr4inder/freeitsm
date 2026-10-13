@@ -22,5 +22,5 @@
 |---|---|---|
 | [api/tickets/get_sla_calendar.php](/code/files/api/tickets/get_sla_calendar.php.md) | L40 |  |
 | [api/tickets/get_sla_settings.php](/code/files/api/tickets/get_sla_settings.php.md) | L63 |  |
-| [includes/sla.php](/code/files/includes/sla.php.md) | sla_load_calendar L356 |  |
+| [includes/sla.php](/code/files/includes/sla.php.md) | sla_load_calendar L376 |  |
 

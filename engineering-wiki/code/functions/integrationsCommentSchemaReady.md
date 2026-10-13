@@ -6,7 +6,7 @@ Is the comment map present? Separate from `integrationsSchemaReady()` because it
 function integrationsCommentSchemaReady(PDO $conn): bool
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1099.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1172.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1104 | `integrationsCommentSchemaReady` | read [integration_comment_map](/code/tables/integration_comment_map.md) |  |
+| 1177 | `integrationsCommentSchemaReady` | read [integration_comment_map](/code/tables/integration_comment_map.md) |  |
 
 ## Called from
 

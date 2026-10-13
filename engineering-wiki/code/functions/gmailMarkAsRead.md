@@ -6,12 +6,12 @@ Mark a Gmail message as read (remove UNREAD label).
 function gmailMarkAsRead(string $accessToken, string $messageId): void
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 505.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 554.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$messageId` | `string` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
+| `$messageId` | `string` |  | the Gmail message id |
 
 **Returns:** `void`
 

@@ -1,6 +1,6 @@
 # api/intune/dashboard_drilldown.php
 
-> API endpoint - 269 lines
+> API endpoint - 273 lines
 
 API: Intune Dashboard Drill-down
 
@@ -39,15 +39,15 @@ GET parameters:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [buildFilter()](/code/functions/buildFilter.md) | 51 | Resolve a filter type + value into a SQL WHERE fragment + bound params. All filter types are validated against this whitelist; nothing user-supplied goes into the SQL string directly. |
+| [buildFilter()](/code/functions/buildFilter.md) | 55 | Resolve a filter type + value into a SQL WHERE fragment + bound params. All filter types are validated against this whitelist; nothing user-supplied goes into the SQL string directly. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 185 |  | read [intune_devices](/code/tables/intune_devices.md) |  |
-| 196 |  | read [intune_devices](/code/tables/intune_devices.md) |  |
-| 241 |  | read [intune_devices](/code/tables/intune_devices.md) |  |
+| 189 |  | read [intune_devices](/code/tables/intune_devices.md) |  |
+| 200 |  | read [intune_devices](/code/tables/intune_devices.md) |  |
+| 245 |  | read [intune_devices](/code/tables/intune_devices.md) |  |
 
 ## How it hangs together
 

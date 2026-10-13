@@ -1,6 +1,6 @@
 # includes/report_packs/api_common.php
 
-> PHP - 45 lines
+> PHP - 55 lines
 
 Report Packs: what every api/reporting/packs/ endpoint shares. Each endpoint still calls requireModuleAccessJson('reporting') itself, so the guard is visible in the file (and tests/module-access-coverage.php can see it).
 
@@ -8,10 +8,10 @@ Report Packs: what every api/reporting/packs/ endpoint shares. Each endpoint sti
 
 | Function | Line | What it does |
 |---|--:|---|
-| [rpOut()](/code/functions/rpOut.md) | 18 | Sends a JSON reply with the given HTTP status and ends the request. |
-| [rpFail()](/code/functions/rpFail.md) | 26 | Sends a failure JSON reply ({success: false, error}) with an HTTP status, 400 by default. |
-| [rpInput()](/code/functions/rpInput.md) | 32 | The JSON body of a POST. |
-| [rpInitLocale()](/code/functions/rpInitLocale.md) | 39 | Bootstrap i18n and the viewer's timezone/date format, for labels and dates. |
+| [rpOut()](/code/functions/rpOut.md) | 23 | Sends a JSON reply with the given HTTP status and ends the request. |
+| [rpFail()](/code/functions/rpFail.md) | 36 | Sends a failure JSON reply ({success: false, error}) with an HTTP status, 400 by default. |
+| [rpInput()](/code/functions/rpInput.md) | 42 | The JSON body of a POST. |
+| [rpInitLocale()](/code/functions/rpInitLocale.md) | 49 | Bootstrap i18n and the viewer's timezone/date format, for labels and dates. |
 
 ## How it hangs together
 

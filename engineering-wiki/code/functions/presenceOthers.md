@@ -10,7 +10,7 @@ an empty strip is a fine answer, a broken reading pane is not.
 function presenceOthers(PDO $conn, int $ticketId, int $analystId): array
 ```
 
-Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md), line 97.
+Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md), line 99.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,7 +24,7 @@ Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 101 | `presenceOthers` | read [ticket_presence](/code/tables/ticket_presence.md), read [analysts](/code/tables/analysts.md) |  |
+| 103 | `presenceOthers` | read [ticket_presence](/code/tables/ticket_presence.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

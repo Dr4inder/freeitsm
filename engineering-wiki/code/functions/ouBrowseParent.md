@@ -6,11 +6,11 @@ The DN one level up. '' once there is nothing left.
 function ouBrowseParent(string $dn): string
 ```
 
-Defined in [api/system/browse_directory_ous.php](/code/files/api/system/browse_directory_ous.php.md), line 194.
+Defined in [api/system/browse_directory_ous.php](/code/files/api/system/browse_directory_ous.php.md), line 198.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dn` | `string` |  |  |
+| `$dn` | `string` |  | an LDAP distinguished name, e.g. OU=Staff,DC=example,DC=com |
 
 **Returns:** `string`
 

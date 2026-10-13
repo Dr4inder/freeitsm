@@ -6,11 +6,11 @@ Builds an OpenAPI schema from a live value - its type, nested properties or list
 function oaf_infer($v)
 ```
 
-Defined in [api/v1/dev/openapi_fix.php](/code/files/api/v1/dev/openapi_fix.php.md), line 39.
+Defined in [api/v1/dev/openapi_fix.php](/code/files/api/v1/dev/openapi_fix.php.md), line 46.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | a value from a live API response |
 
 ## Called from
 

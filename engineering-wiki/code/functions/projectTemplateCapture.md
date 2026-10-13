@@ -6,13 +6,13 @@ A project as a template: its plan with dates turned into days from its start, an
 function projectTemplateCapture(PDO $conn, array $project, array $parts): array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 391.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 412.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
-| `$parts` | `array` |  |  |
+| `$project` | `array` |  | the projects row to copy the plan from |
+| `$parts` | `array` |  | what to keep: any of 'plan', 'scope', 'raid', 'benefits', 'tolerances', 'targets' |
 
 **Returns:** `array`
 
@@ -20,16 +20,16 @@ Defined in [includes/projects/templates.php](/code/files/includes/projects/templ
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 397 | `projectTemplateCapture` | read [project_stages](/code/tables/project_stages.md) |  |
-| 411 | `projectTemplateCapture` | read [project_stages](/code/tables/project_stages.md) |  |
-| 413 | `projectTemplateCapture` | read [tasks](/code/tables/tasks.md) |  |
-| 425 | `projectTemplateCapture` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
-| 443 | `projectTemplateCapture` | read [task_dependencies](/code/tables/task_dependencies.md) |  |
-| 450 | `projectTemplateCapture` | read [project_milestones](/code/tables/project_milestones.md) |  |
-| 458 | `projectTemplateCapture` | read [project_items](/code/tables/project_items.md) |  |
-| 466 | `projectTemplateCapture` | read [project_raid](/code/tables/project_raid.md) |  |
-| 474 | `projectTemplateCapture` | read [project_benefits](/code/tables/project_benefits.md) |  |
-| 487 | `projectTemplateCapture` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
+| 418 | `projectTemplateCapture` | read [project_stages](/code/tables/project_stages.md) |  |
+| 432 | `projectTemplateCapture` | read [project_stages](/code/tables/project_stages.md) |  |
+| 434 | `projectTemplateCapture` | read [tasks](/code/tables/tasks.md) |  |
+| 446 | `projectTemplateCapture` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 464 | `projectTemplateCapture` | read [task_dependencies](/code/tables/task_dependencies.md) |  |
+| 471 | `projectTemplateCapture` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 479 | `projectTemplateCapture` | read [project_items](/code/tables/project_items.md) |  |
+| 487 | `projectTemplateCapture` | read [project_raid](/code/tables/project_raid.md) |  |
+| 495 | `projectTemplateCapture` | read [project_benefits](/code/tables/project_benefits.md) |  |
+| 508 | `projectTemplateCapture` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
 
 ## Calls
 

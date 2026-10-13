@@ -16,13 +16,13 @@ Single-company installs: nothing to decide.
 function ssoApplyJitCompanies(PDO $conn, int $providerId, int $analystId): void
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 205.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 219.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
-| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
+| `$providerId` | `int` |  | the sign-in provider (auth_providers.id) that created the analyst |
+| `$analystId` | `int` |  | the analyst just created by the sign-in |
 
 **Returns:** `void`
 
@@ -30,11 +30,11 @@ Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 209 | `ssoApplyJitCompanies` | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 214 | `ssoApplyJitCompanies` | **update** [analysts](/code/tables/analysts.md) (`can_access_all_tenants`) |  |
-| 215 | `ssoApplyJitCompanies` | **delete** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
-| 218 | `ssoApplyJitCompanies` | **insert** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) (`analyst_id`, `tenant_id`) |  |
-| 223 | `ssoApplyJitCompanies` | **update** [analysts](/code/tables/analysts.md) (`can_access_all_tenants`) |  |
+| 223 | `ssoApplyJitCompanies` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 228 | `ssoApplyJitCompanies` | **update** [analysts](/code/tables/analysts.md) (`can_access_all_tenants`) |  |
+| 229 | `ssoApplyJitCompanies` | **delete** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
+| 232 | `ssoApplyJitCompanies` | **insert** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) (`analyst_id`, `tenant_id`) |  |
+| 237 | `ssoApplyJitCompanies` | **update** [analysts](/code/tables/analysts.md) (`can_access_all_tenants`) |  |
 
 ## Calls
 

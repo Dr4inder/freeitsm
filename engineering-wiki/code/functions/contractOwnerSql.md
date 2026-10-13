@@ -6,12 +6,12 @@ The owning company, for alias `$c`: tenant_id (NULL read as Default) and company
 function contractOwnerSql(PDO $conn, string $c = 'c'): array
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 139.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 158.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$c` | `string` | `'c'` |  |
+| `$c` | `string` | `'c'` | the alias the calling query gives the contracts table (trusted - put straight into SQL) |
 
 **Returns:** array{0:string,1:string} [select columns (with leading comma), joins]
 
@@ -19,7 +19,7 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 146 | `contractOwnerSql` | read [tenants](/code/tables/tenants.md) |  |
+| 165 | `contractOwnerSql` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

@@ -6,11 +6,11 @@ Fetch a URL from this server. Returns [httpCode, transportError]. A transport er
 function d009Fetch(string $url): array
 ```
 
-Defined in [api/system/debug-tools/D009_guarded_paths.php](/code/files/api/system/debug-tools/D009_guarded_paths.php.md), line 90.
+Defined in [api/system/debug-tools/D009_guarded_paths.php](/code/files/api/system/debug-tools/D009_guarded_paths.php.md), line 100.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
+| `$url` | `string` |  | the full address on this server to request; redirects are not followed |
 
 **Returns:** `array`
 

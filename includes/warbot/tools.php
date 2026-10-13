@@ -334,6 +334,8 @@ function warbotTools(): array
  * one (3.3.0, the Projects tools) - access to the module whose data it reads.
  * The older tools name no module and are unchanged: whether the war room is
  * install-wide is the open question in warbotToolSearchKnowledge() below.
+ *
+ * @param array $t  one entry of warbotTools() (capability, and module where the tool names one)
  */
 function warbotToolAllowed(PDO $conn, int $analystId, array $t): bool
 {
@@ -362,6 +364,9 @@ function warbotToolsFor(PDO $conn, int $analystId): array
  * Run one tool. NEVER throws — a failure is returned as words, because "the CMDB
  * lookup failed" is something the model can usefully tell the room, whereas an
  * exception here would lose the whole answer.
+ *
+ * @param string $name  the tool name the model asked for, a key of warbotTools(); unknown names are refused
+ * @param array $args  the model's arguments for it, decoded JSON - untrusted
  */
 function warbotRunTool(PDO $conn, int $analystId, string $name, array $args): string
 {
@@ -386,6 +391,8 @@ function warbotRunTool(PDO $conn, int $analystId, string $name, array $args): st
  * open_incidents: the count of open tickets (optionally at one priority by
  * name) and the newest few, by number, priority, status, subject and assignee.
  * A confidential ticket's subject is withheld by ticketAiSubjectSql().
+ *
+ * @param array $args  the model's arguments - untrusted: priority (a priority name; omit for all), limit (1-25, default 10)
  */
 function warbotToolOpenIncidents(PDO $conn, array $args, int $analystId): string
 {
@@ -431,7 +438,11 @@ function warbotToolOpenIncidents(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
-/** service_status: the active Service Status services and up to ten open service-status incidents, with the services each affects and its latest note. */
+/**
+ * service_status: the active Service Status services and up to ten open service-status incidents, with the services each affects and its latest note.
+ *
+ * @param array $args  the model's arguments; this tool takes none
+ */
 function warbotToolServiceStatus(PDO $conn, array $args, int $analystId): string
 {
     $svc = $conn->query(
@@ -468,7 +479,11 @@ function warbotToolServiceStatus(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
-/** recent_changes: up to 20 changes whose work or outage window started in the last N days (default 2, max 30), with state and owner. */
+/**
+ * recent_changes: up to 20 changes whose work or outage window started in the last N days (default 2, max 30), with state and owner.
+ *
+ * @param array $args  the model's arguments - untrusted: days (1-30, default 2)
+ */
 function warbotToolRecentChanges(PDO $conn, array $args, int $analystId): string
 {
     $days = max(1, min(30, (int)($args['days'] ?? 2)));
@@ -503,7 +518,11 @@ function warbotToolRecentChanges(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
-/** on_call: who is on call on a date (today in UTC by default) and everyone rostered that day with their shift times, from the ticket rota. */
+/**
+ * on_call: who is on call on a date (today in UTC by default) and everyone rostered that day with their shift times, from the ticket rota.
+ *
+ * @param array $args  the model's arguments - untrusted: date ('Y-m-d'; anything else means today in UTC)
+ */
 function warbotToolOnCall(PDO $conn, array $args, int $analystId): string
 {
     $date = (string)($args['date'] ?? '');
@@ -535,7 +554,11 @@ function warbotToolOnCall(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
-/** asset_lookup: up to eight assets whose hostname, asset tag or service tag contains the query, with type, status, OS, location, last user and last seen. */
+/**
+ * asset_lookup: up to eight assets whose hostname, asset tag or service tag contains the query, with type, status, OS, location, last user and last seen.
+ *
+ * @param array $args  the model's arguments - untrusted: query (part of a hostname, asset tag or service tag)
+ */
 function warbotToolAssetLookup(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -572,6 +595,8 @@ function warbotToolAssetLookup(PDO $conn, array $args, int $analystId): string
  * impact_of: the first CMDB object whose name matches, and everything related to
  * it one hop away in either direction, worded with the relationship's verb.
  * Not the full blast radius - that walk stays in the CMDB module.
+ *
+ * @param array $args  the model's arguments - untrusted: name (part of a configuration item's name)
  */
 function warbotToolImpactOf(PDO $conn, array $args, int $analystId): string
 {
@@ -615,13 +640,21 @@ function warbotToolImpactOf(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
-/** Escape the LIKE wildcards themselves, or a search for "50%" matches everything. */
+/**
+ * Escape the LIKE wildcards themselves, or a search for "50%" matches everything.
+ *
+ * @param string $s  the search text; trimmed and wrapped in % for a LIKE ... ESCAPE '\\' match
+ */
 function warbotLike(string $s): string
 {
     return '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], trim($s)) . '%';
 }
 
-/** known_errors: up to six problem records matching the query in title, description, root cause or workaround - known errors first, workaround quoted. */
+/**
+ * known_errors: up to six problem records matching the query in title, description, root cause or workaround - known errors first, workaround quoted.
+ *
+ * @param array $args  the model's arguments - untrusted: query (words to find in a problem record)
+ */
 function warbotToolKnownErrors(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -662,6 +695,8 @@ function warbotToolKnownErrors(PDO $conn, array $args, int $analystId): string
  * ticket_spike: tickets raised in the last N minutes against the average for the
  * same time window over the previous seven days, calling three times the usual
  * rate a spike, plus the newest subjects.
+ *
+ * @param array $args  the model's arguments - untrusted: minutes (the window, 5-720, default 60)
  */
 function warbotToolTicketSpike(PDO $conn, array $args, int $analystId): string
 {
@@ -720,6 +755,8 @@ function warbotToolTicketSpike(PDO $conn, array $args, int $analystId): string
  * contractVisibilitySql() with its company ids written in: these queries bind
  * NAMED parameters, which cannot be mixed with its "?" ones. Every value is a
  * company id, cast to int, so writing them in cannot inject anything.
+ *
+ * @param string $alias  the alias the calling query gives the contracts table
  */
 function warbotContractScope(PDO $conn, int $analystId, string $alias): string
 {
@@ -735,6 +772,8 @@ function warbotContractScope(PDO $conn, int $analystId, string $alias): string
  * supplier_contact: up to three suppliers matching by name or contract title,
  * each with its latest contracts (only in companies the analyst can reach) and
  * its active contacts' phone numbers and email.
+ *
+ * @param array $args  the model's arguments - untrusted: query (a supplier name or words from a contract title)
  */
 function warbotToolSupplierContact(PDO $conn, array $args, int $analystId): string
 {
@@ -802,7 +841,11 @@ function warbotToolSupplierContact(PDO $conn, array $args, int $analystId): stri
     return implode("\n", $lines);
 }
 
-/** morning_checks: the morning check results for a date (today in UTC by default), listing the ones that are not clear, or the first few when all are. */
+/**
+ * morning_checks: the morning check results for a date (today in UTC by default), listing the ones that are not clear, or the first few when all are.
+ *
+ * @param array $args  the model's arguments - untrusted: date ('Y-m-d'; anything else means today in UTC)
+ */
 function warbotToolMorningChecks(PDO $conn, array $args, int $analystId): string
 {
     $date = (string)($args['date'] ?? '');
@@ -841,7 +884,11 @@ function warbotToolMorningChecks(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
-/** search_chat: up to eight War Room messages matching the query, through warRoomSearch() so only channels the asker can read are searched. */
+/**
+ * search_chat: up to eight War Room messages matching the query, through warRoomSearch() so only channels the asker can read are searched.
+ *
+ * @param array $args  the model's arguments - untrusted: query (words to find in War Room messages)
+ */
 function warbotToolSearchChat(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -861,7 +908,11 @@ function warbotToolSearchChat(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
-/** related_tickets: the tickets linked to a ticket number, with the link type, direction and each one's status. */
+/**
+ * related_tickets: the tickets linked to a ticket number, with the link type, direction and each one's status.
+ *
+ * @param array $args  the model's arguments - untrusted: ticket (the ticket number, e.g. as shown on the ticket)
+ */
 function warbotToolRelatedTickets(PDO $conn, array $args, int $analystId): string
 {
     $ref = trim((string)($args['ticket'] ?? ''));
@@ -896,7 +947,11 @@ function warbotToolRelatedTickets(PDO $conn, array $args, int $analystId): strin
     return implode("\n", $lines);
 }
 
-/** search_knowledge: up to eight live Knowledge article titles matching the query that the asking analyst may see - titles only, most viewed first. */
+/**
+ * search_knowledge: up to eight live Knowledge article titles matching the query that the asking analyst may see - titles only, most viewed first.
+ *
+ * @param array $args  the model's arguments - untrusted: query (words to find in an article title)
+ */
 function warbotToolSearchKnowledge(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -951,7 +1006,11 @@ function warbotProjectScope(PDO $conn, int $analystId): array
     return [$sql . $vSql, array_merge($args, $vArgs)];
 }
 
-/** A ServiceError (no such project, several match) is an answer to give the room, not a failure. */
+/**
+ * A ServiceError (no such project, several match) is an answer to give the room, not a failure.
+ *
+ * @param callable $fn  takes nothing and returns the answer text; a ServiceError it throws becomes the answer
+ */
 function warbotProjectAnswer(callable $fn): string
 {
     try {
@@ -961,7 +1020,11 @@ function warbotProjectAnswer(callable $fn): string
     }
 }
 
-/** list_projects: the projects the asker may see, ten by default, via projectAssistList(). */
+/**
+ * list_projects: the projects the asker may see, ten by default, via projectAssistList().
+ *
+ * @param array $args  the model's arguments - untrusted: status, health, q (see the list_projects schema)
+ */
 function warbotToolListProjects(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);
@@ -969,28 +1032,44 @@ function warbotToolListProjects(PDO $conn, array $args, int $analystId): string
     return warbotProjectAnswer(fn() => projectAssistList($conn, $scope, ['limit' => 10] + $args));
 }
 
-/** project_overview: one project's overview via projectAssistOverview(), scoped to the projects the asker may see. */
+/**
+ * project_overview: one project's overview via projectAssistOverview(), scoped to the projects the asker may see.
+ *
+ * @param array $args  the model's arguments - untrusted: project (code, id or part of the name)
+ */
 function warbotToolProjectOverview(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);
     return warbotProjectAnswer(fn() => projectAssistOverview($conn, $scope, $analystId, $args, false));
 }
 
-/** project_raid: one project's RAID log via projectAssistRaid(), scoped to the projects the asker may see. */
+/**
+ * project_raid: one project's RAID log via projectAssistRaid(), scoped to the projects the asker may see.
+ *
+ * @param array $args  the model's arguments - untrusted: project, type (risk, issue...), status (open/closed/all)
+ */
 function warbotToolProjectRaid(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);
     return warbotProjectAnswer(fn() => projectAssistRaid($conn, $scope, $args));
 }
 
-/** project_tasks: one project's tasks via projectAssistTasks(), scoped to the projects the asker may see. */
+/**
+ * project_tasks: one project's tasks via projectAssistTasks(), scoped to the projects the asker may see.
+ *
+ * @param array $args  the model's arguments - untrusted: project, open_only (default true)
+ */
 function warbotToolProjectTasks(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);
     return warbotProjectAnswer(fn() => projectAssistTasks($conn, $scope, $args));
 }
 
-/** project_dates: one project's key dates via projectAssistDates(), scoped to the projects the asker may see. */
+/**
+ * project_dates: one project's key dates via projectAssistDates(), scoped to the projects the asker may see.
+ *
+ * @param array $args  the model's arguments - untrusted: days (how far ahead, default 14, max 90)
+ */
 function warbotToolProjectDates(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);

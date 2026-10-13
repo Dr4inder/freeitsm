@@ -6,7 +6,7 @@ DELETE /projects/{id}/budget-lines/{lineId} - deletes a budget line through Proj
 function apiProjectBudgetLinesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 606.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 641.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

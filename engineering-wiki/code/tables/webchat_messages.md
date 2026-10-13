@@ -17,11 +17,11 @@ Pre-ticket chat transcript (AI 'deflect' mode) — see freeitsm.sql. sender is '
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):391 | `webchatAddMessage` | insert | `conversation_id`, `sender`, `body`, `source_email_id`, `created_datetime` |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):442 | `webchatAddMessage` | insert | `conversation_id`, `sender`, `body`, `source_email_id`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatGetMessages L405, webchatMirrorAgentReplies L444 |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatGetMessages L461, webchatMirrorAgentReplies L504 |  |
 

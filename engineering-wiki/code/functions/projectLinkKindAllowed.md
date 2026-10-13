@@ -6,13 +6,13 @@ May this analyst use links of this kind at all? (Projects AND the other module.)
 function projectLinkKindAllowed(PDO $conn, int $analystId, string $kind): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 82.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 90.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
+| `$kind` | `string` |  | the link kind, e.g. 'asset'; an unknown kind gives false |
 
 **Returns:** `bool`
 

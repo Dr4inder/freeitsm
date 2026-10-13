@@ -1,6 +1,6 @@
 # includes/ticket_views.php
 
-> PHP - 146 lines
+> PHP - 148 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Ticket Views Developer Guide](https://github.com/edmozley/freeitsm/wiki/Ticket-Views-Developer-Guide)
@@ -37,18 +37,18 @@ db_verify_indexes.php - without it every view would be a new row.
 | Function | Line | What it does |
 |---|--:|---|
 | [ticketViewsReady()](/code/functions/ticketViewsReady.md) | 33 | Who has looked at a ticket (discussion #62, step 2). |
-| [ticketViewRecord()](/code/functions/ticketViewRecord.md) | 53 | Record that someone opened a ticket. Never throws: a view that fails to be recorded must not stop the ticket from opening. |
-| [ticketViewsAsAuditRows()](/code/functions/ticketViewsAsAuditRows.md) | 81 | Views shaped as audit-trail rows, so the analyst's Audit window (desktop and phone alike, both fed by api/tickets/get_ticket_audit.php) shows them with no change of its own. One row per viewer per day, dated at their LAST view. |
-| [ticketViewsForRequester()](/code/functions/ticketViewsForRequester.md) | 128 | Portal viewers of a ticket OTHER than its requester, newest first - what the requester is shown under "Who has seen this ticket". Analysts are deliberately absent (see the header). |
+| [ticketViewRecord()](/code/functions/ticketViewRecord.md) | 54 | Record that someone opened a ticket. Never throws: a view that fails to be recorded must not stop the ticket from opening. |
+| [ticketViewsAsAuditRows()](/code/functions/ticketViewsAsAuditRows.md) | 82 | Views shaped as audit-trail rows, so the analyst's Audit window (desktop and phone alike, both fed by api/tickets/get_ticket_audit.php) shows them with no change of its own. One row per viewer per day, dated at their LAST view. |
+| [ticketViewsForRequester()](/code/functions/ticketViewsForRequester.md) | 130 | Portal viewers of a ticket OTHER than its requester, newest first - what the requester is shown under "Who has seen this ticket". Analysts are deliberately absent (see the header). |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 38 | `ticketViewsReady` | read [ticket_views](/code/tables/ticket_views.md) |  |
-| 63 | `ticketViewRecord` | **insert** [ticket_views](/code/tables/ticket_views.md) (`ticket_id`, `viewer_type`, `viewer_id`, `view_date`, `first_viewed_datetime`, `last_viewed_datetime`, `view_count`) |  |
-| 87 | `ticketViewsAsAuditRows` | read [ticket_views](/code/tables/ticket_views.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
-| 134 | `ticketViewsForRequester` | read [ticket_views](/code/tables/ticket_views.md), read [users](/code/tables/users.md) |  |
+| 64 | `ticketViewRecord` | **insert** [ticket_views](/code/tables/ticket_views.md) (`ticket_id`, `viewer_type`, `viewer_id`, `view_date`, `first_viewed_datetime`, `last_viewed_datetime`, `view_count`) |  |
+| 88 | `ticketViewsAsAuditRows` | read [ticket_views](/code/tables/ticket_views.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
+| 136 | `ticketViewsForRequester` | read [ticket_views](/code/tables/ticket_views.md), read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

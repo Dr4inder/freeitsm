@@ -6,13 +6,13 @@ Load one problem (with joins) enforcing the key's company scope; 404 if not visi
 function apiLoadProblem(PDO $conn, array $apiKey, int $problemId): array
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 85.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 91.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
-| `$problemId` | `int` |  |  |
+| `$problemId` | `int` |  | the problems id |
 
 **Returns:** `array`
 

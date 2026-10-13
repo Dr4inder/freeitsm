@@ -1,6 +1,6 @@
 # includes/lms_reminders.php
 
-> PHP - 446 lines
+> PHP - 464 lines
 
 Training reminders — who is due one, and sending it.
 
@@ -44,28 +44,28 @@ a fallback, not a scheduler.
 | Function | Line | What it does |
 |---|--:|---|
 | [lmsReminderSettings()](/code/functions/lmsReminderSettings.md) | 65 | Read the reminder settings, with their defaults applied. |
-| [lmsReminderSaveSetting()](/code/functions/lmsReminderSaveSetting.md) | 93 | Write one setting. |
-| [lmsReminderParseDays()](/code/functions/lmsReminderParseDays.md) | 110 | "7, 1" → [7, 1], sorted high to low, de-duplicated, nonsense discarded. |
-| [lmsRemindersDue()](/code/functions/lmsRemindersDue.md) | 138 | Everybody who should get a reminder right now. |
-| [lmsReminderMessage()](/code/functions/lmsReminderMessage.md) | 274 | Subject and HTML body for one reminder. |
-| [lmsReminderLinkFor()](/code/functions/lmsReminderLinkFor.md) | 321 | The public address of the right training page for this kind of learner. |
-| [fmt_naive_date_for_email()](/code/functions/fmt_naive_date_for_email.md) | 341 | 'YYYY-MM-DD' → '20 November 2026'. Plain, unambiguous, and not zone-shifted. |
-| [lmsRemindersRun()](/code/functions/lmsRemindersRun.md) | 356 | Do a reminder run. |
-| [lmsRemindersRunOpportunistic()](/code/functions/lmsRemindersRunOpportunistic.md) | 429 | The opportunistic run: called when a manager opens the LMS console. |
+| [lmsReminderSaveSetting()](/code/functions/lmsReminderSaveSetting.md) | 98 | Write one setting. |
+| [lmsReminderParseDays()](/code/functions/lmsReminderParseDays.md) | 117 | "7, 1" → [7, 1], sorted high to low, de-duplicated, nonsense discarded. |
+| [lmsRemindersDue()](/code/functions/lmsRemindersDue.md) | 146 | Everybody who should get a reminder right now. |
+| [lmsReminderMessage()](/code/functions/lmsReminderMessage.md) | 286 | Subject and HTML body for one reminder. |
+| [lmsReminderLinkFor()](/code/functions/lmsReminderLinkFor.md) | 335 | The public address of the right training page for this kind of learner. |
+| [fmt_naive_date_for_email()](/code/functions/fmt_naive_date_for_email.md) | 359 | 'YYYY-MM-DD' → '20 November 2026'. Plain, unambiguous, and not zone-shifted. |
+| [lmsRemindersRun()](/code/functions/lmsRemindersRun.md) | 374 | Do a reminder run. |
+| [lmsRemindersRunOpportunistic()](/code/functions/lmsRemindersRunOpportunistic.md) | 447 | The opportunistic run: called when a manager opens the LMS console. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 78 | `lmsReminderSettings` | read [system_settings](/code/tables/system_settings.md) |  |
-| 95 | `lmsReminderSaveSetting` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
-| 149 | `lmsRemindersDue` | read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
-| 222 | `lmsRemindersDue` | read [analysts](/code/tables/analysts.md) |  |
-| 228 | `lmsRemindersDue` | read [users](/code/tables/users.md) |  |
-| 239 | `lmsRemindersDue` | read [lms_reminders_sent](/code/tables/lms_reminders_sent.md) |  |
-| 326 | `lmsReminderLinkFor` | read [system_settings](/code/tables/system_settings.md) |  |
-| 381 | `lmsRemindersRun` | **insert** [lms_reminders_sent](/code/tables/lms_reminders_sent.md) (`learner_type`, `learner_id`, `course_id`, `reminder_kind`, `fingerprint`, `sent_datetime`) |  |
-| 407 | `lmsRemindersRun` | **delete** [lms_reminders_sent](/code/tables/lms_reminders_sent.md) |  |
+| 100 | `lmsReminderSaveSetting` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 157 | `lmsRemindersDue` | read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
+| 230 | `lmsRemindersDue` | read [analysts](/code/tables/analysts.md) |  |
+| 236 | `lmsRemindersDue` | read [users](/code/tables/users.md) |  |
+| 247 | `lmsRemindersDue` | read [lms_reminders_sent](/code/tables/lms_reminders_sent.md) |  |
+| 340 | `lmsReminderLinkFor` | read [system_settings](/code/tables/system_settings.md) |  |
+| 399 | `lmsRemindersRun` | **insert** [lms_reminders_sent](/code/tables/lms_reminders_sent.md) (`learner_type`, `learner_id`, `course_id`, `reminder_kind`, `fingerprint`, `sent_datetime`) |  |
+| 425 | `lmsRemindersRun` | **delete** [lms_reminders_sent](/code/tables/lms_reminders_sent.md) |  |
 
 ## How it hangs together
 

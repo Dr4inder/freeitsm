@@ -1,6 +1,6 @@
 # includes/db_verify_column_parse.php
 
-> PHP - 164 lines
+> PHP - 172 lines
 
 Column drift self-check — the sibling of db_verify_index_parse.php.
 
@@ -37,9 +37,9 @@ human to have kept it so.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [dbVerifyParseColumnsFromSql()](/code/functions/dbVerifyParseColumnsFromSql.md) | 43 | Extract the declared COLUMNS of every table in freeitsm.sql: ['table' => ['column' => 'NORMALISED TYPE', ...], ...] |
-| [dbVerifyNormaliseColumnType()](/code/functions/dbVerifyNormaliseColumnType.md) | 79 | Reduce a column definition to a comparable shape. |
-| [dbVerifyColumnSelfCheck()](/code/functions/dbVerifyColumnSelfCheck.md) | 102 | Compare includes/db_verify_schema.php against a fresh parse of freeitsm.sql. Returns human-readable problem strings; empty means they're in sync. |
+| [dbVerifyParseColumnsFromSql()](/code/functions/dbVerifyParseColumnsFromSql.md) | 45 | Extract the declared COLUMNS of every table in freeitsm.sql: ['table' => ['column' => 'NORMALISED TYPE', ...], ...] |
+| [dbVerifyNormaliseColumnType()](/code/functions/dbVerifyNormaliseColumnType.md) | 83 | Reduce a column definition to a comparable shape. |
+| [dbVerifyColumnSelfCheck()](/code/functions/dbVerifyColumnSelfCheck.md) | 110 | Compare includes/db_verify_schema.php against a fresh parse of freeitsm.sql. Returns human-readable problem strings; empty means they're in sync. |
 
 ## How it hangs together
 

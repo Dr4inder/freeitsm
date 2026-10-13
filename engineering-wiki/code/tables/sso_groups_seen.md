@@ -15,12 +15,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/sso_claims.php](/code/files/includes/sso_claims.php.md):160 | `ssoSaveGroupLabels` | update | `label` |  |
-| [includes/sso_claims.php](/code/files/includes/sso_claims.php.md):187 | `ssoRememberGroups` | insert | `provider_id`, `group_name`, `first_seen_datetime`, `last_seen_datetime` |  |
+| [includes/sso_claims.php](/code/files/includes/sso_claims.php.md):185 | `ssoSaveGroupLabels` | update | `label` |  |
+| [includes/sso_claims.php](/code/files/includes/sso_claims.php.md):221 | `ssoRememberGroups` | insert | `provider_id`, `group_name`, `first_seen_datetime`, `last_seen_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/sso_claims.php](/code/files/includes/sso_claims.php.md) | ssoClaimsReady L44, ssoSeenGroups L147 |  |
+| [includes/sso_claims.php](/code/files/includes/sso_claims.php.md) | ssoClaimsReady L44, ssoSeenGroups L169 |  |
 

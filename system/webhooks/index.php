@@ -149,7 +149,11 @@ $byWorkflow = $conn->query(
       GROUP BY d.workflow_id, w.name ORDER BY total DESC LIMIT 8"
 )->fetchAll(PDO::FETCH_ASSOC);
 
-/** A delivery latency in seconds as translated text (under a second, seconds, minutes or hours); a dash when there is none. */
+/**
+ * A delivery latency in seconds as translated text (under a second, seconds, minutes or hours); a dash when there is none.
+ *
+ * @param mixed $s  the latency in seconds; null for none
+ */
 function whLatency($s) {
     if ($s === null) return '—';
     $s = (float)$s;
@@ -159,6 +163,8 @@ function whLatency($s) {
     return t('system.webhooks.lat_hours', ['n' => round($s / 3600, 1)]);
 }
 // Success-rate cell: delivered vs terminal (delivered + dead); in-flight ignored.
+// @param mixed $delivered  how many deliveries were delivered
+// @param mixed $dead  how many gave up (dead); in-flight ones are not counted
 function whRate($delivered, $dead) {
     $term = (int)$delivered + (int)$dead;
     if ($term === 0) return '<span class="pct">—</span>';
@@ -175,7 +181,11 @@ $httpUrl    = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_UR
             . 'cron/webhook_deliveries.php?token=' . urlencode($cronToken);
 $cliCmd     = 'php ' . $scriptPath;
 
-/** An age in seconds as translated "n seconds/minutes/hours/days ago" text; empty when there is none. */
+/**
+ * An age in seconds as translated "n seconds/minutes/hours/days ago" text; empty when there is none.
+ *
+ * @param mixed $s  the age in seconds; null for none
+ */
 function whAgo($s) {
     if ($s === null) return '';
     if ($s < 90)    return t('system.webhooks.ago_seconds', ['n' => $s]);

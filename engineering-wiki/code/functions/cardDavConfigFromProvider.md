@@ -10,12 +10,12 @@ the plaintext exists only for the length of one call. Same handling as
 function cardDavConfigFromProvider(array $provider, ?string $overridePassword = null): array
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 596.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 623.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
-| `$overridePassword` | `?string` | `null` |  |
+| `$provider` | `array` |  | an auth_providers row as stored, carddav_password still encrypted |
+| `$overridePassword` | `?string` | `null` | a plain password to use instead of the stored one; null decrypts the stored one |
 
 **Returns:** `array`
 

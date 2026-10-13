@@ -12,12 +12,12 @@ already dismissed. Overlap survives both.
 function gapPersistClusters(PDO $conn, array $clusters): int
 ```
 
-Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 405.
+Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 425.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$clusters` | `array` |  |  |
+| `$clusters` | `array` |  | clusters from `writeupCluster()` over `gapAnalyse()`'s candidates (seed + members of {item, similarity}) |
 
 **Returns:** `int`
 
@@ -25,14 +25,14 @@ Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 408 | `gapPersistClusters` | read [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md), read [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md) |  |
-| 474 | `gapPersistClusters` | **update** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
-| 481 | `gapPersistClusters` | **insert** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
-| 487 | `gapPersistClusters` | **delete** [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md) |  |
-| 488 | `gapPersistClusters` | **insert** [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md) (`cluster_id`, `ticket_id`, `similarity`) |  |
-| 496 | `gapPersistClusters` | **update** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) (`status`, `article_id`) |  |
-| 508 | `gapPersistClusters` | **delete** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
-| 511 | `gapPersistClusters` | **delete** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
+| 428 | `gapPersistClusters` | read [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md), read [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md) |  |
+| 494 | `gapPersistClusters` | **update** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
+| 501 | `gapPersistClusters` | **insert** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
+| 507 | `gapPersistClusters` | **delete** [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md) |  |
+| 508 | `gapPersistClusters` | **insert** [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md) (`cluster_id`, `ticket_id`, `similarity`) |  |
+| 516 | `gapPersistClusters` | **update** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) (`status`, `article_id`) |  |
+| 528 | `gapPersistClusters` | **delete** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
+| 531 | `gapPersistClusters` | **delete** [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
 
 ## Calls
 

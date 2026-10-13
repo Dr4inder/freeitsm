@@ -12,15 +12,15 @@ function webchatInsertOutbound(
 ): int
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 278.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 317.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$channel` | `array` |  |  |
-| `$body` | `string` |  |  |
-| `$fromName` | `string` |  |  |
+| `$channel` | `array` |  | the widget/channel row (id and name) |
+| `$body` | `string` |  | the message text |
+| `$fromName` | `string` |  | the sender name shown in the thread, e.g. the assistant's name |
 
 **Returns:** `int`
 
@@ -28,7 +28,7 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 281 | `webchatInsertOutbound` | **insert** [emails](/code/tables/emails.md) (`exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `processed_datetime`, `ticket_id`) |  |
+| 320 | `webchatInsertOutbound` | **insert** [emails](/code/tables/emails.md) (`exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `processed_datetime`, `ticket_id`) |  |
 
 ## Called from
 

@@ -20,10 +20,10 @@ Who is holding an asset. EITHER a requester (user_id) OR a member of the desk (a
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md):348 | `AssetsService::assignAnalyst` | insert | `asset_id`, `analyst_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime` |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md):419 | `AssetsService::assignUser` | insert | `asset_id`, `user_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime` |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md):476 | `AssetsService::unassignUser` | delete |  |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md):516 | `AssetsService::unassignAnalyst` | delete |  |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md):357 | `AssetsService::assignAnalyst` | insert | `asset_id`, `analyst_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime` |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md):430 | `AssetsService::assignUser` | insert | `asset_id`, `user_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime` |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md):490 | `AssetsService::unassignUser` | delete |  |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md):533 | `AssetsService::unassignAnalyst` | delete |  |  |
 
 ## Read by
 
@@ -35,10 +35,10 @@ Who is holding an asset. EITHER a requester (user_id) OR a member of the desk (a
 | [api/self-service/get_my_assets.php](/code/files/api/self-service/get_my_assets.php.md) | L37 |  |
 | [api/tickets/delete_user.php](/code/files/api/tickets/delete_user.php.md) | L68 |  |
 | [api/tickets/search_linkable_assets.php](/code/files/api/tickets/search_linkable_assets.php.md) | L70 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52, apiAssetsList L263, apiAssetsList L267, apiAssetsGet L342, apiAssetAssignmentsList L408 |  |
-| [includes/leases.php](/code/files/includes/leases.php.md) | leaseGet L362, leaseDueBack L690 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleAssets L351, peopleAssets L357, peopleSupplierAssets L788 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewAsset L288 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assignAnalyst L339, AssetsService::assignUser L412, AssetsService::unassignUser L466, AssetsService::unassignAnalyst L506, AssetsService::moveToCompany L628, AssetsService::usersHoldingAssets L862 ... |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52, apiAssetsList L274, apiAssetsList L278, apiAssetsGet L353, apiAssetAssignmentsList L419 |  |
+| [includes/leases.php](/code/files/includes/leases.php.md) | leaseGet L419, leaseDueBack L778 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleAssets L376, peopleAssets L382, peopleSupplierAssets L857 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewAsset L306 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assignAnalyst L348, AssetsService::assignUser L423, AssetsService::unassignUser L480, AssetsService::unassignAnalyst L523, AssetsService::moveToCompany L652, AssetsService::usersHoldingAssets L913 ... |  |
 | [self-service/includes/header.php](/code/files/self-service/includes/header.php.md) | L137 |  |
 

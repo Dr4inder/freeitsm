@@ -6,11 +6,11 @@ Anything unrecognised reads as normal - the column's own default.
 function ticketSensitivityNormalise($value): string
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 64.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
+| `$value` |  |  | a sensitivity as stored or submitted; anything not in TICKET_SENSITIVITIES gives 'normal' |
 
 **Returns:** `string`
 

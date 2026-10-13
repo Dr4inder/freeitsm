@@ -6,11 +6,11 @@ A person's RACI duties on one project, one line per letter: "Accountable for Pho
 function pplRaciDuties(array $duties): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 192.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 265.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$duties` | `array` |  |  |
+| `$duties` | `array` |  | RACI letter ('R', 'A', 'C', 'I') => list of item titles |
 
 **Returns:** `string`
 

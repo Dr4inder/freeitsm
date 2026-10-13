@@ -6,14 +6,14 @@ Emit an error response and stop.
 function apiError(int $status, string $code, string $message, ?array $details = null): void
 ```
 
-Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 24.
+Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 37.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$status` | `int` |  |  |
-| `$code` | `string` |  |  |
-| `$message` | `string` |  |  |
-| `$details` | `?array` | `null` |  |
+| `$status` | `int` |  | HTTP status code (400, 403, 404, 409, 500 ...) |
+| `$code` | `string` |  | machine-readable error code such as 'invalid_parameter' or 'not_found' |
+| `$message` | `string` |  | human-readable explanation, sent as-is |
+| `$details` | `?array` | `null` | extra structured detail added as error.details; null leaves it out |
 
 **Returns:** `void`
 

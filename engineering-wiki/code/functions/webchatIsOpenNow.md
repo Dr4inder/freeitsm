@@ -6,12 +6,12 @@ Is the widget "open" right now? A widget with no business-hours calendar (NULL) 
 function webchatIsOpenNow(PDO $conn, ?int $calendarId): bool
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 346.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 392.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$calendarId` | `?int` |  |  |
+| `$calendarId` | `?int` |  | the widget's business-hours calendar (SLA calendar) id; null means always open |
 
 **Returns:** `bool`
 

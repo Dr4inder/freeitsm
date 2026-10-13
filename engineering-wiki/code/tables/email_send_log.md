@@ -20,7 +20,7 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/email_log.php](/code/files/includes/email_log.php.md):85 | `emailLogRecord` | insert | `mailbox_id`, `ticket_id`, `route`, `provider`, `auth_mode`, `to_address`, `subject`, `status`, `error_message`, `created_datetime` |  |
+| [includes/email_log.php](/code/files/includes/email_log.php.md):91 | `emailLogRecord` | insert | `mailbox_id`, `ticket_id`, `route`, `provider`, `auth_mode`, `to_address`, `subject`, `status`, `error_message`, `created_datetime` |  |
 
 ## Read by
 

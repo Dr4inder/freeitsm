@@ -1,6 +1,6 @@
 # api/lms/native_progress.php
 
-> API endpoint - 215 lines
+> API endpoint - 229 lines
 
 LMS API: progress + grading for a native course.
 
@@ -30,21 +30,21 @@ and learner drill-down with no new admin UI at all.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [lmsFormatTime()](/code/functions/lmsFormatTime.md) | 42 | HH:MM:SS — the format lms.js `formatTime()` understands. |
-| [lmsParseTime()](/code/functions/lmsParseTime.md) | 48 | Parse HH:MM:SS back to seconds, so session time can be accumulated. |
-| [lmsWriteCmi()](/code/functions/lmsWriteCmi.md) | 54 | Upsert one CMI element. The unique key on (progress_id, element) does the work. |
+| [lmsFormatTime()](/code/functions/lmsFormatTime.md) | 46 | HH:MM:SS — the format lms.js `formatTime()` understands. |
+| [lmsParseTime()](/code/functions/lmsParseTime.md) | 56 | Parse HH:MM:SS back to seconds, so session time can be accumulated. |
+| [lmsWriteCmi()](/code/functions/lmsWriteCmi.md) | 68 | Upsert one CMI element. The unique key on (progress_id, element) does the work. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 55 | `lmsWriteCmi` | **insert** [lms_cmi_data](/code/tables/lms_cmi_data.md) (`progress_id`, `element`, `value`, `created_datetime`, `updated_datetime`) |  |
-| 70 |  | **update** [lms_progress](/code/tables/lms_progress.md) (`attempt_count`, `last_access`, `updated_datetime`) |  |
-| 82 |  | read [lms_courses](/code/tables/lms_courses.md) |  |
-| 100 |  | **update** [lms_progress](/code/tables/lms_progress.md) (`bookmark`, `status`, `total_time`, `last_access`, `updated_datetime`) |  |
-| 109 |  | read [lms_questions](/code/tables/lms_questions.md), read [lms_lessons](/code/tables/lms_lessons.md) |  |
-| 120 |  | read [lms_answers](/code/tables/lms_answers.md) |  |
-| 193 |  | **update** [lms_progress](/code/tables/lms_progress.md) (`status`, `score_raw`, `score_min`, `score_max`, `total_time`, `completion_datetime`, `last_access`, `updated_datetime`) |  |
+| 69 | `lmsWriteCmi` | **insert** [lms_cmi_data](/code/tables/lms_cmi_data.md) (`progress_id`, `element`, `value`, `created_datetime`, `updated_datetime`) |  |
+| 84 |  | **update** [lms_progress](/code/tables/lms_progress.md) (`attempt_count`, `last_access`, `updated_datetime`) |  |
+| 96 |  | read [lms_courses](/code/tables/lms_courses.md) |  |
+| 114 |  | **update** [lms_progress](/code/tables/lms_progress.md) (`bookmark`, `status`, `total_time`, `last_access`, `updated_datetime`) |  |
+| 123 |  | read [lms_questions](/code/tables/lms_questions.md), read [lms_lessons](/code/tables/lms_lessons.md) |  |
+| 134 |  | read [lms_answers](/code/tables/lms_answers.md) |  |
+| 207 |  | **update** [lms_progress](/code/tables/lms_progress.md) (`status`, `score_raw`, `score_min`, `score_max`, `total_time`, `completion_datetime`, `last_access`, `updated_datetime`) |  |
 
 ## How it hangs together
 

@@ -52,6 +52,9 @@ if (!empty($input['ticket_id'])) {
 
 /**
  * Calculate cosine similarity between two vectors
+ *
+ * @param mixed $vec1  an embedding, as a list of floats
+ * @param mixed $vec2  another embedding; only the length both share is compared
  */
 function cosineSimilarity($vec1, $vec2) {
     $dotProduct = 0;
@@ -71,6 +74,9 @@ function cosineSimilarity($vec1, $vec2) {
 
 /**
  * Generate embedding for text using OpenAI API
+ *
+ * @param mixed $text  the text to embed; cut to 30,000 bytes
+ * @param mixed $apiKey  the OpenAI API key, in plain text
  */
 function generateEmbedding($text, $apiKey) {
     // Truncate if too long

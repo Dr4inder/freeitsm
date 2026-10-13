@@ -14,14 +14,14 @@ chose a company the viewer cannot see, the viewer gets an error, never the data.
 function rpTenantClause(PDO $conn, int $analystId, $tenant, string $qualified): array
 ```
 
-Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 106.
+Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 115.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$tenant` |  |  |  |
-| `$qualified` | `string` |  |  |
+| `$tenant` |  |  | the pack's company: 'active' (or null/''), 'all', or a company id the viewer must be able to reach |
+| `$qualified` | `string` |  | the company column to filter, alias included, e.g. 't.tenant_id' |
 
 **Returns:** array{0:string,1:array} [" AND ...", params], or ['', []] at N=1
 

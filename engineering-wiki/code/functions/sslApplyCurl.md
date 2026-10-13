@@ -6,12 +6,12 @@ Applies the install's TLS verification setting, and the CA bundle, to a cURL han
 function sslApplyCurl($ch, bool $alwaysVerify = false): void
 ```
 
-Defined in [includes/ssl.php](/code/files/includes/ssl.php.md), line 84.
+Defined in [includes/ssl.php](/code/files/includes/ssl.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ch` |  |  |  |
-| `$alwaysVerify` | `bool` | `false` |  |
+| `$ch` |  |  | the cURL handle from `curl_init()` (CurlHandle, or a resource before PHP 8) |
+| `$alwaysVerify` | `bool` | `false` | true verifies even when SSL_VERIFY_PEER is off - for traffic that must never go unverified |
 
 **Returns:** `void`
 

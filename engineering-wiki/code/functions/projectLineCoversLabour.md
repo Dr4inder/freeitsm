@@ -6,11 +6,11 @@ A labour line with no typed actual is the PLAN for labour: the time logged on th
 function projectLineCoversLabour(array $r): bool
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 238.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 260.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | a project_budget_lines row - category and actual_amount are read |
 
 **Returns:** `bool`
 

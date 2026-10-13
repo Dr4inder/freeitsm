@@ -10,13 +10,13 @@ function catalogueRaiseTicketFromSubmissionId(
 ): array
 ```
 
-Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 354.
+Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 371.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$submissionId` | `int` |  |  |
-| `$overrides` | `array` | `[]` |  |
+| `$submissionId` | `int` |  | form_submissions.id to raise the ticket from |
+| `$overrides` | `array` | `[]` | ticket settings that win over the submission - see `catalogueCreateTicketFromSubmission()` |
 
 **Returns:** array{ticket_id:int, ticket_number:string}
 
@@ -24,7 +24,7 @@ Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_app
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 356 | `catalogueRaiseTicketFromSubmissionId` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md) |  |
+| 373 | `catalogueRaiseTicketFromSubmissionId` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md) |  |
 
 ## Calls
 

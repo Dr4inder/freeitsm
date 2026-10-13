@@ -6,7 +6,7 @@ The presets. 'timebox' is the project_stages.kind used for new and open time box
 function projectMethodologies(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 56.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 60.
 
 **Returns:** array<string,array{label_key:string,desc_key:string,timebox:string,single_active:bool}>
 

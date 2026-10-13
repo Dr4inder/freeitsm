@@ -6,14 +6,14 @@ Record what a sign-in sent: the last sign-in line on the provider, and each grou
 function ssoRememberGroups(PDO $conn, int $providerId, string $who, array $groups): void
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 182.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 216.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
-| `$who` | `string` |  |  |
-| `$groups` | `array` |  |  |
+| `$providerId` | `int` |  | the sign-in provider (auth_providers.id) |
+| `$who` | `string` |  | who signed in, for the last-sign-in line: their email, preferred_username or sub claim |
+| `$groups` | `array` |  | the group values the sign-in sent, from `ssoClaimValues()` |
 
 **Returns:** `void`
 
@@ -21,8 +21,8 @@ Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 185 | `ssoRememberGroups` | **update** [auth_providers](/code/tables/auth_providers.md) (`oidc_groups_last_seen`) |  |
-| 187 | `ssoRememberGroups` | **insert** [sso_groups_seen](/code/tables/sso_groups_seen.md) (`provider_id`, `group_name`, `first_seen_datetime`, `last_seen_datetime`) |  |
+| 219 | `ssoRememberGroups` | **update** [auth_providers](/code/tables/auth_providers.md) (`oidc_groups_last_seen`) |  |
+| 221 | `ssoRememberGroups` | **insert** [sso_groups_seen](/code/tables/sso_groups_seen.md) (`provider_id`, `group_name`, `first_seen_datetime`, `last_seen_datetime`) |  |
 
 ## Called from
 

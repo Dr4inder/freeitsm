@@ -10,7 +10,7 @@ decide; an attacker cannot make a victim's browser claim this host.
 function csrfSameOrigin(): ?bool
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 174.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 180.
 
 **Returns:** `?bool`
 

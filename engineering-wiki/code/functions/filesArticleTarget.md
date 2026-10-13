@@ -6,13 +6,13 @@ A Knowledge article as a shortcut target, or null when this person may not read 
 function filesArticleTarget(PDO $conn, int $analystId, int $id): ?array
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 172.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 208.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the knowledge_articles id; 0 or less gives null |
 
 **Returns:** `?array`
 
@@ -20,7 +20,7 @@ Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_boo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 187 | `filesArticleTarget` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 223 | `filesArticleTarget` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

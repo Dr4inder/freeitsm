@@ -10,7 +10,7 @@ browser's address bar is the one the PCs actually reach.
 function dockerTlsBrowserAddress(): array
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 95.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 101.
 
 **Returns:** `array`
 

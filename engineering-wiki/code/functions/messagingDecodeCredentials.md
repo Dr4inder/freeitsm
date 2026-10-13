@@ -6,11 +6,11 @@ Decrypt + JSON-decode a stored credentials blob into an array (never throws).
 function messagingDecodeCredentials($stored): array
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 91.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 99.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$stored` |  |  |  |
+| `$stored` |  |  | the credentials column as stored (encrypted JSON); null or '' gives an empty array |
 
 **Returns:** `array`
 

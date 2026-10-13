@@ -32,13 +32,13 @@ function templateSelectForRecipient(
 ): array
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 254.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 266.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$eventTrigger` | `string` |  |  |
-| `$recipientEmail` | `?string` | `null` |  |
+| `$eventTrigger` | `string` |  | the template event, e.g. 'ticket_closed' |
+| `$recipientEmail` | `?string` | `null` | the requester's address, matched against sender rules; null or '' matches unrestricted templates only |
 
 **Returns:** `array`
 
@@ -46,7 +46,7 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 257 | `templateSelectForRecipient` | read [ticket_email_templates](/code/tables/ticket_email_templates.md) |  |
+| 269 | `templateSelectForRecipient` | read [ticket_email_templates](/code/tables/ticket_email_templates.md) |  |
 
 ## Calls
 

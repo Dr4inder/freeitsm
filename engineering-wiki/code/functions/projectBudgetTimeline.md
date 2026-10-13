@@ -14,17 +14,17 @@ function projectBudgetTimeline(
 ): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 299.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 330.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
-| `$lineRows` | `array` |  |  |
-| `$labourDays` | `array` |  |  |
-| `$planned` | `float` |  |  |
-| `$actual` | `float` |  |  |
-| `$forecast` | `float` |  |  |
+| `$project` | `array` |  | the projects row - start_date, created_datetime and target_end_date are read |
+| `$lineRows` | `array` |  | one entry per budget line: planned, actual, currency_mismatch, planned_date, spent_date, saved |
+| `$labourDays` | `array` |  | labour cost by day, date => amount, from projectLabour(..., true) |
+| `$planned` | `float` |  | the planned total |
+| `$actual` | `float` |  | the actual total, labour included |
+| `$forecast` | `float` |  | the forecast total (estimate at completion) |
 
 **Returns:** `array`
 

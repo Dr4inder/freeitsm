@@ -6,13 +6,13 @@ Record a 1-5 rating once. Returns false if it was already answered or out of ran
 function csatRecordRating(PDO $conn, int $responseId, int $rating): bool
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 254.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 282.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$responseId` | `int` |  |  |
-| `$rating` | `int` |  |  |
+| `$responseId` | `int` |  | ticket_csat_responses.id to answer |
+| `$rating` | `int` |  | the customer's score, 1 to 5 |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 254.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 259 | `csatRecordRating` | **update** [ticket_csat_responses](/code/tables/ticket_csat_responses.md) (`rating`, `responded_datetime`) |  |
+| 287 | `csatRecordRating` | **update** [ticket_csat_responses](/code/tables/ticket_csat_responses.md) (`rating`, `responded_datetime`) |  |
 
 ## Called from
 

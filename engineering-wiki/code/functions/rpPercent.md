@@ -6,11 +6,11 @@
 function rpPercent(float $p): string
 ```
 
-Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 75.
+Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 87.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `float` |  |  |
+| `$p` | `float` |  | a percentage, 0-100 |
 
 **Returns:** `string`
 

@@ -6,12 +6,12 @@ The members of a team, for the callers that change the team itself.
 function analystSignInTeamMemberIds(PDO $conn, int $teamId): array
 ```
 
-Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 173.
+Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 178.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$teamId` | `int` |  |  |
+| `$teamId` | `int` |  | the team whose members are wanted (analyst_teams.team_id) |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 175 | `analystSignInTeamMemberIds` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 180 | `analystSignInTeamMemberIds` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Called from
 

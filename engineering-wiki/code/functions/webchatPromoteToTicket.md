@@ -12,15 +12,15 @@ function webchatPromoteToTicket(
 ): int
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 469.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 534.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$conversation` | `array` |  |  |
-| `$channel` | `array` |  |  |
-| `$mode` | `string` |  |  |
-| `$aiSummary` | `?string` | `null` |  |
+| `$conversation` | `array` |  | the webchat_conversations row; one already ticketed returns its ticket id |
+| `$channel` | `array` |  | the widget/channel row |
+| `$mode` | `string` |  | 'agent' (opening message is the transcript) or 'email' (the summary, transcript attached) |
+| `$aiSummary` | `?string` | `null` | the AI summary for 'email' mode; null or '' falls back to the transcript |
 
 **Returns:** `int`
 
@@ -28,7 +28,7 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 495 | `webchatPromoteToTicket` | **update** [emails](/code/tables/emails.md) (`has_attachments`) |  |
+| 560 | `webchatPromoteToTicket` | **update** [emails](/code/tables/emails.md) (`has_attachments`) |  |
 
 ## Calls
 

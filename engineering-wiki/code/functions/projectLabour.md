@@ -6,13 +6,13 @@ Labour for projects: time logged on their tasks, and what it cost.
 function projectLabour(PDO $conn, array $projects, bool $byDay = false): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 120.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 132.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projects` | `array` |  | id => row (needs id, currency) |
-| `$byDay` | `bool` | `false` |  |
+| `$byDay` | `bool` | `false` | true to add 'days' => [date => cost] to each project, for the spend chart |
 
 **Returns:** array id => [minutes, priced_minutes, cost (null in hours mode), unpriced_minutes]
 
@@ -20,7 +20,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 130 | `projectLabour` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
+| 142 | `projectLabour` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
 
 ## Calls
 

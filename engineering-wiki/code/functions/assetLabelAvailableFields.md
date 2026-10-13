@@ -6,7 +6,7 @@ Every field a label can print, with the name the SETTINGS picker shows - built-i
 function assetLabelAvailableFields(PDO $conn, ?int $tenantId = null): array
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 217.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 228.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

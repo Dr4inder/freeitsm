@@ -6,11 +6,11 @@ A byte count as readable text - "1.5 MB", "300 KB" or "512 bytes".
 function uploadFormatBytes(int $bytes): string
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 638.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 663.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bytes` | `int` |  |  |
+| `$bytes` | `int` |  | a size in bytes |
 
 **Returns:** `string`
 

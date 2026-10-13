@@ -6,13 +6,13 @@ GET request to vCenter REST API
 function vcenterGet($baseUrl, $path, $sessionToken)
 ```
 
-Defined in [api/assets/get_vcenter.php](/code/files/api/assets/get_vcenter.php.md), line 294.
+Defined in [api/assets/get_vcenter.php](/code/files/api/assets/get_vcenter.php.md), line 302.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$baseUrl` |  |  |  |
-| `$path` |  |  |  |
-| `$sessionToken` |  |  |  |
+| `$baseUrl` |  |  | the vCenter address with scheme and no trailing slash |
+| `$path` |  |  | the API path to fetch, starting with a slash; /api/ and /rest/ paths both work |
+| `$sessionToken` |  |  | the session id returned by `vcenterAuth()` |
 
 ## Calls
 

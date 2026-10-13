@@ -14,14 +14,14 @@ function sendTemplateEmail(
 ): void
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 41.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$eventTrigger` | `string` |  |  |
-| `$extraMergeData` | `array` | `[]` |  |
+| `$eventTrigger` | `string` |  | the template event: 'new_ticket_email', 'ticket_assigned', 'analyst_assigned', 'ticket_closed', 'csat_request' or 'note_shared' |
+| `$extraMergeData` | `array` | `[]` | more merge codes the ticket alone cannot supply, as [code => value], e.g. ['csat_link' => url] |
 
 **Returns:** `void`
 

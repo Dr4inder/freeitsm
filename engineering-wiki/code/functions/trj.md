@@ -6,13 +6,13 @@
 function trj(string $key, string $english, array $params = []): string
 ```
 
-Defined in [includes/i18n_guarded.php](/code/files/includes/i18n_guarded.php.md), line 87.
+Defined in [includes/i18n_guarded.php](/code/files/includes/i18n_guarded.php.md), line 99.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
-| `$english` | `string` |  |  |
-| `$params` | `array` | `[]` |  |
+| `$key` | `string` |  | key within the prefix passed to `i18nGuardedInit()` |
+| `$english` | `string` |  | the exact text this call replaces |
+| `$params` | `array` | `[]` | {placeholder} => value, applied before JSON-encoding |
 
 **Returns:** `string`
 

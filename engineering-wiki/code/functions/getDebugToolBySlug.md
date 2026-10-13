@@ -6,11 +6,11 @@ Find one tool by its slug (e.g. 'd001'). Returns null if not found.
 function getDebugToolBySlug($slug)
 ```
 
-Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md), line 442.
+Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md), line 446.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$slug` |  |  |  |
+| `$slug` |  |  | the tool's slug, e.g. 'd001', as the tool page sets it |
 
 ## Calls
 

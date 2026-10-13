@@ -6,7 +6,7 @@ How a company is stored on a contract: the Default company is NULL, like every s
 function contractStoreTenant(PDO $conn, ?int $tenantId): ?int
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 52.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

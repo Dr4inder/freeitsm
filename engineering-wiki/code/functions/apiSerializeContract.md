@@ -6,11 +6,11 @@ Shapes a contract row for the API - number, title, company, supplier or customer
 function apiSerializeContract(array $r): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 88.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 90.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the contracts row as `apiContractSelect()` loads it, with supplier, customer, owner, status and company names |
 
 **Returns:** `array`
 

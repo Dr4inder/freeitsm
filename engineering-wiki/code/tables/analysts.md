@@ -37,8 +37,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):281 |  | update | `last_login_datetime`, `failed_login_count` |  |
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):589 | `oidcCreateAnalyst` | insert | `username`, `password_hash`, `full_name`, `email`, `job_title`, `department`, `phone`, `mobile`, `is_active`, `created_datetime` |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):285 |  | update | `last_login_datetime`, `failed_login_count` |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):624 | `oidcCreateAnalyst` | insert | `username`, `password_hash`, `full_name`, `email`, `job_title`, `department`, `phone`, `mobile`, `is_active`, `created_datetime` |  |
 | [api/auth/reset_password.php](/code/files/api/auth/reset_password.php.md):71 |  | update | `password_hash`, `password_changed_datetime`, `failed_login_count`, `locked_until` |  |
 | [api/myaccount/change_password.php](/code/files/api/myaccount/change_password.php.md):55 |  | update | `password_hash`, `last_modified_datetime`, `password_changed_datetime` |  |
 | [api/myaccount/change_password.php](/code/files/api/myaccount/change_password.php.md):60 |  | update | `password_hash`, `last_modified_datetime` |  |
@@ -59,15 +59,15 @@
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md):154 |  | update | `auth_follow_team` |  |
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md):163 |  | update | `can_access_all_modules` |  |
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md):173 |  | update | `can_access_all_tenants` |  |
-| [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md):150 | `analystSignInApply` | update | `auth_provider_id`, `last_modified_datetime` |  |
-| [includes/ldap.php](/code/files/includes/ldap.php.md):541 | `ldapCreateAnalyst` | insert | `username`, `password_hash`, `full_name`, `email`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules` |  |
-| [includes/ldap.php](/code/files/includes/ldap.php.md):604 | `ldapResolveAnalyst` | update | `email` |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):71 | `AnalystsService::create` | insert | `username`, `password_hash`, `full_name`, `email`, `is_active`, `auth_provider_id`, `is_admin`, `can_access_all_modules`, `can_access_all_tenants`, `created_datetime` |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):130 | `AnalystsService::update` | update |  |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):204 | `AnalystsService::setAccess` | update | `is_admin`, `can_access_all_modules`, `can_access_all_tenants`, `last_modified_datetime` |  |
-| [includes/sso_claims.php](/code/files/includes/sso_claims.php.md):259 | `ssoJitStartForTeams` | update | `can_access_all_modules` |  |
-| [includes/sso_identity.php](/code/files/includes/sso_identity.php.md):214 | `ssoApplyJitCompanies` | update | `can_access_all_tenants` |  |
-| [includes/sso_identity.php](/code/files/includes/sso_identity.php.md):223 | `ssoApplyJitCompanies` | update | `can_access_all_tenants` |  |
+| [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md):151 | `analystSignInApply` | update | `auth_provider_id`, `last_modified_datetime` |  |
+| [includes/ldap.php](/code/files/includes/ldap.php.md):585 | `ldapCreateAnalyst` | insert | `username`, `password_hash`, `full_name`, `email`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules` |  |
+| [includes/ldap.php](/code/files/includes/ldap.php.md):651 | `ldapResolveAnalyst` | update | `email` |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):77 | `AnalystsService::create` | insert | `username`, `password_hash`, `full_name`, `email`, `is_active`, `auth_provider_id`, `is_admin`, `can_access_all_modules`, `can_access_all_tenants`, `created_datetime` |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):139 | `AnalystsService::update` | update |  |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):219 | `AnalystsService::setAccess` | update | `is_admin`, `can_access_all_modules`, `can_access_all_tenants`, `last_modified_datetime` |  |
+| [includes/sso_claims.php](/code/files/includes/sso_claims.php.md):301 | `ssoJitStartForTeams` | update | `can_access_all_modules` |  |
+| [includes/sso_identity.php](/code/files/includes/sso_identity.php.md):228 | `ssoApplyJitCompanies` | update | `can_access_all_tenants` |  |
+| [includes/sso_identity.php](/code/files/includes/sso_identity.php.md):237 | `ssoApplyJitCompanies` | update | `can_access_all_tenants` |  |
 
 ## Read by
 
@@ -79,7 +79,7 @@
 | [api/assets/get_asset_tickets.php](/code/files/api/assets/get_asset_tickets.php.md) | L50 |  |
 | [api/assets/get_asset_users.php](/code/files/api/assets/get_asset_users.php.md) | L60 |  |
 | [api/assets/import_history.php](/code/files/api/assets/import_history.php.md) | L50 |  |
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md) | L200, oidcLoadAnalyst L322, oidcCreateAnalyst L568 |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md) | L204, oidcLoadAnalyst L330, oidcCreateAnalyst L603 |  |
 | [api/auth/request_password_reset.php](/code/files/api/auth/request_password_reset.php.md) | L35 |  |
 | [api/auth/resolve_login.php](/code/files/api/auth/resolve_login.php.md) | L56 |  |
 | [api/calendar/get_event.php](/code/files/api/calendar/get_event.php.md) | L27 |  |
@@ -96,7 +96,7 @@
 | [api/documents/links.php](/code/files/api/documents/links.php.md) | L49 |  |
 | [api/documents/list.php](/code/files/api/documents/list.php.md) | L66 |  |
 | [api/domains/accounts.php](/code/files/api/domains/accounts.php.md) | L20 |  |
-| [api/domains/bulk_add.php](/code/files/api/domains/bulk_add.php.md) | domainImportResolveNames L58 |  |
+| [api/domains/bulk_add.php](/code/files/api/domains/bulk_add.php.md) | domainImportResolveNames L61 |  |
 | [api/domains/get.php](/code/files/api/domains/get.php.md) | L17 |  |
 | [api/files/list.php](/code/files/api/files/list.php.md) | L62 |  |
 | [api/files/permissions.php](/code/files/api/files/permissions.php.md) | L69, L107 |  |
@@ -112,8 +112,8 @@
 | [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md) | handleList L68 |  |
 | [api/knowledge/knowledge_article.php](/code/files/api/knowledge/knowledge_article.php.md) | L35 |  |
 | [api/knowledge/knowledge_articles.php](/code/files/api/knowledge/knowledge_articles.php.md) | L39 |  |
-| [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md) | handlePreview L107 |  |
-| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | handleSearch L350 |  |
+| [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md) | handlePreview L109 |  |
+| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | handleSearch L369 |  |
 | [api/lms/analysts.php](/code/files/api/lms/analysts.php.md) | L20 |  |
 | [api/lms/assignment_targets.php](/code/files/api/lms/assignment_targets.php.md) | L41 |  |
 | [api/lms/assignments.php](/code/files/api/lms/assignments.php.md) | L52, L55 |  |
@@ -151,11 +151,11 @@
 | [api/system/api_keys/create_key.php](/code/files/api/system/api_keys/create_key.php.md) | L69 |  |
 | [api/system/api_keys/list_keys.php](/code/files/api/system/api_keys/list_keys.php.md) | L27, L59 |  |
 | [api/system/api_keys/update_key.php](/code/files/api/system/api_keys/update_key.php.md) | L54 |  |
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | L208 |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | L212 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L606, L636, L3179, L3282 |  |
-| [api/system/debug-tools/D004_local_login.php](/code/files/api/system/debug-tools/D004_local_login.php.md) | L186 |  |
-| [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | L232, L410, L411, L412, L413, L415 |  |
-| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L836 |  |
+| [api/system/debug-tools/D004_local_login.php](/code/files/api/system/debug-tools/D004_local_login.php.md) | L204 |  |
+| [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | L263, L441, L442, L443, L444, L446 |  |
+| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L859 |  |
 | [api/system/get_carddav_write_log.php](/code/files/api/system/get_carddav_write_log.php.md) | L50 |  |
 | [api/system/get_directory_sync_log.php](/code/files/api/system/get_directory_sync_log.php.md) | L67 |  |
 | [api/system/get_effective_module_access.php](/code/files/api/system/get_effective_module_access.php.md) | L25 |  |
@@ -163,13 +163,13 @@
 | [api/system/get_topology.php](/code/files/api/system/get_topology.php.md) | L65, L89, L140 |  |
 | [api/system/roles.php](/code/files/api/system/roles.php.md) | L26 |  |
 | [api/system/save_module_grants.php](/code/files/api/system/save_module_grants.php.md) | L49 |  |
-| [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md) | collaboratorCandidates L93 |  |
+| [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md) | collaboratorCandidates L95 |  |
 | [api/tasks/get.php](/code/files/api/tasks/get.php.md) | L39, L107, L125 |  |
 | [api/tasks/list.php](/code/files/api/tasks/list.php.md) | L25, L125, L223 |  |
-| [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L114 |  |
+| [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L117 |  |
 | [api/tickets/ai_read.php](/code/files/api/tickets/ai_read.php.md) | L103 |  |
 | [api/tickets/ai_summary.php](/code/files/api/tickets/ai_summary.php.md) | L89 |  |
-| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md) | L397 |  |
+| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md) | L401 |  |
 | [api/tickets/clear_rota_cells.php](/code/files/api/tickets/clear_rota_cells.php.md) | L56 |  |
 | [api/tickets/delete_analyst.php](/code/files/api/tickets/delete_analyst.php.md) | L38, L49, L51 |  |
 | [api/tickets/get_analysts.php](/code/files/api/tickets/get_analysts.php.md) | L21, L80 |  |
@@ -182,105 +182,105 @@
 | [api/tickets/get_ticket_audit.php](/code/files/api/tickets/get_ticket_audit.php.md) | L36 |  |
 | [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L305, L316 |  |
 | [api/tickets/get_ticket_tasks.php](/code/files/api/tickets/get_ticket_tasks.php.md) | L44 |  |
-| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L319, getCategoricalData L321, getCategoricalWithSeries L361, getCategoricalWithSeries L364 |  |
+| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L345, getCategoricalData L347, getCategoricalWithSeries L391, getCategoricalWithSeries L394 |  |
 | [api/tickets/get_time_entries.php](/code/files/api/tickets/get_time_entries.php.md) | L47 |  |
 | [api/tickets/get_user_tickets.php](/code/files/api/tickets/get_user_tickets.php.md) | L31 |  |
-| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md) | maState L96 |  |
+| [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md) | maState L108 |  |
 | [api/tickets/paste_rota_cells.php](/code/files/api/tickets/paste_rota_cells.php.md) | L96 |  |
 | [api/tickets/paste_rota_line.php](/code/files/api/tickets/paste_rota_line.php.md) | L76 |  |
 | [api/tickets/paste_rota_week.php](/code/files/api/tickets/paste_rota_week.php.md) | L71 |  |
 | [api/tickets/reset_analyst_password.php](/code/files/api/tickets/reset_analyst_password.php.md) | L39 |  |
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md) | L64, L75, L78, L100 |  |
 | [api/tickets/save_user.php](/code/files/api/tickets/save_user.php.md) | L71 |  |
-| [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md) | handleGet L145, handleSearch L226, handleAddMember L369 |  |
+| [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md) | handleGet L147, handleSearch L230, handleAddMember L381 |  |
 | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | apiAuthenticate L28 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetsGet L342, apiAssetAssignmentsList L408, apiAssetHistoryList L451, apiAssetCustodyList L473 |  |
-| [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | apiCalendarEventSelect L68 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53, apiChangeCommentsList L379, apiChangeAuditList L416, apiChangeCabGet L441 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetsGet L353, apiAssetAssignmentsList L419, apiAssetHistoryList L462, apiAssetCustodyList L484 |  |
+| [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | apiCalendarEventSelect L71 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L57, apiChangeCommentsList L389, apiChangeAuditList L426, apiChangeCabGet L451 |  |
 | [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractSelect L65 |  |
-| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L44, apiDomainSelect L48, apiDomainsHistory L382, apiDomainAccountsList L412 |  |
-| [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | apiFormSelect L61, apiLoadFormSubmission L209, apiFormSubmissionsSelect L331 |  |
-| [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | apiKnowledgeSelect L51, apiKnowledgeVersionsList L352, apiKnowledgeVersionsGet L374 |  |
+| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L44, apiDomainSelect L48, apiDomainsHistory L393, apiDomainAccountsList L423 |  |
+| [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | apiFormSelect L61, apiLoadFormSubmission L225, apiFormSubmissionsSelect L347 |  |
+| [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | apiKnowledgeSelect L51, apiKnowledgeVersionsList L364, apiKnowledgeVersionsGet L386 |  |
 | [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmDiagramSelect L75 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemNotesList L313, apiProblemAuditList L346 |  |
-| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectSelect L45, apiProjectTasks L621, apiProjectHistory L661 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemNotesList L319, apiProblemAuditList L352 |  |
+| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectSelect L45, apiProjectTasks L656, apiProjectHistory L696 |  |
 | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | apiAnalystsList L22 |  |
-| [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | apiServiceIncidentSelect L112 |  |
-| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareLicenceSelect L221 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiTasksGet L360, apiTaskCommentsList L427 |  |
-| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L38, apiTicketNotesList L333, apiTicketAuditList L401, apiTicketTimeEntriesList L460 |  |
+| [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | apiServiceIncidentSelect L122 |  |
+| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareLicenceSelect L229 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiTasksGet L362, apiTaskCommentsList L429 |  |
+| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L38, apiTicketNotesList L335, apiTicketAuditList L403, apiTicketTimeEntriesList L462 |  |
 | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | apiWorkflowSelect L41 |  |
-| [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | analystSignInReady L53, analystSignInApply L134, analystSignInFollowerIds L186 |  |
-| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncEnrolment L277 |  |
-| [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md) | catalogueApprovalsList L540 |  |
-| [includes/contract_report.php](/code/files/includes/contract_report.php.md) | contractReportLoad L150 |  |
-| [includes/demo_data.php](/code/files/includes/demo_data.php.md) | demoHasUntaggedImport L202 |  |
-| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L85, domainAlertOnChange L315, domainRenewalActionsRun L359 |  |
-| [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L32, domainListSelect L39, domainApiLookups L189 |  |
+| [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | analystSignInReady L53, analystSignInApply L135, analystSignInFollowerIds L191 |  |
+| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncEnrolment L310 |  |
+| [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md) | catalogueApprovalsList L568 |  |
+| [includes/contract_report.php](/code/files/includes/contract_report.php.md) | contractReportLoad L155 |  |
+| [includes/demo_data.php](/code/files/includes/demo_data.php.md) | demoHasUntaggedImport L223 |  |
+| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L104, domainAlertOnChange L363, domainRenewalActionsRun L411 |  |
+| [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L32, domainListSelect L39, domainApiLookups L199 |  |
 | [includes/feature_bingo/cards/system-core.php](/code/files/includes/feature_bingo/cards/system-core.php.md) | L28 |  |
-| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::entries L201 |  |
-| [includes/files/audit.php](/code/files/includes/files/audit.php.md) | filesAudit L53 |  |
-| [includes/functions.php](/code/files/includes/functions.php.md) | getAnalystAllowedModules L133, analystIsAdmin L215 |  |
-| [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.php.md) | knowledgeAuditHistory L129 |  |
-| [includes/ldap.php](/code/files/includes/ldap.php.md) | ldapCreateAnalyst L516, ldapResolveAnalyst L583, ldapResolveAnalyst L612 |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAssignedLearnersSql L483, lmsAssignedLearnersSql L513, lmsAssignmentTargetProblem L568 |  |
-| [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md) | lmsRemindersDue L222 |  |
-| [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsTaskAssignedEmail L417 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleTickets L322, peopleProjects L457, peopleProjects L465, peopleContractorTasks L732 |  |
-| [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L81, projectAiFacts L153, projectAiFacts L283, projectAiFacts L306 |  |
-| [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md) | projectAlertRows L118, projectAlertsStagesDue L225, projectAlertsMilestones L319 |  |
-| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistRows L36, projectAssistOverview L183, projectAssistTasks L236 |  |
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMessages L94, projectChatSystem L148, projectChatRead L232, projectChatRead L248, projectChatRead L270, projectChatTurn L376 |  |
-| [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md) | projectBenefits L72, projectBenefits L79, projectAlertsBenefits L146 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L201 |  |
-| [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectControlDetail L274, projectControlDetail L292 |  |
-| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateItems L70 |  |
-| [includes/projects/intake.php](/code/files/includes/projects/intake.php.md) | projectProposalNamedApprover L58, projectProposalApprovers L79, projectProposalDetail L95 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkProjectRows L367 |  |
-| [includes/projects/milestones.php](/code/files/includes/projects/milestones.php.md) | projectMilestones L43 |  |
-| [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsOverdueDigest L39, projectNudgeProjects L174, projectNudgeDeciders L185 |  |
-| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectListRows L304, projectDetail L348, projectDetail L369, projectDetail L386 |  |
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateList L354 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewTicket L127, recordPreviewTask L173, recordPreviewAsset L288, recordPreviewDomain L387 |  |
-| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpViewer L43, rpListPacks L121, rpListShares L161, rpKnownDepartments L231 |  |
-| [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md) | rpProjectRows L41, rpProjectsRisks L205 |  |
-| [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) | rpStatusIncidentLog L113 |  |
-| [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L28, rpTicketsList L219 |  |
-| [includes/service_context.php](/code/files/includes/service_context.php.md) | ActorContext::sessionCompanyScope L115 |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedList L149, statusPlannedActor L245 |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md) | AnalystsService::load L40, AnalystsService::assertNotLastAdmin L247, AnalystsService::assertEmailFree L363, AnalystsService::uniqueUsername L388 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assignAnalyst L319, AssetsService::assignAnalyst L322, AssetsService::assignAnalyst L364, AssetsService::unassignAnalyst L506, AssetsService::assetsForUser L1077 |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::saveCab L476, ChangesService::voteCab L536, ChangesService::loadJoined L707, ChangesService::resolveAnalyst L824 |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::resolveAnalyst L540 |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::requireAnalyst L813, DomainsService::auditDisplay L902, DomainsService::auditDisplay L904 |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md) | FormsService::listCollections L570, FormsService::collectionSubmissions L718 |  |
-| [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md) | KnowledgeService::resolveAnalyst L500 |  |
-| [includes/services/morning_checks.php](/code/files/includes/services/morning_checks.php.md) | MorningChecksService::listGroups L142 |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L388, ProblemsService::resolveAnalyst L498 |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) | ProjectReportsService::listFor L46, ProjectReportsService::latestBriefing L63, ProjectReportsService::recipients L237, ProjectReportsService::recipients L242, ProjectReportsService::runSchedules L343 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addMember L39, ProjectToolsService::saveRaid L333, ProjectToolsService::issueToTicket L564, ProjectToolsService::raid L757, ProjectToolsService::raid L760, ProjectToolsService::raid L779 ... |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::validateField L622, ProjectsService::auditDisplay L933 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::collaboratorsForMany L689, TasksService::timeEntriesFor L1496, TasksService::resolveAnalyst L1602 |  |
-| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::createTicket L160, TicketsService::updateTicket L489, TicketsService::loadTicket L1061 |  |
+| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::entries L216 |  |
+| [includes/files/audit.php](/code/files/includes/files/audit.php.md) | filesAudit L55 |  |
+| [includes/functions.php](/code/files/includes/functions.php.md) | getAnalystAllowedModules L135, analystIsAdmin L217 |  |
+| [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.php.md) | knowledgeAuditHistory L137 |  |
+| [includes/ldap.php](/code/files/includes/ldap.php.md) | ldapCreateAnalyst L560, ldapResolveAnalyst L630, ldapResolveAnalyst L659 |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAssignedLearnersSql L514, lmsAssignedLearnersSql L544, lmsAssignmentTargetProblem L602 |  |
+| [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md) | lmsRemindersDue L230 |  |
+| [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsTaskAssignedEmail L438 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleTickets L343, peopleProjects L492, peopleProjects L500, peopleContractorTasks L793 |  |
+| [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L84, projectAiFacts L156, projectAiFacts L286, projectAiFacts L309 |  |
+| [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md) | projectAlertRows L131, projectAlertsStagesDue L238, projectAlertsMilestones L334 |  |
+| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistRows L43, projectAssistOverview L215, projectAssistTasks L278 |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMessages L102, projectChatSystem L165, projectChatRead L255, projectChatRead L271, projectChatRead L293, projectChatTurn L408 |  |
+| [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md) | projectBenefits L78, projectBenefits L85, projectAlertsBenefits L166 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L213 |  |
+| [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectControlDetail L315, projectControlDetail L333 |  |
+| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateItems L72 |  |
+| [includes/projects/intake.php](/code/files/includes/projects/intake.php.md) | projectProposalNamedApprover L62, projectProposalApprovers L83, projectProposalDetail L108 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkProjectRows L402 |  |
+| [includes/projects/milestones.php](/code/files/includes/projects/milestones.php.md) | projectMilestones L48 |  |
+| [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsOverdueDigest L39, projectNudgeProjects L178, projectNudgeDeciders L194 |  |
+| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectListRows L328, projectDetail L376, projectDetail L397, projectDetail L414 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateList L367 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewTicket L141, recordPreviewTask L188, recordPreviewAsset L306, recordPreviewDomain L407 |  |
+| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpViewer L43, rpListPacks L134, rpListShares L178, rpKnownDepartments L252 |  |
+| [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md) | rpProjectRows L47, rpProjectsRisks L243 |  |
+| [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) | rpStatusIncidentLog L133 |  |
+| [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L28, rpTicketsList L261 |  |
+| [includes/service_context.php](/code/files/includes/service_context.php.md) | ActorContext::sessionCompanyScope L123 |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedList L165, statusPlannedActor L267 |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md) | AnalystsService::load L44, AnalystsService::assertNotLastAdmin L264, AnalystsService::assertEmailFree L411, AnalystsService::uniqueUsername L445 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assignAnalyst L328, AssetsService::assignAnalyst L331, AssetsService::assignAnalyst L373, AssetsService::unassignAnalyst L523, AssetsService::assetsForUser L1135 |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::saveCab L498, ChangesService::voteCab L561, ChangesService::loadJoined L746, ChangesService::resolveAnalyst L891 |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::resolveAnalyst L630 |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::requireAnalyst L899, DomainsService::auditDisplay L1015, DomainsService::auditDisplay L1017 |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md) | FormsService::listCollections L592, FormsService::collectionSubmissions L747 |  |
+| [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md) | KnowledgeService::resolveAnalyst L544 |  |
+| [includes/services/morning_checks.php](/code/files/includes/services/morning_checks.php.md) | MorningChecksService::listGroups L157 |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L426, ProblemsService::resolveAnalyst L559 |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) | ProjectReportsService::listFor L46, ProjectReportsService::latestBriefing L63, ProjectReportsService::recipients L268, ProjectReportsService::recipients L273, ProjectReportsService::runSchedules L389 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addMember L44, ProjectToolsService::saveRaid L367, ProjectToolsService::issueToTicket L616, ProjectToolsService::raid L822, ProjectToolsService::raid L825, ProjectToolsService::raid L844 ... |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::validateField L683, ProjectsService::auditDisplay L1058 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::collaboratorsForMany L715, TasksService::timeEntriesFor L1587, TasksService::resolveAnalyst L1699 |  |
+| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::createTicket L166, TicketsService::updateTicket L499, TicketsService::loadTicket L1100 |  |
 | [includes/setup_state.php](/code/files/includes/setup_state.php.md) | installIsUnprovisioned L41 |  |
 | [includes/signatures.php](/code/files/includes/signatures.php.md) | signatureMergeData L37 |  |
-| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_resolve_recipients L236, sla_resolve_recipients L248, sla_resolve_recipients L263 |  |
-| [includes/sso_identity.php](/code/files/includes/sso_identity.php.md) | ssoAnalystProfileLocked L93 |  |
+| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_resolve_recipients L245, sla_resolve_recipients L257, sla_resolve_recipients L272 |  |
+| [includes/sso_identity.php](/code/files/includes/sso_identity.php.md) | ssoAnalystProfileLocked L100 |  |
 | [includes/table_views.php](/code/files/includes/table_views.php.md) | tableViewSelect L60 |  |
-| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractorEmail L137 |  |
-| [includes/template_email.php](/code/files/includes/template_email.php.md) | buildTicketMergeData L334 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getAccessibleTenantIds L204 |  |
-| [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | ticketAiTranscript L151, ticketAiLatestSummary L227 |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | mergeBuildSnapshotHtml L672 |  |
-| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md) | presenceOthers L101 |  |
-| [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md) | ticketEmailRecipientsAllowed L289 |  |
-| [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md) | snoozeStateFor L281 |  |
-| [includes/ticket_views.php](/code/files/includes/ticket_views.php.md) | ticketViewsAsAuditRows L87 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOpenIncidents L403, warbotToolRecentChanges L479, warbotToolOnCall L513, warbotToolKnownErrors L632 |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L131, warRoomChannel L213, warRoomAddMembers L323, warRoomOpenDm L380, warRoomDirectory L417, warRoomMessages L469 ... |  |
+| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractorEmail L152 |  |
+| [includes/template_email.php](/code/files/includes/template_email.php.md) | buildTicketMergeData L350 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getAccessibleTenantIds L206 |  |
+| [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | ticketAiTranscript L151, ticketAiLatestSummary L235 |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | mergeBuildSnapshotHtml L696 |  |
+| [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md) | presenceOthers L103 |  |
+| [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md) | ticketEmailRecipientsAllowed L304 |  |
+| [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md) | snoozeStateFor L291 |  |
+| [includes/ticket_views.php](/code/files/includes/ticket_views.php.md) | ticketViewsAsAuditRows L88 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOpenIncidents L410, warbotToolRecentChanges L494, warbotToolOnCall L532, warbotToolKnownErrors L665 |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L132, warRoomChannel L220, warRoomAddMembers L346, warRoomOpenDm L414, warRoomDirectory L451, warRoomMessages L507 ... |  |
 | [projects/settings/index.php](/code/files/projects/settings/index.php.md) | L102 |  |
 | [self-service/includes/user-menu.php](/code/files/self-service/includes/user-menu.php.md) | L29 |  |
 | [system/roles/index.php](/code/files/system/roles/index.php.md) | L35 |  |
 | [tickets/csat/index.php](/code/files/tickets/csat/index.php.md) | L135, L166, L184 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_assign_ticket L2213 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_assign_ticket L2360 |  |
 

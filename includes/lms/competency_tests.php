@@ -71,7 +71,12 @@ function lmsCtSettings(PDO $conn): array
     return $s;
 }
 
-/** Saves one competency test setting to system_settings (insert or update). */
+/**
+ * Saves one competency test setting to system_settings (insert or update).
+ *
+ * @param string $key  the system_settings key, one of the LMS_CT_* setting constants
+ * @param string $value  the value to store, as text
+ */
 function lmsCtSaveSetting(PDO $conn, string $key, string $value): void
 {
     $st = $conn->prepare("INSERT INTO system_settings (setting_key, setting_value, updated_datetime)
@@ -80,7 +85,11 @@ function lmsCtSaveSetting(PDO $conn, string $key, string $value): void
     $st->execute([$key, $value]);
 }
 
-/** '5,3,1,0' -> [5,3,1,0]: four whole numbers, best first, the best above zero. Null if unusable. */
+/**
+ * '5,3,1,0' -> [5,3,1,0]: four whole numbers, best first, the best above zero. Null if unusable.
+ *
+ * @param string $raw  comma-separated marks as typed in the settings, e.g. '5,3,1,0'
+ */
 function lmsCtParseMarks(string $raw): ?array
 {
     $parts = array_map('trim', explode(',', $raw));
@@ -94,7 +103,11 @@ function lmsCtParseMarks(string $raw): ?array
     return $m[0] > 0 ? $m : null;
 }
 
-/** The marks for each grade of a graded question, from the settings, or the default 5, 3, 1, 0. */
+/**
+ * The marks for each grade of a graded question, from the settings, or the default 5, 3, 1, 0.
+ *
+ * @param array $settings  the competency test settings from lmsCtSettings()
+ */
 function lmsCtGradedMarks(array $settings): array
 {
     return lmsCtParseMarks($settings[LMS_CT_GRADED_MARKS] ?? '') ?? [5, 3, 1, 0];
@@ -104,6 +117,8 @@ function lmsCtGradedMarks(array $settings): array
  * Check a question from the editor or the AI. Returns [$clean, null] or [null, 'why'].
  * A choice question has exactly one answer worth anything (stored as 1); a graded
  * one needs a best answer worth more than zero.
+ *
+ * @param array $in  untrusted question fields: skill, difficulty, format, question_text, answers [{text, marks}], explanation, status
  */
 function lmsCtValidateQuestion(array $in): array
 {
@@ -148,7 +163,11 @@ function lmsCtValidateQuestion(array $in): array
     ], null];
 }
 
-/** The best marks a question offers - what a full score on it means. */
+/**
+ * The best marks a question offers - what a full score on it means.
+ *
+ * @param array $answers  the question's answers, each with 'marks'
+ */
 function lmsCtMaxMarks(array $answers): int
 {
     $m = 0;
@@ -156,7 +175,11 @@ function lmsCtMaxMarks(array $answers): int
     return $m;
 }
 
-/** A bank row with its answers decoded. */
+/**
+ * A bank row with its answers decoded.
+ *
+ * @param array $r  an lms_ct_questions row as fetched (answers_json still encoded)
+ */
 function lmsCtDecodeQuestion(array $r): array
 {
     $r['answers'] = json_decode((string)$r['answers_json'], true) ?: [];
@@ -165,7 +188,13 @@ function lmsCtDecodeQuestion(array $r): array
     return $r;
 }
 
-/** Insert a validated question into the bank. */
+/**
+ * Insert a validated question into the bank.
+ *
+ * @param array $q  the clean question from lmsCtValidateQuestion()
+ * @param string $source  where it came from - 'ai' or 'manual'
+ * @param ?string $role  the role description the AI wrote it for, cut to 255 characters; null or '' for none
+ */
 function lmsCtInsertQuestion(PDO $conn, array $q, string $source, ?string $role, ?int $analystId): int
 {
     $st = $conn->prepare("INSERT INTO lms_ct_questions
@@ -179,7 +208,11 @@ function lmsCtInsertQuestion(PDO $conn, array $q, string $source, ?string $role,
     return (int)$conn->lastInsertId();
 }
 
-/** The questions on a test, in order, decoded. */
+/**
+ * The questions on a test, in order, decoded.
+ *
+ * @param int $testId  the lms_ct_tests id
+ */
 function lmsCtTestQuestions(PDO $conn, int $testId): array
 {
     $st = $conn->prepare("SELECT q.*, tq.sort_order
@@ -191,7 +224,11 @@ function lmsCtTestQuestions(PDO $conn, int $testId): array
     return array_map('lmsCtDecodeQuestion', $st->fetchAll(PDO::FETCH_ASSOC));
 }
 
-/** Next sort position on a test. */
+/**
+ * Next sort position on a test.
+ *
+ * @param int $testId  the lms_ct_tests id
+ */
 function lmsCtNextSort(PDO $conn, int $testId): int
 {
     $st = $conn->prepare("SELECT COALESCE(MAX(sort_order), 0) FROM lms_ct_test_questions WHERE test_id = ?");
@@ -199,7 +236,12 @@ function lmsCtNextSort(PDO $conn, int $testId): int
     return (int)$st->fetchColumn() + 1;
 }
 
-/** Put bank questions on a test (already-there ones are skipped). Returns how many were added. */
+/**
+ * Put bank questions on a test (already-there ones are skipped). Returns how many were added.
+ *
+ * @param int $testId  the lms_ct_tests id
+ * @param array $questionIds  lms_ct_questions ids to add, in order (cast to int)
+ */
 function lmsCtAttach(PDO $conn, int $testId, array $questionIds): int
 {
     $sort = lmsCtNextSort($conn, $testId);
@@ -216,6 +258,8 @@ function lmsCtAttach(PDO $conn, int $testId, array $questionIds): int
  * Freeze a test into what a candidate will sit. Throws, with a sentence an
  * analyst can act on, when the test is not ready: no questions, or any that
  * are still drafts or have been hidden since they were added.
+ *
+ * @param int $testId  the lms_ct_tests id to freeze
  */
 function lmsCtBuildSnapshot(PDO $conn, int $testId): array
 {
@@ -266,13 +310,21 @@ function lmsCtNewToken(): array
     return [$raw, hash('sha256', $raw)];
 }
 
-/** The app-relative path of a test link for a raw token. */
+/**
+ * The app-relative path of a test link for a raw token.
+ *
+ * @param string $rawToken  the raw (unhashed) token from lmsCtNewToken()
+ */
 function lmsCtLinkPath(string $rawToken): string
 {
     return 'lms/test.php?t=' . $rawToken;
 }
 
-/** The sitting a raw token opens, or null. Malformed tokens never reach the database. */
+/**
+ * The sitting a raw token opens, or null. Malformed tokens never reach the database.
+ *
+ * @param string $raw  the raw token from the link - untrusted; anything but 64 hex characters gives null
+ */
 function lmsCtFindSitting(PDO $conn, string $raw): ?array
 {
     if (!preg_match('/^[a-f0-9]{64}$/', $raw)) return null;
@@ -281,7 +333,11 @@ function lmsCtFindSitting(PDO $conn, string $raw): ?array
     return $st->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
-/** When a started sitting's time runs out (UTC unix time), or null if not started. */
+/**
+ * When a started sitting's time runs out (UTC unix time), or null if not started.
+ *
+ * @param array $s  an lms_ct_sittings row (started_datetime, time_limit_minutes)
+ */
 function lmsCtDeadline(array $s): ?int
 {
     if (empty($s['started_datetime'])) return null;
@@ -293,6 +349,9 @@ function lmsCtDeadline(array $s): ?int
 /**
  * Where a sitting stands: cancelled | submitted | expired (never started, link
  * out of date) | timeup (started, clock run out, not yet closed) | ready | in_progress.
+ *
+ * @param array $s  an lms_ct_sittings row
+ * @param ?int $now  the time to judge against, as a Unix timestamp; null for now
  */
 function lmsCtState(array $s, ?int $now = null): string
 {
@@ -309,6 +368,9 @@ function lmsCtState(array $s, ?int $now = null): string
  * Score a snapshot against the candidate's answers ({question index: answer index}).
  * Each question counts equally: marks chosen / best marks on offer. Unanswered
  * scores 0. Returns [overall percent, per-skill breakdown].
+ *
+ * @param array $snapshot  the frozen test from lmsCtBuildSnapshot() (its 'questions' are read)
+ * @param array $responses  the candidate's picks, question index => answer index; a missing index scores 0
  */
 function lmsCtScore(array $snapshot, array $responses): array
 {
@@ -332,7 +394,12 @@ function lmsCtScore(array $snapshot, array $responses): array
     return [$n ? round($total / $n * 100, 1) : 0.0, $out];
 }
 
-/** Close a sitting and store its score. Only the first close counts. */
+/**
+ * Close a sitting and store its score. Only the first close counts.
+ *
+ * @param array $s  the lms_ct_sittings row to close (snapshot_json, responses_json, id)
+ * @param string $reason  stored as finish_reason - 'submitted', or 'time_up' (dated at the deadline rather than now)
+ */
 function lmsCtFinalise(PDO $conn, array $s, string $reason): bool
 {
     $snap = json_decode((string)$s['snapshot_json'], true) ?: ['questions' => []];
@@ -362,6 +429,9 @@ function lmsCtFinaliseOverdue(PDO $conn): int
  * Retention: candidates' details are personal data. A sitting that is over -
  * submitted, cancelled, or a link never used and out of date - is deleted once
  * it is older than the retention setting. At most once a day; 0 keeps everything.
+ *
+ * @param array $settings  the competency test settings from lmsCtSettings() (retention days, last purge date)
+ * @param bool $force  true to purge even if it already ran today
  */
 function lmsCtPurge(PDO $conn, array $settings, bool $force = false): int
 {
@@ -382,6 +452,15 @@ function lmsCtPurge(PDO $conn, array $settings, bool $force = false): int
  * Ask the AI for $count questions on one skill. Returns validated DRAFTS (not
  * saved). A graded question comes back best-to-worst and is given the install's
  * marks in that order; the candidate sees them shuffled.
+ *
+ * @param array $cfg  the AI settings for the LMS, from aiSettingsLoad($conn, 'lms_ai')
+ * @param string $role  the role being recruited for, as described on the test; '' if none
+ * @param string $skill  the skill the questions must test
+ * @param string $difficulty  'beginner', 'intermediate' or 'advanced'
+ * @param string $format  'choice' (one correct answer) or 'graded' (four answers, best first)
+ * @param int $count  how many questions to ask for, clamped to 1-20
+ * @param array $avoid  question texts already in the bank on this skill, so they are not repeated (first 40 sent)
+ * @param array $marks  the graded marks, best first, from lmsCtGradedMarks()
  */
 function lmsCtGenerate(array $cfg, string $role, string $skill, string $difficulty, string $format, int $count, array $avoid, array $marks): array
 {
@@ -425,6 +504,12 @@ function lmsCtGenerate(array $cfg, string $role, string $skill, string $difficul
 /**
  * The model's reply -> validated drafts. Separate from the call so the parsing
  * can be tested against sample replies without spending anything.
+ *
+ * @param string $content  the model's reply text, expected to be JSON
+ * @param string $skill  the skill the questions were written for
+ * @param string $difficulty  'beginner', 'intermediate' or 'advanced'
+ * @param string $format  'choice' or 'graded'
+ * @param array $marks  the graded marks, best first, from lmsCtGradedMarks(); used only for 'graded'
  */
 function lmsCtParseDrafts(string $content, string $skill, string $difficulty, string $format, array $marks): array
 {

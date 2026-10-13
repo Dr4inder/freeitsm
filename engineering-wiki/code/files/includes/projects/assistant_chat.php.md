@@ -1,6 +1,6 @@
 # includes/projects/assistant_chat.php
 
-> PHP - 609 lines
+> PHP - 663 lines
 
 Projects - the AI project assistant (3.3.0): "Ask AI" on a project.
 
@@ -57,19 +57,19 @@ DATA inside <project_data>; the system prompt says so. Tool results are data too
 | Function | Line | What it does |
 |---|--:|---|
 | [projectChatReady()](/code/functions/projectChatReady.md) | 66 | Have Database Verification's tables arrived? |
-| [projectChatThread()](/code/functions/projectChatThread.md) | 77 | The conversation this person has on this project (per the memory setting); created on first use when `$create`. |
-| [projectChatMessages()](/code/functions/projectChatMessages.md) | 92 | Every message of a thread, oldest first, shaped for the panel. |
-| [projectChatMaturity()](/code/functions/projectChatMaturity.md) | 110 | How far the project is set up - a checklist the prompt is built around, and the panel's suggestion chips. stage: 'blank' (a name and little else), 'early', 'running'. |
-| [projectChatSystem()](/code/functions/projectChatSystem.md) | 146 | The standing instructions, the set-up checklist, the memory and the project, for one turn. |
-| [projectChatTools()](/code/functions/projectChatTools.md) | 181 | The tools the model may call. Read tools run at once; propose_* tools only record a proposal. |
-| [projectChatRead()](/code/functions/projectChatRead.md) | 223 | Run a READ tool, as text. Never throws. |
-| [projectChatDescribe()](/code/functions/projectChatDescribe.md) | 282 | One line a person can read for a proposal (shown on the card). |
-| [projectChatTurn()](/code/functions/projectChatTurn.md) | 316 | One turn. `$mode`: 'chat' (the person wrote `$text`), 'open' (a greeting for an empty conversation) or 'resume' (a catch-up after a while). Stores the turn and returns the new messages. Throws RuntimeException for provider problems ('not_configured' when AI is not set up). |
-| [projectChatOpen()](/code/functions/projectChatOpen.md) | 405 | Open the panel: a greeting for an empty conversation, a catch-up after a while, or nothing. |
-| [projectChatSummarise()](/code/functions/projectChatSummarise.md) | 423 | The memory: once more than PROJECT_CHAT_SUMMARISE_AT messages are not yet in the summary, everything but the latest PROJECT_CHAT_RECENT is folded into it - what was decided, what the user told it about the project, what is still open. Quiet: a failure leaves the conversation exactly as it was. |
-| [projectChatApply()](/code/functions/projectChatApply.md) | 459 | Apply proposals of one assistant message - the indexes the person ticked - through the ordinary services, AS THEM. Stages before tasks, tasks before dependencies, so a proposal can name a stage or task proposed alongside it. Returns each item's result. |
-| [projectChatApplyOne()](/code/functions/projectChatApplyOne.md) | 491 | One proposal, through the service a person would have used. |
-| [projectChatClear()](/code/functions/projectChatClear.md) | 600 | Start again: the conversation and its memory go. A shared one needs somebody who may change the project. |
+| [projectChatThread()](/code/functions/projectChatThread.md) | 81 | The conversation this person has on this project (per the memory setting); created on first use when `$create`. |
+| [projectChatMessages()](/code/functions/projectChatMessages.md) | 100 | Every message of a thread, oldest first, shaped for the panel. |
+| [projectChatMaturity()](/code/functions/projectChatMaturity.md) | 120 | How far the project is set up - a checklist the prompt is built around, and the panel's suggestion chips. stage: 'blank' (a name and little else), 'early', 'running'. |
+| [projectChatSystem()](/code/functions/projectChatSystem.md) | 163 | The standing instructions, the set-up checklist, the memory and the project, for one turn. |
+| [projectChatTools()](/code/functions/projectChatTools.md) | 198 | The tools the model may call. Read tools run at once; propose_* tools only record a proposal. |
+| [projectChatRead()](/code/functions/projectChatRead.md) | 246 | Run a READ tool, as text. Never throws. |
+| [projectChatDescribe()](/code/functions/projectChatDescribe.md) | 310 | One line a person can read for a proposal (shown on the card). |
+| [projectChatTurn()](/code/functions/projectChatTurn.md) | 348 | One turn. `$mode`: 'chat' (the person wrote `$text`), 'open' (a greeting for an empty conversation) or 'resume' (a catch-up after a while). Stores the turn and returns the new messages. Throws RuntimeException for provider problems ('not_configured' when AI is not set up). |
+| [projectChatOpen()](/code/functions/projectChatOpen.md) | 441 | Open the panel: a greeting for an empty conversation, a catch-up after a while, or nothing. |
+| [projectChatSummarise()](/code/functions/projectChatSummarise.md) | 462 | The memory: once more than PROJECT_CHAT_SUMMARISE_AT messages are not yet in the summary, everything but the latest PROJECT_CHAT_RECENT is folded into it - what was decided, what the user told it about the project, what is still open. Quiet: a failure leaves the conversation exactly as it was. |
+| [projectChatApply()](/code/functions/projectChatApply.md) | 503 | Apply proposals of one assistant message - the indexes the person ticked - through the ordinary services, AS THEM. Stages before tasks, tasks before dependencies, so a proposal can name a stage or task proposed alongside it. Returns each item's result. |
+| [projectChatApplyOne()](/code/functions/projectChatApplyOne.md) | 541 | One proposal, through the service a person would have used. |
+| [projectChatClear()](/code/functions/projectChatClear.md) | 654 | Start again: the conversation and its memory go. A shared one needs somebody who may change the project. |
 
 ## Database
 
@@ -77,49 +77,49 @@ DATA inside <project_data>; the system prompt says so. Tool results are data too
 |--:|---|---|---|
 | 70 | `projectChatReady` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
 | 70 | `projectChatReady` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
-| 81 | `projectChatThread` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
-| 82 | `projectChatThread` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
-| 86 | `projectChatThread` | **insert** [project_ai_threads](/code/tables/project_ai_threads.md) (`project_id`, `analyst_id`, `created_datetime`, `updated_datetime`) |  |
-| 94 | `projectChatMessages` | read [project_ai_messages](/code/tables/project_ai_messages.md), read [analysts](/code/tables/analysts.md) |  |
-| 114 | `projectChatMaturity` | read [tasks](/code/tables/tasks.md) |  |
-| 115 | `projectChatMaturity` | read [tasks](/code/tables/tasks.md) |  |
-| 116 | `projectChatMaturity` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 117 | `projectChatMaturity` | read [project_stages](/code/tables/project_stages.md) |  |
-| 118 | `projectChatMaturity` | read [project_members](/code/tables/project_members.md) |  |
-| 119 | `projectChatMaturity` | read [tasks](/code/tables/tasks.md) |  |
-| 120 | `projectChatMaturity` | read [project_raid](/code/tables/project_raid.md) |  |
-| 121 | `projectChatMaturity` | read [project_raid](/code/tables/project_raid.md) |  |
-| 122 | `projectChatMaturity` | read [project_items](/code/tables/project_items.md) |  |
-| 123 | `projectChatMaturity` | read [project_milestones](/code/tables/project_milestones.md) |  |
-| 124 | `projectChatMaturity` | read [project_milestones](/code/tables/project_milestones.md) |  |
-| 125 | `projectChatMaturity` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
-| 148 | `projectChatSystem` | read [analysts](/code/tables/analysts.md) |  |
-| 231 | `projectChatRead` | read [suppliers](/code/tables/suppliers.md) |  |
-| 232 | `projectChatRead` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [project_stages](/code/tables/project_stages.md), read [analysts](/code/tables/analysts.md) |  |
-| 242 | `projectChatRead` | read [project_stages](/code/tables/project_stages.md) |  |
-| 248 | `projectChatRead` | read [project_raid](/code/tables/project_raid.md), read [analysts](/code/tables/analysts.md) |  |
-| 255 | `projectChatRead` | read [project_milestones](/code/tables/project_milestones.md), read [project_stages](/code/tables/project_stages.md) |  |
-| 270 | `projectChatRead` | read [analysts](/code/tables/analysts.md) |  |
-| 331 | `projectChatTurn` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
-| 360 | `projectChatTurn` | read [suppliers](/code/tables/suppliers.md) |  |
-| 363 | `projectChatTurn` | read [contacts](/code/tables/contacts.md) |  |
-| 368 | `projectChatTurn` | read [tasks](/code/tables/tasks.md) |  |
-| 376 | `projectChatTurn` | read [tasks](/code/tables/tasks.md) |  |
-| 376 | `projectChatTurn` | read [analysts](/code/tables/analysts.md) |  |
-| 394 | `projectChatTurn` | **insert** [project_ai_messages](/code/tables/project_ai_messages.md) (`thread_id`, `role`, `kind`, `content`, `proposals`, `looked_at`, `analyst_id`, `model`, `tokens_in`, `tokens_out`, `created_datetime`) |  |
-| 399 | `projectChatTurn` | **update** [project_ai_threads](/code/tables/project_ai_threads.md) (`updated_datetime`) |  |
-| 409 | `projectChatOpen` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
-| 426 | `projectChatSummarise` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
-| 430 | `projectChatSummarise` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
-| 448 | `projectChatSummarise` | **update** [project_ai_threads](/code/tables/project_ai_threads.md) (`summary`, `summary_upto_id`) |  |
-| 464 | `projectChatApply` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
-| 486 | `projectChatApply` | **update** [project_ai_messages](/code/tables/project_ai_messages.md) (`proposals`) |  |
-| 496 | `projectChatApplyOne` | read [project_stages](/code/tables/project_stages.md) |  |
-| 500 | `projectChatApplyOne` | read [project_stages](/code/tables/project_stages.md) |  |
-| 507 | `projectChatApplyOne` | read [tasks](/code/tables/tasks.md) |  |
-| 511 | `projectChatApplyOne` | read [tasks](/code/tables/tasks.md) |  |
-| 587 | `projectChatApplyOne` | read [project_roles](/code/tables/project_roles.md) |  |
-| 607 | `projectChatClear` | **delete** [project_ai_threads](/code/tables/project_ai_threads.md) |  |
+| 85 | `projectChatThread` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
+| 86 | `projectChatThread` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
+| 90 | `projectChatThread` | **insert** [project_ai_threads](/code/tables/project_ai_threads.md) (`project_id`, `analyst_id`, `created_datetime`, `updated_datetime`) |  |
+| 102 | `projectChatMessages` | read [project_ai_messages](/code/tables/project_ai_messages.md), read [analysts](/code/tables/analysts.md) |  |
+| 124 | `projectChatMaturity` | read [tasks](/code/tables/tasks.md) |  |
+| 125 | `projectChatMaturity` | read [tasks](/code/tables/tasks.md) |  |
+| 126 | `projectChatMaturity` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 127 | `projectChatMaturity` | read [project_stages](/code/tables/project_stages.md) |  |
+| 128 | `projectChatMaturity` | read [project_members](/code/tables/project_members.md) |  |
+| 129 | `projectChatMaturity` | read [tasks](/code/tables/tasks.md) |  |
+| 130 | `projectChatMaturity` | read [project_raid](/code/tables/project_raid.md) |  |
+| 131 | `projectChatMaturity` | read [project_raid](/code/tables/project_raid.md) |  |
+| 132 | `projectChatMaturity` | read [project_items](/code/tables/project_items.md) |  |
+| 133 | `projectChatMaturity` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 134 | `projectChatMaturity` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 135 | `projectChatMaturity` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
+| 165 | `projectChatSystem` | read [analysts](/code/tables/analysts.md) |  |
+| 254 | `projectChatRead` | read [suppliers](/code/tables/suppliers.md) |  |
+| 255 | `projectChatRead` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [project_stages](/code/tables/project_stages.md), read [analysts](/code/tables/analysts.md) |  |
+| 265 | `projectChatRead` | read [project_stages](/code/tables/project_stages.md) |  |
+| 271 | `projectChatRead` | read [project_raid](/code/tables/project_raid.md), read [analysts](/code/tables/analysts.md) |  |
+| 278 | `projectChatRead` | read [project_milestones](/code/tables/project_milestones.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 293 | `projectChatRead` | read [analysts](/code/tables/analysts.md) |  |
+| 363 | `projectChatTurn` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
+| 392 | `projectChatTurn` | read [suppliers](/code/tables/suppliers.md) |  |
+| 395 | `projectChatTurn` | read [contacts](/code/tables/contacts.md) |  |
+| 400 | `projectChatTurn` | read [tasks](/code/tables/tasks.md) |  |
+| 408 | `projectChatTurn` | read [tasks](/code/tables/tasks.md) |  |
+| 408 | `projectChatTurn` | read [analysts](/code/tables/analysts.md) |  |
+| 426 | `projectChatTurn` | **insert** [project_ai_messages](/code/tables/project_ai_messages.md) (`thread_id`, `role`, `kind`, `content`, `proposals`, `looked_at`, `analyst_id`, `model`, `tokens_in`, `tokens_out`, `created_datetime`) |  |
+| 431 | `projectChatTurn` | **update** [project_ai_threads](/code/tables/project_ai_threads.md) (`updated_datetime`) |  |
+| 445 | `projectChatOpen` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
+| 465 | `projectChatSummarise` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
+| 469 | `projectChatSummarise` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
+| 487 | `projectChatSummarise` | **update** [project_ai_threads](/code/tables/project_ai_threads.md) (`summary`, `summary_upto_id`) |  |
+| 508 | `projectChatApply` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
+| 530 | `projectChatApply` | **update** [project_ai_messages](/code/tables/project_ai_messages.md) (`proposals`) |  |
+| 546 | `projectChatApplyOne` | read [project_stages](/code/tables/project_stages.md) |  |
+| 550 | `projectChatApplyOne` | read [project_stages](/code/tables/project_stages.md) |  |
+| 557 | `projectChatApplyOne` | read [tasks](/code/tables/tasks.md) |  |
+| 561 | `projectChatApplyOne` | read [tasks](/code/tables/tasks.md) |  |
+| 637 | `projectChatApplyOne` | read [project_roles](/code/tables/project_roles.md) |  |
+| 661 | `projectChatClear` | **delete** [project_ai_threads](/code/tables/project_ai_threads.md) |  |
 
 ## How it hangs together
 

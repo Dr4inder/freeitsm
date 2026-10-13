@@ -13,14 +13,14 @@ log table on every article read, is not worth that.
 function knowledgeAuditView(PDO $conn, int $articleId, ?int $analyst, ?int $user = null): void
 ```
 
-Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.php.md), line 83.
+Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.php.md), line 87.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$articleId` | `int` |  |  |
-| `$analyst` | `?int` |  |  |
-| `$user` | `?int` | `null` |  |
+| `$articleId` | `int` |  | the knowledge article read; 0 or less records nothing |
+| `$analyst` | `?int` |  | the analyst who read it, or null for a portal reader |
+| `$user` | `?int` | `null` | the portal user who read it, or null for an analyst; both null records nothing |
 
 **Returns:** `void`
 
@@ -28,7 +28,7 @@ Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 88 | `knowledgeAuditView` | read [knowledge_audit](/code/tables/knowledge_audit.md) |  |
+| 92 | `knowledgeAuditView` | read [knowledge_audit](/code/tables/knowledge_audit.md) |  |
 
 ## Calls
 

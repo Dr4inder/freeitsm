@@ -6,7 +6,7 @@ POST /assets/{id}/assignments - assigns a person to the asset through AssetsServ
 function apiAssetAssignmentsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 430.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 441.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

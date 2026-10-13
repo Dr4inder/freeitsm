@@ -43,6 +43,8 @@ function domainPartiesReady(PDO $conn): bool
  * May $userId be the customer of a domain in company $tenantId? An active user
  * in that company; on a single-company install, any active user. A user with no
  * company counts as the Default company's, as everywhere else.
+ *
+ * @param int $userId  the users.id proposed as the customer contact
  */
 function domainCustomerPersonOk(PDO $conn, int $userId, ?int $tenantId): bool
 {
@@ -60,6 +62,10 @@ function domainCustomerPersonOk(PDO $conn, int $userId, ?int $tenantId): bool
 /**
  * Suppliers and supplier contacts matching $q, for the same picker (#162).
  * A contact carries its supplier, so choosing one sets both.
+ *
+ * @param string $q      what the user typed; matched anywhere in supplier names, contact names and e-mails
+ * @param int    $limit  most suppliers, and separately most contacts, to return
+ *
  * @return array<int,array{kind:string,id:int,name:string,email:?string,supplier_id:?int,supplier:?string}>
  */
 function domainCustomerSupplierSearch(PDO $conn, string $q, int $limit = 15): array
@@ -88,6 +94,10 @@ function domainCustomerSupplierSearch(PDO $conn, string $q, int $limit = 15): ar
 
 /**
  * People who could be the customer of a domain in company $tenantId, matching $q.
+ *
+ * @param string $q      what the user typed; matched anywhere in display name, preferred name and e-mail
+ * @param int    $limit  most people to return
+ *
  * @return array<int,array{id:int,name:string,email:?string}>
  */
 function domainCustomerSearch(PDO $conn, ?int $tenantId, string $q, int $limit = 25): array

@@ -1,6 +1,6 @@
 # includes/sso_claims.php
 
-> PHP - 262 lines
+> PHP - 304 lines
 
 SSO groups (3.5.0, proposed in PR #174) - the OIDC twin of LDAP's analyst group, plus team membership that follows the identity provider.
 
@@ -37,17 +37,17 @@ a fix LDAP's `ldapInGroup()` gets too.
 |---|--:|---|
 | [ssoClaimsReady()](/code/functions/ssoClaimsReady.md) | 37 | True once Database Verification has added the columns and tables. |
 | [ssoCommonGroupClaims()](/code/functions/ssoCommonGroupClaims.md) | 50 | The claims offered in the dropdown; anything else is "Other". |
-| [ssoClaimValues()](/code/functions/ssoClaimValues.md) | 62 | The values of claim `$path` as a list of strings. A dotted path walks nested objects ("realm_access.roles"); a claim whose own name has dots (a URL) is matched whole first. An array gives its scalar members; a string gives itself. Works on the decoded ID token (nested parts are stdClass) and on userinfo. |
-| [ssoSameGroup()](/code/functions/ssoSameGroup.md) | 91 | The same group, ignoring case in any alphabet and stray spaces. |
-| [ssoInGroup()](/code/functions/ssoInGroup.md) | 98 | Is `$wanted` among `$groups`? |
-| [ssoTeamMappings()](/code/functions/ssoTeamMappings.md) | 107 | A provider's group -> team rows, with the team names. |
-| [ssoSaveTeamMappings()](/code/functions/ssoSaveTeamMappings.md) | 122 | Replace a provider's group -> team rows. `$rows`: [['group' => .., 'team_id' => ..]]. Blank rows are skipped; an unknown team is refused (ServiceError). |
-| [ssoSeenGroups()](/code/functions/ssoSeenGroups.md) | 144 | Groups this provider has sent: [['group' => code, 'label' => name\|null, 'last_seen' => datetime]], named ones first, then most recently seen. |
-| [ssoSaveGroupLabels()](/code/functions/ssoSaveGroupLabels.md) | 158 | Name the groups a provider has sent. `$labels`: [['group' => code, 'label' => name]]. Only groups it has actually sent can be named; a blank name clears it. |
-| [ssoGroupDisplay()](/code/functions/ssoGroupDisplay.md) | 170 | A group's name if it has one, else the code - for messages and the last-sign-in line. |
-| [ssoRememberGroups()](/code/functions/ssoRememberGroups.md) | 182 | Record what a sign-in sent: the last sign-in line on the provider, and each group in sso_groups_seen for the dropdowns. Best effort - never fails a sign-in. |
-| [ssoApplyGroupAccess()](/code/functions/ssoApplyGroupAccess.md) | 199 | At an analyst sign-in: admin from the admin group, team membership from the mappings. Returns what changed, for the log and the tests: ['admin' => true\|false\|null, 'added' => [team ids], 'removed' => [team ids]] |
-| [ssoJitStartForTeams()](/code/functions/ssoJitStartForTeams.md) | 253 | When a provider maps groups to teams, the analysts it CREATES get their modules from those teams - so, unless the provider names default modules, they start with no modules of their own (the account would otherwise have every module, and the teams could add nothing to that). Called by `oidcCreateAnalyst()` right after the insert. |
+| [ssoClaimValues()](/code/functions/ssoClaimValues.md) | 65 | The values of claim `$path` as a list of strings. A dotted path walks nested objects ("realm_access.roles"); a claim whose own name has dots (a URL) is matched whole first. An array gives its scalar members; a string gives itself. Works on the decoded ID token (nested parts are stdClass) and on userinfo. |
+| [ssoSameGroup()](/code/functions/ssoSameGroup.md) | 99 | The same group, ignoring case in any alphabet and stray spaces. |
+| [ssoInGroup()](/code/functions/ssoInGroup.md) | 111 | Is `$wanted` among `$groups`? |
+| [ssoTeamMappings()](/code/functions/ssoTeamMappings.md) | 124 | A provider's group -> team rows, with the team names. |
+| [ssoSaveTeamMappings()](/code/functions/ssoSaveTeamMappings.md) | 142 | Replace a provider's group -> team rows. `$rows`: [['group' => .., 'team_id' => ..]]. Blank rows are skipped; an unknown team is refused (ServiceError). |
+| [ssoSeenGroups()](/code/functions/ssoSeenGroups.md) | 166 | Groups this provider has sent: [['group' => code, 'label' => name\|null, 'last_seen' => datetime]], named ones first, then most recently seen. |
+| [ssoSaveGroupLabels()](/code/functions/ssoSaveGroupLabels.md) | 183 | Name the groups a provider has sent. `$labels`: [['group' => code, 'label' => name]]. Only groups it has actually sent can be named; a blank name clears it. |
+| [ssoGroupDisplay()](/code/functions/ssoGroupDisplay.md) | 200 | A group's name if it has one, else the code - for messages and the last-sign-in line. |
+| [ssoRememberGroups()](/code/functions/ssoRememberGroups.md) | 216 | Record what a sign-in sent: the last sign-in line on the provider, and each group in sso_groups_seen for the dropdowns. Best effort - never fails a sign-in. |
+| [ssoApplyGroupAccess()](/code/functions/ssoApplyGroupAccess.md) | 237 | At an analyst sign-in: admin from the admin group, team membership from the mappings. Returns what changed, for the log and the tests: ['admin' => true\|false\|null, 'added' => [team ids], 'removed' => [team ids]] |
+| [ssoJitStartForTeams()](/code/functions/ssoJitStartForTeams.md) | 295 | When a provider maps groups to teams, the analysts it CREATES get their modules from those teams - so, unless the provider names default modules, they start with no modules of their own (the account would otherwise have every module, and the teams could add nothing to that). Called by `oidcCreateAnalyst()` right after the insert. |
 
 ## Database
 
@@ -56,19 +56,19 @@ a fix LDAP's `ldapInGroup()` gets too.
 | 42 | `ssoClaimsReady` | read [auth_providers](/code/tables/auth_providers.md) |  |
 | 43 | `ssoClaimsReady` | read [sso_group_teams](/code/tables/sso_group_teams.md) |  |
 | 44 | `ssoClaimsReady` | read [sso_groups_seen](/code/tables/sso_groups_seen.md) |  |
-| 110 | `ssoTeamMappings` | read [sso_group_teams](/code/tables/sso_group_teams.md), read [teams](/code/tables/teams.md) |  |
-| 125 | `ssoSaveTeamMappings` | read [teams](/code/tables/teams.md) |  |
-| 135 | `ssoSaveTeamMappings` | **delete** [sso_group_teams](/code/tables/sso_group_teams.md) |  |
-| 136 | `ssoSaveTeamMappings` | **insert** [sso_group_teams](/code/tables/sso_group_teams.md) (`provider_id`, `group_name`, `team_id`) |  |
-| 147 | `ssoSeenGroups` | read [sso_groups_seen](/code/tables/sso_groups_seen.md) |  |
-| 160 | `ssoSaveGroupLabels` | **update** [sso_groups_seen](/code/tables/sso_groups_seen.md) (`label`) |  |
-| 185 | `ssoRememberGroups` | **update** [auth_providers](/code/tables/auth_providers.md) (`oidc_groups_last_seen`) |  |
-| 187 | `ssoRememberGroups` | **insert** [sso_groups_seen](/code/tables/sso_groups_seen.md) (`provider_id`, `group_name`, `first_seen_datetime`, `last_seen_datetime`) |  |
-| 213 | `ssoApplyGroupAccess` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 216 | `ssoApplyGroupAccess` | **insert** [analyst_teams](/code/tables/analyst_teams.md) (`analyst_id`, `team_id`, `created_datetime`) |  |
-| 217 | `ssoApplyGroupAccess` | **delete** [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 256 | `ssoJitStartForTeams` | read [sso_group_teams](/code/tables/sso_group_teams.md) |  |
-| 259 | `ssoJitStartForTeams` | **update** [analysts](/code/tables/analysts.md) (`can_access_all_modules`) |  |
+| 127 | `ssoTeamMappings` | read [sso_group_teams](/code/tables/sso_group_teams.md), read [teams](/code/tables/teams.md) |  |
+| 145 | `ssoSaveTeamMappings` | read [teams](/code/tables/teams.md) |  |
+| 155 | `ssoSaveTeamMappings` | **delete** [sso_group_teams](/code/tables/sso_group_teams.md) |  |
+| 156 | `ssoSaveTeamMappings` | **insert** [sso_group_teams](/code/tables/sso_group_teams.md) (`provider_id`, `group_name`, `team_id`) |  |
+| 169 | `ssoSeenGroups` | read [sso_groups_seen](/code/tables/sso_groups_seen.md) |  |
+| 185 | `ssoSaveGroupLabels` | **update** [sso_groups_seen](/code/tables/sso_groups_seen.md) (`label`) |  |
+| 219 | `ssoRememberGroups` | **update** [auth_providers](/code/tables/auth_providers.md) (`oidc_groups_last_seen`) |  |
+| 221 | `ssoRememberGroups` | **insert** [sso_groups_seen](/code/tables/sso_groups_seen.md) (`provider_id`, `group_name`, `first_seen_datetime`, `last_seen_datetime`) |  |
+| 251 | `ssoApplyGroupAccess` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 254 | `ssoApplyGroupAccess` | **insert** [analyst_teams](/code/tables/analyst_teams.md) (`analyst_id`, `team_id`, `created_datetime`) |  |
+| 255 | `ssoApplyGroupAccess` | **delete** [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 298 | `ssoJitStartForTeams` | read [sso_group_teams](/code/tables/sso_group_teams.md) |  |
+| 301 | `ssoJitStartForTeams` | **update** [analysts](/code/tables/analysts.md) (`can_access_all_modules`) |  |
 
 ## How it hangs together
 

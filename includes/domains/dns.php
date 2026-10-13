@@ -28,6 +28,10 @@ require_once __DIR__ . '/lookup.php';   // domainHttpGet()
  * elsewhere; DS, DNSKEY and an unsupported CAA always go over DoH, and a failed
  * system lookup is retried over DoH.
  *
+ * @param string $name      the DNS name to ask about, e.g. 'example.com' or '_dmarc.example.com'
+ * @param string $type      record type - A, AAAA, NS, CNAME, MX, TXT, CAA, DS or DNSKEY (any case)
+ * @param string $resolver  auto | system | google | cloudflare (the domain_dns_resolver setting); '' means auto
+ *
  * @return array{ok:bool, nxdomain:bool, records:array, error:?string}
  *   records: A/AAAA → list of IPs; NS/CNAME → host names; MX → [[pri, host]];
  *   TXT → strings; CAA → [[flags, tag, value]]; DS → [string] (presence is what matters)
@@ -60,6 +64,9 @@ function domainDns(string $name, string $type, string $resolver = 'system'): arr
 
 /**
  * Answers a DNS question with PHP's dns_get_record() (A, AAAA, MX, TXT, NS, CNAME and CAA where PHP has it), normalised and sorted.
+ *
+ * @param string $name  the DNS name to ask about
+ * @param string $type  record type in upper case; one PHP cannot ask for gives ok false
  */
 function domainDnsSystem(string $name, string $type): array
 {
@@ -87,6 +94,10 @@ function domainDnsSystem(string $name, string $type): array
 
 /**
  * Answers a DNS question over DNS-over-HTTPS JSON from Google or Cloudflare, normalised and sorted; NXDOMAIN comes back as ok with nxdomain true.
+ *
+ * @param string $name      the DNS name to ask about
+ * @param string $type      record type in upper case
+ * @param string $provider  'cloudflare' for Cloudflare; anything else asks Google
  */
 function domainDnsDoh(string $name, string $type, string $provider): array
 {
@@ -132,6 +143,9 @@ function domainDnsDoh(string $name, string $type, string $provider): array
 
 /**
  * Puts records in a stable order so answers compare equal - MX by priority then host, CAA as given, everything else de-duplicated and sorted.
+ *
+ * @param string $type  record type in upper case - decides how the records are ordered
+ * @param array  $recs  the normalised records, in the shape domainDns() describes for that type
  */
 function domainDnsSort(string $type, array $recs): array
 {
@@ -145,7 +159,13 @@ function domainDnsSort(string $type, array $recs): array
     return $recs;
 }
 
-/** The TXT records at $name that start with $prefix (case-insensitive), e.g. "v=spf1". */
+/**
+ * The TXT records at $name that start with $prefix (case-insensitive), e.g. "v=spf1".
+ *
+ * @param string $name      the DNS name whose TXT records to read
+ * @param string $prefix    the start to match, ignoring case and leading spaces, e.g. 'v=spf1'
+ * @param string $resolver  auto | system | google | cloudflare, as for domainDns()
+ */
 function domainTxtStartingWith(string $name, string $prefix, string $resolver): array
 {
     $r = domainDns($name, 'TXT', $resolver);

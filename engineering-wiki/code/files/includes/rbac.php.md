@@ -1,6 +1,6 @@
 # includes/rbac.php
 
-> PHP - 148 lines
+> PHP - 154 lines
 
 RBAC Layer 2 — per-module SETTINGS permissions.
 
@@ -27,9 +27,9 @@ the source of truth, the tables only reference it.
 | Function | Line | What it does |
 |---|--:|---|
 | [getAnalystCapabilities()](/code/functions/getAnalystCapabilities.md) | 51 | Every capability an analyst effectively holds, as a flat list of keys. |
-| [analystHasCapability()](/code/functions/analystHasCapability.md) | 94 | Does this analyst hold a capability? Authoritative (DB-checked). is_admin is always true. Use this for server-side enforcement. |
-| [requireCapability()](/code/functions/requireCapability.md) | 107 | Page gate: bounce an analyst who lacks `$capability` back to the launcher, so a settings URL can't simply be typed. Authoritative (DB-checked), fails closed. Call after functions.php is loaded and the login check. Pair with (or place after) `requireModuleAccess()` — Layer 1 gets you into the module, this decides whether you may configure it. |
-| [requireCapabilityJson()](/code/functions/requireCapabilityJson.md) | 128 | Hard gate for a settings JSON write API: refuse a lacking analyst with 403. The API twin of `requireCapability()`. Call right after connecting. |
+| [analystHasCapability()](/code/functions/analystHasCapability.md) | 96 | Does this analyst hold a capability? Authoritative (DB-checked). is_admin is always true. Use this for server-side enforcement. |
+| [requireCapability()](/code/functions/requireCapability.md) | 111 | Page gate: bounce an analyst who lacks `$capability` back to the launcher, so a settings URL can't simply be typed. Authoritative (DB-checked), fails closed. Call after functions.php is loaded and the login check. Pair with (or place after) `requireModuleAccess()` — Layer 1 gets you into the module, this decides whether you may configure it. |
+| [requireCapabilityJson()](/code/functions/requireCapabilityJson.md) | 134 | Hard gate for a settings JSON write API: refuse a lacking analyst with 403. The API twin of `requireCapability()`. Call right after connecting. |
 
 ## Database
 

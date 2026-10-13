@@ -39,7 +39,11 @@ const FILES_VIEW_INLINE_TYPES = [
     'pdf' => 'application/pdf',
 ];
 
-/** Which viewer draws a file, by extension. Anything else gets "no preview". */
+/**
+ * Which viewer draws a file, by extension. Anything else gets "no preview".
+ *
+ * @param string $name  the file name; only its extension is looked at, case-insensitively
+ */
 function filesViewKind(string $name): string
 {
     $ext = strtolower((string)pathinfo($name, PATHINFO_EXTENSION));

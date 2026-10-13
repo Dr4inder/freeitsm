@@ -11,14 +11,14 @@ function getOrCreateChannelUser(
 ): ?int
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 887.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 950.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$from` | `string` |  |  |
-| `$displayName` | `string` |  |  |
-| `$channelType` | `string` |  |  |
+| `$from` | `string` |  | the normalised sender id; becomes the local part of the placeholder email |
+| `$displayName` | `string` |  | the name for a new user; '' uses `$from`. An existing user's name is not changed |
+| `$channelType` | `string` |  | the channel type; becomes the placeholder email's domain ('<type>.local') |
 
 **Returns:** `?int`
 
@@ -26,8 +26,8 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 895 | `getOrCreateChannelUser` | read [users](/code/tables/users.md) |  |
-| 901 | `getOrCreateChannelUser` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
+| 958 | `getOrCreateChannelUser` | read [users](/code/tables/users.md) |  |
+| 964 | `getOrCreateChannelUser` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
 
 ## Called from
 

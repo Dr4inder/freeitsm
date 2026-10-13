@@ -6,7 +6,7 @@ GET /workflow-triggers — every trigger with its condition fields, each field's
 function apiWorkflowTriggersList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 409.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 437.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

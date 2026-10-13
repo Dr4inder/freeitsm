@@ -6,7 +6,7 @@ GET /change-statuses - the change statuses, with is_closed.
 function apiChangeStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 508.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 520.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,13 +6,13 @@ Open a section: the hairline, the number badge, the heading and its lead.
 function helpSection(string $id, string $heading, string $lead = ''): void
 ```
 
-Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 48.
+Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 58.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$id` | `string` |  |  |
-| `$heading` | `string` |  |  |
-| `$lead` | `string` | `''` |  |
+| `$id` | `string` |  | the section's key in the topic registry, also used as the HTML id (escaped) |
+| `$heading` | `string` |  | the heading text, plain (escaped) |
+| `$lead` | `string` | `''` | the introductory paragraph as trusted HTML (not escaped); '' for none |
 
 **Returns:** `void`
 

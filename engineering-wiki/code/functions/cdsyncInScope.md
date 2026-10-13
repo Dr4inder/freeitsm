@@ -6,12 +6,12 @@ Is this mapped person inside the resolved scope?
 function cdsyncInScope(?array $resolved, array $p): bool
 ```
 
-Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 314.
+Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 331.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$resolved` | `?array` |  |  |
-| `$p` | `array` |  |  |
+| `$resolved` | `?array` |  | the result of `cdsyncResolveScope()`; null means everything is in scope |
+| `$p` | `array` |  | one person as `cdsyncMapCard()` returns it - 'guid' and 'email' are read |
 
 **Returns:** `bool`
 

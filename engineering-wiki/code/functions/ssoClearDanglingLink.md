@@ -29,14 +29,14 @@ never comes from request input.
 function ssoClearDanglingLink(PDO $conn, string $table, int $providerId, string $sub): void
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 40.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$providerId` | `int` |  |  |
-| `$sub` | `string` |  |  |
+| `$table` | `string` |  | 'analyst_sso_identities' or 'user_sso_identities' - a developer literal; anything else throws |
+| `$providerId` | `int` |  | the sign-in provider (auth_providers.id) |
+| `$sub` | `string` |  | the subject (sub claim) the provider sent for this person |
 
 **Returns:** `void`
 

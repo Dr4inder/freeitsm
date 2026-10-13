@@ -6,7 +6,7 @@ Reference: relationship types
 function apiCmdbRelationshipTypesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 579.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 590.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 581 | `apiCmdbRelationshipTypesList` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
+| 592 | `apiCmdbRelationshipTypesList` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
 
 ## Calls
 

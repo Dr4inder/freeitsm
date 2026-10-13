@@ -6,11 +6,11 @@ Formats a byte count as megabytes for messages - whole numbers without a decimal
 function oversizeMbWords(int $bytes): string
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 191.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 214.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bytes` | `int` |  |  |
+| `$bytes` | `int` |  | the size in bytes |
 
 **Returns:** `string`
 

@@ -6,11 +6,11 @@ A department name normalised for matching: spaces collapsed, trimmed and lower c
 function rpNormDept($s): string
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 57.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | a department name as typed or stored; null gives '' |
 
 **Returns:** `string`
 

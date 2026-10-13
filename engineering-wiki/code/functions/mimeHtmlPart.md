@@ -6,11 +6,11 @@ The HTML body as a [headers, content] entity.
 function mimeHtmlPart(string $html): array
 ```
 
-Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 100.
+Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$html` | `string` |  |  |
+| `$html` | `string` |  | the message body as HTML |
 
 **Returns:** `array`
 

@@ -1,6 +1,6 @@
 # api/system/debug-tools/D012_ticket_attachments.php
 
-> API endpoint - 1153 lines
+> API endpoint - 1176 lines
 
 Debug Tool D012 — Ticket attachments, end to end.
 
@@ -68,26 +68,26 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 75 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
-| [bool_str()](/code/functions/bool_str.md) | 80 | Formats a boolean as YES or NO for the report. |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 86 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
-| [d012_bytes()](/code/functions/d012_bytes.md) | 96 | Human-readable byte count. Sizes here are read by people, not parsed. |
-| [d012_trim()](/code/functions/d012_trim.md) | 106 | Mask nothing, but keep a runaway value from swamping the report. |
-| [d012_whyMissing()](/code/functions/d012_whyMissing.md) | 134 | WHY `is_file()` SAID NO. |
+| [addSection()](/code/functions/addSection.md) | 79 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [bool_str()](/code/functions/bool_str.md) | 88 | Formats a boolean as YES or NO for the report. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 96 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [d012_bytes()](/code/functions/d012_bytes.md) | 110 | Human-readable byte count. Sizes here are read by people, not parsed. |
+| [d012_trim()](/code/functions/d012_trim.md) | 125 | Mask nothing, but keep a runaway value from swamping the report. |
+| [d012_whyMissing()](/code/functions/d012_whyMissing.md) | 157 | WHY `is_file()` SAID NO. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 311 |  | read [tickets](/code/tables/tickets.md) |  |
-| 315 |  | read [tickets](/code/tables/tickets.md) |  |
-| 450 |  | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md) |  |
-| 484 |  | read [document_links](/code/tables/document_links.md), read [documents](/code/tables/documents.md), read [ticket_notes](/code/tables/ticket_notes.md) |  |
-| 553 |  | read [ticket_recordings](/code/tables/ticket_recordings.md) |  |
-| 836 |  | read [analysts](/code/tables/analysts.md) |  |
-| 928 |  | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md), read [ticket_notes](/code/tables/ticket_notes.md) |  |
-| 958 |  | read [tickets](/code/tables/tickets.md) |  |
-| 970 |  | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md), read [ticket_notes](/code/tables/ticket_notes.md), read [tickets](/code/tables/tickets.md) |  |
+| 334 |  | read [tickets](/code/tables/tickets.md) |  |
+| 338 |  | read [tickets](/code/tables/tickets.md) |  |
+| 473 |  | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md) |  |
+| 507 |  | read [document_links](/code/tables/document_links.md), read [documents](/code/tables/documents.md), read [ticket_notes](/code/tables/ticket_notes.md) |  |
+| 576 |  | read [ticket_recordings](/code/tables/ticket_recordings.md) |  |
+| 859 |  | read [analysts](/code/tables/analysts.md) |  |
+| 951 |  | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md), read [ticket_notes](/code/tables/ticket_notes.md) |  |
+| 981 |  | read [tickets](/code/tables/tickets.md) |  |
+| 993 |  | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md), read [ticket_notes](/code/tables/ticket_notes.md), read [tickets](/code/tables/tickets.md) |  |
 
 ## How it hangs together
 

@@ -6,7 +6,7 @@ The instruction given to the AI for a project's Monday briefing - a few short bu
 function projectAiBriefingTask(): string
 ```
 
-Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 365.
+Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 372.
 
 **Returns:** `string`
 

@@ -6,12 +6,12 @@ Helper: get int/bigint value or null
 function intOrNull($data, $key)
 ```
 
-Defined in [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md), line 111.
+Defined in [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$data` |  |  |  |
-| `$key` |  |  |  |
+| `$data` |  |  | one section of the agent's decoded JSON report (untrusted) |
+| `$key` |  |  | the field to read; anything not numeric comes back as null |
 
 ## Called from
 

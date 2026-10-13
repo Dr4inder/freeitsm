@@ -20,14 +20,14 @@ function documentSearchVisibilityClause(
 ): array
 ```
 
-Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 267.
+Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 284.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$allowedModules` | `?array` |  |  |
-| `$alias` | `string` | `'sd'` |  |
+| `$allowedModules` | `?array` |  | the analyst's allowed module keys (`$_SESSION`['allowed_modules']); null means all |
+| `$alias` | `string` | `'sd'` | the alias the search query gives the search_documents table |
 
 **Returns:** array [sqlFragment, params]
 
@@ -35,7 +35,7 @@ Defined in [includes/search/documents_index.php](/code/files/includes/search/doc
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 276 | `documentSearchVisibilityClause` | read [documents](/code/tables/documents.md) |  |
+| 293 | `documentSearchVisibilityClause` | read [documents](/code/tables/documents.md) |  |
 
 ## Calls
 

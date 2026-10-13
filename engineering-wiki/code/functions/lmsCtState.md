@@ -6,12 +6,12 @@ Where a sitting stands: cancelled | submitted | expired (never started, link out
 function lmsCtState(array $s, ?int $now = null): string
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 297.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 356.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
-| `$now` | `?int` | `null` |  |
+| `$s` | `array` |  | an lms_ct_sittings row |
+| `$now` | `?int` | `null` | the time to judge against, as a Unix timestamp; null for now |
 
 **Returns:** `string`
 

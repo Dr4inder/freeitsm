@@ -6,7 +6,7 @@ The project statuses that count as finished: closed and cancelled.
 function projectFinishedStatuses(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 114.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 122.
 
 **Returns:** `array`
 

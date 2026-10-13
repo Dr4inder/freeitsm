@@ -22,16 +22,16 @@ Search corpus — one row per searchable unit (ticket subject, email body, note,
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/search/backfill.php](/code/files/includes/search/backfill.php.md):159 | `searchBackfillPrune` | delete |  |  |
-| [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):101 | `searchCorpusUpsert` | insert | `source_type`, `source_id`, `ticket_id`, `tenant_id`, `tenant_scope`, `is_internal`, `title`, `body`, `source_datetime`, `indexed_datetime` |  |
-| [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):130 | `searchCorpusDelete` | delete |  |  |
-| [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):136 | `searchCorpusDeleteTicket` | delete |  |  |
+| [includes/search/backfill.php](/code/files/includes/search/backfill.php.md):160 | `searchBackfillPrune` | delete |  |  |
+| [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):104 | `searchCorpusUpsert` | insert | `source_type`, `source_id`, `ticket_id`, `tenant_id`, `tenant_scope`, `is_internal`, `title`, `body`, `source_datetime`, `indexed_datetime` |  |
+| [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):138 | `searchCorpusDelete` | delete |  |  |
+| [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):144 | `searchCorpusDeleteTicket` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/system/search_status.php](/code/files/api/system/search_status.php.md) | L46, L61, L63 |  |
-| [includes/search/corpus.php](/code/files/includes/search/corpus.php.md) | searchCorpusReady L144 |  |
-| [includes/search/search.php](/code/files/includes/search/search.php.md) | searchCorpusQuery L286, searchCorpusQuery L293, searchCorpusQuery L308 |  |
+| [includes/search/corpus.php](/code/files/includes/search/corpus.php.md) | searchCorpusReady L152 |  |
+| [includes/search/search.php](/code/files/includes/search/search.php.md) | searchCorpusQuery L294, searchCorpusQuery L301, searchCorpusQuery L316 |  |
 

@@ -6,12 +6,12 @@ Calculate cosine similarity between two vectors
 function cosineSimilarity($vec1, $vec2)
 ```
 
-Defined in [api/knowledge/ai_chat.php](/code/files/api/knowledge/ai_chat.php.md), line 56.
+Defined in [api/knowledge/ai_chat.php](/code/files/api/knowledge/ai_chat.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$vec1` |  |  |  |
-| `$vec2` |  |  |  |
+| `$vec1` |  |  | an embedding, as a list of floats |
+| `$vec2` |  |  | another embedding; only the length both share is compared |
 
 ## Called from
 

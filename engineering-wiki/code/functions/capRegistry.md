@@ -11,7 +11,7 @@ nothing — they are not administration and there is nothing to grant.
 function capRegistry(): array
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 360.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 364.
 
 **Returns:** array<string,array{module:string,umbrella:bool,sensitive:bool,label:string}>
 

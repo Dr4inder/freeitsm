@@ -17,14 +17,14 @@ function resolveSnoozeUntil(
 ): string
 ```
 
-Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 151.
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 156.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$preset` | `string` |  | three_hours \| tonight \| tomorrow \| next_week \| custom |
 | `$customLocal` | `?string` |  | 'Y-m-d H:i' in the analyst's zone, required when `$preset` is custom |
-| `$localZone` | `string` |  |  |
+| `$localZone` | `string` |  | the analyst's display time zone name (Tz::current()), e.g. 'Europe/London' |
 
 **Returns:** string UTC datetime, 'Y-m-d H:i:s'
 

@@ -9,11 +9,11 @@ A DN carries a person's name in its leading component and the directory's shape 
 function maskDn($s)
 ```
 
-Defined in [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md), line 94.
+Defined in [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md), line 110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | an LDAP distinguished name; empty gives (not set) |
 
 ## Calls
 

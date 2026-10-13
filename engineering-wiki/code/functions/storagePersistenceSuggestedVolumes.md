@@ -10,11 +10,11 @@ over a working configuration.
 function storagePersistenceSuggestedVolumes(array $report): array
 ```
 
-Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 327.
+Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 336.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$report` | `array` |  |  |
+| `$report` | `array` |  | the report from `storagePersistenceReport()` |
 
 **Returns:** `array`
 

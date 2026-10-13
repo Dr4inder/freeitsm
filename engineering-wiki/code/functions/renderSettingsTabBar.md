@@ -15,13 +15,13 @@ function renderSettingsTabBar(
 ): void
 ```
 
-Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 114.
+Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$visibleTabs` | `array` |  |  |
-| `$activeId` | `?string` |  |  |
-| `$onclickFn` | `string` | `'switchTab'` |  |
+| `$visibleTabs` | `array` |  | the tabs from `settingsVisibleTabs()`, drawn in that order |
+| `$activeId` | `?string` |  | the id of the tab drawn as active; null for none |
+| `$onclickFn` | `string` | `'switchTab'` | the name of the page's JavaScript tab switcher, called with the tab id |
 
 **Returns:** `void`
 

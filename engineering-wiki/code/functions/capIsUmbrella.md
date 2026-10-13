@@ -6,11 +6,11 @@ Is this capability its module's umbrella?
 function capIsUmbrella(string $key): bool
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 617.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 655.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a capability key; an unknown one is not an umbrella |
 
 **Returns:** `bool`
 

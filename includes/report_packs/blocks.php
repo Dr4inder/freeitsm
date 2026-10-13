@@ -37,27 +37,54 @@ require_once __DIR__ . '/blocks_projects.php';
 
 const RP_CHART_TYPES = ['bar', 'hbar', 'line', 'doughnut', 'pie'];
 
-/** Option helpers, so the handler table below stays readable. */
+/**
+ * Option helpers, so the handler table below stays readable.
+ *
+ * @param string $label  the option's label in the Properties pane
+ * @param array $values  the choices, value => label
+ * @param string $default  the value chosen unless the author picks another
+ */
 function rpOptSelect(string $label, array $values, string $default): array
 {
     return ['type' => 'select', 'label' => $label, 'values' => $values, 'default' => $default];
 }
-/** A whole-number block option, between $min and $max. */
+/**
+ * A whole-number block option, between $min and $max.
+ *
+ * @param string $label  the option's label in the Properties pane
+ * @param int $min  the smallest value allowed
+ * @param int $max  the largest value allowed
+ * @param int $default  the value used unless the author picks another
+ */
 function rpOptInt(string $label, int $min, int $max, int $default): array
 {
     return ['type' => 'int', 'label' => $label, 'min' => $min, 'max' => $max, 'default' => $default];
 }
-/** A yes/no block option. */
+/**
+ * A yes/no block option.
+ *
+ * @param string $label  the option's label in the Properties pane
+ * @param bool $default  whether it is ticked unless the author changes it
+ */
 function rpOptBool(string $label, bool $default): array
 {
     return ['type' => 'bool', 'label' => $label, 'default' => $default];
 }
-/** A multi-select block option whose choices come from the named source. */
+/**
+ * A multi-select block option whose choices come from the named source.
+ *
+ * @param string $label  the option's label in the Properties pane
+ * @param string $source  where the choices come from, for rpOptionSource(): 'projects' or 'status_services'
+ */
 function rpOptMulti(string $label, string $source): array
 {
     return ['type' => 'multi', 'label' => $label, 'source' => $source, 'default' => []];
 }
-/** The chart-type option for a block, offering every chart type with $default selected. */
+/**
+ * The chart-type option for a block, offering every chart type with $default selected.
+ *
+ * @param string $default  the chart type chosen by default, one of RP_CHART_TYPES
+ */
 function rpChartOpt(string $default): array
 {
     $v = [];
@@ -326,6 +353,9 @@ function rpToolboxItems(): array
  * Validate a block's options against its handler's schema. Unknown keys are
  * dropped, out-of-range values clamped, missing ones defaulted - so the data
  * function, the PDF and the saved design all see the same, legal values.
+ *
+ * @param string $handler  the block's handler key in rpHandlers(), e.g. 'tickets.breakdown'
+ * @param mixed $opts  the block's options as saved in the design (untrusted)
  */
 function rpCleanOpts(string $handler, $opts): array
 {
@@ -347,6 +377,10 @@ function rpCleanOpts(string $handler, $opts): array
 /**
  * Fetch one block's data for this viewer. Throws RuntimeException with a message
  * fit to show in the block when the viewer may not see it.
+ *
+ * @param string $handler  the block's handler key in rpHandlers()
+ * @param mixed $opts  the block's options as saved (cleaned here by rpCleanOpts())
+ * @param array $criteria  the pack's criteria: range (preset, from, to) and tenant ('active', 'all' or a company id)
  */
 function rpBlockData(PDO $conn, int $analystId, string $handler, $opts, array $criteria): array
 {
@@ -362,14 +396,22 @@ function rpBlockData(PDO $conn, int $analystId, string $handler, $opts, array $c
     return $data;
 }
 
-/** A module's display name, for "You do not have access to X". */
+/**
+ * A module's display name, for "You do not have access to X".
+ *
+ * @param string $key  the module key, e.g. 'contracts'
+ */
 function rpModuleName(string $key): string
 {
     $reg = function_exists('getModuleRegistry') ? getModuleRegistry() : [];
     return (string)($reg[$key] ?? $key);
 }
 
-/** Choices for a 'multi' option's source (the Properties pane's checkboxes). */
+/**
+ * Choices for a 'multi' option's source (the Properties pane's checkboxes).
+ *
+ * @param string $source  the option's source: 'projects' or 'status_services'; anything else gives []
+ */
 function rpOptionSource(PDO $conn, string $source, int $analystId = 0): array
 {
     if ($source === 'projects') {

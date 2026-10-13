@@ -6,11 +6,11 @@ The message shown to a visitor when the widget is closed (out of office hours). 
 function webchatOfflineMessage(array $widget): string
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 39.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 41.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$widget` | `array` |  |  |
+| `$widget` | `array` |  | the widget row (webchatLoadByChannel/ByKey); its offline_message is used if set |
 
 **Returns:** `string`
 

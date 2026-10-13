@@ -1,6 +1,6 @@
 # api/cmdb/ai_suggest_properties.php
 
-> API endpoint - 167 lines
+> API endpoint - 169 lines
 
 API: Stage 2 of the "suggest properties" wizard. Given a class + the analyst's answers to the stage-1 questions, Claude returns 6-12 suggested properties tailored to their environment.
 
@@ -20,14 +20,14 @@ them in a checklist UI for confirmation.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [slugifyProp()](/code/functions/slugifyProp.md) | 31 | Turns a property name into a lower-case key of letters, digits and underscores, falling back to 'property' when nothing is left. |
+| [slugifyProp()](/code/functions/slugifyProp.md) | 33 | Turns a property name into a lower-case key of letters, digits and underscores, falling back to 'property' when nothing is left. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 47 |  | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 53 |  | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 49 |  | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 55 |  | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
 
 ## How it hangs together
 

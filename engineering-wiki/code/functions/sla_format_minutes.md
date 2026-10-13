@@ -6,11 +6,11 @@ Format a minute count as a short human-friendly string: "1h 30m", "45m", "2h", "
 function sla_format_minutes(int $minutes): string
 ```
 
-Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 366.
+Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 388.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$minutes` | `int` |  |  |
+| `$minutes` | `int` |  | a number of minutes; negative gives a leading minus |
 
 **Returns:** `string`
 

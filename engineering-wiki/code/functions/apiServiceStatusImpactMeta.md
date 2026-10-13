@@ -6,7 +6,7 @@ Every impact level's colour and severity order, keyed by name - read once per re
 function apiServiceStatusImpactMeta(PDO $conn): array
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 61.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 65.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 65 | `apiServiceStatusImpactMeta` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 69 | `apiServiceStatusImpactMeta` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## Called from
 

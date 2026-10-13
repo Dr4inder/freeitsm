@@ -6,13 +6,13 @@ Insert-or-update one knowledge_gap_tickets row from a partial field map.
 function gapUpsertTicket(PDO $conn, int $ticketId, array $fields): void
 ```
 
-Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 66.
+Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 72.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$fields` | `array` |  |  |
+| `$fields` | `array` |  | knowledge_gap_tickets column => value to set; empty does nothing. Column names are not escaped - trusted keys only |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 75 | `gapUpsertTicket` | **insert** [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
+| 81 | `gapUpsertTicket` | **insert** [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
 
 ## Called from
 

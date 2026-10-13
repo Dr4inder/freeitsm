@@ -6,12 +6,12 @@
 function fmt_weekday(?string $utc, bool $short = false): string
 ```
 
-Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 528.
+Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 583.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$utc` | `?string` |  |  |
-| `$short` | `bool` | `false` |  |
+| `$utc` | `?string` |  | a UTC datetime as stored; null or '' gives '', an unparseable value comes back as it is |
+| `$short` | `bool` | `false` | true for the abbreviated name ('Tue') |
 
 **Returns:** `string`
 

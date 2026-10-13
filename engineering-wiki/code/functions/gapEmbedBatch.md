@@ -15,15 +15,15 @@ function gapEmbedBatch(
 ): array
 ```
 
-Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 106.
+Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 120.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$lookbackDays` | `int` |  |  |
-| `$batch` | `int` |  |  |
-| `$openaiKey` | `string` |  |  |
+| `$lookbackDays` | `int` |  | how many days back from now a ticket's closed_datetime may be |
+| `$batch` | `int` |  | how many tickets to embed this call, clamped to 1-50 |
+| `$openaiKey` | `string` |  | the OpenAI key from `knowledgeOpenAiKey()`; '' skips the batch |
 
 **Returns:** `array`
 
@@ -31,8 +31,8 @@ Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 116 | `gapEmbedBatch` | read [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
-| 152 | `gapEmbedBatch` | read [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
+| 130 | `gapEmbedBatch` | read [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
+| 166 | `gapEmbedBatch` | read [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
 
 ## Calls
 

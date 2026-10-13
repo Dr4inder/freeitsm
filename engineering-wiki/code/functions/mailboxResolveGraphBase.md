@@ -6,11 +6,11 @@ Resolve the base path for a mailbox from its auth_mode (Microsoft only). Google 
 function mailboxResolveGraphBase($mailbox)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 256.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 279.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row, decrypted (provider, auth_mode, target_mailbox) |
 
 ## Calls
 

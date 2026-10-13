@@ -1,6 +1,6 @@
 # includes/services/contracts.php
 
-> PHP - 560 lines
+> PHP - 655 lines
 
 ContractsService — the shared write rules for the contracts module's core entities: contracts, suppliers and contract-term values.
 
@@ -30,33 +30,33 @@ relied on the server-local column default).
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 59 | `ContractsService::saveContract` | **update** [contracts](/code/tables/contracts.md) (`contract_number`, `title`, `description`, `supplier_id`, `contract_owner_id`, `contract_status_id`, `contract_start`, `contract_end`, `notice_period_days`, `notice_date`, `contract_value`, `currency`) |  |
-| 81 | `ContractsService::saveContract` | **insert** [contracts](/code/tables/contracts.md) (`contract_number`, `title`, `description`, `supplier_id`, `contract_owner_id`, `contract_status_id`, `contract_start`, `contract_end`, `notice_period_days`, `notice_date`, `contract_value`, `currency`) |  |
-| 103 | `ContractsService::deleteContract` | **delete** [contract_term_values](/code/tables/contract_term_values.md) |  |
-| 109 | `ContractsService::deleteContract` | **delete** [contracts](/code/tables/contracts.md) |  |
-| 138 | `ContractsService::saveTerms` | read [contract_term_values](/code/tables/contract_term_values.md) |  |
-| 142 | `ContractsService::saveTerms` | **update** [contract_term_values](/code/tables/contract_term_values.md) (`content`, `updated_datetime`) |  |
-| 145 | `ContractsService::saveTerms` | **insert** [contract_term_values](/code/tables/contract_term_values.md) (`contract_id`, `term_tab_id`, `content`, `created_datetime`) |  |
-| 195 | `ContractsService::saveSupplier` | **update** [suppliers](/code/tables/suppliers.md) (`legal_name`, `trading_name`, `reg_number`, `vat_number`, `supplier_type_id`, `supplier_status_id`, `address_line_1`, `address_line_2`, `city`, `county`, `postcode`, `country`) |  |
-| 205 | `ContractsService::saveSupplier` | **insert** [suppliers](/code/tables/suppliers.md) (`legal_name`, `trading_name`, `reg_number`, `vat_number`, `supplier_type_id`, `supplier_status_id`, `address_line_1`, `address_line_2`, `city`, `county`, `postcode`, `country`) |  |
-| 222 | `ContractsService::deleteSupplier` | **update** [contacts](/code/tables/contacts.md) (`supplier_id`) |  |
-| 223 | `ContractsService::deleteSupplier` | **update** [contracts](/code/tables/contracts.md) (`supplier_id`) |  |
-| 225 | `ContractsService::deleteSupplier` | **update** [assets](/code/tables/assets.md) (`supplier_id`) |  |
-| 226 | `ContractsService::deleteSupplier` | **update** [rfps](/code/tables/rfps.md) (`chosen_supplier_id`) |  |
-| 227 | `ContractsService::deleteSupplier` | **delete** [rfp_invited_suppliers](/code/tables/rfp_invited_suppliers.md) |  |
-| 228 | `ContractsService::deleteSupplier` | **delete** [rfp_scores](/code/tables/rfp_scores.md) |  |
-| 234 | `ContractsService::deleteSupplier` | **delete** [suppliers](/code/tables/suppliers.md) |  |
-| 287 | `ContractsService::assertNumberFree` | read [contracts](/code/tables/contracts.md) |  |
-| 290 | `ContractsService::assertNumberFree` | read [contracts](/code/tables/contracts.md) |  |
-| 310 | `ContractsService::assertMovable` | read [contract_assets](/code/tables/contract_assets.md), read [assets](/code/tables/assets.md) |  |
-| 311 | `ContractsService::assertMovable` | read [project_contracts](/code/tables/project_contracts.md), read [projects](/code/tables/projects.md) |  |
-| 312 | `ContractsService::assertMovable` | read [rfps](/code/tables/rfps.md) |  |
-| 359 | `ContractsService::costCentreFor` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 372 | `ContractsService::writeCostCentre` | **update** [contracts](/code/tables/contracts.md) (`cost_centre_id`) |  |
-| 379 | `ContractsService::writeTenant` | **update** [contracts](/code/tables/contracts.md) (`tenant_id`) |  |
-| 390 | `ContractsService::assertVisible` | read [contracts](/code/tables/contracts.md) |  |
-| 427 | `ContractsService::writeParty` | **update** [contracts](/code/tables/contracts.md) (`party_type`, `customer_tenant_id`, `customer_user_id`) |  |
-| 540 | `ContractsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 63 | `ContractsService::saveContract` | **update** [contracts](/code/tables/contracts.md) (`contract_number`, `title`, `description`, `supplier_id`, `contract_owner_id`, `contract_status_id`, `contract_start`, `contract_end`, `notice_period_days`, `notice_date`, `contract_value`, `currency`) |  |
+| 85 | `ContractsService::saveContract` | **insert** [contracts](/code/tables/contracts.md) (`contract_number`, `title`, `description`, `supplier_id`, `contract_owner_id`, `contract_status_id`, `contract_start`, `contract_end`, `notice_period_days`, `notice_date`, `contract_value`, `currency`) |  |
+| 111 | `ContractsService::deleteContract` | **delete** [contract_term_values](/code/tables/contract_term_values.md) |  |
+| 117 | `ContractsService::deleteContract` | **delete** [contracts](/code/tables/contracts.md) |  |
+| 151 | `ContractsService::saveTerms` | read [contract_term_values](/code/tables/contract_term_values.md) |  |
+| 155 | `ContractsService::saveTerms` | **update** [contract_term_values](/code/tables/contract_term_values.md) (`content`, `updated_datetime`) |  |
+| 158 | `ContractsService::saveTerms` | **insert** [contract_term_values](/code/tables/contract_term_values.md) (`contract_id`, `term_tab_id`, `content`, `created_datetime`) |  |
+| 212 | `ContractsService::saveSupplier` | **update** [suppliers](/code/tables/suppliers.md) (`legal_name`, `trading_name`, `reg_number`, `vat_number`, `supplier_type_id`, `supplier_status_id`, `address_line_1`, `address_line_2`, `city`, `county`, `postcode`, `country`) |  |
+| 222 | `ContractsService::saveSupplier` | **insert** [suppliers](/code/tables/suppliers.md) (`legal_name`, `trading_name`, `reg_number`, `vat_number`, `supplier_type_id`, `supplier_status_id`, `address_line_1`, `address_line_2`, `city`, `county`, `postcode`, `country`) |  |
+| 243 | `ContractsService::deleteSupplier` | **update** [contacts](/code/tables/contacts.md) (`supplier_id`) |  |
+| 244 | `ContractsService::deleteSupplier` | **update** [contracts](/code/tables/contracts.md) (`supplier_id`) |  |
+| 246 | `ContractsService::deleteSupplier` | **update** [assets](/code/tables/assets.md) (`supplier_id`) |  |
+| 247 | `ContractsService::deleteSupplier` | **update** [rfps](/code/tables/rfps.md) (`chosen_supplier_id`) |  |
+| 248 | `ContractsService::deleteSupplier` | **delete** [rfp_invited_suppliers](/code/tables/rfp_invited_suppliers.md) |  |
+| 249 | `ContractsService::deleteSupplier` | **delete** [rfp_scores](/code/tables/rfp_scores.md) |  |
+| 255 | `ContractsService::deleteSupplier` | **delete** [suppliers](/code/tables/suppliers.md) |  |
+| 321 | `ContractsService::assertNumberFree` | read [contracts](/code/tables/contracts.md) |  |
+| 324 | `ContractsService::assertNumberFree` | read [contracts](/code/tables/contracts.md) |  |
+| 347 | `ContractsService::assertMovable` | read [contract_assets](/code/tables/contract_assets.md), read [assets](/code/tables/assets.md) |  |
+| 348 | `ContractsService::assertMovable` | read [project_contracts](/code/tables/project_contracts.md), read [projects](/code/tables/projects.md) |  |
+| 349 | `ContractsService::assertMovable` | read [rfps](/code/tables/rfps.md) |  |
+| 400 | `ContractsService::costCentreFor` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 418 | `ContractsService::writeCostCentre` | **update** [contracts](/code/tables/contracts.md) (`cost_centre_id`) |  |
+| 430 | `ContractsService::writeTenant` | **update** [contracts](/code/tables/contracts.md) (`tenant_id`) |  |
+| 443 | `ContractsService::assertVisible` | read [contracts](/code/tables/contracts.md) |  |
+| 488 | `ContractsService::writeParty` | **update** [contracts](/code/tables/contracts.md) (`party_type`, `customer_tenant_id`, `customer_user_id`) |  |
+| 630 | `ContractsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

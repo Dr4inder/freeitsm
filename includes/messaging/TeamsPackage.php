@@ -13,6 +13,9 @@ require_once __DIR__ . '/messaging.php';
 /**
  * Write the package for $channel to $outPath. Returns the zip's file name.
  * Throws with a message the admin can act on when the channel is not ready.
+ *
+ * @param array $channel  the Teams messaging_channels row, decrypted (credentials.app_id, name)
+ * @param string $outPath  where to write the zip file; overwritten if it exists
  */
 function teamsPackageBuild(PDO $conn, array $channel, string $outPath): string
 {

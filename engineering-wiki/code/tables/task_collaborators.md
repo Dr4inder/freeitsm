@@ -19,16 +19,16 @@ The other people on a task (GH #89) — shown as "Involved". Modelled on change_
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):738 | `TasksService::addCollaborator` | insert | `task_id`, `analyst_id`, `added_by_id`, `added_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):751 | `TasksService::removeCollaborator` | delete |  |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):783 | `TasksService::setCollaboratorDone` | update | `is_completed`, `completed_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):764 | `TasksService::addCollaborator` | insert | `task_id`, `analyst_id`, `added_by_id`, `added_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):777 | `TasksService::removeCollaborator` | delete |  |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):812 | `TasksService::setCollaboratorDone` | update | `is_completed`, `completed_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/tasks/list.php](/code/files/api/tasks/list.php.md) | L79 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksList L210, apiTasksList L214 |  |
-| [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsAudienceFor L160 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::collaboratorsForMany L689, TasksService::addCollaborator L731, TasksService::setCollaboratorDone L791, TasksService::collaboratorsOutstanding L805 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksList L212, apiTasksList L216 |  |
+| [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsAudienceFor L165 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::collaboratorsForMany L715, TasksService::addCollaborator L757, TasksService::setCollaboratorDone L820, TasksService::collaboratorsOutstanding L834 |  |
 

@@ -6,11 +6,11 @@ Pull the signed-in user's address straight out of a Graph access token. The toke
 function mailboxIdentityFromToken($jwt)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 79.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$jwt` |  |  |  |
+| `$jwt` |  |  | a Graph access token (a JWT); its payload is read without checking the signature |
 
 ## Called from
 

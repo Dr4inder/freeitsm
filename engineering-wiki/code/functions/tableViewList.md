@@ -9,14 +9,14 @@ made" is how people look for a view they did not write.
 function tableViewList(PDO $conn, int $analystId, string $tableKey, string $q = ''): array
 ```
 
-Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 87.
+Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 94.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$tableKey` | `string` |  |  |
-| `$q` | `string` | `''` |  |
+| `$tableKey` | `string` |  | which table the views belong to: 'assets', 'tasks', 'calendar', 'changes' or 'domains' |
+| `$q` | `string` | `''` | search text matched against the name, description and owner's name; '' for all |
 
 **Returns:** `array`
 

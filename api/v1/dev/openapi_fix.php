@@ -25,7 +25,12 @@ require __DIR__ . '/../lib/openapi.php';
 $data = require $SCHEMA_FILE;
 $schemas = $data['schemas']; $responses = $data['responses']; $reqBodies = $data['requestBodies'] ?? [];
 
-/** GETs one API URL with the bearer key and returns [HTTP code, decoded JSON]. */
+/**
+ * GETs one API URL with the bearer key and returns [HTTP code, decoded JSON].
+ *
+ * @param mixed $url  the full API URL to fetch
+ * @param mixed $key  the API key, sent as a bearer token
+ */
 function oaf_get($url, $key) {
     $ch = curl_init($url);
     curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_HTTPHEADER=>['Authorization: Bearer '.$key], CURLOPT_TIMEOUT=>20]);
@@ -35,6 +40,8 @@ function oaf_get($url, $key) {
 /**
  * Builds an OpenAPI schema from a live value - its type, nested properties or list
  * items, and nullable for nulls, strings and objects, which can be empty in other rows.
+ *
+ * @param mixed $v  a value from a live API response
  */
 function oaf_infer($v) {
     if ($v === null)   return ['nullable' => true];
@@ -59,6 +66,11 @@ $patches = 0;
  *
  * Counts every change in the global $patches, so the script can say whether anything was
  * fixed.
+ *
+ * @param mixed $node  the schema node to correct, by reference
+ * @param mixed $data  the live value that node should describe
+ * @param mixed $schemas  the shared component schemas, by reference, so a $ref target is corrected too
+ * @param mixed $depth  how deep the recursion is; it stops past 40
  */
 function oaf_patch(&$node, $data, &$schemas, $depth = 0) {
     global $patches;
@@ -100,6 +112,10 @@ $idCache = [];
  * Turns a path template into a real path by replacing each {id} with the first id its
  * parent collection returns - null when there is no row to use. Ids are cached per
  * collection.
+ *
+ * @param mixed $template  an OpenAPI path template, e.g. /tickets/{id}/notes
+ * @param mixed $base  the API's base URL, e.g. http://localhost/freeitsm-app/api/v1/index.php
+ * @param mixed $key  the API key, sent as a bearer token
  */
 function oaf_resolvePath($template, $base, $key) {
     global $idCache;

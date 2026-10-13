@@ -18,7 +18,7 @@
 
 ### createFromTemplate
 
-*public static* - line 33
+*public static* - line 37
 
 Create a project from template `$key`. `$in` is the new-project form (name, start_date, ...): anything it sets wins over the template. Returns the id.
 
@@ -36,30 +36,30 @@ function createFromTemplate(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$in` | `array` |  |  |
+| `$key` | `string` |  | which template: 'builtin:<key>' or 'saved:<project_templates.id>' |
+| `$in` | `array` |  | the new-project form (name, start_date, target_end_date, methodology...) - anything set wins over the template; an empty start_date means today |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 59 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_stages](/code/tables/project_stages.md) (`project_id`, `kind`, `name`, `goal`, `start_date`, `end_date`, `position`, `status`, `created_datetime`, `updated_datetime`) |  |
-| 77 | `ProjectTemplatesService::createFromTemplate` | **update** [project_stages](/code/tables/project_stages.md) (`gate_kind`) |  |
-| 78 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_gate_items](/code/tables/project_gate_items.md) (`project_id`, `stage_id`, `kind`, `title`, `position`, `created_by_id`, `created_datetime`) |  |
-| 83 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_milestones](/code/tables/project_milestones.md) (`project_id`, `stage_id`, `name`, `due_date`, `position`, `created_by_analyst_id`, `created_datetime`, `updated_datetime`) |  |
-| 92 | `ProjectTemplatesService::createFromTemplate` | **insert** [task_dependencies](/code/tables/task_dependencies.md) (`task_id`, `depends_on_id`, `lag_days`, `created_by_id`, `created_datetime`) |  |
-| 100 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_benefits](/code/tables/project_benefits.md) (`project_id`, `title`, `measure`, `unit`, `direction`, `target_value`, `target_date`, `review_date`, `review_months`, `status`, `position`, `created_by_id`) |  |
-| 110 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_items](/code/tables/project_items.md) (`project_id`, `title`, `description`, `moscow`, `status`, `position`, `created_datetime`, `updated_datetime`) |  |
-| 115 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_raid](/code/tables/project_raid.md) (`project_id`, `type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `status`, `raised_by_id`, `raised_datetime`, `updated_datetime`) |  |
-| 120 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_tolerances](/code/tables/project_tolerances.md) (`project_id`, `stage_id`, `dimension`, `value`) |  |
-| 127 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_asset_targets](/code/tables/project_asset_targets.md) (`project_id`, `name`, `scope`, `scope_type_id`, `scope_field`, `scope_value`, `done_field`, `done_op`, `done_value`, `target_date`, `position`, `created_by_analyst_id`) |  |
+| 63 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_stages](/code/tables/project_stages.md) (`project_id`, `kind`, `name`, `goal`, `start_date`, `end_date`, `position`, `status`, `created_datetime`, `updated_datetime`) |  |
+| 81 | `ProjectTemplatesService::createFromTemplate` | **update** [project_stages](/code/tables/project_stages.md) (`gate_kind`) |  |
+| 82 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_gate_items](/code/tables/project_gate_items.md) (`project_id`, `stage_id`, `kind`, `title`, `position`, `created_by_id`, `created_datetime`) |  |
+| 87 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_milestones](/code/tables/project_milestones.md) (`project_id`, `stage_id`, `name`, `due_date`, `position`, `created_by_analyst_id`, `created_datetime`, `updated_datetime`) |  |
+| 96 | `ProjectTemplatesService::createFromTemplate` | **insert** [task_dependencies](/code/tables/task_dependencies.md) (`task_id`, `depends_on_id`, `lag_days`, `created_by_id`, `created_datetime`) |  |
+| 104 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_benefits](/code/tables/project_benefits.md) (`project_id`, `title`, `measure`, `unit`, `direction`, `target_value`, `target_date`, `review_date`, `review_months`, `status`, `position`, `created_by_id`) |  |
+| 114 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_items](/code/tables/project_items.md) (`project_id`, `title`, `description`, `moscow`, `status`, `position`, `created_datetime`, `updated_datetime`) |  |
+| 119 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_raid](/code/tables/project_raid.md) (`project_id`, `type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `status`, `raised_by_id`, `raised_datetime`, `updated_datetime`) |  |
+| 124 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_tolerances](/code/tables/project_tolerances.md) (`project_id`, `stage_id`, `dimension`, `value`) |  |
+| 131 | `ProjectTemplatesService::createFromTemplate` | **insert** [project_asset_targets](/code/tables/project_asset_targets.md) (`project_id`, `name`, `scope`, `scope_type_id`, `scope_field`, `scope_value`, `done_field`, `done_op`, `done_value`, `target_date`, `position`, `created_by_analyst_id`) |  |
 
 **Called from:** [api/projects/save.php](/code/files/api/projects/save.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md)
 
 ### cleanup
 
-*private static* - line 150
+*private static* - line 159
 
 Remove a half-built project and the tasks made for it.
 
@@ -70,20 +70,20 @@ function cleanup(PDO $conn, int $pid, array $taskIds): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$pid` | `int` |  |  |
-| `$taskIds` | `array` |  |  |
+| `$pid` | `int` |  | the half-built project to remove |
+| `$taskIds` | `array` |  | the ids of the tasks already created for it |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 155 | `ProjectTemplatesService::cleanup` | **delete** [tasks](/code/tables/tasks.md) |  |
-| 157 | `ProjectTemplatesService::cleanup` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md), read [project_raid](/code/tables/project_raid.md) |  |
-| 161 | `ProjectTemplatesService::cleanup` | **delete** [projects](/code/tables/projects.md) |  |
+| 164 | `ProjectTemplatesService::cleanup` | **delete** [tasks](/code/tables/tasks.md) |  |
+| 166 | `ProjectTemplatesService::cleanup` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md), read [project_raid](/code/tables/project_raid.md) |  |
+| 170 | `ProjectTemplatesService::cleanup` | **delete** [projects](/code/tables/projects.md) |  |
 
 ### saveFromProject
 
-*public static* - line 177
+*public static* - line 189
 
 Save a project as a template. `$parts`: plan, scope, raid, benefits (3.3.0), tolerances, targets. Needs the Templates capability - templates are shared by every company on the install.
 
@@ -102,20 +102,20 @@ function saveFromProject(PDO $conn, ActorContext $ctx, int $projectId, array $in
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | name (required), description, parts (any of plan, scope, raid, benefits, tolerances, targets), id (a saved template to replace instead of adding a new one) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 188 | `ProjectTemplatesService::saveFromProject` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `content`, `updated_datetime`) |  |
-| 192 | `ProjectTemplatesService::saveFromProject` | **insert** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `content`, `is_active`, `created_by_analyst_id`, `created_datetime`, `updated_datetime`) |  |
+| 200 | `ProjectTemplatesService::saveFromProject` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `content`, `updated_datetime`) |  |
+| 204 | `ProjectTemplatesService::saveFromProject` | **insert** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `content`, `is_active`, `created_by_analyst_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/templates.php](/code/files/api/projects/templates.php.md)
 
 ### update
 
-*public static* - line 202
+*public static* - line 219
 
 Changes a project template's name, description and active flag.
 
@@ -127,20 +127,20 @@ function update(PDO $conn, ActorContext $ctx, int $id, array $in): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$in` | `array` |  |  |
+| `$id` | `int` |  | the saved template (project_templates.id) |
+| `$in` | `array` |  | name (required), description, is_active |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 207 | `ProjectTemplatesService::update` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `is_active`, `updated_datetime`) |  |
+| 224 | `ProjectTemplatesService::update` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `is_active`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/templates.php](/code/files/api/projects/templates.php.md)
 
 ### delete
 
-*public static* - line 212
+*public static* - line 233
 
 Deletes a project template; projects made from it are untouched.
 
@@ -152,19 +152,19 @@ function delete(PDO $conn, ActorContext $ctx, int $id): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the saved template (project_templates.id) to delete |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 217 | `ProjectTemplatesService::delete` | **delete** [project_templates](/code/tables/project_templates.md) |  |
+| 238 | `ProjectTemplatesService::delete` | **delete** [project_templates](/code/tables/project_templates.md) |  |
 
 **Called from:** [api/projects/templates.php](/code/files/api/projects/templates.php.md)
 
 ### setBuiltinHidden
 
-*public static* - line 221
+*public static* - line 247
 
 Hide or show a built-in template in the new-project picker.
 
@@ -176,14 +176,14 @@ function setBuiltinHidden(PDO $conn, ActorContext $ctx, string $key, bool $hidde
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$hidden` | `bool` |  |  |
+| `$key` | `string` |  | the built-in template's key, without the 'builtin:' prefix |
+| `$hidden` | `bool` |  | true to hide it from the new-project picker, false to show it |
 
 **Called from:** [api/projects/templates.php](/code/files/api/projects/templates.php.md)
 
 ### assertManage
 
-*private static* - line 232
+*private static* - line 258
 
 Throws unless the actor holds the Projects templates capability; system callers (actor 0) pass.
 
@@ -198,7 +198,7 @@ function assertManage(PDO $conn, ActorContext $ctx): void
 
 ### nameDesc
 
-*private static* - line 241
+*private static* - line 271
 
 A validated template name and optional description.
 
@@ -208,11 +208,11 @@ function nameDesc(array $in): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | name (required, up to 150) and description (optional, cut to 500) |
 
 ### row
 
-*private static* - line 251
+*private static* - line 285
 
 Loads one project template; throws not found when it does not exist.
 
@@ -223,11 +223,11 @@ function row(PDO $conn, int $id): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the saved template (project_templates.id) to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 254 | `ProjectTemplatesService::row` | read [project_templates](/code/tables/project_templates.md) |  |
+| 288 | `ProjectTemplatesService::row` | read [project_templates](/code/tables/project_templates.md) |  |
 

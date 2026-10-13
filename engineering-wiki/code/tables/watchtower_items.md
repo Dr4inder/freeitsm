@@ -23,5 +23,5 @@ Watchtower settings. analyst_id 0 = the installation's setting; real ids are res
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtVisibleCards L307, wtItemMembers L336 |  |
+| [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtVisibleCards L320, wtItemMembers L351 |  |
 

@@ -25,6 +25,8 @@ function apiUserColumns(PDO $conn): string {
  * `cost_centre_id` from a request body for a requester in company $tenantId
  * (NULL = Default): an ACTIVE one of that company, or the one they hold. 422
  * otherwise. Returns [sent?, value].
+ *
+ * @param ?int $currentId  the cost centre the requester holds now (may be inactive and still kept); null on a create
  */
 function apiUserCostCentre(PDO $conn, array $body, ?int $tenantId, ?int $currentId): array {
     if (!array_key_exists('cost_centre_id', $body)) return [false, null];
@@ -40,6 +42,8 @@ function apiUserCostCentre(PDO $conn, array $body, ?int $tenantId, ?int $current
 /**
  * Shapes a requester (users row) for the API - email (null for a directory user with no
  * mailbox), names, company, active flag, cost centre and created date.
+ *
+ * @param array $u  a users row selected with apiUserColumns(), including the cost centre code and name when present
  */
 function apiSerializeUser(array $u): array {
     return [

@@ -6,15 +6,15 @@ Software block: a chart of how many machines have software from each publisher. 
 function rpSoftwareByPublisher(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md), line 24.
+Defined in [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$o` | `array` |  |  |
-| `$range` | `array` |  |  |
-| `$tenant` |  |  |  |
+| `$o` | `array` |  | the block's cleaned options: system (include system components), limit, chart |
+| `$range` | `array` |  | the pack's range (not used - a snapshot of today) |
+| `$tenant` |  |  | the pack's company: 'active', 'all' or a company id |
 
 **Returns:** `array`
 
@@ -22,7 +22,7 @@ Defined in [includes/report_packs/blocks_software.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 27 | `rpSoftwareByPublisher` | read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 38 | `rpSoftwareByPublisher` | read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
 
 ## Calls
 

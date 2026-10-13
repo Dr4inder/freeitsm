@@ -6,11 +6,11 @@ Sensible per-flavour defaults, offered by the admin UI as presets. 'ad' = Active
 function ldapFlavourDefaults(string $flavour): array
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 33.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$flavour` | `string` |  |  |
+| `$flavour` | `string` |  | 'openldap' for OpenLDAP-style defaults; anything else (normally 'ad') gives Active Directory's |
 
 **Returns:** `array`
 

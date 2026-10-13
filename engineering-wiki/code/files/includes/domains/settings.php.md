@@ -1,6 +1,6 @@
 # includes/domains/settings.php
 
-> PHP - 253 lines
+> PHP - 269 lines
 
 Domains — settings: the keys, their defaults, and the one reader.
 
@@ -24,18 +24,18 @@ server cannot disagree about what "not set yet" means.
 | Function | Line | What it does |
 |---|--:|---|
 | [domainSettingDefinitions()](/code/functions/domainSettingDefinitions.md) | 29 | key => [default, validator, tab]. The tab decides which capability may write the key; the validator is one of the names `domainSettingValidate()` understands. |
-| [domainSettings()](/code/functions/domainSettings.md) | 132 | Every setting, with its default applied where nothing is stored. |
-| [domainSetting()](/code/functions/domainSetting.md) | 160 | Returns one Domains setting as a string, from the cached settings (its default when not saved). |
-| [domainSettingWrite()](/code/functions/domainSettingWrite.md) | 166 | Write one setting (no validation — callers go through `domainSettingValidate()`). |
-| [domainSettingValidate()](/code/functions/domainSettingValidate.md) | 179 | Validate and normalise one incoming value. Returns the value to store, or throws InvalidArgumentException with a message fit to show the operator. |
-| [domainParseDays()](/code/functions/domainParseDays.md) | 239 | "60, 30, 7" → [60, 30, 7] — sorted high to low, de-duplicated, nonsense dropped. 0 is allowed and means "on the day". |
+| [domainSettings()](/code/functions/domainSettings.md) | 134 | Every setting, with its default applied where nothing is stored. |
+| [domainSetting()](/code/functions/domainSetting.md) | 166 | Returns one Domains setting as a string, from the cached settings (its default when not saved). |
+| [domainSettingWrite()](/code/functions/domainSettingWrite.md) | 177 | Write one setting (no validation — callers go through `domainSettingValidate()`). |
+| [domainSettingValidate()](/code/functions/domainSettingValidate.md) | 193 | Validate and normalise one incoming value. Returns the value to store, or throws InvalidArgumentException with a message fit to show the operator. |
+| [domainParseDays()](/code/functions/domainParseDays.md) | 255 | "60, 30, 7" → [60, 30, 7] — sorted high to low, de-duplicated, nonsense dropped. 0 is allowed and means "on the day". |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 144 | `domainSettings` | read [system_settings](/code/tables/system_settings.md) |  |
-| 169 | `domainSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 146 | `domainSettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 180 | `domainSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## How it hangs together
 

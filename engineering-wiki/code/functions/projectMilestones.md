@@ -6,7 +6,7 @@ One project's milestones in date order, each with its state, for the project pag
 function projectMilestones(PDO $conn, int $projectId): array
 ```
 
-Defined in [includes/projects/milestones.php](/code/files/includes/projects/milestones.php.md), line 40.
+Defined in [includes/projects/milestones.php](/code/files/includes/projects/milestones.php.md), line 45.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/milestones.php](/code/files/includes/projects/mile
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 43 | `projectMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [project_stages](/code/tables/project_stages.md), read [analysts](/code/tables/analysts.md) |  |
+| 48 | `projectMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [project_stages](/code/tables/project_stages.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

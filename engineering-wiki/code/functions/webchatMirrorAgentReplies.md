@@ -6,12 +6,12 @@ Mirror any new analyst replies (Outbound webchat emails on the conversation's ti
 function webchatMirrorAgentReplies(PDO $conn, array $conversation): void
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 436.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 496.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$conversation` | `array` |  |  |
+| `$conversation` | `array` |  | the webchat_conversations row; nothing happens until it has a ticket_id |
 
 **Returns:** `void`
 
@@ -19,8 +19,8 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 444 | `webchatMirrorAgentReplies` | read [webchat_messages](/code/tables/webchat_messages.md) |  |
-| 449 | `webchatMirrorAgentReplies` | read [emails](/code/tables/emails.md) |  |
+| 504 | `webchatMirrorAgentReplies` | read [webchat_messages](/code/tables/webchat_messages.md) |  |
+| 509 | `webchatMirrorAgentReplies` | read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

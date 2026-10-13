@@ -1,6 +1,6 @@
 # api/messaging/save_channel.php
 
-> API endpoint - 243 lines
+> API endpoint - 247 lines
 
 API Endpoint: create/update a messaging channel (WhatsApp etc.).
 
@@ -20,15 +20,15 @@ On update, a blank or masked (***) secret field means "keep the existing value".
 
 | Function | Line | What it does |
 |---|--:|---|
-| [provided()](/code/functions/provided.md) | 39 | Treat blank or all-asterisk values as "unchanged" so masked secrets aren't wiped. |
+| [provided()](/code/functions/provided.md) | 43 | Treat blank or all-asterisk values as "unchanged" so masked secrets aren't wiped. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 |  | read [tenants](/code/tables/tenants.md) |  |
-| 217 |  | **update** [messaging_channels](/code/tables/messaging_channels.md) (`name`, `channel_type`, `provider`, `phone_number`, `credentials`, `verify_token`, `ingress_mode`, `relay_secret`, `tenant_id`, `is_active`) |  |
-| 229 |  | **insert** [messaging_channels](/code/tables/messaging_channels.md) (`name`, `channel_type`, `provider`, `phone_number`, `credentials`, `verify_token`, `ingress_mode`, `relay_secret`, `tenant_id`, `is_active`, `channel_ref`) |  |
+| 117 |  | read [tenants](/code/tables/tenants.md) |  |
+| 221 |  | **update** [messaging_channels](/code/tables/messaging_channels.md) (`name`, `channel_type`, `provider`, `phone_number`, `credentials`, `verify_token`, `ingress_mode`, `relay_secret`, `tenant_id`, `is_active`) |  |
+| 233 |  | **insert** [messaging_channels](/code/tables/messaging_channels.md) (`name`, `channel_type`, `provider`, `phone_number`, `credentials`, `verify_token`, `ingress_mode`, `relay_secret`, `tenant_id`, `is_active`, `channel_ref`) |  |
 
 ## How it hangs together
 
@@ -39,5 +39,5 @@ On update, a blank or masked (***) secret field means "keep the existing value".
 ## Traps
 
 > [!WARNING]
-> **Line 211:** only write channel_ref for a provider that owns it here. Other providers keep their own value in it (Slack's workspace id), and a save that blanked it for them would quietly break a working channel.
+> **Line 215:** only write channel_ref for a provider that owns it here. Other providers keep their own value in it (Slack's workspace id), and a save that blanked it for them would quietly break a working channel.
 

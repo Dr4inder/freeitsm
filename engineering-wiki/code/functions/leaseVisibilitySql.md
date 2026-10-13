@@ -6,13 +6,13 @@
 function leaseVisibilitySql(PDO $conn, int $analystId, string $l = 'l'): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 49.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 53.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$l` | `string` | `'l'` |  |
+| `$l` | `string` | `'l'` | the leases table's alias in the calling query |
 
 **Returns:** `array`
 

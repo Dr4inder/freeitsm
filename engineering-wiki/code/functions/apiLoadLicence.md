@@ -6,12 +6,12 @@ Loads one licence row (apiSoftwareLicenceSelect), or answers 404 and stops.
 function apiLoadLicence(PDO $conn, int $licenceId): array
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 275.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 289.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$licenceId` | `int` |  |  |
+| `$licenceId` | `int` |  | the software_licences id |
 
 **Returns:** `array`
 

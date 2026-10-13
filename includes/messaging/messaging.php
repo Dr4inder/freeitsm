@@ -34,6 +34,8 @@ if (!defined('MESSAGING_WINDOW_SECONDS')) {
 /**
  * Build the right provider for a channel row (credentials already decrypted into
  * an array by loadMessagingChannel). Throws on an unknown provider.
+ *
+ * @param array $channel  a messaging_channels row with credentials already decoded; 'provider' picks the class (default twilio)
  */
 function messagingProvider(array $channel): MessagingProvider
 {
@@ -61,6 +63,8 @@ function messagingProvider(array $channel): MessagingProvider
  * Load a messaging_channels row with its credentials decrypted + JSON-decoded.
  * Returns null if not found. Safe to call before db_verify has run the table
  * (returns null rather than throwing).
+ *
+ * @param mixed $channelId  the messaging_channels id (cast to int)
  */
 function loadMessagingChannel(PDO $conn, $channelId): ?array
 {
@@ -87,7 +91,11 @@ function loadMessagingChannel(PDO $conn, $channelId): ?array
     return $row;
 }
 
-/** Decrypt + JSON-decode a stored credentials blob into an array (never throws). */
+/**
+ * Decrypt + JSON-decode a stored credentials blob into an array (never throws).
+ *
+ * @param mixed $stored  the credentials column as stored (encrypted JSON); null or '' gives an empty array
+ */
 function messagingDecodeCredentials($stored): array
 {
     if ($stored === null || $stored === '') {
@@ -130,6 +138,8 @@ function messagingPublicBaseUrl(PDO $conn): string
 /**
  * The full public webhook URL for a channel — what gets pasted into the provider.
  * The app root is derived from SCRIPT_NAME so it works under any sub-path.
+ *
+ * @param int $channelId  the messaging_channels id, put in the URL's ?channel= parameter
  */
 function messagingWebhookUrl(PDO $conn, int $channelId): string
 {
@@ -160,6 +170,8 @@ function messagingWebhookUrl(PDO $conn, int $channelId): string
  * ONE attachment id and expires quickly (checked in media.php), so it only
  * stays reachable for the brief window between sending the message and the
  * provider fetching it — not for as long as the ticket exists.
+ *
+ * @param int $attachmentId  the outbound attachment whose bytes the provider will fetch
  */
 function messagingOutboundMediaUrl(PDO $conn, int $attachmentId): string
 {
@@ -190,6 +202,9 @@ function messagingOutboundMediaUrl(PDO $conn, int $attachmentId): string
  *
  * Throws if there is no encryption key (getEncryptionKey()); callers that face
  * the internet catch that and answer 404 rather than a fatal.
+ *
+ * @param int $attachmentId  the attachment id the token is bound to
+ * @param int $expires  the Unix timestamp the link stops working
  */
 function messagingOutboundMediaToken(int $attachmentId, int $expires): string
 {
@@ -198,7 +213,11 @@ function messagingOutboundMediaToken(int $attachmentId, int $expires): string
     return hash_hmac('sha256', $attachmentId . ':' . $expires, $signingKey);
 }
 
-/** The category Meta's Media upload endpoint wants for a mime type ('image'|'video'|'audio'|'document'). */
+/**
+ * The category Meta's Media upload endpoint wants for a mime type ('image'|'video'|'audio'|'document').
+ *
+ * @param string $mime  a MIME type, parameters after ';' ignored
+ */
 function messagingMediaCategory(string $mime): string
 {
     $mime = strtolower(trim(explode(';', $mime)[0]));
@@ -219,6 +238,9 @@ function messagingMediaCategory(string $mime): string
  *
  * The phone behaviour is unchanged and must stay that way: whatsapp is the
  * default so every existing caller keeps its exact previous result.
+ *
+ * @param string $raw  the sender id as received or typed - a phone number, Slack/Mattermost user id, Teams or Telegram chat id
+ * @param string $channelType  the channel type (whatsapp, slack, mattermost, teams, telegram, ...); anything else is treated as a phone
  */
 function normaliseChannelIdentifier(string $raw, string $channelType = 'whatsapp'): string
 {
@@ -268,6 +290,8 @@ function normaliseChannelIdentifier(string $raw, string $channelType = 'whatsapp
  * keys. Unrecognised or empty input falls back to English — I18n::tFor()
  * would do that anyway, but resolving it here keeps the fallback visible to
  * the caller (e.g. for deciding whether to bother storing it).
+ *
+ * @param string $raw  the client-reported language tag, e.g. "en-US" or "pt-BR"; empty gives 'en'
  */
 function messagingNormaliseLocale(string $raw): string
 {
@@ -292,6 +316,8 @@ function messagingNormaliseLocale(string $raw): string
 
 /**
  * A sensible file extension for a media MIME type (for naming downloaded media).
+ *
+ * @param string $mime  the media's MIME type, parameters after ';' ignored
  */
 function messagingExtForMime(string $mime): string
 {
@@ -320,6 +346,8 @@ function messagingExtForMime(string $mime): string
 /**
  * How many distinct {{n}} placeholders a template body uses (the highest index).
  * e.g. "Hi {{1}}, ref {{2}}" → 2.
+ *
+ * @param string $body  the template text with {{1}}, {{2}} ... placeholders
  */
 function messagingTemplateVarCount(string $body): int
 {
@@ -332,6 +360,9 @@ function messagingTemplateVarCount(string $body): int
 /**
  * Substitute {{1}}, {{2}}, … in a template body with the given ordered values, for
  * storing/showing what was actually sent. Missing values are left blank.
+ *
+ * @param string $body  the template text with {{1}}, {{2}} ... placeholders
+ * @param array $vars  the values in placeholder order ({{1}} takes the first); keys are ignored
  */
 function messagingRenderTemplate(string $body, array $vars): string
 {
@@ -407,6 +438,9 @@ const MESSAGING_THREADED_CHANNELS = ['slack', 'teams', 'mattermost'];
 /**
  * The address to reply to on a conversation row - to_recipients on threaded channels
  * (Slack, Teams, Mattermost), from_address elsewhere.
+ *
+ * @param string $channelType  the channel type, e.g. 'slack' or 'whatsapp'
+ * @param array $row  the customer's latest inbound emails row - needs from_address and to_recipients
  */
 function messagingReplyAddress(string $channelType, array $row): string
 {
@@ -418,13 +452,19 @@ function messagingReplyAddress(string $channelType, array $row): string
 /**
  * True for channels with a reply window (WhatsApp); web chat, Slack, Telegram, Teams and
  * Mattermost have none.
+ *
+ * @param string $channelType  the channel type, e.g. 'whatsapp' or 'slack'
  */
 function channelHasServiceWindow(string $channelType): bool
 {
     return !in_array($channelType, ['webchat', 'slack', 'telegram', 'teams', 'mattermost'], true);
 }
 
-/** True when the last inbound message (UTC) was under 24 hours ago, so a free-form reply is still allowed. */
+/**
+ * True when the last inbound message (UTC) was under 24 hours ago, so a free-form reply is still allowed.
+ *
+ * @param ?string $lastInboundAt  the last inbound message time as a 'Y-m-d H:i:s' UTC string; null or empty means closed
+ */
 function channelWindowOpen(?string $lastInboundAt): bool
 {
     if (!$lastInboundAt) {
@@ -453,6 +493,8 @@ function channelWindowOpen(?string $lastInboundAt): bool
  * Returns true when the caller may act on this channel by virtue of being an
  * admin working on Slack; false means "fall through to the normal capability
  * check", which then produces the standard error.
+ *
+ * @param int $channelId  the messaging_channels id being acted on; 0 or less is always refused
  */
 function messagingAdminMayAdministerChannel(PDO $conn, int $channelId): bool
 {

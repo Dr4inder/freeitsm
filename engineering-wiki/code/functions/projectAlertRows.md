@@ -6,7 +6,7 @@ Live projects decorated with their health and exceptions, plus what the scan saw
 function projectAlertRows(PDO $conn, ?int $projectId = null): array
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 109.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 122.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 118 | `projectAlertRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 131 | `projectAlertRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

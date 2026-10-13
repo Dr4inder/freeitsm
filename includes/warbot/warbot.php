@@ -36,6 +36,8 @@ require_once __DIR__ . '/../warroom.php';
 /**
  * Does this message address Warbot?
  * Either "@Warbot …" anywhere in it, or a leading slash command.
+ *
+ * @param string $body  the chat message text as posted
  */
 function warbotIsAddressed(string $body): bool
 {
@@ -111,6 +113,8 @@ function warbotHelpText(): string
 /**
  * Run a slash command. Returns null if the text is not one.
  * 🔑 NO MODEL INVOLVED — this is the path that still works during the outage.
+ *
+ * @param string $body  the message text; a command is a leading "/name" with any argument after it
  */
 function warbotTryCommand(PDO $conn, int $analystId, string $body): ?string
 {
@@ -145,6 +149,8 @@ function warbotTryCommand(PDO $conn, int $analystId, string $body): ?string
  * answers, no preamble, and — the part that matters most — say when you do not
  * know. A bot that guesses during an incident is worse than one that shrugs,
  * because its guess gets repeated to the business.
+ *
+ * @param string $channelName  the channel's display name, written into the prompt
  */
 function warbotSystemPrompt(string $channelName): string
 {
@@ -188,6 +194,7 @@ SYS;
 /**
  * Answer a question. Returns the text to post, or null if there is nothing to say.
  *
+ * @param int    $channelId the warroom_channels id the question was asked in, for its name in the prompt
  * @param string $question the message addressed to Warbot, with the @Warbot removed
  * @param array  $recent   recent messages for context: [['author'=>…,'body'=>…], …]
  */
@@ -295,6 +302,8 @@ function warbotAnswer(PDO $conn, int $analystId, int $channelId, string $questio
  * locale would need its own sentinel; until then a missed match only means the
  * notice is truncated to 200 characters rather than dropped, which is already
  * enough to stop it being copied wholesale.
+ *
+ * @param string $body  an earlier Warbot message's text
  */
 function warbotLooksLikeStatusNotice(string $body): bool
 {
@@ -302,7 +311,11 @@ function warbotLooksLikeStatusNotice(string $body): bool
         || stripos($body, 'so I cannot answer questions in plain English') !== false;
 }
 
-/** What Warbot says when the brain is unreachable but the hands still work. */
+/**
+ * What Warbot says when the brain is unreachable but the hands still work.
+ *
+ * @param string $why  the reason, worded to start a sentence, e.g. 'no AI provider is configured'
+ */
 function warbotNoBrain(string $why): string
 {
     return $why . ", so I cannot answer questions in plain English right now.\n"
@@ -317,6 +330,10 @@ function warbotNoBrain(string $why): string
  * 1. ⚠️ Those two together are what distinguishes Warbot from a DELETED ANALYST,
  * which is the other reason analyst_id can be NULL — without the flag every one
  * of Warbot's messages would render as "Former analyst".
+ *
+ * @param int $channelId  the warroom_channels id to post into
+ * @param string $body  the reply text; blank posts nothing, longer than WARROOM_MAX_BODY is cut
+ * @param int $replyTo  the warroom_messages id being answered; 0 for none
  */
 function warbotPost(PDO $conn, int $channelId, string $body, int $replyTo = 0): int
 {
@@ -343,6 +360,8 @@ function warbotPost(PDO $conn, int $channelId, string $body, int $replyTo = 0): 
  * The reply is triggered by the asker's browser after the send, so a double
  * submit, a retry, or two people with the page open could otherwise produce two
  * identical answers in the room.
+ *
+ * @param int $messageId  the warroom_messages id of the question
  */
 function warbotAlreadyAnswered(PDO $conn, int $messageId): bool
 {

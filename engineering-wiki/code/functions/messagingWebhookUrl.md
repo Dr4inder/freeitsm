@@ -6,12 +6,12 @@ The full public webhook URL for a channel — what gets pasted into the provider
 function messagingWebhookUrl(PDO $conn, int $channelId): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 134.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 144.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
+| `$channelId` | `int` |  | the messaging_channels id, put in the URL's ?channel= parameter |
 
 **Returns:** `string`
 

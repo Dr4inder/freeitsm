@@ -6,7 +6,7 @@ POST /domains/{id}/lookup — ask the registry now
 function apiDomainsLookup(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 311.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 317.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

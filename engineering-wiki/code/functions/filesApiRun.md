@@ -6,11 +6,11 @@ Run an endpoint body and turn any failure into the UI's {success:false} shape.
 function filesApiRun(callable $fn): void
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 208.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 253.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fn` | `callable` |  |  |
+| `$fn` | `callable` |  | the endpoint's work, called with no arguments; it replies itself via `filesApiOk()` |
 
 **Returns:** `void`
 

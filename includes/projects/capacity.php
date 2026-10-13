@@ -43,7 +43,13 @@ require_once __DIR__ . '/settings.php';
 require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/../i18n.php';                // t() - a members-only project's neutral name
 
-/** The working days from $from to $to inclusive, as Y-m-d. $days: ISO weekdays (1 = Monday), Monday to Friday by default. */
+/**
+ * The working days from $from to $to inclusive, as Y-m-d. $days: ISO weekdays (1 = Monday), Monday to Friday by default.
+ *
+ * @param string $from  the first day, 'Y-m-d'
+ * @param string $to  the last day, 'Y-m-d' (included)
+ * @param array $days  the working weekdays as ISO numbers, 1 = Monday to 7 = Sunday
+ */
 function projectCapacityWorkdays(string $from, string $to, array $days = [1, 2, 3, 4, 5]): array
 {
     $out = [];
@@ -53,7 +59,12 @@ function projectCapacityWorkdays(string $from, string $to, array $days = [1, 2, 
     return $out;
 }
 
-/** Length of a rota shift in hours; a shift that ends at or before it starts runs past midnight. */
+/**
+ * Length of a rota shift in hours; a shift that ends at or before it starts runs past midnight.
+ *
+ * @param string $start  the shift's start time of day, e.g. '09:00'
+ * @param string $end  the shift's end time of day; at or before $start means it ends the next day
+ */
 function projectCapacityShiftHours(string $start, string $end): float
 {
     $s = strtotime('1970-01-01 ' . $start . ' UTC'); $e = strtotime('1970-01-01 ' . $end . ' UTC');
@@ -65,6 +76,7 @@ function projectCapacityShiftHours(string $start, string $end): float
  * The capacity view: each analyst's project hours and rota desk hours, week by week for the
  * next $weeks weeks, plus open tickets and work given to contractors.
  *
+ * @param int $viewerId  the analyst looking - which companies, projects and modules they may see
  * @param int $weeks 1-12
  * @return array{weeks:array, hours_per_week:float, amber:int, several:int, can_tickets:bool, rows:array, team_hours:float, team_tasks:int}
  */

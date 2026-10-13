@@ -6,11 +6,11 @@ The name to show for a person: preferred name, then display name, email, usernam
 function peopleName(array $r): string
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 55.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 67.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | a users row - preferred_name, display_name, email, username and id are read |
 
 **Returns:** `string`
 

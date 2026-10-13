@@ -6,7 +6,7 @@
 function ticketChecklistClosureMode(PDO $conn, ?int $tenantId): string
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 200.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 211.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

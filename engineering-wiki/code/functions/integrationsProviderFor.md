@@ -6,11 +6,11 @@ provider string → concrete connector.
 function integrationsProviderFor(array $connection): IssueTrackerProvider
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 274.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 289.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$connection` | `array` |  |  |
+| `$connection` | `array` |  | a connection row as loaded by `integrationsLoadConnection()`; its 'provider' picks the class |
 
 **Returns:** `IssueTrackerProvider`
 

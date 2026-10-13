@@ -6,12 +6,12 @@ UI-safe view of the config — never returns the plaintext key, only a mask and 
 function aiSettingsForUi(PDO $conn, string $ns): array
 ```
 
-Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 208.
+Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 222.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ns` | `string` |  |  |
+| `$ns` | `string` |  | a registered namespace, e.g. 'workflow_ai'; an unknown one throws |
 
 **Returns:** `array`
 

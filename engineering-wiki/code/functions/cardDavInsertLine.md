@@ -13,12 +13,12 @@ that malformed is not one to start editing.
 function cardDavInsertLine(string $raw, string $logicalLine): string
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 359.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 381.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
-| `$logicalLine` | `string` |  |  |
+| `$raw` | `string` |  | the card as it stands |
+| `$logicalLine` | `string` |  | the whole new content line, value already escaped; folded here |
 
 **Returns:** `string`
 

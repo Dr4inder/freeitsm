@@ -6,13 +6,13 @@ One project inside `$scope`, by code (PRJ-0042), id or a unique part of its name
 function projectAssistFind(PDO $conn, array $scope, $ref): array
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 50.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `array` |  |  |
-| `$ref` |  |  |  |
+| `$scope` | `array` |  | [sql, args]: the caller's company filter on alias p |
+| `$ref` |  |  | what the assistant was told: a code (PRJ-0042), an id, or part of the name (untrusted) |
 
 **Returns:** `array`
 

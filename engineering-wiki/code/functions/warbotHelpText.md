@@ -10,7 +10,7 @@ the table itself, so adding a command adds a line here and cannot not.
 function warbotHelpText(): string
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 89.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 91.
 
 **Returns:** `string`
 

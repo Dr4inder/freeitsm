@@ -6,7 +6,7 @@ The tools this analyst may actually use, in the shape aiProviderChatTools wants.
 function warbotToolsFor(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 351.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 353.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

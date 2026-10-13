@@ -6,13 +6,13 @@ One stage of a project (apiProjectStages), or answers 404 and stops.
 function apiProjectStage(PDO $conn, int $projectId, int $stageId): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 311.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 330.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$stageId` | `int` |  |  |
+| `$stageId` | `int` |  | the project_stages id, which must belong to the project |
 
 **Returns:** `array`
 

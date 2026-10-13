@@ -6,11 +6,11 @@ Is this a Microsoft mailbox authenticating as itself (client credentials)? There
 function mailboxIsAppOnly($mailbox)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 247.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 268.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row (provider, auth_mode) |
 
 ## Called from
 

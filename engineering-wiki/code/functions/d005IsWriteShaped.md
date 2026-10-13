@@ -6,11 +6,11 @@ Does this endpoint change anything? Writes are what make a missing guard dangero
 function d005IsWriteShaped(string $src): bool
 ```
 
-Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 106.
+Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$src` | `string` |  |  |
+| `$src` | `string` |  | the endpoint file's full PHP source |
 
 **Returns:** `bool`
 

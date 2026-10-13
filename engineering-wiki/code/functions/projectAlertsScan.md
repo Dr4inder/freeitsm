@@ -6,7 +6,7 @@ Compare each live project with what was seen last, and fire what changed. `$proj
 function projectAlertsScan(PDO $conn, ?int $projectId = null): array
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 137.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 150.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,9 +19,9 @@ Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 141 | `projectAlertsScan` | read [projects](/code/tables/projects.md) |  |
-| 155 | `projectAlertsScan` | **update** [projects](/code/tables/projects.md) (`alert_health`, `alert_exceptions`) |  |
-| 190 | `projectAlertsScan` | read [projects](/code/tables/projects.md) |  |
+| 154 | `projectAlertsScan` | read [projects](/code/tables/projects.md) |  |
+| 168 | `projectAlertsScan` | **update** [projects](/code/tables/projects.md) (`alert_health`, `alert_exceptions`) |  |
+| 203 | `projectAlertsScan` | read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

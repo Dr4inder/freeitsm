@@ -30,15 +30,15 @@ function workflowEmitOnce(
 ): bool
 ```
 
-Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 49.
+Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$event` | `string` |  |  |
-| `$entityKey` | `string` |  |  |
-| `$fingerprint` | `string` |  |  |
-| `$payload` | `array` |  |  |
+| `$event` | `string` |  | the trigger event key, e.g. 'sla.breached' |
+| `$entityKey` | `string` |  | what it is about, e.g. 'ticket:183:response' |
+| `$fingerprint` | `string` |  | the state it is about; a new value re-arms the emission |
+| `$payload` | `array` |  | the event payload handed to WorkflowEngine::dispatch() |
 
 **Returns:** `bool`
 
@@ -46,8 +46,8 @@ Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_sched
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 63 | `workflowEmitOnce` | read [workflows](/code/tables/workflows.md) |  |
-| 74 | `workflowEmitOnce` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 68 | `workflowEmitOnce` | read [workflows](/code/tables/workflows.md) |  |
+| 79 | `workflowEmitOnce` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
 
 ## Called from
 

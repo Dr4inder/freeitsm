@@ -32,7 +32,7 @@ its own problem. Left as it was rather than changed on the way past.
 function naive_now(): string
 ```
 
-Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 489.
+Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 539.
 
 **Returns:** `string`
 

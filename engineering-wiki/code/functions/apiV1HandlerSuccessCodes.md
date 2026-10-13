@@ -6,7 +6,7 @@ Scan the resource files for each handler's `apiRespond()` status codes, so an op
 function apiV1HandlerSuccessCodes(): array
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 342.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 379.
 
 **Returns:** `array`
 

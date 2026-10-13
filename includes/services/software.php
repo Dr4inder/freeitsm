@@ -33,6 +33,9 @@ class SoftwareService
     /**
      * Create (no id) or update (id present) a licence.
      * Returns ['id' => int, 'created' => bool].
+     *
+     * @param array $in  id (a licence to change; absent creates one), app_id, licence_type, licence_key, quantity, renewal_date,
+     *     notice_period_days, portal_url, cost, currency, purchase_date, vendor_contact, notes, status
      */
     public static function saveLicence(PDO $conn, ActorContext $ctx, array $in): array
     {
@@ -77,7 +80,11 @@ class SoftwareService
         return ['id' => $newId, 'created' => true];
     }
 
-    /** Delete a licence (leaf table). Returns the id. 404 if it does not exist. */
+    /**
+     * Delete a licence (leaf table). Returns the id. 404 if it does not exist.
+     *
+     * @param int $id  the licence (software_licences.id) to delete
+     */
     public static function deleteLicence(PDO $conn, ActorContext $ctx, int $id): int
     {
         $row = self::loadLicenceRow($conn, $id);
@@ -115,7 +122,11 @@ class SoftwareService
         }
     }
 
-    /** Load a licence row for update/delete, or throw 404. */
+    /**
+     * Load a licence row for update/delete, or throw 404.
+     *
+     * @param int $id  the licence (software_licences.id) to load
+     */
     private static function loadLicenceRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare("SELECT * FROM software_licences WHERE id = ?");
@@ -131,6 +142,9 @@ class SoftwareService
      * Collect + validate the writable licence fields (mirrors the API resource's
      * apiSoftwareLicenceFields coercions). On update, absent keys fall back to
      * the current row; on create they fall back to the column default.
+     *
+     * @param array $in  the licence fields as sent (see saveLicence())
+     * @param array $current  the stored row when updating, so absent keys keep their value; empty when creating
      */
     private static function collectFields(PDO $conn, array $in, array $current = []): array
     {
@@ -186,7 +200,12 @@ class SoftwareService
         return $f;
     }
 
-    /** Validate an optional YYYY-MM-DD date (throwing version of apiParseDateOnly). */
+    /**
+     * Validate an optional YYYY-MM-DD date (throwing version of apiParseDateOnly).
+     *
+     * @param mixed $value  the date as sent (YYYY-MM-DD); null or '' gives null
+     * @param string $field  the field name, used in the error message
+     */
     private static function parseDateOnly($value, string $field): ?string
     {
         if ($value === null || $value === '') {

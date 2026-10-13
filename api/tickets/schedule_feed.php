@@ -39,6 +39,9 @@ require_once '../../includes/timezone.php';   // naive_now(), for the work-windo
 /**
  * Sends an HTTP status and a plain-text message, then stops - the feed's only error
  * path, since a calendar app shows nothing richer.
+ *
+ * @param mixed $code  the HTTP status line after the protocol, e.g. '403 Forbidden'
+ * @param mixed $msg  the plain-text body the calendar app receives
  */
 function feed_deny($code, $msg) {
     header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code);

@@ -35,7 +35,11 @@ if (!($isSlackRequest && sessionIsAdmin())) {
     requireCapabilityJson(Cap::TICKETS_MESSAGING);
 }
 
-/** Treat blank or all-asterisk values as "unchanged" so masked secrets aren't wiped. */
+/**
+ * Treat blank or all-asterisk values as "unchanged" so masked secrets aren't wiped.
+ *
+ * @param mixed $v  a submitted secret field; blank or all asterisks (the masked value) means unchanged
+ */
 function provided($v): bool
 {
     $v = trim((string) $v);

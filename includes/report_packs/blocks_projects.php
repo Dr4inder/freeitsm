@@ -24,7 +24,13 @@ require_once __DIR__ . '/../projects/read.php';
 
 const RP_HEALTH_COLOURS = ['green' => '#16a34a', 'amber' => '#f59e0b', 'red' => '#dc2626'];
 
-/** Projects in the pack's company, decorated with health and progress. */
+/**
+ * Projects in the pack's company, decorated with health and progress.
+ *
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
+ * @param array $ids  project ids to narrow to; [] means every project
+ * @param bool $liveOnly  true for proposed and active projects only; false for all but cancelled
+ */
 function rpProjectRows(PDO $conn, int $analystId, $tenant, array $ids, bool $liveOnly): array
 {
     [$tSql, $tArgs] = rpProjectClause($conn, $analystId, $tenant);
@@ -55,6 +61,8 @@ function rpProjectRows(PDO $conn, int $analystId, $tenant, array $ids, bool $liv
 /**
  * The company clause plus members-only (3.3.0): a pack carries a members-only
  * project only when the person it is built for may see it - never for nobody.
+ *
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  */
 function rpProjectClause(PDO $conn, int $analystId, $tenant): array
 {
@@ -64,7 +72,11 @@ function rpProjectClause(PDO $conn, int $analystId, $tenant): array
     return [$tSql . $vSql, array_merge($tArgs, $vArgs)];
 }
 
-/** A health pill: the words the Projects module uses, in its colours. */
+/**
+ * A health pill: the words the Projects module uses, in its colours.
+ *
+ * @param ?string $h  the shown health: 'green', 'amber', 'red', or null for none
+ */
 function rpProjectHealthPill(?string $h): array
 {
     if ($h === null || !isset(RP_HEALTH_COLOURS[$h])) return ['pill' => t('projects.health.none'), 'colour' => '#64748b'];
@@ -74,6 +86,10 @@ function rpProjectHealthPill(?string $h): array
 /**
  * Projects block: KPI tiles - live projects, how many are green, amber and red now, and
  * stages ending in the period.
+ *
+ * @param array $o  the block's cleaned options (none are read)
+ * @param array $range  the pack's range from rpResolveRange() - for stages ending in the period
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  */
 function rpProjectsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -95,7 +111,13 @@ function rpProjectsKpis(PDO $conn, int $analystId, array $o, array $range, $tena
     ]];
 }
 
-/** Projects block: a chart of live projects by health (green, amber, red). A snapshot of today. */
+/**
+ * Projects block: a chart of live projects by health (green, amber, red). A snapshot of today.
+ *
+ * @param array $o  the block's cleaned options: projects (ids; [] for all), chart
+ * @param array $range  the pack's range (not used - a snapshot of today)
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
+ */
 function rpProjectsHealth(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $count = ['green' => 0, 'amber' => 0, 'red' => 0];
@@ -114,6 +136,10 @@ function rpProjectsHealth(PDO $conn, int $analystId, array $o, array $range, $te
 /**
  * Projects block: a table of projects with health, progress, current stage, target date
  * and, optionally, manager and the reason for the health.
+ *
+ * @param array $o  the block's cleaned options: projects, scope ('live' or all), notes, manager
+ * @param array $range  the pack's range (not used - a snapshot of today)
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  */
 function rpProjectsStatus(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -148,7 +174,13 @@ function rpProjectsStatus(PDO $conn, int $analystId, array $o, array $range, $te
     return ['kind' => 'table', 'snapshot' => true, 'rows' => $out, 'columns' => $cols, 'empty' => t('reporting.packs.empty.projects')];
 }
 
-/** Stage ends and target finishes inside the range, and whether each was met. */
+/**
+ * Stage ends and target finishes inside the range, and whether each was met.
+ *
+ * @param array $o  the block's cleaned options: projects (ids; [] for all)
+ * @param array $range  the pack's range from rpResolveRange() - from_date and to_date are used
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
+ */
 function rpProjectsMilestones(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$tSql, $tArgs] = rpProjectClause($conn, $analystId, $tenant);
@@ -195,7 +227,13 @@ function rpProjectsMilestones(PDO $conn, int $analystId, array $o, array $range,
     ]];
 }
 
-/** The open risks that matter most, across the chosen projects. */
+/**
+ * The open risks that matter most, across the chosen projects.
+ *
+ * @param array $o  the block's cleaned options: projects, limit, plans (show response plans)
+ * @param array $range  the pack's range (not used - open risks now)
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
+ */
 function rpProjectsRisks(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$tSql, $tArgs] = rpProjectClause($conn, $analystId, $tenant);

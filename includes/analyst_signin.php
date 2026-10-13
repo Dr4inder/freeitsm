@@ -97,6 +97,7 @@ function analystSignInTeamMethods(PDO $conn, ?int $analystId = null): array
 /**
  * Turn one analyst's team methods into a verdict.
  *
+ * @param array $teams  one analyst's entry from analystSignInTeamMethods() - a list of {team_id, team_name, key, label}
  * @return array{status:string, key:?int, teams:array}
  *         status 'none'     - no active team of theirs sets a method
  *                'agreed'   - one method; key is it (0 = local password)
@@ -155,7 +156,7 @@ function analystSignInApply(PDO $conn, int $analystId): string
 /**
  * Apply to several analysts and count the outcomes.
  *
- * @param int[] $analystIds
+ * @param int[] $analystIds  the analysts to bring into line; cast to int, duplicates and ids <= 0 skipped
  * @return array{changed:int, conflict:int}
  */
 function analystSignInApplyMany(PDO $conn, array $analystIds): array
@@ -169,7 +170,11 @@ function analystSignInApplyMany(PDO $conn, array $analystIds): array
     return $counts;
 }
 
-/** The members of a team, for the callers that change the team itself. */
+/**
+ * The members of a team, for the callers that change the team itself.
+ *
+ * @param int $teamId  the team whose members are wanted (analyst_teams.team_id)
+ */
 function analystSignInTeamMemberIds(PDO $conn, int $teamId): array
 {
     $stmt = $conn->prepare("SELECT analyst_id FROM analyst_teams WHERE team_id = ?");

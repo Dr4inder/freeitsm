@@ -6,13 +6,13 @@ Write the package for `$channel` to `$outPath`. Returns the zip's file name. Thr
 function teamsPackageBuild(PDO $conn, array $channel, string $outPath): string
 ```
 
-Defined in [includes/messaging/TeamsPackage.php](/code/files/includes/messaging/TeamsPackage.php.md), line 17.
+Defined in [includes/messaging/TeamsPackage.php](/code/files/includes/messaging/TeamsPackage.php.md), line 20.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channel` | `array` |  |  |
-| `$outPath` | `string` |  |  |
+| `$channel` | `array` |  | the Teams messaging_channels row, decrypted (credentials.app_id, name) |
+| `$outPath` | `string` |  | where to write the zip file; overwritten if it exists |
 
 **Returns:** `string`
 

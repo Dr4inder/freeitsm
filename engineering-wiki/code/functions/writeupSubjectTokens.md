@@ -11,11 +11,11 @@ recurring gaps behind a wall of unique-looking subjects.
 function writeupSubjectTokens(string $subject): array
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 465.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 478.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$subject` | `string` |  |  |
+| `$subject` | `string` |  | a ticket subject or article title |
 
 **Returns:** `array`
 

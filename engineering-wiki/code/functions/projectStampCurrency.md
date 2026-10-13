@@ -6,7 +6,7 @@ Stamp the install currency on a project that has none, so a later change of defa
 function projectStampCurrency(PDO $conn, int $projectId): void
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 80.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 84.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 83 | `projectStampCurrency` | **update** [projects](/code/tables/projects.md) (`currency`) |  |
+| 87 | `projectStampCurrency` | **update** [projects](/code/tables/projects.md) (`currency`) |  |
 
 ## Calls
 

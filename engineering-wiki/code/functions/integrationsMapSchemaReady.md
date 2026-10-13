@@ -6,7 +6,7 @@ Is the mapping table present? Separate gate again, for the same reason as the co
 function integrationsMapSchemaReady(PDO $conn): bool
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 913.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 969.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 918 | `integrationsMapSchemaReady` | read [integration_field_maps](/code/tables/integration_field_maps.md) |  |
+| 974 | `integrationsMapSchemaReady` | read [integration_field_maps](/code/tables/integration_field_maps.md) |  |
 
 ## Called from
 

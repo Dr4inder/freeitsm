@@ -6,7 +6,7 @@ GET /projects/{id}/tasks - its top-level tasks. Change them through /tasks.
 function apiProjectTasks(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 618.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 653.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 621 | `apiProjectTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md) |  |
+| 656 | `apiProjectTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

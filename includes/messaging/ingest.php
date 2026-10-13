@@ -23,6 +23,10 @@ require_once __DIR__ . '/../ticket_numbering.php';
 /**
  * Ingest one normalised inbound message for a (decrypted) channel row.
  * Returns ['status' => 'created'|'appended'|'duplicate', 'ticket_id' => int|null].
+ *
+ * @param array $channel  the messaging_channels row, decrypted
+ * @param array $msg  one normalised message from the provider's parseInbound() (from, to, body, profile_name, provider_msg_id,
+ *        media, and optionally csat, contact, sender_id, language_code, is_test)
  */
 function ingestInboundMessage(PDO $conn, array $channel, array $msg): array
 {
@@ -280,6 +284,11 @@ function ingestInboundMessage(PDO $conn, array $channel, array $msg): array
  *                    at once, and matching on the sender would collapse all five
  *                    onto one ticket. $replyAddress is "C08HELP:1719500000.0001",
  *                    which is exactly the thread.
+ *
+ * @param string $from  the normalised sender id (phone number, chat id or platform user id)
+ * @param string $channelType  the channel type, e.g. 'whatsapp', 'slack', 'telegram', 'teams', 'mattermost'
+ * @param string $replyAddress  the Slack thread address "<channel>:<threadTs>"; only read for Slack, '' otherwise
+ * @param ?int $channelId  the messaging_channels id; Telegram, Teams and Mattermost only match within it
  */
 function findOpenChannelTicket(PDO $conn, string $from, string $channelType, string $replyAddress = '', ?int $channelId = null): ?int
 {
@@ -330,6 +339,9 @@ function findOpenChannelTicket(PDO $conn, string $from, string $channelType, str
  *
  * Every failure path still returns a usable requester. Losing the identity must
  * never lose the ticket.
+ *
+ * @param array $channel  the Slack messaging_channels row, decrypted
+ * @param string $slackUserId  the sender's Slack user id
  */
 function resolveSlackRequester(PDO $conn, array $channel, string $slackUserId): array
 {
@@ -389,6 +401,9 @@ function resolveSlackRequester(PDO $conn, array $channel, string $slackUserId): 
  *   whole of the identity here: an address someone merely typed would file
  *   their chats under whoever owns it. users.email is unique, so a match is
  *   one person, never a guess between two.
+ *
+ * @param string $email  an address the platform vouches for; '' or invalid gives null
+ * @param string $name  the platform's display name, used if the user row has none
  */
 function messagingKnownPersonByEmail(PDO $conn, string $email, string $name): ?array
 {
@@ -422,6 +437,11 @@ function messagingKnownPersonByEmail(PDO $conn, string $email, string $name): ?a
  * Only WHO raised the ticket changes. Which ticket a message joins is still
  * decided by the platform id (findOpenChannelTicket()), because an id never
  * changes and an email can. Every failure path still returns a requester.
+ *
+ * @param array $channel  the Teams or Mattermost messaging_channels row, decrypted
+ * @param array $msg  the normalised message (Teams reads 'to' and 'sender_id')
+ * @param string $from  the normalised sender id - the key for the channel's own contact
+ * @param string $displayName  the name to use when the platform gives none
  */
 function resolveDirectoryRequester(PDO $conn, array $channel, array $msg, string $from, string $displayName): array
 {
@@ -512,13 +532,22 @@ function messagingIdentityLinksReady(PDO $conn): bool
     return $ready;
 }
 
-/** The placeholder's synthetic address - MUST match getOrCreateChannelUser(). */
+/**
+ * The placeholder's synthetic address - MUST match getOrCreateChannelUser().
+ *
+ * @param string $chatId  the Telegram chat id
+ */
 function messagingTelegramPlaceholderEmail(string $chatId): string
 {
     return ltrim($chatId, '+') . '@telegram.local';
 }
 
-/** Is this user id this chat's own placeholder (and not a real person)? */
+/**
+ * Is this user id this chat's own placeholder (and not a real person)?
+ *
+ * @param int $userId  the users.id to check
+ * @param string $chatId  the Telegram chat id
+ */
 function messagingTelegramIsPlaceholder(PDO $conn, int $userId, string $chatId): bool
 {
     $st = $conn->prepare("SELECT email FROM users WHERE id = ?");
@@ -533,6 +562,11 @@ function messagingTelegramIsPlaceholder(PDO $conn, int $userId, string $chatId):
  * Returns ['user_id'=>int, 'display_name'=>string (only when it should override
  * the caller's default), 'contact_only'=>bool (this message was a phone-number
  * share the caller should not turn into ticket text), 'is_new_placeholder'=>bool].
+ *
+ * @param array $channel  the Telegram messaging_channels row, decrypted
+ * @param string $chatId  the Telegram chat id (the normalised sender)
+ * @param array $msg  the normalised message (language_code, contact, is_test)
+ * @param string $profileName  the sender's Telegram name; '' uses the chat id
  */
 function messagingTelegramResolveIdentity(PDO $conn, array $channel, string $chatId, array $msg, string $profileName): array
 {
@@ -624,6 +658,12 @@ function messagingTelegramResolveIdentity(PDO $conn, array $channel, string $cha
 /**
  * A phone number has just arrived for this chat. Decide what it means, safely.
  *
+ * @param array $channel  the Telegram messaging_channels row, decrypted
+ * @param string $chatId  the Telegram chat id
+ * @param int $linkedUserId  the users.id the chat is linked to now - its placeholder, or a real person
+ * @param string $phone  the number Telegram vouched for, '+digits'
+ * @param string $locale  the language for the bot's reply
+ * @param bool $isTest  true for the settings self-test - nothing is sent to Telegram
  * @return array{0:int,1:string} [the user the chat now resolves to, display name override]
  */
 function messagingTelegramLinkPhone(PDO $conn, array $channel, string $chatId, int $linkedUserId, string $phone, string $locale = 'en', bool $isTest = false): array
@@ -727,6 +767,10 @@ function messagingTelegramLinkPhone(PDO $conn, array $channel, string $chatId, i
  * Record what happened on the ticket's audit trail (Audit tab), as automation:
  * analyst_id NULL is the established "nobody did this, the system did" marker
  * (see the ticket_audit comment in freeitsm.sql). Best-effort.
+ *
+ * @param string $field  the audit field name shown, e.g. 'Requester'
+ * @param ?string $old  the old value; null for none (cut to 500 characters)
+ * @param string $new  the new value or what happened (cut to 500 characters)
  */
 function messagingTelegramAudit(PDO $conn, int $ticketId, string $field, ?string $old, string $new): void
 {
@@ -739,7 +783,11 @@ function messagingTelegramAudit(PDO $conn, int $ticketId, string $field, ?string
     }
 }
 
-/** "Alice Real <alice@example.com>" - for audit entries. */
+/**
+ * "Alice Real <alice@example.com>" - for audit entries.
+ *
+ * @param int $userId  the users.id to describe
+ */
 function messagingUserLabel(PDO $conn, int $userId): string
 {
     $st = $conn->prepare("SELECT display_name, email FROM users WHERE id = ?");
@@ -755,6 +803,11 @@ function messagingUserLabel(PDO $conn, int $userId): string
  * A rating only counts if its request was sent to THIS customer on THIS channel
  * and has not been answered yet, so a replayed or forged button press changes
  * nothing. Never creates or touches a ticket.
+ *
+ * @param array $channel  the messaging_channels row, decrypted
+ * @param string $chatId  the normalised sender id the rating came from
+ * @param string $replyAddress  where the thanks goes - see messagingReplyAddress()
+ * @param array $reply  response_id, rating, button (true for a button press), and for Telegram callback_id, message_id, message_text
  */
 function messagingRecordCsatReply(PDO $conn, array $channel, string $chatId, string $replyAddress, array $reply): array
 {
@@ -811,6 +864,10 @@ function messagingRecordCsatReply(PDO $conn, array $channel, string $chatId, str
  *
  * Every outcome sends the SAME neutral text: telling a stranger "found your
  * account" would let anyone holding a phone confirm who is in this install.
+ *
+ * @param array $channel  the Telegram messaging_channels row, decrypted; other channel types send nothing
+ * @param string $chatId  the Telegram chat id
+ * @param string $text  the message to send
  */
 function messagingTelegramAck(array $channel, string $chatId, string $text): void
 {
@@ -845,6 +902,8 @@ function messagingTelegramAck(array $channel, string $chatId, string $text): voi
  *
  * A full scan rather than an indexed lookup: phone numbers are free text and
  * rarely normalised at entry, so SQL equality would miss real matches.
+ *
+ * @param string $phone  the number to look for, any format; under 7 digits matches nobody
  */
 function messagingFindUsersByPhone(PDO $conn, string $phone, ?int $tenantId): array
 {
@@ -883,6 +942,10 @@ function messagingFindUsersByPhone(PDO $conn, string $phone, ?int $tenantId): ar
  * one user. The users table requires an email, so we synthesise a stable
  * non-routable address ('+44…@whatsapp.local'); the real identity is the
  * display name (the WhatsApp profile name) shown on the ticket.
+ *
+ * @param string $from  the normalised sender id; becomes the local part of the placeholder email
+ * @param string $displayName  the name for a new user; '' uses $from. An existing user's name is not changed
+ * @param string $channelType  the channel type; becomes the placeholder email's domain ('<type>.local')
  */
 function getOrCreateChannelUser(PDO $conn, string $from, string $displayName, string $channelType): ?int
 {
@@ -907,7 +970,11 @@ function getOrCreateChannelUser(PDO $conn, string $from, string $displayName, st
     }
 }
 
-/** The origin id for a channel type (e.g. the seeded 'WhatsApp' origin), or null. */
+/**
+ * The origin id for a channel type (e.g. the seeded 'WhatsApp' origin), or null.
+ *
+ * @param string $channelType  the channel type, e.g. 'whatsapp' (looked up as the 'WhatsApp' origin)
+ */
 function getChannelOriginId(PDO $conn, string $channelType): ?int
 {
     $name = $channelType === 'whatsapp' ? 'WhatsApp' : ($channelType === 'webchat' ? 'Web chat' : ucfirst($channelType));
@@ -921,7 +988,13 @@ function getChannelOriginId(PDO $conn, string $channelType): ?int
     }
 }
 
-/** A short, human ticket subject from the first line of the first message. */
+/**
+ * A short, human ticket subject from the first line of the first message.
+ *
+ * @param string $channelType  the channel type, used as the subject's label
+ * @param string $displayName  the sender's name, used when the message has no text
+ * @param string $body  the first message's text; its first line, cut to 80 characters, becomes the subject
+ */
 function buildChannelSubject(string $channelType, string $displayName, string $body): string
 {
     $label = $channelType === 'whatsapp' ? 'WhatsApp' : ($channelType === 'webchat' ? 'Web chat' : ucfirst($channelType));
@@ -961,6 +1034,10 @@ function messagingGenerateTicketNumber(PDO $conn, ?int $tenantId = null): string
 /**
  * Stores one downloaded media file as an attachment on the channel message's email row.
  *
+ * @param int $emailId  the emails row the message was stored as
+ * @param string $filename  the file name the sender gave - untrusted, for display only
+ * @param string $contentType  the content type the provider claimed (not stored - the bytes decide)
+ * @param string $data  the file's bytes
  * @return array{stored:bool, reason:?string} — reason is set when the file was rejected or quarantined.
  */
 function saveChannelMediaAttachment(PDO $conn, int $emailId, string $filename, string $contentType, string $data): array

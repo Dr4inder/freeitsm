@@ -6,11 +6,11 @@ The first colour of a project's palette key - for a dot or a chip outside the mo
 function projectColourHex(?string $key): string
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 44.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 48.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `?string` |  |  |
+| `$key` | `?string` |  | the project's palette key from projects.colour, e.g. 'coral'; unknown or null gives coral |
 
 **Returns:** `string`
 

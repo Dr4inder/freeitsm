@@ -11,13 +11,13 @@ person per view to answer, and nobody has asked that.
 function tableViewTouch(PDO $conn, int $analystId, int $viewId): void
 ```
 
-Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 225.
+Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 240.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$viewId` | `int` |  |  |
+| `$viewId` | `int` |  | the view (table_views.id) just opened |
 
 **Returns:** `void`
 
@@ -25,7 +25,7 @@ Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 228 | `tableViewTouch` | **update** [table_views](/code/tables/table_views.md) (`last_used_datetime`) |  |
+| 243 | `tableViewTouch` | **update** [table_views](/code/tables/table_views.md) (`last_used_datetime`) |  |
 
 ## Calls
 

@@ -19,7 +19,11 @@ require_once '../../includes/oidc.php';
 require_once '../../includes/tenancy.php';
 require_once '../../includes/landing.php';   // re-issue the landing cookie on login (#63)
 
-/** Bounce back to the originating portal's login page with an error message. */
+/**
+ * Bounce back to the originating portal's login page with an error message.
+ *
+ * @param string $msg  the error shown on the login page, in plain text
+ */
 function ssoBail(string $msg): void {
     $loginPath = (($_SESSION['oidc_portal'] ?? 'analyst') === 'self-service')
         ? 'self-service/login.php' : 'login.php';
@@ -317,14 +321,22 @@ try {
 
 // --------------------------------------------------------------------------
 
-/** Loads one analyst row by id, or null when there is none. */
+/**
+ * Loads one analyst row by id, or null when there is none.
+ *
+ * @param int $id  the analysts.id to load
+ */
 function oidcLoadAnalyst(PDO $conn, int $id): ?array {
     $stmt = $conn->prepare("SELECT * FROM analysts WHERE id = ?");
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
-/** Loads one self-service user row by id, or null when there is none. */
+/**
+ * Loads one self-service user row by id, or null when there is none.
+ *
+ * @param int $id  the users.id (requester) to load
+ */
 function ssLoadUser(PDO $conn, int $id): ?array {
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$id]);
@@ -342,7 +354,11 @@ function ssLoadUser(PDO $conn, int $id): ?array {
  * handled at creation time (oidcCreateAnalyst / the requester INSERT), and
  * 'never' does nothing.
  *
+ * @param array $provider  the sso_providers row the user signed in with; only profile_sync_mode is read
  * @param string $table 'analysts' or 'users' - never user input
+ * @param array $record  the local account row as loaded (analysts or users), including id and the current profile values
+ * @param array $claims  the validated ID token claims, topped up from userinfo when sync is on
+ * @param string $name  the display name worked out from the claims; empty means leave the name alone
  */
 function oidcSyncProfile(PDO $conn, array $provider, string $table, array $record, array $claims, string $name): void {
     if (($provider['profile_sync_mode'] ?? 'never') !== 'always') return;
@@ -389,6 +405,8 @@ function oidcSyncProfile(PDO $conn, array $provider, string $table, array $recor
  * way (Entra `jobTitle`/`businessPhones`, Okta `title`, Keycloak `job_title`,
  * the standard `phone_number`), so each field tries the known spellings in
  * turn. Values are trimmed and cut to the column length; missing = null.
+ *
+ * @param array $claims  the OIDC claims (ID token merged with userinfo), keyed by claim name
  */
 function oidcExtractProfileAttributes(array $claims): array {
     $clean = function ($val, int $max = 100) {
@@ -442,6 +460,15 @@ function oidcExtractProfileAttributes(array $claims): array {
  * contact starts passwordless and unassigned), so we don't require an admin to
  * pre-enrol every customer. An already-assigned requester is still strictly
  * isolated to their own provider.
+ *
+ * @param array $provider  the sso_providers row being signed in with
+ * @param int $providerId  that provider's id
+ * @param string $sub  the user's subject (sub claim) at the identity provider - never empty here
+ * @param string $email  the email claim, lower-cased and trimmed; empty when the provider sent none
+ * @param bool $emailVerified  true when the provider vouches for the email (or the claim is missing and not required)
+ * @param string $name  the display name worked out from the claims
+ * @param array $tokens  the token endpoint response; id_token is kept in the session for single logout
+ * @param array $claims  the validated claims, used for profile sync
  */
 function completeSelfServiceSso(PDO $conn, array $provider, int $providerId, string $sub, string $email, bool $emailVerified, string $name, array $tokens, array $claims = []): void {
     // From here on this is a portal sign-in, so any error goes back to the
@@ -558,6 +585,14 @@ function completeSelfServiceSso(PDO $conn, array $provider, int $providerId, str
  * Create a new analyst from SSO claims, assigned to the given provider.
  * The local password is set to an unusable random hash (SSO users sign in
  * via the IdP, not a local password).
+ *
+ * @param int $providerId  the SSO provider the new analyst is assigned to
+ * @param string $preferredUser  the preferred_username claim (or email/sub), the base for the new username
+ * @param string $name  the display name; empty falls back to the username
+ * @param string $email  the email claim, lower-cased
+ * @param ?string $defaultModules  the provider's comma-separated module keys; null or blank means every module
+ * @param array $claims  the validated claims, read for job title, department and phones
+ * @param string $syncMode  the provider's profile_sync_mode - 'never' leaves the profile fields empty
  */
 function oidcCreateAnalyst(PDO $conn, int $providerId, string $preferredUser, string $name, string $email, ?string $defaultModules, array $claims = [], string $syncMode = 'never'): int {
     // Derive a unique username from the preferred username / email local-part.

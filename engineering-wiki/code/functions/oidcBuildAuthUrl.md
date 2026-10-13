@@ -12,15 +12,15 @@ function oidcBuildAuthUrl(
 ): string
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 126.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 146.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
-| `$disco` | `array` |  |  |
-| `$state` | `string` |  |  |
-| `$nonce` | `string` |  |  |
-| `$codeChallenge` | `string` |  |  |
+| `$provider` | `array` |  | the auth_providers row - client_id and scopes are used |
+| `$disco` | `array` |  | the provider's discovery document from `oidcDiscover()` |
+| `$state` | `string` |  | the random value the callback checks against the session (CSRF protection) |
+| `$nonce` | `string` |  | the random value the ID token must echo back |
+| `$codeChallenge` | `string` |  | the PKCE S256 challenge derived from the code verifier |
 
 **Returns:** `string`
 

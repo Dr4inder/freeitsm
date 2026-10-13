@@ -35,14 +35,14 @@ function knowledgeAclSql(
 ): array
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 503.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 540.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$viewer` | `KnowledgeViewer` |  |  |
-| `$alias` | `string` | `"a"` |  |
-| `$opts` | `array` | `[]` |  |
+| `$viewer` | `KnowledgeViewer` |  | who is reading |
+| `$alias` | `string` | `"a"` | the knowledge_articles alias in the calling query; '' when it has none |
+| `$opts` | `array` | `[]` | no_admin_floor (true) leaves out the administrator floor; other keys are ignored here |
 
 **Returns:** `array`
 
@@ -50,7 +50,7 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 562 | `knowledgeAclSql` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 599 | `knowledgeAclSql` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

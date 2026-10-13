@@ -11,13 +11,13 @@ nothing rather than a file.
 function warRoomAttachmentFor(PDO $conn, int $analystId, int $attachmentId): ?array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 923.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 993.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$attachmentId` | `int` |  |  |
+| `$attachmentId` | `int` |  | the warroom_attachments id asked for |
 
 **Returns:** `?array`
 
@@ -25,7 +25,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 923
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 926 | `warRoomAttachmentFor` | read [warroom_attachments](/code/tables/warroom_attachments.md), read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 996 | `warRoomAttachmentFor` | read [warroom_attachments](/code/tables/warroom_attachments.md), read [warroom_messages](/code/tables/warroom_messages.md) |  |
 
 ## Calls
 

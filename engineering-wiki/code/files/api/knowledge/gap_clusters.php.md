@@ -1,6 +1,6 @@
 # api/knowledge/gap_clusters.php
 
-> API endpoint - 146 lines
+> API endpoint - 151 lines
 
 API: Knowledge — what the assistant found.
 
@@ -23,7 +23,7 @@ you can click through and see the fourteen.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [gapStatusCounts()](/code/functions/gapStatusCounts.md) | 134 | How many clusters sit in each state, for the view's tabs. |
+| [gapStatusCounts()](/code/functions/gapStatusCounts.md) | 139 | How many clusters sit in each state, for the view's tabs. |
 
 ## Database
 
@@ -32,7 +32,7 @@ you can click through and see the fourteen.
 | 60 |  | read [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 | 78 |  | read [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md), read [tickets](/code/tables/tickets.md) |  |
 | 119 |  | read [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
-| 138 | `gapStatusCounts` | read [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
+| 143 | `gapStatusCounts` | read [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
 
 ## How it hangs together
 

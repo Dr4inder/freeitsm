@@ -1,6 +1,6 @@
 # includes/carddav_sync.php
 
-> PHP - 520 lines
+> PHP - 538 lines
 
 Importing people from a CardDAV address book.
 
@@ -31,21 +31,21 @@ test rig. (The transport half is CardDAV Contact Sync — Developer Guide.)
 
 | Function | Line | What it does |
 |---|--:|---|
-| [cdsyncMapCard()](/code/functions/cdsyncMapCard.md) | 67 | Turn one vCard into the person array the policy layer expects. |
-| [cdsyncPhones()](/code/functions/cdsyncPhones.md) | 145 | Split a card's telephone numbers into a phone and a mobile. |
-| [cdsyncPhoneLines()](/code/functions/cdsyncPhoneLines.md) | 172 | WHICH lines the two numbers came from, as indexes into the unfolded card. |
-| [cdsyncOrg()](/code/functions/cdsyncOrg.md) | 208 | Pull the department out of a structured `ORG` value. |
-| [cdsyncLocality()](/code/functions/cdsyncLocality.md) | 230 | The locality (town) from `ADR`, which is the part that answers "which site". |
-| [cdsyncResolveScope()](/code/functions/cdsyncResolveScope.md) | 256 | Which cards are in scope, resolved BEFORE anything is imported. |
-| [cdsyncInScope()](/code/functions/cdsyncInScope.md) | 314 | Is this mapped person inside the resolved scope? |
-| [cardDavSyncRun()](/code/functions/cardDavSyncRun.md) | 331 | Run an import for one CardDAV provider. |
+| [cdsyncMapCard()](/code/functions/cdsyncMapCard.md) | 69 | Turn one vCard into the person array the policy layer expects. |
+| [cdsyncPhones()](/code/functions/cdsyncPhones.md) | 149 | Split a card's telephone numbers into a phone and a mobile. |
+| [cdsyncPhoneLines()](/code/functions/cdsyncPhoneLines.md) | 177 | WHICH lines the two numbers came from, as indexes into the unfolded card. |
+| [cdsyncOrg()](/code/functions/cdsyncOrg.md) | 215 | Pull the department out of a structured `ORG` value. |
+| [cdsyncLocality()](/code/functions/cdsyncLocality.md) | 239 | The locality (town) from `ADR`, which is the part that answers "which site". |
+| [cdsyncResolveScope()](/code/functions/cdsyncResolveScope.md) | 268 | Which cards are in scope, resolved BEFORE anything is imported. |
+| [cdsyncInScope()](/code/functions/cdsyncInScope.md) | 331 | Is this mapped person inside the resolved scope? |
+| [cardDavSyncRun()](/code/functions/cardDavSyncRun.md) | 349 | Run an import for one CardDAV provider. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 337 | `cardDavSyncRun` | **insert** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id`) |  |
-| 477 | `cardDavSyncRun` | **update** [auth_providers](/code/tables/auth_providers.md) (`sync_last_run_datetime`, `sync_last_count`) |  |
+| 355 | `cardDavSyncRun` | **insert** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id`) |  |
+| 495 | `cardDavSyncRun` | **update** [auth_providers](/code/tables/auth_providers.md) (`sync_last_run_datetime`, `sync_last_count`) |  |
 
 ## How it hangs together
 

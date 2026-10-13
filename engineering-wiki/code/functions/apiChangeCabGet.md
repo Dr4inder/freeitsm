@@ -6,7 +6,7 @@ CAB — roster + votes
 function apiChangeCabGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 438.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 448.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 441 | `apiChangeCabGet` | read [change_cab_members](/code/tables/change_cab_members.md), read [analysts](/code/tables/analysts.md) |  |
+| 451 | `apiChangeCabGet` | read [change_cab_members](/code/tables/change_cab_members.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

@@ -8,13 +8,13 @@ Throws with the provider's own error message (or the HTTP code) when the call fa
 function formsTestOpenAI(string $apiKey, string $model, bool $verifySsl): array
 ```
 
-Defined in [api/forms/test_ai_key.php](/code/files/api/forms/test_ai_key.php.md), line 132.
+Defined in [api/forms/test_ai_key.php](/code/files/api/forms/test_ai_key.php.md), line 140.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$apiKey` | `string` |  |  |
-| `$model` | `string` |  |  |
-| `$verifySsl` | `bool` |  |  |
+| `$apiKey` | `string` |  | the OpenAI API key to test, in plain text |
+| `$model` | `string` |  | the model id to call, as chosen in the form's AI settings |
+| `$verifySsl` | `bool` |  | the "verify SSL" tick from the request - unused: `sslApplyCurl()` follows the global switch alone |
 
 **Returns:** `array`
 

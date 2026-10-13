@@ -11,11 +11,11 @@ explicitly rather than relying on this being set — see `templateGraphContext()
 function mailboxGraphBase($set = null)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 235.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 254.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$set` |  | `null` |  |
+| `$set` |  | `null` | the new base path ('/me' or '/users/<address>'), or null just to read it |
 
 ## Called from
 

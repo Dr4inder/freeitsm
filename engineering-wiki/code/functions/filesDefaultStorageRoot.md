@@ -6,7 +6,7 @@ The storage folder used when none is set: uploads/files under the application ro
 function filesDefaultStorageRoot(): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 45.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 55.
 
 **Returns:** `string`
 

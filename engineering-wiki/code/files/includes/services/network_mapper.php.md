@@ -1,6 +1,6 @@
 # includes/services/network_mapper.php
 
-> PHP - 518 lines
+> PHP - 594 lines
 
 NetworkMapperService — the shared write rules for network diagrams: create, full-contents save (metadata + nodes + connectors replace), delete (leaf/chain) and version fork.
 
@@ -33,28 +33,28 @@ the UI adapter maps its flat branding keys + node-id refs onto them.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 54 | `NetworkMapperService::createDiagram` | **insert** [network_diagrams](/code/tables/network_diagrams.md) (`parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center`) |  |
-| 106 | `NetworkMapperService::saveDiagram` | **update** [network_diagrams](/code/tables/network_diagrams.md) (`title`, `description`, `version_label`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center`, `footer_right`, `updated_datetime`) |  |
-| 155 | `NetworkMapperService::deleteDiagram` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
-| 156 | `NetworkMapperService::deleteDiagram` | **delete** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 158 | `NetworkMapperService::deleteDiagram` | **delete** [network_diagrams](/code/tables/network_diagrams.md) |  |
-| 179 | `NetworkMapperService::createVersion` | **insert** [network_diagrams](/code/tables/network_diagrams.md) (`parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center`) |  |
-| 202 | `NetworkMapperService::createVersion` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 205 | `NetworkMapperService::createVersion` | **insert** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) (`diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override`) |  |
-| 211 | `NetworkMapperService::createVersion` | read [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
-| 214 | `NetworkMapperService::createVersion` | **insert** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`diagram_id`, `from_node_id`, `to_node_id`, `cmdb_relationship_id`, `label`, `line_style`) |  |
-| 240 | `NetworkMapperService::loadDiagram` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
-| 265 | `NetworkMapperService::chainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
-| 276 | `NetworkMapperService::chainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
-| 319 | `NetworkMapperService::replaceContents` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
-| 320 | `NetworkMapperService::replaceContents` | **delete** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 326 | `NetworkMapperService::replaceContents` | **insert** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) (`diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override`) |  |
-| 350 | `NetworkMapperService::replaceContents` | **insert** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`diagram_id`, `from_node_id`, `to_node_id`, `cmdb_relationship_id`, `label`, `line_style`) |  |
-| 422 | `NetworkMapperService::autoPlacer` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 446 | `NetworkMapperService::resolveRelationshipId` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 459 | `NetworkMapperService::resolveRelationshipId` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
-| 470 | `NetworkMapperService::validateObjectExists` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 510 | `NetworkMapperService::validateIcon` | read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
+| 58 | `NetworkMapperService::createDiagram` | **insert** [network_diagrams](/code/tables/network_diagrams.md) (`parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center`) |  |
+| 115 | `NetworkMapperService::saveDiagram` | **update** [network_diagrams](/code/tables/network_diagrams.md) (`title`, `description`, `version_label`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center`, `footer_right`, `updated_datetime`) |  |
+| 169 | `NetworkMapperService::deleteDiagram` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
+| 170 | `NetworkMapperService::deleteDiagram` | **delete** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 172 | `NetworkMapperService::deleteDiagram` | **delete** [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 198 | `NetworkMapperService::createVersion` | **insert** [network_diagrams](/code/tables/network_diagrams.md) (`parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center`) |  |
+| 221 | `NetworkMapperService::createVersion` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 224 | `NetworkMapperService::createVersion` | **insert** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) (`diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override`) |  |
+| 230 | `NetworkMapperService::createVersion` | read [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
+| 233 | `NetworkMapperService::createVersion` | **insert** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`diagram_id`, `from_node_id`, `to_node_id`, `cmdb_relationship_id`, `label`, `line_style`) |  |
+| 263 | `NetworkMapperService::loadDiagram` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 296 | `NetworkMapperService::chainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 307 | `NetworkMapperService::chainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 368 | `NetworkMapperService::replaceContents` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
+| 369 | `NetworkMapperService::replaceContents` | **delete** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 375 | `NetworkMapperService::replaceContents` | **insert** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) (`diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override`) |  |
+| 399 | `NetworkMapperService::replaceContents` | **insert** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`diagram_id`, `from_node_id`, `to_node_id`, `cmdb_relationship_id`, `label`, `line_style`) |  |
+| 478 | `NetworkMapperService::autoPlacer` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 506 | `NetworkMapperService::resolveRelationshipId` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 519 | `NetworkMapperService::resolveRelationshipId` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
+| 534 | `NetworkMapperService::validateObjectExists` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 586 | `NetworkMapperService::validateIcon` | read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
 
 ## How it hangs together
 

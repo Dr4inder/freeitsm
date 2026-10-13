@@ -33,15 +33,15 @@ function warRoomSearch(
 ): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 968.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1042.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$query` | `string` |  |  |
-| `$channelId` | `?int` | `null` |  |
-| `$limit` | `int` | `60` |  |
+| `$query` | `string` |  | the words typed; up to six, all must appear (substring match) |
+| `$channelId` | `?int` | `null` | limit to one channel; null searches every channel the analyst can read |
+| `$limit` | `int` | `60` | the most results, 1-200 |
 
 **Returns:** `array`
 
@@ -49,9 +49,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 968
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 992 | `warRoomSearch` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
-| 1006 | `warRoomSearch` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 1010 | `warRoomSearch` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+| 1066 | `warRoomSearch` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
+| 1080 | `warRoomSearch` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 1084 | `warRoomSearch` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
 
 ## Calls
 

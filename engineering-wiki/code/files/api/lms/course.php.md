@@ -1,6 +1,6 @@
 # api/lms/course.php
 
-> API endpoint - 102 lines
+> API endpoint - 105 lines
 
 LMS API: Single course operations (GET detail, PUT update, DELETE deactivate)
 
@@ -16,17 +16,17 @@ LMS API: Single course operations (GET detail, PUT update, DELETE deactivate)
 
 | Function | Line | What it does |
 |---|--:|---|
-| [lmsReadPassMark()](/code/functions/lmsReadPassMark.md) | 39 | Read a pass mark off the request. Null means "no pass mark" — the course is marked complete on reaching the end rather than passed/failed. Anything outside 0-100 is a bad request rather than something to silently clamp: a course whose pass mark isn't what the author typed is worse than an error. |
+| [lmsReadPassMark()](/code/functions/lmsReadPassMark.md) | 42 | Read a pass mark off the request. Null means "no pass mark" — the course is marked complete on reaching the end rather than passed/failed. Anything outside 0-100 is a bad request rather than something to silently clamp: a course whose pass mark isn't what the author typed is worse than an error. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 21 |  | read [lms_courses](/code/tables/lms_courses.md) |  |
-| 63 |  | **insert** [lms_courses](/code/tables/lms_courses.md) (`title`, `description`, `content_type`, `pass_mark`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 84 |  | **update** [lms_courses](/code/tables/lms_courses.md) (`title`, `description`, `pass_mark`, `updated_datetime`) |  |
-| 87 |  | **update** [lms_courses](/code/tables/lms_courses.md) (`title`, `description`, `updated_datetime`) |  |
-| 95 |  | **update** [lms_courses](/code/tables/lms_courses.md) (`is_active`, `updated_datetime`) |  |
+| 66 |  | **insert** [lms_courses](/code/tables/lms_courses.md) (`title`, `description`, `content_type`, `pass_mark`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 87 |  | **update** [lms_courses](/code/tables/lms_courses.md) (`title`, `description`, `pass_mark`, `updated_datetime`) |  |
+| 90 |  | **update** [lms_courses](/code/tables/lms_courses.md) (`title`, `description`, `updated_datetime`) |  |
+| 98 |  | **update** [lms_courses](/code/tables/lms_courses.md) (`is_active`, `updated_datetime`) |  |
 
 ## How it hangs together
 

@@ -6,7 +6,7 @@ GET /cmdb/objects/{id} — fully hydrated
 function apiCmdbObjectsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 285.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 296.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,12 +21,12 @@ Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 300 | `apiCmdbObjectsGet` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 302 | `apiCmdbObjectsGet` | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 347 | `apiCmdbObjectsGet` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 354 | `apiCmdbObjectsGet` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 375 | `apiCmdbObjectsGet` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 385 | `apiCmdbObjectsGet` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 311 | `apiCmdbObjectsGet` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 313 | `apiCmdbObjectsGet` | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 358 | `apiCmdbObjectsGet` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 365 | `apiCmdbObjectsGet` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 386 | `apiCmdbObjectsGet` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 396 | `apiCmdbObjectsGet` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
 
 ## Calls
 

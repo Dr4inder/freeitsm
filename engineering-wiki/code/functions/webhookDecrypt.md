@@ -6,11 +6,11 @@ Decrypt; plaintext passes straight through (pre-encryption rows still work).
 function webhookDecrypt(?string $v): ?string
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 56.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` | `?string` |  |  |
+| `$v` | `?string` |  | a stored value, encrypted or (on older rows) plain; null and '' come back unchanged |
 
 **Returns:** `?string`
 

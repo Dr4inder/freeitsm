@@ -1,6 +1,6 @@
 # includes/encryption.php
 
-> PHP - 379 lines
+> PHP - 394 lines
 
 AES-256-GCM Encryption Helper
 
@@ -17,23 +17,23 @@ The ENC: prefix allows gradual migration - unencrypted values pass through uncha
 
 | Function | Line | What it does |
 |---|--:|---|
-| [isMaskedSettingKey()](/code/functions/isMaskedSettingKey.md) | 92 | Check if a system_settings key should be masked when returned to the client. |
-| [maskSecret()](/code/functions/maskSecret.md) | 99 | Produce a "****<last4>" mask. Empty input returns ''. |
-| [isMaskedNoChangeValue()](/code/functions/isMaskedNoChangeValue.md) | 110 | Treat a save-time value as "leave existing untouched" when it's empty, null, or starts with one or more asterisks (i.e. the user submitted the masked placeholder unchanged). |
-| [isEncryptedSettingKey()](/code/functions/isEncryptedSettingKey.md) | 184 | Should this system_settings key be encrypted at rest? |
-| [isSecretSettingName()](/code/functions/isSecretSettingName.md) | 195 | Is this key named like a credential (*_password, *_secret, *_token, *_api_key)? The rule `isEncryptedSettingKey()` falls back on, shared so a reader can refuse to send such a key in the clear (api/settings/get_system_settings.php). |
-| [getEncryptionKey()](/code/functions/getEncryptionKey.md) | 202 | Load the encryption key from the key file |
-| [encryptValue()](/code/functions/encryptValue.md) | 223 | Encrypt a plaintext value using AES-256-GCM |
-| [decryptValue()](/code/functions/decryptValue.md) | 265 | Decrypt an encrypted value |
-| [decryptMailboxRow()](/code/functions/decryptMailboxRow.md) | 313 | Decrypt all encrypted columns in a target_mailboxes row. |
-| [settingsGetDecrypted()](/code/functions/settingsGetDecrypted.md) | 350 | Read system_settings values with any encryption already undone. |
-| [settingGetDecrypted()](/code/functions/settingGetDecrypted.md) | 373 | One setting, decrypted. See `settingsGetDecrypted()`. |
+| [isMaskedSettingKey()](/code/functions/isMaskedSettingKey.md) | 94 | Check if a system_settings key should be masked when returned to the client. |
+| [maskSecret()](/code/functions/maskSecret.md) | 103 | Produce a "****<last4>" mask. Empty input returns ''. |
+| [isMaskedNoChangeValue()](/code/functions/isMaskedNoChangeValue.md) | 116 | Treat a save-time value as "leave existing untouched" when it's empty, null, or starts with one or more asterisks (i.e. the user submitted the masked placeholder unchanged). |
+| [isEncryptedSettingKey()](/code/functions/isEncryptedSettingKey.md) | 192 | Should this system_settings key be encrypted at rest? |
+| [isSecretSettingName()](/code/functions/isSecretSettingName.md) | 205 | Is this key named like a credential (*_password, *_secret, *_token, *_api_key)? The rule `isEncryptedSettingKey()` falls back on, shared so a reader can refuse to send such a key in the clear (api/settings/get_system_settings.php). |
+| [getEncryptionKey()](/code/functions/getEncryptionKey.md) | 212 | Load the encryption key from the key file |
+| [encryptValue()](/code/functions/encryptValue.md) | 233 | Encrypt a plaintext value using AES-256-GCM |
+| [decryptValue()](/code/functions/decryptValue.md) | 275 | Decrypt an encrypted value |
+| [decryptMailboxRow()](/code/functions/decryptMailboxRow.md) | 323 | Decrypt all encrypted columns in a target_mailboxes row. |
+| [settingsGetDecrypted()](/code/functions/settingsGetDecrypted.md) | 360 | Read system_settings values with any encryption already undone. |
+| [settingGetDecrypted()](/code/functions/settingGetDecrypted.md) | 388 | One setting, decrypted. See `settingsGetDecrypted()`. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 354 | `settingsGetDecrypted` | read [system_settings](/code/tables/system_settings.md) |  |
+| 364 | `settingsGetDecrypted` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

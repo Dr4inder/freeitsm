@@ -6,11 +6,11 @@ Tidy a ticket subject into something that reads as a knowledge-base heading. Cos
 function writeupCleanLabel(string $subject): string
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 593.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 615.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$subject` | `string` |  |  |
+| `$subject` | `string` |  | the ticket subject to tidy into a heading |
 
 **Returns:** `string`
 

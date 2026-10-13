@@ -6,7 +6,7 @@ A ticket's number for audit and note text; "#id" if the lookup fails.
 function mergeTicketNumber(PDO $conn, int $ticketId): string
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 613.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 630.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 615 | `mergeTicketNumber` | read [tickets](/code/tables/tickets.md) |  |
+| 632 | `mergeTicketNumber` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Called from
 

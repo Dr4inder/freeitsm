@@ -21,12 +21,12 @@ See the Gmail mail collection developer guide on the wiki.
 function gmailResolveListLabelId(string $accessToken, array $mailbox): string
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 209.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 238.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$mailbox` | `array` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
+| `$mailbox` | `array` |  | the target_mailboxes row; email_folder is the label name, blank meaning INBOX |
 
 **Returns:** `string`
 

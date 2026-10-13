@@ -6,11 +6,11 @@ The SQL expression for a contract's customer company, for alias `$c`. Uses the c
 function contractCustomerTenantExpr(string $c = 'c'): string
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 71.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 77.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `string` | `'c'` |  |
+| `$c` | `string` | `'c'` | the alias the calling query gives the contracts table (trusted - put straight into SQL) |
 
 **Returns:** `string`
 
@@ -18,7 +18,7 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 73 | `contractCustomerTenantExpr` | read [users](/code/tables/users.md) |  |
+| 79 | `contractCustomerTenantExpr` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

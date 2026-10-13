@@ -6,13 +6,13 @@ Works out, without changing anything, what a Database Verification run would do 
 function dbVerifyPreview(PDO $conn, array $schema, string $dbName): array
 ```
 
-Defined in [includes/db_verify_preview.php](/code/files/includes/db_verify_preview.php.md), line 157.
+Defined in [includes/db_verify_preview.php](/code/files/includes/db_verify_preview.php.md), line 176.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$schema` | `array` |  | the db_verify table => [column => definition] map |
-| `$dbName` | `string` |  |  |
+| `$dbName` | `string` |  | the database (schema) name being verified |
 
 **Returns:** array  the four lists plus a summary of counts, and read_only => true
 

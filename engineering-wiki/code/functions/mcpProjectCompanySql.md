@@ -9,12 +9,12 @@ companies sees nothing. Projects with no company count as the Default company's.
 function mcpProjectCompanySql(PDO $conn, array $apiKey): array
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 230.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 251.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$apiKey` | `array` |  |  |
+| `$apiKey` | `array` |  | the authenticated api_keys row; a null company_scope means every company |
 
 **Returns:** `array`
 

@@ -6,7 +6,7 @@ Blank the stored request/response bodies of deliveries past the retention window
 function webhookPurgePayloads(PDO $conn): int
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 138.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 146 | `webhookPurgePayloads` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`request_body`, `response_snippet`, `payload_purged`, `updated_datetime`) |  |
+| 156 | `webhookPurgePayloads` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`request_body`, `response_snippet`, `payload_purged`, `updated_datetime`) |  |
 
 ## Calls
 

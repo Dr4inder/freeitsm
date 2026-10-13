@@ -6,7 +6,7 @@ POST /problems/{id}/notes - adds a note to the problem through ProblemsService.
 function apiProblemNotesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 329.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 335.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

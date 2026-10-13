@@ -6,11 +6,11 @@
 function domainCtIssuer(string $dn): string
 ```
 
-Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 95.
+Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 102.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dn` | `string` |  |  |
+| `$dn` | `string` |  | an issuer distinguished name as crt.sh gives it, e.g. "C=US, O=Let's Encrypt, CN=R11" |
 
 **Returns:** `string`
 

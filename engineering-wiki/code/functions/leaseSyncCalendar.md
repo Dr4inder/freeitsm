@@ -10,7 +10,7 @@ problem cannot fail a lease save.
 function leaseSyncCalendar(PDO $conn): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 751.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 839.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,10 +24,10 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 751.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 757 | `leaseSyncCalendar` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
-| 761 | `leaseSyncCalendar` | read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 770 | `leaseSyncCalendar` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
-| 776 | `leaseSyncCalendar` | read [assets](/code/tables/assets.md) |  |
+| 845 | `leaseSyncCalendar` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
+| 849 | `leaseSyncCalendar` | read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 858 | `leaseSyncCalendar` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
+| 864 | `leaseSyncCalendar` | read [assets](/code/tables/assets.md) |  |
 
 ## Calls
 

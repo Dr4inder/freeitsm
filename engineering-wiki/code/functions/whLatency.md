@@ -6,11 +6,11 @@ A delivery latency in seconds as translated text (under a second, seconds, minut
 function whLatency($s)
 ```
 
-Defined in [system/webhooks/index.php](/code/files/system/webhooks/index.php.md), line 153.
+Defined in [system/webhooks/index.php](/code/files/system/webhooks/index.php.md), line 157.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | the latency in seconds; null for none |
 
 ## Calls
 

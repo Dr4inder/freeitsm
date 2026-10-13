@@ -6,12 +6,12 @@ One Projects setting as a string; '' when it is not set.
 function projectSetting(PDO $conn, string $key): string
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 172.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 180.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the setting key, e.g. 'project_currency' (see `projectSettingDefinitions()`) |
 
 **Returns:** `string`
 

@@ -17,12 +17,12 @@ a hand-rolled tag regex.
 function portalArticlePreview(?string $body, int $length = 400): string
 ```
 
-Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), line 102.
+Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `?string` |  |  |
-| `$length` | `int` | `400` |  |
+| `$body` | `?string` |  | the article body HTML; null gives '' |
+| `$length` | `int` | `400` | the most characters kept before an ellipsis is added |
 
 **Returns:** `string`
 

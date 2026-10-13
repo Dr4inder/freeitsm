@@ -12,12 +12,12 @@ NAME of who you want, not which of four tables they live in.
 function handleSearch(PDO $conn, array $src): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 333.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 352.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$src` | `array` |  |  |
+| `$src` | `array` |  | the query string (`$_GET`); q is the name to look for, at least 2 characters |
 
 **Returns:** `void`
 
@@ -25,10 +25,10 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 350 | `handleSearch` | read [analysts](/code/tables/analysts.md) |  |
-| 351 | `handleSearch` | read [teams](/code/tables/teams.md) |  |
-| 352 | `handleSearch` | read [users](/code/tables/users.md) |  |
-| 353 | `handleSearch` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 369 | `handleSearch` | read [analysts](/code/tables/analysts.md) |  |
+| 370 | `handleSearch` | read [teams](/code/tables/teams.md) |  |
+| 371 | `handleSearch` | read [users](/code/tables/users.md) |  |
+| 372 | `handleSearch` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
 
 ## Called from
 

@@ -1,6 +1,6 @@
 # includes/task_contractors.php
 
-> PHP - 208 lines
+> PHP - 223 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Projects Internals 10 Contractors](https://github.com/edmozley/freeitsm/wiki/Projects-Internals-10-Contractors)
@@ -33,29 +33,29 @@ you can already see does not, like a project or team name.
 | Function | Line | What it does |
 |---|--:|---|
 | [tasksContractorReady()](/code/functions/tasksContractorReady.md) | 31 | Has Database Verification added the two columns? Before it, there are no contractors and no errors. |
-| [tasksSupplierNameSql()](/code/functions/tasksSupplierNameSql.md) | 42 | The name a supplier goes by. |
-| [tasksContractors()](/code/functions/tasksContractors.md) | 51 | The contractor on each of these tasks: [task_id => {supplier_id, supplier_name, contact_id, contact_name, contact_email}]. Tasks without one are absent. |
-| [tasksWithContractors()](/code/functions/tasksWithContractors.md) | 69 | Add the contractor fields to task rows (each with an 'id'). |
-| [tasksContractorValidate()](/code/functions/tasksContractorValidate.md) | 85 | Check a supplier / contact pair: the supplier exists; the contact (if any) works for it. A contact alone brings their supplier. Returns [supplierId, contactId]. |
-| [tasksContractorChoices()](/code/functions/tasksContractorChoices.md) | 107 | Suppliers to choose from, each with its active contacts. |
-| [tasksContractorEmailOn()](/code/functions/tasksContractorEmailOn.md) | 117 | Is project_contractor_email on? |
-| [tasksContractorEmail()](/code/functions/tasksContractorEmail.md) | 132 | Email a task's contractor contact - `$kind` 'assigned', 'due' (due soon) or 'overdue'. Quiet: false when the setting is off, there is no contact email or the send fails (the email log says which). Never throws. |
-| [tasksContractorReminders()](/code/functions/tasksContractorReminders.md) | 189 | The reminders, from the hourly scan (projectAlertsScan): two days before a contractor's task is due, and once the day after it is missed - each once per due date (the ledger), so moving the date re-arms them. Open tasks with a contact only; nothing when the setting is off. Returns how many were sent. |
+| [tasksSupplierNameSql()](/code/functions/tasksSupplierNameSql.md) | 46 | The name a supplier goes by. |
+| [tasksContractors()](/code/functions/tasksContractors.md) | 57 | The contractor on each of these tasks: [task_id => {supplier_id, supplier_name, contact_id, contact_name, contact_email}]. Tasks without one are absent. |
+| [tasksWithContractors()](/code/functions/tasksWithContractors.md) | 79 | Add the contractor fields to task rows (each with an 'id'). |
+| [tasksContractorValidate()](/code/functions/tasksContractorValidate.md) | 98 | Check a supplier / contact pair: the supplier exists; the contact (if any) works for it. A contact alone brings their supplier. Returns [supplierId, contactId]. |
+| [tasksContractorChoices()](/code/functions/tasksContractorChoices.md) | 120 | Suppliers to choose from, each with its active contacts. |
+| [tasksContractorEmailOn()](/code/functions/tasksContractorEmailOn.md) | 130 | Is project_contractor_email on? |
+| [tasksContractorEmail()](/code/functions/tasksContractorEmail.md) | 147 | Email a task's contractor contact - `$kind` 'assigned', 'due' (due soon) or 'overdue'. Quiet: false when the setting is off, there is no contact email or the send fails (the email log says which). Never throws. |
+| [tasksContractorReminders()](/code/functions/tasksContractorReminders.md) | 204 | The reminders, from the hourly scan (projectAlertsScan): two days before a contractor's task is due, and once the day after it is missed - each once per due date (the ledger), so moving the date re-arms them. Open tasks with a contact only; nothing when the setting is off. Returns how many were sent. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 35 | `tasksContractorReady` | read [tasks](/code/tables/tasks.md) |  |
-| 57 | `tasksContractors` | read [tasks](/code/tables/tasks.md), read [suppliers](/code/tables/suppliers.md), read [contacts](/code/tables/contacts.md) |  |
-| 90 | `tasksContractorValidate` | read [contacts](/code/tables/contacts.md) |  |
-| 99 | `tasksContractorValidate` | read [suppliers](/code/tables/suppliers.md) |  |
-| 109 | `tasksContractorChoices` | read [suppliers](/code/tables/suppliers.md) |  |
-| 110 | `tasksContractorChoices` | read [contacts](/code/tables/contacts.md) |  |
-| 137 | `tasksContractorEmail` | read [tasks](/code/tables/tasks.md), read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md) |  |
-| 149 | `tasksContractorEmail` | read [projects](/code/tables/projects.md) |  |
-| 192 | `tasksContractorReminders` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 198 | `tasksContractorReminders` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 63 | `tasksContractors` | read [tasks](/code/tables/tasks.md), read [suppliers](/code/tables/suppliers.md), read [contacts](/code/tables/contacts.md) |  |
+| 103 | `tasksContractorValidate` | read [contacts](/code/tables/contacts.md) |  |
+| 112 | `tasksContractorValidate` | read [suppliers](/code/tables/suppliers.md) |  |
+| 122 | `tasksContractorChoices` | read [suppliers](/code/tables/suppliers.md) |  |
+| 123 | `tasksContractorChoices` | read [contacts](/code/tables/contacts.md) |  |
+| 152 | `tasksContractorEmail` | read [tasks](/code/tables/tasks.md), read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md) |  |
+| 164 | `tasksContractorEmail` | read [projects](/code/tables/projects.md) |  |
+| 207 | `tasksContractorReminders` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 213 | `tasksContractorReminders` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
 
 ## How it hangs together
 

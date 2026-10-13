@@ -6,12 +6,12 @@ Drop a document from the index — used when its last link goes.
 function searchUnindexDocument(PDO $conn, int $documentId): void
 ```
 
-Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 144.
+Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 156.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$documentId` | `int` |  |  |
+| `$documentId` | `int` |  | the documents id |
 
 **Returns:** `void`
 

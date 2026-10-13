@@ -6,7 +6,7 @@ Do a reminder run.
 function lmsRemindersRun(PDO $conn, bool $dryRun = false): array
 ```
 
-Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 356.
+Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 374.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 381 | `lmsRemindersRun` | **insert** [lms_reminders_sent](/code/tables/lms_reminders_sent.md) (`learner_type`, `learner_id`, `course_id`, `reminder_kind`, `fingerprint`, `sent_datetime`) |  |
-| 407 | `lmsRemindersRun` | **delete** [lms_reminders_sent](/code/tables/lms_reminders_sent.md) |  |
+| 399 | `lmsRemindersRun` | **insert** [lms_reminders_sent](/code/tables/lms_reminders_sent.md) (`learner_type`, `learner_id`, `course_id`, `reminder_kind`, `fingerprint`, `sent_datetime`) |  |
+| 425 | `lmsRemindersRun` | **delete** [lms_reminders_sent](/code/tables/lms_reminders_sent.md) |  |
 
 ## Calls
 

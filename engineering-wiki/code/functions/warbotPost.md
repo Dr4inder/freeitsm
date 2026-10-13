@@ -11,14 +11,14 @@ of Warbot's messages would render as "Former analyst".
 function warbotPost(PDO $conn, int $channelId, string $body, int $replyTo = 0): int
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 321.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 338.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
-| `$body` | `string` |  |  |
-| `$replyTo` | `int` | `0` |  |
+| `$channelId` | `int` |  | the warroom_channels id to post into |
+| `$body` | `string` |  | the reply text; blank posts nothing, longer than WARROOM_MAX_BODY is cut |
+| `$replyTo` | `int` | `0` | the warroom_messages id being answered; 0 for none |
 
 **Returns:** `int`
 
@@ -26,7 +26,7 @@ Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 328 | `warbotPost` | **insert** [warroom_messages](/code/tables/warroom_messages.md) (`channel_id`, `analyst_id`, `body`, `is_bot`, `reply_to_id`, `created_datetime`) |  |
+| 345 | `warbotPost` | **insert** [warroom_messages](/code/tables/warroom_messages.md) (`channel_id`, `analyst_id`, `body`, `is_bot`, `reply_to_id`, `created_datetime`) |  |
 
 ## Called from
 

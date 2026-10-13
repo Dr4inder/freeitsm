@@ -6,11 +6,11 @@ Every card, validated. A card with a missing field or an unknown module or tier 
 function featureBingoCards(?array &$problems = null): array
 ```
 
-Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md), line 112.
+Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md), line 114.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$problems` | `?array` | `null` |  |
+| `$problems` | `?array` | `null` | out: reset to [] and filled with one "file#index: what is wrong" string per bad card |
 
 **Returns:** `array`
 

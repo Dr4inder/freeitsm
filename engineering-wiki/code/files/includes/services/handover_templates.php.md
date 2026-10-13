@@ -1,6 +1,6 @@
 # includes/services/handover_templates.php
 
-> PHP - 543 lines
+> PHP - 583 lines
 
 Handover document templates (discussion #56).
 
@@ -40,14 +40,14 @@ that gets emailed. See `renderBlocks()`.
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 115 | `HandoverTemplates::customColumns` | read [asset_fields](/code/tables/asset_fields.md) |  |
-| 239 | `HandoverTemplates::listAll` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
-| 257 | `HandoverTemplates::load` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
-| 290 | `HandoverTemplates::effective` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
-| 318 | `HandoverTemplates::save` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`name`, `blocks`, `is_active`, `updated_datetime`) |  |
-| 324 | `HandoverTemplates::save` | **insert** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`name`, `blocks`, `is_active`, `created_datetime`, `updated_datetime`) |  |
-| 339 | `HandoverTemplates::makeDefault` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`is_default`) |  |
-| 340 | `HandoverTemplates::makeDefault` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`is_default`, `is_active`) |  |
-| 346 | `HandoverTemplates::delete` | **delete** [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
+| 241 | `HandoverTemplates::listAll` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
+| 263 | `HandoverTemplates::load` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
+| 298 | `HandoverTemplates::effective` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
+| 330 | `HandoverTemplates::save` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`name`, `blocks`, `is_active`, `updated_datetime`) |  |
+| 336 | `HandoverTemplates::save` | **insert** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`name`, `blocks`, `is_active`, `created_datetime`, `updated_datetime`) |  |
+| 355 | `HandoverTemplates::makeDefault` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`is_default`) |  |
+| 356 | `HandoverTemplates::makeDefault` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`is_default`, `is_active`) |  |
+| 366 | `HandoverTemplates::delete` | **delete** [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
 
 ## How it hangs together
 

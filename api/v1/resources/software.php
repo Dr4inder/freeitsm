@@ -115,7 +115,11 @@ function apiSoftwareAppsList(PDO $conn, array $apiKey, array $params, array $bod
     ]);
 }
 
-/** Loads one discovered application row, or answers 404 and stops. */
+/**
+ * Loads one discovered application row, or answers 404 and stops.
+ *
+ * @param int $appId  the software_inventory_apps id
+ */
 function apiSoftwareLoadApp(PDO $conn, int $appId): array {
     $stmt = $conn->prepare("SELECT id, display_name, publisher, first_detected FROM software_inventory_apps WHERE id = ?");
     $stmt->execute([$appId]);
@@ -126,7 +130,11 @@ function apiSoftwareLoadApp(PDO $conn, int $appId): array {
     return $row;
 }
 
-/** Distinct non-system-component hosts for an app — the compliance install count. */
+/**
+ * Distinct non-system-component hosts for an app — the compliance install count.
+ *
+ * @param int $appId  the software_inventory_apps id
+ */
 function apiSoftwareInstallCount(PDO $conn, int $appId): int {
     $stmt = $conn->prepare(
         "SELECT COUNT(DISTINCT host_id) FROM software_inventory_detail
@@ -231,6 +239,8 @@ function apiSoftwareLicenceSelect(): string {
  * Shapes a licence row for the API, adding renewal_status - overdue, due_soon (inside
  * the notice period, 30 days by default) or ok - computed the way the licence screen
  * colours it.
+ *
+ * @param array $r  the software_licences row as apiSoftwareLicenceSelect() loads it, with app name, publisher, installs and creator
  */
 function apiSerializeLicence(array $r): array {
     // The licence screen's client-side colour logic, computed server-side:
@@ -271,7 +281,11 @@ function apiSerializeLicence(array $r): array {
     ];
 }
 
-/** Loads one licence row (apiSoftwareLicenceSelect), or answers 404 and stops. */
+/**
+ * Loads one licence row (apiSoftwareLicenceSelect), or answers 404 and stops.
+ *
+ * @param int $licenceId  the software_licences id
+ */
 function apiLoadLicence(PDO $conn, int $licenceId): array {
     $stmt = $conn->prepare(apiSoftwareLicenceSelect() . " WHERE l.id = ?");
     $stmt->execute([$licenceId]);

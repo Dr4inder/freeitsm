@@ -28,13 +28,13 @@ not millions — and a real clustering library is not worth a dependency here.
 function writeupCluster(array $items, callable $simFn, float $threshold): array
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 550.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 570.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$items` | `array` |  |  |
-| `$simFn` | `callable` |  |  |
-| `$threshold` | `float` |  |  |
+| `$items` | `array` |  | candidates sorted best seed first; each needs an 'id' plus whatever `$simFn` reads |
+| `$simFn` | `callable` |  | function(item, item): float - how alike two items are, 0-1 |
+| `$threshold` | `float` |  | the lowest similarity that joins an item to a cluster |
 
 **Returns:** `array`
 

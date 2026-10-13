@@ -29,7 +29,12 @@ function projectMilestonesReady(PDO $conn): bool
     return $ready;
 }
 
-/** done | missed | due - see the header. */
+/**
+ * done | missed | due - see the header.
+ *
+ * @param array $m  a project_milestones row - due_date and done_date are read
+ * @param ?string $today  the date to judge against, 'Y-m-d'; null means today (UTC)
+ */
 function projectMilestoneState(array $m, ?string $today = null): string
 {
     if (!empty($m['done_date'])) return 'done';
@@ -60,6 +65,8 @@ function projectMilestones(PDO $conn, int $projectId): array
 /**
  * Per project: how many milestones are missed, and the next one still to come
  * ({id, name, due_date} or null) - for health and the portfolio card.
+ *
+ * @param array $projectIds  the project ids to count for
  */
 function projectMilestoneStats(PDO $conn, array $projectIds): array
 {

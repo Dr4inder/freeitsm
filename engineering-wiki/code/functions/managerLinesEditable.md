@@ -6,7 +6,7 @@ May the signed-in analyst add or remove management lines? System -> Managers dec
 function managerLinesEditable(PDO $conn): bool
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 290.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

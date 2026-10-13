@@ -10,13 +10,13 @@ relationships and object_ref properties: both ends must pass.
 function analystCanAccessCmdbObject(PDO $conn, int $analystId, $objectId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 413.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 427.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$objectId` |  |  |  |
+| `$objectId` |  |  | the CMDB item (cmdb_objects.id), any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -24,7 +24,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 413
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 422 | `analystCanAccessCmdbObject` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 436 | `analystCanAccessCmdbObject` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ## Calls
 

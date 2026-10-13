@@ -1,6 +1,6 @@
 # includes/files/api_bootstrap.php
 
-> PHP - 217 lines
+> PHP - 262 lines
 
 Files — the start of every api/files/*.php endpoint.
 
@@ -16,27 +16,27 @@ Lives in includes/ so it cannot be requested on its own.
 | Function | Line | What it does |
 |---|--:|---|
 | [filesApiBody()](/code/functions/filesApiBody.md) | 34 | The decoded JSON body (never null). |
-| [filesApiOk()](/code/functions/filesApiOk.md) | 45 | Sends a success JSON reply ({success: true} plus `$data`) and ends the request. |
-| [filesApiFail()](/code/functions/filesApiFail.md) | 55 | Sends a failure JSON reply ({success: false, error}) with an optional HTTP status and extra keys, and ends the request. |
-| [filesHasCap()](/code/functions/filesHasCap.md) | 63 | True when the analyst holds the capability; a failed lookup counts as no. |
-| [filesNeed()](/code/functions/filesNeed.md) | 73 | Refuse unless the caller holds `$need` on the folder. Below View the folder does not exist for them, so the answer is "not found" - the same words a deleted or made-up id gets. A refusal at a level they CAN see is audited as 'denied'. |
-| [filesItem()](/code/functions/filesItem.md) | 86 | A live file row, or null. |
-| [filesNeedItem()](/code/functions/filesNeedItem.md) | 98 | A file the caller holds `$need` on, or "not found". |
-| [filesNameTaken()](/code/functions/filesNameTaken.md) | 116 | Is a name already used by a live folder or file in this folder? (case-insensitive) |
-| [filesShortcutTarget()](/code/functions/filesShortcutTarget.md) | 148 | What a shortcut points at, IF the caller can see it - else null. The one place shortcuts meet permissions: a shortcut never widens access. Returns [name, folder_id (the target folder, or the file's folder), path, level]. |
-| [filesArticleTarget()](/code/functions/filesArticleTarget.md) | 172 | A Knowledge article as a shortcut target, or null when this person may not read it (no Knowledge module, another company's, restricted, archived, a draft, deleted). Knowledge's own visibility rules decide - the same clause its list uses, WITHOUT the administrator floor: that floor is an audited override for opening one article in Knowledge, never a reason for it to show up in a folder. |
-| [filesFreeName()](/code/functions/filesFreeName.md) | 195 | "Report.pdf" -> "Report (2).pdf", the first free one. |
-| [filesApiRun()](/code/functions/filesApiRun.md) | 208 | Run an endpoint body and turn any failure into the UI's {success:false} shape. |
+| [filesApiOk()](/code/functions/filesApiOk.md) | 49 | Sends a success JSON reply ({success: true} plus `$data`) and ends the request. |
+| [filesApiFail()](/code/functions/filesApiFail.md) | 63 | Sends a failure JSON reply ({success: false, error}) with an optional HTTP status and extra keys, and ends the request. |
+| [filesHasCap()](/code/functions/filesHasCap.md) | 75 | True when the analyst holds the capability; a failed lookup counts as no. |
+| [filesNeed()](/code/functions/filesNeed.md) | 89 | Refuse unless the caller holds `$need` on the folder. Below View the folder does not exist for them, so the answer is "not found" - the same words a deleted or made-up id gets. A refusal at a level they CAN see is audited as 'denied'. |
+| [filesItem()](/code/functions/filesItem.md) | 106 | A live file row, or null. |
+| [filesNeedItem()](/code/functions/filesNeedItem.md) | 124 | A file the caller holds `$need` on, or "not found". |
+| [filesNameTaken()](/code/functions/filesNameTaken.md) | 147 | Is a name already used by a live folder or file in this folder? (case-insensitive) |
+| [filesShortcutTarget()](/code/functions/filesShortcutTarget.md) | 182 | What a shortcut points at, IF the caller can see it - else null. The one place shortcuts meet permissions: a shortcut never widens access. Returns [name, folder_id (the target folder, or the file's folder), path, level]. |
+| [filesArticleTarget()](/code/functions/filesArticleTarget.md) | 208 | A Knowledge article as a shortcut target, or null when this person may not read it (no Knowledge module, another company's, restricted, archived, a draft, deleted). Knowledge's own visibility rules decide - the same clause its list uses, WITHOUT the administrator floor: that floor is an audited override for opening one article in Knowledge, never a reason for it to show up in a folder. |
+| [filesFreeName()](/code/functions/filesFreeName.md) | 236 | "Report.pdf" -> "Report (2).pdf", the first free one. |
+| [filesApiRun()](/code/functions/filesApiRun.md) | 253 | Run an endpoint body and turn any failure into the UI's {success:false} shape. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 88 | `filesItem` | read [files_items](/code/tables/files_items.md) |  |
-| 119 | `filesNameTaken` | read [files_folders](/code/tables/files_folders.md) |  |
-| 127 | `filesNameTaken` | read [files_items](/code/tables/files_items.md) |  |
-| 133 | `filesNameTaken` | read [files_shortcuts](/code/tables/files_shortcuts.md) |  |
-| 187 | `filesArticleTarget` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 108 | `filesItem` | read [files_items](/code/tables/files_items.md) |  |
+| 150 | `filesNameTaken` | read [files_folders](/code/tables/files_folders.md) |  |
+| 158 | `filesNameTaken` | read [files_items](/code/tables/files_items.md) |  |
+| 164 | `filesNameTaken` | read [files_shortcuts](/code/tables/files_shortcuts.md) |  |
+| 223 | `filesArticleTarget` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

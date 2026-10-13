@@ -18,16 +18,16 @@ function uploadStoreBytes(
 ): array
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 786.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 820.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bytes` | `string` |  |  |
-| `$originalName` | `string` |  |  |
-| `$destDir` | `string` |  |  |
+| `$bytes` | `string` |  | the file's decoded contents |
+| `$originalName` | `string` |  | the sender's filename - untrusted; cleaned, and only its extension is used |
+| `$destDir` | `string` |  | absolute directory to store into; created (and protected) if absent |
 | `$policy` | `string` | `ATTACHMENT_POLICY_STORE` | ATTACHMENT_POLICY_STORE \| ATTACHMENT_POLICY_DROP |
-| `$allowed` | `array` | `UPLOAD_TYPES_ATTACHMENT` |  |
-| `$maxBytes` | `?int` | `null` |  |
+| `$allowed` | `array` | `UPLOAD_TYPES_ATTACHMENT` | ext => [mime, ...] accepted; defaults to the everyday attachment set |
+| `$maxBytes` | `?int` | `null` | the size limit in bytes; null = the configured limit (attachmentMaxBytes()) |
 
 **Returns:** array{stored:bool, quarantined:bool, stored_name:?string, path:?string, original_name:string, size:int, mime:string, reason:?string}
 

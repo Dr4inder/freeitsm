@@ -18,13 +18,13 @@ reuses the ownership map rather than inventing a second mechanism:
 function analystCanManageAiNamespace(PDO $conn, int $analystId, string $ns): bool
 ```
 
-Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 220.
+Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 223.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$ns` | `string` |  |  |
+| `$ns` | `string` |  | the AI settings namespace, e.g. 'knowledge_ai', 'cmdb_ai', 'tickets_reply_cleanup' |
 
 **Returns:** `bool`
 

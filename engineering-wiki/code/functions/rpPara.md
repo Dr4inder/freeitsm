@@ -6,12 +6,12 @@ A paragraph of plain text, for the starter design.
 function rpPara(string $text, array $extra = []): array
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 39.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
-| `$extra` | `array` | `[]` |  |
+| `$text` | `string` |  | the paragraph's text |
+| `$extra` | `array` | `[]` | paragraph keys that override the defaults, e.g. ['a' => 'center', 'r' => [...]] |
 
 **Returns:** `array`
 

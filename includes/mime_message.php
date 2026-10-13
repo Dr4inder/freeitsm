@@ -21,7 +21,11 @@
  * attachment appeared on the ticket and never reached the customer.
  */
 
-/** RFC 2047 encode a header value if it contains non-ASCII. */
+/**
+ * RFC 2047 encode a header value if it contains non-ASCII.
+ *
+ * @param string $value  the header text; CR and LF are replaced with spaces
+ */
 function mimeEncodeHeader(string $value): string {
     $value = str_replace(["\r", "\n"], ' ', $value);
     if (preg_match('/[\x80-\xFF]/', $value)) {
@@ -34,6 +38,8 @@ function mimeEncodeHeader(string $value): string {
  * A globally unique Message-ID on the sender's own domain, e.g.
  * <3f9c...e1.1790805999@example.com>. Falls back to a fixed domain if the
  * From address has none we can use.
+ *
+ * @param string $from  the From email address whose domain the id uses
  */
 function mimeMessageId(string $from): string {
     $domain = strtolower((string)substr(strrchr($from, '@') ?: '', 1));
@@ -96,7 +102,11 @@ function mimeBuildMessage(array $m): string {
     return implode("\r\n", array_merge($headers, $body[0])) . "\r\n\r\n" . $body[1];
 }
 
-/** The HTML body as a [headers, content] entity. */
+/**
+ * The HTML body as a [headers, content] entity.
+ *
+ * @param string $html  the message body as HTML
+ */
 function mimeHtmlPart(string $html): array {
     return [
         ['Content-Type: text/html; charset=UTF-8', 'Content-Transfer-Encoding: base64'],
@@ -104,7 +114,11 @@ function mimeHtmlPart(string $html): array {
     ];
 }
 
-/** One file (inline image or attachment) as a [headers, content] entity. */
+/**
+ * One file (inline image or attachment) as a [headers, content] entity.
+ *
+ * @param array $p  one part: name, contentType, contentBytes (base64), contentId, isInline - see the file comment
+ */
 function mimeFilePart(array $p): array {
     $raw = base64_decode(preg_replace('/\s+/', '', (string)($p['contentBytes'] ?? '')), true);
     $name = (string)($p['name'] ?? '');
@@ -143,7 +157,13 @@ function mimeFilePart(array $p): array {
     return [$headers, rtrim(chunk_split(base64_encode($raw), 76, "\r\n"))];
 }
 
-/** Wrap [headers, content] entities in a multipart/<subtype> entity. */
+/**
+ * Wrap [headers, content] entities in a multipart/<subtype> entity.
+ *
+ * @param string $subtype  the multipart subtype, e.g. 'mixed' or 'related'
+ * @param array $entities  the parts to wrap, each a [headers list, content string] pair
+ * @param string $extraParams  extra Content-Type parameters, e.g. 'type="text/html"'; '' for none
+ */
 function mimeMultipart(string $subtype, array $entities, string $extraParams = ''): array {
     $boundary = '=_freeitsm_' . bin2hex(random_bytes(12));
     $out = '';

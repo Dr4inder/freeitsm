@@ -13,12 +13,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md):134 | `apiRateLimit` | insert | `api_key_id`, `request_count`, `window_start` |  |
-| [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md):144 | `apiRateLimit` | delete |  |  |
+| [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md):142 | `apiRateLimit` | insert | `api_key_id`, `request_count`, `window_start` |  |
+| [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md):152 | `apiRateLimit` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | apiRateLimit L140 |  |
+| [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | apiRateLimit L148 |  |
 

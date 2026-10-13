@@ -55,6 +55,10 @@ $sections = [];
 /**
  * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
  * string or an array of lines.
+ *
+ * @param mixed $sections  the report so far, a list of section strings - appended to by reference
+ * @param mixed $title  the section heading, printed between === marks
+ * @param mixed $body  the section text - a string, or an array of lines
  */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
@@ -63,33 +67,60 @@ function addSection(&$sections, $title, $body) {
 /**
  * Prints every section, separated by blank lines, and stops - the end of the report, and
  * the early exit when a check cannot go on.
+ *
+ * @param mixed $sections  the report, a list of section strings as built by addSection()
  */
 function emit_and_exit($sections) {
     if (!headers_sent()) header('Content-Type: text/plain; charset=utf-8');
     echo implode("\n\n", $sections) . "\n";
     exit;
 }
-/** First four characters and a length — enough to tell a wrong key from no key. */
+/**
+ * First four characters and a length — enough to tell a wrong key from no key.
+ *
+ * @param string $k  an API key, in plain text; empty gives (none saved)
+ */
 function keyHint(string $k): string {
     if ($k === '') return '(none saved)';
     return substr($k, 0, 4) . '… (' . strlen($k) . ' characters)';
 }
-/** Replace the key wherever it appears with its hint. */
+/**
+ * Replace the key wherever it appears with its hint.
+ *
+ * @param string $s  text that may contain the key, such as a URL, header or body
+ * @param string $key  the API key to hide; empty leaves $s alone
+ */
 function redactKey(string $s, string $key): string {
     return $key === '' ? $s : str_replace($key, '[key ' . keyHint($key) . ']', $s);
 }
-/** JSON pretty-printed for reading; anything else as it came, trimmed to a length. */
+/**
+ * JSON pretty-printed for reading; anything else as it came, trimmed to a length.
+ *
+ * @param ?string $s  a request or response body; null or empty gives (empty)
+ * @param int $max  the most characters to print
+ */
 function prettyBody(?string $s, int $max = 4000): string {
     if ($s === null || $s === '') return '(empty)';
     $j = json_decode($s, true);
     if ($j !== null) $s = json_encode($j, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     return strlen($s) > $max ? substr($s, 0, $max) . "\n… (" . strlen($s) . ' characters in all)' : $s;
 }
-/** Indents every line of a block of text by $pad. */
+/**
+ * Indents every line of a block of text by $pad.
+ *
+ * @param string $s  the text to indent
+ * @param string $pad  what to put before each line
+ */
 function indent(string $s, string $pad = '  '): string {
     return $pad . str_replace("\n", "\n" . $pad, $s);
 }
-/** Print one recorded HTTP exchange. */
+/**
+ * Print one recorded HTTP exchange.
+ *
+ * @param array $t  one recorded exchange from aiProviderTraceTake(): attempt, url, headers, body, response, code, ms, error
+ * @param string $key  the API key to redact from everything printed
+ * @param int $n  the exchange's number in the report, from 1
+ */
 function traceLines(array $t, string $key, int $n): array {
     $out = [];
     $out[] = "--- Request {$n}" . ($t['attempt'] > 1 ? " (retry {$t['attempt']} after a busy or failed answer)" : '') . ' ---';
@@ -107,7 +138,11 @@ function traceLines(array $t, string $key, int $n): array {
     $out[] = '';
     return $out;
 }
-/** The address and key of a setup, so features sharing one are called once. */
+/**
+ * The address and key of a setup, so features sharing one are called once.
+ *
+ * @param array $cfg  one feature's AI settings: provider, model, api_key, verify_ssl and the azure_* fields
+ */
 function setupKey(array $cfg): string {
     return implode('|', [$cfg['provider'], $cfg['provider'] === 'azure' ? '' : $cfg['model'],
         $cfg['azure_endpoint'] ?? '', $cfg['azure_deployment'] ?? '', $cfg['azure_api_version'] ?? '',
@@ -116,6 +151,8 @@ function setupKey(array $cfg): string {
 /**
  * The display name of an AI provider key (anthropic, openai, openrouter, azure), or the
  * key itself when it is not one of those.
+ *
+ * @param string $p  the provider key, e.g. 'anthropic' or 'azure'
  */
 function providerLabel(string $p): string {
     return ['anthropic' => 'Anthropic', 'openai' => 'OpenAI', 'openrouter' => 'OpenRouter', 'azure' => 'Azure OpenAI'][$p] ?? $p;

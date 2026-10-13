@@ -6,13 +6,13 @@
 function recordPreviewDomain(PDO $conn, int $analystId, int $id): ?array
 ```
 
-Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 381.
+Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 401.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domains id |
 
 **Returns:** `?array`
 
@@ -20,7 +20,7 @@ Defined in [includes/record_preview.php](/code/files/includes/record_preview.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 387 | `recordPreviewDomain` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 407 | `recordPreviewDomain` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md), read [suppliers](/code/tables/suppliers.md) |  |
 
 ## Calls
 

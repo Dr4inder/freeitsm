@@ -6,11 +6,11 @@ Map a tone name (Friendly / Formal / Brief) to the short clause inserted into th
 function replyCleanupToneDescription(string $tone): string
 ```
 
-Defined in [includes/reply_cleanup_prompt.php](/code/files/includes/reply_cleanup_prompt.php.md), line 14.
+Defined in [includes/reply_cleanup_prompt.php](/code/files/includes/reply_cleanup_prompt.php.md), line 16.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$tone` | `string` |  |  |
+| `$tone` | `string` |  | the tone name from settings: 'Friendly', 'Formal' or 'Brief'; anything else is treated as Friendly |
 
 **Returns:** `string`
 

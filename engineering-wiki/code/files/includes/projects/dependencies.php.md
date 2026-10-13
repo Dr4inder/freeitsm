@@ -1,6 +1,6 @@
 # includes/projects/dependencies.php
 
-> PHP - 119 lines
+> PHP - 127 lines
 
 Projects - task dependencies and the critical path (3.3.0).
 
@@ -26,8 +26,8 @@ Cycles are refused when a dependency is made (projectDependencyMakesCycle).
 |---|--:|---|
 | [projectDependenciesReady()](/code/functions/projectDependenciesReady.md) | 22 | Projects - task dependencies and the critical path (3.3.0). |
 | [projectDependencies()](/code/functions/projectDependencies.md) | 33 | A project's dependencies - both ends inside the project: [{id, task_id, depends_on_id, lag_days}]. |
-| [projectDependencyMakesCycle()](/code/functions/projectDependencyMakesCycle.md) | 47 | Would task -> dependsOn close a loop (dependsOn already waits, directly or not, for task)? |
-| [projectDependencyAnalysis()](/code/functions/projectDependencyAnalysis.md) | 66 | Per task: depends_on [{id, lag}], waiting_on [ids], clash (bool), critical (bool), slack (days or null). `$tasks` need id, start_date, due_date, is_closed. |
+| [projectDependencyMakesCycle()](/code/functions/projectDependencyMakesCycle.md) | 52 | Would task -> dependsOn close a loop (dependsOn already waits, directly or not, for task)? |
+| [projectDependencyAnalysis()](/code/functions/projectDependencyAnalysis.md) | 74 | Per task: depends_on [{id, lag}], waiting_on [ids], clash (bool), critical (bool), slack (days or null). `$tasks` need id, start_date, due_date, is_closed. |
 
 ## Database
 

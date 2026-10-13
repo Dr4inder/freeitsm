@@ -6,13 +6,13 @@ Is this account's code step locked right now? Returns whole minutes remaining, o
 function mfaThrottleMinutesRemaining(PDO $conn, string $table, int $accountId): int
 ```
 
-Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 106.
+Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 115.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$accountId` | `int` |  |  |
+| `$table` | `string` |  | the account table: 'analysts' or 'users' |
+| `$accountId` | `int` |  | the account's id in that table; 0 or less always gives 0 |
 
 **Returns:** `int`
 

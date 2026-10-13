@@ -22,13 +22,13 @@ Output:
 function rfpAiConsolidate(PDO $conn, int $rfpId, array $extractedRows): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 711.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 749.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rfpId` | `int` |  |  |
-| `$extractedRows` | `array` |  |  |
+| `$rfpId` | `int` |  | the rfps id, for the log |
+| `$extractedRows` | `array` |  | rfp_extracted_requirements rows: id, requirement_text, requirement_type, source_quote, department_name |
 
 **Returns:** `array`
 

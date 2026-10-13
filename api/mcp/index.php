@@ -42,7 +42,12 @@ ini_set('display_errors', '0');
 const MCP_PROTOCOL_VERSIONS = ['2025-06-18', '2025-03-26', '2024-11-05'];
 const MCP_SERVER_VERSION = '1.0.0';
 
-/** Sends an HTTP status and, when given, a JSON body, then stops. */
+/**
+ * Sends an HTTP status and, when given, a JSON body, then stops.
+ *
+ * @param int $status  the HTTP status to send
+ * @param ?array $body  the JSON body to send; null sends no body
+ */
 function mcpReply(int $status, ?array $body = null): void
 {
     http_response_code($status);
@@ -52,11 +57,20 @@ function mcpReply(int $status, ?array $body = null): void
     }
     exit;
 }
-/** Sends a JSON-RPC 2.0 success response for request $id, then stops. */
+/**
+ * Sends a JSON-RPC 2.0 success response for request $id, then stops.
+ *
+ * @param mixed $id  the JSON-RPC request id being answered (string, number or null), echoed back as given
+ * @param mixed $result  the method's result, sent as the response's result member
+ */
 function mcpResult($id, $result): void { mcpReply(200, ['jsonrpc' => '2.0', 'id' => $id, 'result' => $result]); }
 /**
  * Sends a JSON-RPC 2.0 error response (code and message) for request $id with HTTP 200,
  * as JSON-RPC expects, then stops.
+ *
+ * @param mixed $id  the JSON-RPC request id being answered; null when the request could not be read
+ * @param int $code  the JSON-RPC error code, e.g. -32700 parse error, -32600 invalid request
+ * @param string $message  the error message for the client
  */
 function mcpRpcError($id, int $code, string $message): void { mcpReply(200, ['jsonrpc' => '2.0', 'id' => $id, 'error' => ['code' => $code, 'message' => $message]]); }
 

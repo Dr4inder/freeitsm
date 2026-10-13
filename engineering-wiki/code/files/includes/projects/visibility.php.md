@@ -1,6 +1,6 @@
 # includes/projects/visibility.php
 
-> PHP - 98 lines
+> PHP - 109 lines
 
 Members-only projects (3.3.0) - the ONE place that decides who may see a project beyond its company.
 
@@ -31,19 +31,19 @@ members-only project unless the person it is built for may see it).
 |---|--:|---|
 | [projectVisibilities()](/code/functions/projectVisibilities.md) | 34 | The visibility a project can have: everyone, or members only. |
 | [projectVisibilityReady()](/code/functions/projectVisibilityReady.md) | 40 | Has Database Verification added projects.visibility? Before it, everything is visible. |
-| [projectVisibilityColumn()](/code/functions/projectVisibilityColumn.md) | 51 | p.visibility, or 'everyone' before Verification - for a SELECT list. |
-| [projectSeesAllPrivate()](/code/functions/projectSeesAllPrivate.md) | 57 | May this analyst see every members-only project? (Manage Projects; admins.) |
-| [projectVisibleSql()](/code/functions/projectVisibleSql.md) | 68 | " AND (...)" limiting `$alias` to the projects this analyst may see, with its arguments. Empty when nothing is hidden from them. |
-| [projectVisibleTo()](/code/functions/projectVisibleTo.md) | 81 | May this analyst see this project row (needs id, owner_analyst_id, created_by_id, visibility)? |
-| [projectIdVisibleTo()](/code/functions/projectIdVisibleTo.md) | 89 | The same, by id - for callers holding only an id (Documents, the recent trail). |
+| [projectVisibilityColumn()](/code/functions/projectVisibilityColumn.md) | 55 | p.visibility, or 'everyone' before Verification - for a SELECT list. |
+| [projectSeesAllPrivate()](/code/functions/projectSeesAllPrivate.md) | 61 | May this analyst see every members-only project? (Manage Projects; admins.) |
+| [projectVisibleSql()](/code/functions/projectVisibleSql.md) | 75 | " AND (...)" limiting `$alias` to the projects this analyst may see, with its arguments. Empty when nothing is hidden from them. |
+| [projectVisibleTo()](/code/functions/projectVisibleTo.md) | 92 | May this analyst see this project row (needs id, owner_analyst_id, created_by_id, visibility)? |
+| [projectIdVisibleTo()](/code/functions/projectIdVisibleTo.md) | 100 | The same, by id - for callers holding only an id (Documents, the recent trail). |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 44 | `projectVisibilityReady` | read [projects](/code/tables/projects.md) |  |
-| 73 | `projectVisibleSql` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 92 | `projectIdVisibleTo` | read [projects](/code/tables/projects.md) |  |
+| 80 | `projectVisibleSql` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 103 | `projectIdVisibleTo` | read [projects](/code/tables/projects.md) |  |
 
 ## How it hangs together
 

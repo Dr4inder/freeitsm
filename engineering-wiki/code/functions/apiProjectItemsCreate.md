@@ -6,7 +6,7 @@ POST /projects/{id}/items - adds a scope item through ProjectToolsService and re
 function apiProjectItemsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 403.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 428.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

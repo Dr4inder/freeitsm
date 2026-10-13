@@ -6,7 +6,7 @@ Read the sleep state of one ticket for the reading pane: null when it is awake, 
 function snoozeStateFor(PDO $conn, int $ticketId): ?array
 ```
 
-Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 277.
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 287.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 281 | `snoozeStateFor` | read [tickets](/code/tables/tickets.md), read [analysts](/code/tables/analysts.md) |  |
+| 291 | `snoozeStateFor` | read [tickets](/code/tables/tickets.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

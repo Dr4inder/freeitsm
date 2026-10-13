@@ -6,11 +6,11 @@ Map an Intune operating_system string to a sensible "drive" label for asset_disk
 function intuneOsToDrive(?string $os): string
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 358.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 372.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$os` | `?string` |  |  |
+| `$os` | `?string` |  | Intune's operating_system text, e.g. 'Windows' or 'iOS'; null or '' gives 'System' |
 
 **Returns:** `string`
 

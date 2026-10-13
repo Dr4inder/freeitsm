@@ -1,6 +1,6 @@
 # includes/portal_visibility.php
 
-> PHP - 160 lines
+> PHP - 163 lines
 
 What the requester may see of their OWN ticket in the self-service portal.
 
@@ -59,7 +59,7 @@ on `direction` well before any address comparison.
 |---|--:|---|
 | [portalThirdPartyPolicy()](/code/functions/portalThirdPartyPolicy.md) | 71 | The configured policy: Tickets → Settings → Privacy. |
 | [portalEmailInvolvesRequester()](/code/functions/portalEmailInvolvesRequester.md) | 97 | Is this message part of the requester's own correspondence? |
-| [portalEmailVisibility()](/code/functions/portalEmailVisibility.md) | 145 | Apply the policy to one message. |
+| [portalEmailVisibility()](/code/functions/portalEmailVisibility.md) | 148 | Apply the policy to one message. |
 
 ## Database
 

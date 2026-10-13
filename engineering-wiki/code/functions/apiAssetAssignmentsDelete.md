@@ -6,7 +6,7 @@ DELETE /assets/{id}/assignments/{userId} - removes a person from the asset throu
 function apiAssetAssignmentsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 438.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 449.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

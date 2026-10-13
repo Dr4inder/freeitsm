@@ -6,11 +6,11 @@
 function domainParseTags(string $record): array
 ```
 
-Defined in [includes/domains/checks.php](/code/files/includes/domains/checks.php.md), line 299.
+Defined in [includes/domains/checks.php](/code/files/includes/domains/checks.php.md), line 305.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$record` | `string` |  |  |
+| `$record` | `string` |  | a tag=value record such as DMARC; parts without an "=" are skipped |
 
 **Returns:** `array`
 

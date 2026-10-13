@@ -6,11 +6,11 @@ True when the path is on CSRF_EXEMPT_PATHS - an exact file, or anything under an
 function csrfIsExempt(string $path): bool
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 74.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | the request path relative to the app root, as `csrfRequestPath()` gives it |
 
 **Returns:** `bool`
 

@@ -6,11 +6,11 @@ A milestone as its events carry it (3.3.0). state: due | missed | done.
 function projectMilestoneEventFields(array $m): array
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 291.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$m` | `array` |  |  |
+| `$m` | `array` |  | a project_milestones row - id, name, due_date, done_date, stage_id |
 
 **Returns:** `array`
 

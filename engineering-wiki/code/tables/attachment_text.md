@@ -17,18 +17,18 @@ Text pulled out of an attachment (discussion #53). The DURABLE record — search
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/system/tika_settings.php](/code/files/api/system/tika_settings.php.md):105 |  | update | `status` |  |
-| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md):113 | `extractQueueDrain` | update | `status` |  |
-| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md):123 | `extractQueueDrain` | update | `status` |  |
-| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md):153 | `extractQueueDrain` | update | `status`, `extracted_datetime` |  |
-| [includes/search/indexer.php](/code/files/includes/search/indexer.php.md):269 | `searchIndexTicketAttachments` | insert | `attachment_id`, `status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime` |  |
+| [api/system/tika_settings.php](/code/files/api/system/tika_settings.php.md):110 |  | update | `status` |  |
+| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md):119 | `extractQueueDrain` | update | `status` |  |
+| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md):129 | `extractQueueDrain` | update | `status` |  |
+| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md):159 | `extractQueueDrain` | update | `status`, `extracted_datetime` |  |
+| [includes/search/indexer.php](/code/files/includes/search/indexer.php.md):272 | `searchIndexTicketAttachments` | insert | `attachment_id`, `status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/system/search_status.php](/code/files/api/system/search_status.php.md) | L91, L102 |  |
-| [api/system/tika_settings.php](/code/files/api/system/tika_settings.php.md) | L92 |  |
-| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md) | extractQueueDepth L59, extractQueueDrain L101, extractQueueDrain L131, extractQueueDrain L166, extractQueueDepthUnchanged L216 |  |
-| [includes/search/indexer.php](/code/files/includes/search/indexer.php.md) | searchIndexTicketAttachments L161 |  |
+| [api/system/tika_settings.php](/code/files/api/system/tika_settings.php.md) | L97 |  |
+| [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md) | extractQueueDepth L63, extractQueueDrain L107, extractQueueDrain L137, extractQueueDrain L172, extractQueueDepthUnchanged L224 |  |
+| [includes/search/indexer.php](/code/files/includes/search/indexer.php.md) | searchIndexTicketAttachments L164 |  |
 

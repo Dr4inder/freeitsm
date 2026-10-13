@@ -14,13 +14,13 @@ deliberately, rather than a side effect of tidying the tree.
 function handleDelete(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 252.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 271.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request: id of the folder to delete |
 
 **Returns:** `void`
 
@@ -28,10 +28,10 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 258 | `handleDelete` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 264 | `handleDelete` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 273 | `handleDelete` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 274 | `handleDelete` | **delete** [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 277 | `handleDelete` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 283 | `handleDelete` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 292 | `handleDelete` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 293 | `handleDelete` | **delete** [knowledge_folders](/code/tables/knowledge_folders.md) |  |
 
 ## Calls
 

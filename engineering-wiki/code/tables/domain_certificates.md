@@ -20,7 +20,7 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/domains/watch.php](/code/files/api/domains/watch.php.md):29 |  | update | `acknowledged` |  |
-| [includes/domains/watch.php](/code/files/includes/domains/watch.php.md):67 | `domainCtScan` | insert | `domain_id`, `crtsh_id`, `common_name`, `name_value`, `issuer`, `not_before`, `not_after`, `first_seen_datetime`, `acknowledged` |  |
+| [includes/domains/watch.php](/code/files/includes/domains/watch.php.md):70 | `domainCtScan` | insert | `domain_id`, `crtsh_id`, `common_name`, `name_value`, `issuer`, `not_before`, `not_after`, `first_seen_datetime`, `acknowledged` |  |
 
 ## Read by
 
@@ -28,5 +28,5 @@
 |---|---|---|
 | [api/domains/get.php](/code/files/api/domains/get.php.md) | L28 |  |
 | [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L39 |  |
-| [includes/domains/watch.php](/code/files/includes/domains/watch.php.md) | domainCtScan L62 |  |
+| [includes/domains/watch.php](/code/files/includes/domains/watch.php.md) | domainCtScan L65 |  |
 

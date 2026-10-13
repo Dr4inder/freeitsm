@@ -6,12 +6,12 @@ Comment ids already mapped for one link, in either direction.
 function integrationsKnownCommentIds(PDO $conn, int $linkId): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1180.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1263.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$linkId` | `int` |  |  |
+| `$linkId` | `int` |  | the integration_links id |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1184 | `integrationsKnownCommentIds` | read [integration_comment_map](/code/tables/integration_comment_map.md) |  |
+| 1267 | `integrationsKnownCommentIds` | read [integration_comment_map](/code/tables/integration_comment_map.md) |  |
 
 ## Calls
 

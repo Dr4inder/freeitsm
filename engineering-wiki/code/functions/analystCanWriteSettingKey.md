@@ -10,13 +10,13 @@ bypasses both — via `analystHasCapability()` and via analystCanAccessModule('s
 function analystCanWriteSettingKey(PDO $conn, int $analystId, string $key): bool
 ```
 
-Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 266.
+Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 273.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the system_settings key to be written; a key with no owner is always refused |
 
 **Returns:** `bool`
 

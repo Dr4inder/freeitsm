@@ -6,12 +6,12 @@ Fetch (and cache) the OpenRouter model catalogue. No API key required. Cached in
 function aiProviderListOpenRouterModels(PDO $conn, bool $force = false): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 745.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 791.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$force` | `bool` | `false` |  |
+| `$force` | `bool` | `false` | true to fetch afresh even when the 24-hour cache is still fresh |
 
 **Returns:** array{models: array<int,array>, cached_at: int, stale: bool} models: [{id,name,context_length,prompt_price,completion_price}]
 
@@ -19,8 +19,8 @@ Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 748 | `aiProviderListOpenRouterModels` | read [system_settings](/code/tables/system_settings.md) |  |
-| 800 | `aiProviderListOpenRouterModels` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 794 | `aiProviderListOpenRouterModels` | read [system_settings](/code/tables/system_settings.md) |  |
+| 846 | `aiProviderListOpenRouterModels` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## Calls
 

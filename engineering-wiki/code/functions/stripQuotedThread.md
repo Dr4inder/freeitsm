@@ -6,11 +6,11 @@ Strip quoted/nested thread content from an email body Relies on our own visible 
 function stripQuotedThread($body)
 ```
 
-Defined in [api/tickets/get_ticket_thread.php](/code/files/api/tickets/get_ticket_thread.php.md), line 176.
+Defined in [api/tickets/get_ticket_thread.php](/code/files/api/tickets/get_ticket_thread.php.md), line 178.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` |  |  |  |
+| `$body` |  |  | an email's HTML body, which may still carry the quoted earlier thread |
 
 ## Called from
 

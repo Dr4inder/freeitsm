@@ -6,11 +6,11 @@ The extension, lowercased, or '' if there isn't one.
 function attTextExtension(string $filename): string
 ```
 
-Defined in [includes/search/extract.php](/code/files/includes/search/extract.php.md), line 89.
+Defined in [includes/search/extract.php](/code/files/includes/search/extract.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filename` | `string` |  |  |
+| `$filename` | `string` |  | the file name |
 
 **Returns:** `string`
 

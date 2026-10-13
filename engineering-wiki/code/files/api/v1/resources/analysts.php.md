@@ -1,6 +1,6 @@
 # api/v1/resources/analysts.php
 
-> API endpoint - 99 lines
+> API endpoint - 101 lines
 
 FreeITSM REST API v1 — analyst provisioning (3.5.0, PR #174 from @Kraleemil's design). Lets an identity source keep analysts and their access in step:
 
@@ -31,12 +31,12 @@ grant its own analyst more than it has.
 | Function | Line | What it does |
 |---|--:|---|
 | [apiAnalystsRequireProvisioner()](/code/functions/apiAnalystsRequireProvisioner.md) | 25 | 403 unless this key may provision analysts. |
-| [apiSerializeAnalyst()](/code/functions/apiSerializeAnalyst.md) | 39 | Shapes an analyst row for the API - id, username, name, email, active and admin flags, sign-in provider and dates. Never the password hash or MFA secret. |
-| [apiAnalystsCreate()](/code/functions/apiAnalystsCreate.md) | 55 | POST /analysts |
-| [apiAnalystsGet()](/code/functions/apiAnalystsGet.md) | 65 | GET /analysts/{id} |
-| [apiAnalystsUpdate()](/code/functions/apiAnalystsUpdate.md) | 73 | PATCH /analysts/{id} |
-| [apiAnalystsAccessGet()](/code/functions/apiAnalystsAccessGet.md) | 83 | GET /analysts/{id}/access |
-| [apiAnalystsAccessUpdate()](/code/functions/apiAnalystsAccessUpdate.md) | 91 | PATCH /analysts/{id}/access |
+| [apiSerializeAnalyst()](/code/functions/apiSerializeAnalyst.md) | 41 | Shapes an analyst row for the API - id, username, name, email, active and admin flags, sign-in provider and dates. Never the password hash or MFA secret. |
+| [apiAnalystsCreate()](/code/functions/apiAnalystsCreate.md) | 57 | POST /analysts |
+| [apiAnalystsGet()](/code/functions/apiAnalystsGet.md) | 67 | GET /analysts/{id} |
+| [apiAnalystsUpdate()](/code/functions/apiAnalystsUpdate.md) | 75 | PATCH /analysts/{id} |
+| [apiAnalystsAccessGet()](/code/functions/apiAnalystsAccessGet.md) | 85 | GET /analysts/{id}/access |
+| [apiAnalystsAccessUpdate()](/code/functions/apiAnalystsAccessUpdate.md) | 93 | PATCH /analysts/{id}/access |
 
 ## How it hangs together
 

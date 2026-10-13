@@ -6,12 +6,12 @@ The gate every RFP endpoint passes. Reads the id named `$key` from the query str
 function rfpGate(string $kind, string $key): void
 ```
 
-Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 99.
+Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 121.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$kind` | `string` |  |  |
-| `$key` | `string` |  |  |
+| `$kind` | `string` |  | which table the request's id is for, as `rfpIdOf()` takes it ('rfp' for an RFP id itself) |
+| `$key` | `string` |  | the request field holding the id (or a list of ids), read from the query string, the form or the JSON body |
 
 **Returns:** `void`
 

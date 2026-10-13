@@ -1,6 +1,6 @@
 # api/knowledge/send_share_email.php
 
-> API endpoint - 366 lines
+> API endpoint - 389 lines
 
 API Endpoint: Send share email for knowledge article
 
@@ -15,11 +15,11 @@ API Endpoint: Send share email for knowledge article
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sendSmtpEmail()](/code/functions/sendSmtpEmail.md) | 137 | Send email via SMTP |
-| [sendMailboxEmail()](/code/functions/sendMailboxEmail.md) | 195 | Send email via Microsoft 365 mailbox using Graph API |
-| [getValidAccessToken()](/code/functions/getValidAccessToken.md) | 286 | Get valid access token (refresh if expired) |
-| [refreshAccessToken()](/code/functions/refreshAccessToken.md) | 312 | Refresh the access token using mailbox configuration |
-| [saveTokenData()](/code/functions/saveTokenData.md) | 357 | Save token data to database |
+| [sendSmtpEmail()](/code/functions/sendSmtpEmail.md) | 144 | Send email via SMTP |
+| [sendMailboxEmail()](/code/functions/sendMailboxEmail.md) | 209 | Send email via Microsoft 365 mailbox using Graph API |
+| [getValidAccessToken()](/code/functions/getValidAccessToken.md) | 303 | Get valid access token (refresh if expired) |
+| [refreshAccessToken()](/code/functions/refreshAccessToken.md) | 332 | Refresh the access token using mailbox configuration |
+| [saveTokenData()](/code/functions/saveTokenData.md) | 380 | Save token data to database |
 
 ## Database
 
@@ -27,8 +27,8 @@ API Endpoint: Send share email for knowledge article
 |--:|---|---|---|
 | 44 |  | read [system_settings](/code/tables/system_settings.md) |  |
 | 121 |  | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 201 | `sendMailboxEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 361 | `saveTokenData` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
+| 215 | `sendMailboxEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 384 | `saveTokenData` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
 
 ## How it hangs together
 

@@ -9,13 +9,13 @@ Authenticate with vCenter REST API
 function vcenterAuth($baseUrl, $user, $pass)
 ```
 
-Defined in [api/assets/debug_vcenter.php](/code/files/api/assets/debug_vcenter.php.md), line 188.
+Defined in [api/assets/debug_vcenter.php](/code/files/api/assets/debug_vcenter.php.md), line 192.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$baseUrl` |  |  |  |
-| `$user` |  |  |  |
-| `$pass` |  |  |  |
+| `$baseUrl` |  |  | the vCenter address with scheme and no trailing slash, e.g. https://vc.example.com |
+| `$user` |  |  | the vCenter user name, sent as HTTP Basic auth |
+| `$pass` |  |  | that user's password, in plain text |
 
 ## Calls
 

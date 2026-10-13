@@ -9,13 +9,13 @@ single-company or un-migrated install behaves exactly as before.
 function analystCanAccessArticle(PDO $conn, int $analystId, $articleId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 960.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1008.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$articleId` |  |  |  |
+| `$articleId` |  |  | the Knowledge article (knowledge_articles.id) |
 
 **Returns:** `bool`
 
@@ -23,7 +23,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 960
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 964 | `analystCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 1012 | `analystCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

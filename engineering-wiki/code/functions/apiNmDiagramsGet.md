@@ -6,7 +6,7 @@ GET /network-diagrams/{id} — fully hydrated; ?include_properties=true adds eac
 function apiNmDiagramsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 488.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 550.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

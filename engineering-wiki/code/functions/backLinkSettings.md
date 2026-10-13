@@ -6,7 +6,7 @@ The three settings, raw - for System -> Branding.
 function backLinkSettings(PDO $conn): array
 ```
 
-Defined in [includes/back_link.php](/code/files/includes/back_link.php.md), line 24.
+Defined in [includes/back_link.php](/code/files/includes/back_link.php.md), line 28.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/back_link.php](/code/files/includes/back_link.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 28 | `backLinkSettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 32 | `backLinkSettings` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

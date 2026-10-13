@@ -16,11 +16,22 @@ require __DIR__ . '/_init.php';
 $helpSlug = 'sso-groups';
 require __DIR__ . '/_top.php';
 
-/** A "System -> X" link that opens in a new tab. */
+/**
+ * A "System -> X" link that opens in a new tab.
+ *
+ * @param string $path  the System page path relative to system/, e.g. 'sso/'
+ * @param string $label  the link text as HTML (trusted, not escaped)
+ */
 function sgLink(string $path, string $label): string {
     return '<a class="help-ext" href="../' . htmlspecialchars($path) . '" target="_blank" rel="noopener">' . $label . '</a>';
 }
-/** One tick-off step. */
+/**
+ * One tick-off step.
+ *
+ * @param string $id  the step's key, used to remember its tick in localStorage
+ * @param string $title  the step heading as HTML (trusted, not escaped)
+ * @param string $body  the step's detail as HTML (trusted, not escaped); '' for none
+ */
 function sgCheck(string $id, string $title, string $body = ''): string {
     return '<li><label class="help-check"><input type="checkbox" data-check="' . htmlspecialchars($id) . '">'
          . '<span class="help-check-body"><span class="help-check-title">' . $title . '</span>' . ($body !== '' ? '<span>' . $body . '</span>' : '') . '</span></label></li>';

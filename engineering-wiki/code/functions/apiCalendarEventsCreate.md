@@ -6,7 +6,7 @@ POST /calendar/events
 function apiCalendarEventsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 193.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 202.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

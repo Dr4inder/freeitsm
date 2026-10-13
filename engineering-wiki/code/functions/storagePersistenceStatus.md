@@ -6,12 +6,12 @@ Assess one directory. Returns 'persisted' | 'at_risk' | 'missing' | 'unknown'.
 function storagePersistenceStatus(string $dir, ?int $rootDev = null): string
 ```
 
-Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 197.
+Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 200.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dir` | `string` |  |  |
-| `$rootDev` | `?int` | `null` |  |
+| `$dir` | `string` |  | the absolute directory to check |
+| `$rootDev` | `?int` | `null` | the device number of '/', when the caller already has it; null stats '/' here |
 
 **Returns:** `string`
 

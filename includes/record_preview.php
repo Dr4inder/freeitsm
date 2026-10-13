@@ -50,6 +50,9 @@ const RECORD_PREVIEW_MODULES = [
 /**
  * A preview, or NULL when the type is unknown, the record does not exist, or
  * this analyst may not see it. One answer for all three, deliberately.
+ *
+ * @param string $type  the record type, a RECORD_PREVIEW_MODULES key such as 'ticket' or 'knowledge_article'
+ * @param int $id  the record's id; 0 or less gives null
  */
 function recordPreview(PDO $conn, int $analystId, string $type, int $id): ?array
 {
@@ -77,7 +80,13 @@ function recordPreview(PDO $conn, int $analystId, string $type, int $id): ?array
     return $preview;
 }
 
-/** Shorthand for one line of a preview. */
+/**
+ * Shorthand for one line of a preview.
+ *
+ * @param string $label  the field's label as shown
+ * @param mixed $value  the value to show; null or an empty string leaves the field out
+ * @param ?string $colour  a status colour for the dot (CSS colour); anything that is not a plain colour is dropped
+ */
 function rpField(string $label, $value, ?string $colour = null): ?array
 {
     $value = is_string($value) ? trim($value) : $value;
@@ -107,13 +116,18 @@ function rpField(string $label, $value, ?string $colour = null): ?array
     ], fn($v) => $v !== null);
 }
 
-/** Drop the empties, so callers can just list every field they might have. */
+/**
+ * Drop the empties, so callers can just list every field they might have.
+ *
+ * @param array $fields  the fields from rpField(), nulls included - they are dropped
+ */
 function rpFields(array $fields): array
 {
     return array_values(array_filter($fields));
 }
 
 // ── Ticket ──────────────────────────────────────────────────────────────────
+// @param int $id  the tickets id
 function recordPreviewTicket(PDO $conn, int $analystId, int $id): ?array
 {
     // ⚠️ analystCanAccessTicket() is TENANCY only — it answers "is this ticket
@@ -157,6 +171,7 @@ function recordPreviewTicket(PDO $conn, int $analystId, int $id): ?array
 }
 
 // ── Task ────────────────────────────────────────────────────────────────────
+// @param int $id  the tasks id
 function recordPreviewTask(PDO $conn, int $analystId, int $id): ?array
 {
     // 🔴 analystCanAccessTask(), NOT activeTenantFilter(). The filter answers
@@ -203,6 +218,7 @@ function recordPreviewTask(PDO $conn, int $analystId, int $id): ?array
 }
 
 // ── Change ──────────────────────────────────────────────────────────────────
+// @param int $id  the changes id
 function recordPreviewChange(PDO $conn, int $analystId, int $id): ?array
 {
     // 🔴 The module's own gate, not the active-company filter. See the note on
@@ -242,6 +258,7 @@ function recordPreviewChange(PDO $conn, int $analystId, int $id): ?array
 }
 
 // ── Problem ─────────────────────────────────────────────────────────────────
+// @param int $id  the problems id
 function recordPreviewProblem(PDO $conn, int $analystId, int $id): ?array
 {
     // 🔴 The module's own gate, not the active-company filter. See the note on
@@ -278,6 +295,7 @@ function recordPreviewProblem(PDO $conn, int $analystId, int $id): ?array
 }
 
 // ── Asset ───────────────────────────────────────────────────────────────────
+// @param int $id  the assets id
 function recordPreviewAsset(PDO $conn, int $analystId, int $id): ?array
 {
     if (!analystCanAccessAsset($conn, $analystId, $id)) {
@@ -340,6 +358,7 @@ function recordPreviewAsset(PDO $conn, int $analystId, int $id): ?array
 }
 
 // ── Contract ────────────────────────────────────────────────────────────────
+// @param int $id  the contracts id
 function recordPreviewContract(PDO $conn, int $analystId, int $id): ?array
 {
     // Contracts carry no tenant_id, but a CUSTOMER contract belongs to its customer's
@@ -378,6 +397,7 @@ function recordPreviewContract(PDO $conn, int $analystId, int $id): ?array
 }
 
 // ── Domain (#154) ───────────────────────────────────────────────────────────
+// @param int $id  the domains id
 function recordPreviewDomain(PDO $conn, int $analystId, int $id): ?array
 {
     // The domain's own record gate — never activeTenantFilter(), which is a list
@@ -411,6 +431,7 @@ function recordPreviewDomain(PDO $conn, int $analystId, int $id): ?array
 }
 
 // ── Knowledge article ───────────────────────────────────────────────────────
+// @param int $id  the knowledge_articles id
 function recordPreviewKnowledgeArticle(PDO $conn, int $analystId, int $id): ?array
 {
     // 🔴 Knowledge has its own visibility rules — folders, audiences, lifecycle —

@@ -14,15 +14,15 @@ function filesAudit(
 ): void
 ```
 
-Defined in [includes/files/audit.php](/code/files/includes/files/audit.php.md), line 39.
+Defined in [includes/files/audit.php](/code/files/includes/files/audit.php.md), line 41.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$action` | `string` |  |  |
+| `$action` | `string` |  | what was done - one of FILES_AUDIT_ACTIONS ('view', 'download', 'denied' ...) |
 | `$t` | `array` | `[]` | ['folder_id'=>?, 'item_id'=>?, 'version_id'=>?, 'path'=>?] - path is worked out from folder_id (+ item name) when omitted. |
-| `$detail` | `array` | `[]` |  |
+| `$detail` | `array` | `[]` | extra facts for the row, stored as JSON in files_audit.detail; empty stores NULL |
 
 **Returns:** `void`
 
@@ -32,8 +32,8 @@ Defined in [includes/files/audit.php](/code/files/includes/files/audit.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 53 | `filesAudit` | read [analysts](/code/tables/analysts.md) |  |
-| 58 | `filesAudit` | **insert** [files_audit](/code/tables/files_audit.md) (`analyst_id`, `analyst_name`, `action`, `folder_id`, `item_id`, `version_id`, `target_path`, `detail`, `ip_address`, `user_agent`, `created_datetime`) |  |
+| 55 | `filesAudit` | read [analysts](/code/tables/analysts.md) |  |
+| 60 | `filesAudit` | **insert** [files_audit](/code/tables/files_audit.md) (`analyst_id`, `analyst_name`, `action`, `folder_id`, `item_id`, `version_id`, `target_path`, `detail`, `ip_address`, `user_agent`, `created_datetime`) |  |
 
 ## Called from
 

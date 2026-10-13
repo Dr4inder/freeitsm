@@ -6,11 +6,11 @@ Is this a landing key we recognise? Everything from outside goes through here.
 function landingIsValid($key): bool
 ```
 
-Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 54.
+Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 58.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` |  |  |  |
+| `$key` |  |  | untrusted input (cookie, preference or setting); valid only if it is 'analyst' or 'portal' |
 
 **Returns:** `bool`
 

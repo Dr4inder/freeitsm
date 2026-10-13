@@ -1,6 +1,6 @@
 # api/messaging/media.php
 
-> API endpoint - 108 lines
+> API endpoint - 110 lines
 
 Public, unauthenticated media server for ONE outbound attachment — the companion to webhook.php, but outbound: Twilio's WhatsApp API sends media by URL rather than accepting an upload, so it has to fetch the bytes from somewhere reachable on the internet. This is that somewhere.
 
@@ -30,13 +30,13 @@ Deliberately narrow, not a general file host:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [mediaFail()](/code/functions/mediaFail.md) | 31 | Sends the given HTTP status with a plain "Not found", then stops - every refusal looks the same, so nothing is revealed about why. |
+| [mediaFail()](/code/functions/mediaFail.md) | 33 | Sends the given HTTP status with a plain "Not found", then stops - every refusal looks the same, so nothing is revealed about why. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 73 |  | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md) |  |
+| 75 |  | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md) |  |
 
 ## How it hangs together
 

@@ -203,6 +203,8 @@ try {
 
 /**
  * Get mailbox for a ticket based on associated emails
+ *
+ * @param mixed $ticketId  the ticket whose first email decides which mailbox replies go from
  */
 function getMailboxForTicket($conn, $ticketId) {
     // Get the mailbox_id from the ticket's emails (use the first/initial email's mailbox)
@@ -227,6 +229,9 @@ function getMailboxForTicket($conn, $ticketId) {
 
 /**
  * Get valid access token (refresh if expired)
+ *
+ * @param mixed $mailbox  the target_mailboxes row, decrypted (id and the azure_* columns are used for a refresh)
+ * @param mixed $tokenData  the mailbox's decoded token_data: access_token, refresh_token, expires_at (Unix time)
  */
 function getValidAccessToken($conn, $mailbox, $tokenData) {
     if (!$tokenData || !isset($tokenData['access_token'])) {
@@ -249,6 +254,9 @@ function getValidAccessToken($conn, $mailbox, $tokenData) {
 
 /**
  * Refresh the access token using mailbox configuration
+ *
+ * @param mixed $mailbox  the target_mailboxes row, decrypted - azure_tenant_id, azure_client_id/secret, oauth_scopes
+ * @param mixed $refreshToken  the OAuth refresh token to trade for a new access token
  */
 function refreshAccessToken($mailbox, $refreshToken) {
     $tokenUrl = 'https://login.microsoftonline.com/' . $mailbox['azure_tenant_id'] . '/oauth2/v2.0/token';
@@ -300,6 +308,9 @@ function refreshAccessToken($mailbox, $refreshToken) {
 
 /**
  * Save token data to database
+ *
+ * @param mixed $mailboxId  the target_mailboxes id to update
+ * @param mixed $tokenData  the token array to store (encrypted) in token_data, as built by refreshAccessToken()
  */
 function saveTokenData($conn, $mailboxId, $tokenData) {
     // Encrypted at rest — see ENCRYPTED_MAILBOX_COLUMNS; decryptMailboxRow() reverses it.
@@ -312,6 +323,13 @@ function saveTokenData($conn, $mailboxId, $tokenData) {
 
 /**
  * Build email message structure for Graph API
+ *
+ * @param mixed $to  the To addresses as typed, separated by ; or ,
+ * @param mixed $cc  the Cc addresses as typed, separated by ; or ,; empty for none
+ * @param mixed $subject  the email subject
+ * @param mixed $body  the HTML body to send, thread included for a reply or forward
+ * @param mixed $attachments  the files the analyst attached, from the request: [{name, type, content (base64)}, ...]
+ * @param mixed $ticketId  the ticket being emailed from; only its own stored pictures are embedded
  */
 function buildEmailMessage($to, $cc, $subject, $body, $attachments, $ticketId) {
     // Parse recipients
@@ -355,6 +373,8 @@ function buildEmailMessage($to, $cc, $subject, $body, $attachments, $ticketId) {
  * The files the analyst attached, in the Graph fileAttachment shape that all
  * three providers' builders take (Graph directly; SMTP and Gmail through
  * includes/mime_message.php).
+ *
+ * @param mixed $attachments  the files the analyst attached, from the request: [{name, type, content (base64)}, ...]
  */
 function uploadedFileParts($attachments) {
     $parts = [];
@@ -395,6 +415,9 @@ function uploadedFileParts($attachments) {
  *
  * 2. data: images - what the editor produces when a screenshot is pasted.
  *    Gmail and Outlook refuse to show a data: image in a received email.
+ *
+ * @param mixed $body  the HTML body to send
+ * @param mixed $ticketId  the ticket being emailed from; links to another ticket's files are left alone
  */
 function processInlineImages($body, $ticketId) {
     $inlineAttachments = [];
@@ -513,6 +536,9 @@ function processInlineImages($body, $ticketId) {
 
 /**
  * Get attachment by ID from database - only if it belongs to this ticket
+ *
+ * @param mixed $id  the email_attachments id from the image link
+ * @param mixed $ticketId  the ticket the attachment must belong to; anything else gives no row
  */
 function getAttachmentById($id, $ticketId) {
     try {
@@ -532,6 +558,10 @@ function getAttachmentById($id, $ticketId) {
 
 /**
  * Get attachment by CID and email_id from database - only if it belongs to this ticket
+ *
+ * @param mixed $cid  the content id from the image link, possibly URL-encoded
+ * @param mixed $emailId  the emails.id from the image link
+ * @param mixed $ticketId  the ticket the attachment must belong to; anything else gives no row
  */
 function getAttachmentByCid($cid, $emailId, $ticketId) {
     try {
@@ -562,6 +592,8 @@ function getAttachmentByCid($cid, $emailId, $ticketId) {
 
 /**
  * Parse recipients string into Graph API format
+ *
+ * @param mixed $recipientString  addresses separated by ; or ,; invalid ones are dropped
  */
 function parseRecipients($recipientString) {
     if (empty($recipientString)) {
@@ -588,6 +620,9 @@ function parseRecipients($recipientString) {
 
 /**
  * Send email via Microsoft Graph API
+ *
+ * @param mixed $accessToken  the mailbox's Microsoft Graph access token, from getValidAccessToken()
+ * @param mixed $message  the sendMail request as built by buildEmailMessage()
  */
 function sendEmailViaGraph($accessToken, $message) {
     $graphUrl = 'https://graph.microsoft.com/v1.0' . mailboxGraphBase() . '/sendMail';
@@ -625,6 +660,8 @@ function sendEmailViaGraph($accessToken, $message) {
 /**
  * Strip the quoted thread from the email body
  * Looks for the reply marker and returns only the content above it
+ *
+ * @param mixed $body  an HTML body that may contain the reply marker and the quoted thread below it
  */
 function stripThreadFromBody($body) {
     // Look for the marker pattern in the HTML
@@ -652,6 +689,10 @@ function stripThreadFromBody($body) {
 /**
  * Build full email body with thread for sending to recipient
  * Analyst's content + reply marker + quoted thread from DB
+ *
+ * @param mixed $ticketId  the ticket whose emails make up the quoted thread
+ * @param mixed $analystBody  the analyst's new HTML text, which goes above the marker
+ * @param mixed $type  'reply' or 'forward' - a forward gets a "Forwarded message" heading
  */
 function buildFullEmailBody($conn, $ticketId, $analystBody, $type) {
     // Get the ticket number for the reply marker
@@ -722,6 +763,8 @@ function buildFullEmailBody($conn, $ticketId, $analystBody, $type) {
 /**
  * Strip quoted/nested content from email body (for thread assembly)
  * Relies on our own visible marker text, with generic blockquote fallback
+ *
+ * @param mixed $body  one stored email's HTML body, which may carry its own quoted thread
  */
 function stripQuotedContent($body) {
     // 1. Our visible marker text: "Please reply above this line"
@@ -763,6 +806,14 @@ function stripQuotedContent($body) {
  * It still stores through includes/uploads.php like every other path, because
  * these land in tickets/attachments/ inside the web root and a name chosen by
  * somebody else must never become a file the server would execute.
+ *
+ * @param mixed $ticketId  the ticket the email was sent from
+ * @param mixed $mailbox  the target_mailboxes row it was sent from - id, target_mailbox and mailbox_name are stored
+ * @param mixed $to  the To addresses as typed
+ * @param mixed $cc  the Cc addresses as typed
+ * @param mixed $subject  the email subject
+ * @param mixed $body  the analyst's HTML text, without the quoted thread
+ * @param mixed $attachments  the files the analyst attached, from the request: [{name, type, content (base64)}, ...]
  */
 function saveSentEmail($conn, $ticketId, $mailbox, $to, $cc, $subject, $body, $attachments = []) {
     try {
@@ -813,6 +864,9 @@ function saveSentEmail($conn, $ticketId, $mailbox, $to, $cc, $subject, $body, $a
  * Without this the file reached the requester and left NO trace on the ticket —
  * so the next analyst to open it saw a reply referring to a document that,
  * as far as FreeITSM was concerned, had never existed. Reported by Ed.
+ *
+ * @param mixed $emailId  the emails.id of the sent message; also names its folder on disk
+ * @param mixed $attachments  the files the analyst attached, from the request: [{name, type, content (base64)}, ...]
  */
 function saveSentAttachments($conn, $emailId, $attachments) {
     require_once '../../includes/uploads.php';

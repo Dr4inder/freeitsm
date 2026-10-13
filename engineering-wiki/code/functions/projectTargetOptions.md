@@ -6,12 +6,12 @@ The lists the target dialog offers, for the project's company.
 function projectTargetOptions(PDO $conn, array $project): array
 ```
 
-Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 274.
+Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 310.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row - tenant_id picks the company's lists |
 
 **Returns:** `array`
 
@@ -19,9 +19,9 @@ Defined in [includes/projects/targets.php](/code/files/includes/projects/targets
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 281 | `projectTargetOptions` | read [asset_types](/code/tables/asset_types.md) |  |
-| 282 | `projectTargetOptions` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 283 | `projectTargetOptions` | read [asset_locations](/code/tables/asset_locations.md) |  |
+| 317 | `projectTargetOptions` | read [asset_types](/code/tables/asset_types.md) |  |
+| 318 | `projectTargetOptions` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 319 | `projectTargetOptions` | read [asset_locations](/code/tables/asset_locations.md) |  |
 
 ## Calls
 

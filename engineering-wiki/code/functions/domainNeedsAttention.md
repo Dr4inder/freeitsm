@@ -6,11 +6,11 @@ The reasons a domain belongs on the "needs attention" list — one place, so the
 function domainNeedsAttention(array $r): array
 ```
 
-Defined in [includes/domains/read.php](/code/files/includes/domains/read.php.md), line 124.
+Defined in [includes/domains/read.php](/code/files/includes/domains/read.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | a row already through `domainShapeRow()` (needs days_left and ssl_days_left) |
 
 **Returns:** `array`
 

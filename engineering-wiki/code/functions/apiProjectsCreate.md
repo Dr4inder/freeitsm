@@ -6,7 +6,7 @@ POST /projects (optionally {template: "builtin:office_move" | "saved:12"})
 function apiProjectsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 228.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 242.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

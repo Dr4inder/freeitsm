@@ -6,14 +6,14 @@ May this key access this row of a tenant-scoped table (by its owning company)? U
 function apiKeyCanAccessTenantRow(PDO $conn, array $apiKey, string $table, int $rowId): bool
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 228.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 245.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$rowId` | `int` |  |  |
+| `$table` | `string` |  | the table to look in - a literal from the code, never user input |
+| `$rowId` | `int` |  | the row's id |
 
 **Returns:** `bool`
 

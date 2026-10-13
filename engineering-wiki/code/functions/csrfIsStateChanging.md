@@ -6,7 +6,7 @@ True for any request method other than GET, HEAD and OPTIONS.
 function csrfIsStateChanging(): bool
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 83.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 87.
 
 **Returns:** `bool`
 

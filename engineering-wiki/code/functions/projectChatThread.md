@@ -6,14 +6,14 @@ The conversation this person has on this project (per the memory setting); creat
 function projectChatThread(PDO $conn, int $projectId, int $analystId, bool $create): ?array
 ```
 
-Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 77.
+Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 81.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$create` | `bool` |  |  |
+| `$create` | `bool` |  | true to create the thread when there is none yet; false returns null instead |
 
 **Returns:** `?array`
 
@@ -21,9 +21,9 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 81 | `projectChatThread` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
-| 82 | `projectChatThread` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
-| 86 | `projectChatThread` | **insert** [project_ai_threads](/code/tables/project_ai_threads.md) (`project_id`, `analyst_id`, `created_datetime`, `updated_datetime`) |  |
+| 85 | `projectChatThread` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
+| 86 | `projectChatThread` | read [project_ai_threads](/code/tables/project_ai_threads.md) |  |
+| 90 | `projectChatThread` | **insert** [project_ai_threads](/code/tables/project_ai_threads.md) (`project_id`, `analyst_id`, `created_datetime`, `updated_datetime`) |  |
 
 ## Calls
 

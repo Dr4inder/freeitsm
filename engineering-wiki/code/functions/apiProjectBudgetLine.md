@@ -6,13 +6,13 @@ One budget line of a project as the analyst sees it in the budget detail, or ans
 function apiProjectBudgetLine(PDO $conn, array $p, int $lineId, int $analystId): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 569.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 604.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$p` | `array` |  |  |
-| `$lineId` | `int` |  |  |
+| `$p` | `array` |  | the decorated project row as `apiLoadProject()` returns it |
+| `$lineId` | `int` |  | the budget line id, which must belong to that project |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`

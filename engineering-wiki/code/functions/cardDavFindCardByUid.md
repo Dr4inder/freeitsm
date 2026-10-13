@@ -6,12 +6,12 @@ Find a card in a fetched book by UID.
 function cardDavFindCardByUid(array $cards, string $uid): ?array
 ```
 
-Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php.md), line 154.
+Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php.md), line 169.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cards` | `array` |  |  |
-| `$uid` | `string` |  |  |
+| `$cards` | `array` |  | the 'cards' list from `cardDavFetchCards()` - each with href, etag, vcard |
+| `$uid` | `string` |  | the UID to find, matched exactly |
 
 **Returns:** `?array`
 

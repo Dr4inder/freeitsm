@@ -6,12 +6,12 @@ The Forms card: form, when submitted, who by (company page), approval state and 
 function pplSectionForms(array $s, bool $person): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 172.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 243.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
-| `$person` | `bool` |  |  |
+| `$s` | `array` |  | the forms section from includes/people.php: rows, total |
+| `$person` | `bool` |  | true on a person's page; false adds the "By" column |
 
 **Returns:** `string`
 

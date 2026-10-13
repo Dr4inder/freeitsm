@@ -13,16 +13,16 @@ function sla_send_breach_email(
 ): void
 ```
 
-Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 286.
+Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 300.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$state` | `array` |  |  |
-| `$targetType` | `string` |  |  |
-| `$trigger` | `string` |  |  |
-| `$recipients` | `array` |  |  |
+| `$state` | `array` |  | the ticket's SLA state from `sla_get_state()` |
+| `$targetType` | `string` |  | 'response' or 'resolution' - which part of `$state` the email is about |
+| `$trigger` | `string` |  | 'warning' or 'breach' |
+| `$recipients` | `array` |  | the email addresses to send to, from `sla_resolve_recipients()` |
 
 **Returns:** `void`
 

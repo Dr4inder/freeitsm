@@ -6,7 +6,7 @@ PATCH /network-diagrams/{id} — partial metadata; sending nodes/connectors = fu
 function apiNmDiagramsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 592.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 663.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,13 +6,13 @@ True when the analyst holds the capability; false on any error.
 function domainHasCap(PDO $conn, int $analystId, string $cap): bool
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 65.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$cap` | `string` |  |  |
+| `$cap` | `string` |  | a capability key, normally a Cap::DOMAINS_* constant |
 
 **Returns:** `bool`
 

@@ -6,11 +6,11 @@ Map a ServiceError raised by the shared service to the API's error response.
 function apiServiceStatusFail(ServiceError $e): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 33.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 37.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `ServiceError` |  |  |
+| `$e` | `ServiceError` |  | the error ServiceStatusService threw - its kind picks the status, errorCode and message pass through |
 
 **Returns:** `void`
 

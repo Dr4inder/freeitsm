@@ -6,7 +6,7 @@ Parse the JSON request body. Returns [] for an empty body; 400s on a body that i
 function apiJsonBody(): array
 ```
 
-Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 49.
+Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 64.
 
 **Returns:** `array`
 

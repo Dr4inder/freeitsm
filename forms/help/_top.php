@@ -36,7 +36,11 @@ if (!isset($helpTopic) || !isset($topics[$helpTopic])) {
 }
 $topic = $topics[$helpTopic];
 
-/** A section's number, from the registry. '' when the registry does not know it. */
+/**
+ * A section's number, from the registry. '' when the registry does not know it.
+ *
+ * @param string $id  the section's key in the topic's 'sections' registry
+ */
 function helpNum(string $id): string
 {
     global $topic;
@@ -44,7 +48,13 @@ function helpNum(string $id): string
     return $n === false ? '' : (string)($n + 1);
 }
 
-/** Open a section: the hairline, the number badge, the heading and its lead. */
+/**
+ * Open a section: the hairline, the number badge, the heading and its lead.
+ *
+ * @param string $id  the section's key in the topic registry, also used as the HTML id (escaped)
+ * @param string $heading  the heading text, plain (escaped)
+ * @param string $lead  the introductory paragraph as trusted HTML (not escaped); '' for none
+ */
 function helpSection(string $id, string $heading, string $lead = ''): void
 {
     echo '<div class="help-section" id="' . htmlspecialchars($id) . '">'

@@ -6,12 +6,12 @@ Read a pass mark off the request. Null means "no pass mark" — the course is ma
 function lmsReadPassMark(array $input, &$error)
 ```
 
-Defined in [api/lms/course.php](/code/files/api/lms/course.php.md), line 39.
+Defined in [api/lms/course.php](/code/files/api/lms/course.php.md), line 42.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$input` | `array` |  |  |
-| `$error` |  |  |  |
+| `$input` | `array` |  | the decoded request; pass_mark is read if present |
+| `$error` |  |  | set by reference to a message when pass_mark is not a whole number from 0 to 100 |
 
 ## Called from
 

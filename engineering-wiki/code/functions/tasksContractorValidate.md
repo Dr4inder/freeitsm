@@ -6,13 +6,13 @@ Check a supplier / contact pair: the supplier exists; the contact (if any) works
 function tasksContractorValidate(PDO $conn, $supplierId, $contactId): array
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 85.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 98.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$supplierId` |  |  |  |
-| `$contactId` |  |  |  |
+| `$supplierId` |  |  | a supplier id as sent; null or '' for none |
+| `$contactId` |  |  | a contact id as sent; null or '' for none - a contact alone brings their supplier |
 
 **Returns:** `array`
 
@@ -20,8 +20,8 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 90 | `tasksContractorValidate` | read [contacts](/code/tables/contacts.md) |  |
-| 99 | `tasksContractorValidate` | read [suppliers](/code/tables/suppliers.md) |  |
+| 103 | `tasksContractorValidate` | read [contacts](/code/tables/contacts.md) |  |
+| 112 | `tasksContractorValidate` | read [suppliers](/code/tables/suppliers.md) |  |
 
 ## Called from
 

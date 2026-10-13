@@ -12,15 +12,15 @@ function proxmoxCall(
 ): array
 ```
 
-Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 71.
+Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
-| `$method` | `string` |  |  |
-| `$path` | `string` |  |  |
-| `$form` | `?array` | `null` |  |
-| `$auth` | `?array` | `null` |  |
+| `$c` | `array` |  | the connection row - host and verify_ssl are read |
+| `$method` | `string` |  | the HTTP method, e.g. 'GET' or 'POST' |
+| `$path` | `string` |  | the API path from the host, starting '/api2/json/...' |
+| `$form` | `?array` | `null` | form fields to send as the body; null for none |
+| `$auth` | `?array` | `null` | what `proxmoxLogin()` returned (a token header, or ticket and csrf); null for the login call itself |
 
 **Returns:** `array`
 

@@ -1,6 +1,6 @@
 # includes/calendar_sync/push.php
 
-> PHP - 498 lines
+> PHP - 511 lines
 
 Putting a scheduled ticket into its owner's calendar, and taking it out again (GH discussion #75, step 3).
 
@@ -27,12 +27,12 @@ database problem.
 |---|--:|---|
 | [calendarSyncReconcileTicket()](/code/functions/calendarSyncReconcileTicket.md) | 34 | Make the calendar match the ticket. |
 | [calendarSyncReconcileTask()](/code/functions/calendarSyncReconcileTask.md) | 172 | Make the calendar match a TASK (#75). |
-| [calendarSyncEventFromTask()](/code/functions/calendarSyncEventFromTask.md) | 308 | One task, as a calendar event of the given kind. Null when the task has nothing to say for that kind. |
-| [calendarSyncRemoveRow()](/code/functions/calendarSyncRemoveRow.md) | 378 | Remove one mapped event from the calendar it was written to, and forget it. |
-| [calendarSyncRemoveAllForAnalyst()](/code/functions/calendarSyncRemoveAllForAnalyst.md) | 409 | Everything FreeITSM put in one analyst's calendar, removed. |
-| [calendarSyncEventFromTicket()](/code/functions/calendarSyncEventFromTicket.md) | 424 | The canonical event shape (see CalendarSyncProvider) for one ticket row. |
-| [calendarSyncRecordError()](/code/functions/calendarSyncRecordError.md) | 473 | Stores a sync error (cut to 500 characters) on the analyst's enrolment, creating an 'off' enrolment row when there is none; never throws. |
-| [calendarSyncClearError()](/code/functions/calendarSyncClearError.md) | 489 | Clears the analyst's sync error and stamps the time of the last good sync; never throws. |
+| [calendarSyncEventFromTask()](/code/functions/calendarSyncEventFromTask.md) | 311 | One task, as a calendar event of the given kind. Null when the task has nothing to say for that kind. |
+| [calendarSyncRemoveRow()](/code/functions/calendarSyncRemoveRow.md) | 385 | Remove one mapped event from the calendar it was written to, and forget it. |
+| [calendarSyncRemoveAllForAnalyst()](/code/functions/calendarSyncRemoveAllForAnalyst.md) | 416 | Everything FreeITSM put in one analyst's calendar, removed. |
+| [calendarSyncEventFromTicket()](/code/functions/calendarSyncEventFromTicket.md) | 435 | The canonical event shape (see CalendarSyncProvider) for one ticket row. |
+| [calendarSyncRecordError()](/code/functions/calendarSyncRecordError.md) | 486 | Stores a sync error (cut to 500 characters) on the analyst's enrolment, creating an 'off' enrolment row when there is none; never throws. |
+| [calendarSyncClearError()](/code/functions/calendarSyncClearError.md) | 502 | Clears the analyst's sync error and stamps the time of the last good sync; never throws. |
 
 ## Database
 
@@ -48,10 +48,10 @@ database problem.
 | 267 | `calendarSyncReconcileTask` | **update** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`updated_datetime`) |  |
 | 274 | `calendarSyncReconcileTask` | **update** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`remote_event_id`, `remote_calendar`, `updated_datetime`) |  |
 | 285 | `calendarSyncReconcileTask` | **insert** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`task_id`, `kind`, `analyst_id`, `connection_id`, `remote_event_id`, `remote_calendar`) |  |
-| 402 | `calendarSyncRemoveRow` | **delete** [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
-| 413 | `calendarSyncRemoveAllForAnalyst` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
-| 477 | `calendarSyncRecordError` | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `mode`, `last_error`) |  |
-| 493 | `calendarSyncClearError` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`last_error`, `last_sync_datetime`) |  |
+| 409 | `calendarSyncRemoveRow` | **delete** [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
+| 420 | `calendarSyncRemoveAllForAnalyst` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
+| 490 | `calendarSyncRecordError` | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `mode`, `last_error`) |  |
+| 506 | `calendarSyncClearError` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`last_error`, `last_sync_datetime`) |  |
 
 ## How it hangs together
 

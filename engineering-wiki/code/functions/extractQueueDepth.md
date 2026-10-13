@@ -6,7 +6,7 @@ How many attachments are waiting.
 function extractQueueDepth(PDO $conn): int
 ```
 
-Defined in [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md), line 57.
+Defined in [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/search/extract_queue.php](/code/files/includes/search/extra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 59 | `extractQueueDepth` | read [attachment_text](/code/tables/attachment_text.md) |  |
+| 63 | `extractQueueDepth` | read [attachment_text](/code/tables/attachment_text.md) |  |
 
 ## Called from
 

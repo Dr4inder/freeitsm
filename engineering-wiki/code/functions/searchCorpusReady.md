@@ -6,7 +6,7 @@ Is the corpus available? False on an install that has not run Database Verificat
 function searchCorpusReady(PDO $conn): bool
 ```
 
-Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 140.
+Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 144 | `searchCorpusReady` | read [search_documents](/code/tables/search_documents.md) |  |
+| 152 | `searchCorpusReady` | read [search_documents](/code/tables/search_documents.md) |  |
 
 ## Called from
 

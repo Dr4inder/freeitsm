@@ -25,5 +25,5 @@
 | [api/tickets/get_sla_calendar.php](/code/files/api/tickets/get_sla_calendar.php.md) | L30 |  |
 | [api/tickets/get_sla_settings.php](/code/files/api/tickets/get_sla_settings.php.md) | L56 |  |
 | [includes/feature_bingo/cards/tickets-core.php](/code/files/includes/feature_bingo/cards/tickets-core.php.md) | L359 |  |
-| [includes/sla.php](/code/files/includes/sla.php.md) | sla_load_calendar L352 |  |
+| [includes/sla.php](/code/files/includes/sla.php.md) | sla_load_calendar L372 |  |
 

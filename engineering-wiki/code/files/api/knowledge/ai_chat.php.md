@@ -1,6 +1,6 @@
 # api/knowledge/ai_chat.php
 
-> API endpoint - 294 lines
+> API endpoint - 300 lines
 
 API Endpoint: AI Chat - Ask questions about knowledge base articles Uses Claude Haiku to answer questions based solely on knowledge article content Supports vector similarity search for finding relevant articles (if embeddings are configured)
 
@@ -16,20 +16,20 @@ API Endpoint: AI Chat - Ask questions about knowledge base articles Uses Claude 
 
 | Function | Line | What it does |
 |---|--:|---|
-| [cosineSimilarity()](/code/functions/cosineSimilarity.md) | 56 | Calculate cosine similarity between two vectors |
-| [generateEmbedding()](/code/functions/generateEmbedding.md) | 75 | Generate embedding for text using OpenAI API |
+| [cosineSimilarity()](/code/functions/cosineSimilarity.md) | 59 | Calculate cosine similarity between two vectors |
+| [generateEmbedding()](/code/functions/generateEmbedding.md) | 81 | Generate embedding for text using OpenAI API |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 121 |  | read [system_settings](/code/tables/system_settings.md) |  |
-| 148 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 166 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 204 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 214 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 219 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 127 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 154 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 172 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 210 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 220 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 | 225 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 231 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

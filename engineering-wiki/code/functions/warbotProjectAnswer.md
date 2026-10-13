@@ -6,11 +6,11 @@ A ServiceError (no such project, several match) is an answer to give the room, n
 function warbotProjectAnswer(callable $fn): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 955.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 1014.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fn` | `callable` |  |  |
+| `$fn` | `callable` |  | takes nothing and returns the answer text; a ServiceError it throws becomes the answer |
 
 **Returns:** `string`
 

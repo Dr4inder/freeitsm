@@ -6,12 +6,12 @@ Loads one contract row the key may see (apiContractVisibility), or answers 404 a
 function apiLoadContract(PDO $conn, int $contractId, array $apiKey): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 138.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 144.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$contractId` | `int` |  |  |
+| `$contractId` | `int` |  | the contracts id |
 | `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`

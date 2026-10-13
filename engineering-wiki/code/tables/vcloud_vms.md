@@ -24,8 +24,8 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/assets/vcloud_connections.php](/code/files/api/assets/vcloud_connections.php.md):46 |  | delete |  |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):207 | `vcdSyncConnection` | insert | `connection_id`, `vm_uuid`, `name`, `org_vdc`, `vapp_name`, `status`, `vcpus`, `memory_mb`, `disk_gb`, `ip_addresses` |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):234 | `vcdSyncConnection` | delete |  |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):250 | `vcdSyncConnection` | insert | `connection_id`, `vm_uuid`, `name`, `org_vdc`, `vapp_name`, `status`, `vcpus`, `memory_mb`, `disk_gb`, `ip_addresses` |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):277 | `vcdSyncConnection` | delete |  |  |
 
 ## Read by
 
@@ -33,5 +33,5 @@
 |---|---|---|
 | [api/assets/get_servers.php](/code/files/api/assets/get_servers.php.md) | L62 |  |
 | [api/assets/vcloud_vms.php](/code/files/api/assets/vcloud_vms.php.md) | L26 |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md) | vcdSyncConnection L222 |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md) | vcdSyncConnection L265 |  |
 

@@ -25,15 +25,15 @@ function sla_emit_workflow_event(
 ): void
 ```
 
-Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 138.
+Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$targetType` | `string` |  |  |
-| `$trigger` | `string` |  |  |
-| `$target` | `array` |  |  |
+| `$targetType` | `string` |  | 'response' or 'resolution' |
+| `$trigger` | `string` |  | 'warning' or 'breach' |
+| `$target` | `array` |  | that target's state from `sla_get_state()`: target_minutes, elapsed_minutes, remaining_minutes, percent |
 
 **Returns:** `void`
 
@@ -41,8 +41,8 @@ Defined in [includes/sla_notifications.php](/code/files/includes/sla_notificatio
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 153 | `sla_emit_workflow_event` | read [tickets](/code/tables/tickets.md) |  |
-| 166 | `sla_emit_workflow_event` | read [emails](/code/tables/emails.md) |  |
+| 157 | `sla_emit_workflow_event` | read [tickets](/code/tables/tickets.md) |  |
+| 170 | `sla_emit_workflow_event` | read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

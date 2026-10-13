@@ -18,7 +18,7 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/assets/proxmox_connections.php](/code/files/api/assets/proxmox_connections.php.md):47 |  | delete |  |  |
-| [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md):167 | `proxmoxSyncConnection` | insert | `connection_id`, `node_name`, `cluster_name`, `status`, `cpu_cores`, `memory_mb`, `last_seen_datetime` |  |
+| [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md):197 | `proxmoxSyncConnection` | insert | `connection_id`, `node_name`, `cluster_name`, `status`, `cpu_cores`, `memory_mb`, `last_seen_datetime` |  |
 
 ## Read by
 

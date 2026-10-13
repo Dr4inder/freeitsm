@@ -6,14 +6,14 @@ Perform the outbound HTTP request for a webhook and return the raw outcome. Shar
 function webhookHttpSend(string $url, array $headers, string $body, string $method = 'POST'): array
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 277.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 299.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
-| `$headers` | `array` |  |  |
-| `$body` | `string` |  |  |
-| `$method` | `string` | `'POST'` |  |
+| `$url` | `string` |  | the full endpoint URL, decrypted |
+| `$headers` | `array` |  | header lines, e.g. 'Content-Type: application/json' |
+| `$body` | `string` |  | the request body as sent |
+| `$method` | `string` | `'POST'` | the HTTP method; '' means POST |
 
 **Returns:** array{body:string|false,status:int,error:string,ms:int}
 

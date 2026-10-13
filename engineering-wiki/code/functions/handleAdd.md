@@ -6,13 +6,13 @@ Adds an analyst, team, portal user or user group to a folder's or article's acce
 function handleAdd(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 268.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 283.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request: object_type, object_id, principal_type and principal_id |
 
 **Returns:** `void`
 
@@ -22,7 +22,7 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 279 | `handleAdd` | **insert** [knowledge_acl](/code/tables/knowledge_acl.md) (`object_type`, `object_id`, `principal_type`, `principal_id`, `created_by_id`, `created_datetime`) |  |
+| 294 | `handleAdd` | **insert** [knowledge_acl](/code/tables/knowledge_acl.md) (`object_type`, `object_id`, `principal_type`, `principal_id`, `created_by_id`, `created_datetime`) |  |
 
 ## Calls
 

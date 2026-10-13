@@ -11,12 +11,12 @@ in Jira is worse than no note.
 function integrationsCommentNoteText(array $event, array $link): string
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1221.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1311.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `array` |  |  |
-| `$link` | `array` |  |  |
+| `$event` | `array` |  | a canonical comment event (author_name, comment_body) |
+| `$link` | `array` |  | the integration_links row (external_key, or external_id when there is no key) |
 
 **Returns:** `string`
 

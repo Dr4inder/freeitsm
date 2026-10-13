@@ -6,13 +6,13 @@ Everything about one supplier contact this analyst may see, or null.
 function supplierContactDetail(PDO $conn, int $analystId, int $contactId): ?array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 686.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 745.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$contactId` | `int` |  |  |
+| `$contactId` | `int` |  | the contacts id (a supplier contact) |
 
 **Returns:** `?array`
 
@@ -20,7 +20,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 686.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 690 | `supplierContactDetail` | read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 749 | `supplierContactDetail` | read [contacts](/code/tables/contacts.md), read [suppliers](/code/tables/suppliers.md) |  |
 
 ## Calls
 

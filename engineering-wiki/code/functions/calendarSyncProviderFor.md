@@ -10,11 +10,11 @@ silently to nowhere is the worst possible response to it.
 function calendarSyncProviderFor(array $connection, ?array $enrolment = null): CalendarSyncProvider
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 226.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 257.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$connection` | `array` |  |  |
+| `$connection` | `array` |  | a calendar_connections row with credentials decrypted, from `calendarSyncLoadConnection()` |
 | `$enrolment` | `?array` | `null` | the enrolment of the analyst whose calendar is being touched. Microsoft ignores it; CalDAV signs in with the credentials on it (see CalendarSyncProvider::`$account`). Pass it whenever an analyst is involved - a CalDAV provider built without one refuses every call with an explanation rather than guessing. |
 
 **Returns:** `CalendarSyncProvider`

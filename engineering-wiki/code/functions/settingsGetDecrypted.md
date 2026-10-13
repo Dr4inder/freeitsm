@@ -25,12 +25,12 @@ decrypt at all.
 function settingsGetDecrypted(PDO $conn, array $keys): array
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 350.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 360.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$keys` | `array` |  |  |
+| `$keys` | `array` |  | the system_settings.setting_key values to load; an empty list returns [] |
 
 **Returns:** array<string,string> key => plaintext value, missing keys absent
 
@@ -38,7 +38,7 @@ Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 354 | `settingsGetDecrypted` | read [system_settings](/code/tables/system_settings.md) |  |
+| 364 | `settingsGetDecrypted` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ POST /tasks/{id}/comments - adds a comment to the task through TasksService.
 function apiTaskCommentsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 443.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 445.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

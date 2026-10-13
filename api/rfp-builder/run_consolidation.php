@@ -41,6 +41,9 @@ set_time_limit(0);
 
 /**
  * Send one SSE event to the browser. Always flushes.
+ *
+ * @param string $event  the event name the browser listens for: 'phase', 'complete' or 'error'
+ * @param array $data  the payload, sent as one JSON line
  */
 function sse(string $event, array $data): void
 {

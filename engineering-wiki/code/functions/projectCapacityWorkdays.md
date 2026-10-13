@@ -6,13 +6,13 @@ The working days from `$from` to `$to` inclusive, as Y-m-d. `$days`: ISO weekday
 function projectCapacityWorkdays(string $from, string $to, array $days = [1, 2, 3, 4, 5]): array
 ```
 
-Defined in [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md), line 47.
+Defined in [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md), line 53.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$from` | `string` |  |  |
-| `$to` | `string` |  |  |
-| `$days` | `array` | `[1, 2, 3, 4, 5]` |  |
+| `$from` | `string` |  | the first day, 'Y-m-d' |
+| `$to` | `string` |  | the last day, 'Y-m-d' (included) |
+| `$days` | `array` | `[1, 2, 3, 4, 5]` | the working weekdays as ISO numbers, 1 = Monday to 7 = Sunday |
 
 **Returns:** `array`
 

@@ -9,13 +9,13 @@ account" would let anyone holding a phone confirm who is in this install.
 function messagingTelegramAck(array $channel, string $chatId, string $text): void
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 815.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 872.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$channel` | `array` |  |  |
-| `$chatId` | `string` |  |  |
-| `$text` | `string` |  |  |
+| `$channel` | `array` |  | the Telegram messaging_channels row, decrypted; other channel types send nothing |
+| `$chatId` | `string` |  | the Telegram chat id |
+| `$text` | `string` |  | the message to send |
 
 **Returns:** `void`
 

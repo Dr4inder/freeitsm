@@ -12,13 +12,13 @@ is stored as a JSON array of the chosen labels.
 function catalogueAnswerText(?string $raw, ?string $fieldType, array $field = []): string
 ```
 
-Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 378.
+Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 399.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `?string` |  |  |
-| `$fieldType` | `?string` |  |  |
-| `$field` | `array` | `[]` |  |
+| `$raw` | `?string` |  | the stored form_submission_data.field_value; null reads as empty |
+| `$fieldType` | `?string` |  | form_fields.field_type, e.g. 'checkbox', 'checkboxes', 'grid' |
+| `$field` | `array` | `[]` | the form_fields row (label, config) - only used to label a 'grid' answer's columns |
 
 **Returns:** `string`
 

@@ -19,10 +19,10 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):484 | `ChangesService::saveCab` | insert | `change_id`, `analyst_id`, `is_required`, `added_by_id`, `added_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):490 | `ChangesService::saveCab` | update | `is_required` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):498 | `ChangesService::saveCab` | delete |  |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):532 | `ChangesService::voteCab` | update | `vote`, `vote_comment`, `vote_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):506 | `ChangesService::saveCab` | insert | `change_id`, `analyst_id`, `is_required`, `added_by_id`, `added_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):512 | `ChangesService::saveCab` | update | `is_required` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):520 | `ChangesService::saveCab` | delete |  |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):557 | `ChangesService::voteCab` | update | `vote`, `vote_comment`, `vote_datetime` |  |
 
 ## Read by
 
@@ -30,6 +30,6 @@
 |---|---|---|
 | [api/change-management/get.php](/code/files/api/change-management/get.php.md) | L103 |  |
 | [api/change-management/get_approvals.php](/code/files/api/change-management/get_approvals.php.md) | L32, L95, L119 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeCabGet L441 |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::saveCab L468, ChangesService::voteCab L521, ChangesService::voteCab L565 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeCabGet L451 |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::saveCab L490, ChangesService::voteCab L546, ChangesService::voteCab L590 |  |
 

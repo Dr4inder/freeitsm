@@ -6,12 +6,12 @@ The rules for one mailbox: the install defaults, overridden by the mailbox's own
 function oversizeRules(PDO $conn, ?array $mailbox = null): array
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 82.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 95.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `?array` | `null` |  |
+| `$mailbox` | `?array` | `null` | the target_mailboxes row, whose oversize_policy JSON overrides the defaults; null for defaults only |
 
 **Returns:** `array`
 

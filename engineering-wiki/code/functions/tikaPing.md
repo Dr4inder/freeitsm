@@ -6,12 +6,12 @@ Is the service answering? Used by the settings screen's Test button, and NOWHERE
 function tikaPing(PDO $conn, string $overrideUrl = ''): array
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 184.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$overrideUrl` | `string` | `''` |  |
+| `$overrideUrl` | `string` | `''` | a Tika address to test instead of the saved one (the settings screen's unsaved value); '' uses the saved one |
 
 **Returns:** array{ok:bool,detail:string}
 

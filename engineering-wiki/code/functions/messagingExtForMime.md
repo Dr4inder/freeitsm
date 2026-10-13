@@ -6,11 +6,11 @@ A sensible file extension for a media MIME type (for naming downloaded media).
 function messagingExtForMime(string $mime): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 296.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 322.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mime` | `string` |  |  |
+| `$mime` | `string` |  | the media's MIME type, parameters after ';' ignored |
 
 **Returns:** `string`
 

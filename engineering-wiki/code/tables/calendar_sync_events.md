@@ -21,24 +21,24 @@ One row per event we have written into somebody's calendar.  ⚠️ ticket_id is
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):118 | `csAdoptOrphans` | update | `connection_id` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):122 | `csAdoptOrphans` | update | `connection_id` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3921 |  | delete |  |  |
 | [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):199 | `calendarSyncPullForAnalyst` | delete |  |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):221 | `calendarPullApply` | update | `updated_datetime` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):227 | `calendarPullApply` | update | `updated_datetime` |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):119 | `calendarSyncReconcileTicket` | update | `updated_datetime` |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):127 | `calendarSyncReconcileTicket` | update | `remote_event_id`, `remote_calendar`, `updated_datetime` |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):138 | `calendarSyncReconcileTicket` | insert | `ticket_id`, `analyst_id`, `connection_id`, `remote_event_id`, `remote_calendar` |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):267 | `calendarSyncReconcileTask` | update | `updated_datetime` |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):274 | `calendarSyncReconcileTask` | update | `remote_event_id`, `remote_calendar`, `updated_datetime` |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):285 | `calendarSyncReconcileTask` | insert | `task_id`, `kind`, `analyst_id`, `connection_id`, `remote_event_id`, `remote_calendar` |  |
-| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):402 | `calendarSyncRemoveRow` | delete |  |  |
+| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):409 | `calendarSyncRemoveRow` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | csUsage L53, csTakeBack L74 |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | csUsage L55, csTakeBack L78 |  |
 | [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md) | enrolReconcileTasks L94 |  |
 | [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md) | calendarSyncPullForAnalyst L117, calendarSyncPullForAnalyst L127 |  |
-| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTicket L39, calendarSyncReconcileTask L177, calendarSyncRemoveAllForAnalyst L413 |  |
+| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTicket L39, calendarSyncReconcileTask L177, calendarSyncRemoveAllForAnalyst L420 |  |
 

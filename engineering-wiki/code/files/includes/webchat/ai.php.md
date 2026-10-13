@@ -1,6 +1,6 @@
 # includes/webchat/ai.php
 
-> PHP - 117 lines
+> PHP - 122 lines
 
 Web chat AI answers — draft a reply from the Knowledge base for a visitor's message.
 
@@ -15,8 +15,8 @@ the visitor at a human when unsure (the widget renders the actual escalation but
 | Function | Line | What it does |
 |---|--:|---|
 | [webchatAiConfigured()](/code/functions/webchatAiConfigured.md) | 18 | Is a Knowledge AI provider/key configured? (Cheap check before spending the budget.) |
-| [webchatAiReply()](/code/functions/webchatAiReply.md) | 41 | Draft an AI answer to `$question`, given the recent `$history` (array of ['sender','body']). Returns ['ok'=>bool, 'answer'=>string, 'articles'=>[{id,title}], 'error'=>?string]. |
-| [webchatAiSummarise()](/code/functions/webchatAiSummarise.md) | 92 | Summarise a web chat transcript into a short support-ticket description for a human agent — used as the ticket body on an "email me back" escalation. Returns '' when AI is unconfigured or the call fails, so the caller can fall back to the raw transcript. |
+| [webchatAiReply()](/code/functions/webchatAiReply.md) | 44 | Draft an AI answer to `$question`, given the recent `$history` (array of ['sender','body']). Returns ['ok'=>bool, 'answer'=>string, 'articles'=>[{id,title}], 'error'=>?string]. |
+| [webchatAiSummarise()](/code/functions/webchatAiSummarise.md) | 97 | Summarise a web chat transcript into a short support-ticket description for a human agent — used as the ticket body on an "email me back" escalation. Returns '' when AI is unconfigured or the call fails, so the caller can fall back to the raw transcript. |
 
 ## How it hangs together
 

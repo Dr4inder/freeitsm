@@ -6,12 +6,12 @@ The title and opening comment, in plain words (stored data: what customers may r
 function domainStatusWording(array $row, array $problems): array
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 134.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 155.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
-| `$problems` | `array` |  |  |
+| `$row` | `array` |  | the domain row from `domainStatusRow()` (domain_name, display_name) |
+| `$problems` | `array` |  | the non-empty list from `domainStatusProblems()`, each array{kind:string,fingerprint:string,date:string} |
 
 **Returns:** `array`
 

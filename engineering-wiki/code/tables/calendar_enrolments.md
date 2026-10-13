@@ -25,27 +25,27 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):93 | `csTakeBack` | update | `mode`, `calendar_address`, `credentials`, `connection_id`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error` |  |
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):117 | `csAdoptOrphans` | update | `connection_id` |  |
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):485 |  | insert | `analyst_id`, `calendar_address`, `mode` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):97 | `csTakeBack` | update | `mode`, `calendar_address`, `credentials`, `connection_id`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):121 | `csAdoptOrphans` | update | `connection_id` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):489 |  | insert | `analyst_id`, `calendar_address`, `mode` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3916 |  | delete |  |  |
-| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):131 | `enrolSwitchConnection` | update | `connection_id` |  |
-| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):151 | `enrolSwitchConnection` | update | `connection_id`, `mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error` |  |
-| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):240 |  | update | `mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `last_error`, `updated_datetime` |  |
-| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):330 |  | insert | `analyst_id`, `mode`, `connection_id`, `calendar_address`, `credentials` |  |
-| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):459 |  | insert | `analyst_id`, `mode`, `task_mode`, `connection_id` |  |
+| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):135 | `enrolSwitchConnection` | update | `connection_id` |  |
+| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):155 | `enrolSwitchConnection` | update | `connection_id`, `mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error` |  |
+| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):244 |  | update | `mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `last_error`, `updated_datetime` |  |
+| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):334 |  | insert | `analyst_id`, `mode`, `connection_id`, `calendar_address`, `credentials` |  |
+| [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):463 |  | insert | `analyst_id`, `mode`, `task_mode`, `connection_id` |  |
 | [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):90 | `calendarSyncPullForAnalyst` | update | `delta_token`, `delta_synced_datetime` |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):473 | `calendarStoreSubscription` | update | `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error` |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):487 | `calendarClearSubscription` | update | `subscription_id`, `subscription_expires`, `subscription_secret` |  |
-| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):477 | `calendarSyncRecordError` | insert | `analyst_id`, `mode`, `last_error` |  |
-| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):493 | `calendarSyncClearError` | update | `last_error`, `last_sync_datetime` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):512 | `calendarStoreSubscription` | update | `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):526 | `calendarClearSubscription` | update | `subscription_id`, `subscription_expires`, `subscription_secret` |  |
+| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):490 | `calendarSyncRecordError` | insert | `analyst_id`, `mode`, `last_error` |  |
+| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):506 | `calendarSyncClearError` | update | `last_error`, `last_sync_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/calendar/graph_notify.php](/code/files/api/calendar/graph_notify.php.md) | L93 |  |
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | csUsage L55, csTakeBack L84, L181, L182, L196, L208 |  |
-| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncEnrolment L307 |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md) | calendarSyncPullAll L332, calendarSyncEnsureAllSubscriptions L501 |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | csUsage L57, csTakeBack L88, L185, L186, L200, L212 |  |
+| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncEnrolment L340 |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md) | calendarSyncPullAll L367, calendarSyncEnsureAllSubscriptions L540 |  |
 

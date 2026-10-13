@@ -49,13 +49,13 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/change-management/move_to_company.php](/code/files/api/change-management/move_to_company.php.md):62 |  | update | `tenant_id`, `modified_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):113 | `ChangesService::createChange` | insert | `tenant_id`, `title`, `change_type_id`, `status_id`, `priority_id`, `impact_id`, `category`, `category_id`, `requester_id`, `assigned_to_id` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):359 | `ChangesService::updateChange` | update |  |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):387 | `ChangesService::deleteChange` | delete |  |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):574 | `ChangesService::voteCab` | update | `status_id`, `modified_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):582 | `ChangesService::voteCab` | update | `status_id`, `approval_datetime`, `modified_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):648 | `ChangesService::linkTicket` | update | `modified_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):668 | `ChangesService::unlinkTicket` | update | `modified_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):115 | `ChangesService::createChange` | insert | `tenant_id`, `title`, `change_type_id`, `status_id`, `priority_id`, `impact_id`, `category`, `category_id`, `requester_id`, `assigned_to_id` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):364 | `ChangesService::updateChange` | update |  |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):396 | `ChangesService::deleteChange` | delete |  |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):599 | `ChangesService::voteCab` | update | `status_id`, `modified_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):607 | `ChangesService::voteCab` | update | `status_id`, `approval_datetime`, `modified_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):678 | `ChangesService::linkTicket` | update | `modified_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):702 | `ChangesService::unlinkTicket` | update | `modified_datetime` |  |
 
 ## Read by
 
@@ -77,17 +77,17 @@
 | [api/tasks/get.php](/code/files/api/tasks/get.php.md) | L39 |  |
 | [api/tasks/search_links.php](/code/files/api/tasks/search_links.php.md) | L56 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L220 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53, apiChangesList L248 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L235 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksGet L349 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L57, apiChangesList L258 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L241 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksGet L351 |  |
 | [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateChanges L56 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L176, projectLinkSearch L319, projectUnapprovedChanges L461 |  |
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L447 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewChange L215 |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::voteCab L551, ChangesService::loadJoined L707 |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::linkChange L334 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::validateLink L1304 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessChange L366 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolRecentChanges L479 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L288, getWatchtowerData L312, getWatchtowerData L325, getWatchtowerData L346, getWatchtowerData L373 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L198, projectLinkSearch L350, projectUnapprovedChanges L503 |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L463 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewChange L231 |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::voteCab L576, ChangesService::loadJoined L746 |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::linkChange L365 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::validateLink L1377 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessChange L376 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolRecentChanges L494 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L291, getWatchtowerData L315, getWatchtowerData L328, getWatchtowerData L349, getWatchtowerData L376 |  |
 

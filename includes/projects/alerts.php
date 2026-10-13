@@ -62,7 +62,11 @@
 require_once __DIR__ . '/read.php';
 require_once __DIR__ . '/../../workflow/includes/engine.php';
 
-/** The project as every project event carries it. */
+/**
+ * The project as every project event carries it.
+ *
+ * @param array $p  a projects row as projectAlertRows() gives it (shown_health and owner_name included when present)
+ */
 function projectEventPayload(array $p): array
 {
     return [
@@ -80,7 +84,12 @@ function projectEventPayload(array $p): array
     ];
 }
 
-/** Dispatch, never throwing: an event must not break the change that caused it. */
+/**
+ * Dispatch, never throwing: an event must not break the change that caused it.
+ *
+ * @param string $event  the workflow event name, e.g. 'project.health_changed'
+ * @param array $payload  the event's data, as WorkflowEngine::dispatch() takes it
+ */
 function projectDispatch(string $event, array $payload): void
 {
     try {
@@ -90,7 +99,11 @@ function projectDispatch(string $event, array $payload): void
     }
 }
 
-/** Run $fn with nobody signed in, as cron does - see the TRAP above. */
+/**
+ * Run $fn with nobody signed in, as cron does - see the TRAP above.
+ *
+ * @param callable $fn  the work to run with the session's analyst hidden; its return value is passed back
+ */
 function projectAlertsAsSystem(callable $fn)
 {
     if (!isset($_SESSION) || !is_array($_SESSION)) return $fn();
@@ -287,6 +300,8 @@ function projectAlertsOpportunistic(PDO $conn): void
 }
 /**
  * A milestone as its events carry it (3.3.0). state: due | missed | done.
+ *
+ * @param array $m  a project_milestones row - id, name, due_date, done_date, stage_id
  */
 function projectMilestoneEventFields(array $m): array
 {

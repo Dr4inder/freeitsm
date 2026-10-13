@@ -14,12 +14,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):100 | `statusPlannedSave` | delete |  |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):107 | `statusPlannedSave` | insert | `planned_id`, `service_id`, `impact_level_id` |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):106 | `statusPlannedSave` | delete |  |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):113 | `statusPlannedSave` | insert | `planned_id`, `service_id`, `impact_level_id` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedReady L55, statusPlannedList L160, statusPlannedStart L273 |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedReady L55, statusPlannedList L176, statusPlannedStart L296 |  |
 

@@ -6,12 +6,12 @@ Turn a raw directory entry into the fields FreeITSM stores. Returns null when th
 function dsyncMapPerson(array $entry, array $provider): ?array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 342.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 380.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$entry` | `array` |  |  |
-| `$provider` | `array` |  |  |
+| `$entry` | `array` |  | one raw entry from `ldap_get_entries()` |
+| `$provider` | `array` |  | the auth_providers row being synced (its ldap_attr_* and sync_* columns) |
 
 **Returns:** `?array`
 

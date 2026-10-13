@@ -12,15 +12,15 @@ function messagingRecordCsatReply(
 ): array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 759.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 812.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channel` | `array` |  |  |
-| `$chatId` | `string` |  |  |
-| `$replyAddress` | `string` |  |  |
-| `$reply` | `array` |  |  |
+| `$channel` | `array` |  | the messaging_channels row, decrypted |
+| `$chatId` | `string` |  | the normalised sender id the rating came from |
+| `$replyAddress` | `string` |  | where the thanks goes - see `messagingReplyAddress()` |
+| `$reply` | `array` |  | response_id, rating, button (true for a button press), and for Telegram callback_id, message_id, message_text |
 
 **Returns:** `array`
 

@@ -23,11 +23,11 @@ no under load is not a guard.
 function tenancyDegradeAllowed(Exception $e): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 52.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `Exception` |  |  |
+| `$e` | `Exception` |  | the exception a tenancy guard's query threw |
 
 **Returns:** `bool`
 

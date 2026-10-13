@@ -1,6 +1,6 @@
 # api/system/cost_centres.php
 
-> API endpoint - 193 lines
+> API endpoint - 198 lines
 
 API: System -> Cost Centres (GH #160, stage 1).
 
@@ -29,7 +29,7 @@ can never disagree about what a valid cost centre is.
 | Function | Line | What it does |
 |---|--:|---|
 | [costCentreColumns()](/code/functions/costCentreColumns.md) | 25 | The columns of an import/export, and the headings each is recognised by. |
-| [costCentreJsonFail()](/code/functions/costCentreJsonFail.md) | 40 | Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops. |
+| [costCentreJsonFail()](/code/functions/costCentreJsonFail.md) | 45 | Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops. |
 
 ## How it hangs together
 

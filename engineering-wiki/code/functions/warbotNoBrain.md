@@ -6,11 +6,11 @@ What Warbot says when the brain is unreachable but the hands still work.
 function warbotNoBrain(string $why): string
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 306.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 319.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$why` | `string` |  |  |
+| `$why` | `string` |  | the reason, worded to start a sentence, e.g. 'no AI provider is configured' |
 
 **Returns:** `string`
 

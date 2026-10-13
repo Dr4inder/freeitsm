@@ -6,7 +6,7 @@ Every status a project can have.
 function projectStatuses(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 101.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 109.
 
 **Returns:** `array`
 

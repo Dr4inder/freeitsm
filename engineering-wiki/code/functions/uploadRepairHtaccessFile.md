@@ -6,11 +6,11 @@ Repair one .htaccess in place. True if it was changed.
 function uploadRepairHtaccessFile(string $path): bool
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 549.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 558.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | absolute path of one .htaccess file; an unreadable file is left alone |
 
 **Returns:** `bool`
 

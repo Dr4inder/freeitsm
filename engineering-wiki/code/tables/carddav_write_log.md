@@ -23,12 +23,12 @@ Every attempt to write a contact back to an address book — succeeded, refused,
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/system/delete_sso_provider.php](/code/files/api/system/delete_sso_provider.php.md):44 |  | delete |  |  |
-| [includes/carddav_write.php](/code/files/includes/carddav_write.php.md):575 | `cardDavLogWrite` | insert | `provider_id`, `user_id`, `display_name`, `outcome`, `fields`, `http_status`, `server_response`, `message`, `triggered_by_analyst_id`, `created_datetime` |  |
+| [includes/carddav_write.php](/code/files/includes/carddav_write.php.md):616 | `cardDavLogWrite` | insert | `provider_id`, `user_id`, `display_name`, `outcome`, `fields`, `http_status`, `server_response`, `message`, `triggered_by_analyst_id`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md) | L233, L238 |  |
+| [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md) | L251, L256 |  |
 | [api/system/get_carddav_write_log.php](/code/files/api/system/get_carddav_write_log.php.md) | L50, L72 |  |
 

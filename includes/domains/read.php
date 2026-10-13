@@ -93,7 +93,11 @@ function domainListRows(PDO $conn, int $analystId, array $f = []): array
     return array_map('domainShapeRow', $rows);
 }
 
-/** Types, and the derived numbers every screen wants (days left, attention). */
+/**
+ * Types, and the derived numbers every screen wants (days left, attention).
+ *
+ * @param array $r  one row from domainListSelect(), straight from PDO (strings)
+ */
 function domainShapeRow(array $r): array
 {
     $today = new DateTimeImmutable(gmdate('Y-m-d'));
@@ -120,6 +124,8 @@ function domainShapeRow(array $r): array
 /**
  * The reasons a domain belongs on the "needs attention" list — one place, so
  * the register filter, the dashboard and Watchtower cannot disagree.
+ *
+ * @param array $r  a row already through domainShapeRow() (needs days_left and ssl_days_left)
  */
 function domainNeedsAttention(array $r): array
 {
@@ -135,7 +141,11 @@ function domainNeedsAttention(array $r): array
     return $why;
 }
 
-/** One domain for its page: everything but the auth code's value. */
+/**
+ * One domain for its page: everything but the auth code's value.
+ *
+ * @param int $id  the domain's id - access is not checked here, the caller does that
+ */
 function domainDetail(PDO $conn, int $id, ?int $analystId = null): ?array
 {
     $st = $conn->prepare(domainListSelect($conn) . ' WHERE d.id = ?');

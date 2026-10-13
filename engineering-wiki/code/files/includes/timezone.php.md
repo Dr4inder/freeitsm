@@ -1,6 +1,6 @@
 # includes/timezone.php
 
-> PHP - 535 lines
+> PHP - 590 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Timezones and Time Handling](https://github.com/edmozley/freeitsm/wiki/Timezones-and-Time-Handling)
@@ -27,29 +27,29 @@ source of truth.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [fmt_local()](/code/functions/fmt_local.md) | 114 | Format a UTC datetime (as stored in the DB) in the current analyst's display zone. Returns '' for null/empty and passes the raw value through unchanged if it can't be parsed, so a bad value is visible rather than fatal. |
-| [_fmt_dt()](/code/functions/_fmt_dt.md) | 408 | Internal: UTC string -> DateTime in the display zone, or null if unparseable. |
-| [fmt_date()](/code/functions/fmt_date.md) | 420 | '25 Aug 2026' |
-| [fmt_time()](/code/functions/fmt_time.md) | 428 | '14:30' |
-| [fmt_datetime()](/code/functions/fmt_datetime.md) | 436 | '25 Aug 2026 14:30' |
-| [fmt_day_month()](/code/functions/fmt_day_month.md) | 445 | '25 Aug' - compact chips and list rows where the year is implied. |
-| [fmt_month_year()](/code/functions/fmt_month_year.md) | 453 | 'August 2026' - calendar headers. Always the full month name. |
-| [naive_now()](/code/functions/naive_now.md) | 489 | 🔴 "NOW" FOR A NAIVE WALL-CLOCK COLUMN — not for anything else. |
-| [naive_today_sql()](/code/functions/naive_today_sql.md) | 522 | 🔴 "TODAY" FOR A BARE DATE COLUMN — the SQL literal, not a bound parameter. |
-| [fmt_weekday()](/code/functions/fmt_weekday.md) | 528 | 'Tuesday' / 'Tue' |
+| [fmt_local()](/code/functions/fmt_local.md) | 118 | Format a UTC datetime (as stored in the DB) in the current analyst's display zone. Returns '' for null/empty and passes the raw value through unchanged if it can't be parsed, so a bad value is visible rather than fatal. |
+| [_fmt_dt()](/code/functions/_fmt_dt.md) | 438 | Internal: UTC string -> DateTime in the display zone, or null if unparseable. |
+| [fmt_date()](/code/functions/fmt_date.md) | 454 | '25 Aug 2026' |
+| [fmt_time()](/code/functions/fmt_time.md) | 466 | '14:30' |
+| [fmt_datetime()](/code/functions/fmt_datetime.md) | 478 | '25 Aug 2026 14:30' |
+| [fmt_day_month()](/code/functions/fmt_day_month.md) | 491 | '25 Aug' - compact chips and list rows where the year is implied. |
+| [fmt_month_year()](/code/functions/fmt_month_year.md) | 503 | 'August 2026' - calendar headers. Always the full month name. |
+| [naive_now()](/code/functions/naive_now.md) | 539 | 🔴 "NOW" FOR A NAIVE WALL-CLOCK COLUMN — not for anything else. |
+| [naive_today_sql()](/code/functions/naive_today_sql.md) | 572 | 🔴 "TODAY" FOR A BARE DATE COLUMN — the SQL literal, not a bound parameter. |
+| [fmt_weekday()](/code/functions/fmt_weekday.md) | 583 | 'Tuesday' / 'Tue' |
 
 ## Classes
 
 - [Tz](/code/classes/Tz.md) (class, line 23) - Per-analyst timezone support.
-- [DateFmt](/code/classes/DateFmt.md) (class, line 152) - Per-user date & time FORMAT (GH #105).
+- [DateFmt](/code/classes/DateFmt.md) (class, line 156) - Per-user date & time FORMAT (GH #105).
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 49 | `Tz::init` | read [user_preferences](/code/tables/user_preferences.md) |  |
-| 215 | `DateFmt::init` | read [system_settings](/code/tables/system_settings.md) |  |
-| 225 | `DateFmt::init` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 221 | `DateFmt::init` | read [system_settings](/code/tables/system_settings.md) |  |
+| 231 | `DateFmt::init` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## How it hangs together
 

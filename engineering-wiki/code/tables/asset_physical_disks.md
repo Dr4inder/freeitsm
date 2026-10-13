@@ -18,14 +18,14 @@ The physical drives themselves, as opposed to the lettered volumes above.  WHY A
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):328 |  | delete |  |  |
-| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):329 |  | insert | `asset_id`, `model`, `serial`, `size_bytes`, `media_type`, `interface_type` |  |
+| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):335 |  | delete |  |  |
+| [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):336 |  | insert | `asset_id`, `model`, `serial`, `size_bytes`, `media_type`, `interface_type` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_disks.php](/code/files/api/assets/get_asset_disks.php.md) | L58 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetPhysicalDisksList L533 |  |
-| [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md) | assetDiskMatchCount L104 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetPhysicalDisksList L544 |  |
+| [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md) | assetDiskMatchCount L110 |  |
 

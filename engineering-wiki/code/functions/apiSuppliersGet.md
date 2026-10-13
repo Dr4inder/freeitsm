@@ -6,7 +6,7 @@ Suppliers — full CRUD (GET /suppliers stays the lite reference list)
 function apiSuppliersGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 422.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 436.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contrac
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 425 | `apiSuppliersGet` | read [contacts](/code/tables/contacts.md) |  |
+| 439 | `apiSuppliersGet` | read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

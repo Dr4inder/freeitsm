@@ -6,7 +6,7 @@ The ids of every active connection, oldest first.
 function calendarSyncConnectionIds(PDO $conn): array
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 158.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 182.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 163 | `calendarSyncConnectionIds` | read [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 187 | `calendarSyncConnectionIds` | read [calendar_connections](/code/tables/calendar_connections.md) |  |
 
 ## Calls
 

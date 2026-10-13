@@ -6,12 +6,12 @@ The values of claim `$path` as a list of strings. A dotted path walks nested obj
 function ssoClaimValues(array $claims, string $path): array
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 62.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 65.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$claims` | `array` |  |  |
-| `$path` | `string` |  |  |
+| `$claims` | `array` |  | the decoded ID token or userinfo claims (nested parts may be stdClass) |
+| `$path` | `string` |  | the claim name, or a dotted path into nested objects, e.g. 'groups' or 'realm_access.roles' |
 
 **Returns:** string[]
 

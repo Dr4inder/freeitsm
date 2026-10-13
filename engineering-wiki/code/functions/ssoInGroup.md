@@ -6,12 +6,12 @@ Is `$wanted` among `$groups`?
 function ssoInGroup(array $groups, string $wanted): bool
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 98.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 111.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$groups` | `array` |  |  |
-| `$wanted` | `string` |  |  |
+| `$groups` | `array` |  | the group values the sign-in sent, from `ssoClaimValues()` |
+| `$wanted` | `string` |  | the group to look for, matched with `ssoSameGroup()` |
 
 **Returns:** `bool`
 

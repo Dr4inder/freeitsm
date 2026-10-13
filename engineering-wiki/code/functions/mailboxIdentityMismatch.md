@@ -6,11 +6,11 @@ Offline "is this reading the wrong inbox?" check for delegated Microsoft mailbox
 function mailboxIdentityMismatch($mailbox)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 190.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 204.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row, decrypted (provider, auth_mode, target_mailbox, authenticated_*) |
 
 ## Calls
 

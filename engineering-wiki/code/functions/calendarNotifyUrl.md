@@ -11,7 +11,7 @@ produce a subscription that silently never fires.
 function calendarNotifyUrl(PDO $conn): string
 ```
 
-Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 359.
+Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 394.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 362 | `calendarNotifyUrl` | read [system_settings](/code/tables/system_settings.md) |  |
+| 397 | `calendarNotifyUrl` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

@@ -14,17 +14,17 @@ function pplCard(
 ): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 43.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 67.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
-| `$title` | `string` |  |  |
-| `$count` | `int` |  |  |
-| `$head` | `array` |  |  |
-| `$rows` | `array` |  |  |
-| `$more` | `bool` | `false` |  |
-| `$extra` | `string` | `''` |  |
+| `$key` | `string` |  | the section key, used for the card's id (sec-<key>) the stats strip links to |
+| `$title` | `string` |  | the card heading |
+| `$count` | `int` |  | the total shown beside the heading |
+| `$head` | `array` |  | the column headings, plain text |
+| `$rows` | `array` |  | one array of cells per row, each cell ALREADY-ESCAPED HTML; rows past PPL_VISIBLE_ROWS start hidden |
+| `$more` | `bool` | `false` | true to add the "only the first N are shown" note |
+| `$extra` | `string` | `''` | extra HTML after the count, e.g. an open/total line |
 
 **Returns:** `string`
 

@@ -8,12 +8,12 @@ An answer saying the name is not registered comes back with not_found set.
 function domainWhoisLookup(PDO $conn, string $name): array
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 369.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 409.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$name` | `string` |  |  |
+| `$name` | `string` |  | a stored domain name, already through `domainNormalise()` |
 
 **Returns:** `array`
 

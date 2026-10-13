@@ -6,12 +6,12 @@ How the plan NOW differs from a baseline. Headline figures, then the detail by i
 function projectBaselineVariance(array $base, array $now): array
 ```
 
-Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 139.
+Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 155.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$base` | `array` |  |  |
-| `$now` | `array` |  |  |
+| `$base` | `array` |  | the baseline in the snapshot shape (projectBaselineShape()) |
+| `$now` | `array` |  | the plan as it is now (projectPlanSnapshot()) |
 
 **Returns:** `array`
 

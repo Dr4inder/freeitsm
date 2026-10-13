@@ -1,6 +1,6 @@
 # includes/signatures.php
 
-> PHP - 141 lines
+> PHP - 145 lines
 
 Analyst email signatures (discussion #80, request 3).
 
@@ -33,19 +33,19 @@ a box and ends up in somebody else's inbox, so it is escaped like anything else.
 |---|--:|---|
 | [signatureMergeData()](/code/functions/signatureMergeData.md) | 35 | The values a signature can merge, for the analyst who is signing. |
 | [signatureMergeCodes()](/code/functions/signatureMergeCodes.md) | 57 | The merge codes offered in the editor, in the order they are listed. |
-| [renderSignature()](/code/functions/renderSignature.md) | 78 | Resolve a signature body for one analyst. |
-| [signaturesForAnalyst()](/code/functions/signaturesForAnalyst.md) | 90 | Every signature belonging to one analyst, default first. |
-| [defaultSignatureForAnalyst()](/code/functions/defaultSignatureForAnalyst.md) | 113 | The one that gets inserted without being asked for, or null. |
-| [setDefaultSignature()](/code/functions/setDefaultSignature.md) | 134 | Make exactly one signature the default for an analyst. |
+| [renderSignature()](/code/functions/renderSignature.md) | 80 | Resolve a signature body for one analyst. |
+| [signaturesForAnalyst()](/code/functions/signaturesForAnalyst.md) | 92 | Every signature belonging to one analyst, default first. |
+| [defaultSignatureForAnalyst()](/code/functions/defaultSignatureForAnalyst.md) | 115 | The one that gets inserted without being asked for, or null. |
+| [setDefaultSignature()](/code/functions/setDefaultSignature.md) | 138 | Make exactly one signature the default for an analyst. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 37 | `signatureMergeData` | read [analysts](/code/tables/analysts.md) |  |
-| 93 | `signaturesForAnalyst` | read [analyst_signatures](/code/tables/analyst_signatures.md) |  |
-| 136 | `setDefaultSignature` | **update** [analyst_signatures](/code/tables/analyst_signatures.md) (`is_default`) |  |
-| 138 | `setDefaultSignature` | **update** [analyst_signatures](/code/tables/analyst_signatures.md) (`is_default`) |  |
+| 95 | `signaturesForAnalyst` | read [analyst_signatures](/code/tables/analyst_signatures.md) |  |
+| 140 | `setDefaultSignature` | **update** [analyst_signatures](/code/tables/analyst_signatures.md) (`is_default`) |  |
+| 142 | `setDefaultSignature` | **update** [analyst_signatures](/code/tables/analyst_signatures.md) (`is_default`) |  |
 
 ## How it hangs together
 

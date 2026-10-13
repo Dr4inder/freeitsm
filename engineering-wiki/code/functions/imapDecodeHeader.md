@@ -6,11 +6,11 @@ Decode a MIME-encoded header value (e.g. =?UTF-8?B?...?=) to a UTF-8 string.
 function imapDecodeHeader(string $value): string
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 318.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 352.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` | `string` |  |  |
+| `$value` | `string` |  | a raw header value, possibly MIME-encoded words |
 
 **Returns:** `string`
 

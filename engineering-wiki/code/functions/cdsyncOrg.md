@@ -11,11 +11,11 @@ only the department is taken.
 function cdsyncOrg(array $lines): array
 ```
 
-Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 208.
+Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
+| `$lines` | `array` |  | the card's unfolded lines from `cardDavUnfold()` |
 
 **Returns:** `array`
 

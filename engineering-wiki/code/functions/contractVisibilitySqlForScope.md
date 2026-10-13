@@ -6,13 +6,13 @@ The same rule for an explicit company list, in the API's null-means-all conventi
 function contractVisibilitySqlForScope(PDO $conn, ?array $scope, string $c = 'c'): array
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 96.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `?array` |  |  |
-| `$c` | `string` | `'c'` |  |
+| `$scope` | `?array` |  | tenant ids the caller may reach; null means every company, empty means none |
+| `$c` | `string` | `'c'` | the alias the calling query gives the contracts table (trusted - put straight into SQL) |
 
 **Returns:** array{0:string,1:array}
 

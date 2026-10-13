@@ -6,13 +6,13 @@ The Domains card: domain, the roles it plays when the rows carry them, status, e
 function pplSectionDomains(array $s, bool $person, ?string $title = null): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 128.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 186.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
-| `$person` | `bool` |  |  |
-| `$title` | `?string` | `null` |  |
+| `$s` | `array` |  | the domains section from includes/people.php: rows (with roles on supplier and contact pages), total |
+| `$person` | `bool` |  | true on a person's page, for the heading only |
+| `$title` | `?string` | `null` | a heading to use instead of the standard one; null for the standard |
 
 **Returns:** `string`
 

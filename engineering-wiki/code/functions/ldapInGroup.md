@@ -6,12 +6,12 @@ Is the user in `$wanted`? `$wanted` may be a plain group name ("NW-IT-Support") 
 function ldapInGroup(array $groups, string $wanted): bool
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 249.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 280.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$groups` | `array` |  |  |
-| `$wanted` | `string` |  |  |
+| `$groups` | `array` |  | the user's groups from `ldapUserGroups()`, each ['dn' => ..., 'cn' => ...] |
+| `$wanted` | `string` |  | the group to look for, as a plain name or a full DN; '' gives false |
 
 **Returns:** `bool`
 

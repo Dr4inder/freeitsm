@@ -16,12 +16,12 @@ upgrading. Every failure here is swallowed on purpose.
 function entityVisit(string $type, int $id, ?PDO $conn = null): void
 ```
 
-Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 127.
+Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$type` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$type` | `string` |  | the record type, a RECENT_TRAIL_MODULES key such as 'ticket' or 'asset' |
+| `$id` | `int` |  | the record's id |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

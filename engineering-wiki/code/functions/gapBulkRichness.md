@@ -12,12 +12,12 @@ bundle from `writeupTicketBundle()` instead.
 function gapBulkRichness(PDO $conn, array $ticketIds): array
 ```
 
-Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 342.
+Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 360.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ticketIds` | `array` |  |  |
+| `$ticketIds` | `array` |  | the ticket ids to score; empty gives [] |
 
 **Returns:** `array`
 
@@ -25,10 +25,10 @@ Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 360 | `gapBulkRichness` | read [emails](/code/tables/emails.md) |  |
-| 370 | `gapBulkRichness` | read [ticket_notes](/code/tables/ticket_notes.md) |  |
-| 377 | `gapBulkRichness` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
-| 384 | `gapBulkRichness` | read [problem_tickets](/code/tables/problem_tickets.md) |  |
+| 378 | `gapBulkRichness` | read [emails](/code/tables/emails.md) |  |
+| 388 | `gapBulkRichness` | read [ticket_notes](/code/tables/ticket_notes.md) |  |
+| 395 | `gapBulkRichness` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 402 | `gapBulkRichness` | read [problem_tickets](/code/tables/problem_tickets.md) |  |
 
 ## Calls
 

@@ -9,7 +9,7 @@ created_datetime, which the browser formats in the reader's own time zone.
 function ticketViewsAsAuditRows(PDO $conn, int $ticketId): array
 ```
 
-Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 81.
+Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,7 +22,7 @@ Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 87 | `ticketViewsAsAuditRows` | read [ticket_views](/code/tables/ticket_views.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
+| 88 | `ticketViewsAsAuditRows` | read [ticket_views](/code/tables/ticket_views.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

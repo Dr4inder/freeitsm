@@ -6,7 +6,7 @@ The chat a ticket's customer is talking on, ready to ask in - or null, which mea
 function csatTicketChannel(PDO $conn, int $ticketId): ?array
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 120.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 125.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 120.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 126 | `csatTicketChannel` | read [emails](/code/tables/emails.md) |  |
+| 131 | `csatTicketChannel` | read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

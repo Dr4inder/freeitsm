@@ -6,12 +6,12 @@ Does this portal user manage anybody? Decides whether "Team tickets" is shown.
 function managerHasTeam(PDO $conn, int $userId): bool
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 258.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 273.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the portal user's users.id |
 
 **Returns:** `bool`
 

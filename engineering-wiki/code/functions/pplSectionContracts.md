@@ -6,13 +6,13 @@ The Contracts card: contract, the other party (unless `$withParty` is false), st
 function pplSectionContracts(array $s, bool $withParty = true, ?string $title = null): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 111.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 163.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
-| `$withParty` | `bool` | `true` |  |
-| `$title` | `?string` | `null` |  |
+| `$s` | `array` |  | the contracts section from includes/people.php: rows, total |
+| `$withParty` | `bool` | `true` | false on a supplier's own page, to leave out the "With" column |
+| `$title` | `?string` | `null` | a heading to use instead of the standard one; null for the standard |
 
 **Returns:** `string`
 

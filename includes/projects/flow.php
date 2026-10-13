@@ -25,7 +25,11 @@ function projectFlowReady(PDO $conn): bool
     return $ready;
 }
 
-/** Record today's counts by status for these projects (top-level tasks). Quiet: never breaks its caller. */
+/**
+ * Record today's counts by status for these projects (top-level tasks). Quiet: never breaks its caller.
+ *
+ * @param array $projectIds  the projects to record today's counts for
+ */
 function projectFlowSnapshot(PDO $conn, array $projectIds): void
 {
     if (!$projectIds || !projectFlowReady($conn)) return;
@@ -49,6 +53,8 @@ function projectFlowSnapshot(PDO $conn, array $projectIds): void
  *   statuses  [{id, name, closed}] in board order (the install's task statuses)
  *   points    [{d, counts: {status_id|'open'|'done': n}, recorded: bool}]
  *   from      the first recorded day (null = none yet)
+ *
+ * @param array $project  the projects row - id and start_date are read
  */
 function projectFlow(PDO $conn, array $project): array
 {

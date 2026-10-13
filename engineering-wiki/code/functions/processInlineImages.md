@@ -25,12 +25,12 @@ Two kinds of image are converted:
 function processInlineImages($body, $ticketId)
 ```
 
-Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 399.
+Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 422.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` |  |  |  |
-| `$ticketId` |  |  |  |
+| `$body` |  |  | the HTML body to send |
+| `$ticketId` |  |  | the ticket being emailed from; links to another ticket's files are left alone |
 
 ## Calls
 

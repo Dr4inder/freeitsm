@@ -25,5 +25,5 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_devices.php](/code/files/api/assets/get_asset_devices.php.md) | L34 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetDevicesList L584 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetDevicesList L595 |  |
 

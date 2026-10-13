@@ -6,11 +6,11 @@ Validate + normalise a raw permissions structure (from the admin UI or a stored 
 function apiV1NormalisePermissions($raw): array
 ```
 
-Defined in [api/v1/lib/permissions.php](/code/files/api/v1/lib/permissions.php.md), line 423.
+Defined in [api/v1/lib/permissions.php](/code/files/api/v1/lib/permissions.php.md), line 425.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` |  |  |  |
+| `$raw` |  |  | untrusted permissions map, ['resource' => ['action', ...]]; anything not an array gives [] |
 
 **Returns:** `array`
 

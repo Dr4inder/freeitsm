@@ -1,6 +1,6 @@
 # includes/services/asset_import.php
 
-> PHP - 1020 lines
+> PHP - 1146 lines
 
 AssetImportService — bringing assets in from a spreadsheet.
 
@@ -41,20 +41,20 @@ scheduled import, and each has a deliberate answer here:
 |--:|---|---|---|
 | 92 | `AssetImportService::availableMatchKeys` | read [assets](/code/tables/assets.md) |  |
 | 110 | `AssetImportService::schemaReady` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
-| 564 | `AssetImportService::findMatch` | read [assets](/code/tables/assets.md) |  |
-| 720 | `AssetImportService::resolveOption` | read [asset_field_options](/code/tables/asset_field_options.md) |  |
-| 729 | `AssetImportService::resolveOption` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `display_order`) |  |
-| 758 | `AssetImportService::handleMissing` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
-| 780 | `AssetImportService::handleMissing` | **update** [assets](/code/tables/assets.md) (`asset_status_id`) |  |
-| 803 | `AssetImportService::inactiveStatusId` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 823 | `AssetImportService::unresolved` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
-| 848 | `AssetImportService::resolveEntry` | **update** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`resolved_datetime`) |  |
-| 865 | `AssetImportService::startRun` | **insert** [asset_import_runs](/code/tables/asset_import_runs.md) (`profile_id`, `mode`, `status`, `source_name`, `stored_file`, `triggered_by_analyst_id`, `tenant_id`, `started_datetime`) |  |
-| 884 | `AssetImportService::finishRun` | **update** [asset_import_runs](/code/tables/asset_import_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `unchanged_count`, `conflict_count`, `skipped_count`, `error_count`) |  |
-| 900 | `AssetImportService::loadRun` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
-| 916 | `AssetImportService::runEntries` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md) |  |
-| 938 | `AssetImportService::logEntry` | **insert** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`run_id`, `row_number`, `action`, `asset_id`, `source_ref`, `display_name`, `detail`, `raw_row`) |  |
-| 962 | `AssetImportService::loadCore` | read [assets](/code/tables/assets.md) |  |
+| 595 | `AssetImportService::findMatch` | read [assets](/code/tables/assets.md) |  |
+| 772 | `AssetImportService::resolveOption` | read [asset_field_options](/code/tables/asset_field_options.md) |  |
+| 781 | `AssetImportService::resolveOption` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `display_order`) |  |
+| 819 | `AssetImportService::handleMissing` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 841 | `AssetImportService::handleMissing` | **update** [assets](/code/tables/assets.md) (`asset_status_id`) |  |
+| 864 | `AssetImportService::inactiveStatusId` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 889 | `AssetImportService::unresolved` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 918 | `AssetImportService::resolveEntry` | **update** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`resolved_datetime`) |  |
+| 940 | `AssetImportService::startRun` | **insert** [asset_import_runs](/code/tables/asset_import_runs.md) (`profile_id`, `mode`, `status`, `source_name`, `stored_file`, `triggered_by_analyst_id`, `tenant_id`, `started_datetime`) |  |
+| 965 | `AssetImportService::finishRun` | **update** [asset_import_runs](/code/tables/asset_import_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `unchanged_count`, `conflict_count`, `skipped_count`, `error_count`) |  |
+| 985 | `AssetImportService::loadRun` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 1007 | `AssetImportService::runEntries` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md) |  |
+| 1039 | `AssetImportService::logEntry` | **insert** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`run_id`, `row_number`, `action`, `asset_id`, `source_ref`, `display_name`, `detail`, `raw_row`) |  |
+| 1063 | `AssetImportService::loadCore` | read [assets](/code/tables/assets.md) |  |
 
 ## How it hangs together
 

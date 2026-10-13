@@ -10,12 +10,12 @@ writer happened to be using, forever.
 function notificationsBodyFor(string $event, ?string $actorName): string
 ```
 
-Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 378.
+Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 395.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `string` |  |  |
-| `$actorName` | `?string` |  |  |
+| `$event` | `string` |  | the workflow event name (not used - the bell picks the wording by event at render time) |
+| `$actorName` | `?string` |  | the display name of whoever caused the event; null when nobody did (e.g. cron) |
 
 **Returns:** `string`
 

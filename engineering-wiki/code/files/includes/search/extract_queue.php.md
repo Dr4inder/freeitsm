@@ -1,6 +1,6 @@
 # includes/search/extract_queue.php
 
-> PHP - 256 lines
+> PHP - 264 lines
 
 The pending-extraction queue (discussion #53, tier 2).
 
@@ -31,25 +31,25 @@ Tickets → Settings → Indexing if it misbehaves.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [extractQueueSettingOn()](/code/functions/extractQueueSettingOn.md) | 44 | Read a boolean setting that defaults to ON when absent. |
-| [extractQueueDepth()](/code/functions/extractQueueDepth.md) | 57 | How many attachments are waiting. |
-| [extractQueueDrain()](/code/functions/extractQueueDrain.md) | 79 | Read up to `$limit` pending attachments. |
-| [extractQueueDepthUnchanged()](/code/functions/extractQueueDepthUnchanged.md) | 211 | Did the attachments we just tried stay pending? If so the extractor is unreachable again and there is no point continuing this pass. |
-| [extractQueueDrainOpportunistic()](/code/functions/extractQueueDrainOpportunistic.md) | 231 | A few items, on the back of a request somebody made anyway. |
+| [extractQueueSettingOn()](/code/functions/extractQueueSettingOn.md) | 48 | Read a boolean setting that defaults to ON when absent. |
+| [extractQueueDepth()](/code/functions/extractQueueDepth.md) | 61 | How many attachments are waiting. |
+| [extractQueueDrain()](/code/functions/extractQueueDrain.md) | 85 | Read up to `$limit` pending attachments. |
+| [extractQueueDepthUnchanged()](/code/functions/extractQueueDepthUnchanged.md) | 219 | Did the attachments we just tried stay pending? If so the extractor is unreachable again and there is no point continuing this pass. |
+| [extractQueueDrainOpportunistic()](/code/functions/extractQueueDrainOpportunistic.md) | 239 | A few items, on the back of a request somebody made anyway. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 46 | `extractQueueSettingOn` | read [system_settings](/code/tables/system_settings.md) |  |
-| 59 | `extractQueueDepth` | read [attachment_text](/code/tables/attachment_text.md) |  |
-| 101 | `extractQueueDrain` | read [attachment_text](/code/tables/attachment_text.md), read [email_attachments](/code/tables/email_attachments.md) |  |
-| 113 | `extractQueueDrain` | **update** [attachment_text](/code/tables/attachment_text.md) (`status`) |  |
-| 123 | `extractQueueDrain` | **update** [attachment_text](/code/tables/attachment_text.md) (`status`) |  |
-| 131 | `extractQueueDrain` | read [attachment_text](/code/tables/attachment_text.md) |  |
-| 153 | `extractQueueDrain` | **update** [attachment_text](/code/tables/attachment_text.md) (`status`, `extracted_datetime`) |  |
-| 166 | `extractQueueDrain` | read [attachment_text](/code/tables/attachment_text.md), read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md) |  |
-| 216 | `extractQueueDepthUnchanged` | read [attachment_text](/code/tables/attachment_text.md) |  |
+| 50 | `extractQueueSettingOn` | read [system_settings](/code/tables/system_settings.md) |  |
+| 63 | `extractQueueDepth` | read [attachment_text](/code/tables/attachment_text.md) |  |
+| 107 | `extractQueueDrain` | read [attachment_text](/code/tables/attachment_text.md), read [email_attachments](/code/tables/email_attachments.md) |  |
+| 119 | `extractQueueDrain` | **update** [attachment_text](/code/tables/attachment_text.md) (`status`) |  |
+| 129 | `extractQueueDrain` | **update** [attachment_text](/code/tables/attachment_text.md) (`status`) |  |
+| 137 | `extractQueueDrain` | read [attachment_text](/code/tables/attachment_text.md) |  |
+| 159 | `extractQueueDrain` | **update** [attachment_text](/code/tables/attachment_text.md) (`status`, `extracted_datetime`) |  |
+| 172 | `extractQueueDrain` | read [attachment_text](/code/tables/attachment_text.md), read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md) |  |
+| 224 | `extractQueueDepthUnchanged` | read [attachment_text](/code/tables/attachment_text.md) |  |
 
 ## How it hangs together
 

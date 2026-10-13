@@ -6,15 +6,15 @@ Projects in the pack's company, decorated with health and progress.
 function rpProjectRows(PDO $conn, int $analystId, $tenant, array $ids, bool $liveOnly): array
 ```
 
-Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 28.
+Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 34.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$tenant` |  |  |  |
-| `$ids` | `array` |  |  |
-| `$liveOnly` | `bool` |  |  |
+| `$tenant` |  |  | the pack's company: 'active', 'all' or a company id |
+| `$ids` | `array` |  | project ids to narrow to; [] means every project |
+| `$liveOnly` | `bool` |  | true for proposed and active projects only; false for all but cancelled |
 
 **Returns:** `array`
 
@@ -22,8 +22,8 @@ Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 38 | `rpProjectRows` | read [project_stages](/code/tables/project_stages.md) |  |
-| 41 | `rpProjectRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 44 | `rpProjectRows` | read [project_stages](/code/tables/project_stages.md) |  |
+| 47 | `rpProjectRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

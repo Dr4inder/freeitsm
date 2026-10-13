@@ -6,7 +6,7 @@ Everything FreeITSM put in one analyst's calendar, removed.
 function calendarSyncRemoveAllForAnalyst(PDO $conn, int $analystId): void
 ```
 
-Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md), line 409.
+Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md), line 416.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 413 | `calendarSyncRemoveAllForAnalyst` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
+| 420 | `calendarSyncRemoveAllForAnalyst` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
 
 ## Calls
 

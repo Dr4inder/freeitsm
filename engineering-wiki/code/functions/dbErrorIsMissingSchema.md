@@ -6,11 +6,11 @@ Either of the above — the two shapes a part-migrated install actually takes.
 function dbErrorIsMissingSchema(PDOException $e): bool
 ```
 
-Defined in [includes/db_errors.php](/code/files/includes/db_errors.php.md), line 42.
+Defined in [includes/db_errors.php](/code/files/includes/db_errors.php.md), line 48.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `PDOException` |  |  |
+| `$e` | `PDOException` |  | the exception a query threw |
 
 **Returns:** `bool`
 

@@ -8,11 +8,11 @@ https://discord.com/api/webhooks/142.../aBcD-secret  →  https://discord.com/ap
 function webhookRedactUrl(?string $url): string
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 72.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `?string` |  |  |
+| `$url` | `?string` |  | the decrypted webhook URL |
 
 **Returns:** `string`
 

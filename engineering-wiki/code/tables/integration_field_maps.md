@@ -17,12 +17,12 @@ What our values mean in the tracker's vocabulary (V3 mapping). map_type is proje
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):971 | `integrationsSaveMaps` | delete |  |  |
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):975 | `integrationsSaveMaps` | insert | `connection_id`, `map_type`, `local_key`, `external_key` |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1030 | `integrationsSaveMaps` | delete |  |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1034 | `integrationsSaveMaps` | insert | `connection_id`, `map_type`, `local_key`, `external_key` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | integrationsMapSchemaReady L918, integrationsLoadMaps L935 |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | integrationsMapSchemaReady L974, integrationsLoadMaps L993 |  |
 

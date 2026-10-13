@@ -12,7 +12,7 @@ validation as a typed one — a preset is a shortcut, not a trusted path.
 function brandingLoginPresets(): array
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 370.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 393.
 
 **Returns:** `array`
 

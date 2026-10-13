@@ -6,7 +6,7 @@ POST /morning-checks/checks
 function apiMorningChecksCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 148.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 167.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

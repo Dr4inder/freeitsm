@@ -16,13 +16,13 @@ the UID and the email are accepted as ways of naming a member.
 function cdsyncResolveScope(array $cards, string $scope, array $wanted): ?array
 ```
 
-Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 256.
+Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 268.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cards` | `array` |  |  |
-| `$scope` | `string` |  |  |
-| `$wanted` | `array` |  |  |
+| `$cards` | `array` |  | the 'cards' list from `cardDavFetchCards()` - each with href, etag, vcard |
+| `$scope` | `string` |  | auth_providers.carddav_scope - 'all', 'category' or 'group' |
+| `$wanted` | `array` |  | the chosen tags or group UIDs/names, from `cardDavScopeList()`; empty means everything |
 
 **Returns:** array ['uids' => set of in-scope UIDs, 'emails' => set of in-scope emails] or null when the scope is 'all' and everything is in scope.
 

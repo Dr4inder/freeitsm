@@ -6,7 +6,7 @@ Nothing has touched this object in CMDB_AUDIT_STALE_MONTHS.
 function cmdbAuditStale(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 197.
+Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 204.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 199 | `cmdbAuditStale` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 206 | `cmdbAuditStale` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
 
 ## Calls
 

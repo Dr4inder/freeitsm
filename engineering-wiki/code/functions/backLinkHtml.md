@@ -6,12 +6,12 @@ The link's HTML for a header ('portal' or 'analyst'), or '' when it is not set u
 function backLinkHtml(PDO $conn, string $side): string
 ```
 
-Defined in [includes/back_link.php](/code/files/includes/back_link.php.md), line 41.
+Defined in [includes/back_link.php](/code/files/includes/back_link.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$side` | `string` |  |  |
+| `$side` | `string` |  | which header is asking - 'portal' or 'analyst' (also used in the link's class name) |
 
 **Returns:** `string`
 

@@ -10,12 +10,12 @@ ticket events — which have no list of involved people — still use.
 function notificationsRecipientFor(string $event, array $payload): int
 ```
 
-Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 212.
+Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 220.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `string` |  |  |
-| `$payload` | `array` |  |  |
+| `$event` | `string` |  | the workflow event name, e.g. 'ticket.assigned' |
+| `$payload` | `array` |  | the event's dispatch payload - reads analyst_id, ticket, task, domain or project from it |
 
 **Returns:** `int`
 

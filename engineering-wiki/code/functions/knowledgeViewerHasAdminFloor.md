@@ -14,12 +14,12 @@ whatever else is true of them.
 function knowledgeViewerHasAdminFloor(PDO $conn, KnowledgeViewer $viewer): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 457.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 485.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$viewer` | `KnowledgeViewer` |  |  |
+| `$viewer` | `KnowledgeViewer` |  | who is reading; only an analyst viewer can hold the floor |
 
 **Returns:** `bool`
 

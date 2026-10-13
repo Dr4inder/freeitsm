@@ -6,7 +6,7 @@ DELETE /cmdb/objects/{id}/tickets/{ticketId} - removes the link between the obje
 function apiCmdbObjectTicketsUnlink(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 562.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 573.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 568 | `apiCmdbObjectTicketsUnlink` | **delete** [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) |  |
+| 579 | `apiCmdbObjectTicketsUnlink` | **delete** [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) |  |
 
 ## Calls
 

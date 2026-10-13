@@ -6,11 +6,11 @@ Rich text from an incident comment, flattened for a table's detail line.
 function rpPlainText(string $html): string
 ```
 
-Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 253.
+Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 287.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$html` | `string` |  |  |
+| `$html` | `string` |  | an incident update's comment as stored (rich text HTML) |
 
 **Returns:** `string`
 

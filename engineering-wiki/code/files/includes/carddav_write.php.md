@@ -1,6 +1,6 @@
 # includes/carddav_write.php
 
-> PHP - 794 lines
+> PHP - 836 lines
 
 CardDAV write-back — editing a contact card without rewriting it.
 
@@ -46,30 +46,30 @@ there should never be one.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [cardDavPutCard()](/code/functions/cardDavPutCard.md) | 70 | Write a card back, refusing if it has changed on the server since we read it. |
-| [cardDavGetCard()](/code/functions/cardDavGetCard.md) | 122 | Fetch one card by its own URL, with the ETag the server currently holds. |
-| [cardDavCanWrite()](/code/functions/cardDavCanWrite.md) | 162 | Does this account have permission to WRITE to the address book? |
-| [cardDavFoldLine()](/code/functions/cardDavFoldLine.md) | 220 | Fold one logical line the way RFC 6350 §3.2 asks: break at 75 octets and begin each continuation with a single space. |
-| [cardDavDetectEol()](/code/functions/cardDavDetectEol.md) | 255 | Which line ending does this card use? |
-| [cardDavLineSpans()](/code/functions/cardDavLineSpans.md) | 273 | Split a card into logical lines, remembering where each one physically began and ended. |
-| [cardDavLineProperty()](/code/functions/cardDavLineProperty.md) | 309 | The property name of a logical line, upper-cased, or '' if it is not one. |
-| [cardDavReplaceLineValue()](/code/functions/cardDavReplaceLineValue.md) | 335 | Replace the VALUE of the logical line at `$index`, keeping its name, its group prefix and every one of its parameters exactly as they were. |
-| [cardDavInsertLine()](/code/functions/cardDavInsertLine.md) | 359 | Add a property that the card does not currently have, immediately before `END:VCARD`. |
-| [cardDavRemoveLine()](/code/functions/cardDavRemoveLine.md) | 377 | Remove the logical line at `$index`, its continuations and its line ending. |
-| [cardDavSetComponent()](/code/functions/cardDavSetComponent.md) | 404 | Set one component of a structured value, leaving its siblings alone. |
-| [cardDavWritableFields()](/code/functions/cardDavWritableFields.md) | 424 | How each writable person field is stored on a card. |
-| [cardDavLocateField()](/code/functions/cardDavLocateField.md) | 447 | The line a given field's value lives on, or null if the card has no such line. |
-| [cardDavApplyPersonEdits()](/code/functions/cardDavApplyPersonEdits.md) | 474 | Apply a set of FreeITSM field changes to a card, surgically. |
-| [cardDavLogWrite()](/code/functions/cardDavLogWrite.md) | 569 | Record one write-back attempt. |
-| [cardDavPushPersonChanges()](/code/functions/cardDavPushPersonChanges.md) | 646 | Push a person's changed fields to their card in the address book. |
+| [cardDavPutCard()](/code/functions/cardDavPutCard.md) | 74 | Write a card back, refusing if it has changed on the server since we read it. |
+| [cardDavGetCard()](/code/functions/cardDavGetCard.md) | 128 | Fetch one card by its own URL, with the ETag the server currently holds. |
+| [cardDavCanWrite()](/code/functions/cardDavCanWrite.md) | 170 | Does this account have permission to WRITE to the address book? |
+| [cardDavFoldLine()](/code/functions/cardDavFoldLine.md) | 231 | Fold one logical line the way RFC 6350 §3.2 asks: break at 75 octets and begin each continuation with a single space. |
+| [cardDavDetectEol()](/code/functions/cardDavDetectEol.md) | 268 | Which line ending does this card use? |
+| [cardDavLineSpans()](/code/functions/cardDavLineSpans.md) | 287 | Split a card into logical lines, remembering where each one physically began and ended. |
+| [cardDavLineProperty()](/code/functions/cardDavLineProperty.md) | 325 | The property name of a logical line, upper-cased, or '' if it is not one. |
+| [cardDavReplaceLineValue()](/code/functions/cardDavReplaceLineValue.md) | 354 | Replace the VALUE of the logical line at `$index`, keeping its name, its group prefix and every one of its parameters exactly as they were. |
+| [cardDavInsertLine()](/code/functions/cardDavInsertLine.md) | 381 | Add a property that the card does not currently have, immediately before `END:VCARD`. |
+| [cardDavRemoveLine()](/code/functions/cardDavRemoveLine.md) | 403 | Remove the logical line at `$index`, its continuations and its line ending. |
+| [cardDavSetComponent()](/code/functions/cardDavSetComponent.md) | 433 | Set one component of a structured value, leaving its siblings alone. |
+| [cardDavWritableFields()](/code/functions/cardDavWritableFields.md) | 453 | How each writable person field is stored on a card. |
+| [cardDavLocateField()](/code/functions/cardDavLocateField.md) | 479 | The line a given field's value lives on, or null if the card has no such line. |
+| [cardDavApplyPersonEdits()](/code/functions/cardDavApplyPersonEdits.md) | 506 | Apply a set of FreeITSM field changes to a card, surgically. |
+| [cardDavLogWrite()](/code/functions/cardDavLogWrite.md) | 610 | Record one write-back attempt. |
+| [cardDavPushPersonChanges()](/code/functions/cardDavPushPersonChanges.md) | 688 | Push a person's changed fields to their card in the address book. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 575 | `cardDavLogWrite` | **insert** [carddav_write_log](/code/tables/carddav_write_log.md) (`provider_id`, `user_id`, `display_name`, `outcome`, `fields`, `http_status`, `server_response`, `message`, `triggered_by_analyst_id`, `created_datetime`) |  |
-| 659 | `cardDavPushPersonChanges` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md), read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
-| 786 | `cardDavPushPersonChanges` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`source_etag`) |  |
+| 616 | `cardDavLogWrite` | **insert** [carddav_write_log](/code/tables/carddav_write_log.md) (`provider_id`, `user_id`, `display_name`, `outcome`, `fields`, `http_status`, `server_response`, `message`, `triggered_by_analyst_id`, `created_datetime`) |  |
+| 701 | `cardDavPushPersonChanges` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md), read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 828 | `cardDavPushPersonChanges` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`source_etag`) |  |
 
 ## How it hangs together
 

@@ -6,7 +6,7 @@ GET /change-priorities - the change priorities.
 function apiChangePrioritiesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 516.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 528.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

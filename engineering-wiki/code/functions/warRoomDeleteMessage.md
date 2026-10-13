@@ -18,14 +18,14 @@ function warRoomDeleteMessage(
 ): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 589.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 633.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$messageId` | `int` |  |  |
-| `$mayManage` | `bool` | `false` |  |
+| `$messageId` | `int` |  | the warroom_messages id |
+| `$mayManage` | `bool` | `false` | true when the caller holds war_room.manage and may delete anyone's message |
 
 **Returns:** `bool`
 
@@ -33,10 +33,10 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 589
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 598 | `warRoomDeleteMessage` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
-| 604 | `warRoomDeleteMessage` | **delete** [warroom_attachments](/code/tables/warroom_attachments.md) |  |
-| 605 | `warRoomDeleteMessage` | **delete** [warroom_mentions](/code/tables/warroom_mentions.md) |  |
-| 608 | `warRoomDeleteMessage` | **update** [warroom_messages](/code/tables/warroom_messages.md) (`body`, `deleted_datetime`, `deleted_by`) |  |
+| 642 | `warRoomDeleteMessage` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 648 | `warRoomDeleteMessage` | **delete** [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 649 | `warRoomDeleteMessage` | **delete** [warroom_mentions](/code/tables/warroom_mentions.md) |  |
+| 652 | `warRoomDeleteMessage` | **update** [warroom_messages](/code/tables/warroom_messages.md) (`body`, `deleted_datetime`, `deleted_by`) |  |
 
 ## Calls
 

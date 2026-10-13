@@ -6,14 +6,14 @@ Put assets on a schedule. Each must be in the lease's company, visible to the ac
 function leaseAssetsAdd(PDO $conn, ActorContext $ctx, int $scheduleId, array $assetIds): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 482.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 551.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$scheduleId` | `int` |  |  |
-| `$assetIds` | `array` |  |  |
+| `$scheduleId` | `int` |  | the lease_schedules id to put the assets on |
+| `$assetIds` | `array` |  | the asset ids to add (cast to int, duplicates and 0 ignored) |
 
 **Returns:** array{added:int, refused:array<int,string>} refused: asset id => reason
 
@@ -21,9 +21,9 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 482.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 494 | `leaseAssetsAdd` | read [assets](/code/tables/assets.md) |  |
-| 501 | `leaseAssetsAdd` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 511 | `leaseAssetsAdd` | **insert** [lease_assets](/code/tables/lease_assets.md) (`schedule_id`, `asset_id`, `outcome_id`, `created_by`, `created_datetime`, `updated_datetime`) |  |
+| 563 | `leaseAssetsAdd` | read [assets](/code/tables/assets.md) |  |
+| 570 | `leaseAssetsAdd` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 580 | `leaseAssetsAdd` | **insert** [lease_assets](/code/tables/lease_assets.md) (`schedule_id`, `asset_id`, `outcome_id`, `created_by`, `created_datetime`, `updated_datetime`) |  |
 
 ## Calls
 

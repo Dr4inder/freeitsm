@@ -14,11 +14,11 @@ outcome than the one being prevented.
 function sessionPromoteToAuthenticated(bool $newIdentity = true): void
 ```
 
-Defined in [includes/session_security.php](/code/files/includes/session_security.php.md), line 128.
+Defined in [includes/session_security.php](/code/files/includes/session_security.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$newIdentity` | `bool` | `true` |  |
+| `$newIdentity` | `bool` | `true` | true at sign-in (the CSRF token is rotated too); false after a password change by the same person |
 
 **Returns:** `void`
 

@@ -6,11 +6,11 @@ Match every docs endpoint (method + path template) to its handler function by te
 function apiV1MapEndpointsToHandlers(array $routes): array
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 319.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 356.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$routes` | `array` |  |  |
+| `$routes` | `array` |  | the router's table: [method, path regex, permission, handler function] per route |
 
 **Returns:** `array`
 

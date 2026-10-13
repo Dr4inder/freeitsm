@@ -6,7 +6,7 @@ The label settings for a company: header, footer, which fields in which order, w
 function assetLabelSettings(PDO $conn, ?int $tenantId = null): array
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 247.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 258.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

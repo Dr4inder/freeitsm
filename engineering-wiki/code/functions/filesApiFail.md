@@ -6,13 +6,13 @@ Sends a failure JSON reply ({success: false, error}) with an optional HTTP statu
 function filesApiFail(string $message, int $status = 200, array $extra = []): void
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 55.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 63.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$message` | `string` |  |  |
-| `$status` | `int` | `200` |  |
-| `$extra` | `array` | `[]` |  |
+| `$message` | `string` |  | the error text shown to the user |
+| `$status` | `int` | `200` | the HTTP status; 200 (the default) leaves it unchanged |
+| `$extra` | `array` | `[]` | extra keys merged into the reply beside success and error |
 
 **Returns:** `void`
 

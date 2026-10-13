@@ -18,6 +18,8 @@
  * domain name - lower case, no scheme, path, port, root dot or leading www.,
  * internationalised names as punycode with the Unicode form as the display name.
  *
+ * @param string $raw  what somebody typed or pasted (untrusted) - a name, URL or e-mail address, in any script
+ *
  * @return array{ok:bool, name?:string, display?:?string, error?:string}
  */
 function domainNormalise(string $raw): array
@@ -79,7 +81,11 @@ function domainNormalise(string $raw): array
     return ['ok' => true, 'name' => $ascii, 'display' => $display];
 }
 
-/** The last label: "co.uk" is not a TLD, "uk" is. */
+/**
+ * The last label: "co.uk" is not a TLD, "uk" is.
+ *
+ * @param string $name  a domain or host name
+ */
 function domainTld(string $name): string
 {
     $p = strrpos($name, '.');
@@ -90,6 +96,9 @@ function domainTld(string $name): string
  * Is $host this domain or one of its sub-domains? Used to keep the "extra hosts
  * to check certificates on" list from being pointed at somebody else's server —
  * or at an internal address, which would make this a way to probe the network.
+ *
+ * @param string $host    the host to test; trimmed, lower-cased and any trailing dot removed first
+ * @param string $domain  the stored domain name (already lower case)
  */
 function domainHostBelongsTo(string $host, string $domain): bool
 {
@@ -101,6 +110,9 @@ function domainHostBelongsTo(string $host, string $domain): bool
  * The extra certificate hosts, cleaned: one per entry, only ones that belong to
  * the domain, de-duplicated. The apex and www are always checked and are not
  * listed here.
+ *
+ * @param ?string $raw     the extra hosts as typed - separated by spaces, commas or semicolons; null for none
+ * @param string  $domain  the stored domain name the hosts must belong to
  */
 function domainParseSslHosts(?string $raw, string $domain): array
 {
@@ -116,7 +128,11 @@ function domainParseSslHosts(?string $raw, string $domain): array
     return array_keys($out);
 }
 
-/** A host name (may be a sub-domain, keeps "www."), or null when it is not one. */
+/**
+ * A host name (may be a sub-domain, keeps "www."), or null when it is not one.
+ *
+ * @param string $h  one host as typed - a scheme, path and port are stripped; Unicode becomes punycode
+ */
 function domainNormaliseHost(string $h): ?string
 {
     $h = preg_replace('#^[a-z][a-z0-9+.\-]*://#i', '', trim($h));
@@ -147,7 +163,11 @@ function domainPurposes(): array
     return ['primary', 'secondary', 'redirect', 'email_only', 'defensive', 'parked', 'campaign'];
 }
 
-/** Purposes that should never send or receive mail, so get "lock it down" advice. */
+/**
+ * Purposes that should never send or receive mail, so get "lock it down" advice.
+ *
+ * @param string $purpose  a key from domainPurposes(), e.g. 'parked'
+ */
 function domainPurposeIsNonMail(string $purpose): bool
 {
     return in_array($purpose, ['defensive', 'parked', 'redirect'], true);

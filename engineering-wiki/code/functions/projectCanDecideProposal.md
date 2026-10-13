@@ -6,7 +6,7 @@ May this analyst approve or reject proposals? The named approver, and Manage Pro
 function projectCanDecideProposal(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 64.
+Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

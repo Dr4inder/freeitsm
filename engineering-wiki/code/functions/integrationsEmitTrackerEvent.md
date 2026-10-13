@@ -29,15 +29,15 @@ function integrationsEmitTrackerEvent(
 ): void
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 868.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 924.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$event` | `string` |  |  |
-| `$connection` | `array` |  |  |
-| `$link` | `array` |  |  |
-| `$extra` | `array` | `[]` |  |
+| `$event` | `string` |  | the workflow event name, e.g. 'tracker.issue_status_changed' |
+| `$connection` | `array` |  | the connection row (provider, name, id are copied into the payload) |
+| `$link` | `array` |  | the integration_links row; only entity_type 'ticket' fires anything |
+| `$extra` | `array` | `[]` | more fields merged into the payload's 'tracker' block |
 
 **Returns:** `void`
 

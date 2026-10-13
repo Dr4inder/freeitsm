@@ -6,11 +6,11 @@ A company's Courses card: each course with how many of its people have finished 
 function pplSectionCoursesCompany(array $s): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 164.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 230.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
+| `$s` | `array` |  | the company's courses section from includes/people.php: rows (finished, in_progress), total |
 
 **Returns:** `string`
 

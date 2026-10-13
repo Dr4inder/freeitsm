@@ -30,5 +30,5 @@
 |---|---|---|
 | [api/tickets/get_sla_notification_rules.php](/code/files/api/tickets/get_sla_notification_rules.php.md) | L24 |  |
 | [api/tickets/save_sla_notification_rule.php](/code/files/api/tickets/save_sla_notification_rule.php.md) | L80 |  |
-| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_find_matching_rule L213 |  |
+| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_find_matching_rule L220 |  |
 

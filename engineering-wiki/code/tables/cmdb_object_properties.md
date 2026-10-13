@@ -18,8 +18,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):280 | `CmdbService::deleteObject` | update | `value_object_id` |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):281 | `CmdbService::deleteObject` | delete |  |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):301 | `CmdbService::deleteObject` | update | `value_object_id` |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):302 | `CmdbService::deleteObject` | delete |  |  |
 
 ## Read by
 
@@ -29,8 +29,8 @@
 | [api/cmdb/generate_object_summary.php](/code/files/api/cmdb/generate_object_summary.php.md) | L65, L131 |  |
 | [api/cmdb/get_object.php](/code/files/api/cmdb/get_object.php.md) | L108 |  |
 | [api/network-mapper/get_related_objects.php](/code/files/api/network-mapper/get_related_objects.php.md) | L125 |  |
-| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbObjectsGet L300 |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmObjectProperties L539, apiNmSuggestionsList L662 |  |
-| [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md) | cmdbAuditRequiredMissing L84, cmdbAuditBrokenReferences L113, cmdbAuditDependencyBlank L141, cmdbAuditDisconnected L172 |  |
-| [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md) | cmdbDirectImpact L153, cmdbImpactEdgesFrom L317 |  |
+| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbObjectsGet L311 |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmObjectProperties L605, apiNmSuggestionsList L733 |  |
+| [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md) | cmdbAuditRequiredMissing L91, cmdbAuditBrokenReferences L120, cmdbAuditDependencyBlank L148, cmdbAuditDisconnected L179 |  |
+| [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md) | cmdbDirectImpact L157, cmdbImpactEdgesFrom L328 |  |
 

@@ -67,6 +67,9 @@ class TaskRecurrence
      * Every branch is "move the anchor forward, then land on a valid day",
      * never "add days and hope" - which is what makes month ends and nth
      * weekdays behave.
+     *
+     * @param array $rule  a task_recurrences row or a rule from ruleFromInput(); missing keys take blankRule() defaults
+     * @param string $from  the anchor date (YYYY-MM-DD): the completion date, or the previous occurrence's due date
      */
     public static function nextDate(array $rule, string $from): ?string
     {
@@ -98,6 +101,10 @@ class TaskRecurrence
      * days named, the next named day is found by walking forward - and when the
      * week runs out, jumping to the start of the week N weeks on, so "every 2
      * weeks on Mon and Thu" does not quietly become every week.
+     *
+     * @param DateTimeImmutable $d  the anchor date (UTC midnight)
+     * @param int $step  every how many weeks, 1 or more
+     * @param string $weekdays  CSV of ISO weekdays (1 = Monday ... 7 = Sunday); empty means the anchor's own weekday
      */
     private static function nextWeekly(DateTimeImmutable $d, int $step, string $weekdays): ?string
     {
@@ -120,7 +127,13 @@ class TaskRecurrence
         return $mondayNext->modify('+' . ($days[0] - 1) . ' day')->format('Y-m-d');
     }
 
-    /** Monthly, either on a day number or on the nth weekday. */
+    /**
+     * Monthly, either on a day number or on the nth weekday.
+     *
+     * @param DateTimeImmutable $d  the anchor date (UTC midnight)
+     * @param int $step  every how many months, 1 or more
+     * @param array $r  the full rule (month_mode, day_of_month, nth, nth_weekday)
+     */
     private static function nextMonthly(DateTimeImmutable $d, int $step, array $r): ?string
     {
         // Move to the first of the target month FIRST. Adding a month to the
@@ -135,7 +148,13 @@ class TaskRecurrence
         return self::dayOfMonth($firstOfTarget, $dom);
     }
 
-    /** Yearly. Same two shapes as monthly, a chosen month at a time. */
+    /**
+     * Yearly. Same two shapes as monthly, a chosen month at a time.
+     *
+     * @param DateTimeImmutable $d  the anchor date (UTC midnight)
+     * @param int $step  every how many years, 1 or more
+     * @param array $r  the full rule (month_of_year, month_mode, day_of_month, nth, nth_weekday)
+     */
     private static function nextYearly(DateTimeImmutable $d, int $step, array $r): ?string
     {
         $target = $d->modify('first day of this month')->modify("+{$step} year");
@@ -154,6 +173,9 @@ class TaskRecurrence
      * -1 means the last day. Anything past the end of a short month CLAMPS to
      * its last day: "the 31st" in a 30-day month means the 30th, not the 1st of
      * the month after, which is what naive date arithmetic produces.
+     *
+     * @param DateTimeImmutable $first  the first day of the target month
+     * @param int $dom  the day number, 1-31, or -1 for the last day; past the month's end clamps to the last day
      */
     private static function dayOfMonth(DateTimeImmutable $first, int $dom): string
     {
@@ -169,6 +191,10 @@ class TaskRecurrence
      *
      * A month has either four or five of any weekday, so a rule asking for the
      * 5th falls back to the last rather than spilling into the next month.
+     *
+     * @param DateTimeImmutable $first  the first day of the target month
+     * @param int $nth  which one, 1-5, or -1 for the last; a 5th the month does not have gives the last
+     * @param int $weekday  the ISO weekday, 1 (Monday) to 7 (Sunday); anything else gives null
      */
     private static function nthWeekdayOf(DateTimeImmutable $first, int $nth, int $weekday): ?string
     {
@@ -192,6 +218,9 @@ class TaskRecurrence
     /**
      * Has the series finished? Checked BEFORE creating, so a series that ends
      * "after 6 occurrences" produces six and not seven.
+     *
+     * @param array $rule  the rule, with ends_mode, ends_on, max_occurrences and occurrences_created
+     * @param string $nextDate  the date (YYYY-MM-DD) about to be created
      */
     public static function isExhausted(array $rule, string $nextDate): bool
     {
@@ -206,7 +235,11 @@ class TaskRecurrence
         return false;
     }
 
-    /** A YYYY-MM-DD string as a UTC date, or null when it is not one. */
+    /**
+     * A YYYY-MM-DD string as a UTC date, or null when it is not one.
+     *
+     * @param string $ymd  a date string; only its first 10 characters (YYYY-MM-DD) are read
+     */
     private static function mkDate(string $ymd): ?DateTimeImmutable
     {
         $d = DateTimeImmutable::createFromFormat('!Y-m-d', substr(trim($ymd), 0, 10), new DateTimeZone('UTC'));
@@ -272,6 +305,10 @@ class TaskRecurrence
      * compliance review is a fact somebody needs to see, not something to quietly
      * forget. Capped per series per run so a rule left dormant for two years
      * cannot create six hundred tasks in one go.
+     *
+     * @param ?string $today  the date (YYYY-MM-DD) treated as today; null means today in UTC
+     * @param int $capPerSeries  the most occurrences any one series may produce in this run
+     * @param ?array $onlyRecurrenceIds  limit the run to these task_recurrences ids (used by tests); null means every series
      */
     public static function runDue(PDO $conn, ?string $today = null, int $capPerSeries = 24,
                                   ?array $onlyRecurrenceIds = null): array
@@ -377,6 +414,10 @@ class TaskRecurrence
      * the current one, which has not happened. Drawing a guess there would be
      * inventing information, and it would move every time somebody was a day
      * late.
+     *
+     * @param string $from  the first date (YYYY-MM-DD) to include
+     * @param string $to  the last date (YYYY-MM-DD) to include
+     * @param int $capPerSeries  the most dates to walk per series
      */
     public static function project(PDO $conn, string $from, string $to, int $capPerSeries = 60): array
     {
@@ -436,14 +477,23 @@ class TaskRecurrence
         return $out;
     }
 
-    /** Switches a recurrence off. */
+    /**
+     * Switches a recurrence off.
+     *
+     * @param int $recurrenceId  the series (task_recurrences.id) to switch off
+     */
     private static function deactivate(PDO $conn, int $recurrenceId): void
     {
         $conn->prepare("UPDATE task_recurrences SET is_active = 0, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
              ->execute([$recurrenceId]);
     }
 
-    /** Does this series already have a top-level occurrence due on that date? */
+    /**
+     * Does this series already have a top-level occurrence due on that date?
+     *
+     * @param int $recurrenceId  the series (task_recurrences.id)
+     * @param string $due  the due date (YYYY-MM-DD) to look for
+     */
     private static function occurrenceExistsFor(PDO $conn, int $recurrenceId, string $due): bool
     {
         $s = $conn->prepare(
@@ -455,7 +505,13 @@ class TaskRecurrence
     }
 
     /** The most recent task in a series - the one a new occurrence is copied from. */
-    /** Keep a value inside a range, or null. */
+    /**
+     * Keep a value inside a range, or null.
+     *
+     * @param mixed $v  the value as sent; null or '' gives null
+     * @param int $min  the lowest allowed value
+     * @param int $max  the highest allowed value
+     */
     private static function clampInt($v, int $min, int $max): ?int
     {
         if ($v === null || $v === '') return null;
@@ -469,6 +525,9 @@ class TaskRecurrence
      * previewing one that has not been saved yet. A preview built from
      * differently-sanitised input would show dates the worker will not produce,
      * and a preview that lies is worse than no preview at all.
+     *
+     * @param array $in  the repeat form as sent by the browser: mode, freq, interval_n, weekdays (array or CSV), month_mode,
+     *     day_of_month, nth, nth_weekday, month_of_year, ends_mode, ends_on, max_occurrences, copy_* flags - untrusted
      */
     public static function ruleFromInput(array $in): array
     {
@@ -524,6 +583,10 @@ class TaskRecurrence
      * next date is counted from the day somebody actually finishes, which has
      * not happened, so a list would be a guess dressed up as a schedule. The
      * caller is told the mode and says so in words instead.
+     *
+     * @param array $rule  the rule, as built by ruleFromInput()
+     * @param array $task  the task the rule is for, with its start_date and due_date (no due date means today)
+     * @param int $limit  the most dates to list before marking the result truncated
      */
     public static function previewRule(array $rule, array $task, int $limit = 25): array
     {
@@ -584,6 +647,9 @@ class TaskRecurrence
      *
      * Returns null when the source has no start date, or none worth keeping.
      * That is a point-in-time task, and it correctly appears on its due date.
+     *
+     * @param array $task  the source task, with start_date and due_date
+     * @param string $due  the new occurrence's due date (YYYY-MM-DD)
      */
     public static function startForDue(array $task, string $due): ?string
     {
@@ -607,7 +673,11 @@ class TaskRecurrence
         return (new DateTimeImmutable($due, $tz))->modify("-{$gap} days")->format('Y-m-d');
     }
 
-    /** Loads one task row, or null. */
+    /**
+     * Loads one task row, or null.
+     *
+     * @param int $id  the task to load
+     */
     private static function taskRow(PDO $conn, int $id): ?array
     {
         $s = $conn->prepare("SELECT * FROM tasks WHERE id = ?");
@@ -616,7 +686,11 @@ class TaskRecurrence
         return $row ?: null;
     }
 
-    /** The newest top-level task made by the recurrence, or null. */
+    /**
+     * The newest top-level task made by the recurrence, or null.
+     *
+     * @param int $recurrenceId  the series (task_recurrences.id)
+     */
     private static function latestOccurrence(PDO $conn, int $recurrenceId): ?int
     {
         $s = $conn->prepare(
@@ -636,6 +710,10 @@ class TaskRecurrence
      * occurrence starts open even if the series was completed into some other
      * status - spawning one straight into a closed status would make it look
      * done on arrival, and in completion mode could loop.
+     *
+     * @param int $sourceTaskId  the task to copy - normally the newest occurrence of the series
+     * @param array $rule  the task_recurrences row, for its id and copy_* flags
+     * @param string $due  the new occurrence's due date (YYYY-MM-DD)
      */
     private static function createOccurrence(PDO $conn, int $sourceTaskId, array $rule, string $due): ?int
     {

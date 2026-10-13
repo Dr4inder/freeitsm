@@ -6,13 +6,13 @@ Ingest one normalised inbound message for a (decrypted) channel row. Returns ['s
 function ingestInboundMessage(PDO $conn, array $channel, array $msg): array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 27.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 31.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channel` | `array` |  |  |
-| `$msg` | `array` |  |  |
+| `$channel` | `array` |  | the messaging_channels row, decrypted |
+| `$msg` | `array` |  | one normalised message from the provider's `parseInbound()` (from, to, body, profile_name, provider_msg_id, media, and optionally csat, contact, sender_id, language_code, is_test) |
 
 **Returns:** `array`
 
@@ -20,14 +20,14 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 42 | `ingestInboundMessage` | read [emails](/code/tables/emails.md) |  |
-| 157 | `ingestInboundMessage` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `created_datetime`, `updated_datetime`, `last_inbound_at`, `user_id`, `tenant_id`, `origin_id`), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 176 | `ingestInboundMessage` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`, `last_inbound_at`) |  |
-| 185 | `ingestInboundMessage` | **insert** [emails](/code/tables/emails.md) (`exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `processed_datetime`, `ticket_id`) |  |
-| 248 | `ingestInboundMessage` | **update** [emails](/code/tables/emails.md) (`has_attachments`) |  |
-| 250 | `ingestInboundMessage` | **update** [emails](/code/tables/emails.md) (`body_content`) |  |
-| 257 | `ingestInboundMessage` | **update** [emails](/code/tables/emails.md) (`body_content`) |  |
-| 264 | `ingestInboundMessage` | **update** [messaging_channels](/code/tables/messaging_channels.md) (`last_inbound_datetime`) |  |
+| 46 | `ingestInboundMessage` | read [emails](/code/tables/emails.md) |  |
+| 161 | `ingestInboundMessage` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `created_datetime`, `updated_datetime`, `last_inbound_at`, `user_id`, `tenant_id`, `origin_id`), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 180 | `ingestInboundMessage` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`, `last_inbound_at`) |  |
+| 189 | `ingestInboundMessage` | **insert** [emails](/code/tables/emails.md) (`exchange_message_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `processed_datetime`, `ticket_id`) |  |
+| 252 | `ingestInboundMessage` | **update** [emails](/code/tables/emails.md) (`has_attachments`) |  |
+| 254 | `ingestInboundMessage` | **update** [emails](/code/tables/emails.md) (`body_content`) |  |
+| 261 | `ingestInboundMessage` | **update** [emails](/code/tables/emails.md) (`body_content`) |  |
+| 268 | `ingestInboundMessage` | **update** [messaging_channels](/code/tables/messaging_channels.md) (`last_inbound_datetime`) |  |
 
 ## Calls
 

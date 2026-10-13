@@ -6,7 +6,7 @@ A plain zip archive with every entry stored (no compression). Written by hand so
 function teamsZipStore(array $files): string
 ```
 
-Defined in [includes/messaging/TeamsPackage.php](/code/files/includes/messaging/TeamsPackage.php.md), line 87.
+Defined in [includes/messaging/TeamsPackage.php](/code/files/includes/messaging/TeamsPackage.php.md), line 90.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

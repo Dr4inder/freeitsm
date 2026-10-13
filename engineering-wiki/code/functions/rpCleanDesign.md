@@ -6,12 +6,12 @@ Check a whole design from the browser. Returns the cleaned design; throws Invali
 function rpCleanDesign($d, string $name): array
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 153.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` |  |  |  |
-| `$name` | `string` |  |  |
+| `$d` |  |  | the whole design from the browser (untrusted) |
+| `$name` | `string` |  | the pack's name, for the defaults the design falls back on |
 
 **Returns:** `array`
 

@@ -17,13 +17,13 @@ overwriting an edit somebody else was making.
 function handleMoveArticle(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 295.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 316.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request: article_id, and folder_id (empty or null for the root) |
 
 **Returns:** `void`
 
@@ -31,7 +31,7 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 310 | `handleMoveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`folder_id`, `modified_datetime`) |  |
+| 331 | `handleMoveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`folder_id`, `modified_datetime`) |  |
 
 ## Calls
 

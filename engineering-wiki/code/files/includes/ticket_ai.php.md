@@ -1,6 +1,6 @@
 # includes/ticket_ai.php
 
-> PHP - 296 lines
+> PHP - 304 lines
 
 Reading a whole ticket with an AI: the shared parts.
 
@@ -36,12 +36,12 @@ history that loss is silent and permanent.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [ticketAiSettings()](/code/functions/ticketAiSettings.md) | 44 | ─────────────────────────────────────────────────────────────────────────── SETTINGS |
+| [ticketAiSettings()](/code/functions/ticketAiSettings.md) | 44 | SETTINGS |
 | [ticketAiTranscript()](/code/functions/ticketAiTranscript.md) | 121 | Turn a ticket into the plain text a model reads. |
-| [ticketAiMessagesSince()](/code/functions/ticketAiMessagesSince.md) | 203 | How many messages have arrived since the summary was written. |
-| [ticketAiLatestSummary()](/code/functions/ticketAiLatestSummary.md) | 221 | The newest stored summary (or briefing) for a ticket, or null. |
-| [ticketAiSummarySystemPrompt()](/code/functions/ticketAiSummarySystemPrompt.md) | 246 | The instructions for the standing summary. |
-| [ticketAiReadSystemPrompt()](/code/functions/ticketAiReadSystemPrompt.md) | 276 | "Read this ticket for me" asks a different question from the summary. |
+| [ticketAiMessagesSince()](/code/functions/ticketAiMessagesSince.md) | 207 | How many messages have arrived since the summary was written. |
+| [ticketAiLatestSummary()](/code/functions/ticketAiLatestSummary.md) | 229 | The newest stored summary (or briefing) for a ticket, or null. |
+| [ticketAiSummarySystemPrompt()](/code/functions/ticketAiSummarySystemPrompt.md) | 254 | The instructions for the standing summary. |
+| [ticketAiReadSystemPrompt()](/code/functions/ticketAiReadSystemPrompt.md) | 284 | "Read this ticket for me" asks a different question from the summary. |
 
 ## Database
 
@@ -51,9 +51,9 @@ history that loss is silent and permanent.
 | 132 | `ticketAiTranscript` | read [emails](/code/tables/emails.md) |  |
 | 144 | `ticketAiTranscript` | read [emails](/code/tables/emails.md) |  |
 | 151 | `ticketAiTranscript` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
-| 206 | `ticketAiMessagesSince` | read [emails](/code/tables/emails.md) |  |
-| 212 | `ticketAiMessagesSince` | read [emails](/code/tables/emails.md) |  |
-| 227 | `ticketAiLatestSummary` | read [ticket_ai_summaries](/code/tables/ticket_ai_summaries.md), read [analysts](/code/tables/analysts.md) |  |
+| 210 | `ticketAiMessagesSince` | read [emails](/code/tables/emails.md) |  |
+| 216 | `ticketAiMessagesSince` | read [emails](/code/tables/emails.md) |  |
+| 235 | `ticketAiLatestSummary` | read [ticket_ai_summaries](/code/tables/ticket_ai_summaries.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

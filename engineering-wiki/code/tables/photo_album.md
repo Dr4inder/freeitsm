@@ -22,12 +22,12 @@ System -> Photo Album: webcam photos as ASCII art. Only the art is stored, never
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/system/photo_album.php](/code/files/api/system/photo_album.php.md):149 |  | insert | `analyst_id`, `title`, `style`, `palette`, `width_chars`, `height_chars`, `art`, `colours`, `thumbnail`, `created_datetime` |  |
-| [api/system/photo_album.php](/code/files/api/system/photo_album.php.md):158 |  | delete |  |  |
+| [api/system/photo_album.php](/code/files/api/system/photo_album.php.md):158 |  | insert | `analyst_id`, `title`, `style`, `palette`, `width_chars`, `height_chars`, `art`, `colours`, `thumbnail`, `created_datetime` |  |
+| [api/system/photo_album.php](/code/files/api/system/photo_album.php.md):167 |  | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/photo_album.php](/code/files/api/system/photo_album.php.md) | L69, L88 |  |
+| [api/system/photo_album.php](/code/files/api/system/photo_album.php.md) | L78, L97 |  |
 

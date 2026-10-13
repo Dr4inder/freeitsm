@@ -15,11 +15,11 @@ ONE module, use `requireModuleAccessJson()`.
 function requireAnyModuleAccessJson(array $moduleKeys, ?PDO $conn = null): void
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 325.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 333.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$moduleKeys` | `array` |  |  |
+| `$moduleKeys` | `array` |  | the module keys that may use the endpoint, e.g. ['knowledge', 'tickets'] |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

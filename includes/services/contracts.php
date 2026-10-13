@@ -33,7 +33,11 @@ class ContractsService
     //  Contracts
     // ======================================================================
 
-    /** Create (no id) or update (id present) a contract. Returns ['id','created']. */
+    /**
+     * Create (no id) or update (id present) a contract. Returns ['id','created'].
+     *
+     * @param array $in  id (absent = new) plus contract fields, party fields, tenant_id, cost_centre_id or cost_centre (a code)
+     */
     public static function saveContract(PDO $conn, ActorContext $ctx, array $in): array
     {
         if (!empty($in['id'])) {
@@ -93,7 +97,11 @@ class ContractsService
         return ['id' => $newId, 'created' => true];
     }
 
-    /** Delete a contract (+ its term values; nullify referrers explicitly). Returns the id. */
+    /**
+     * Delete a contract (+ its term values; nullify referrers explicitly). Returns the id.
+     *
+     * @param int $id  the contract to delete
+     */
     public static function deleteContract(PDO $conn, ActorContext $ctx, int $id): int
     {
         $row = self::loadRow($conn, 'contracts', $id, 'Contract not found.');
@@ -119,7 +127,12 @@ class ContractsService
         return $id;
     }
 
-    /** Bulk-upsert a contract's term values (per tab). Idempotent; returns nothing. */
+    /**
+     * Bulk-upsert a contract's term values (per tab). Idempotent; returns nothing.
+     *
+     * @param int $contractId  the contract whose terms are saved
+     * @param mixed $terms  [{term_tab_id, content}] - one entry per tab to write; must be an array
+     */
     public static function saveTerms(PDO $conn, ActorContext $ctx, int $contractId, $terms): void
     {
         self::loadRow($conn, 'contracts', $contractId, 'Contract not found.');
@@ -152,7 +165,11 @@ class ContractsService
     //  Suppliers
     // ======================================================================
 
-    /** Create (no id) or update (id present) a supplier. Returns ['id','created']. */
+    /**
+     * Create (no id) or update (id present) a supplier. Returns ['id','created'].
+     *
+     * @param array $in  id (absent = new), legal_name (required), trading_name, type and status ids, address, questionnaire dates...
+     */
     public static function saveSupplier(PDO $conn, ActorContext $ctx, array $in): array
     {
         $current = [];
@@ -213,7 +230,11 @@ class ContractsService
         return ['id' => $newId, 'created' => true];
     }
 
-    /** Delete a supplier — nullify/clean every referrer, then delete. Returns the id. */
+    /**
+     * Delete a supplier — nullify/clean every referrer, then delete. Returns the id.
+     *
+     * @param int $id  the supplier to delete; every reference to it is cleared first
+     */
     public static function deleteSupplier(PDO $conn, ActorContext $ctx, int $id): int
     {
         $row = self::loadRow($conn, 'suppliers', $id, 'Supplier not found.');
@@ -245,7 +266,11 @@ class ContractsService
     //  Internals
     // ======================================================================
 
-    /** A contract row's company, with NULL read as the Default company. */
+    /**
+     * A contract row's company, with NULL read as the Default company.
+     *
+     * @param array $row  the contracts row
+     */
     private static function effectiveTenant(PDO $conn, array $row): int
     {
         $t = $row['tenant_id'] ?? null;
@@ -256,6 +281,9 @@ class ContractsService
      * The company a contract being saved belongs to. A named company must exist
      * and be one the caller can reach - refused, never quietly replaced with
      * another. Not named: the current one on an update, Default on a create.
+     *
+     * @param array $in  the request fields; tenant_id names the company
+     * @param array $current  the stored contract row on update; [] on create
      */
     private static function ownerTenant(PDO $conn, ActorContext $ctx, array $in, array $current): int
     {
@@ -280,7 +308,13 @@ class ContractsService
         return $tid;
     }
 
-    /** Contract numbers are unique within a company - two clients can both have C-001. */
+    /**
+     * Contract numbers are unique within a company - two clients can both have C-001.
+     *
+     * @param string $number  the contract number to check
+     * @param int $tenant  the company it must be unique in (a real id, never null)
+     * @param ?int $exceptId  the contract allowed to hold it (the one being saved), or null on create
+     */
     private static function assertNumberFree(PDO $conn, string $number, int $tenant, ?int $exceptId): void
     {
         if (contractTenantReady($conn)) {
@@ -302,6 +336,9 @@ class ContractsService
      * Moving a contract to another company is refused while anything of the old
      * company hangs off it - its assets, projects or RFPs would otherwise link
      * across companies, which nothing here allows. Say what is in the way.
+     *
+     * @param int $id  the contract being moved
+     * @param int $to  the company it is moving to
      */
     private static function assertMovable(PDO $conn, int $id, int $to): void
     {
@@ -336,6 +373,10 @@ class ContractsService
      *    contract's company - linked if it exists, refused if not; '' clears.
      *  - Neither sent: unchanged - but a contract moving company cannot take its
      *    old company's cost centre with it, so that is refused with a reason.
+     *
+     * @param array $in  the request fields; cost_centre_id, or cost_centre as a code
+     * @param array $current  the stored contract row on update; [] on create
+     * @param int $tenant  the company the contract will belong to
      */
     private static function costCentreFor(PDO $conn, array $in, array $current, int $tenant): array
     {
@@ -365,14 +406,24 @@ class ContractsService
         return [$curId, $curText];
     }
 
-    /** Sets a contract's cost centre, once that column exists. */
+    /**
+     * Sets a contract's cost centre, once that column exists.
+     *
+     * @param int $id  the contract
+     * @param ?int $ccId  the cost centre to charge it to, or null for none
+     */
     private static function writeCostCentre(PDO $conn, int $id, ?int $ccId): void
     {
         if (!costCentreReady($conn, 'contracts')) return;
         $conn->prepare("UPDATE contracts SET cost_centre_id = ? WHERE id = ?")->execute([$ccId, $id]);
     }
 
-    /** Sets a contract's company, once that column exists. */
+    /**
+     * Sets a contract's company, once that column exists.
+     *
+     * @param int $id  the contract
+     * @param int $tenant  the owning company as a real id; the Default company is stored as NULL
+     */
     private static function writeTenant(PDO $conn, int $id, int $tenant): void
     {
         if (!contractTenantReady($conn)) return;
@@ -383,6 +434,8 @@ class ContractsService
      * A contract in a company the actor cannot reach is reported as not found,
      * never forbidden, so ids cannot be probed. By the ACTOR's company scope, not
      * the analyst's: an API key can be narrower than the analyst it acts as.
+     *
+     * @param int $id  the contract to check
      */
     private static function assertVisible(PDO $conn, ActorContext $ctx, int $id): void
     {
@@ -398,6 +451,9 @@ class ContractsService
      * Who the contract is with. Fields not sent keep their current value, so an
      * update that only changes the title leaves a customer contract a customer
      * contract. A supplier id is checked against suppliers as before.
+     *
+     * @param array $in  the request fields; party_type, supplier_id, customer_tenant_id, customer_user_id
+     * @param array $current  the stored contract row on update; [] on create
      */
     private static function partyFields(PDO $conn, ActorContext $ctx, array $in, array $current): array
     {
@@ -420,7 +476,12 @@ class ContractsService
         return $p;
     }
 
-    /** Sets who a contract is with (supplier or customer), once those columns exist. */
+    /**
+     * Sets who a contract is with (supplier or customer), once those columns exist.
+     *
+     * @param int $id  the contract
+     * @param array $p  the party from partyFields(): party_type, customer_tenant_id, customer_user_id
+     */
     private static function writeParty(PDO $conn, int $id, array $p): void
     {
         if (!contractPartyReady($conn)) return;
@@ -428,13 +489,23 @@ class ContractsService
              ->execute([$p['party_type'], $p['customer_tenant_id'], $p['customer_user_id'], $id]);
     }
 
-    /** The party fields of a contract as an array. */
+    /**
+     * The party fields of a contract as an array.
+     *
+     * @param array $p  the party from partyFields()
+     */
     private static function partyPayload(array $p): array
     {
         return ['party_type' => $p['party_type'], 'customer_tenant_id' => $p['customer_tenant_id'], 'customer_user_id' => $p['customer_user_id']];
     }
 
-    /** Loads one row from the given table by id; throws not found with $notFoundMsg when it does not exist. */
+    /**
+     * Loads one row from the given table by id; throws not found with $notFoundMsg when it does not exist.
+     *
+     * @param string $table  the table to read, written in code - never user input
+     * @param int $id  the row's id
+     * @param string $notFoundMsg  the error message when it does not exist
+     */
     private static function loadRow(PDO $conn, string $table, int $id, string $notFoundMsg): array
     {
         $stmt = $conn->prepare("SELECT * FROM `$table` WHERE id = ?");
@@ -446,7 +517,11 @@ class ContractsService
         return $row;
     }
 
-    /** Ordered contract column values for INSERT/UPDATE (matches both statements' column order). */
+    /**
+     * Ordered contract column values for INSERT/UPDATE (matches both statements' column order).
+     *
+     * @param array $f  the validated fields from contractFields(), with supplier_id and cost_centre set
+     */
     private static function contractParams(array $f): array
     {
         return [
@@ -457,7 +532,12 @@ class ContractsService
         ];
     }
 
-    /** Collect + validate contract fields (mirrors the API resource's apiContractFieldsFromBody). */
+    /**
+     * Collect + validate contract fields (mirrors the API resource's apiContractFieldsFromBody).
+     *
+     * @param array $in  the request fields; only keys present are taken from here
+     * @param array $current  the stored contract row on update, for absent keys; [] on create
+     */
     private static function contractFields(PDO $conn, array $in, array $current = []): array
     {
         $get = function (string $key, $default = null) use ($in, $current) {
@@ -519,7 +599,13 @@ class ContractsService
         return $f;
     }
 
-    /** Validate a nullable lookup id against a table; 422 with the label on unknown. */
+    /**
+     * Validate a nullable lookup id against a table; 422 with the label on unknown.
+     *
+     * @param string $table  the lookup table, written in code - never user input
+     * @param mixed $value  the id from the request; null or '' gives null
+     * @param string $label  what the table holds, for the error message, e.g. 'supplier'
+     */
     private static function lookup(PDO $conn, string $table, $value, string $label): ?int
     {
         if ($value === null || $value === '') {
@@ -534,7 +620,11 @@ class ContractsService
         return $id;
     }
 
-    /** Validate an analyst id exists + is active (throwing twin of apiResolveAnalyst). */
+    /**
+     * Validate an analyst id exists + is active (throwing twin of apiResolveAnalyst).
+     *
+     * @param int $analystId  the analyst named as the contract's owner - not the actor
+     */
     private static function resolveAnalyst(PDO $conn, int $analystId): void
     {
         $stmt = $conn->prepare("SELECT full_name FROM analysts WHERE id = ? AND is_active = 1");
@@ -544,7 +634,12 @@ class ContractsService
         }
     }
 
-    /** Validate an optional YYYY-MM-DD date (throwing twin of apiParseDateOnly). */
+    /**
+     * Validate an optional YYYY-MM-DD date (throwing twin of apiParseDateOnly).
+     *
+     * @param mixed $value  the date from the request, Y-m-d; null or '' gives null
+     * @param string $field  the request field name, used in the error message
+     */
     private static function parseDateOnly($value, string $field): ?string
     {
         if ($value === null || $value === '') {

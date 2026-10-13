@@ -17,11 +17,11 @@ sent to nobody is a feature that looks broken.
 function templateEventAudience(string $eventTrigger): string
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 28.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 30.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$eventTrigger` | `string` |  |  |
+| `$eventTrigger` | `string` |  | the template event, e.g. 'new_ticket_email', 'analyst_assigned', 'ticket_closed' |
 
 **Returns:** `string`
 

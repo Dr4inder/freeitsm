@@ -6,13 +6,13 @@ Contracts where the person / the company is the CUSTOMER (#153 step 1).
 function peopleContracts(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 376.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 405.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$who` | `array` |  |  |
+| `$who` | `array` |  | ['user' => users id] or ['company' => tenant id] - the contract's customer |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 376.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 391 | `peopleContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 420 | `peopleContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
 
 ## Calls
 

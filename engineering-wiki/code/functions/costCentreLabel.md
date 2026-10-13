@@ -6,11 +6,11 @@
 function costCentreLabel(?array $ref): string
 ```
 
-Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 118.
+Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 146.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ref` | `?array` |  |  |
+| `$ref` | `?array` |  | a cost centre as `costCentreRef()` returns it; null gives '' |
 
 **Returns:** `string`
 

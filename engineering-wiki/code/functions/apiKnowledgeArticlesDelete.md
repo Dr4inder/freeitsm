@@ -6,7 +6,7 @@ DELETE (archive) / restore / permanent purge — the recycle-bin semantics
 function apiKnowledgeArticlesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 317.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 329.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -123,6 +123,9 @@ const RECENT_TRAIL_MODULES = [
  * work to do — a ticket must still open if the trail table is missing, or is
  * mid-verification, or the install has not run Database Verification since
  * upgrading. Every failure here is swallowed on purpose.
+ *
+ * @param string $type  the record type, a RECENT_TRAIL_MODULES key such as 'ticket' or 'asset'
+ * @param int $id  the record's id
  */
 function entityVisit(string $type, int $id, ?PDO $conn = null): void
 {
@@ -148,6 +151,9 @@ function entityVisit(string $type, int $id, ?PDO $conn = null): void
  * missed every ticket you opened while you were in it — which is precisely the
  * work the trail exists to lead you back to. api/system/recent_trail_visit.php
  * is the other half, and it calls this.
+ *
+ * @param string $type  the record type, a RECENT_TRAIL_MODULES key; anything else is ignored
+ * @param int $id  the record's id; 0 or less is ignored
  */
 function recentTrailWrite(string $type, int $id, ?PDO $conn = null): void
 {
@@ -355,7 +361,12 @@ function entityRecentTrail(PDO $conn, int $analystId): array
     return $groups;
 }
 
-/** Are two visits close enough in time to belong to the same sitting? */
+/**
+ * Are two visits close enough in time to belong to the same sitting?
+ *
+ * @param string $earlier  the earlier visit time, a UTC 'Y-m-d H:i:s' string
+ * @param string $later  the later visit time, a UTC 'Y-m-d H:i:s' string
+ */
 function recentTrailWithinGap(string $earlier, string $later): bool
 {
     $a = strtotime($earlier . ' UTC');
@@ -381,7 +392,7 @@ function recentTrailWithinGap(string $earlier, string $later): bool
  * ⚠️ cmdb_object has no preview at all (previews cover seven types, links cover
  * eight), so there was never a resolver here to reuse for that one.
  *
- * @param array<int,array> $rows
+ * @param array<int,array> $rows  analyst_recent_trail rows - entity_type and entity_id are read
  * @return array<string,string> "type:id" => label, for the visible ones only.
  */
 function recentTrailLabels(PDO $conn, int $analystId, array $rows): array
@@ -417,7 +428,12 @@ function recentTrailLabels(PDO $conn, int $analystId, array $rows): array
     return $out;
 }
 
-/** One query for the labels of one type, then the record gate on each. */
+/**
+ * One query for the labels of one type, then the record gate on each.
+ *
+ * @param string $type  the record type, a RECENT_TRAIL_MODULES key such as 'ticket'
+ * @param array $ids  the distinct record ids of that type to label
+ */
 function recentTrailLabelsForType(PDO $conn, int $analystId, string $type, array $ids): array
 {
     if (!$ids) {

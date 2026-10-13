@@ -6,13 +6,13 @@ Links for one work item, newest first. Empty when the schema is not ready.
 function integrationsLinksFor(PDO $conn, string $entityType, int $entityId): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 439.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 476.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$entityType` | `string` |  |  |
-| `$entityId` | `int` |  |  |
+| `$entityType` | `string` |  | 'ticket', 'problem' or 'change' |
+| `$entityId` | `int` |  | the id of that work item |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 444 | `integrationsLinksFor` | read [integration_links](/code/tables/integration_links.md), read [integration_connections](/code/tables/integration_connections.md) |  |
+| 481 | `integrationsLinksFor` | read [integration_links](/code/tables/integration_links.md), read [integration_connections](/code/tables/integration_connections.md) |  |
 
 ## Calls
 

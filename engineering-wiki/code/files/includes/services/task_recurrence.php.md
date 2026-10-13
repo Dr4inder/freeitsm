@@ -1,6 +1,6 @@
 # includes/services/task_recurrence.php
 
-> PHP - 768 lines
+> PHP - 846 lines
 
 Task recurrence — the date engine and the spawning of occurrences.
 
@@ -42,22 +42,22 @@ datetime through this would reintroduce GH #116 by another route.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 224 | `TaskRecurrence::ruleForTask` | read [task_recurrences](/code/tables/task_recurrences.md), read [tasks](/code/tables/tasks.md) |  |
-| 302 | `TaskRecurrence::runDue` | read [task_recurrences](/code/tables/task_recurrences.md) |  |
-| 354 | `TaskRecurrence::runDue` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`next_due_date`) |  |
-| 385 | `TaskRecurrence::project` | read [task_recurrences](/code/tables/task_recurrences.md), read [tasks](/code/tables/tasks.md) |  |
-| 442 | `TaskRecurrence::deactivate` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`is_active`, `updated_datetime`) |  |
-| 450 | `TaskRecurrence::occurrenceExistsFor` | read [tasks](/code/tables/tasks.md) |  |
-| 613 | `TaskRecurrence::taskRow` | read [tasks](/code/tables/tasks.md) |  |
-| 623 | `TaskRecurrence::latestOccurrence` | read [tasks](/code/tables/tasks.md) |  |
-| 642 | `TaskRecurrence::createOccurrence` | read [tasks](/code/tables/tasks.md) |  |
-| 655 | `TaskRecurrence::createOccurrence` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `ticket_id`, `change_id`, `contract_id`, `tenant_id`) |  |
-| 686 | `TaskRecurrence::createOccurrence` | **insert** [task_tag_map](/code/tables/task_tag_map.md) (`task_id`, `tag_id`) |  |
-| 695 | `TaskRecurrence::createOccurrence` | read [tasks](/code/tables/tasks.md) |  |
-| 700 | `TaskRecurrence::createOccurrence` | **insert** [tasks](/code/tables/tasks.md) (`title`, `status_id`, `priority_id`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `tenant_id`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 720 | `TaskRecurrence::createOccurrence` | **insert** [document_links](/code/tables/document_links.md) (`document_id`, `parent_type`, `parent_id`, `linked_by_id`, `created_datetime`) |  |
-| 741 | `TaskRecurrence::createOccurrence` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`occurrences_created`, `updated_datetime`) |  |
-| 762 | `TaskRecurrence::defaultOpenStatusId` | read [task_statuses](/code/tables/task_statuses.md) |  |
+| 257 | `TaskRecurrence::ruleForTask` | read [task_recurrences](/code/tables/task_recurrences.md), read [tasks](/code/tables/tasks.md) |  |
+| 339 | `TaskRecurrence::runDue` | read [task_recurrences](/code/tables/task_recurrences.md) |  |
+| 391 | `TaskRecurrence::runDue` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`next_due_date`) |  |
+| 426 | `TaskRecurrence::project` | read [task_recurrences](/code/tables/task_recurrences.md), read [tasks](/code/tables/tasks.md) |  |
+| 487 | `TaskRecurrence::deactivate` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`is_active`, `updated_datetime`) |  |
+| 500 | `TaskRecurrence::occurrenceExistsFor` | read [tasks](/code/tables/tasks.md) |  |
+| 683 | `TaskRecurrence::taskRow` | read [tasks](/code/tables/tasks.md) |  |
+| 697 | `TaskRecurrence::latestOccurrence` | read [tasks](/code/tables/tasks.md) |  |
+| 720 | `TaskRecurrence::createOccurrence` | read [tasks](/code/tables/tasks.md) |  |
+| 733 | `TaskRecurrence::createOccurrence` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `ticket_id`, `change_id`, `contract_id`, `tenant_id`) |  |
+| 764 | `TaskRecurrence::createOccurrence` | **insert** [task_tag_map](/code/tables/task_tag_map.md) (`task_id`, `tag_id`) |  |
+| 773 | `TaskRecurrence::createOccurrence` | read [tasks](/code/tables/tasks.md) |  |
+| 778 | `TaskRecurrence::createOccurrence` | **insert** [tasks](/code/tables/tasks.md) (`title`, `status_id`, `priority_id`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `tenant_id`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 798 | `TaskRecurrence::createOccurrence` | **insert** [document_links](/code/tables/document_links.md) (`document_id`, `parent_type`, `parent_id`, `linked_by_id`, `created_datetime`) |  |
+| 819 | `TaskRecurrence::createOccurrence` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`occurrences_created`, `updated_datetime`) |  |
+| 840 | `TaskRecurrence::defaultOpenStatusId` | read [task_statuses](/code/tables/task_statuses.md) |  |
 
 ## How it hangs together
 

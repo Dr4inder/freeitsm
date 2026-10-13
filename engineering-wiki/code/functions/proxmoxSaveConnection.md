@@ -14,12 +14,12 @@ TRAP: the password field holds the API token SECRET (or the user's password).
 function proxmoxSaveConnection(PDO $conn, array $in): int
 ```
 
-Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 426.
+Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 482.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the settings form's fields (untrusted): id, name, host, username, password, verify_ssl, is_active, sync_interval_minutes |
 
 **Returns:** `int`
 
@@ -27,9 +27,9 @@ Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 448 | `proxmoxSaveConnection` | read [proxmox_connections](/code/tables/proxmox_connections.md) |  |
-| 463 | `proxmoxSaveConnection` | **update** [proxmox_connections](/code/tables/proxmox_connections.md) (`name`, `host`, `username`, `password_enc`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
-| 469 | `proxmoxSaveConnection` | **insert** [proxmox_connections](/code/tables/proxmox_connections.md) (`name`, `host`, `username`, `password_enc`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
+| 504 | `proxmoxSaveConnection` | read [proxmox_connections](/code/tables/proxmox_connections.md) |  |
+| 519 | `proxmoxSaveConnection` | **update** [proxmox_connections](/code/tables/proxmox_connections.md) (`name`, `host`, `username`, `password_enc`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
+| 525 | `proxmoxSaveConnection` | **insert** [proxmox_connections](/code/tables/proxmox_connections.md) (`name`, `host`, `username`, `password_enc`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
 
 ## Calls
 

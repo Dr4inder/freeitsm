@@ -6,11 +6,11 @@ Shapes an analyst row for the API - id, username, name, email, active and admin 
 function apiSerializeAnalyst(array $a): array
 ```
 
-Defined in [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), line 39.
+Defined in [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), line 41.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` | `array` |  |  |
+| `$a` | `array` |  | the analysts row as AnalystsService::load returns it |
 
 **Returns:** `array`
 

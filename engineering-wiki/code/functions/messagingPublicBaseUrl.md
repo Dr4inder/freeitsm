@@ -6,7 +6,7 @@ The public base URL (scheme://host[:port]) used to build webhook URLs. Uses the 
 function messagingPublicBaseUrl(PDO $conn): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 110.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/mes
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `messagingPublicBaseUrl` | read [system_settings](/code/tables/system_settings.md) |  |
+| 121 | `messagingPublicBaseUrl` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

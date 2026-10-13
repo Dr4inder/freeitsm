@@ -6,11 +6,11 @@ DB "YYYY-MM-DD HH:MM:SS" (stored UTC) -> ISO 8601 "YYYY-MM-DDTHH:MM:SSZ", or nul
 function apiIsoDate(?string $dbDatetime): ?string
 ```
 
-Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 62.
+Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 81.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dbDatetime` | `?string` |  |  |
+| `$dbDatetime` | `?string` |  | a UTC datetime column value; null or '' gives null |
 
 **Returns:** `?string`
 

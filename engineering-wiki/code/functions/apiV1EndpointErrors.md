@@ -6,12 +6,12 @@ The errors an endpoint can return: the common ones derived from its shape, plus 
 function apiV1EndpointErrors(array $ep, array $extras): array
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 263.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 287.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ep` | `array` |  |  |
-| `$extras` | `array` |  |  |
+| `$ep` | `array` |  | one endpoint from spec.json: m (method), p (path template), s, d, params, perm |
+| `$extras` | `array` |  | that endpoint's entry in spec.json extras - examples and specific errors; may be empty |
 
 **Returns:** `array`
 

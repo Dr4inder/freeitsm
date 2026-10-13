@@ -11,14 +11,14 @@ function callWorkflowAi(
 ): string
 ```
 
-Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 96.
+Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$systemPrompt` | `string` |  |  |
-| `$userMessage` | `string` |  |  |
-| `$maxTokens` | `int` | `2500` |  |
+| `$cfg` | `array` |  | the workflow AI settings from `loadWorkflowAiConfig()` - provider, model, api_key, verify_ssl |
+| `$systemPrompt` | `string` |  | the system prompt sent ahead of the user message |
+| `$userMessage` | `string` |  | the single user message to answer |
+| `$maxTokens` | `int` | `2500` | the most tokens the reply may use |
 
 **Returns:** `string`
 

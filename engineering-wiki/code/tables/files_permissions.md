@@ -23,7 +23,7 @@ Grants only, no Deny. level 1 View .. 5 Full control (FilesAcl::LEVEL_*).
 | [api/files/permissions.php](/code/files/api/files/permissions.php.md):46 |  | insert | `folder_id`, `principal_type`, `principal_id`, `level`, `granted_by`, `granted_datetime` |  |
 | [api/files/permissions.php](/code/files/api/files/permissions.php.md):81 |  | delete |  |  |
 | [api/files/permissions.php](/code/files/api/files/permissions.php.md):82 |  | insert | `folder_id`, `principal_type`, `principal_id`, `level`, `granted_by`, `granted_datetime` |  |
-| [api/files/transfer.php](/code/files/api/files/transfer.php.md):197 | `filesGrantCreatorFull` | insert | `folder_id`, `principal_type`, `principal_id`, `level`, `granted_by`, `granted_datetime` |  |
+| [api/files/transfer.php](/code/files/api/files/transfer.php.md):217 | `filesGrantCreatorFull` | insert | `folder_id`, `principal_type`, `principal_id`, `level`, `granted_by`, `granted_datetime` |  |
 
 ## Read by
 
@@ -31,5 +31,5 @@ Grants only, no Deny. level 1 View .. 5 Full control (FilesAcl::LEVEL_*).
 |---|---|---|
 | [api/files/permissions.php](/code/files/api/files/permissions.php.md) | L74 |  |
 | [api/files/settings.php](/code/files/api/files/settings.php.md) | L65 |  |
-| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::levels L132, FilesAcl::entries L201 |  |
+| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::levels L136, FilesAcl::entries L216 |  |
 

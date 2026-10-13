@@ -12,15 +12,15 @@ function projectBaselineAuto(
 ): ?int
 ```
 
-Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 226.
+Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 259.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$actorId` | `?int` |  |  |
-| `$trigger` | `string` |  |  |
-| `$stageId` | `?int` | `null` |  |
+| `$actorId` | `?int` |  | the analyst whose change set it off; null for the system |
+| `$trigger` | `string` |  | 'start' (the project went active) or 'stage' (a stage started) |
+| `$stageId` | `?int` | `null` | the stage that started, for 'stage' |
 
 **Returns:** `?int`
 
@@ -28,10 +28,10 @@ Defined in [includes/projects/control.php](/code/files/includes/projects/control
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 232 | `projectBaselineAuto` | read [projects](/code/tables/projects.md) |  |
-| 237 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
-| 241 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
-| 247 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 265 | `projectBaselineAuto` | read [projects](/code/tables/projects.md) |  |
+| 270 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 274 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 280 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
 
 ## Calls
 

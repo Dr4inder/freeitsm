@@ -10,7 +10,7 @@ here is showing somebody the wrong chips.
 function inboxDisplayForAnalyst(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.md), line 152.
+Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.md), line 154.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 162 | `inboxDisplayForAnalyst` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 164 | `inboxDisplayForAnalyst` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Calls
 

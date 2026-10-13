@@ -6,7 +6,7 @@ Generate a token unique to (ticket, response_row). 32-byte random base ensures i
 function csatGenerateToken(): string
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 48.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 51.
 
 **Returns:** `string`
 

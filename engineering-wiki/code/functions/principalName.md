@@ -10,13 +10,13 @@ thing people leave alone forever because they dare not remove it.
 function principalName(PDO $conn, string $type, int $id): string
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 204.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 216.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$type` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$type` | `string` |  | the principal_type: 'analyst', 'team', 'user' or 'user_group' |
+| `$id` | `int` |  | the principal's id in its own table |
 
 **Returns:** `string`
 

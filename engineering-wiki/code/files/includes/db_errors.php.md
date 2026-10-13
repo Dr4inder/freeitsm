@@ -1,6 +1,6 @@
 # includes/db_errors.php
 
-> PHP - 46 lines
+> PHP - 52 lines
 
 Telling one database error from another.
 
@@ -23,9 +23,9 @@ on a PDOException) with the driver-specific code as a second opinion.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [dbErrorIsMissingTable()](/code/functions/dbErrorIsMissingTable.md) | 24 | "That table doesn't exist." MySQL: SQLSTATE 42S02, driver code 1146. |
-| [dbErrorIsUnknownColumn()](/code/functions/dbErrorIsUnknownColumn.md) | 33 | "That column doesn't exist." MySQL: SQLSTATE 42S22, driver code 1054. |
-| [dbErrorIsMissingSchema()](/code/functions/dbErrorIsMissingSchema.md) | 42 | Either of the above — the two shapes a part-migrated install actually takes. |
+| [dbErrorIsMissingTable()](/code/functions/dbErrorIsMissingTable.md) | 26 | "That table doesn't exist." MySQL: SQLSTATE 42S02, driver code 1146. |
+| [dbErrorIsUnknownColumn()](/code/functions/dbErrorIsUnknownColumn.md) | 37 | "That column doesn't exist." MySQL: SQLSTATE 42S22, driver code 1054. |
+| [dbErrorIsMissingSchema()](/code/functions/dbErrorIsMissingSchema.md) | 48 | Either of the above — the two shapes a part-migrated install actually takes. |
 
 ## How it hangs together
 

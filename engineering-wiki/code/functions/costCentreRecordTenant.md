@@ -6,12 +6,12 @@ A record's company for cost centre purposes: its tenant_id, or Default when NULL
 function costCentreRecordTenant(PDO $conn, $tenantId): int
 ```
 
-Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 37.
+Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 45.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$tenantId` |  |  |  |
+| `$tenantId` |  |  | the record's raw tenant_id column value; null, '' or 0 mean the Default company |
 
 **Returns:** `int`
 

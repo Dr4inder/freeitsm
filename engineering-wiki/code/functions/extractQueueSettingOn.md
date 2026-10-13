@@ -6,12 +6,12 @@ Read a boolean setting that defaults to ON when absent.
 function extractQueueSettingOn(PDO $conn, string $key): bool
 ```
 
-Defined in [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md), line 44.
+Defined in [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md), line 48.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the system_settings key to read, e.g. EXTRACT_SETTING_CRON; absent or blank counts as on |
 
 **Returns:** `bool`
 
@@ -19,7 +19,7 @@ Defined in [includes/search/extract_queue.php](/code/files/includes/search/extra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 46 | `extractQueueSettingOn` | read [system_settings](/code/tables/system_settings.md) |  |
+| 50 | `extractQueueSettingOn` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

@@ -1,6 +1,6 @@
 # includes/ics.php
 
-> PHP - 146 lines
+> PHP - 164 lines
 
 iCalendar (RFC 5545) output, shared by every feed FreeITSM publishes.
 
@@ -19,11 +19,11 @@ has the same rule with different spelling — see MicrosoftCalendarProvider.)
 
 | Function | Line | What it does |
 |---|--:|---|
-| [icsEscape()](/code/functions/icsEscape.md) | 18 | Escape a text value per RFC 5545 (backslash, newline, comma, semicolon). |
-| [icsFold()](/code/functions/icsFold.md) | 35 | Fold a content line to <=75 octets; continuation lines start with a space. |
-| [icsHeader()](/code/functions/icsHeader.md) | 50 | The VCALENDAR header lines. `$name` is what the client shows as the calendar's name. |
-| [icsEvent()](/code/functions/icsEvent.md) | 87 | One VEVENT. |
-| [icsRespond()](/code/functions/icsRespond.md) | 138 | Emit the finished calendar with the right headers. |
+| [icsEscape()](/code/functions/icsEscape.md) | 22 | Escape a text value per RFC 5545 (backslash, newline, comma, semicolon). |
+| [icsFold()](/code/functions/icsFold.md) | 41 | Fold a content line to <=75 octets; continuation lines start with a space. |
+| [icsHeader()](/code/functions/icsHeader.md) | 62 | The VCALENDAR header lines. `$name` is what the client shows as the calendar's name. |
+| [icsEvent()](/code/functions/icsEvent.md) | 100 | One VEVENT. |
+| [icsRespond()](/code/functions/icsRespond.md) | 156 | Emit the finished calendar with the right headers. |
 
 ## How it hangs together
 

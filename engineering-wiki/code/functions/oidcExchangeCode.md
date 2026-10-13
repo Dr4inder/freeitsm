@@ -6,14 +6,14 @@ Exchange the authorization code for tokens at the token endpoint (server-to-serv
 function oidcExchangeCode(array $provider, array $disco, string $code, string $codeVerifier): array
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 145.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 170.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
-| `$disco` | `array` |  |  |
-| `$code` | `string` |  |  |
-| `$codeVerifier` | `string` |  |  |
+| `$provider` | `array` |  | the auth_providers row with client_secret decrypted (oidcGetProvider()) |
+| `$disco` | `array` |  | the provider's discovery document from `oidcDiscover()` |
+| `$code` | `string` |  | the authorization code the provider sent to the callback |
+| `$codeVerifier` | `string` |  | the PKCE code verifier kept in the session at sign-in start |
 
 **Returns:** `array`
 

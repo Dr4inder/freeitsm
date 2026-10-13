@@ -12,11 +12,11 @@ deliberately the narrow reading.
 function demoTablesWithInserts(array $demoData): array
 ```
 
-Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 74.
+Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$demoData` | `array` |  |  |
+| `$demoData` | `array` |  | a decoded demo-data JSON file: tier1..tier5 => [table => [record, ...]] |
 
 **Returns:** `array`
 

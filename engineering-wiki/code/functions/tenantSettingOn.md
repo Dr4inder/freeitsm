@@ -6,14 +6,14 @@ Convenience for a yes/no setting. Anything but '0' is on.
 function tenantSettingOn(PDO $conn, ?int $tenantId, string $key, bool $default = true): bool
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 95.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 102.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$default` | `bool` | `true` |  |
+| `$key` | `string` |  | the setting key, the same name in tenant_settings and system_settings |
+| `$default` | `bool` | `true` | the answer when neither the company nor the install has a value |
 
 **Returns:** `bool`
 

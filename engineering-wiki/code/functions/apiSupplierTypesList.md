@@ -6,7 +6,7 @@ GET /supplier-types - the supplier types.
 function apiSupplierTypesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 588.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 604.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

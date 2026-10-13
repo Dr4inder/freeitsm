@@ -10,11 +10,11 @@ that isn't a column.
 function dbVerifyParseColumnsFromSql(string $sql): array
 ```
 
-Defined in [includes/db_verify_column_parse.php](/code/files/includes/db_verify_column_parse.php.md), line 43.
+Defined in [includes/db_verify_column_parse.php](/code/files/includes/db_verify_column_parse.php.md), line 45.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sql` | `string` |  |  |
+| `$sql` | `string` |  | the full text of database/freeitsm.sql |
 
 **Returns:** `array`
 

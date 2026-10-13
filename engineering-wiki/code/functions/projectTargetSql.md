@@ -6,13 +6,13 @@
 function projectTargetSql(PDO $conn, array $project, array $t): array
 ```
 
-Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 115.
+Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 120.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
-| `$t` | `array` |  |  |
+| `$project` | `array` |  | the projects row - id and tenant_id are read |
+| `$t` | `array` |  | the target (a project_asset_targets row or screen input); normalised again here |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [includes/projects/targets.php](/code/files/includes/projects/targets
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 120 | `projectTargetSql` | read [project_assets](/code/tables/project_assets.md) |  |
+| 125 | `projectTargetSql` | read [project_assets](/code/tables/project_assets.md) |  |
 
 ## Calls
 

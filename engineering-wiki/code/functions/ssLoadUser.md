@@ -6,12 +6,12 @@ Loads one self-service user row by id, or null when there is none.
 function ssLoadUser(PDO $conn, int $id): ?array
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 328.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 340.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the users.id (requester) to load |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 329 | `ssLoadUser` | read [users](/code/tables/users.md) |  |
+| 341 | `ssLoadUser` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

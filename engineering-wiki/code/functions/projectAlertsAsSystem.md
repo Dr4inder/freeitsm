@@ -6,11 +6,11 @@ Run `$fn` with nobody signed in, as cron does - see the TRAP above.
 function projectAlertsAsSystem(callable $fn)
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 94.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fn` | `callable` |  |  |
+| `$fn` | `callable` |  | the work to run with the session's analyst hidden; its return value is passed back |
 
 ## Called from
 

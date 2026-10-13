@@ -20,11 +20,11 @@ is not a guard — it means the opposite.
 function htaccessUnguardedPhpDirectives(string $text): array
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 495.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 500.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
+| `$text` | `string` |  | the whole .htaccess file's contents, any line endings |
 
 **Returns:** int[]
 

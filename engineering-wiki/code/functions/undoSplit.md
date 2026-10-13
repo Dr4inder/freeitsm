@@ -22,13 +22,13 @@ scatter a conversation permanently.
 function undoSplit(PDO $conn, int $actorId, int $splitId): array
 ```
 
-Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 377.
+Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 401.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$actorId` | `int` |  |  |
-| `$splitId` | `int` |  |  |
+| `$actorId` | `int` |  | the analyst undoing, recorded as undone_by_id; 0 is stored as NULL |
+| `$splitId` | `int` |  | the ticket_splits row to reverse |
 
 **Returns:** `array`
 
@@ -36,13 +36,13 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 380 | `undoSplit` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
-| 405 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
-| 411 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
-| 430 | `undoSplit` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
-| 434 | `undoSplit` | **delete** [emails](/code/tables/emails.md) |  |
-| 439 | `undoSplit` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
-| 448 | `undoSplit` | **update** [ticket_splits](/code/tables/ticket_splits.md) (`undone_datetime`, `undone_by_id`) |  |
+| 404 | `undoSplit` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
+| 429 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
+| 435 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
+| 454 | `undoSplit` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
+| 458 | `undoSplit` | **delete** [emails](/code/tables/emails.md) |  |
+| 463 | `undoSplit` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 472 | `undoSplit` | **update** [ticket_splits](/code/tables/ticket_splits.md) (`undone_datetime`, `undone_by_id`) |  |
 
 ## Calls
 

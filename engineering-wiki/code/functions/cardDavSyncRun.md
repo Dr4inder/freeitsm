@@ -15,12 +15,12 @@ function cardDavSyncRun(
 ): array
 ```
 
-Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 331.
+Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 349.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
+| `$provider` | `array` |  | the auth_providers row (protocol 'carddav') as stored, password still encrypted |
 | `$mode` | `string` | `'live'` | 'live' \| 'preview' |
 | `$analystId` | `?int` | `null` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
@@ -30,8 +30,8 @@ Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 337 | `cardDavSyncRun` | **insert** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id`) |  |
-| 477 | `cardDavSyncRun` | **update** [auth_providers](/code/tables/auth_providers.md) (`sync_last_run_datetime`, `sync_last_count`) |  |
+| 355 | `cardDavSyncRun` | **insert** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id`) |  |
+| 495 | `cardDavSyncRun` | **update** [auth_providers](/code/tables/auth_providers.md) (`sync_last_run_datetime`, `sync_last_count`) |  |
 
 ## Calls
 

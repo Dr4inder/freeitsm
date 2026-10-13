@@ -14,12 +14,12 @@ the caller can say so rather than silently returning an empty page.
 function searchParseQuery(string $raw, int $minToken = 3): array
 ```
 
-Defined in [includes/search/search.php](/code/files/includes/search/search.php.md), line 63.
+Defined in [includes/search/search.php](/code/files/includes/search/search.php.md), line 65.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
-| `$minToken` | `int` | `3` |  |
+| `$raw` | `string` |  | the search text as the user typed it - untrusted |
+| `$minToken` | `int` | `3` | the shortest word MySQL indexes (innodb_ft_min_token_size); shorter words are dropped |
 
 **Returns:** array{expr:string,terms:array,phrases:array,excluded:array,dropped:array}
 

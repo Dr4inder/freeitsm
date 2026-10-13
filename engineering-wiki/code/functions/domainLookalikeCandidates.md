@@ -6,11 +6,11 @@ The look-alike candidates for a name, keyed by candidate => technique. Deliberat
 function domainLookalikeCandidates(string $name): array
 ```
 
-Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 120.
+Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 133.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
+| `$name` | `string` |  | the stored domain name; the first label is varied and the rest kept as the ending |
 
 **Returns:** `array`
 

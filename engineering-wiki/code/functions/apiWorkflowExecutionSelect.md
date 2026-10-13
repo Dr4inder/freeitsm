@@ -6,7 +6,7 @@ The SELECT for workflow executions, keeping the workflow's name from the snapsho
 function apiWorkflowExecutionSelect(): string
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 96.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 103.
 
 **Returns:** `string`
 
@@ -14,7 +14,7 @@ Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 99 | `apiWorkflowExecutionSelect` | read [workflow_executions](/code/tables/workflow_executions.md), read [workflows](/code/tables/workflows.md) |  |
+| 106 | `apiWorkflowExecutionSelect` | read [workflow_executions](/code/tables/workflow_executions.md), read [workflows](/code/tables/workflows.md) |  |
 
 ## Called from
 

@@ -12,15 +12,15 @@ function domainSpfLookupCount(
 ): int
 ```
 
-Defined in [includes/domains/checks.php](/code/files/includes/domains/checks.php.md), line 316.
+Defined in [includes/domains/checks.php](/code/files/includes/domains/checks.php.md), line 326.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$spf` | `string` |  |  |
-| `$resolver` | `string` |  |  |
-| `$depth` | `int` |  |  |
+| `$spf` | `string` |  | the SPF record text, e.g. "v=spf1 include:_spf.example.com -all" |
+| `$resolver` | `string` |  | auto \| system \| google \| cloudflare, as for `domainDns()` |
+| `$depth` | `int` |  | how deep in the include/redirect chain this is - 0 for the top; past 10 counts nothing |
 | `$broken` | `array` |  | collects include/redirect targets that have no SPF record |
-| `$seen` | `array` | `[]` |  |
+| `$seen` | `array` | `[]` | targets already followed (filled in as it goes), so a loop is counted once |
 
 **Returns:** `int`
 

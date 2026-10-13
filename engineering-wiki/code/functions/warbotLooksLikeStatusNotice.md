@@ -13,11 +13,11 @@ enough to stop it being copied wholesale.
 function warbotLooksLikeStatusNotice(string $body): bool
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 299.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 308.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `string` |  |  |
+| `$body` | `string` |  | an earlier Warbot message's text |
 
 **Returns:** `bool`
 

@@ -6,12 +6,12 @@ Parses a YYYY-MM-DD string as midnight in the given timezone; null when it is no
 function rpParseDate($s, DateTimeZone $zone): ?DateTimeImmutable
 ```
 
-Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 85.
+Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 92.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
-| `$zone` | `DateTimeZone` |  |  |
+| `$s` |  |  | the date to parse, 'Y-m-d'; anything else gives null |
+| `$zone` | `DateTimeZone` |  | the timezone the midnight is in |
 
 **Returns:** `?DateTimeImmutable`
 

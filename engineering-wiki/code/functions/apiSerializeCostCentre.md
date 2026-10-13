@@ -6,11 +6,11 @@ Shapes a cost centre row for the API - code, name, description, parent, active f
 function apiSerializeCostCentre(array $r): array
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 44.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 46.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the cost_centres row as `apiCostCentreSelect()` loads it, with parent code/name, company name and child_count |
 
 **Returns:** `array`
 

@@ -65,6 +65,15 @@ function domainSyncExpiryCalendar(PDO $conn): array
  * One kind: adopt its category, clear its entries, and - if its surface says
  * calendar - draw one all-day entry per domain with a date in $column.
  * The column name is interpolated, never bound; it comes only from this file.
+ *
+ * @param string $source        the calendar_events.source marker for this kind, 'domain_expiry' or 'domain_cert'
+ * @param string $surface       that kind's surface setting - off | dashboard | calendar | both; only the last two draw
+ * @param string $categoryName  the calendar category to create if none is remembered for this source
+ * @param string $colour        hex colour for a newly created category, e.g. '#4d7c0f'
+ * @param string $column        the domains date column to draw from - interpolated into SQL, so only literals from here
+ * @param string $prefix        put before the domain name in each entry's title, e.g. 'Domain expires: '
+ * @param string $description   the description written on every entry
+ * @param string $live          an SQL condition on domain_statuses alias s that a domain must meet to be drawn
  */
 function domainSyncCalendarKind(PDO $conn, string $source, string $surface, string $categoryName, string $colour,
                                 string $column, string $prefix, string $description, string $live): int

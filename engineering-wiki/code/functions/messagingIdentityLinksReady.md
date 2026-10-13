@@ -6,7 +6,7 @@ Has Database Verification created messaging_identity_links yet? Cached per reque
 function messagingIdentityLinksReady(PDO $conn): bool
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 502.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 522.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 507 | `messagingIdentityLinksReady` | read [messaging_identity_links](/code/tables/messaging_identity_links.md) |  |
+| 527 | `messagingIdentityLinksReady` | read [messaging_identity_links](/code/tables/messaging_identity_links.md) |  |
 
 ## Called from
 

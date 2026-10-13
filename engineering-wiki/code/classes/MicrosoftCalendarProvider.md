@@ -26,7 +26,7 @@
 
 ### supports
 
-*public* - line 36
+*public* - line 40
 
 Microsoft Graph supports all-day events, HTML bodies, checking a mailbox exists, and change notifications.
 
@@ -36,11 +36,11 @@ function supports(string $capability): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$capability` | `string` |  |  |
+| `$capability` | `string` |  | a CalendarSyncProvider::CAP_* key |
 
 ### token
 
-*private* - line 55
+*private* - line 59
 
 An app-only access token, cached on the connection until it expires.
 
@@ -56,11 +56,11 @@ function token(): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 101 | `MicrosoftCalendarProvider::token` | **update** [calendar_connections](/code/tables/calendar_connections.md) (`token_data`) |  |
+| 105 | `MicrosoftCalendarProvider::token` | **update** [calendar_connections](/code/tables/calendar_connections.md) (`token_data`) |  |
 
 ### verifyConnection
 
-*public* - line 120
+*public* - line 124
 
 Mint a token. If that succeeds the credentials are right and Calendars.ReadWrite was granted and consented; nothing else can be true and this fail.
 
@@ -70,7 +70,7 @@ function verifyConnection(): void
 
 ### call
 
-*private* - line 128
+*private* - line 138
 
 One Graph call. Returns [httpCode, decodedBody].
 
@@ -80,13 +80,13 @@ function call(string $method, string $path, ?array $body = null): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$method` | `string` |  |  |
-| `$path` | `string` |  |  |
-| `$body` | `?array` | `null` |  |
+| `$method` | `string` |  | the HTTP method - GET, POST, PATCH or DELETE |
+| `$path` | `string` |  | the Graph path after /v1.0, e.g. '/users/{address}/events', already URL-encoded where needed |
+| `$body` | `?array` | `null` | the JSON body to send; null sends none |
 
 ### toGraphEvent
 
-*private* - line 162
+*private* - line 174
 
 Translate our canonical event into Graph's shape.
 
@@ -108,11 +108,11 @@ function toGraphEvent(array $event): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `array` |  |  |
+| `$event` | `array` |  | the canonical event shape (see CalendarSyncProvider) - naive start/end plus timezone |
 
 ### createEvent
 
-*public* - line 196
+*public* - line 213
 
 Creates the event in the mailbox's calendar through Graph and returns Graph's event id.
 
@@ -122,12 +122,12 @@ function createEvent(string $calendarAddress, array $event): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$event` | `array` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's mailbox address (UPN), as Graph knows it |
+| `$event` | `array` |  | the canonical event shape (see CalendarSyncProvider) |
 
 ### updateEvent
 
-*public* - line 208
+*public* - line 231
 
 PATCHes the event through Graph; throws CalendarEventMissing on a 404 so the caller can create a fresh one.
 
@@ -137,13 +137,13 @@ function updateEvent(string $calendarAddress, string $remoteEventId, array $even
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$remoteEventId` | `string` |  |  |
-| `$event` | `array` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's mailbox address (UPN), as Graph knows it |
+| `$remoteEventId` | `string` |  | Graph's event id, as `createEvent()` returned it |
+| `$event` | `array` |  | the canonical event shape (see CalendarSyncProvider) |
 
 ### deleteEvent
 
-*public* - line 227
+*public* - line 255
 
 Deletes the event through Graph; a 404 counts as success.
 
@@ -153,12 +153,12 @@ function deleteEvent(string $calendarAddress, string $remoteEventId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$remoteEventId` | `string` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's mailbox address (UPN), as Graph knows it |
+| `$remoteEventId` | `string` |  | Graph's event id, as `createEvent()` returned it |
 
 ### pollChanges
 
-*public* - line 258
+*public* - line 289
 
 Read changes back out of the mailbox with a Graph delta query.
 
@@ -179,12 +179,12 @@ function pollChanges(string $calendarAddress, ?string $token): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$token` | `?string` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's mailbox address (UPN), as Graph knows it |
+| `$token` | `?string` |  | the full deltaLink the last poll returned; null or '' takes a baseline |
 
 ### toLocal
 
-*private* - line 318
+*private* - line 354
 
 Graph's {dateTime,timeZone} to a naive wall clock in `$tz`.
 
@@ -194,12 +194,12 @@ function toLocal(array $slot, string $tz): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$slot` | `array` |  |  |
-| `$tz` | `string` |  |  |
+| `$slot` | `array` |  | Graph's {dateTime, timeZone} pair for an event's start or end |
+| `$tz` | `string` |  | the PHP time zone to give the naive wall-clock time in |
 
 ### callAbsolute
 
-*private* - line 327
+*private* - line 367
 
 A GET against a URL Graph gave us (nextLink / deltaLink are absolute).
 
@@ -209,11 +209,11 @@ function callAbsolute(string $url): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
+| `$url` | `string` |  | an absolute Graph URL - a nextLink, a deltaLink, or the first delta query |
 
 ### createSubscription
 
-*public* - line 357
+*public* - line 401
 
 Subscribes to updates and deletions in the mailbox's calendar, posting to `$notifyUrl` with `$secret` as clientState, for SUBSCRIPTION_MINUTES.
 
@@ -223,15 +223,15 @@ function createSubscription(string $calendarAddress, string $notifyUrl, string $
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
-| `$notifyUrl` | `string` |  |  |
-| `$secret` | `string` |  |  |
+| `$calendarAddress` | `string` |  | the analyst's mailbox address (UPN), as Graph knows it |
+| `$notifyUrl` | `string` |  | the public HTTPS endpoint Graph posts notifications to (Graph checks it during this call) |
+| `$secret` | `string` |  | sent as clientState and echoed back in every notification, to prove it came from Graph |
 
 **Returns:** array  ['id' => subscription id, 'expires' => naive local datetime]
 
 ### renewSubscription
 
-*public* - line 379
+*public* - line 425
 
 Extends a Graph subscription by SUBSCRIPTION_MINUTES; throws CalendarSubscriptionMissing when it has already lapsed.
 
@@ -241,11 +241,11 @@ function renewSubscription(string $subscriptionId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$subscriptionId` | `string` |  |  |
+| `$subscriptionId` | `string` |  | Graph's subscription id, as `createSubscription()` returned it |
 
 ### deleteSubscription
 
-*public* - line 396
+*public* - line 446
 
 Removes a Graph subscription; one already gone counts as success.
 
@@ -255,11 +255,11 @@ function deleteSubscription(string $subscriptionId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$subscriptionId` | `string` |  |  |
+| `$subscriptionId` | `string` |  | Graph's subscription id, as `createSubscription()` returned it |
 
 ### expiryToLocal
 
-*private* - line 404
+*private* - line 458
 
 Graph's UTC expiry to the naive local datetime the column stores.
 
@@ -269,11 +269,11 @@ function expiryToLocal(?string $utc): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$utc` | `?string` |  |  |
+| `$utc` | `?string` |  | Graph's expirationDateTime (UTC, ISO 8601); null uses now plus SUBSCRIPTION_MINUTES |
 
 ### verifyTarget
 
-*public* - line 413
+*public* - line 471
 
 True when Graph can read the mailbox's calendar - i.e. the address exists and the app can reach it.
 
@@ -283,11 +283,11 @@ function verifyTarget(string $calendarAddress): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$calendarAddress` | `string` |  |  |
+| `$calendarAddress` | `string` |  | the mailbox address (UPN) to check |
 
 ### briefly
 
-*private* - line 428
+*private* - line 488
 
 Graph error bodies are long and carry request ids. Keep enough to diagnose without putting a wall of JSON in last_error, which is 500 characters and is shown to a human.
 
@@ -297,5 +297,5 @@ function briefly(?string $raw): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `?string` |  |  |
+| `$raw` | `?string` |  | the raw response body from Graph or the token endpoint |
 

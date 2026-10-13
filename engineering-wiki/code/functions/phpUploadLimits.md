@@ -6,7 +6,7 @@ What PHP on this server will accept, for the settings screen.
 function phpUploadLimits(): array
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 198.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 221.
 
 **Returns:** `array`
 

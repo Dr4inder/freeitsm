@@ -35,7 +35,7 @@ open it in a tab; anything with a scheme opens in a new browser window.
 | [cells()](#cells) | Splits a table row into trimmed cells, ignoring the outer pipes and any \| inside `code` or escaped as \\|. |
 | [table()](#table) | Renders a table from its header, separator and body rows, applying the column alignment. |
 | [listMarker()](#listmarker) | Reads a list item marker (- * + or 1. 1)) at the start of a line; null when the line is not a list item, including a --- rule. |
-| [listBlock()](#listblock) | One list (and its nested lists). `@return` array{0:string,1:int} [html, next line] |
+| [listBlock()](#listblock) | One list (and its nested lists). |
 | [codeBlock()](#codeblock) | Renders a fenced code block with its language label, highlighted when the language is one it knows. |
 | [highlight()](#highlight) | Just enough colour to read by: comments, strings, numbers, keywords, variables. |
 | [inlineLines()](#inlinelines) | Renders a paragraph's lines as inline HTML, turning two trailing spaces or a trailing backslash into a line break. |
@@ -65,7 +65,7 @@ function render(string $md, callable $resolve): array
 
 ### blocks
 
-*private* - line 54
+*private* - line 56
 
 Renders a run of lines as block HTML - fenced code, headings, rules, quotes and alerts, tables, lists and paragraphs.
 
@@ -75,11 +75,11 @@ function blocks(array $lines): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
+| `$lines` | `array` |  | the page (or a quote / list item body) as lines, line endings and tabs already normalised |
 
 ### startsBlock
 
-*private* - line 128
+*private* - line 134
 
 Would this line start a new block (and so end a paragraph)?
 
@@ -89,11 +89,11 @@ function startsBlock(string $line): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$line` | `string` |  |  |
+| `$line` | `string` |  | one source line |
 
 ### heading
 
-*private* - line 137
+*private* - line 146
 
 Renders a heading with its GitHub-style anchor; the first h1 becomes the page title and h2/h3 go into the table of contents.
 
@@ -103,12 +103,12 @@ function heading(int $level, string $text): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$level` | `int` |  |  |
-| `$text` | `string` |  |  |
+| `$level` | `int` |  | 1 to 6, the number of # marks |
+| `$text` | `string` |  | the heading text as written, without the # marks - inline Markdown |
 
 ### slug
 
-*private* - line 148
+*private* - line 161
 
 GitHub's anchor rule: lower case, punctuation dropped, spaces to hyphens, repeats numbered.
 
@@ -118,11 +118,11 @@ function slug(string $text): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
+| `$text` | `string` |  | the heading as plain text (tags stripped, entities decoded); repeats are tracked per page |
 
 ### quote
 
-*private* - line 163
+*private* - line 178
 
 Renders a block quote, or a GitHub alert box when the first line is [!NOTE], [!TIP], [!IMPORTANT], [!WARNING] or [!CAUTION].
 
@@ -132,11 +132,11 @@ function quote(array $lines): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
+| `$lines` | `array` |  | the quote's lines with the leading "> " already removed |
 
 ### isTableRule
 
-*private* - line 177
+*private* - line 196
 
 True when a line is a table's header separator (| --- | :---: |).
 
@@ -146,11 +146,11 @@ function isTableRule(string $line): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$line` | `string` |  |  |
+| `$line` | `string` |  | the line straight after a candidate header row |
 
 ### cells
 
-*private* - line 184
+*private* - line 207
 
 Splits a table row into trimmed cells, ignoring the outer pipes and any | inside `code` or escaped as \|.
 
@@ -160,11 +160,11 @@ function cells(string $row): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `string` |  |  |
+| `$row` | `string` |  | one raw table line |
 
 ### table
 
-*private* - line 203
+*private* - line 230
 
 Renders a table from its header, separator and body rows, applying the column alignment.
 
@@ -174,11 +174,11 @@ function table(array $rows): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rows` | `array` |  |  |
+| `$rows` | `array` |  | raw table lines: [0] the header, [1] the \| --- \| separator, then the body rows |
 
 ### listMarker
 
-*private* - line 230
+*private* - line 258
 
 Reads a list item marker (- * + or 1. 1)) at the start of a line; null when the line is not a list item, including a --- rule.
 
@@ -188,15 +188,15 @@ function listMarker(string $line): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$line` | `string` |  |  |
+| `$line` | `string` |  | one source line |
 
 **Returns:** ?array{indent:int, ordered:bool, start:int, width:int}
 
 ### listBlock
 
-*private* - line 239
+*private* - line 273
 
-One list (and its nested lists). `@return` array{0:string,1:int} [html, next line]
+One list (and its nested lists).
 
 ```php
 function listBlock(array $lines, int $i): array
@@ -204,12 +204,14 @@ function listBlock(array $lines, int $i): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
-| `$i` | `int` |  |  |
+| `$lines` | `array` |  | every line of the block being rendered |
+| `$i` | `int` |  | the index in `$lines` of the list's first item |
+
+**Returns:** array{0:string,1:int} [html, next line]
 
 ### codeBlock
 
-*private* - line 300
+*private* - line 339
 
 Renders a fenced code block with its language label, highlighted when the language is one it knows.
 
@@ -219,12 +221,12 @@ function codeBlock(string $code, string $lang): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$code` | `string` |  |  |
-| `$lang` | `string` |  |  |
+| `$code` | `string` |  | the code between the fences, unescaped |
+| `$lang` | `string` |  | the lower-cased language after the opening fence ("php", "sql"...), '' for none |
 
 ### highlight
 
-*private* - line 311
+*private* - line 355
 
 Just enough colour to read by: comments, strings, numbers, keywords, variables.
 
@@ -234,12 +236,12 @@ function highlight(string $code, string $kind): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$code` | `string` |  |  |
-| `$kind` | `string` |  |  |
+| `$code` | `string` |  | the code to colour, unescaped (every piece is escaped here) |
+| `$kind` | `string` |  | 'php', 'sql', 'js', 'sh' or 'css' - the alias `codeBlock()` mapped the language to |
 
 ### inlineLines
 
-*private* - line 349
+*private* - line 397
 
 Renders a paragraph's lines as inline HTML, turning two trailing spaces or a trailing backslash into a line break.
 
@@ -249,11 +251,11 @@ function inlineLines(array $lines): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
+| `$lines` | `array` |  | the paragraph's source lines, in order |
 
 ### hold
 
-*private* - line 363
+*private* - line 415
 
 Parks finished HTML (code, links, escapes) behind a placeholder so later inline passes cannot touch it.
 
@@ -263,11 +265,11 @@ function hold(string $html): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$html` | `string` |  |  |
+| `$html` | `string` |  | finished, already-escaped HTML |
 
 ### inline
 
-*private* - line 372
+*private* - line 426
 
 Renders inline Markdown - escapes, code, images, links, wiki links and autolinks, then bold, italic and strike - with all other text escaped.
 
@@ -277,11 +279,11 @@ function inline(string $t): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$t` | `string` |  |  |
+| `$t` | `string` |  | one piece of Markdown text (a line, a heading, a cell or a link label) - raw, escaped here |
 
 ### link
 
-*private* - line 405
+*private* - line 463
 
 Builds a link - external ones open in a new window, #anchors stay on the page, and wiki paths go through the resolver (a page it cannot find is shown as a broken link).
 
@@ -291,13 +293,13 @@ function link(string $href, string $label, bool $wiki = false): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$href` | `string` |  |  |
-| `$label` | `string` |  |  |
-| `$wiki` | `bool` | `false` |  |
+| `$href` | `string` |  | the link target as written: a URL, a #anchor, a relative .md path, or a wiki path when `$wiki` |
+| `$label` | `string` |  | the link text already rendered to HTML - inserted as is, so it must be escaped first |
+| `$wiki` | `bool` | `false` | true for a [[wiki link]], whose path is from the wiki root and may omit ".md" |
 
 ### e
 
-*private* - line 428
+*private* - line 490
 
 Escapes text for HTML.
 
@@ -307,5 +309,5 @@ function e(string $s): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `string` |  |  |
+| `$s` | `string` |  | plain text |
 

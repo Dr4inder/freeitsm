@@ -12,15 +12,15 @@ function domainLinkPickDomains(
 ): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 287.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 334.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
-| `$targetId` | `int` |  |  |
-| `$q` | `string` |  |  |
+| `$kind` | `string` |  | the kind of record on the other side - cmdb \| service \| ticket \| article |
+| `$targetId` | `int` |  | that record's id |
+| `$q` | `string` |  | what the user typed; matched anywhere in the domain name or display name |
 
 **Returns:** `array`
 
@@ -28,7 +28,7 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 293 | `domainLinkPickDomains` | read [domains](/code/tables/domains.md) |  |
+| 340 | `domainLinkPickDomains` | read [domains](/code/tables/domains.md) |  |
 
 ## Calls
 

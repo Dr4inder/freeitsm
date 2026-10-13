@@ -36,7 +36,11 @@ if (!is_array($data)) {
     exit;
 }
 
-/** Answers {success: false, error} as JSON and stops. */
+/**
+ * Answers {success: false, error} as JSON and stops.
+ *
+ * @param string $msg  the error shown to the admin
+ */
 function bail(string $msg): void {
     echo json_encode(['success' => false, 'error' => $msg]);
     exit;
@@ -59,6 +63,8 @@ function bail(string $msg): void {
  * Whether the base is one the bind account may read is the DIRECTORY's decision,
  * not ours: an unreadable base returns nothing, and a base outside the tree
  * errors. Neither leaks anything the bind account could not already read.
+ *
+ * @param mixed $value  the DNs from the request - an array, or newline-separated text (untrusted)
  */
 function ssoDnLines($value): ?string
 {

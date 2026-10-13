@@ -15,12 +15,12 @@ is due, or the email says one thing and the portal says another.
 function lmsRemindersDue(PDO $conn, array $settings): array
 ```
 
-Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 138.
+Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 146.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$settings` | `array` |  |  |
+| `$settings` | `array` |  | the reminder settings from `lmsReminderSettings()` |
 
 **Returns:** array<int,array<string,mixed>>
 
@@ -28,10 +28,10 @@ Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 149 | `lmsRemindersDue` | read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
-| 222 | `lmsRemindersDue` | read [analysts](/code/tables/analysts.md) |  |
-| 228 | `lmsRemindersDue` | read [users](/code/tables/users.md) |  |
-| 239 | `lmsRemindersDue` | read [lms_reminders_sent](/code/tables/lms_reminders_sent.md) |  |
+| 157 | `lmsRemindersDue` | read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
+| 230 | `lmsRemindersDue` | read [analysts](/code/tables/analysts.md) |  |
+| 236 | `lmsRemindersDue` | read [users](/code/tables/users.md) |  |
+| 247 | `lmsRemindersDue` | read [lms_reminders_sent](/code/tables/lms_reminders_sent.md) |  |
 
 ## Calls
 

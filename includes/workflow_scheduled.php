@@ -45,6 +45,11 @@ require_once __DIR__ . '/timezone.php';   // naive_today_sql() — expiry dates 
  * Only the insert that actually created a row dispatches. Two overlapping cron
  * runs therefore cannot double-fire — the database, not the application, is the
  * arbiter.
+ *
+ * @param string $event  the trigger event key, e.g. 'sla.breached'
+ * @param string $entityKey  what it is about, e.g. 'ticket:183:response'
+ * @param string $fingerprint  the state it is about; a new value re-arms the emission
+ * @param array $payload  the event payload handed to WorkflowEngine::dispatch()
  */
 function workflowEmitOnce(PDO $conn, string $event, string $entityKey, string $fingerprint, array $payload): bool
 {
@@ -263,6 +268,8 @@ function workflowScheduledRun(PDO $conn): array
  * Drop ledger rows for events long past. Keeping them forever would grow without
  * bound; a year is far longer than any window we announce, so nothing can be
  * resurrected by a prune.
+ *
+ * @param int $keepDays  ledger rows older than this many days are deleted
  */
 function workflowPruneEmissions(PDO $conn, int $keepDays = 365): int
 {

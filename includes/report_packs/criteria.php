@@ -28,6 +28,8 @@ const RP_RANGE_PRESETS = [
  * The end is EXCLUSIVE: [from, to). A custom range is inclusive of both days the
  * reader picked, so its end is the day after.
  *
+ * @param array $range  the pack's range as saved: preset (an RP_RANGE_PRESETS value) and, for 'custom', from and to as 'Y-m-d'
+ * @param ?string $tz  the timezone to read the range in; null means the viewer's own (Tz::current())
  * @return array{preset:string,from_date:string,to_date:string,from_utc:string,to_utc:string,days:int,tz:string}
  */
 function rpResolveRange(array $range, ?string $tz = null): array
@@ -81,7 +83,12 @@ function rpResolveRange(array $range, ?string $tz = null): array
     ];
 }
 
-/** Parses a YYYY-MM-DD string as midnight in the given timezone; null when it is not a valid date. */
+/**
+ * Parses a YYYY-MM-DD string as midnight in the given timezone; null when it is not a valid date.
+ *
+ * @param mixed $s  the date to parse, 'Y-m-d'; anything else gives null
+ * @param DateTimeZone $zone  the timezone the midnight is in
+ */
 function rpParseDate($s, DateTimeZone $zone): ?DateTimeImmutable
 {
     if (!is_string($s) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $s)) return null;
@@ -100,6 +107,8 @@ function rpParseDate($s, DateTimeZone $zone): ?DateTimeImmutable
  * A shared pack is read with the viewer's rights, not the author's: if the author
  * chose a company the viewer cannot see, the viewer gets an error, never the data.
  *
+ * @param mixed $tenant  the pack's company: 'active' (or null/''), 'all', or a company id the viewer must be able to reach
+ * @param string $qualified  the company column to filter, alias included, e.g. 't.tenant_id'
  * @return array{0:string,1:array} [" AND ...", params], or ['', []] at N=1
  * @throws RuntimeException when the viewer may not see the chosen company
  */
@@ -126,7 +135,11 @@ function rpTenantClause(PDO $conn, int $analystId, $tenant, string $qualified): 
     return [" AND $qualified = ?", [$id]];
 }
 
-/** The company's name for the header field {{company}}. */
+/**
+ * The company's name for the header field {{company}}.
+ *
+ * @param mixed $tenant  the pack's company: 'active' (or null/''), 'all', or a company id
+ */
 function rpTenantLabel(PDO $conn, int $analystId, $tenant): string
 {
     if (!isMultiTenant($conn)) return '';

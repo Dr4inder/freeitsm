@@ -21,16 +21,16 @@ function internalTicketEmail(
 ): void
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 643.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 676.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$recipients` | `array` |  |  |
-| `$subject` | `string` |  |  |
-| `$bodyHtml` | `string` |  |  |
-| `$route` | `string` |  |  |
+| `$recipients` | `array` |  | the staff email addresses to send to, one email each |
+| `$subject` | `string` |  | the email subject, plain text |
+| `$bodyHtml` | `string` |  | the email body, HTML |
+| `$route` | `string` |  | what the send log records it as, e.g. 'sla' or 'closure_alert' |
 
 **Returns:** `void`
 
@@ -38,7 +38,7 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 646 | `internalTicketEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 679 | `internalTicketEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## Calls
 

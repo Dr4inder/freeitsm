@@ -10,7 +10,7 @@ already do by typing either login URL directly — and it is validated anyway.
 function landingResolve(PDO $conn): string
 ```
 
-Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 80.
+Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 84.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

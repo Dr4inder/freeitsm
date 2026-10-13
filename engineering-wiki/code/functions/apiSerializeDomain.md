@@ -6,11 +6,11 @@ Shapes a domain row for the API - names, company, status, registrar and account,
 function apiSerializeDomain(array $r): array
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 69.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 71.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the domains row as `apiDomainSelect()` loads it, with the lookup, contact and company names |
 
 **Returns:** `array`
 

@@ -1,6 +1,6 @@
 # includes/reply_cleanup_prompt.php
 
-> PHP - 136 lines
+> PHP - 142 lines
 
 Single source of truth for the AI Reply Cleanup system prompt.
 
@@ -12,8 +12,8 @@ exactly the same scaffold Claude sees, just with a sample greeting + tone.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [replyCleanupToneDescription()](/code/functions/replyCleanupToneDescription.md) | 14 | Map a tone name (Friendly / Formal / Brief) to the short clause inserted into the system prompt. Defaults to Friendly for unrecognised values. |
-| [buildReplyCleanupSystemPrompt()](/code/functions/buildReplyCleanupSystemPrompt.md) | 28 | Build the system prompt. `$customInstructions` is appended verbatim under a dedicated heading at the end so any user-supplied rules sit AFTER the safety scaffold rather than overriding it. |
+| [replyCleanupToneDescription()](/code/functions/replyCleanupToneDescription.md) | 16 | Map a tone name (Friendly / Formal / Brief) to the short clause inserted into the system prompt. Defaults to Friendly for unrecognised values. |
+| [buildReplyCleanupSystemPrompt()](/code/functions/buildReplyCleanupSystemPrompt.md) | 34 | Build the system prompt. `$customInstructions` is appended verbatim under a dedicated heading at the end so any user-supplied rules sit AFTER the safety scaffold rather than overriding it. |
 
 ## How it hangs together
 

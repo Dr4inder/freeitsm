@@ -70,7 +70,11 @@ function csrfRequestPath(): string
     return ltrim((string)parse_url((string)($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH), '/');
 }
 
-/** True when the path is on CSRF_EXEMPT_PATHS - an exact file, or anything under an entry ending in '/'. */
+/**
+ * True when the path is on CSRF_EXEMPT_PATHS - an exact file, or anything under an entry ending in '/'.
+ *
+ * @param string $path  the request path relative to the app root, as csrfRequestPath() gives it
+ */
 function csrfIsExempt(string $path): bool
 {
     foreach (CSRF_EXEMPT_PATHS as $p) {
@@ -145,6 +149,8 @@ function csrfProvidedToken(): string
  * This app's own host[:port], as the browser addresses it: the Host header, and -
  * only when asked, because it costs a query - the configured public address (for a
  * proxy that rewrites Host).
+ *
+ * @param bool $withConfigured  true to add the host from the configured public URL (costs a database query)
  */
 function csrfOwnHosts(bool $withConfigured = false): array
 {
@@ -199,7 +205,12 @@ function csrfSameOrigin(): ?bool
         || (bool)array_intersect($candidates, csrfOwnHosts(true));
 }
 
-/** Refuse, in the shape the caller expects: JSON for the API, a short page for a form post. */
+/**
+ * Refuse, in the shape the caller expects: JSON for the API, a short page for a form post.
+ *
+ * @param string $why  'origin' (came from another site) or 'token' (missing or wrong CSRF token);
+ *     sent in the X-CSRF-Refused header and the csrf_ error code
+ */
 function csrfRefuse(string $why): void
 {
     http_response_code(403);

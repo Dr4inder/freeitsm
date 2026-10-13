@@ -6,12 +6,12 @@ project_raid: one project's RAID log via `projectAssistRaid()`, scoped to the pr
 function warbotToolProjectRaid(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 980.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 1051.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$args` | `array` |  |  |
+| `$args` | `array` |  | the model's arguments - untrusted: project, type (risk, issue...), status (open/closed/all) |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`

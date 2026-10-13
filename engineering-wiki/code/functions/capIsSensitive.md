@@ -6,11 +6,11 @@ Does granting this need a second thought? Enum twin: `$cap`->isSensitive().
 function capIsSensitive(string $key): bool
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 458.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 484.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a capability key; an unknown one is not sensitive |
 
 **Returns:** `bool`
 

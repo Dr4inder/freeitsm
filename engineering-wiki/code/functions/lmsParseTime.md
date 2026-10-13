@@ -6,11 +6,11 @@ Parse HH:MM:SS back to seconds, so session time can be accumulated.
 function lmsParseTime(?string $t): int
 ```
 
-Defined in [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md), line 48.
+Defined in [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$t` | `?string` |  |  |
+| `$t` | `?string` |  | a duration as HH:MM:SS; null or anything else gives 0 |
 
 **Returns:** `int`
 

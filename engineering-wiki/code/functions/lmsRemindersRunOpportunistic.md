@@ -10,7 +10,7 @@ and must never be the reason a page errors.
 function lmsRemindersRunOpportunistic(PDO $conn): void
 ```
 
-Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 429.
+Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 447.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

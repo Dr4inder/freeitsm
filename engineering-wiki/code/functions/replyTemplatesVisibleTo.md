@@ -17,13 +17,13 @@ deliberately no branch here that could give them any.
 function replyTemplatesVisibleTo(PDO $conn, int $analystId, bool $activeOnly = true): array
 ```
 
-Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.php.md), line 100.
+Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$activeOnly` | `bool` | `true` |  |
+| `$activeOnly` | `bool` | `true` | true for active templates only (inserting); false for every one (managing them) |
 
 **Returns:** array rows with an extra 'scope' => 'shared'|'mine'
 
@@ -31,7 +31,7 @@ Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 115 | `replyTemplatesVisibleTo` | read [ticket_reply_templates](/code/tables/ticket_reply_templates.md) |  |
+| 118 | `replyTemplatesVisibleTo` | read [ticket_reply_templates](/code/tables/ticket_reply_templates.md) |  |
 
 ## Calls
 

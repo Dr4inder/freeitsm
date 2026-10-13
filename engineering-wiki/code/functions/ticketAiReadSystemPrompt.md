@@ -11,7 +11,7 @@ the failure mode here is somebody acting on a confident guess.
 function ticketAiReadSystemPrompt(): string
 ```
 
-Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line 276.
+Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line 284.
 
 **Returns:** `string`
 

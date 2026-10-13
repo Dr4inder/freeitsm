@@ -6,12 +6,12 @@ Read an uploaded CSV or .xlsx into rows of strings (the first sheet of a workboo
 function spreadsheetRead(string $path, string $originalName): array
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 38.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 40.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
-| `$originalName` | `string` |  |  |
+| `$path` | `string` |  | the uploaded file on disk (the upload's tmp_name) - untrusted content |
+| `$originalName` | `string` |  | the file name the person uploaded; only its extension is read, to spot an old .xls |
 
 **Returns:** array<int, array<int, string>>
 

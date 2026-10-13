@@ -6,13 +6,13 @@ One VM record from the inventory, with its NICs and disks. Null if it has no usa
 function vcdVmRecord(array $c, string $token, SimpleXMLElement $rec): ?array
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 316.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 365.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
-| `$token` | `string` |  |  |
-| `$rec` | `SimpleXMLElement` |  |  |
+| `$c` | `array` |  | the connection row from `vcdLoadConnection()` |
+| `$token` | `string` |  | the session token from `vcdLogin()` |
+| `$rec` | `SimpleXMLElement` |  | one VMRecord element from /api/query?type=vm |
 
 **Returns:** `?array`
 

@@ -6,7 +6,7 @@ Create a new app-sync job for the next batch of candidate assets. Returns ['job_
 function intuneCreateAppSyncJob(PDO $conn): array
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 636.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 663.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,11 +18,11 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 636.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 639 | `intuneCreateAppSyncJob` | read [intune_app_sync_jobs](/code/tables/intune_app_sync_jobs.md) |  |
-| 642 | `intuneCreateAppSyncJob` | read [intune_app_sync_job_assets](/code/tables/intune_app_sync_job_assets.md) |  |
-| 649 | `intuneCreateAppSyncJob` | **update** [intune_app_sync_jobs](/code/tables/intune_app_sync_jobs.md) (`status`, `message`, `finished_datetime`) |  |
-| 667 | `intuneCreateAppSyncJob` | **insert** [intune_app_sync_jobs](/code/tables/intune_app_sync_jobs.md) (`started_datetime`, `status`, `total`, `processed`, `failed`, `message`) |  |
-| 673 | `intuneCreateAppSyncJob` | **insert** [intune_app_sync_job_assets](/code/tables/intune_app_sync_job_assets.md) (`job_id`, `asset_id`, `status`) |  |
+| 666 | `intuneCreateAppSyncJob` | read [intune_app_sync_jobs](/code/tables/intune_app_sync_jobs.md) |  |
+| 669 | `intuneCreateAppSyncJob` | read [intune_app_sync_job_assets](/code/tables/intune_app_sync_job_assets.md) |  |
+| 676 | `intuneCreateAppSyncJob` | **update** [intune_app_sync_jobs](/code/tables/intune_app_sync_jobs.md) (`status`, `message`, `finished_datetime`) |  |
+| 694 | `intuneCreateAppSyncJob` | **insert** [intune_app_sync_jobs](/code/tables/intune_app_sync_jobs.md) (`started_datetime`, `status`, `total`, `processed`, `failed`, `message`) |  |
+| 700 | `intuneCreateAppSyncJob` | **insert** [intune_app_sync_job_assets](/code/tables/intune_app_sync_job_assets.md) (`job_id`, `asset_id`, `status`) |  |
 
 ## Calls
 

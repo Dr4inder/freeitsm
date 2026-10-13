@@ -6,11 +6,11 @@ System areas that still have no help page — the gap this registry exists to ma
 function helpTopicsMissing($multiTenant = false)
 ```
 
-Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 605.
+Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 609.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$multiTenant` |  | `false` |  |
+| `$multiTenant` |  | `false` | true when a second company exists, so 'multitenant' areas count too |
 
 **Returns:** array<int,string> Area titles (translated).
 

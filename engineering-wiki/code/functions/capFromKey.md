@@ -9,11 +9,11 @@ here, so a stale or hand-inserted key can never grant anything.
 function capFromKey(string $key): ?string
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 431.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 441.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a capability key read from outside the code (rbac_role_capabilities or a form post) - untrusted |
 
 **Returns:** `?string`
 

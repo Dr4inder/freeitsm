@@ -10,13 +10,13 @@ thing under the cursor, not the thing you scroll past your DMs to reach.
 function warRoomChannelList(PDO $conn, int $analystId, bool $includeArchived = false): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 122.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$includeArchived` | `bool` | `false` |  |
+| `$includeArchived` | `bool` | `false` | true to include archived channels as well |
 
 **Returns:** array<int,array{id:int,kind:string,name:string,topic:?string, is_private:bool,archived:bool,unread:int,members:?int}>
 
@@ -24,9 +24,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 122
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 131 | `warRoomChannelList` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md), read [warroom_reads](/code/tables/warroom_reads.md) |  |
-| 149 | `warRoomChannelList` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 153 | `warRoomChannelList` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+| 132 | `warRoomChannelList` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md), read [warroom_reads](/code/tables/warroom_reads.md) |  |
+| 150 | `warRoomChannelList` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 154 | `warRoomChannelList` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
 
 ## Calls
 

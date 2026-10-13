@@ -6,11 +6,11 @@ When a started sitting's time runs out (UTC unix time), or null if not started.
 function lmsCtDeadline(array $s): ?int
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 285.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 341.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
+| `$s` | `array` |  | an lms_ct_sittings row (started_datetime, time_limit_minutes) |
 
 **Returns:** `?int`
 

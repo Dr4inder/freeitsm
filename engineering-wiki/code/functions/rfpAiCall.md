@@ -22,12 +22,12 @@ Returns:
 function rfpAiCall(PDO $conn, array $opts): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 121.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 125.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$opts` | `array` |  |  |
+| `$opts` | `array` |  | system, user (the prompts), max_tokens (default 4096), temperature (default 0.0) |
 
 **Returns:** `array`
 

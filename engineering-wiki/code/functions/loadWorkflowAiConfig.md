@@ -6,7 +6,7 @@ Load the workflow-specific AI settings from `system_settings`. Throws if no key 
 function loadWorkflowAiConfig(PDO $conn): array
 ```
 
-Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 81.
+Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

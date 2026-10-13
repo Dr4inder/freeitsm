@@ -6,11 +6,11 @@ Could this tier read the file at all? Used to answer before opening anything.
 function attTextSupports(string $filename): bool
 ```
 
-Defined in [includes/search/extract.php](/code/files/includes/search/extract.php.md), line 95.
+Defined in [includes/search/extract.php](/code/files/includes/search/extract.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filename` | `string` |  |  |
+| `$filename` | `string` |  | the file name - only its extension is judged |
 
 **Returns:** `bool`
 

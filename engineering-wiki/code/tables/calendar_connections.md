@@ -23,17 +23,17 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):341 |  | update | `name`, `provider`, `mailbox_id`, `credentials`, `is_active`, `last_error`, `last_error_datetime`, `token_data`, `updated_datetime` |  |
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):349 |  | insert | `name`, `provider`, `mailbox_id`, `credentials`, `created_by` |  |
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):368 |  | update | `last_error`, `last_error_datetime` |  |
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):373 |  | update | `last_error`, `last_error_datetime` |  |
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):522 |  | delete |  |  |
-| [includes/calendar_sync/MicrosoftCalendarProvider.php](/code/files/includes/calendar_sync/MicrosoftCalendarProvider.php.md):101 | `MicrosoftCalendarProvider::token` | update | `token_data` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):345 |  | update | `name`, `provider`, `mailbox_id`, `credentials`, `is_active`, `last_error`, `last_error_datetime`, `token_data`, `updated_datetime` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):353 |  | insert | `name`, `provider`, `mailbox_id`, `credentials`, `created_by` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):372 |  | update | `last_error`, `last_error_datetime` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):377 |  | update | `last_error`, `last_error_datetime` |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):526 |  | delete |  |  |
+| [includes/calendar_sync/MicrosoftCalendarProvider.php](/code/files/includes/calendar_sync/MicrosoftCalendarProvider.php.md):105 | `MicrosoftCalendarProvider::token` | update | `token_data` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | L146, L208, L256, L508 |  |
-| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncLoadConnection L124, calendarSyncConnectionIds L163, calendarSyncConnectionProvider L203 |  |
+| [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | L150, L212, L260, L512 |  |
+| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncLoadConnection L148, calendarSyncConnectionIds L187, calendarSyncConnectionProvider L233 |  |
 

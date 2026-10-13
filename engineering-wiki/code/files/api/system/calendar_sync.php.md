@@ -1,6 +1,6 @@
 # api/system/calendar_sync.php
 
-> API endpoint - 531 lines
+> API endpoint - 535 lines
 
 API: the install's calendar-sync connections and feed policy (GH #75, #133).
 
@@ -45,36 +45,36 @@ reason for the screen to know them.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [csUsage()](/code/functions/csUsage.md) | 51 | How many events and analysts depend on one connection. |
-| [csTakeBack()](/code/functions/csTakeBack.md) | 69 | 🔴 TAKE BACK EVERYTHING ONE CONNECTION WROTE, then reset its analysts. |
-| [csAdoptOrphans()](/code/functions/csAdoptOrphans.md) | 113 | 🔴 NAME THE CONNECTION ON ROWS THAT ONLY IMPLY IT. |
+| [csUsage()](/code/functions/csUsage.md) | 53 | How many events and analysts depend on one connection. |
+| [csTakeBack()](/code/functions/csTakeBack.md) | 73 | 🔴 TAKE BACK EVERYTHING ONE CONNECTION WROTE, then reset its analysts. |
+| [csAdoptOrphans()](/code/functions/csAdoptOrphans.md) | 117 | 🔴 NAME THE CONNECTION ON ROWS THAT ONLY IMPLY IT. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 53 | `csUsage` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
-| 55 | `csUsage` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
-| 74 | `csTakeBack` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
-| 84 | `csTakeBack` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
-| 93 | `csTakeBack` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`mode`, `calendar_address`, `credentials`, `connection_id`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`, `updated_datetime`) |  |
-| 117 | `csAdoptOrphans` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`) |  |
-| 118 | `csAdoptOrphans` | **update** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`connection_id`) |  |
-| 139 |  | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 146 |  | read [calendar_connections](/code/tables/calendar_connections.md) |  |
-| 181 |  | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
-| 182 |  | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
-| 196 |  | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
-| 208 |  | read [analysts](/code/tables/analysts.md), read [calendar_enrolments](/code/tables/calendar_enrolments.md), read [calendar_connections](/code/tables/calendar_connections.md) |  |
-| 235 |  | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 256 |  | read [calendar_connections](/code/tables/calendar_connections.md) |  |
-| 341 |  | **update** [calendar_connections](/code/tables/calendar_connections.md) (`name`, `provider`, `mailbox_id`, `credentials`, `is_active`, `last_error`, `last_error_datetime`, `token_data`, `updated_datetime`) |  |
-| 349 |  | **insert** [calendar_connections](/code/tables/calendar_connections.md) (`name`, `provider`, `mailbox_id`, `credentials`, `created_by`) |  |
-| 368 |  | **update** [calendar_connections](/code/tables/calendar_connections.md) (`last_error`, `last_error_datetime`) |  |
-| 373 |  | **update** [calendar_connections](/code/tables/calendar_connections.md) (`last_error`, `last_error_datetime`) |  |
-| 485 |  | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `calendar_address`, `mode`) |  |
-| 508 |  | read [calendar_connections](/code/tables/calendar_connections.md) |  |
-| 522 |  | **delete** [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 55 | `csUsage` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
+| 57 | `csUsage` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 78 | `csTakeBack` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
+| 88 | `csTakeBack` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 97 | `csTakeBack` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`mode`, `calendar_address`, `credentials`, `connection_id`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`, `updated_datetime`) |  |
+| 121 | `csAdoptOrphans` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`) |  |
+| 122 | `csAdoptOrphans` | **update** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`connection_id`) |  |
+| 143 |  | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 150 |  | read [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 185 |  | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 186 |  | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 200 |  | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 212 |  | read [analysts](/code/tables/analysts.md), read [calendar_enrolments](/code/tables/calendar_enrolments.md), read [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 239 |  | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 260 |  | read [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 345 |  | **update** [calendar_connections](/code/tables/calendar_connections.md) (`name`, `provider`, `mailbox_id`, `credentials`, `is_active`, `last_error`, `last_error_datetime`, `token_data`, `updated_datetime`) |  |
+| 353 |  | **insert** [calendar_connections](/code/tables/calendar_connections.md) (`name`, `provider`, `mailbox_id`, `credentials`, `created_by`) |  |
+| 372 |  | **update** [calendar_connections](/code/tables/calendar_connections.md) (`last_error`, `last_error_datetime`) |  |
+| 377 |  | **update** [calendar_connections](/code/tables/calendar_connections.md) (`last_error`, `last_error_datetime`) |  |
+| 489 |  | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `calendar_address`, `mode`) |  |
+| 512 |  | read [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 526 |  | **delete** [calendar_connections](/code/tables/calendar_connections.md) |  |
 
 ## How it hangs together
 

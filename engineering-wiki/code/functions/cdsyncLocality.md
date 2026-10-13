@@ -9,11 +9,11 @@ postcode, country. The fourth is the town.
 function cdsyncLocality(array $lines): ?string
 ```
 
-Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 230.
+Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 239.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
+| `$lines` | `array` |  | the card's unfolded lines from `cardDavUnfold()` |
 
 **Returns:** `?string`
 

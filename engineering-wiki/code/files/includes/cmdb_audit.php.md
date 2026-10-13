@@ -1,6 +1,6 @@
 # includes/cmdb_audit.php
 
-> PHP - 238 lines
+> PHP - 249 lines
 
 CMDB data-quality audit — "is this CMDB still telling you the truth?"
 
@@ -32,25 +32,25 @@ standalone CI.
 | Function | Line | What it does |
 |---|--:|---|
 | [cmdbRunAudit()](/code/functions/cmdbRunAudit.md) | 41 | Run every check. |
-| [cmdbAuditResult()](/code/functions/cmdbAuditResult.md) | 63 | Shape every check returns, so the UI can render them uniformly. |
-| [cmdbAuditRequiredMissing()](/code/functions/cmdbAuditRequiredMissing.md) | 82 | A property the class marks required, with no value on the object. |
-| [cmdbAuditBrokenReferences()](/code/functions/cmdbAuditBrokenReferences.md) | 111 | An object reference pointing at an object that no longer exists. |
-| [cmdbAuditDependencyBlank()](/code/functions/cmdbAuditDependencyBlank.md) | 139 | A property ticked "this is a dependency" that is blank on an object. |
-| [cmdbAuditDisconnected()](/code/functions/cmdbAuditDisconnected.md) | 170 | An object attached to nothing: no parent, no children, no relationships. |
-| [cmdbAuditStale()](/code/functions/cmdbAuditStale.md) | 197 | Nothing has touched this object in CMDB_AUDIT_STALE_MONTHS. |
-| [cmdbAuditNoImpactEdges()](/code/functions/cmdbAuditNoImpactEdges.md) | 225 | Install-level: nothing at all is configured to carry impact, so every blast radius on every object is empty regardless of how good the data is. |
-| [cmdbAuditRows()](/code/functions/cmdbAuditRows.md) | 232 | Normalise ids to ints for the JSON. |
+| [cmdbAuditResult()](/code/functions/cmdbAuditResult.md) | 70 | Shape every check returns, so the UI can render them uniformly. |
+| [cmdbAuditRequiredMissing()](/code/functions/cmdbAuditRequiredMissing.md) | 89 | A property the class marks required, with no value on the object. |
+| [cmdbAuditBrokenReferences()](/code/functions/cmdbAuditBrokenReferences.md) | 118 | An object reference pointing at an object that no longer exists. |
+| [cmdbAuditDependencyBlank()](/code/functions/cmdbAuditDependencyBlank.md) | 146 | A property ticked "this is a dependency" that is blank on an object. |
+| [cmdbAuditDisconnected()](/code/functions/cmdbAuditDisconnected.md) | 177 | An object attached to nothing: no parent, no children, no relationships. |
+| [cmdbAuditStale()](/code/functions/cmdbAuditStale.md) | 204 | Nothing has touched this object in CMDB_AUDIT_STALE_MONTHS. |
+| [cmdbAuditNoImpactEdges()](/code/functions/cmdbAuditNoImpactEdges.md) | 232 | Install-level: nothing at all is configured to carry impact, so every blast radius on every object is empty regardless of how good the data is. |
+| [cmdbAuditRows()](/code/functions/cmdbAuditRows.md) | 243 | Normalise ids to ints for the JSON. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 52 | `cmdbRunAudit` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 84 | `cmdbAuditRequiredMissing` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
-| 113 | `cmdbAuditBrokenReferences` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 141 | `cmdbAuditDependencyBlank` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
-| 172 | `cmdbAuditDisconnected` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
-| 199 | `cmdbAuditStale` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 91 | `cmdbAuditRequiredMissing` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
+| 120 | `cmdbAuditBrokenReferences` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 148 | `cmdbAuditDependencyBlank` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
+| 179 | `cmdbAuditDisconnected` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 206 | `cmdbAuditStale` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
 
 ## How it hangs together
 

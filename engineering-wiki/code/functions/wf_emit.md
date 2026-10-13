@@ -6,14 +6,14 @@ Fire a settings/CRUD workflow event ({entity}.{created|updated|deleted}) from a 
 function wf_emit(string $entity, string $action, int $id, ?string $name = null): void
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 386.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 401.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$entity` | `string` |  |  |
-| `$action` | `string` |  |  |
-| `$id` | `int` |  |  |
-| `$name` | `?string` | `null` |  |
+| `$entity` | `string` |  | the entity key, e.g. 'asset' or 'asset_location' - the first half of the event name |
+| `$action` | `string` |  | 'created', 'updated' or 'deleted' - the second half of the event name |
+| `$id` | `int` |  | the id of the record that changed |
+| `$name` | `?string` | `null` | its display name for the payload, if known |
 
 **Returns:** `void`
 

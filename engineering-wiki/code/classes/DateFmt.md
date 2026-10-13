@@ -1,6 +1,6 @@
 # DateFmt
 
-> Class in [includes/timezone.php](/code/files/includes/timezone.php.md), line 152
+> Class in [includes/timezone.php](/code/files/includes/timezone.php.md), line 156
 
 Per-user date & time FORMAT (GH #105).
 
@@ -42,7 +42,7 @@ Both renderers consume the SAME token template below, so they cannot drift.
 
 ### init
 
-*public static* - line 201
+*public static* - line 207
 
 Resolve both formats for this request. Safe without a DB - falls back to the defaults. Normally reached via Tz::init(), which passes its own connection; call it directly only in a context that has no Tz.
 
@@ -52,20 +52,20 @@ function init(?PDO $existing = null)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$existing` | `?PDO` | `null` |  |
+| `$existing` | `?PDO` | `null` | a connection to reuse; null opens one (or keeps the defaults when none can be opened) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 215 | `DateFmt::init` | read [system_settings](/code/tables/system_settings.md) |  |
-| 225 | `DateFmt::init` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 221 | `DateFmt::init` | read [system_settings](/code/tables/system_settings.md) |  |
+| 231 | `DateFmt::init` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 **Called from:** [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), [includes/timezone.php](/code/files/includes/timezone.php.md)
 
 ### apply
 
-*private static* - line 241
+*private static* - line 252
 
 Accept a candidate value for one of the two keys, ignoring blanks and unknown values.
 
@@ -75,12 +75,12 @@ function apply($key, $value)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` |  |  |  |
-| `$value` |  |  |  |
+| `$key` |  |  | 'date_format' or 'time_format'; any other key is ignored |
+| `$value` |  |  | a key of DATE_TEMPLATES or TIME_TEMPLATES; null, '' or unknown values are ignored |
 
 ### dateKey
 
-*public static* - line 258
+*public static* - line 269
 
 The effective date-format key.
 
@@ -100,7 +100,7 @@ function dateKey()
 
 ### timeKey
 
-*public static* - line 264
+*public static* - line 275
 
 The effective time-format key. Lazily resolves - see `dateKey()`.
 
@@ -112,7 +112,7 @@ function timeKey()
 
 ### months
 
-*public static* - line 283
+*public static* - line 297
 
 Ordered month names. `$short` picks the abbreviated set.
 
@@ -132,12 +132,12 @@ function months($short = false, $inDate = false)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$short` |  | `false` |  |
-| `$inDate` |  | `false` |  |
+| `$short` |  | `false` | true for the abbreviated names |
+| `$inDate` |  | `false` | true for the form used beside a day number (full names only; ignored when `$short`) |
 
 ### weekdays
 
-*public static* - line 296
+*public static* - line 314
 
 Ordered weekday names, MONDAY FIRST (index 0 = Monday).
 
@@ -147,13 +147,13 @@ function weekdays($short = false)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$short` |  | `false` |  |
+| `$short` |  | `false` | true for the abbreviated names |
 
 **Called from:** [includes/timezone.php](/code/files/includes/timezone.php.md), [morning-checks/index.php](/code/files/morning-checks/index.php.md)
 
 ### names
 
-*private static* - line 311
+*private static* - line 332
 
 The translated names in one calendar group (common.calendar.<group>, or <group>_short), in the order of `$keys` - a missing string falls back to the capitalised English key rather than a dotted key path.
 
@@ -163,14 +163,14 @@ function names($group, $short, array $keys, $optional = false)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$group` |  |  |  |
-| `$short` |  |  |  |
-| `$keys` | `array` |  |  |
+| `$group` |  |  | the calendar group: 'months', 'weekdays' or 'months_in_date' |
+| `$short` |  |  | true for the abbreviated set (<group>_short) |
+| `$keys` | `array` |  | the English keys in display order, e.g. 'january'..'december' |
 | `$optional` |  | `false` | When true, return NULL if the locale does not define this group at all, rather than falling back. Used by months_in_date, which most languages do not need. |
 
 ### render
 
-*public static* - line 350
+*public static* - line 376
 
 Render a DateTime through a token template. The single PHP-side renderer.
 
@@ -180,14 +180,14 @@ function render(DateTime $dt, $template)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dt` | `DateTime` |  |  |
-| `$template` |  |  |  |
+| `$dt` | `DateTime` |  | the moment to render, already in the display zone |
+| `$template` |  |  | a token template such as 'DD MON YYYY' (tokens: MONTH YYYY MON DD MM YY mi HH D h A) |
 
 **Called from:** [api/knowledge/get_review_list.php](/code/files/api/knowledge/get_review_list.php.md), [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), [contracts/rfp-builder/preview.php](/code/files/contracts/rfp-builder/preview.php.md), [includes/people.php](/code/files/includes/people.php.md), [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md), [includes/timezone.php](/code/files/includes/timezone.php.md), [morning-checks/index.php](/code/files/morning-checks/index.php.md), [system/date-formats/index.php](/code/files/system/date-formats/index.php.md), [system/preferences/index.php](/code/files/system/preferences/index.php.md)
 
 ### jsPayload
 
-*public static* - line 382
+*public static* - line 408
 
 Everything the browser needs to render dates itself, published by Tz::scriptTag(). Kept here so the PHP and JS renderers read one source.
 

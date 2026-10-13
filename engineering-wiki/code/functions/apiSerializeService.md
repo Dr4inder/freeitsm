@@ -6,12 +6,12 @@ Shapes a service row for the API, with its current status (the default impact le
 function apiSerializeService(PDO $conn, array $r): array
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 76.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | a status_services row, with current_status from `apiServiceStatusSubquery()` (null = default level) |
 
 **Returns:** `array`
 

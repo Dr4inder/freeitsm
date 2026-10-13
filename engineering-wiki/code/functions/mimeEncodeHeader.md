@@ -6,11 +6,11 @@ RFC 2047 encode a header value if it contains non-ASCII.
 function mimeEncodeHeader(string $value): string
 ```
 
-Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 25.
+Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 29.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` | `string` |  |  |
+| `$value` | `string` |  | the header text; CR and LF are replaced with spaces |
 
 **Returns:** `string`
 

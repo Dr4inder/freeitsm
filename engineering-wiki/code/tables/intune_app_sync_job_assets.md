@@ -16,13 +16,13 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/intune.php](/code/files/includes/intune.php.md):673 | `intuneCreateAppSyncJob` | insert | `job_id`, `asset_id`, `status` |  |
-| [includes/intune.php](/code/files/includes/intune.php.md):780 | `intuneRunAppSyncJob` | update | `status`, `error_message`, `synced_datetime`, `app_count` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):700 | `intuneCreateAppSyncJob` | insert | `job_id`, `asset_id`, `status` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):814 | `intuneRunAppSyncJob` | update | `status`, `error_message`, `synced_datetime`, `app_count` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/intune/app_sync_job_status.php](/code/files/api/intune/app_sync_job_status.php.md) | L51 |  |
-| [includes/intune.php](/code/files/includes/intune.php.md) | intuneGetAppSyncCandidates L604, intuneCreateAppSyncJob L642, intuneRunAppSyncJob L800 |  |
+| [includes/intune.php](/code/files/includes/intune.php.md) | intuneGetAppSyncCandidates L631, intuneCreateAppSyncJob L669, intuneRunAppSyncJob L834 |  |
 

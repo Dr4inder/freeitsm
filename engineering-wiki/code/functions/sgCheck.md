@@ -6,13 +6,13 @@ One tick-off step.
 function sgCheck(string $id, string $title, string $body = ''): string
 ```
 
-Defined in [system/help/sso-groups.php](/code/files/system/help/sso-groups.php.md), line 24.
+Defined in [system/help/sso-groups.php](/code/files/system/help/sso-groups.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$id` | `string` |  |  |
-| `$title` | `string` |  |  |
-| `$body` | `string` | `''` |  |
+| `$id` | `string` |  | the step's key, used to remember its tick in localStorage |
+| `$title` | `string` |  | the step heading as HTML (trusted, not escaped) |
+| `$body` | `string` | `''` | the step's detail as HTML (trusted, not escaped); '' for none |
 
 **Returns:** `string`
 

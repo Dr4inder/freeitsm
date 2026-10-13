@@ -124,6 +124,8 @@ function sessionCookieOptions(): array
  * it will not fatal if output has already started — it logs instead, because
  * refusing to log somebody in over a cookie-attribute problem would be a worse
  * outcome than the one being prevented.
+ *
+ * @param bool $newIdentity  true at sign-in (the CSRF token is rotated too); false after a password change by the same person
  */
 function sessionPromoteToAuthenticated(bool $newIdentity = true): void
 {

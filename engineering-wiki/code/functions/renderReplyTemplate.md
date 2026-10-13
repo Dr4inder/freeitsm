@@ -10,12 +10,12 @@ whereas silently blanking the codes looks like a finished sentence and gets sent
 function renderReplyTemplate(PDO $conn, string $body, int $ticketId): string
 ```
 
-Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.php.md), line 70.
+Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.php.md), line 72.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$body` | `string` |  |  |
+| `$body` | `string` |  | the template text with [merge_code] placeholders (trusted HTML; the values put in are escaped) |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`

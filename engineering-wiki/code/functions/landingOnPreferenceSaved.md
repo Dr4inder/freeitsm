@@ -10,12 +10,12 @@ Saving the two together keeps them from drifting apart.
 function landingOnPreferenceSaved(string $key, $value): void
 ```
 
-Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 169.
+Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 178.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
-| `$value` |  |  |  |
+| `$key` | `string` |  | the preference key just saved; anything but the landing key is ignored |
+| `$value` |  |  | the value saved; an unrecognised one clears the cookie |
 
 **Returns:** `void`
 

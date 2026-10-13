@@ -6,7 +6,7 @@ GET /calendar/events/{id} - one calendar event.
 function apiCalendarEventsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 186.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 195.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,11 +6,11 @@ HTML-escapes any value for output.
 function pplE($s): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 16.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 20.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | the value to print; cast to string |
 
 **Returns:** `string`
 

@@ -6,11 +6,11 @@ Run a service call and turn any failure into the UI's {success:false} shape.
 function domainApiRun(callable $fn): void
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 87.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fn` | `callable` |  |  |
+| `$fn` | `callable` |  | the endpoint's work - takes no arguments and normally ends with `domainApiOk()` |
 
 **Returns:** `void`
 

@@ -6,12 +6,12 @@ Per-project task counts in one query: total, done, overdue (top-level tasks only
 function projectTaskStats(PDO $conn, array $projectIds): array
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 29.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 31.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$projectIds` | `array` |  |  |
+| `$projectIds` | `array` |  | the project ids to count for |
 
 **Returns:** `array`
 
@@ -19,10 +19,10 @@ Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 35 | `projectTaskStats` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 52 | `projectTaskStats` | read [project_tickets](/code/tables/project_tickets.md), read [tickets](/code/tables/tickets.md) |  |
-| 66 | `projectTaskStats` | read [projects](/code/tables/projects.md) |  |
-| 82 | `projectTaskStats` | read [project_raid](/code/tables/project_raid.md) |  |
+| 37 | `projectTaskStats` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 54 | `projectTaskStats` | read [project_tickets](/code/tables/project_tickets.md), read [tickets](/code/tables/tickets.md) |  |
+| 68 | `projectTaskStats` | read [projects](/code/tables/projects.md) |  |
+| 84 | `projectTaskStats` | read [project_raid](/code/tables/project_raid.md) |  |
 
 ## Calls
 

@@ -6,11 +6,11 @@ Returns one record type's registry entry (label, URL, title column, access check
 function documentEntityDef(string $type): ?array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 346.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 350.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$type` | `string` |  |  |
+| `$type` | `string` |  | an entity type key from `documentEntityRegistry()`, e.g. 'contract' - may be untrusted |
 
 **Returns:** `?array`
 

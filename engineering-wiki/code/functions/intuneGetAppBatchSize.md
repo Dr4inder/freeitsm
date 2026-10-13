@@ -6,7 +6,7 @@ Read the configured app sync batch size from system_settings, with a sane defaul
 function intuneGetAppBatchSize(PDO $conn): int
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 586.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 611.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 586.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 587 | `intuneGetAppBatchSize` | read [system_settings](/code/tables/system_settings.md) |  |
+| 612 | `intuneGetAppBatchSize` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

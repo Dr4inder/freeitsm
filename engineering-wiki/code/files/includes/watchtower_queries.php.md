@@ -1,6 +1,6 @@
 # includes/watchtower_queries.php
 
-> PHP - 994 lines
+> PHP - 997 lines
 
 Shared Watchtower Dashboard Queries Returns unified attention summary data from all modules
 
@@ -8,55 +8,55 @@ Shared Watchtower Dashboard Queries Returns unified attention summary data from 
 
 | Function | Line | What it does |
 |---|--:|---|
-| [getWatchtowerData()](/code/functions/getWatchtowerData.md) | 17 | `$analystId` is optional and only used to scope the Knowledge card to the company the analyst has switched to. Omitted (or 0) = unscoped, which is the behaviour every other card on this dashboard still has. |
+| [getWatchtowerData()](/code/functions/getWatchtowerData.md) | 20 | `$analystId` is optional and only used to scope the Knowledge card to the company the analyst has switched to. Omitted (or 0) = unscoped, which is the behaviour every other card on this dashboard still has. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 166 | `getWatchtowerData` | read [ticket_statuses](/code/tables/ticket_statuses.md), read [tickets](/code/tables/tickets.md) |  |
-| 193 | `getWatchtowerData` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 198 | `getWatchtowerData` | read [tickets](/code/tables/tickets.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 211 | `getWatchtowerData` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 213 | `getWatchtowerData` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 226 | `getWatchtowerData` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 239 | `getWatchtowerData` | read [system_settings](/code/tables/system_settings.md) |  |
-| 246 | `getWatchtowerData` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_audit](/code/tables/ticket_audit.md) |  |
-| 288 | `getWatchtowerData` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
-| 312 | `getWatchtowerData` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
-| 325 | `getWatchtowerData` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
-| 346 | `getWatchtowerData` | read [change_statuses](/code/tables/change_statuses.md), read [changes](/code/tables/changes.md) |  |
-| 373 | `getWatchtowerData` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
-| 396 | `getWatchtowerData` | read [calendar_events](/code/tables/calendar_events.md) |  |
-| 406 | `getWatchtowerData` | read [calendar_events](/code/tables/calendar_events.md) |  |
-| 432 | `getWatchtowerData` | read [status_services](/code/tables/status_services.md), read [status_incident_services](/code/tables/status_incident_services.md), read [status_incidents](/code/tables/status_incidents.md), read [service_impact_levels](/code/tables/service_impact_levels.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 465 | `getWatchtowerData` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 481 | `getWatchtowerData` | read [contracts](/code/tables/contracts.md) |  |
-| 528 | `getWatchtowerData` | read [system_settings](/code/tables/system_settings.md) |  |
-| 534 | `getWatchtowerData` | read [software_licences](/code/tables/software_licences.md) |  |
-| 538 | `getWatchtowerData` | read [software_licences](/code/tables/software_licences.md) |  |
-| 544 | `getWatchtowerData` | read [software_licences](/code/tables/software_licences.md) |  |
-| 556 | `getWatchtowerData` | read [software_licences](/code/tables/software_licences.md) |  |
-| 607 | `getWatchtowerData` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 641 | `getWatchtowerData` | read [domain_status_services](/code/tables/domain_status_services.md), read [domains](/code/tables/domains.md), read [status_services](/code/tables/status_services.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 685 | `getWatchtowerData` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 696 | `getWatchtowerData` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 710 | `getWatchtowerData` | read [assets](/code/tables/assets.md) |  |
+| 169 | `getWatchtowerData` | read [ticket_statuses](/code/tables/ticket_statuses.md), read [tickets](/code/tables/tickets.md) |  |
+| 196 | `getWatchtowerData` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 201 | `getWatchtowerData` | read [tickets](/code/tables/tickets.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 214 | `getWatchtowerData` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 216 | `getWatchtowerData` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 229 | `getWatchtowerData` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 242 | `getWatchtowerData` | read [system_settings](/code/tables/system_settings.md) |  |
+| 249 | `getWatchtowerData` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_audit](/code/tables/ticket_audit.md) |  |
+| 291 | `getWatchtowerData` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 315 | `getWatchtowerData` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 328 | `getWatchtowerData` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 349 | `getWatchtowerData` | read [change_statuses](/code/tables/change_statuses.md), read [changes](/code/tables/changes.md) |  |
+| 376 | `getWatchtowerData` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 399 | `getWatchtowerData` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 409 | `getWatchtowerData` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 435 | `getWatchtowerData` | read [status_services](/code/tables/status_services.md), read [status_incident_services](/code/tables/status_incident_services.md), read [status_incidents](/code/tables/status_incidents.md), read [service_impact_levels](/code/tables/service_impact_levels.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 468 | `getWatchtowerData` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 484 | `getWatchtowerData` | read [contracts](/code/tables/contracts.md) |  |
+| 531 | `getWatchtowerData` | read [system_settings](/code/tables/system_settings.md) |  |
+| 537 | `getWatchtowerData` | read [software_licences](/code/tables/software_licences.md) |  |
+| 541 | `getWatchtowerData` | read [software_licences](/code/tables/software_licences.md) |  |
+| 547 | `getWatchtowerData` | read [software_licences](/code/tables/software_licences.md) |  |
+| 559 | `getWatchtowerData` | read [software_licences](/code/tables/software_licences.md) |  |
+| 610 | `getWatchtowerData` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 644 | `getWatchtowerData` | read [domain_status_services](/code/tables/domain_status_services.md), read [domains](/code/tables/domains.md), read [status_services](/code/tables/status_services.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 688 | `getWatchtowerData` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 699 | `getWatchtowerData` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 | 713 | `getWatchtowerData` | read [assets](/code/tables/assets.md) |  |
-| 724 | `getWatchtowerData` | read [system_settings](/code/tables/system_settings.md) |  |
-| 732 | `getWatchtowerData` | read [assets](/code/tables/assets.md) |  |
-| 750 | `getWatchtowerData` | read [system_settings](/code/tables/system_settings.md) |  |
-| 761 | `getWatchtowerData` | read [assets](/code/tables/assets.md) |  |
-| 783 | `getWatchtowerData` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 793 | `getWatchtowerData` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 810 | `getWatchtowerData` | read [task_statuses](/code/tables/task_statuses.md), read [tasks](/code/tables/tasks.md) |  |
-| 860 | `getWatchtowerData` | read [projects](/code/tables/projects.md) |  |
-| 879 | `getWatchtowerData` | read [project_stages](/code/tables/project_stages.md) |  |
-| 886 | `getWatchtowerData` | read [project_milestones](/code/tables/project_milestones.md) |  |
-| 918 | `getWatchtowerData` | read [workflow_executions](/code/tables/workflow_executions.md) |  |
-| 923 | `getWatchtowerData` | read [workflow_executions](/code/tables/workflow_executions.md) |  |
-| 931 | `getWatchtowerData` | read [workflow_executions](/code/tables/workflow_executions.md), read [workflows](/code/tables/workflows.md) |  |
-| 949 | `getWatchtowerData` | read [webhook_deliveries](/code/tables/webhook_deliveries.md) |  |
+| 716 | `getWatchtowerData` | read [assets](/code/tables/assets.md) |  |
+| 727 | `getWatchtowerData` | read [system_settings](/code/tables/system_settings.md) |  |
+| 735 | `getWatchtowerData` | read [assets](/code/tables/assets.md) |  |
+| 753 | `getWatchtowerData` | read [system_settings](/code/tables/system_settings.md) |  |
+| 764 | `getWatchtowerData` | read [assets](/code/tables/assets.md) |  |
+| 786 | `getWatchtowerData` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 796 | `getWatchtowerData` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 813 | `getWatchtowerData` | read [task_statuses](/code/tables/task_statuses.md), read [tasks](/code/tables/tasks.md) |  |
+| 863 | `getWatchtowerData` | read [projects](/code/tables/projects.md) |  |
+| 882 | `getWatchtowerData` | read [project_stages](/code/tables/project_stages.md) |  |
+| 889 | `getWatchtowerData` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 921 | `getWatchtowerData` | read [workflow_executions](/code/tables/workflow_executions.md) |  |
+| 926 | `getWatchtowerData` | read [workflow_executions](/code/tables/workflow_executions.md) |  |
+| 934 | `getWatchtowerData` | read [workflow_executions](/code/tables/workflow_executions.md), read [workflows](/code/tables/workflows.md) |  |
+| 952 | `getWatchtowerData` | read [webhook_deliveries](/code/tables/webhook_deliveries.md) |  |
 
 ## How it hangs together
 

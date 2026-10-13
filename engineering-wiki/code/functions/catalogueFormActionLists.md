@@ -11,12 +11,12 @@ it needs to be for one lookup.
 function catalogueFormActionLists(PDO $conn, int $formId): array
 ```
 
-Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 442.
+Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 464.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$formId` | `int` |  |  |
+| `$formId` | `int` |  | forms.id whose action lists to load |
 
 **Returns:** array{submitted: ?array, approved: ?array, rejected: ?array}
 

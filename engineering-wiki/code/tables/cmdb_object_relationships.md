@@ -15,10 +15,10 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):290 | `CmdbService::deleteObject` | delete |  |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):343 | `CmdbService::createRelationship` | insert | `from_object_id`, `to_object_id`, `relationship_type_id`, `created_datetime` |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):364 | `CmdbService::deleteRelationship` | delete |  |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):379 | `CmdbService::deleteRelationship` | delete |  |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):311 | `CmdbService::deleteObject` | delete |  |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):369 | `CmdbService::createRelationship` | insert | `from_object_id`, `to_object_id`, `relationship_type_id`, `created_datetime` |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):393 | `CmdbService::deleteRelationship` | delete |  |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):408 | `CmdbService::deleteRelationship` | delete |  |  |
 
 ## Read by
 
@@ -29,11 +29,11 @@
 | [api/cmdb/get_object.php](/code/files/api/cmdb/get_object.php.md) | L187, L204 |  |
 | [api/network-mapper/get_related_objects.php](/code/files/api/network-mapper/get_related_objects.php.md) | L64, L94 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3276 |  |
-| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbObjectsGet L375, apiCmdbObjectsGet L385 |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmConnectorsForDiagram L219, apiNmResolveRelationshipId L366, apiNmResolveRelationshipId L379, apiNmSuggestionsList L662 |  |
-| [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md) | cmdbAuditDisconnected L172 |  |
-| [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md) | cmdbDirectImpact L169, cmdbImpactEdgesFrom L286, cmdbImpactEdgesFrom L302 |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::deleteObject L283, CmdbService::deleteRelationship L372 |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::resolveRelationshipId L446, NetworkMapperService::resolveRelationshipId L459 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolImpactOf L595 |  |
+| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbObjectsGet L386, apiCmdbObjectsGet L396 |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmConnectorsForDiagram L250, apiNmResolveRelationshipId L422, apiNmResolveRelationshipId L435, apiNmSuggestionsList L733 |  |
+| [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md) | cmdbAuditDisconnected L179 |  |
+| [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md) | cmdbDirectImpact L173, cmdbImpactEdgesFrom L297, cmdbImpactEdgesFrom L313 |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::deleteObject L304, CmdbService::deleteRelationship L401 |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::resolveRelationshipId L506, NetworkMapperService::resolveRelationshipId L519 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolImpactOf L620 |  |
 

@@ -6,11 +6,11 @@ Sends {success: true} merged with `$data` as JSON and ends the request.
 function domainApiOk(array $data = []): void
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 44.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 48.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$data` | `array` | `[]` |  |
+| `$data` | `array` | `[]` | extra keys to send alongside success |
 
 **Returns:** `void`
 

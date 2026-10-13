@@ -6,11 +6,11 @@ First four characters and a length — enough to tell a wrong key from no key.
 function keyHint(string $k): string
 ```
 
-Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 73.
+Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$k` | `string` |  |  |
+| `$k` | `string` |  | an API key, in plain text; empty gives (none saved) |
 
 **Returns:** `string`
 

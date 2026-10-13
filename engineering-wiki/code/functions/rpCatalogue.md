@@ -6,7 +6,7 @@ The toolbox and handler schemas as the designer needs them, filtered to what thi
 function rpCatalogue(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 393.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 435.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

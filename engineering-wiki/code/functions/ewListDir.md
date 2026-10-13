@@ -6,11 +6,11 @@ One folder of the page tree, for the sidebar (it opens folder by folder, because
 function ewListDir(string $dir): array
 ```
 
-Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 130.
+Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 154.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dir` | `string` |  |  |
+| `$dir` | `string` |  | the folder's page path, e.g. "code/tables"; '' lists the top-level sections |
 
 **Returns:** array{dirs:array<int,array{path:string,name:string}>, pages:array<int,array{page:string,title:string}>}
 

@@ -10,11 +10,11 @@ which on a printed report nobody can then look up either.
 function contractReportAssetName(array $a): string
 ```
 
-Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 131.
+Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` | `array` |  |  |
+| `$a` | `array` |  | an asset row as `contractAssetsFor()` returns it (hostname, asset_tag, service_tag, manufacturer, model, asset_id) |
 
 **Returns:** `string`
 

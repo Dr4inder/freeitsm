@@ -15,9 +15,9 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md):234 |  | insert | `section_id`, `version`, `section_content`, `is_manually_edited` |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md):237 |  | insert | `section_id`, `version`, `section_content`, `is_manually_edited` |  |
 | [api/rfp-builder/restore_section_version.php](/code/files/api/rfp-builder/restore_section_version.php.md):63 |  | insert | `section_id`, `version`, `section_content`, `is_manually_edited` |  |
-| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md):134 |  | insert | `section_id`, `version`, `section_content`, `is_manually_edited` |  |
+| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md):137 |  | insert | `section_id`, `version`, `section_content`, `is_manually_edited` |  |
 | [api/rfp-builder/update_section.php](/code/files/api/rfp-builder/update_section.php.md):53 |  | insert | `section_id`, `version`, `section_content`, `is_manually_edited` |  |
 
 ## Read by

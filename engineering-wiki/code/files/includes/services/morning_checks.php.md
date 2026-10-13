@@ -1,6 +1,6 @@
 # includes/services/morning_checks.php
 
-> PHP - 553 lines
+> PHP - 617 lines
 
 MorningChecksService — the single home for the morning-checks module's write rules (checks, daily results, and the UI-only statuses / reorder / normalise).
 
@@ -26,7 +26,7 @@ check_id, status_id/status, date). UI adapters map their camelCase to these.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 142 | `MorningChecksService::listGroups` | read [teams](/code/tables/teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 157 | `MorningChecksService::listGroups` | read [teams](/code/tables/teams.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

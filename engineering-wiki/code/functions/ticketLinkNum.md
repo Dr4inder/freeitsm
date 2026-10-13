@@ -6,12 +6,12 @@ A ticket's number for audit text, falling back to "#id" when it has none (delete
 function ticketLinkNum(PDO $conn, int $id): string
 ```
 
-Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 29.
+Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 37.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the ticket whose number to show |
 
 **Returns:** `string`
 
@@ -19,7 +19,7 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 31 | `ticketLinkNum` | read [tickets](/code/tables/tickets.md) |  |
+| 39 | `ticketLinkNum` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Called from
 

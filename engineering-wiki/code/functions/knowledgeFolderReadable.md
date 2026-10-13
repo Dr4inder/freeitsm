@@ -22,15 +22,15 @@ function knowledgeFolderReadable(
 ): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 639.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 688.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$folderId` | `int` |  |  |
-| `$folders` | `array` |  |  |
-| `$acl` | `array` |  |  |
-| `$principals` | `array` |  |  |
-| `$mode` | `string` |  |  |
+| `$folderId` | `int` |  | the knowledge_folders id to check |
+| `$folders` | `array` |  | the folder tree from `knowledgeFolderIndex()`, [id => [parent, restricted, inherit]] |
+| `$acl` | `array` |  | the access rows from `knowledgeAclIndex()` |
+| `$principals` | `array` |  | the viewer's 'type:id' strings from `knowledgeViewerPrincipals()` |
+| `$mode` | `string` |  | 'containers' (every ancestor must permit) or 'filing' (the nearest rule-bearing node decides) |
 
 **Returns:** `bool`
 

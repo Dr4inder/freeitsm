@@ -6,11 +6,11 @@
 function ewNiceName(string $page): string
 ```
 
-Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 105.
+Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$page` | `string` |  |  |
+| `$page` | `string` |  | a page path; an "index" page is named after its folder |
 
 **Returns:** `string`
 

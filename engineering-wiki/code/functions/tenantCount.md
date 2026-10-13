@@ -11,7 +11,7 @@ the same reason.
 function tenantCount(PDO $conn): int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 102.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 104.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 102
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 109 | `tenantCount` | read [tenants](/code/tables/tenants.md) |  |
+| 111 | `tenantCount` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

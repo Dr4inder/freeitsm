@@ -6,7 +6,7 @@ The tags every page needs: the token and the script that sends it.
 function csrfHeadTags(): string
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 256.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 267.
 
 **Returns:** `string`
 

@@ -6,7 +6,7 @@ Should the "reported as" category field show on a ticket for this company?
 function ticketCategoryOn(PDO $conn, ?int $tenantId): bool
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 236.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 247.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -14,6 +14,6 @@ Ticket numbering (GH #71) ⚠️ ticket_number_counters has NO auto-increment id
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md):186 | `TicketNumbering::windCounterTo` | insert | `counter_key`, `next_value` |  |
-| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md):410 | `TicketNumbering::claimNext` | insert | `counter_key`, `next_value` |  |
+| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md):193 | `TicketNumbering::windCounterTo` | insert | `counter_key`, `next_value` |  |
+| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md):433 | `TicketNumbering::claimNext` | insert | `counter_key`, `next_value` |  |
 

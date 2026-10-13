@@ -6,11 +6,11 @@
 function fmt_naive_date_for_email(string $ymd): string
 ```
 
-Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 341.
+Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 359.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ymd` | `string` |  |  |
+| `$ymd` | `string` |  | a 'YYYY-MM-DD' date; anything else is returned unchanged |
 
 **Returns:** `string`
 

@@ -32,7 +32,7 @@ final class EwScanner
     private const SKIP_DIRS = ['.git', 'vendor', 'node_modules', 'engineering-wiki', 'lang', 'tests', 'local', 'docs',
                                'database', 'uploads', 'recordings', 'logs', 'data', 'cache', 'tmp', 'releases', 'samples', 'system-wiki',
                                'tinymce'];   // third-party editor - not ours to document
-    private const VERSION = 9;   // bump when the parse output changes shape - forces a full re-read
+    private const VERSION = 10;   // bump when the parse output changes shape - forces a full re-read
 
     private string $app;
     private string $out;
@@ -54,6 +54,9 @@ final class EwScanner
 
     /**
      * Do up to $seconds of work. Call again until 'done' is true.
+     *
+     * @param float $seconds  time budget in seconds; parsing stops at it, a write phase once started runs to the end
+     * @param bool $fresh  true drops saved progress (state.json) and lists again; unchanged files are still skipped
      * @return array{done:bool, phase:string, done_files:int, total_files:int, changed:int, message:string}
      */
     public function step(float $seconds = 8.0, bool $fresh = false): array
@@ -81,7 +84,11 @@ final class EwScanner
         }
     }
 
-    /** Run to the end (command line). */
+    /**
+     * Run to the end (command line).
+     *
+     * @param ?callable $progress  called after every 20-second step with that step's report() array; null for none
+     */
     public function runAll(?callable $progress = null): array
     {
         do {
@@ -93,6 +100,9 @@ final class EwScanner
 
     /**
      * Builds the progress answer step() returns - phase, files done of total, files changed, pages written and a message.
+     *
+     * @param string $phase  'list', 'parse', 'write', 'done', or 'busy' when another scan holds the lock
+     * @param string $message  a line to show the person running the scan; '' when there is nothing to say
      */
     private function report(string $phase, string $message): array
     {
@@ -149,6 +159,10 @@ final class EwScanner
 
     /**
      * Calls $fn for every .php and .js file under a folder, skipping SKIP_DIRS, hidden folders, folders whose .htaccess denies all, minified scripts and files over 1.5 MB.
+     *
+     * @param string $abs  the folder's absolute path
+     * @param string $rel  the same folder from the app root; '' for the root, whose own .htaccess is not checked
+     * @param callable $fn  called as fn(string $rel, string $abs) for each file found
      */
     private function walk(string $abs, string $rel, callable $fn): void
     {
@@ -191,7 +205,12 @@ final class EwScanner
         if (!$this->state['queue']) $this->state['phase'] = 'write';
     }
 
-    /** Everything worth knowing about one PHP file. */
+    /**
+     * Everything worth knowing about one PHP file.
+     *
+     * @param string $src  the file's contents
+     * @param string $rel  the file's path from the app root - includes and script srcs are resolved from it
+     */
     private function parsePhp(string $src, string $rel): array
     {
         $d = ['kind' => 'php', 'doc' => null, 'functions' => [], 'classes' => [], 'includes' => [], 'calls' => [], 'sql' => [],
@@ -425,6 +444,11 @@ final class EwScanner
 
     /**
      * True when the declaration at token $i carries the given modifier (static, abstract...) among the few tokens before it.
+     *
+     * @param array $tokens  the file's token_get_all() output
+     * @param int $i  the index of the T_FUNCTION / T_CLASS token
+     * @param callable $sig  parsePhp()'s significant-token finder: fn(int $i, int $dir): int, -1 when there is none
+     * @param int $mod  the modifier's token id, e.g. T_STATIC
      */
     private function hasModifier(array $tokens, int $i, callable $sig, int $mod): bool
     {
@@ -436,7 +460,13 @@ final class EwScanner
         return false;
     }
 
-    /** Returns 'public', 'protected' or 'private' for the declaration at token $i, or '' when none is written. */
+    /**
+     * Returns 'public', 'protected' or 'private' for the declaration at token $i, or '' when none is written.
+     *
+     * @param array $tokens  the file's token_get_all() output
+     * @param int $i  the index of the T_FUNCTION token
+     * @param callable $sig  parsePhp()'s significant-token finder: fn(int $i, int $dir): int, -1 when there is none
+     */
     private function visibility(array $tokens, int $i, callable $sig): string
     {
         for ($k = $sig($i, -1), $g = 0; $k >= 0 && $g < 4; $k = $sig($k, -1), $g++) {
@@ -449,7 +479,13 @@ final class EwScanner
         return '';
     }
 
-    /** The parameters between ( and the matching ). @return array{0:array,1:int} [params, index of ")"] */
+    /**
+     * The parameters between ( and the matching ).
+     *
+     * @param array $tokens  the file's token_get_all() output
+     * @param int $open  the index of the "(" that opens the parameter list
+     * @return array{0:array,1:int} [params, index of ")"]
+     */
     private function params(array $tokens, int $open): array
     {
         $params = []; $cur = ['type' => '', 'name' => '', 'default' => '', 'ref' => false, 'variadic' => false];
@@ -483,14 +519,23 @@ final class EwScanner
         return [$this->tidyParams($params), $k];
     }
 
-    /** Trims each parsed parameter's type and default (whitespace in a default collapsed to single spaces). */
+    /**
+     * Trims each parsed parameter's type and default (whitespace in a default collapsed to single spaces).
+     *
+     * @param array $ps  the raw parameters params() collected - type, name, default, ref, variadic and an optional note
+     */
     private function tidyParams(array $ps): array
     {
         return array_map(fn($p) => ['type' => trim($p['type']), 'name' => $p['name'], 'default' => trim(preg_replace('/\s+/', ' ', $p['default'])),
                                     'ref' => $p['ref'], 'variadic' => $p['variadic'], 'note' => $p['note'] ?? ''], $ps);
     }
 
-    /** Work out the file an include points at: string pieces, __DIR__, dirname(__DIR__[, n]). */
+    /**
+     * Work out the file an include points at: string pieces, __DIR__, dirname(__DIR__[, n]).
+     *
+     * @param array $expr  the tokens between include / require and its ";"
+     * @param string $rel  the including file's path from the app root
+     */
     private function evalPath(array $expr, string $rel): ?string
     {
         $dir = dirname($rel) === '.' ? '' : dirname($rel);
@@ -528,7 +573,11 @@ final class EwScanner
         return $this->normalise($path);
     }
 
-    /** Resolves '.' and '..' in a relative path; null when it climbs above the app root or ends up empty. */
+    /**
+     * Resolves '.' and '..' in a relative path; null when it climbs above the app root or ends up empty.
+     *
+     * @param string $path  a path from the app root; backslashes are read as slashes
+     */
     private function normalise(string $path): ?string
     {
         $parts = [];
@@ -542,6 +591,9 @@ final class EwScanner
 
     /**
      * Resolves a script src or link found in a page to a path from the app root; null for external URLs and PHP-built paths.
+     *
+     * @param string $from  the path, from the app root, of the file the reference is written in
+     * @param string $href  the src as written - relative, "/"-rooted, a URL, or starting with an inline PHP echo
      */
     private function resolveRel(string $from, string $href): ?string
     {
@@ -552,7 +604,11 @@ final class EwScanner
         return $href[0] === '/' ? $this->normalise($href) : $this->normalise(($dir !== '' ? $dir . '/' : '') . $href);
     }
 
-    /** Is this string SQL? Which tables does it read and which does it write (with the columns written)? */
+    /**
+     * Is this string SQL? Which tables does it read and which does it write (with the columns written)?
+     *
+     * @param string $s  a string literal (quotes may still be on), or the joined pieces of an interpolated string / heredoc
+     */
     private function sqlOf(string $s): ?array
     {
         $s = trim($s, " \t\n\r'\"");
@@ -579,10 +635,20 @@ final class EwScanner
         return ['op' => $op, 'reads' => array_keys($reads), 'writes' => $writes];
     }
 
-    /** A /** doc comment * / split into summary, body and @tags. */
+    /**
+     * A /** doc comment * / split into summary, body and @tags.
+     *
+     * @param string $raw  the whole doc comment as written, opening and closing markers included
+     */
     private function parseDoc(string $raw): array
     {
         $raw = preg_replace(['#^/\*\*+#', '#\*+/$#'], '', $raw);
+        // A one-line comment can carry its tags on the same line ("/** Summary. @return int */").
+        // Split them off - only in one-liners, so prose like "add @param lines" in a longer
+        // comment is never mistaken for a tag.
+        if (strpos(trim($raw), "\n") === false) {
+            $raw = preg_replace('/(\S)\s+(@(?:param|return|reads|writes|see|wiki|input|output|throws)\b)/', "\$1\n\$2", $raw);
+        }
         $lines = array_map(fn($l) => preg_replace('/^\s*\*( ?)/', '', rtrim($l)), explode("\n", $raw));
         $text = []; $tags = [];
         foreach ($lines as $l) {
@@ -601,6 +667,8 @@ final class EwScanner
     /**
      * A run of // lines, or a plain block comment, used as a description when there is
      * no doc comment. Decorative rules (// ----, // ====) and a lone TRAP are not descriptions.
+     *
+     * @param array $comments  the raw comment texts in order - // lines, # lines or one block comment
      */
     private function lineDoc(array $comments): ?array
     {
@@ -609,7 +677,8 @@ final class EwScanner
             foreach (explode("
 ", str_replace("", '', $c)) as $l) {
                 $l = preg_replace(['#^\s*(//+|\#)\s?#', '#^\s*/\*+\s?#', '#\s*\*+/\s*$#', '#^\s*\*\s?#'], '', $l);
-                if (preg_match('/^\s*[-=~*#]{3,}\s*$/', $l) || preg_match('/^\s*[-=]{3,}.*[-=]{3,}\s*$/', $l)) continue;
+                // Decorative rules and banners, ASCII or box-drawing (// ----, ═══ KNOWLEDGE ═══).
+                if (preg_match('/^\s*[-=~*#─━═]{3,}\s*$/u', $l) || preg_match('/^\s*[-=─━═]{3,}.*[-=─━═]{3,}\s*$/u', $l)) continue;
                 $lines[] = rtrim($l);
             }
         }
@@ -623,6 +692,8 @@ final class EwScanner
 
     /**
      * Cleans a TRAP: comment down to its text - comment markers stripped, from "TRAP:" to the end of its paragraph, on one line.
+     *
+     * @param string $raw  the comment holding TRAP: - a run of // lines joined with "\n", or a whole block comment
      */
     private function trapText(string $raw): string
     {
@@ -641,7 +712,12 @@ final class EwScanner
         return trim(preg_replace('/\s*\n\s*/', ' ', $t));
     }
 
-    /** JavaScript: its functions (with /** comments) and the API endpoints it calls. */
+    /**
+     * JavaScript: its functions (with /** comments) and the API endpoints it calls.
+     *
+     * @param string $src  the file's contents
+     * @param string $rel  the file's path from the app root (not used yet)
+     */
     private function parseJs(string $src, string $rel): array
     {
         $d = ['kind' => 'js', 'doc' => null, 'functions' => [], 'endpoints' => [], 'traps' => [], 'lines' => substr_count($src, "\n") + 1];
@@ -798,7 +874,11 @@ final class EwScanner
         $this->cleanEmptyDirs($this->out);
     }
 
-    /** Removes empty folders under the output, keeping _scan; returns true when the folder itself is empty. */
+    /**
+     * Removes empty folders under the output, keeping _scan; returns true when the folder itself is empty.
+     *
+     * @param string $dir  the absolute folder to tidy - the output folder, then each folder below it
+     */
     private function cleanEmptyDirs(string $dir): bool
     {
         $empty = true;
@@ -811,7 +891,12 @@ final class EwScanner
         return $empty;
     }
 
-    /** "api/tickets/save.php" from a JS reference like "../api/tickets/save.php" or "api/tickets/save.php". */
+    /**
+     * "api/tickets/save.php" from a JS reference like "../api/tickets/save.php" or "api/tickets/save.php".
+     *
+     * @param string $e  an endpoint path as found in the JavaScript, e.g. "../api/tickets/save.php"
+     * @param array $files  every scanned file, keyed by path from the app root (only the keys are used)
+     */
     private function matchEndpoint(string $e, array $files): array
     {
         $e = ltrim(preg_replace('#^(\.\./)+#', '', $e), '/');
@@ -820,24 +905,63 @@ final class EwScanner
 
     // ================================================================ page builders
 
-    /** A Markdown link to a wiki page. */
+    /**
+     * A Markdown link to a wiki page.
+     *
+     * @param string $page  the page path from the wiki root without ".md", e.g. "code/tables/leases"
+     * @param string $label  the link text, plain
+     */
     private function link(string $page, string $label): string { return '[' . $this->mdText($label) . '](/' . $page . '.md)'; }
-    /** A link to a file's page. */
+    /**
+     * A link to a file's page.
+     *
+     * @param string $rel  the file's path from the app root
+     * @param ?string $label  the link text; null shows the path
+     */
     private function fileLink(string $rel, ?string $label = null): string { return $this->link('code/files/' . $rel, $label ?? $rel); }
-    /** A link to a function's page, labelled name(). */
+    /**
+     * A link to a function's page, labelled name().
+     *
+     * @param string $name  the function's name as defined
+     */
     private function fnLink(string $name): string { return $this->link('code/functions/' . $this->fnSlug($name), $name . '()'); }
-    /** A link to a table's page. */
+    /**
+     * A link to a table's page.
+     *
+     * @param string $t  the table name
+     */
     private function tableLink(string $t): string { return $this->link('code/tables/' . $t, $t); }
-    /** A function or class name made safe for a page file name. */
+    /**
+     * A function or class name made safe for a page file name.
+     *
+     * @param string $name  a function or class name
+     */
     private function fnSlug(string $name): string { return preg_replace('/[^A-Za-z0-9_.-]/', '_', $name); }
-    /** Text safe inside a link label or table cell. */
+    /**
+     * Text safe inside a link label or table cell.
+     *
+     * @param string $s  plain text
+     */
     private function mdText(string $s): string { return str_replace(['|', '[', ']', "\n"], ['\|', '\[', '\]', ' '], $s); }
-    /** Text made safe for a Markdown table cell - pipes escaped, line breaks flattened. */
+    /**
+     * Text made safe for a Markdown table cell - pipes escaped, line breaks flattened.
+     *
+     * @param string $s  the cell's text, plain or Markdown
+     */
     private function cell(string $s): string { return str_replace(['|', "\n", "\r"], ['\|', ' ', ''], trim($s)); }
-    /** Text as inline code (any backtick inside becomes a quote). */
+    /**
+     * Text as inline code (any backtick inside becomes a quote).
+     *
+     * @param string $s  the text to show as code
+     */
     private function code(string $s): string { return '`' . str_replace('`', "'", $s) . '`'; }
 
-    /** A parsed doc comment as Markdown - the wiki link box, then the summary (optional) and the body. */
+    /**
+     * A parsed doc comment as Markdown - the wiki link box, then the summary (optional) and the body.
+     *
+     * @param ?array $doc  a parsed comment from parseDoc() / lineDoc() - array{summary, body, tags}; null for none
+     * @param bool $withSummary  false leaves the summary out (when the page shows it elsewhere)
+     */
     private function docMd(?array $doc, bool $withSummary = true): string
     {
         if (!$doc) return '';
@@ -852,6 +976,8 @@ final class EwScanner
      * the page - a LINK only; the wiki's text is never copied into FreeITSM.
      * From "@wiki Page-Name" (or a full URL) and from any github.com/edmozley/freeitsm/wiki/...
      * link already written in the comment.
+     *
+     * @param array $doc  a parsed comment from parseDoc() / lineDoc() - its @wiki tags, summary and body are read
      */
     private function wikiLinks(array $doc): string
     {
@@ -871,7 +997,11 @@ final class EwScanner
         return "> [!TIP]\n> **Developer guide on the GitHub wiki:** " . implode(' · ', $links) . "\n\n";
     }
 
-    /** Comment prose into Markdown: keep paragraphs and lists, stop "*" and "_" in code-ish text turning into emphasis. */
+    /**
+     * Comment prose into Markdown: keep paragraphs and lists, stop "*" and "_" in code-ish text turning into emphasis.
+     *
+     * @param string $t  comment text - a summary, body, tag value or note
+     */
     private function prose(string $t): string
     {
         $t = preg_replace('/(?<![\w`])(\$[A-Za-z_]\w*)/', '`$1`', $t);
@@ -880,7 +1010,11 @@ final class EwScanner
         return $t;
     }
 
-    /** A function's signature as written, wrapped one parameter per line when it is over 100 characters. */
+    /**
+     * A function's signature as written, wrapped one parameter per line when it is over 100 characters.
+     *
+     * @param array $fn  a parsed function from parsePhp() - name, params and return are used
+     */
     private function signature(array $fn): string
     {
         $ps = array_map(function ($p) {
@@ -891,7 +1025,11 @@ final class EwScanner
         return 'function ' . $fn['name'] . "(\n    " . implode(",\n    ", $ps) . "\n)" . ($fn['return'] !== '' ? ': ' . $fn['return'] : '');
     }
 
-    /** The parameters table - name, type, default, and the meaning from its @param tag. */
+    /**
+     * The parameters table - name, type, default, and the meaning from its @param tag.
+     *
+     * @param array $fn  a parsed function from parsePhp() with its 'file' added - params, doc and file are used
+     */
     private function paramsTable(array $fn): string
     {
         $descr = [];
@@ -902,7 +1040,7 @@ final class EwScanner
         $out = "| Parameter | Type | Default | Meaning |\n|---|---|---|---|\n";
         foreach ($fn['params'] as $p) {
             $out .= '| ' . $this->code(($p['variadic'] ? '...' : '') . $p['name']) . ' | ' . ($p['type'] !== '' ? $this->code($p['type']) : '') . ' | '
-                . ($p['default'] !== '' ? $this->code($p['default']) : '') . ' | ' . $this->cell($this->prose($descr[$p['name']] ?? (($p['note'] ?? '') !== '' ? $p['note'] : $this->standardParam($p, (string)($fn['file'] ?? ''))))) . " |\n";
+                . ($p['default'] !== '' ? $this->code($p['default']) : '') . ' | ' . $this->cell($this->prose(trim($descr[$p['name']] ?? '') !== '' ? $descr[$p['name']] : (($p['note'] ?? '') !== '' ? $p['note'] : $this->standardParam($p, (string)($fn['file'] ?? ''))))) . " |\n";
         }
         return $out . "\n";
     }
@@ -911,6 +1049,9 @@ final class EwScanner
      * The meaning of a parameter that means the same everywhere (handbook/standard-parameters.md),
      * used only when the function's own comment says nothing about it. Marked "standard" so a
      * reader knows where it came from.
+     *
+     * @param array $p  one parameter as tidyParams() leaves it - name and type are used
+     * @param string $file  the defining file's path from the app root; under api/v1/ the REST parameters count too
      */
     private function standardParam(array $p, string $file): string
     {
@@ -931,7 +1072,12 @@ final class EwScanner
         return $m === null ? '' : $m . ' *([standard](/handbook/standard-parameters.md))*';
     }
 
-    /** The doc comment's tags of the wanted kinds, as [tag, value] pairs. */
+    /**
+     * The doc comment's tags of the wanted kinds, as [tag, value] pairs.
+     *
+     * @param ?array $doc  a parsed comment from parseDoc() / lineDoc() - array{summary, body, tags}; null for none
+     * @param array $want  the lower-case tag names to keep, e.g. ['return', 'reads']
+     */
     private function tagRows(?array $doc, array $want): array
     {
         $rows = [];
@@ -941,6 +1087,14 @@ final class EwScanner
 
     /**
      * Builds a file's page - its description, the endpoint box for an API file, its functions and classes, its SQL, what it includes and is included by, what it calls, and its traps.
+     *
+     * @param string $rel  the file's path from the app root, forward slashes, e.g. "api/tickets/save.php"
+     * @param array $d  the file's parse, from parsePhp() or parseJs()
+     * @param array $includedBy  the PHP files that include it: path => true
+     * @param array $jsCallers  the JavaScript files that call it as an endpoint: path => true
+     * @param array $usedBy  the pages that load it with a script tag: path => true
+     * @param array $tableSet  table name => true for every table in the schema, so only real tables are linked
+     * @param array $fnIndex  lower-case function name => list of its definitions (each a parsed function plus 'file')
      */
     private function filePage(string $rel, array $d, array $includedBy, array $jsCallers, array $usedBy, array $tableSet, array $fnIndex): string
     {
@@ -1007,6 +1161,9 @@ final class EwScanner
      * How an endpoint is protected: the checks it makes itself, else the ones made by a
      * file it includes (a shared bootstrap like includes/files/api_bootstrap.php), at the
      * top level of that file - a check inside a function only guards that function's callers.
+     *
+     * @param string $rel  the file's path from the app root, forward slashes, e.g. "api/tickets/save.php"
+     * @param array $d  the file's parse, as parsePhp() returns it
      */
     private function guardText(string $rel, array $d): string
     {
@@ -1034,6 +1191,9 @@ final class EwScanner
 
     /**
      * The sign-in and permission checks a file makes at its top level (admin guard, module access, capability), each suffixed with $via.
+     *
+     * @param array $d  the file's parse, as parsePhp() returns it
+     * @param string $via  added after each check found, e.g. " (via includes/x.php)"; '' for the endpoint's own checks
      */
     private function guardsOf(array $d, string $via): array
     {
@@ -1053,6 +1213,9 @@ final class EwScanner
 
     /**
      * The Database table for a list of queries - line, function, tables read or written (with columns), and the SQL: note.
+     *
+     * @param array $sql  query entries from sqlOf() with line, fn and note added, as parsePhp() stores them
+     * @param array $tableSet  table name => true for every table in the schema, so only real tables are linked
      */
     private function sqlMd(array $sql, array $tableSet): string
     {
@@ -1068,7 +1231,11 @@ final class EwScanner
         return "## Database\n\n| Line | In | Tables | Purpose |\n|--:|---|---|---|\n" . implode('', array_slice($rows, 0, 200)) . (count($rows) > 200 ? "\n*(" . (count($rows) - 200) . " more not shown)*\n" : '') . "\n";
     }
 
-    /** The Traps section - each trap as a warning box with its line and function. */
+    /**
+     * The Traps section - each trap as a warning box with its line and function.
+     *
+     * @param array $traps  the traps to show, each array{line:int, fn:?string, text:string}
+     */
     private function trapsMd(array $traps): string
     {
         if (!$traps) return '';
@@ -1077,7 +1244,11 @@ final class EwScanner
         return $md;
     }
 
-    /** An @see value as a file link when it names a file in the app, otherwise as code. */
+    /**
+     * An @see value as a file link when it names a file in the app, otherwise as code.
+     *
+     * @param string $v  an @see value as written; only its first word is used
+     */
     private function seeLink(string $v): string
     {
         $v = trim(preg_split('/\s+/', $v)[0]);
@@ -1087,6 +1258,12 @@ final class EwScanner
 
     /**
      * Builds a function's page - description, signature, parameters, return, the tables it touches (warning when the comment names one its SQL does not), what it calls, its callers and its traps.
+     *
+     * @param array $defs  every definition of this function name (a parsed function plus 'file'); the first is shown
+     * @param array $callers  who calls it: "file|caller" => array{file, fn}, fn null for top-level code
+     * @param array $files  every scanned file's parse (parsePhp() / parseJs() result), keyed by path from the app root
+     * @param array $tableSet  table name => true for every table in the schema, so only real tables are linked
+     * @param array $fnIndex  lower-case function name => list of its definitions (each a parsed function plus 'file')
      */
     private function functionPage(array $defs, array $callers, array $files, array $tableSet, array $fnIndex): string
     {
@@ -1136,7 +1313,15 @@ final class EwScanner
         return $md . $this->trapsMd(array_values($traps));
     }
 
-    /** Builds a class's page - its description, then each method with its signature, parameters, tags, SQL and callers. */
+    /**
+     * Builds a class's page - its description, then each method with its signature, parameters, tags, SQL and callers.
+     *
+     * @param string $cls  the class name
+     * @param array $c  the class's $classIndex entry - file, line, doc, kind and methods
+     * @param array $callers  every caller list, keyed by function name or "Class::method" (method lower-case)
+     * @param array $files  every scanned file's parse (parsePhp() / parseJs() result), keyed by path from the app root
+     * @param array $tableSet  table name => true for every table in the schema, so only real tables are linked
+     */
     private function classPage(string $cls, array $c, array $callers, array $files, array $tableSet): string
     {
         $md = '# ' . $cls . "\n\n> " . ucfirst($c['kind'] ?? 'class') . ' in ' . $this->fileLink($c['file']) . ', line ' . $c['line'] . "\n\n";
@@ -1163,7 +1348,13 @@ final class EwScanner
         return $md;
     }
 
-    /** Builds a table's page - its columns from the schema with their comments, then who writes it and who reads it. */
+    /**
+     * Builds a table's page - its columns from the schema with their comments, then who writes it and who reads it.
+     *
+     * @param string $t  the table name
+     * @param array $def  the table's loadSchema() entry - array{note, columns}
+     * @param array $use  array{read?: list, write?: list} from phaseWrite(); empty when no SQL names the table
+     */
     private function tablePage(string $t, array $def, array $use): string
     {
         $md = '# ' . $t . "\n\n";
@@ -1192,7 +1383,14 @@ final class EwScanner
         return $md;
     }
 
-    /** Builds the Code map front page - counts of files, endpoints, functions, classes, tables and traps, with links. */
+    /**
+     * Builds the Code map front page - counts of files, endpoints, functions, classes, tables and traps, with links.
+     *
+     * @param array $files  every scanned file's parse (parsePhp() / parseJs() result), keyed by path from the app root
+     * @param array $fnIndex  lower-case function name => list of its definitions (each a parsed function plus 'file')
+     * @param array $classIndex  class name => array{file, line, doc, kind, methods} (methods are parsed functions plus 'file')
+     * @param array $schema  loadSchema()'s result: table name => array{note, columns}
+     */
     private function indexPage(array $files, array $fnIndex, array $classIndex, array $schema): string
     {
         $php = count(array_filter($files, fn($d) => $d['kind'] === 'php'));
@@ -1210,7 +1408,11 @@ final class EwScanner
             . "How to make these pages say more: [[handbook/comments|Writing comments for the wiki]].\n";
     }
 
-    /** Builds the A-Z list of functions outside classes, with file and summary. */
+    /**
+     * Builds the A-Z list of functions outside classes, with file and summary.
+     *
+     * @param array $fnIndex  lower-case function name => list of its definitions (each a parsed function plus 'file')
+     */
     private function functionsIndex(array $fnIndex): string
     {
         $md = "# Functions\n\nEvery function defined outside a class, A to Z. Class methods are on their [class pages](/code/classes/index.md).\n\n";
@@ -1226,7 +1428,11 @@ final class EwScanner
         return $md;
     }
 
-    /** Builds the list of classes, with file, method count and summary. */
+    /**
+     * Builds the list of classes, with file, method count and summary.
+     *
+     * @param array $classIndex  class name => array{file, line, doc, kind, methods} (methods are parsed functions plus 'file')
+     */
     private function classesIndex(array $classIndex): string
     {
         ksort($classIndex, SORT_NATURAL | SORT_FLAG_CASE);
@@ -1240,6 +1446,9 @@ final class EwScanner
 
     /**
      * Builds the list of tables, with column count, how many files read and write each, and the first sentence of its note.
+     *
+     * @param array $schema  loadSchema()'s result: table name => array{note, columns}
+     * @param array $use  table name => array{read?: list, write?: list}, each entry carrying the file
      */
     private function tablesIndex(array $schema, array $use): string
     {
@@ -1253,7 +1462,11 @@ final class EwScanner
         return $md;
     }
 
-    /** Builds the files index - a count per top folder, then the top-level files with their summaries. */
+    /**
+     * Builds the files index - a count per top folder, then the top-level files with their summaries.
+     *
+     * @param array $files  every scanned file's parse (parsePhp() / parseJs() result), keyed by path from the app root
+     */
     private function filesIndex(array $files): string
     {
         $md = "# Files\n\nEvery PHP and JavaScript file the scanner read, by folder. Open a folder in the page list on the left to browse, or search.\n\n";
@@ -1269,6 +1482,9 @@ final class EwScanner
 
     /**
      * Builds the API endpoints page - every api/ PHP file by folder, with its protection, summary and the scripts that call it.
+     *
+     * @param array $files  every scanned file's parse (parsePhp() / parseJs() result), keyed by path from the app root
+     * @param array $jsCallers  endpoint path => [path of each JavaScript file that calls it => true]
      */
     private function endpointsPage(array $files, array $jsCallers): string
     {
@@ -1287,7 +1503,11 @@ final class EwScanner
         return $md;
     }
 
-    /** Builds the page listing every TRAP: comment, file by file. */
+    /**
+     * Builds the page listing every TRAP: comment, file by file.
+     *
+     * @param array $files  every scanned file's parse (parsePhp() / parseJs() result), keyed by path from the app root
+     */
     private function trapsPage(array $files): string
     {
         $md = "# Traps\n\nEvery `TRAP:` comment in the code - the things that will bite the next person, and why. Written by the people who were bitten.\n\n";
@@ -1366,7 +1586,12 @@ final class EwScanner
     private function saveManifest(): void { $this->writeJson('manifest.json', $this->manifest); }
     /** Saves the scan's progress; a finished scan saves an empty state. */
     private function saveState(): void { $this->writeJson('state.json', $this->state['phase'] === 'done' ? [] : $this->state); }
-    /** Reads a JSON file from the state folder, or $default when it is missing or unreadable. */
+    /**
+     * Reads a JSON file from the state folder, or $default when it is missing or unreadable.
+     *
+     * @param string $name  the file name inside _scan, e.g. 'state.json'
+     * @param mixed $default  returned when the file is missing, unreadable or holds null
+     */
     private function readJson(string $name, $default)
     {
         $f = $this->stateDir . '/' . $name;
@@ -1374,7 +1599,12 @@ final class EwScanner
         $d = json_decode((string)file_get_contents($f), true);
         return $d === null ? $default : $d;
     }
-    /** Writes a JSON file to the state folder through a temporary file and a rename, so a reader never sees half a file. */
+    /**
+     * Writes a JSON file to the state folder through a temporary file and a rename, so a reader never sees half a file.
+     *
+     * @param string $name  the file name inside _scan, e.g. 'manifest.json'
+     * @param mixed $data  any value json_encode() can write
+     */
     private function writeJson(string $name, $data): void
     {
         $f = $this->stateDir . '/' . $name;

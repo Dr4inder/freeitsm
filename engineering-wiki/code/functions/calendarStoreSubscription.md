@@ -12,15 +12,15 @@ function calendarStoreSubscription(
 ): void
 ```
 
-Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 464.
+Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 503.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `string` |  |  |
-| `$expires` | `string` |  |  |
-| `$secret` | `?string` |  |  |
+| `$id` | `string` |  | the provider's subscription id |
+| `$expires` | `string` |  | when the subscription lapses, as the provider returned it (naive local datetime) |
+| `$secret` | `?string` |  | the client state Graph echoes back on each notification; kept unchanged on a renewal |
 
 **Returns:** `void`
 
@@ -30,7 +30,7 @@ Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 473 | `calendarStoreSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`) |  |
+| 512 | `calendarStoreSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`) |  |
 
 ## Called from
 

@@ -9,13 +9,13 @@ value names the rule so nobody has to wonder how it got there.
 function ticketSensitivityRaise(PDO $conn, int $ticketId, string $reason): bool
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 77.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$reason` | `string` |  |  |
+| `$reason` | `string` |  | why, in words; stored in the audit row as "Confidential - <reason>" |
 
 **Returns:** `bool`
 
@@ -23,8 +23,8 @@ Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensiti
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 82 | `ticketSensitivityRaise` | **update** [tickets](/code/tables/tickets.md) (`sensitivity`) |  |
-| 88 | `ticketSensitivityRaise` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 88 | `ticketSensitivityRaise` | **update** [tickets](/code/tables/tickets.md) (`sensitivity`) |  |
+| 94 | `ticketSensitivityRaise` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ## Calls
 

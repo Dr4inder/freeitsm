@@ -8,13 +8,13 @@ English, like the portal's other system emails (includes/self_service_email.php)
 function managersEmailNewTicket(PDO $conn, int $managerId, array $t): bool
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 439.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 459.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$managerId` | `int` |  |  |
-| `$t` | `array` |  |  |
+| `$managerId` | `int` |  | the manager's users.id; nothing is sent if they have no email address |
+| `$t` | `array` |  | the new ticket (id, ticket_number, subject, requester_name) |
 
 **Returns:** `bool`
 
@@ -22,7 +22,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 4
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 441 | `managersEmailNewTicket` | read [users](/code/tables/users.md) |  |
+| 461 | `managersEmailNewTicket` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

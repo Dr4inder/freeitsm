@@ -1,6 +1,6 @@
 # includes/documents_panel.php
 
-> PHP - 94 lines
+> PHP - 96 lines
 
 Render the documents panel on any record.
 
@@ -23,8 +23,8 @@ from showing somebody a document they cannot open.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [documentsPanelAssets()](/code/functions/documentsPanelAssets.md) | 30 | Load the panel's stylesheet and script once per page. |
-| [renderDocumentsPanel()](/code/functions/renderDocumentsPanel.md) | 54 | Renders the attached-documents panel for one record, loading its CSS and JS once. |
+| [documentsPanelAssets()](/code/functions/documentsPanelAssets.md) | 32 | Load the panel's stylesheet and script once per page. |
+| [renderDocumentsPanel()](/code/functions/renderDocumentsPanel.md) | 56 | Renders the attached-documents panel for one record, loading its CSS and JS once. |
 
 ## How it hangs together
 

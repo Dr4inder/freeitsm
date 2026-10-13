@@ -6,7 +6,7 @@ The install-wide default an administrator has set, or the shipped one.
 function inboxDisplayInstallDefault(PDO $conn): array
 ```
 
-Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.md), line 130.
+Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.md), line 132.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 133 | `inboxDisplayInstallDefault` | read [system_settings](/code/tables/system_settings.md) |  |
+| 135 | `inboxDisplayInstallDefault` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

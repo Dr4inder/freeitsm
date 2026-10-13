@@ -11,12 +11,12 @@ is answered at query time — see `documentSearchVisibilityClause()`.
 function searchIndexDocument(PDO $conn, int $documentId): void
 ```
 
-Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 99.
+Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$documentId` | `int` |  |  |
+| `$documentId` | `int` |  | the documents id |
 
 **Returns:** `void`
 
@@ -24,7 +24,7 @@ Defined in [includes/search/documents_index.php](/code/files/includes/search/doc
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 104 | `searchIndexDocument` | read [documents](/code/tables/documents.md), read [document_text](/code/tables/document_text.md) |  |
+| 112 | `searchIndexDocument` | read [documents](/code/tables/documents.md), read [document_text](/code/tables/document_text.md) |  |
 
 ## Calls
 

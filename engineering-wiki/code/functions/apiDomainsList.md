@@ -6,7 +6,7 @@ GET /domains
 function apiDomainsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 164.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 170.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 235 | `apiDomainsList` | read [domains](/code/tables/domains.md) |  |
+| 241 | `apiDomainsList` | read [domains](/code/tables/domains.md) |  |
 
 ## Calls
 

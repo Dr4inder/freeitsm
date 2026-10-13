@@ -6,7 +6,7 @@ The named approver, when the setting names one and they are still an active anal
 function projectProposalNamedApprover(PDO $conn): ?int
 ```
 
-Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 53.
+Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 57.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 58 | `projectProposalNamedApprover` | read [analysts](/code/tables/analysts.md) |  |
+| 62 | `projectProposalNamedApprover` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

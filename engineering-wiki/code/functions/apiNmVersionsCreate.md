@@ -6,7 +6,7 @@ POST /network-diagrams/{id}/versions — clone the leaf forward (the editor's "N
 function apiNmVersionsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 625.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 696.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

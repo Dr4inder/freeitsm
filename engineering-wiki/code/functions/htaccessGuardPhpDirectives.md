@@ -9,11 +9,11 @@ a file whose only copy of the directive was the unguarded one keeps it.
 function htaccessGuardPhpDirectives(string $text): string
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 529.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 536.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
+| `$text` | `string` |  | the whole .htaccess file's contents; its line endings are kept |
 
 **Returns:** `string`
 

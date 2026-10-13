@@ -31,21 +31,33 @@ function rfpTenantReady(PDO $conn): bool
     catch (Throwable $e) { return $ok = false; }
 }
 
-/** " AND ..." keeping RFPs (alias $r) in companies this analyst can reach. */
+/**
+ * " AND ..." keeping RFPs (alias $r) in companies this analyst can reach.
+ *
+ * @param string $r  the alias the calling query gives the rfps table
+ */
 function rfpVisibilitySql(PDO $conn, int $analystId, string $r = 'r'): array
 {
     if (!rfpTenantReady($conn) || !isMultiTenant($conn)) return ['', []];
     return allAccessibleTenantsFilter($conn, $analystId, "$r.tenant_id");
 }
 
-/** The RFP LIST: the active company, or every company the analyst can see under "All companies". */
+/**
+ * The RFP LIST: the active company, or every company the analyst can see under "All companies".
+ *
+ * @param string $r  the alias the calling query gives the rfps table
+ */
 function rfpListSql(PDO $conn, int $analystId, string $r = 'r'): array
 {
     if (!rfpTenantReady($conn) || !isMultiTenant($conn)) return ['', []];
     return activeTenantReadFilter($conn, $analystId, $r);
 }
 
-/** The company an RFP belongs to (NULL read as Default), or null if there is no such RFP. */
+/**
+ * The company an RFP belongs to (NULL read as Default), or null if there is no such RFP.
+ *
+ * @param int $rfpId  the rfps id
+ */
 function rfpTenantOf(PDO $conn, int $rfpId): ?int
 {
     $s = $conn->prepare(rfpTenantReady($conn) ? "SELECT id, tenant_id FROM rfps WHERE id = ?" : "SELECT id, NULL AS tenant_id FROM rfps WHERE id = ?");
@@ -55,7 +67,11 @@ function rfpTenantOf(PDO $conn, int $rfpId): ?int
     return $row['tenant_id'] === null ? getDefaultTenantId($conn) : (int)$row['tenant_id'];
 }
 
-/** May this analyst see RFP $id? False for one that does not exist - the same answer, deliberately. */
+/**
+ * May this analyst see RFP $id? False for one that does not exist - the same answer, deliberately.
+ *
+ * @param int $rfpId  the rfps id; 0 or less gives false
+ */
 function rfpCanView(PDO $conn, int $analystId, int $rfpId): bool
 {
     if ($rfpId <= 0) return false;
@@ -68,6 +84,9 @@ function rfpCanView(PDO $conn, int $analystId, int $rfpId): bool
 /**
  * The RFP a child row belongs to. $kind names the table the id is for; every
  * one carries rfp_id except section history (through its section).
+ *
+ * @param string $kind  which table the id is for: rfp, document, extracted, consolidated, conflict, section, framing or invited
+ * @param int $id  the row's id in that table
  */
 function rfpIdOf(PDO $conn, string $kind, int $id): ?int
 {
@@ -95,6 +114,9 @@ function rfpIdOf(PDO $conn, string $kind, int $id): ?int
  * see that RFP. A missing id is left to the endpoint's own validation. With
  * $key naming a LIST (merge's `ids`), every id must resolve to RFPs the analyst
  * can see.
+ *
+ * @param string $kind  which table the request's id is for, as rfpIdOf() takes it ('rfp' for an RFP id itself)
+ * @param string $key  the request field holding the id (or a list of ids), read from the query string, the form or the JSON body
  */
 function rfpGate(string $kind, string $key): void
 {

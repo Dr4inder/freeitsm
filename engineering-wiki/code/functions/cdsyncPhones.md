@@ -10,11 +10,11 @@ searched for the word rather than compared to it.
 function cdsyncPhones(array $lines): array
 ```
 
-Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 145.
+Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 149.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
+| `$lines` | `array` |  | the card's unfolded lines from `cardDavUnfold()` |
 
 **Returns:** `array`
 

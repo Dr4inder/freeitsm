@@ -10,11 +10,11 @@ means every such line is invisible to both the reader and the writer.
 function cardDavLineProperty(string $logical): string
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 309.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 325.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$logical` | `string` |  |  |
+| `$logical` | `string` |  | one unfolded content line |
 
 **Returns:** `string`
 

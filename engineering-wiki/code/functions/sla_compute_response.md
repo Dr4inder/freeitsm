@@ -13,16 +13,16 @@ function sla_compute_response(
 ): array
 ```
 
-Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 160.
+Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 168.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ticket` | `array` |  |  |
-| `$priority` | `array` |  |  |
-| `$calendar` | `array` |  |  |
-| `$timeline` | `array` |  |  |
-| `$settings` | `array` |  |  |
+| `$ticket` | `array` |  | the ticket row as loaded by `sla_get_state()` (not read in v1) |
+| `$priority` | `array` |  | the ticket_priorities row; sla_response_minutes is the target |
+| `$calendar` | `array` |  | the SLA calendar from `sla_load_calendar()`: timezone, hours, holidays |
+| `$timeline` | `array` |  | status segments [{start: DateTimeImmutable UTC, status: name, pauses: bool}], oldest first |
+| `$settings` | `array` |  | the SLA settings from `sla_load_settings()` (not read in v1 - every definition uses status change) |
 
 **Returns:** `array`
 

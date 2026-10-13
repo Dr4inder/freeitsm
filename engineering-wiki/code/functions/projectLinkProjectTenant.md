@@ -6,7 +6,7 @@ The project's company (Default for NULL), or not-found for a project out of reac
 function projectLinkProjectTenant(PDO $conn, ActorContext $ctx, int $projectId): int
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 101.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 114.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

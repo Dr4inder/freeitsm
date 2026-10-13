@@ -6,7 +6,7 @@ Closes a section opened by `helpSection()`.
 function helpSectionEnd(): void
 ```
 
-Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 58.
+Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 68.
 
 **Returns:** `void`
 

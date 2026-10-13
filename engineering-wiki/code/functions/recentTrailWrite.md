@@ -20,12 +20,12 @@ is the other half, and it calls this.
 function recentTrailWrite(string $type, int $id, ?PDO $conn = null): void
 ```
 
-Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 152.
+Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 158.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$type` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$type` | `string` |  | the record type, a RECENT_TRAIL_MODULES key; anything else is ignored |
+| `$id` | `int` |  | the record's id; 0 or less is ignored |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
@@ -34,9 +34,9 @@ Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 175 | `recentTrailWrite` | read [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
-| 186 | `recentTrailWrite` | **update** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) (`visited_datetime`) |  |
-| 197 | `recentTrailWrite` | **insert** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) (`analyst_id`, `entity_type`, `entity_id`, `visited_datetime`) |  |
+| 181 | `recentTrailWrite` | read [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
+| 192 | `recentTrailWrite` | **update** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) (`visited_datetime`) |  |
+| 203 | `recentTrailWrite` | **insert** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) (`analyst_id`, `entity_type`, `entity_id`, `visited_datetime`) |  |
 
 ## Calls
 

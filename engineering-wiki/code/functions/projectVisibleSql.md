@@ -11,14 +11,14 @@ function projectVisibleSql(
 ): array
 ```
 
-Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 68.
+Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` | `'p'` |  |
-| `$systemSeesAll` | `bool` | `true` |  |
+| `$alias` | `string` | `'p'` | the alias the calling query gives the projects table |
+| `$systemSeesAll` | `bool` | `true` | when there is no analyst (0, the system): true hides nothing, false hides members-only projects |
 
 **Returns:** `array`
 
@@ -26,7 +26,7 @@ Defined in [includes/projects/visibility.php](/code/files/includes/projects/visi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 73 | `projectVisibleSql` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 80 | `projectVisibleSql` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Calls
 

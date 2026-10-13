@@ -6,13 +6,13 @@ Schedule (no id) or change (id, while still scheduled) planned maintenance. `$in
 function statusPlannedSave(PDO $conn, ActorContext $ctx, array $in): int
 ```
 
-Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 76.
+Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the request fields: id (0 or absent = new), title, comment, start, end, services, project_id |
 
 **Returns:** `int`
 
@@ -20,10 +20,10 @@ Defined in [includes/service_status_planned.php](/code/files/includes/service_st
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 98 | `statusPlannedSave` | **update** [status_planned](/code/tables/status_planned.md) (`title`, `comment`, `planned_start_datetime`, `planned_end_datetime`, `updated_datetime`) |  |
-| 100 | `statusPlannedSave` | **delete** [status_planned_services](/code/tables/status_planned_services.md) |  |
-| 102 | `statusPlannedSave` | **insert** [status_planned](/code/tables/status_planned.md) (`title`, `comment`, `planned_start_datetime`, `planned_end_datetime`, `state`, `project_id`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 107 | `statusPlannedSave` | **insert** [status_planned_services](/code/tables/status_planned_services.md) (`planned_id`, `service_id`, `impact_level_id`) |  |
+| 104 | `statusPlannedSave` | **update** [status_planned](/code/tables/status_planned.md) (`title`, `comment`, `planned_start_datetime`, `planned_end_datetime`, `updated_datetime`) |  |
+| 106 | `statusPlannedSave` | **delete** [status_planned_services](/code/tables/status_planned_services.md) |  |
+| 108 | `statusPlannedSave` | **insert** [status_planned](/code/tables/status_planned.md) (`title`, `comment`, `planned_start_datetime`, `planned_end_datetime`, `state`, `project_id`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 113 | `statusPlannedSave` | **insert** [status_planned_services](/code/tables/status_planned_services.md) (`planned_id`, `service_id`, `impact_level_id`) |  |
 
 ## Calls
 

@@ -34,10 +34,10 @@
 | [api/tasks/get_task_priorities.php](/code/files/api/tasks/get_task_priorities.php.md) | L20 |  |
 | [api/tasks/list.php](/code/files/api/tasks/list.php.md) | L125, L223 |  |
 | [api/tasks/save_task_priority.php](/code/files/api/tasks/save_task_priority.php.md) | L56 |  |
-| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L119 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiTasksList L275, apiTaskPrioritiesList L474 |  |
+| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L122 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiTasksList L277, apiTaskPrioritiesList L476 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTask L184 |  |
-| [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsTaskAssignedEmail L425 |  |
-| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectDetail L369 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_create_task L2449 |  |
+| [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsTaskAssignedEmail L446 |  |
+| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectDetail L397 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_create_task L2605 |  |
 

@@ -6,7 +6,7 @@ GET /software/licences/{id} - one licence.
 function apiSoftwareLicencesGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 351.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 365.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

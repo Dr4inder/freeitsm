@@ -6,13 +6,13 @@ May this analyst access this *change* (by its owning company)? The Change Manage
 function analystCanAccessChange(PDO $conn, int $analystId, $changeId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 357.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 367.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$changeId` |  |  |  |
+| `$changeId` |  |  | the change (changes.id), any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 357
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 366 | `analystCanAccessChange` | read [changes](/code/tables/changes.md) |  |
+| 376 | `analystCanAccessChange` | read [changes](/code/tables/changes.md) |  |
 
 ## Calls
 

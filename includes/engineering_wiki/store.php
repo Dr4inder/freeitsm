@@ -30,6 +30,8 @@ function ewRoot(): string
 /**
  * A page path from a request, made safe, or null.
  * Accepts "handbook/start", "/handbook/start.md", "code/files/api/x.php" (a dot is fine inside a name).
+ *
+ * @param string $p  the page path as received - untrusted request input
  */
 function ewSafePath(string $p): ?string
 {
@@ -43,7 +45,11 @@ function ewSafePath(string $p): ?string
     return $p;
 }
 
-/** The file behind a safe page path, if it exists and really is inside the wiki. */
+/**
+ * The file behind a safe page path, if it exists and really is inside the wiki.
+ *
+ * @param string $page  a page path already passed through ewSafePath(), e.g. "handbook/start"
+ */
 function ewFile(string $page): ?string
 {
     $root = realpath(ewRoot());
@@ -57,6 +63,9 @@ function ewFile(string $page): ?string
  * Turn a link written on page $from into a page path (+ #anchor), or null when it
  * does not lead to a wiki page. "../tables/leases.md#columns" on code/files/x -> "code/tables/leases#columns".
  * A leading "/" means "from the wiki root" ([[wiki links]] arrive like that).
+ *
+ * @param string $from  the page path the link is written on, e.g. "code/files/x"
+ * @param string $href  the link target as written in the Markdown, optionally with a #fragment
  */
 function ewResolveLink(string $from, string $href): ?string
 {
@@ -82,7 +91,12 @@ function ewResolveLink(string $from, string $href): ?string
     return $page === null ? null : $page . $frag;
 }
 
-/** A page, rendered. @return ?array{page:string,title:string,html:string,toc:array,modified:int,section:string,generated:bool} */
+/**
+ * A page, rendered.
+ *
+ * @param string $page  a safe page path (from ewSafePath()), e.g. "code/tables/leases"
+ * @return ?array{page:string,title:string,html:string,toc:array,modified:int,section:string,generated:bool}
+ */
 function ewReadPage(string $page): ?array
 {
     $f = ewFile($page);
@@ -101,14 +115,23 @@ function ewReadPage(string $page): ?array
     ];
 }
 
-/** "code/tables/lease_assets" -> "lease_assets"; used when a page has no # title. */
+/**
+ * "code/tables/lease_assets" -> "lease_assets"; used when a page has no # title.
+ *
+ * @param string $page  a page path; an "index" page is named after its folder
+ */
 function ewNiceName(string $page): string
 {
     $base = basename($page);
     return $base === 'index' ? basename(dirname($page)) : $base;
 }
 
-/** The title of a page without rendering it: the first "# " line, else its file name. */
+/**
+ * The title of a page without rendering it: the first "# " line, else its file name.
+ *
+ * @param string $file  the absolute path of the page's .md file (only its first 8 lines are read)
+ * @param string $page  the page path, used for the fallback name
+ */
 function ewTitleOf(string $file, string $page): string
 {
     $h = @fopen($file, 'rb');
@@ -125,6 +148,7 @@ function ewTitleOf(string $file, string $page): string
 /**
  * One folder of the page tree, for the sidebar (it opens folder by folder, because
  * the code map runs to thousands of pages).
+ * @param string $dir  the folder's page path, e.g. "code/tables"; '' lists the top-level sections
  * @return array{dirs:array<int,array{path:string,name:string}>, pages:array<int,array{page:string,title:string}>}
  */
 function ewListDir(string $dir): array
@@ -158,6 +182,8 @@ function ewListDir(string $dir): array
 
 /**
  * Search every page for words. Titles count more than bodies; up to $limit hits.
+ * @param string $q  the search text as typed; split on spaces, every word must match, under 2 characters gives []
+ * @param int $limit  the most hits to return
  * @return array<int,array{page:string,title:string,snippet:string}>
  */
 function ewSearch(string $q, int $limit = 60): array

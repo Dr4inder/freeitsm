@@ -6,11 +6,11 @@
 function dbErrorIsMissingTable(PDOException $e): bool
 ```
 
-Defined in [includes/db_errors.php](/code/files/includes/db_errors.php.md), line 24.
+Defined in [includes/db_errors.php](/code/files/includes/db_errors.php.md), line 26.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `PDOException` |  |  |
+| `$e` | `PDOException` |  | the exception a query threw |
 
 **Returns:** `bool`
 

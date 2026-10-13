@@ -21,13 +21,13 @@ Single-company install → always true; unknown id → false; part-migrated tabl
 function analystCanAccessChannel(PDO $conn, int $analystId, $channelId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 454.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 470.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` |  |  |  |
+| `$channelId` |  |  | the messaging channel (messaging_channels.id), any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -35,7 +35,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 454
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 463 | `analystCanAccessChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 479 | `analystCanAccessChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
 
 ## Calls
 

@@ -6,12 +6,12 @@ What is wrong with this domain right now, as far as Service Status is concerned.
 function domainStatusProblems(PDO $conn, array $row): array
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 62.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | the domain row from `domainStatusRow()` (expiry_date, ssl_expiry_date, renewal_mode, alerts_enabled) |
 
 **Returns:** `array`
 

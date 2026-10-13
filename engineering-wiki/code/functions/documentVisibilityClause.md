@@ -19,14 +19,14 @@ function documentVisibilityClause(
 ): array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 415.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 428.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$allowedModules` | `?array` |  |  |
-| `$docAlias` | `string` | `'d'` |  |
+| `$allowedModules` | `?array` |  | the analyst's allowed module keys (`$_SESSION`['allowed_modules']); null means all |
+| `$docAlias` | `string` | `'d'` | the alias the calling query gives the documents table; '' for no alias |
 
 **Returns:** array [sqlFragment, params] — the [sql, params] shape every other filter in includes/tenancy.php uses.
 
@@ -34,7 +34,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 430 | `documentVisibilityClause` | read [document_links](/code/tables/document_links.md) |  |
+| 443 | `documentVisibilityClause` | read [document_links](/code/tables/document_links.md) |  |
 
 ## Calls
 

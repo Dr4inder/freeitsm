@@ -31,6 +31,10 @@ const RP_INTUNE_DIMENSIONS = [
 /**
  * Assets block: a chart of how many assets there are, grouped by the chosen dimension. A
  * snapshot of today, not the period.
+ *
+ * @param array $o  the block's cleaned options: by (dimension), limit, chart
+ * @param array $range  the pack's range from rpResolveRange() (not used - a snapshot of today)
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  */
 function rpAssetsBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -47,6 +51,10 @@ function rpAssetsBreakdown(PDO $conn, int $analystId, array $o, array $range, $t
 /**
  * Assets block: KPI tiles - total assets, assets added in the period, warranties ending in
  * the period and assets already out of warranty.
+ *
+ * @param array $o  the block's cleaned options (none are read)
+ * @param array $range  the pack's range from rpResolveRange()
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  */
 function rpAssetsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -66,7 +74,13 @@ function rpAssetsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant
     ]];
 }
 
-/** Assets whose warranty and/or lease ends inside the range. */
+/**
+ * Assets whose warranty and/or lease ends inside the range.
+ *
+ * @param array $o  the block's cleaned options: what ('warranty', 'lease', or anything else for both)
+ * @param array $range  the pack's range from rpResolveRange() - from_date and to_date are used
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
+ */
 function rpAssetsExpiring(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$tSql, $tParams] = rpTenantClause($conn, $analystId, $tenant, 'x.tenant_id');
@@ -99,7 +113,13 @@ function rpAssetsExpiring(PDO $conn, int $analystId, array $o, array $range, $te
     return ['kind' => 'table', 'rows' => $rows, 'columns' => $cols, 'empty' => t('reporting.packs.empty.expiring')];
 }
 
-/** Intune block: a chart of Intune devices grouped by the chosen dimension. A snapshot of today. */
+/**
+ * Intune block: a chart of Intune devices grouped by the chosen dimension. A snapshot of today.
+ *
+ * @param array $o  the block's cleaned options: by (dimension), limit, chart
+ * @param array $range  the pack's range (not used - a snapshot of today)
+ * @param mixed $tenant  the pack's company (not used - Intune devices are not split by company)
+ */
 function rpIntuneBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $label = RP_INTUNE_DIMENSIONS[$o['by']];
@@ -112,6 +132,10 @@ function rpIntuneBreakdown(PDO $conn, int $analystId, array $o, array $range, $t
 /**
  * Intune block: KPI tiles - device count, percentage compliant and encrypted, and devices
  * not synced for 30 days.
+ *
+ * @param array $o  the block's cleaned options (none are read)
+ * @param array $range  the pack's range (not used - a snapshot of today)
+ * @param mixed $tenant  the pack's company (not used - Intune devices are not split by company)
  */
 function rpIntuneKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {

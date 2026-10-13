@@ -11,14 +11,14 @@ function imapHandleAfterProcessing(
 ): int
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 378.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 419.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` | `array` |  |  |
-| `$uid` | `int` |  |  |
-| `$action` | `string` |  |  |
-| `$folderName` | `?string` | `null` |  |
+| `$mailbox` | `array` |  | the target_mailboxes row, decrypted |
+| `$uid` | `int` |  | the message's IMAP UID |
+| `$action` | `string` |  | 'mark_read', 'move_to_folder', 'move_to_deleted' or 'delete'; anything else deletes |
+| `$folderName` | `?string` | `null` | the folder to move to for 'move_to_folder'; null or '' deletes instead |
 
 **Returns:** `int`
 

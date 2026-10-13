@@ -15,21 +15,21 @@ as far as FreeITSM was concerned, had never existed. Reported by Ed.
 function saveSentAttachments($conn, $emailId, $attachments)
 ```
 
-Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 817.
+Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 871.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$emailId` |  |  |  |
-| `$attachments` |  |  |  |
+| `$emailId` |  |  | the emails.id of the sent message; also names its folder on disk |
+| `$attachments` |  |  | the files the analyst attached, from the request: [{name, type, content (base64)}, ...] |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 835 | `saveSentAttachments` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime`) |  |
-| 872 | `saveSentAttachments` | **update** [emails](/code/tables/emails.md) (`has_attachments`) |  |
-| 881 | `saveSentAttachments` | **update** [emails](/code/tables/emails.md) (`body_content`) |  |
+| 889 | `saveSentAttachments` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime`) |  |
+| 926 | `saveSentAttachments` | **update** [emails](/code/tables/emails.md) (`has_attachments`) |  |
+| 935 | `saveSentAttachments` | **update** [emails](/code/tables/emails.md) (`body_content`) |  |
 
 ## Calls
 

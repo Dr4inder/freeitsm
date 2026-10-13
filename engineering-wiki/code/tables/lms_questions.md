@@ -28,6 +28,6 @@
 |---|---|---|
 | [api/lms/course_content.php](/code/files/api/lms/course_content.php.md) | L54 |  |
 | [api/lms/lessons.php](/code/files/api/lms/lessons.php.md) | L39 |  |
-| [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md) | L109 |  |
+| [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md) | L123 |  |
 | [api/lms/questions.php](/code/files/api/lms/questions.php.md) | L69 |  |
 

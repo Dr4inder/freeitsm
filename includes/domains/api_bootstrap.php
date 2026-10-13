@@ -40,14 +40,23 @@ function domainApiBody(): array
     return $b;
 }
 
-/** Sends {success: true} merged with $data as JSON and ends the request. */
+/**
+ * Sends {success: true} merged with $data as JSON and ends the request.
+ *
+ * @param array $data  extra keys to send alongside success
+ */
 function domainApiOk(array $data = []): void
 {
     echo json_encode(['success' => true] + $data);
     exit;
 }
 
-/** Sends {success: false, error} as JSON, with an HTTP status when one other than 200 is given, and ends the request. */
+/**
+ * Sends {success: false, error} as JSON, with an HTTP status when one other than 200 is given, and ends the request.
+ *
+ * @param string $message  the error text, shown to the user as it stands
+ * @param int    $status   HTTP status code; 200 leaves the status alone
+ */
 function domainApiFail(string $message, int $status = 200): void
 {
     if ($status !== 200) http_response_code($status);
@@ -55,13 +64,21 @@ function domainApiFail(string $message, int $status = 200): void
     exit;
 }
 
-/** Stops the request with a JSON refusal unless the signed-in analyst holds the capability. */
+/**
+ * Stops the request with a JSON refusal unless the signed-in analyst holds the capability.
+ *
+ * @param string $cap  a capability key, normally a Cap::DOMAINS_* constant
+ */
 function domainRequireCap(PDO $conn, string $cap): void
 {
     requireCapabilityJson($cap, $conn);
 }
 
-/** True when the analyst holds the capability; false on any error. */
+/**
+ * True when the analyst holds the capability; false on any error.
+ *
+ * @param string $cap  a capability key, normally a Cap::DOMAINS_* constant
+ */
 function domainHasCap(PDO $conn, int $analystId, string $cap): bool
 {
     try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { return false; }
@@ -70,6 +87,8 @@ function domainHasCap(PDO $conn, int $analystId, string $cap): bool
 /**
  * The company a NEW record belongs to: the one the request names (checked
  * against what this analyst may reach), else the analyst's active company.
+ *
+ * @param mixed $requested  the company_id from the request body (untrusted); null, '' or 0 means the active company
  */
 function domainApiTenantForCreate(PDO $conn, int $analystId, $requested): int
 {
@@ -83,7 +102,11 @@ function domainApiTenantForCreate(PDO $conn, int $analystId, $requested): int
     return getActiveTenantId($conn, $analystId);
 }
 
-/** Run a service call and turn any failure into the UI's {success:false} shape. */
+/**
+ * Run a service call and turn any failure into the UI's {success:false} shape.
+ *
+ * @param callable $fn  the endpoint's work - takes no arguments and normally ends with domainApiOk()
+ */
 function domainApiRun(callable $fn): void
 {
     try {

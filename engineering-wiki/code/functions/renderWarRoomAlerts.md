@@ -6,17 +6,17 @@ Renders the header's War Room alert button and panel, which poll api/war-room/al
 function renderWarRoomAlerts($path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1252.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1260.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path_prefix` |  |  |  |
+| `$path_prefix` |  |  | relative path from the page to the app root, e.g. '../'; '' is read as './' |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1262 | `renderWarRoomAlerts` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 1270 | `renderWarRoomAlerts` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Calls
 

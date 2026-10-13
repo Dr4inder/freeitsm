@@ -12,14 +12,14 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):487 | `gapPersistClusters` | delete |  |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):488 | `gapPersistClusters` | insert | `cluster_id`, `ticket_id`, `similarity` |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):507 | `gapPersistClusters` | delete |  |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):508 | `gapPersistClusters` | insert | `cluster_id`, `ticket_id`, `similarity` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/knowledge/gap_clusters.php](/code/files/api/knowledge/gap_clusters.php.md) | L78 |  |
-| [api/knowledge/writeup_stream.php](/code/files/api/knowledge/writeup_stream.php.md) | L130 |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapPersistClusters L408 |  |
+| [api/knowledge/writeup_stream.php](/code/files/api/knowledge/writeup_stream.php.md) | L133 |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapPersistClusters L428 |  |
 

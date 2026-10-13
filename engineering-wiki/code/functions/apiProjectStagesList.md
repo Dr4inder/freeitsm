@@ -6,7 +6,7 @@ GET /projects/{id}/stages - the project's stages in order.
 function apiProjectStagesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 318.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 337.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,12 +6,12 @@ The API twin: refuse with a 403 unless this analyst may manage the namespace's A
 function requireAiNamespaceJson(PDO $conn, string $ns): void
 ```
 
-Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 248.
+Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 253.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ns` | `string` |  |  |
+| `$ns` | `string` |  | the AI settings namespace, e.g. 'knowledge_ai'; checked for the signed-in analyst |
 
 **Returns:** `void`
 

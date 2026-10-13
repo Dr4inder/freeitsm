@@ -6,11 +6,11 @@ Formats a byte count as B, KB or MB for the report.
 function warroomD008Bytes(int $n): string
 ```
 
-Defined in [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md), line 349.
+Defined in [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md), line 364.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$n` | `int` |  |  |
+| `$n` | `int` |  | a size in bytes |
 
 **Returns:** `string`
 

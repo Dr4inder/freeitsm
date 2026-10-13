@@ -10,12 +10,12 @@ somebody else's company.
 function portalUserTenantId(PDO $conn, int $userId): ?int
 ```
 
-Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), line 47.
+Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), line 49.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the portal user's users.id (from the session's ss_user_id) |
 
 **Returns:** `?int`
 
@@ -23,7 +23,7 @@ Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 48 | `portalUserTenantId` | read [users](/code/tables/users.md) |  |
+| 50 | `portalUserTenantId` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

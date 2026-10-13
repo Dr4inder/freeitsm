@@ -20,16 +20,16 @@ Time actually SPENT on a task, as many sessions as it took (GH #112). Mirrors ti
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):1458 | `TasksService::createTimeEntry` | insert | `task_id`, `analyst_id`, `notes`, `time_spent_minutes`, `entry_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):1477 | `TasksService::deleteTimeEntry` | update | `is_active` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):1545 | `TasksService::createTimeEntry` | insert | `task_id`, `analyst_id`, `notes`, `time_spent_minutes`, `entry_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):1568 | `TasksService::deleteTimeEntry` | update | `is_active` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L110 |  |
-| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectLabour L130, projectLabourToCome L261 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L124 |  |
-| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectDetail L369 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::deleteTimeEntry L1467, TasksService::timeEntriesFor L1496, TasksService::timeEntriesFor L1512 |  |
+| [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L113 |  |
+| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectLabour L142, projectLabourToCome L285 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L136 |  |
+| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectDetail L397 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::deleteTimeEntry L1558, TasksService::timeEntriesFor L1587, TasksService::timeEntriesFor L1603 |  |
 

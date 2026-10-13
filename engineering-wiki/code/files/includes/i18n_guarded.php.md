@@ -1,6 +1,6 @@
 # includes/i18n_guarded.php
 
-> PHP - 101 lines
+> PHP - 113 lines
 
 Translation for the screens that must render even when i18n does not.
 
@@ -34,9 +34,9 @@ would otherwise be entitled to ignore - hence the Vary header below.
 |---|--:|---|
 | [i18nGuardedInit()](/code/functions/i18nGuardedInit.md) | 38 | Load i18n behind a guard and fix the namespace prefix `tr()` will use. |
 | [tr()](/code/functions/tr.md) | 64 | Translate, with the English as the last line of defence. |
-| [trh()](/code/functions/trh.md) | 81 | `tr()` escaped for HTML - the normal case for anything going into the page. |
-| [trj()](/code/functions/trj.md) | 87 | `tr()` as a JavaScript literal, for the inline scripts these pages carry. |
-| [trLocale()](/code/functions/trLocale.md) | 93 | The locale for <html lang="...">, or 'en' when i18n did not load. |
+| [trh()](/code/functions/trh.md) | 87 | `tr()` escaped for HTML - the normal case for anything going into the page. |
+| [trj()](/code/functions/trj.md) | 99 | `tr()` as a JavaScript literal, for the inline scripts these pages carry. |
+| [trLocale()](/code/functions/trLocale.md) | 105 | The locale for <html lang="...">, or 'en' when i18n did not load. |
 
 ## How it hangs together
 

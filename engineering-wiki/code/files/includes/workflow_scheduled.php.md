@@ -1,6 +1,6 @@
 # includes/workflow_scheduled.php
 
-> PHP - 280 lines
+> PHP - 287 lines
 
 Time-based workflow triggers.
 
@@ -25,22 +25,22 @@ state) fires exactly once, even if two cron runs overlap.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [workflowEmitOnce()](/code/functions/workflowEmitOnce.md) | 49 | Dispatch a time-based event — but only the FIRST time this exact situation is seen. Returns true if it fired, false if it had already fired. |
-| [workflowExpiryWindows()](/code/functions/workflowExpiryWindows.md) | 105 | The windows we announce an expiry at. A contract expiring in 45 days crosses the 90-day window today and the 30-day window in a fortnight — two separate emissions, each carrying `window_days`, so a workflow can say "only tell me at 30 days" with a plain condition rather than needing its own scheduling. |
-| [workflowEmitContractExpiries()](/code/functions/workflowEmitContractExpiries.md) | 113 | Contracts approaching their end date → `contract.expiring`. |
-| [workflowEmitWarrantyExpiries()](/code/functions/workflowEmitWarrantyExpiries.md) | 183 | Asset warranties approaching expiry → `asset.warranty_expiring`. |
-| [workflowScheduledRun()](/code/functions/workflowScheduledRun.md) | 232 | Everything the scheduled-trigger cron runs. SLA events are NOT here — they're emitted from `sla_run_breach_check()`, which already walks every open ticket and computes its SLA state, so emitting from there costs nothing and cannot drift from what the SLA emails think is true. |
-| [workflowPruneEmissions()](/code/functions/workflowPruneEmissions.md) | 267 | Drop ledger rows for events long past. Keeping them forever would grow without bound; a year is far longer than any window we announce, so nothing can be resurrected by a prune. |
+| [workflowEmitOnce()](/code/functions/workflowEmitOnce.md) | 54 | Dispatch a time-based event — but only the FIRST time this exact situation is seen. Returns true if it fired, false if it had already fired. |
+| [workflowExpiryWindows()](/code/functions/workflowExpiryWindows.md) | 110 | The windows we announce an expiry at. A contract expiring in 45 days crosses the 90-day window today and the 30-day window in a fortnight — two separate emissions, each carrying `window_days`, so a workflow can say "only tell me at 30 days" with a plain condition rather than needing its own scheduling. |
+| [workflowEmitContractExpiries()](/code/functions/workflowEmitContractExpiries.md) | 118 | Contracts approaching their end date → `contract.expiring`. |
+| [workflowEmitWarrantyExpiries()](/code/functions/workflowEmitWarrantyExpiries.md) | 188 | Asset warranties approaching expiry → `asset.warranty_expiring`. |
+| [workflowScheduledRun()](/code/functions/workflowScheduledRun.md) | 237 | Everything the scheduled-trigger cron runs. SLA events are NOT here — they're emitted from `sla_run_breach_check()`, which already walks every open ticket and computes its SLA state, so emitting from there costs nothing and cannot drift from what the SLA emails think is true. |
+| [workflowPruneEmissions()](/code/functions/workflowPruneEmissions.md) | 274 | Drop ledger rows for events long past. Keeping them forever would grow without bound; a year is far longer than any window we announce, so nothing can be resurrected by a prune. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 63 | `workflowEmitOnce` | read [workflows](/code/tables/workflows.md) |  |
-| 74 | `workflowEmitOnce` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
-| 130 | `workflowEmitContractExpiries` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md) |  |
-| 192 | `workflowEmitWarrantyExpiries` | read [assets](/code/tables/assets.md) |  |
-| 271 | `workflowPruneEmissions` | **delete** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) |  |
+| 68 | `workflowEmitOnce` | read [workflows](/code/tables/workflows.md) |  |
+| 79 | `workflowEmitOnce` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 135 | `workflowEmitContractExpiries` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 197 | `workflowEmitWarrantyExpiries` | read [assets](/code/tables/assets.md) |  |
+| 278 | `workflowPruneEmissions` | **delete** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) |  |
 
 ## How it hangs together
 

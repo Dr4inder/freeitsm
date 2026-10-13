@@ -6,12 +6,12 @@ Load a messaging_channels row with its credentials decrypted + JSON-decoded. Ret
 function loadMessagingChannel(PDO $conn, $channelId): ?array
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 65.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 69.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` |  |  |  |
+| `$channelId` |  |  | the messaging_channels id (cast to int) |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/mes
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 68 | `loadMessagingChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 72 | `loadMessagingChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
 
 ## Calls
 

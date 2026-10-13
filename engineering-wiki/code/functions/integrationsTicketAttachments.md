@@ -24,13 +24,13 @@ function integrationsTicketAttachments(
 ): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 688.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 732.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$maxFiles` | `int` | `INTEGRATION_ATTACH_MAX_FILES` |  |
+| `$maxFiles` | `int` | `INTEGRATION_ATTACH_MAX_FILES` | how many files may be sent; the rest are returned with skip_reason 'over_limit' |
 
 **Returns:** array [['id','filename','content_type','size','path','skip_reason'], …] `skip_reason` set means: show it, do not send it.
 
@@ -38,7 +38,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 692 | `integrationsTicketAttachments` | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md) |  |
+| 736 | `integrationsTicketAttachments` | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

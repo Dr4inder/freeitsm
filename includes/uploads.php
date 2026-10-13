@@ -218,6 +218,8 @@ function uploadStoreFile(array $file, string $destDir, array $allowed = UPLOAD_T
  * 🔑 Called on every store, not only on create — so a directory that already
  * exists from before this file was written gets protected the next time
  * anything is uploaded into it.
+ *
+ * @param string $dir  absolute path of the upload directory; created (with parents) if missing
  */
 function uploadPrepareDir(string $dir): void
 {
@@ -361,6 +363,8 @@ HT
  * it. Layer 1 stops any NEW one arriving; it cannot retroactively make an old one
  * safe. Removing an existing SVG logo is an operator action, and it is called out
  * in the release notes rather than hidden in a code comment.
+ *
+ * @param string $dir  absolute path of the directory; created (with parents) if missing
  */
 function uploadPrepareWebServableDir(string $dir): void
 {
@@ -490,6 +494,7 @@ const UPLOAD_HTACCESS_ROOTS = [
  * <IfModule mod_php.c> still counts as guarded. A negated <IfModule !mod_php.c>
  * is not a guard — it means the opposite.
  *
+ * @param string $text  the whole .htaccess file's contents, any line endings
  * @return int[]
  */
 function htaccessUnguardedPhpDirectives(string $text): array
@@ -525,6 +530,8 @@ function htaccessUnguardedPhpDirectives(string $text): array
  *
  * Wrapping rather than deleting, so the repair never changes what mod_php does:
  * a file whose only copy of the directive was the unguarded one keeps it.
+ *
+ * @param string $text  the whole .htaccess file's contents; its line endings are kept
  */
 function htaccessGuardPhpDirectives(string $text): string
 {
@@ -545,6 +552,8 @@ function htaccessGuardPhpDirectives(string $text): string
 
 /**
  * Repair one .htaccess in place. True if it was changed.
+ *
+ * @param string $path  absolute path of one .htaccess file; an unreadable file is left alone
  */
 function uploadRepairHtaccessFile(string $path): bool
 {
@@ -562,6 +571,8 @@ function uploadRepairHtaccessFile(string $path): bool
  * WROTE itself — one per ticket attachment folder, the portal logo folder,
  * per-form image folders — stay as they were written until something rewrites
  * them. Database Verify calls this so an upgraded install is repaired in one go.
+ *
+ * @param string $appRoot  absolute path of the FreeITSM folder; UPLOAD_HTACCESS_ROOTS are relative to it
  */
 function uploadRepairHtaccessTree(string $appRoot): int
 {
@@ -590,6 +601,8 @@ function uploadRepairHtaccessTree(string $appRoot): int
  * Content-Disposition header and rendered in lists, so it must not carry a
  * newline (header injection), a quote (breaks out of the header's filename),
  * or any path segment.
+ *
+ * @param string $name  the filename as the sender gave it - untrusted, may hold a path
  */
 function uploadCleanName(string $name): string
 {
@@ -604,7 +617,11 @@ function uploadCleanName(string $name): string
     return $name;
 }
 
-/** The file's real mime type, or null if this server cannot tell us. */
+/**
+ * The file's real mime type, or null if this server cannot tell us.
+ *
+ * @param string $path  absolute path of the file on disk
+ */
 function uploadDetectMime(string $path): ?string
 {
     if (class_exists('finfo')) {
@@ -619,7 +636,11 @@ function uploadDetectMime(string $path): ?string
     return null;   // unknown → gate 1 and gate 3 still stand
 }
 
-/** PHP's upload error codes as something a person can act on. */
+/**
+ * PHP's upload error codes as something a person can act on.
+ *
+ * @param int $code  a PHP upload error code, the UPLOAD_ERR_* in $_FILES[...]['error']
+ */
 function uploadErrorMessage(int $code): string
 {
     switch ($code) {
@@ -634,7 +655,11 @@ function uploadErrorMessage(int $code): string
     }
 }
 
-/** A byte count as readable text - "1.5 MB", "300 KB" or "512 bytes". */
+/**
+ * A byte count as readable text - "1.5 MB", "300 KB" or "512 bytes".
+ *
+ * @param int $bytes  a size in bytes
+ */
 function uploadFormatBytes(int $bytes): string
 {
     if ($bytes >= 1048576) return round($bytes / 1048576, 1) . ' MB';
@@ -706,6 +731,7 @@ const ATTACHMENT_SERVE_TYPES = [
  * The stored content_type is deliberately NOT a parameter: there is no version of
  * this decision that should consult a value the sender chose.
  *
+ * @param string $filename  the attachment's original filename; only its extension decides the type
  * @return array ['type' => string, 'inline' => bool, 'filename' => string]
  *               filename is header-safe (quotes and CR/LF removed).
  */
@@ -725,6 +751,9 @@ function attachmentServeRules(string $filename): array
 /**
  * Emit the Content-Type / Content-Disposition / nosniff headers for an attachment.
  * Callers still do their own authorisation and file-existence checks first.
+ *
+ * @param string $filename  the attachment's original filename, for the type and the download name
+ * @param int $size  the file's size in bytes, sent as Content-Length
  */
 function attachmentSendHeaders(string $filename, int $size): void
 {
@@ -779,7 +808,12 @@ const ATTACHMENT_QUARANTINE_EXT = 'bin';
  * odd attachment must never cost somebody their ticket. It reports what it did and
  * lets the caller record it.
  *
+ * @param string $bytes  the file's decoded contents
+ * @param string $originalName  the sender's filename - untrusted; cleaned, and only its extension is used
+ * @param string $destDir  absolute directory to store into; created (and protected) if absent
  * @param string $policy ATTACHMENT_POLICY_STORE | ATTACHMENT_POLICY_DROP
+ * @param array $allowed  ext => [mime, ...] accepted; defaults to the everyday attachment set
+ * @param ?int $maxBytes  the size limit in bytes; null = the configured limit (attachmentMaxBytes())
  * @return array{stored:bool, quarantined:bool, stored_name:?string, path:?string,
  *               original_name:string, size:int, mime:string, reason:?string}
  */
@@ -862,7 +896,11 @@ function uploadStoreBytes(
     return $result;
 }
 
-/** The real mime type of bytes held in memory, or null if this server cannot tell. */
+/**
+ * The real mime type of bytes held in memory, or null if this server cannot tell.
+ *
+ * @param string $bytes  the file's contents
+ */
 function uploadDetectMimeFromBytes(string $bytes): ?string
 {
     if (class_exists('finfo')) {
@@ -941,6 +979,9 @@ function attachmentAllowedTypes(PDO $conn): array
  * The block appended to a message body when attachments were not accepted, so the
  * outcome is visible on the ticket instead of a file quietly vanishing.
  * Returns '' when there is nothing to say.
+ *
+ * @param array $rejected  files not saved, each ['name' => original filename, 'reason' => why]
+ * @param array $quarantined  files stored as inert .bin, each ['name' => original filename, 'reason' => why]
  */
 function attachmentIngestNotice(array $rejected, array $quarantined): string
 {

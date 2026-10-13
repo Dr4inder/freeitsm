@@ -18,7 +18,11 @@ require_once __DIR__ . '/../../includes/projects/assistant_chat.php';
 require_once __DIR__ . '/../../includes/i18n.php';
 I18n::initFromSession();   // the assistant answers in the analyst's language
 
-/** A provider problem in words the panel can show (as reports.php). */
+/**
+ * A provider problem in words the panel can show (as reports.php).
+ *
+ * @param RuntimeException $e  the AI call's failure; the message 'not_configured' means no provider is set up
+ */
 function projectChatAiFail(RuntimeException $e): void
 {
     if ($e instanceof PDOException) throw $e;

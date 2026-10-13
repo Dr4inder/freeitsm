@@ -6,7 +6,7 @@ GET /changes/{id} — detail incl. bodies, PIR, attachments, linked problems
 function apiChangesGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 273.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 283.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 292 | `apiChangesGet` | read [change_attachments](/code/tables/change_attachments.md) |  |
-| 310 | `apiChangesGet` | read [change_relations](/code/tables/change_relations.md), read [problems](/code/tables/problems.md) |  |
+| 302 | `apiChangesGet` | read [change_attachments](/code/tables/change_attachments.md) |  |
+| 320 | `apiChangesGet` | read [change_relations](/code/tables/change_relations.md), read [problems](/code/tables/problems.md) |  |
 
 ## Calls
 

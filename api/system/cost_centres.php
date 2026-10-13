@@ -36,7 +36,12 @@ function costCentreColumns(): array
     ];
 }
 
-/** Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops. */
+/**
+ * Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops.
+ *
+ * @param string $message  the error shown to the user
+ * @param int $status  the HTTP status to send
+ */
 function costCentreJsonFail(string $message, int $status = 200): void
 {
     http_response_code($status);

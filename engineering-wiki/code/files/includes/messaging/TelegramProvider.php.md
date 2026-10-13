@@ -1,6 +1,6 @@
 # includes/messaging/TelegramProvider.php
 
-> PHP - 533 lines
+> PHP - 591 lines
 
 TelegramProvider — chat via the Telegram Bot API.
 
@@ -40,5 +40,5 @@ digit-stripping rule over it.
 ## Traps
 
 > [!WARNING]
-> **Line 466, in `TelegramProvider::setWebhook`:** this list is everything `parseInbound()` reads. Leave one out and Telegram never sends it - no error anywhere. A rating button press is a callback_query; without it the button just shimmers on the customer's phone. Telegram keeps the list a bot was registered with, so a bot connected before a type was added needs Connect pressed again - `testConnection()` checks for that (TELEGRAM_UPDATE_TYPES).
+> **Line 524, in `TelegramProvider::setWebhook`:** this list is everything `parseInbound()` reads. Leave one out and Telegram never sends it - no error anywhere. A rating button press is a callback_query; without it the button just shimmers on the customer's phone. Telegram keeps the list a bot was registered with, so a bot connected before a type was added needs Connect pressed again - `testConnection()` checks for that (TELEGRAM_UPDATE_TYPES).
 

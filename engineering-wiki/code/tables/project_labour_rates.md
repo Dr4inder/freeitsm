@@ -19,14 +19,14 @@
 |---|---|---|---|---|
 | [api/projects/settings.php](/code/files/api/projects/settings.php.md):102 |  | insert | `scope`, `ref_id`, `hourly_rate`, `effective_from`, `created_by_id`, `created_datetime` |  |
 | [api/projects/settings.php](/code/files/api/projects/settings.php.md):105 |  | delete |  |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):268 | `ProjectsService::deleteProject` | delete |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1738 | `ProjectToolsService::addProjectRate` | insert | `scope`, `ref_id`, `hourly_rate`, `effective_from`, `created_by_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1750 | `ProjectToolsService::deleteProjectRate` | delete |  |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):280 | `ProjectsService::deleteProject` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1960 | `ProjectToolsService::addProjectRate` | insert | `scope`, `ref_id`, `hourly_rate`, `effective_from`, `created_by_id`, `created_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1976 | `ProjectToolsService::deleteProjectRate` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/projects/settings.php](/code/files/api/projects/settings.php.md) | projectRatesForSettings L43 |  |
-| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectBudgetReady L61, projectLabourRates L93 |  |
+| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectBudgetReady L61, projectLabourRates L97 |  |
 

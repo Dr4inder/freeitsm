@@ -6,7 +6,7 @@ Unread mentions per channel, so the channel list can mark a mention differently 
 function warRoomMentionCounts(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 852.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 917.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 852
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 855 | `warRoomMentionCounts` | read [warroom_mentions](/code/tables/warroom_mentions.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_reads](/code/tables/warroom_reads.md) |  |
+| 920 | `warRoomMentionCounts` | read [warroom_mentions](/code/tables/warroom_mentions.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_reads](/code/tables/warroom_reads.md) |  |
 
 ## Called from
 

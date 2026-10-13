@@ -6,13 +6,13 @@ Admin "Test" helper: prove the service account can connect, bind and search. Opt
 function ldapTestConnection(array $provider, string $login = '', string $password = ''): array
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 826.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 880.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
-| `$login` | `string` | `''` |  |
-| `$password` | `string` | `''` |  |
+| `$provider` | `array` |  | the provider row from `ldapGetProvider()` |
+| `$login` | `string` | `''` | a sample username to sign in as; '' only tests the service bind and base DN |
+| `$password` | `string` | `''` | the sample user's password |
 
 **Returns:** `array`
 

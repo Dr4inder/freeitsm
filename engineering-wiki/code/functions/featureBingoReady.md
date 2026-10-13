@@ -6,7 +6,7 @@ Has Database Verification created the "Not for us" table yet?
 function featureBingoReady(PDO $conn): bool
 ```
 
-Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md), line 250.
+Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md), line 258.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 252 | `featureBingoReady` | read [feature_bingo_dismissed](/code/tables/feature_bingo_dismissed.md) |  |
+| 260 | `featureBingoReady` | read [feature_bingo_dismissed](/code/tables/feature_bingo_dismissed.md) |  |
 
 ## Called from
 

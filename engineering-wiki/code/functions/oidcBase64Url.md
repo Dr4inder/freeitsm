@@ -6,11 +6,11 @@ URL-safe base64 (no padding) for PKCE / random tokens.
 function oidcBase64Url(string $bin): string
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 46.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 50.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bin` | `string` |  |  |
+| `$bin` | `string` |  | the raw bytes to encode |
 
 **Returns:** `string`
 

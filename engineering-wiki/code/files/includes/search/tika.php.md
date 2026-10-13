@@ -1,6 +1,6 @@
 # includes/search/tika.php
 
-> PHP - 206 lines
+> PHP - 215 lines
 
 Apache Tika client — attachment extraction, tier 2 (discussion #53).
 
@@ -26,19 +26,19 @@ but the setting screen says it.
 | Function | Line | What it does |
 |---|--:|---|
 | [tikaUrl()](/code/functions/tikaUrl.md) | 56 | The configured endpoint, or '' when tier 2 is switched off. |
-| [tikaTimeoutOverride()](/code/functions/tikaTimeoutOverride.md) | 76 | Force a shorter timeout for the current process. |
-| [tikaTimeout()](/code/functions/tikaTimeout.md) | 86 | How many seconds to wait for Tika, from the override or the system setting, kept within the allowed range. |
-| [tikaConfigured()](/code/functions/tikaConfigured.md) | 99 | Is tier 2 switched on at all? |
-| [tikaHandles()](/code/functions/tikaHandles.md) | 104 | Would Tika be asked about this file, if configured? |
-| [tikaExtract()](/code/functions/tikaExtract.md) | 124 | Ask Tika for the text of a file. |
-| [tikaPing()](/code/functions/tikaPing.md) | 184 | Is the service answering? Used by the settings screen's Test button, and NOWHERE in the indexing path — a health check before every attachment would be an extra HTTP round trip per file. There, the extraction attempt IS the check. |
+| [tikaTimeoutOverride()](/code/functions/tikaTimeoutOverride.md) | 78 | Force a shorter timeout for the current process. |
+| [tikaTimeout()](/code/functions/tikaTimeout.md) | 88 | How many seconds to wait for Tika, from the override or the system setting, kept within the allowed range. |
+| [tikaConfigured()](/code/functions/tikaConfigured.md) | 101 | Is tier 2 switched on at all? |
+| [tikaHandles()](/code/functions/tikaHandles.md) | 110 | Would Tika be asked about this file, if configured? |
+| [tikaExtract()](/code/functions/tikaExtract.md) | 132 | Ask Tika for the text of a file. |
+| [tikaPing()](/code/functions/tikaPing.md) | 193 | Is the service answering? Used by the settings screen's Test button, and NOWHERE in the indexing path — a health check before every attachment would be an extra HTTP round trip per file. There, the extraction attempt IS the check. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 60 | `tikaUrl` | read [system_settings](/code/tables/system_settings.md) |  |
-| 91 | `tikaTimeout` | read [system_settings](/code/tables/system_settings.md) |  |
+| 93 | `tikaTimeout` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

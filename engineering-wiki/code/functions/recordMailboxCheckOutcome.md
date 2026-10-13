@@ -21,19 +21,19 @@ mail it could not turn into tickets has not worked, whatever its status said.
 function recordMailboxCheckOutcome($conn, $mailboxId, ?string $error = null)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 529.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 541.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailboxId` |  |  |  |
+| `$mailboxId` |  |  | the target_mailboxes id the check was for |
 | `$error` | `?string` | `null` | null on a clean run; the reason otherwise. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 532 | `recordMailboxCheckOutcome` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`last_checked_datetime`, `last_error`, `last_error_datetime`) |  |
+| 544 | `recordMailboxCheckOutcome` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`last_checked_datetime`, `last_error`, `last_error_datetime`) |  |
 
 ## Called from
 

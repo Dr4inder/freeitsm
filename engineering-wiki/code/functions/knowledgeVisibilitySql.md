@@ -39,14 +39,14 @@ function knowledgeVisibilitySql(
 ): array
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 324.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 346.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$viewer` | `KnowledgeViewer` |  |  |
-| `$alias` | `string` | `'a'` |  |
-| `$opts` | `array` | `[]` |  |
+| `$viewer` | `KnowledgeViewer` |  | who is reading |
+| `$alias` | `string` | `'a'` | the knowledge_articles alias in the calling query; '' when it has none |
+| `$opts` | `array` | `[]` | lifecycle ('live', 'published', 'unarchived', 'archived', 'any'); no_admin_floor (true skips the floor) |
 
 **Returns:** `array`
 

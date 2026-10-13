@@ -20,8 +20,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):848 | `AssetImportService::resolveEntry` | update | `resolved_datetime` |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):938 | `AssetImportService::logEntry` | insert | `run_id`, `row_number`, `action`, `asset_id`, `source_ref`, `display_name`, `detail`, `raw_row` |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):918 | `AssetImportService::resolveEntry` | update | `resolved_datetime` |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):1039 | `AssetImportService::logEntry` | insert | `run_id`, `row_number`, `action`, `asset_id`, `source_ref`, `display_name`, `detail`, `raw_row` |  |
 
 ## Read by
 
@@ -29,5 +29,5 @@
 |---|---|---|
 | [api/assets/get_assets.php](/code/files/api/assets/get_assets.php.md) | L309 |  |
 | [api/assets/import_history.php](/code/files/api/assets/import_history.php.md) | L60 |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::handleMissing L758, AssetImportService::unresolved L823, AssetImportService::runEntries L916 |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::handleMissing L819, AssetImportService::unresolved L889, AssetImportService::runEntries L1007 |  |
 

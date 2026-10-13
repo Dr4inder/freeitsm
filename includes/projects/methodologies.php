@@ -40,7 +40,11 @@ function projectsSchemaReady(PDO $conn): bool
     return $ready;
 }
 
-/** The first colour of a project's palette key - for a dot or a chip outside the module. */
+/**
+ * The first colour of a project's palette key - for a dot or a chip outside the module.
+ *
+ * @param ?string $key  the project's palette key from projects.colour, e.g. 'coral'; unknown or null gives coral
+ */
 function projectColourHex(?string $key): string
 {
     $p = projectColours();
@@ -85,7 +89,11 @@ function projectToolDefinitions(): array
     ];
 }
 
-/** The tools switched on for one project: its method's defaults, then its tailoring. */
+/**
+ * The tools switched on for one project: its method's defaults, then its tailoring.
+ *
+ * @param array $project  the projects row - methodology and tailoring (JSON) are read
+ */
 function projectEnabledTools(array $project): array
 {
     $preset = projectMethodologies()[$project['methodology'] ?? 'simple'] ?? projectMethodologies()['simple'];

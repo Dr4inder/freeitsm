@@ -16,15 +16,15 @@ function warRoomTranscriptSince(
 ): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1267.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1354.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$sinceUtc` | `string` |  | 'Y-m-d H:i:s' in UTC |
-| `$channelId` | `?int` | `null` |  |
-| `$maxMessages` | `int` | `400` |  |
+| `$channelId` | `?int` | `null` | limit to one channel; null takes every channel the analyst can read |
+| `$maxMessages` | `int` | `400` | the most messages to include, oldest first, 1-1000 |
 
 **Returns:** array{lines:string[],messages:int,channels:int}
 
@@ -32,9 +32,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 126
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1277 | `warRoomTranscriptSince` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
-| 1291 | `warRoomTranscriptSince` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 1295 | `warRoomTranscriptSince` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+| 1364 | `warRoomTranscriptSince` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
+| 1378 | `warRoomTranscriptSince` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 1382 | `warRoomTranscriptSince` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
 
 ## Calls
 

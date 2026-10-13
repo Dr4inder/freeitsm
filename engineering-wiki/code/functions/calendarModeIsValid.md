@@ -11,11 +11,11 @@ and baffling to diagnose. A single choice makes it unrepresentable.
 function calendarModeIsValid(string $mode): bool
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 32.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 34.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mode` | `string` |  |  |
+| `$mode` | `string` |  | a stored or submitted calendar_enrolments.mode value - valid ones are off, push and feed |
 
 **Returns:** `bool`
 

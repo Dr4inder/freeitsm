@@ -6,13 +6,13 @@ The disks, adapters and guest interfaces in the shape the asset detail view read
 function proxmoxVmDetailBlock(array $cfg, string $type, array $guestIfaces): array
 ```
 
-Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 345.
+Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 389.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$type` | `string` |  |  |
-| `$guestIfaces` | `array` |  |  |
+| `$cfg` | `array` |  | the VM's config as Proxmox returns it (disk, net and other keys) |
+| `$type` | `string` |  | 'qemu' or 'lxc' |
+| `$guestIfaces` | `array` |  | the guest agent's interfaces, shaped by `proxmoxVmDetails()`; [] when there is no agent |
 
 **Returns:** `array`
 

@@ -1,6 +1,6 @@
 # includes/integrations/IssueDoc.php
 
-> PHP - 374 lines
+> PHP - 403 lines
 
 IssueDoc — one description/comment, written once, rendered per provider.
 

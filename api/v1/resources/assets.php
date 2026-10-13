@@ -76,7 +76,11 @@ function apiAssetLocations(PDO $conn): array {
     return $cache;
 }
 
-/** The full path of a location, top level first, or null when there is no location. */
+/**
+ * The full path of a location, top level first, or null when there is no location.
+ *
+ * @param ?int $locationId  the asset_locations id; null gives null
+ */
 function apiAssetLocationPath(PDO $conn, ?int $locationId): ?string {
     if ($locationId === null) {
         return null;
@@ -95,6 +99,8 @@ function apiAssetLocationPath(PDO $conn, ?int $locationId): ?string {
 /**
  * Shapes an asset row for the API - identity, company, type, status, location with its
  * path, hardware, operating system and the rest of the record.
+ *
+ * @param array $r  the asset row as apiAssetSelect() loads it, with its type, status, location, supplier and company names
  */
 function apiSerializeAsset(PDO $conn, array $r): array {
     $rel = function ($id, $name) {
@@ -175,6 +181,8 @@ function apiSerializeAsset(PDO $conn, array $r): array {
  * batched reader (AssetFieldsService::readForAssets) is there for when it is
  * not. Flagged rather than hidden: if list latency ever matters, this is the
  * line to change.
+ *
+ * @param ?int $assetTypeId  the asset's type, which decides the custom fields it carries; null for no type
  */
 function apiAssetCustomFields(PDO $conn, int $assetId, ?int $assetTypeId): array {
     static $ready = null;
@@ -211,6 +219,9 @@ function apiLoadAsset(PDO $conn, array $apiKey, int $assetId): array {
  * Validate a DATE field (YYYY-MM-DD); 422 naming the field on garbage. Null/''
  * clears. Kept here (not in AssetsService) because contracts.php + tasks.php
  * share it as a generic API date-parameter validator.
+ *
+ * @param mixed $value  the caller-supplied date (untrusted); null or '' clears the field
+ * @param string $field  the field name, quoted in the 422 message
  */
 function apiParseDateOnly($value, string $field): ?string {
     if ($value === null || $value === '') {

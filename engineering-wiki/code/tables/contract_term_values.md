@@ -18,15 +18,15 @@
 |---|---|---|---|---|
 | [api/contracts/delete_contract_term_tab.php](/code/files/api/contracts/delete_contract_term_tab.php.md):30 |  | delete |  |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3941 |  | delete |  |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):103 | `ContractsService::deleteContract` | delete |  |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):142 | `ContractsService::saveTerms` | update | `content`, `updated_datetime` |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):145 | `ContractsService::saveTerms` | insert | `contract_id`, `term_tab_id`, `content`, `created_datetime` |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):111 | `ContractsService::deleteContract` | delete |  |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):155 | `ContractsService::saveTerms` | update | `content`, `updated_datetime` |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):158 | `ContractsService::saveTerms` | insert | `contract_id`, `term_tab_id`, `content`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/contracts/get_contract_terms.php](/code/files/api/contracts/get_contract_terms.php.md) | L24 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractTermsGet L392 |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::saveTerms L138 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractTermsGet L406 |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::saveTerms L151 |  |
 

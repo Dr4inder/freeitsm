@@ -17,12 +17,12 @@ screen says the server did not answer rather than pretending it said no.
 function cardDavCanWrite(array $cfg, string $bookHref): array
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 162.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 170.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$bookHref` | `string` |  |  |
+| `$cfg` | `array` |  | request settings from `cardDavConfigFromProvider()` |
+| `$bookHref` | `string` |  | the address book's href, absolute or relative to `$cfg`['url'] |
 
 **Returns:** array ['writable'=>bool, 'known'=>bool, 'privileges'=>string[], 'error'=>string]
 

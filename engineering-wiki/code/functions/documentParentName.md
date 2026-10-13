@@ -16,13 +16,13 @@ the registry, which is code, so neither is ever attacker-supplied.
 function documentParentName(PDO $conn, string $type, int $parentId): ?string
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 504.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 523.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$type` | `string` |  |  |
-| `$parentId` | `int` |  |  |
+| `$type` | `string` |  | the parent's entity type key from `documentEntityRegistry()`; unknown gives null |
+| `$parentId` | `int` |  | the parent record's id in that type's table |
 
 **Returns:** `?string`
 

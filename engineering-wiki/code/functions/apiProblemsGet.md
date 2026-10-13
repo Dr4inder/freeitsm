@@ -6,7 +6,7 @@ GET /problems/{id} — full detail incl. linked incidents + changes
 function apiProblemsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 207.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 213.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 212 | `apiProblemsGet` | read [problem_tickets](/code/tables/problem_tickets.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 235 | `apiProblemsGet` | read [change_relations](/code/tables/change_relations.md), read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 218 | `apiProblemsGet` | read [problem_tickets](/code/tables/problem_tickets.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 241 | `apiProblemsGet` | read [change_relations](/code/tables/change_relations.md), read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
 
 ## Calls
 

@@ -6,11 +6,11 @@ Is this a capability the code defines? Enum twin: Capability::tryFrom() !== null
 function capExists(string $key): bool
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 419.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 427.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a capability key, e.g. 'assets.manage' |
 
 **Returns:** `bool`
 

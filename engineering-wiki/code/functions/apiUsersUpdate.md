@@ -6,7 +6,7 @@ PATCH /users/{id}
 function apiUsersUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 210.
+Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 214.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,12 +21,12 @@ Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 225 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
-| 239 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
-| 278 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
-| 290 | `apiUsersUpdate` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 300 | `apiUsersUpdate` | **update** [users](/code/tables/users.md) |  |
-| 302 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
+| 229 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
+| 243 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
+| 282 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
+| 294 | `apiUsersUpdate` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 304 | `apiUsersUpdate` | **update** [users](/code/tables/users.md) |  |
+| 306 | `apiUsersUpdate` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

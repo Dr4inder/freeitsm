@@ -6,11 +6,11 @@ Turns a typed or pasted URL, e-mail address or name into the one stored domain n
 function domainNormalise(string $raw): array
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 23.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 25.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | what somebody typed or pasted (untrusted) - a name, URL or e-mail address, in any script |
 
 **Returns:** array{ok:bool, name?:string, display?:?string, error?:string}
 

@@ -6,7 +6,7 @@ Purposes a domain can be registered for. The keys drive checks; labels are in la
 function domainPurposes(): array
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 138.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 154.
 
 **Returns:** `array`
 

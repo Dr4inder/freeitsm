@@ -6,12 +6,12 @@ The origin id for a channel type (e.g. the seeded 'WhatsApp' origin), or null.
 function getChannelOriginId(PDO $conn, string $channelType): ?int
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 911.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 978.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelType` | `string` |  |  |
+| `$channelType` | `string` |  | the channel type, e.g. 'whatsapp' (looked up as the 'WhatsApp' origin) |
 
 **Returns:** `?int`
 
@@ -19,7 +19,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 915 | `getChannelOriginId` | read [ticket_origins](/code/tables/ticket_origins.md) |  |
+| 982 | `getChannelOriginId` | read [ticket_origins](/code/tables/ticket_origins.md) |  |
 
 ## Called from
 

@@ -10,13 +10,13 @@ function pplHead(
 ): void
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 258.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 351.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$title` | `string` |  |  |
-| `$namespaces` | `array` | `['common', 'people']` |  |
-| `$extraCss` | `array` | `[]` |  |
+| `$title` | `string` |  | the page's own title, put into the <title> by `pageTitle()` |
+| `$namespaces` | `array` | `['common', 'people']` | the translation namespaces published to the page's JS |
+| `$extraCss` | `array` | `[]` | stylesheet paths relative to the app root, e.g. 'assets/css/help.css?v=6' |
 
 **Returns:** `void`
 

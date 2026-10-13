@@ -1,6 +1,6 @@
 # includes/projects/api_bootstrap.php
 
-> PHP - 91 lines
+> PHP - 106 lines
 
 Projects - the start of every api/projects/*.php endpoint.
 
@@ -14,11 +14,11 @@ its own. Mirrors includes/domains/api_bootstrap.php.
 | Function | Line | What it does |
 |---|--:|---|
 | [projectApiBody()](/code/functions/projectApiBody.md) | 32 | The decoded JSON body (never null). |
-| [projectApiOk()](/code/functions/projectApiOk.md) | 43 | Sends a success JSON reply ({success: true} plus `$data`) and ends the request. |
-| [projectApiFail()](/code/functions/projectApiFail.md) | 50 | Sends a failure JSON reply ({success: false, error}) with an optional HTTP status, and ends the request. |
-| [projectApiRequirePost()](/code/functions/projectApiRequirePost.md) | 58 | Writes are POST only, so a link or an image tag can never change a project. |
-| [projectApiTenantForCreate()](/code/functions/projectApiTenantForCreate.md) | 67 | The company a NEW project belongs to: the one the request names (checked against what this analyst may reach), else the analyst's active company. |
-| [projectApiRun()](/code/functions/projectApiRun.md) | 80 | Run a service call and turn any failure into the UI's {success:false} shape. |
+| [projectApiOk()](/code/functions/projectApiOk.md) | 47 | Sends a success JSON reply ({success: true} plus `$data`) and ends the request. |
+| [projectApiFail()](/code/functions/projectApiFail.md) | 59 | Sends a failure JSON reply ({success: false, error}) with an optional HTTP status, and ends the request. |
+| [projectApiRequirePost()](/code/functions/projectApiRequirePost.md) | 67 | Writes are POST only, so a link or an image tag can never change a project. |
+| [projectApiTenantForCreate()](/code/functions/projectApiTenantForCreate.md) | 78 | The company a NEW project belongs to: the one the request names (checked against what this analyst may reach), else the analyst's active company. |
+| [projectApiRun()](/code/functions/projectApiRun.md) | 95 | Run a service call and turn any failure into the UI's {success:false} shape. |
 
 ## How it hangs together
 

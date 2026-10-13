@@ -31,6 +31,8 @@ require_once __DIR__ . '/tenancy.php';
  * The value of a setting for one company.
  *
  * @param ?int $tenantId  null = ask the install-wide value only
+ * @param string $key  the setting key, the same name in tenant_settings and system_settings
+ * @param ?string $default  returned when neither the company nor the install has a value
  */
 function tenantSetting(PDO $conn, ?int $tenantId, string $key, ?string $default = null): ?string
 {
@@ -91,7 +93,12 @@ function tenantSettingForget(): void
     $cache = [];
 }
 
-/** Convenience for a yes/no setting. Anything but '0' is on. */
+/**
+ * Convenience for a yes/no setting. Anything but '0' is on.
+ *
+ * @param string $key  the setting key, the same name in tenant_settings and system_settings
+ * @param bool $default  the answer when neither the company nor the install has a value
+ */
 function tenantSettingOn(PDO $conn, ?int $tenantId, string $key, bool $default = true): bool
 {
     $v = tenantSetting($conn, $tenantId, $key, $default ? '1' : '0');
@@ -105,6 +112,9 @@ function tenantSettingOn(PDO $conn, ?int $tenantId, string $key, bool $default =
  * company goes back to following the install-wide default. "Not set" and "set to
  * nothing" have to stay distinguishable, or a company can never be handed back to
  * the default once it has been given an answer.
+ *
+ * @param string $key  the setting key
+ * @param ?string $value  the company's answer; null deletes it, so the company follows the install-wide value again
  */
 function setTenantSetting(PDO $conn, int $tenantId, string $key, ?string $value): void
 {
@@ -124,6 +134,7 @@ function setTenantSetting(PDO $conn, int $tenantId, string $key, ?string $value)
 /**
  * Every company's answer for one key, for rendering a settings table.
  *
+ * @param string $key  the setting key
  * @return array<int,string> tenant_id => value, containing ONLY companies that
  *                           have their own answer. Anything absent follows the
  *                           install default, which the caller shows separately.

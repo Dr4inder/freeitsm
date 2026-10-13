@@ -11,12 +11,12 @@ segment, and all three are legal. Concatenating blindly produces
 function cardDavAbsoluteUrl(string $baseUrl, string $href): string
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 383.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 393.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$baseUrl` | `string` |  |  |
-| `$href` | `string` |  |  |
+| `$baseUrl` | `string` |  | the absolute URL the href is relative to (the configured server address) |
+| `$href` | `string` |  | an href from a DAV response - absolute, root-relative or a bare segment; '' gives `$baseUrl` |
 
 **Returns:** `string`
 

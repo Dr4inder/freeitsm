@@ -1,6 +1,6 @@
 # api/projects/reports.php
 
-> API endpoint - 83 lines
+> API endpoint - 87 lines
 
 Projects - briefing and reports, and the AI project manager (3.2.0). Rules: includes/services/project_reports.php; the AI: includes/projects/ai.php.
 
@@ -29,7 +29,7 @@ The AI only PROPOSES: a draft is a draft until a person approves it.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [projectReportsAiFail()](/code/functions/projectReportsAiFail.md) | 25 | A provider problem in words the page can show. |
+| [projectReportsAiFail()](/code/functions/projectReportsAiFail.md) | 29 | A provider problem in words the page can show. |
 
 ## How it hangs together
 

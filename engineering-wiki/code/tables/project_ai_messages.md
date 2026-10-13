@@ -22,12 +22,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):394 | `projectChatTurn` | insert | `thread_id`, `role`, `kind`, `content`, `proposals`, `looked_at`, `analyst_id`, `model`, `tokens_in`, `tokens_out` |  |
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):486 | `projectChatApply` | update | `proposals` |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):426 | `projectChatTurn` | insert | `thread_id`, `role`, `kind`, `content`, `proposals`, `looked_at`, `analyst_id`, `model`, `tokens_in`, `tokens_out` |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md):530 | `projectChatApply` | update | `proposals` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatReady L70, projectChatMessages L94, projectChatTurn L331, projectChatOpen L409, projectChatSummarise L430, projectChatApply L464 |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatReady L70, projectChatMessages L102, projectChatTurn L363, projectChatOpen L445, projectChatSummarise L469, projectChatApply L508 |  |
 

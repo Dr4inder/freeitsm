@@ -13,11 +13,11 @@ will fall behind, which costs nothing because a working call never asks.
 function aiAzureApiVersionLooksValid(string $v): bool
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 249.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 262.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` | `string` |  |  |
+| `$v` | `string` |  | the api-version as typed by the administrator; '' counts as valid (the default is used) |
 
 **Returns:** `bool`
 

@@ -16,8 +16,8 @@ Incidents (tickets) linked to a change — twin of problem_tickets.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):645 | `ChangesService::linkTicket` | insert | `change_id`, `ticket_id`, `created_by_id`, `created_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):662 | `ChangesService::unlinkTicket` | delete |  |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):675 | `ChangesService::linkTicket` | insert | `change_id`, `ticket_id`, `created_by_id`, `created_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):696 | `ChangesService::unlinkTicket` | delete |  |  |
 
 ## Read by
 
@@ -26,5 +26,5 @@ Incidents (tickets) linked to a change — twin of problem_tickets.
 | [api/change-management/get.php](/code/files/api/change-management/get.php.md) | L91 |  |
 | [api/change-management/list_linkable_tickets.php](/code/files/api/change-management/list_linkable_tickets.php.md) | L41 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L220 |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::linkTicket L639 |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::linkTicket L669 |  |
 

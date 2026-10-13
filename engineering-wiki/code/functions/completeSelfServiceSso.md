@@ -33,19 +33,19 @@ function completeSelfServiceSso(
 ): void
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 446.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 473.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
-| `$providerId` | `int` |  |  |
-| `$sub` | `string` |  |  |
-| `$email` | `string` |  |  |
-| `$emailVerified` | `bool` |  |  |
-| `$name` | `string` |  |  |
-| `$tokens` | `array` |  |  |
-| `$claims` | `array` | `[]` |  |
+| `$provider` | `array` |  | the sso_providers row being signed in with |
+| `$providerId` | `int` |  | that provider's id |
+| `$sub` | `string` |  | the user's subject (sub claim) at the identity provider - never empty here |
+| `$email` | `string` |  | the email claim, lower-cased and trimmed; empty when the provider sent none |
+| `$emailVerified` | `bool` |  | true when the provider vouches for the email (or the claim is missing and not required) |
+| `$name` | `string` |  | the display name worked out from the claims |
+| `$tokens` | `array` |  | the token endpoint response; id_token is kept in the session for single logout |
+| `$claims` | `array` | `[]` | the validated claims, used for profile sync |
 
 **Returns:** `void`
 
@@ -53,12 +53,12 @@ Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 451 | `completeSelfServiceSso` | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
-| 469 | `completeSelfServiceSso` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`last_login_datetime`, `email`) |  |
-| 478 | `completeSelfServiceSso` | read [users](/code/tables/users.md) |  |
-| 488 | `completeSelfServiceSso` | **update** [users](/code/tables/users.md) (`auth_provider_id`) |  |
-| 513 | `completeSelfServiceSso` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `job_title`, `department`, `office`, `phone`, `mobile`, `auth_provider_id`, `tenant_id`, `created_at`) |  |
-| 528 | `completeSelfServiceSso` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
+| 478 | `completeSelfServiceSso` | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 496 | `completeSelfServiceSso` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`last_login_datetime`, `email`) |  |
+| 505 | `completeSelfServiceSso` | read [users](/code/tables/users.md) |  |
+| 515 | `completeSelfServiceSso` | **update** [users](/code/tables/users.md) (`auth_provider_id`) |  |
+| 540 | `completeSelfServiceSso` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `job_title`, `department`, `office`, `phone`, `mobile`, `auth_provider_id`, `tenant_id`, `created_at`) |  |
+| 555 | `completeSelfServiceSso` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
 
 ## Calls
 

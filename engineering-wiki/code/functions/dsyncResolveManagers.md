@@ -21,15 +21,15 @@ function dsyncResolveManagers(
 ): void
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 888.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 975.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$people` | `array` |  |  |
-| `$dnToUserId` | `array` |  |  |
-| `$runId` | `int` |  |  |
-| `$preview` | `bool` |  |  |
+| `$people` | `array` |  | every mapped person this run found, as `dsyncMapPerson()` returns them |
+| `$dnToUserId` | `array` |  | lower-cased DN => users.id for everyone matched or created this run |
+| `$runId` | `int` |  | directory_sync_runs.id to log against |
+| `$preview` | `bool` |  | true to work it out without writing manager_id |
 
 **Returns:** `void`
 
@@ -37,7 +37,7 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 914 | `dsyncResolveManagers` | **update** [users](/code/tables/users.md) (`manager_id`) |  |
+| 1001 | `dsyncResolveManagers` | **update** [users](/code/tables/users.md) (`manager_id`) |  |
 
 ## Calls
 

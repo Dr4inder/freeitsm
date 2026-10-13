@@ -6,7 +6,7 @@ GET /workflow-executions — install-wide, including orphaned runs whose workflo
 function apiWorkflowExecutionsListAll(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 378.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 406.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

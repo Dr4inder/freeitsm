@@ -6,7 +6,7 @@ SLA (compute-on-read via includes/sla.php)
 function apiTicketSlaGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 423.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 425.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

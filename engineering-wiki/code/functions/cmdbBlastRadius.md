@@ -17,15 +17,15 @@ function cmdbBlastRadius(
 ): array
 ```
 
-Defined in [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md), line 202.
+Defined in [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md), line 210.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rootId` | `int` |  |  |
-| `$tenantScope` | `?int` | `null` |  |
-| `$maxDepth` | `int` | `20` |  |
-| `$maxNodes` | `int` | `1000` |  |
+| `$rootId` | `int` |  | cmdb_objects.id whose failure is being modelled |
+| `$tenantScope` | `?int` | `null` | company the walk stays inside (see `cmdbImpactTenantScope()`); null means no limit |
+| `$maxDepth` | `int` | `20` | most hops to follow from the root |
+| `$maxNodes` | `int` | `1000` | most objects to collect before stopping and flagging truncated |
 
 **Returns:** array{nodes: array, truncated: bool, max_depth_reached: int}
 

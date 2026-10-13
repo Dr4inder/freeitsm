@@ -33,10 +33,10 @@
 | [api/problem-management/list.php](/code/files/api/problem-management/list.php.md) | L28, L46 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2479 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L204 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L184, apiProblemStatusesList L413 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L190, apiProblemStatusesList L419 |  |
 | [includes/feature_bingo/cards/problems.php](/code/files/includes/feature_bingo/cards/problems.php.md) | L112 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L211 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewProblem L256 |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::createProblem L52, ProblemsService::loadProblem L388, ProblemsService::resolveStatus L458, ProblemsService::resolveStatus L461 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolKnownErrors L632 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L233 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewProblem L273 |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::createProblem L55, ProblemsService::loadProblem L426, ProblemsService::resolveStatus L515, ProblemsService::resolveStatus L518 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolKnownErrors L665 |  |
 

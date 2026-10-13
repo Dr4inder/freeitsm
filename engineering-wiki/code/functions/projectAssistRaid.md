@@ -6,13 +6,13 @@ args: project, type (risk | assumption | issue | dependency | decision | lesson)
 function projectAssistRaid(PDO $conn, array $scope, array $args): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 209.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 246.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `array` |  |  |
-| `$args` | `array` |  |  |
+| `$scope` | `array` |  | [sql, args]: the caller's company filter on alias p |
+| `$args` | `array` |  | the tool's arguments: project, type (risk, issue, ...; '' for all), status (open, closed or all; default open) |
 
 **Returns:** `string`
 

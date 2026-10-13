@@ -72,7 +72,11 @@ class ProjectsService
     //  Projects
     // ======================================================================
 
-    /** Create (no id) or update (id present). Returns ['id', 'created']. */
+    /**
+     * Create (no id) or update (id present). Returns ['id', 'created'].
+     *
+     * @param array $in  the project fields from fieldMap(); with id it updates that project, without one it creates
+     */
     public static function saveProject(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId = null): array
     {
         if (!empty($in['id'])) {
@@ -87,6 +91,9 @@ class ProjectsService
      * Fills in the default method, visibility and project manager from Projects -> Settings
      * and the creator, starts it as proposed when proposals need approval, records it in
      * the history and fires project.created.
+     *
+     * @param array $in  the project fields from fieldMap() (name required); methodology, visibility and owner_analyst_id
+     *     default from settings and the creator; _from_form marks a proposal made on a form
      */
     public static function createProject(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId): int
     {
@@ -155,6 +162,9 @@ class ProjectsService
      *
      * Only the team or a project manager may change who can see it; a proposal waiting for
      * approval cannot be started.
+     *
+     * @param int $id  the project to change
+     * @param array $in  only the fields to change, keyed as in fieldMap(); unchanged values are skipped
      */
     public static function updateProject(PDO $conn, ActorContext $ctx, int $id, array $in): int
     {
@@ -232,6 +242,8 @@ class ProjectsService
     /**
      * Delete a project. Its tasks are DETACHED, never deleted; its stages and
      * history go with it. Returns ['id', 'tasks_detached'].
+     *
+     * @param int $id  the project to delete
      */
     public static function deleteProject(PDO $conn, ActorContext $ctx, int $id): array
     {
@@ -287,6 +299,8 @@ class ProjectsService
     /**
      * Relabel the OPEN time boxes to the preset's kind. Closed ones are history
      * and keep the name they were run under.
+     *
+     * @param string $method  the new methodology key from projectMethodologies(); an unknown key does nothing
      */
     private static function applyMethodology(PDO $conn, int $projectId, string $method): void
     {
@@ -313,7 +327,12 @@ class ProjectsService
     //  Stages (phases / stages / sprints)
     // ======================================================================
 
-    /** Create or update a time box. Returns its id. */
+    /**
+     * Create or update a time box. Returns its id.
+     *
+     * @param array $in  id (a stage to change; absent for new), name (up to 150), goal, start_date, end_date, status -
+     *     fields left out keep their value
+     */
     public static function saveStage(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
         $project = self::loadForActor($conn, $ctx, $projectId);
@@ -371,7 +390,11 @@ class ProjectsService
         return $newId;
     }
 
-    /** Delete a time box. Its tasks stay in the project, unassigned to any stage. */
+    /**
+     * Delete a time box. Its tasks stay in the project, unassigned to any stage.
+     *
+     * @param int $stageId  the stage (project_stages.id) to delete; must belong to the project
+     */
     public static function deleteStage(PDO $conn, ActorContext $ctx, int $projectId, int $stageId): void
     {
         self::assertCanChange($conn, $ctx, self::loadForActor($conn, $ctx, $projectId));
@@ -396,7 +419,11 @@ class ProjectsService
         self::afterChange($conn, $projectId);
     }
 
-    /** Put the project's time boxes in the given order (ids not listed keep their place after). */
+    /**
+     * Put the project's time boxes in the given order (ids not listed keep their place after).
+     *
+     * @param array $ids  stage ids in their new order; positions are renumbered from 1, ids of other projects match nothing
+     */
     public static function reorderStages(PDO $conn, ActorContext $ctx, int $projectId, array $ids): void
     {
         self::assertCanChange($conn, $ctx, self::loadForActor($conn, $ctx, $projectId));
@@ -416,6 +443,9 @@ class ProjectsService
      * Put a task in a project (and optionally a stage), or take it out (null).
      * The task and the project must belong to the same company - a project is
      * one company's work, and a task cannot carry another company's plan.
+     *
+     * @param ?int $projectId  the project to put the task in; null or 0 takes it out of its project
+     * @param ?int $stageId  a stage of that project to put it in; null or 0 for none
      */
     public static function assignTask(PDO $conn, ActorContext $ctx, int $taskId, ?int $projectId, ?int $stageId = null): void
     {
@@ -462,6 +492,9 @@ class ProjectsService
      * email, the bell, workflows and everything else that happens for a new task
      * happens here too. Only then is it filed under the project, and it takes the
      * project's company: a project is one company's work.
+     *
+     * @param ?int $stageId  a stage of the project to put the task in; null or 0 for none
+     * @param array $in  the task fields as TasksService::saveTask() takes them; id, ticket_id, parent_task_id and tenant_id are ignored
      */
     public static function createTaskInProject(PDO $conn, ActorContext $ctx, int $projectId, ?int $stageId, array $in): int
     {
@@ -500,7 +533,11 @@ class ProjectsService
     //  Loading and scope
     // ======================================================================
 
-    /** Loads one project; throws not found when it does not exist. */
+    /**
+     * Loads one project; throws not found when it does not exist.
+     *
+     * @param int $id  the project to load
+     */
     public static function loadRow(PDO $conn, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM projects WHERE id = ?");
@@ -510,7 +547,11 @@ class ProjectsService
         return $row;
     }
 
-    /** Load a project the caller may touch - out of scope reads as not found. */
+    /**
+     * Load a project the caller may touch - out of scope reads as not found.
+     *
+     * @param int $id  the project to load
+     */
     public static function loadForActor(PDO $conn, ActorContext $ctx, int $id): array
     {
         $row = self::loadRow($conn, $id);
@@ -521,7 +562,11 @@ class ProjectsService
         return $row;
     }
 
-    /** Loads one project stage; throws not found when it does not exist. */
+    /**
+     * Loads one project stage; throws not found when it does not exist.
+     *
+     * @param int $id  the stage (project_stages.id) to load
+     */
     public static function loadStage(PDO $conn, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM project_stages WHERE id = ?");
@@ -536,6 +581,8 @@ class ProjectsService
      * (its team, or everyone with the module); people who manage Projects always
      * may. A system actor (actorId 0 - demo import, scheduled work) is not a person
      * and is not asked.
+     *
+     * @param array $project  the projects row, as loaded by loadForActor()
      */
     public static function assertCanChange(PDO $conn, ActorContext $ctx, array $project): void
     {
@@ -545,7 +592,12 @@ class ProjectsService
         }
     }
 
-    /** Throws not found with $notFound when the row's company is outside the actor's companies. */
+    /**
+     * Throws not found with $notFound when the row's company is outside the actor's companies.
+     *
+     * @param array $row  any row with a tenant_id column (a project or a task)
+     * @param string $notFound  the not-found message to throw, e.g. 'Project not found.'
+     */
     private static function assertScope(PDO $conn, ActorContext $ctx, array $row, string $notFound): void
     {
         if ($ctx->companyScope === null || !isMultiTenant($conn)) return;
@@ -555,7 +607,12 @@ class ProjectsService
         }
     }
 
-    /** True when two company ids are the same company, treating NULL as the Default company. */
+    /**
+     * True when two company ids are the same company, treating NULL as the Default company.
+     *
+     * @param mixed $a  a tenant_id as stored (null = the Default company)
+     * @param mixed $b  the other tenant_id as stored (null = the Default company)
+     */
     private static function sameTenant(PDO $conn, $a, $b): bool
     {
         if (!isMultiTenant($conn)) return true;
@@ -579,6 +636,10 @@ class ProjectsService
     /**
      * Validates and cleans one project field according to its type in fieldMap(), and
      * returns the value to store.
+     *
+     * @param string $field  the project column, a key of fieldMap()
+     * @param mixed $v  the value as sent
+     * @param array $def  that field's rule from fieldMap(): type, plus max, values or required
      */
     private static function validateField(PDO $conn, string $field, $v, array $def)
     {
@@ -627,7 +688,11 @@ class ProjectsService
         return $v;
     }
 
-    /** Validates an optional YYYY-MM-DD date; blank gives null. */
+    /**
+     * Validates an optional YYYY-MM-DD date; blank gives null.
+     *
+     * @param mixed $v  the date as typed (YYYY-MM-DD); null or blank gives null, anything else invalid throws
+     */
     private static function date($v): ?string
     {
         if ($v === null || trim((string)$v) === '') return null;
@@ -637,7 +702,12 @@ class ProjectsService
         return $s;
     }
 
-    /** Throws when the end date is before the start date. */
+    /**
+     * Throws when the end date is before the start date.
+     *
+     * @param ?string $start  the start date (YYYY-MM-DD), or null
+     * @param ?string $end  the end date (YYYY-MM-DD), or null
+     */
     private static function assertDates(?string $start, ?string $end): void
     {
         if ($start && $end && $end < $start) {
@@ -645,7 +715,12 @@ class ProjectsService
         }
     }
 
-    /** Trimmed text cut to $max characters, or null when blank. */
+    /**
+     * Trimmed text cut to $max characters, or null when blank.
+     *
+     * @param mixed $v  the text as sent; null or blank gives null
+     * @param int $max  the most characters to keep
+     */
     private static function str($v, int $max): ?string
     {
         if ($v === null) return null;
@@ -654,7 +729,12 @@ class ProjectsService
         return mb_substr($s, 0, $max);
     }
 
-    /** True when two values are equal as strings; null only equals null. */
+    /**
+     * True when two values are equal as strings; null only equals null.
+     *
+     * @param mixed $a  the stored value
+     * @param mixed $b  the new value
+     */
     private static function same($a, $b): bool
     {
         if ($a === null || $b === null) return $a === $b;
@@ -696,7 +776,13 @@ class ProjectsService
         }
     }
 
-    /** project.stage_closed - by its gate ($decision) or by hand (null). */
+    /**
+     * project.stage_closed - by its gate ($decision) or by hand (null).
+     *
+     * @param int $stageId  the stage (project_stages.id) that closed
+     * @param ?string $decision  the gate decision that closed it ('go', 'go_with_conditions'), or null when closed by hand
+     * @param ?string $next  the name of the stage the gate started, or null
+     */
     public static function stageClosed(PDO $conn, int $projectId, int $stageId, ?string $decision, ?string $next): void
     {
         try {
@@ -720,7 +806,11 @@ class ProjectsService
         }
     }
 
-    /** project.raid_escalated - a RAID entry needs somebody above the project manager (3.3.0). */
+    /**
+     * project.raid_escalated - a RAID entry needs somebody above the project manager (3.3.0).
+     *
+     * @param array $r  the project_raid row just escalated, including escalation_note
+     */
     public static function raidEscalated(PDO $conn, int $projectId, array $r): void
     {
         try {
@@ -738,7 +828,11 @@ class ProjectsService
         }
     }
 
-    /** project.signoff_requested (3.3.0): somebody is named to sign off an item at a stage gate. */
+    /**
+     * project.signoff_requested (3.3.0): somebody is named to sign off an item at a stage gate.
+     *
+     * @param int $itemId  the gate checklist item (project_gate_items.id) that needs signing; no event if nobody is named
+     */
     public static function signoffEvent(PDO $conn, int $projectId, int $itemId): void
     {
         try {
@@ -765,6 +859,9 @@ class ProjectsService
      * records who and when and - when project_proposal_on_approve is 'active' -
      * starts the project; rejecting cancels it. Either way it is audited and the
      * proposer is told. Compare-and-set, so two approvers decide it once.
+     *
+     * @param string $decision  'approved' or 'rejected'
+     * @param mixed $notes  the decision notes (cut to 20000 characters); required to reject
      */
     public static function decideProposal(PDO $conn, ActorContext $ctx, int $projectId, string $decision, $notes): array
     {
@@ -796,6 +893,8 @@ class ProjectsService
      * (to whoever proposed it, when that was an analyst) - 3.3.0. The payload
      * carries the proposer's email so a workflow can tell somebody who asked on
      * a form and has no bell.
+     *
+     * @param string $event  'project.proposal_submitted' or 'project.proposal_decided'
      */
     public static function proposalEvent(PDO $conn, int $projectId, string $event): void
     {
@@ -835,6 +934,9 @@ class ProjectsService
     /**
      * project.change_raised / project.change_decided (3.3.0) - a change request
      * was raised, or approved or rejected. includes/projects/control.php.
+     *
+     * @param string $event  'project.change_raised' or 'project.change_decided'
+     * @param array $cr  the project_change_requests row
      */
     public static function changeEvent(PDO $conn, int $projectId, string $event, array $cr): void
     {
@@ -857,7 +959,11 @@ class ProjectsService
         }
     }
 
-    /** project.milestone_reached - somebody marked a milestone done (3.3.0). */
+    /**
+     * project.milestone_reached - somebody marked a milestone done (3.3.0).
+     *
+     * @param array $m  the project_milestones row, with done_date set
+     */
     public static function milestoneReached(PDO $conn, int $projectId, array $m): void
     {
         try {
@@ -875,7 +981,11 @@ class ProjectsService
         }
     }
 
-    /** The project as its events carry it, with the health it shows; null if it is gone. */
+    /**
+     * The project as its events carry it, with the health it shows; null if it is gone.
+     *
+     * @param int $id  the project
+     */
     private static function eventFor(PDO $conn, int $id): ?array
     {
         try {
@@ -888,7 +998,13 @@ class ProjectsService
         }
     }
 
-    /** Fires a project workflow event with the project's details. */
+    /**
+     * Fires a project workflow event with the project's details.
+     *
+     * @param string $event  the workflow event name, e.g. 'project.created'
+     * @param int $id  the project
+     * @param array $extra  more payload keys added beside 'project', e.g. ['changed' => 'name,status']
+     */
     private static function dispatch(PDO $conn, string $event, int $id, array $extra = []): void
     {
         $p = self::eventFor($conn, $id);
@@ -910,6 +1026,10 @@ class ProjectsService
     /**
      * Records one change in a project's history; a failure is logged, never thrown.
      *
+     * @param string $field  what changed: a project column or an action key such as 'stage_added'
+     * @param mixed $old  the value before (cut to 1000 characters), or null
+     * @param mixed $new  the value after (cut to 1000 characters), or null
+     * @param string $source  where it came from: 'app', 'api' or 'system'
      * @writes project_audit - the project's history
      */
     public static function audit(PDO $conn, int $projectId, ?int $analystId, string $field, $old, $new, string $source = 'app'): void
@@ -925,7 +1045,12 @@ class ProjectsService
         }
     }
 
-    /** What the history shows for a value: names, not ids; a line, not a paragraph. */
+    /**
+     * What the history shows for a value: names, not ids; a line, not a paragraph.
+     *
+     * @param string $field  the project column the value belongs to
+     * @param mixed $v  the stored value
+     */
     private static function auditDisplay(PDO $conn, string $field, $v): ?string
     {
         if ($v === null || $v === '') return null;

@@ -6,12 +6,12 @@ The flow for one project's chart: statuses [{id, name, closed}] in board order (
 function projectFlow(PDO $conn, array $project): array
 ```
 
-Defined in [includes/projects/flow.php](/code/files/includes/projects/flow.php.md), line 53.
+Defined in [includes/projects/flow.php](/code/files/includes/projects/flow.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row - id and start_date are read |
 
 **Returns:** `array`
 
@@ -19,10 +19,10 @@ Defined in [includes/projects/flow.php](/code/files/includes/projects/flow.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 57 | `projectFlow` | read [task_statuses](/code/tables/task_statuses.md) |  |
-| 60 | `projectFlow` | read [project_task_flow](/code/tables/project_task_flow.md) |  |
-| 67 | `projectFlow` | read [tasks](/code/tables/tasks.md) |  |
-| 76 | `projectFlow` | read [tasks](/code/tables/tasks.md) |  |
+| 63 | `projectFlow` | read [task_statuses](/code/tables/task_statuses.md) |  |
+| 66 | `projectFlow` | read [project_task_flow](/code/tables/project_task_flow.md) |  |
+| 73 | `projectFlow` | read [tasks](/code/tables/tasks.md) |  |
+| 82 | `projectFlow` | read [tasks](/code/tables/tasks.md) |  |
 
 ## Calls
 

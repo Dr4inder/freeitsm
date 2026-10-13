@@ -6,7 +6,7 @@ Forgets an analyst's change-notification subscription.
 function calendarClearSubscription(PDO $conn, int $analystId): void
 ```
 
-Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 484.
+Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 523.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 487 | `calendarClearSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`) |  |
+| 526 | `calendarClearSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`) |  |
 
 ## Called from
 

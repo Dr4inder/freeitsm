@@ -28,7 +28,7 @@
 
 ### createTicket
 
-*public static* - line 70
+*public static* - line 76
 
 Create a ticket (with its initial email row + audit + ticket.created). `$tenantId` is the adapter-resolved acting company. `$defaultAnalystId` is the assignee when the caller sends none (UI: the creator; API: null). Returns the new ticket id.
 
@@ -48,29 +48,29 @@ function createTicket(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
-| `$defaultAnalystId` | `?int` |  |  |
-| `$creationNote` | `string` |  |  |
+| `$in` | `array` |  | subject (required), description, requester_email (required unless user_id), requester_name, user_id (a requester the caller has already authorised), status_id/status, priority_id/priority, department_id, ticket_type_id, origin_id, category_id, assigned_analyst_id, assigned_team_id, mailbox_id, sensitivity |
+| `$defaultAnalystId` | `?int` |  | the assignee when `$in` names none (UI: the creator; API: null for unassigned) |
+| `$creationNote` | `string` |  | the text of the 'Ticket Created' audit row, e.g. "Created via API (key: X)" |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 112 | `TicketsService::createTicket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 117 | `TicketsService::createTicket` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 160 | `TicketsService::createTicket` | read [analysts](/code/tables/analysts.md) |  |
-| 167 | `TicketsService::createTicket` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 187 | `TicketsService::createTicket` | read [users](/code/tables/users.md) |  |
-| 199 | `TicketsService::createTicket` | read [users](/code/tables/users.md) |  |
-| 217 | `TicketsService::createTicket` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `tenant_id`, `created_at`) |  |
-| 231 | `TicketsService::createTicket` | **insert** [tickets](/code/tables/tickets.md) (`tenant_id`, `ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `category_id`, `origin_id`, `assigned_team_id`, `assigned_analyst_id`, `owner_id`) |  |
-| 247 | `TicketsService::createTicket` | **insert** [emails](/code/tables/emails.md) (`mailbox_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance`, `is_read`) |  |
+| 118 | `TicketsService::createTicket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 123 | `TicketsService::createTicket` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 166 | `TicketsService::createTicket` | read [analysts](/code/tables/analysts.md) |  |
+| 173 | `TicketsService::createTicket` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 193 | `TicketsService::createTicket` | read [users](/code/tables/users.md) |  |
+| 205 | `TicketsService::createTicket` | read [users](/code/tables/users.md) |  |
+| 223 | `TicketsService::createTicket` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `tenant_id`, `created_at`) |  |
+| 237 | `TicketsService::createTicket` | **insert** [tickets](/code/tables/tickets.md) (`tenant_id`, `ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `category_id`, `origin_id`, `assigned_team_id`, `assigned_analyst_id`, `owner_id`) |  |
+| 253 | `TicketsService::createTicket` | **insert** [emails](/code/tables/emails.md) (`mailbox_id`, `subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance`, `is_read`) |  |
 
 **Called from:** [api/tickets/create_ticket.php](/code/files/api/tickets/create_ticket.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
 ### updateTicket
 
-*public static* - line 288
+*public static* - line 298
 
 Apply a partial update to a ticket. `$writeAudit` toggles the server-side audit trail (API: true; UI: false — it audits client-side). Returns void; the adapter reloads for its response.
 
@@ -89,23 +89,23 @@ function updateTicket(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
-| `$writeAudit` | `bool` |  |  |
+| `$in` | `array` |  | only the fields to change: subject, status/priority (by id or name), the lookup ids, assigned_analyst_id, assigned_team_id, company_id, sensitivity, closed_message, work_start_at, work_end_at, work_all_day |
+| `$writeAudit` | `bool` |  | true writes the ticket_audit rows here (API); false when the caller audits itself (UI) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 461 | `TicketsService::updateTicket` | read [teams](/code/tables/teams.md) |  |
-| 489 | `TicketsService::updateTicket` | read [analysts](/code/tables/analysts.md) |  |
-| 638 | `TicketsService::updateTicket` | **update** [tickets](/code/tables/tickets.md) |  |
-| 730 | `TicketsService::updateTicket` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
+| 471 | `TicketsService::updateTicket` | read [teams](/code/tables/teams.md) |  |
+| 499 | `TicketsService::updateTicket` | read [analysts](/code/tables/analysts.md) |  |
+| 648 | `TicketsService::updateTicket` | **update** [tickets](/code/tables/tickets.md) |  |
+| 740 | `TicketsService::updateTicket` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
 
 **Called from:** [api/self-service/close_ticket.php](/code/files/api/self-service/close_ticket.php.md), [api/tickets/assign_ticket.php](/code/files/api/tickets/assign_ticket.php.md), [api/tickets/bulk_update_tickets.php](/code/files/api/tickets/bulk_update_tickets.php.md), [api/tickets/schedule_ticket.php](/code/files/api/tickets/schedule_ticket.php.md), [api/tickets/update_ticket_owner.php](/code/files/api/tickets/update_ticket_owner.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md)
 
 ### deleteTicket
 
-*public static* - line 800
+*public static* - line 814
 
 Move a ticket to the trash. `$writeAudit` -> the 'Trash' audit row (UI: true; API: false).
 
@@ -118,19 +118,19 @@ function deleteTicket(PDO $conn, ActorContext $ctx, int $ticketId, bool $writeAu
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$writeAudit` | `bool` |  |  |
+| `$writeAudit` | `bool` |  | true writes the 'Trash' audit row (UI); false for the API |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 806 | `TicketsService::deleteTicket` | **update** [tickets](/code/tables/tickets.md) (`deleted_datetime`, `deleted_by`) |  |
+| 820 | `TicketsService::deleteTicket` | **update** [tickets](/code/tables/tickets.md) (`deleted_datetime`, `deleted_by`) |  |
 
 **Called from:** [api/tickets/bulk_delete_tickets.php](/code/files/api/tickets/bulk_delete_tickets.php.md), [api/tickets/delete_ticket.php](/code/files/api/tickets/delete_ticket.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 ### restoreTicket
 
-*public static* - line 818
+*public static* - line 836
 
 Restore a ticket from the trash. `$writeAudit` -> the 'Trash' audit row.
 
@@ -143,19 +143,19 @@ function restoreTicket(PDO $conn, ActorContext $ctx, int $ticketId, bool $writeA
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$writeAudit` | `bool` |  |  |
+| `$writeAudit` | `bool` |  | true writes the 'Trash' audit row (UI); false for the API |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 824 | `TicketsService::restoreTicket` | **update** [tickets](/code/tables/tickets.md) (`deleted_datetime`, `deleted_by`) |  |
+| 842 | `TicketsService::restoreTicket` | **update** [tickets](/code/tables/tickets.md) (`deleted_datetime`, `deleted_by`) |  |
 
 **Called from:** [api/tickets/restore_ticket.php](/code/files/api/tickets/restore_ticket.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md)
 
 ### eventTicket
 
-*private static* - line 835
+*private static* - line 857
 
 The canonical ticket workflow payload, built from a loaded (joined) row.
 
@@ -165,11 +165,11 @@ function eventTicket(array $r): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the ticket row, as loaded by `loadTicket()` or `rowAfterUpdates()` |
 
 ### createNote
 
-*public static* - line 857
+*public static* - line 883
 
 Add a note. Returns the note id; touches the ticket's updated_datetime.
 
@@ -182,20 +182,20 @@ function createNote(PDO $conn, ActorContext $ctx, int $ticketId, array $in): int
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | text (required), is_internal (default true; false shares it with the requester and may email them) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 878 | `TicketsService::createNote` | **insert** [ticket_notes](/code/tables/ticket_notes.md) (`ticket_id`, `analyst_id`, `note_text`, `is_internal`, `created_datetime`) |  |
-| 881 | `TicketsService::createNote` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
+| 904 | `TicketsService::createNote` | **insert** [ticket_notes](/code/tables/ticket_notes.md) (`ticket_id`, `analyst_id`, `note_text`, `is_internal`, `created_datetime`) |  |
+| 907 | `TicketsService::createNote` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
 
 **Called from:** [api/tickets/save_note.php](/code/files/api/tickets/save_note.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md)
 
 ### createTimeEntry
 
-*public static* - line 940
+*public static* - line 970
 
 Log time on a ticket. Returns the entry id.
 
@@ -208,19 +208,19 @@ function createTimeEntry(PDO $conn, ActorContext $ctx, int $ticketId, array $in)
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | minutes (required, above 0), notes, entry_at (ISO 8601; default now in UTC) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 952 | `TicketsService::createTimeEntry` | **insert** [ticket_time_entries](/code/tables/ticket_time_entries.md) (`ticket_id`, `analyst_id`, `notes`, `time_spent_minutes`, `entry_datetime`) |  |
+| 982 | `TicketsService::createTimeEntry` | **insert** [ticket_time_entries](/code/tables/ticket_time_entries.md) (`ticket_id`, `analyst_id`, `notes`, `time_spent_minutes`, `entry_datetime`) |  |
 
 **Called from:** [api/tickets/save_time_entry.php](/code/files/api/tickets/save_time_entry.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md)
 
 ### updateTimeEntry
 
-*public static* - line 959
+*public static* - line 994
 
 Edit a time entry (UI-only; only the owning analyst may edit).
 
@@ -232,22 +232,22 @@ function updateTimeEntry(PDO $conn, ActorContext $ctx, int $entryId, int $ticket
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$entryId` | `int` |  |  |
+| `$entryId` | `int` |  | the time entry (ticket_time_entries.id) to edit; must be the actor's own |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | minutes (required, above 0), notes, entry_at (ISO 8601; default now in UTC) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 971 | `TicketsService::updateTimeEntry` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
-| 980 | `TicketsService::updateTimeEntry` | **update** [ticket_time_entries](/code/tables/ticket_time_entries.md) (`notes`, `time_spent_minutes`, `entry_datetime`) |  |
+| 1006 | `TicketsService::updateTimeEntry` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 1015 | `TicketsService::updateTimeEntry` | **update** [ticket_time_entries](/code/tables/ticket_time_entries.md) (`notes`, `time_spent_minutes`, `entry_datetime`) |  |
 
 **Called from:** [api/tickets/save_time_entry.php](/code/files/api/tickets/save_time_entry.php.md)
 
 ### deleteTimeEntry
 
-*public static* - line 989
+*public static* - line 1027
 
 Soft-delete a time entry. `$ticketId` scopes it (API route); pass null to resolve the ticket from the entry (the UI passes only the entry id). `$restrictToOwner` enforces the UI's "only your own entry" rule.
 
@@ -265,23 +265,23 @@ function deleteTimeEntry(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$entryId` | `int` |  |  |
+| `$entryId` | `int` |  | the time entry (ticket_time_entries.id) to remove |
 | `$ticketId` | `?int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$restrictToOwner` | `bool` |  |  |
+| `$restrictToOwner` | `bool` |  | true allows only the analyst who logged it (UI); false allows any entry on a reachable ticket (API) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 993 | `TicketsService::deleteTimeEntry` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
-| 1000 | `TicketsService::deleteTimeEntry` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
-| 1013 | `TicketsService::deleteTimeEntry` | **update** [ticket_time_entries](/code/tables/ticket_time_entries.md) (`is_active`) |  |
+| 1031 | `TicketsService::deleteTimeEntry` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 1038 | `TicketsService::deleteTimeEntry` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 1051 | `TicketsService::deleteTimeEntry` | **update** [ticket_time_entries](/code/tables/ticket_time_entries.md) (`is_active`) |  |
 
 **Called from:** [api/tickets/delete_time_entry.php](/code/files/api/tickets/delete_time_entry.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md)
 
 ### rowAfterUpdates
 
-*private static* - line 1032
+*private static* - line 1071
 
 The ticket row as it will be once an UPDATE built by `updateTicket()` lands.
 
@@ -297,13 +297,13 @@ function rowAfterUpdates(array $current, array $updates, array $args): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$current` | `array` |  |  |
+| `$current` | `array` |  | the ticket row before the update, as loaded by `loadTicket()` |
 | `$updates` | `array` |  | "column = ?" / "column = <expr>" fragments |
 | `$args` | `array` |  | the placeholder values, in order |
 
 ### loadTicket
 
-*public static* - line 1058
+*public static* - line 1097
 
 Load the joined ticket row, enforcing the actor's company scope; 404 otherwise.
 
@@ -328,13 +328,13 @@ function loadTicket(PDO $conn, ActorContext $ctx, int $ticketId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1061 | `TicketsService::loadTicket` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [ticket_types](/code/tables/ticket_types.md), read [ticket_origins](/code/tables/ticket_origins.md), read [departments](/code/tables/departments.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 1100 | `TicketsService::loadTicket` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [ticket_types](/code/tables/ticket_types.md), read [ticket_origins](/code/tables/ticket_origins.md), read [departments](/code/tables/departments.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
 
 **Called from:** [api/tickets/get_mandatory_fields_check.php](/code/files/api/tickets/get_mandatory_fields_check.php.md), [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 ### canAccessTicket
 
-*private static* - line 1094
+*private static* - line 1133
 
 May the actor access this ticket (by its company)? Mirror of apiKeyCanAccessTenantRow.
 
@@ -352,11 +352,11 @@ function canAccessTicket(PDO $conn, ActorContext $ctx, int $ticketId): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1099 | `TicketsService::canAccessTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 1138 | `TicketsService::canAccessTicket` | read [tickets](/code/tables/tickets.md) |  |
 
 ### auditWrite
 
-*private static* - line 1113
+*private static* - line 1158
 
 Records one field change in the ticket's audit trail.
 
@@ -376,19 +376,19 @@ function auditWrite(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$old` | `?string` |  |  |
-| `$new` | `?string` |  |  |
+| `$field` | `string` |  | the audit field label, e.g. 'Status', 'Team', 'Trash', 'Ticket Created' |
+| `$old` | `?string` |  | the value before, or null |
+| `$new` | `?string` |  | the value after, or null |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1116 | `TicketsService::auditWrite` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 1161 | `TicketsService::auditWrite` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### resolveStatus
 
-*private static* - line 1134
+*private static* - line 1183
 
 Resolve a status by name or id. Returns [id, name, is_closed] or null.
 
@@ -399,18 +399,18 @@ function resolveStatus(PDO $conn, array $in): ?array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the request: status_id wins over status (a name); neither gives null, unknown throws |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1137 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 1140 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 1186 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 1189 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ### resolvePriority
 
-*private static* - line 1153
+*private static* - line 1206
 
 Resolve a priority by name or id. Empty string/null id = clear.
 
@@ -421,18 +421,18 @@ function resolvePriority(PDO $conn, array $in): ?array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the request: priority_id (null or '' clears) wins over priority (a name); neither gives null |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1159 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 1162 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 1212 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 1215 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
 
 ### teamName
 
-*private static* - line 1183
+*private static* - line 1240
 
 A team's name for the audit trail, or null. Never throws — this is a label.
 
@@ -443,17 +443,17 @@ function teamName(PDO $conn, ?int $teamId): ?string
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$teamId` | `?int` |  |  |
+| `$teamId` | `?int` |  | the team (teams.id); null or 0 gives null |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1187 | `TicketsService::teamName` | read [teams](/code/tables/teams.md) |  |
+| 1244 | `TicketsService::teamName` | read [teams](/code/tables/teams.md) |  |
 
 ### categoryEffectiveTypeId
 
-*private static* - line 1200
+*private static* - line 1259
 
 The ticket type a category is bound to, taken from its top-level category; null when unbound or it cannot be worked out.
 
@@ -464,17 +464,17 @@ function categoryEffectiveTypeId(PDO $conn, int $categoryId): ?int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$categoryId` | `int` |  |  |
+| `$categoryId` | `int` |  | the ticket category (ticket_categories.id) to start from |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1205 | `TicketsService::categoryEffectiveTypeId` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 1264 | `TicketsService::categoryEffectiveTypeId` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
 
 ### validateLookupId
 
-*private static* - line 1225
+*private static* - line 1290
 
 The name of a row in a lookup table, or null for no id; throws for an unknown id.
 
@@ -485,13 +485,13 @@ function validateLookupId(PDO $conn, string $table, $id, string $label): ?string
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$id` |  |  |  |
-| `$label` | `string` |  |  |
+| `$table` | `string` |  | the lookup table, e.g. 'departments', 'ticket_types', 'teams' - a developer literal |
+| `$id` |  |  | the id as sent; null or '' gives null |
+| `$label` | `string` |  | what the lookup is called in the error message, e.g. 'ticket type' |
 
 ### parseDate
 
-*private static* - line 1240
+*private static* - line 1310
 
 Parse a date to UTC 'Y-m-d H:i:s' (mirrors apiParseDate; 400 on garbage).
 
@@ -501,6 +501,6 @@ function parseDate(string $value, string $field): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` | `string` |  |  |
-| `$field` | `string` |  |  |
+| `$value` | `string` |  | a date and time in any form DateTimeImmutable reads; with no zone it is read as UTC |
+| `$field` | `string` |  | the field name, used in the error message |
 

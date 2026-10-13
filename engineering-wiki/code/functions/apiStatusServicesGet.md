@@ -6,7 +6,7 @@ GET /service-status/services/{id} - one service with its open (unresolved) incid
 function apiStatusServicesGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 211.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 227.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 216 | `apiStatusServicesGet` | read [status_incident_services](/code/tables/status_incident_services.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 232 | `apiStatusServicesGet` | read [status_incident_services](/code/tables/status_incident_services.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
 
 ## Calls
 

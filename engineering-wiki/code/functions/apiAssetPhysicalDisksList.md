@@ -16,7 +16,7 @@ mid-upgrade gets an empty list rather than a 500.
 function apiAssetPhysicalDisksList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 529.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 540.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -31,7 +31,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 533 | `apiAssetPhysicalDisksList` | read [asset_physical_disks](/code/tables/asset_physical_disks.md) |  |
+| 544 | `apiAssetPhysicalDisksList` | read [asset_physical_disks](/code/tables/asset_physical_disks.md) |  |
 
 ## Calls
 

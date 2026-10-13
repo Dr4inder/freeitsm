@@ -6,11 +6,11 @@ The category Meta's Media upload endpoint wants for a mime type ('image'|'video'
 function messagingMediaCategory(string $mime): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 202.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 221.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mime` | `string` |  |  |
+| `$mime` | `string` |  | a MIME type, parameters after ';' ignored |
 
 **Returns:** `string`
 

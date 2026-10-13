@@ -9,11 +9,11 @@ Parse a JSON response from Claude robustly: strip markdown fences, extract the f
 function parseClaudeJson(string $text): array
 ```
 
-Defined in [api/cmdb/_ai_helpers.php](/code/files/api/cmdb/_ai_helpers.php.md), line 55.
+Defined in [api/cmdb/_ai_helpers.php](/code/files/api/cmdb/_ai_helpers.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
+| `$text` | `string` |  | the model's reply, which may wrap the JSON in markdown fences or prose |
 
 **Returns:** `array`
 

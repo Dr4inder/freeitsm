@@ -41,7 +41,11 @@ function filesApiBody(): array
     return $b;
 }
 
-/** Sends a success JSON reply ({success: true} plus $data) and ends the request. */
+/**
+ * Sends a success JSON reply ({success: true} plus $data) and ends the request.
+ *
+ * @param array $data  extra keys merged into the reply beside success
+ */
 function filesApiOk(array $data = []): void
 {
     echo json_encode(['success' => true] + $data);
@@ -51,6 +55,10 @@ function filesApiOk(array $data = []): void
 /**
  * Sends a failure JSON reply ({success: false, error}) with an optional HTTP status and
  * extra keys, and ends the request.
+ *
+ * @param string $message  the error text shown to the user
+ * @param int $status      the HTTP status; 200 (the default) leaves it unchanged
+ * @param array $extra     extra keys merged into the reply beside success and error
  */
 function filesApiFail(string $message, int $status = 200, array $extra = []): void
 {
@@ -59,7 +67,11 @@ function filesApiFail(string $message, int $status = 200, array $extra = []): vo
     exit;
 }
 
-/** True when the analyst holds the capability; a failed lookup counts as no. */
+/**
+ * True when the analyst holds the capability; a failed lookup counts as no.
+ *
+ * @param string $cap  the capability key, normally a Cap:: constant such as Cap::FILES_FOLDERS
+ */
 function filesHasCap(PDO $conn, int $analystId, string $cap): bool
 {
     try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { return false; }
@@ -69,6 +81,10 @@ function filesHasCap(PDO $conn, int $analystId, string $cap): bool
  * Refuse unless the caller holds $need on the folder. Below View the folder does
  * not exist for them, so the answer is "not found" - the same words a deleted or
  * made-up id gets. A refusal at a level they CAN see is audited as 'denied'.
+ *
+ * @param int $folderId  the files_folders id being acted on
+ * @param int $need      the lowest level the action needs, one of FilesAcl::VIEW to FilesAcl::FULL
+ * @param string $what   the action being attempted ('rename', 'upload' ...), recorded as 'doing' in the audit row
  */
 function filesNeed(PDO $conn, int $analystId, int $folderId, int $need, string $what = ''): int
 {
@@ -82,7 +98,11 @@ function filesNeed(PDO $conn, int $analystId, int $folderId, int $need, string $
     return $lvl;
 }
 
-/** A live file row, or null. */
+/**
+ * A live file row, or null.
+ *
+ * @param int $itemId  the files_items id; null comes back if it or any folder above it is deleted
+ */
 function filesItem(PDO $conn, int $itemId): ?array
 {
     $st = $conn->prepare("SELECT * FROM files_items WHERE id = ? AND deleted_datetime IS NULL");
@@ -94,7 +114,13 @@ function filesItem(PDO $conn, int $itemId): ?array
     return $r;
 }
 
-/** A file the caller holds $need on, or "not found". */
+/**
+ * A file the caller holds $need on, or "not found".
+ *
+ * @param int $itemId  the files_items id being acted on
+ * @param int $need    the lowest level the action needs on the file's folder, FilesAcl::VIEW to FilesAcl::FULL
+ * @param string $what the action being attempted, recorded as 'doing' in any 'denied' audit row
+ */
 function filesNeedItem(PDO $conn, int $analystId, int $itemId, int $need, string $what = ''): array
 {
     $it = filesItem($conn, $itemId);
@@ -112,6 +138,11 @@ function filesNeedItem(PDO $conn, int $analystId, int $itemId, int $need, string
  * confirm a hidden folder exists - at the top level, or a subfolder that stopped
  * inheriting. Two people may therefore end up with same-named folders they cannot
  * see each other's of; that is the price of not leaking, and it is harmless.
+ *
+ * @param ?int $parentId     the folder to look in; null is the top level, where only folders are checked
+ * @param string $name       the name to test, compared case-insensitively
+ * @param string $exceptType 'folder', 'item' or 'shortcut' - the kind of the thing being renamed; '' for none
+ * @param int $exceptId      the id of that thing, so its own current name does not count as taken
  */
 function filesNameTaken(PDO $conn, ?int $parentId, string $name, string $exceptType = '', int $exceptId = 0): bool
 {
@@ -144,6 +175,9 @@ function filesNameTaken(PDO $conn, ?int $parentId, string $name, string $exceptT
  * What a shortcut points at, IF the caller can see it - else null. The one
  * place shortcuts meet permissions: a shortcut never widens access.
  * Returns [name, folder_id (the target folder, or the file's folder), path, level].
+ *
+ * @param string $type  files_shortcuts.target_type - 'folder', 'article', or anything else for a file ('item')
+ * @param int $id       the target's id - a files_folders, knowledge_articles or files_items id to match $type
  */
 function filesShortcutTarget(PDO $conn, int $analystId, string $type, int $id): ?array
 {
@@ -168,6 +202,8 @@ function filesShortcutTarget(PDO $conn, int $analystId, string $type, int $id): 
  * deleted). Knowledge's own visibility rules decide - the same clause its list
  * uses, WITHOUT the administrator floor: that floor is an audited override for
  * opening one article in Knowledge, never a reason for it to show up in a folder.
+ *
+ * @param int $id  the knowledge_articles id; 0 or less gives null
  */
 function filesArticleTarget(PDO $conn, int $analystId, int $id): ?array
 {
@@ -191,7 +227,12 @@ function filesArticleTarget(PDO $conn, int $analystId, int $id): ?array
     return ['name' => (string)$title, 'folder_id' => null, 'path' => 'Knowledge / ' . $title, 'level' => FilesAcl::VIEW];
 }
 
-/** "Report.pdf" -> "Report (2).pdf", the first free one. */
+/**
+ * "Report.pdf" -> "Report (2).pdf", the first free one.
+ *
+ * @param ?int $parentId  the folder the name must be free in; null is the top level
+ * @param string $name    the name wanted; returned unchanged when nothing visible already uses it
+ */
 function filesFreeName(PDO $conn, ?int $parentId, string $name): string
 {
     if (!filesNameTaken($conn, $parentId, $name)) return $name;
@@ -204,7 +245,11 @@ function filesFreeName(PDO $conn, ?int $parentId, string $name): string
     return $base . ' (' . bin2hex(random_bytes(3)) . ')' . ($ext !== '' ? ".$ext" : '');
 }
 
-/** Run an endpoint body and turn any failure into the UI's {success:false} shape. */
+/**
+ * Run an endpoint body and turn any failure into the UI's {success:false} shape.
+ *
+ * @param callable $fn  the endpoint's work, called with no arguments; it replies itself via filesApiOk()
+ */
 function filesApiRun(callable $fn): void
 {
     try {

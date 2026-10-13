@@ -10,11 +10,11 @@ looks. Calendar clients are unforgiving about over-long lines.
 function icsFold(string $line): string
 ```
 
-Defined in [includes/ics.php](/code/files/includes/ics.php.md), line 35.
+Defined in [includes/ics.php](/code/files/includes/ics.php.md), line 41.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$line` | `string` |  |  |
+| `$line` | `string` |  | one complete content line, e.g. 'SUMMARY:...', already escaped |
 
 **Returns:** `string`
 

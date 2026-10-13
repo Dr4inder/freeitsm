@@ -35,14 +35,22 @@ requireAnyModuleAccessJson(['tickets', 'assets']);
 const MANAGER_ACCESS_PAGE = 25;      // search results per page
 const MANAGER_ACCESS_PREVIEW = 200;  // names listed under "Who they can see"
 
-/** Refuse, in the one shape every refusal takes here. */
+/**
+ * Refuse, in the one shape every refusal takes here.
+ *
+ * @param string $error  the error shown to the analyst
+ */
 function maFail(string $error): void
 {
     echo json_encode(['success' => false, 'error' => $error]);
     exit;
 }
 
-/** The manager, if this analyst may see them. */
+/**
+ * The manager, if this analyst may see them.
+ *
+ * @param int $id  the users.id of the manager (a portal user); 0 or less gives null
+ */
 function maManager(PDO $conn, int $id): ?array
 {
     if ($id <= 0 || !analystCanAccessUser($conn, (int)$_SESSION['analyst_id'], $id)) return null;
@@ -63,7 +71,11 @@ function maReady(PDO $conn): bool
     catch (Throwable $e) { return false; }
 }
 
-/** Everything the page shows for one manager. */
+/**
+ * Everything the page shows for one manager.
+ *
+ * @param array $m  the manager as loaded by maManager()
+ */
 function maState(PDO $conn, array $m): array
 {
     $settings = managersSettings($conn);

@@ -6,15 +6,15 @@ Intune block: a chart of Intune devices grouped by the chosen dimension. A snaps
 function rpIntuneBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md), line 103.
+Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$o` | `array` |  |  |
-| `$range` | `array` |  |  |
-| `$tenant` |  |  |  |
+| `$o` | `array` |  | the block's cleaned options: by (dimension), limit, chart |
+| `$range` | `array` |  | the pack's range (not used - a snapshot of today) |
+| `$tenant` |  |  | the pack's company (not used - Intune devices are not split by company) |
 
 **Returns:** `array`
 
@@ -22,7 +22,7 @@ Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 106 | `rpIntuneBreakdown` | read [intune_devices](/code/tables/intune_devices.md) |  |
+| 126 | `rpIntuneBreakdown` | read [intune_devices](/code/tables/intune_devices.md) |  |
 
 ## Calls
 

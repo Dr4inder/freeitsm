@@ -65,6 +65,8 @@ function projectTargetScopeFields(): array
 /**
  * Check and tidy a target from the screen. Returns the row to store; throws
  * ServiceError on anything the SQL builder would not accept.
+ *
+ * @param array $in  the target as sent by the screen, or a stored project_asset_targets row (untrusted either way)
  */
 function projectTargetNormalise(array $in): array
 {
@@ -111,6 +113,9 @@ function projectTargetNormalise(array $in): array
 /**
  * [FROM/WHERE for the assets in scope, args, the "is done" expression, its args]
  * for one target on one project. Built from the whitelists only.
+ *
+ * @param array $project  the projects row - id and tenant_id are read
+ * @param array $t  the target (a project_asset_targets row or screen input); normalised again here
  */
 function projectTargetSql(PDO $conn, array $project, array $t): array
 {
@@ -144,7 +149,12 @@ function projectTargetSql(PDO $conn, array $project, array $t): array
     return [$from . ($where ? ' WHERE ' . implode(' AND ', $where) : ''), $args, $done, $dArgs];
 }
 
-/** [done, total] for one target. */
+/**
+ * [done, total] for one target.
+ *
+ * @param array $project  the projects row - id and tenant_id are read
+ * @param array $t  the target (a project_asset_targets row)
+ */
 function projectTargetCount(PDO $conn, array $project, array $t): array
 {
     [$from, $args, $done, $dArgs] = projectTargetSql($conn, $project, $t);
@@ -154,7 +164,14 @@ function projectTargetCount(PDO $conn, array $project, array $t): array
     return [(int)$d, (int)$total];
 }
 
-/** green | amber | red for a live target; null when there is nothing to measure. */
+/**
+ * green | amber | red for a live target; null when there is nothing to measure.
+ *
+ * @param int $done  how many assets in scope are done
+ * @param int $total  how many assets are in scope; 0 gives null
+ * @param ?string $due  the date it should be done by, 'Y-m-d' (the target's, else the project's); null means no deadline
+ * @param string $setOn  when the target was set (its created_datetime) - the start of the expected line
+ */
 function projectTargetHealth(int $done, int $total, ?string $due, string $setOn): ?string
 {
     if ($total === 0) return null;
@@ -171,6 +188,8 @@ function projectTargetHealth(int $done, int $total, ?string $due, string $setOn)
 /**
  * Every target on these projects with its counts and health:
  * [project_id => [target, ...]]. Empty before Verification.
+ *
+ * @param array $projectIds  the project ids to read targets for
  */
 function projectTargetsFor(PDO $conn, array $projectIds): array
 {
@@ -202,7 +221,11 @@ function projectTargetsFor(PDO $conn, array $projectIds): array
     return $out;
 }
 
-/** The worst health across a project's targets, or null. */
+/**
+ * The worst health across a project's targets, or null.
+ *
+ * @param array $targets  one project's targets as projectTargetsFor() gives them, each with health
+ */
 function projectTargetsWorst(array $targets): ?string
 {
     $rank = ['green' => 1, 'amber' => 2, 'red' => 3]; $worst = null;
@@ -234,7 +257,11 @@ function projectTargetsDetail(PDO $conn, int $projectId): array
     return $targets;
 }
 
-/** Names for list values in rules (status 6 => Retired), keyed "field:id". */
+/**
+ * Names for list values in rules (status 6 => Retired), keyed "field:id".
+ *
+ * @param array $targets  targets as projectTargetsFor() gives them - done_field and done_value are read
+ */
 function projectTargetValueNames(PDO $conn, array $targets): array
 {
     $out = [];
@@ -252,6 +279,11 @@ function projectTargetValueNames(PDO $conn, array $targets): array
 /**
  * The assets still to do on a target (or all of them, $done = true), at most
  * $limit - for the "what's left" list. Callers check Assets access first.
+ *
+ * @param array $project  the projects row - id and tenant_id are read
+ * @param array $t  the target (a project_asset_targets row)
+ * @param bool $doneOnes  true for the assets already done; false (the default) for those still to do
+ * @param int $limit  the most assets to return
  */
 function projectTargetAssets(PDO $conn, array $project, array $t, bool $doneOnes = false, int $limit = 200): array
 {
@@ -270,7 +302,11 @@ function projectTargetAssets(PDO $conn, array $project, array $t, bool $doneOnes
     return array_map(fn($r) => $r + ['url' => entityLink('asset', (int)$r['id'])], $st->fetchAll(PDO::FETCH_ASSOC));
 }
 
-/** The lists the target dialog offers, for the project's company. */
+/**
+ * The lists the target dialog offers, for the project's company.
+ *
+ * @param array $project  the projects row - tenant_id picks the company's lists
+ */
 function projectTargetOptions(PDO $conn, array $project): array
 {
     $tid = $project['tenant_id'] === null ? null : (int)$project['tenant_id'];

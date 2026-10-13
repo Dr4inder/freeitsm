@@ -47,38 +47,38 @@
 | [api/tasks/toggle_subtask.php](/code/files/api/tasks/toggle_subtask.php.md):123 |  | update | `updated_datetime` |  |
 | [api/tickets/delete_ticket_task.php](/code/files/api/tickets/delete_ticket_task.php.md):49 |  | update | `ticket_id`, `updated_datetime` |  |
 | [api/tickets/save_ticket_task.php](/code/files/api/tickets/save_ticket_task.php.md):102 |  | update | `ticket_id`, `updated_datetime` |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):267 | `calendarPullApplyTaskWork` | update | `work_start_datetime`, `work_end_datetime`, `work_all_day`, `updated_datetime` |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):286 | `calendarPullApplyTaskDue` | update | `due_date`, `updated_datetime` |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):298 | `calendarPullUnscheduleTask` | update | `due_date`, `updated_datetime` |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):305 | `calendarPullUnscheduleTask` | update | `work_start_datetime`, `work_end_datetime`, `updated_datetime` |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):245 | `ProjectsService::deleteProject` | update | `project_id`, `project_stage_id` |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):382 | `ProjectsService::deleteStage` | update | `project_stage_id` |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):438 | `ProjectsService::assignTask` | update | `project_id`, `project_stage_id`, `updated_datetime` |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):453 | `ProjectsService::assignTask` | update | `project_id`, `project_stage_id`, `updated_datetime` |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):492 | `ProjectsService::createTaskInProject` | update | `tenant_id`, `project_id`, `project_stage_id` |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):155 | `ProjectTemplatesService::cleanup` | delete |  |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):130 | `TasksService::createTask` | insert | `title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `ticket_id` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):145 | `TasksService::createTask` | update | `estimate_hours` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):148 | `TasksService::createTask` | update | `assigned_supplier_id`, `assigned_contact_id` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):370 | `TasksService::updateTask` | update |  |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):374 | `TasksService::updateTask` | update | `updated_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):429 | `TasksService::moveTask` | update | `status_id`, `completed_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):446 | `TasksService::moveTask` | update | `board_position` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):548 | `TasksService::deleteTask` | delete |  |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):570 | `TasksService::createComment` | update | `updated_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):741 | `TasksService::addCollaborator` | update | `updated_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):756 | `TasksService::removeCollaborator` | update | `updated_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):797 | `TasksService::setCollaboratorDone` | update | `updated_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):1044 | `TasksService::moveTaskToCompany` | update | `tenant_id`, `updated_datetime` |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):655 | `TaskRecurrence::createOccurrence` | insert | `title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `ticket_id`, `change_id` |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):700 | `TaskRecurrence::createOccurrence` | insert | `title`, `status_id`, `priority_id`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `tenant_id`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2461 | `WorkflowEngine::action_create_task` | insert | `title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `ticket_id`, `board_position`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):287 | `calendarPullApplyTaskWork` | update | `work_start_datetime`, `work_end_datetime`, `work_all_day`, `updated_datetime` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):310 | `calendarPullApplyTaskDue` | update | `due_date`, `updated_datetime` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):327 | `calendarPullUnscheduleTask` | update | `due_date`, `updated_datetime` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):334 | `calendarPullUnscheduleTask` | update | `work_start_datetime`, `work_end_datetime`, `updated_datetime` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):257 | `ProjectsService::deleteProject` | update | `project_id`, `project_stage_id` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):405 | `ProjectsService::deleteStage` | update | `project_stage_id` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):468 | `ProjectsService::assignTask` | update | `project_id`, `project_stage_id`, `updated_datetime` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):483 | `ProjectsService::assignTask` | update | `project_id`, `project_stage_id`, `updated_datetime` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):525 | `ProjectsService::createTaskInProject` | update | `tenant_id`, `project_id`, `project_stage_id` |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):164 | `ProjectTemplatesService::cleanup` | delete |  |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):137 | `TasksService::createTask` | insert | `title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `ticket_id` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):152 | `TasksService::createTask` | update | `estimate_hours` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):155 | `TasksService::createTask` | update | `assigned_supplier_id`, `assigned_contact_id` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):380 | `TasksService::updateTask` | update |  |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):384 | `TasksService::updateTask` | update | `updated_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):444 | `TasksService::moveTask` | update | `status_id`, `completed_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):461 | `TasksService::moveTask` | update | `board_position` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):565 | `TasksService::deleteTask` | delete |  |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):591 | `TasksService::createComment` | update | `updated_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):767 | `TasksService::addCollaborator` | update | `updated_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):782 | `TasksService::removeCollaborator` | update | `updated_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):826 | `TasksService::setCollaboratorDone` | update | `updated_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):1086 | `TasksService::moveTaskToCompany` | update | `tenant_id`, `updated_datetime` |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):733 | `TaskRecurrence::createOccurrence` | insert | `title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `ticket_id`, `change_id` |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):778 | `TaskRecurrence::createOccurrence` | insert | `title`, `status_id`, `priority_id`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `tenant_id`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2617 | `WorkflowEngine::action_create_task` | insert | `title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `ticket_id`, `board_position`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L336 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L346 |  |
 | [api/tasks/delete_task_priority.php](/code/files/api/tasks/delete_task_priority.php.md) | L32 |  |
 | [api/tasks/delete_task_status.php](/code/files/api/tasks/delete_task_status.php.md) | L32 |  |
 | [api/tasks/get.php](/code/files/api/tasks/get.php.md) | L39, L100, L107, L162, L170 |  |
@@ -91,35 +91,35 @@
 | [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md) | enrolReconcileTasks L94 |  |
 | [api/tickets/get_ticket_tasks.php](/code/files/api/tickets/get_ticket_tasks.php.md) | L44 |  |
 | [api/tickets/save_ticket_task.php](/code/files/api/tickets/save_ticket_task.php.md) | L75 |  |
-| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L119 |  |
+| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L122 |  |
 | [api/tickets/search_linkable_tasks.php](/code/files/api/tickets/search_linkable_tasks.php.md) | L50 |  |
-| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectStages L301, apiProjectTasks L621 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiSerializeTask L78, apiTasksList L275, apiTasksGet L307, apiTasksGet L317 |  |
+| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectStages L316, apiProjectTasks L656 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiSerializeTask L80, apiTasksList L277, apiTasksGet L309, apiTasksGet L319 |  |
 | [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md) | calendarSyncPullForAnalyst L127 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTask L184 |  |
 | [includes/feature_bingo/cards/projects.php](/code/files/includes/feature_bingo/cards/projects.php.md) | L33, L338 |  |
-| [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsTaskAssignedEmail L425 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleContractorTasks L732 |  |
-| [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L110, projectAiFacts L153, projectAiFacts L248 |  |
-| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistTasks L236 |  |
-| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMaturity L114, projectChatMaturity L115, projectChatMaturity L116, projectChatMaturity L119, projectChatRead L232, projectChatTurn L368 ... |  |
-| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectLabour L130, projectLabourToCome L261, projectEarnedValue L350 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L124 |  |
+| [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsTaskAssignedEmail L446 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleContractorTasks L793 |  |
+| [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L113, projectAiFacts L156, projectAiFacts L251 |  |
+| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistTasks L278 |  |
+| [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMaturity L124, projectChatMaturity L125, projectChatMaturity L126, projectChatMaturity L129, projectChatRead L255, projectChatTurn L400 ... |  |
+| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectLabour L142, projectLabourToCome L285, projectEarnedValue L384 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L136 |  |
 | [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectPlanSnapshot L60, projectPlanSnapshot L63 |  |
 | [includes/projects/dependencies.php](/code/files/includes/projects/dependencies.php.md) | projectDependencies L36 |  |
-| [includes/projects/flow.php](/code/files/includes/projects/flow.php.md) | projectFlowSnapshot L35, projectFlow L67, projectFlow L76 |  |
+| [includes/projects/flow.php](/code/files/includes/projects/flow.php.md) | projectFlowSnapshot L39, projectFlow L73, projectFlow L82 |  |
 | [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsOverdueDigest L39 |  |
-| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectTaskStats L35, projectEstimatesReady L338, projectDetail L356, projectDetail L364, projectDetail L369 |  |
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L413 |  |
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L436 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewTask L173 |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::taskTenantId L441 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::raid L779, ProjectToolsService::setTaskDates L985, ProjectToolsService::setTaskEstimate L1007, ProjectToolsService::addTaskDependency L1083 |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::assignTask L422 |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::ruleForTask L224, TaskRecurrence::project L385, TaskRecurrence::occurrenceExistsFor L450, TaskRecurrence::taskRow L613, TaskRecurrence::latestOccurrence L623, TaskRecurrence::createOccurrence L642 ... |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::createTask L111, TasksService::createTask L117, TasksService::moveTask L436, TasksService::deleteTask L523, TasksService::taskEventDispatch L590, TasksService::collaboratorDispatch L869 ... |  |
-| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractorReady L35, tasksContractors L57, tasksContractorEmail L137, tasksContractorReminders L192 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessTask L572 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L783, getWatchtowerData L793, getWatchtowerData L810 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_create_task L2456 |  |
+| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectTaskStats L37, projectEstimatesReady L362, projectDetail L384, projectDetail L392, projectDetail L397 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L434 |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L452 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewTask L188 |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::taskTenantId L455 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::raid L844, ProjectToolsService::setTaskDates L1078, ProjectToolsService::setTaskEstimate L1102, ProjectToolsService::addTaskDependency L1183 |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::assignTask L452 |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::ruleForTask L257, TaskRecurrence::project L426, TaskRecurrence::occurrenceExistsFor L500, TaskRecurrence::taskRow L683, TaskRecurrence::latestOccurrence L697, TaskRecurrence::createOccurrence L720 ... |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::createTask L118, TasksService::createTask L124, TasksService::moveTask L451, TasksService::deleteTask L540, TasksService::taskEventDispatch L614, TasksService::collaboratorDispatch L906 ... |  |
+| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractorReady L35, tasksContractors L63, tasksContractorEmail L152, tasksContractorReminders L207 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessTask L596 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L786, getWatchtowerData L796, getWatchtowerData L813 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_create_task L2612 |  |
 

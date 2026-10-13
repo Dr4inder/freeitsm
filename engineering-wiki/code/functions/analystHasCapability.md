@@ -6,13 +6,13 @@ Does this analyst hold a capability? Authoritative (DB-checked). is_admin is alw
 function analystHasCapability(PDO $conn, int $analystId, string $capability): bool
 ```
 
-Defined in [includes/rbac.php](/code/files/includes/rbac.php.md), line 94.
+Defined in [includes/rbac.php](/code/files/includes/rbac.php.md), line 96.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$capability` | `string` |  |  |
+| `$capability` | `string` |  | the capability key, a Cap:: constant such as Cap::PROJECTS_MANAGE |
 
 **Returns:** `bool`
 

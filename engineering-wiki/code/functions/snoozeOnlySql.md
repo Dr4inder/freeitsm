@@ -6,12 +6,12 @@ The complement: only sleeping tickets. Drives the Snoozed folder and its count. 
 function snoozeOnlySql(PDO $conn, string $alias = 't'): string
 ```
 
-Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 132.
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 136.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` | `'t'` |  |
+| `$alias` | `string` | `'t'` | the alias the calling query gives the tickets table |
 
 **Returns:** `string`
 

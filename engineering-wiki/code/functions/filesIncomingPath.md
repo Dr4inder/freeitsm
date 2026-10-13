@@ -6,12 +6,12 @@ Where pieces of an in-progress upload collect.
 function filesIncomingPath(PDO $conn, string $token): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 89.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$token` | `string` |  |  |
+| `$token` | `string` |  | the upload's token from the client - must be 32 lower-case hex characters or it throws |
 
 **Returns:** `string`
 

@@ -1,6 +1,6 @@
 # forms/help/_top.php
 
-> PHP - 126 lines
+> PHP - 136 lines
 
 Forms help topic — the chrome.
 
@@ -19,9 +19,9 @@ confidently wrong one is not.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [helpNum()](/code/functions/helpNum.md) | 40 | A section's number, from the registry. '' when the registry does not know it. |
-| [helpSection()](/code/functions/helpSection.md) | 48 | Open a section: the hairline, the number badge, the heading and its lead. |
-| [helpSectionEnd()](/code/functions/helpSectionEnd.md) | 58 | Closes a section opened by `helpSection()`. |
+| [helpNum()](/code/functions/helpNum.md) | 44 | A section's number, from the registry. '' when the registry does not know it. |
+| [helpSection()](/code/functions/helpSection.md) | 58 | Open a section: the hairline, the number badge, the heading and its lead. |
+| [helpSectionEnd()](/code/functions/helpSectionEnd.md) | 68 | Closes a section opened by `helpSection()`. |
 
 ## How it hangs together
 

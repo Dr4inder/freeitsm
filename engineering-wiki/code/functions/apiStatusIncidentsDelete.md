@@ -6,7 +6,7 @@ DELETE /service-status/incidents/{id} - deletes an incident through ServiceStatu
 function apiStatusIncidentsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 334.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 350.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

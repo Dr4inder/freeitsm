@@ -58,6 +58,7 @@ require_once __DIR__ . '/settings_keys.php';
  * Everything else is deny-by-default: no capability, no tab. is_admin holds every
  * capability, so administrators see the lot.
  *
+ * @param array $manifest  a module's settings manifest (<module>/settings/manifest.php), with its 'tabs' list
  * @return array<int,array> the visible tab definitions
  */
 function settingsVisibleTabs(PDO $conn, int $analystId, array $manifest): array
@@ -73,7 +74,12 @@ function settingsVisibleTabs(PDO $conn, int $analystId, array $manifest): array
     return $visible;
 }
 
-/** Is this tab id in the visible set? Use to decide whether to emit its panel. */
+/**
+ * Is this tab id in the visible set? Use to decide whether to emit its panel.
+ *
+ * @param array $visibleTabs  the tabs from settingsVisibleTabs()
+ * @param string $tabId  the tab's id from the manifest, e.g. 'vcenter'
+ */
 function settingsTabVisible(array $visibleTabs, string $tabId): bool
 {
     foreach ($visibleTabs as $tab) {
@@ -88,13 +94,19 @@ function settingsTabVisible(array $visibleTabs, string $tabId): bool
  * Not simply "the first in the manifest" — that tab may not be visible to this analyst,
  * and hard-coding `class="tab-content active"` on it would leave a restricted user
  * looking at a settings page with no panel showing.
+ *
+ * @param array $visibleTabs  the tabs from settingsVisibleTabs()
  */
 function settingsFirstTabId(array $visibleTabs): ?string
 {
     return $visibleTabs[0]['id'] ?? null;
 }
 
-/** Does this analyst hold ANY administrative capability in this module? */
+/**
+ * Does this analyst hold ANY administrative capability in this module?
+ *
+ * @param array $visibleTabs  the tabs from settingsVisibleTabs()
+ */
 function settingsHasAnyAdminTab(array $visibleTabs): bool
 {
     foreach ($visibleTabs as $tab) {
@@ -110,6 +122,10 @@ function settingsHasAnyAdminTab(array $visibleTabs): bool
  * either. Tabs with no capability are marked data-capability="none" rather than being
  * left bare, so the coverage report can tell "personal preference" apart from "someone
  * forgot to declare one".
+ *
+ * @param array $visibleTabs  the tabs from settingsVisibleTabs(), drawn in that order
+ * @param ?string $activeId  the id of the tab drawn as active; null for none
+ * @param string $onclickFn  the name of the page's JavaScript tab switcher, called with the tab id
  */
 function renderSettingsTabBar(array $visibleTabs, ?string $activeId, string $onclickFn = 'switchTab'): void
 {

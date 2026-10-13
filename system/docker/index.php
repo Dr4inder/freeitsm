@@ -44,14 +44,23 @@ $httpsUrl  = 'https://' . $savedHost . ($httpsPort === 443 ? '' : ':' . $httpsPo
 
 $restartCmd = 'docker compose restart';
 
-/** Escape a translated string, then drop pre-built HTML into its {placeholders}. */
+/**
+ * Escape a translated string, then drop pre-built HTML into its {placeholders}.
+ *
+ * @param string $key  the string key under system.docker, e.g. 'not_container'
+ * @param array $html  placeholder name => ready-built HTML (trusted, inserted unescaped)
+ */
 function dk(string $key, array $html = []): string
 {
     $out = htmlspecialchars(t('system.docker.' . $key));
     foreach ($html as $k => $v) $out = str_replace('{' . $k . '}', $v, $out);
     return $out;
 }
-/** Escapes a command or path and wraps it in <code> for dropping into a dk() placeholder. */
+/**
+ * Escapes a command or path and wraps it in <code> for dropping into a dk() placeholder.
+ *
+ * @param string $s  the command or path, escaped here
+ */
 function dkCode(string $s): string { return '<code>' . htmlspecialchars($s) . '</code>'; }
 
 $overrideFile = "services:\n  app:\n    ports:\n      - \"8443:443\"\n    volumes:\n      - tls:" . DOCKER_TLS_DIR . "\n\nvolumes:\n  tls:\n";

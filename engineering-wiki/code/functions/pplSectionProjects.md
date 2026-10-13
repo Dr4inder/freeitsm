@@ -6,12 +6,12 @@ Projects (3.2.0): a person's memberships with their role and RACI duties, or a c
 function pplSectionProjects(array $s, bool $person): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 205.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 283.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
-| `$person` | `bool` |  |  |
+| `$s` | `array` |  | the projects section from includes/people.php: rows, total |
+| `$person` | `bool` |  | true on a person's page, adding the role and RACI duties column |
 
 **Returns:** `string`
 

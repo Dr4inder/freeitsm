@@ -1,6 +1,6 @@
 # api/tasks/collaborators.php
 
-> API endpoint - 121 lines
+> API endpoint - 123 lines
 
 API: Tasks — the other people on a task ("Involved", GH #89).
 
@@ -27,13 +27,13 @@ its own, before anybody is added and whether or not the save would refuse it.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [collaboratorCandidates()](/code/functions/collaboratorCandidates.md) | 91 | Who may be offered as a collaborator on this task: active analysts, minus the owner, minus anybody already on it, and — on a multi-company install — only those who can reach the task's own company. |
+| [collaboratorCandidates()](/code/functions/collaboratorCandidates.md) | 93 | Who may be offered as a collaborator on this task: active analysts, minus the owner, minus anybody already on it, and — on a multi-company install — only those who can reach the task's own company. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 93 | `collaboratorCandidates` | read [analysts](/code/tables/analysts.md) |  |
+| 95 | `collaboratorCandidates` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

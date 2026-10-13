@@ -6,13 +6,13 @@ Refresh a Google access token using the refresh token. Returns the updated token
 function gmailRefreshAccessToken(PDO $conn, array $mailbox, array $tokenData): array
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 16.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 20.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `array` |  |  |
-| `$tokenData` | `array` |  |  |
+| `$mailbox` | `array` |  | the target_mailboxes row, decrypted - id, azure_client_id and azure_client_secret (which hold the Google OAuth client for a Google mailbox) |
+| `$tokenData` | `array` |  | the decoded token_data - array{access_token:string,refresh_token:string,expires_at:int} |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 16.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 64 | `gmailRefreshAccessToken` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
+| 68 | `gmailRefreshAccessToken` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
 
 ## Calls
 

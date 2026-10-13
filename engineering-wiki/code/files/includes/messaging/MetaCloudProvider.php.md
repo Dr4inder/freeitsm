@@ -1,6 +1,6 @@
 # includes/messaging/MetaCloudProvider.php
 
-> PHP - 339 lines
+> PHP - 373 lines
 
 MetaCloudProvider — WhatsApp via Meta's WhatsApp Cloud API (direct, no BSP).
 

@@ -6,7 +6,7 @@ POST /suppliers - creates a supplier through ContractsService and returns it.
 function apiSuppliersCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 434.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 448.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

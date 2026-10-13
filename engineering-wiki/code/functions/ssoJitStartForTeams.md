@@ -11,14 +11,14 @@ function ssoJitStartForTeams(
 ): void
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 253.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 295.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
-| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$defaultModules` | `?string` |  |  |
+| `$providerId` | `int` |  | the sign-in provider (auth_providers.id) that created the analyst |
+| `$analystId` | `int` |  | the analyst just created by the sign-in |
+| `$defaultModules` | `?string` |  | the provider's default modules setting; anything non-blank leaves the analyst alone |
 
 **Returns:** `void`
 
@@ -26,8 +26,8 @@ Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 256 | `ssoJitStartForTeams` | read [sso_group_teams](/code/tables/sso_group_teams.md) |  |
-| 259 | `ssoJitStartForTeams` | **update** [analysts](/code/tables/analysts.md) (`can_access_all_modules`) |  |
+| 298 | `ssoJitStartForTeams` | read [sso_group_teams](/code/tables/sso_group_teams.md) |  |
+| 301 | `ssoJitStartForTeams` | **update** [analysts](/code/tables/analysts.md) (`can_access_all_modules`) |  |
 
 ## Calls
 

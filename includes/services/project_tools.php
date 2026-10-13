@@ -27,7 +27,12 @@ class ProjectToolsService
     //  People
     // ======================================================================
 
-    /** Add a member: exactly one of analyst_id / team_id / user_id / supplier_id (+ contact_id). Returns its id. */
+    /**
+     * Add a member: exactly one of analyst_id / team_id / user_id / supplier_id (+ contact_id). Returns its id.
+     *
+     * @param array $in  exactly one of analyst_id, team_id, user_id (a person in the project's company) or supplier_id
+     *     (with optional contact_id); plus role_id and notes (up to 255)
+     */
     public static function addMember(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
         $project = self::changeable($conn, $ctx, $projectId);
@@ -69,6 +74,8 @@ class ProjectToolsService
     /**
      * A contractor on the team (3.3.0): a supplier, or one person there (which
      * brings its supplier). Suppliers live in Contracts, so adding one needs it.
+     *
+     * @param array $in  supplier_id and/or contact_id (a contact brings its supplier), role_id, notes
      */
     private static function addContractorMember(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
@@ -114,6 +121,10 @@ class ProjectToolsService
     /**
      * Changes a project member's role, notes and stakeholder map details (power, interest,
      * stance, how they are kept informed), and records the change in the project's history.
+     *
+     * @param int $memberId  the member (project_members.id) to change
+     * @param array $in  only the fields to change: role_id, notes, power and interest (1-5, empty = not placed),
+     *     stance (champion, supporter, neutral, sceptic, blocker), keep_informed
      */
     public static function updateMember(PDO $conn, ActorContext $ctx, int $projectId, int $memberId, array $in): void
     {
@@ -169,7 +180,11 @@ class ProjectToolsService
         return self::stakeReady($conn) ? 'm.power, m.interest, m.stance, m.keep_informed' : 'NULL AS power, NULL AS interest, NULL AS stance, NULL AS keep_informed';
     }
 
-    /** Remove a member. Their RACI letters go with them (FK cascade, and by hand). */
+    /**
+     * Remove a member. Their RACI letters go with them (FK cascade, and by hand).
+     *
+     * @param int $memberId  the member (project_members.id) to remove
+     */
     public static function removeMember(PDO $conn, ActorContext $ctx, int $projectId, int $memberId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -190,6 +205,9 @@ class ProjectToolsService
      *
      * A new item goes to the end of the list; adding one, or changing its MoSCoW priority,
      * is recorded in the project's history.
+     *
+     * @param array $in  id (an existing item to change; absent for a new one), title, description, acceptance_criteria,
+     *     moscow, stage_id, status (proposed, agreed, in_progress, accepted, dropped) - fields left out keep their value
      */
     public static function saveItem(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
@@ -225,6 +243,8 @@ class ProjectToolsService
     /**
      * Deletes a deliverable with its RACI rows; any child items lose their parent. Recorded
      * in the project's history.
+     *
+     * @param int $itemId  the deliverable or requirement (project_items.id) to delete
      */
     public static function deleteItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId): void
     {
@@ -236,7 +256,13 @@ class ProjectToolsService
         ProjectsService::audit($conn, $projectId, $ctx->actorId, 'item_removed', $item['title'], null, self::src($ctx));
     }
 
-    /** Move an item to a MoSCoW column, in the given order within it (the drag on the board). */
+    /**
+     * Move an item to a MoSCoW column, in the given order within it (the drag on the board).
+     *
+     * @param int $itemId  the item (project_items.id) that was dragged
+     * @param mixed $moscow  the column it was dropped in: must, should, could, wont, or null/'' for unprioritised
+     * @param array $orderedIds  the item ids in that column in their new order; positions are renumbered from 1
+     */
     public static function moveItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId, $moscow, array $orderedIds): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -258,6 +284,10 @@ class ProjectToolsService
     /**
      * Set one cell: R, A, C, I or '' to clear. Returns the row's letters after
      * the change ({member_id: letter}), so the screen can redraw a demoted A.
+     *
+     * @param int $itemId  the deliverable (project_items.id) - the row
+     * @param int $memberId  the member (project_members.id) - the column
+     * @param string $letter  R, A, C or I (any case), or '' to clear the cell
      */
     public static function setRaci(PDO $conn, ActorContext $ctx, int $projectId, int $itemId, int $memberId, string $letter): array
     {
@@ -305,6 +335,10 @@ class ProjectToolsService
      * with no date is stamped today. A decision still open past its due date,
      * like a dependency not arrived by its due date, turns health amber
      * (projectAutoHealth).
+     *
+     * @param array $in  id (an entry to change; absent for new), type (risk, assumption, issue, dependency, decision, lesson),
+     *     title, description, probability and impact (1-5), response, response_plan, owner_analyst_id, status
+     *     (open/closed), due_date, ticket_id, and for decisions decided_by, decided_date, rationale
      */
     public static function saveRaid(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
@@ -385,6 +419,8 @@ class ProjectToolsService
     /**
      * Deletes a RAID log entry; its follow-up tasks are unlinked but kept. Recorded in the
      * project's history.
+     *
+     * @param int $raidId  the RAID entry (project_raid.id) to delete
      */
     public static function deleteRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): void
     {
@@ -418,6 +454,9 @@ class ProjectToolsService
      * de-escalated or the entry is closed; fires project.raid_escalated, so the
      * project manager's bell rings (unless they escalated it) and a workflow can
      * email the sponsor. Escalating again replaces the note and fires again.
+     *
+     * @param int $raidId  the open RAID entry (project_raid.id) to escalate
+     * @param ?string $note  what is needed and from whom (required, cut to 500 characters)
      */
     public static function escalateRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidId, ?string $note): void
     {
@@ -437,6 +476,8 @@ class ProjectToolsService
     /**
      * Clears a RAID entry's escalation; does nothing when it is not escalated. Recorded in
      * the project's history.
+     *
+     * @param int $raidId  the RAID entry (project_raid.id) to de-escalate
      */
     public static function deescalateRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): void
     {
@@ -454,6 +495,9 @@ class ProjectToolsService
      * createTaskInProject() (TasksService - so the assigned email, the bell and
      * task events happen as for any task), then joined to the entry. It is put
      * in no stage - where it sits in the plan is the Plan's job. Returns the task id.
+     *
+     * @param int $raidId  the RAID entry (project_raid.id) the action follows up
+     * @param array $in  title (required), assigned_analyst_id, due_date (YYYY-MM-DD) for the new task
      */
     public static function addRaidAction(PDO $conn, ActorContext $ctx, int $projectId, int $raidId, array $in): int
     {
@@ -473,7 +517,11 @@ class ProjectToolsService
         return $taskId;
     }
 
-    /** Unlink an action. The task itself stays - it is somebody's work. */
+    /**
+     * Unlink an action. The task itself stays - it is somebody's work.
+     *
+     * @param int $raidId  the RAID entry (project_raid.id) to unlink the task from
+     */
     public static function removeRaidAction(PDO $conn, ActorContext $ctx, int $projectId, int $raidId, int $taskId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -503,6 +551,8 @@ class ProjectToolsService
      * it), is linked on the project's Connections tab, and remembered on the
      * lesson so it is made once. Needs Knowledge as well as being allowed to
      * change the project. Returns ['id', 'url'].
+     *
+     * @param int $raidId  the lesson (a project_raid row of type 'lesson') to turn into an article
      */
     public static function lessonToKnowledge(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): array
     {
@@ -551,6 +601,8 @@ class ProjectToolsService
      * made by hand is. The issue then points at it, and the project is linked to
      * it, so it shows on the ticket and on the Connections tab. Needs Tickets.
      * Returns ['id', 'number', 'url'].
+     *
+     * @param int $raidId  the issue (a project_raid row of type 'issue') to raise a ticket from
      */
     public static function issueToTicket(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): array
     {
@@ -596,7 +648,11 @@ class ProjectToolsService
         return ['id' => $ticketId, 'number' => $number, 'url' => entityLink('ticket', $ticketId)];
     }
 
-    /** One RAID entry of this project, or not found. */
+    /**
+     * One RAID entry of this project, or not found.
+     *
+     * @param int $raidId  the RAID entry (project_raid.id) to load
+     */
     private static function raidRow(PDO $conn, int $projectId, int $raidId): array
     {
         $st = $conn->prepare("SELECT * FROM project_raid WHERE id = ? AND project_id = ?");
@@ -610,6 +666,9 @@ class ProjectToolsService
      * Link the new record on the Connections tab too. The record is already
      * made and remembered on the entry, so a link that cannot be added (the
      * tables not verified yet) must not undo it.
+     *
+     * @param string $kind  the kind of record to link, as projectLinkAdd() takes it: 'ticket' or 'article' here
+     * @param int $id  the id of that record
      */
     private static function linkQuietly(PDO $conn, ActorContext $ctx, int $projectId, string $kind, int $id): void
     {
@@ -632,6 +691,9 @@ class ProjectToolsService
      * (PRINCE2's "manage by exception", in our own words). time = days past the
      * target finish (or the active stage's end) with work still open; risk = the
      * highest open risk score allowed (1-25). null removes one.
+     *
+     * @param array $in  any of time (days late, 0-365), risk (highest open risk score, 1-25), cost (overspend percent, 0-500);
+     *     null or '' removes that tolerance, a key left out is untouched
      */
     public static function saveTolerances(PDO $conn, ActorContext $ctx, int $projectId, array $in): void
     {
@@ -678,6 +740,9 @@ class ProjectToolsService
      * hand-over; Stop records the decision and leaves the plan alone - what to do
      * next is the board's call, not the software's.
      *
+     * @param int $stageId  the stage (project_stages.id) whose end-of-stage gate is decided; must have started
+     * @param string $decision  'go', 'go_with_conditions' or 'stop'
+     * @param ?string $notes  the board's notes; required for go with conditions (cut to 20000 characters)
      * @return array{closed:bool, next:?string}
      */
     public static function decideGate(PDO $conn, ActorContext $ctx, int $projectId, int $stageId, string $decision, ?string $notes): array
@@ -809,6 +874,9 @@ class ProjectToolsService
      * Assets access: the rule names asset types, statuses and models, and the
      * dialog's live count would otherwise tell somebody without Assets what is
      * in the estate. Returns its id.
+     *
+     * @param array $in  the rule as projectTargetNormalise() reads it (name, scope, scope_type_id, scope_field, scope_value,
+     *     done_field, done_op, done_value, target_date); id to change an existing target
      */
     public static function saveTarget(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
@@ -843,7 +911,11 @@ class ProjectToolsService
         return $id;
     }
 
-    /** Deletes an asset target from a project and records it; health and tolerances are checked again. */
+    /**
+     * Deletes an asset target from a project and records it; health and tolerances are checked again.
+     *
+     * @param int $targetId  the asset target (project_asset_targets.id) to delete
+     */
     public static function deleteTarget(PDO $conn, ActorContext $ctx, int $projectId, int $targetId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -862,7 +934,11 @@ class ProjectToolsService
         }
     }
 
-    /** Loads one asset target of the project; throws not found otherwise. */
+    /**
+     * Loads one asset target of the project; throws not found otherwise.
+     *
+     * @param int $targetId  the asset target (project_asset_targets.id) to load
+     */
     public static function target(PDO $conn, int $projectId, int $targetId): array
     {
         $st = $conn->prepare("SELECT * FROM project_asset_targets WHERE id = ? AND project_id = ?");
@@ -873,7 +949,11 @@ class ProjectToolsService
     }
 
 
-    /** Validates an optional YYYY-MM-DD date; blank gives null. */
+    /**
+     * Validates an optional YYYY-MM-DD date; blank gives null.
+     *
+     * @param mixed $v  the date as typed (YYYY-MM-DD); null or blank gives null, anything else invalid throws
+     */
     private static function date($v): ?string
     {
         if ($v === null || trim((string)$v) === '') return null;
@@ -893,6 +973,9 @@ class ProjectToolsService
      * just the date. done = true stamps today (or done_date) and who; done =
      * false clears both. Reaching one fires project.milestone_reached.
      * Returns its id.
+     *
+     * @param array $in  id (to change one), name (up to 150), due_date, stage_id, notes, done (true/false), done_date -
+     *     fields left out keep their value
      */
     public static function saveMilestone(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
@@ -946,7 +1029,11 @@ class ProjectToolsService
         return $id;
     }
 
-    /** Deletes a milestone from a project, records it, and refreshes the calendar, health and tolerances. */
+    /**
+     * Deletes a milestone from a project, records it, and refreshes the calendar, health and tolerances.
+     *
+     * @param int $milestoneId  the milestone (project_milestones.id) to delete
+     */
     public static function deleteMilestone(PDO $conn, ActorContext $ctx, int $projectId, int $milestoneId): void
     {
         require_once __DIR__ . '/../projects/milestones.php';
@@ -959,7 +1046,11 @@ class ProjectToolsService
         ProjectsService::afterChange($conn, $projectId);
     }
 
-    /** Loads one milestone of the project; throws not found otherwise. */
+    /**
+     * Loads one milestone of the project; throws not found otherwise.
+     *
+     * @param int $milestoneId  the milestone (project_milestones.id) to load
+     */
     private static function milestone(PDO $conn, int $projectId, int $milestoneId): array
     {
         if (!projectMilestonesReady($conn)) throw new ServiceError('not_found', 'not_found', 'That milestone is not part of this project.');
@@ -978,6 +1069,8 @@ class ProjectToolsService
      * board. The Projects side only checks that the task IS in this project and
      * that the caller may change the project; Tasks access is not required, the
      * same as adding a task from the Plan.
+     *
+     * @param array $in  start_date and/or due_date (YYYY-MM-DD, '' clears); keys left out are untouched
      */
     public static function setTaskDates(PDO $conn, ActorContext $ctx, int $projectId, int $taskId, array $in): void
     {
@@ -1000,6 +1093,8 @@ class ProjectToolsService
      * Set a project task's estimate from the Plan (3.3.0): {estimate_hours}
      * (empty = not estimated). Through TasksService, like setTaskDates() - the
      * task window and the REST API write the same column the same way.
+     *
+     * @param mixed $hours  the estimate in hours as typed; empty means not estimated (TasksService validates it)
      */
     public static function setTaskEstimate(PDO $conn, ActorContext $ctx, int $projectId, int $taskId, $hours): void
     {
@@ -1072,7 +1167,12 @@ class ProjectToolsService
     //  Task dependencies (3.3.0) - includes/projects/dependencies.php
     // ======================================================================
 
-    /** $taskId waits for $dependsOnId to finish (+ lag days). Both in this project; no loops. Returns its id. */
+    /**
+     * $taskId waits for $dependsOnId to finish (+ lag days). Both in this project; no loops. Returns its id.
+     *
+     * @param int $dependsOnId  the task that must finish first; must be in the same project and not make a loop
+     * @param mixed $lag  days to wait after it finishes, -365..365; null or '' means 0
+     */
     public static function addTaskDependency(PDO $conn, ActorContext $ctx, int $projectId, int $taskId, int $dependsOnId, $lag): int
     {
         require_once __DIR__ . '/../projects/dependencies.php';
@@ -1099,7 +1199,11 @@ class ProjectToolsService
         return (int)$st->fetchColumn();
     }
 
-    /** Removes a dependency between two of the project's tasks and records it in the project's history. */
+    /**
+     * Removes a dependency between two of the project's tasks and records it in the project's history.
+     *
+     * @param int $depId  the dependency (task_dependencies.id) to remove; must belong to this project's tasks
+     */
     public static function removeTaskDependency(PDO $conn, ActorContext $ctx, int $projectId, int $depId): void
     {
         require_once __DIR__ . '/../projects/dependencies.php';
@@ -1115,7 +1219,12 @@ class ProjectToolsService
     //  Gate checklists (3.3.0) - includes/projects/gatecheck.php
     // ======================================================================
 
-    /** Add (no id) or change a gate item. Returns its id. */
+    /**
+     * Add (no id) or change a gate item. Returns its id.
+     *
+     * @param array $in  id (to change one), stage_id (new items only), kind (new items only: check, signoff, document, change),
+     *     title (up to 200), analyst_id (sign-off), change_id (change), notes (up to 500)
+     */
     public static function saveGateItem(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
         require_once __DIR__ . '/../projects/gatecheck.php';
@@ -1156,7 +1265,11 @@ class ProjectToolsService
         return $id;
     }
 
-    /** Deletes a stage gate item and records it in the project's history. */
+    /**
+     * Deletes a stage gate item and records it in the project's history.
+     *
+     * @param int $itemId  the gate checklist item (project_gate_items.id) to delete
+     */
     public static function deleteGateItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -1171,6 +1284,9 @@ class ProjectToolsService
      * sign-off: ONLY its named analyst. A document: choose one of the project's
      * documents (document_id; empty unticks). A change cannot be ticked - it is
      * done when the change is approved.
+     *
+     * @param int $itemId  the gate checklist item (project_gate_items.id) to tick or untick
+     * @param array $in  done (true ticks), notes (sign-off only), document_id (document items; empty unticks)
      */
     public static function tickGateItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId, array $in): void
     {
@@ -1206,7 +1322,12 @@ class ProjectToolsService
         ProjectsService::touchProject($conn, $projectId);
     }
 
-    /** standard | golive. Making a gate go-live adds the starter items it does not already have. */
+    /**
+     * standard | golive. Making a gate go-live adds the starter items it does not already have.
+     *
+     * @param int $stageId  the stage (project_stages.id) whose gate to change
+     * @param string $kind  'standard' or 'golive'
+     */
     public static function setGateKind(PDO $conn, ActorContext $ctx, int $projectId, int $stageId, string $kind): int
     {
         require_once __DIR__ . '/../projects/gatecheck.php';
@@ -1233,7 +1354,11 @@ class ProjectToolsService
         return $added;
     }
 
-    /** Loads one stage gate item of the project; throws not found otherwise. */
+    /**
+     * Loads one stage gate item of the project; throws not found otherwise.
+     *
+     * @param int $itemId  the gate checklist item (project_gate_items.id) to load
+     */
     private static function gateItem(PDO $conn, int $projectId, int $itemId): array
     {
         try {
@@ -1251,7 +1376,12 @@ class ProjectToolsService
     //  Benefits (3.3.0) - includes/projects/benefits.php
     // ======================================================================
 
-    /** Create (no id) or update a benefit. Returns its id. */
+    /**
+     * Create (no id) or update a benefit. Returns its id.
+     *
+     * @param array $in  id (to change one), title (required), measure, unit, direction (up/down), baseline_value, target_value,
+     *     target_date, owner_analyst_id, review_date, review_months (0-24; empty uses the setting), status, notes
+     */
     public static function saveBenefit(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
         require_once __DIR__ . '/../projects/benefits.php';
@@ -1300,7 +1430,11 @@ class ProjectToolsService
         return $id;
     }
 
-    /** Deletes a benefit with its measurements and records it in the project's history. */
+    /**
+     * Deletes a benefit with its measurements and records it in the project's history.
+     *
+     * @param int $benefitId  the benefit (project_benefits.id) to delete
+     */
     public static function deleteBenefit(PDO $conn, ActorContext $ctx, int $projectId, int $benefitId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -1315,6 +1449,9 @@ class ProjectToolsService
      * Record a measurement. One on or after (review date - 14 days) is the
      * review: the next one moves on by the benefit's review_months (none when 0).
      * Returns the measurement's id.
+     *
+     * @param int $benefitId  the benefit (project_benefits.id) measured
+     * @param array $in  value (a number, up to 2 decimals), measured_date (default today, not in the future), note
      */
     public static function addBenefitMeasure(PDO $conn, ActorContext $ctx, int $projectId, int $benefitId, array $in): int
     {
@@ -1338,7 +1475,12 @@ class ProjectToolsService
         return $id;
     }
 
-    /** Deletes one measurement of a benefit; throws not found when it is not that benefit's. */
+    /**
+     * Deletes one measurement of a benefit; throws not found when it is not that benefit's.
+     *
+     * @param int $benefitId  the benefit (project_benefits.id) the measurement belongs to
+     * @param int $measureId  the measurement (project_benefit_measures.id) to delete
+     */
     public static function deleteBenefitMeasure(PDO $conn, ActorContext $ctx, int $projectId, int $benefitId, int $measureId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -1349,7 +1491,11 @@ class ProjectToolsService
         ProjectsService::touchProject($conn, $projectId);
     }
 
-    /** Loads one benefit of the project; throws not found otherwise. */
+    /**
+     * Loads one benefit of the project; throws not found otherwise.
+     *
+     * @param int $benefitId  the benefit (project_benefits.id) to load
+     */
     private static function benefit(PDO $conn, int $projectId, int $benefitId): array
     {
         try {
@@ -1369,7 +1515,11 @@ class ProjectToolsService
 
     const CR_DECISIONS = ['approved', 'rejected'];
 
-    /** Take a baseline of the plan as it is now, by hand. Returns its id. */
+    /**
+     * Take a baseline of the plan as it is now, by hand. Returns its id.
+     *
+     * @param mixed $label  an optional name for the baseline (cut to 150 characters); null or blank for none
+     */
     public static function takeBaseline(PDO $conn, ActorContext $ctx, int $projectId, $label): int
     {
         require_once __DIR__ . '/../projects/control.php';
@@ -1386,6 +1536,9 @@ class ProjectToolsService
     /**
      * Raise a change request (no id), or edit one still waiting for a decision -
      * by whoever raised it, or anybody who may change the project. Returns its id.
+     *
+     * @param array $in  id (to edit one still proposed), title (required), description, reason, impact_days (-3650..3650),
+     *     impact_cost (an amount), impact_scope
      */
     public static function saveChangeRequest(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
@@ -1438,6 +1591,9 @@ class ProjectToolsService
      * "plan", first moves the target finish by the days and adds the cost as a
      * budget line, recording both in `applied`. Rejecting changes nothing.
      *
+     * @param int $crId  the change request (project_change_requests.id) to decide; must still be 'proposed'
+     * @param string $decision  'approved' or 'rejected'
+     * @param mixed $notes  the decision notes (cut to 20000 characters); null or blank for none
      * @return array{baseline_id:?int, applied:?array}
      */
     public static function decideChangeRequest(PDO $conn, ActorContext $ctx, int $projectId, int $crId, string $decision, $notes): array
@@ -1502,7 +1658,11 @@ class ProjectToolsService
         return ['baseline_id' => $baselineId, 'applied' => $applied];
     }
 
-    /** Withdraw a request still waiting for a decision: whoever raised it, or the project's team. */
+    /**
+     * Withdraw a request still waiting for a decision: whoever raised it, or the project's team.
+     *
+     * @param int $crId  the change request (project_change_requests.id) to withdraw
+     */
     public static function withdrawChangeRequest(PDO $conn, ActorContext $ctx, int $projectId, int $crId): void
     {
         $p = ProjectsService::loadForActor($conn, $ctx, $projectId);
@@ -1514,7 +1674,11 @@ class ProjectToolsService
         ProjectsService::touchProject($conn, $projectId);
     }
 
-    /** Loads one change request of the project; throws not found otherwise. */
+    /**
+     * Loads one change request of the project; throws not found otherwise.
+     *
+     * @param int $crId  the change request (project_change_requests.id) to load
+     */
     private static function changeRequest(PDO $conn, int $projectId, int $crId): array
     {
         try {
@@ -1540,7 +1704,11 @@ class ProjectToolsService
         return $p;
     }
 
-    /** Loads one member row of the project; throws not found otherwise. */
+    /**
+     * Loads one member row of the project; throws not found otherwise.
+     *
+     * @param int $memberId  the member (project_members.id) to load
+     */
     private static function member(PDO $conn, int $projectId, int $memberId): array
     {
         $st = $conn->prepare("SELECT * FROM project_members WHERE id = ? AND project_id = ?");
@@ -1550,7 +1718,11 @@ class ProjectToolsService
         return $r;
     }
 
-    /** Loads one deliverable of the project; throws not found otherwise. */
+    /**
+     * Loads one deliverable of the project; throws not found otherwise.
+     *
+     * @param int $itemId  the deliverable (project_items.id) to load
+     */
     private static function item(PDO $conn, int $projectId, int $itemId): array
     {
         $st = $conn->prepare("SELECT * FROM project_items WHERE id = ? AND project_id = ?");
@@ -1560,7 +1732,11 @@ class ProjectToolsService
         return $r;
     }
 
-    /** A validated MoSCoW value in lower case, or null for none. */
+    /**
+     * A validated MoSCoW value in lower case, or null for none.
+     *
+     * @param mixed $v  must, should, could or wont in any case; null or '' means none
+     */
     private static function moscow($v): ?string
     {
         if ($v === null || $v === '') return null;
@@ -1569,7 +1745,11 @@ class ProjectToolsService
         return $v;
     }
 
-    /** A validated stage id of this project, or null for none. */
+    /**
+     * A validated stage id of this project, or null for none.
+     *
+     * @param mixed $stageId  a stage id as sent; null, '' or 0 means none
+     */
     private static function stageOf(PDO $conn, int $projectId, $stageId): ?int
     {
         if ($stageId === null || $stageId === '' || (int)$stageId <= 0) return null;
@@ -1579,7 +1759,11 @@ class ProjectToolsService
         return (int)$stageId;
     }
 
-    /** A validated project role id, or null for none. */
+    /**
+     * A validated project role id, or null for none.
+     *
+     * @param mixed $v  a project role id (project_roles.id) as sent; null, '' or 0 means none
+     */
     private static function roleId(PDO $conn, $v): ?int
     {
         if ($v === null || $v === '' || (int)$v <= 0) return null;
@@ -1589,7 +1773,11 @@ class ProjectToolsService
         return (int)$v;
     }
 
-    /** The name of a project role, or null. */
+    /**
+     * The name of a project role, or null.
+     *
+     * @param ?int $id  the project role id; null or 0 gives null
+     */
     private static function roleName(PDO $conn, ?int $id): ?string
     {
         if (!$id) return null;
@@ -1598,7 +1786,11 @@ class ProjectToolsService
         return ($n = $st->fetchColumn()) !== false ? (string)$n : null;
     }
 
-    /** The name of a project member - analyst, team, portal user or contractor - or #id. */
+    /**
+     * The name of a project member - analyst, team, portal user or contractor - or #id.
+     *
+     * @param int $memberId  the member (project_members.id) to name
+     */
     private static function memberName(PDO $conn, int $memberId): string
     {
         $c = self::contractorMemberSql($conn);
@@ -1609,7 +1801,13 @@ class ProjectToolsService
         return (string)($st->fetchColumn() ?: ('#' . $memberId));
     }
 
-    /** Runs a one-id lookup query and throws a validation error with $msg when it finds nothing. */
+    /**
+     * Runs a one-id lookup query and throws a validation error with $msg when it finds nothing.
+     *
+     * @param string $sql  a developer-written query with one ? placeholder that returns a row when the id is valid
+     * @param int $id  the id to look up
+     * @param string $msg  the validation message shown when nothing is found
+     */
     private static function mustExist(PDO $conn, string $sql, int $id, string $msg): void
     {
         $st = $conn->prepare($sql);
@@ -1617,7 +1815,12 @@ class ProjectToolsService
         if (!$st->fetchColumn()) throw new ServiceError('validation', 'invalid_field', $msg);
     }
 
-    /** Trimmed text cut to $max characters, or null when blank. */
+    /**
+     * Trimmed text cut to $max characters, or null when blank.
+     *
+     * @param mixed $v  the text as sent; null or blank gives null
+     * @param int $max  the most characters to keep
+     */
     private static function str($v, int $max): ?string
     {
         if ($v === null) return null;
@@ -1635,7 +1838,12 @@ class ProjectToolsService
     //  Budget (3.2.0) - includes/projects/budget.php
     // ======================================================================
 
-    /** Create (no id) or update a budget line. Returns its id. */
+    /**
+     * Create (no id) or update a budget line. Returns its id.
+     *
+     * @param array $in  id (to change one), title (required), category, planned, actual, forecast (amounts), planned_date,
+     *     spent_date, contract_id (linked to the project), cost_centre_id, notes (up to 500)
+     */
     public static function saveBudgetLine(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
         require_once __DIR__ . '/../projects/budget.php';
@@ -1696,7 +1904,14 @@ class ProjectToolsService
         return $id;
     }
 
-    /** The 3.3.0 columns, on their own: before Database Verification adds them the rest of the line still saves. */
+    /**
+     * The 3.3.0 columns, on their own: before Database Verification adds them the rest of the line still saves.
+     *
+     * @param int $lineId  the budget line (project_budget_lines.id)
+     * @param ?string $plannedDate  when the money is due to go out (YYYY-MM-DD), or null
+     * @param ?string $spentDate  when it went out (YYYY-MM-DD), or null
+     * @param ?float $forecast  what the line is now expected to cost, or null
+     */
     private static function budgetLineWhen(PDO $conn, int $lineId, ?string $plannedDate, ?string $spentDate, ?float $forecast): void
     {
         try {
@@ -1706,7 +1921,11 @@ class ProjectToolsService
         }
     }
 
-    /** Deletes a budget line, records it in the project's history, and checks health and tolerances again. */
+    /**
+     * Deletes a budget line, records it in the project's history, and checks health and tolerances again.
+     *
+     * @param int $lineId  the budget line (project_budget_lines.id) to delete
+     */
     public static function deleteBudgetLine(PDO $conn, ActorContext $ctx, int $projectId, int $lineId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -1724,6 +1943,9 @@ class ProjectToolsService
      * The project's own hourly rate from a date (labour mode "rate"), in the
      * project's currency. Each rate is a new row: the old one still prices the
      * time logged before the new one's date.
+     *
+     * @param mixed $rate  the hourly rate as typed, in the project's currency
+     * @param ?string $from  the date it applies from (YYYY-MM-DD); null or '' means today
      */
     public static function addProjectRate(PDO $conn, ActorContext $ctx, int $projectId, $rate, ?string $from): void
     {
@@ -1742,7 +1964,11 @@ class ProjectToolsService
         ProjectsService::afterChange($conn, $projectId);
     }
 
-    /** Remove one of the project's own rates (entered by mistake). */
+    /**
+     * Remove one of the project's own rates (entered by mistake).
+     *
+     * @param string $from  the effective-from date (YYYY-MM-DD) of the project's rate to remove
+     */
     public static function deleteProjectRate(PDO $conn, ActorContext $ctx, int $projectId, string $from): void
     {
         require_once __DIR__ . '/../projects/budget.php';
@@ -1757,6 +1983,8 @@ class ProjectToolsService
      * Change the project's currency - a RELABEL: amounts are not converted, and
      * the page says so before anyone presses Save. Only when Projects -> Settings
      * -> Budget lets projects choose.
+     *
+     * @param string $code  a three-letter currency code such as GBP (any case)
      */
     public static function setCurrency(PDO $conn, ActorContext $ctx, int $projectId, string $code): void
     {
@@ -1785,6 +2013,9 @@ class ProjectToolsService
      * Needs Service Status as well as being allowed to change the project.
      * Service Status is install-wide, like contracts: no company check on the
      * services. Returns the planned maintenance id.
+     *
+     * @param array $in  title, comment, start and end (as statusPlannedUtc() reads them; start is ignored in 'now' mode),
+     *     services - a list of {service_id, impact_level_id}
      */
     public static function announce(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
@@ -1810,7 +2041,11 @@ class ProjectToolsService
         return $id;
     }
 
-    /** Withdraw an announcement that has not started. It must belong to this project. */
+    /**
+     * Withdraw an announcement that has not started. It must belong to this project.
+     *
+     * @param int $plannedId  the planned maintenance (status_planned.id) to withdraw; must belong to this project
+     */
     public static function withdrawAnnouncement(PDO $conn, ActorContext $ctx, int $projectId, int $plannedId): void
     {
         self::changeable($conn, $ctx, $projectId);

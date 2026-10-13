@@ -1,6 +1,6 @@
 # includes/messaging/FreeitsmProvider.php
 
-> PHP - 50 lines
+> PHP - 65 lines
 
 FreeitsmProvider — the "provider" for the self-hosted website chat channel.
 

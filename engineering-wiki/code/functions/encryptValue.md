@@ -6,7 +6,7 @@ Encrypt a plaintext value using AES-256-GCM
 function encryptValue($plaintext)
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 223.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 233.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

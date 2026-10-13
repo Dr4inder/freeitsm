@@ -15,11 +15,11 @@ separate flavour field could after somebody hand-edits an attribute.
 function dsyncFlavour(array $provider): string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 99.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
+| `$provider` | `array` |  | the auth_providers row - ldap_attr_username and ldap_attr_guid are read |
 
 **Returns:** `string`
 

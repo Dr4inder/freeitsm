@@ -1,6 +1,6 @@
 # api/system/debug-tools/D002_delete_ticket.php
 
-> API endpoint - 438 lines
+> API endpoint - 448 lines
 
 Debug Tool D002 — Delete Ticket (with full SQL trace)
 
@@ -32,40 +32,40 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 34 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
-| [bool_str()](/code/functions/bool_str.md) | 39 | Formats a boolean as YES or NO for the report. |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 45 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [addSection()](/code/functions/addSection.md) | 38 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [bool_str()](/code/functions/bool_str.md) | 47 | Formats a boolean as YES or NO for the report. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 55 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 131 |  | read [tickets](/code/tables/tickets.md) |  |
-| 136 |  | read [tickets](/code/tables/tickets.md) |  |
-| 228 |  | read [emails](/code/tables/emails.md) |  |
-| 255 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
-| 280 |  | read [emails](/code/tables/emails.md) |  |
-| 300 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
-| 326 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
-| 327 |  | read [emails](/code/tables/emails.md) |  |
-| 328 |  | read [ticket_notes](/code/tables/ticket_notes.md) |  |
-| 329 |  | read [ticket_audit](/code/tables/ticket_audit.md) |  |
-| 330 |  | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
-| 331 |  | read [ticket_recordings](/code/tables/ticket_recordings.md) |  |
-| 332 |  | read [ticket_csat_responses](/code/tables/ticket_csat_responses.md) |  |
-| 333 |  | read [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) |  |
-| 334 |  | read [ticket_assets](/code/tables/ticket_assets.md) |  |
-| 335 |  | read [sla_notifications_sent](/code/tables/sla_notifications_sent.md) |  |
-| 336 |  | read [tasks](/code/tables/tasks.md) |  |
-| 356 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
-| 365 |  | **delete** [email_attachments](/code/tables/email_attachments.md) |  |
-| 366 |  | **delete** [emails](/code/tables/emails.md) |  |
-| 367 |  | **delete** [ticket_notes](/code/tables/ticket_notes.md) |  |
-| 368 |  | **delete** [ticket_audit](/code/tables/ticket_audit.md) |  |
-| 369 |  | **delete** [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
-| 370 |  | **delete** [tickets](/code/tables/tickets.md) |  |
-| 408 |  | read [tickets](/code/tables/tickets.md) |  |
-| 410 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
+| 141 |  | read [tickets](/code/tables/tickets.md) |  |
+| 146 |  | read [tickets](/code/tables/tickets.md) |  |
+| 238 |  | read [emails](/code/tables/emails.md) |  |
+| 265 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
+| 290 |  | read [emails](/code/tables/emails.md) |  |
+| 310 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
+| 336 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
+| 337 |  | read [emails](/code/tables/emails.md) |  |
+| 338 |  | read [ticket_notes](/code/tables/ticket_notes.md) |  |
+| 339 |  | read [ticket_audit](/code/tables/ticket_audit.md) |  |
+| 340 |  | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 341 |  | read [ticket_recordings](/code/tables/ticket_recordings.md) |  |
+| 342 |  | read [ticket_csat_responses](/code/tables/ticket_csat_responses.md) |  |
+| 343 |  | read [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) |  |
+| 344 |  | read [ticket_assets](/code/tables/ticket_assets.md) |  |
+| 345 |  | read [sla_notifications_sent](/code/tables/sla_notifications_sent.md) |  |
+| 346 |  | read [tasks](/code/tables/tasks.md) |  |
+| 366 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
+| 375 |  | **delete** [email_attachments](/code/tables/email_attachments.md) |  |
+| 376 |  | **delete** [emails](/code/tables/emails.md) |  |
+| 377 |  | **delete** [ticket_notes](/code/tables/ticket_notes.md) |  |
+| 378 |  | **delete** [ticket_audit](/code/tables/ticket_audit.md) |  |
+| 379 |  | **delete** [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 380 |  | **delete** [tickets](/code/tables/tickets.md) |  |
+| 418 |  | read [tickets](/code/tables/tickets.md) |  |
+| 420 |  | read [email_attachments](/code/tables/email_attachments.md) |  |
 
 ## How it hangs together
 

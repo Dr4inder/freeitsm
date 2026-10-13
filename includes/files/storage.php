@@ -21,7 +21,12 @@ const FILES_DEFAULT_MAX_UPLOAD_MB = 4096;
 /** Each upload piece. Under PHP's default post_max_size (8M) with room to spare. */
 const FILES_CHUNK_BYTES = 4 * 1024 * 1024;
 
-/** Reads a Files setting from system_settings, cached per request; blank or missing gives $default. */
+/**
+ * Reads a Files setting from system_settings, cached per request; blank or missing gives $default.
+ *
+ * @param string $key      the system_settings.setting_key, e.g. 'files_storage_root' or 'files_max_upload_mb'
+ * @param string $default  what to return when the setting is missing or blank
+ */
 function filesSetting(PDO $conn, string $key, string $default = ''): string
 {
     static $cache = [];
@@ -34,7 +39,12 @@ function filesSetting(PDO $conn, string $key, string $default = ''): string
     return ($cache[$key] === null || $cache[$key] === '') ? $default : $cache[$key];
 }
 
-/** Saves one Files setting to system_settings (insert or update). */
+/**
+ * Saves one Files setting to system_settings (insert or update).
+ *
+ * @param string $key     the system_settings.setting_key, e.g. 'files_storage_root'
+ * @param ?string $value  the value to store; null stores NULL, which filesSetting() reads as unset
+ */
 function filesSaveSetting(PDO $conn, string $key, ?string $value): void
 {
     $conn->prepare("INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?)
@@ -78,6 +88,8 @@ function filesNewStoragePath(PDO $conn): string
 /**
  * The absolute path of a stored version, or null if the row's path is not one
  * we could have written. A row reading "../../config.php" must never be served.
+ *
+ * @param string $rel  the version's stored path relative to the storage root, e.g. 2026/10/10/<32 hex>.bin
  */
 function filesAbsolutePath(PDO $conn, string $rel): ?string
 {
@@ -85,7 +97,11 @@ function filesAbsolutePath(PDO $conn, string $rel): ?string
     return filesStorageRoot($conn) . '/' . $rel;
 }
 
-/** Where pieces of an in-progress upload collect. */
+/**
+ * Where pieces of an in-progress upload collect.
+ *
+ * @param string $token  the upload's token from the client - must be 32 lower-case hex characters or it throws
+ */
 function filesIncomingPath(PDO $conn, string $token): string
 {
     if (!preg_match('/^[0-9a-f]{32}$/', $token)) throw new Exception('Bad upload token.');
@@ -96,13 +112,22 @@ function filesIncomingPath(PDO $conn, string $token): string
     return $dir . '/' . $token . '.part';
 }
 
-/** A file or folder name as a person typed it, made safe to store and display. */
+/**
+ * A file or folder name as a person typed it, made safe to store and display.
+ *
+ * @param string $name  the name as typed or uploaded (untrusted)
+ */
 function filesCleanName(string $name): string
 {
     return uploadCleanName($name);
 }
 
-/** The mime type we record for a stored file: sniffed, else guessed from the name. */
+/**
+ * The mime type we record for a stored file: sniffed, else guessed from the name.
+ *
+ * @param string $absPath  the full path of the file on disk, whose content is sniffed
+ * @param string $name     the file's display name, whose extension is the fallback guess
+ */
 function filesDetectMime(string $absPath, string $name): string
 {
     $m = uploadDetectMime($absPath);
@@ -130,6 +155,8 @@ function filesGetPrefs(PDO $conn, int $analystId): array
 /**
  * Saves one of the analyst's own Files preferences (insert or update).
  *
+ * @param string $key    the preference_key with its files_ prefix, e.g. 'files_view' or 'files_windows'
+ * @param string $value  the value to store, already checked by the caller (JSON for 'files_windows')
  * @writes user_preferences(preference_value) - per-analyst choices such as the view
  */
 function filesSavePref(PDO $conn, int $analystId, string $key, string $value): void
@@ -173,7 +200,11 @@ function filesDesktopLogo(PDO $conn, int $analystId): array
     return ['url' => $url, 'position' => $pos];
 }
 
-/** A company logo lives in system/uploads/branding/companies/ under our own random name. */
+/**
+ * A company logo lives in system/uploads/branding/companies/ under our own random name.
+ *
+ * @param string $p  tenants.logo_path, relative to the application root
+ */
 function filesCompanyLogoPathIsSafe(string $p): bool
 {
     return (bool)preg_match('#^system/uploads/branding/companies/[0-9a-f]{32}\.(png|jpe?g|gif|webp)$#', $p);

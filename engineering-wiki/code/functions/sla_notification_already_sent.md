@@ -11,14 +11,14 @@ function sla_notification_already_sent(
 ): bool
 ```
 
-Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 366.
+Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 389.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$targetType` | `string` |  |  |
-| `$trigger` | `string` |  |  |
+| `$targetType` | `string` |  | 'response' or 'resolution' |
+| `$trigger` | `string` |  | 'warning' or 'breach' |
 
 **Returns:** `bool`
 
@@ -26,7 +26,7 @@ Defined in [includes/sla_notifications.php](/code/files/includes/sla_notificatio
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 367 | `sla_notification_already_sent` | read [sla_notifications_sent](/code/tables/sla_notifications_sent.md) |  |
+| 390 | `sla_notification_already_sent` | read [sla_notifications_sent](/code/tables/sla_notifications_sent.md) |  |
 
 ## Called from
 

@@ -1,6 +1,6 @@
 # CalendarEventMissing
 
-> Class in [includes/calendar_sync/CalendarSyncProvider.php](/code/files/includes/calendar_sync/CalendarSyncProvider.php.md), line 260
+> Class in [includes/calendar_sync/CalendarSyncProvider.php](/code/files/includes/calendar_sync/CalendarSyncProvider.php.md), line 290
 
 The event we were told to update is no longer there.
 

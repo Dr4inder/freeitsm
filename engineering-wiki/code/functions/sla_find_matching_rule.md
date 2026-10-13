@@ -20,14 +20,14 @@ function sla_find_matching_rule(
 ): ?array
 ```
 
-Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 206.
+Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 213.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$trigger` | `string` |  |  |
-| `$targetType` | `string` |  |  |
+| `$trigger` | `string` |  | 'warning' or 'breach' |
+| `$targetType` | `string` |  | 'response' or 'resolution' |
 
 **Returns:** `?array`
 
@@ -35,8 +35,8 @@ Defined in [includes/sla_notifications.php](/code/files/includes/sla_notificatio
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 207 | `sla_find_matching_rule` | read [tickets](/code/tables/tickets.md) |  |
-| 213 | `sla_find_matching_rule` | read [sla_notification_rules](/code/tables/sla_notification_rules.md) |  |
+| 214 | `sla_find_matching_rule` | read [tickets](/code/tables/tickets.md) |  |
+| 220 | `sla_find_matching_rule` | read [sla_notification_rules](/code/tables/sla_notification_rules.md) |  |
 
 ## Called from
 

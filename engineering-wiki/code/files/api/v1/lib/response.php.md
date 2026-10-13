@@ -1,6 +1,6 @@
 # api/v1/lib/response.php
 
-> API endpoint - 91 lines
+> API endpoint - 113 lines
 
 FreeITSM REST API v1 — response + input helpers.
 
@@ -22,13 +22,13 @@ carry the outcome).
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiRespond()](/code/functions/apiRespond.md) | 13 | Emit a success response and stop. `$meta` (pagination etc.) is optional. |
-| [apiError()](/code/functions/apiError.md) | 24 | Emit an error response and stop. |
-| [apiFailFromService()](/code/functions/apiFailFromService.md) | 41 | Emit the API error response for a ServiceError raised by a shared service (see includes/service_context.php). Maps kind -> HTTP status and passes the code + message through verbatim, so a service-backed handler produces the same error body it did when the logic lived inline. Resolves ServiceError / serviceErrorHttpStatus at call time (the calling resource has required them). |
-| [apiJsonBody()](/code/functions/apiJsonBody.md) | 49 | Parse the JSON request body. Returns [] for an empty body; 400s on a body that is present but not valid JSON (silent garbage-in is worse than an error). |
-| [apiIsoDate()](/code/functions/apiIsoDate.md) | 62 | DB "YYYY-MM-DD HH:MM:SS" (stored UTC) -> ISO 8601 "YYYY-MM-DDTHH:MM:SSZ", or null. |
-| [apiParseDate()](/code/functions/apiParseDate.md) | 73 | Parse an incoming date/time filter or field (ISO 8601, with or without Z, or "YYYY-MM-DD HH:MM:SS") into a UTC DB string. 400s on garbage. |
-| [apiPagination()](/code/functions/apiPagination.md) | 84 | Pagination from ?page= and ?per_page= (defaults 1 / 25, per_page capped at 100). |
+| [apiRespond()](/code/functions/apiRespond.md) | 19 | Emit a success response and stop. `$meta` (pagination etc.) is optional. |
+| [apiError()](/code/functions/apiError.md) | 37 | Emit an error response and stop. |
+| [apiFailFromService()](/code/functions/apiFailFromService.md) | 56 | Emit the API error response for a ServiceError raised by a shared service (see includes/service_context.php). Maps kind -> HTTP status and passes the code + message through verbatim, so a service-backed handler produces the same error body it did when the logic lived inline. Resolves ServiceError / serviceErrorHttpStatus at call time (the calling resource has required them). |
+| [apiJsonBody()](/code/functions/apiJsonBody.md) | 64 | Parse the JSON request body. Returns [] for an empty body; 400s on a body that is present but not valid JSON (silent garbage-in is worse than an error). |
+| [apiIsoDate()](/code/functions/apiIsoDate.md) | 81 | DB "YYYY-MM-DD HH:MM:SS" (stored UTC) -> ISO 8601 "YYYY-MM-DDTHH:MM:SSZ", or null. |
+| [apiParseDate()](/code/functions/apiParseDate.md) | 95 | Parse an incoming date/time filter or field (ISO 8601, with or without Z, or "YYYY-MM-DD HH:MM:SS") into a UTC DB string. 400s on garbage. |
+| [apiPagination()](/code/functions/apiPagination.md) | 106 | Pagination from ?page= and ?per_page= (defaults 1 / 25, per_page capped at 100). |
 
 ## How it hangs together
 

@@ -6,13 +6,13 @@ Every gate item of a project, each with `done` worked out, grouped by stage id. 
 function projectGateItems(PDO $conn, int $projectId, bool $showChanges = true): array
 ```
 
-Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 67.
+Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 69.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$showChanges` | `bool` | `true` |  |
+| `$showChanges` | `bool` | `true` | whether the analyst may open Changes; false leaves each change's title out |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatec
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 70 | `projectGateItems` | read [project_gate_items](/code/tables/project_gate_items.md), read [analysts](/code/tables/analysts.md) |  |
+| 72 | `projectGateItems` | read [project_gate_items](/code/tables/project_gate_items.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

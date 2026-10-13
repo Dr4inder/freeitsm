@@ -9,7 +9,7 @@ they cannot reach is left out (a link made before 3.5.0 can cross companies).
 function contractsForAsset(PDO $conn, int $assetId, ?int $analystId = null): array
 ```
 
-Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 101.
+Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 109 | `contractsForAsset` | read [contract_assets](/code/tables/contract_assets.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 111 | `contractsForAsset` | read [contract_assets](/code/tables/contract_assets.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
 
 ## Calls
 

@@ -10,14 +10,14 @@ because an edit can add or remove a name.
 function warRoomEditMessage(PDO $conn, int $analystId, int $messageId, string $body): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 555.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 596.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$messageId` | `int` |  |  |
-| `$body` | `string` |  |  |
+| `$messageId` | `int` |  | the warroom_messages id; only its author may edit it |
+| `$body` | `string` |  | the new text; blank changes nothing; cut to WARROOM_MAX_BODY |
 
 **Returns:** `bool`
 
@@ -25,8 +25,8 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 555
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 567 | `warRoomEditMessage` | **update** [warroom_messages](/code/tables/warroom_messages.md) (`body`, `edited_datetime`) |  |
-| 574 | `warRoomEditMessage` | **delete** [warroom_mentions](/code/tables/warroom_mentions.md) |  |
+| 608 | `warRoomEditMessage` | **update** [warroom_messages](/code/tables/warroom_messages.md) (`body`, `edited_datetime`) |  |
+| 615 | `warRoomEditMessage` | **delete** [warroom_mentions](/code/tables/warroom_mentions.md) |  |
 
 ## Calls
 

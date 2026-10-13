@@ -6,7 +6,7 @@ The statuses a stage can have: planned, active or closed.
 function projectStageStatuses(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 132.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 140.
 
 **Returns:** `array`
 

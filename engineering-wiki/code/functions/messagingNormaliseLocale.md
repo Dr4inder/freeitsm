@@ -6,11 +6,11 @@ Map a raw client-reported language tag (e.g. Telegram's message.from. language_c
 function messagingNormaliseLocale(string $raw): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 272.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 296.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the client-reported language tag, e.g. "en-US" or "pt-BR"; empty gives 'en' |
 
 **Returns:** `string`
 

@@ -89,7 +89,7 @@ function schemaReady(PDO $conn): bool
 
 ### readCsv
 
-*public static* - line 131
+*public static* - line 134
 
 Read a CSV into [headers, rows]. Rows are [header => value].
 
@@ -104,14 +104,14 @@ function readCsv(string $path, array $config = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
-| `$config` | `array` | `[]` |  |
+| `$path` | `string` |  | the CSV file on disk |
+| `$config` | `array` | `[]` | delimiter (default ','), has_header (default true; false names the columns 'Column 1'...) |
 
 **Called from:** [api/assets/import_run.php](/code/files/api/assets/import_run.php.md), [api/assets/import_upload.php](/code/files/api/assets/import_upload.php.md)
 
 ### dedupeHeaders
 
-*private static* - line 197
+*private static* - line 204
 
 "Serial", "Serial" -> "Serial", "Serial (2)".
 
@@ -121,11 +121,11 @@ function dedupeHeaders(array $headers): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$headers` | `array` |  |  |
+| `$headers` | `array` |  | the trimmed header cells in column order |
 
 ### suggestMapping
 
-*public static* - line 219
+*public static* - line 228
 
 Guess a mapping from the column names, so the screen opens mostly done.
 
@@ -139,14 +139,14 @@ function suggestMapping(PDO $conn, array $headers, int $analystId): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$headers` | `array` |  |  |
+| `$headers` | `array` |  | the file's column names, as returned by `readCsv()` |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/assets/import_upload.php](/code/files/api/assets/import_upload.php.md)
 
 ### run
 
-*public static* - line 286
+*public static* - line 298
 
 Import rows. `$mode` of 'preview' does every check and writes nothing.
 
@@ -165,10 +165,10 @@ function run(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$rows` | `array` |  |  |
-| `$mapping` | `array` |  |  |
+| `$rows` | `array` |  | source rows, each [column name => value] plus '__row' (the line number in the file) |
+| `$mapping` | `array` |  | [column name => null \| {target_kind: 'core'\|'field', target_key}] |
 | `$opts` | `array` |  | profile-shaped settings; see asset_import_profiles. |
-| `$mode` | `string` | `'preview'` |  |
+| `$mode` | `string` | `'preview'` | 'live' writes; anything else ('preview') checks every row and writes no asset |
 
 **Returns:** array the run row, with counts.
 
@@ -176,7 +176,7 @@ function run(
 
 ### processRow
 
-*private static* - line 389
+*private static* - line 406
 
 One row: map it, find it, write it.
 
@@ -197,18 +197,18 @@ function processRow(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
-| `$mapping` | `array` |  |  |
-| `$opts` | `array` |  |  |
-| `$matchKeys` | `array` |  |  |
+| `$row` | `array` |  | one source row, [column name => value] plus '__row' |
+| `$mapping` | `array` |  | [column name => null \| {target_kind: 'core'\|'field', target_key}] |
+| `$opts` | `array` |  | the run's profile-shaped settings (defaults, write_mode, on_unknown_option...) |
+| `$matchKeys` | `array` |  | the asset columns to identify a row by, in order, e.g. ['hostname', 'service_tag'] |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$live` | `bool` |  |  |
+| `$live` | `bool` |  | true to write, false for a preview |
 
 **Returns:** array ['action', 'asset_id'?, 'source_ref'?, 'display_name'?, 'detail'?]
 
 ### resolveLookups
 
-*private static* - line 451
+*private static* - line 470
 
 Turn the NAMES a spreadsheet contains into the ids the columns hold.
 
@@ -233,12 +233,12 @@ function resolveLookups(PDO $conn, array $core, ?int $tenantId): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$core` | `array` |  |  |
+| `$core` | `array` |  | [core column => value] from `applyMapping()`; names in lookup columns become ids |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### hasTenantColumn
 
-*private static* - line 511
+*private static* - line 534
 
 Not every lookup table is company-scoped (suppliers may not be).
 
@@ -249,11 +249,11 @@ function hasTenantColumn(PDO $conn, string $table): bool
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
+| `$table` | `string` |  | a lookup table name from the fixed list in `resolveLookups()` - never user input |
 
 ### applyMapping
 
-*private static* - line 526
+*private static* - line 554
 
 Split a source row into core columns and custom field values.
 
@@ -263,12 +263,12 @@ function applyMapping(array $row, array $mapping): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
-| `$mapping` | `array` |  |  |
+| `$row` | `array` |  | one source row, [column name => value] |
+| `$mapping` | `array` |  | [column name => null \| {target_kind: 'core'\|'field', target_key}] |
 
 ### findMatch
 
-*private static* - line 554
+*private static* - line 585
 
 Find the existing asset for this row, trying each match key IN ORDER.
 
@@ -283,19 +283,19 @@ function findMatch(PDO $conn, array $core, array $matchKeys, ?int $tenantId): ar
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$core` | `array` |  |  |
-| `$matchKeys` | `array` |  |  |
+| `$core` | `array` |  | the row's [core column => value] after lookups |
+| `$matchKeys` | `array` |  | the asset columns to try, in order - each from MATCH_KEYS, so safe to put in SQL |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 564 | `AssetImportService::findMatch` | read [assets](/code/tables/assets.md) |  |
+| 595 | `AssetImportService::findMatch` | read [assets](/code/tables/assets.md) |  |
 
 ### applyCreate
 
-*private static* - line 581
+*private static* - line 619
 
 Creates an asset from one import row, with its custom fields, or describes it on a preview.
 
@@ -319,17 +319,17 @@ function applyCreate(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$core` | `array` |  |  |
-| `$fields` | `array` |  |  |
-| `$opts` | `array` |  |  |
-| `$ref` | `string` |  |  |
-| `$name` | `?string` |  |  |
+| `$core` | `array` |  | the row's [core column => value] after lookups and defaults |
+| `$fields` | `array` |  | the row's [custom field_key => value] |
+| `$opts` | `array` |  | the run's settings (source_name, apply_field_set_id, on_unknown_option...) |
+| `$ref` | `string` |  | the value the row is identified by, for the log |
+| `$name` | `?string` |  | the asset name for the log |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$live` | `bool` |  |  |
+| `$live` | `bool` |  | true to create, false to describe it for a preview |
 
 ### applyUpdate
 
-*private static* - line 611
+*private static* - line 656
 
 Updates an existing asset from one import row, or describes it on a preview.
 
@@ -355,16 +355,16 @@ function applyUpdate(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$core` | `array` |  |  |
-| `$fields` | `array` |  |  |
-| `$opts` | `array` |  |  |
-| `$ref` | `string` |  |  |
-| `$name` | `?string` |  |  |
-| `$live` | `bool` |  |  |
+| `$core` | `array` |  | the row's [core column => value] after lookups and defaults |
+| `$fields` | `array` |  | the row's [custom field_key => value] |
+| `$opts` | `array` |  | the run's settings; write_mode 'fill' (default) only fills blanks, anything else overwrites |
+| `$ref` | `string` |  | the value the row is identified by, for the log |
+| `$name` | `?string` |  | the asset name for the log |
+| `$live` | `bool` |  | true to write, false to describe the changes for a preview |
 
 ### writeFields
 
-*private static* - line 679
+*private static* - line 727
 
 Write the custom fields, honouring on_unknown_option.
 
@@ -381,12 +381,12 @@ function writeFields(PDO $conn, ActorContext $ctx, int $assetId, array $fields, 
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$fields` | `array` |  |  |
-| `$opts` | `array` |  |  |
+| `$fields` | `array` |  | [custom field_key => value] to write |
+| `$opts` | `array` |  | the run's settings; on_unknown_option decides unknown dropdown values |
 
 ### resolveOption
 
-*private static* - line 718
+*private static* - line 770
 
 A dropdown value the option list does not have (§6.7). reject -> the row fails; add -> the option is created.
 
@@ -397,20 +397,20 @@ function resolveOption(PDO $conn, array $def, string $value, array $opts): ?stri
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$def` | `array` |  |  |
-| `$value` | `string` |  |  |
-| `$opts` | `array` |  |  |
+| `$def` | `array` |  | the dropdown field's definition, with id and label |
+| `$value` | `string` |  | the value from the source row |
+| `$opts` | `array` |  | the run's settings; on_unknown_option 'add' creates the option, anything else ('reject') throws |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 720 | `AssetImportService::resolveOption` | read [asset_field_options](/code/tables/asset_field_options.md) |  |
-| 729 | `AssetImportService::resolveOption` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `display_order`) |  |
+| 772 | `AssetImportService::resolveOption` | read [asset_field_options](/code/tables/asset_field_options.md) |  |
+| 781 | `AssetImportService::resolveOption` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `display_order`) |  |
 
 ### attachProfileSet
 
-*private static* - line 739
+*private static* - line 795
 
 The profile's field set, applied to everything it touches.
 
@@ -423,11 +423,11 @@ function attachProfileSet(PDO $conn, ActorContext $ctx, int $assetId, array $opt
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$opts` | `array` |  |  |
+| `$opts` | `array` |  | the run's settings; apply_field_set_id names the set to attach, if any |
 
 ### handleMissing
 
-*private static* - line 754
+*private static* - line 815
 
 Rows present last run and absent now (§6.6).
 
@@ -449,22 +449,22 @@ function handleMissing(
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$runId` | `int` |  |  |
-| `$profileId` | `int` |  |  |
-| `$touchedIds` | `array` |  |  |
-| `$policy` | `string` |  |  |
+| `$runId` | `int` |  | the asset_import_runs row being finished |
+| `$profileId` | `int` |  | the import profile whose earlier live runs are compared |
+| `$touchedIds` | `array` |  | the asset ids this run created, updated or found unchanged |
+| `$policy` | `string` |  | on_missing: 'deactivate' sets an inactive status, anything else only logs it |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 758 | `AssetImportService::handleMissing` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
-| 780 | `AssetImportService::handleMissing` | **update** [assets](/code/tables/assets.md) (`asset_status_id`) |  |
+| 819 | `AssetImportService::handleMissing` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 841 | `AssetImportService::handleMissing` | **update** [assets](/code/tables/assets.md) (`asset_status_id`) |  |
 
 ### inactiveStatusId
 
-*private static* - line 800
+*private static* - line 861
 
 The asset status to give an asset that has dropped out of the source - the first active status whose name contains retired, disposed or inactive.
 
@@ -481,11 +481,11 @@ function inactiveStatusId(PDO $conn, ?int $tenantId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 803 | `AssetImportService::inactiveStatusId` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 864 | `AssetImportService::inactiveStatusId` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
 
 ### unresolved
 
-*public static* - line 818
+*public static* - line 884
 
 Rows that could not be imported and have not been dealt with.
 
@@ -496,20 +496,20 @@ function unresolved(PDO $conn, ?int $runId = null, int $limit = 200): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$runId` | `?int` | `null` |  |
-| `$limit` | `int` | `200` |  |
+| `$runId` | `?int` | `null` | only this run's parked rows, or null for every live run |
+| `$limit` | `int` | `200` | the most rows to return |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 823 | `AssetImportService::unresolved` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 889 | `AssetImportService::unresolved` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
 
 **Called from:** [api/assets/import_history.php](/code/files/api/assets/import_history.php.md)
 
 ### resolveEntry
 
-*public static* - line 846
+*public static* - line 916
 
 Mark a parked row dealt with — either retried successfully, or dismissed.
 
@@ -520,19 +520,19 @@ function resolveEntry(PDO $conn, int $entryId): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$entryId` | `int` |  |  |
+| `$entryId` | `int` |  | the asset_import_run_entries row to mark dealt with |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 848 | `AssetImportService::resolveEntry` | **update** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`resolved_datetime`) |  |
+| 918 | `AssetImportService::resolveEntry` | **update** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`resolved_datetime`) |  |
 
 **Called from:** [api/assets/import_resolve.php](/code/files/api/assets/import_resolve.php.md)
 
 ### startRun
 
-*private static* - line 857
+*private static* - line 932
 
 Records the start of an import run and returns its id.
 
@@ -544,19 +544,19 @@ function startRun(PDO $conn, ActorContext $ctx, array $opts, string $mode, ?int 
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$opts` | `array` |  |  |
-| `$mode` | `string` |  |  |
+| `$opts` | `array` |  | the run's settings; profile_id, source_name and stored_file are recorded |
+| `$mode` | `string` |  | 'live' or 'preview' (anything not 'live' is stored as preview) |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 865 | `AssetImportService::startRun` | **insert** [asset_import_runs](/code/tables/asset_import_runs.md) (`profile_id`, `mode`, `status`, `source_name`, `stored_file`, `triggered_by_analyst_id`, `tenant_id`, `started_datetime`) |  |
+| 940 | `AssetImportService::startRun` | **insert** [asset_import_runs](/code/tables/asset_import_runs.md) (`profile_id`, `mode`, `status`, `source_name`, `stored_file`, `triggered_by_analyst_id`, `tenant_id`, `started_datetime`) |  |
 
 ### finishRun
 
-*private static* - line 881
+*private static* - line 962
 
 Marks an import run finished with its counts, and returns the run.
 
@@ -567,19 +567,19 @@ function finishRun(PDO $conn, int $runId, int $seen, array $counts): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$runId` | `int` |  |  |
-| `$seen` | `int` |  |  |
-| `$counts` | `array` |  |  |
+| `$runId` | `int` |  | the asset_import_runs row to finish |
+| `$seen` | `int` |  | how many source rows were read |
+| `$counts` | `array` |  | [action => count] for every ACTIONS key |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 884 | `AssetImportService::finishRun` | **update** [asset_import_runs](/code/tables/asset_import_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `unchanged_count`, `conflict_count`, `skipped_count`, `error_count`) |  |
+| 965 | `AssetImportService::finishRun` | **update** [asset_import_runs](/code/tables/asset_import_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `unchanged_count`, `conflict_count`, `skipped_count`, `error_count`) |  |
 
 ### loadRun
 
-*public static* - line 898
+*public static* - line 983
 
 Loads one import run with its counts as integers; throws not found when it does not exist.
 
@@ -590,19 +590,19 @@ function loadRun(PDO $conn, int $runId): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$runId` | `int` |  |  |
+| `$runId` | `int` |  | the asset_import_runs row to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 900 | `AssetImportService::loadRun` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 985 | `AssetImportService::loadRun` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
 
 **Called from:** [api/assets/import_history.php](/code/files/api/assets/import_history.php.md)
 
 ### runEntries
 
-*public static* - line 914
+*public static* - line 1005
 
 Every row's outcome for a run.
 
@@ -613,21 +613,21 @@ function runEntries(PDO $conn, int $runId, ?string $action = null, int $limit = 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$runId` | `int` |  |  |
-| `$action` | `?string` | `null` |  |
-| `$limit` | `int` | `500` |  |
+| `$runId` | `int` |  | the asset_import_runs row whose log to read |
+| `$action` | `?string` | `null` | only entries with this ACTIONS value, or null for all |
+| `$limit` | `int` | `500` | the most entries to return |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 916 | `AssetImportService::runEntries` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md) |  |
+| 1007 | `AssetImportService::runEntries` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md) |  |
 
 **Called from:** [api/assets/import_history.php](/code/files/api/assets/import_history.php.md), [api/assets/import_run.php](/code/files/api/assets/import_run.php.md)
 
 ### logEntry
 
-*private static* - line 929
+*private static* - line 1030
 
 Writes one row of an import run's log.
 
@@ -648,24 +648,24 @@ function logEntry(
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$runId` | `int` |  |  |
-| `$rowNo` | `?int` |  |  |
-| `$action` | `string` |  |  |
+| `$runId` | `int` |  | the asset_import_runs row the entry belongs to |
+| `$rowNo` | `?int` |  | the source line number; null for an entry with no source row (a missing asset) |
+| `$action` | `string` |  | one of ACTIONS |
 | `$assetId` | `?int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$ref` | `?string` |  |  |
-| `$name` | `?string` |  |  |
-| `$detail` | `?string` |  |  |
-| `$raw` | `?array` |  |  |
+| `$ref` | `?string` |  | the value the row is identified by (cut to 255 characters) |
+| `$name` | `?string` |  | the asset name (cut to 255 characters) |
+| `$detail` | `?string` |  | what happened, in words (cut to 1000 characters) |
+| `$raw` | `?array` |  | the source row, kept so it can be corrected and retried; '__row' is dropped |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 938 | `AssetImportService::logEntry` | **insert** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`run_id`, `row_number`, `action`, `asset_id`, `source_ref`, `display_name`, `detail`, `raw_row`) |  |
+| 1039 | `AssetImportService::logEntry` | **insert** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`run_id`, `row_number`, `action`, `asset_id`, `source_ref`, `display_name`, `detail`, `raw_row`) |  |
 
 ### loadCore
 
-*private static* - line 959
+*private static* - line 1060
 
 An asset's id and core columns, for comparing with an import row.
 
@@ -682,11 +682,11 @@ function loadCore(PDO $conn, int $assetId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 962 | `AssetImportService::loadCore` | read [assets](/code/tables/assets.md) |  |
+| 1063 | `AssetImportService::loadCore` | read [assets](/code/tables/assets.md) |  |
 
 ### firstNonEmpty
 
-*private static* - line 968
+*private static* - line 1074
 
 The first of `$keys` that has a non-blank value in `$core`, or null.
 
@@ -696,12 +696,12 @@ function firstNonEmpty(array $core, array $keys): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$core` | `array` |  |  |
-| `$keys` | `array` |  |  |
+| `$core` | `array` |  | [core column => value] |
+| `$keys` | `array` |  | the columns to try, in order |
 
 ### refOf
 
-*private static* - line 979
+*private static* - line 1091
 
 The value an import row is matched on - the first non-blank of the match keys.
 
@@ -711,13 +711,13 @@ function refOf(array $row, array $mapping, array $matchKeys): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
-| `$mapping` | `array` |  |  |
-| `$matchKeys` | `array` |  |  |
+| `$row` | `array` |  | one source row, [column name => value] |
+| `$mapping` | `array` |  | [column name => null \| {target_kind, target_key}] |
+| `$matchKeys` | `array` |  | the asset columns a row is identified by, in order |
 
 ### nameOf
 
-*private static* - line 986
+*private static* - line 1103
 
 The asset name an import row maps to.
 
@@ -727,12 +727,12 @@ function nameOf(array $row, array $mapping): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
-| `$mapping` | `array` |  |  |
+| `$row` | `array` |  | one source row, [column name => value] |
+| `$mapping` | `array` |  | [column name => null \| {target_kind, target_key}] |
 
 ### describe
 
-*private static* - line 993
+*private static* - line 1115
 
 A human sentence describing what a row did, for the log.
 
@@ -742,12 +742,12 @@ function describe(array $core, array $fields): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$core` | `array` |  |  |
-| `$fields` | `array` |  |  |
+| `$core` | `array` |  | [core column => value] written or to be written |
+| `$fields` | `array` |  | [custom field_key => value], possibly with '__ignored' listing keys that went nowhere |
 
 ### short
 
-*private static* - line 1014
+*private static* - line 1140
 
 A value cut to 40 characters for the run log.
 
@@ -757,5 +757,5 @@ function short($v): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | the value to show |
 

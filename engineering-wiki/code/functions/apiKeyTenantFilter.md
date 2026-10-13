@@ -6,13 +6,13 @@ SQL predicate scoping any tenant_id-carrying list query to the key's companies. 
 function apiKeyTenantFilter(PDO $conn, array $apiKey, string $alias): array
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 262.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 285.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` |  |  |
+| `$alias` | `string` |  | the alias the query gives the table; empty for the bare tenant_id column |
 
 **Returns:** array [sqlFragment, params]
 

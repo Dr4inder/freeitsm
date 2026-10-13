@@ -62,6 +62,8 @@ function apiTaskContractor(PDO $conn, int $taskId): ?array {
 /**
  * Shapes a task row for the API, with its tags and subtask progress (total and done)
  * read alongside.
+ *
+ * @param array $r  the tasks row as apiTaskSelect() loads it, with the lookup and people names
  */
 function apiSerializeTask(PDO $conn, array $r): array {
     $rel = function ($id, $name, array $extra = []) {

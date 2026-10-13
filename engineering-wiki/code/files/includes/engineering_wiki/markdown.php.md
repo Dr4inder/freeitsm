@@ -1,6 +1,6 @@
 # includes/engineering_wiki/markdown.php
 
-> PHP - 433 lines
+> PHP - 495 lines
 
 Engineering wiki - a small Markdown renderer written for the wiki, so the pages look and read like GitHub without pulling in a library.
 

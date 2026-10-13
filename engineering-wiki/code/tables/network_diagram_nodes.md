@@ -19,14 +19,14 @@
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3266 |  | delete |  |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3268 |  | delete |  |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):762 | `apiNmNodesCreate` | insert | `diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):809 | `apiNmNodesUpdate` | update | `x`, `y`, `size`, `icon_override` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):835 | `apiNmNodesDelete` | delete |  |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):289 | `CmdbService::deleteObject` | delete |  |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):156 | `NetworkMapperService::deleteDiagram` | delete |  |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):205 | `NetworkMapperService::createVersion` | insert | `diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override` |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):320 | `NetworkMapperService::replaceContents` | delete |  |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):326 | `NetworkMapperService::replaceContents` | insert | `diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):833 | `apiNmNodesCreate` | insert | `diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):880 | `apiNmNodesUpdate` | update | `x`, `y`, `size`, `icon_override` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):906 | `apiNmNodesDelete` | delete |  |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md):310 | `CmdbService::deleteObject` | delete |  |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):170 | `NetworkMapperService::deleteDiagram` | delete |  |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):224 | `NetworkMapperService::createVersion` | insert | `diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override` |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):369 | `NetworkMapperService::replaceContents` | delete |  |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):375 | `NetworkMapperService::replaceContents` | insert | `diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override` |  |
 
 ## Read by
 
@@ -35,7 +35,7 @@
 | [api/network-mapper/get_diagram.php](/code/files/api/network-mapper/get_diagram.php.md) | L72 |  |
 | [api/network-mapper/list_diagrams.php](/code/files/api/network-mapper/list_diagrams.php.md) | L47 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3273, L3274 |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmDiagramSelect L75, apiNmLoadNode L103, apiNmNodeSelect L186, apiNmConnectorsForDiagram L219, apiNmResolveEndpoint L341, apiNmResolveRelationshipId L366 ... |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::deleteObject L286 |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::createVersion L202, NetworkMapperService::autoPlacer L422, NetworkMapperService::resolveRelationshipId L446 |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmDiagramSelect L75, apiNmLoadNode L116, apiNmNodeSelect L211, apiNmConnectorsForDiagram L250, apiNmResolveEndpoint L393, apiNmResolveRelationshipId L422 ... |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::deleteObject L307 |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::createVersion L221, NetworkMapperService::autoPlacer L478, NetworkMapperService::resolveRelationshipId L506 |  |
 

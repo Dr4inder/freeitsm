@@ -1,6 +1,6 @@
 # includes/asset_warranty_calendar.php
 
-> PHP - 298 lines
+> PHP - 326 lines
 
 Asset expiry dates → Calendar sync.
 
@@ -28,27 +28,27 @@ event set is small.
 | Function | Line | What it does |
 |---|--:|---|
 | [syncAssetWarrantyCalendar()](/code/functions/syncAssetWarrantyCalendar.md) | 37 | Rebuilds the auto-generated warranty-expiry and lease-end calendar entries from the asset dates, then the lease "give notice" entries. |
-| [awcSyncKind()](/code/functions/awcSyncKind.md) | 107 | Clear and rebuild one kind of auto-generated asset date entry. |
-| [awcEnsureCategory()](/code/functions/awcEnsureCategory.md) | 190 | Which calendar category should this kind of entry use? |
-| [awcAdoptExistingCategory()](/code/functions/awcAdoptExistingCategory.md) | 236 | Adopt whatever category this kind of entry is already filed under. |
-| [awcSetSetting()](/code/functions/awcSetSetting.md) | 258 | Remember a value; best-effort, because losing it only costs one lookup. |
-| [awcGetSetting()](/code/functions/awcGetSetting.md) | 269 | Reads one system_settings value, returning `$default` when it is missing, empty or unreadable. |
-| [awcColumnExists()](/code/functions/awcColumnExists.md) | 284 | True when the table has the column (information_schema), so the sync can wait for Database Verification instead of failing. |
+| [awcSyncKind()](/code/functions/awcSyncKind.md) | 116 | Clear and rebuild one kind of auto-generated asset date entry. |
+| [awcEnsureCategory()](/code/functions/awcEnsureCategory.md) | 203 | Which calendar category should this kind of entry use? |
+| [awcAdoptExistingCategory()](/code/functions/awcAdoptExistingCategory.md) | 251 | Adopt whatever category this kind of entry is already filed under. |
+| [awcSetSetting()](/code/functions/awcSetSetting.md) | 278 | Remember a value; best-effort, because losing it only costs one lookup. |
+| [awcGetSetting()](/code/functions/awcGetSetting.md) | 294 | Reads one system_settings value, returning `$default` when it is missing, empty or unreadable. |
+| [awcColumnExists()](/code/functions/awcColumnExists.md) | 312 | True when the table has the column (information_schema), so the sync can wait for Database Verification instead of failing. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 123 | `awcSyncKind` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
-| 142 | `awcSyncKind` | read [assets](/code/tables/assets.md) |  |
-| 152 | `awcSyncKind` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
-| 197 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 207 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 217 | `awcEnsureCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `is_active`) |  |
-| 241 | `awcAdoptExistingCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 247 | `awcAdoptExistingCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
-| 262 | `awcSetSetting` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 272 | `awcGetSetting` | read [system_settings](/code/tables/system_settings.md) |  |
+| 132 | `awcSyncKind` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
+| 151 | `awcSyncKind` | read [assets](/code/tables/assets.md) |  |
+| 161 | `awcSyncKind` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
+| 210 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 220 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 230 | `awcEnsureCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `is_active`) |  |
+| 256 | `awcAdoptExistingCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 262 | `awcAdoptExistingCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 282 | `awcSetSetting` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 297 | `awcGetSetting` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

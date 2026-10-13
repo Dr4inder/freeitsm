@@ -6,7 +6,7 @@ True once Database Verification has added auth_providers.jit_company_access (3.5
 function ssoJitCompanyReady(PDO $conn): bool
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 182.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 185 | `ssoJitCompanyReady` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 196 | `ssoJitCompanyReady` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Called from
 

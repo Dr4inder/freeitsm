@@ -23,18 +23,18 @@ function oversizeNotify(
 ): array
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 231.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 260.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `array` |  |  |
-| `$rules` | `array` |  |  |
-| `$fromAddress` | `string` |  |  |
-| `$fromName` | `string` |  |  |
-| `$subject` | `string` |  |  |
+| `$mailbox` | `array` |  | the target_mailboxes row the email arrived at - id, name and target_mailbox are read |
+| `$rules` | `array` |  | the mailbox's rules from `oversizeRules()` |
+| `$fromAddress` | `string` |  | the sender's address, from the email (untrusted) - the auto-reply goes here |
+| `$fromName` | `string` |  | the sender's display name, shown in the alert |
+| `$subject` | `string` |  | the email's subject, shown in the alert and the auto-reply |
 | `$atts` | `array` |  | [['name','size'], ...]   `$plan` from `oversizePlan()` |
-| `$plan` | `array` |  |  |
+| `$plan` | `array` |  | the decision from `oversizePlan()` for these attachments - its 'reasons' are listed |
 | `$outcome` | `string` |  | 'rejected' (no ticket) \| 'stripped' (ticket kept, files removed) |
 | `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
@@ -44,7 +44,7 @@ Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 244 | `oversizeNotify` | read [tickets](/code/tables/tickets.md) |  |
+| 273 | `oversizeNotify` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

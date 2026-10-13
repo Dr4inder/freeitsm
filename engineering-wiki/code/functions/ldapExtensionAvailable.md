@@ -6,7 +6,7 @@ True when the PHP ldap extension is present. Checked before every use.
 function ldapExtensionAvailable(): bool
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 63.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 65.
 
 **Returns:** `bool`
 

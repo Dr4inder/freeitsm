@@ -10,11 +10,11 @@ anything is uploaded into it.
 function uploadPrepareDir(string $dir): void
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 222.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 224.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dir` | `string` |  |  |
+| `$dir` | `string` |  | absolute path of the upload directory; created (with parents) if missing |
 
 **Returns:** `void`
 

@@ -188,6 +188,7 @@ function settingKeyPrefixes(): array
  * Who owns this setting key? null = nobody, so it may not be written through the
  * generic endpoint. Exact matches win over prefixes.
  *
+ * @param string $key  a system_settings key, e.g. 'vcenter_server' or 'module_color_tickets'
  * @return array{module:string,cap:?string,tab:string}|null
  */
 function settingKeyOwner(string $key): ?array
@@ -216,6 +217,8 @@ function settingKeyOwner(string $key): ?array
  *   - the module has been CONVERTED (its manifest claims those keys) → the tab's capability;
  *   - it has NOT been converted yet                                  → is_admin, exactly as
  *     today, so nothing loosens by accident.
+ *
+ * @param string $ns  the AI settings namespace, e.g. 'knowledge_ai', 'cmdb_ai', 'tickets_reply_cleanup'
  */
 function analystCanManageAiNamespace(PDO $conn, int $analystId, string $ns): bool
 {
@@ -244,6 +247,8 @@ function analystCanManageAnyAiNamespace(PDO $conn, int $analystId): bool
 
 /**
  * The API twin: refuse with a 403 unless this analyst may manage the namespace's AI config.
+ *
+ * @param string $ns  the AI settings namespace, e.g. 'knowledge_ai'; checked for the signed-in analyst
  */
 function requireAiNamespaceJson(PDO $conn, string $ns): void
 {
@@ -262,6 +267,8 @@ function requireAiNamespaceJson(PDO $conn, string $ns): void
  * Once a module converts (phase 3b) its keys name a capability, and that capability is
  * required. Until then the key falls back to its module's Layer 1 access. is_admin
  * bypasses both — via analystHasCapability() and via analystCanAccessModule('system').
+ *
+ * @param string $key  the system_settings key to be written; a key with no owner is always refused
  */
 function analystCanWriteSettingKey(PDO $conn, int $analystId, string $key): bool
 {

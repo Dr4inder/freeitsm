@@ -86,6 +86,8 @@ function publicBaseUrlSetting(PDO $conn): string
  * `.../freeitsm-app/freeitsm-app/...` for anyone who typed the sub-path in. So the
  * sub-path is added only when it is not already on the end, which is the same guard
  * messagingWebhookUrl() arrived at for the same reason.
+ *
+ * @param string $root  the configured public address, with or without the app's sub-path
  */
 function publicUrlWithAppPath(string $root): string
 {
@@ -158,7 +160,11 @@ function publicBaseUrl(PDO $conn): string
     return $root;
 }
 
-/** An absolute URL for an app-relative path, e.g. 'self-service/tickets.php?id=9'. */
+/**
+ * An absolute URL for an app-relative path, e.g. 'self-service/tickets.php?id=9'.
+ *
+ * @param string $path  an app-relative path, e.g. 'self-service/tickets.php?id=9'; a leading slash is ignored
+ */
 function publicAbsoluteUrl(PDO $conn, string $path): string
 {
     return publicBaseUrl($conn) . '/' . ltrim($path, '/');

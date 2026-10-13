@@ -25,6 +25,8 @@ require_once __DIR__ . '/milestones.php';
  * Per-project task counts in one query: total, done, overdue (top-level tasks
  * only), plus targets_health - the worst of the project's asset targets
  * (includes/projects/targets.php) - so every screen's health agrees.
+ *
+ * @param array $projectIds  the project ids to count for
  */
 function projectTaskStats(PDO $conn, array $projectIds): array
 {
@@ -127,6 +129,10 @@ function projectTaskStats(PDO $conn, array $projectIds): array
  * green project amber (projectTargetHealth).
  * Finished projects have no health (null). Written in the help page too - keep
  * the two in step.
+ *
+ * @param array $p  the projects row - status and target_end_date are read
+ * @param array $stats  the project's counts from projectTaskStats()
+ * @param ?array $cfg  the health thresholds from projectHealthConfig(); null uses the built-in defaults
  */
 function projectAutoHealth(array $p, array $stats, ?array $cfg = null): ?string
 {
@@ -160,7 +166,12 @@ function projectAutoHealth(array $p, array $stats, ?array $cfg = null): ?string
     return $targets === 'amber' ? 'amber' : 'green';
 }
 
-/** Have this many linked tickets been raised in the last 7 days? (Projects -> Settings -> Health) */
+/**
+ * Have this many linked tickets been raised in the last 7 days? (Projects -> Settings -> Health)
+ *
+ * @param array $stats  the project's counts from projectTaskStats() - tickets_7d is read
+ * @param array $cfg  the health thresholds from projectHealthConfig() - ticket_amber is read (0 = off)
+ */
 function projectTicketSpike(array $stats, array $cfg): bool
 {
     $n = (int)($cfg['ticket_amber'] ?? 0);
@@ -209,6 +220,9 @@ function projectExceptionColumns(PDO $conn): string
  *           allowed days in the past with work still open;
  *   risk  - an open risk scores above the allowed score.
  * An exception turns automatic health red. Worked out, never stored.
+ *
+ * @param array $p  the projects row with projectExceptionColumns() added (tol_time, tol_risk, tol_cost, max_risk, active_stage_end)
+ * @param array $stats  the project's counts from projectTaskStats(), budget included
  */
 function projectExceptions(array $p, array $stats): array
 {
@@ -236,7 +250,13 @@ function projectExceptions(array $p, array $stats): array
     return $out;
 }
 
-/** Add progress, counts and the health actually shown to a project row. */
+/**
+ * Add progress, counts and the health actually shown to a project row.
+ *
+ * @param array $p  the projects row, ideally with projectExceptionColumns() added
+ * @param array $stats  the project's counts from projectTaskStats(); [] when it has none
+ * @param ?array $cfg  the health thresholds from projectHealthConfig(); null uses the built-in defaults
+ */
 function projectDecorate(array $p, array $stats, ?array $cfg = null): array
 {
     $s = $stats + ['total' => 0, 'done' => 0, 'overdue' => 0];
@@ -264,7 +284,11 @@ function projectDecorate(array $p, array $stats, ?array $cfg = null): array
     return $p;
 }
 
-/** The reference people say out loud: PRJ-0042. */
+/**
+ * The reference people say out loud: PRJ-0042.
+ *
+ * @param int $id  the projects id
+ */
 function projectCode(int $id): string
 {
     return 'PRJ-' . str_pad((string)$id, 4, '0', STR_PAD_LEFT);
@@ -341,7 +365,11 @@ function projectEstimatesReady(PDO $conn): bool
     return $ready;
 }
 
-/** One project for its page: the row, its time boxes with their counts, its tasks and its history. */
+/**
+ * One project for its page: the row, its time boxes with their counts, its tasks and its history.
+ *
+ * @param array $row  the projects row, already loaded and checked as visible
+ */
 function projectDetail(PDO $conn, array $row): array
 {
     $id = (int)$row['id'];

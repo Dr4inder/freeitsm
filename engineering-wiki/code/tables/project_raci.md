@@ -15,16 +15,16 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):178 | `ProjectToolsService::removeMember` | delete |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):233 | `ProjectToolsService::deleteItem` | delete |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):270 | `ProjectToolsService::setRaci` | delete |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):274 | `ProjectToolsService::setRaci` | update | `letter` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):276 | `ProjectToolsService::setRaci` | insert | `project_id`, `item_id`, `member_id`, `letter` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):193 | `ProjectToolsService::removeMember` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):253 | `ProjectToolsService::deleteItem` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):300 | `ProjectToolsService::setRaci` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):304 | `ProjectToolsService::setRaci` | update | `letter` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):306 | `ProjectToolsService::setRaci` | insert | `project_id`, `item_id`, `member_id`, `letter` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L478 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::setRaci L280, ProjectToolsService::raci L1064 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L513 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::setRaci L310, ProjectToolsService::raci L1159 |  |
 

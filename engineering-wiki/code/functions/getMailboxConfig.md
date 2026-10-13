@@ -6,18 +6,18 @@ Get mailbox configuration from database
 function getMailboxConfig($conn, $mailboxId)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 406.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 408.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailboxId` |  |  |  |
+| `$mailboxId` |  |  | the target_mailboxes id to load |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 407 | `getMailboxConfig` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 409 | `getMailboxConfig` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## Calls
 

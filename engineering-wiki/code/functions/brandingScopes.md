@@ -14,7 +14,7 @@ who has already used the designer, for tidiness.
 function brandingScopes(): array
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 114.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 118.
 
 **Returns:** `array`
 

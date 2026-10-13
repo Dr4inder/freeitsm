@@ -1,6 +1,6 @@
 # api/system/browse_directory_ous.php
 
-> API endpoint - 231 lines
+> API endpoint - 242 lines
 
 API: the shape of the directory, for the OU browser.
 
@@ -32,9 +32,9 @@ Reads only. Administrators only.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [ouBrowseParent()](/code/functions/ouBrowseParent.md) | 194 | The DN one level up. '' once there is nothing left. |
-| [ouBrowseRdnValue()](/code/functions/ouBrowseRdnValue.md) | 204 | The readable half of a DN's first component: "OU=Staff,…" → "Staff". |
-| [ouBrowseIsPlumbing()](/code/functions/ouBrowseIsPlumbing.md) | 219 | Active Directory's own furniture, which nobody is importing people from. |
+| [ouBrowseParent()](/code/functions/ouBrowseParent.md) | 198 | The DN one level up. '' once there is nothing left. |
+| [ouBrowseRdnValue()](/code/functions/ouBrowseRdnValue.md) | 212 | The readable half of a DN's first component: "OU=Staff,…" → "Staff". |
+| [ouBrowseIsPlumbing()](/code/functions/ouBrowseIsPlumbing.md) | 230 | Active Directory's own furniture, which nobody is importing people from. |
 
 ## Database
 

@@ -32,12 +32,12 @@ The genuinely ambiguous choices are made here, in the open:
 function cdsyncMapCard(string $vcard, string $href): ?array
 ```
 
-Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 67.
+Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 69.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$vcard` | `string` |  |  |
-| `$href` | `string` |  |  |
+| `$vcard` | `string` |  | one raw vCard as the server sent it |
+| `$href` | `string` |  | the card's href, kept as the 'dn' for logging and display |
 
 **Returns:** array|null null when the card cannot be a person — no UID, or it is a group card rather than somebody.
 

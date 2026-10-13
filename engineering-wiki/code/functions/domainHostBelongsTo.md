@@ -6,12 +6,12 @@ Is `$host` this domain or one of its sub-domains? Used to keep the "extra hosts 
 function domainHostBelongsTo(string $host, string $domain): bool
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 94.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$host` | `string` |  |  |
-| `$domain` | `string` |  |  |
+| `$host` | `string` |  | the host to test; trimmed, lower-cased and any trailing dot removed first |
+| `$domain` | `string` |  | the stored domain name (already lower case) |
 
 **Returns:** `bool`
 

@@ -10,12 +10,12 @@ login screen and cannot tell you why.
 function brandingContrastRatio(string $hexA, string $hexB): float
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 389.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 415.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$hexA` | `string` |  |  |
-| `$hexB` | `string` |  |  |
+| `$hexA` | `string` |  | the first colour as #rrggbb |
+| `$hexB` | `string` |  | the second colour as #rrggbb |
 
 **Returns:** `float`
 

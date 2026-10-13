@@ -21,7 +21,7 @@
 
 ### __construct
 
-*public* - line 21
+*public* - line 25
 
 Keeps the root schema, which `$ref` pointers are resolved against.
 
@@ -31,11 +31,11 @@ function __construct(array $root)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$root` | `array` |  |  |
+| `$root` | `array` |  | the whole decoded schema document, e.g. the OpenAPI 3.0 meta-schema |
 
 ### validate
 
-*public* - line 29
+*public* - line 36
 
 Validates data against a schema (the root schema by default), adding any failures to `$errors`.
 
@@ -45,15 +45,15 @@ function validate($data, ?array $schema = null, string $path = '#'): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$data` |  |  |  |
-| `$schema` | `?array` | `null` |  |
-| `$path` | `string` | `'#'` |  |
+| `$data` |  |  | the decoded JSON value to check |
+| `$schema` | `?array` | `null` | the schema to check against; null uses the root schema |
+| `$path` | `string` | `'#'` | where `$data` sits in the document, as a JSON pointer, for error messages |
 
 **Returns:** bool  true when this call added no errors
 
 ### err
 
-*private* - line 37
+*private* - line 49
 
 Records one validation failure as "path: message".
 
@@ -63,12 +63,12 @@ function err(string $path, string $msg)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
-| `$msg` | `string` |  |  |
+| `$path` | `string` |  | where the failure is, as a JSON pointer |
+| `$msg` | `string` |  | what is wrong |
 
 ### resolveRef
 
-*private* - line 44
+*private* - line 58
 
 Follows a local JSON pointer (`$ref` starting #/) through the root schema, decoding ~1 and ~0, and returns the schema it points at - null when it is external or missing.
 
@@ -78,11 +78,11 @@ function resolveRef(string $ref): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ref` | `string` |  |  |
+| `$ref` | `string` |  | the `$ref` value, e.g. '#/definitions/Schema' |
 
 ### check
 
-*private* - line 64
+*private* - line 82
 
 Checks one value against one schema and records every failure: `$ref`, allOf / anyOf / oneOf / not, type, enum, then the object, array, string and number keywords the OpenAPI 3.0 meta-schema uses.
 
@@ -95,13 +95,13 @@ function check($data, array $schema, string $path): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$data` |  |  |  |
-| `$schema` | `array` |  |  |
-| `$path` | `string` |  |  |
+| `$data` |  |  | the decoded JSON value to check |
+| `$schema` | `array` |  | the schema to check it against |
+| `$path` | `string` |  | where `$data` sits in the document, as a JSON pointer, for error messages |
 
 ### isList
 
-*private* - line 162
+*private* - line 184
 
 Whether a PHP array is a JSON list - an empty array counts as both list and object.
 
@@ -111,11 +111,11 @@ function isList($d): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` |  |  |  |
+| `$d` |  |  | any decoded JSON value |
 
 ### isAssoc
 
-*private* - line 164
+*private* - line 190
 
 Whether a PHP array is a non-empty JSON object (not a list).
 
@@ -125,11 +125,11 @@ function isAssoc($d): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` |  |  |  |
+| `$d` |  |  | any decoded JSON value |
 
 ### isObject
 
-*private* - line 166
+*private* - line 196
 
 Whether a value is a JSON object - an associative array, or an empty array.
 
@@ -139,11 +139,11 @@ function isObject($d): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` |  |  |  |
+| `$d` |  |  | any decoded JSON value |
 
 ### typeOf
 
-*private* - line 169
+*private* - line 203
 
 The JSON Schema type name of a PHP value, for error messages.
 
@@ -153,11 +153,11 @@ function typeOf($d): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` |  |  |  |
+| `$d` |  |  | any decoded JSON value |
 
 ### matchesAnyType
 
-*private* - line 179
+*private* - line 218
 
 Whether a value matches at least one of the given JSON Schema types.
 
@@ -167,12 +167,12 @@ function matchesAnyType($d, array $types): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` |  |  |  |
-| `$types` | `array` |  |  |
+| `$d` |  |  | any decoded JSON value |
+| `$types` | `array` |  | JSON Schema type names, e.g. ['string', 'null'] |
 
 ### matchesType
 
-*private* - line 187
+*private* - line 229
 
 Whether a value matches one JSON Schema type - integer is a PHP int only, number an int or float.
 
@@ -182,12 +182,12 @@ function matchesType($d, string $t): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` |  |  |  |
-| `$t` | `string` |  |  |
+| `$d` |  |  | any decoded JSON value |
+| `$t` | `string` |  | one JSON Schema type name, e.g. 'integer'; an unknown name never matches |
 
 ### inEnum
 
-*private* - line 203
+*private* - line 248
 
 Whether a value is one of an enum's values, comparing strictly and then by JSON encoding (so arrays and objects match).
 
@@ -197,6 +197,6 @@ function inEnum($d, array $enum): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` |  |  |  |
-| `$enum` | `array` |  |  |
+| `$d` |  |  | any decoded JSON value |
+| `$enum` | `array` |  | the schema's enum values |
 

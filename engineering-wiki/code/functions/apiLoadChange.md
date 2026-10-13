@@ -6,13 +6,13 @@ Loads one change row (apiChangeSelect), or answers 404 and stops - including for
 function apiLoadChange(PDO $conn, array $apiKey, int $changeId): array
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 128.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 138.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
-| `$changeId` | `int` |  |  |
+| `$changeId` | `int` |  | the changes id |
 
 **Returns:** `array`
 

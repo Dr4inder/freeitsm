@@ -6,7 +6,7 @@ The whole scan as nobody - what cron and the portfolio fallback call.
 function projectAlertsRun(PDO $conn): array
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 265.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 278.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

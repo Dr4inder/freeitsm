@@ -6,12 +6,12 @@ One domain for its page: everything but the auth code's value.
 function domainDetail(PDO $conn, int $id, ?int $analystId = null): ?array
 ```
 
-Defined in [includes/domains/read.php](/code/files/includes/domains/read.php.md), line 139.
+Defined in [includes/domains/read.php](/code/files/includes/domains/read.php.md), line 149.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain's id - access is not checked here, the caller does that |
 | `$analystId` | `?int` | `null` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?array`
@@ -20,7 +20,7 @@ Defined in [includes/domains/read.php](/code/files/includes/domains/read.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 150 | `domainDetail` | read [contracts](/code/tables/contracts.md), read [domains](/code/tables/domains.md) |  |
+| 160 | `domainDetail` | read [contracts](/code/tables/contracts.md), read [domains](/code/tables/domains.md) |  |
 
 ## Calls
 

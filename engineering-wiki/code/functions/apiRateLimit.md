@@ -6,13 +6,13 @@ Rate limiting — fixed one-minute windows in api_key_rate_limits, same mechanis
 function apiRateLimit(PDO $conn, int $keyId, ?int $override): void
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 115.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$keyId` | `int` |  |  |
-| `$override` | `?int` |  |  |
+| `$keyId` | `int` |  | the api_keys id the request came in on |
+| `$override` | `?int` |  | the key's own rate_limit_per_minute; null or 0 uses the system setting |
 
 **Returns:** `void`
 
@@ -20,10 +20,10 @@ Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 115.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 121 | `apiRateLimit` | read [system_settings](/code/tables/system_settings.md) |  |
-| 134 | `apiRateLimit` | **insert** [api_key_rate_limits](/code/tables/api_key_rate_limits.md) (`api_key_id`, `request_count`, `window_start`) |  |
-| 140 | `apiRateLimit` | read [api_key_rate_limits](/code/tables/api_key_rate_limits.md) |  |
-| 144 | `apiRateLimit` | **delete** [api_key_rate_limits](/code/tables/api_key_rate_limits.md) |  |
+| 129 | `apiRateLimit` | read [system_settings](/code/tables/system_settings.md) |  |
+| 142 | `apiRateLimit` | **insert** [api_key_rate_limits](/code/tables/api_key_rate_limits.md) (`api_key_id`, `request_count`, `window_start`) |  |
+| 148 | `apiRateLimit` | read [api_key_rate_limits](/code/tables/api_key_rate_limits.md) |  |
+| 152 | `apiRateLimit` | **delete** [api_key_rate_limits](/code/tables/api_key_rate_limits.md) |  |
 
 ## Calls
 

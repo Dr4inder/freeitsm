@@ -9,11 +9,11 @@ falls back to Graph /me if the token isn't a readable JWT (needs User.Read).
 function mailboxDelegatedIdentity($accessToken)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 102.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 108.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
+| `$accessToken` |  |  | a delegated Graph access token |
 
 ## Calls
 

@@ -6,7 +6,7 @@ p.priority, or 'medium' before Database Verification has added the column (3.3.0
 function projectPriorityColumn(PDO $conn): string
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 323.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 347.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 327 | `projectPriorityColumn` | read [projects](/code/tables/projects.md) |  |
+| 351 | `projectPriorityColumn` | read [projects](/code/tables/projects.md) |  |
 
 ## Called from
 

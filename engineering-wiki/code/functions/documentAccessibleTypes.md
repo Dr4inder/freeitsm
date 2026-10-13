@@ -10,11 +10,11 @@ gate here." A NULL allowed_modules means unrestricted.
 function documentAccessibleTypes(?array $allowedModules): array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 358.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 364.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$allowedModules` | `?array` |  |  |
+| `$allowedModules` | `?array` |  | the analyst's allowed module keys (`$_SESSION`['allowed_modules']); null means all |
 
 **Returns:** `array`
 

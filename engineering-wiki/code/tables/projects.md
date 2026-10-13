@@ -49,18 +49,18 @@ Projects (3.2.0) - see docs/design/projects.md A container over ordinary tasks (
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md):155 | `projectAlertsScan` | update | `alert_health`, `alert_exceptions` |  |
-| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md):83 | `projectStampCurrency` | update | `currency` |  |
-| [includes/projects/intake.php](/code/files/includes/projects/intake.php.md):190 | `projectCreateFromAction` | update | `form_submission_id`, `proposed_by_name`, `proposed_by_email`, `created_by_id` |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):137 | `ProjectsService::createProject` | insert |  |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):207 | `ProjectsService::updateProject` | update |  |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):273 | `ProjectsService::deleteProject` | delete |  |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):780 | `ProjectsService::decideProposal` | update | `approval_status`, `approval_by_id`, `approval_datetime`, `approval_notes`, `status`, `closed_datetime` |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):907 | `ProjectsService::touch` | update | `updated_datetime` |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):219 | `ProjectReportsService::setSchedule` | update | `report_schedule`, `report_schedule_kind` |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):161 | `ProjectTemplatesService::cleanup` | delete |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1470 | `ProjectToolsService::decideChangeRequest` | update | `target_end_date` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1770 | `ProjectToolsService::setCurrency` | update | `currency`, `updated_datetime` |  |
+| [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md):168 | `projectAlertsScan` | update | `alert_health`, `alert_exceptions` |  |
+| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md):87 | `projectStampCurrency` | update | `currency` |  |
+| [includes/projects/intake.php](/code/files/includes/projects/intake.php.md):205 | `projectCreateFromAction` | update | `form_submission_id`, `proposed_by_name`, `proposed_by_email`, `created_by_id` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):144 | `ProjectsService::createProject` | insert |  |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):217 | `ProjectsService::updateProject` | update |  |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):285 | `ProjectsService::deleteProject` | delete |  |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):877 | `ProjectsService::decideProposal` | update | `approval_status`, `approval_by_id`, `approval_datetime`, `approval_notes`, `status`, `closed_datetime` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):1023 | `ProjectsService::touch` | update | `updated_datetime` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):250 | `ProjectReportsService::setSchedule` | update | `report_schedule`, `report_schedule_kind` |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):170 | `ProjectTemplatesService::cleanup` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1626 | `ProjectToolsService::decideChangeRequest` | update | `target_end_date` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1998 | `ProjectToolsService::setCurrency` | update | `currency`, `updated_datetime` |  |
 
 ## Read by
 
@@ -71,29 +71,29 @@ Projects (3.2.0) - see docs/design/projects.md A container over ordinary tasks (
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L431 |  |
 | [api/tasks/get.php](/code/files/api/tasks/get.php.md) | L87 |  |
 | [api/tasks/list.php](/code/files/api/tasks/list.php.md) | L169 |  |
-| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectSelect L45, apiProjectsList L199 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L457, peopleProjects L465, peopleContractorTasks L728, peopleContractorTasks L732 |  |
-| [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md) | projectAlertRows L118, projectAlertsScan L141, projectAlertsScan L190, projectAlertsStagesDue L225, projectAlertsMilestones L319 |  |
-| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistRows L36, projectAssistDates L269, projectAssistDates L271, projectAssistDates L275, projectAssistDates L277 |  |
-| [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md) | projectAlertsBenefits L146 |  |
+| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectSelect L45, apiProjectsList L213 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L492, peopleProjects L500, peopleContractorTasks L789, peopleContractorTasks L793 |  |
+| [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md) | projectAlertRows L131, projectAlertsScan L154, projectAlertsScan L203, projectAlertsStagesDue L238, projectAlertsMilestones L334 |  |
+| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistRows L43, projectAssistDates L314, projectAssistDates L316, projectAssistDates L320, projectAssistDates L322 |  |
+| [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md) | projectAlertsBenefits L166 |  |
 | [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectBudgetReady L61 |  |
 | [includes/projects/calendar.php](/code/files/includes/projects/calendar.php.md) | projectSyncCalendar L60, projectSyncCalendar L64, projectSyncCalendar L68, projectSyncCalendar L73, projectSyncCalendar L81, projectSyncCalendar L86 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L101, projectCapacity L110 |  |
-| [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectPlanSnapshot L56, projectBaselineAuto L232 |  |
-| [includes/projects/intake.php](/code/files/includes/projects/intake.php.md) | projectIntakeReady L38, projectProposalDetail L95, projectCreateFromAction L192 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkProjectRows L367, projectsPickableFor L415 |  |
-| [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsOverdueDigest L39, projectAlertsStalled L92, projectAlertsStalled L104, projectAlertsStalled L119, projectAlertsStalled L130, projectNudgeProjects L174 |  |
-| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectTaskStats L66, projectListRows L304, projectPriorityColumn L327, projectDetail L348 |  |
-| [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetsFor L180 |  |
-| [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md) | projectVisibilityReady L44, projectIdVisibleTo L92 |  |
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L474, recentTrailLabelsForType L476 |  |
-| [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md) | rpProjectRows L41, rpProjectsKpis L85, rpProjectsMilestones L160, rpProjectsMilestones L168, rpProjectsRisks L205, rpProjectChoices L248 |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedList L149 |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::assertMovable L311 |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) | ProjectReportsService::scheduleReady L193, ProjectReportsService::schedule L203, ProjectReportsService::recipients L237, ProjectReportsService::runSchedules L343 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::announce L1793 |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::loadRow L506, ProjectsService::proposalEvent L807 |  |
-| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractorEmail L149 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessProject L392 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L860 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L113, projectCapacity L122 |  |
+| [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectPlanSnapshot L56, projectBaselineAuto L265 |  |
+| [includes/projects/intake.php](/code/files/includes/projects/intake.php.md) | projectIntakeReady L38, projectProposalDetail L108, projectCreateFromAction L207 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkProjectRows L402, projectsPickableFor L457 |  |
+| [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsOverdueDigest L39, projectAlertsStalled L92, projectAlertsStalled L104, projectAlertsStalled L119, projectAlertsStalled L130, projectNudgeProjects L178 |  |
+| [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectTaskStats L68, projectListRows L328, projectPriorityColumn L351, projectDetail L376 |  |
+| [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetsFor L199 |  |
+| [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md) | projectVisibilityReady L44, projectIdVisibleTo L103 |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L490, recentTrailLabelsForType L492 |  |
+| [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md) | rpProjectRows L47, rpProjectsKpis L101, rpProjectsMilestones L192, rpProjectsMilestones L200, rpProjectsRisks L243, rpProjectChoices L286 |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedList L165 |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::assertMovable L348 |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) | ProjectReportsService::scheduleReady L219, ProjectReportsService::schedule L229, ProjectReportsService::recipients L268, ProjectReportsService::runSchedules L389 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::announce L2024 |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::loadRow L543, ProjectsService::proposalEvent L906 |  |
+| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractorEmail L164 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessProject L404 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L863 |  |
 

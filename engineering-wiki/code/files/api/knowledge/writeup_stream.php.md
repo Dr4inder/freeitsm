@@ -1,6 +1,6 @@
 # api/knowledge/writeup_stream.php
 
-> API endpoint - 265 lines
+> API endpoint - 268 lines
 
 API: Knowledge — write this up (streaming).
 
@@ -35,14 +35,14 @@ back here; from then on deltas pass straight through.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse_send()](/code/functions/sse_send.md) | 53 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
+| [sse_send()](/code/functions/sse_send.md) | 56 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 106 |  | read [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
-| 130 |  | read [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md), read [tickets](/code/tables/tickets.md) |  |
+| 109 |  | read [knowledge_gap_clusters](/code/tables/knowledge_gap_clusters.md) |  |
+| 133 |  | read [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md), read [tickets](/code/tables/tickets.md) |  |
 
 ## How it hangs together
 

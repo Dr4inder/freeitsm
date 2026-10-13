@@ -12,15 +12,15 @@ function ticketLinkCreate(
 ): array
 ```
 
-Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 54.
+Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$sourceId` | `int` |  |  |
-| `$targetId` | `int` |  |  |
-| `$uiRelation` | `string` |  |  |
+| `$sourceId` | `int` |  | the ticket the link is made from (the one being looked at) |
+| `$targetId` | `int` |  | the other ticket; must be visible to the analyst and in the same company |
+| `$uiRelation` | `string` |  | 'related', 'duplicate_of', 'parent_of' or 'child_of', from `$sourceId`'s point of view |
 
 **Returns:** `array`
 
@@ -28,12 +28,12 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 101 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 110 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 117 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 127 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 137 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 144 | `ticketLinkCreate` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
+| 115 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 124 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 131 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 141 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 151 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 158 | `ticketLinkCreate` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
 
 ## Calls
 

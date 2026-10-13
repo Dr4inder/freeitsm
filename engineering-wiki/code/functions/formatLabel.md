@@ -6,12 +6,12 @@ Turns a bucket key into the axis label in the analyst's date format - day and mo
 function formatLabel($raw, $timeGrouping)
 ```
 
-Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 257.
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 280.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` |  |  |  |
-| `$timeGrouping` |  |  |  |
+| `$raw` |  |  | a bucket key: 'YYYY-MM-DD' for a day, 'YYYY-MM' for a month, the year for a year |
+| `$timeGrouping` |  |  | the bucket size: 'day', 'month' or 'year' |
 
 ## Called from
 

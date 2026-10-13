@@ -12,15 +12,15 @@ function projectChatTurn(
 ): array
 ```
 
-Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 316.
+Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 348.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
-| `$mode` | `string` |  |  |
-| `$text` | `string` | `''` |  |
+| `$project` | `array` |  | the projects row the conversation is about |
+| `$mode` | `string` |  | 'chat' (the person wrote `$text`), 'open' (a first greeting) or 'resume' (a catch-up) |
+| `$text` | `string` | `''` | what the person wrote; only used in 'chat' mode, cut to PROJECT_CHAT_MAX_INPUT characters |
 
 **Returns:** `array`
 
@@ -28,14 +28,14 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 331 | `projectChatTurn` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
-| 360 | `projectChatTurn` | read [suppliers](/code/tables/suppliers.md) |  |
-| 363 | `projectChatTurn` | read [contacts](/code/tables/contacts.md) |  |
-| 368 | `projectChatTurn` | read [tasks](/code/tables/tasks.md) |  |
-| 376 | `projectChatTurn` | read [tasks](/code/tables/tasks.md) |  |
-| 376 | `projectChatTurn` | read [analysts](/code/tables/analysts.md) |  |
-| 394 | `projectChatTurn` | **insert** [project_ai_messages](/code/tables/project_ai_messages.md) (`thread_id`, `role`, `kind`, `content`, `proposals`, `looked_at`, `analyst_id`, `model`, `tokens_in`, `tokens_out`, `created_datetime`) |  |
-| 399 | `projectChatTurn` | **update** [project_ai_threads](/code/tables/project_ai_threads.md) (`updated_datetime`) |  |
+| 363 | `projectChatTurn` | read [project_ai_messages](/code/tables/project_ai_messages.md) |  |
+| 392 | `projectChatTurn` | read [suppliers](/code/tables/suppliers.md) |  |
+| 395 | `projectChatTurn` | read [contacts](/code/tables/contacts.md) |  |
+| 400 | `projectChatTurn` | read [tasks](/code/tables/tasks.md) |  |
+| 408 | `projectChatTurn` | read [tasks](/code/tables/tasks.md) |  |
+| 408 | `projectChatTurn` | read [analysts](/code/tables/analysts.md) |  |
+| 426 | `projectChatTurn` | **insert** [project_ai_messages](/code/tables/project_ai_messages.md) (`thread_id`, `role`, `kind`, `content`, `proposals`, `looked_at`, `analyst_id`, `model`, `tokens_in`, `tokens_out`, `created_datetime`) |  |
+| 431 | `projectChatTurn` | **update** [project_ai_threads](/code/tables/project_ai_threads.md) (`updated_datetime`) |  |
 
 ## Calls
 

@@ -6,13 +6,13 @@ Loads one connector row that belongs to the given diagram, or answers 404 and st
 function apiNmLoadConnector(PDO $conn, int $diagramId, int $connectorId): array
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 113.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 131.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$diagramId` | `int` |  |  |
-| `$connectorId` | `int` |  |  |
+| `$diagramId` | `int` |  | the network_diagrams id the connector must belong to |
+| `$connectorId` | `int` |  | the network_diagram_connectors id |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 114 | `apiNmLoadConnector` | read [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
+| 132 | `apiNmLoadConnector` | read [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
 
 ## Calls
 

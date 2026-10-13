@@ -6,13 +6,13 @@ Close a sitting and store its score. Only the first close counts.
 function lmsCtFinalise(PDO $conn, array $s, string $reason): bool
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 336.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 403.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$s` | `array` |  |  |
-| `$reason` | `string` |  |  |
+| `$s` | `array` |  | the lms_ct_sittings row to close (snapshot_json, responses_json, id) |
+| `$reason` | `string` |  | stored as finish_reason - 'submitted', or 'time_up' (dated at the deadline rather than now) |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 342 | `lmsCtFinalise` | **update** [lms_ct_sittings](/code/tables/lms_ct_sittings.md) (`submitted_datetime`, `finish_reason`, `score_percent`, `skills_json`) |  |
+| 409 | `lmsCtFinalise` | **update** [lms_ct_sittings](/code/tables/lms_ct_sittings.md) (`submitted_datetime`, `finish_reason`, `score_percent`, `skills_json`) |  |
 
 ## Calls
 

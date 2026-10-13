@@ -6,7 +6,7 @@ Is this analyst an administrator? Admins are the only accounts allowed into the 
 function analystIsAdmin(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 203.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 205.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 215 | `analystIsAdmin` | read [analysts](/code/tables/analysts.md) |  |
+| 217 | `analystIsAdmin` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Called from
 

@@ -8,13 +8,13 @@ Throws with the provider's own error message (or the HTTP code) when the call fa
 function rfpTestAnthropic(string $apiKey, string $model, bool $verifySsl): array
 ```
 
-Defined in [api/rfp-builder/test_ai_connection.php](/code/files/api/rfp-builder/test_ai_connection.php.md), line 79.
+Defined in [api/rfp-builder/test_ai_connection.php](/code/files/api/rfp-builder/test_ai_connection.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$apiKey` | `string` |  |  |
-| `$model` | `string` |  |  |
-| `$verifySsl` | `bool` |  |  |
+| `$apiKey` | `string` |  | the Anthropic API key to test, in plain text |
+| `$model` | `string` |  | the model id to call |
+| `$verifySsl` | `bool` |  | the "verify SSL" tick from the request - unused: `sslApplyCurl()` follows the global switch alone |
 
 **Returns:** `array`
 

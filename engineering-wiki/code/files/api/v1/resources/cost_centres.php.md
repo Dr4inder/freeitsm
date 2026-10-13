@@ -1,6 +1,6 @@
 # api/v1/resources/cost_centres.php
 
-> API endpoint - 250 lines
+> API endpoint - 260 lines
 
 FreeITSM REST API v1 — cost centres resource (GH #160).
 
@@ -33,23 +33,23 @@ or the key's default company.
 | Function | Line | What it does |
 |---|--:|---|
 | [apiCostCentreSelect()](/code/functions/apiCostCentreSelect.md) | 32 | The SELECT for cost centres, with the parent's code and name, the company name and the number of child cost centres. |
-| [apiSerializeCostCentre()](/code/functions/apiSerializeCostCentre.md) | 44 | Shapes a cost centre row for the API - code, name, description, parent, active flag, company, child count and dates. |
-| [apiLoadCostCentre()](/code/functions/apiLoadCostCentre.md) | 60 | The by-id gate: existence + company scope, both failing as 404. |
-| [apiCostCentreCompany()](/code/functions/apiCostCentreCompany.md) | 71 | company_id from the body/query, checked against the key - or the key's default company. |
-| [apiCostCentresReady()](/code/functions/apiCostCentresReady.md) | 83 | Answers 503 and stops when the cost centre tables are not there yet (Database Verification has not been run). |
-| [apiCostCentresList()](/code/functions/apiCostCentresList.md) | 92 | GET /cost-centres |
-| [apiCostCentresGet()](/code/functions/apiCostCentresGet.md) | 151 | GET /cost-centres/{id} |
-| [apiCostCentresCreate()](/code/functions/apiCostCentresCreate.md) | 159 | POST /cost-centres |
-| [apiCostCentresUpdate()](/code/functions/apiCostCentresUpdate.md) | 174 | PATCH /cost-centres/{id} |
-| [apiCostCentresDelete()](/code/functions/apiCostCentresDelete.md) | 193 | DELETE /cost-centres/{id} |
-| [apiCostCentresSync()](/code/functions/apiCostCentresSync.md) | 208 | POST /cost-centres/sync — bring a company's list into line, matched on code |
+| [apiSerializeCostCentre()](/code/functions/apiSerializeCostCentre.md) | 46 | Shapes a cost centre row for the API - code, name, description, parent, active flag, company, child count and dates. |
+| [apiLoadCostCentre()](/code/functions/apiLoadCostCentre.md) | 66 | The by-id gate: existence + company scope, both failing as 404. |
+| [apiCostCentreCompany()](/code/functions/apiCostCentreCompany.md) | 81 | company_id from the body/query, checked against the key - or the key's default company. |
+| [apiCostCentresReady()](/code/functions/apiCostCentresReady.md) | 93 | Answers 503 and stops when the cost centre tables are not there yet (Database Verification has not been run). |
+| [apiCostCentresList()](/code/functions/apiCostCentresList.md) | 102 | GET /cost-centres |
+| [apiCostCentresGet()](/code/functions/apiCostCentresGet.md) | 161 | GET /cost-centres/{id} |
+| [apiCostCentresCreate()](/code/functions/apiCostCentresCreate.md) | 169 | POST /cost-centres |
+| [apiCostCentresUpdate()](/code/functions/apiCostCentresUpdate.md) | 184 | PATCH /cost-centres/{id} |
+| [apiCostCentresDelete()](/code/functions/apiCostCentresDelete.md) | 203 | DELETE /cost-centres/{id} |
+| [apiCostCentresSync()](/code/functions/apiCostCentresSync.md) | 218 | POST /cost-centres/sync — bring a company's list into line, matched on code |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 33 | `apiCostCentreSelect` | read [cost_centres](/code/tables/cost_centres.md), read [tenants](/code/tables/tenants.md) |  |
-| 137 | `apiCostCentresList` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 147 | `apiCostCentresList` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## How it hangs together
 

@@ -6,12 +6,12 @@ Find one label by display name, case-insensitively. Null when there is no match.
 function gmailFindLabel(array $labels, string $name): ?array
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 180.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 207.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$labels` | `array` |  |  |
-| `$name` | `string` |  |  |
+| `$labels` | `array` |  | the labels from `gmailListLabels()` - each array{id:string,name:string,...} |
+| `$name` | `string` |  | the display name to look for; surrounding spaces are ignored |
 
 **Returns:** `?array`
 

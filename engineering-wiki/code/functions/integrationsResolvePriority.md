@@ -11,12 +11,12 @@ simply travels as text in the description, exactly as it did before mapping.
 function integrationsResolvePriority(array $maps, ?int $priorityId): ?string
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1042.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$maps` | `array` |  |  |
-| `$priorityId` | `?int` |  |  |
+| `$maps` | `array` |  | the connection's mappings as returned by `integrationsLoadMaps()` |
+| `$priorityId` | `?int` |  | the ticket's priority_id; null gives null |
 
 **Returns:** `?string`
 

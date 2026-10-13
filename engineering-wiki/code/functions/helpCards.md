@@ -10,7 +10,7 @@ an area with no help page yet is skipped rather than linked to a 404.
 function helpCards($multiTenant = false)
 ```
 
-Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 555.
+Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 556.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

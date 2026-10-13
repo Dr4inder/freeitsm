@@ -6,12 +6,12 @@ A string cut to `$max` characters, with control and zero-width characters remove
 function rpStr($v, int $max): string
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 93.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 119.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
-| `$max` | `int` |  |  |
+| `$v` |  |  | the value to clean (untrusted); a number is turned into text, anything else gives '' |
+| `$max` | `int` |  | the most characters to keep |
 
 **Returns:** `string`
 

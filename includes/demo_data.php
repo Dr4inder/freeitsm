@@ -32,6 +32,8 @@ const DEMO_MODULES = [
  *   snapshot: {"_demo": {"target_shift": -14, "budget_delta": -4500, "stage_shift": -10}}
  * - and this takes the project's plan as imported and moves it by that much:
  * the plan as it stood before the change request that moved it.
+ *
+ * @param string $module  the DEMO_MODULES key just imported, e.g. 'tasks'; only 'tasks' does anything
  */
 function demoAfterImport(PDO $conn, string $module): void {
     if ($module !== 'tasks') return;
@@ -57,7 +59,11 @@ function demoAfterImport(PDO $conn, string $module): void {
     }
 }
 
-/** Returns the path of a module's demo data file, database/demo-data/{module}.json. */
+/**
+ * Returns the path of a module's demo data file, database/demo-data/{module}.json.
+ *
+ * @param string $module  a DEMO_MODULES key, e.g. 'tickets' (trusted - put straight into the path)
+ */
 function demoDataPath(string $module): string {
     return __DIR__ . "/../database/demo-data/{$module}.json";
 }
@@ -70,6 +76,8 @@ function demoDataPath(string $module): string {
  * icons) and the importer never creates or removes them. Getting this wrong in
  * the clearing direction is what makes an importer destructive, so it is
  * deliberately the narrow reading.
+ *
+ * @param array $demoData  a decoded demo-data JSON file: tier1..tier5 => [table => [record, ...]]
  */
 function demoTablesWithInserts(array $demoData): array {
     $tables = [];
@@ -87,7 +95,11 @@ function demoTablesWithInserts(array $demoData): array {
     return $tables;
 }
 
-/** As above, but reads the module's JSON from disk. Returns [] if unreadable. */
+/**
+ * As above, but reads the module's JSON from disk. Returns [] if unreadable.
+ *
+ * @param string $module  a DEMO_MODULES key, e.g. 'tickets'
+ */
 function demoModuleTables(string $module): array {
     $path = demoDataPath($module);
     if (!file_exists($path)) return [];
@@ -101,6 +113,8 @@ function demoModuleTables(string $module): array {
  * Counts only rows marked is_demo = 1, so real data is never mistaken for
  * demo data. A missing table or column counts as zero rather than throwing —
  * a module whose feature was never set up simply has no demo rows.
+ *
+ * @param string $module  a DEMO_MODULES key, e.g. 'tickets'
  */
 function demoRowCount(PDO $conn, string $module): int {
     $total = 0;
@@ -126,6 +140,9 @@ function demoRowCount(PDO $conn, string $module): int {
  * finds the demo tables that reference $table and still hold demo rows, and
  * names the modules they belong to so the message can tell the administrator
  * what to deal with first.
+ *
+ * @param string $table  the table whose demo rows could not be cleared
+ * @param string $exceptModule  the DEMO_MODULES key being imported, left out of the answer
  */
 function demoBlockingModules(PDO $conn, string $table, string $exceptModule): array {
     $blocking = [];
@@ -164,6 +181,10 @@ function demoBlockingModules(PDO $conn, string $table, string $exceptModule): ar
  * message is true and useless — it names a row the administrator never created
  * and says nothing about what to do. It is also the likeliest failure on
  * exactly the installations most at risk, so it is worth spelling out.
+ *
+ * @param string $module  the DEMO_MODULES key being imported
+ * @param string $table  the table the insert collided in
+ * @param string $dbMessage  the database error text; the "Duplicate entry '...'" value is quoted from it
  */
 function demoDuplicateExplanation(PDO $conn, string $module, string $table, string $dbMessage): string {
     $value = '';

@@ -6,7 +6,7 @@ GET /problems
 function apiProblemsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 106.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 184 | `apiProblemsList` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md), read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 190 | `apiProblemsList` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md), read [problem_priorities](/code/tables/problem_priorities.md) |  |
 
 ## Calls
 

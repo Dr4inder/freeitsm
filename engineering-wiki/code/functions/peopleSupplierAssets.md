@@ -6,13 +6,13 @@ Assets bought from the supplier, in companies the analyst can access.
 function peopleSupplierAssets(PDO $conn, int $analystId, int $supplierId): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 778.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 847.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$supplierId` | `int` |  |  |
+| `$supplierId` | `int` |  | the suppliers id, matched on assets.supplier_id |
 
 **Returns:** `array`
 
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 778.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 781 | `peopleSupplierAssets` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 788 | `peopleSupplierAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 850 | `peopleSupplierAssets` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 857 | `peopleSupplierAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

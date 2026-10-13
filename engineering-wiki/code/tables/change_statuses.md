@@ -39,12 +39,12 @@
 | [api/problem-management/list_linkable_changes.php](/code/files/api/problem-management/list_linkable_changes.php.md) | L32 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2447 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L220 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53, apiChangesList L248 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L235 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L57, apiChangesList L258 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L241 |  |
 | [includes/feature_bingo/cards/changes.php](/code/files/includes/feature_bingo/cards/changes.php.md) | L43 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L176, projectUnapprovedChanges L461 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewChange L215 |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::voteCab L551, ChangesService::voteCab L558, ChangesService::loadJoined L707 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolRecentChanges L479 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L288, getWatchtowerData L312, getWatchtowerData L325, getWatchtowerData L346, getWatchtowerData L373 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L198, projectUnapprovedChanges L503 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewChange L231 |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::voteCab L576, ChangesService::voteCab L583, ChangesService::loadJoined L746 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolRecentChanges L494 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L291, getWatchtowerData L315, getWatchtowerData L328, getWatchtowerData L349, getWatchtowerData L376 |  |
 

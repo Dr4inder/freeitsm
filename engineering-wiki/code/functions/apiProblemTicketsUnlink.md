@@ -6,7 +6,7 @@ DELETE /problems/{id}/tickets/{ticketId} - unlinks a ticket from the problem thr
 function apiProblemTicketsUnlink(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 379.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 385.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

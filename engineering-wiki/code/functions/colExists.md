@@ -9,13 +9,13 @@ Whether a column exists in this database - false on any error, so an older insta
 function colExists(PDO $c, $table, $col)
 ```
 
-Defined in [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md), line 163.
+Defined in [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md), line 191.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `PDO` |  |  |
-| `$table` |  |  |  |
-| `$col` |  |  |  |
+| `$c` | `PDO` |  | the database connection |
+| `$table` |  |  | the table name to look for |
+| `$col` |  |  | the column name to look for |
 
 ## Called from
 

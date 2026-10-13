@@ -9,11 +9,11 @@ person reading them is configuring a server, not debugging one.
 function cardDavExplainStatus(int $status): string
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 191.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$status` | `int` |  |  |
+| `$status` | `int` |  | the HTTP status of the failed request; 0 means the server was never reached |
 
 **Returns:** `string`
 

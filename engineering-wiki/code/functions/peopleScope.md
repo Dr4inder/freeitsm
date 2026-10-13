@@ -6,13 +6,13 @@
 function peopleScope(PDO $conn, int $analystId, string $qualified): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 40.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$qualified` | `string` |  |  |
+| `$qualified` | `string` |  | the company column to filter on, alias included, e.g. 'u.tenant_id' |
 
 **Returns:** `array`
 

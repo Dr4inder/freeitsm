@@ -1,6 +1,6 @@
 # includes/config_requirements.php
 
-> PHP - 148 lines
+> PHP - 152 lines
 
 What config.php is expected to define - the ONE list (GH #129).
 
@@ -29,8 +29,8 @@ add:      the line(s) to add, with a placeholder - never a real value.
 | Function | Line | What it does |
 |---|--:|---|
 | [configRequirements()](/code/functions/configRequirements.md) | 30 | Returns every constant config.php is expected to define, keyed by name, with its kind, where it lives, any fallback, what happens without it and the line to add. |
-| [configFileShape()](/code/functions/configFileShape.md) | 87 | What a config file DECLARES, read with the tokeniser so commented-out lines do not count. Returns names only: the constants it `define()`s and the functions it declares. Never values. |
-| [configRequirementsReport()](/code/functions/configRequirementsReport.md) | 121 | Compare the running state and the operator's config.php with the list. Each row: name, kind, defined (bool), inConfig (bool), status ('ok' \| 'default' \| 'problem'). Names and booleans only. |
+| [configFileShape()](/code/functions/configFileShape.md) | 89 | What a config file DECLARES, read with the tokeniser so commented-out lines do not count. Returns names only: the constants it `define()`s and the functions it declares. Never values. |
+| [configRequirementsReport()](/code/functions/configRequirementsReport.md) | 125 | Compare the running state and the operator's config.php with the list. Each row: name, kind, defined (bool), inConfig (bool), status ('ok' \| 'default' \| 'problem'). Names and booleans only. |
 
 ## How it hangs together
 

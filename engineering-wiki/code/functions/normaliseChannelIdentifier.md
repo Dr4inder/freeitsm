@@ -15,12 +15,12 @@ default so every existing caller keeps its exact previous result.
 function normaliseChannelIdentifier(string $raw, string $channelType = 'whatsapp'): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 223.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 245.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
-| `$channelType` | `string` | `'whatsapp'` |  |
+| `$raw` | `string` |  | the sender id as received or typed - a phone number, Slack/Mattermost user id, Teams or Telegram chat id |
+| `$channelType` | `string` | `'whatsapp'` | the channel type (whatsapp, slack, mattermost, teams, telegram, ...); anything else is treated as a phone |
 
 **Returns:** `string`
 

@@ -6,11 +6,11 @@ Pull the five profile fields out of OIDC claims. Each IdP names them its own way
 function oidcExtractProfileAttributes(array $claims): array
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 393.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 411.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$claims` | `array` |  |  |
+| `$claims` | `array` |  | the OIDC claims (ID token merged with userinfo), keyed by claim name |
 
 **Returns:** `array`
 

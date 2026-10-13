@@ -6,11 +6,11 @@ The visitor's display name for a conversation (name → email → generic).
 function webchatVisitorName(array $conversation): string
 ```
 
-Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 178.
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 204.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conversation` | `array` |  |  |
+| `$conversation` | `array` |  | a webchat_conversations row (visitor_name, visitor_email) |
 
 **Returns:** `string`
 

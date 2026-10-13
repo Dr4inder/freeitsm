@@ -11,14 +11,14 @@ function integrationsAlreadyLinked(
 ): bool
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 458.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 501.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connectionId` | `int` |  |  |
-| `$entityType` | `string` |  |  |
-| `$entityId` | `int` |  |  |
+| `$connectionId` | `int` |  | the integration_connections id |
+| `$entityType` | `string` |  | 'ticket', 'problem' or 'change' |
+| `$entityId` | `int` |  | the id of that work item |
 
 **Returns:** `bool`
 
@@ -26,7 +26,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 463 | `integrationsAlreadyLinked` | read [integration_links](/code/tables/integration_links.md) |  |
+| 506 | `integrationsAlreadyLinked` | read [integration_links](/code/tables/integration_links.md) |  |
 
 ## Calls
 

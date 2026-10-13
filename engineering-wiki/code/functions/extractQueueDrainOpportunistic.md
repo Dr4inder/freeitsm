@@ -9,7 +9,7 @@ must never be allowed to make that request feel slow. Silent by design.
 function extractQueueDrainOpportunistic(PDO $conn): void
 ```
 
-Defined in [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md), line 231.
+Defined in [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md), line 239.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,12 +6,12 @@ Spawn the CLI app-sync worker.
 function intuneSpawnAppWorker(int $jobId, ?string $phpExeOverride): bool
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 897.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 934.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$jobId` | `int` |  |  |
-| `$phpExeOverride` | `?string` |  |  |
+| `$jobId` | `int` |  | the intune_app_sync_jobs id passed to the worker on its command line |
+| `$phpExeOverride` | `?string` |  | a PHP CLI path from the settings, or null to search - see `intuneFindPhpExe()` |
 
 **Returns:** `bool`
 

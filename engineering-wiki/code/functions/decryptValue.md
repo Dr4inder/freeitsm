@@ -9,7 +9,7 @@ This allows gradual migration from plaintext to encrypted values.
 function decryptValue($encrypted)
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 265.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 275.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -40,6 +40,8 @@ function apiCostCentreSelect(): string {
 /**
  * Shapes a cost centre row for the API - code, name, description, parent, active flag,
  * company, child count and dates.
+ *
+ * @param array $r  the cost_centres row as apiCostCentreSelect() loads it, with parent code/name, company name and child_count
  */
 function apiSerializeCostCentre(array $r): array {
     return [
@@ -56,7 +58,11 @@ function apiSerializeCostCentre(array $r): array {
     ];
 }
 
-/** The by-id gate: existence + company scope, both failing as 404. */
+/**
+ * The by-id gate: existence + company scope, both failing as 404.
+ *
+ * @param int $id  the cost_centres id
+ */
 function apiLoadCostCentre(PDO $conn, array $apiKey, int $id): array {
     $st = $conn->prepare(apiCostCentreSelect() . " WHERE c.id = ?");
     $st->execute([$id]);
@@ -67,7 +73,11 @@ function apiLoadCostCentre(PDO $conn, array $apiKey, int $id): array {
     return $row;
 }
 
-/** company_id from the body/query, checked against the key - or the key's default company. */
+/**
+ * company_id from the body/query, checked against the key - or the key's default company.
+ *
+ * @param mixed $raw  the caller's company_id (untrusted); null or '' means the key's default company
+ */
 function apiCostCentreCompany(PDO $conn, array $apiKey, $raw): int {
     if ($raw === null || $raw === '') return apiKeyDefaultTenantId($conn, $apiKey);
     $tenantId = (int)$raw;

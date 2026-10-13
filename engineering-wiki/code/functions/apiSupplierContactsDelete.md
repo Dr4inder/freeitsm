@@ -6,7 +6,7 @@ DELETE /suppliers/{id}/contacts/{contactId} - deletes one of the supplier's cont
 function apiSupplierContactsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 551.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 566.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contrac
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 554 | `apiSupplierContactsDelete` | **delete** [contacts](/code/tables/contacts.md) |  |
+| 569 | `apiSupplierContactsDelete` | **delete** [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

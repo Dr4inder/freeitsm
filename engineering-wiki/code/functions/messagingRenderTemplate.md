@@ -6,12 +6,12 @@ Substitute {{1}}, {{2}}, … in a template body with the given ordered values, f
 function messagingRenderTemplate(string $body, array $vars): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 336.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 367.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `string` |  |  |
-| `$vars` | `array` |  |  |
+| `$body` | `string` |  | the template text with {{1}}, {{2}} ... placeholders |
+| `$vars` | `array` |  | the values in placeholder order ({{1}} takes the first); keys are ignored |
 
 **Returns:** `string`
 

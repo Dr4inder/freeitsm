@@ -6,12 +6,12 @@ Generate embedding for text using OpenAI API
 function generateEmbedding($text, $apiKey)
 ```
 
-Defined in [api/knowledge/ai_chat.php](/code/files/api/knowledge/ai_chat.php.md), line 75.
+Defined in [api/knowledge/ai_chat.php](/code/files/api/knowledge/ai_chat.php.md), line 81.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` |  |  |  |
-| `$apiKey` |  |  |  |
+| `$text` |  |  | the text to embed; cut to 30,000 bytes |
+| `$apiKey` |  |  | the OpenAI API key, in plain text |
 
 ## Calls
 

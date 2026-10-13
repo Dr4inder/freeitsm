@@ -20,15 +20,15 @@ Checklists on TASKS (discussion #138, round three) - the same shape as the two t
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):524 | `ChecklistsService::copyTemplateToTask` | insert | `task_id`, `template_id`, `title`, `closure_mode`, `sort_order`, `created_by_id`, `created_datetime` |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):564 | `ChecklistsService::reorderTaskChecklists` | update | `sort_order` |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):643 | `ChecklistsService::removeTaskChecklist` | delete |  |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):667 | `ChecklistsService::deleteForTasks` | delete |  |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):781 | `ChecklistsService::copyTaskChecklists` | insert | `task_id`, `template_id`, `title`, `closure_mode`, `sort_order`, `created_by_id`, `created_datetime` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):547 | `ChecklistsService::copyTemplateToTask` | insert | `task_id`, `template_id`, `title`, `closure_mode`, `sort_order`, `created_by_id`, `created_datetime` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):589 | `ChecklistsService::reorderTaskChecklists` | update | `sort_order` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):689 | `ChecklistsService::removeTaskChecklist` | delete |  |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):713 | `ChecklistsService::deleteForTasks` | delete |  |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):830 | `ChecklistsService::copyTaskChecklists` | insert | `task_id`, `template_id`, `title`, `closure_mode`, `sort_order`, `created_by_id`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::taskChecklists L458, ChecklistsService::nextTaskChecklistOrder L552, ChecklistsService::taskIdForItem L582, ChecklistsService::taskIdForChecklist L590, ChecklistsService::deleteForTasks L664, ChecklistsService::taskOutstandingMandatorySteps L679 ... |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::taskChecklists L472, ChecklistsService::nextTaskChecklistOrder L575, ChecklistsService::taskIdForItem L616, ChecklistsService::taskIdForChecklist L628, ChecklistsService::deleteForTasks L710, ChecklistsService::taskOutstandingMandatorySteps L725 ... |  |
 

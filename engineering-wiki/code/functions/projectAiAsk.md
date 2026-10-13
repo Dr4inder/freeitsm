@@ -6,14 +6,14 @@ Ask the model. Returns ['text', 'model']. Throws RuntimeException when AI is not
 function projectAiAsk(PDO $conn, string $task, string $facts, int $maxTokens): array
 ```
 
-Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 340.
+Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 347.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$task` | `string` |  |  |
-| `$facts` | `string` |  |  |
-| `$maxTokens` | `int` |  |  |
+| `$task` | `string` |  | the instruction for the model, e.g. `projectAiBriefingTask()` or a report kind's wording |
+| `$facts` | `string` |  | the project facts from `projectAiFacts()`, wrapped in <project_data> for the model |
+| `$maxTokens` | `int` |  | the most tokens the reply may use |
 
 **Returns:** `array`
 

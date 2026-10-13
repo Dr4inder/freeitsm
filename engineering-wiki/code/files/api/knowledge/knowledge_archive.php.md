@@ -1,6 +1,6 @@
 # api/knowledge/knowledge_archive.php
 
-> API endpoint - 151 lines
+> API endpoint - 159 lines
 
 API Endpoint: Knowledge article recycle bin operations Actions: list, restore, hard_delete
 
@@ -17,22 +17,22 @@ API Endpoint: Knowledge article recycle bin operations Actions: list, restore, h
 | Function | Line | What it does |
 |---|--:|---|
 | [handleList()](/code/functions/handleList.md) | 57 | Lists the Knowledge recycle bin - archived articles the caller could see when they were live, most recently deleted first - with the retention period. |
-| [handleRestore()](/code/functions/handleRestore.md) | 93 | Restores an archived article through KnowledgeService. |
-| [handleHardDelete()](/code/functions/handleHardDelete.md) | 100 | Permanently deletes an archived article through KnowledgeService. |
-| [purgeExpired()](/code/functions/purgeExpired.md) | 113 | Permanently deletes articles that have been in the recycle bin longer than the retention period, with their versions and tags, then removes tags no article uses any more. A retention of 0 keeps them forever. |
-| [getRetentionDays()](/code/functions/getRetentionDays.md) | 144 | Returns how many days an article stays in the recycle bin before it is purged - the knowledge_recycle_bin_days setting, 30 when unset, 0 meaning forever. |
+| [handleRestore()](/code/functions/handleRestore.md) | 97 | Restores an archived article through KnowledgeService. |
+| [handleHardDelete()](/code/functions/handleHardDelete.md) | 108 | Permanently deletes an archived article through KnowledgeService. |
+| [purgeExpired()](/code/functions/purgeExpired.md) | 121 | Permanently deletes articles that have been in the recycle bin longer than the retention period, with their versions and tags, then removes tags no article uses any more. A retention of 0 keeps them forever. |
+| [getRetentionDays()](/code/functions/getRetentionDays.md) | 152 | Returns how many days an article stays in the recycle bin before it is purged - the knowledge_recycle_bin_days setting, 30 when unset, 0 meaning forever. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 68 | `handleList` | read [knowledge_articles](/code/tables/knowledge_articles.md), read [analysts](/code/tables/analysts.md) |  |
-| 120 | `purgeExpired` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 129 | `purgeExpired` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
-| 130 | `purgeExpired` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 131 | `purgeExpired` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 134 | `purgeExpired` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 145 | `getRetentionDays` | read [system_settings](/code/tables/system_settings.md) |  |
+| 128 | `purgeExpired` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 137 | `purgeExpired` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
+| 138 | `purgeExpired` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 139 | `purgeExpired` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 142 | `purgeExpired` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 153 | `getRetentionDays` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

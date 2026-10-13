@@ -6,12 +6,12 @@ Proxmox size suffix to GB: K, M, G, T (no suffix means GB).
 function proxmoxSizeToGb(float $n, string $unit): float
 ```
 
-Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 388.
+Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 437.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$n` | `float` |  |  |
-| `$unit` | `string` |  |  |
+| `$n` | `float` |  | the size number from a Proxmox size= value |
+| `$unit` | `string` |  | its suffix, upper case: 'K', 'M', 'G', 'T', or '' for GB |
 
 **Returns:** `float`
 

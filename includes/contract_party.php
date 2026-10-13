@@ -37,7 +37,11 @@ function contractTenantReady(PDO $conn): bool
     catch (Throwable $e) { return $ok = false; }
 }
 
-/** The company a contract belongs to (NULL resolved to Default), or null if there is no such contract. */
+/**
+ * The company a contract belongs to (NULL resolved to Default), or null if there is no such contract.
+ *
+ * @param int $contractId  contracts.id to look up
+ */
 function contractTenantOf(PDO $conn, int $contractId): ?int
 {
     if (!contractTenantReady($conn)) return getDefaultTenantId($conn);
@@ -67,6 +71,8 @@ function contractPartyReady(PDO $conn): bool
 /**
  * The SQL expression for a contract's customer company, for alias $c.
  * Uses the customer person's company when no company was chosen.
+ *
+ * @param string $c  the alias the calling query gives the contracts table (trusted - put straight into SQL)
  */
 function contractCustomerTenantExpr(string $c = 'c'): string
 {
@@ -78,6 +84,8 @@ function contractCustomerTenantExpr(string $c = 'c'): string
  * query over `contracts` aliased $c - every company they may see, whatever the
  * switcher says. For search, previews, links and anything else that is not the
  * contracts list itself. ['', []] on a single-company install.
+ *
+ * @param string $c  the alias the calling query gives the contracts table (trusted - put straight into SQL)
  * @return array{0:string,1:array}
  */
 function contractVisibilitySql(PDO $conn, int $analystId, string $c = 'c'): array
@@ -91,6 +99,9 @@ function contractVisibilitySql(PDO $conn, int $analystId, string $c = 'c'): arra
 /**
  * The same rule for an explicit company list, in the API's null-means-all
  * convention (ActorContext::$companyScope).
+ *
+ * @param ?array $scope  tenant ids the caller may reach; null means every company, empty means none
+ * @param string $c  the alias the calling query gives the contracts table (trusted - put straight into SQL)
  * @return array{0:string,1:array}
  */
 function contractVisibilitySqlForScope(PDO $conn, ?array $scope, string $c = 'c'): array
@@ -111,6 +122,8 @@ function contractVisibilitySqlForScope(PDO $conn, ?array $scope, string $c = 'c'
  * The contracts LIST and its dashboard: the active company, or every company the
  * analyst can see when the switcher says "All companies" - the same as Assets and
  * Domains. ['', []] on a single-company install.
+ *
+ * @param string $c  the alias the calling query gives the contracts table (trusted - put straight into SQL)
  * @return array{0:string,1:array}
  */
 function contractListSql(PDO $conn, int $analystId, string $c = 'c'): array
@@ -121,7 +134,11 @@ function contractListSql(PDO $conn, int $analystId, string $c = 'c'): array
     return activeTenantReadFilter($conn, $analystId, $c);
 }
 
-/** May this analyst see contract $id? (Existence is the caller's business.) */
+/**
+ * May this analyst see contract $id? (Existence is the caller's business.)
+ *
+ * @param int $contractId  contracts.id to check; a missing contract also returns false
+ */
 function contractCanView(PDO $conn, int $analystId, int $contractId): bool
 {
     [$sql, $params] = contractVisibilitySql($conn, $analystId, 'c');
@@ -134,6 +151,8 @@ function contractCanView(PDO $conn, int $analystId, int $contractId): bool
  * The owning company, for alias $c: tenant_id (NULL read as Default) and
  * company_name. A NULL column before Database Verification, so callers need no
  * second branch.
+ *
+ * @param string $c  the alias the calling query gives the contracts table (trusted - put straight into SQL)
  * @return array{0:string,1:string} [select columns (with leading comma), joins]
  */
 function contractOwnerSql(PDO $conn, string $c = 'c'): array
@@ -150,6 +169,8 @@ function contractOwnerSql(PDO $conn, string $c = 'c'): array
  * Joins and columns that name a contract's customer, for alias $c:
  *   customer_company_name, customer_person_name, customer_person_email
  * Empty strings before Database Verification, so callers need no second branch.
+ *
+ * @param string $c  the alias the calling query gives the contracts table (trusted - put straight into SQL)
  * @return array{0:string,1:string} [select columns (with leading comma), joins]
  */
 function contractPartySql(PDO $conn, string $c = 'c'): array
@@ -171,6 +192,9 @@ function contractPartySql(PDO $conn, string $c = 'c'): array
 /**
  * One line naming who a contract is with, for lists, previews and payloads:
  * the supplier's name, or "Company · Person" / "Company" / "Person".
+ *
+ * @param array $row  a contract row carrying the contractPartySql() columns plus supplier_name and
+ *     supplier_trading_name
  */
 function contractPartyLabel(array $row): string
 {
@@ -192,6 +216,8 @@ function contractPartyLabel(array $row): string
  * the customer company and the person's company - otherwise they could put a
  * contract on a customer they cannot see, or learn a person exists by id.
  *
+ * @param array $data  the submitted contract fields (untrusted) - party_type, supplier_id,
+ *     customer_tenant_id, customer_user_id are read; the rest is ignored
  * @return array{party_type:string,supplier_id:?int,customer_tenant_id:?int,customer_user_id:?int}
  */
 function contractNormaliseParty(PDO $conn, int $analystId, array $data): array

@@ -10,11 +10,11 @@ string. Hex-encode anything that is not clean printable text so the
 function ldapStringifyId(string $raw): string
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 95.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the raw GUID attribute value - binary objectGUID on AD, text entryUUID on OpenLDAP |
 
 **Returns:** `string`
 

@@ -6,11 +6,11 @@ Summary shape (lists). Detail adds the longtext bodies, PIR, attachments, links.
 function apiSerializeChange(array $r): array
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 78.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 86.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the changes row as `apiChangeSelect()` loads it, with the lookup and people names |
 
 **Returns:** `array`
 

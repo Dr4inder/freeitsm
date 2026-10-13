@@ -6,11 +6,11 @@ Shapes a requester (users row) for the API - email (null for a directory user wi
 function apiSerializeUser(array $u): array
 ```
 
-Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 44.
+Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 48.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$u` | `array` |  |  |
+| `$u` | `array` |  | a users row selected with `apiUserColumns()`, including the cost centre code and name when present |
 
 **Returns:** `array`
 

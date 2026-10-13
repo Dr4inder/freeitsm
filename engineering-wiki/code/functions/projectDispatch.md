@@ -6,12 +6,12 @@ Dispatch, never throwing: an event must not break the change that caused it.
 function projectDispatch(string $event, array $payload): void
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 84.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `string` |  |  |
-| `$payload` | `array` |  |  |
+| `$event` | `string` |  | the workflow event name, e.g. 'project.health_changed' |
+| `$payload` | `array` |  | the event's data, as WorkflowEngine::dispatch() takes it |
 
 **Returns:** `void`
 

@@ -6,12 +6,12 @@ The Tickets card: number, subject, status, priority, then the analyst (person pa
 function pplSectionTickets(array $s, bool $person): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 78.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
-| `$person` | `bool` |  |  |
+| `$s` | `array` |  | the tickets section from includes/people.php: rows, total, open |
+| `$person` | `bool` |  | true on a person's page (shows the analyst), false on a company page (shows the requester) |
 
 **Returns:** `string`
 

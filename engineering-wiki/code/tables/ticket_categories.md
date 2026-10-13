@@ -31,9 +31,9 @@ Ticket classification (#1540). The tree behind BOTH the category a ticket is rai
 | File | Where | Purpose |
 |---|---|---|
 | [api/tickets/delete_ticket_category.php](/code/files/api/tickets/delete_ticket_category.php.md) | L53, L67 |  |
-| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L308, getCategoricalWithSeries L372 |  |
+| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L334, getCategoricalWithSeries L402 |  |
 | [api/tickets/save_ticket_category.php](/code/files/api/tickets/save_ticket_category.php.md) | L76, L115, L130 |  |
-| [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L23, rpTicketsList L219 |  |
-| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::categoryEffectiveTypeId L1205 |  |
-| [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md) | ticketCategoriesResolved L74, ticketCategoryPathLabel L209, ticketCategoryDepthUnder L236, ticketCategorySubtreeDepth L260, ticketCategoryWouldCycle L287 |  |
+| [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L23, rpTicketsList L261 |  |
+| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::categoryEffectiveTypeId L1264 |  |
+| [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md) | ticketCategoriesResolved L74, ticketCategoryPathLabel L210, ticketCategoryDepthUnder L239, ticketCategorySubtreeDepth L266, ticketCategoryWouldCycle L296 |  |
 

@@ -34,7 +34,7 @@ External issue trackers — see freeitsm.sql for the full commentary.  ⚠️ CO
 | [api/integrations/save_connection.php](/code/files/api/integrations/save_connection.php.md):128 |  | insert | `name`, `provider`, `base_url`, `auth_type`, `credentials`, `tenant_id`, `is_active`, `inbound_enabled`, `send_attachments`, `created_by` |  |
 | [api/integrations/test_connection.php](/code/files/api/integrations/test_connection.php.md):76 |  | update | `account_identity`, `credentials` |  |
 | [cron/integration_poll.php](/code/files/cron/integration_poll.php.md):157 |  | update | `last_poll_datetime` |  |
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1356 | `integrationsPullComments` | update | `last_poll_watermark` |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1450 | `integrationsPullComments` | update | `last_poll_watermark` |  |
 
 ## Read by
 
@@ -42,6 +42,6 @@ External issue trackers — see freeitsm.sql for the full commentary.  ⚠️ CO
 |---|---|---|
 | [api/tickets/get_notes.php](/code/files/api/tickets/get_notes.php.md) | L65 |  |
 | [cron/integration_poll.php](/code/files/cron/integration_poll.php.md) | L97 |  |
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | integrationsSchemaReady L44, integrationsLoadConnection L307, integrationsListConnections L345, integrationsLinksFor L444 |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | integrationsSchemaReady L44, integrationsLoadConnection L328, integrationsListConnections L368, integrationsLinksFor L481 |  |
 | [system/integrations/index.php](/code/files/system/integrations/index.php.md) | L46 |  |
 

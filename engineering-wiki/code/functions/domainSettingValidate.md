@@ -6,12 +6,12 @@ Validate and normalise one incoming value. Returns the value to store, or throws
 function domainSettingValidate(string $key, $raw): string
 ```
 
-Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 179.
+Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
-| `$raw` |  |  |  |
+| `$key` | `string` |  | a key from `domainSettingDefinitions()`; unknown throws |
+| `$raw` |  |  | the submitted value (untrusted) - a string, number or bool |
 
 **Returns:** `string`
 

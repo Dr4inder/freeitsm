@@ -33,8 +33,10 @@ const FILES_AUDIT_ACTIONS = [
  *
  * @writes files_audit - the record of who did what to which folder or file
  *
+ * @param string $action  what was done - one of FILES_AUDIT_ACTIONS ('view', 'download', 'denied' ...)
  * @param array $t ['folder_id'=>?, 'item_id'=>?, 'version_id'=>?, 'path'=>?] -
  *                 path is worked out from folder_id (+ item name) when omitted.
+ * @param array $detail  extra facts for the row, stored as JSON in files_audit.detail; empty stores NULL
  */
 function filesAudit(PDO $conn, int $analystId, string $action, array $t = [], array $detail = []): void
 {

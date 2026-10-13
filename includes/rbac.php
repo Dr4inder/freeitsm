@@ -90,6 +90,8 @@ function getAnalystCapabilities(PDO $conn, int $analystId): array {
 /**
  * Does this analyst hold a capability? Authoritative (DB-checked). is_admin is
  * always true. Use this for server-side enforcement.
+ *
+ * @param string $capability  the capability key, a Cap:: constant such as Cap::PROJECTS_MANAGE
  */
 function analystHasCapability(PDO $conn, int $analystId, string $capability): bool {
     if ($analystId <= 0) return false;
@@ -103,6 +105,8 @@ function analystHasCapability(PDO $conn, int $analystId, string $capability): bo
  * Call after functions.php is loaded and the login check. Pair with (or place
  * after) requireModuleAccess() — Layer 1 gets you into the module, this decides
  * whether you may configure it.
+ *
+ * @param string $capability  the capability key the page needs, a Cap:: constant
  */
 function requireCapability(string $capability, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
@@ -124,6 +128,8 @@ function requireCapability(string $capability, ?PDO $conn = null): void {
 /**
  * Hard gate for a settings JSON write API: refuse a lacking analyst with 403.
  * The API twin of requireCapability(). Call right after connecting.
+ *
+ * @param string $capability  the capability key the endpoint needs, a Cap:: constant
  */
 function requireCapabilityJson(string $capability, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {

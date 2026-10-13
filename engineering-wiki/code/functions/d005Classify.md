@@ -15,12 +15,12 @@ cases below are the ones that DID produce false alarms on the first run:
 function d005Classify(string $src, string $rel): array
 ```
 
-Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 128.
+Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 143.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$src` | `string` |  |  |
-| `$rel` | `string` |  |  |
+| `$src` | `string` |  | the endpoint file's full PHP source |
+| `$rel` | `string` |  | the endpoint's path from the app root, with forward slashes |
 
 **Returns:** `array`
 

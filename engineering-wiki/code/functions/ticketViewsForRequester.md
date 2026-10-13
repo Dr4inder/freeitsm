@@ -6,13 +6,13 @@ Portal viewers of a ticket OTHER than its requester, newest first - what the req
 function ticketViewsForRequester(PDO $conn, int $ticketId, int $requesterUserId): array
 ```
 
-Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 128.
+Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$requesterUserId` | `int` |  |  |
+| `$requesterUserId` | `int` |  | the requester's users.id, left out of the list |
 
 **Returns:** array<int, array{name:string, first:string, last:string, count:int}>
 
@@ -20,7 +20,7 @@ Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 134 | `ticketViewsForRequester` | read [ticket_views](/code/tables/ticket_views.md), read [users](/code/tables/users.md) |  |
+| 136 | `ticketViewsForRequester` | read [ticket_views](/code/tables/ticket_views.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

@@ -11,11 +11,11 @@ about the same day.
 function lmsReminderParseDays(string $raw): array
 ```
 
-Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 110.
+Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the "days before" setting as typed, e.g. '7, 1'; numbers outside 0-365 are dropped |
 
 **Returns:** `array`
 

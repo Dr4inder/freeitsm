@@ -6,21 +6,21 @@ Get or create user by email address Returns the user ID
 function getOrCreateUser($conn, $email, $displayName)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 843.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 891.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$email` |  |  |  |
-| `$displayName` |  |  |  |
+| `$email` |  |  | the sender's address; lower-cased and trimmed before use |
+| `$displayName` |  |  | the sender's name from the email; empty leaves an existing name alone |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 848 | `getOrCreateUser` | read [users](/code/tables/users.md) |  |
-| 856 | `getOrCreateUser` | **update** [users](/code/tables/users.md) (`display_name`) |  |
-| 864 | `getOrCreateUser` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
+| 896 | `getOrCreateUser` | read [users](/code/tables/users.md) |  |
+| 904 | `getOrCreateUser` | **update** [users](/code/tables/users.md) (`display_name`) |  |
+| 912 | `getOrCreateUser` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
 
 ## Called from
 

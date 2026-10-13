@@ -21,13 +21,13 @@ One website chat conversation. token is the visitor's browser-held capability fo
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/webchat/start.php](/code/files/api/webchat/start.php.md):40 |  | insert | `channel_id`, `token`, `visitor_name`, `visitor_email`, `visitor_ip`, `created_datetime`, `last_activity_datetime` |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):219 | `webchatOpenTicket` | update | `ticket_id`, `last_activity_datetime` |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):325 | `webchatIngestMessage` | update | `last_activity_datetime` |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):396 | `webchatAddMessage` | update | `last_activity_datetime` |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):249 | `webchatOpenTicket` | update | `ticket_id`, `last_activity_datetime` |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):369 | `webchatIngestMessage` | update | `last_activity_datetime` |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md):447 | `webchatAddMessage` | update | `last_activity_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/webchat/public.php](/code/files/includes/webchat/public.php.md) | webchatLoadConversation L132, webchatRateLimitStart L150 |  |
+| [includes/webchat/public.php](/code/files/includes/webchat/public.php.md) | webchatLoadConversation L144, webchatRateLimitStart L166 |  |
 

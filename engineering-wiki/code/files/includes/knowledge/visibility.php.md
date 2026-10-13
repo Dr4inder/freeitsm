@@ -1,6 +1,6 @@
 # includes/knowledge/visibility.php
 
-> PHP - 857 lines
+> PHP - 914 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Knowledge Folders and Permissions](https://github.com/edmozley/freeitsm/wiki/Knowledge-Folders-and-Permissions)
@@ -56,40 +56,40 @@ serve to anyone holding its id. One clause, two uses, no drift.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [knowledgeVisibilitySql()](/code/functions/knowledgeVisibilitySql.md) | 324 | The SQL clause restricting a knowledge_articles query to what `$viewer` may read. |
-| [knowledgeCanRead()](/code/functions/knowledgeCanRead.md) | 409 | May `$viewer` read article `$articleId`? |
-| [knowledgeViewerHasAdminFloor()](/code/functions/knowledgeViewerHasAdminFloor.md) | 457 | Does this viewer hold the administrator floor? |
-| [knowledgeAuditAdminOverride()](/code/functions/knowledgeAuditAdminOverride.md) | 469 | Record that the floor let somebody past an access list they were not on. |
-| [knowledgeAclSql()](/code/functions/knowledgeAclSql.md) | 503 | The access-list clause. Returns ['', []] until the folder/ACL tables exist, which is why introducing this file changes nothing. |
-| [knowledgeNodePermits()](/code/functions/knowledgeNodePermits.md) | 616 | Does this node let this viewer through? |
-| [knowledgeFolderReadable()](/code/functions/knowledgeFolderReadable.md) | 639 | May this viewer reach `$folderId`? |
-| [knowledgeViewerPrincipals()](/code/functions/knowledgeViewerPrincipals.md) | 670 | Everything the viewer counts as, as "type:id" strings for cheap lookup. |
-| [knowledgeAclResetCaches()](/code/functions/knowledgeAclResetCaches.md) | 752 | Forget everything memoised about folders and the access list. |
-| [knowledgeFolderPermissionModel()](/code/functions/knowledgeFolderPermissionModel.md) | 758 | Which permission model this install runs. Default 'containers' — the safe end. |
-| [knowledgeAclHasAnyRows()](/code/functions/knowledgeAclHasAnyRows.md) | 785 | Is ANYTHING restricted on this install? The cheap test that skips all the work. |
-| [knowledgeAclIndex()](/code/functions/knowledgeAclIndex.md) | 803 | All access rows as [type][object_id]['principal:id' => true]. One query. |
-| [knowledgeFolderIndex()](/code/functions/knowledgeFolderIndex.md) | 818 | The folder tree as [id => ['parent'=>?int,'restricted'=>int,'inherit'=>int]]. |
-| [knowledgeAclTablesExist()](/code/functions/knowledgeAclTablesExist.md) | 844 | Do the folder/access-list tables exist yet? |
+| [knowledgeVisibilitySql()](/code/functions/knowledgeVisibilitySql.md) | 346 | The SQL clause restricting a knowledge_articles query to what `$viewer` may read. |
+| [knowledgeCanRead()](/code/functions/knowledgeCanRead.md) | 435 | May `$viewer` read article `$articleId`? |
+| [knowledgeViewerHasAdminFloor()](/code/functions/knowledgeViewerHasAdminFloor.md) | 485 | Does this viewer hold the administrator floor? |
+| [knowledgeAuditAdminOverride()](/code/functions/knowledgeAuditAdminOverride.md) | 502 | Record that the floor let somebody past an access list they were not on. |
+| [knowledgeAclSql()](/code/functions/knowledgeAclSql.md) | 540 | The access-list clause. Returns ['', []] until the folder/ACL tables exist, which is why introducing this file changes nothing. |
+| [knowledgeNodePermits()](/code/functions/knowledgeNodePermits.md) | 659 | Does this node let this viewer through? |
+| [knowledgeFolderReadable()](/code/functions/knowledgeFolderReadable.md) | 688 | May this viewer reach `$folderId`? |
+| [knowledgeViewerPrincipals()](/code/functions/knowledgeViewerPrincipals.md) | 721 | Everything the viewer counts as, as "type:id" strings for cheap lookup. |
+| [knowledgeAclResetCaches()](/code/functions/knowledgeAclResetCaches.md) | 809 | Forget everything memoised about folders and the access list. |
+| [knowledgeFolderPermissionModel()](/code/functions/knowledgeFolderPermissionModel.md) | 815 | Which permission model this install runs. Default 'containers' — the safe end. |
+| [knowledgeAclHasAnyRows()](/code/functions/knowledgeAclHasAnyRows.md) | 842 | Is ANYTHING restricted on this install? The cheap test that skips all the work. |
+| [knowledgeAclIndex()](/code/functions/knowledgeAclIndex.md) | 860 | All access rows as [type][object_id]['principal:id' => true]. One query. |
+| [knowledgeFolderIndex()](/code/functions/knowledgeFolderIndex.md) | 875 | The folder tree as [id => ['parent'=>?int,'restricted'=>int,'inherit'=>int]]. |
+| [knowledgeAclTablesExist()](/code/functions/knowledgeAclTablesExist.md) | 901 | Do the folder/access-list tables exist yet? |
 
 ## Classes
 
 - [KnowledgeViewer](/code/classes/KnowledgeViewer.md) (class, line 75) - WHO is asking. Not the same thing as ActorContext (service_context.php), which models an *analyst* performing a write — a Knowledge reader may be a portal user or an anonymous web-chat visitor, neither of whom has an analyst id at all.
-- [KnowledgeAclCache](/code/classes/KnowledgeAclCache.md) (class, line 719) - Per-request memo for the four things the access list needs to look up: the permission model, whether any rules exist at all, the rules themselves, and the folder tree. Read once per request rather than once per query — a page that lists articles and then fetches one would otherwise ask four times over.
+- [KnowledgeAclCache](/code/classes/KnowledgeAclCache.md) (class, line 770) - Per-request memo for the four things the access list needs to look up: the permission model, whether any rules exist at all, the rules themselves, and the folder tree. Read once per request rather than once per query — a page that lists articles and then fetches one would otherwise ask four times over.
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 416 | `knowledgeCanRead` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 562 | `knowledgeAclSql` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 681 | `knowledgeViewerPrincipals` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 695 | `knowledgeViewerPrincipals` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 763 | `knowledgeFolderPermissionModel` | read [system_settings](/code/tables/system_settings.md) |  |
-| 790 | `knowledgeAclHasAnyRows` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 791 | `knowledgeAclHasAnyRows` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 792 | `knowledgeAclHasAnyRows` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 809 | `knowledgeAclIndex` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 824 | `knowledgeFolderIndex` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 442 | `knowledgeCanRead` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 599 | `knowledgeAclSql` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 732 | `knowledgeViewerPrincipals` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 746 | `knowledgeViewerPrincipals` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 820 | `knowledgeFolderPermissionModel` | read [system_settings](/code/tables/system_settings.md) |  |
+| 847 | `knowledgeAclHasAnyRows` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 848 | `knowledgeAclHasAnyRows` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 849 | `knowledgeAclHasAnyRows` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 866 | `knowledgeAclIndex` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 881 | `knowledgeFolderIndex` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
 
 ## How it hangs together
 

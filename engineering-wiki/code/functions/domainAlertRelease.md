@@ -6,14 +6,14 @@ Gives back a claimed alert, so the next run tries it again - used when every e-m
 function domainAlertRelease(PDO $conn, int $domainId, string $kind, string $fingerprint): void
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 57.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$domainId` | `int` |  |  |
-| `$kind` | `string` |  |  |
-| `$fingerprint` | `string` |  |  |
+| `$domainId` | `int` |  | the domain the alert is about |
+| `$kind` | `string` |  | the kind it was claimed under, e.g. 'mail_expiry' |
+| `$fingerprint` | `string` |  | the fingerprint it was claimed with |
 
 **Returns:** `void`
 
@@ -23,7 +23,7 @@ Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 59 | `domainAlertRelease` | **delete** [domain_alerts_sent](/code/tables/domain_alerts_sent.md) |  |
+| 70 | `domainAlertRelease` | **delete** [domain_alerts_sent](/code/tables/domain_alerts_sent.md) |  |
 
 ## Called from
 

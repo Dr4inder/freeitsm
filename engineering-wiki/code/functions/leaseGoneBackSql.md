@@ -10,11 +10,11 @@ machine handed back in March is "due back" for ever. Call only when `leaseReady(
 function leaseGoneBackSql(string $a = 'a'): string
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 112.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 144.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` | `string` | `'a'` |  |
+| `$a` | `string` | `'a'` | the alias the calling query gives the assets table |
 
 **Returns:** `string`
 
@@ -22,7 +22,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 112.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 114 | `leaseGoneBackSql` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 146 | `leaseGoneBackSql` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
 
 ## Calls
 

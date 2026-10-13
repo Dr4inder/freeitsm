@@ -1,6 +1,6 @@
 # includes/manager_access_page.php
 
-> PHP - 692 lines
+> PHP - 697 lines
 
 Manager access - one manager's management lines, FULL SCREEN (discussion #62).
 
@@ -22,7 +22,7 @@ tickets namespace to JavaScript.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [managerAccessRender()](/code/functions/managerAccessRender.md) | 21 | Print the page body (below the module header). Call once, inside <body>. |
+| [managerAccessRender()](/code/functions/managerAccessRender.md) | 26 | Print the page body (below the module header). Call once, inside <body>. |
 
 ## How it hangs together
 

@@ -23,12 +23,12 @@ Returns plain text - escape it where it is printed.
 function pageTitle(?string $module = null, ?string ...$parts): string
 ```
 
-Defined in [includes/system_name.php](/code/files/includes/system_name.php.md), line 58.
+Defined in [includes/system_name.php](/code/files/includes/system_name.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$module` | `?string` | `null` |  |
-| `...$parts` | `?string` |  |  |
+| `$module` | `?string` | `null` | the module's key in common.modules, e.g. 'contracts'; null or '' for a page outside any module |
+| `...$parts` | `?string` |  | the page's own words, e.g. 'Edit contract'; blanks and repeats of earlier parts are dropped |
 
 **Returns:** `string`
 

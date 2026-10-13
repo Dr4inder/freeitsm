@@ -6,7 +6,7 @@ Forget every cached setting - after a write, or between test cases.
 function tenantSettingForget(): void
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 88.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 90.
 
 **Returns:** `void`
 

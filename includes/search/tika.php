@@ -72,6 +72,8 @@ function tikaUrl(PDO $conn): string {
  * a minute or more — and applying that to a page load means an analyst who
  * happened to open the wrong screen waits a minute for it. Set low, do one item,
  * set back.
+ *
+ * @param ?int $seconds  the timeout to force for this process, or null to go back to the setting; omit to only read it
  */
 function tikaTimeoutOverride(?int $seconds = null): ?int {
     static $override = null;
@@ -100,7 +102,11 @@ function tikaConfigured(PDO $conn): bool {
     return tikaUrl($conn) !== '';
 }
 
-/** Would Tika be asked about this file, if configured? */
+/**
+ * Would Tika be asked about this file, if configured?
+ *
+ * @param string $filename  the attachment's file name; only its extension is checked against TIKA_EXTENSIONS
+ */
 function tikaHandles(string $filename): bool {
     return in_array(attTextExtension($filename), TIKA_EXTENSIONS, true);
 }
@@ -119,6 +125,8 @@ function tikaHandles(string $filename): bool {
  * files would be permanently blacklisted and never looked at again — the index
  * would be quietly wrong forever and nothing would say so.
  *
+ * @param string $path  the full path of the file on disk, already checked to be inside the attachments directory
+ * @param string $filename  the original file name, sent to Tika as a hint for choosing a parser
  * @return array{ok:bool,text:string,retry:bool,error:string}
  */
 function tikaExtract(PDO $conn, string $path, string $filename): array {
@@ -179,6 +187,7 @@ function tikaExtract(PDO $conn, string $path, string $filename): array {
  * NOWHERE in the indexing path — a health check before every attachment would be
  * an extra HTTP round trip per file. There, the extraction attempt IS the check.
  *
+ * @param string $overrideUrl  a Tika address to test instead of the saved one (the settings screen's unsaved value); '' uses the saved one
  * @return array{ok:bool,detail:string}
  */
 function tikaPing(PDO $conn, string $overrideUrl = ''): array {

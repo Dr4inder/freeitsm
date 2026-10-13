@@ -73,6 +73,8 @@ function contractAssetSelect(): string
 
 /**
  * Equipment covered by a contract, filtered to what this analyst may see.
+ *
+ * @param int $contractId  contracts.id; a contract the analyst cannot view gives an empty list
  */
 function contractAssetsFor(PDO $conn, int $analystId, int $contractId): array
 {
@@ -142,6 +144,9 @@ function contractsForAsset(PDO $conn, int $assetId, ?int $analystId = null): arr
  * failing: the unique key makes a second row impossible, and "it is already on
  * here" is not an error anybody wants to read.
  *
+ * @param int $contractId  contracts.id to link the asset to
+ * @param ?string $reference  free-text note on the link (e.g. a line or serial on the agreement); trimmed,
+ *     cut to 190 characters, empty or null stores NULL
  * @throws RuntimeException when the contract or the asset is out of reach.
  */
 function contractAssetLink(PDO $conn, int $analystId, int $contractId, int $assetId, ?string $reference): int
@@ -184,6 +189,8 @@ function contractAssetLink(PDO $conn, int $analystId, int $contractId, int $asse
 /**
  * Change the note on an existing link.
  *
+ * @param int $linkId  contract_assets.id
+ * @param ?string $reference  the new note; trimmed, cut to 190 characters, empty or null clears it
  * @throws RuntimeException when the link is out of reach.
  */
 function contractAssetSetReference(PDO $conn, int $analystId, int $linkId, ?string $reference): void
@@ -201,6 +208,7 @@ function contractAssetSetReference(PDO $conn, int $analystId, int $linkId, ?stri
  * Remove a link. The asset and the contract both survive it — this only ever
  * says "this equipment is not on that agreement".
  *
+ * @param int $linkId  contract_assets.id to delete
  * @throws RuntimeException when the link is out of reach.
  */
 function contractAssetUnlink(PDO $conn, int $analystId, int $linkId): void
@@ -212,6 +220,7 @@ function contractAssetUnlink(PDO $conn, int $analystId, int $linkId): void
 /**
  * One link, but only if this analyst can reach the asset on it.
  *
+ * @param int $linkId  contract_assets.id to load
  * @throws RuntimeException when it does not exist or is out of reach.
  */
 function contractAssetLoad(PDO $conn, int $analystId, int $linkId): array
@@ -235,6 +244,10 @@ function contractAssetLoad(PDO $conn, int $analystId, int $linkId): array
  * reason the ticket picker does: nobody knows the hostname of a meeting-room
  * TV, and nobody knows the service tag of a SIM card. They know what it is and
  * where it lives.
+ *
+ * @param int $contractId  contracts.id the assets would be added to; its company bounds the search
+ * @param string $q  the search text, matched as a substring; empty lists everything not yet linked
+ * @param int $limit  most rows to return
  */
 function contractAssetSearch(PDO $conn, int $analystId, int $contractId, string $q, int $limit = 25): array
 {

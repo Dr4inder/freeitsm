@@ -1,6 +1,6 @@
 # includes/ticket_merge.php
 
-> PHP - 803 lines
+> PHP - 831 lines
 
 Merging tickets.
 
@@ -66,16 +66,16 @@ THIS TICKET?" The first kind moves; the second kind would be falsified by moving
 |---|--:|---|
 | [mergeSettings()](/code/functions/mergeSettings.md) | 91 | Read the install's merge policy. Defaults are the conservative pair: keep the requester's reference alive, and keep the conversation searchable. |
 | [resolveMergedTicket()](/code/functions/resolveMergedTicket.md) | 125 | Follow the merge chain to the ticket that is actually live. |
-| [unmergeTicket()](/code/functions/unmergeTicket.md) | 169 | Undo a merge: take back exactly what was moved, and reopen the source. |
-| [mergedAwayInfo()](/code/functions/mergedAwayInfo.md) | 298 | Is this ticket a merged-away one? Returns the target row, or null. |
-| [mergeTickets()](/code/functions/mergeTickets.md) | 332 | Merge one or more source tickets into a target. |
-| [mergeCreateTargetTicket()](/code/functions/mergeCreateTargetTicket.md) | 436 | Create the brand-new ticket that everything folds into ('new' reference mode). |
-| [mergeOneTicket()](/code/functions/mergeOneTicket.md) | 474 | Fold a single source into the target. Assumes the caller holds a transaction. |
-| [mergeFirstClosedStatusId()](/code/functions/mergeFirstClosedStatusId.md) | 603 | The install's first closed status id, or null if none is flagged. |
-| [mergeTicketNumber()](/code/functions/mergeTicketNumber.md) | 613 | A ticket's number for audit and note text; "#id" if the lookup fails. |
-| [mergeAudit()](/code/functions/mergeAudit.md) | 629 | Writes one ticket_audit row for a merge step, best-effort - a failed audit write never stops the merge. An actor id of 0 is stored as NULL. |
-| [mergeBuildSnapshotHtml()](/code/functions/mergeBuildSnapshotHtml.md) | 655 | Render a source ticket's whole conversation as a self-contained HTML document. |
-| [mergeAttachSnapshot()](/code/functions/mergeAttachSnapshot.md) | 742 | Attach a snapshot to the target ticket. |
+| [unmergeTicket()](/code/functions/unmergeTicket.md) | 172 | Undo a merge: take back exactly what was moved, and reopen the source. |
+| [mergedAwayInfo()](/code/functions/mergedAwayInfo.md) | 301 | Is this ticket a merged-away one? Returns the target row, or null. |
+| [mergeTickets()](/code/functions/mergeTickets.md) | 336 | Merge one or more source tickets into a target. |
+| [mergeCreateTargetTicket()](/code/functions/mergeCreateTargetTicket.md) | 445 | Create the brand-new ticket that everything folds into ('new' reference mode). |
+| [mergeOneTicket()](/code/functions/mergeOneTicket.md) | 491 | Fold a single source into the target. Assumes the caller holds a transaction. |
+| [mergeFirstClosedStatusId()](/code/functions/mergeFirstClosedStatusId.md) | 620 | The install's first closed status id, or null if none is flagged. |
+| [mergeTicketNumber()](/code/functions/mergeTicketNumber.md) | 630 | A ticket's number for audit and note text; "#id" if the lookup fails. |
+| [mergeAudit()](/code/functions/mergeAudit.md) | 650 | Writes one ticket_audit row for a merge step, best-effort - a failed audit write never stops the merge. An actor id of 0 is stored as NULL. |
+| [mergeBuildSnapshotHtml()](/code/functions/mergeBuildSnapshotHtml.md) | 679 | Render a source ticket's whole conversation as a self-contained HTML document. |
+| [mergeAttachSnapshot()](/code/functions/mergeAttachSnapshot.md) | 770 | Attach a snapshot to the target ticket. |
 
 ## Database
 
@@ -83,35 +83,35 @@ THIS TICKET?" The first kind moves; the second kind would be falsified by moving
 |--:|---|---|---|
 | 99 | `mergeSettings` | read [system_settings](/code/tables/system_settings.md) |  |
 | 131 | `resolveMergedTicket` | read [tickets](/code/tables/tickets.md) |  |
-| 172 | `unmergeTicket` | read [ticket_merges](/code/tables/ticket_merges.md) |  |
-| 195 | `unmergeTicket` | read [emails](/code/tables/emails.md) |  |
-| 207 | `unmergeTicket` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
-| 226 | `unmergeTicket` | read [email_attachments](/code/tables/email_attachments.md) |  |
-| 232 | `unmergeTicket` | **delete** [email_attachments](/code/tables/email_attachments.md) |  |
-| 233 | `unmergeTicket` | **delete** [emails](/code/tables/emails.md) |  |
-| 240 | `unmergeTicket` | **update** [tickets](/code/tables/tickets.md) (`merged_into_id`, `status_id`, `closed_datetime`, `updated_datetime`) |  |
-| 254 | `unmergeTicket` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
-| 263 | `unmergeTicket` | read [ticket_merges](/code/tables/ticket_merges.md) |  |
-| 267 | `unmergeTicket` | read [emails](/code/tables/emails.md) |  |
-| 274 | `unmergeTicket` | **update** [ticket_merges](/code/tables/ticket_merges.md) (`undone_datetime`, `undone_by_id`) |  |
-| 304 | `mergedAwayInfo` | read [tickets](/code/tables/tickets.md), read [ticket_merges](/code/tables/ticket_merges.md) |  |
-| 449 | `mergeCreateTargetTicket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_analyst_id`, `origin_id`, `user_id`, `owner_id`, `tenant_id`, `created_datetime`) |  |
-| 487 | `mergeOneTicket` | read [emails](/code/tables/emails.md) |  |
-| 491 | `mergeOneTicket` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
-| 536 | `mergeOneTicket` | **update** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`) |  |
-| 537 | `mergeOneTicket` | **update** [ticket_links](/code/tables/ticket_links.md) (`target_ticket_id`) |  |
-| 538 | `mergeOneTicket` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
-| 540 | `mergeOneTicket` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
-| 565 | `mergeOneTicket` | **update** [tickets](/code/tables/tickets.md) (`merged_into_id`, `status_id`, `closed_datetime`, `updated_datetime`) |  |
-| 577 | `mergeOneTicket` | **insert** [ticket_merges](/code/tables/ticket_merges.md) (`source_ticket_id`, `source_ticket_number`, `target_ticket_id`, `reference_mode`, `originals_mode`, `moved_email_ids`, `moved_related`, `snapshot_email_id`, `source_prev_status_id`, `source_prev_closed_datetime`, `merged_by_id`, `merged_datetime`) |  |
-| 596 | `mergeOneTicket` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
-| 605 | `mergeFirstClosedStatusId` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 615 | `mergeTicketNumber` | read [tickets](/code/tables/tickets.md) |  |
-| 632 | `mergeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 662 | `mergeBuildSnapshotHtml` | read [emails](/code/tables/emails.md) |  |
-| 672 | `mergeBuildSnapshotHtml` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
-| 746 | `mergeAttachSnapshot` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction`, `channel`, `is_initial`) |  |
-| 797 | `mergeAttachSnapshot` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime`) |  |
+| 175 | `unmergeTicket` | read [ticket_merges](/code/tables/ticket_merges.md) |  |
+| 198 | `unmergeTicket` | read [emails](/code/tables/emails.md) |  |
+| 210 | `unmergeTicket` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
+| 229 | `unmergeTicket` | read [email_attachments](/code/tables/email_attachments.md) |  |
+| 235 | `unmergeTicket` | **delete** [email_attachments](/code/tables/email_attachments.md) |  |
+| 236 | `unmergeTicket` | **delete** [emails](/code/tables/emails.md) |  |
+| 243 | `unmergeTicket` | **update** [tickets](/code/tables/tickets.md) (`merged_into_id`, `status_id`, `closed_datetime`, `updated_datetime`) |  |
+| 257 | `unmergeTicket` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 266 | `unmergeTicket` | read [ticket_merges](/code/tables/ticket_merges.md) |  |
+| 270 | `unmergeTicket` | read [emails](/code/tables/emails.md) |  |
+| 277 | `unmergeTicket` | **update** [ticket_merges](/code/tables/ticket_merges.md) (`undone_datetime`, `undone_by_id`) |  |
+| 307 | `mergedAwayInfo` | read [tickets](/code/tables/tickets.md), read [ticket_merges](/code/tables/ticket_merges.md) |  |
+| 458 | `mergeCreateTargetTicket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_analyst_id`, `origin_id`, `user_id`, `owner_id`, `tenant_id`, `created_datetime`) |  |
+| 504 | `mergeOneTicket` | read [emails](/code/tables/emails.md) |  |
+| 508 | `mergeOneTicket` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
+| 553 | `mergeOneTicket` | **update** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`) |  |
+| 554 | `mergeOneTicket` | **update** [ticket_links](/code/tables/ticket_links.md) (`target_ticket_id`) |  |
+| 555 | `mergeOneTicket` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 557 | `mergeOneTicket` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 582 | `mergeOneTicket` | **update** [tickets](/code/tables/tickets.md) (`merged_into_id`, `status_id`, `closed_datetime`, `updated_datetime`) |  |
+| 594 | `mergeOneTicket` | **insert** [ticket_merges](/code/tables/ticket_merges.md) (`source_ticket_id`, `source_ticket_number`, `target_ticket_id`, `reference_mode`, `originals_mode`, `moved_email_ids`, `moved_related`, `snapshot_email_id`, `source_prev_status_id`, `source_prev_closed_datetime`, `merged_by_id`, `merged_datetime`) |  |
+| 613 | `mergeOneTicket` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
+| 622 | `mergeFirstClosedStatusId` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 632 | `mergeTicketNumber` | read [tickets](/code/tables/tickets.md) |  |
+| 653 | `mergeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 686 | `mergeBuildSnapshotHtml` | read [emails](/code/tables/emails.md) |  |
+| 696 | `mergeBuildSnapshotHtml` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
+| 774 | `mergeAttachSnapshot` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction`, `channel`, `is_initial`) |  |
+| 825 | `mergeAttachSnapshot` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime`) |  |
 
 ## How it hangs together
 
@@ -124,5 +124,5 @@ THIS TICKET?" The first kind moves; the second kind would be falsified by moving
 ## Traps
 
 > [!WARNING]
-> **Line 440, in `mergeCreateTargetTicket`:** the install's numbering, never a number made here - see `messagingGenerateTicketNumber()` for what went wrong when it was.
+> **Line 449, in `mergeCreateTargetTicket`:** the install's numbering, never a number made here - see `messagingGenerateTicketNumber()` for what went wrong when it was.
 

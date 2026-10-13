@@ -9,12 +9,12 @@ Refresh the access token using mailbox configuration
 function refreshAccessToken($mailbox, $refreshToken)
 ```
 
-Defined in [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md), line 285.
+Defined in [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md), line 305.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` |  |  |  |
-| `$refreshToken` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row, decrypted - azure_tenant_id, azure_client_id/secret, oauth_scopes |
+| `$refreshToken` |  |  | the OAuth refresh token to trade for a new access token |
 
 ## Calls
 

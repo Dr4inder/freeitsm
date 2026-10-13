@@ -1,6 +1,6 @@
 # api/rfp-builder/generate_section.php
 
-> API endpoint - 292 lines
+> API endpoint - 295 lines
 
 Run Pass 3 (AI section generation) for a single category as a Server-Sent Events stream. Same pattern as run_consolidation.php but per-category — the browser opens this endpoint once per category for "Generate all", or just once for a per-section regenerate.
 
@@ -33,23 +33,23 @@ mid-generation.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse()](/code/functions/sse.md) | 52 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
+| [sse()](/code/functions/sse.md) | 55 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 95 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 117 |  | read [rfp_output_sections](/code/tables/rfp_output_sections.md) |  |
-| 136 |  | read [rfp_categories](/code/tables/rfp_categories.md) |  |
-| 146 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 161 |  | read [rfp_consolidated_sources](/code/tables/rfp_consolidated_sources.md), read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
-| 177 |  | read [rfps](/code/tables/rfps.md) |  |
-| 227 |  | read [rfp_output_sections](/code/tables/rfp_output_sections.md) |  |
-| 234 |  | **insert** [rfp_section_history](/code/tables/rfp_section_history.md) (`section_id`, `version`, `section_content`, `is_manually_edited`) |  |
-| 247 |  | **update** [rfp_output_sections](/code/tables/rfp_output_sections.md) (`section_content`, `version`, `is_manually_edited`, `requirements_hash`, `generated_datetime`, `edited_datetime`) |  |
-| 260 |  | **insert** [rfp_output_sections](/code/tables/rfp_output_sections.md) (`rfp_id`, `category_id`, `section_title`, `section_content`, `version`, `requirements_hash`) |  |
-| 268 |  | **update** [rfps](/code/tables/rfps.md) (`updated_datetime`) |  |
+| 98 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 120 |  | read [rfp_output_sections](/code/tables/rfp_output_sections.md) |  |
+| 139 |  | read [rfp_categories](/code/tables/rfp_categories.md) |  |
+| 149 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 164 |  | read [rfp_consolidated_sources](/code/tables/rfp_consolidated_sources.md), read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
+| 180 |  | read [rfps](/code/tables/rfps.md) |  |
+| 230 |  | read [rfp_output_sections](/code/tables/rfp_output_sections.md) |  |
+| 237 |  | **insert** [rfp_section_history](/code/tables/rfp_section_history.md) (`section_id`, `version`, `section_content`, `is_manually_edited`) |  |
+| 250 |  | **update** [rfp_output_sections](/code/tables/rfp_output_sections.md) (`section_content`, `version`, `is_manually_edited`, `requirements_hash`, `generated_datetime`, `edited_datetime`) |  |
+| 263 |  | **insert** [rfp_output_sections](/code/tables/rfp_output_sections.md) (`rfp_id`, `category_id`, `section_title`, `section_content`, `version`, `requirements_hash`) |  |
+| 271 |  | **update** [rfps](/code/tables/rfps.md) (`updated_datetime`) |  |
 
 ## How it hangs together
 

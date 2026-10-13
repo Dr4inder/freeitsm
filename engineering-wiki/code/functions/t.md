@@ -6,12 +6,12 @@ Global shorthand. Recommended call style in views and modules.
 function t($key, $params = [])
 ```
 
-Defined in [includes/i18n.php](/code/files/includes/i18n.php.md), line 313.
+Defined in [includes/i18n.php](/code/files/includes/i18n.php.md), line 358.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` |  |  |  |
-| `$params` |  | `[]` |  |
+| `$key` |  |  | 'namespace.dotted.path', e.g. 'common.save' |
+| `$params` |  | `[]` | placeholder values, name => value, substituted for {name} in the text |
 
 ## Called from
 

@@ -40,8 +40,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/intune.php](/code/files/includes/intune.php.md):173 | `intuneUpsertDevice` | insert | `intune_id`, `device_name`, `user_principal_name`, `user_display_name`, `user_id`, `operating_system`, `os_version`, `compliance_state`, `management_state`, `managed_device_owner_type` |  |
-| [includes/intune.php](/code/files/includes/intune.php.md):323 | `intuneLinkDevicesToAssets` | update | `asset_id` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):183 | `intuneUpsertDevice` | insert | `intune_id`, `device_name`, `user_principal_name`, `user_display_name`, `user_id`, `operating_system`, `os_version`, `compliance_state`, `management_state`, `managed_device_owner_type` |  |
+| [includes/intune.php](/code/files/includes/intune.php.md):335 | `intuneLinkDevicesToAssets` | update | `asset_id` |  |
 
 ## Read by
 
@@ -49,9 +49,9 @@
 |---|---|---|
 | [api/intune/app_sync_freshness.php](/code/files/api/intune/app_sync_freshness.php.md) | L31 |  |
 | [api/intune/dashboard_data.php](/code/files/api/intune/dashboard_data.php.md) | L25, L28, L36, L42, L50, L70 ... |  |
-| [api/intune/dashboard_drilldown.php](/code/files/api/intune/dashboard_drilldown.php.md) | L185, L196, L241 |  |
+| [api/intune/dashboard_drilldown.php](/code/files/api/intune/dashboard_drilldown.php.md) | L189, L200, L245 |  |
 | [api/intune/get_intune_device.php](/code/files/api/intune/get_intune_device.php.md) | L28 |  |
 | [api/intune/list_app_sync_jobs.php](/code/files/api/intune/list_app_sync_jobs.php.md) | L39 |  |
-| [includes/intune.php](/code/files/includes/intune.php.md) | intuneLinkDevicesToAssets L303, intuneLinkDevicesToAssets L315, intuneLinkDevicesToAssets L348, intuneSyncDisks L381, intuneGetAppSyncCandidates L604, intuneRunAppSyncJob L800 |  |
-| [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | rpIntuneBreakdown L106, rpIntuneKpis L118 |  |
+| [includes/intune.php](/code/files/includes/intune.php.md) | intuneLinkDevicesToAssets L315, intuneLinkDevicesToAssets L327, intuneLinkDevicesToAssets L360, intuneSyncDisks L395, intuneGetAppSyncCandidates L631, intuneRunAppSyncJob L834 |  |
+| [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | rpIntuneBreakdown L126, rpIntuneKpis L142 |  |
 

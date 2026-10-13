@@ -53,7 +53,11 @@ function rpViewer(PDO $conn, int $analystId): array
     ];
 }
 
-/** A department name normalised for matching: spaces collapsed, trimmed and lower case. */
+/**
+ * A department name normalised for matching: spaces collapsed, trimmed and lower case.
+ *
+ * @param mixed $s  a department name as typed or stored; null gives ''
+ */
 function rpNormDept($s): string
 {
     return mb_strtolower(trim(preg_replace('/\s+/u', ' ', (string)$s)));
@@ -61,6 +65,8 @@ function rpNormDept($s): string
 
 /**
  * SQL that matches the shares reaching this viewer, for `report_pack_shares s`.
+ *
+ * @param array $viewer  the viewer from rpViewer(): id, team_ids and department (already normalised)
  * @return array{0:string,1:array}
  */
 function rpShareMatchSql(array $viewer): array
@@ -81,6 +87,8 @@ function rpShareMatchSql(array $viewer): array
 /**
  * This viewer's role on a pack: 'owner', 'edit', 'view', or null (no access, or no
  * such pack - the caller says "not found" for both, so ids cannot be probed).
+ *
+ * @param int $packId  the report_packs id
  */
 function rpRole(PDO $conn, int $analystId, int $packId): ?string
 {
@@ -102,7 +110,12 @@ function rpRole(PDO $conn, int $analystId, int $packId): ?string
     return (int)$edit === 1 ? 'edit' : 'view';
 }
 
-/** True if $role is at least $need ('view' < 'edit' < 'owner'). */
+/**
+ * True if $role is at least $need ('view' < 'edit' < 'owner').
+ *
+ * @param ?string $role  the viewer's role from rpRole(): 'owner', 'edit', 'view' or null
+ * @param string $need  the least role required: 'view', 'edit' or 'owner'
+ */
 function rpRoleAtLeast(?string $role, string $need): bool
 {
     return $role !== null && (RP_ROLE_RANK[$role] ?? 0) >= (RP_ROLE_RANK[$need] ?? 99);
@@ -154,7 +167,11 @@ function rpListPacks(PDO $conn, int $analystId): array
     return $out;
 }
 
-/** A pack's shares, with a display name for each target. Owner only. */
+/**
+ * A pack's shares, with a display name for each target. Owner only.
+ *
+ * @param int $packId  the report_packs id
+ */
 function rpListShares(PDO $conn, int $packId): array
 {
     $s = $conn->prepare(
@@ -188,6 +205,10 @@ function rpListShares(PDO $conn, int $packId): array
  * Each entry is validated against what exists; unknown targets are dropped, never
  * stored, so a share cannot point at an id that a later analyst or team would
  * inherit.
+ *
+ * @param int $packId  the report_packs id
+ * @param int $ownerId  the pack owner's analyst id - a share to them is dropped
+ * @param array $shares  the whole list from the share dialog (untrusted): each {type: analyst|team|department, id or value, can_edit}
  */
 function rpSaveShares(PDO $conn, int $packId, int $ownerId, array $shares): void
 {

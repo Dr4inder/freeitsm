@@ -6,7 +6,7 @@ Called by AssetsService after an asset's lease_start / lease_expiry change. On a
 function leaseAssetDatesEdited(PDO $conn, int $assetId): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 637.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 722.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 637.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 641 | `leaseAssetDatesEdited` | read [assets](/code/tables/assets.md) |  |
-| 648 | `leaseAssetDatesEdited` | **update** [lease_assets](/code/tables/lease_assets.md) (`start_date`, `end_date`, `updated_datetime`) |  |
+| 726 | `leaseAssetDatesEdited` | read [assets](/code/tables/assets.md) |  |
+| 733 | `leaseAssetDatesEdited` | **update** [lease_assets](/code/tables/lease_assets.md) (`start_date`, `end_date`, `updated_datetime`) |  |
 
 ## Calls
 

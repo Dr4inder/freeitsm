@@ -6,12 +6,12 @@ The active mailboxes a self-service user may raise a ticket through - their own 
 function selfServiceMailboxes(PDO $conn, int $userId): array
 ```
 
-Defined in [includes/self_service_mailboxes.php](/code/files/includes/self_service_mailboxes.php.md), line 34.
+Defined in [includes/self_service_mailboxes.php](/code/files/includes/self_service_mailboxes.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the signed-in self-service user (users.id); their company decides the list |
 
 **Returns:** array<int,array{id:int,name:string,target_mailbox:string,shared:bool}> keyed by mailbox id, the user's own company's first, then shared.
 
@@ -19,8 +19,8 @@ Defined in [includes/self_service_mailboxes.php](/code/files/includes/self_servi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 36 | `selfServiceMailboxes` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 39 | `selfServiceMailboxes` | read [users](/code/tables/users.md) |  |
+| 37 | `selfServiceMailboxes` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 40 | `selfServiceMailboxes` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

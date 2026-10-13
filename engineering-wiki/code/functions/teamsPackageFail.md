@@ -6,11 +6,11 @@ Answers {success: false, error} as JSON and stops - used instead of the zip down
 function teamsPackageFail(string $message): void
 ```
 
-Defined in [api/messaging/teams_package.php](/code/files/api/messaging/teams_package.php.md), line 23.
+Defined in [api/messaging/teams_package.php](/code/files/api/messaging/teams_package.php.md), line 25.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$message` | `string` |  |  |
+| `$message` | `string` |  | the error shown to the admin |
 
 **Returns:** `void`
 

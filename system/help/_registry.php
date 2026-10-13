@@ -534,6 +534,7 @@ function getHelpTopics() {
 /**
  * One topic by slug, or null. Slug comes from the page ($helpSlug) or the URL.
  *
+ * @param mixed $slug  the help page slug, e.g. 'sso-groups'; unknown slugs give null
  * @return array<string,mixed>|null
  */
 function getHelpTopic($slug) {
@@ -584,6 +585,8 @@ function helpCards($multiTenant = false) {
  * flattened so the caller can do a single substring test: title, description,
  * the area's own keyword synonyms, this page's standfirst, its section labels
  * and any extra search terms.
+ *
+ * @param array $card  one card from helpCards() (title, desc, keywords, sub, terms, sections)
  */
 function helpCardHaystack(array $card) {
     $parts = [
@@ -600,6 +603,7 @@ function helpCardHaystack(array $card) {
  * make visible. Shown as a quiet footnote on the landing page rather than
  * hidden, so a new area doesn't quietly ship undocumented.
  *
+ * @param mixed $multiTenant  true when a second company exists, so 'multitenant' areas count too
  * @return array<int,string> Area titles (translated).
  */
 function helpTopicsMissing($multiTenant = false) {

@@ -6,11 +6,11 @@ A card's SQL is read-only by construction, and this makes sure of it: one statem
 function featureBingoAssertReadOnly(string $sql): void
 ```
 
-Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md), line 207.
+Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md), line 215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sql` | `string` |  |  |
+| `$sql` | `string` |  | the full statement a card's check will run; throws if it is not a single SELECT |
 
 **Returns:** `void`
 

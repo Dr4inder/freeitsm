@@ -26,15 +26,15 @@ function resolveDirectoryRequester(
 ): array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 426.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 446.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channel` | `array` |  |  |
-| `$msg` | `array` |  |  |
-| `$from` | `string` |  |  |
-| `$displayName` | `string` |  |  |
+| `$channel` | `array` |  | the Teams or Mattermost messaging_channels row, decrypted |
+| `$msg` | `array` |  | the normalised message (Teams reads 'to' and 'sender_id') |
+| `$from` | `string` |  | the normalised sender id - the key for the channel's own contact |
+| `$displayName` | `string` |  | the name to use when the platform gives none |
 
 **Returns:** `array`
 
@@ -42,7 +42,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 455 | `resolveDirectoryRequester` | **update** [users](/code/tables/users.md) (`display_name`) |  |
+| 475 | `resolveDirectoryRequester` | **update** [users](/code/tables/users.md) (`display_name`) |  |
 
 ## Calls
 

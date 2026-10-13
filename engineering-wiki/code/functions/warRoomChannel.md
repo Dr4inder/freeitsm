@@ -6,12 +6,12 @@ One channel row, or null. Raw — callers must still check access.
 function warRoomChannel(PDO $conn, int $channelId): ?array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 210.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 217.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channelId` | `int` |  |  |
+| `$channelId` | `int` |  | the warroom_channels id |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 210
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 213 | `warRoomChannel` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
+| 220 | `warRoomChannel` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
 
 ## Called from
 

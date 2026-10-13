@@ -1,6 +1,6 @@
 # includes/back_link.php
 
-> PHP - 55 lines
+> PHP - 61 lines
 
 The "Back to ..." link (3.5.0, proposed in PR #174): System -> Branding can put a link back to your own site - an intranet, a community website the portal is reached from - at the top of the portal, the analyst screens, or both.
 
@@ -15,15 +15,15 @@ Nothing shows until both the label and the address are set.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [backLinkUrlValid()](/code/functions/backLinkUrlValid.md) | 18 | True when `$url` is a plain http(s) address - the only kind ever rendered. |
-| [backLinkSettings()](/code/functions/backLinkSettings.md) | 24 | The three settings, raw - for System -> Branding. |
-| [backLinkHtml()](/code/functions/backLinkHtml.md) | 41 | The link's HTML for a header ('portal' or 'analyst'), or '' when it is not set up, not meant for this side, or its address is not a plain http(s) one. |
+| [backLinkUrlValid()](/code/functions/backLinkUrlValid.md) | 22 | True when `$url` is a plain http(s) address - the only kind ever rendered. |
+| [backLinkSettings()](/code/functions/backLinkSettings.md) | 28 | The three settings, raw - for System -> Branding. |
+| [backLinkHtml()](/code/functions/backLinkHtml.md) | 47 | The link's HTML for a header ('portal' or 'analyst'), or '' when it is not set up, not meant for this side, or its address is not a plain http(s) one. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 28 | `backLinkSettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 32 | `backLinkSettings` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

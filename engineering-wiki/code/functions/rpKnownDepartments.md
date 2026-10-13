@@ -6,7 +6,7 @@ The departments analysts actually have, for the share picker.
 function rpKnownDepartments(PDO $conn): array
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 229.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 250.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 231 | `rpKnownDepartments` | read [analysts](/code/tables/analysts.md) |  |
+| 252 | `rpKnownDepartments` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

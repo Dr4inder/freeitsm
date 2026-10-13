@@ -23,17 +23,17 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md):123 | `awcSyncKind` | delete |  |  |
-| [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md):152 | `awcSyncKind` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
-| [includes/domains/calendar.php](/code/files/includes/domains/calendar.php.md):73 | `domainSyncCalendarKind` | delete |  |  |
-| [includes/domains/calendar.php](/code/files/includes/domains/calendar.php.md):85 | `domainSyncCalendarKind` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
-| [includes/leases.php](/code/files/includes/leases.php.md):757 | `leaseSyncCalendar` | delete |  |  |
-| [includes/leases.php](/code/files/includes/leases.php.md):770 | `leaseSyncCalendar` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
-| [includes/projects/calendar.php](/code/files/includes/projects/calendar.php.md):100 | `projectSyncCalendarKind` | delete |  |  |
-| [includes/projects/calendar.php](/code/files/includes/projects/calendar.php.md):105 | `projectSyncCalendarKind` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
-| [includes/services/calendar.php](/code/files/includes/services/calendar.php.md):57 | `CalendarService::saveEvent` | update | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `location`, `contract_id`, `updated_at` |  |
-| [includes/services/calendar.php](/code/files/includes/services/calendar.php.md):78 | `CalendarService::saveEvent` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `location`, `contract_id`, `created_by` |  |
-| [includes/services/calendar.php](/code/files/includes/services/calendar.php.md):96 | `CalendarService::deleteEvent` | delete |  |  |
+| [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md):132 | `awcSyncKind` | delete |  |  |
+| [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md):161 | `awcSyncKind` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
+| [includes/domains/calendar.php](/code/files/includes/domains/calendar.php.md):82 | `domainSyncCalendarKind` | delete |  |  |
+| [includes/domains/calendar.php](/code/files/includes/domains/calendar.php.md):94 | `domainSyncCalendarKind` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):845 | `leaseSyncCalendar` | delete |  |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):858 | `leaseSyncCalendar` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
+| [includes/projects/calendar.php](/code/files/includes/projects/calendar.php.md):108 | `projectSyncCalendarKind` | delete |  |  |
+| [includes/projects/calendar.php](/code/files/includes/projects/calendar.php.md):113 | `projectSyncCalendarKind` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
+| [includes/services/calendar.php](/code/files/includes/services/calendar.php.md):61 | `CalendarService::saveEvent` | update | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `location`, `contract_id`, `updated_at` |  |
+| [includes/services/calendar.php](/code/files/includes/services/calendar.php.md):82 | `CalendarService::saveEvent` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `location`, `contract_id`, `created_by` |  |
+| [includes/services/calendar.php](/code/files/includes/services/calendar.php.md):104 | `CalendarService::deleteEvent` | delete |  |  |
 | [includes/software_licence_calendar.php](/code/files/includes/software_licence_calendar.php.md):60 | `syncSoftwareLicenceCalendar` | delete |  |  |
 | [includes/software_licence_calendar.php](/code/files/includes/software_licence_calendar.php.md):84 | `syncSoftwareLicenceCalendar` | insert | `title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source` |  |
 
@@ -41,11 +41,11 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/calendar/feed.php](/code/files/api/calendar/feed.php.md) | L51 |  |
+| [api/calendar/feed.php](/code/files/api/calendar/feed.php.md) | L54 |  |
 | [api/calendar/get_event.php](/code/files/api/calendar/get_event.php.md) | L27 |  |
 | [api/calendar/get_events.php](/code/files/api/calendar/get_events.php.md) | L34 |  |
-| [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | apiCalendarEventSelect L68, apiCalendarEventsList L171, apiCalendarCategoriesList L225 |  |
-| [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md) | awcAdoptExistingCategory L247 |  |
-| [includes/services/calendar.php](/code/files/includes/services/calendar.php.md) | CalendarService::deleteCategory L142, CalendarService::loadEventRow L165 |  |
-| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L396, getWatchtowerData L406 |  |
+| [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md) | apiCalendarEventSelect L71, apiCalendarEventsList L180, apiCalendarCategoriesList L234 |  |
+| [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md) | awcAdoptExistingCategory L262 |  |
+| [includes/services/calendar.php](/code/files/includes/services/calendar.php.md) | CalendarService::deleteCategory L158, CalendarService::loadEventRow L185 |  |
+| [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L399, getWatchtowerData L409 |  |
 

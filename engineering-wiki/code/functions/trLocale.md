@@ -6,7 +6,7 @@ The locale for <html lang="...">, or 'en' when i18n did not load.
 function trLocale(): string
 ```
 
-Defined in [includes/i18n_guarded.php](/code/files/includes/i18n_guarded.php.md), line 93.
+Defined in [includes/i18n_guarded.php](/code/files/includes/i18n_guarded.php.md), line 105.
 
 **Returns:** `string`
 

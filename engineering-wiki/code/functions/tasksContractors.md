@@ -6,12 +6,12 @@ The contractor on each of these tasks: [task_id => {supplier_id, supplier_name, 
 function tasksContractors(PDO $conn, array $taskIds): array
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 51.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 57.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$taskIds` | `array` |  |  |
+| `$taskIds` | `array` |  | task ids; non-numeric and zero values are dropped |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 57 | `tasksContractors` | read [tasks](/code/tables/tasks.md), read [suppliers](/code/tables/suppliers.md), read [contacts](/code/tables/contacts.md) |  |
+| 63 | `tasksContractors` | read [tasks](/code/tables/tasks.md), read [suppliers](/code/tables/suppliers.md), read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

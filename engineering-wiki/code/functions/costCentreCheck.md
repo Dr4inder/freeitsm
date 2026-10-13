@@ -6,14 +6,14 @@ Validate a cost centre being given to a record in company `$tenantId`. Returns t
 function costCentreCheck(PDO $conn, int $tenantId, $value, ?int $currentId = null): ?int
 ```
 
-Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 65.
+Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$value` |  |  |  |
-| `$currentId` | `?int` | `null` |  |
+| `$value` |  |  | the submitted cost centre id (untrusted); null, '', 0 or '0' mean none |
+| `$currentId` | `?int` | `null` | the cost_centres.id the record holds now; null for a new record or none |
 
 **Returns:** `?int`
 
@@ -21,7 +21,7 @@ Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_as
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 72 | `costCentreCheck` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 85 | `costCentreCheck` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## Called from
 

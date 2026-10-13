@@ -23,7 +23,7 @@ with "Unknown error".
 function oauthTokenErrorMessage($response, int $httpCode): string
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 419.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 434.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -15,12 +15,12 @@ the redirect belongs here rather than at each call site.
 function findTicketByNumber($conn, $ticketNumber)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 820.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 865.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ticketNumber` |  |  |  |
+| `$ticketNumber` |  |  | the ticket number taken from the subject tag; old and renumbered numbers are found too |
 
 ## Calls
 

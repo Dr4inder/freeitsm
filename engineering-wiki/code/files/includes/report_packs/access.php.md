@@ -1,6 +1,6 @@
 # includes/report_packs/access.php
 
-> PHP - 243 lines
+> PHP - 264 lines
 
 Report Packs: who may open, change and share a pack.
 
@@ -31,14 +31,14 @@ sharing a pack never shows anybody a figure they could not already see.
 | Function | Line | What it does |
 |---|--:|---|
 | [rpViewer()](/code/functions/rpViewer.md) | 31 | The teams and department this analyst counts as, for matching shares. |
-| [rpNormDept()](/code/functions/rpNormDept.md) | 57 | A department name normalised for matching: spaces collapsed, trimmed and lower case. |
-| [rpShareMatchSql()](/code/functions/rpShareMatchSql.md) | 66 | SQL that matches the shares reaching this viewer, for `report_pack_shares s`. |
-| [rpRole()](/code/functions/rpRole.md) | 85 | This viewer's role on a pack: 'owner', 'edit', 'view', or null (no access, or no such pack - the caller says "not found" for both, so ids cannot be probed). |
-| [rpRoleAtLeast()](/code/functions/rpRoleAtLeast.md) | 106 | True if `$role` is at least `$need` ('view' < 'edit' < 'owner'). |
-| [rpListPacks()](/code/functions/rpListPacks.md) | 115 | Every pack this analyst can open, newest change first, with their role on each. |
-| [rpListShares()](/code/functions/rpListShares.md) | 158 | A pack's shares, with a display name for each target. Owner only. |
-| [rpSaveShares()](/code/functions/rpSaveShares.md) | 192 | Replace a pack's shares with `$shares` (the whole list, as the dialog sends it). Each entry is validated against what exists; unknown targets are dropped, never stored, so a share cannot point at an id that a later analyst or team would inherit. |
-| [rpKnownDepartments()](/code/functions/rpKnownDepartments.md) | 229 | The departments analysts actually have, for the share picker. |
+| [rpNormDept()](/code/functions/rpNormDept.md) | 61 | A department name normalised for matching: spaces collapsed, trimmed and lower case. |
+| [rpShareMatchSql()](/code/functions/rpShareMatchSql.md) | 72 | SQL that matches the shares reaching this viewer, for `report_pack_shares s`. |
+| [rpRole()](/code/functions/rpRole.md) | 93 | This viewer's role on a pack: 'owner', 'edit', 'view', or null (no access, or no such pack - the caller says "not found" for both, so ids cannot be probed). |
+| [rpRoleAtLeast()](/code/functions/rpRoleAtLeast.md) | 119 | True if `$role` is at least `$need` ('view' < 'edit' < 'owner'). |
+| [rpListPacks()](/code/functions/rpListPacks.md) | 128 | Every pack this analyst can open, newest change first, with their role on each. |
+| [rpListShares()](/code/functions/rpListShares.md) | 175 | A pack's shares, with a display name for each target. Owner only. |
+| [rpSaveShares()](/code/functions/rpSaveShares.md) | 213 | Replace a pack's shares with `$shares` (the whole list, as the dialog sends it). Each entry is validated against what exists; unknown targets are dropped, never stored, so a share cannot point at an id that a later analyst or team would inherit. |
+| [rpKnownDepartments()](/code/functions/rpKnownDepartments.md) | 250 | The departments analysts actually have, for the share picker. |
 
 ## Database
 
@@ -46,13 +46,13 @@ sharing a pack never shows anybody a figure they could not already see.
 |--:|---|---|---|
 | 38 | `rpViewer` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
 | 43 | `rpViewer` | read [analysts](/code/tables/analysts.md) |  |
-| 87 | `rpRole` | read [report_packs](/code/tables/report_packs.md) |  |
-| 98 | `rpRole` | read [report_pack_shares](/code/tables/report_pack_shares.md) |  |
-| 121 | `rpListPacks` | read [report_pack_shares](/code/tables/report_pack_shares.md), read [report_packs](/code/tables/report_packs.md), read [analysts](/code/tables/analysts.md) |  |
-| 161 | `rpListShares` | read [report_pack_shares](/code/tables/report_pack_shares.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
-| 216 | `rpSaveShares` | **delete** [report_pack_shares](/code/tables/report_pack_shares.md) |  |
-| 217 | `rpSaveShares` | **insert** [report_pack_shares](/code/tables/report_pack_shares.md) (`pack_id`, `target_type`, `target_id`, `target_value`, `can_edit`) |  |
-| 231 | `rpKnownDepartments` | read [analysts](/code/tables/analysts.md) |  |
+| 95 | `rpRole` | read [report_packs](/code/tables/report_packs.md) |  |
+| 106 | `rpRole` | read [report_pack_shares](/code/tables/report_pack_shares.md) |  |
+| 134 | `rpListPacks` | read [report_pack_shares](/code/tables/report_pack_shares.md), read [report_packs](/code/tables/report_packs.md), read [analysts](/code/tables/analysts.md) |  |
+| 178 | `rpListShares` | read [report_pack_shares](/code/tables/report_pack_shares.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
+| 237 | `rpSaveShares` | **delete** [report_pack_shares](/code/tables/report_pack_shares.md) |  |
+| 238 | `rpSaveShares` | **insert** [report_pack_shares](/code/tables/report_pack_shares.md) (`pack_id`, `target_type`, `target_id`, `target_value`, `can_edit`) |  |
+| 252 | `rpKnownDepartments` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

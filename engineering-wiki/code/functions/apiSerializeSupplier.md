@@ -6,11 +6,11 @@ Shapes a supplier row for the API - legal, trading and display name, registratio
 function apiSerializeSupplier(array $r): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 165.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 173.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the suppliers row as `apiSupplierSelect()` loads it, with type and status names and the counts |
 
 **Returns:** `array`
 

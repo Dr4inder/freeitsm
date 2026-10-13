@@ -21,15 +21,15 @@ function findOpenChannelTicket(
 ): ?int
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 284.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 293.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$from` | `string` |  |  |
-| `$channelType` | `string` |  |  |
-| `$replyAddress` | `string` | `''` |  |
-| `$channelId` | `?int` | `null` |  |
+| `$from` | `string` |  | the normalised sender id (phone number, chat id or platform user id) |
+| `$channelType` | `string` |  | the channel type, e.g. 'whatsapp', 'slack', 'telegram', 'teams', 'mattermost' |
+| `$replyAddress` | `string` | `''` | the Slack thread address "<channel>:<threadTs>"; only read for Slack, '' otherwise |
+| `$channelId` | `?int` | `null` | the messaging_channels id; Telegram, Teams and Mattermost only match within it |
 
 **Returns:** `?int`
 
@@ -37,7 +37,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 299 | `findOpenChannelTicket` | read [tickets](/code/tables/tickets.md), read [emails](/code/tables/emails.md) |  |
+| 308 | `findOpenChannelTicket` | read [tickets](/code/tables/tickets.md), read [emails](/code/tables/emails.md) |  |
 
 ## Called from
 
@@ -46,5 +46,5 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 ## Traps
 
 > [!WARNING]
-> **Line 293, in `findOpenChannelTicket`:** a new channel type whose sender id is not unique per channel must be added here. Mattermost (PR #166) is one: a user id is the same in every configuration on one server, so two companies' support channels would share a person's thread - another company's ticket - without this.
+> **Line 302, in `findOpenChannelTicket`:** a new channel type whose sender id is not unique per channel must be added here. Mattermost (PR #166) is one: a user id is the same in every configuration on one server, so two companies' support channels would share a person's thread - another company's ticket - without this.
 

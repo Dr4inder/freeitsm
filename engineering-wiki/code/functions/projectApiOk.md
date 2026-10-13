@@ -6,11 +6,11 @@ Sends a success JSON reply ({success: true} plus `$data`) and ends the request.
 function projectApiOk(array $data = []): void
 ```
 
-Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 43.
+Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$data` | `array` | `[]` |  |
+| `$data` | `array` | `[]` | extra keys to send beside success: true |
 
 **Returns:** `void`
 

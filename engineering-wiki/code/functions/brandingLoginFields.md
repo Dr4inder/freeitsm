@@ -18,11 +18,11 @@ Types:
 function brandingLoginFields(string $scope = 'login'): array
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 148.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 158.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$scope` | `string` | `'login'` |  |
+| `$scope` | `string` | `'login'` | which screen - login, portal or home; anything else is treated as login |
 
 **Returns:** `array`
 

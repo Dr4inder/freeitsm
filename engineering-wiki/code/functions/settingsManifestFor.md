@@ -6,11 +6,11 @@ The manifest for one module, or null.
 function settingsManifestFor(string $module): ?array
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 329.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 333.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$module` | `string` |  |  |
+| `$module` | `string` |  | a Layer 1 module slug, e.g. 'assets', as named in its settings/manifest.php |
 
 **Returns:** `?array`
 

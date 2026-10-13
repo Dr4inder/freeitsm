@@ -6,7 +6,7 @@ Does the given analyst's sign-in provider lock their My details fields? Safe bef
 function ssoAnalystProfileLocked(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 90.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 97.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 93 | `ssoAnalystProfileLocked` | read [analysts](/code/tables/analysts.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 100 | `ssoAnalystProfileLocked` | read [analysts](/code/tables/analysts.md), read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Calls
 

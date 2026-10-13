@@ -6,11 +6,11 @@ The design a new pack starts from: a header like Enrique's, a footer, one headin
 function rpDefaultDesign(string $name): array
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 45.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
+| `$name` | `string` |  | the pack's name, shown in the starter header |
 
 **Returns:** `array`
 

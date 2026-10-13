@@ -6,7 +6,7 @@ Notes — append-only journal
 function apiProblemNotesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 310.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 316.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 313 | `apiProblemNotesList` | read [problem_notes](/code/tables/problem_notes.md), read [analysts](/code/tables/analysts.md) |  |
+| 319 | `apiProblemNotesList` | read [problem_notes](/code/tables/problem_notes.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

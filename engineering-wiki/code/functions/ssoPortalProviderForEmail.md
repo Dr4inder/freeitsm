@@ -9,12 +9,12 @@ Safe before Database Verification (answers null).
 function ssoPortalProviderForEmail(PDO $conn, string $email): ?array
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 160.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 171.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$email` | `string` |  |  |
+| `$email` | `string` |  | the address typed on the portal sign-in page - untrusted; only its domain is used |
 
 **Returns:** `?array`
 
@@ -22,7 +22,7 @@ Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 168 | `ssoPortalProviderForEmail` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 179 | `ssoPortalProviderForEmail` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Calls
 

@@ -8,12 +8,12 @@ If `enabled` is false, the other fields are best-effort / informational only.
 function sla_get_state(PDO $conn, int $ticket_id): array
 ```
 
-Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 36.
+Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 38.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ticket_id` | `int` |  |  |
+| `$ticket_id` | `int` |  | the ticket (tickets.id) to work out |
 
 **Returns:** `array`
 
@@ -21,12 +21,12 @@ Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 36.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 47 | `sla_get_state` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 77 | `sla_get_state` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 95 | `sla_get_state` | read [sla_calendars](/code/tables/sla_calendars.md) |  |
-| 113 | `sla_get_state` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 116 | `sla_get_state` | read [ticket_audit](/code/tables/ticket_audit.md) |  |
-| 125 | `sla_get_state` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 49 | `sla_get_state` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 79 | `sla_get_state` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 97 | `sla_get_state` | read [sla_calendars](/code/tables/sla_calendars.md) |  |
+| 115 | `sla_get_state` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 118 | `sla_get_state` | read [ticket_audit](/code/tables/ticket_audit.md) |  |
+| 127 | `sla_get_state` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Calls
 

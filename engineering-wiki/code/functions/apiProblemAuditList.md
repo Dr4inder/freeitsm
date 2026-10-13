@@ -6,7 +6,7 @@ GET /problems/{id}/audit
 function apiProblemAuditList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 343.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 349.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 346 | `apiProblemAuditList` | read [problem_audit](/code/tables/problem_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 352 | `apiProblemAuditList` | read [problem_audit](/code/tables/problem_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

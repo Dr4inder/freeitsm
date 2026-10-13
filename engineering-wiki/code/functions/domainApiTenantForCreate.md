@@ -6,13 +6,13 @@ The company a NEW record belongs to: the one the request names (checked against 
 function domainApiTenantForCreate(PDO $conn, int $analystId, $requested): int
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 74.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$requested` |  |  |  |
+| `$requested` |  |  | the company_id from the request body (untrusted); null, '' or 0 means the active company |
 
 **Returns:** `int`
 

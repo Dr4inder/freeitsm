@@ -6,7 +6,7 @@ May this analyst see every members-only project? (Manage Projects; admins.)
 function projectSeesAllPrivate(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 57.
+Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

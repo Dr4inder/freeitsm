@@ -6,7 +6,7 @@ Bootstrap i18n and the viewer's timezone/date format, for labels and dates.
 function rpInitLocale(PDO $conn): void
 ```
 
-Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 39.
+Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 49.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

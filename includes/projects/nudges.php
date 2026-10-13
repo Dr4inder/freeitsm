@@ -164,7 +164,11 @@ function projectAlertsStalled(PDO $conn, ?int $projectId = null): int
     return $fired;
 }
 
-/** Project rows shaped for projectEventPayload(), by id. */
+/**
+ * Project rows shaped for projectEventPayload(), by id.
+ *
+ * @param array $ids  the project ids to load; non-numbers and 0 are dropped
+ */
 function projectNudgeProjects(PDO $conn, array $ids): array
 {
     $ids = array_values(array_filter(array_map('intval', $ids)));
@@ -178,7 +182,12 @@ function projectNudgeProjects(PDO $conn, array $ids): array
     return $out;
 }
 
-/** Everybody who may decide a change request on this project - the setting's rule, applied to each active analyst. */
+/**
+ * Everybody who may decide a change request on this project - the setting's rule, applied to each active analyst.
+ *
+ * @param array $project  the projects row the change request belongs to
+ * @param ?int $raisedBy  the analyst who raised it; null when unknown
+ */
 function projectNudgeDeciders(PDO $conn, array $project, ?int $raisedBy): array
 {
     $out = [];

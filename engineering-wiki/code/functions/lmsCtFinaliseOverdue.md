@@ -6,7 +6,7 @@ Close every sitting whose clock has run out. Cheap; called whenever results are 
 function lmsCtFinaliseOverdue(PDO $conn): int
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 350.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 417.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 352 | `lmsCtFinaliseOverdue` | read [lms_ct_sittings](/code/tables/lms_ct_sittings.md) |  |
+| 419 | `lmsCtFinaliseOverdue` | read [lms_ct_sittings](/code/tables/lms_ct_sittings.md) |  |
 
 ## Calls
 

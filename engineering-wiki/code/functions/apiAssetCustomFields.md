@@ -12,13 +12,13 @@ line to change.
 function apiAssetCustomFields(PDO $conn, int $assetId, ?int $assetTypeId): array
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 179.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 187.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$assetTypeId` | `?int` |  |  |
+| `$assetTypeId` | `?int` |  | the asset's type, which decides the custom fields it carries; null for no type |
 
 **Returns:** `array`
 

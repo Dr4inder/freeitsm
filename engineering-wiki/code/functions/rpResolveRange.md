@@ -6,12 +6,12 @@ Resolve a pack's range into local dates (for display) and UTC bounds (for SQL). 
 function rpResolveRange(array $range, ?string $tz = null): array
 ```
 
-Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 33.
+Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$range` | `array` |  |  |
-| `$tz` | `?string` | `null` |  |
+| `$range` | `array` |  | the pack's range as saved: preset (an RP_RANGE_PRESETS value) and, for 'custom', from and to as 'Y-m-d' |
+| `$tz` | `?string` | `null` | the timezone to read the range in; null means the viewer's own (Tz::current()) |
 
 **Returns:** array{preset:string,from_date:string,to_date:string,from_utc:string,to_utc:string,days:int,tz:string}
 

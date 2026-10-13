@@ -419,6 +419,8 @@ function apiV1PermissionCatalog(): array {
  * Validate + normalise a raw permissions structure (from the admin UI or a
  * stored JSON blob) against the catalog. Unknown resources/actions are
  * dropped; the result is always ['resource' => ['action', ...]].
+ *
+ * @param mixed $raw  untrusted permissions map, ['resource' => ['action', ...]]; anything not an array gives []
  */
 function apiV1NormalisePermissions($raw): array {
     if (!is_array($raw)) {

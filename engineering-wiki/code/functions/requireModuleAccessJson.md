@@ -6,11 +6,11 @@ Hard gate for a module's JSON write APIs: refuse a denied analyst with a 403. Au
 function requireModuleAccessJson(string $moduleKey, ?PDO $conn = null): void
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 357.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 367.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$moduleKey` | `string` |  |  |
+| `$moduleKey` | `string` |  | the module the endpoint belongs to, e.g. 'assets'; 'system' means administrators only |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

@@ -6,7 +6,7 @@ PATCH /analysts/{id}/access
 function apiAnalystsAccessUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), line 91.
+Defined in [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

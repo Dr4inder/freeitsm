@@ -6,7 +6,7 @@ Is AI set up for Projects?
 function projectAiReady(PDO $conn): bool
 ```
 
-Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 356.
+Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 363.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

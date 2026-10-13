@@ -6,13 +6,13 @@ Resolve a filter type + value into a SQL WHERE fragment + bound params. All filt
 function buildFilter(string $filter, string $value, ?string &$friendly): array
 ```
 
-Defined in [api/intune/dashboard_drilldown.php](/code/files/api/intune/dashboard_drilldown.php.md), line 51.
+Defined in [api/intune/dashboard_drilldown.php](/code/files/api/intune/dashboard_drilldown.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filter` | `string` |  |  |
-| `$value` | `string` |  |  |
-| `$friendly` | `?string` |  |  |
+| `$filter` | `string` |  | the drill-down type from the request, e.g. 'compliance', 'os', 'last_sync', 'kpi_stale' |
+| `$value` | `string` |  | the clicked value for that type (untrusted - always bound, never put in the SQL) |
+| `$friendly` | `?string` |  | set by reference to a human label for the filter, shown above the device list |
 
 **Returns:** `array`
 

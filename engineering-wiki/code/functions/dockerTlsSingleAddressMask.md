@@ -6,11 +6,11 @@ The netmask that pins a name constraint to exactly one address.
 function dockerTlsSingleAddressMask(string $ip): string
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 230.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 254.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ip` | `string` |  |  |
+| `$ip` | `string` |  | a valid IPv4 or IPv6 address - decides which kind of mask comes back |
 
 **Returns:** `string`
 

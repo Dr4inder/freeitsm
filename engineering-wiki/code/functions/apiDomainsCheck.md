@@ -6,7 +6,7 @@ POST /domains/{id}/check — run the health and security checks now
 function apiDomainsCheck(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 328.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 334.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

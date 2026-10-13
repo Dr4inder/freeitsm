@@ -1,6 +1,6 @@
 # includes/cmdb_impact.php
 
-> PHP - 352 lines
+> PHP - 363 lines
 
 CMDB impact analysis — the ONE implementation of "what breaks if this breaks".
 
@@ -65,10 +65,10 @@ company's, so it is resolved before comparing.
 |---|--:|---|
 | [cmdbImpactDirections()](/code/functions/cmdbImpactDirections.md) | 74 | The values impact_direction is allowed to hold. |
 | [cmdbHasImpactEdgesConfigured()](/code/functions/cmdbHasImpactEdgesConfigured.md) | 87 | Has anyone actually configured an edge that carries impact? |
-| [cmdbImpactTenantScope()](/code/functions/cmdbImpactTenantScope.md) | 105 | Resolve the company a walk is allowed to stay inside, or null when the install is single-company and there is nothing to constrain. |
-| [cmdbDirectImpact()](/code/functions/cmdbDirectImpact.md) | 122 | The three one-hop buckets. Shape is a published API contract — add keys here, never rename or remove them. |
-| [cmdbBlastRadius()](/code/functions/cmdbBlastRadius.md) | 202 | Transitive blast radius: everything reachable from `$rootId` along impact-bearing edges. Breadth-first, so the depth recorded against each object is the SHORTEST number of hops from the root — which is what the panel groups by, and what makes "2 hops away" meaningful rather than an artefact of traversal order. |
-| [cmdbImpactEdgesFrom()](/code/functions/cmdbImpactEdgesFrom.md) | 251 | One hop out from every id in `$fromIds`, across all three edge kinds. |
+| [cmdbImpactTenantScope()](/code/functions/cmdbImpactTenantScope.md) | 107 | Resolve the company a walk is allowed to stay inside, or null when the install is single-company and there is nothing to constrain. |
+| [cmdbDirectImpact()](/code/functions/cmdbDirectImpact.md) | 126 | The three one-hop buckets. Shape is a published API contract — add keys here, never rename or remove them. |
+| [cmdbBlastRadius()](/code/functions/cmdbBlastRadius.md) | 210 | Transitive blast radius: everything reachable from `$rootId` along impact-bearing edges. Breadth-first, so the depth recorded against each object is the SHORTEST number of hops from the root — which is what the panel groups by, and what makes "2 hops away" meaningful rather than an artefact of traversal order. |
+| [cmdbImpactEdgesFrom()](/code/functions/cmdbImpactEdgesFrom.md) | 262 | One hop out from every id in `$fromIds`, across all three edge kinds. |
 
 ## Database
 
@@ -76,15 +76,15 @@ company's, so it is resolved before comparing.
 |--:|---|---|---|
 | 89 | `cmdbHasImpactEdgesConfigured` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
 | 95 | `cmdbHasImpactEdgesConfigured` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
-| 109 | `cmdbImpactTenantScope` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 129 | `cmdbDirectImpact` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 153 | `cmdbDirectImpact` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
-| 169 | `cmdbDirectImpact` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
-| 275 | `cmdbImpactEdgesFrom` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 286 | `cmdbImpactEdgesFrom` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
-| 302 | `cmdbImpactEdgesFrom` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
-| 317 | `cmdbImpactEdgesFrom` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 337 | `cmdbImpactEdgesFrom` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 111 | `cmdbImpactTenantScope` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 133 | `cmdbDirectImpact` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 157 | `cmdbDirectImpact` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 173 | `cmdbDirectImpact` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
+| 286 | `cmdbImpactEdgesFrom` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 297 | `cmdbImpactEdgesFrom` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
+| 313 | `cmdbImpactEdgesFrom` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
+| 328 | `cmdbImpactEdgesFrom` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 348 | `cmdbImpactEdgesFrom` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ## How it hangs together
 

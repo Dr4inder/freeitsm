@@ -6,11 +6,11 @@ Shapes a licence row for the API, adding renewal_status - overdue, due_soon (ins
 function apiSerializeLicence(array $r): array
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 235.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 245.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the software_licences row as `apiSoftwareLicenceSelect()` loads it, with app name, publisher, installs and creator |
 
 **Returns:** `array`
 

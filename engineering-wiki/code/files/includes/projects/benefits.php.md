@@ -1,6 +1,6 @@
 # includes/projects/benefits.php
 
-> PHP - 184 lines
+> PHP - 204 lines
 
 Projects - benefits realisation (3.3.0): what a project is meant to improve, measured from a baseline towards a target, and reviewed on a date.
 
@@ -31,12 +31,12 @@ review on by the benefit's review_months; 0 / NULL means no repeat.
 | Function | Line | What it does |
 |---|--:|---|
 | [projectBenefitsReady()](/code/functions/projectBenefitsReady.md) | 34 | Has Database Verification created the tables? |
-| [projectBenefitState()](/code/functions/projectBenefitState.md) | 45 | The worked-out state and progress of one benefit, given its latest value. |
-| [projectBenefits()](/code/functions/projectBenefits.md) | 69 | One project's benefits with their measurements, state and progress - for its Benefits tab. |
-| [projectBenefitStats()](/code/functions/projectBenefitStats.md) | 108 | Per project: benefits open and reviews due - for the Overview, the card and the assistant. |
-| [projectBenefitNextReview()](/code/functions/projectBenefitNextReview.md) | 122 | The next review after `$from`, `$months` on; null when it does not repeat. |
-| [projectBenefitNotifyIds()](/code/functions/projectBenefitNotifyIds.md) | 131 | Who is reminded about a benefit's review (project_benefit_notify). |
-| [projectAlertsBenefits()](/code/functions/projectAlertsBenefits.md) | 142 | Reviews that have fallen due -> project.benefit_review_due, once per benefit per review date. Every project that is not cancelled: benefits outlive it. Called from `projectAlertsScan()`; quiet before Database Verification. |
+| [projectBenefitState()](/code/functions/projectBenefitState.md) | 51 | The worked-out state and progress of one benefit, given its latest value. |
+| [projectBenefits()](/code/functions/projectBenefits.md) | 75 | One project's benefits with their measurements, state and progress - for its Benefits tab. |
+| [projectBenefitStats()](/code/functions/projectBenefitStats.md) | 118 | Per project: benefits open and reviews due - for the Overview, the card and the assistant. |
+| [projectBenefitNextReview()](/code/functions/projectBenefitNextReview.md) | 137 | The next review after `$from`, `$months` on; null when it does not repeat. |
+| [projectBenefitNotifyIds()](/code/functions/projectBenefitNotifyIds.md) | 151 | Who is reminded about a benefit's review (project_benefit_notify). |
+| [projectAlertsBenefits()](/code/functions/projectAlertsBenefits.md) | 162 | Reviews that have fallen due -> project.benefit_review_due, once per benefit per review date. Every project that is not cancelled: benefits outlive it. Called from `projectAlertsScan()`; quiet before Database Verification. |
 
 ## Database
 
@@ -44,11 +44,11 @@ review on by the benefit's review_months; 0 / NULL means no repeat.
 |--:|---|---|---|
 | 38 | `projectBenefitsReady` | read [project_benefits](/code/tables/project_benefits.md) |  |
 | 38 | `projectBenefitsReady` | read [project_benefit_measures](/code/tables/project_benefit_measures.md) |  |
-| 72 | `projectBenefits` | read [project_benefits](/code/tables/project_benefits.md), read [analysts](/code/tables/analysts.md) |  |
-| 79 | `projectBenefits` | read [project_benefit_measures](/code/tables/project_benefit_measures.md), read [analysts](/code/tables/analysts.md) |  |
-| 113 | `projectBenefitStats` | read [project_benefits](/code/tables/project_benefits.md) |  |
-| 146 | `projectAlertsBenefits` | read [project_benefits](/code/tables/project_benefits.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 159 | `projectAlertsBenefits` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 78 | `projectBenefits` | read [project_benefits](/code/tables/project_benefits.md), read [analysts](/code/tables/analysts.md) |  |
+| 85 | `projectBenefits` | read [project_benefit_measures](/code/tables/project_benefit_measures.md), read [analysts](/code/tables/analysts.md) |  |
+| 123 | `projectBenefitStats` | read [project_benefits](/code/tables/project_benefits.md) |  |
+| 166 | `projectAlertsBenefits` | read [project_benefits](/code/tables/project_benefits.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 179 | `projectAlertsBenefits` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
 
 ## How it hangs together
 
@@ -61,5 +61,5 @@ review on by the benefit's review_months; 0 / NULL means no repeat.
 ## Traps
 
 > [!WARNING]
-> **Line 168, in `projectAlertsBenefits`:** a review falling due is nobody's action. This scan also runs inside somebody's request (afterChange), and the bell never tells you about your own action - so it is dispatched as the system, or the project manager who happened to close the project would never hear that a review is due.
+> **Line 188, in `projectAlertsBenefits`:** a review falling due is nobody's action. This scan also runs inside somebody's request (afterChange), and the bell never tells you about your own action - so it is dispatched as the system, or the project manager who happened to close the project would never hear that a review is due.
 

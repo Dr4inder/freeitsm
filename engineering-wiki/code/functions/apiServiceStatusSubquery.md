@@ -10,7 +10,7 @@ pasted into several statements whose own placeholders are positional.
 function apiServiceStatusSubquery(PDO $conn): string
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 48.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 52.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,7 +22,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 50 | `apiServiceStatusSubquery` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_incidents](/code/tables/status_incidents.md), read [service_impact_levels](/code/tables/service_impact_levels.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 54 | `apiServiceStatusSubquery` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_incidents](/code/tables/status_incidents.md), read [service_impact_levels](/code/tables/service_impact_levels.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
 
 ## Calls
 

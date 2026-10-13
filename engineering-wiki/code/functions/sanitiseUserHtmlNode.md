@@ -6,12 +6,12 @@ Walk a node's children, removing or unwrapping anything not allow-listed. Iterat
 function sanitiseUserHtmlNode(DOMDocument $doc, DOMNode $node): void
 ```
 
-Defined in [includes/html_sanitise.php](/code/files/includes/html_sanitise.php.md), line 101.
+Defined in [includes/html_sanitise.php](/code/files/includes/html_sanitise.php.md), line 104.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$doc` | `DOMDocument` |  |  |
-| `$node` | `DOMNode` |  |  |
+| `$doc` | `DOMDocument` |  | the document the user's HTML was loaded into |
+| `$node` | `DOMNode` |  | the node whose children are cleaned, in place and recursively |
 
 **Returns:** `void`
 

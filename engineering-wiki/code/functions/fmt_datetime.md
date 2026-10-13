@@ -6,11 +6,11 @@
 function fmt_datetime(?string $utc): string
 ```
 
-Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 436.
+Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 478.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$utc` | `?string` |  |  |
+| `$utc` | `?string` |  | a UTC datetime as stored; null or '' gives '', an unparseable value comes back as it is |
 
 **Returns:** `string`
 

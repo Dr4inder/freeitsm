@@ -11,7 +11,7 @@ guessing" would reinstate the bug through a settings screen.
 function mfaThrottleThreshold(PDO $conn): int
 ```
 
-Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 89.
+Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 95.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

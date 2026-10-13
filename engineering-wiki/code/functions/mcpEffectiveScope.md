@@ -13,12 +13,12 @@ authenticating, so every tool and helper below reads the narrowed value.
 function mcpEffectiveScope(PDO $conn, array $apiKey): ?array
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 154.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 156.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$apiKey` | `array` |  |  |
+| `$apiKey` | `array` |  | the authenticated api_keys row (analyst_id, company_scope) |
 
 **Returns:** `?array`
 

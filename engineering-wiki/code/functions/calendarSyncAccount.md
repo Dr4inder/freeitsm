@@ -6,11 +6,11 @@ An analyst's own calendar sign-in, decrypted: ['username' => …, 'password' => 
 function calendarSyncAccount(array $enrolment): array
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 248.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 281.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$enrolment` | `array` |  |  |
+| `$enrolment` | `array` |  | a calendar_enrolments row - its encrypted 'credentials' column is read |
 
 **Returns:** `array`
 

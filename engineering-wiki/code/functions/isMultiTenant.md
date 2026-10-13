@@ -6,7 +6,7 @@ Is multi-tenancy "awake"? True only once a second tenant exists. This is the mas
 function isMultiTenant(PDO $conn): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 123.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 125.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -12,12 +12,12 @@ Does nothing once an id is recorded, and nothing if there are no entries.
 function awcAdoptExistingCategory(PDO $conn, string $source): void
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 236.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 251.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$source` | `string` |  |  |
+| `$source` | `string` |  | the entry kind ('asset_warranty' or 'asset_lease') whose existing entries are checked |
 
 **Returns:** `void`
 
@@ -25,8 +25,8 @@ Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_war
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 241 | `awcAdoptExistingCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 247 | `awcAdoptExistingCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 256 | `awcAdoptExistingCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 262 | `awcAdoptExistingCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
 
 ## Calls
 

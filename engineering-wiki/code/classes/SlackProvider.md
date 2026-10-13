@@ -27,7 +27,7 @@
 
 ### verifyChallenge
 
-*public* - line 48
+*public* - line 50
 
 Slack's one-off endpoint check. It arrives as a POSTed JSON body of type url_verification, NOT a GET — so the base class's GET-shaped hook can't serve it. The webhook endpoint calls `verifyUrlChallenge()` instead; this stays null so nothing tries the Meta handshake on a Slack channel.
 
@@ -37,11 +37,11 @@ function verifyChallenge(array $get): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$get` | `array` |  |  |
+| `$get` | `array` |  | the request's query parameters (not used - Slack's handshake is a POST) |
 
 ### verifyUrlChallenge
 
-*public* - line 77
+*public* - line 81
 
 Slack's url_verification handshake: echo back the challenge.
 
@@ -72,11 +72,11 @@ function verifyUrlChallenge(string $rawBody): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawBody` | `string` |  |  |
+| `$rawBody` | `string` |  | the raw JSON request body; only a url_verification payload gives a challenge |
 
 ### hasSigningSecret
 
-*public* - line 91
+*public* - line 95
 
 Has this channel been given its signing secret yet? Drives the one-time exemption above — see `verifyUrlChallenge()`.
 
@@ -86,7 +86,7 @@ function hasSigningSecret(): bool
 
 ### verifyWebhook
 
-*public* - line 105
+*public* - line 114
 
 Slack request signing: HMAC-SHA256 of "v0:{timestamp}:{rawBody}" with the signing secret, compared against the X-Slack-Signature header.
 
@@ -101,14 +101,14 @@ function verifyWebhook(string $rawBody, array $headers, array $params, string $u
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawBody` | `string` |  |  |
-| `$headers` | `array` |  |  |
-| `$params` | `array` |  |  |
-| `$url` | `string` |  |  |
+| `$rawBody` | `string` |  | the raw request body, exactly as received - it is part of the signed string |
+| `$headers` | `array` |  | the request headers, lower-cased keys (x-slack-signature, x-slack-request-timestamp) |
+| `$params` | `array` |  | the parsed POST parameters (not used) |
+| `$url` | `string` |  | the public URL that was hit (not used) |
 
 ### parseInbound
 
-*public* - line 140
+*public* - line 152
 
 Parse an Events API callback into zero or more normalised messages.
 
@@ -127,12 +127,12 @@ function parseInbound(string $rawBody, array $params): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawBody` | `string` |  |  |
-| `$params` | `array` |  |  |
+| `$rawBody` | `string` |  | the raw JSON Events API body |
+| `$params` | `array` |  | the parsed POST parameters (not used) |
 
 ### sendMessage
 
-*public* - line 218
+*public* - line 233
 
 Post a reply. `$to` is the reply address parseInbound produced — "C08ABCDE:1719500000.123456" — so the reply lands in the same thread rather than as a new top-level message in the channel.
 
@@ -142,12 +142,12 @@ function sendMessage(string $to, string $body): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$to` | `string` |  |  |
-| `$body` | `string` |  |  |
+| `$to` | `string` |  | the reply address "<slackChannel>:<threadTs>" from `parseInbound()` |
+| `$body` | `string` |  | the reply text; HTML from the editor is flattened to text |
 
 ### testConnection
 
-*public* - line 242
+*public* - line 257
 
 Checks the bot token with auth.test and returns the workspace and bot name.
 
@@ -159,7 +159,7 @@ function testConnection(): string
 
 ### downloadMedia
 
-*public* - line 266
+*public* - line 283
 
 Download a file shared in Slack. url_private needs the bot token as a bearer header; without it Slack silently returns its sign-in HTML page with HTTP 200, which is why the content type is checked rather than trusted.
 
@@ -169,11 +169,11 @@ function downloadMedia(array $item): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$item` | `array` |  |  |
+| `$item` | `array` |  | one entry from `parseInbound()`'s 'media' list (url, content_type, filename) |
 
 ### botUserId
 
-*public* - line 305
+*public* - line 322
 
 The bot's own Slack user id, or '' if the token will not authenticate. Used as a harmless probe subject for the profile-lookup health check — a user that certainly exists and certainly is not somebody's real account.
 
@@ -183,7 +183,7 @@ function botUserId(): string
 
 ### grantedScopes
 
-*public* - line 327
+*public* - line 344
 
 The scopes this token was actually granted, lowercased.
 
@@ -203,7 +203,7 @@ function grantedScopes(): array
 
 ### channelMembership
 
-*public* - line 358
+*public* - line 376
 
 Is the app actually a member of this Slack channel?
 
@@ -223,13 +223,13 @@ function channelMembership(string $slackChannelId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$slackChannelId` | `string` |  |  |
+| `$slackChannelId` | `string` |  | the Slack channel id, e.g. 'C08ABCDE' |
 
 **Returns:** array ['in' => bool, 'error' => string]  error is '' when in.
 
 ### lookupUser
 
-*public* - line 373
+*public* - line 393
 
 Look up a Slack user. Returns ['name' => …, 'email' => …]; either may be ''. Never throws — identity is a nice-to-have and must not stop a ticket being raised. A missing email simply means the app has no users:read.email scope.
 
@@ -239,11 +239,11 @@ function lookupUser(string $slackUserId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$slackUserId` | `string` |  |  |
+| `$slackUserId` | `string` |  | the Slack user id, e.g. 'U012ABC' |
 
 ### splitAddress
 
-*private* - line 388
+*private* - line 412
 
 Split "C08ABCDE:1719500000.123456" into [channel, threadTs].
 
@@ -253,11 +253,11 @@ function splitAddress(string $addr): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$addr` | `string` |  |  |
+| `$addr` | `string` |  | the reply address "<slackChannel>:<threadTs>"; a missing part comes back as '' |
 
 ### call
 
-*private* - line 414
+*private* - line 441
 
 One Slack Web API call.
 
@@ -281,12 +281,12 @@ function call(string $method, array $args = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$method` | `string` |  |  |
-| `$args` | `array` | `[]` |  |
+| `$method` | `string` |  | the Slack Web API method, e.g. 'chat.postMessage' |
+| `$args` | `array` | `[]` | the method's arguments, sent form-encoded |
 
 ### explainError
 
-*private* - line 449
+*private* - line 478
 
 Slack's error strings are terse machine tokens. An analyst reading "not_in_channel" has no idea the fix is to invite the app to the channel, so the common ones are translated into the action that fixes them.
 
@@ -296,11 +296,11 @@ function explainError(string $err): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$err` | `string` |  |  |
+| `$err` | `string` |  | Slack's error token, e.g. 'not_in_channel' |
 
 ### httpRequestWithHeaders
 
-*private* - line 469
+*private* - line 501
 
 `httpRequest()` drops response headers, but Slack reports the token's granted scopes in X-OAuth-Scopes and that is the only way to warn about a missing one BEFORE it fails in use. Same cURL setup, including `sslApplyCurl()`.
 
@@ -310,12 +310,12 @@ function httpRequestWithHeaders(string $url, array $opts = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
-| `$opts` | `array` | `[]` |  |
+| `$url` | `string` |  | the full URL to call |
+| `$opts` | `array` | `[]` | method, headers and body, as for `httpRequest()` |
 
 ### toPlainText
 
-*private* - line 506
+*private* - line 540
 
 Slack text → plain text for the ticket body. Unwraps the link syntax (<https://x|label> and <@U123>) which would otherwise show as raw angle brackets, and decodes the three entities Slack escapes.
 
@@ -325,11 +325,11 @@ function toPlainText(string $text): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
+| `$text` | `string` |  | message text in Slack's own markup |
 
 ### toMrkdwn
 
-*private* - line 520
+*private* - line 558
 
 Plain text → Slack mrkdwn. Escapes the three characters Slack reserves.
 
@@ -339,5 +339,5 @@ function toMrkdwn(string $body): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `string` |  |  |
+| `$body` | `string` |  | the analyst's reply, plain text or editor HTML |
 

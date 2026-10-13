@@ -9,12 +9,12 @@ settings endpoint does) so the answer reflects what was just written.
 function domainSettings(PDO $conn, bool $fresh = false): array
 ```
 
-Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 132.
+Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$fresh` | `bool` | `false` |  |
+| `$fresh` | `bool` | `false` | true to re-read from the database instead of using this request's cached copy |
 
 **Returns:** array<string,string>
 
@@ -22,7 +22,7 @@ Defined in [includes/domains/settings.php](/code/files/includes/domains/settings
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 144 | `domainSettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 146 | `domainSettings` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

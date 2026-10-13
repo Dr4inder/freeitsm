@@ -6,11 +6,11 @@ Cryptographically-random URL-safe token.
 function oidcRandomToken(int $bytes = 32): string
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 51.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bytes` | `int` | `32` |  |
+| `$bytes` | `int` | `32` | how many random bytes to draw before encoding |
 
 **Returns:** `string`
 

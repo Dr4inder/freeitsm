@@ -35,5 +35,5 @@ The AI-written ticket summary, kept as a history — see freeitsm.sql for why a 
 |---|---|---|
 | [api/tickets/ai_read.php](/code/files/api/tickets/ai_read.php.md) | L103 |  |
 | [api/tickets/ai_summary.php](/code/files/api/tickets/ai_summary.php.md) | L89 |  |
-| [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | ticketAiLatestSummary L227 |  |
+| [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md) | ticketAiLatestSummary L235 |  |
 

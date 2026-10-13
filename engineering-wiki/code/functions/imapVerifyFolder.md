@@ -21,12 +21,12 @@ name is "INBOX.Support", and "Support" alone genuinely will not open.
 function imapVerifyFolder(array $mailbox, string $folderName): array
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 613.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 684.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` | `array` |  |  |
-| `$folderName` | `string` |  |  |
+| `$mailbox` | `array` |  | the target_mailboxes row, decrypted |
+| `$folderName` | `string` |  | the folder as typed in the mailbox settings |
 
 **Returns:** array{displayName:string, totalItemCount:int|null, unreadItemCount:int}
 

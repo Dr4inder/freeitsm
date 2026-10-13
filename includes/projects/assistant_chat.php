@@ -73,7 +73,11 @@ function projectChatReady(PDO $conn): bool
     return $ready;
 }
 
-/** The conversation this person has on this project (per the memory setting); created on first use when $create. */
+/**
+ * The conversation this person has on this project (per the memory setting); created on first use when $create.
+ *
+ * @param bool $create  true to create the thread when there is none yet; false returns null instead
+ */
 function projectChatThread(PDO $conn, int $projectId, int $analystId, bool $create): ?array
 {
     $shared = projectSetting($conn, 'project_assistant_memory') === 'project';
@@ -88,7 +92,11 @@ function projectChatThread(PDO $conn, int $projectId, int $analystId, bool $crea
     return projectChatThread($conn, $projectId, $analystId, false);
 }
 
-/** Every message of a thread, oldest first, shaped for the panel. */
+/**
+ * Every message of a thread, oldest first, shaped for the panel.
+ *
+ * @param int $threadId  the project_ai_threads id
+ */
 function projectChatMessages(PDO $conn, int $threadId): array
 {
     $st = $conn->prepare("SELECT m.id, m.role, m.kind, m.content, m.proposals, m.looked_at, m.created_datetime, a.full_name AS analyst_name
@@ -106,6 +114,8 @@ function projectChatMessages(PDO $conn, int $threadId): array
 /**
  * How far the project is set up - a checklist the prompt is built around, and the
  * panel's suggestion chips. stage: 'blank' (a name and little else), 'early', 'running'.
+ *
+ * @param array $project  the projects row - id, status, goal, summary and dates are read
  */
 function projectChatMaturity(PDO $conn, array $project): array
 {
@@ -142,7 +152,14 @@ function projectChatMaturity(PDO $conn, array $project): array
             'counts' => compact('tasks', 'dated', 'overdue', 'stages', 'members', 'risks', 'high', 'scope', 'ms', 'missed', 'crs')];
 }
 
-/** The standing instructions, the set-up checklist, the memory and the project, for one turn. */
+/**
+ * The standing instructions, the set-up checklist, the memory and the project, for one turn.
+ *
+ * @param array $project  the projects row the conversation is about
+ * @param array $maturity  the set-up checklist from projectChatMaturity()
+ * @param ?string $summary  the thread's memory (project_ai_threads.summary); null when nothing has been folded in yet
+ * @param bool $canChange  whether the analyst may change the project - decides whether propose_* tools are offered
+ */
 function projectChatSystem(PDO $conn, array $project, int $analystId, array $maturity, ?string $summary, bool $canChange): string
 {
     $me = $conn->prepare("SELECT full_name FROM analysts WHERE id = ?");
@@ -219,7 +236,13 @@ function projectChatTools(): array
     ];
 }
 
-/** Run a READ tool, as text. Never throws. */
+/**
+ * Run a READ tool, as text. Never throws.
+ *
+ * @param int $pid  the project id the read is limited to
+ * @param string $name  the read tool the model called, e.g. 'list_tasks'
+ * @param array $a  the tool's arguments from the model (untrusted), e.g. filter, open_only, search
+ */
 function projectChatRead(PDO $conn, int $pid, string $name, array $a): string
 {
     try {
@@ -278,7 +301,12 @@ function projectChatRead(PDO $conn, int $pid, string $name, array $a): string
     return 'Unknown tool.';
 }
 
-/** One line a person can read for a proposal (shown on the card). */
+/**
+ * One line a person can read for a proposal (shown on the card).
+ *
+ * @param string $type  the proposal type: the tool name without 'propose_', e.g. 'task' or 'raid'
+ * @param array $a  the proposal's arguments, plus the _label and _supplier names looked up for the card
+ */
 function projectChatDescribe(string $type, array $a): string
 {
     $d = fn($v) => $v ? (string)$v : '-';
@@ -312,6 +340,10 @@ function projectChatDescribe(string $type, array $a): string
  * empty conversation) or 'resume' (a catch-up after a while). Stores the turn and
  * returns the new messages. Throws RuntimeException for provider problems
  * ('not_configured' when AI is not set up).
+ *
+ * @param array $project  the projects row the conversation is about
+ * @param string $mode  'chat' (the person wrote $text), 'open' (a first greeting) or 'resume' (a catch-up)
+ * @param string $text  what the person wrote; only used in 'chat' mode, cut to PROJECT_CHAT_MAX_INPUT characters
  */
 function projectChatTurn(PDO $conn, ActorContext $ctx, array $project, string $mode, string $text = ''): array
 {
@@ -401,7 +433,11 @@ function projectChatTurn(PDO $conn, ActorContext $ctx, array $project, string $m
     return ['messages' => projectChatMessages($conn, (int)$thread['id']), 'maturity' => $maturity];
 }
 
-/** Open the panel: a greeting for an empty conversation, a catch-up after a while, or nothing. */
+/**
+ * Open the panel: a greeting for an empty conversation, a catch-up after a while, or nothing.
+ *
+ * @param array $project  the projects row the panel is open on
+ */
 function projectChatOpen(PDO $conn, ActorContext $ctx, array $project): array
 {
     $thread = projectChatThread($conn, (int)$project['id'], $ctx->actorId, false);
@@ -419,6 +455,9 @@ function projectChatOpen(PDO $conn, ActorContext $ctx, array $project): array
  * summary, everything but the latest PROJECT_CHAT_RECENT is folded into it - what
  * was decided, what the user told it about the project, what is still open. Quiet:
  * a failure leaves the conversation exactly as it was.
+ *
+ * @param int $threadId  the project_ai_threads id
+ * @param array $cfg  the Projects AI settings from aiSettingsLoad($conn, 'projects_ai')
  */
 function projectChatSummarise(PDO $conn, int $threadId, array $cfg): void
 {
@@ -455,6 +494,11 @@ function projectChatSummarise(PDO $conn, int $threadId, array $cfg): void
  * Apply proposals of one assistant message - the indexes the person ticked - through
  * the ordinary services, AS THEM. Stages before tasks, tasks before dependencies, so
  * a proposal can name a stage or task proposed alongside it. Returns each item's result.
+ *
+ * @param array $project  the projects row the message belongs to
+ * @param int $messageId  the project_ai_messages id holding the proposals
+ * @param array $indexes  positions in that message's proposals list; any not still pending are skipped
+ * @param bool $dismiss  true to mark them dismissed instead of applying them
  */
 function projectChatApply(PDO $conn, ActorContext $ctx, array $project, int $messageId, array $indexes, bool $dismiss = false): array
 {
@@ -487,7 +531,13 @@ function projectChatApply(PDO $conn, ActorContext $ctx, array $project, int $mes
     return $props;
 }
 
-/** One proposal, through the service a person would have used. */
+/**
+ * One proposal, through the service a person would have used.
+ *
+ * @param int $pid  the project id the change is made in
+ * @param string $type  the proposal type, e.g. 'stage', 'task', 'raid', 'member'
+ * @param array $a  the proposal's arguments as the model gave them (untrusted - the services validate)
+ */
 function projectChatApplyOne(PDO $conn, ActorContext $ctx, int $pid, string $type, array $a): void
 {
     $date = fn($k) => isset($a[$k]) && preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$a[$k]) ? (string)$a[$k] : null;
@@ -596,7 +646,11 @@ function projectChatApplyOne(PDO $conn, ActorContext $ctx, int $pid, string $typ
     throw new ServiceError('validation', 'invalid_field', 'Unknown kind of change.');
 }
 
-/** Start again: the conversation and its memory go. A shared one needs somebody who may change the project. */
+/**
+ * Start again: the conversation and its memory go. A shared one needs somebody who may change the project.
+ *
+ * @param array $project  the projects row whose conversation is cleared
+ */
 function projectChatClear(PDO $conn, ActorContext $ctx, array $project): void
 {
     $thread = projectChatThread($conn, (int)$project['id'], $ctx->actorId, false);

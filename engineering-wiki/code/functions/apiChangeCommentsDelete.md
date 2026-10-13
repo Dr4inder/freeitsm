@@ -6,7 +6,7 @@ DELETE /changes/{id}/comments/{commentId} - deletes a comment through ChangesSer
 function apiChangeCommentsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 403.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 413.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

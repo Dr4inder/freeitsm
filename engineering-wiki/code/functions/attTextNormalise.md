@@ -10,11 +10,11 @@ becomes "Pleasereboot" and is then unfindable by either.
 function attTextNormalise(string $raw): string
 ```
 
-Defined in [includes/search/extract.php](/code/files/includes/search/extract.php.md), line 107.
+Defined in [includes/search/extract.php](/code/files/includes/search/extract.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the text or XML read from the file |
 
 **Returns:** `string`
 

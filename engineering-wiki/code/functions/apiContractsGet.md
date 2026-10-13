@@ -6,7 +6,7 @@ GET /contracts/{id} - one contract.
 function apiContractsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 327.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 339.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

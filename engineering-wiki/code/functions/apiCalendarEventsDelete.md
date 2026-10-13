@@ -6,7 +6,7 @@ DELETE /calendar/events/{id}
 function apiCalendarEventsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 213.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 222.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,12 +6,12 @@ Reference lookups
 function apiContractLookupList(PDO $conn, string $table): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 565.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 581.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
+| `$table` | `string` |  | the lookup table to list (contract_statuses, payment_schedules ...) - fixed by the caller |
 
 **Returns:** `void`
 

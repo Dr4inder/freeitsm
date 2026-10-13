@@ -1,6 +1,6 @@
 # KnowledgeAclCache
 
-> Class in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 719
+> Class in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 770
 
 Per-request memo for the four things the access list needs to look up: the permission model, whether any rules exist at all, the rules themselves, and the folder tree. Read once per request rather than once per query — a page that lists articles and then fetches one would otherwise ask four times over.
 
@@ -20,7 +20,7 @@ a cache that will eventually answer with yesterday's permissions.
 
 ### get
 
-*public static* - line 728
+*public static* - line 780
 
 The cached value for `$key`, or null when nothing is cached.
 
@@ -30,7 +30,7 @@ function get(string $key)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the cache slot - 'mode', 'any', 'acl' or 'folders' |
 
 **Returns:** mixed|null null = not cached (distinct from a cached null)
 
@@ -38,7 +38,7 @@ function get(string $key)
 
 ### set
 
-*public static* - line 734
+*public static* - line 791
 
 Stores and returns the value, so callers can `return set(...)`.
 
@@ -48,14 +48,14 @@ function set(string $key, $value)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
-| `$value` |  |  |  |
+| `$key` | `string` |  | the cache slot - 'mode', 'any', 'acl' or 'folders' |
+| `$value` |  |  | the value to keep for the rest of the request |
 
 **Called from:** [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md)
 
 ### clear
 
-*public static* - line 741
+*public static* - line 798
 
 Empties the per-request cache.
 

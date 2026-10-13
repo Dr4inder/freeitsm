@@ -6,21 +6,21 @@ Build full email body with thread for sending to recipient Analyst's content + r
 function buildFullEmailBody($conn, $ticketId, $analystBody, $type)
 ```
 
-Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 656.
+Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 697.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ticketId` |  |  |  |
-| `$analystBody` |  |  |  |
-| `$type` |  |  |  |
+| `$ticketId` |  |  | the ticket whose emails make up the quoted thread |
+| `$analystBody` |  |  | the analyst's new HTML text, which goes above the marker |
+| `$type` |  |  | 'reply' or 'forward' - a forward gets a "Forwarded message" heading |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 658 | `buildFullEmailBody` | read [tickets](/code/tables/tickets.md) |  |
-| 664 | `buildFullEmailBody` | read [emails](/code/tables/emails.md) |  |
+| 699 | `buildFullEmailBody` | read [tickets](/code/tables/tickets.md) |  |
+| 705 | `buildFullEmailBody` | read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

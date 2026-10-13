@@ -6,13 +6,13 @@ Everything about one person this analyst may see, or null (unknown or out of rea
 function personDetail(PDO $conn, int $analystId, int $userId): ?array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 194.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 211.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the users id of the person |
 
 **Returns:** `?array`
 
@@ -20,9 +20,9 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 194.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 202 | `personDetail` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 228 | `personDetail` | read [users](/code/tables/users.md) |  |
-| 233 | `personDetail` | read [users](/code/tables/users.md) |  |
+| 219 | `personDetail` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 245 | `personDetail` | read [users](/code/tables/users.md) |  |
+| 250 | `personDetail` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

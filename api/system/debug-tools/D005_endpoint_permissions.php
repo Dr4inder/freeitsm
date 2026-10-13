@@ -46,6 +46,10 @@ $sections = [];
 /**
  * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
  * string or an array of lines.
+ *
+ * @param mixed $sections  the report so far, a list of section strings - appended to by reference
+ * @param mixed $title  the section heading, printed between === marks
+ * @param mixed $body  the section text - a string, or an array of lines
  */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
@@ -64,6 +68,8 @@ $apiRoot = $appRoot . DIRECTORY_SEPARATOR . 'api';
  * or they belong to the self-service portal, which authenticates its own way. Being
  * unguarded is the point, so they are excluded from the findings rather than shouted
  * about. Listed explicitly so the exclusion is a decision, not an accident.
+ *
+ * @param string $rel  the endpoint's path from the app root, with forward slashes, e.g. api/auth/login.php
  */
 function d005IsPublicByDesign(string $rel): bool {
     $publicPrefixes = [
@@ -88,6 +94,8 @@ function d005IsPublicByDesign(string $rel): bool {
  *
  * Add to this ONLY when the endpoint genuinely acts on the caller's own account. If you
  * are adding something because "it's probably fine", it isn't — guard it instead.
+ *
+ * @param string $rel  the endpoint's path from the app root, with forward slashes
  */
 function d005ByDesign(string $rel): ?string {
     $ok = [
@@ -102,7 +110,11 @@ function d005ByDesign(string $rel): ?string {
     return $ok[$rel] ?? null;
 }
 
-/** Does this endpoint change anything? Writes are what make a missing guard dangerous. */
+/**
+ * Does this endpoint change anything? Writes are what make a missing guard dangerous.
+ *
+ * @param string $src  the endpoint file's full PHP source
+ */
 function d005IsWriteShaped(string $src): bool {
     // SQL that mutates. Note CREATE TABLE / CREATE INDEX: leaving those out is not
     // academic — it is why this tool initially reported db_verify.php, which builds the
@@ -124,6 +136,9 @@ function d005IsWriteShaped(string $src): bool {
  *   - MFA endpoints authenticate through getMfaAuthContext(), not a bare $_SESSION read;
  *   - the browser extension's endpoint takes an Authorization API key;
  *   - the inbound messaging webhook is authenticated by the provider's own signature.
+ *
+ * @param string $src  the endpoint file's full PHP source
+ * @param string $rel  the endpoint's path from the app root, with forward slashes
  */
 function d005Classify(string $src, string $rel): array {
     if (strncmp($rel, 'api/v1/', 7) === 0) {

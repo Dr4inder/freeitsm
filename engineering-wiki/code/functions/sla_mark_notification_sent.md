@@ -12,15 +12,15 @@ function sla_mark_notification_sent(
 ): void
 ```
 
-Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 373.
+Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 402.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$targetType` | `string` |  |  |
-| `$trigger` | `string` |  |  |
-| `$recipients` | `array` |  |  |
+| `$targetType` | `string` |  | 'response' or 'resolution' |
+| `$trigger` | `string` |  | 'warning' or 'breach' |
+| `$recipients` | `array` |  | the addresses it went to, stored comma-separated |
 
 **Returns:** `void`
 
@@ -28,7 +28,7 @@ Defined in [includes/sla_notifications.php](/code/files/includes/sla_notificatio
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 374 | `sla_mark_notification_sent` | **insert** [sla_notifications_sent](/code/tables/sla_notifications_sent.md) (`ticket_id`, `target_type`, `trigger_type`, `recipients`) |  |
+| 403 | `sla_mark_notification_sent` | **insert** [sla_notifications_sent](/code/tables/sla_notifications_sent.md) (`ticket_id`, `target_type`, `trigger_type`, `recipients`) |  |
 
 ## Called from
 

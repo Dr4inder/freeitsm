@@ -75,6 +75,10 @@ try {
  * returns the reply text with the token counts.
  *
  * Throws with the provider's own error message (or the HTTP code) when the call fails.
+ *
+ * @param string $apiKey  the Anthropic API key to test, in plain text
+ * @param string $model  the model id to call
+ * @param bool $verifySsl  the "verify SSL" tick from the request - unused: sslApplyCurl() follows the global switch alone
  */
 function rfpTestAnthropic(string $apiKey, string $model, bool $verifySsl): array {
     $body = json_encode([
@@ -130,6 +134,10 @@ function rfpTestAnthropic(string $apiKey, string $model, bool $verifySsl): array
  * work, and returns the reply text with the token counts.
  *
  * Throws with the provider's own error message (or the HTTP code) when the call fails.
+ *
+ * @param string $apiKey  the OpenAI API key to test, in plain text
+ * @param string $model  the model id to call
+ * @param bool $verifySsl  the "verify SSL" tick from the request - unused: sslApplyCurl() follows the global switch alone
  */
 function rfpTestOpenAI(string $apiKey, string $model, bool $verifySsl): array {
     $body = json_encode([

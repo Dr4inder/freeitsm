@@ -136,12 +136,18 @@ try {
 /**
  * Whether a widget property is plotted over time ('created' or 'closed') rather than
  * counted by category.
+ *
+ * @param mixed $prop  the widget's aggregate_property, e.g. 'status', 'created', 'closed' or 'created_vs_closed'
  */
 function isTimeBased($prop) {
     return in_array($prop, ['created', 'closed']);
 }
 
-/** Whether a widget property is the two-series created-versus-closed chart. */
+/**
+ * Whether a widget property is the two-series created-versus-closed chart.
+ *
+ * @param mixed $prop  the widget's aggregate_property, e.g. 'status', 'created', 'closed' or 'created_vs_closed'
+ */
 function isCreatedVsClosed($prop) {
     return $prop === 'created_vs_closed';
 }
@@ -149,6 +155,8 @@ function isCreatedVsClosed($prop) {
 /**
  * The tickets date column a time-based property counts by - closed_datetime for
  * 'closed', created_datetime otherwise.
+ *
+ * @param mixed $prop  a time-based aggregate_property: 'created' or 'closed'
  */
 function getDateField($prop) {
     if ($prop === 'closed') return 'closed_datetime';
@@ -159,6 +167,8 @@ function getDateField($prop) {
  * Turns a widget's date range ('7d', '30d', 'this_month', '3m', '6m', '12m',
  * 'this_year') into a condition on the date column and its start date.
  *
+ * @param mixed $dateRange  the widget's date range: '7d', '30d', 'this_month', '3m', '6m', '12m', 'this_year' or 'all'
+ * @param mixed $dateField  the tickets date column: 'created_datetime' or 'closed_datetime'
  * @return array  [sql, param] - ['', null] for 'all', empty or an unknown range
  */
 function buildDateRangeWhere($dateRange, $dateField) {
@@ -184,6 +194,8 @@ function buildDateRangeWhere($dateRange, $dateField) {
 /**
  * Turns a widget's department filter into a t.department_id IN (...) condition with its
  * integer parameters - ['', []] when there is no filter.
+ *
+ * @param mixed $deptFilter  the widget's department ids, decoded from department_filter; null or empty for none
  */
 function buildDepartmentWhere($deptFilter) {
     if (empty($deptFilter) || !is_array($deptFilter)) {
@@ -193,7 +205,12 @@ function buildDepartmentWhere($deptFilter) {
     return ["t.department_id IN ({$placeholders})", array_map('intval', $deptFilter)];
 }
 
-/** The SQL expression that buckets a ticket date by day, month or year for GROUP BY. */
+/**
+ * The SQL expression that buckets a ticket date by day, month or year for GROUP BY.
+ *
+ * @param mixed $timeGrouping  the bucket size: 'day', 'month' or 'year'
+ * @param mixed $dateField  the tickets date column: 'created_datetime' or 'closed_datetime'
+ */
 function getDateExpr($timeGrouping, $dateField) {
     switch ($timeGrouping) {
         case 'day':   return "DATE(t.{$dateField})";
@@ -207,6 +224,9 @@ function getDateExpr($timeGrouping, $dateField) {
  * Every bucket key (day, month or year) from the start of the date range to today, so a
  * time chart shows empty periods as zero instead of leaving them out. An unknown range
  * means the last 12 months.
+ *
+ * @param mixed $dateRange  the widget's date range: '7d', '30d', 'this_month', '3m', '6m', '12m', 'this_year' or 'all'
+ * @param mixed $timeGrouping  the bucket size: 'day', 'month' or 'year'
  */
 function getTimeLabels($dateRange, $timeGrouping) {
     $now = new DateTime('now', new DateTimeZone('UTC'));
@@ -253,6 +273,9 @@ function getTimeLabels($dateRange, $timeGrouping) {
 /**
  * Turns a bucket key into the axis label in the analyst's date format - day and month
  * buckets are rendered without a time-zone shift, years as they are.
+ *
+ * @param mixed $raw  a bucket key: 'YYYY-MM-DD' for a day, 'YYYY-MM' for a month, the year for a year
+ * @param mixed $timeGrouping  the bucket size: 'day', 'month' or 'year'
  */
 function formatLabel($raw, $timeGrouping) {
     switch ($timeGrouping) {
@@ -271,6 +294,9 @@ function formatLabel($raw, $timeGrouping) {
  * category, resolution code, analyst, owner, origin, first-time fix, training provided),
  * largest first.
  *
+ * @param mixed $prop  the property to count by, e.g. 'status', 'priority', 'department', 'category' or 'analyst'
+ * @param mixed $where  the widget's filters as " WHERE ..." on alias t, or empty for none
+ * @param mixed $params  the values bound to the placeholders in $where, in order
  * @return array  {labels, values} - empty for a property it does not know
  */
 function getCategoricalData($conn, $prop, $where, $params) {
@@ -343,6 +369,10 @@ function getCategoricalData($conn, $prop, $where, $params) {
  * Counts tickets by one property, split into a series per status or priority - the
  * stacked or grouped bar chart.
  *
+ * @param mixed $prop  the property to count by, e.g. 'department', 'ticket_type', 'analyst' or 'category'
+ * @param mixed $seriesProp  the widget's series_property: 'status' or 'priority'
+ * @param mixed $where  the widget's filters as " WHERE ..." on alias t, or empty for none
+ * @param mixed $params  the values bound to the placeholders in $where, in order
  * @return array  {labels, series} from pivotToSeries()
  */
 function getCategoricalWithSeries($conn, $prop, $seriesProp, $where, $params) {
@@ -399,6 +429,11 @@ function getCategoricalWithSeries($conn, $prop, $seriesProp, $where, $params) {
  * Counts tickets created or closed per day, month or year across the date range, with
  * every empty period filled in as zero.
  *
+ * @param mixed $prop  'created' or 'closed' - which date the tickets are counted by
+ * @param mixed $timeGrouping  the bucket size: 'day', 'month' or 'year'
+ * @param mixed $dateRange  the widget's date range: '7d', '30d', 'this_month', '3m', '6m', '12m', 'this_year' or 'all'
+ * @param mixed $where  the widget's filters as " WHERE ..." on alias t, or empty for none
+ * @param mixed $params  the values bound to the placeholders in $where, in order
  * @return array  {labels, values}
  */
 function getTimeData($conn, $prop, $timeGrouping, $dateRange, $where, $params) {
@@ -449,6 +484,12 @@ function getTimeData($conn, $prop, $timeGrouping, $dateRange, $where, $params) {
  * Counts tickets created or closed per period across the date range, split into a series
  * per status or priority, with empty periods filled in as zero.
  *
+ * @param mixed $prop  'created' or 'closed' - which date the tickets are counted by
+ * @param mixed $seriesProp  the widget's series_property: 'status' or 'priority'
+ * @param mixed $timeGrouping  the bucket size: 'day', 'month' or 'year'
+ * @param mixed $dateRange  the widget's date range: '7d', '30d', 'this_month', '3m', '6m', '12m', 'this_year' or 'all'
+ * @param mixed $where  the widget's filters as " WHERE ..." on alias t, or empty for none
+ * @param mixed $params  the values bound to the placeholders in $where, in order
  * @return array  {labels, series}
  */
 function getTimeWithSeries($conn, $prop, $seriesProp, $timeGrouping, $dateRange, $where, $params) {
@@ -517,6 +558,10 @@ function getTimeWithSeries($conn, $prop, $seriesProp, $timeGrouping, $dateRange,
  * Counts tickets created and tickets closed in each period of the date range, as two
  * series on the same time labels.
  *
+ * @param mixed $timeGrouping  the bucket size: 'day', 'month' or 'year'
+ * @param mixed $dateRange  the widget's date range: '7d', '30d', 'this_month', '3m', '6m', '12m', 'this_year' or 'all'
+ * @param mixed $where  the widget's filters as " WHERE ..." on alias t, or empty for none
+ * @param mixed $params  the values bound to the placeholders in $where, in order
  * @return array  {labels, series: [Created, Closed]}
  */
 function getCreatedVsClosedData($conn, $timeGrouping, $dateRange, $where, $params) {
@@ -584,6 +629,7 @@ function getCreatedVsClosedData($conn, $timeGrouping, $dateRange, $where, $param
  * Pivots label / series_val / value rows into chart series - one series per distinct
  * series value, with a count (0 when missing) for every label.
  *
+ * @param mixed $data  query rows with label, series_val and value columns
  * @return array  {labels, series: [{label, values}]}
  */
 function pivotToSeries($data) {

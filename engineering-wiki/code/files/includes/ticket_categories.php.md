@@ -1,6 +1,6 @@
 # includes/ticket_categories.php
 
-> PHP - 357 lines
+> PHP - 368 lines
 
 Ticket categories and resolution codes (#1540) — the shared reader.
 
@@ -41,24 +41,24 @@ actual noun: Hardware → Printer → Toner).
 |---|--:|---|
 | [ticketCategoriesResolved()](/code/functions/ticketCategoriesResolved.md) | 58 | Every category this company can see, each with its derived path and root. |
 | [ticketCategorySortTree()](/code/functions/ticketCategorySortTree.md) | 164 | Order a resolved set depth-first: each root, then its descendants, by display_order then name at every level. |
-| [ticketCategoryPathLabel()](/code/functions/ticketCategoryPathLabel.md) | 199 | One category's full path, for display next to a ticket. |
-| [ticketCategoryDepthUnder()](/code/functions/ticketCategoryDepthUnder.md) | 230 | The depth a NEW child of `$parentId` would sit at, 1 for a root. |
-| [ticketCategorySubtreeDepth()](/code/functions/ticketCategorySubtreeDepth.md) | 256 | How many levels the subtree rooted at `$id` occupies (1 = no children). |
-| [ticketCategoryWouldCycle()](/code/functions/ticketCategoryWouldCycle.md) | 280 | Would making `$parentId` the parent of `$id` create a loop? |
-| [ticketResolutionCodesResolved()](/code/functions/ticketResolutionCodesResolved.md) | 307 | Resolution codes this company can see. |
-| [ticketResolutionCodeName()](/code/functions/ticketResolutionCodeName.md) | 343 | One resolution code's name, ignoring is_active. |
+| [ticketCategoryPathLabel()](/code/functions/ticketCategoryPathLabel.md) | 200 | One category's full path, for display next to a ticket. |
+| [ticketCategoryDepthUnder()](/code/functions/ticketCategoryDepthUnder.md) | 233 | The depth a NEW child of `$parentId` would sit at, 1 for a root. |
+| [ticketCategorySubtreeDepth()](/code/functions/ticketCategorySubtreeDepth.md) | 262 | How many levels the subtree rooted at `$id` occupies (1 = no children). |
+| [ticketCategoryWouldCycle()](/code/functions/ticketCategoryWouldCycle.md) | 289 | Would making `$parentId` the parent of `$id` create a loop? |
+| [ticketResolutionCodesResolved()](/code/functions/ticketResolutionCodesResolved.md) | 316 | Resolution codes this company can see. |
+| [ticketResolutionCodeName()](/code/functions/ticketResolutionCodeName.md) | 354 | One resolution code's name, ignoring is_active. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 74 | `ticketCategoriesResolved` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
-| 209 | `ticketCategoryPathLabel` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
-| 236 | `ticketCategoryDepthUnder` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
-| 260 | `ticketCategorySubtreeDepth` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
-| 287 | `ticketCategoryWouldCycle` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
-| 316 | `ticketResolutionCodesResolved` | read [ticket_resolution_codes](/code/tables/ticket_resolution_codes.md) |  |
-| 349 | `ticketResolutionCodeName` | read [ticket_resolution_codes](/code/tables/ticket_resolution_codes.md) |  |
+| 210 | `ticketCategoryPathLabel` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 239 | `ticketCategoryDepthUnder` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 266 | `ticketCategorySubtreeDepth` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 296 | `ticketCategoryWouldCycle` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 325 | `ticketResolutionCodesResolved` | read [ticket_resolution_codes](/code/tables/ticket_resolution_codes.md) |  |
+| 360 | `ticketResolutionCodeName` | read [ticket_resolution_codes](/code/tables/ticket_resolution_codes.md) |  |
 
 ## How it hangs together
 

@@ -1,6 +1,6 @@
 # includes/knowledge/portal_reader.php
 
-> PHP - 114 lines
+> PHP - 119 lines
 
 What a self-service requester may read of the knowledge base — in ONE place.
 
@@ -38,15 +38,15 @@ chat reader follows (includes/webchat/ai.php).
 
 | Function | Line | What it does |
 |---|--:|---|
-| [portalUserTenantId()](/code/functions/portalUserTenantId.md) | 47 | The company a portal user belongs to, or null for "shared articles only". |
-| [portalKnowledgeScope()](/code/functions/portalKnowledgeScope.md) | 69 | The WHERE fragment and bound params for "articles this requester may read". |
-| [portalArticlePreview()](/code/functions/portalArticlePreview.md) | 102 | Turn an article body into a short plain-text preview. |
+| [portalUserTenantId()](/code/functions/portalUserTenantId.md) | 49 | The company a portal user belongs to, or null for "shared articles only". |
+| [portalKnowledgeScope()](/code/functions/portalKnowledgeScope.md) | 71 | The WHERE fragment and bound params for "articles this requester may read". |
+| [portalArticlePreview()](/code/functions/portalArticlePreview.md) | 107 | Turn an article body into a short plain-text preview. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 48 | `portalUserTenantId` | read [users](/code/tables/users.md) |  |
+| 50 | `portalUserTenantId` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

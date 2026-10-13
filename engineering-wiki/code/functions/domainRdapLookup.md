@@ -8,12 +8,12 @@ A 404 comes back with not_found set, which callers treat as an answer rather tha
 function domainRdapLookup(string $base, string $name): array
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 160.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 169.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$base` | `string` |  |  |
-| `$name` | `string` |  |  |
+| `$base` | `string` |  | the registry's RDAP base URL from `domainRdapBootstrap()`, ending in "/" |
+| `$name` | `string` |  | a stored domain name, already through `domainNormalise()` |
 
 **Returns:** `array`
 

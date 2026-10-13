@@ -14,7 +14,7 @@ default once more.
 function landingRefreshCookieFromPreference(PDO $conn, int $analystId): void
 ```
 
-Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 138.
+Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 144.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -27,7 +27,7 @@ Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 138
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 145 | `landingRefreshCookieFromPreference` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 151 | `landingRefreshCookieFromPreference` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Calls
 

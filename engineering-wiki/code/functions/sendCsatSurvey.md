@@ -12,14 +12,14 @@ BEFORE the row is inserted, so failed sends don't leave orphan tokens behind.
 function sendCsatSurvey(PDO $conn, int $ticketId, ?int $analystId, bool $force = false): array
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 276.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$force` | `bool` | `false` |  |
+| `$force` | `bool` | `false` | true to send even when one-survey-per-ticket is on and one already exists |
 
 **Returns:** `array`
 
@@ -27,9 +27,9 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 276.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 284 | `sendCsatSurvey` | read [ticket_csat_responses](/code/tables/ticket_csat_responses.md) |  |
-| 306 | `sendCsatSurvey` | read [ticket_email_templates](/code/tables/ticket_email_templates.md) |  |
-| 323 | `sendCsatSurvey` | **insert** [ticket_csat_responses](/code/tables/ticket_csat_responses.md) (`ticket_id`, `token`, `sent_datetime`, `analyst_id`, `created_at`) |  |
+| 314 | `sendCsatSurvey` | read [ticket_csat_responses](/code/tables/ticket_csat_responses.md) |  |
+| 336 | `sendCsatSurvey` | read [ticket_email_templates](/code/tables/ticket_email_templates.md) |  |
+| 353 | `sendCsatSurvey` | **insert** [ticket_csat_responses](/code/tables/ticket_csat_responses.md) (`ticket_id`, `token`, `sent_datetime`, `analyst_id`, `created_at`) |  |
 
 ## Calls
 

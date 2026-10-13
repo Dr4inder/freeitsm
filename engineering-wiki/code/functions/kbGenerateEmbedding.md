@@ -6,12 +6,12 @@ Embed a query with OpenAI's small embedding model. Returns the vector or null.
 function kbGenerateEmbedding(string $text, string $apiKey): ?array
 ```
 
-Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md), line 39.
+Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md), line 49.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `string` |  |  |
-| `$apiKey` | `string` |  |  |
+| `$text` | `string` |  | the text to embed; cut to 30,000 bytes first |
+| `$apiKey` | `string` |  | the OpenAI API key, decrypted |
 
 **Returns:** `?array`
 

@@ -6,12 +6,12 @@ Follows a schema's `$ref` chain into the component schemas and returns the schem
 function oav_resolveRef($schema, $components)
 ```
 
-Defined in [api/v1/dev/openapi_verify.php](/code/files/api/v1/dev/openapi_verify.php.md), line 39.
+Defined in [api/v1/dev/openapi_verify.php](/code/files/api/v1/dev/openapi_verify.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$schema` |  |  |  |
-| `$components` |  |  |  |
+| `$schema` |  |  | a schema that may be a `$ref` to a component schema |
+| `$components` |  |  | the component schemas, keyed by name |
 
 ## Called from
 

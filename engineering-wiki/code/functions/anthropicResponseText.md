@@ -6,11 +6,11 @@ Pull the assistant's text out of the shared client's response shape.
 function anthropicResponseText(array $resp): string
 ```
 
-Defined in [api/cmdb/_ai_helpers.php](/code/files/api/cmdb/_ai_helpers.php.md), line 47.
+Defined in [api/cmdb/_ai_helpers.php](/code/files/api/cmdb/_ai_helpers.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$resp` | `array` |  |  |
+| `$resp` | `array` |  | the response array returned by `callAnthropic()` |
 
 **Returns:** `string`
 

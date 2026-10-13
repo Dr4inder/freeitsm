@@ -10,7 +10,7 @@ from then on, and would have to work out why on their own.
 function defaultSignatureForAnalyst(PDO $conn, int $analystId): ?array
 ```
 
-Defined in [includes/signatures.php](/code/files/includes/signatures.php.md), line 113.
+Defined in [includes/signatures.php](/code/files/includes/signatures.php.md), line 115.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

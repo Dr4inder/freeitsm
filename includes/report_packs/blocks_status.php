@@ -15,7 +15,11 @@
 
 require_once __DIR__ . '/../services/service_uptime.php';
 
-/** The services a block covers: the chosen ones, or every active one. */
+/**
+ * The services a block covers: the chosen ones, or every active one.
+ *
+ * @param array $ids  status_services ids to narrow to; [] means every active service
+ */
 function rpStatusServices(PDO $conn, array $ids): array
 {
     $sql = "SELECT id, name, description FROM status_services WHERE is_active = 1";
@@ -32,6 +36,10 @@ function rpStatusServices(PDO $conn, array $ids): array
 /**
  * Service status block: each chosen service's uptime over the period, with an optional
  * daily strip and incident list.
+ *
+ * @param array $o  the block's cleaned options: services (ids; [] for all), strip (daily bars), incidents (list them)
+ * @param array $range  the pack's range from rpResolveRange()
+ * @param mixed $tenant  the pack's company (not used - Service Status has no company)
  */
 function rpStatusUptime(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -71,7 +79,11 @@ function rpStatusUptime(PDO $conn, int $analystId, array $o, array $range, $tena
             'empty' => t('reporting.packs.empty.services')];
 }
 
-/** 100% / 99.13% / 95.7% - two decimals, trailing zeros dropped. */
+/**
+ * 100% / 99.13% / 95.7% - two decimals, trailing zeros dropped.
+ *
+ * @param float $p  a percentage, 0-100
+ */
 function rpPercent(float $p): string
 {
     return rtrim(rtrim(number_format($p, 2, '.', ''), '0'), '.') . '%';
@@ -80,6 +92,10 @@ function rpPercent(float $p): string
 /**
  * Service status block: a table of each chosen service's uptime, downtime and incident
  * count over the period.
+ *
+ * @param array $o  the block's cleaned options: services (ids; [] for all)
+ * @param array $range  the pack's range from rpResolveRange()
+ * @param mixed $tenant  the pack's company (not used - Service Status has no company)
  */
 function rpStatusUptimeTable(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -105,6 +121,10 @@ function rpStatusUptimeTable(PDO $conn, int $analystId, array $o, array $range, 
  * Every incident UPDATE in the range, oldest first, with the services it named
  * and their worst impact - the incident log in Enrique's example. The update's
  * comment goes underneath the row, full width.
+ *
+ * @param array $o  the block's cleaned options: internal (include internal updates), comments (show each update's comment)
+ * @param array $range  the pack's range from rpResolveRange() - from_utc and to_utc are used
+ * @param mixed $tenant  the pack's company (not used - Service Status has no company)
  */
 function rpStatusIncidentLog(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -171,7 +191,13 @@ function rpStatusIncidentLog(PDO $conn, int $analystId, array $o, array $range, 
     ]];
 }
 
-/** Incidents overlapping the range: title, status pill, affected services as chips. */
+/**
+ * Incidents overlapping the range: title, status pill, affected services as chips.
+ *
+ * @param array $o  the block's cleaned options (none are read)
+ * @param array $range  the pack's range from rpResolveRange() - from_utc and to_utc are used
+ * @param mixed $tenant  the pack's company (not used - Service Status has no company)
+ */
 function rpStatusIncidentSummary(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $s = $conn->prepare(
@@ -226,6 +252,10 @@ function rpStatusIncidentSummary(PDO $conn, int $analystId, array $o, array $ran
 /**
  * Service status block: KPI tiles - average uptime, incidents open during the period,
  * services affected and total downtime.
+ *
+ * @param array $o  the block's cleaned options (none are read)
+ * @param array $range  the pack's range from rpResolveRange()
+ * @param mixed $tenant  the pack's company (not used - Service Status has no company)
  */
 function rpStatusKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -249,7 +279,11 @@ function rpStatusKpis(PDO $conn, int $analystId, array $o, array $range, $tenant
     ]];
 }
 
-/** Rich text from an incident comment, flattened for a table's detail line. */
+/**
+ * Rich text from an incident comment, flattened for a table's detail line.
+ *
+ * @param string $html  an incident update's comment as stored (rich text HTML)
+ */
 function rpPlainText(string $html): string
 {
     $txt = preg_replace('/<(br|\/p|\/div|\/li)\s*\/?>/i', "\n", $html);

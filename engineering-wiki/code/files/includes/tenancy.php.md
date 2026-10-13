@@ -1,6 +1,6 @@
 # includes/tenancy.php
 
-> PHP - 1367 lines
+> PHP - 1424 lines
 
 Multi-tenancy helper — the single choke-point for tenant logic.
 
@@ -27,89 +27,89 @@ concluded these guards were inert.)
 
 | Function | Line | What it does |
 |---|--:|---|
-| [tenancyDegradeAllowed()](/code/functions/tenancyDegradeAllowed.md) | 52 | May an analystCanAccess*() guard degrade to "yes" after a database error? |
-| [tenancyTablesReady()](/code/functions/tenancyTablesReady.md) | 78 | Does the tenants table exist? (Cached.) Lets every other function degrade gracefully on an install that hasn't been migrated yet. |
-| [tenantCount()](/code/functions/tenantCount.md) | 102 | Number of tenants on this install. Returns 1 if the table isn't ready. |
-| [isMultiTenant()](/code/functions/isMultiTenant.md) | 123 | Is multi-tenancy "awake"? True only once a second tenant exists. This is the master switch: while false, switchers/scoping/triage all stay dormant and the app behaves exactly as a single-company install. |
-| [getDefaultTenantId()](/code/functions/getDefaultTenantId.md) | 132 | The id of the silent Default tenant (the one that owns everything on a single-company install). Falls back to the lowest tenant id, then to TENANCY_FALLBACK_TENANT_ID. (Cached.) |
-| [getAllTenants()](/code/functions/getAllTenants.md) | 152 | All tenants as rows [id, name, slug, is_default, is_active]. |
-| [getTenantById()](/code/functions/getTenantById.md) | 169 | A single tenant row, or null if not found. |
-| [getAccessibleTenantIds()](/code/functions/getAccessibleTenantIds.md) | 191 | The tenant ids an analyst may access. Company access is ADDITIVE from two sources, unioned: 1. the analyst's own grant (can_access_all_tenants flag / analyst_tenant_access); 2. the teams they belong to (a team flagged can_access_all_tenants grants every company; otherwise its team_tenant_access rows). So an analyst can reach a company if their own access OR any of their teams grants it. A team grants nothing until explicitly configured, so this only ever widens access once an admin sets it up. (Cached per analyst per request.) |
-| [analystCanAccessTenant()](/code/functions/analystCanAccessTenant.md) | 247 | May this analyst access this tenant? |
-| [analystCanAccessTicket()](/code/functions/analystCanAccessTicket.md) | 266 | May this analyst access this *ticket* (by its owning company)? |
-| [analystCanAccessUser()](/code/functions/analystCanAccessUser.md) | 301 | May this analyst act on this *end user / requester* (by their owning company)? |
-| [analystCanAccessProblem()](/code/functions/analystCanAccessProblem.md) | 329 | May this analyst access this *problem* (by its owning company)? The Problem Management twin of `analystCanAccessTicket()` — same rules (single-company → always true; NULL tenant treated as Default-owned; unknown id → false; part-migrated table → true). |
-| [analystCanAccessChange()](/code/functions/analystCanAccessChange.md) | 357 | May this analyst access this *change* (by its owning company)? The Change Management twin of `analystCanAccessProblem()` — same rules (single-company → always true; NULL tenant treated as Default-owned; unknown id → false; part-migrated table → true). |
-| [analystCanAccessProject()](/code/functions/analystCanAccessProject.md) | 384 | May this analyst access this *project* (by its company)? The same rules as a change: single-company -> yes; NULL company = the Default one; unknown id -> no. Added for documents on projects (3.3.0). |
-| [analystCanAccessCmdbObject()](/code/functions/analystCanAccessCmdbObject.md) | 413 | May this analyst access this *CMDB configuration item* (by its owning company)? The CMDB twin of `analystCanAccessAsset()` — same rules (single-company → always true; NULL tenant treated as Default-owned; unknown id → false; part-migrated table → true). |
-| [analystCanAccessChannel()](/code/functions/analystCanAccessChannel.md) | 454 | May this analyst administer this *messaging channel* (WhatsApp number, web chat widget) by its owning company? |
-| [analystCanAssignTenant()](/code/functions/analystCanAssignTenant.md) | 485 | May this analyst PIN a channel (or anything else) to this company? |
-| [analystCanAccessDomain()](/code/functions/analystCanAccessDomain.md) | 501 | May this analyst access this *domain* (#154)? The Domains-module twin of `analystCanAccessAsset()` below: single-company → always true; NULL tenant = the Default company; unknown id → false; part-migrated table → true. A domain is SCOPED DATA, never shared between companies. |
-| [analystCanAccessAsset()](/code/functions/analystCanAccessAsset.md) | 529 | May this analyst access this *asset* (by its owning company)? The Asset Management twin of `analystCanAccessChange()` — same rules (single-company → always true; NULL tenant treated as Default-owned; unknown id → false; part-migrated table → true). |
-| [analystCanAccessTask()](/code/functions/analystCanAccessTask.md) | 563 | May this analyst see/act on this task? (GH #83 groundwork.) |
-| [getActiveTenantId()](/code/functions/getActiveTenantId.md) | 596 | The analyst's current working company context. |
-| [setActiveTenantId()](/code/functions/setActiveTenantId.md) | 619 | Set the analyst's active company context. The caller must have a writable session (i.e. `session_start()` without read_and_close). |
-| [isActiveTenantAll()](/code/functions/isActiveTenantAll.md) | 643 | Is the analyst looking at every company they may see, rather than just one? |
-| [setActiveTenantAll()](/code/functions/setActiveTenantAll.md) | 651 | Turn the consolidated view on or off. Needs a writable session. |
-| [getTenantConfigRowsByCompany()](/code/functions/getTenantConfigRowsByCompany.md) | 679 | The same config list resolved SEPARATELY FOR EVERY COMPANY the analyst may see. |
-| [ticketTenantFilter()](/code/functions/ticketTenantFilter.md) | 716 | Builds the SQL fragment that scopes ticket rows to the analyst's active company, or to every company they may see when the consolidated view is on. |
-| [activeTenantFilter()](/code/functions/activeTenantFilter.md) | 750 | Generic active-company list filter for any tenant-scoped table (Change Management onward). Same semantics as ticketTenantFilter but the table alias and column are parameterised so each Phase-3 module can reuse it: scopes to the analyst's ACTIVE company, and the Default company also owns NULL-tenant rows (so nothing is hidden at N=1 or from Default). Returns ['', []] at N=1. |
-| [allAccessibleTenantsFilter()](/code/functions/allAccessibleTenantsFilter.md) | 773 | The consolidated-view predicate: every company this analyst may see. The ONE copy of it, shared by `ticketTenantFilter()` and `activeTenantReadFilter()`. |
-| [activeTenantReadFilter()](/code/functions/activeTenantReadFilter.md) | 807 | `activeTenantFilter()` for a LIST READ that should widen in the "All companies" view — the opt-in the note above `isActiveTenantAll()` describes. |
-| [analystHasAllTenantAccess()](/code/functions/analystHasAllTenantAccess.md) | 823 | Can this analyst reach EVERY company on the install? |
-| [requestedTenantId()](/code/functions/requestedTenantId.md) | 845 | The company a request is FOR: `?for_tenant=` when it names a company this analyst may reach, otherwise the active company. |
-| [tenantScopeSqlFor()](/code/functions/tenantScopeSqlFor.md) | 859 | `activeTenantFilter()`'s clause for ONE NAMED company instead of the active one. Same Default-owns-NULL rule. ['', []] on a single-company install. |
-| [tenancyColumnExists()](/code/functions/tenancyColumnExists.md) | 878 | Does `$table` have `$column`? Cached per request; false if the table is missing. |
-| [knowledgeTenantFilterForCompany()](/code/functions/knowledgeTenantFilterForCompany.md) | 924 | Scope a Knowledge query to the articles a given COMPANY may see. |
-| [knowledgeTenantFilter()](/code/functions/knowledgeTenantFilter.md) | 947 | Scope a Knowledge query to what an ANALYST should see right now: the company they have switched to, plus everything shared. |
-| [analystCanAccessArticle()](/code/functions/analystCanAccessArticle.md) | 960 | May this analyst act on this article? Mirrors `analystCanAccessAsset()`, except a SHARED article (tenant_id IS NULL) belongs to everybody, so everybody may reach it — that is what "shared" means. |
-| [resolveTenantForNewUser()](/code/functions/resolveTenantForNewUser.md) | 1002 | Suggest the company for a NEW portal/requester account from its email address. |
-| [resolveTicketTenantForEmail()](/code/functions/resolveTicketTenantForEmail.md) | 1059 | Decide which company (tenant) a NEW inbound-email ticket belongs to. |
-| [resolveTicketTenantForChannel()](/code/functions/resolveTicketTenantForChannel.md) | 1136 | Decide which company a NEW inbound messaging-channel ticket (WhatsApp etc.) belongs to. The channel twin of `resolveTicketTenantForEmail()`: |
-| [resolveTenantIdForAddress()](/code/functions/resolveTenantIdForAddress.md) | 1182 | Resolve an email address to the tenant that owns it, for LOGIN routing (which IdP should this person be sent to). Mirrors the email-routing rule (exact sender address → registered domain), but without the mailbox step. |
-| [freemailBuiltinDomains()](/code/functions/freemailBuiltinDomains.md) | 1214 | The built-in list of public free-email / consumer domains. These are ALWAYS treated as freemail; an admin can ADD to the list (the freemail_domains table, see getCustomFreemailDomains) but never remove a built-in — so gmail.com and friends can't be accidentally un-protected. |
-| [getCustomFreemailDomains()](/code/functions/getCustomFreemailDomains.md) | 1229 | Admin-added custom freemail domains (the freemail_domains table), lower-cased. Cached per request; degrades to [] if the table doesn't exist yet — so the file is safe on a part-migrated install. |
-| [isFreemailDomain()](/code/functions/isFreemailDomain.md) | 1257 | Is this a public free-email / consumer domain (gmail.com, outlook.com, …)? |
-| [normaliseEmailDomain()](/code/functions/normaliseEmailDomain.md) | 1269 | Normalise a user-entered email domain for storage/matching: lower-cased, trimmed, with any leading "@", scheme or "www." stripped. Returns '' if what remains isn't a plausible domain. |
-| [normaliseEmailAddress()](/code/functions/normaliseEmailAddress.md) | 1294 | Normalise a user-entered email address for storage/matching: lower-cased, trimmed, with any "mailto:" prefix or surrounding angle brackets stripped. Returns '' if what remains isn't a valid email address. |
-| [getTenantConfigRows()](/code/functions/getTenantConfigRows.md) | 1330 | Resolve a per-company config list under the "add + hide" override model (design §7) — the single primitive every overridable list-setting routes through (ticket types, ticket origins, departments, …). |
+| [tenancyDegradeAllowed()](/code/functions/tenancyDegradeAllowed.md) | 54 | May an analystCanAccess*() guard degrade to "yes" after a database error? |
+| [tenancyTablesReady()](/code/functions/tenancyTablesReady.md) | 80 | Does the tenants table exist? (Cached.) Lets every other function degrade gracefully on an install that hasn't been migrated yet. |
+| [tenantCount()](/code/functions/tenantCount.md) | 104 | Number of tenants on this install. Returns 1 if the table isn't ready. |
+| [isMultiTenant()](/code/functions/isMultiTenant.md) | 125 | Is multi-tenancy "awake"? True only once a second tenant exists. This is the master switch: while false, switchers/scoping/triage all stay dormant and the app behaves exactly as a single-company install. |
+| [getDefaultTenantId()](/code/functions/getDefaultTenantId.md) | 134 | The id of the silent Default tenant (the one that owns everything on a single-company install). Falls back to the lowest tenant id, then to TENANCY_FALLBACK_TENANT_ID. (Cached.) |
+| [getAllTenants()](/code/functions/getAllTenants.md) | 154 | All tenants as rows [id, name, slug, is_default, is_active]. |
+| [getTenantById()](/code/functions/getTenantById.md) | 171 | A single tenant row, or null if not found. |
+| [getAccessibleTenantIds()](/code/functions/getAccessibleTenantIds.md) | 193 | The tenant ids an analyst may access. Company access is ADDITIVE from two sources, unioned: 1. the analyst's own grant (can_access_all_tenants flag / analyst_tenant_access); 2. the teams they belong to (a team flagged can_access_all_tenants grants every company; otherwise its team_tenant_access rows). So an analyst can reach a company if their own access OR any of their teams grants it. A team grants nothing until explicitly configured, so this only ever widens access once an admin sets it up. (Cached per analyst per request.) |
+| [analystCanAccessTenant()](/code/functions/analystCanAccessTenant.md) | 249 | May this analyst access this tenant? |
+| [analystCanAccessTicket()](/code/functions/analystCanAccessTicket.md) | 270 | May this analyst access this *ticket* (by its owning company)? |
+| [analystCanAccessUser()](/code/functions/analystCanAccessUser.md) | 307 | May this analyst act on this *end user / requester* (by their owning company)? |
+| [analystCanAccessProblem()](/code/functions/analystCanAccessProblem.md) | 337 | May this analyst access this *problem* (by its owning company)? The Problem Management twin of `analystCanAccessTicket()` — same rules (single-company → always true; NULL tenant treated as Default-owned; unknown id → false; part-migrated table → true). |
+| [analystCanAccessChange()](/code/functions/analystCanAccessChange.md) | 367 | May this analyst access this *change* (by its owning company)? The Change Management twin of `analystCanAccessProblem()` — same rules (single-company → always true; NULL tenant treated as Default-owned; unknown id → false; part-migrated table → true). |
+| [analystCanAccessProject()](/code/functions/analystCanAccessProject.md) | 396 | May this analyst access this *project* (by its company)? The same rules as a change: single-company -> yes; NULL company = the Default one; unknown id -> no. Added for documents on projects (3.3.0). |
+| [analystCanAccessCmdbObject()](/code/functions/analystCanAccessCmdbObject.md) | 427 | May this analyst access this *CMDB configuration item* (by its owning company)? The CMDB twin of `analystCanAccessAsset()` — same rules (single-company → always true; NULL tenant treated as Default-owned; unknown id → false; part-migrated table → true). |
+| [analystCanAccessChannel()](/code/functions/analystCanAccessChannel.md) | 470 | May this analyst administer this *messaging channel* (WhatsApp number, web chat widget) by its owning company? |
+| [analystCanAssignTenant()](/code/functions/analystCanAssignTenant.md) | 503 | May this analyst PIN a channel (or anything else) to this company? |
+| [analystCanAccessDomain()](/code/functions/analystCanAccessDomain.md) | 521 | May this analyst access this *domain* (#154)? The Domains-module twin of `analystCanAccessAsset()` below: single-company → always true; NULL tenant = the Default company; unknown id → false; part-migrated table → true. A domain is SCOPED DATA, never shared between companies. |
+| [analystCanAccessAsset()](/code/functions/analystCanAccessAsset.md) | 551 | May this analyst access this *asset* (by its owning company)? The Asset Management twin of `analystCanAccessChange()` — same rules (single-company → always true; NULL tenant treated as Default-owned; unknown id → false; part-migrated table → true). |
+| [analystCanAccessTask()](/code/functions/analystCanAccessTask.md) | 587 | May this analyst see/act on this task? (GH #83 groundwork.) |
+| [getActiveTenantId()](/code/functions/getActiveTenantId.md) | 620 | The analyst's current working company context. |
+| [setActiveTenantId()](/code/functions/setActiveTenantId.md) | 643 | Set the analyst's active company context. The caller must have a writable session (i.e. `session_start()` without read_and_close). |
+| [isActiveTenantAll()](/code/functions/isActiveTenantAll.md) | 667 | Is the analyst looking at every company they may see, rather than just one? |
+| [setActiveTenantAll()](/code/functions/setActiveTenantAll.md) | 679 | Turn the consolidated view on or off. Needs a writable session. |
+| [getTenantConfigRowsByCompany()](/code/functions/getTenantConfigRowsByCompany.md) | 712 | The same config list resolved SEPARATELY FOR EVERY COMPANY the analyst may see. |
+| [ticketTenantFilter()](/code/functions/ticketTenantFilter.md) | 750 | Builds the SQL fragment that scopes ticket rows to the analyst's active company, or to every company they may see when the consolidated view is on. |
+| [activeTenantFilter()](/code/functions/activeTenantFilter.md) | 786 | Generic active-company list filter for any tenant-scoped table (Change Management onward). Same semantics as ticketTenantFilter but the table alias and column are parameterised so each Phase-3 module can reuse it: scopes to the analyst's ACTIVE company, and the Default company also owns NULL-tenant rows (so nothing is hidden at N=1 or from Default). Returns ['', []] at N=1. |
+| [allAccessibleTenantsFilter()](/code/functions/allAccessibleTenantsFilter.md) | 809 | The consolidated-view predicate: every company this analyst may see. The ONE copy of it, shared by `ticketTenantFilter()` and `activeTenantReadFilter()`. |
+| [activeTenantReadFilter()](/code/functions/activeTenantReadFilter.md) | 846 | `activeTenantFilter()` for a LIST READ that should widen in the "All companies" view — the opt-in the note above `isActiveTenantAll()` describes. |
+| [analystHasAllTenantAccess()](/code/functions/analystHasAllTenantAccess.md) | 862 | Can this analyst reach EVERY company on the install? |
+| [requestedTenantId()](/code/functions/requestedTenantId.md) | 886 | The company a request is FOR: `?for_tenant=` when it names a company this analyst may reach, otherwise the active company. |
+| [tenantScopeSqlFor()](/code/functions/tenantScopeSqlFor.md) | 900 | `activeTenantFilter()`'s clause for ONE NAMED company instead of the active one. Same Default-owns-NULL rule. ['', []] on a single-company install. |
+| [tenancyColumnExists()](/code/functions/tenancyColumnExists.md) | 922 | Does `$table` have `$column`? Cached per request; false if the table is missing. |
+| [knowledgeTenantFilterForCompany()](/code/functions/knowledgeTenantFilterForCompany.md) | 969 | Scope a Knowledge query to the articles a given COMPANY may see. |
+| [knowledgeTenantFilter()](/code/functions/knowledgeTenantFilter.md) | 993 | Scope a Knowledge query to what an ANALYST should see right now: the company they have switched to, plus everything shared. |
+| [analystCanAccessArticle()](/code/functions/analystCanAccessArticle.md) | 1008 | May this analyst act on this article? Mirrors `analystCanAccessAsset()`, except a SHARED article (tenant_id IS NULL) belongs to everybody, so everybody may reach it — that is what "shared" means. |
+| [resolveTenantForNewUser()](/code/functions/resolveTenantForNewUser.md) | 1051 | Suggest the company for a NEW portal/requester account from its email address. |
+| [resolveTicketTenantForEmail()](/code/functions/resolveTicketTenantForEmail.md) | 1108 | Decide which company (tenant) a NEW inbound-email ticket belongs to. |
+| [resolveTicketTenantForChannel()](/code/functions/resolveTicketTenantForChannel.md) | 1185 | Decide which company a NEW inbound messaging-channel ticket (WhatsApp etc.) belongs to. The channel twin of `resolveTicketTenantForEmail()`: |
+| [resolveTenantIdForAddress()](/code/functions/resolveTenantIdForAddress.md) | 1233 | Resolve an email address to the tenant that owns it, for LOGIN routing (which IdP should this person be sent to). Mirrors the email-routing rule (exact sender address → registered domain), but without the mailbox step. |
+| [freemailBuiltinDomains()](/code/functions/freemailBuiltinDomains.md) | 1265 | The built-in list of public free-email / consumer domains. These are ALWAYS treated as freemail; an admin can ADD to the list (the freemail_domains table, see getCustomFreemailDomains) but never remove a built-in — so gmail.com and friends can't be accidentally un-protected. |
+| [getCustomFreemailDomains()](/code/functions/getCustomFreemailDomains.md) | 1280 | Admin-added custom freemail domains (the freemail_domains table), lower-cased. Cached per request; degrades to [] if the table doesn't exist yet — so the file is safe on a part-migrated install. |
+| [isFreemailDomain()](/code/functions/isFreemailDomain.md) | 1310 | Is this a public free-email / consumer domain (gmail.com, outlook.com, …)? |
+| [normaliseEmailDomain()](/code/functions/normaliseEmailDomain.md) | 1324 | Normalise a user-entered email domain for storage/matching: lower-cased, trimmed, with any leading "@", scheme or "www." stripped. Returns '' if what remains isn't a plausible domain. |
+| [normaliseEmailAddress()](/code/functions/normaliseEmailAddress.md) | 1351 | Normalise a user-entered email address for storage/matching: lower-cased, trimmed, with any "mailto:" prefix or surrounding angle brackets stripped. Returns '' if what remains isn't a valid email address. |
+| [getTenantConfigRows()](/code/functions/getTenantConfigRows.md) | 1387 | Resolve a per-company config list under the "add + hide" override model (design §7) — the single primitive every overridable list-setting routes through (ticket types, ticket origins, departments, …). |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 82 | `tenancyTablesReady` | read [tenants](/code/tables/tenants.md) |  |
-| 109 | `tenantCount` | read [tenants](/code/tables/tenants.md) |  |
-| 138 | `getDefaultTenantId` | read [tenants](/code/tables/tenants.md) |  |
+| 84 | `tenancyTablesReady` | read [tenants](/code/tables/tenants.md) |  |
+| 111 | `tenantCount` | read [tenants](/code/tables/tenants.md) |  |
 | 140 | `getDefaultTenantId` | read [tenants](/code/tables/tenants.md) |  |
-| 154 | `getAllTenants` | read [tenants](/code/tables/tenants.md) |  |
-| 171 | `getTenantById` | read [tenants](/code/tables/tenants.md) |  |
-| 200 | `getAccessibleTenantIds` | read [tenants](/code/tables/tenants.md) |  |
-| 204 | `getAccessibleTenantIds` | read [analysts](/code/tables/analysts.md) |  |
-| 214 | `getAccessibleTenantIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
-| 228 | `getAccessibleTenantIds` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md), read [team_tenant_access](/code/tables/team_tenant_access.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 238 | `getAccessibleTenantIds` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
-| 275 | `analystCanAccessTicket` | read [tickets](/code/tables/tickets.md) |  |
-| 310 | `analystCanAccessUser` | read [users](/code/tables/users.md) |  |
-| 338 | `analystCanAccessProblem` | read [problems](/code/tables/problems.md) |  |
-| 366 | `analystCanAccessChange` | read [changes](/code/tables/changes.md) |  |
-| 392 | `analystCanAccessProject` | read [projects](/code/tables/projects.md) |  |
-| 422 | `analystCanAccessCmdbObject` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 463 | `analystCanAccessChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
-| 510 | `analystCanAccessDomain` | read [domains](/code/tables/domains.md) |  |
-| 538 | `analystCanAccessAsset` | read [assets](/code/tables/assets.md) |  |
-| 572 | `analystCanAccessTask` | read [tasks](/code/tables/tasks.md) |  |
-| 964 | `analystCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 1021 | `resolveTenantForNewUser` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 1068 | `resolveTicketTenantForEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 1085 | `resolveTicketTenantForEmail` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
-| 1103 | `resolveTicketTenantForEmail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 1144 | `resolveTicketTenantForChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
-| 1159 | `resolveTicketTenantForChannel` | read [tenant_channel_senders](/code/tables/tenant_channel_senders.md) |  |
-| 1188 | `resolveTenantIdForAddress` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
-| 1198 | `resolveTenantIdForAddress` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 1234 | `getCustomFreemailDomains` | read [freemail_domains](/code/tables/freemail_domains.md) |  |
-| 1346 | `getTenantConfigRows` | read [tenant_config_hidden](/code/tables/tenant_config_hidden.md) |  |
+| 142 | `getDefaultTenantId` | read [tenants](/code/tables/tenants.md) |  |
+| 156 | `getAllTenants` | read [tenants](/code/tables/tenants.md) |  |
+| 173 | `getTenantById` | read [tenants](/code/tables/tenants.md) |  |
+| 202 | `getAccessibleTenantIds` | read [tenants](/code/tables/tenants.md) |  |
+| 206 | `getAccessibleTenantIds` | read [analysts](/code/tables/analysts.md) |  |
+| 216 | `getAccessibleTenantIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 230 | `getAccessibleTenantIds` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md), read [team_tenant_access](/code/tables/team_tenant_access.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 240 | `getAccessibleTenantIds` | read [analyst_tenant_access](/code/tables/analyst_tenant_access.md) |  |
+| 279 | `analystCanAccessTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 316 | `analystCanAccessUser` | read [users](/code/tables/users.md) |  |
+| 346 | `analystCanAccessProblem` | read [problems](/code/tables/problems.md) |  |
+| 376 | `analystCanAccessChange` | read [changes](/code/tables/changes.md) |  |
+| 404 | `analystCanAccessProject` | read [projects](/code/tables/projects.md) |  |
+| 436 | `analystCanAccessCmdbObject` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 479 | `analystCanAccessChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 530 | `analystCanAccessDomain` | read [domains](/code/tables/domains.md) |  |
+| 560 | `analystCanAccessAsset` | read [assets](/code/tables/assets.md) |  |
+| 596 | `analystCanAccessTask` | read [tasks](/code/tables/tasks.md) |  |
+| 1012 | `analystCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 1070 | `resolveTenantForNewUser` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1117 | `resolveTicketTenantForEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 1134 | `resolveTicketTenantForEmail` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
+| 1152 | `resolveTicketTenantForEmail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1193 | `resolveTicketTenantForChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 1208 | `resolveTicketTenantForChannel` | read [tenant_channel_senders](/code/tables/tenant_channel_senders.md) |  |
+| 1239 | `resolveTenantIdForAddress` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
+| 1249 | `resolveTenantIdForAddress` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1285 | `getCustomFreemailDomains` | read [freemail_domains](/code/tables/freemail_domains.md) |  |
+| 1403 | `getTenantConfigRows` | read [tenant_config_hidden](/code/tables/tenant_config_hidden.md) |  |
 
 ## How it hangs together
 

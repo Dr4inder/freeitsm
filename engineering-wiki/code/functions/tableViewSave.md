@@ -10,13 +10,13 @@ that team and writable by nobody else — Ed's choice, and the one that makes
 function tableViewSave(PDO $conn, int $analystId, array $in): int
 ```
 
-Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 137.
+Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (to change one the analyst owns), table_key, name (required, up to 120), description (up to 500), visibility ('private', 'team', 'public'), team_id (a team the analyst is in, for 'team'), config (JSON or array) |
 
 **Returns:** `int`
 
@@ -24,9 +24,9 @@ Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 180 | `tableViewSave` | read [table_views](/code/tables/table_views.md) |  |
-| 187 | `tableViewSave` | **update** [table_views](/code/tables/table_views.md) (`name`, `description`, `visibility`, `team_id`, `config`, `updated_datetime`) |  |
-| 196 | `tableViewSave` | **insert** [table_views](/code/tables/table_views.md) (`table_key`, `name`, `description`, `owner_id`, `visibility`, `team_id`, `config`, `created_datetime`, `updated_datetime`) |  |
+| 191 | `tableViewSave` | read [table_views](/code/tables/table_views.md) |  |
+| 198 | `tableViewSave` | **update** [table_views](/code/tables/table_views.md) (`name`, `description`, `visibility`, `team_id`, `config`, `updated_datetime`) |  |
+| 207 | `tableViewSave` | **insert** [table_views](/code/tables/table_views.md) (`table_key`, `name`, `description`, `owner_id`, `visibility`, `team_id`, `config`, `created_datetime`, `updated_datetime`) |  |
 
 ## Calls
 

@@ -13,6 +13,9 @@ require_once __DIR__ . '/timezone.php';   // naive_now(), for the change-window 
  * $analystId is optional and only used to scope the Knowledge card to the
  * company the analyst has switched to. Omitted (or 0) = unscoped, which is the
  * behaviour every other card on this dashboard still has.
+ *
+ * @param mixed $analystId  the analyst viewing, for the Knowledge card's company and the scope; 0 = unscoped
+ * @param mixed $scope  WT_SCOPE_MINE, WT_SCOPE_TEAM or WT_SCOPE_ALL; anything else, or no analyst, means all
  */
 function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     $today = date('Y-m-d');

@@ -6,7 +6,7 @@ The same, by id - for callers holding only an id (Documents, the recent trail).
 function projectIdVisibleTo(PDO $conn, int $analystId, int $projectId): bool
 ```
 
-Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 89.
+Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 100.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/projects/visibility.php](/code/files/includes/projects/visi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 92 | `projectIdVisibleTo` | read [projects](/code/tables/projects.md) |  |
+| 103 | `projectIdVisibleTo` | read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

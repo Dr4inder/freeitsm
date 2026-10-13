@@ -145,6 +145,9 @@ function apiCmdbClassesGet(PDO $conn, array $apiKey, array $params, array $body)
  * Load one CI; 404 if unknown OR outside the key's companies (multi-tenancy —
  * the key's company scope gates every by-id read/write; a NULL tenant_id
  * normalises to the Default company; no-op at N=1 / all-access key).
+ *
+ * @param int $objectId  the cmdb_objects id
+ * @param ?array $apiKey  the calling API key; null skips the company check (every current caller passes one)
  */
 function apiCmdbLoadObject(PDO $conn, int $objectId, ?array $apiKey = null): array {
     $stmt = $conn->prepare(
@@ -165,7 +168,11 @@ function apiCmdbLoadObject(PDO $conn, int $objectId, ?array $apiKey = null): arr
     return $row;
 }
 
-/** Shapes a CMDB object row for the API - name, company, class, parent, planned flag and dates. */
+/**
+ * Shapes a CMDB object row for the API - name, company, class, parent, planned flag and dates.
+ *
+ * @param array $r  the cmdb_objects row as apiCmdbLoadObject() loads it, with class name, class_key and company name
+ */
 function apiCmdbSerializeObject(array $r): array {
     return [
         'id'         => (int)$r['id'],
@@ -180,7 +187,11 @@ function apiCmdbSerializeObject(array $r): array {
     ];
 }
 
-/** Property definitions for a class, keyed by property_key. */
+/**
+ * Property definitions for a class, keyed by property_key.
+ *
+ * @param int $classId  the cmdb_classes id whose property definitions to load
+ */
 function apiCmdbClassDefs(PDO $conn, int $classId): array {
     $stmt = $conn->prepare(
         "SELECT id, property_key, label, property_type, target_class_id, is_required

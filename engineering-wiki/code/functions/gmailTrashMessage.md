@@ -6,12 +6,12 @@ Delete a Gmail message (move to trash).
 function gmailTrashMessage(string $accessToken, string $messageId): void
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 479.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 525.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$messageId` | `string` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
+| `$messageId` | `string` |  | the Gmail message id |
 
 **Returns:** `void`
 

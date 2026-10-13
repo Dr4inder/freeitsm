@@ -47,6 +47,8 @@ function intuneGetSettings(PDO $conn): ?array {
 /**
  * Acquire a Graph access token via client-credentials. Cached for the lifetime
  * of the PHP process (token TTL is ~1h).
+ *
+ * @param array $settings  the connection settings from intuneGetSettings() (tenant_id, client_id, client_secret are used)
  */
 function intuneGetToken(array $settings): string {
     static $token = null;
@@ -94,6 +96,10 @@ function intuneGetToken(array $settings): string {
 
 /**
  * GET a Graph URL, retrying on 429/5xx with Retry-After honoured.
+ *
+ * @param string $url  the full Graph URL, including any query string or an @odata.nextLink
+ * @param array $settings  the connection settings from intuneGetSettings(), used to get the token
+ * @param int $maxRetries  how many attempts in all before giving up on a 429, 5xx or network failure
  */
 function intuneGraphGet(string $url, array $settings, int $maxRetries = 5): array {
     for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
@@ -154,6 +160,8 @@ function intuneGraphGet(string $url, array $settings, int $maxRetries = 5): arra
 /**
  * Convert a Graph ISO-8601 timestamp ("2025-04-30T08:14:22Z") to a MySQL
  * DATETIME string ("2025-04-30 08:14:22"), in UTC. Returns null for empty input.
+ *
+ * @param ?string $iso  a Graph ISO-8601 timestamp; null or '' gives null
  */
 function intuneIsoToMysql(?string $iso): ?string {
     if ($iso === null || $iso === '') return null;
@@ -166,6 +174,8 @@ function intuneIsoToMysql(?string $iso): ?string {
 
 /**
  * Upsert a single Graph managedDevice into intune_devices. Keyed on intune_id.
+ *
+ * @param array $d  one managedDevice object from Graph, decoded (id, deviceName, serialNumber, ...); stored whole in raw_json
  */
 function intuneUpsertDevice(PDO $conn, array $d): void {
     static $stmt = null;
@@ -274,6 +284,8 @@ function intuneUpsertDevice(PDO $conn, array $d): void {
  *
  * Matching itself is AssetsService::reconcileAsset(): serial first, then
  * hostname, with the placeholder-serial list and the laptop-refresh rule.
+ *
+ * @param ?int $companyId  the company new stubs go in and unlinked devices may match within; null uses the Intune setting
  */
 function intuneLinkDevicesToAssets(PDO $conn, ?int $companyId = null): array {
     require_once __DIR__ . '/services/assets.php';
@@ -354,6 +366,8 @@ function intuneLinkDevicesToAssets(PDO $conn, ?int $companyId = null): array {
  * Map an Intune operating_system string to a sensible "drive" label for
  * asset_disks. Intune only gives us a single device-level total/free figure,
  * so we fake a single drive entry whose name reflects the platform.
+ *
+ * @param ?string $os  Intune's operating_system text, e.g. 'Windows' or 'iOS'; null or '' gives 'System'
  */
 function intuneOsToDrive(?string $os): string {
     if ($os === null || $os === '') return 'System';
@@ -423,6 +437,8 @@ function intuneSyncDisks(PDO $conn): int {
 /**
  * Run the full sync for a given job id. Updates intune_sync_jobs as it goes
  * so the UI progress bar can poll. Designed for CLI worker use.
+ *
+ * @param int $jobId  the intune_sync_jobs id whose progress this updates
  */
 function intuneRunSync(PDO $conn, int $jobId): void {
     $logFile = __DIR__ . '/../logs/intune_sync.log';
@@ -522,6 +538,8 @@ function intuneRunSync(PDO $conn, int $jobId): void {
  * Locate a usable PHP CLI binary so the web request can spawn a worker.
  * Tries: explicit setting → PHP_BINARY's directory → known WAMP layout → 'php' from PATH.
  * Returns the path or throws if nothing works.
+ *
+ * @param ?string $override  a PHP CLI path from the intune_php_exe setting, tried first; null or '' to search
  */
 function intuneFindPhpExe(?string $override): string {
     $isWindows = stripos(PHP_OS_FAMILY, 'Windows') === 0 || PHP_OS_FAMILY === 'Windows';
@@ -548,6 +566,9 @@ function intuneFindPhpExe(?string $override): string {
 
 /**
  * Spawn the CLI worker so it survives the web request. Returns true on success.
+ *
+ * @param int $jobId  the intune_sync_jobs id passed to the worker on its command line
+ * @param ?string $phpExeOverride  a PHP CLI path from the settings, or null to search - see intuneFindPhpExe()
  */
 function intuneSpawnWorker(int $jobId, ?string $phpExeOverride): bool {
     return intuneSpawnGenericWorker('intune_worker.php', $jobId, $phpExeOverride);
@@ -555,6 +576,10 @@ function intuneSpawnWorker(int $jobId, ?string $phpExeOverride): bool {
 
 /**
  * Generic spawn helper used by both the device sync and the app sync workers.
+ *
+ * @param string $workerScriptName  the worker's file name inside scripts/, e.g. 'intune_worker.php'
+ * @param int $jobId  the job id passed to the worker on its command line
+ * @param ?string $phpExeOverride  a PHP CLI path from the settings, or null to search - see intuneFindPhpExe()
  */
 function intuneSpawnGenericWorker(string $workerScriptName, int $jobId, ?string $phpExeOverride): bool {
     $worker = realpath(__DIR__ . '/../scripts/' . $workerScriptName);
@@ -599,6 +624,8 @@ function intuneGetAppBatchSize(PDO $conn): int {
  *   - Have NO 'agent'-sourced rows in software_inventory_detail (agent wins)
  *   - Aren't already pending/running in another job
  * Ordered: assets that have never been Intune-synced first, then oldest synced.
+ *
+ * @param int $limit  the most assets to return (the app sync batch size)
  */
 function intuneGetAppSyncCandidates(PDO $conn, int $limit): array {
     $sql = "
@@ -686,6 +713,9 @@ function intuneCreateAppSyncJob(PDO $conn): array {
 
 /**
  * Fetch the detectedApps array for a single Intune-managed device.
+ *
+ * @param string $intuneId  the device's Graph managedDevice id (intune_devices.intune_id)
+ * @param array $settings  the connection settings from intuneGetSettings()
  */
 function intuneFetchDeviceApps(string $intuneId, array $settings): array {
     $url = 'https://graph.microsoft.com/beta/deviceManagement/managedDevices/'
@@ -698,6 +728,8 @@ function intuneFetchDeviceApps(string $intuneId, array $settings): array {
  * Wipe and re-write the source='intune' software rows for a single asset.
  * Apps catalogue (software_inventory_apps) is shared with the agent — we
  * dedupe on (display_name, publisher).
+ *
+ * @param array $apps  Graph detectedApps entries (displayName, publisher, version, sizeInByte); entries with no name are skipped
  */
 function intuneUpsertSoftwareForAsset(PDO $conn, int $assetId, array $apps): int {
     // Wipe previous Intune rows for this asset so the import is idempotent.
@@ -758,6 +790,8 @@ function intuneUpsertSoftwareForAsset(PDO $conn, int $assetId, array $apps): int
  * Run an app-sync job: iterate its child rows, fetch detectedApps from Graph
  * for each asset, upsert into software_inventory_*, and tick progress.
  * Designed for CLI worker use.
+ *
+ * @param int $jobId  the intune_app_sync_jobs id whose pending assets are synced
  */
 function intuneRunAppSyncJob(PDO $conn, int $jobId): void {
     $logFile = __DIR__ . '/../logs/intune_app_sync.log';
@@ -893,6 +927,9 @@ function intuneRunAppSyncJob(PDO $conn, int $jobId): void {
 
 /**
  * Spawn the CLI app-sync worker.
+ *
+ * @param int $jobId  the intune_app_sync_jobs id passed to the worker on its command line
+ * @param ?string $phpExeOverride  a PHP CLI path from the settings, or null to search - see intuneFindPhpExe()
  */
 function intuneSpawnAppWorker(int $jobId, ?string $phpExeOverride): bool {
     return intuneSpawnGenericWorker('intune_app_worker.php', $jobId, $phpExeOverride);

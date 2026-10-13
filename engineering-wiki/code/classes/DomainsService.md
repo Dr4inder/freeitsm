@@ -67,7 +67,7 @@ function bulkFields(): array
 
 ### saveDomain
 
-*public static* - line 106
+*public static* - line 107
 
 Create (no id) or update (id present) a domain. Returns ['id', 'created'].
 
@@ -79,14 +79,14 @@ function saveDomain(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId = nu
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (absent = new), domain_name, auth_code and any `fieldMap()` key |
 | `$tenantId` | `?int` | `null` | the company a NEW domain belongs to (the adapter resolves it: the analyst's active company, or the API key's). Ignored on update — moving a domain between companies is not an edit. |
 
 **Called from:** [api/domains/save.php](/code/files/api/domains/save.php.md)
 
 ### createDomain
 
-*public static* - line 120
+*public static* - line 124
 
 Adds a domain to the register for a company and returns its id.
 
@@ -107,24 +107,24 @@ function createDomain(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | domain_name (required), auth_code and any `fieldMap()` key |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$source` | `string` | `'app'` |  |
+| `$source` | `string` | `'app'` | the history row's source; 'app' (default) records 'app' or 'api' from the caller, anything else as given |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 133 | `DomainsService::createDomain` | read [domains](/code/tables/domains.md) |  |
-| 153 | `DomainsService::createDomain` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 157 | `DomainsService::createDomain` | **insert** [domains](/code/tables/domains.md) |  |
-| 162 | `DomainsService::createDomain` | **update** [domains](/code/tables/domains.md) (`auth_code`) |  |
+| 137 | `DomainsService::createDomain` | read [domains](/code/tables/domains.md) |  |
+| 157 | `DomainsService::createDomain` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 161 | `DomainsService::createDomain` | **insert** [domains](/code/tables/domains.md) |  |
+| 166 | `DomainsService::createDomain` | **update** [domains](/code/tables/domains.md) (`auth_code`) |  |
 
 **Called from:** [api/domains/bulk_add.php](/code/files/api/domains/bulk_add.php.md), [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md)
 
 ### updateDomain
 
-*public static* - line 177
+*public static* - line 185
 
 Changes a domain's fields, records each change in its history and fires domain.updated when anything changed.
 
@@ -138,22 +138,22 @@ function updateDomain(PDO $conn, ActorContext $ctx, int $id, array $in, string $
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$in` | `array` |  |  |
-| `$source` | `string` | `''` |  |
+| `$id` | `int` |  | the domain to change |
+| `$in` | `array` |  | domain_name, auth_code and any `fieldMap()` key; absent keys are left alone |
+| `$source` | `string` | `''` | the history row's source; '' records 'app' or 'api' from the caller |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 190 | `DomainsService::updateDomain` | read [domains](/code/tables/domains.md) |  |
-| 222 | `DomainsService::updateDomain` | **update** [domains](/code/tables/domains.md) |  |
+| 198 | `DomainsService::updateDomain` | read [domains](/code/tables/domains.md) |  |
+| 230 | `DomainsService::updateDomain` | **update** [domains](/code/tables/domains.md) |  |
 
 **Called from:** [api/domains/auth_code.php](/code/files/api/domains/auth_code.php.md), [api/domains/links.php](/code/files/api/domains/links.php.md), [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md)
 
 ### deleteDomain
 
-*public static* - line 233
+*public static* - line 245
 
 Delete a domain and everything that hangs off it. Returns the id.
 
@@ -165,19 +165,19 @@ function deleteDomain(PDO $conn, ActorContext $ctx, int $id): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain to delete, with its history, alerts, checks and links |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 249 | `DomainsService::deleteDomain` | **delete** [domains](/code/tables/domains.md) |  |
+| 261 | `DomainsService::deleteDomain` | **delete** [domains](/code/tables/domains.md) |  |
 
 **Called from:** [api/domains/delete.php](/code/files/api/domains/delete.php.md), [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md)
 
 ### bulkAdd
 
-*public static* - line 270
+*public static* - line 285
 
 Add many domains from a pasted list (one per line, or separated by commas or spaces). Every name goes through the same create path as a single add.
 
@@ -196,10 +196,10 @@ function bulkAdd(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$text` | `string` |  |  |
-| `$defaults` | `array` |  |  |
+| `$text` | `string` |  | the pasted list - names separated by new lines, commas, semicolons, tabs or spaces (at most 1,000) |
+| `$defaults` | `array` |  | `fieldMap()` values every new domain starts with, e.g. status_id or owner_analyst_id |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$source` | `string` | `'app'` |  |
+| `$source` | `string` | `'app'` | the history row's source, as `createDomain()` |
 
 **Returns:** array{added:array<int,array{id:int,name:string}>, skipped:array<int,array{input:string,reason:string}>}
 
@@ -207,7 +207,7 @@ function bulkAdd(
 
 ### bulkUpdate
 
-*public static* - line 299
+*public static* - line 317
 
 Set the same fields on many domains. Each goes through `updateDomain()`, so each gets its own history rows and scope check; a domain the caller cannot reach is reported, not silently skipped.
 
@@ -219,14 +219,14 @@ function bulkUpdate(PDO $conn, ActorContext $ctx, array $ids, array $fields): ar
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$ids` | `array` |  |  |
-| `$fields` | `array` |  |  |
+| `$ids` | `array` |  | the domains to change |
+| `$fields` | `array` |  | [field => value]; only `bulkFields()` keys are used |
 
 **Called from:** [api/domains/bulk_update.php](/code/files/api/domains/bulk_update.php.md)
 
 ### refreshLookup
 
-*public static* - line 317
+*public static* - line 339
 
 Look a domain up now and apply the answer. For the "Refresh" button and the API.
 
@@ -238,13 +238,13 @@ function refreshLookup(PDO $conn, ActorContext $ctx, int $id): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain to look up |
 
 **Called from:** [api/domains/process.php](/code/files/api/domains/process.php.md), [api/domains/save.php](/code/files/api/domains/save.php.md), [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md)
 
 ### applyLookup
 
-*public static* - line 342
+*public static* - line 366
 
 Write a lookup result onto a domain, under the operator's overwrite rule.
 
@@ -263,8 +263,8 @@ function applyLookup(PDO $conn, int $id, array $r, ?int $analystId = null): arra
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$r` | `array` |  |  |
+| `$id` | `int` |  | the domain the answer is for |
+| `$r` | `array` |  | a successful `domainLookup()` result: registrar, dates, nameservers, locks, statuses, registrant, source |
 | `$analystId` | `?int` | `null` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array<int,array{field:string,old:?string,new:?string}>
@@ -273,13 +273,13 @@ function applyLookup(PDO $conn, int $id, array $r, ?int $analystId = null): arra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 397 | `DomainsService::applyLookup` | **update** [domains](/code/tables/domains.md) |  |
+| 421 | `DomainsService::applyLookup` | **update** [domains](/code/tables/domains.md) |  |
 
 **Called from:** [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md)
 
 ### recordLookupError
 
-*public static* - line 407
+*public static* - line 436
 
 Records that the last registration lookup for a domain failed, and why.
 
@@ -290,20 +290,20 @@ function recordLookupError(PDO $conn, int $id, string $error): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$error` | `string` |  |  |
+| `$id` | `int` |  | the domain |
+| `$error` | `string` |  | why the lookup failed (cut to 255 characters) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 409 | `DomainsService::recordLookupError` | **update** [domains](/code/tables/domains.md) (`last_lookup_datetime`, `last_lookup_error`) |  |
+| 438 | `DomainsService::recordLookupError` | **update** [domains](/code/tables/domains.md) (`last_lookup_datetime`, `last_lookup_error`) |  |
 
 **Called from:** [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md)
 
 ### runChecks
 
-*public static* - line 423
+*public static* - line 453
 
 Run the health/security checks for one domain, store the result, and compare against the last run. Returns the check result plus 'changes'.
 
@@ -315,19 +315,19 @@ function runChecks(PDO $conn, ?ActorContext $ctx, int $id): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `?ActorContext` |  | null when the scheduled run calls it |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain to check |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 434 | `DomainsService::runChecks` | **update** [domains](/code/tables/domains.md) (`check_results`, `security_score`, `security_grade`, `ssl_expiry_date`, `ssl_issuer`, `watch_baseline`, `last_check_datetime`) |  |
+| 464 | `DomainsService::runChecks` | **update** [domains](/code/tables/domains.md) (`check_results`, `security_score`, `security_grade`, `ssl_expiry_date`, `ssl_issuer`, `watch_baseline`, `last_check_datetime`) |  |
 
 **Called from:** [api/domains/process.php](/code/files/api/domains/process.php.md), [api/domains/save.php](/code/files/api/domains/save.php.md), [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md)
 
 ### revealAuthCode
 
-*public static* - line 490
+*public static* - line 522
 
 The decrypted auth code, for somebody the adapter has already checked holds Cap::DOMAINS_AUTH_CODES. Recorded in the domain's history unless the operator switched that off.
 
@@ -339,13 +339,13 @@ function revealAuthCode(PDO $conn, ActorContext $ctx, int $id): ?string
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain whose auth code is shown |
 
 **Called from:** [api/domains/auth_code.php](/code/files/api/domains/auth_code.php.md)
 
 ### saveStatus
 
-*public static* - line 509
+*public static* - line 543
 
 Adds or updates a domain status (name, colour, alerts on or off, active, order); names must be unique.
 
@@ -356,21 +356,21 @@ function saveStatus(PDO $conn, array $in): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (0 or absent = new), name (unique), colour (#rrggbb), alerts_enabled, is_active, display_order |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 519 | `DomainsService::saveStatus` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 524 | `DomainsService::saveStatus` | **update** [domain_statuses](/code/tables/domain_statuses.md) (`name`, `colour`, `alerts_enabled`, `is_active`, `display_order`) |  |
-| 528 | `DomainsService::saveStatus` | **insert** [domain_statuses](/code/tables/domain_statuses.md) (`name`, `colour`, `alerts_enabled`, `is_active`, `display_order`, `created_datetime`) |  |
+| 553 | `DomainsService::saveStatus` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 558 | `DomainsService::saveStatus` | **update** [domain_statuses](/code/tables/domain_statuses.md) (`name`, `colour`, `alerts_enabled`, `is_active`, `display_order`) |  |
+| 562 | `DomainsService::saveStatus` | **insert** [domain_statuses](/code/tables/domain_statuses.md) (`name`, `colour`, `alerts_enabled`, `is_active`, `display_order`, `created_datetime`) |  |
 
 **Called from:** [api/domains/statuses.php](/code/files/api/domains/statuses.php.md)
 
 ### deleteStatus
 
-*public static* - line 534
+*public static* - line 572
 
 Deletes a domain status; refuses while any domain uses it.
 
@@ -381,20 +381,20 @@ function deleteStatus(PDO $conn, int $id): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain_statuses row to delete |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 536 | `DomainsService::deleteStatus` | read [domains](/code/tables/domains.md) |  |
-| 541 | `DomainsService::deleteStatus` | **delete** [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 574 | `DomainsService::deleteStatus` | read [domains](/code/tables/domains.md) |  |
+| 579 | `DomainsService::deleteStatus` | **delete** [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 **Called from:** [api/domains/statuses.php](/code/files/api/domains/statuses.php.md)
 
 ### saveRegistrarAccount
 
-*public static* - line 549
+*public static* - line 592
 
 Adds or updates a registrar account (the login at a registrar) for a company.
 
@@ -406,21 +406,21 @@ function saveRegistrarAccount(PDO $conn, ActorContext $ctx, array $in, ?int $ten
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (0 or absent = new), account_name (required), supplier_id, account_reference, login_url, owner_analyst_id, two_factor_holder, notes |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 565 | `DomainsService::saveRegistrarAccount` | **update** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) (`supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`) |  |
-| 573 | `DomainsService::saveRegistrarAccount` | **insert** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) (`supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`, `tenant_id`, `created_by`, `created_datetime`) |  |
+| 608 | `DomainsService::saveRegistrarAccount` | **update** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) (`supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`) |  |
+| 616 | `DomainsService::saveRegistrarAccount` | **insert** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) (`supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`, `tenant_id`, `created_by`, `created_datetime`) |  |
 
 **Called from:** [api/domains/accounts.php](/code/files/api/domains/accounts.php.md)
 
 ### deleteRegistrarAccount
 
-*public static* - line 580
+*public static* - line 627
 
 Deletes a registrar account, unlinking it from its domains first.
 
@@ -432,20 +432,20 @@ function deleteRegistrarAccount(PDO $conn, ActorContext $ctx, int $id): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain_registrar_accounts row to delete |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 583 | `DomainsService::deleteRegistrarAccount` | **update** [domains](/code/tables/domains.md) (`registrar_account_id`) |  |
-| 584 | `DomainsService::deleteRegistrarAccount` | **delete** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 630 | `DomainsService::deleteRegistrarAccount` | **update** [domains](/code/tables/domains.md) (`registrar_account_id`) |  |
+| 631 | `DomainsService::deleteRegistrarAccount` | **delete** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
 
 **Called from:** [api/domains/accounts.php](/code/files/api/domains/accounts.php.md)
 
 ### loadRow
 
-*public static* - line 592
+*public static* - line 643
 
 Loads one domain; throws not found when it does not exist.
 
@@ -456,17 +456,17 @@ function loadRow(PDO $conn, int $id): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 594 | `DomainsService::loadRow` | read [domains](/code/tables/domains.md) |  |
+| 645 | `DomainsService::loadRow` | read [domains](/code/tables/domains.md) |  |
 
 ### loadForActor
 
-*public static* - line 602
+*public static* - line 657
 
 Load a domain the caller may touch — out of scope reads as not found.
 
@@ -478,13 +478,13 @@ function loadForActor(PDO $conn, ActorContext $ctx, int $id): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain to load |
 
 **Called from:** [api/domains/links.php](/code/files/api/domains/links.php.md), [api/domains/process.php](/code/files/api/domains/process.php.md), [api/domains/watch.php](/code/files/api/domains/watch.php.md)
 
 ### loadAccountForActor
 
-*private static* - line 610
+*private static* - line 669
 
 Loads a registrar account the actor's companies can reach; throws not found otherwise.
 
@@ -496,17 +496,17 @@ function loadAccountForActor(PDO $conn, ActorContext $ctx, int $id): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the domain_registrar_accounts row to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 612 | `DomainsService::loadAccountForActor` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 671 | `DomainsService::loadAccountForActor` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
 
 ### assertScope
 
-*private static* - line 621
+*private static* - line 684
 
 Throws not found when the row's company is outside the actor's companies.
 
@@ -518,11 +518,11 @@ function assertScope(PDO $conn, ActorContext $ctx, array $row): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | a domain or registrar account row; must include tenant_id |
 
 ### storeTenant
 
-*private static* - line 631
+*private static* - line 694
 
 The Default company is stored as NULL, the way every scoped table does.
 
@@ -537,7 +537,7 @@ function storeTenant(PDO $conn, ?int $tenantId): ?int
 
 ### validateField
 
-*private static* - line 645
+*private static* - line 714
 
 Validates and cleans one domain field according to its type in `fieldMap()`, and returns the value to store.
 
@@ -548,21 +548,21 @@ function validateField(PDO $conn, string $field, $v, array $def, array $row, str
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$v` |  |  |  |
-| `$def` | `array` |  |  |
-| `$row` | `array` |  |  |
-| `$domainName` | `string` |  |  |
+| `$field` | `string` |  | the `fieldMap()` key being set |
+| `$v` |  |  | the value from the request |
+| `$def` | `array` |  | that field's `fieldMap()` entry (type, table, values, max, min) |
+| `$row` | `array` |  | the domain as stored (or ['tenant_id' => ...] on create), for company checks |
+| `$domainName` | `string` |  | the domain's name, used to read ssl_hosts entries |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 661 | `DomainsService::validateField` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 730 | `DomainsService::validateField` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
 
 ### fieldReady
 
-*private static* - line 736
+*private static* - line 809
 
 Is this field's column there yet? The #153 and #162 columns arrive with Database Verification.
 
@@ -573,11 +573,11 @@ function fieldReady(PDO $conn, string $field): bool
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
+| `$field` | `string` |  | a `fieldMap()` key |
 
 ### normaliseParties
 
-*private static* - line 752
+*private static* - line 828
 
 #162: a domain has ONE customer - a person, or a supplier (optionally with one of its contacts) - and ONE technical contact - a supplier contact, or an analyst. Setting one kind clears the other, so a caller (the edit dialog, or a REST PATCH naming just one field) never has to know which kind was there before. Naming both kinds at once is refused rather than guessed. Clearing a field clears only that field, except that clearing the supplier also clears its contact.
 
@@ -588,19 +588,19 @@ function normaliseParties(PDO $conn, array $in, array $cur): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
-| `$cur` | `array` |  |  |
+| `$in` | `array` |  | the request fields; the customer and technical contact keys are adjusted |
+| `$cur` | `array` |  | the stored domain row on update; [] on create |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 774 | `DomainsService::normaliseParties` | read [contacts](/code/tables/contacts.md) |  |
-| 789 | `DomainsService::normaliseParties` | read [contacts](/code/tables/contacts.md) |  |
+| 850 | `DomainsService::normaliseParties` | read [contacts](/code/tables/contacts.md) |  |
+| 865 | `DomainsService::normaliseParties` | read [contacts](/code/tables/contacts.md) |  |
 
 ### lookup
 
-*private static* - line 800
+*private static* - line 882
 
 A validated id from a lookup table, or null for none; throws for an unknown id.
 
@@ -611,13 +611,13 @@ function lookup(PDO $conn, string $table, $value, string $label): ?int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$value` |  |  |  |
-| `$label` | `string` |  |  |
+| `$table` | `string` |  | the lookup table, written in code - never user input |
+| `$value` |  |  | the id from the request; null, '', 0 or '0' gives null |
+| `$label` | `string` |  | what the table holds, for the error message |
 
 ### requireAnalyst
 
-*private static* - line 811
+*private static* - line 897
 
 Throws unless the id is an active analyst.
 
@@ -628,17 +628,17 @@ function requireAnalyst(PDO $conn, int $id): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the analyst to check |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 813 | `DomainsService::requireAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 899 | `DomainsService::requireAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ### str
 
-*private static* - line 819
+*private static* - line 910
 
 Trimmed text cut to `$max` characters, or null when blank.
 
@@ -648,12 +648,12 @@ function str($v, int $max): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
-| `$max` | `int` |  |  |
+| `$v` |  |  | the value from the request |
+| `$max` | `int` |  | the most characters to keep |
 
 ### same
 
-*private static* - line 826
+*private static* - line 922
 
 True when two values are equal, treating null and '' as the same.
 
@@ -663,12 +663,12 @@ function same($a, $b): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$a` |  |  |  |
-| `$b` |  |  |  |
+| `$a` |  |  | the stored value |
+| `$b` |  |  | the new value |
 
 ### matchSupplier
 
-*private static* - line 833
+*private static* - line 933
 
 A supplier whose legal or trading name matches the registry's registrar name.
 
@@ -679,17 +679,17 @@ function matchSupplier(PDO $conn, string $registrar): ?int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$registrar` | `string` |  |  |
+| `$registrar` | `string` |  | the registrar's name as the registry gives it |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 839 | `DomainsService::matchSupplier` | read [suppliers](/code/tables/suppliers.md) |  |
+| 939 | `DomainsService::matchSupplier` | read [suppliers](/code/tables/suppliers.md) |  |
 
 ### audit
 
-*public static* - line 858
+*public static* - line 963
 
 Records one change in a domain's history; a failure is logged, never thrown.
 
@@ -708,12 +708,12 @@ function audit(
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$domainId` | `int` |  |  |
+| `$domainId` | `int` |  | the domain the entry belongs to |
 | `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$old` |  |  |  |
-| `$new` |  |  |  |
-| `$source` | `string` | `'app'` |  |
+| `$field` | `string` |  | the field that changed, or an event such as 'domain_created' or 'auth_code_viewed' |
+| `$old` |  |  | the value before, as shown (cut to 1000 characters); null for none |
+| `$new` |  |  | the value after, as shown (cut to 1000 characters); null for none |
+| `$source` | `string` | `'app'` | what made the change: 'app', 'api', 'lookup', 'check' or 'monitor' |
 
 **Writes:** domain_audit - the domain's change history
 
@@ -721,13 +721,13 @@ function audit(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 861 | `DomainsService::audit` | **insert** [domain_audit](/code/tables/domain_audit.md) (`domain_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
+| 966 | `DomainsService::audit` | **insert** [domain_audit](/code/tables/domain_audit.md) (`domain_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
 
 **Called from:** [api/domains/watch.php](/code/files/api/domains/watch.php.md), [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md)
 
 ### assertContractVisible
 
-*private static* - line 877
+*private static* - line 985
 
 A domain may only be linked to a contract its editor can see - one in a company outside their reach is "unknown", as everywhere else - and, since contracts belong to a company (3.5.0), only to one in the DOMAIN's company. `$domainTenant` is the domain's stored company (NULL = Default).
 
@@ -744,18 +744,18 @@ function assertContractVisible(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$contractId` |  |  |  |
-| `$domainTenant` | `?int` | `null` |  |
+| `$contractId` |  |  | the contract being linked; null does nothing |
+| `$domainTenant` | `?int` | `null` | the domain's stored company - null for the Default company |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 882 | `DomainsService::assertContractVisible` | read [contracts](/code/tables/contracts.md) |  |
+| 990 | `DomainsService::assertContractVisible` | read [contracts](/code/tables/contracts.md) |  |
 
 ### auditDisplay
 
-*private static* - line 895
+*private static* - line 1008
 
 Ids stored as names, so the history reads as English a year later.
 
@@ -766,27 +766,27 @@ function auditDisplay(PDO $conn, string $field, $v): ?string
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$v` |  |  |  |
+| `$field` | `string` |  | the field the value belongs to |
+| `$v` |  |  | the stored value - an id for the lookup fields |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 899 | `DomainsService::auditDisplay` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 900 | `DomainsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
-| 901 | `DomainsService::auditDisplay` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
-| 902 | `DomainsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
-| 903 | `DomainsService::auditDisplay` | read [contacts](/code/tables/contacts.md) |  |
-| 904 | `DomainsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
-| 905 | `DomainsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
-| 906 | `DomainsService::auditDisplay` | read [contacts](/code/tables/contacts.md) |  |
-| 907 | `DomainsService::auditDisplay` | read [contracts](/code/tables/contracts.md) |  |
-| 908 | `DomainsService::auditDisplay` | read [users](/code/tables/users.md) |  |
+| 1012 | `DomainsService::auditDisplay` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 1013 | `DomainsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
+| 1014 | `DomainsService::auditDisplay` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 1015 | `DomainsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
+| 1016 | `DomainsService::auditDisplay` | read [contacts](/code/tables/contacts.md) |  |
+| 1017 | `DomainsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
+| 1018 | `DomainsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
+| 1019 | `DomainsService::auditDisplay` | read [contacts](/code/tables/contacts.md) |  |
+| 1020 | `DomainsService::auditDisplay` | read [contracts](/code/tables/contracts.md) |  |
+| 1021 | `DomainsService::auditDisplay` | read [users](/code/tables/users.md) |  |
 
 ### eventPayload
 
-*public static* - line 919
+*public static* - line 1036
 
 The payload every domain.* event carries.
 
@@ -796,11 +796,11 @@ function eventPayload(array $row): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | the domains row |
 
 ### dispatchCrud
 
-*private static* - line 938
+*private static* - line 1060
 
 Fires the domain.<verb> workflow event for a domain; a failure is logged, never thrown.
 
@@ -811,12 +811,12 @@ function dispatchCrud(PDO $conn, string $verb, int $id): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$verb` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$verb` | `string` |  | 'created' or 'updated' - the event is domain.<verb> |
+| `$id` | `int` |  | the domain |
 
 ### afterDateChange
 
-*private static* - line 949
+*private static* - line 1071
 
 Expiry dates feed the calendar; keep it in step. Never fails the write.
 

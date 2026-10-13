@@ -6,11 +6,11 @@ A money amount from input: null for empty, else a number with at most two decima
 function projectMoney($v): ?float
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 495.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 541.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | the amount as typed (untrusted); commas and spaces are ignored, null or '' gives null |
 
 **Returns:** `?float`
 

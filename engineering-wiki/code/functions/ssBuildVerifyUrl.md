@@ -6,11 +6,11 @@ Absolute URL to the self-service email-verification page for a raw token.
 function ssBuildVerifyUrl(string $rawToken): string
 ```
 
-Defined in [includes/self_service_email.php](/code/files/includes/self_service_email.php.md), line 95.
+Defined in [includes/self_service_email.php](/code/files/includes/self_service_email.php.md), line 104.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawToken` | `string` |  |  |
+| `$rawToken` | `string` |  | the unhashed verification token that goes in the link |
 
 **Returns:** `string`
 

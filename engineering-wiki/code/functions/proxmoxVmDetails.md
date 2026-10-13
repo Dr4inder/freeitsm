@@ -14,17 +14,17 @@ function proxmoxVmDetails(
 ): array
 ```
 
-Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 270.
+Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 310.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
-| `$auth` | `array` |  |  |
-| `$type` | `string` |  |  |
-| `$node` | `string` |  |  |
-| `$vmid` | `int` |  |  |
-| `$listEntry` | `array` |  |  |
-| `$clusterName` | `string` |  |  |
+| `$c` | `array` |  | the connection row |
+| `$auth` | `array` |  | what `proxmoxLogin()` returned |
+| `$type` | `string` |  | 'qemu' for a VM or 'lxc' for a container |
+| `$node` | `string` |  | the node name the VM is on |
+| `$vmid` | `int` |  | the VM's Proxmox id |
+| `$listEntry` | `array` |  | the VM's entry from the node's qemu or lxc list (name, status, maxmem) |
+| `$clusterName` | `string` |  | the cluster's name, or the node's when it is not in a cluster |
 
 **Returns:** `array`
 

@@ -6,7 +6,7 @@ Comments — append + delete (no edit), always internal, like the UI
 function apiChangeCommentsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 376.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 386.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 379 | `apiChangeCommentsList` | read [change_comments](/code/tables/change_comments.md), read [analysts](/code/tables/analysts.md) |  |
+| 389 | `apiChangeCommentsList` | read [change_comments](/code/tables/change_comments.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

@@ -13,7 +13,7 @@ the things that need checking.
 function handleExceptions(PDO $conn, int $analystId): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 395.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 422.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,8 +26,8 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 406 | `handleExceptions` | read [knowledge_acl](/code/tables/knowledge_acl.md), read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 423 | `handleExceptions` | read [knowledge_acl](/code/tables/knowledge_acl.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 433 | `handleExceptions` | read [knowledge_acl](/code/tables/knowledge_acl.md), read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 450 | `handleExceptions` | read [knowledge_acl](/code/tables/knowledge_acl.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

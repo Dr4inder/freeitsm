@@ -6,7 +6,7 @@ Analysts this person could start a DM with. Active accounts only — offering to
 function warRoomDirectory(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 414.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 448.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 414
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 417 | `warRoomDirectory` | read [warroom_presence](/code/tables/warroom_presence.md), read [analysts](/code/tables/analysts.md) |  |
+| 451 | `warRoomDirectory` | read [warroom_presence](/code/tables/warroom_presence.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Called from
 

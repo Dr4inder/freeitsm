@@ -83,6 +83,8 @@ if (!function_exists('configFileShape')) {
      * What a config file DECLARES, read with the tokeniser so commented-out
      * lines do not count. Returns names only: the constants it define()s and
      * the functions it declares. Never values.
+     *
+     * @param string $path  filesystem path of the PHP config file to read; unreadable gives readable => false
      */
     function configFileShape(string $path): array
     {
@@ -117,6 +119,8 @@ if (!function_exists('configRequirementsReport')) {
      * Compare the running state and the operator's config.php with the list.
      * Each row: name, kind, defined (bool), inConfig (bool), status
      * ('ok' | 'default' | 'problem'). Names and booleans only.
+     *
+     * @param string $configPath  filesystem path of the operator's config.php
      */
     function configRequirementsReport(string $configPath): array
     {

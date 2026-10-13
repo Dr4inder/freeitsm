@@ -6,14 +6,14 @@ POST with retry/backoff on 429 / 5xx / network errors. Ported from rfpAiHttpPost
 function aiProviderHttpPost(string $url, array $headers, string $body, bool $verifySsl): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 678.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 723.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
-| `$headers` | `array` |  |  |
-| `$body` | `string` |  |  |
-| `$verifySsl` | `bool` |  |  |
+| `$url` | `string` |  | the full URL to POST to |
+| `$headers` | `array` |  | every header line to send |
+| `$body` | `string` |  | the request body, already JSON-encoded |
+| `$verifySsl` | `bool` |  | the feature's verify-SSL setting; not applied - `sslApplyCurl()` uses the install-wide setting |
 
 **Returns:** `array`
 

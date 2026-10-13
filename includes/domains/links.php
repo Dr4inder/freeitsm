@@ -61,6 +61,8 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
 
     /**
      * Returns the definition (table, column, module...) of one link kind; throws a validation ServiceError for an unknown kind.
+     *
+     * @param string $kind  the link kind - cmdb | service | ticket | article (untrusted)
      */
     function domainLinkKind(string $kind): array
     {
@@ -69,7 +71,11 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         return $kinds[$kind];
     }
 
-    /** May this analyst use links of this kind at all? (Domains AND the other module.) */
+    /**
+     * May this analyst use links of this kind at all? (Domains AND the other module.)
+     *
+     * @param string $kind  the link kind - cmdb | service | ticket | article; unknown gives false
+     */
     function domainLinkKindAllowed(PDO $conn, int $analystId, string $kind): bool
     {
         $k = domainLinkKinds()[$kind] ?? null;
@@ -78,7 +84,12 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
             && analystCanAccessModule($conn, $analystId, $k['module']);
     }
 
-    /** A record's company with NULL read as the Default company. */
+    /**
+     * A record's company with NULL read as the Default company.
+     *
+     * @param string $table  the table holding the record - interpolated into SQL, so only literals from this file
+     * @param int    $id     the record's id; a missing record gives null
+     */
     function domainLinkTenantOf(PDO $conn, string $table, int $id): ?int
     {
         $st = $conn->prepare("SELECT tenant_id FROM $table WHERE id = ?");
@@ -91,6 +102,10 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
     /**
      * Is the OTHER end of a link one this analyst may see, and (for company
      * records) in the domain's company? $domainTenant null = do not compare.
+     *
+     * @param string $kind          the link kind - cmdb | service | ticket | article
+     * @param int    $targetId      the id of the record on the other end (a CI, service, ticket or article)
+     * @param ?int   $domainTenant  the domain's company to match for a CI or ticket; null skips the company check
      */
     function domainLinkTargetOk(PDO $conn, int $analystId, string $kind, int $targetId, ?int $domainTenant): bool
     {
@@ -117,7 +132,11 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         return false;
     }
 
-    /** The domain's company (Default for NULL), or a not-found for a domain out of reach. */
+    /**
+     * The domain's company (Default for NULL), or a not-found for a domain out of reach.
+     *
+     * @param int $domainId  the domain whose company is wanted
+     */
     function domainLinkDomainTenant(PDO $conn, int $analystId, int $domainId): int
     {
         if (!analystCanAccessModule($conn, $analystId, 'domains') || !analystCanAccessDomain($conn, $analystId, $domainId)) {
@@ -128,7 +147,12 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         return $t;
     }
 
-    /** One linked record, shaped for display: id, label, sub-line, link, and kind-specific extras. */
+    /**
+     * One linked record, shaped for display: id, label, sub-line, link, and kind-specific extras.
+     *
+     * @param string $kind  the link kind - cmdb | service | ticket | article - decides the table and the shape
+     * @param int[]  $ids   ids of the records to describe, already checked as visible
+     */
     function domainLinkDescribe(PDO $conn, string $kind, array $ids): array
     {
         if (!$ids) return [];
@@ -166,6 +190,8 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
      * Everything linked to one domain, per kind, for this analyst: a kind they
      * cannot use is left out entirely; within a kind, rows they cannot see are
      * dropped.
+     *
+     * @param int $domainId  the domain whose links to list
      */
     function domainLinks(PDO $conn, int $analystId, int $domainId): array
     {
@@ -185,6 +211,10 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
 
     /**
      * Links a record of one kind to a domain, when the analyst can reach both modules and both records in the domain's company; returns false when the link already existed.
+     *
+     * @param int    $domainId  the domain to link from
+     * @param string $kind      the link kind - cmdb | service | ticket | article (untrusted; unknown throws)
+     * @param int    $targetId  the id of the record to link to
      */
     function domainLinkAdd(PDO $conn, int $analystId, int $domainId, string $kind, int $targetId): bool
     {
@@ -199,7 +229,13 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         return $st->rowCount() > 0;
     }
 
-    /** Removes a domain link, under the same access rules as adding one; returns false when there was nothing to remove. */
+    /**
+     * Removes a domain link, under the same access rules as adding one; returns false when there was nothing to remove.
+     *
+     * @param int    $domainId  the domain to unlink from
+     * @param string $kind      the link kind - cmdb | service | ticket | article (untrusted; unknown throws)
+     * @param int    $targetId  the id of the linked record
+     */
     function domainLinkRemove(PDO $conn, int $analystId, int $domainId, string $kind, int $targetId): bool
     {
         $k = domainLinkKind($kind);
@@ -218,6 +254,10 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
     /**
      * Records of one kind that could be linked to a domain: matching $q, in the
      * domain's company, visible to the analyst, not already linked. At most 20.
+     *
+     * @param int    $domainId  the domain the picker is for
+     * @param string $kind      which kind of record to search - cmdb | service | ticket | article
+     * @param string $q         what the user typed; matched anywhere in the name, title, subject or ticket number
      */
     function domainLinkSearch(PDO $conn, int $analystId, int $domainId, string $kind, string $q): array
     {
@@ -266,6 +306,9 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
      * The other direction: the domains linked to one CI / service / ticket /
      * article that this analyst can see. Empty (not an error) when they cannot
      * open Domains or the other record, so a page can call it unconditionally.
+     *
+     * @param string $kind      the kind of record on the other side - cmdb | service | ticket | article
+     * @param int    $targetId  that record's id
      */
     function domainsLinkedTo(PDO $conn, int $analystId, string $kind, int $targetId): array
     {
@@ -283,6 +326,10 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
      * The picker on the OTHER side: domains that could be linked to this CI /
      * service / ticket / article - visible, matching $q, not already linked, and
      * for a company record in that record's company. At most 20.
+     *
+     * @param string $kind      the kind of record on the other side - cmdb | service | ticket | article
+     * @param int    $targetId  that record's id
+     * @param string $q         what the user typed; matched anywhere in the domain name or display name
      */
     function domainLinkPickDomains(PDO $conn, int $analystId, string $kind, int $targetId, string $q): array
     {
@@ -305,7 +352,11 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         return domainLinkDomainRows($conn, $ids);
     }
 
-    /** Domains by id, shaped for a list on another module's page. */
+    /**
+     * Domains by id, shaped for a list on another module's page.
+     *
+     * @param int[] $ids  domain ids, already checked as visible to the analyst
+     */
     function domainLinkDomainRows(PDO $conn, array $ids): array
     {
         if (!$ids) return [];
@@ -333,7 +384,11 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         ], $st->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    /** Domains under one contract (domains.contract_id) that this analyst can see. */
+    /**
+     * Domains under one contract (domains.contract_id) that this analyst can see.
+     *
+     * @param int $contractId  the contract whose domains to list; 0 or less gives none
+     */
     function domainsForContract(PDO $conn, int $analystId, int $contractId): array
     {
         if ($contractId <= 0 || !analystCanAccessModule($conn, $analystId, 'domains')) return [];

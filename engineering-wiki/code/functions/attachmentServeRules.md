@@ -9,11 +9,11 @@ this decision that should consult a value the sender chose.
 function attachmentServeRules(string $filename): array
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 712.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 738.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filename` | `string` |  |  |
+| `$filename` | `string` |  | the attachment's original filename; only its extension decides the type |
 
 **Returns:** array ['type' => string, 'inline' => bool, 'filename' => string] filename is header-safe (quotes and CR/LF removed).
 

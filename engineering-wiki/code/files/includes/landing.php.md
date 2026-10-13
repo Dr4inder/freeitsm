@@ -1,6 +1,6 @@
 # includes/landing.php
 
-> PHP - 176 lines
+> PHP - 185 lines
 
 Where an unauthenticated visitor lands (discussion #63).
 
@@ -25,19 +25,19 @@ unrecognised falls back to the default.
 | Function | Line | What it does |
 |---|--:|---|
 | [landingTargets()](/code/functions/landingTargets.md) | 39 | The only place a landing key maps to a URL. |
-| [landingIsValid()](/code/functions/landingIsValid.md) | 54 | Is this a landing key we recognise? Everything from outside goes through here. |
-| [landingInstallDefault()](/code/functions/landingInstallDefault.md) | 60 | The install-wide default, or 'analyst' when unset — the historical behaviour. |
-| [landingResolve()](/code/functions/landingResolve.md) | 80 | Where should this visitor go? Returns a relative path from the app root. |
-| [landingSetCookie()](/code/functions/landingSetCookie.md) | 102 | Write (or clear) the cookie that caches an analyst's choice. |
-| [landingRefreshCookieFromPreference()](/code/functions/landingRefreshCookieFromPreference.md) | 138 | Re-issue the cookie from the analyst's stored preference, on login. |
-| [landingOnPreferenceSaved()](/code/functions/landingOnPreferenceSaved.md) | 169 | Hook for api/system/set_user_preference.php. |
+| [landingIsValid()](/code/functions/landingIsValid.md) | 58 | Is this a landing key we recognise? Everything from outside goes through here. |
+| [landingInstallDefault()](/code/functions/landingInstallDefault.md) | 64 | The install-wide default, or 'analyst' when unset — the historical behaviour. |
+| [landingResolve()](/code/functions/landingResolve.md) | 84 | Where should this visitor go? Returns a relative path from the app root. |
+| [landingSetCookie()](/code/functions/landingSetCookie.md) | 108 | Write (or clear) the cookie that caches an analyst's choice. |
+| [landingRefreshCookieFromPreference()](/code/functions/landingRefreshCookieFromPreference.md) | 144 | Re-issue the cookie from the analyst's stored preference, on login. |
+| [landingOnPreferenceSaved()](/code/functions/landingOnPreferenceSaved.md) | 178 | Hook for api/system/set_user_preference.php. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 63 | `landingInstallDefault` | read [system_settings](/code/tables/system_settings.md) |  |
-| 145 | `landingRefreshCookieFromPreference` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 67 | `landingInstallDefault` | read [system_settings](/code/tables/system_settings.md) |  |
+| 151 | `landingRefreshCookieFromPreference` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## How it hangs together
 

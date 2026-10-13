@@ -6,11 +6,11 @@ The reference people say out loud: PRJ-0042.
 function projectCode(int $id): string
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 268.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 292.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the projects id |
 
 **Returns:** `string`
 

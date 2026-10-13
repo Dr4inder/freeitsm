@@ -12,15 +12,15 @@ function saveChannelMediaAttachment(
 ): array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 966.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 1043.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$emailId` | `int` |  |  |
-| `$filename` | `string` |  |  |
-| `$contentType` | `string` |  |  |
-| `$data` | `string` |  |  |
+| `$emailId` | `int` |  | the emails row the message was stored as |
+| `$filename` | `string` |  | the file name the sender gave - untrusted, for display only |
+| `$contentType` | `string` |  | the content type the provider claimed (not stored - the bytes decide) |
+| `$data` | `string` |  | the file's bytes |
 
 **Returns:** array{stored:bool, reason:?string} — reason is set when the file was rejected or quarantined.
 
@@ -28,7 +28,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 988 | `saveChannelMediaAttachment` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline`) |  |
+| 1065 | `saveChannelMediaAttachment` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline`) |  |
 
 ## Calls
 

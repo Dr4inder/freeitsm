@@ -23,7 +23,7 @@ Every action, reads and refusals included. No FKs: it outlives what it names.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/files/audit.php](/code/files/includes/files/audit.php.md):58 | `filesAudit` | insert | `analyst_id`, `analyst_name`, `action`, `folder_id`, `item_id`, `version_id`, `target_path`, `detail`, `ip_address`, `user_agent` |  |
+| [includes/files/audit.php](/code/files/includes/files/audit.php.md):60 | `filesAudit` | insert | `analyst_id`, `analyst_name`, `action`, `folder_id`, `item_id`, `version_id`, `target_path`, `detail`, `ip_address`, `user_agent` |  |
 
 ## Read by
 

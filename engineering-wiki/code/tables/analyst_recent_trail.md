@@ -16,14 +16,14 @@ The recent trail (#124): every record an analyst has opened, in order, so the wa
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md):186 | `recentTrailWrite` | update | `visited_datetime` |  |
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md):197 | `recentTrailWrite` | insert | `analyst_id`, `entity_type`, `entity_id`, `visited_datetime` |  |
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md):243 | `recentTrailPrune` | delete |  |  |
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md):253 | `recentTrailPrune` | delete |  |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md):192 | `recentTrailWrite` | update | `visited_datetime` |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md):203 | `recentTrailWrite` | insert | `analyst_id`, `entity_type`, `entity_id`, `visited_datetime` |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md):249 | `recentTrailPrune` | delete |  |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md):259 | `recentTrailPrune` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailWrite L175, entityRecentTrail L287 |  |
+| [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailWrite L181, entityRecentTrail L293 |  |
 

@@ -6,7 +6,7 @@ The session's token, created if missing. Works whether the session is open, or w
 function csrfToken(): string
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 106.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 110.
 
 **Returns:** `string`
 

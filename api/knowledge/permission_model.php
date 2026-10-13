@@ -84,6 +84,8 @@ function handleGet(PDO $conn): void
  * page into a four-million-row calculation. A capped answer that admits its cap
  * is useful; an uncapped one that times out is not, and a silent cap would be
  * worse than either.
+ *
+ * @param string $target  the model to compare against, from ?model= - 'filing', anything else meaning 'containers'
  */
 function handlePreview(PDO $conn, string $target): void
 {
@@ -163,6 +165,7 @@ function handlePreview(PDO $conn, string $target): void
  * Saves the install-wide folder permission model ('filing', anything else meaning
  * 'containers') and writes an audit row naming the old and new model.
  *
+ * @param array $in  the decoded JSON request; model is 'filing', anything else meaning 'containers'
  * @writes system_settings(knowledge_folder_permission_model)
  */
 function handleSet(PDO $conn, int $analystId, array $in): void

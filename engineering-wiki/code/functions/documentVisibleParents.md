@@ -16,14 +16,14 @@ function documentVisibleParents(
 ): array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 535.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 557.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$allowedModules` | `?array` |  |  |
-| `$documentId` | `int` |  |  |
+| `$allowedModules` | `?array` |  | the analyst's allowed module keys (`$_SESSION`['allowed_modules']); null means all |
+| `$documentId` | `int` |  | the documents.id whose attachments to list |
 
 **Returns:** array<int,array{parent_type:string,parent_id:int,label:string,name:?string,url:?string}>
 
@@ -31,7 +31,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 540 | `documentVisibleParents` | read [document_links](/code/tables/document_links.md) |  |
+| 562 | `documentVisibleParents` | read [document_links](/code/tables/document_links.md) |  |
 
 ## Calls
 

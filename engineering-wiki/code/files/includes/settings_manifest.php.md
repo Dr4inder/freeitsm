@@ -1,6 +1,6 @@
 # includes/settings_manifest.php
 
-> PHP - 139 lines
+> PHP - 155 lines
 
 Settings manifests — the only place a settings TAB may be declared.
 
@@ -44,11 +44,11 @@ is (a) the panel not being rendered and (b) the guard on the endpoint behind it.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [settingsVisibleTabs()](/code/functions/settingsVisibleTabs.md) | 63 | The tabs this analyst may see, in manifest order. |
-| [settingsTabVisible()](/code/functions/settingsTabVisible.md) | 77 | Is this tab id in the visible set? Use to decide whether to emit its panel. |
-| [settingsFirstTabId()](/code/functions/settingsFirstTabId.md) | 92 | The tab that should open first: the first visible one. |
-| [settingsHasAnyAdminTab()](/code/functions/settingsHasAnyAdminTab.md) | 98 | Does this analyst hold ANY administrative capability in this module? |
-| [renderSettingsTabBar()](/code/functions/renderSettingsTabBar.md) | 114 | Render the tab bar from the manifest — only the tabs this analyst may see. |
+| [settingsVisibleTabs()](/code/functions/settingsVisibleTabs.md) | 64 | The tabs this analyst may see, in manifest order. |
+| [settingsTabVisible()](/code/functions/settingsTabVisible.md) | 83 | Is this tab id in the visible set? Use to decide whether to emit its panel. |
+| [settingsFirstTabId()](/code/functions/settingsFirstTabId.md) | 100 | The tab that should open first: the first visible one. |
+| [settingsHasAnyAdminTab()](/code/functions/settingsHasAnyAdminTab.md) | 110 | Does this analyst hold ANY administrative capability in this module? |
+| [renderSettingsTabBar()](/code/functions/renderSettingsTabBar.md) | 130 | Render the tab bar from the manifest — only the tabs this analyst may see. |
 
 ## How it hangs together
 

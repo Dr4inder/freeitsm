@@ -1,6 +1,6 @@
 # includes/services/tasks.php
 
-> PHP - 1682 lines
+> PHP - 1792 lines
 
 TasksService — the shared write rules for the kanban Tasks module: task create/update, the kanban move (re-pack a column), delete (subtask tree) and comment create.
 
@@ -47,59 +47,59 @@ estimate_hours (3.3.0; hours, up to two decimals, NULL = not estimated).
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 111 | `TasksService::createTask` | read [tasks](/code/tables/tasks.md) |  |
-| 117 | `TasksService::createTask` | read [tasks](/code/tables/tasks.md) |  |
-| 130 | `TasksService::createTask` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `ticket_id`, `change_id`, `contract_id`) |  |
-| 145 | `TasksService::createTask` | **update** [tasks](/code/tables/tasks.md) (`estimate_hours`) |  |
-| 148 | `TasksService::createTask` | **update** [tasks](/code/tables/tasks.md) (`assigned_supplier_id`, `assigned_contact_id`) |  |
-| 370 | `TasksService::updateTask` | **update** [tasks](/code/tables/tasks.md) |  |
-| 374 | `TasksService::updateTask` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
-| 429 | `TasksService::moveTask` | **update** [tasks](/code/tables/tasks.md) (`status_id`, `completed_datetime`) |  |
-| 436 | `TasksService::moveTask` | read [tasks](/code/tables/tasks.md) |  |
-| 446 | `TasksService::moveTask` | **update** [tasks](/code/tables/tasks.md) (`board_position`) |  |
-| 523 | `TasksService::deleteTask` | read [tasks](/code/tables/tasks.md) |  |
-| 542 | `TasksService::deleteTask` | **delete** [task_comments](/code/tables/task_comments.md) |  |
-| 543 | `TasksService::deleteTask` | **delete** [task_tag_map](/code/tables/task_tag_map.md) |  |
-| 548 | `TasksService::deleteTask` | **delete** [tasks](/code/tables/tasks.md) |  |
-| 567 | `TasksService::createComment` | **insert** [task_comments](/code/tables/task_comments.md) (`task_id`, `analyst_id`, `comment`, `created_datetime`) |  |
-| 570 | `TasksService::createComment` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
-| 590 | `TasksService::taskEventDispatch` | read [tasks](/code/tables/tasks.md) |  |
-| 636 | `TasksService::collaboratorCompletionEnabled` | read [system_settings](/code/tables/system_settings.md) |  |
-| 689 | `TasksService::collaboratorsForMany` | read [task_collaborators](/code/tables/task_collaborators.md), read [analysts](/code/tables/analysts.md) |  |
-| 731 | `TasksService::addCollaborator` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 738 | `TasksService::addCollaborator` | **insert** [task_collaborators](/code/tables/task_collaborators.md) (`task_id`, `analyst_id`, `added_by_id`, `added_datetime`) |  |
-| 741 | `TasksService::addCollaborator` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
-| 751 | `TasksService::removeCollaborator` | **delete** [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 756 | `TasksService::removeCollaborator` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
-| 783 | `TasksService::setCollaboratorDone` | **update** [task_collaborators](/code/tables/task_collaborators.md) (`is_completed`, `completed_datetime`) |  |
-| 791 | `TasksService::setCollaboratorDone` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 797 | `TasksService::setCollaboratorDone` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
-| 805 | `TasksService::collaboratorsOutstanding` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 869 | `TasksService::collaboratorDispatch` | read [tasks](/code/tables/tasks.md) |  |
-| 898 | `TasksService::loadTaskRow` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 1044 | `TasksService::moveTaskToCompany` | **update** [tasks](/code/tables/tasks.md) (`tenant_id`, `updated_datetime`) |  |
-| 1051 | `TasksService::moveTaskToCompany` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
-| 1109 | `TasksService::taskAndDescendantIds` | read [tasks](/code/tables/tasks.md) |  |
-| 1127 | `TasksService::parentTaskTenant` | read [tasks](/code/tables/tasks.md) |  |
-| 1178 | `TasksService::resolveNewTaskTenant` | read [tickets](/code/tables/tickets.md) |  |
-| 1279 | `TasksService::validateTeam` | read [teams](/code/tables/teams.md) |  |
-| 1304 | `TasksService::validateLink` | read [changes](/code/tables/changes.md) |  |
-| 1310 | `TasksService::validateLink` | read [contracts](/code/tables/contracts.md) |  |
-| 1313 | `TasksService::validateLink` | read [tasks](/code/tables/tasks.md) |  |
-| 1336 | `TasksService::ticketAccessible` | read [tickets](/code/tables/tickets.md) |  |
-| 1370 | `TasksService::resolveTags` | read [task_tags](/code/tables/task_tags.md) |  |
-| 1373 | `TasksService::resolveTags` | read [task_tags](/code/tables/task_tags.md) |  |
-| 1388 | `TasksService::syncTags` | **delete** [task_tag_map](/code/tables/task_tag_map.md) |  |
-| 1389 | `TasksService::syncTags` | **insert** [task_tag_map](/code/tables/task_tag_map.md) (`task_id`, `tag_id`) |  |
-| 1413 | `TasksService::timeScope` | read [system_settings](/code/tables/system_settings.md) |  |
-| 1458 | `TasksService::createTimeEntry` | **insert** [task_time_entries](/code/tables/task_time_entries.md) (`task_id`, `analyst_id`, `notes`, `time_spent_minutes`, `entry_datetime`) |  |
-| 1467 | `TasksService::deleteTimeEntry` | read [task_time_entries](/code/tables/task_time_entries.md) |  |
-| 1477 | `TasksService::deleteTimeEntry` | **update** [task_time_entries](/code/tables/task_time_entries.md) (`is_active`) |  |
-| 1496 | `TasksService::timeEntriesFor` | read [task_time_entries](/code/tables/task_time_entries.md), read [analysts](/code/tables/analysts.md) |  |
-| 1512 | `TasksService::timeEntriesFor` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
-| 1560 | `TasksService::assignedDispatch` | read [tasks](/code/tables/tasks.md) |  |
-| 1583 | `TasksService::completedDispatch` | read [tasks](/code/tables/tasks.md) |  |
-| 1602 | `TasksService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 118 | `TasksService::createTask` | read [tasks](/code/tables/tasks.md) |  |
+| 124 | `TasksService::createTask` | read [tasks](/code/tables/tasks.md) |  |
+| 137 | `TasksService::createTask` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `ticket_id`, `change_id`, `contract_id`) |  |
+| 152 | `TasksService::createTask` | **update** [tasks](/code/tables/tasks.md) (`estimate_hours`) |  |
+| 155 | `TasksService::createTask` | **update** [tasks](/code/tables/tasks.md) (`assigned_supplier_id`, `assigned_contact_id`) |  |
+| 380 | `TasksService::updateTask` | **update** [tasks](/code/tables/tasks.md) |  |
+| 384 | `TasksService::updateTask` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 444 | `TasksService::moveTask` | **update** [tasks](/code/tables/tasks.md) (`status_id`, `completed_datetime`) |  |
+| 451 | `TasksService::moveTask` | read [tasks](/code/tables/tasks.md) |  |
+| 461 | `TasksService::moveTask` | **update** [tasks](/code/tables/tasks.md) (`board_position`) |  |
+| 540 | `TasksService::deleteTask` | read [tasks](/code/tables/tasks.md) |  |
+| 559 | `TasksService::deleteTask` | **delete** [task_comments](/code/tables/task_comments.md) |  |
+| 560 | `TasksService::deleteTask` | **delete** [task_tag_map](/code/tables/task_tag_map.md) |  |
+| 565 | `TasksService::deleteTask` | **delete** [tasks](/code/tables/tasks.md) |  |
+| 588 | `TasksService::createComment` | **insert** [task_comments](/code/tables/task_comments.md) (`task_id`, `analyst_id`, `comment`, `created_datetime`) |  |
+| 591 | `TasksService::createComment` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 614 | `TasksService::taskEventDispatch` | read [tasks](/code/tables/tasks.md) |  |
+| 660 | `TasksService::collaboratorCompletionEnabled` | read [system_settings](/code/tables/system_settings.md) |  |
+| 715 | `TasksService::collaboratorsForMany` | read [task_collaborators](/code/tables/task_collaborators.md), read [analysts](/code/tables/analysts.md) |  |
+| 757 | `TasksService::addCollaborator` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 764 | `TasksService::addCollaborator` | **insert** [task_collaborators](/code/tables/task_collaborators.md) (`task_id`, `analyst_id`, `added_by_id`, `added_datetime`) |  |
+| 767 | `TasksService::addCollaborator` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 777 | `TasksService::removeCollaborator` | **delete** [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 782 | `TasksService::removeCollaborator` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 812 | `TasksService::setCollaboratorDone` | **update** [task_collaborators](/code/tables/task_collaborators.md) (`is_completed`, `completed_datetime`) |  |
+| 820 | `TasksService::setCollaboratorDone` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 826 | `TasksService::setCollaboratorDone` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 834 | `TasksService::collaboratorsOutstanding` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 906 | `TasksService::collaboratorDispatch` | read [tasks](/code/tables/tasks.md) |  |
+| 939 | `TasksService::loadTaskRow` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 1086 | `TasksService::moveTaskToCompany` | **update** [tasks](/code/tables/tasks.md) (`tenant_id`, `updated_datetime`) |  |
+| 1093 | `TasksService::moveTaskToCompany` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
+| 1155 | `TasksService::taskAndDescendantIds` | read [tasks](/code/tables/tasks.md) |  |
+| 1177 | `TasksService::parentTaskTenant` | read [tasks](/code/tables/tasks.md) |  |
+| 1234 | `TasksService::resolveNewTaskTenant` | read [tickets](/code/tables/tickets.md) |  |
+| 1349 | `TasksService::validateTeam` | read [teams](/code/tables/teams.md) |  |
+| 1377 | `TasksService::validateLink` | read [changes](/code/tables/changes.md) |  |
+| 1383 | `TasksService::validateLink` | read [contracts](/code/tables/contracts.md) |  |
+| 1386 | `TasksService::validateLink` | read [tasks](/code/tables/tasks.md) |  |
+| 1409 | `TasksService::ticketAccessible` | read [tickets](/code/tables/tickets.md) |  |
+| 1447 | `TasksService::resolveTags` | read [task_tags](/code/tables/task_tags.md) |  |
+| 1450 | `TasksService::resolveTags` | read [task_tags](/code/tables/task_tags.md) |  |
+| 1469 | `TasksService::syncTags` | **delete** [task_tag_map](/code/tables/task_tag_map.md) |  |
+| 1470 | `TasksService::syncTags` | **insert** [task_tag_map](/code/tables/task_tag_map.md) (`task_id`, `tag_id`) |  |
+| 1494 | `TasksService::timeScope` | read [system_settings](/code/tables/system_settings.md) |  |
+| 1545 | `TasksService::createTimeEntry` | **insert** [task_time_entries](/code/tables/task_time_entries.md) (`task_id`, `analyst_id`, `notes`, `time_spent_minutes`, `entry_datetime`) |  |
+| 1558 | `TasksService::deleteTimeEntry` | read [task_time_entries](/code/tables/task_time_entries.md) |  |
+| 1568 | `TasksService::deleteTimeEntry` | **update** [task_time_entries](/code/tables/task_time_entries.md) (`is_active`) |  |
+| 1587 | `TasksService::timeEntriesFor` | read [task_time_entries](/code/tables/task_time_entries.md), read [analysts](/code/tables/analysts.md) |  |
+| 1603 | `TasksService::timeEntriesFor` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
+| 1657 | `TasksService::assignedDispatch` | read [tasks](/code/tables/tasks.md) |  |
+| 1680 | `TasksService::completedDispatch` | read [tasks](/code/tables/tasks.md) |  |
+| 1699 | `TasksService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

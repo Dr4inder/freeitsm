@@ -6,12 +6,12 @@ Every template. `$all` = false: only what the new-project picker offers (built-i
 function projectTemplateList(PDO $conn, bool $all = false): array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 344.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 357.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$all` | `bool` | `false` |  |
+| `$all` | `bool` | `false` | true for every template (the Settings tab); false for only what the new-project picker offers |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/projects/templates.php](/code/files/includes/projects/templ
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 354 | `projectTemplateList` | read [project_templates](/code/tables/project_templates.md), read [analysts](/code/tables/analysts.md) |  |
+| 367 | `projectTemplateList` | read [project_templates](/code/tables/project_templates.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

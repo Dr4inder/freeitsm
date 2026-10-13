@@ -6,7 +6,7 @@ May this key access this company?
 function apiKeyCanAccessTenant(PDO $conn, array $apiKey, int $tenantId): bool
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 212.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 226.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

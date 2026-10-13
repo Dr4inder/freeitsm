@@ -98,7 +98,11 @@ function aiSettingsRegistry(): array
     ];
 }
 
-/** True when $ns is a namespace registered in aiSettingsRegistry(). */
+/**
+ * True when $ns is a namespace registered in aiSettingsRegistry().
+ *
+ * @param string $ns  the namespace to check, possibly from the request (e.g. 'knowledge_ai')
+ */
 function aiSettingsIsValidNs(string $ns): bool
 {
     return array_key_exists($ns, aiSettingsRegistry());
@@ -106,6 +110,8 @@ function aiSettingsIsValidNs(string $ns): bool
 
 /**
  * Returns a namespace's registry entry (label, default provider and model); throws RuntimeException for an unknown namespace.
+ *
+ * @param string $ns  a namespace key from aiSettingsRegistry(), e.g. 'workflow_ai'
  */
 function aiSettingsEntry(string $ns): array
 {
@@ -116,7 +122,11 @@ function aiSettingsEntry(string $ns): array
     return $reg[$ns];
 }
 
-/** The system_settings keys for a namespace. */
+/**
+ * The system_settings keys for a namespace.
+ *
+ * @param string $ns  the namespace, used as the prefix of every key; not checked against the registry here
+ */
 function aiSettingsKeys(string $ns): array
 {
     return [
@@ -144,6 +154,8 @@ function aiSettingsKeys(string $ns): array
  * Load a ready-to-use config (decrypted key) for aiProviderChat().
  * Defaults: provider/model from the registry; verify_ssl from the row, else the
  * global SSL_VERIFY_PEER constant (preserves existing localhost behaviour).
+ *
+ * @param string $ns  a registered namespace, e.g. 'workflow_ai'; an unknown one throws
  */
 function aiSettingsLoad(PDO $conn, string $ns): array
 {
@@ -204,6 +216,8 @@ function aiSettingsLoad(PDO $conn, string $ns): array
 /**
  * UI-safe view of the config — never returns the plaintext key, only a mask
  * and a has_key flag.
+ *
+ * @param string $ns  a registered namespace, e.g. 'workflow_ai'; an unknown one throws
  */
 function aiSettingsForUi(PDO $conn, string $ns): array
 {
@@ -227,6 +241,7 @@ function aiSettingsForUi(PDO $conn, string $ns): array
  * Persist a config. Validates provider; encrypts the key; honours
  * masked/empty "no change" so saving provider+model alone never wipes the key.
  *
+ * @param string $ns  a registered namespace, e.g. 'workflow_ai'; an unknown one throws
  * @param array $data ['provider','model','api_key'?]
  */
 function aiSettingsSave(PDO $conn, string $ns, array $data): void

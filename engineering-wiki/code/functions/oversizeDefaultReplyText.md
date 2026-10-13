@@ -6,7 +6,7 @@ The default text of the auto-reply. {subject}, {limit} and {total_limit} are fil
 function oversizeDefaultReplyText(): string
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 73.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 84.
 
 **Returns:** `string`
 

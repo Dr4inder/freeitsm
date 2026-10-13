@@ -16,11 +16,11 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md):771 | `TicketNumbering::applyRenumber` | insert | `ticket_id`, `ticket_number`, `reason` |  |
+| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md):812 | `TicketNumbering::applyRenumber` | insert | `ticket_id`, `ticket_number`, `reason` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md) | TicketNumbering::inUse L471, TicketNumbering::findTicketId L495, TicketNumbering::assertPlanSafe L743 |  |
+| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md) | TicketNumbering::inUse L500, TicketNumbering::findTicketId L526, TicketNumbering::assertPlanSafe L782 |  |
 

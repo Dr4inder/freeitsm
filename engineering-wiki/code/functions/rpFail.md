@@ -6,12 +6,12 @@ Sends a failure JSON reply ({success: false, error}) with an HTTP status, 400 by
 function rpFail(string $message, int $code = 400): void
 ```
 
-Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 26.
+Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 36.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$message` | `string` |  |  |
-| `$code` | `int` | `400` |  |
+| `$message` | `string` |  | the error text sent as 'error' |
+| `$code` | `int` | `400` | the HTTP status |
 
 **Returns:** `void`
 

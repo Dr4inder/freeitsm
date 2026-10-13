@@ -38,7 +38,11 @@ function tasksContractorReady(PDO $conn): bool
     return $ready;
 }
 
-/** The name a supplier goes by. */
+/**
+ * The name a supplier goes by.
+ *
+ * @param string $alias  the alias the calling query gives the suppliers table
+ */
 function tasksSupplierNameSql(string $alias = 'sp'): string
 {
     return "COALESCE(NULLIF($alias.trading_name, ''), $alias.legal_name)";
@@ -47,6 +51,8 @@ function tasksSupplierNameSql(string $alias = 'sp'): string
 /**
  * The contractor on each of these tasks: [task_id => {supplier_id, supplier_name,
  * contact_id, contact_name, contact_email}]. Tasks without one are absent.
+ *
+ * @param array $taskIds  task ids; non-numeric and zero values are dropped
  */
 function tasksContractors(PDO $conn, array $taskIds): array
 {
@@ -65,7 +71,11 @@ function tasksContractors(PDO $conn, array $taskIds): array
     return $out;
 }
 
-/** Add the contractor fields to task rows (each with an 'id'). */
+/**
+ * Add the contractor fields to task rows (each with an 'id').
+ *
+ * @param array $rows  task rows, each with an 'id'; supplier_id, supplier_name, contact_id and contact_name are added
+ */
 function tasksWithContractors(PDO $conn, array $rows): array
 {
     $c = tasksContractors($conn, array_column($rows, 'id'));
@@ -81,6 +91,9 @@ function tasksWithContractors(PDO $conn, array $rows): array
 /**
  * Check a supplier / contact pair: the supplier exists; the contact (if any) works
  * for it. A contact alone brings their supplier. Returns [supplierId, contactId].
+ *
+ * @param mixed $supplierId  a supplier id as sent; null or '' for none
+ * @param mixed $contactId  a contact id as sent; null or '' for none - a contact alone brings their supplier
  */
 function tasksContractorValidate(PDO $conn, $supplierId, $contactId): array
 {
@@ -128,6 +141,8 @@ function tasksContractorEmailOn(PDO $conn): bool
  * Email a task's contractor contact - $kind 'assigned', 'due' (due soon) or
  * 'overdue'. Quiet: false when the setting is off, there is no contact email or
  * the send fails (the email log says which). Never throws.
+ *
+ * @param string $kind  'assigned', 'due' (due soon) or 'overdue'
  */
 function tasksContractorEmail(PDO $conn, int $taskId, string $kind): bool
 {

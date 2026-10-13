@@ -6,11 +6,11 @@ The set of addresses a (delegated) mailbox is known to own, read back from the s
 function mailboxAcceptedSet($mailbox)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 170.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 182.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row (authenticated_addresses JSON, authenticated_as) |
 
 ## Called from
 

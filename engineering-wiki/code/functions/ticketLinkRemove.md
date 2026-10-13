@@ -6,13 +6,13 @@ Remove a link by id.
 function ticketLinkRemove(PDO $conn, int $analystId, int $linkId): array
 ```
 
-Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 166.
+Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 184.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$linkId` | `int` |  |  |
+| `$linkId` | `int` |  | the link (ticket_links.id) to remove |
 
 **Returns:** `array`
 
@@ -20,8 +20,8 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 168 | `ticketLinkRemove` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 181 | `ticketLinkRemove` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 186 | `ticketLinkRemove` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 199 | `ticketLinkRemove` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
 
 ## Calls
 

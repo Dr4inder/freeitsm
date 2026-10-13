@@ -17,15 +17,15 @@ function filesNameTaken(
 ): bool
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 116.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 147.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$parentId` | `?int` |  |  |
-| `$name` | `string` |  |  |
-| `$exceptType` | `string` | `''` |  |
-| `$exceptId` | `int` | `0` |  |
+| `$parentId` | `?int` |  | the folder to look in; null is the top level, where only folders are checked |
+| `$name` | `string` |  | the name to test, compared case-insensitively |
+| `$exceptType` | `string` | `''` | 'folder', 'item' or 'shortcut' - the kind of the thing being renamed; '' for none |
+| `$exceptId` | `int` | `0` | the id of that thing, so its own current name does not count as taken |
 
 **Returns:** `bool`
 
@@ -33,9 +33,9 @@ Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_boo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 119 | `filesNameTaken` | read [files_folders](/code/tables/files_folders.md) |  |
-| 127 | `filesNameTaken` | read [files_items](/code/tables/files_items.md) |  |
-| 133 | `filesNameTaken` | read [files_shortcuts](/code/tables/files_shortcuts.md) |  |
+| 150 | `filesNameTaken` | read [files_folders](/code/tables/files_folders.md) |  |
+| 158 | `filesNameTaken` | read [files_items](/code/tables/files_items.md) |  |
+| 164 | `filesNameTaken` | read [files_shortcuts](/code/tables/files_shortcuts.md) |  |
 
 ## Calls
 

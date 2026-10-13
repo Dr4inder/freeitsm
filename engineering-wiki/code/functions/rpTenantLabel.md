@@ -6,13 +6,13 @@ The company's name for the header field {{company}}.
 function rpTenantLabel(PDO $conn, int $analystId, $tenant): string
 ```
 
-Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 130.
+Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 143.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$tenant` |  |  |  |
+| `$tenant` |  |  | the pack's company: 'active' (or null/''), 'all', or a company id |
 
 **Returns:** `string`
 

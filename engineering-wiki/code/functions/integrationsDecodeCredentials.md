@@ -6,11 +6,11 @@ Decrypt + JSON-decode a stored credentials blob (never throws).
 function integrationsDecodeCredentials($stored): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 287.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$stored` |  |  |  |
+| `$stored` |  |  | the encrypted credentials column as stored; null or '' gives [] |
 
 **Returns:** `array`
 

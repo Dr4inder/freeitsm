@@ -1,6 +1,6 @@
 # api/v1/lib/permissions.php
 
-> API endpoint - 443 lines
+> API endpoint - 445 lines
 
 FreeITSM REST API v1 — permission catalog.
 
@@ -25,7 +25,7 @@ Anything not present is denied — keys start from zero.
 | Function | Line | What it does |
 |---|--:|---|
 | [apiV1PermissionCatalog()](/code/functions/apiV1PermissionCatalog.md) | 15 | FreeITSM REST API v1 — permission catalog. |
-| [apiV1NormalisePermissions()](/code/functions/apiV1NormalisePermissions.md) | 423 | Validate + normalise a raw permissions structure (from the admin UI or a stored JSON blob) against the catalog. Unknown resources/actions are dropped; the result is always ['resource' => ['action', ...]]. |
+| [apiV1NormalisePermissions()](/code/functions/apiV1NormalisePermissions.md) | 425 | Validate + normalise a raw permissions structure (from the admin UI or a stored JSON blob) against the catalog. Unknown resources/actions are dropped; the result is always ['resource' => ['action', ...]]. |
 
 ## How it hangs together
 

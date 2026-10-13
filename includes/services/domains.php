@@ -99,6 +99,7 @@ class DomainsService
     /**
      * Create (no id) or update (id present) a domain. Returns ['id', 'created'].
      *
+     * @param array $in  id (absent = new), domain_name, auth_code and any fieldMap() key
      * @param ?int $tenantId the company a NEW domain belongs to (the adapter
      *        resolves it: the analyst's active company, or the API key's). Ignored
      *        on update — moving a domain between companies is not an edit.
@@ -116,6 +117,9 @@ class DomainsService
      *
      * Validates every field, starts it in the first active status, encrypts any auth code,
      * records it in the history and fires the domain.created workflow event.
+     *
+     * @param array $in  domain_name (required), auth_code and any fieldMap() key
+     * @param string $source  the history row's source; 'app' (default) records 'app' or 'api' from the caller, anything else as given
      */
     public static function createDomain(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId, string $source = 'app'): int
     {
@@ -173,6 +177,10 @@ class DomainsService
      * domain.updated when anything changed.
      *
      * A new domain name clears the change-watch baseline.
+     *
+     * @param int $id  the domain to change
+     * @param array $in  domain_name, auth_code and any fieldMap() key; absent keys are left alone
+     * @param string $source  the history row's source; '' records 'app' or 'api' from the caller
      */
     public static function updateDomain(PDO $conn, ActorContext $ctx, int $id, array $in, string $source = ''): int
     {
@@ -229,7 +237,11 @@ class DomainsService
         return $id;
     }
 
-    /** Delete a domain and everything that hangs off it. Returns the id. */
+    /**
+     * Delete a domain and everything that hangs off it. Returns the id.
+     *
+     * @param int $id  the domain to delete, with its history, alerts, checks and links
+     */
     public static function deleteDomain(PDO $conn, ActorContext $ctx, int $id): int
     {
         $row = self::loadForActor($conn, $ctx, $id);
@@ -265,6 +277,9 @@ class DomainsService
      * Add many domains from a pasted list (one per line, or separated by commas
      * or spaces). Every name goes through the same create path as a single add.
      *
+     * @param string $text  the pasted list - names separated by new lines, commas, semicolons, tabs or spaces (at most 1,000)
+     * @param array $defaults  fieldMap() values every new domain starts with, e.g. status_id or owner_analyst_id
+     * @param string $source  the history row's source, as createDomain()
      * @return array{added:array<int,array{id:int,name:string}>, skipped:array<int,array{input:string,reason:string}>}
      */
     public static function bulkAdd(PDO $conn, ActorContext $ctx, string $text, array $defaults, ?int $tenantId, string $source = 'app'): array
@@ -295,6 +310,9 @@ class DomainsService
      * Set the same fields on many domains. Each goes through updateDomain(), so
      * each gets its own history rows and scope check; a domain the caller cannot
      * reach is reported, not silently skipped.
+     *
+     * @param array $ids  the domains to change
+     * @param array $fields  [field => value]; only bulkFields() keys are used
      */
     public static function bulkUpdate(PDO $conn, ActorContext $ctx, array $ids, array $fields): array
     {
@@ -313,7 +331,11 @@ class DomainsService
     //  Registry lookups
     // ======================================================================
 
-    /** Look a domain up now and apply the answer. For the "Refresh" button and the API. */
+    /**
+     * Look a domain up now and apply the answer. For the "Refresh" button and the API.
+     *
+     * @param int $id  the domain to look up
+     */
     public static function refreshLookup(PDO $conn, ActorContext $ctx, int $id): array
     {
         $row = self::loadForActor($conn, $ctx, $id);
@@ -337,6 +359,8 @@ class DomainsService
      * never blanked by that registry's silence: a null answer is "not published",
      * not "no date".
      *
+     * @param int $id  the domain the answer is for
+     * @param array $r  a successful domainLookup() result: registrar, dates, nameservers, locks, statuses, registrant, source
      * @return array<int,array{field:string,old:?string,new:?string}>
      */
     public static function applyLookup(PDO $conn, int $id, array $r, ?int $analystId = null): array
@@ -403,7 +427,12 @@ class DomainsService
         return $changes;
     }
 
-    /** Records that the last registration lookup for a domain failed, and why. */
+    /**
+     * Records that the last registration lookup for a domain failed, and why.
+     *
+     * @param int $id  the domain
+     * @param string $error  why the lookup failed (cut to 255 characters)
+     */
     public static function recordLookupError(PDO $conn, int $id, string $error): void
     {
         $conn->prepare("UPDATE domains SET last_lookup_datetime = UTC_TIMESTAMP(), last_lookup_error = ? WHERE id = ?")
@@ -419,6 +448,7 @@ class DomainsService
      * compare against the last run. Returns the check result plus 'changes'.
      *
      * @param ?ActorContext $ctx null when the scheduled run calls it
+     * @param int $id  the domain to check
      */
     public static function runChecks(PDO $conn, ?ActorContext $ctx, int $id): array
     {
@@ -486,6 +516,8 @@ class DomainsService
      * The decrypted auth code, for somebody the adapter has already checked
      * holds Cap::DOMAINS_AUTH_CODES. Recorded in the domain's history unless
      * the operator switched that off.
+     *
+     * @param int $id  the domain whose auth code is shown
      */
     public static function revealAuthCode(PDO $conn, ActorContext $ctx, int $id): ?string
     {
@@ -505,6 +537,8 @@ class DomainsService
     /**
      * Adds or updates a domain status (name, colour, alerts on or off, active, order);
      * names must be unique.
+     *
+     * @param array $in  id (0 or absent = new), name (unique), colour (#rrggbb), alerts_enabled, is_active, display_order
      */
     public static function saveStatus(PDO $conn, array $in): array
     {
@@ -530,7 +564,11 @@ class DomainsService
         return ['id' => (int)$conn->lastInsertId(), 'created' => true];
     }
 
-    /** Deletes a domain status; refuses while any domain uses it. */
+    /**
+     * Deletes a domain status; refuses while any domain uses it.
+     *
+     * @param int $id  the domain_statuses row to delete
+     */
     public static function deleteStatus(PDO $conn, int $id): void
     {
         $inUse = $conn->prepare("SELECT COUNT(*) FROM domains WHERE status_id = ?");
@@ -545,7 +583,12 @@ class DomainsService
     //  Registrar accounts
     // ======================================================================
 
-    /** Adds or updates a registrar account (the login at a registrar) for a company. */
+    /**
+     * Adds or updates a registrar account (the login at a registrar) for a company.
+     *
+     * @param array $in  id (0 or absent = new), account_name (required), supplier_id, account_reference, login_url,
+     *     owner_analyst_id, two_factor_holder, notes
+     */
     public static function saveRegistrarAccount(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId): array
     {
         $name = trim((string)($in['account_name'] ?? ''));
@@ -576,7 +619,11 @@ class DomainsService
         return ['id' => (int)$conn->lastInsertId(), 'created' => true];
     }
 
-    /** Deletes a registrar account, unlinking it from its domains first. */
+    /**
+     * Deletes a registrar account, unlinking it from its domains first.
+     *
+     * @param int $id  the domain_registrar_accounts row to delete
+     */
     public static function deleteRegistrarAccount(PDO $conn, ActorContext $ctx, int $id): void
     {
         self::loadAccountForActor($conn, $ctx, $id);
@@ -588,7 +635,11 @@ class DomainsService
     //  Loading + scope
     // ======================================================================
 
-    /** Loads one domain; throws not found when it does not exist. */
+    /**
+     * Loads one domain; throws not found when it does not exist.
+     *
+     * @param int $id  the domain to load
+     */
     public static function loadRow(PDO $conn, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM domains WHERE id = ?");
@@ -598,7 +649,11 @@ class DomainsService
         return $row;
     }
 
-    /** Load a domain the caller may touch — out of scope reads as not found. */
+    /**
+     * Load a domain the caller may touch — out of scope reads as not found.
+     *
+     * @param int $id  the domain to load
+     */
     public static function loadForActor(PDO $conn, ActorContext $ctx, int $id): array
     {
         $row = self::loadRow($conn, $id);
@@ -606,7 +661,11 @@ class DomainsService
         return $row;
     }
 
-    /** Loads a registrar account the actor's companies can reach; throws not found otherwise. */
+    /**
+     * Loads a registrar account the actor's companies can reach; throws not found otherwise.
+     *
+     * @param int $id  the domain_registrar_accounts row to load
+     */
     private static function loadAccountForActor(PDO $conn, ActorContext $ctx, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM domain_registrar_accounts WHERE id = ?");
@@ -617,7 +676,11 @@ class DomainsService
         return $row;
     }
 
-    /** Throws not found when the row's company is outside the actor's companies. */
+    /**
+     * Throws not found when the row's company is outside the actor's companies.
+     *
+     * @param array $row  a domain or registrar account row; must include tenant_id
+     */
     private static function assertScope(PDO $conn, ActorContext $ctx, array $row): void
     {
         if ($ctx->companyScope === null || !isMultiTenant($conn)) return;
@@ -641,6 +704,12 @@ class DomainsService
     /**
      * Validates and cleans one domain field according to its type in fieldMap(), and
      * returns the value to store.
+     *
+     * @param string $field  the fieldMap() key being set
+     * @param mixed $v  the value from the request
+     * @param array $def  that field's fieldMap() entry (type, table, values, max, min)
+     * @param array $row  the domain as stored (or ['tenant_id' => ...] on create), for company checks
+     * @param string $domainName  the domain's name, used to read ssl_hosts entries
      */
     private static function validateField(PDO $conn, string $field, $v, array $def, array $row, string $domainName)
     {
@@ -732,7 +801,11 @@ class DomainsService
         return $v;
     }
 
-    /** Is this field's column there yet? The #153 and #162 columns arrive with Database Verification. */
+    /**
+     * Is this field's column there yet? The #153 and #162 columns arrive with Database Verification.
+     *
+     * @param string $field  a fieldMap() key
+     */
     private static function fieldReady(PDO $conn, string $field): bool
     {
         if ($field === 'customer_user_id') return domainCustomerReady($conn);
@@ -748,6 +821,9 @@ class DomainsService
      * kind was there before. Naming both kinds at once is refused rather than
      * guessed. Clearing a field clears only that field, except that clearing the
      * supplier also clears its contact.
+     *
+     * @param array $in  the request fields; the customer and technical contact keys are adjusted
+     * @param array $cur  the stored domain row on update; [] on create
      */
     private static function normaliseParties(PDO $conn, array $in, array $cur): array
     {
@@ -796,7 +872,13 @@ class DomainsService
         return $in;
     }
 
-    /** A validated id from a lookup table, or null for none; throws for an unknown id. */
+    /**
+     * A validated id from a lookup table, or null for none; throws for an unknown id.
+     *
+     * @param string $table  the lookup table, written in code - never user input
+     * @param mixed $value  the id from the request; null, '', 0 or '0' gives null
+     * @param string $label  what the table holds, for the error message
+     */
     private static function lookup(PDO $conn, string $table, $value, string $label): ?int
     {
         if ($value === null || $value === '' || $value === 0 || $value === '0') return null;
@@ -807,7 +889,11 @@ class DomainsService
         return $id;
     }
 
-    /** Throws unless the id is an active analyst. */
+    /**
+     * Throws unless the id is an active analyst.
+     *
+     * @param int $id  the analyst to check
+     */
     private static function requireAnalyst(PDO $conn, int $id): void
     {
         $st = $conn->prepare("SELECT id FROM analysts WHERE id = ? AND is_active = 1");
@@ -815,21 +901,35 @@ class DomainsService
         if (!$st->fetchColumn()) throw new ServiceError('validation', 'invalid_field', "Unknown or inactive analyst id: {$id}");
     }
 
-    /** Trimmed text cut to $max characters, or null when blank. */
+    /**
+     * Trimmed text cut to $max characters, or null when blank.
+     *
+     * @param mixed $v  the value from the request
+     * @param int $max  the most characters to keep
+     */
     private static function str($v, int $max): ?string
     {
         $s = trim((string)$v);
         return $s === '' ? null : mb_substr($s, 0, $max);
     }
 
-    /** True when two values are equal, treating null and '' as the same. */
+    /**
+     * True when two values are equal, treating null and '' as the same.
+     *
+     * @param mixed $a  the stored value
+     * @param mixed $b  the new value
+     */
     private static function same($a, $b): bool
     {
         if (($a === null || $a === '') && ($b === null || $b === '')) return true;
         return (string)$a === (string)$b;
     }
 
-    /** A supplier whose legal or trading name matches the registry's registrar name. */
+    /**
+     * A supplier whose legal or trading name matches the registry's registrar name.
+     *
+     * @param string $registrar  the registrar's name as the registry gives it
+     */
     private static function matchSupplier(PDO $conn, string $registrar): ?int
     {
         $clean = fn($s) => trim(preg_replace('/[,.]|\b(inc|ltd|limited|llc|gmbh|plc|corp|corporation|s\.?a\.?|b\.?v\.?)\b/i', '', mb_strtolower($s)));
@@ -853,6 +953,11 @@ class DomainsService
     /**
      * Records one change in a domain's history; a failure is logged, never thrown.
      *
+     * @param int $domainId  the domain the entry belongs to
+     * @param string $field  the field that changed, or an event such as 'domain_created' or 'auth_code_viewed'
+     * @param mixed $old  the value before, as shown (cut to 1000 characters); null for none
+     * @param mixed $new  the value after, as shown (cut to 1000 characters); null for none
+     * @param string $source  what made the change: 'app', 'api', 'lookup', 'check' or 'monitor'
      * @writes domain_audit - the domain's change history
      */
     public static function audit(PDO $conn, int $domainId, ?int $analystId, string $field, $old, $new, string $source = 'app'): void
@@ -873,6 +978,9 @@ class DomainsService
      * company outside their reach is "unknown", as everywhere else - and, since
      * contracts belong to a company (3.5.0), only to one in the DOMAIN's company.
      * $domainTenant is the domain's stored company (NULL = Default).
+     *
+     * @param mixed $contractId  the contract being linked; null does nothing
+     * @param ?int $domainTenant  the domain's stored company - null for the Default company
      */
     private static function assertContractVisible(PDO $conn, ActorContext $ctx, $contractId, ?int $domainTenant = null): void
     {
@@ -891,7 +999,12 @@ class DomainsService
         }
     }
 
-    /** Ids stored as names, so the history reads as English a year later. */
+    /**
+     * Ids stored as names, so the history reads as English a year later.
+     *
+     * @param string $field  the field the value belongs to
+     * @param mixed $v  the stored value - an id for the lookup fields
+     */
     private static function auditDisplay(PDO $conn, string $field, $v): ?string
     {
         if ($v === null || $v === '') return null;
@@ -915,7 +1028,11 @@ class DomainsService
         return (string)$v;
     }
 
-    /** The payload every domain.* event carries. */
+    /**
+     * The payload every domain.* event carries.
+     *
+     * @param array $row  the domains row
+     */
     public static function eventPayload(array $row): array
     {
         return [
@@ -934,7 +1051,12 @@ class DomainsService
         ];
     }
 
-    /** Fires the domain.<verb> workflow event for a domain; a failure is logged, never thrown. */
+    /**
+     * Fires the domain.<verb> workflow event for a domain; a failure is logged, never thrown.
+     *
+     * @param string $verb  'created' or 'updated' - the event is domain.<verb>
+     * @param int $id  the domain
+     */
     private static function dispatchCrud(PDO $conn, string $verb, int $id): void
     {
         try {

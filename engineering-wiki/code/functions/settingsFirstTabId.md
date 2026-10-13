@@ -10,11 +10,11 @@ looking at a settings page with no panel showing.
 function settingsFirstTabId(array $visibleTabs): ?string
 ```
 
-Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 92.
+Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 100.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$visibleTabs` | `array` |  |  |
+| `$visibleTabs` | `array` |  | the tabs from `settingsVisibleTabs()` |
 
 **Returns:** `?string`
 

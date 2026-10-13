@@ -6,7 +6,7 @@ Write the effective dates onto the asset (audited, through AssetsService).
 function leaseSyncAsset(PDO $conn, ActorContext $ctx, int $assetId): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 611.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 692.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ All of a ticket's links, grouped for display from THIS ticket's perspective. Ret
 function ticketLinksFor(PDO $conn, int $ticketId): array
 ```
 
-Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 193.
+Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 211.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 196 | `ticketLinksFor` | read [ticket_links](/code/tables/ticket_links.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 214 | `ticketLinksFor` | read [ticket_links](/code/tables/ticket_links.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Called from
 

@@ -38,15 +38,15 @@ function kbRetrieveArticles(
 ): array
 ```
 
-Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md), line 103.
+Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$question` | `string` |  |  |
-| `$limit` | `int` | `5` |  |
+| `$question` | `string` |  | the reader's question, embedded and compared with each article |
+| `$limit` | `int` | `5` | the most articles returned on the vector path (the fallback returns at least 10) |
 | `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$viewer` |  | `Audience::PUBLIC` |  |
+| `$viewer` |  | `Audience::PUBLIC` | a KnowledgeViewer (preferred, authoritative), or an Audience:: level string such as 'public' |
 
 **Returns:** `array`
 
@@ -54,10 +54,10 @@ Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 117 | `kbRetrieveArticles` | read [system_settings](/code/tables/system_settings.md) |  |
-| 127 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 135 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 153 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 131 | `kbRetrieveArticles` | read [system_settings](/code/tables/system_settings.md) |  |
+| 141 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 149 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 167 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

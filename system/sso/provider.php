@@ -71,7 +71,12 @@ $tabs = [
 $activeTab = in_array($_GET['tab'] ?? '', ['connection','signin','import','mapping','history'], true)
     ? $_GET['tab'] : 'connection';
 
-/** Print a value into an input safely. */
+/**
+ * Print a value into an input safely.
+ *
+ * @param mixed $row  the provider row being edited (an auth_providers row)
+ * @param string $k  the column to print
+ */
 function v($row, string $k): string { return htmlspecialchars((string)($row[$k] ?? '')); }
 ?>
 <!DOCTYPE html>

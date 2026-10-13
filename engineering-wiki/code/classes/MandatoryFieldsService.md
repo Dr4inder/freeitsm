@@ -37,7 +37,7 @@ function settings(PDO $conn, ?int $tenantId): array
 
 ### parseAddresses
 
-*public static* - line 111
+*public static* - line 112
 
 Split and validate an address list. Invalid entries are dropped, so the saved list and the one actually mailed can never disagree.
 
@@ -47,7 +47,7 @@ function parseAddresses(string $raw): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | email addresses as typed, separated by spaces, commas or semicolons |
 
 **Returns:** string[]
 
@@ -55,7 +55,7 @@ function parseAddresses(string $raw): array
 
 ### missing
 
-*public static* - line 130
+*public static* - line 131
 
 The required fields this ticket has left empty.
 
@@ -75,7 +75,7 @@ function missing(PDO $conn, ?int $tenantId, array $row): array
 
 ### fieldAvailable
 
-*public static* - line 148
+*public static* - line 153
 
 Can this field be filled in on a ticket belonging to this company?
 
@@ -87,17 +87,17 @@ function fieldAvailable(PDO $conn, ?int $tenantId, string $key): bool
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a FIELDS key, e.g. 'category' or 'team' |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 159 | `MandatoryFieldsService::fieldAvailable` | read [teams](/code/tables/teams.md) |  |
+| 164 | `MandatoryFieldsService::fieldAvailable` | read [teams](/code/tables/teams.md) |  |
 
 ### assertClosureAllowed
 
-*public static* - line 177
+*public static* - line 182
 
 Refuse the close under 'block'. Call BEFORE anything is written: thrown after the update, the ticket would already be closed and the caller would report a failure the database disagrees with.
 
@@ -115,7 +115,7 @@ function assertClosureAllowed(PDO $conn, ?int $tenantId, array $missing): void
 
 ### afterClosure
 
-*public static* - line 196
+*public static* - line 201
 
 After a close that went ahead with fields empty: write the note and send the email, as configured. Never throws - a failed note or email must not turn a close that happened into an error.
 
@@ -141,7 +141,7 @@ function afterClosure(
 
 ### writeNote
 
-*public static* - line 232
+*public static* - line 239
 
 An internal note from an analyst, or a 'Workflow Note' audit entry when nobody is acting. ticket_notes.analyst_id is NOT NULL with a foreign key to analysts, so a workflow (actor 0) cannot write there - which is why the workflow engine's own "add note" action writes to ticket_audit with a NULL analyst, and this follows it. UTC at rest (GH #126).
 
@@ -154,18 +154,18 @@ function writeNote(PDO $conn, ActorContext $ctx, int $ticketId, string $note): v
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$note` | `string` |  |  |
+| `$note` | `string` |  | the note text |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 236 | `MandatoryFieldsService::writeNote` | **insert** [ticket_notes](/code/tables/ticket_notes.md) (`ticket_id`, `analyst_id`, `note_text`, `is_internal`, `created_datetime`) |  |
-| 242 | `MandatoryFieldsService::writeNote` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 243 | `MandatoryFieldsService::writeNote` | **insert** [ticket_notes](/code/tables/ticket_notes.md) (`ticket_id`, `analyst_id`, `note_text`, `is_internal`, `created_datetime`) |  |
+| 249 | `MandatoryFieldsService::writeNote` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### closedByLine
 
-*public static* - line 248
+*public static* - line 255
 
 "Closed by Jo Bloggs via the API." / "Closed by a workflow."
 
@@ -179,7 +179,7 @@ function closedByLine(ActorContext $ctx): string
 
 ### notify
 
-*private static* - line 259
+*private static* - line 272
 
 Emails the chosen people that a ticket was closed with mandatory fields empty, listing them.
 
@@ -191,7 +191,7 @@ function notify(PDO $conn, int $ticketId, array $to, array $missing, string $clo
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$to` | `array` |  |  |
-| `$missing` | `array` |  |  |
-| `$closedBy` | `string` |  |  |
+| `$to` | `array` |  | the email addresses to tell, from `parseAddresses()` |
+| `$missing` | `array` |  | [field key => English label] of the fields left empty |
+| `$closedBy` | `string` |  | who closed it, from `closedByLine()` |
 

@@ -6,7 +6,7 @@ The portfolio, scoped to what this analyst may see.
 function projectListRows(PDO $conn, int $analystId, array $f = []): array
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 278.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 302.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 300 | `projectListRows` | read [project_stages](/code/tables/project_stages.md) |  |
-| 304 | `projectListRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 324 | `projectListRows` | read [project_stages](/code/tables/project_stages.md) |  |
+| 328 | `projectListRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

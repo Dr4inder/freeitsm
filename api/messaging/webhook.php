@@ -62,7 +62,12 @@ function webhookFullUrl(): string
     return $proto . '://' . $host . $uri;
 }
 
-/** Sends an HTTP status and {success: false, error} as JSON, then stops. */
+/**
+ * Sends an HTTP status and {success: false, error} as JSON, then stops.
+ *
+ * @param int $code  the HTTP status to send
+ * @param string $msg  the error message
+ */
 function webhookFail(int $code, string $msg): void
 {
     http_response_code($code);

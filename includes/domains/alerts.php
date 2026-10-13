@@ -42,7 +42,13 @@ require_once __DIR__ . '/../services/domains.php';
 require_once __DIR__ . '/../self_service_email.php';   // ssSendSystemEmail()
 if (is_file(__DIR__ . '/../public_url.php')) require_once __DIR__ . '/../public_url.php';
 
-/** Claim an alert. true = ours to send; false = already sent (or claimed a moment ago). */
+/**
+ * Claim an alert. true = ours to send; false = already sent (or claimed a moment ago).
+ *
+ * @param int    $domainId     the domain the alert is about
+ * @param string $kind         audience prefix + kind, e.g. 'mail_expiry', 'evt_ssl', 'act_renew', 'mail_changed'
+ * @param string $fingerprint  what makes this alert unique within the kind - normally the date it is about
+ */
 function domainAlertClaim(PDO $conn, int $domainId, string $kind, string $fingerprint): bool
 {
     $st = $conn->prepare("INSERT IGNORE INTO domain_alerts_sent (domain_id, alert_kind, fingerprint, sent_datetime) VALUES (?, ?, ?, UTC_TIMESTAMP())");
@@ -52,6 +58,11 @@ function domainAlertClaim(PDO $conn, int $domainId, string $kind, string $finger
 
 /**
  * Gives back a claimed alert, so the next run tries it again - used when every e-mail for it failed.
+ *
+ * @param int    $domainId     the domain the alert is about
+ * @param string $kind         the kind it was claimed under, e.g. 'mail_expiry'
+ * @param string $fingerprint  the fingerprint it was claimed with
+ *
  * @writes domain_alerts_sent - removes the claim row
  */
 function domainAlertRelease(PDO $conn, int $domainId, string $kind, string $fingerprint): void
@@ -59,7 +70,13 @@ function domainAlertRelease(PDO $conn, int $domainId, string $kind, string $fing
     $conn->prepare("DELETE FROM domain_alerts_sent WHERE domain_id = ? AND alert_kind = ? AND fingerprint = ?")->execute([$domainId, $kind, $fingerprint]);
 }
 
-/** True when this alert (domain, kind, fingerprint) has already been claimed or sent. */
+/**
+ * True when this alert (domain, kind, fingerprint) has already been claimed or sent.
+ *
+ * @param int    $domainId     the domain the alert is about
+ * @param string $kind         the kind to look for, e.g. 'mail_ssl'
+ * @param string $fingerprint  the fingerprint to look for
+ */
 function domainAlertAlreadySent(PDO $conn, int $domainId, string $kind, string $fingerprint): bool
 {
     $st = $conn->prepare("SELECT 1 FROM domain_alerts_sent WHERE domain_id = ? AND alert_kind = ? AND fingerprint = ?");
@@ -69,6 +86,8 @@ function domainAlertAlreadySent(PDO $conn, int $domainId, string $kind, string $
 
 /**
  * Everything due today for expiry and certificates.
+ *
+ * @param array $s  every Domains setting, as domainSettings() returns them
  *
  * @return array<int,array> each: domain row fields + kind ('expiry'|'expired'|'ssl'), days, date, fingerprint
  */
@@ -202,7 +221,12 @@ function domainAlertsRun(PDO $conn, bool $dryRun = false): array
     return $out;
 }
 
-/** email => display name, for one due item. */
+/**
+ * email => display name, for one due item.
+ *
+ * @param array $a  one due item from domainAlertsDue() (or a domain row with owner_email/owner_name added)
+ * @param array $s  every Domains setting, as domainSettings() returns them - reads the recipients mode and list
+ */
 function domainAlertRecipients(array $a, array $s): array
 {
     $to = [];
@@ -219,7 +243,11 @@ function domainAlertRecipients(array $a, array $s): array
     return $to;
 }
 
-/** Shapes a due domain row into the 'domain' payload the domain.expiring and domain.ssl_expiring workflow events carry. */
+/**
+ * Shapes a due domain row into the 'domain' payload the domain.expiring and domain.ssl_expiring workflow events carry.
+ *
+ * @param array $a  one due item from domainAlertsDue() - a domain row with its fields
+ */
 function domainAlertPayload(array $a): array
 {
     return [
@@ -231,14 +259,23 @@ function domainAlertPayload(array $a): array
     ];
 }
 
-/** Absolute link to a domain, for mail sent by a cron with no request host. */
+/**
+ * Absolute link to a domain, for mail sent by a cron with no request host.
+ *
+ * @param int $id  the domain's id
+ */
 function domainPublicLink(PDO $conn, int $id): string
 {
     $base = function_exists('publicBaseUrl') ? rtrim(publicBaseUrl($conn), '/') : rtrim(defined('BASE_URL') ? BASE_URL : '', '/');
     return $base . '/domains/view.php?id=' . $id;
 }
 
-/** Subject and HTML for one recipient's digest. */
+/**
+ * Subject and HTML for one recipient's digest.
+ *
+ * @param string $name   the recipient's display name; '' gives a plain "Hello,"
+ * @param array  $items  that recipient's due items from domainAlertsDue() (expiry, expired and ssl mixed)
+ */
 function domainAlertDigest(PDO $conn, string $name, array $items): array
 {
     usort($items, fn($x, $y) => $x['days'] <=> $y['days']);
@@ -281,7 +318,11 @@ function domainAlertDigest(PDO $conn, string $name, array $items): array
     return ['subject' => $subject, 'body' => $body];
 }
 
-/** Says when in words - "expired 3 days ago", "today", "tomorrow", "in 30 days". */
+/**
+ * Says when in words - "expired 3 days ago", "today", "tomorrow", "in 30 days".
+ *
+ * @param int $days  days until the date; negative for days since it passed
+ */
 function domainAlertWhen(int $days): string
 {
     if ($days < 0)  return 'expired ' . (-$days) . ' day' . ($days === -1 ? '' : 's') . ' ago';
@@ -290,7 +331,11 @@ function domainAlertWhen(int $days): string
     return 'in ' . $days . ' days';
 }
 
-/** 'YYYY-MM-DD' → '20 November 2026'. Plain and not zone-shifted. */
+/**
+ * 'YYYY-MM-DD' → '20 November 2026'. Plain and not zone-shifted.
+ *
+ * @param ?string $ymd  a 'YYYY-MM-DD' date (anything after the first 10 characters is ignored); null or '' gives ''
+ */
 function fmt_domain_date(?string $ymd): string
 {
     if (!$ymd) return '';
@@ -302,6 +347,9 @@ function fmt_domain_date(?string $ymd): string
  * Change detection's e-mail. Called by DomainsService::runChecks() when
  * something serious moved — separate from the daily digest because a possible
  * hijack cannot wait for tomorrow's run.
+ *
+ * @param array $row      the domain row as loaded by DomainsService::runChecks()
+ * @param array $serious  the changes domainChangeIsSerious() kept, each array{field:string,old:string,new:string}
  */
 function domainAlertOnChange(PDO $conn, array $row, array $serious): void
 {
@@ -337,6 +385,8 @@ function domainAlertOnChange(PDO $conn, array $row, array $serious): void
 
 /**
  * The plain-English name of a watched field for the change e-mail (registrar, locks, DNSSEC, name servers, MX, SPF, DMARC).
+ *
+ * @param string $field  a key from domainWatchedFields(), e.g. 'dns_ns'; an unknown key comes back unchanged
  */
 function domainWatchLabel(string $field): string
 {
@@ -351,6 +401,8 @@ function domainWatchLabel(string $field): string
  * Raise a task or a ticket for each domain entering the renewal window. Once per
  * expiry date (a renewed domain re-arms). Ownerless domains get an unassigned
  * task — renewing is still somebody's job even when nobody has been named.
+ *
+ * @param array $s  every Domains setting, as domainSettings() returns them - reads the renewal action and window
  */
 function domainRenewalActionsRun(PDO $conn, array $s): int
 {

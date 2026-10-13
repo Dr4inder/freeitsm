@@ -15,13 +15,13 @@ endpoints were missed the first time round.
 function analystCanAccessTask(PDO $conn, int $analystId, $taskId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 563.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 587.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$taskId` |  |  |  |
+| `$taskId` |  |  | the task id, any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -29,7 +29,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 563
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 572 | `analystCanAccessTask` | read [tasks](/code/tables/tasks.md) |  |
+| 596 | `analystCanAccessTask` | read [tasks](/code/tables/tasks.md) |  |
 
 ## Calls
 

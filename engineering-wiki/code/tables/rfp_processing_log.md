@@ -19,7 +19,7 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md):476 | `rfpAiLogAction` | insert | `rfp_id`, `document_id`, `section_id`, `action`, `status`, `details`, `tokens_in`, `tokens_out` |  |
+| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md):506 | `rfpAiLogAction` | insert | `rfp_id`, `document_id`, `section_id`, `action`, `status`, `details`, `tokens_in`, `tokens_out` |  |
 
 ## Read by
 

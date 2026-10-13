@@ -6,13 +6,13 @@ One preference for one portal user, or `$default`.
 function portalPrefGet(PDO $conn, int $userId, string $key, string $default = ''): string
 ```
 
-Defined in [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md), line 26.
+Defined in [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md), line 28.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
-| `$key` | `string` |  |  |
+| `$userId` | `int` |  | the portal user (users id); 0 or less gives `$default` |
+| `$key` | `string` |  | the preference_key, e.g. 'kb_layout'; '' gives `$default` |
 | `$default` | `string` | `''` | returned when unset, unreadable, or the table is absent |
 
 **Returns:** `string`
@@ -21,7 +21,7 @@ Defined in [includes/portal_preferences.php](/code/files/includes/portal_prefere
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 31 | `portalPrefGet` | read [portal_user_preferences](/code/tables/portal_user_preferences.md) |  |
+| 33 | `portalPrefGet` | read [portal_user_preferences](/code/tables/portal_user_preferences.md) |  |
 
 ## Called from
 

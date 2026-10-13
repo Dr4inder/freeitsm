@@ -21,18 +21,18 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):182 | `handleCreate` | insert | `parent_id`, `name`, `is_restricted`, `inherit_permissions`, `created_by_id`, `owner_id`, `created_datetime`, `modified_datetime` |  |
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):200 | `handleRename` | update | `name`, `modified_datetime` |  |
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):237 | `handleMove` | update | `parent_id`, `modified_datetime` |  |
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):274 | `handleDelete` | delete |  |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):193 | `handleCreate` | insert | `parent_id`, `name`, `is_restricted`, `inherit_permissions`, `created_by_id`, `owner_id`, `created_datetime`, `modified_datetime` |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):215 | `handleRename` | update | `name`, `modified_datetime` |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):254 | `handleMove` | update | `parent_id`, `modified_datetime` |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):293 | `handleDelete` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md) | handleList L80, requireFolderAccess L155, handleDelete L264, handleExceptions L406 |  |
-| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | resolveInherited L170 |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md) | handleList L80, requireFolderAccess L164, handleDelete L283, handleExceptions L433 |  |
+| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | resolveInherited L179 |  |
 | [api/self-service/get_knowledge_articles.php](/code/files/api/self-service/get_knowledge_articles.php.md) | L72 |  |
-| [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeAclHasAnyRows L791, knowledgeFolderIndex L824 |  |
-| [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md) | KnowledgeService::resolveFolderId L91 |  |
+| [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeAclHasAnyRows L848, knowledgeFolderIndex L881 |  |
+| [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md) | KnowledgeService::resolveFolderId L95 |  |
 

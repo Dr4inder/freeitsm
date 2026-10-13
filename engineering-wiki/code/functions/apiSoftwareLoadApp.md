@@ -6,12 +6,12 @@ Loads one discovered application row, or answers 404 and stops.
 function apiSoftwareLoadApp(PDO $conn, int $appId): array
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 119.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$appId` | `int` |  |  |
+| `$appId` | `int` |  | the software_inventory_apps id |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 120 | `apiSoftwareLoadApp` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 124 | `apiSoftwareLoadApp` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ## Calls
 

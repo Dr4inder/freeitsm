@@ -302,6 +302,8 @@ function getSystemAreas() {
  * Return the inline SVG markup for an area icon key. Unknown keys render a
  * neutral square so a typo never breaks the page. Sizing/colour come from the
  * .system-card svg CSS rule, so no width/height/stroke colour is hard-set here.
+ *
+ * @param mixed $key  the icon key from an area's entry in getSystemAreas(); unknown keys draw a square
  */
 function systemAreaIcon($key) {
     $icons = [

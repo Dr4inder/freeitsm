@@ -113,6 +113,8 @@ function getModulePermissionMode(PDO $conn): string {
  *
  * Returns: null = ALL modules (unrestricted) · [] = NO modules · [keys] = a specific set.
  * Cached per request. System is deliberately excluded (gated by is_admin instead).
+ *
+ * @param mixed $analyst_id  the analyst whose access to resolve (cast to int); deactivated or unknown gives []
  */
 function getAnalystAllowedModules($conn, $analyst_id) {
     static $cache = [];
@@ -223,6 +225,8 @@ function analystIsAdmin(PDO $conn, int $analystId): bool {
  * left cannot sign in to the portal, by any route, and is signed out of an open
  * portal session on their next page (self-service/includes/auth.php). 3.5.0.
  * NULL counts as active, as everywhere else.
+ *
+ * @param int $userId  the requester's users.id; 0 or less, or an unknown id, gives false
  */
 function requesterIsActive(PDO $conn, int $userId): bool {
     if ($userId <= 0) return false;
@@ -274,6 +278,8 @@ function requireAdminJson(PDO $conn): void {
  * 'system' here defers to analystIsAdmin(), and any unknown key is denied. The
  * heavy lifting (union/intersection across the analyst + their teams) lives in the
  * single choke-point getAnalystAllowedModules(), which this just consults.
+ *
+ * @param string $moduleKey  the module key, e.g. 'tickets', 'assets', 'files'; 'system' means administrators only
  */
 function analystCanAccessModule(PDO $conn, int $analystId, string $moduleKey): bool {
     if ($analystId <= 0) return false;
@@ -289,6 +295,8 @@ function analystCanAccessModule(PDO $conn, int $analystId, string $moduleKey): b
  * (DB-checked) — a just-restricted analyst is stopped even on a stale session.
  * Call near the top of a module's page after functions.php is loaded and the
  * "are you logged in?" check. Passes $conn if you already have one, else connects.
+ *
+ * @param string $moduleKey  the module the page belongs to, e.g. 'tickets'; also sent back as ?denied= on refusal
  */
 function requireModuleAccess(string $moduleKey, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
@@ -320,7 +328,7 @@ function requireModuleAccess(string $moduleKey, ?PDO $conn = null): void {
  * "Any of these modules" is the honest gate. Use it sparingly: if an endpoint belongs to
  * ONE module, use requireModuleAccessJson().
  *
- * @param array<int,string> $moduleKeys
+ * @param array<int,string> $moduleKeys  the module keys that may use the endpoint, e.g. ['knowledge', 'tickets']
  */
 function requireAnyModuleAccessJson(array $moduleKeys, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
@@ -353,6 +361,8 @@ function requireAnyModuleAccessJson(array $moduleKeys, ?PDO $conn = null): void 
  * after connecting, e.g. requireModuleAccessJson('assets', $conn);
  * Shared READ endpoints that other modules or the login page depend on must NOT
  * call this — guarding those would break normal cross-module flows.
+ *
+ * @param string $moduleKey  the module the endpoint belongs to, e.g. 'assets'; 'system' means administrators only
  */
 function requireModuleAccessJson(string $moduleKey, ?PDO $conn = null): void {
     if (!isset($_SESSION['analyst_id'])) {
@@ -382,6 +392,11 @@ function requireModuleAccessJson(string $moduleKey, ?PDO $conn = null): void {
  * (including a missing engine on a minimal install) so it can NEVER affect the
  * save it follows. Funnels into the exact same WorkflowEngine::dispatch() path as
  * every other event, so a webhook fires identically however it was emitted.
+ *
+ * @param string $entity  the entity key, e.g. 'asset' or 'asset_location' - the first half of the event name
+ * @param string $action  'created', 'updated' or 'deleted' - the second half of the event name
+ * @param int $id         the id of the record that changed
+ * @param ?string $name   its display name for the payload, if known
  */
 function wf_emit(string $entity, string $action, int $id, ?string $name = null): void
 {

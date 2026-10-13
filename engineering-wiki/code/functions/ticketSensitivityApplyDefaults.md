@@ -6,13 +6,13 @@ Apply the automatic defaults to a ticket: its service-desk department's, and the
 function ticketSensitivityApplyDefaults(PDO $conn, int $ticketId, ?int $mailboxId = null): bool
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 104.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$mailboxId` | `?int` | `null` |  |
+| `$mailboxId` | `?int` | `null` | the target_mailboxes id the ticket arrived through; null when it did not come by email |
 
 **Returns:** `bool`
 
@@ -20,8 +20,8 @@ Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensiti
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 110 | `ticketSensitivityApplyDefaults` | read [tickets](/code/tables/tickets.md), read [departments](/code/tables/departments.md) |  |
-| 121 | `ticketSensitivityApplyDefaults` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 118 | `ticketSensitivityApplyDefaults` | read [tickets](/code/tables/tickets.md), read [departments](/code/tables/departments.md) |  |
+| 129 | `ticketSensitivityApplyDefaults` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## Calls
 

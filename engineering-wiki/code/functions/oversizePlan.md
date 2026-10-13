@@ -10,12 +10,12 @@ left still comes to more than the total limit, strip_order decides what else goe
 function oversizePlan(array $atts, array $rules): array
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 149.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 170.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$atts` | `array` |  | [['name' => string, 'size' => int bytes], ...] in message order |
-| `$rules` | `array` |  |  |
+| `$rules` | `array` |  | the mailbox's rules from `oversizeRules()` - max_bytes, max_total_bytes, mode, strip_order |
 
 **Returns:** array [ 'over'   => bool          anything breaks a limit 'reject' => bool          the whole email is to be refused (mode = reject) 'strip'  => [index => reason]   attachments to leave out (mode = strip) 'total'  => int           total bytes of all attachments
 

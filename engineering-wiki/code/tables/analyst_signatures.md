@@ -20,13 +20,13 @@
 | [api/myaccount/delete_signature.php](/code/files/api/myaccount/delete_signature.php.md):33 |  | delete |  |  |
 | [api/myaccount/save_signature.php](/code/files/api/myaccount/save_signature.php.md):46 |  | update | `name`, `body`, `updated_datetime` |  |
 | [api/myaccount/save_signature.php](/code/files/api/myaccount/save_signature.php.md):60 |  | insert | `analyst_id`, `name`, `body`, `is_default`, `display_order` |  |
-| [includes/signatures.php](/code/files/includes/signatures.php.md):136 | `setDefaultSignature` | update | `is_default` |  |
-| [includes/signatures.php](/code/files/includes/signatures.php.md):138 | `setDefaultSignature` | update | `is_default` |  |
+| [includes/signatures.php](/code/files/includes/signatures.php.md):140 | `setDefaultSignature` | update | `is_default` |  |
+| [includes/signatures.php](/code/files/includes/signatures.php.md):142 | `setDefaultSignature` | update | `is_default` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/myaccount/save_signature.php](/code/files/api/myaccount/save_signature.php.md) | L53, L68 |  |
-| [includes/signatures.php](/code/files/includes/signatures.php.md) | signaturesForAnalyst L93 |  |
+| [includes/signatures.php](/code/files/includes/signatures.php.md) | signaturesForAnalyst L95 |  |
 

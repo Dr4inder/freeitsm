@@ -26,7 +26,12 @@ function domainWatchedFields(): array
     return ['registrar', 'transfer_lock', 'registry_lock', 'dnssec', 'dns_ns', 'mx', 'spf', 'dmarc'];
 }
 
-/** Build the baseline from a domain row plus the check snapshot. */
+/**
+ * Build the baseline from a domain row plus the check snapshot.
+ *
+ * @param array $d         the domain row (registrar_name, nameservers, transfer_lock, registry_lock, dnssec)
+ * @param array $snapshot  the 'snapshot' from domainRunChecks() - array{dns_ns:string[],mx:string[],spf:string,dmarc:string}
+ */
 function domainBaseline(array $d, array $snapshot): array
 {
     $ns = array_values(array_filter(array_map(fn($x) => strtolower(rtrim(trim($x), '.')), preg_split('/\R/', (string)($d['nameservers'] ?? '')))));
@@ -53,6 +58,9 @@ function domainBaseline(array $d, array $snapshot): array
  * every time a registry had a slow afternoon. Only known → different known
  * counts. Unknown → known is the first sighting, recorded without an alert.
  *
+ * @param ?array $old  the previous baseline from domains.watch_baseline, or null on the first run
+ * @param array  $new  the baseline domainBaseline() just built
+ *
  * @return array<int,array{field:string,old:string,new:string}>
  */
 function domainBaselineDiff(?array $old, array $new): array
@@ -73,6 +81,9 @@ function domainBaselineDiff(?array $old, array $new): array
  * Keep the previous value of a field when this run could not see it, so a
  * one-off gap never erases what we knew (and never makes tomorrow's reappearance
  * look like a change).
+ *
+ * @param ?array $old  the previous baseline from domains.watch_baseline, or null on the first run
+ * @param array  $new  the baseline domainBaseline() just built
  */
 function domainBaselineMerge(?array $old, array $new): array
 {
@@ -85,7 +96,11 @@ function domainBaselineMerge(?array $old, array $new): array
     return $new;
 }
 
-/** Is this change one that should wake somebody up (vs. merely be recorded)? */
+/**
+ * Is this change one that should wake somebody up (vs. merely be recorded)?
+ *
+ * @param array $c  one change from domainBaselineDiff() - array{field:string,old:string,new:string}
+ */
 function domainChangeIsSerious(array $c): bool
 {
     // Losing a lock, or the servers that answer for the domain moving, is how

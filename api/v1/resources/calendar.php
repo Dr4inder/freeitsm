@@ -41,6 +41,9 @@ require_once dirname(__DIR__, 3) . '/includes/services/calendar.php';
  * Parse a NAIVE local datetime ("YYYY-MM-DD HH:MM[:SS]", T separator OK,
  * date-only OK). 422s on timezone designators — this resource is naive-local
  * by design (see header).
+ *
+ * @param mixed $value  the caller-supplied datetime (untrusted), server-local with no offset; null or '' gives null
+ * @param string $field  the field or query parameter name, quoted in the 422 message
  */
 function apiParseNaiveDatetime($value, string $field): ?string {
     if ($value === null || $value === '') {
@@ -76,6 +79,8 @@ function apiCalendarEventSelect(): string {
  * Shapes a calendar event row for the API - times stay naive server-local, source says
  * whether it was generated (null = typed in), and created_by is null for generated
  * events.
+ *
+ * @param array $r  the calendar_events row as apiCalendarEventSelect() loads it, with category and creator names
  */
 function apiSerializeCalendarEvent(array $r): array {
     return [
@@ -101,7 +106,11 @@ function apiSerializeCalendarEvent(array $r): array {
     ];
 }
 
-/** Loads one calendar event row (apiCalendarEventSelect), or answers 404 and stops. */
+/**
+ * Loads one calendar event row (apiCalendarEventSelect), or answers 404 and stops.
+ *
+ * @param int $eventId  the calendar_events id
+ */
 function apiLoadCalendarEvent(PDO $conn, int $eventId): array {
     $stmt = $conn->prepare(apiCalendarEventSelect() . " WHERE e.id = ?");
     $stmt->execute([$eventId]);

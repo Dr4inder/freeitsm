@@ -1,6 +1,6 @@
 # api/change-management/send_share_email.php
 
-> API endpoint - 339 lines
+> API endpoint - 362 lines
 
 API Endpoint: Send share email for change record
 
@@ -15,11 +15,11 @@ API Endpoint: Send share email for change record
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sendSmtpEmail()](/code/functions/sendSmtpEmail.md) | 121 | Send email via SMTP |
-| [sendMailboxEmail()](/code/functions/sendMailboxEmail.md) | 168 | Send email via Microsoft 365 mailbox using Graph API |
-| [getValidAccessToken()](/code/functions/getValidAccessToken.md) | 259 | Get valid access token (refresh if expired) |
-| [refreshAccessToken()](/code/functions/refreshAccessToken.md) | 285 | Refresh the access token using mailbox configuration |
-| [saveTokenData()](/code/functions/saveTokenData.md) | 330 | Save token data to database |
+| [sendSmtpEmail()](/code/functions/sendSmtpEmail.md) | 128 | Send email via SMTP |
+| [sendMailboxEmail()](/code/functions/sendMailboxEmail.md) | 182 | Send email via Microsoft 365 mailbox using Graph API |
+| [getValidAccessToken()](/code/functions/getValidAccessToken.md) | 276 | Get valid access token (refresh if expired) |
+| [refreshAccessToken()](/code/functions/refreshAccessToken.md) | 305 | Refresh the access token using mailbox configuration |
+| [saveTokenData()](/code/functions/saveTokenData.md) | 353 | Save token data to database |
 
 ## Database
 
@@ -27,8 +27,8 @@ API Endpoint: Send share email for change record
 |--:|---|---|---|
 | 45 |  | read [system_settings](/code/tables/system_settings.md) |  |
 | 105 |  | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 174 | `sendMailboxEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 334 | `saveTokenData` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
+| 188 | `sendMailboxEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 357 | `saveTokenData` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
 
 ## How it hangs together
 

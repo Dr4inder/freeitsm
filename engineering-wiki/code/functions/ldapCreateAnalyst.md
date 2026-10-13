@@ -21,16 +21,16 @@ function ldapCreateAnalyst(
 ): int
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 511.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 555.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
-| `$preferredUser` | `string` |  |  |
-| `$name` | `string` |  |  |
-| `$email` | `string` |  |  |
-| `$defaultModules` | `?string` |  |  |
+| `$providerId` | `int` |  | the auth_providers id the new analyst signs in through |
+| `$preferredUser` | `string` |  | the directory username, used as the base of the new analyst's username |
+| `$name` | `string` |  | the display name from the directory; '' uses the username |
+| `$email` | `string` |  | the directory email address; '' is allowed |
+| `$defaultModules` | `?string` |  | comma-separated module keys to grant; null or blank grants every module |
 
 **Returns:** `int`
 
@@ -38,9 +38,9 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 511.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 516 | `ldapCreateAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 541 | `ldapCreateAnalyst` | **insert** [analysts](/code/tables/analysts.md) (`username`, `password_hash`, `full_name`, `email`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules`) |  |
-| 548 | `ldapCreateAnalyst` | **insert** [analyst_modules](/code/tables/analyst_modules.md) (`analyst_id`, `module_key`) |  |
+| 560 | `ldapCreateAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 585 | `ldapCreateAnalyst` | **insert** [analysts](/code/tables/analysts.md) (`username`, `password_hash`, `full_name`, `email`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules`) |  |
+| 592 | `ldapCreateAnalyst` | **insert** [analyst_modules](/code/tables/analyst_modules.md) (`analyst_id`, `module_key`) |  |
 
 ## Calls
 

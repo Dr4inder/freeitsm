@@ -6,7 +6,7 @@ The approver's inbox list.
 function catalogueApprovalsList(PDO $conn, int $analystId, string $filter = 'mine'): array
 ```
 
-Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 538.
+Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 566.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,10 +20,10 @@ Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_app
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 540 | `catalogueApprovalsList` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md), read [tickets](/code/tables/tickets.md) |  |
-| 576 | `catalogueApprovalsList` | read [form_submissions](/code/tables/form_submissions.md) |  |
-| 577 | `catalogueApprovalsList` | read [form_submissions](/code/tables/form_submissions.md) |  |
-| 578 | `catalogueApprovalsList` | read [form_submissions](/code/tables/form_submissions.md) |  |
+| 568 | `catalogueApprovalsList` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md), read [tickets](/code/tables/tickets.md) |  |
+| 604 | `catalogueApprovalsList` | read [form_submissions](/code/tables/form_submissions.md) |  |
+| 605 | `catalogueApprovalsList` | read [form_submissions](/code/tables/form_submissions.md) |  |
+| 606 | `catalogueApprovalsList` | read [form_submissions](/code/tables/form_submissions.md) |  |
 
 ## Calls
 

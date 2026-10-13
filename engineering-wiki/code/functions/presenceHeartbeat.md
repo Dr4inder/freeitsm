@@ -9,14 +9,14 @@ composer being open — as opposed to merely having the ticket on screen.
 function presenceHeartbeat(PDO $conn, int $ticketId, int $analystId, bool $composing): void
 ```
 
-Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md), line 76.
+Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$composing` | `bool` |  |  |
+| `$composing` | `bool` |  | true while the reply, forward or note composer is open; false when only viewing |
 
 **Returns:** `void`
 
@@ -24,7 +24,7 @@ Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 80 | `presenceHeartbeat` | **insert** [ticket_presence](/code/tables/ticket_presence.md) (`ticket_id`, `analyst_id`, `last_seen`, `is_composing`) |  |
+| 82 | `presenceHeartbeat` | **insert** [ticket_presence](/code/tables/ticket_presence.md) (`ticket_id`, `analyst_id`, `last_seen`, `is_composing`) |  |
 
 ## Calls
 

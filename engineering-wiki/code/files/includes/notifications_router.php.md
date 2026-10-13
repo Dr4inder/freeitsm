@@ -1,6 +1,6 @@
 # includes/notifications_router.php
 
-> PHP - 477 lines
+> PHP - 498 lines
 
 Turns workflow events into notifications (discussion #55).
 
@@ -22,23 +22,23 @@ the new trigger for free, which is the right trade either way.
 | Function | Line | What it does |
 |---|--:|---|
 | [notificationsCurrentActor()](/code/functions/notificationsCurrentActor.md) | 33 | Who caused this? Resolved centrally from the session rather than threaded through 48 dispatch payloads. |
-| [notificationsHandleEvent()](/code/functions/notificationsHandleEvent.md) | 46 | Entry point from WorkflowEngine::dispatch(). |
-| [notificationsAudienceFor()](/code/functions/notificationsAudienceFor.md) | 135 | EVERYBODY who gets told about this event. |
-| [notificationsRecipientFor()](/code/functions/notificationsRecipientFor.md) | 212 | The ONE person an event is about, for events that are about one person. |
-| [notificationsEntityFor()](/code/functions/notificationsEntityFor.md) | 253 | Display data for the row: id, human reference, and what it is about. |
-| [notificationsBodyFor()](/code/functions/notificationsBodyFor.md) | 378 | The one-line description. |
-| [notificationsTaskAssignedEmail()](/code/functions/notificationsTaskAssignedEmail.md) | 400 | "A task has been assigned to you", by email - for an analyst who has turned on Preferences -> Notifications -> "Email me when a task is assigned to me" (user_preferences.task_assigned_email = 'on'; off unless they ask). |
+| [notificationsHandleEvent()](/code/functions/notificationsHandleEvent.md) | 49 | Entry point from WorkflowEngine::dispatch(). |
+| [notificationsAudienceFor()](/code/functions/notificationsAudienceFor.md) | 140 | EVERYBODY who gets told about this event. |
+| [notificationsRecipientFor()](/code/functions/notificationsRecipientFor.md) | 220 | The ONE person an event is about, for events that are about one person. |
+| [notificationsEntityFor()](/code/functions/notificationsEntityFor.md) | 267 | Display data for the row: id, human reference, and what it is about. |
+| [notificationsBodyFor()](/code/functions/notificationsBodyFor.md) | 395 | The one-line description. |
+| [notificationsTaskAssignedEmail()](/code/functions/notificationsTaskAssignedEmail.md) | 421 | "A task has been assigned to you", by email - for an analyst who has turned on Preferences -> Notifications -> "Email me when a task is assigned to me" (user_preferences.task_assigned_email = 'on'; off unless they ask). |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 160 | `notificationsAudienceFor` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 192 | `notificationsAudienceFor` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 358 | `notificationsEntityFor` | read [tickets](/code/tables/tickets.md) |  |
-| 409 | `notificationsTaskAssignedEmail` | read [user_preferences](/code/tables/user_preferences.md) |  |
-| 417 | `notificationsTaskAssignedEmail` | read [analysts](/code/tables/analysts.md) |  |
-| 425 | `notificationsTaskAssignedEmail` | read [tasks](/code/tables/tasks.md), read [task_priorities](/code/tables/task_priorities.md) |  |
+| 165 | `notificationsAudienceFor` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 197 | `notificationsAudienceFor` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 372 | `notificationsEntityFor` | read [tickets](/code/tables/tickets.md) |  |
+| 430 | `notificationsTaskAssignedEmail` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 438 | `notificationsTaskAssignedEmail` | read [analysts](/code/tables/analysts.md) |  |
+| 446 | `notificationsTaskAssignedEmail` | read [tasks](/code/tables/tasks.md), read [task_priorities](/code/tables/task_priorities.md) |  |
 
 ## How it hangs together
 

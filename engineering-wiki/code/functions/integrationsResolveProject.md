@@ -19,13 +19,13 @@ Pure: no database, so the precedence is provable without fixtures.
 function integrationsResolveProject(array $maps, ?int $tenantId, ?int $departmentId): ?string
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1011.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1073.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$maps` | `array` |  |  |
+| `$maps` | `array` |  | the connection's mappings as returned by `integrationsLoadMaps()` |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$departmentId` | `?int` |  |  |
+| `$departmentId` | `?int` |  | the work item's department; null skips the department rule |
 
 **Returns:** `?string`
 

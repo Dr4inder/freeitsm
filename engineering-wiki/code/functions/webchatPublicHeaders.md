@@ -6,11 +6,11 @@ Emit CORS + JSON headers. Pass the request's origin to echo it back (required fo
 function webchatPublicHeaders(?string $allowOrigin = null): void
 ```
 
-Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 62.
+Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$allowOrigin` | `?string` | `null` |  |
+| `$allowOrigin` | `?string` | `null` | the origin to echo in Access-Control-Allow-Origin, or '*'; null or '' sends none |
 
 **Returns:** `void`
 

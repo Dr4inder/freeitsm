@@ -37,5 +37,5 @@ Embed config for one website chat widget. Drives a messaging_channels row (chann
 | [api/webchat/delete_widget.php](/code/files/api/webchat/delete_widget.php.md) | L36 |  |
 | [api/webchat/get_widgets.php](/code/files/api/webchat/get_widgets.php.md) | L30 |  |
 | [api/webchat/save_widget.php](/code/files/api/webchat/save_widget.php.md) | L109, L157 |  |
-| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatLoadByChannel L80, webchatLoadByKey L98 |  |
+| [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatLoadByChannel L90, webchatLoadByKey L112 |  |
 

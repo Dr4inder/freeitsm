@@ -12,13 +12,13 @@ sending from the wrong mailbox.
 function templateSendViaGraph(string $accessToken, array $message, string $graphBase): void
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 596.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 626.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$message` | `array` |  |  |
-| `$graphBase` | `string` |  |  |
+| `$accessToken` | `string` |  | a valid Microsoft Graph access token, from `templateGraphContext()` |
+| `$message` | `array` |  | the Graph sendMail body: ['message' => [...], 'saveToSentItems' => bool] |
+| `$graphBase` | `string` |  | '/me' (delegated) or '/users/<address>' (app-only), from `templateGraphContext()` |
 
 **Returns:** `void`
 

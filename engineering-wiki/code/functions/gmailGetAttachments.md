@@ -6,13 +6,13 @@ Get Gmail attachments for a message. Returns array of [filename, mimeType, data 
 function gmailGetAttachments(string $accessToken, string $messageId, array $payload): array
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 527.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 580.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$messageId` | `string` |  |  |
-| `$payload` | `array` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
+| `$messageId` | `string` |  | the Gmail message id the attachments belong to |
+| `$payload` | `array` |  | the message's payload from messages.get; only its top-level parts are read |
 
 **Returns:** `array`
 

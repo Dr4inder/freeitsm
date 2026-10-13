@@ -22,6 +22,10 @@ if (file_exists(__DIR__ . '/../ssl.php')) require_once __DIR__ . '/../ssl.php';
  * names - then says whether it matches the host name and whether the chain
  * verifies against the trusted CA bundle.
  *
+ * @param string $host     the host name to connect to and to send as SNI
+ * @param int    $port     the TCP port to try
+ * @param int    $timeout  connect timeout in seconds, for each of the two handshakes
+ *
  * @return array{ok:bool, host:string, error:?string, subject:?string, issuer:?string,
  *               valid_from:?string, valid_to:?string, days_left:?int, sans:array,
  *               hostname_match:?bool, chain_valid:?bool}
@@ -82,7 +86,12 @@ function domainTlsCertificate(string $host, int $port = 443, int $timeout = 8): 
     return $out;
 }
 
-/** Does $host appear in the certificate's names (with one-label wildcards)? */
+/**
+ * Does $host appear in the certificate's names (with one-label wildcards)?
+ *
+ * @param string   $host  the host name that was asked for
+ * @param string[] $sans  the certificate's DNS names, lower case; "*.example.com" matches one label
+ */
 function domainTlsNameMatches(string $host, array $sans): bool
 {
     $host = strtolower($host);

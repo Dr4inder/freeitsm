@@ -8,7 +8,7 @@ Returns the number of asset_disks rows inserted (one per eligible asset).
 function intuneSyncDisks(PDO $conn): int
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 376.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 390.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,9 +20,9 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 376.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 381 | `intuneSyncDisks` | read [intune_devices](/code/tables/intune_devices.md), read [asset_disks](/code/tables/asset_disks.md) |  |
-| 396 | `intuneSyncDisks` | **delete** [asset_disks](/code/tables/asset_disks.md) |  |
-| 398 | `intuneSyncDisks` | **insert** [asset_disks](/code/tables/asset_disks.md) (`asset_id`, `drive`, `label`, `file_system`, `size_bytes`, `free_bytes`, `used_percent`, `source`) |  |
+| 395 | `intuneSyncDisks` | read [intune_devices](/code/tables/intune_devices.md), read [asset_disks](/code/tables/asset_disks.md) |  |
+| 410 | `intuneSyncDisks` | **delete** [asset_disks](/code/tables/asset_disks.md) |  |
+| 412 | `intuneSyncDisks` | **insert** [asset_disks](/code/tables/asset_disks.md) (`asset_id`, `drive`, `label`, `file_system`, `size_bytes`, `free_bytes`, `used_percent`, `source`) |  |
 
 ## Calls
 

@@ -6,19 +6,19 @@ Populate authenticated_as / authenticated_addresses for a delegated Microsoft ma
 function mailboxBackfillIdentity($conn, $mailbox, $accessToken)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 210.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 227.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` |  |  |  |
-| `$accessToken` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row, decrypted; returned with the identity columns filled in |
+| `$accessToken` |  |  | the mailbox's current delegated Graph access token |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 219 | `mailboxBackfillIdentity` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`authenticated_as`, `authenticated_addresses`) |  |
+| 236 | `mailboxBackfillIdentity` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`authenticated_as`, `authenticated_addresses`) |  |
 
 ## Calls
 

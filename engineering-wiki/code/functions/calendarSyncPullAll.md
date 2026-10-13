@@ -6,7 +6,7 @@ Every enrolled analyst. Returns one report per person.
 function calendarSyncPullAll(PDO $conn): array
 ```
 
-Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 329.
+Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 364.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 332 | `calendarSyncPullAll` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 367 | `calendarSyncPullAll` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
 
 ## Calls
 

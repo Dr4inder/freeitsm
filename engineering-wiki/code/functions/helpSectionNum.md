@@ -18,11 +18,11 @@ Help Page House Style §5.
 function helpSectionNum(string $id): string
 ```
 
-Defined in [system/help/_init.php](/code/files/system/help/_init.php.md), line 72.
+Defined in [system/help/_init.php](/code/files/system/help/_init.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$id` | `string` |  |  |
+| `$id` | `string` |  | the help section's id, as listed in the page's `$helpNav` |
 
 **Returns:** `string`
 

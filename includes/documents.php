@@ -342,7 +342,11 @@ function documentEntityTypes(): array {
     return array_keys(documentEntityRegistry());
 }
 
-/** Returns one record type's registry entry (label, URL, title column, access checks), or null when unknown. */
+/**
+ * Returns one record type's registry entry (label, URL, title column, access checks), or null when unknown.
+ *
+ * @param string $type  an entity type key from documentEntityRegistry(), e.g. 'contract' - may be untrusted
+ */
 function documentEntityDef(string $type): ?array {
     $reg = documentEntityRegistry();
     return $reg[$type] ?? null;
@@ -354,6 +358,8 @@ function documentEntityDef(string $type): ?array {
  * Module membership is the read gate, exactly as the command palette has it:
  * "Reads aren't capability-gated in FreeITSM, so module membership is the right
  * gate here." A NULL allowed_modules means unrestricted.
+ *
+ * @param ?array $allowedModules  the analyst's allowed module keys ($_SESSION['allowed_modules']); null means all
  */
 function documentAccessibleTypes(?array $allowedModules): array {
     $out = [];
@@ -371,6 +377,10 @@ function documentAccessibleTypes(?array $allowedModules): array {
  * Used for the exact, one-row question: may this document be downloaded, may it
  * be attached here. Checks the module gate first (cheap, and the coarse rule),
  * then the module's own record-level check where it has one.
+ *
+ * @param ?array $allowedModules  the analyst's allowed module keys ($_SESSION['allowed_modules']); null means all
+ * @param string $type            the parent's entity type key from documentEntityRegistry(); unknown gives false
+ * @param int    $parentId        the parent record's id in that type's table
  */
 function documentCanViewParent(PDO $conn, int $analystId, ?array $allowedModules, string $type, int $parentId): bool {
     $def = documentEntityDef($type);
@@ -408,6 +418,9 @@ function documentCanViewParent(PDO $conn, int $analystId, ?array $allowedModules
  *
  * ⚠️ Returns ' AND 0=1' when the analyst can reach no entity type at all. An
  * empty string would mean "no constraint", i.e. every document in the system.
+ *
+ * @param ?array $allowedModules  the analyst's allowed module keys ($_SESSION['allowed_modules']); null means all
+ * @param string $docAlias        the alias the calling query gives the documents table; '' for no alias
  *
  * @return array [sqlFragment, params] — the [sql, params] shape every other
  *               filter in includes/tenancy.php uses.
@@ -464,6 +477,9 @@ function documentVisibilityClause(PDO $conn, int $analystId, ?array $allowedModu
  * download, preview and metadata read, and must never trust that the caller
  * found the id through a filtered list — /download.php?id=12345 is the attack,
  * and guessing an integer is not hard.
+ *
+ * @param ?array $allowedModules  the analyst's allowed module keys ($_SESSION['allowed_modules']); null means all
+ * @param int    $documentId      the documents.id asked for - untrusted, often straight from the URL
  */
 function documentCanView(PDO $conn, int $analystId, ?array $allowedModules, int $documentId): bool {
     if ($documentId <= 0) return false;
@@ -500,6 +516,9 @@ function documentCanView(PDO $conn, int $analystId, ?array $allowedModules, int 
  * software licence has no name of its own — it lives in software_inventory_apps
  * via app_id — so its entry supplies a scalar subquery instead. Both come from
  * the registry, which is code, so neither is ever attacker-supplied.
+ *
+ * @param string $type      the parent's entity type key from documentEntityRegistry(); unknown gives null
+ * @param int    $parentId  the parent record's id in that type's table
  */
 function documentParentName(PDO $conn, string $type, int $parentId): ?string
 {
@@ -529,6 +548,9 @@ function documentParentName(PDO $conn, string $type, int $parentId): ?string
  * see would disclose that a contract exists, and its title, to somebody with no
  * access to Contracts at all. So a hidden parent is omitted silently rather than
  * shown as "1 other record", which would leak the same fact more quietly.
+ *
+ * @param ?array $allowedModules  the analyst's allowed module keys ($_SESSION['allowed_modules']); null means all
+ * @param int    $documentId      the documents.id whose attachments to list
  *
  * @return array<int,array{parent_type:string,parent_id:int,label:string,name:?string,url:?string}>
  */
@@ -592,6 +614,9 @@ function documentVisibleParents(PDO $conn, int $analystId, ?array $allowedModule
  * Call this from a module's delete path when you have one. It is the tidy answer:
  * the links go at the moment the parent does.
  *
+ * @param string $parentType  the deleted record's entity type key from documentEntityRegistry(); unknown does nothing
+ * @param int    $parentId    the deleted record's id
+ *
  * @return int links removed
  */
 function documentsDetachParent(PDO $conn, string $parentType, int $parentId): int
@@ -624,6 +649,8 @@ function documentsDetachParent(PDO $conn, string $parentType, int $parentId): in
  * correct on its own.
  *
  * Bounded so it can run opportunistically without becoming the cost of a page load.
+ *
+ * @param int $limit  most rows to delete per entity type, and most documents to collect, in one run (at least 1)
  *
  * @return array{links_removed:int,documents_orphaned:int,files_removed:int,errors:string[]}
  */
@@ -703,6 +730,8 @@ function documentsCollectOrphans(PDO $conn, int $limit = 200): array
  * 🔑 The database stores an opaque KEY, never a path. A path baked into a row is
  * a data migration the day the files move to another disk, a NAS or object
  * storage; a key is a change to this one function.
+ *
+ * @param string $storageKey  documents.storage_key, as made by documentStorageKey(); any "../" is stripped
  */
 function documentStoragePath(string $storageKey): string {
     $key = str_replace('\\', '/', $storageKey);
@@ -719,6 +748,8 @@ function documentStoragePath(string $storageKey): string {
  * single directory is not a problem worth solving. Sharding into subdirectories,
  * or moving to object storage entirely, changes THIS function and nothing else —
  * which is the entire reason the column holds a key rather than a path.
+ *
+ * @param string $storedName  the random file name uploadStoreFile() gave the upload (its 'stored_name')
  */
 function documentStorageKey(string $storedName): string {
     return basename(str_replace('\\', '/', $storedName));

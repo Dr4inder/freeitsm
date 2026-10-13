@@ -17,15 +17,15 @@ Extracted text for an attached document (discussion #76).  Its own table rather 
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md):68 | `documentTextEnqueue` | insert | `document_id`, `status`, `extracted_datetime` |  |
-| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md):166 | `documentTextDrain` | update | `status` |  |
-| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md):191 | `documentTextDrain` | update | `status`, `extracted_datetime` |  |
-| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md):235 | `documentTextDrain` | update | `status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime` |  |
+| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md):74 | `documentTextEnqueue` | insert | `document_id`, `status`, `extracted_datetime` |  |
+| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md):181 | `documentTextDrain` | update | `status` |  |
+| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md):206 | `documentTextDrain` | update | `status`, `extracted_datetime` |  |
+| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md):250 | `documentTextDrain` | update | `status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/documents/links.php](/code/files/api/documents/links.php.md) | L49 |  |
-| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md) | documentTextQueueDepth L83, searchIndexDocument L104, documentTextDrain L171 |  |
+| [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md) | documentTextQueueDepth L89, searchIndexDocument L112, documentTextDrain L186 |  |
 

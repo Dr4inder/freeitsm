@@ -6,7 +6,7 @@ GET /assets/{id}/software - the software installed on the asset, by name. System
 function apiAssetSoftwareList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 605.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 616.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 608 | `apiAssetSoftwareList` | read [software_inventory_detail](/code/tables/software_inventory_detail.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 619 | `apiAssetSoftwareList` | read [software_inventory_detail](/code/tables/software_inventory_detail.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ## Calls
 

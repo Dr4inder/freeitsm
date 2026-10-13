@@ -6,12 +6,12 @@ Add the contractor fields to task rows (each with an 'id').
 function tasksWithContractors(PDO $conn, array $rows): array
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 69.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 79.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rows` | `array` |  |  |
+| `$rows` | `array` |  | task rows, each with an 'id'; supplier_id, supplier_name, contact_id and contact_name are added |
 
 **Returns:** `array`
 

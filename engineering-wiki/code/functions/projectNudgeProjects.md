@@ -6,12 +6,12 @@ Project rows shaped for `projectEventPayload()`, by id.
 function projectNudgeProjects(PDO $conn, array $ids): array
 ```
 
-Defined in [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md), line 168.
+Defined in [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md), line 172.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ids` | `array` |  |  |
+| `$ids` | `array` |  | the project ids to load; non-numbers and 0 are dropped |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/projects/nudges.php](/code/files/includes/projects/nudges.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 174 | `projectNudgeProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 178 | `projectNudgeProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Called from
 

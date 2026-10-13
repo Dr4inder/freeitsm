@@ -6,7 +6,7 @@ A fresh relative path for today: 2026/10/10/<hex>.bin (directories created).
 function filesNewStoragePath(PDO $conn): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 67.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 77.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

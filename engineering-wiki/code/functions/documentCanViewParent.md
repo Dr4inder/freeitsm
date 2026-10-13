@@ -16,15 +16,15 @@ function documentCanViewParent(
 ): bool
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 375.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 385.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$allowedModules` | `?array` |  |  |
-| `$type` | `string` |  |  |
-| `$parentId` | `int` |  |  |
+| `$allowedModules` | `?array` |  | the analyst's allowed module keys (`$_SESSION`['allowed_modules']); null means all |
+| `$type` | `string` |  | the parent's entity type key from `documentEntityRegistry()`; unknown gives false |
+| `$parentId` | `int` |  | the parent record's id in that type's table |
 
 **Returns:** `bool`
 

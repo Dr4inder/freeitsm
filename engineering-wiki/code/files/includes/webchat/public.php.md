@@ -1,6 +1,6 @@
 # includes/webchat/public.php
 
-> PHP - 178 lines
+> PHP - 194 lines
 
 Web chat — public request plumbing.
 
@@ -21,21 +21,21 @@ ships in page source) never exposes anyone's chat.
 | [webchatGenerateToken()](/code/functions/webchatGenerateToken.md) | 19 | A fresh per-conversation capability token (browser-held). |
 | [webchatClientIp()](/code/functions/webchatClientIp.md) | 25 | Best-effort client IP (rate limiting only — not a security boundary). |
 | [webchatRequestOrigin()](/code/functions/webchatRequestOrigin.md) | 37 | The origin of the requesting page. Cross-origin requests carry an Origin header (the authoritative case in production, where the customer's site and the FreeITSM host are different origins). Same-origin requests — e.g. a demo site on the same host — omit Origin entirely, so we fall back to the scheme+host of the Referer. Returns '' if neither is present. Like the whole allowlist, this is a deterrent, not a crypto control. |
-| [webchatPublicHeaders()](/code/functions/webchatPublicHeaders.md) | 62 | Emit CORS + JSON headers. Pass the request's origin to echo it back (required for the browser to accept the response on a cross-origin call); pass '*' when there is no origin (same-origin / curl). Call once the origin has been authorised. |
-| [webchatHandlePreflight()](/code/functions/webchatHandlePreflight.md) | 75 | Answer a CORS preflight and exit. Call at the very top of each public endpoint. |
-| [webchatFail()](/code/functions/webchatFail.md) | 87 | Emit a JSON error and stop. |
-| [webchatPublicResolve()](/code/functions/webchatPublicResolve.md) | 99 | Load the widget for a public request, enforce active + origin allowlist, and set the CORS headers. Returns the widget row (joined to its channel). Exits with JSON on any failure — so the caller can treat the return as authorised. |
-| [webchatLoadConversation()](/code/functions/webchatLoadConversation.md) | 125 | Load a conversation by its token, scoped to the widget's channel (so a token issued for one widget can't be replayed against another). Null if not found. |
-| [webchatRateLimitStart()](/code/functions/webchatRateLimitStart.md) | 143 | Cap new conversations per IP per minute. Exits (429) on breach. |
-| [webchatRateLimitSend()](/code/functions/webchatRateLimitSend.md) | 161 | Cap inbound messages per conversation per minute. Exits (429) on breach. |
+| [webchatPublicHeaders()](/code/functions/webchatPublicHeaders.md) | 64 | Emit CORS + JSON headers. Pass the request's origin to echo it back (required for the browser to accept the response on a cross-origin call); pass '*' when there is no origin (same-origin / curl). Call once the origin has been authorised. |
+| [webchatHandlePreflight()](/code/functions/webchatHandlePreflight.md) | 77 | Answer a CORS preflight and exit. Call at the very top of each public endpoint. |
+| [webchatFail()](/code/functions/webchatFail.md) | 94 | Emit a JSON error and stop. |
+| [webchatPublicResolve()](/code/functions/webchatPublicResolve.md) | 108 | Load the widget for a public request, enforce active + origin allowlist, and set the CORS headers. Returns the widget row (joined to its channel). Exits with JSON on any failure — so the caller can treat the return as authorised. |
+| [webchatLoadConversation()](/code/functions/webchatLoadConversation.md) | 137 | Load a conversation by its token, scoped to the widget's channel (so a token issued for one widget can't be replayed against another). Null if not found. |
+| [webchatRateLimitStart()](/code/functions/webchatRateLimitStart.md) | 159 | Cap new conversations per IP per minute. Exits (429) on breach. |
+| [webchatRateLimitSend()](/code/functions/webchatRateLimitSend.md) | 177 | Cap inbound messages per conversation per minute. Exits (429) on breach. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 132 | `webchatLoadConversation` | read [webchat_conversations](/code/tables/webchat_conversations.md) |  |
-| 150 | `webchatRateLimitStart` | read [webchat_conversations](/code/tables/webchat_conversations.md) |  |
-| 168 | `webchatRateLimitSend` | read [emails](/code/tables/emails.md) |  |
+| 144 | `webchatLoadConversation` | read [webchat_conversations](/code/tables/webchat_conversations.md) |  |
+| 166 | `webchatRateLimitStart` | read [webchat_conversations](/code/tables/webchat_conversations.md) |  |
+| 184 | `webchatRateLimitSend` | read [emails](/code/tables/emails.md) |  |
 
 ## How it hangs together
 

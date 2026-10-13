@@ -14,11 +14,11 @@ are adding something because "it's probably fine", it isn't — guard it instead
 function d005ByDesign(string $rel): ?string
 ```
 
-Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 92.
+Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 100.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rel` | `string` |  |  |
+| `$rel` | `string` |  | the endpoint's path from the app root, with forward slashes |
 
 **Returns:** `?string`
 

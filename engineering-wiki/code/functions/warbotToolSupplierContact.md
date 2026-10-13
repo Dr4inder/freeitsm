@@ -6,12 +6,12 @@ supplier_contact: up to three suppliers matching by name or contract title, each
 function warbotToolSupplierContact(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 739.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 778.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$args` | `array` |  |  |
+| `$args` | `array` |  | the model's arguments - untrusted: query (a supplier name or words from a contract title) |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
@@ -20,9 +20,9 @@ Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 749 | `warbotToolSupplierContact` | read [suppliers](/code/tables/suppliers.md), read [contracts](/code/tables/contracts.md) |  |
-| 766 | `warbotToolSupplierContact` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
-| 779 | `warbotToolSupplierContact` | read [contacts](/code/tables/contacts.md) |  |
+| 788 | `warbotToolSupplierContact` | read [suppliers](/code/tables/suppliers.md), read [contracts](/code/tables/contracts.md) |  |
+| 805 | `warbotToolSupplierContact` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 818 | `warbotToolSupplierContact` | read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

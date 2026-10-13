@@ -16,15 +16,15 @@ function messagingTelegramResolveIdentity(
 ): array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 537.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 571.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$channel` | `array` |  |  |
-| `$chatId` | `string` |  |  |
-| `$msg` | `array` |  |  |
-| `$profileName` | `string` |  |  |
+| `$channel` | `array` |  | the Telegram messaging_channels row, decrypted |
+| `$chatId` | `string` |  | the Telegram chat id (the normalised sender) |
+| `$msg` | `array` |  | the normalised message (language_code, contact, is_test) |
+| `$profileName` | `string` |  | the sender's Telegram name; '' uses the chat id |
 
 **Returns:** `array`
 
@@ -32,9 +32,9 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 554 | `messagingTelegramResolveIdentity` | read [messaging_identity_links](/code/tables/messaging_identity_links.md) |  |
-| 566 | `messagingTelegramResolveIdentity` | **insert** [messaging_identity_links](/code/tables/messaging_identity_links.md) (`channel_id`, `channel_type`, `external_id`, `user_id`, `phone`, `locale`) |  |
-| 608 | `messagingTelegramResolveIdentity` | **update** [messaging_identity_links](/code/tables/messaging_identity_links.md) (`locale`) |  |
+| 588 | `messagingTelegramResolveIdentity` | read [messaging_identity_links](/code/tables/messaging_identity_links.md) |  |
+| 600 | `messagingTelegramResolveIdentity` | **insert** [messaging_identity_links](/code/tables/messaging_identity_links.md) (`channel_id`, `channel_type`, `external_id`, `user_id`, `phone`, `locale`) |  |
+| 642 | `messagingTelegramResolveIdentity` | **update** [messaging_identity_links](/code/tables/messaging_identity_links.md) (`locale`) |  |
 
 ## Calls
 

@@ -27,7 +27,7 @@
 
 ### saveCheck
 
-*public static* - line 31
+*public static* - line 35
 
 Create (no id) or update (id present) a check. Returns the id.
 
@@ -39,13 +39,13 @@ function saveCheck(PDO $conn, ActorContext $ctx, array $in): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (absent = new), name, description, sort_order, is_active, group_id, assigned_analyst_id - null or '' clears |
 
 **Called from:** [api/morning-checks/add_check.php](/code/files/api/morning-checks/add_check.php.md), [api/morning-checks/update_check.php](/code/files/api/morning-checks/update_check.php.md), [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md)
 
 ### nullableId
 
-*private static* - line 96
+*private static* - line 102
 
 "" and 0 and "0" all mean "no assignment"; anything else is an id.
 
@@ -59,11 +59,11 @@ function nullableId($value): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
+| `$value` |  |  | an id from the request; null, '', 0 or '0' means none |
 
 ### assertExists
 
-*private static* - line 114
+*private static* - line 125
 
 Reject an id that points at nothing.
 
@@ -80,14 +80,14 @@ function assertExists(PDO $conn, ?int $id, string $table, string $idCol, string 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `?int` |  |  |
-| `$table` | `string` |  |  |
-| `$idCol` | `string` |  |  |
-| `$field` | `string` |  |  |
+| `$id` | `?int` |  | the id to check; null passes straight through |
+| `$table` | `string` |  | the table it should be in, written in code - never user input |
+| `$idCol` | `string` |  | that table's id column, written in code |
+| `$field` | `string` |  | the request field name, used in the error message |
 
 ### listGroups
 
-*public static* - line 140
+*public static* - line 155
 
 Groups with their routing, plus how many active checks each holds.
 
@@ -98,19 +98,19 @@ function listGroups(PDO $conn, bool $activeOnly = false): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$activeOnly` | `bool` | `false` |  |
+| `$activeOnly` | `bool` | `false` | true to leave out groups that are switched off |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 142 | `MorningChecksService::listGroups` | read [teams](/code/tables/teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 157 | `MorningChecksService::listGroups` | read [teams](/code/tables/teams.md), read [analysts](/code/tables/analysts.md) |  |
 
 **Called from:** [api/morning-checks/get_groups.php](/code/files/api/morning-checks/get_groups.php.md)
 
 ### saveGroup
 
-*public static* - line 162
+*public static* - line 179
 
 Adds or updates a morning check group, including the team or analyst it routes to, and returns its id.
 
@@ -122,13 +122,13 @@ function saveGroup(PDO $conn, ActorContext $ctx, array $in): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (absent = new), name, description, assigned_team_id, assigned_analyst_id, is_active, sort_order |
 
 **Called from:** [api/morning-checks/save_group.php](/code/files/api/morning-checks/save_group.php.md)
 
 ### deleteGroup
 
-*public static* - line 221
+*public static* - line 240
 
 Delete a group. Its checks are NOT deleted — they fall back to ungrouped.
 
@@ -144,13 +144,13 @@ function deleteGroup(PDO $conn, ActorContext $ctx, int $id): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the morningChecks_Groups row to delete; its checks become ungrouped |
 
 **Called from:** [api/morning-checks/delete_group.php](/code/files/api/morning-checks/delete_group.php.md)
 
 ### resolveAssignment
 
-*public static* - line 245
+*public static* - line 267
 
 Who is a check routed to? Returns [analystId, label, source] — all null when nobody in particular, which is the default.
 
@@ -169,13 +169,13 @@ function resolveAssignment(array $checkRow): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$checkRow` | `array` |  |  |
+| `$checkRow` | `array` |  | a check row joined to its group, with AssignedAnalystID, CheckAnalystName, GroupAnalystID, GroupAnalystName, GroupTeamID and GroupTeamName |
 
 **Called from:** [api/morning-checks/get_todays_checks.php](/code/files/api/morning-checks/get_todays_checks.php.md)
 
 ### deleteCheck
 
-*public static* - line 260
+*public static* - line 286
 
 Delete a check + its results, atomically.
 
@@ -187,13 +187,13 @@ function deleteCheck(PDO $conn, ActorContext $ctx, int $id): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the check to delete, with its results |
 
 **Called from:** [api/morning-checks/delete_check.php](/code/files/api/morning-checks/delete_check.php.md), [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md)
 
 ### loadCheckRow
 
-*private static* - line 276
+*private static* - line 306
 
 Loads one morning check; throws not found when it does not exist.
 
@@ -204,11 +204,11 @@ function loadCheckRow(PDO $conn, int $id): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the check to load |
 
 ### recordResult
 
-*public static* - line 293
+*public static* - line 325
 
 Record (upsert) a result. Returns ['id' => int, 'created' => bool] (created = a new row for that check+date; false = overwrite).
 
@@ -220,13 +220,13 @@ function recordResult(PDO $conn, ActorContext $ctx, array $in): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | check_id (required), status_id or status (a label), notes, date (Y-m-d, default today) |
 
 **Called from:** [api/morning-checks/save_check_result.php](/code/files/api/morning-checks/save_check_result.php.md), [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md)
 
 ### clearResult
 
-*public static* - line 379
+*public static* - line 414
 
 Put a check back to "not checked" for a date (discussion #64).
 
@@ -253,14 +253,14 @@ function clearResult(PDO $conn, ActorContext $ctx, int $checkId, ?string $date =
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$checkId` | `int` |  |  |
-| `$date` | `?string` | `null` |  |
+| `$checkId` | `int` |  | the check to put back to 'not checked' |
+| `$date` | `?string` | `null` | the day, Y-m-d; null means today |
 
 **Called from:** [api/morning-checks/clear_check_result.php](/code/files/api/morning-checks/clear_check_result.php.md)
 
 ### recordedDispatch
 
-*private static* - line 389
+*private static* - line 432
 
 Fire morning_check.recorded (best-effort).
 
@@ -276,15 +276,15 @@ function recordedDispatch(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$checkId` | `int` |  |  |
-| `$checkName` | `?string` |  |  |
-| `$statusId` | `int` |  |  |
-| `$statusName` | `?string` |  |  |
-| `$date` | `string` |  |  |
+| `$checkId` | `int` |  | the check |
+| `$checkName` | `?string` |  | the check's name |
+| `$statusId` | `int` |  | the status recorded |
+| `$statusName` | `?string` |  | that status's label |
+| `$date` | `string` |  | the day the result is for, Y-m-d |
 
 ### validateDate
 
-*private static* - line 398
+*private static* - line 446
 
 Strict YYYY-MM-DD — 422 on garbage (the old UI silently substituted today).
 
@@ -294,12 +294,12 @@ function validateDate(string $value, string $field): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` | `string` |  |  |
-| `$field` | `string` |  |  |
+| `$value` | `string` |  | the date from the request, Y-m-d |
+| `$field` | `string` |  | the request field name, used in the error message |
 
 ### saveStatus
 
-*public static* - line 413
+*public static* - line 465
 
 Create (id null) or update (id present) a status. Returns the id.
 
@@ -311,13 +311,13 @@ function saveStatus(PDO $conn, ActorContext $ctx, array $in): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (null or absent = new), label (up to 50), colour (#rrggbb), requires_notes, is_active, sort_order |
 
 **Called from:** [api/morning-checks/save_status.php](/code/files/api/morning-checks/save_status.php.md)
 
 ### deleteStatus
 
-*public static* - line 459
+*public static* - line 513
 
 Delete a status; snapshot its label onto affected results (turning them into orphans) first. Returns ['deleted' => int, 'orphaned' => int].
 
@@ -329,13 +329,13 @@ function deleteStatus(PDO $conn, ActorContext $ctx, int $id): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the morningChecks_Statuses row to delete |
 
 **Called from:** [api/morning-checks/delete_status.php](/code/files/api/morning-checks/delete_status.php.md)
 
 ### reorderChecks
 
-*public static* - line 494
+*public static* - line 552
 
 Reorder checks: SortOrder becomes the array index (matches reorder_checks.php).
 
@@ -347,13 +347,13 @@ function reorderChecks(PDO $conn, ActorContext $ctx, array $order): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$order` | `array` |  |  |
+| `$order` | `array` |  | every check id, top first; each check's SortOrder becomes its position |
 
 **Called from:** [api/morning-checks/reorder_checks.php](/code/files/api/morning-checks/reorder_checks.php.md)
 
 ### reorderStatuses
 
-*public static* - line 503
+*public static* - line 565
 
 Reorder statuses: positions become 10, 20, 30, … (matches reorder_statuses.php), transactional.
 
@@ -365,13 +365,13 @@ function reorderStatuses(PDO $conn, ActorContext $ctx, array $order): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$order` | `array` |  |  |
+| `$order` | `array` |  | every status id, top first; SortOrder becomes 10, 20, 30... |
 
 **Called from:** [api/morning-checks/reorder_statuses.php](/code/files/api/morning-checks/reorder_statuses.php.md)
 
 ### normaliseStatuses
 
-*public static* - line 522
+*public static* - line 586
 
 Map orphan label strings to target StatusIDs. `$mappings` = [{label, statusId}, …]. Returns the total rows updated. Transactional; every target must be active.
 
@@ -383,7 +383,7 @@ function normaliseStatuses(PDO $conn, ActorContext $ctx, array $mappings): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$mappings` | `array` |  |  |
+| `$mappings` | `array` |  | [{label, statusId}] - each old label and the active status its results should now use |
 
 **Called from:** [api/morning-checks/normalise_status.php](/code/files/api/morning-checks/normalise_status.php.md)
 

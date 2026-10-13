@@ -1,6 +1,6 @@
 # includes/demo_data.php
 
-> PHP - 209 lines
+> PHP - 230 lines
 
 Demo data — the one place that knows what a demo module is made of.
 
@@ -19,22 +19,22 @@ importer inserts and present on all of the tables listed here.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [demoAfterImport()](/code/functions/demoAfterImport.md) | 36 | After a module's rows are in, inside the import's transaction (3.3.0). |
-| [demoDataPath()](/code/functions/demoDataPath.md) | 61 | Returns the path of a module's demo data file, database/demo-data/{module}.json. |
-| [demoTablesWithInserts()](/code/functions/demoTablesWithInserts.md) | 74 | The tables a parsed demo module actually INSERTS into. |
-| [demoModuleTables()](/code/functions/demoModuleTables.md) | 91 | As above, but reads the module's JSON from disk. Returns [] if unreadable. |
-| [demoRowCount()](/code/functions/demoRowCount.md) | 105 | How many demo rows a module currently has in the database. |
-| [demoBlockingModules()](/code/functions/demoBlockingModules.md) | 130 | Which other demo modules are holding a table down. |
-| [demoDuplicateExplanation()](/code/functions/demoDuplicateExplanation.md) | 168 | Explain a unique-key collision during an import in terms of its actual cause. |
-| [demoHasUntaggedImport()](/code/functions/demoHasUntaggedImport.md) | 200 | Does this installation hold demo data from BEFORE the rows were tagged? |
+| [demoAfterImport()](/code/functions/demoAfterImport.md) | 38 | After a module's rows are in, inside the import's transaction (3.3.0). |
+| [demoDataPath()](/code/functions/demoDataPath.md) | 67 | Returns the path of a module's demo data file, database/demo-data/{module}.json. |
+| [demoTablesWithInserts()](/code/functions/demoTablesWithInserts.md) | 82 | The tables a parsed demo module actually INSERTS into. |
+| [demoModuleTables()](/code/functions/demoModuleTables.md) | 103 | As above, but reads the module's JSON from disk. Returns [] if unreadable. |
+| [demoRowCount()](/code/functions/demoRowCount.md) | 119 | How many demo rows a module currently has in the database. |
+| [demoBlockingModules()](/code/functions/demoBlockingModules.md) | 147 | Which other demo modules are holding a table down. |
+| [demoDuplicateExplanation()](/code/functions/demoDuplicateExplanation.md) | 189 | Explain a unique-key collision during an import in terms of its actual cause. |
+| [demoHasUntaggedImport()](/code/functions/demoHasUntaggedImport.md) | 221 | Does this installation hold demo data from BEFORE the rows were tagged? |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 38 | `demoAfterImport` | read [project_baselines](/code/tables/project_baselines.md) |  |
-| 43 | `demoAfterImport` | **update** [project_baselines](/code/tables/project_baselines.md) (`snapshot`, `start_date`, `target_end_date`, `budget_planned`, `task_count`, `estimate_hours`, `must_count`) |  |
-| 202 | `demoHasUntaggedImport` | read [analysts](/code/tables/analysts.md) |  |
+| 40 | `demoAfterImport` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 45 | `demoAfterImport` | **update** [project_baselines](/code/tables/project_baselines.md) (`snapshot`, `start_date`, `target_end_date`, `budget_planned`, `task_count`, `estimate_hours`, `must_count`) |  |
+| 223 | `demoHasUntaggedImport` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

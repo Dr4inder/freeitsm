@@ -1,6 +1,6 @@
 # includes/waffle-menu.php
 
-> PHP - 2362 lines
+> PHP - 2373 lines
 
 Shared Waffle Menu Component Cross-module navigation menu for ITSM system
 
@@ -16,19 +16,19 @@ Optional variables:
 | Function | Line | What it does |
 |---|--:|---|
 | [renderWaffleMenuButton()](/code/functions/renderWaffleMenuButton.md) | 660 | Output the waffle menu button and panel |
-| [renderWaffleMenuPanel()](/code/functions/renderWaffleMenuPanel.md) | 677 | Renders the waffle drawer: the module launcher (System for administrators only, every other module filtered by the analyst's allowed modules) and the Recent tab, whose trail ships empty and is fetched the first time it opens. |
-| [renderWaffleMenuJS()](/code/functions/renderWaffleMenuJS.md) | 750 | Outputs the scripts every analyst page shares: the analyst's toast, chime, search-panel and desktop-notification preferences as window globals (one user_preferences query), toast/confirm/clipboard, the command palette with the modules this analyst may see, and the waffle drawer's own JS. |
-| [renderNotificationBell()](/code/functions/renderNotificationBell.md) | 1232 | The global notification bell (discussion #55). |
-| [renderWarRoomAlerts()](/code/functions/renderWarRoomAlerts.md) | 1252 | Renders the header's War Room alert button and panel, which poll api/war-room/alerts.php every minute and stay hidden until something is waiting. Not polled on the War Room page itself; desktop popups only when the analyst's warroom_desktop_alerts preference is on. |
-| [renderHeaderRight()](/code/functions/renderHeaderRight.md) | 1462 | Renders the right-hand side of the analyst header: the "Back to" link, the company switcher, the notification bell, War Room alerts, the mail-check button, the initials avatar and its account menu (preferences, password, MFA, the portal link when the analyst could sign in there, appearance, log out), plus the password and MFA dialogs and their script. |
+| [renderWaffleMenuPanel()](/code/functions/renderWaffleMenuPanel.md) | 681 | Renders the waffle drawer: the module launcher (System for administrators only, every other module filtered by the analyst's allowed modules) and the Recent tab, whose trail ships empty and is fetched the first time it opens. |
+| [renderWaffleMenuJS()](/code/functions/renderWaffleMenuJS.md) | 754 | Outputs the scripts every analyst page shares: the analyst's toast, chime, search-panel and desktop-notification preferences as window globals (one user_preferences query), toast/confirm/clipboard, the command palette with the modules this analyst may see, and the waffle drawer's own JS. |
+| [renderNotificationBell()](/code/functions/renderNotificationBell.md) | 1238 | The global notification bell (discussion #55). |
+| [renderWarRoomAlerts()](/code/functions/renderWarRoomAlerts.md) | 1260 | Renders the header's War Room alert button and panel, which poll api/war-room/alerts.php every minute and stay hidden until something is waiting. Not polled on the War Room page itself; desktop popups only when the analyst's warroom_desktop_alerts preference is on. |
+| [renderHeaderRight()](/code/functions/renderHeaderRight.md) | 1473 | Renders the right-hand side of the analyst header: the "Back to" link, the company switcher, the notification bell, War Room alerts, the mail-check button, the initials avatar and its account menu (preferences, password, MFA, the portal link when the analyst could sign in there, appearance, log out), plus the password and MFA dialogs and their script. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 771 | `renderWaffleMenuJS` | read [user_preferences](/code/tables/user_preferences.md) |  |
-| 1262 | `renderWarRoomAlerts` | read [user_preferences](/code/tables/user_preferences.md) |  |
-| 1495 | `renderHeaderRight` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 775 | `renderWaffleMenuJS` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 1270 | `renderWarRoomAlerts` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 1506 | `renderHeaderRight` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## How it hangs together
 

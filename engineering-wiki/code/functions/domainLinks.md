@@ -6,13 +6,13 @@ Everything linked to one domain, per kind, for this analyst: a kind they cannot 
 function domainLinks(PDO $conn, int $analystId, int $domainId): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 170.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 196.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$domainId` | `int` |  |  |
+| `$domainId` | `int` |  | the domain whose links to list |
 
 **Returns:** `array`
 

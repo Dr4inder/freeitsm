@@ -19,11 +19,11 @@ sub-path is added only when it is not already on the end, which is the same guar
 function publicUrlWithAppPath(string $root): string
 ```
 
-Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), line 90.
+Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), line 92.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$root` | `string` |  |  |
+| `$root` | `string` |  | the configured public address, with or without the app's sub-path |
 
 **Returns:** `string`
 

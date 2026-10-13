@@ -10,12 +10,12 @@ side until it timed out - one more per server per interval.
 function vcdLogout(array $c, string $token): void
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 106.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
-| `$token` | `string` |  |  |
+| `$c` | `array` |  | the connection row from `vcdLoadConnection()` |
+| `$token` | `string` |  | the session token from `vcdLogin()` |
 
 **Returns:** `void`
 

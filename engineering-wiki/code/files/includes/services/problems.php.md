@@ -1,6 +1,6 @@
 # includes/services/problems.php
 
-> PHP - 507 lines
+> PHP - 568 lines
 
 ProblemsService — the shared write rules for Problem Management: create/update a problem (with the per-field audit trail + PRB-##### numbering), delete, the append-only notes journal, and incident/change linking with the same-company rule.
 
@@ -30,29 +30,29 @@ gone → 404 (the UI silently succeeded).
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 52 | `ProblemsService::createProblem` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 70 | `ProblemsService::createProblem` | **insert** [problems](/code/tables/problems.md) (`tenant_id`, `title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `root_cause`, `workaround`, `is_known_error`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 81 | `ProblemsService::createProblem` | **update** [problems](/code/tables/problems.md) (`problem_number`) |  |
-| 202 | `ProblemsService::updateProblem` | **update** [problems](/code/tables/problems.md) |  |
-| 232 | `ProblemsService::deleteProblem` | **delete** [change_relations](/code/tables/change_relations.md) |  |
-| 235 | `ProblemsService::deleteProblem` | **delete** [problems](/code/tables/problems.md) |  |
-| 251 | `ProblemsService::addNote` | **insert** [problem_notes](/code/tables/problem_notes.md) (`problem_id`, `analyst_id`, `note`, `created_datetime`) |  |
-| 275 | `ProblemsService::linkTicket` | read [tickets](/code/tables/tickets.md) |  |
-| 292 | `ProblemsService::linkTicket` | read [problem_tickets](/code/tables/problem_tickets.md) |  |
-| 298 | `ProblemsService::linkTicket` | **insert** [problem_tickets](/code/tables/problem_tickets.md) (`problem_id`, `ticket_id`, `created_by_id`, `created_datetime`) |  |
-| 310 | `ProblemsService::unlinkTicket` | **delete** [problem_tickets](/code/tables/problem_tickets.md) |  |
-| 334 | `ProblemsService::linkChange` | read [changes](/code/tables/changes.md) |  |
-| 344 | `ProblemsService::linkChange` | read [change_relations](/code/tables/change_relations.md) |  |
-| 351 | `ProblemsService::linkChange` | **insert** [change_relations](/code/tables/change_relations.md) (`change_id`, `related_type`, `related_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
-| 365 | `ProblemsService::unlinkChange` | **delete** [change_relations](/code/tables/change_relations.md) |  |
-| 388 | `ProblemsService::loadProblem` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md), read [problem_priorities](/code/tables/problem_priorities.md), read [analysts](/code/tables/analysts.md) |  |
-| 439 | `ProblemsService::auditWrite` | **insert** [problem_audit](/code/tables/problem_audit.md) (`problem_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 451 | `ProblemsService::touch` | **update** [problems](/code/tables/problems.md) (`updated_datetime`) |  |
-| 458 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 461 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 480 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
-| 483 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
-| 498 | `ProblemsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 55 | `ProblemsService::createProblem` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 73 | `ProblemsService::createProblem` | **insert** [problems](/code/tables/problems.md) (`tenant_id`, `title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `root_cause`, `workaround`, `is_known_error`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 84 | `ProblemsService::createProblem` | **update** [problems](/code/tables/problems.md) (`problem_number`) |  |
+| 210 | `ProblemsService::updateProblem` | **update** [problems](/code/tables/problems.md) |  |
+| 244 | `ProblemsService::deleteProblem` | **delete** [change_relations](/code/tables/change_relations.md) |  |
+| 247 | `ProblemsService::deleteProblem` | **delete** [problems](/code/tables/problems.md) |  |
+| 268 | `ProblemsService::addNote` | **insert** [problem_notes](/code/tables/problem_notes.md) (`problem_id`, `analyst_id`, `note`, `created_datetime`) |  |
+| 297 | `ProblemsService::linkTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 314 | `ProblemsService::linkTicket` | read [problem_tickets](/code/tables/problem_tickets.md) |  |
+| 320 | `ProblemsService::linkTicket` | **insert** [problem_tickets](/code/tables/problem_tickets.md) (`problem_id`, `ticket_id`, `created_by_id`, `created_datetime`) |  |
+| 336 | `ProblemsService::unlinkTicket` | **delete** [problem_tickets](/code/tables/problem_tickets.md) |  |
+| 365 | `ProblemsService::linkChange` | read [changes](/code/tables/changes.md) |  |
+| 375 | `ProblemsService::linkChange` | read [change_relations](/code/tables/change_relations.md) |  |
+| 382 | `ProblemsService::linkChange` | **insert** [change_relations](/code/tables/change_relations.md) (`change_id`, `related_type`, `related_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
+| 401 | `ProblemsService::unlinkChange` | **delete** [change_relations](/code/tables/change_relations.md) |  |
+| 426 | `ProblemsService::loadProblem` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md), read [problem_priorities](/code/tables/problem_priorities.md), read [analysts](/code/tables/analysts.md) |  |
+| 488 | `ProblemsService::auditWrite` | **insert** [problem_audit](/code/tables/problem_audit.md) (`problem_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 504 | `ProblemsService::touch` | **update** [problems](/code/tables/problems.md) (`updated_datetime`) |  |
+| 515 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 518 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 541 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 544 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 559 | `ProblemsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

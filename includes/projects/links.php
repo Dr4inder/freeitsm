@@ -50,6 +50,8 @@ if (!defined('PROJECT_LINKS_LOADED')) {
      * Before Database Verification the tables are not there: no links, never an error.
      * With $kind, that one kind's table (3.3.0) - so an upgrade that adds a kind
      * (problem) hides only that kind until Verification, not every link.
+     *
+     * @param ?string $kind  one link kind to check, e.g. 'problem'; null asks whether any kind is usable
      */
     function projectLinksReady(PDO $conn, ?string $kind = null): bool
     {
@@ -70,6 +72,8 @@ if (!defined('PROJECT_LINKS_LOADED')) {
     /**
      * The definition (table, column, module) of one link kind; throws a validation error
      * for an unknown kind.
+     *
+     * @param string $kind  the link kind: asset, change, ticket, contract, cmdb, article or problem
      */
     function projectLinkKind(string $kind): array
     {
@@ -78,7 +82,11 @@ if (!defined('PROJECT_LINKS_LOADED')) {
         return $kinds[$kind];
     }
 
-    /** May this analyst use links of this kind at all? (Projects AND the other module.) */
+    /**
+     * May this analyst use links of this kind at all? (Projects AND the other module.)
+     *
+     * @param string $kind  the link kind, e.g. 'asset'; an unknown kind gives false
+     */
     function projectLinkKindAllowed(PDO $conn, int $analystId, string $kind): bool
     {
         $k = projectLinkKinds()[$kind] ?? null;
@@ -87,7 +95,12 @@ if (!defined('PROJECT_LINKS_LOADED')) {
             && analystCanAccessModule($conn, $analystId, $k['module']);
     }
 
-    /** A record's company with NULL read as the Default company. */
+    /**
+     * A record's company with NULL read as the Default company.
+     *
+     * @param string $table  the record's table (trusted - from projectLinkKinds(), never from input)
+     * @param int $id  the record's id in that table
+     */
     function projectLinkTenantOf(PDO $conn, string $table, int $id): ?int
     {
         $st = $conn->prepare("SELECT tenant_id FROM $table WHERE id = ?");
@@ -108,6 +121,10 @@ if (!defined('PROJECT_LINKS_LOADED')) {
     /**
      * Is the OTHER end of a link one this analyst may see, and (for company
      * records) in the project's company?
+     *
+     * @param string $kind  the link kind, e.g. 'ticket'
+     * @param int $targetId  the id of the record at the other end
+     * @param ?int $projectTenant  the project's company; null skips the same-company check (the record's own page)
      */
     function projectLinkTargetOk(PDO $conn, int $analystId, string $kind, int $targetId, ?int $projectTenant): bool
     {
@@ -156,7 +173,12 @@ if (!defined('PROJECT_LINKS_LOADED')) {
         return projectLinkTenantOf($conn, $k['scoped'], $targetId) === $projectTenant;
     }
 
-    /** Linked records, shaped for display: id, label, a sub-line, a status and a link. */
+    /**
+     * Linked records, shaped for display: id, label, a sub-line, a status and a link.
+     *
+     * @param string $kind  the link kind, e.g. 'contract'
+     * @param array $ids  the record ids to describe (already checked as visible)
+     */
     function projectLinkDescribe(PDO $conn, string $kind, array $ids): array
     {
         if (!$ids) return [];
@@ -250,6 +272,9 @@ if (!defined('PROJECT_LINKS_LOADED')) {
      *
      * Both ends must be visible to the actor and the actor must be able to change the
      * project. Returns false when the link already existed.
+     *
+     * @param string $kind  the link kind, e.g. 'asset'
+     * @param int $targetId  the id of the record to link
      */
     function projectLinkAdd(PDO $conn, ActorContext $ctx, int $projectId, string $kind, int $targetId): bool
     {
@@ -275,6 +300,9 @@ if (!defined('PROJECT_LINKS_LOADED')) {
      * history.
      *
      * Needs the same rights as adding it. Returns false when there was no such link.
+     *
+     * @param string $kind  the link kind, e.g. 'asset'
+     * @param int $targetId  the id of the linked record
      */
     function projectLinkRemove(PDO $conn, ActorContext $ctx, int $projectId, string $kind, int $targetId): bool
     {
@@ -298,6 +326,9 @@ if (!defined('PROJECT_LINKS_LOADED')) {
     /**
      * Records of one kind that could be linked: matching $q, in the project's
      * company where that applies, visible to the analyst, not already linked. At most 20.
+     *
+     * @param string $kind  the link kind to search, e.g. 'ticket'
+     * @param string $q  the search text as typed; for changes and problems its digits also match the id
      */
     function projectLinkSearch(PDO $conn, ActorContext $ctx, int $projectId, string $kind, string $q): array
     {
@@ -358,7 +389,11 @@ if (!defined('PROJECT_LINKS_LOADED')) {
     //  from the other side"). Same rules as above, read from the other end.
     // ------------------------------------------------------------------
 
-    /** Projects by id, shaped for a list on another module's page. */
+    /**
+     * Projects by id, shaped for a list on another module's page.
+     *
+     * @param array $ids  the project ids to show (already checked as visible)
+     */
     function projectLinkProjectRows(PDO $conn, array $ids): array
     {
         if (!$ids) return [];
@@ -384,6 +419,9 @@ if (!defined('PROJECT_LINKS_LOADED')) {
      * linked to that this analyst may see. Empty - never an error - when they
      * cannot open Projects, the other module, or the record, so a page can call
      * it unconditionally.
+     *
+     * @param string $kind  the record's link kind, e.g. 'asset'
+     * @param int $targetId  the record's id
      */
     function projectsLinkedTo(PDO $conn, ActorContext $ctx, string $kind, int $targetId): array
     {
@@ -403,6 +441,10 @@ if (!defined('PROJECT_LINKS_LOADED')) {
      * The picker on the record's page: live projects this analyst may CHANGE,
      * in the record's company (for company records), not already linked,
      * matching $q. At most 20.
+     *
+     * @param string $kind  the record's link kind, e.g. 'contract'
+     * @param int $targetId  the record's id
+     * @param string $q  the search text; matches the project name, or its id by the digits in it
      */
     function projectsPickableFor(PDO $conn, ActorContext $ctx, string $kind, int $targetId, string $q): array
     {

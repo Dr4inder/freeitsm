@@ -1,6 +1,6 @@
 # api/cmdb/_ai_helpers.php
 
-> API endpoint - 74 lines
+> API endpoint - 83 lines
 
 Shared CMDB AI helpers — load saved settings, call Anthropic, parse JSON. Keeps the per-feature endpoints thin and consistent.
 
@@ -16,9 +16,9 @@ Shared CMDB AI helpers — load saved settings, call Anthropic, parse JSON. Keep
 | Function | Line | What it does |
 |---|--:|---|
 | [loadCmdbAiConfig()](/code/functions/loadCmdbAiConfig.md) | 17 | Load CMDB AI config via the shared building block (ns=cmdb_ai), then attach the CMDB-specific custom instructions. Returns provider/model/api_key/ verify_ssl/custom_instructions. Throws if no key is set. |
-| [callAnthropic()](/code/functions/callAnthropic.md) | 36 | One-shot AI call via the shared, provider-agnostic client (Anthropic / OpenAI / OpenRouter). Name kept for backward compatibility with callers. Returns ['content' => string, 'tokens_in' => ?int, 'tokens_out' => ?int, ...]. |
-| [anthropicResponseText()](/code/functions/anthropicResponseText.md) | 47 | Pull the assistant's text out of the shared client's response shape. |
-| [parseClaudeJson()](/code/functions/parseClaudeJson.md) | 55 | Parse a JSON response from Claude robustly: strip markdown fences, extract the first JSON object/array, and json_decode it. |
+| [callAnthropic()](/code/functions/callAnthropic.md) | 41 | One-shot AI call via the shared, provider-agnostic client (Anthropic / OpenAI / OpenRouter). Name kept for backward compatibility with callers. Returns ['content' => string, 'tokens_in' => ?int, 'tokens_out' => ?int, ...]. |
+| [anthropicResponseText()](/code/functions/anthropicResponseText.md) | 54 | Pull the assistant's text out of the shared client's response shape. |
+| [parseClaudeJson()](/code/functions/parseClaudeJson.md) | 64 | Parse a JSON response from Claude robustly: strip markdown fences, extract the first JSON object/array, and json_decode it. |
 
 ## Database
 

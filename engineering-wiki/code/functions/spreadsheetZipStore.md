@@ -6,11 +6,11 @@ A zip with every entry STORED (no compression) - valid, and all Excel needs.
 function spreadsheetZipStore(array $files): string
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 214.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 232.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$files` | `array` |  |  |
+| `$files` | `array` |  | [path inside the zip => file bytes], written in that order |
 
 **Returns:** `string`
 

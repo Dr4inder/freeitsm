@@ -6,7 +6,7 @@ Did the server's own configuration already give the session cookie the attribute
 function sessionCookieParamsAreHardened(): bool
 ```
 
-Defined in [includes/session_security.php](/code/files/includes/session_security.php.md), line 160.
+Defined in [includes/session_security.php](/code/files/includes/session_security.php.md), line 162.
 
 **Returns:** `bool`
 

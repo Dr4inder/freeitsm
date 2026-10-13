@@ -6,12 +6,12 @@ Loads one diagram row (apiNmDiagramSelect), or answers 404 and stops.
 function apiNmLoadDiagram(PDO $conn, int $diagramId): array
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 84.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$diagramId` | `int` |  |  |
+| `$diagramId` | `int` |  | the network_diagrams id (any version) |
 
 **Returns:** `array`
 

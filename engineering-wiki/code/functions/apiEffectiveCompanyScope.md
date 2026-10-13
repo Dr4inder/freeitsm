@@ -13,13 +13,13 @@ creating a record is refused (apiKeyDefaultTenantId).
 function apiEffectiveCompanyScope(PDO $conn, int $analystId, ?array $keyScope): ?array
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 175.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 186.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$keyScope` | `?array` |  |  |
+| `$analystId` | `int` |  | the analyst the API key acts as - not whoever is signed in |
+| `$keyScope` | `?array` |  | the company ids the key itself is limited to; null means no limit of its own |
 
 **Returns:** `?array`
 
@@ -27,7 +27,7 @@ Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 175.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 180 | `apiEffectiveCompanyScope` | read [tenants](/code/tables/tenants.md) |  |
+| 191 | `apiEffectiveCompanyScope` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

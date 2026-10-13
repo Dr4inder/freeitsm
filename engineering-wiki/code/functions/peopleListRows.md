@@ -6,14 +6,14 @@ People the analyst can see, newest-relevant first by name.
 function peopleListRows(PDO $conn, int $analystId, array $f = [], int $limit = 200): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 72.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 85.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$f` | `array` | `[]` | q, company (tenant id), status ('active' default \| 'leavers' \| 'all') |
-| `$limit` | `int` | `200` |  |
+| `$limit` | `int` | `200` | the most rows to return |
 
 **Returns:** `array`
 
@@ -21,7 +21,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 72.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 93 | `peopleListRows` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
+| 106 | `peopleListRows` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

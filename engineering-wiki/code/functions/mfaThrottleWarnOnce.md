@@ -6,11 +6,11 @@ Log the missing-column case once per request rather than on every keystroke, so 
 function mfaThrottleWarnOnce(Exception $e): void
 ```
 
-Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 197.
+Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 214.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `Exception` |  |  |
+| `$e` | `Exception` |  | the exception from the failed query, normally a missing mfa_* column |
 
 **Returns:** `void`
 

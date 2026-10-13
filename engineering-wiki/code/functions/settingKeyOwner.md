@@ -6,11 +6,11 @@ Who owns this setting key? null = nobody, so it may not be written through the g
 function settingKeyOwner(string $key): ?array
 ```
 
-Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 193.
+Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.md), line 194.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | a system_settings key, e.g. 'vcenter_server' or 'module_color_tickets' |
 
 **Returns:** array{module:string,cap:?string,tab:string}|null
 

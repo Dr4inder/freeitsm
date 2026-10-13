@@ -10,12 +10,12 @@ plain negative number is left alone.
 function spreadsheetWriteCsv(array $header, array $rows): string
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 121.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 132.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$header` | `array` |  |  |
-| `$rows` | `array` |  |  |
+| `$header` | `array` |  | the column headings, in order |
+| `$rows` | `array` |  | the data rows, each a list of cell values in column order |
 
 **Returns:** `string`
 

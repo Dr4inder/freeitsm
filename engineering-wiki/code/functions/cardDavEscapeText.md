@@ -14,11 +14,11 @@ by the next parser as a line fold.
 function cardDavEscapeText(string $v): string
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 466.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 482.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` | `string` |  |  |
+| `$v` | `string` |  | the plain text to write into a vCard |
 
 **Returns:** `string`
 

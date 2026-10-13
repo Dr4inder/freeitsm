@@ -6,11 +6,11 @@ The plain-English name of a watched field for the change e-mail (registrar, lock
 function domainWatchLabel(string $field): string
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 341.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 391.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$field` | `string` |  |  |
+| `$field` | `string` |  | a key from `domainWatchedFields()`, e.g. 'dns_ns'; an unknown key comes back unchanged |
 
 **Returns:** `string`
 

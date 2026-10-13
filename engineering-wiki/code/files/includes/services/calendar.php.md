@@ -1,6 +1,6 @@
 # includes/services/calendar.php
 
-> PHP - 265 lines
+> PHP - 295 lines
 
 CalendarService — the single home for the calendar module's write rules (events, shared by the UI + REST API; plus the UI-only categories).
 
@@ -31,17 +31,17 @@ start_datetime/end_datetime to start_at/end_at.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 57 | `CalendarService::saveEvent` | **update** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `location`, `contract_id`, `updated_at`) |  |
-| 78 | `CalendarService::saveEvent` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `location`, `contract_id`, `created_by`) |  |
-| 96 | `CalendarService::deleteEvent` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
-| 122 | `CalendarService::saveCategory` | **update** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `description`, `is_active`, `updated_at`) |  |
-| 129 | `CalendarService::saveCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `description`, `is_active`) |  |
-| 142 | `CalendarService::deleteCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
-| 148 | `CalendarService::deleteCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 149 | `CalendarService::deleteCategory` | **delete** [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 165 | `CalendarService::loadEventRow` | read [calendar_events](/code/tables/calendar_events.md) |  |
-| 213 | `CalendarService::collectEventFields` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 226 | `CalendarService::collectEventFields` | read [contracts](/code/tables/contracts.md) |  |
+| 61 | `CalendarService::saveEvent` | **update** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `location`, `contract_id`, `updated_at`) |  |
+| 82 | `CalendarService::saveEvent` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `location`, `contract_id`, `created_by`) |  |
+| 104 | `CalendarService::deleteEvent` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
+| 134 | `CalendarService::saveCategory` | **update** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `description`, `is_active`, `updated_at`) |  |
+| 141 | `CalendarService::saveCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `description`, `is_active`) |  |
+| 158 | `CalendarService::deleteCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 164 | `CalendarService::deleteCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 165 | `CalendarService::deleteCategory` | **delete** [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 185 | `CalendarService::loadEventRow` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 240 | `CalendarService::collectEventFields` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 253 | `CalendarService::collectEventFields` | read [contracts](/code/tables/contracts.md) |  |
 
 ## How it hangs together
 

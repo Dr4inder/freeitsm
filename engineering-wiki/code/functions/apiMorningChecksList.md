@@ -6,7 +6,7 @@ GET /morning-checks/checks — all checks (settings view); ?is_active, ?q
 function apiMorningChecksList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 123.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

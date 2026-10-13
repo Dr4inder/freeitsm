@@ -36,7 +36,12 @@
 
 const ATTACHMENT_DEFAULT_MAX_MB = 10;
 
-/** One setting, cached per request. */
+/**
+ * One setting, cached per request.
+ *
+ * @param string $key  the system_settings key to read
+ * @param string $default  returned when the row is missing, empty or unreadable; the first answer per key is cached
+ */
 function attachmentSetting(?PDO $conn, string $key, string $default): string
 {
     static $cache = [];
@@ -54,7 +59,13 @@ function attachmentSetting(?PDO $conn, string $key, string $default): string
     return $cache[$key] = ($v ?? $default);
 }
 
-/** A whole number of MB from a setting, clamped to something sane (0 allowed only where it means "no limit"). */
+/**
+ * A whole number of MB from a setting, clamped to something sane (0 allowed only where it means "no limit").
+ *
+ * @param mixed $v  the raw setting or posted value, in MB (string, int or null)
+ * @param int $default  returned when $v is empty or not numeric, and for 0 or less unless $zeroMeansNone
+ * @param bool $zeroMeansNone  true when 0 means "no limit" (the per-email total); 0 or less then returns 0
+ */
 function attachmentMb($v, int $default, bool $zeroMeansNone): int
 {
     if ($v === null || $v === '' || !is_numeric($v)) return $default;
@@ -78,6 +89,8 @@ function oversizeDefaultReplyText(): string
 /**
  * The rules for one mailbox: the install defaults, overridden by the mailbox's
  * own oversize_policy when it has one. Limits in BYTES (total 0 = no limit).
+ *
+ * @param ?array $mailbox  the target_mailboxes row, whose oversize_policy JSON overrides the defaults; null for defaults only
  */
 function oversizeRules(PDO $conn, ?array $mailbox = null): array
 {
@@ -103,6 +116,9 @@ function oversizeRules(PDO $conn, ?array $mailbox = null): array
 /**
  * A policy as posted by a settings screen (MB, strings), made safe. Used for the
  * mailbox override on save and on read, so a hand-edited row cannot break a check.
+ *
+ * @param array $p  the policy as posted or stored - max_mb, max_total_mb, mode, strip_order, alert, alert_to, autoreply...
+ * @param ?array $fallback  rules to take max_bytes and max_total_bytes from when $p has none; null uses 10 MB and no total
  */
 function oversizeNormalisePolicy(array $p, ?array $fallback = null): array
 {
@@ -122,7 +138,11 @@ function oversizeNormalisePolicy(array $p, ?array $fallback = null): array
     ];
 }
 
-/** "a@x.com; b@y.com, junk" -> "a@x.com, b@y.com" - valid addresses only. */
+/**
+ * "a@x.com; b@y.com, junk" -> "a@x.com, b@y.com" - valid addresses only.
+ *
+ * @param string $raw  addresses as typed, separated by commas, semicolons or spaces
+ */
 function oversizeCleanAddresses(string $raw): string
 {
     $out = [];
@@ -137,6 +157,7 @@ function oversizeCleanAddresses(string $raw): string
  * Decide what to do with one email's attachments.
  *
  * @param array $atts  [['name' => string, 'size' => int bytes], ...] in message order
+ * @param array $rules  the mailbox's rules from oversizeRules() - max_bytes, max_total_bytes, mode, strip_order
  * @return array [
  *   'over'   => bool          anything breaks a limit
  *   'reject' => bool          the whole email is to be refused (mode = reject)
@@ -187,6 +208,8 @@ function oversizePlan(array $atts, array $rules): array
 
 /**
  * Formats a byte count as megabytes for messages - whole numbers without a decimal ("10 MB"), otherwise one place ("2.5 MB").
+ *
+ * @param int $bytes  the size in bytes
  */
 function oversizeMbWords(int $bytes): string
 {
@@ -219,8 +242,14 @@ function phpUploadLimits(): array
  * Tell people about an oversized email: the alert to the configured addresses,
  * and the reply to the sender. Returns processing-log steps for the inbound log.
  *
+ * @param array  $mailbox      the target_mailboxes row the email arrived at - id, name and target_mailbox are read
+ * @param array  $rules        the mailbox's rules from oversizeRules()
+ * @param string $fromAddress  the sender's address, from the email (untrusted) - the auto-reply goes here
+ * @param string $fromName     the sender's display name, shown in the alert
+ * @param string $subject      the email's subject, shown in the alert and the auto-reply
  * @param string $outcome  'rejected' (no ticket) | 'stripped' (ticket kept, files removed)
  * @param array  $atts     [['name','size'], ...]   $plan from oversizePlan()
+ * @param array  $plan         the decision from oversizePlan() for these attachments - its 'reasons' are listed
  *
  * ⚠️ THE AUTO-REPLY MUST NOT BE ABLE TO LOOP. Two systems that each answer an
  * oversized email with an email can bounce forever, so the reply is never sent to
@@ -286,7 +315,13 @@ function oversizeNotify(PDO $conn, array $mailbox, array $rules, string $fromAdd
     return $steps;
 }
 
-/** Why NOT to auto-reply to this sender, or null to go ahead. */
+/**
+ * Why NOT to auto-reply to this sender, or null to go ahead.
+ *
+ * @param int $mailboxId  the target_mailboxes id the email arrived at
+ * @param string $from  the sender's address, from the email (untrusted)
+ * @param string $mailboxAddress  the mailbox's own address, so it never replies to itself
+ */
 function oversizeReplySkipReason(PDO $conn, int $mailboxId, string $from, string $mailboxAddress): ?string
 {
     $from = strtolower(trim($from));
@@ -306,7 +341,11 @@ function oversizeReplySkipReason(PDO $conn, int $mailboxId, string $from, string
     return null;
 }
 
-/** A normalised policy in the shape stored on a mailbox (MB, not bytes) and read back by oversizeNormalisePolicy(). */
+/**
+ * A normalised policy in the shape stored on a mailbox (MB, not bytes) and read back by oversizeNormalisePolicy().
+ *
+ * @param array $p  a policy as returned by oversizeNormalisePolicy() - limits in bytes
+ */
 function oversizePolicyForStorage(array $p): array
 {
     return [

@@ -10,7 +10,7 @@ dependencies that nothing will ever follow.
 function cmdbAuditNoImpactEdges(PDO $conn): array
 ```
 
-Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 225.
+Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 232.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

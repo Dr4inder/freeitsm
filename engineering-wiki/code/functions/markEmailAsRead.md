@@ -6,12 +6,12 @@ Mark an email as read via Microsoft Graph API
 function markEmailAsRead($accessToken, $messageId)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 701.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 735.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
-| `$messageId` |  |  |  |
+| `$accessToken` |  |  | the mailbox's Microsoft Graph access token, from `getValidAccessToken()` |
+| `$messageId` |  |  | the Graph message id to mark as read |
 
 ## Calls
 

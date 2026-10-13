@@ -6,7 +6,7 @@ GET /projects/{id}/items - the project's scope items.
 function apiProjectItemsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 396.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 421.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

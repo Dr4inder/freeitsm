@@ -34,6 +34,7 @@ const VCD_PAGE_SIZE         = 128;
  * One vCloud Director connection row with its password decrypted into
  * 'password'. Throws when the id does not exist.
  *
+ * @param int $connectionId  the vcloud_connections id
  * @reads vcloud_connections - host, org, credentials and API version for the calls
  */
 function vcdLoadConnection(PDO $conn, int $connectionId): array
@@ -51,6 +52,13 @@ function vcdLoadConnection(PDO $conn, int $connectionId): array
 /**
  * One HTTP call. Returns [status code, body, access token from the response headers].
  * Throws only when the server cannot be reached at all; HTTP errors are returned.
+ *
+ * @param array $c  the connection row from vcdLoadConnection() (host and verify_ssl are used)
+ * @param string $method  the HTTP method, e.g. 'GET', 'POST', 'DELETE'
+ * @param string $path  the path after the host, starting with '/', e.g. '/cloudapi/1.0.0/sessions'
+ * @param array $headers  extra header lines, e.g. from vcdAcceptJson()
+ * @param ?string $bearer  a session token from vcdLogin(); takes precedence over $basic
+ * @param ?string $basic  base64 "user@org:password" for the login call only
  */
 function vcdHttp(array $c, string $method, string $path, array $headers, ?string $bearer = null, ?string $basic = null): array
 {
@@ -70,19 +78,31 @@ function vcdHttp(array $c, string $method, string $path, array $headers, ?string
     return [$code, (string)$body, (string)($respHeaders['x-vmware-vcloud-access-token'] ?? '')];
 }
 
-/** The Accept header for a cloudapi (JSON) call at the connection's API version. */
+/**
+ * The Accept header for a cloudapi (JSON) call at the connection's API version.
+ *
+ * @param string $version  the connection's API version, e.g. '38.0'
+ */
 function vcdAcceptJson(string $version): array
 {
     return ['Accept: application/json;version=' . $version];
 }
 
-/** The Accept header for a legacy /api (XML) call at the connection's API version. */
+/**
+ * The Accept header for a legacy /api (XML) call at the connection's API version.
+ *
+ * @param string $version  the connection's API version, e.g. '38.0'
+ */
 function vcdAcceptXml(string $version): array
 {
     return ['Accept: application/*+xml;version=' . $version];
 }
 
-/** Session: Basic auth as "user@org", and the access token comes back in a response header. */
+/**
+ * Session: Basic auth as "user@org", and the access token comes back in a response header.
+ *
+ * @param array $c  the connection row from vcdLoadConnection(), with the password decrypted
+ */
 function vcdLogin(array $c): string
 {
     $basic = base64_encode($c['username'] . '@' . $c['org'] . ':' . $c['password']);
@@ -102,6 +122,9 @@ function vcdLogin(array $c): string
  * Added at merge time: the PR logged in on every test and every sync and never
  * logged out, so each scheduled run left a live session behind on the Director
  * side until it timed out - one more per server per interval.
+ *
+ * @param array $c  the connection row from vcdLoadConnection()
+ * @param string $token  the session token from vcdLogin()
  */
 function vcdLogout(array $c, string $token): void
 {
@@ -112,7 +135,14 @@ function vcdLogout(array $c, string $token): void
     }
 }
 
-/** A GET that returns the body on success, or null on any failure (per-item problems never stop a sync). */
+/**
+ * A GET that returns the body on success, or null on any failure (per-item problems never stop a sync).
+ *
+ * @param array $c  the connection row from vcdLoadConnection()
+ * @param string $token  the session token from vcdLogin()
+ * @param string $path  the path after the host, starting with '/'
+ * @param array $headers  the Accept header lines (vcdAcceptJson() or vcdAcceptXml())
+ */
 function vcdTryGet(array $c, string $token, string $path, array $headers): ?string
 {
     try {
@@ -123,7 +153,11 @@ function vcdTryGet(array $c, string $token, string $path, array $headers): ?stri
     }
 }
 
-/** Parses an XML response body quietly; null for an empty or unparseable body. */
+/**
+ * Parses an XML response body quietly; null for an empty or unparseable body.
+ *
+ * @param ?string $body  a response body from vcdTryGet(); null when the request failed
+ */
 function vcdXml(?string $body): ?SimpleXMLElement
 {
     if ($body === null || $body === '') {
@@ -134,7 +168,12 @@ function vcdXml(?string $body): ?SimpleXMLElement
     return $xml === false ? null : $xml;
 }
 
-/** Elements by local name, ignoring namespaces. */
+/**
+ * Elements by local name, ignoring namespaces.
+ *
+ * @param SimpleXMLElement $node  the element to search below (any depth)
+ * @param string $localName  the element name without its namespace prefix, e.g. 'VMRecord'
+ */
 function vcdFind(SimpleXMLElement $node, string $localName): array
 {
     $found = $node->xpath('.//*[local-name()="' . $localName . '"]');
@@ -145,6 +184,8 @@ function vcdFind(SimpleXMLElement $node, string $localName): array
  * The Test button: logs in, reads one VM record and one edge gateway, logs out
  * and returns a one-line result. Throws when the login fails or the VM inventory
  * cannot be read; unreadable edge gateways are only mentioned in the message.
+ *
+ * @param array $c  the connection row from vcdLoadConnection(), with the password decrypted
  */
 function vcdTest(array $c): string
 {
@@ -161,6 +202,8 @@ function vcdTest(array $c): string
 /**
  * Sync one server. Never throws for a per-VM problem: those are counted and reported.
  * Returns a summary and records it on the connection row.
+ *
+ * @param int $connectionId  the vcloud_connections id to sync
  */
 function vcdSyncConnection(PDO $conn, int $connectionId): array
 {
@@ -312,7 +355,13 @@ function vcdSyncConnection(PDO $conn, int $connectionId): array
     return $summary;
 }
 
-/** One VM record from the inventory, with its NICs and disks. Null if it has no usable uuid. */
+/**
+ * One VM record from the inventory, with its NICs and disks. Null if it has no usable uuid.
+ *
+ * @param array $c  the connection row from vcdLoadConnection()
+ * @param string $token  the session token from vcdLogin()
+ * @param SimpleXMLElement $rec  one VMRecord element from /api/query?type=vm
+ */
 function vcdVmRecord(array $c, string $token, SimpleXMLElement $rec): ?array
 {
     $href = (string)($rec['href'] ?? '');
@@ -401,6 +450,9 @@ function vcdVmRecord(array $c, string $token, SimpleXMLElement $rec): ?array
  * TRAP: the password is stored only through encryptValue(), never returned to
  *   the browser (vcdConnectionOut() says has_password and nothing more), and a
  *   blank or all-asterisks value on edit keeps the stored one.
+ *
+ * @param array $in  the settings form's fields - untrusted: id (0 for new), name, host, org, username,
+ *     password (blank or asterisks keeps the stored one), api_version, verify_ssl, is_active, sync_interval_minutes
  */
 function vcdSaveConnection(PDO $conn, array $in): int
 {
@@ -456,7 +508,11 @@ function vcdSaveConnection(PDO $conn, array $in): int
     return (int)$conn->lastInsertId();
 }
 
-/** A server as the browser may see it: never the password, only whether there is one. */
+/**
+ * A server as the browser may see it: never the password, only whether there is one.
+ *
+ * @param array $r  a vcloud_connections row
+ */
 function vcdConnectionOut(array $r): array
 {
     return [

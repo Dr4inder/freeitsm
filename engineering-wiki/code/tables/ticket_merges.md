@@ -24,14 +24,14 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):274 | `unmergeTicket` | update | `undone_datetime`, `undone_by_id` |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):577 | `mergeOneTicket` | insert | `source_ticket_id`, `source_ticket_number`, `target_ticket_id`, `reference_mode`, `originals_mode`, `moved_email_ids`, `moved_related`, `snapshot_email_id`, `source_prev_status_id`, `source_prev_closed_datetime` |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):277 | `unmergeTicket` | update | `undone_datetime`, `undone_by_id` |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):594 | `mergeOneTicket` | insert | `source_ticket_id`, `source_ticket_number`, `target_ticket_id`, `reference_mode`, `originals_mode`, `moved_email_ids`, `moved_related`, `snapshot_email_id`, `source_prev_status_id`, `source_prev_closed_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L130 |  |
+| [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L133 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L275 |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | unmergeTicket L172, unmergeTicket L263, mergedAwayInfo L304 |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | unmergeTicket L175, unmergeTicket L266, mergedAwayInfo L307 |  |
 

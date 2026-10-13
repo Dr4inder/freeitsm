@@ -6,7 +6,7 @@ Asset warranties approaching expiry → `asset.warranty_expiring`.
 function workflowEmitWarrantyExpiries(PDO $conn): int
 ```
 
-Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 183.
+Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 188.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_sched
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 192 | `workflowEmitWarrantyExpiries` | read [assets](/code/tables/assets.md) |  |
+| 197 | `workflowEmitWarrantyExpiries` | read [assets](/code/tables/assets.md) |  |
 
 ## Calls
 

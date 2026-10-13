@@ -1,6 +1,6 @@
 # includes/lms_package.php
 
-> PHP - 186 lines
+> PHP - 192 lines
 
 Safe extraction of an uploaded SCORM package.
 
@@ -34,9 +34,9 @@ package cannot ship one to undo this.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [lmsValidatePackage()](/code/functions/lmsValidatePackage.md) | 65 | Check every entry in the archive. Returns the entries that should be written (directories excluded), or throws with a message naming the offending file. |
-| [lmsExtractPackage()](/code/functions/lmsExtractPackage.md) | 135 | Extract only the entries that passed validation, one at a time. |
-| [lmsHardenContentDir()](/code/functions/lmsHardenContentDir.md) | 150 | Stop the content tree ever executing code, whatever ends up in it. |
+| [lmsValidatePackage()](/code/functions/lmsValidatePackage.md) | 66 | Check every entry in the archive. Returns the entries that should be written (directories excluded), or throws with a message naming the offending file. |
+| [lmsExtractPackage()](/code/functions/lmsExtractPackage.md) | 139 | Extract only the entries that passed validation, one at a time. |
+| [lmsHardenContentDir()](/code/functions/lmsHardenContentDir.md) | 156 | Stop the content tree ever executing code, whatever ends up in it. |
 
 ## How it hangs together
 

@@ -6,11 +6,11 @@ True when a registrant value is a privacy placeholder ("REDACTED", "Domains By P
 function domainLooksRedacted(string $v): bool
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 300.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 325.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` | `string` |  |  |
+| `$v` | `string` |  | the registrant name or organisation the registry gave |
 
 **Returns:** `bool`
 

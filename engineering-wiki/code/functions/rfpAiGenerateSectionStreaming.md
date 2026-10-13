@@ -28,14 +28,14 @@ function rfpAiGenerateSectionStreaming(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 963.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1009.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rfpId` | `int` |  |  |
-| `$categoryId` | `int` |  |  |
-| `$onEvent` | `callable` |  |  |
+| `$rfpId` | `int` |  | the rfps id |
+| `$categoryId` | `int` |  | the rfp_categories id the section is written for (must belong to the RFP) |
+| `$onEvent` | `callable` |  | fn(string `$eventType`, array `$data`) - passed to `rfpAiCallAnthropicStreaming()` |
 
 **Returns:** `array`
 
@@ -43,9 +43,9 @@ Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 963.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 966 | `rfpAiGenerateSectionStreaming` | read [rfp_categories](/code/tables/rfp_categories.md) |  |
-| 975 | `rfpAiGenerateSectionStreaming` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 991 | `rfpAiGenerateSectionStreaming` | read [rfp_consolidated_sources](/code/tables/rfp_consolidated_sources.md), read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
+| 1012 | `rfpAiGenerateSectionStreaming` | read [rfp_categories](/code/tables/rfp_categories.md) |  |
+| 1021 | `rfpAiGenerateSectionStreaming` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 1037 | `rfpAiGenerateSectionStreaming` | read [rfp_consolidated_sources](/code/tables/rfp_consolidated_sources.md), read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
 
 ## Calls
 

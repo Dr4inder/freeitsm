@@ -6,12 +6,12 @@ Retention "don't store": the payload had to exist long enough for the worker to 
 function webhookScrubIfNoRetention(PDO $conn, int $id): void
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 357.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 383.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the webhook_deliveries id |
 
 **Returns:** `void`
 
@@ -19,7 +19,7 @@ Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 361 | `webhookScrubIfNoRetention` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`request_body`, `response_snippet`, `payload_purged`) |  |
+| 387 | `webhookScrubIfNoRetention` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`request_body`, `response_snippet`, `payload_purged`) |  |
 
 ## Calls
 

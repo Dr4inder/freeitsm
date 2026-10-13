@@ -12,13 +12,13 @@ contract on a customer they cannot see, or learn a person exists by id.
 function contractNormaliseParty(PDO $conn, int $analystId, array $data): array
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 197.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 223.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$data` | `array` |  |  |
+| `$data` | `array` |  | the submitted contract fields (untrusted) - party_type, supplier_id, customer_tenant_id, customer_user_id are read; the rest is ignored |
 
 **Returns:** array{party_type:string,supplier_id:?int,customer_tenant_id:?int,customer_user_id:?int}
 
@@ -26,8 +26,8 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 219 | `contractNormaliseParty` | read [tenants](/code/tables/tenants.md) |  |
-| 226 | `contractNormaliseParty` | read [users](/code/tables/users.md) |  |
+| 245 | `contractNormaliseParty` | read [tenants](/code/tables/tenants.md) |  |
+| 252 | `contractNormaliseParty` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

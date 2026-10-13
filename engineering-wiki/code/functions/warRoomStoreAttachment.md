@@ -18,13 +18,13 @@ temptation is removed rather than documented.
 function warRoomStoreAttachment(PDO $conn, int $messageId, array $file): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 891.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 959.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$messageId` | `int` |  |  |
-| `$file` | `array` |  |  |
+| `$messageId` | `int` |  | the warroom_messages id it belongs to |
+| `$file` | `array` |  | one entry from `$_FILES` - untrusted; `uploadStoreFile()` checks it |
 
 **Returns:** `array`
 
@@ -32,7 +32,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 891
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 896 | `warRoomStoreAttachment` | **insert** [warroom_attachments](/code/tables/warroom_attachments.md) (`message_id`, `stored_name`, `original_name`, `size_bytes`, `created_datetime`) |  |
+| 964 | `warRoomStoreAttachment` | **insert** [warroom_attachments](/code/tables/warroom_attachments.md) (`message_id`, `stored_name`, `original_name`, `size_bytes`, `created_datetime`) |  |
 
 ## Calls
 

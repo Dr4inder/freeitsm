@@ -6,12 +6,12 @@ Fetch one card by its own URL, with the ETag the server currently holds.
 function cardDavGetCard(array $cfg, string $cardUrl): array
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 122.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 128.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$cardUrl` | `string` |  |  |
+| `$cfg` | `array` |  | request settings from `cardDavConfigFromProvider()` |
+| `$cardUrl` | `string` |  | the card's absolute URL |
 
 **Returns:** array ['ok'=>bool, 'vcard'=>string, 'etag'=>string, 'error'=>string]
 

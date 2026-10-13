@@ -16,9 +16,9 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):232 | `ProblemsService::deleteProblem` | delete |  |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):351 | `ProblemsService::linkChange` | insert | `change_id`, `related_type`, `related_id`, `relation_type`, `created_by_id`, `created_datetime` |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):365 | `ProblemsService::unlinkChange` | delete |  |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):244 | `ProblemsService::deleteProblem` | delete |  |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):382 | `ProblemsService::linkChange` | insert | `change_id`, `related_type`, `related_id`, `relation_type`, `created_by_id`, `created_datetime` |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):401 | `ProblemsService::unlinkChange` | delete |  |  |
 
 ## Read by
 
@@ -26,7 +26,7 @@
 |---|---|---|
 | [api/problem-management/get.php](/code/files/api/problem-management/get.php.md) | L51 |  |
 | [api/problem-management/list_linkable_changes.php](/code/files/api/problem-management/list_linkable_changes.php.md) | L24 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L310 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L235 |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::linkChange L344 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L320 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L241 |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::linkChange L375 |  |
 

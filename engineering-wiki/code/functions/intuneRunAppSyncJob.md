@@ -6,12 +6,12 @@ Run an app-sync job: iterate its child rows, fetch detectedApps from Graph for e
 function intuneRunAppSyncJob(PDO $conn, int $jobId): void
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 762.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 796.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$jobId` | `int` |  |  |
+| `$jobId` | `int` |  | the intune_app_sync_jobs id whose pending assets are synced |
 
 **Returns:** `void`
 
@@ -19,9 +19,9 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 762.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 774 | `intuneRunAppSyncJob` | **update** [intune_app_sync_jobs](/code/tables/intune_app_sync_jobs.md) (`status`, `processed`, `failed`, `finished_datetime`, `message`) |  |
-| 780 | `intuneRunAppSyncJob` | **update** [intune_app_sync_job_assets](/code/tables/intune_app_sync_job_assets.md) (`status`, `error_message`, `synced_datetime`, `app_count`) |  |
-| 800 | `intuneRunAppSyncJob` | read [intune_app_sync_job_assets](/code/tables/intune_app_sync_job_assets.md), read [assets](/code/tables/assets.md), read [intune_devices](/code/tables/intune_devices.md) |  |
+| 808 | `intuneRunAppSyncJob` | **update** [intune_app_sync_jobs](/code/tables/intune_app_sync_jobs.md) (`status`, `processed`, `failed`, `finished_datetime`, `message`) |  |
+| 814 | `intuneRunAppSyncJob` | **update** [intune_app_sync_job_assets](/code/tables/intune_app_sync_job_assets.md) (`status`, `error_message`, `synced_datetime`, `app_count`) |  |
+| 834 | `intuneRunAppSyncJob` | read [intune_app_sync_job_assets](/code/tables/intune_app_sync_job_assets.md), read [assets](/code/tables/assets.md), read [intune_devices](/code/tables/intune_devices.md) |  |
 
 ## Calls
 

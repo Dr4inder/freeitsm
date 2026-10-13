@@ -16,12 +16,12 @@ three bytes, so a character is never split.
 function cardDavFoldLine(string $logical, string $eol = "\r\n"): string
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 220.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 231.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$logical` | `string` |  |  |
-| `$eol` | `string` | `"\r\n"` |  |
+| `$logical` | `string` |  | one unfolded content line |
+| `$eol` | `string` | `"\r\n"` | the line ending to fold with - the card's own, from `cardDavDetectEol()` |
 
 **Returns:** `string`
 

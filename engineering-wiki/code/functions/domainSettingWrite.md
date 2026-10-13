@@ -6,13 +6,13 @@ Write one setting (no validation — callers go through `domainSettingValidate()
 function domainSettingWrite(PDO $conn, string $key, string $value): void
 ```
 
-Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 166.
+Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 177.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$value` | `string` |  |  |
+| `$key` | `string` |  | the system_settings key to write |
+| `$value` | `string` |  | the value to store, already validated |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/domains/settings.php](/code/files/includes/domains/settings
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 169 | `domainSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 180 | `domainSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## Called from
 

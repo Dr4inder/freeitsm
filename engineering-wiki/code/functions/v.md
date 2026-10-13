@@ -9,12 +9,12 @@ Print a value into an input safely.
 function v($row, string $k): string
 ```
 
-Defined in [system/sso/carddav.php](/code/files/system/sso/carddav.php.md), line 81.
+Defined in [system/sso/carddav.php](/code/files/system/sso/carddav.php.md), line 86.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` |  |  |  |
-| `$k` | `string` |  |  |
+| `$row` |  |  | the provider row being edited (an auth_providers row) |
+| `$k` | `string` |  | the column to print |
 
 **Returns:** `string`
 

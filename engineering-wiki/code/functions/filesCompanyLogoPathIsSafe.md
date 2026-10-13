@@ -6,11 +6,11 @@ A company logo lives in system/uploads/branding/companies/ under our own random 
 function filesCompanyLogoPathIsSafe(string $p): bool
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 177.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 208.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `string` |  |  |
+| `$p` | `string` |  | tenants.logo_path, relative to the application root |
 
 **Returns:** `bool`
 

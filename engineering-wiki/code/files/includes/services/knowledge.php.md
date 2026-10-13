@@ -1,6 +1,6 @@
 # includes/services/knowledge.php
 
-> PHP - 520 lines
+> PHP - 569 lines
 
 KnowledgeService — the shared write rules for the Knowledge Base: article create/update (tags + save-as-version + best-effort embedding regeneration) and the recycle-bin trio archive / restore / purge.
 
@@ -40,25 +40,25 @@ save_as_version. The UI adapter maps its `body` to `body_html`.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 91 | `KnowledgeService::resolveFolderId` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 136 | `KnowledgeService::assertCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 218 | `KnowledgeService::saveArticle` | **insert** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) (`article_id`, `version`, `title`, `body`, `saved_by_id`, `saved_datetime`), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 224 | `KnowledgeService::saveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 280 | `KnowledgeService::saveArticle` | **insert** [knowledge_articles](/code/tables/knowledge_articles.md) (`title`, `body`, `author_id`, `owner_id`, `next_review_date`, `created_datetime`, `modified_datetime`, `is_published`, `view_count`, `tenant_id`, `audience`, `folder_id`) |  |
-| 350 | `KnowledgeService::archiveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`is_archived`, `archived_datetime`, `archived_by_id`) |  |
-| 372 | `KnowledgeService::restoreArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`is_archived`, `archived_datetime`, `archived_by_id`) |  |
-| 394 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
-| 395 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 396 | `KnowledgeService::purgeArticle` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 397 | `KnowledgeService::purgeArticle` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 416 | `KnowledgeService::loadArticleRow` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 428 | `KnowledgeService::setTags` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 434 | `KnowledgeService::setTags` | read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
-| 438 | `KnowledgeService::setTags` | **insert** [knowledge_tags](/code/tables/knowledge_tags.md) (`name`, `created_datetime`) |  |
-| 441 | `KnowledgeService::setTags` | **insert** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) (`article_id`, `tag_id`) |  |
-| 454 | `KnowledgeService::updateEmbedding` | read [system_settings](/code/tables/system_settings.md) |  |
-| 486 | `KnowledgeService::updateEmbedding` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`embedding`, `embedding_updated`) |  |
-| 500 | `KnowledgeService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 95 | `KnowledgeService::resolveFolderId` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 144 | `KnowledgeService::assertCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 231 | `KnowledgeService::saveArticle` | **insert** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) (`article_id`, `version`, `title`, `body`, `saved_by_id`, `saved_datetime`), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 237 | `KnowledgeService::saveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 293 | `KnowledgeService::saveArticle` | **insert** [knowledge_articles](/code/tables/knowledge_articles.md) (`title`, `body`, `author_id`, `owner_id`, `next_review_date`, `created_datetime`, `modified_datetime`, `is_published`, `view_count`, `tenant_id`, `audience`, `folder_id`) |  |
+| 369 | `KnowledgeService::archiveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`is_archived`, `archived_datetime`, `archived_by_id`) |  |
+| 395 | `KnowledgeService::restoreArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`is_archived`, `archived_datetime`, `archived_by_id`) |  |
+| 421 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
+| 422 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 423 | `KnowledgeService::purgeArticle` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 424 | `KnowledgeService::purgeArticle` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 447 | `KnowledgeService::loadArticleRow` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 464 | `KnowledgeService::setTags` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 470 | `KnowledgeService::setTags` | read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
+| 474 | `KnowledgeService::setTags` | **insert** [knowledge_tags](/code/tables/knowledge_tags.md) (`name`, `created_datetime`) |  |
+| 477 | `KnowledgeService::setTags` | **insert** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) (`article_id`, `tag_id`) |  |
+| 494 | `KnowledgeService::updateEmbedding` | read [system_settings](/code/tables/system_settings.md) |  |
+| 526 | `KnowledgeService::updateEmbedding` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`embedding`, `embedding_updated`) |  |
+| 544 | `KnowledgeService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

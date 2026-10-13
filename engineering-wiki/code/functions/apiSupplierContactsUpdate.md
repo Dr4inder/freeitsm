@@ -6,7 +6,7 @@ PATCH /suppliers/{id}/contacts/{contactId} - updates the fields sent, keeping th
 function apiSupplierContactsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 518.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 533.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,9 +21,9 @@ Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contrac
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 521 | `apiSupplierContactsUpdate` | read [contacts](/code/tables/contacts.md) |  |
-| 540 | `apiSupplierContactsUpdate` | **update** [contacts](/code/tables/contacts.md) (`first_name`, `surname`, `email`, `mobile`, `job_title`, `direct_dial`, `switchboard`, `is_active`) |  |
-| 545 | `apiSupplierContactsUpdate` | read [contacts](/code/tables/contacts.md) |  |
+| 536 | `apiSupplierContactsUpdate` | read [contacts](/code/tables/contacts.md) |  |
+| 555 | `apiSupplierContactsUpdate` | **update** [contacts](/code/tables/contacts.md) (`first_name`, `surname`, `email`, `mobile`, `job_title`, `direct_dial`, `switchboard`, `is_active`) |  |
+| 560 | `apiSupplierContactsUpdate` | read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

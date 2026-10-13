@@ -6,7 +6,7 @@ Resolution codes this company can see.
 function ticketResolutionCodesResolved(PDO $conn, ?int $tenantId, array $opts = []): array
 ```
 
-Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md), line 307.
+Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md), line 316.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categori
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 316 | `ticketResolutionCodesResolved` | read [ticket_resolution_codes](/code/tables/ticket_resolution_codes.md) |  |
+| 325 | `ticketResolutionCodesResolved` | read [ticket_resolution_codes](/code/tables/ticket_resolution_codes.md) |  |
 
 ## Calls
 

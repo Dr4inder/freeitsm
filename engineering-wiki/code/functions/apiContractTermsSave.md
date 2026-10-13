@@ -6,7 +6,7 @@ POST /contracts/{id}/terms - saves the contract's terms through ContractsService
 function apiContractTermsSave(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 412.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 426.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

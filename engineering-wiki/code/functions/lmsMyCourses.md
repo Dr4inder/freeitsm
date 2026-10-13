@@ -12,12 +12,12 @@ it, which the old GROUP BY was quietly there to mop up.
 function lmsMyCourses(PDO $conn, LmsLearner $learner): array
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 310.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 336.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$learner` | `LmsLearner` |  |  |
+| `$learner` | `LmsLearner` |  | the person whose assigned courses are listed |
 
 **Returns:** array<int,array<string,mixed>>
 
@@ -25,7 +25,7 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 313 | `lmsMyCourses` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
+| 339 | `lmsMyCourses` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
 
 ## Calls
 

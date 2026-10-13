@@ -1,6 +1,6 @@
 # includes/projects/control.php
 
-> PHP - 327 lines
+> PHP - 368 lines
 
 Projects - change control (3.3.0): baselines and change requests.
 
@@ -38,15 +38,15 @@ drift on the old baseline straight away - which is the point.
 |---|--:|---|
 | [projectControlReady()](/code/functions/projectControlReady.md) | 39 | Has Database Verification created the tables? Everything here is quiet before it. |
 | [projectPlanSnapshot()](/code/functions/projectPlanSnapshot.md) | 54 | The plan as it is now, in the shape a baseline stores: the headline figures plus the detail, so the same function makes a baseline and the "now" side of every comparison. |
-| [projectTakeBaseline()](/code/functions/projectTakeBaseline.md) | 112 | Take a baseline of the plan as it is now. Returns its id. |
-| [projectDaysBetween()](/code/functions/projectDaysBetween.md) | 127 | Whole days from `$a` to `$b` (both Y-m-d); null if either is missing. |
-| [projectBaselineVariance()](/code/functions/projectBaselineVariance.md) | 139 | How the plan NOW differs from a baseline. Headline figures, then the detail by item: moved (days), added (in the plan now, not in the baseline) and removed (in the baseline, gone now). Items are matched by id, so a renamed milestone is the same milestone. |
-| [projectVarianceItems()](/code/functions/projectVarianceItems.md) | 176 | Dated items compared by id on one date column: [{name, kind: moved\|added\|removed, from, to, days}]. |
-| [projectBaselineShape()](/code/functions/projectBaselineShape.md) | 191 | A stored baseline row in the snapshot shape. |
-| [projectCanDecideChange()](/code/functions/projectCanDecideChange.md) | 209 | May this analyst approve or reject a change request? The setting says who (team = anyone who may change the project; owner = its project manager or Manage Projects; managers = Manage Projects only), and project_change_self whether the person who raised it may decide it too. |
-| [projectBaselineAuto()](/code/functions/projectBaselineAuto.md) | 226 | Take a baseline by itself when the setting says so - never twice for the same stage, and once only for the project starting. Quiet: it must never break the change that triggered it. `$trigger` 'start' - the project went active; 'stage' - `$stageId` started |
-| [projectChangeStats()](/code/functions/projectChangeStats.md) | 256 | Per project: change requests waiting for a decision - for the Overview, the card and the assistant. |
-| [projectControlDetail()](/code/functions/projectControlDetail.md) | 269 | Everything the Change control tab shows. null before Database Verification. |
+| [projectTakeBaseline()](/code/functions/projectTakeBaseline.md) | 120 | Take a baseline of the plan as it is now. Returns its id. |
+| [projectDaysBetween()](/code/functions/projectDaysBetween.md) | 140 | Whole days from `$a` to `$b` (both Y-m-d); null if either is missing. |
+| [projectBaselineVariance()](/code/functions/projectBaselineVariance.md) | 155 | How the plan NOW differs from a baseline. Headline figures, then the detail by item: moved (days), added (in the plan now, not in the baseline) and removed (in the baseline, gone now). Items are matched by id, so a renamed milestone is the same milestone. |
+| [projectVarianceItems()](/code/functions/projectVarianceItems.md) | 198 | Dated items compared by id on one date column: [{name, kind: moved\|added\|removed, from, to, days}]. |
+| [projectBaselineShape()](/code/functions/projectBaselineShape.md) | 217 | A stored baseline row in the snapshot shape. |
+| [projectCanDecideChange()](/code/functions/projectCanDecideChange.md) | 238 | May this analyst approve or reject a change request? The setting says who (team = anyone who may change the project; owner = its project manager or Manage Projects; managers = Manage Projects only), and project_change_self whether the person who raised it may decide it too. |
+| [projectBaselineAuto()](/code/functions/projectBaselineAuto.md) | 259 | Take a baseline by itself when the setting says so - never twice for the same stage, and once only for the project starting. Quiet: it must never break the change that triggered it. `$trigger` 'start' - the project went active; 'stage' - `$stageId` started |
+| [projectChangeStats()](/code/functions/projectChangeStats.md) | 293 | Per project: change requests waiting for a decision - for the Overview, the card and the assistant. |
+| [projectControlDetail()](/code/functions/projectControlDetail.md) | 310 | Everything the Change control tab shows. null before Database Verification. |
 
 ## Database
 
@@ -61,15 +61,15 @@ drift on the old baseline straight away - which is the point.
 | 73 | `projectPlanSnapshot` | read [project_milestones](/code/tables/project_milestones.md) |  |
 | 80 | `projectPlanSnapshot` | read [project_items](/code/tables/project_items.md) |  |
 | 87 | `projectPlanSnapshot` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
-| 115 | `projectTakeBaseline` | read [project_baselines](/code/tables/project_baselines.md) |  |
-| 116 | `projectTakeBaseline` | **insert** [project_baselines](/code/tables/project_baselines.md) (`project_id`, `number`, `label`, `reason`, `stage_id`, `change_request_id`, `start_date`, `target_end_date`, `budget_planned`, `currency`, `task_count`, `estimate_hours`) |  |
-| 232 | `projectBaselineAuto` | read [projects](/code/tables/projects.md) |  |
-| 237 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
-| 241 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
-| 247 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
-| 261 | `projectChangeStats` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
-| 274 | `projectControlDetail` | read [project_baselines](/code/tables/project_baselines.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md), read [project_change_requests](/code/tables/project_change_requests.md) |  |
-| 292 | `projectControlDetail` | read [project_change_requests](/code/tables/project_change_requests.md), read [analysts](/code/tables/analysts.md), read [project_baselines](/code/tables/project_baselines.md) |  |
+| 123 | `projectTakeBaseline` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 124 | `projectTakeBaseline` | **insert** [project_baselines](/code/tables/project_baselines.md) (`project_id`, `number`, `label`, `reason`, `stage_id`, `change_request_id`, `start_date`, `target_end_date`, `budget_planned`, `currency`, `task_count`, `estimate_hours`) |  |
+| 265 | `projectBaselineAuto` | read [projects](/code/tables/projects.md) |  |
+| 270 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 274 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 280 | `projectBaselineAuto` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 298 | `projectChangeStats` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
+| 315 | `projectControlDetail` | read [project_baselines](/code/tables/project_baselines.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md), read [project_change_requests](/code/tables/project_change_requests.md) |  |
+| 333 | `projectControlDetail` | read [project_change_requests](/code/tables/project_change_requests.md), read [analysts](/code/tables/analysts.md), read [project_baselines](/code/tables/project_baselines.md) |  |
 
 ## How it hangs together
 

@@ -6,13 +6,13 @@ Build one normalised (Graph-like) message array from a UID.
 function imapNormaliseMessage($stream, int $uid, array $mailbox): ?array
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 118.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$stream` |  |  |  |
-| `$uid` | `int` |  |  |
-| `$mailbox` | `array` |  |  |
+| `$stream` |  |  | the open IMAP stream from `imapStreamFor()` |
+| `$uid` | `int` |  | the message's IMAP UID |
+| `$mailbox` | `array` |  | the target_mailboxes row (its id makes the fallback de-duplication key) |
 
 **Returns:** `?array`
 

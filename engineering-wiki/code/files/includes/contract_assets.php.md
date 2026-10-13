@@ -1,6 +1,6 @@
 # includes/contract_assets.php
 
-> PHP - 276 lines
+> PHP - 289 lines
 
 Assets covered by a contract (discussion #106, dschipfel).
 
@@ -36,13 +36,13 @@ requester picker made: it scoped the list and not the count.
 | [contractAssetCanReach()](/code/functions/contractAssetCanReach.md) | 41 | Can this analyst reach this asset at all? |
 | [contractAssetReachSql()](/code/functions/contractAssetReachSql.md) | 56 | " AND ..." keeping assets (alias a) in companies this analyst can reach. ['', []] with one company. |
 | [contractAssetSelect()](/code/functions/contractAssetSelect.md) | 62 | The columns every asset row in this feature shows. One home, so the two directions match. |
-| [contractAssetsFor()](/code/functions/contractAssetsFor.md) | 77 | Equipment covered by a contract, filtered to what this analyst may see. |
-| [contractsForAsset()](/code/functions/contractsForAsset.md) | 101 | Contracts covering an asset. |
-| [contractAssetLink()](/code/functions/contractAssetLink.md) | 147 | Link an asset to a contract. Returns the new link id. |
-| [contractAssetSetReference()](/code/functions/contractAssetSetReference.md) | 189 | Change the note on an existing link. |
-| [contractAssetUnlink()](/code/functions/contractAssetUnlink.md) | 206 | Remove a link. The asset and the contract both survive it — this only ever says "this equipment is not on that agreement". |
-| [contractAssetLoad()](/code/functions/contractAssetLoad.md) | 217 | One link, but only if this analyst can reach the asset on it. |
-| [contractAssetSearch()](/code/functions/contractAssetSearch.md) | 239 | Assets this analyst could add to a contract, matching `$q`. |
+| [contractAssetsFor()](/code/functions/contractAssetsFor.md) | 79 | Equipment covered by a contract, filtered to what this analyst may see. |
+| [contractsForAsset()](/code/functions/contractsForAsset.md) | 103 | Contracts covering an asset. |
+| [contractAssetLink()](/code/functions/contractAssetLink.md) | 152 | Link an asset to a contract. Returns the new link id. |
+| [contractAssetSetReference()](/code/functions/contractAssetSetReference.md) | 196 | Change the note on an existing link. |
+| [contractAssetUnlink()](/code/functions/contractAssetUnlink.md) | 214 | Remove a link. The asset and the contract both survive it — this only ever says "this equipment is not on that agreement". |
+| [contractAssetLoad()](/code/functions/contractAssetLoad.md) | 226 | One link, but only if this analyst can reach the asset on it. |
+| [contractAssetSearch()](/code/functions/contractAssetSearch.md) | 252 | Assets this analyst could add to a contract, matching `$q`. |
 
 ## Database
 
@@ -50,14 +50,14 @@ requester picker made: it scoped the list and not the count.
 |--:|---|---|---|
 | 50 | `contractAssetCanReach` | read [assets](/code/tables/assets.md) |  |
 | 64 | `contractAssetSelect` | read [contract_assets](/code/tables/contract_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_locations](/code/tables/asset_locations.md) |  |
-| 109 | `contractsForAsset` | read [contract_assets](/code/tables/contract_assets.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
-| 161 | `contractAssetLink` | read [assets](/code/tables/assets.md) |  |
-| 174 | `contractAssetLink` | **insert** [contract_assets](/code/tables/contract_assets.md) (`contract_id`, `asset_id`, `reference`, `linked_by_id`, `created_datetime`) |  |
-| 179 | `contractAssetLink` | read [contract_assets](/code/tables/contract_assets.md) |  |
-| 196 | `contractAssetSetReference` | **update** [contract_assets](/code/tables/contract_assets.md) (`reference`) |  |
-| 209 | `contractAssetUnlink` | **delete** [contract_assets](/code/tables/contract_assets.md) |  |
-| 219 | `contractAssetLoad` | read [contract_assets](/code/tables/contract_assets.md) |  |
-| 250 | `contractAssetSearch` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_locations](/code/tables/asset_locations.md), read [contract_assets](/code/tables/contract_assets.md) |  |
+| 111 | `contractsForAsset` | read [contract_assets](/code/tables/contract_assets.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 166 | `contractAssetLink` | read [assets](/code/tables/assets.md) |  |
+| 179 | `contractAssetLink` | **insert** [contract_assets](/code/tables/contract_assets.md) (`contract_id`, `asset_id`, `reference`, `linked_by_id`, `created_datetime`) |  |
+| 184 | `contractAssetLink` | read [contract_assets](/code/tables/contract_assets.md) |  |
+| 203 | `contractAssetSetReference` | **update** [contract_assets](/code/tables/contract_assets.md) (`reference`) |  |
+| 217 | `contractAssetUnlink` | **delete** [contract_assets](/code/tables/contract_assets.md) |  |
+| 228 | `contractAssetLoad` | read [contract_assets](/code/tables/contract_assets.md) |  |
+| 263 | `contractAssetSearch` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_locations](/code/tables/asset_locations.md), read [contract_assets](/code/tables/contract_assets.md) |  |
 
 ## How it hangs together
 

@@ -9,13 +9,13 @@ never call it — that is precisely the reset the attack relied on.
 function mfaThrottleReset(PDO $conn, string $table, int $accountId): void
 ```
 
-Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 179.
+Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 194.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$accountId` | `int` |  |  |
+| `$table` | `string` |  | the account table: 'analysts' or 'users' |
+| `$accountId` | `int` |  | the account's id in that table |
 
 **Returns:** `void`
 

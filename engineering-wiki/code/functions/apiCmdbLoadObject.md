@@ -6,13 +6,13 @@ Load one CI; 404 if unknown OR outside the key's companies (multi-tenancy — th
 function apiCmdbLoadObject(PDO $conn, int $objectId, ?array $apiKey = null): array
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 149.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 152.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$objectId` | `int` |  |  |
-| `$apiKey` | `?array` | `null` | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
+| `$objectId` | `int` |  | the cmdb_objects id |
+| `$apiKey` | `?array` | `null` | the calling API key; null skips the company check (every current caller passes one) |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 151 | `apiCmdbLoadObject` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [tenants](/code/tables/tenants.md) |  |
+| 154 | `apiCmdbLoadObject` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

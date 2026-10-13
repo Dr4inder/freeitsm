@@ -6,7 +6,7 @@ Build merge data from ticket, analyst, and department tables.
 function buildTicketMergeData(PDO $conn, int $ticketId): ?array
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 333.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 349.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 334 | `buildTicketMergeData` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md), read [departments](/code/tables/departments.md) |  |
+| 350 | `buildTicketMergeData` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md), read [departments](/code/tables/departments.md) |  |
 
 ## Calls
 

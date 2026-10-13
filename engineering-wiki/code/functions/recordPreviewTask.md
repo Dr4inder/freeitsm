@@ -6,13 +6,13 @@
 function recordPreviewTask(PDO $conn, int $analystId, int $id): ?array
 ```
 
-Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 160.
+Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 175.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the tasks id |
 
 **Returns:** `?array`
 
@@ -20,7 +20,7 @@ Defined in [includes/record_preview.php](/code/files/includes/record_preview.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 173 | `recordPreviewTask` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
+| 188 | `recordPreviewTask` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
 
 ## Calls
 

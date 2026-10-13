@@ -6,7 +6,7 @@ Incident linking — POST /problems/{id}/tickets, DELETE .../{ticket_id}
 function apiProblemTicketsLink(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 368.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 374.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

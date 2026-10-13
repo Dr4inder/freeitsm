@@ -17,7 +17,7 @@ whole file exists to prevent, arriving by a different door.
 function capSelfCheck(): array
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 557.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 591.
 
 **Returns:** array<int,string> human-readable problems; empty means healthy
 

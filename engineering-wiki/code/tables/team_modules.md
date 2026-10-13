@@ -23,5 +23,5 @@ Per-team module grants (issue #30) — the team twin of analyst_modules, mirrori
 | File | Where | Purpose |
 |---|---|---|
 | [api/system/get_effective_module_access.php](/code/files/api/system/get_effective_module_access.php.md) | L42 |  |
-| [includes/functions.php](/code/files/includes/functions.php.md) | getAnalystAllowedModules L161 |  |
+| [includes/functions.php](/code/files/includes/functions.php.md) | getAnalystAllowedModules L163 |  |
 

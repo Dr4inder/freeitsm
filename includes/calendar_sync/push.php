@@ -304,6 +304,9 @@ function calendarSyncReconcileTask(PDO $conn, int $taskId, bool $gone = false): 
 /**
  * One task, as a calendar event of the given kind. Null when the task has
  * nothing to say for that kind.
+ *
+ * @param array $t  the task row as calendarSyncReconcileTask() loads it - title, due_date, work_*, status, priority and team names
+ * @param string $kind  'due' for the due-date banner, anything else for the work window
  */
 function calendarSyncEventFromTask(array $t, string $kind): ?array
 {
@@ -374,7 +377,11 @@ function calendarSyncEventFromTask(array $t, string $kind): ?array
     ];
 }
 
-/** Remove one mapped event from the calendar it was written to, and forget it. */
+/**
+ * Remove one mapped event from the calendar it was written to, and forget it.
+ *
+ * @param array $row  one calendar_sync_events row - connection_id, analyst_id, remote_calendar, remote_event_id
+ */
 function calendarSyncRemoveRow(PDO $conn, array $row): void
 {
     try {
@@ -420,7 +427,11 @@ function calendarSyncRemoveAllForAnalyst(PDO $conn, int $analystId): void
     }
 }
 
-/** The canonical event shape (see CalendarSyncProvider) for one ticket row. */
+/**
+ * The canonical event shape (see CalendarSyncProvider) for one ticket row.
+ *
+ * @param array $t  the ticket row as calendarSyncReconcileTicket() loads it - work_*, subject, sensitivity, requester, status and priority names
+ */
 function calendarSyncEventFromTicket(array $t): array
 {
     $end = $t['work_end_datetime'];
@@ -468,6 +479,8 @@ function calendarSyncEventFromTicket(array $t): array
 
 /**
  * Stores a sync error (cut to 500 characters) on the analyst's enrolment, creating an 'off' enrolment row when there is none; never throws.
+ *
+ * @param string $message  the error to show the analyst; cut to 500 characters
  * @writes calendar_enrolments(last_error) - shown on the analyst's calendar settings
  */
 function calendarSyncRecordError(PDO $conn, int $analystId, string $message): void

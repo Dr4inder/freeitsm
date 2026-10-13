@@ -1,6 +1,6 @@
 # includes/calendar_sync/pull.php
 
-> PHP - 508 lines
+> PHP - 547 lines
 
 Reading changes back OUT of an analyst's calendar (GH #75, bi-directional).
 
@@ -41,19 +41,19 @@ picked up rather than suppressed.
 |---|--:|---|
 | [calendarAcceptDeletes()](/code/functions/calendarAcceptDeletes.md) | 50 | Off by default: whether a personal tidy-up may reach shared data is an organisation's call, and the safe answer is the one that changes nothing. |
 | [calendarSyncPullForAnalyst()](/code/functions/calendarSyncPullForAnalyst.md) | 66 | Poll one analyst's calendar and apply what came back. |
-| [calendarPullApply()](/code/functions/calendarPullApply.md) | 211 | Apply a moved event to its ticket. |
-| [calendarPullUnschedule()](/code/functions/calendarPullUnschedule.md) | 226 | Clear a ticket's schedule because its event was deleted. |
-| [calendarPullAudit()](/code/functions/calendarPullAudit.md) | 243 | A ticket_audit row, best effort. |
-| [calendarPullApplyTaskWork()](/code/functions/calendarPullApplyTaskWork.md) | 264 | A task's work window, moved in the calendar. |
-| [calendarPullApplyTaskDue()](/code/functions/calendarPullApplyTaskDue.md) | 284 | A task's DUE DATE, moved in the calendar. |
-| [calendarPullUnscheduleTask()](/code/functions/calendarPullUnscheduleTask.md) | 294 | The event was deleted from the calendar: take the matching field away. |
-| [calendarPullTaskAudit()](/code/functions/calendarPullTaskAudit.md) | 314 | One line of task history, marked as having come from a calendar. |
-| [calendarSyncPullAll()](/code/functions/calendarSyncPullAll.md) | 329 | Every enrolled analyst. Returns one report per person. |
-| [calendarNotifyUrl()](/code/functions/calendarNotifyUrl.md) | 359 | The configured notification endpoint, or '' when notifications are off. |
-| [calendarSyncEnsureSubscription()](/code/functions/calendarSyncEnsureSubscription.md) | 382 | Bring one analyst's subscription into line: create, renew or remove. |
-| [calendarStoreSubscription()](/code/functions/calendarStoreSubscription.md) | 464 | Records an analyst's change-notification subscription (id, expiry, secret) and clears any stored error, since subscribing succeeded. |
-| [calendarClearSubscription()](/code/functions/calendarClearSubscription.md) | 484 | Forgets an analyst's change-notification subscription. |
-| [calendarSyncEnsureAllSubscriptions()](/code/functions/calendarSyncEnsureAllSubscriptions.md) | 497 | Every enrolled analyst's subscription, plus any left behind by someone who has since opted out. |
+| [calendarPullApply()](/code/functions/calendarPullApply.md) | 217 | Apply a moved event to its ticket. |
+| [calendarPullUnschedule()](/code/functions/calendarPullUnschedule.md) | 236 | Clear a ticket's schedule because its event was deleted. |
+| [calendarPullAudit()](/code/functions/calendarPullAudit.md) | 257 | A ticket_audit row, best effort. |
+| [calendarPullApplyTaskWork()](/code/functions/calendarPullApplyTaskWork.md) | 284 | A task's work window, moved in the calendar. |
+| [calendarPullApplyTaskDue()](/code/functions/calendarPullApplyTaskDue.md) | 308 | A task's DUE DATE, moved in the calendar. |
+| [calendarPullUnscheduleTask()](/code/functions/calendarPullUnscheduleTask.md) | 323 | The event was deleted from the calendar: take the matching field away. |
+| [calendarPullTaskAudit()](/code/functions/calendarPullTaskAudit.md) | 349 | One line of task history, marked as having come from a calendar. |
+| [calendarSyncPullAll()](/code/functions/calendarSyncPullAll.md) | 364 | Every enrolled analyst. Returns one report per person. |
+| [calendarNotifyUrl()](/code/functions/calendarNotifyUrl.md) | 394 | The configured notification endpoint, or '' when notifications are off. |
+| [calendarSyncEnsureSubscription()](/code/functions/calendarSyncEnsureSubscription.md) | 417 | Bring one analyst's subscription into line: create, renew or remove. |
+| [calendarStoreSubscription()](/code/functions/calendarStoreSubscription.md) | 503 | Records an analyst's change-notification subscription (id, expiry, secret) and clears any stored error, since subscribing succeeded. |
+| [calendarClearSubscription()](/code/functions/calendarClearSubscription.md) | 523 | Forgets an analyst's change-notification subscription. |
+| [calendarSyncEnsureAllSubscriptions()](/code/functions/calendarSyncEnsureAllSubscriptions.md) | 536 | Every enrolled analyst's subscription, plus any left behind by someone who has since opted out. |
 
 ## Database
 
@@ -64,21 +64,21 @@ picked up rather than suppressed.
 | 117 | `calendarSyncPullForAnalyst` | read [calendar_sync_events](/code/tables/calendar_sync_events.md), read [tickets](/code/tables/tickets.md) |  |
 | 127 | `calendarSyncPullForAnalyst` | read [calendar_sync_events](/code/tables/calendar_sync_events.md), read [tasks](/code/tables/tasks.md) |  |
 | 199 | `calendarSyncPullForAnalyst` | **delete** [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
-| 214 | `calendarPullApply` | **update** [tickets](/code/tables/tickets.md) (`work_start_datetime`, `work_end_datetime`, `work_all_day`) |  |
-| 221 | `calendarPullApply` | **update** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`updated_datetime`) |  |
-| 228 | `calendarPullUnschedule` | read [tickets](/code/tables/tickets.md) |  |
-| 230 | `calendarPullUnschedule` | **update** [tickets](/code/tables/tickets.md) (`work_start_datetime`, `work_end_datetime`, `work_all_day`) |  |
-| 247 | `calendarPullAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 267 | `calendarPullApplyTaskWork` | **update** [tasks](/code/tables/tasks.md) (`work_start_datetime`, `work_end_datetime`, `work_all_day`, `updated_datetime`) |  |
-| 286 | `calendarPullApplyTaskDue` | **update** [tasks](/code/tables/tasks.md) (`due_date`, `updated_datetime`) |  |
-| 298 | `calendarPullUnscheduleTask` | **update** [tasks](/code/tables/tasks.md) (`due_date`, `updated_datetime`) |  |
-| 305 | `calendarPullUnscheduleTask` | **update** [tasks](/code/tables/tasks.md) (`work_start_datetime`, `work_end_datetime`, `updated_datetime`) |  |
-| 318 | `calendarPullTaskAudit` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
-| 332 | `calendarSyncPullAll` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
-| 362 | `calendarNotifyUrl` | read [system_settings](/code/tables/system_settings.md) |  |
-| 473 | `calendarStoreSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`) |  |
-| 487 | `calendarClearSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`) |  |
-| 501 | `calendarSyncEnsureAllSubscriptions` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 220 | `calendarPullApply` | **update** [tickets](/code/tables/tickets.md) (`work_start_datetime`, `work_end_datetime`, `work_all_day`) |  |
+| 227 | `calendarPullApply` | **update** [calendar_sync_events](/code/tables/calendar_sync_events.md) (`updated_datetime`) |  |
+| 238 | `calendarPullUnschedule` | read [tickets](/code/tables/tickets.md) |  |
+| 240 | `calendarPullUnschedule` | **update** [tickets](/code/tables/tickets.md) (`work_start_datetime`, `work_end_datetime`, `work_all_day`) |  |
+| 261 | `calendarPullAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 287 | `calendarPullApplyTaskWork` | **update** [tasks](/code/tables/tasks.md) (`work_start_datetime`, `work_end_datetime`, `work_all_day`, `updated_datetime`) |  |
+| 310 | `calendarPullApplyTaskDue` | **update** [tasks](/code/tables/tasks.md) (`due_date`, `updated_datetime`) |  |
+| 327 | `calendarPullUnscheduleTask` | **update** [tasks](/code/tables/tasks.md) (`due_date`, `updated_datetime`) |  |
+| 334 | `calendarPullUnscheduleTask` | **update** [tasks](/code/tables/tasks.md) (`work_start_datetime`, `work_end_datetime`, `updated_datetime`) |  |
+| 353 | `calendarPullTaskAudit` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
+| 367 | `calendarSyncPullAll` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 397 | `calendarNotifyUrl` | read [system_settings](/code/tables/system_settings.md) |  |
+| 512 | `calendarStoreSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`) |  |
+| 526 | `calendarClearSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`) |  |
+| 540 | `calendarSyncEnsureAllSubscriptions` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
 
 ## How it hangs together
 

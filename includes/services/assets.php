@@ -42,6 +42,8 @@ class AssetsService
      * companyScope null = all companies (single-company install or an all-access
      * actor) → no gate. Framed as not-found so it never reveals another company's
      * asset. $row must include tenant_id.
+     *
+     * @param array $row  the asset row; must include tenant_id
      */
     private static function assertScope(PDO $conn, ActorContext $ctx, array $row): void
     {
@@ -104,6 +106,9 @@ class AssetsService
      * records the acting key, the UI records the analyst — see
      * api/assets/create_asset.php, added in #1132 because a television cannot
      * run the inventory agent).
+     *
+     * @param array $in  the new asset's fields: hostname (required), any fieldMap() key, and asset_tag
+     * @param string $creationNote  the new_value of the 'asset_created' history row, e.g. who or what created it
      */
     public static function createAsset(PDO $conn, ActorContext $ctx, array $in, string $creationNote, ?int $tenantId = null): int
     {
@@ -203,6 +208,8 @@ class AssetsService
      * Apply a partial set of field updates to an asset. Writes one audit row per
      * changed field (no-ops are skipped) and re-syncs the warranty calendar when
      * warranty_expiry moves. Returns void; the adapter reloads for its response.
+     *
+     * @param array $in  [fieldMap() key => new value]; unknown keys are ignored, '' or null clears a field
      */
     public static function updateFields(PDO $conn, ActorContext $ctx, int $assetId, array $in): void
     {
@@ -309,6 +316,8 @@ class AssetsService
      *
      * $in: analyst_id | analyst_email, plus optional notes,
      * expected_return_date, previous_analyst_id.
+     *
+     * @param array $in  analyst_id or analyst_email, plus optional notes, expected_return_date (Y-m-d), previous_analyst_id
      */
     public static function assignAnalyst(PDO $conn, ActorContext $ctx, int $assetId, array $in): array
     {
@@ -383,6 +392,8 @@ class AssetsService
      * Assign a requester to an asset. $in: user_id | user_email, plus optional
      * notes, expected_return_date, previous_user_id (UI re-assign old_value).
      * Returns [asset_id, user_id, name, expected_return_date, notes].
+     *
+     * @param array $in  user_id or user_email, plus optional notes, expected_return_date (Y-m-d), previous_user_id
      */
     public static function assignUser(PDO $conn, ActorContext $ctx, int $assetId, array $in): array
     {
@@ -453,6 +464,9 @@ class AssetsService
      * Remove a requester from an asset. $skipAudit suppresses the history row
      * (the UI's re-assign removes the previous holder silently, then the assign
      * logs the transition). Returns [asset_id, user_id].
+     *
+     * @param int $userId  the requester (users.id) to remove from the asset
+     * @param bool $skipAudit  true to write no history row (a re-assign logs the change itself)
      */
     public static function unassignUser(PDO $conn, ActorContext $ctx, int $assetId, int $userId, bool $skipAudit = false): array
     {
@@ -496,6 +510,9 @@ class AssetsService
      *
      * Separate for the same reason assignAnalyst() is: it matches on a different
      * column, and a shared function would be an `if` at every line.
+     *
+     * @param int $analystId  the analyst HOLDING the asset who is removed - not the one acting, who is in $ctx
+     * @param bool $skipAudit  true to write no history row (a re-assign logs the change itself)
      */
     public static function unassignAnalyst(PDO $conn, ActorContext $ctx, int $assetId, int $analystId, bool $skipAudit = false): array
     {
@@ -535,7 +552,13 @@ class AssetsService
         return ['asset_id' => $assetId, 'analyst_id' => $analystId];
     }
 
-    /** Fire an asset.* workflow event (best-effort; the engine swallows its own errors). */
+    /**
+     * Fire an asset.* workflow event (best-effort; the engine swallows its own errors).
+     *
+     * @param string $event  the workflow event, 'asset.assigned' or 'asset.unassigned'
+     * @param int $userId  the requester holding it, or 0 when the holder is an analyst
+     * @param ?string $userName  the holder's display name
+     */
     private static function dispatch(string $event, PDO $conn, int $assetId, int $userId, ?string $userName): void
     {
         try {
@@ -572,6 +595,7 @@ class AssetsService
      *
      * An analyst holder moves with it: analysts are not company-scoped.
      *
+     * @param int $targetTenantId  the company (tenant) id to move the asset to
      * @return array{moved:bool, from:string, to:string, cleared:string[]}
      *         `cleared` lists the audit keys (location/type/status) that were
      *         emptied, so the UI can say what changed.
@@ -707,6 +731,10 @@ class AssetsService
     /**
      * Records one field change in the asset's history; analyst 0 (an inventory source or
      * Intune) is stored as NULL.
+     *
+     * @param string $fieldKey  the history field_name - a fieldMap() audit key or an event such as 'asset_created'
+     * @param ?string $old  the value before, as shown in history (null = not set)
+     * @param ?string $new  the value after, as shown in history (null = not set)
      */
     private static function auditWrite(PDO $conn, int $assetId, int $analystId, string $fieldKey, ?string $old, ?string $new): void
     {
@@ -719,7 +747,12 @@ class AssetsService
         )->execute([$assetId, $analystId > 0 ? $analystId : null, $fieldKey, $old, $new]);
     }
 
-    /** Validate a DATE field (YYYY-MM-DD); 422 naming the field. Null/'' clears. */
+    /**
+     * Validate a DATE field (YYYY-MM-DD); 422 naming the field. Null/'' clears.
+     *
+     * @param mixed $value  the date from the request, Y-m-d; null or '' gives null
+     * @param string $field  the request field name, used in the error message
+     */
     private static function parseDate($value, string $field): ?string
     {
         if ($value === null || $value === '') {
@@ -732,7 +765,13 @@ class AssetsService
         return (string)$value;
     }
 
-    /** Validate one incoming field value per its map entry. Returns the DB-ready value. */
+    /**
+     * Validate one incoming field value per its map entry. Returns the DB-ready value.
+     *
+     * @param string $field  the asset column being set, a fieldMap() key
+     * @param mixed $value  the value from the request; '' or null gives null
+     * @param array $def  that column's fieldMap() entry (kind, table, label, max)
+     */
     private static function validateField(PDO $conn, string $field, $value, array $def)
     {
         if ($value === '' || $value === null) {
@@ -778,6 +817,9 @@ class AssetsService
      * A lease cannot end before it starts. Checked on the dates as they will be
      * after the write (what was sent, else what is stored), so changing either one
      * alone is held to the other.
+     *
+     * @param array $in  the fields being written; lease_start / lease_expiry here win
+     * @param array $current  the asset row as stored ([] on create)
      */
     private static function assertLeaseOrder(array $in, array $current): void
     {
@@ -792,7 +834,13 @@ class AssetsService
         }
     }
 
-    /** Resolve a lookup id to its display name for the audit trail. */
+    /**
+     * Resolve a lookup id to its display name for the audit trail.
+     *
+     * @param string $field  the asset column, a fieldMap() key
+     * @param mixed $value  the stored value - an id for lookup, supplier and cost centre columns
+     * @param array $def  that column's fieldMap() entry
+     */
     private static function auditDisplay(PDO $conn, string $field, $value, array $def): ?string
     {
         if ($value === null) {
@@ -844,6 +892,9 @@ class AssetsService
      * older installs carry rows pointing at requesters that no longer exist —
      * Ed's own dev database has nine. A LEFT JOIN would list them as blank people
      * holding real equipment, which reads as data loss rather than as stale rows.
+     *
+     * @param string $search  text to match in the person's name or email; '' for everyone
+     * @param int $limit  the most people to return (1-500)
      */
     public static function usersHoldingAssets(PDO $conn, ActorContext $ctx, string $search = '', int $limit = 200): array
     {
@@ -908,6 +959,11 @@ class AssetsService
      * Tenancy is applied to the PERSON (users.tenant_id), not to their assets —
      * otherwise somebody who holds nothing would fall outside the filter and
      * silently vanish from the directory.
+     *
+     * @param string $search  text to match in name, email, username, department, job title or employee id; '' for all
+     * @param string $scope  'current' (default), 'leavers', 'everyone' or 'holding' - see above
+     * @param int $limit  the most people to return (1-1000)
+     * @param string $source  '' for every source, 'local' for people linked to nothing, or an auth_providers id
      */
     public static function people(PDO $conn, ActorContext $ctx, string $search = '', string $scope = 'current', int $limit = 500, string $source = ''): array
     {
@@ -999,6 +1055,8 @@ class AssetsService
      * exist. An existing person holding nothing returns an empty asset list
      * rather than null — "Ada has no equipment" is a real and useful answer,
      * particularly during offboarding.
+     *
+     * @param int $userId  the requester (users.id) to show
      */
     public static function assetsForUser(PDO $conn, ActorContext $ctx, int $userId): ?array
     {
@@ -1131,7 +1189,11 @@ class AssetsService
         return ['user' => $user, 'assets' => $assets];
     }
 
-    /** Best available human name for a requester row, falling back to the email. */
+    /**
+     * Best available human name for a requester row, falling back to the email.
+     *
+     * @param array $row  a users row with display_name, preferred_name, email and id
+     */
     private static function personName(array $row): string
     {
         foreach (['display_name', 'preferred_name', 'email'] as $k) {
@@ -1187,7 +1249,12 @@ class AssetsService
         return $map;
     }
 
-    /** Is this serial worth matching on - not blank, not a placeholder? */
+    /**
+     * Is this serial worth matching on - not blank, not a placeholder?
+     *
+     * @param ?string $tag  the serial number reported
+     * @param ?array $ignoredMap  placeholder serials as [lowercased => true], from getIgnoredServiceTags(); null uses the defaults
+     */
     public static function isUsableServiceTag(?string $tag, ?array $ignoredMap = null): bool
     {
         $t = trim((string)$tag);
@@ -1215,6 +1282,8 @@ class AssetsService
      *
      * @param array $ids        asset_id (tier 1, with $isExplicitLink), service_tag, hostname
      * @param ?int  $tenantId   the company to look in; NULL = the Default company
+     * @param bool $isExplicitLink  true when $ids['asset_id'] is a stored connector link to trust (tier 1)
+     * @param ?array $ignoredTags  placeholder serials from getIgnoredServiceTags(); null reads the setting
      * @param bool  $anyCompany look in EVERY company (tiers 2-3). Only for a
      *        connection that has no company of its own - see intuneLinkDevicesToAssets().
      * @return array{asset_id:?int, matched_by:string, ambiguous:bool, hostname_reused:?int}
@@ -1279,6 +1348,8 @@ class AssetsService
      * if another asset in the SAME company (the asset's own, wherever a person
      * may have moved it) already has the name - hostname is unique per company.
      *
+     * @param string $newHostname  the name the inventory source reported (cut to 50 characters)
+     * @param string $source  what reported it, e.g. 'Intune', added to the history row
      * @return array{updated:bool, conflict:bool}
      */
     public static function updateAssetHostname(PDO $conn, ActorContext $ctx, int $assetId, string $newHostname, string $source = 'system'): array
@@ -1313,6 +1384,11 @@ class AssetsService
      * Resolve, then - for a match made by link or serial - apply a reported
      * rename. The single entry point every inventory source uses.
      *
+     * @param array $ids  what the source reported: asset_id (with $isExplicitLink), service_tag, hostname
+     * @param string $source  what reported it, e.g. 'software inventory', added to a rename's history row
+     * @param bool $isExplicitLink  true when $ids['asset_id'] is a stored connector link to trust
+     * @param ?array $ignoredTags  placeholder serials from getIgnoredServiceTags(); null reads the setting
+     * @param bool $anyCompany  true to match across every company - only for a connection with no company of its own
      * @return array{asset_id:?int, matched_by:string, ambiguous:bool, hostname_reused:?int, hostname_updated:bool, hostname_conflict:bool}
      */
     public static function reconcileAsset(PDO $conn, ActorContext $ctx, array $ids, ?int $tenantId = null, string $source = 'system', bool $isExplicitLink = false, ?array $ignoredTags = null, bool $anyCompany = false): array
@@ -1337,6 +1413,7 @@ class AssetsService
      *
      * @param array $fields column => value, from the discovered-asset columns below
      * @param ?int  $tenantId the company it belongs to (NULL = Default)
+     * @param string $source  what found it, e.g. 'the software inventory agent' - the history row's value
      * @param ?int  $hostnameReusedBy the asset a refreshed machine's name still belongs to, if any
      */
     public static function createDiscoveredAsset(PDO $conn, ActorContext $ctx, array $fields, ?int $tenantId, string $source, ?int $hostnameReusedBy = null): int

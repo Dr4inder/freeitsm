@@ -15,11 +15,11 @@ end. Both are the same intention and neither should be a support question.
 function aiAzureChatUrl(array $cfg): string
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 206.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 213.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
+| `$cfg` | `array` |  | the AI settings - azure_endpoint, azure_deployment and azure_api_version are read |
 
 **Returns:** `string`
 

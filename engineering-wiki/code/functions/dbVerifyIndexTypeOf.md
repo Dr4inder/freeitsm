@@ -12,11 +12,11 @@ column that has duplicates, which fails loudly, or worse the reverse.
 function dbVerifyIndexTypeOf($type): string
 ```
 
-Defined in [includes/db_verify_index_parse.php](/code/files/includes/db_verify_index_parse.php.md), line 54.
+Defined in [includes/db_verify_index_parse.php](/code/files/includes/db_verify_index_parse.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$type` |  |  |  |
+| `$type` |  |  | a list entry's type: bool (old format, true = unique) or 'unique'/'fulltext'/'key'; anything else reads as 'key' |
 
 **Returns:** `string`
 

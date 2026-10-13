@@ -6,11 +6,11 @@ True when the last inbound message (UTC) was under 24 hours ago, so a free-form 
 function channelWindowOpen(?string $lastInboundAt): bool
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 428.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 468.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lastInboundAt` | `?string` |  |  |
+| `$lastInboundAt` | `?string` |  | the last inbound message time as a 'Y-m-d H:i:s' UTC string; null or empty means closed |
 
 **Returns:** `bool`
 

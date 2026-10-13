@@ -6,12 +6,12 @@ The mime type we record for a stored file: sniffed, else guessed from the name.
 function filesDetectMime(string $absPath, string $name): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 106.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 131.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$absPath` | `string` |  |  |
-| `$name` | `string` |  |  |
+| `$absPath` | `string` |  | the full path of the file on disk, whose content is sniffed |
+| `$name` | `string` |  | the file's display name, whose extension is the fallback guess |
 
 **Returns:** `string`
 

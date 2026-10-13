@@ -6,7 +6,7 @@ Should the "turned out to be" category field show when closing a ticket?
 function ticketClosureCategoryOn(PDO $conn, ?int $tenantId): bool
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 242.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 253.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

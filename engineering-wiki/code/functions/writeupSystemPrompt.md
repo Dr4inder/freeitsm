@@ -10,11 +10,11 @@ rest token by token.
 function writeupSystemPrompt(string $mode = 'single'): string
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 623.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 647.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mode` | `string` | `'single'` |  |
+| `$mode` | `string` | `'single'` | 'single' (one ticket), 'cluster' (a recurring question) or 'answers' (the analyst has replied) |
 
 **Returns:** `string`
 

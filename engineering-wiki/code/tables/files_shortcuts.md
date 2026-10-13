@@ -34,5 +34,5 @@ A shortcut lives in a folder (folder_id) OR on one person's desktop (analyst_id)
 |---|---|---|
 | [api/files/list.php](/code/files/api/files/list.php.md) | L89 |  |
 | [api/files/shortcut.php](/code/files/api/files/shortcut.php.md) | L68, L128 |  |
-| [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md) | filesNameTaken L133 |  |
+| [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md) | filesNameTaken L164 |  |
 

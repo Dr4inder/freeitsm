@@ -36,7 +36,7 @@
 
 ### assertScope
 
-*private static* - line 46
+*private static* - line 48
 
 Multi-tenancy gate: refuse to touch an asset outside the actor's companies. companyScope null = all companies (single-company install or an all-access actor) → no gate. Framed as not-found so it never reveals another company's asset. `$row` must include tenant_id.
 
@@ -48,11 +48,11 @@ function assertScope(PDO $conn, ActorContext $ctx, array $row): void
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | the asset row; must include tenant_id |
 
 ### fieldMap
 
-*public static* - line 62
+*public static* - line 64
 
 The editable columns, their audit field keys (the SAME stable keys the UI history view localises via t('asset-management.field.<key>')), and how to validate/resolve each. 'lookup'/'supplier' fields audit display NAMES.
 
@@ -62,7 +62,7 @@ function fieldMap(): array
 
 ### createAsset
 
-*public static* - line 108
+*public static* - line 113
 
 Create an asset (identified by its unique hostname). Returns the new id. `$creationNote` is the audit new_value for the 'asset_created' row (the API records the acting key, the UI records the analyst — see api/assets/create_asset.php, added in #1132 because a television cannot run the inventory agent).
 
@@ -80,22 +80,22 @@ function createAsset(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
-| `$creationNote` | `string` |  |  |
+| `$in` | `array` |  | the new asset's fields: hostname (required), any `fieldMap()` key, and asset_tag |
+| `$creationNote` | `string` |  | the new_value of the 'asset_created' history row, e.g. who or what created it |
 | `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 128 | `AssetsService::createAsset` | read [assets](/code/tables/assets.md) |  |
-| 186 | `AssetsService::createAsset` | **insert** [assets](/code/tables/assets.md) |  |
+| 133 | `AssetsService::createAsset` | read [assets](/code/tables/assets.md) |  |
+| 191 | `AssetsService::createAsset` | **insert** [assets](/code/tables/assets.md) |  |
 
 **Called from:** [api/assets/create_asset.php](/code/files/api/assets/create_asset.php.md), [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md)
 
 ### updateFields
 
-*public static* - line 207
+*public static* - line 214
 
 Apply a partial set of field updates to an asset. Writes one audit row per changed field (no-ops are skipped) and re-syncs the warranty calendar when warranty_expiry moves. Returns void; the adapter reloads for its response.
 
@@ -108,20 +108,20 @@ function updateFields(PDO $conn, ActorContext $ctx, int $assetId, array $in): vo
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | [fieldMap() key => new value]; unknown keys are ignored, '' or null clears a field |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 241 | `AssetsService::updateFields` | read [assets](/code/tables/assets.md) |  |
-| 279 | `AssetsService::updateFields` | **update** [assets](/code/tables/assets.md) |  |
+| 248 | `AssetsService::updateFields` | read [assets](/code/tables/assets.md) |  |
+| 286 | `AssetsService::updateFields` | **update** [assets](/code/tables/assets.md) |  |
 
 **Called from:** [api/assets/update_asset_field.php](/code/files/api/assets/update_asset_field.php.md), [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), [includes/leases.php](/code/files/includes/leases.php.md), [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md)
 
 ### assignAnalyst
 
-*public static* - line 313
+*public static* - line 322
 
 Assign an ANALYST to an asset — the desk's own kit.
 
@@ -148,24 +148,24 @@ function assignAnalyst(PDO $conn, ActorContext $ctx, int $assetId, array $in): a
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | analyst_id or analyst_email, plus optional notes, expected_return_date (Y-m-d), previous_analyst_id |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 319 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 322 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 339 | `AssetsService::assignAnalyst` | read [users_assets](/code/tables/users_assets.md) |  |
-| 348 | `AssetsService::assignAnalyst` | **insert** [users_assets](/code/tables/users_assets.md) (`asset_id`, `analyst_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime`) |  |
-| 357 | `AssetsService::assignAnalyst` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `notes`, `action_datetime`) |  |
-| 364 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 328 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 331 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 348 | `AssetsService::assignAnalyst` | read [users_assets](/code/tables/users_assets.md) |  |
+| 357 | `AssetsService::assignAnalyst` | **insert** [users_assets](/code/tables/users_assets.md) (`asset_id`, `analyst_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime`) |  |
+| 366 | `AssetsService::assignAnalyst` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `notes`, `action_datetime`) |  |
+| 373 | `AssetsService::assignAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 **Called from:** [api/assets/assign_asset_user.php](/code/files/api/assets/assign_asset_user.php.md)
 
 ### assignUser
 
-*public static* - line 387
+*public static* - line 398
 
 Assign a requester to an asset. `$in`: user_id | user_email, plus optional notes, expected_return_date, previous_user_id (UI re-assign old_value). Returns [asset_id, user_id, name, expected_return_date, notes].
 
@@ -178,24 +178,24 @@ function assignUser(PDO $conn, ActorContext $ctx, int $assetId, array $in): arra
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | user_id or user_email, plus optional notes, expected_return_date (Y-m-d), previous_user_id |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 394 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
-| 397 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
-| 412 | `AssetsService::assignUser` | read [users_assets](/code/tables/users_assets.md) |  |
-| 419 | `AssetsService::assignUser` | **insert** [users_assets](/code/tables/users_assets.md) (`asset_id`, `user_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime`) |  |
-| 426 | `AssetsService::assignUser` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `notes`, `action_datetime`) |  |
-| 434 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
+| 405 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
+| 408 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
+| 423 | `AssetsService::assignUser` | read [users_assets](/code/tables/users_assets.md) |  |
+| 430 | `AssetsService::assignUser` | **insert** [users_assets](/code/tables/users_assets.md) (`asset_id`, `user_id`, `assigned_by_analyst_id`, `notes`, `expected_return_date`, `assigned_datetime`) |  |
+| 437 | `AssetsService::assignUser` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `notes`, `action_datetime`) |  |
+| 445 | `AssetsService::assignUser` | read [users](/code/tables/users.md) |  |
 
 **Called from:** [api/assets/assign_asset_user.php](/code/files/api/assets/assign_asset_user.php.md), [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md)
 
 ### unassignUser
 
-*public static* - line 457
+*public static* - line 471
 
 Remove a requester from an asset. `$skipAudit` suppresses the history row (the UI's re-assign removes the previous holder silently, then the assign logs the transition). Returns [asset_id, user_id].
 
@@ -214,22 +214,22 @@ function unassignUser(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
-| `$skipAudit` | `bool` | `false` |  |
+| `$userId` | `int` |  | the requester (users.id) to remove from the asset |
+| `$skipAudit` | `bool` | `false` | true to write no history row (a re-assign logs the change itself) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 466 | `AssetsService::unassignUser` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
-| 476 | `AssetsService::unassignUser` | **delete** [users_assets](/code/tables/users_assets.md) |  |
-| 480 | `AssetsService::unassignUser` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `action_datetime`) |  |
+| 480 | `AssetsService::unassignUser` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 490 | `AssetsService::unassignUser` | **delete** [users_assets](/code/tables/users_assets.md) |  |
+| 494 | `AssetsService::unassignUser` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `action_datetime`) |  |
 
 **Called from:** [api/assets/unassign_asset_user.php](/code/files/api/assets/unassign_asset_user.php.md), [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md)
 
 ### unassignAnalyst
 
-*public static* - line 500
+*public static* - line 517
 
 Remove an analyst from an asset — the mirror of `unassignUser()`.
 
@@ -251,22 +251,22 @@ function unassignAnalyst(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$skipAudit` | `bool` | `false` |  |
+| `$analystId` | `int` |  | the analyst HOLDING the asset who is removed - not the one acting, who is in `$ctx` |
+| `$skipAudit` | `bool` | `false` | true to write no history row (a re-assign logs the change itself) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 506 | `AssetsService::unassignAnalyst` | read [users_assets](/code/tables/users_assets.md), read [analysts](/code/tables/analysts.md) |  |
-| 516 | `AssetsService::unassignAnalyst` | **delete** [users_assets](/code/tables/users_assets.md) |  |
-| 524 | `AssetsService::unassignAnalyst` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `action_datetime`) |  |
+| 523 | `AssetsService::unassignAnalyst` | read [users_assets](/code/tables/users_assets.md), read [analysts](/code/tables/analysts.md) |  |
+| 533 | `AssetsService::unassignAnalyst` | **delete** [users_assets](/code/tables/users_assets.md) |  |
+| 541 | `AssetsService::unassignAnalyst` | **insert** [asset_checkout_log](/code/tables/asset_checkout_log.md) (`asset_id`, `user_id`, `user_name`, `action`, `expected_return_date`, `analyst_id`, `action_datetime`) |  |
 
 **Called from:** [api/assets/unassign_asset_user.php](/code/files/api/assets/unassign_asset_user.php.md)
 
 ### dispatch
 
-*private static* - line 539
+*private static* - line 562
 
 Fire an asset.* workflow event (best-effort; the engine swallows its own errors).
 
@@ -276,21 +276,21 @@ function dispatch(string $event, PDO $conn, int $assetId, int $userId, ?string $
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `string` |  |  |
+| `$event` | `string` |  | the workflow event, 'asset.assigned' or 'asset.unassigned' |
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
-| `$userName` | `?string` |  |  |
+| `$userId` | `int` |  | the requester holding it, or 0 when the holder is an analyst |
+| `$userName` | `?string` |  | the holder's display name |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 542 | `AssetsService::dispatch` | read [assets](/code/tables/assets.md) |  |
+| 565 | `AssetsService::dispatch` | read [assets](/code/tables/assets.md) |  |
 
 ### moveToCompany
 
-*public static* - line 579
+*public static* - line 603
 
 Move an asset to another company (2.6.0, from a customer's request list).
 
@@ -323,7 +323,7 @@ function moveToCompany(PDO $conn, ActorContext $ctx, int $assetId, int $targetTe
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$targetTenantId` | `int` |  |  |
+| `$targetTenantId` | `int` |  | the company (tenant) id to move the asset to |
 
 **Returns:** array{moved:bool, from:string, to:string, cleared:string[]} `cleared` lists the audit keys (location/type/status) that were emptied, so the UI can say what changed.
 
@@ -331,18 +331,18 @@ function moveToCompany(PDO $conn, ActorContext $ctx, int $assetId, int $targetTe
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 612 | `AssetsService::moveToCompany` | read [assets](/code/tables/assets.md) |  |
-| 619 | `AssetsService::moveToCompany` | read [assets](/code/tables/assets.md) |  |
-| 628 | `AssetsService::moveToCompany` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
-| 642 | `AssetsService::moveToCompany` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 655 | `AssetsService::moveToCompany` | read [asset_locations](/code/tables/asset_locations.md) |  |
-| 675 | `AssetsService::moveToCompany` | **update** [assets](/code/tables/assets.md) |  |
+| 636 | `AssetsService::moveToCompany` | read [assets](/code/tables/assets.md) |  |
+| 643 | `AssetsService::moveToCompany` | read [assets](/code/tables/assets.md) |  |
+| 652 | `AssetsService::moveToCompany` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 666 | `AssetsService::moveToCompany` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 679 | `AssetsService::moveToCompany` | read [asset_locations](/code/tables/asset_locations.md) |  |
+| 699 | `AssetsService::moveToCompany` | **update** [assets](/code/tables/assets.md) |  |
 
 **Called from:** [api/assets/move_to_company.php](/code/files/api/assets/move_to_company.php.md)
 
 ### loadRow
 
-*private static* - line 696
+*private static* - line 720
 
 Load the base asset row for write guards + change detection; 404 if unknown.
 
@@ -359,11 +359,11 @@ function loadRow(PDO $conn, int $assetId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 698 | `AssetsService::loadRow` | read [assets](/code/tables/assets.md) |  |
+| 722 | `AssetsService::loadRow` | read [assets](/code/tables/assets.md) |  |
 
 ### auditWrite
 
-*private static* - line 711
+*private static* - line 739
 
 Records one field change in the asset's history; analyst 0 (an inventory source or Intune) is stored as NULL.
 
@@ -383,19 +383,19 @@ function auditWrite(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$fieldKey` | `string` |  |  |
-| `$old` | `?string` |  |  |
-| `$new` | `?string` |  |  |
+| `$fieldKey` | `string` |  | the history field_name - a `fieldMap()` audit key or an event such as 'asset_created' |
+| `$old` | `?string` |  | the value before, as shown in history (null = not set) |
+| `$new` | `?string` |  | the value after, as shown in history (null = not set) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 717 | `AssetsService::auditWrite` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 745 | `AssetsService::auditWrite` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### parseDate
 
-*private static* - line 723
+*private static* - line 756
 
 Validate a DATE field (YYYY-MM-DD); 422 naming the field. Null/'' clears.
 
@@ -405,12 +405,12 @@ function parseDate($value, string $field): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
-| `$field` | `string` |  |  |
+| `$value` |  |  | the date from the request, Y-m-d; null or '' gives null |
+| `$field` | `string` |  | the request field name, used in the error message |
 
 ### validateField
 
-*private static* - line 736
+*private static* - line 775
 
 Validate one incoming field value per its map entry. Returns the DB-ready value.
 
@@ -421,19 +421,19 @@ function validateField(PDO $conn, string $field, $value, array $def)
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$value` |  |  |  |
-| `$def` | `array` |  |  |
+| `$field` | `string` |  | the asset column being set, a `fieldMap()` key |
+| `$value` |  |  | the value from the request; '' or null gives null |
+| `$def` | `array` |  | that column's `fieldMap()` entry (kind, table, label, max) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 750 | `AssetsService::validateField` | read [suppliers](/code/tables/suppliers.md) |  |
+| 789 | `AssetsService::validateField` | read [suppliers](/code/tables/suppliers.md) |  |
 
 ### assertLeaseOrder
 
-*private static* - line 782
+*private static* - line 824
 
 A lease cannot end before it starts. Checked on the dates as they will be after the write (what was sent, else what is stored), so changing either one alone is held to the other.
 
@@ -443,12 +443,12 @@ function assertLeaseOrder(array $in, array $current): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$in` | `array` |  |  |
-| `$current` | `array` |  |  |
+| `$in` | `array` |  | the fields being written; lease_start / lease_expiry here win |
+| `$current` | `array` |  | the asset row as stored ([] on create) |
 
 ### auditDisplay
 
-*private static* - line 796
+*private static* - line 844
 
 Resolve a lookup id to its display name for the audit trail.
 
@@ -459,19 +459,19 @@ function auditDisplay(PDO $conn, string $field, $value, array $def): ?string
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$field` | `string` |  |  |
-| `$value` |  |  |  |
-| `$def` | `array` |  |  |
+| `$field` | `string` |  | the asset column, a `fieldMap()` key |
+| `$value` |  |  | the stored value - an id for lookup, supplier and cost centre columns |
+| `$def` | `array` |  | that column's `fieldMap()` entry |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 812 | `AssetsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
+| 860 | `AssetsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
 
 ### syncWarranty
 
-*private static* - line 825
+*private static* - line 873
 
 Re-sync the asset expiry calendar (best-effort; same hook the UI + API used). One pass writes BOTH warranty and lease entries, which is why there is no lease equivalent of this method.
 
@@ -485,7 +485,7 @@ function syncWarranty(PDO $conn): void
 
 ### usersHoldingAssets
 
-*public static* - line 848
+*public static* - line 899
 
 Everyone who currently holds at least one asset, with how many.
 
@@ -512,20 +512,20 @@ function usersHoldingAssets(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$search` | `string` | `''` |  |
-| `$limit` | `int` | `200` |  |
+| `$search` | `string` | `''` | text to match in the person's name or email; '' for everyone |
+| `$limit` | `int` | `200` | the most people to return (1-500) |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 862 | `AssetsService::usersHoldingAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [assets](/code/tables/assets.md) |  |
+| 913 | `AssetsService::usersHoldingAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [assets](/code/tables/assets.md) |  |
 
 **Called from:** [api/assets/get_users_with_assets.php](/code/files/api/assets/get_users_with_assets.php.md)
 
 ### people
 
-*public static* - line 912
+*public static* - line 968
 
 Everyone, whether or not they hold anything.
 
@@ -568,23 +568,23 @@ function people(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$search` | `string` | `''` |  |
-| `$scope` | `string` | `'current'` |  |
-| `$limit` | `int` | `500` |  |
-| `$source` | `string` | `''` |  |
+| `$search` | `string` | `''` | text to match in name, email, username, department, job title or employee id; '' for all |
+| `$scope` | `string` | `'current'` | 'current' (default), 'leavers', 'everyone' or 'holding' - see above |
+| `$limit` | `int` | `500` | the most people to return (1-1000) |
+| `$source` | `string` | `''` | '' for every source, 'local' for people linked to nothing, or an auth_providers id |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 944 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md) |  |
-| 952 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1000 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md) |  |
+| 1008 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
 
 **Called from:** [api/assets/get_people.php](/code/files/api/assets/get_people.php.md)
 
 ### assetsForUser
 
-*public static* - line 1003
+*public static* - line 1061
 
 One person, and everything currently assigned to them.
 
@@ -601,22 +601,22 @@ function assetsForUser(PDO $conn, ActorContext $ctx, int $userId): ?array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the requester (users.id) to show |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1023 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 1061 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md) |  |
-| 1077 | `AssetsService::assetsForUser` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md), read [analysts](/code/tables/analysts.md) |  |
-| 1117 | `AssetsService::assetsForUser` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 1081 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1119 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md) |  |
+| 1135 | `AssetsService::assetsForUser` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md), read [analysts](/code/tables/analysts.md) |  |
+| 1175 | `AssetsService::assetsForUser` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
 
 **Called from:** [api/assets/email_handover.php](/code/files/api/assets/email_handover.php.md), [api/assets/get_user_assets.php](/code/files/api/assets/get_user_assets.php.md), [api/assets/handover_templates.php](/code/files/api/assets/handover_templates.php.md), [asset-management/handover.php](/code/files/asset-management/handover.php.md)
 
 ### personName
 
-*private static* - line 1135
+*private static* - line 1197
 
 Best available human name for a requester row, falling back to the email.
 
@@ -626,11 +626,11 @@ function personName(array $row): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | a users row with display_name, preferred_name, email and id |
 
 ### getIgnoredServiceTags
 
-*public static* - line 1169
+*public static* - line 1231
 
 The placeholder list as a lookup map [lowercased => true]. The stored setting, one per line, replaces the defaults when it has anything in it.
 
@@ -646,13 +646,13 @@ function getIgnoredServiceTags(PDO $conn): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1176 | `AssetsService::getIgnoredServiceTags` | read [system_settings](/code/tables/system_settings.md) |  |
+| 1238 | `AssetsService::getIgnoredServiceTags` | read [system_settings](/code/tables/system_settings.md) |  |
 
 **Called from:** [includes/intune.php](/code/files/includes/intune.php.md)
 
 ### isUsableServiceTag
 
-*public static* - line 1191
+*public static* - line 1258
 
 Is this serial worth matching on - not blank, not a placeholder?
 
@@ -662,12 +662,12 @@ function isUsableServiceTag(?string $tag, ?array $ignoredMap = null): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$tag` | `?string` |  |  |
-| `$ignoredMap` | `?array` | `null` |  |
+| `$tag` | `?string` |  | the serial number reported |
+| `$ignoredMap` | `?array` | `null` | placeholder serials as [lowercased => true], from `getIgnoredServiceTags()`; null uses the defaults |
 
 ### resolveAssetIdentity
 
-*public static* - line 1222
+*public static* - line 1291
 
 Which existing asset, if any, an incoming device is. Reads only.
 
@@ -701,8 +701,8 @@ function resolveAssetIdentity(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ids` | `array` |  | asset_id (tier 1, with `$isExplicitLink`), service_tag, hostname |
 | `$tenantId` | `?int` | `null` | the company to look in; NULL = the Default company |
-| `$isExplicitLink` | `bool` | `false` |  |
-| `$ignoredTags` | `?array` | `null` |  |
+| `$isExplicitLink` | `bool` | `false` | true when `$ids`['asset_id'] is a stored connector link to trust (tier 1) |
+| `$ignoredTags` | `?array` | `null` | placeholder serials from `getIgnoredServiceTags()`; null reads the setting |
 | `$anyCompany` | `bool` | `false` | look in EVERY company (tiers 2-3). Only for a connection that has no company of its own - see `intuneLinkDevicesToAssets()`. |
 
 **Returns:** array{asset_id:?int, matched_by:string, ambiguous:bool, hostname_reused:?int}
@@ -711,14 +711,14 @@ function resolveAssetIdentity(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1235 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1246 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1252 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1262 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1304 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1315 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1321 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1331 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
 
 ### updateAssetHostname
 
-*public static* - line 1284
+*public static* - line 1355
 
 Apply a rename an inventory source reported for an asset it has matched by something stronger than its name. Skipped, and reported as a conflict, if another asset in the SAME company (the asset's own, wherever a person may have moved it) already has the name - hostname is unique per company.
 
@@ -737,8 +737,8 @@ function updateAssetHostname(
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
-| `$newHostname` | `string` |  |  |
-| `$source` | `string` | `'system'` |  |
+| `$newHostname` | `string` |  | the name the inventory source reported (cut to 50 characters) |
+| `$source` | `string` | `'system'` | what reported it, e.g. 'Intune', added to the history row |
 
 **Returns:** array{updated:bool, conflict:bool}
 
@@ -746,15 +746,15 @@ function updateAssetHostname(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1289 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
-| 1296 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
-| 1300 | `AssetsService::updateAssetHostname` | **update** [assets](/code/tables/assets.md) (`hostname`) |  |
+| 1360 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
+| 1367 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
+| 1371 | `AssetsService::updateAssetHostname` | **update** [assets](/code/tables/assets.md) (`hostname`) |  |
 
 **Called from:** [includes/intune.php](/code/files/includes/intune.php.md)
 
 ### reconcileAsset
 
-*public static* - line 1318
+*public static* - line 1394
 
 Resolve, then - for a match made by link or serial - apply a reported rename. The single entry point every inventory source uses.
 
@@ -775,12 +775,12 @@ function reconcileAsset(
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$ids` | `array` |  |  |
+| `$ids` | `array` |  | what the source reported: asset_id (with `$isExplicitLink`), service_tag, hostname |
 | `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$source` | `string` | `'system'` |  |
-| `$isExplicitLink` | `bool` | `false` |  |
-| `$ignoredTags` | `?array` | `null` |  |
-| `$anyCompany` | `bool` | `false` |  |
+| `$source` | `string` | `'system'` | what reported it, e.g. 'software inventory', added to a rename's history row |
+| `$isExplicitLink` | `bool` | `false` | true when `$ids`['asset_id'] is a stored connector link to trust |
+| `$ignoredTags` | `?array` | `null` | placeholder serials from `getIgnoredServiceTags()`; null reads the setting |
+| `$anyCompany` | `bool` | `false` | true to match across every company - only for a connection with no company of its own |
 
 **Returns:** array{asset_id:?int, matched_by:string, ambiguous:bool, hostname_reused:?int, hostname_updated:bool, hostname_conflict:bool}
 
@@ -788,7 +788,7 @@ function reconcileAsset(
 
 ### createDiscoveredAsset
 
-*public static* - line 1342
+*public static* - line 1419
 
 Create an asset an inventory source has found - the inventory agents and Intune. The one place such an asset is written, so the tag, the transaction and the history row are the same whichever source found it (the three used to INSERT for themselves).
 
@@ -809,14 +809,14 @@ function createDiscoveredAsset(
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$fields` | `array` |  | column => value, from the discovered-asset columns below |
 | `$tenantId` | `?int` |  | the company it belongs to (NULL = Default) |
-| `$source` | `string` |  |  |
+| `$source` | `string` |  | what found it, e.g. 'the software inventory agent' - the history row's value |
 | `$hostnameReusedBy` | `?int` | `null` | the asset a refreshed machine's name still belongs to, if any |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1360 | `AssetsService::createDiscoveredAsset` | **insert** [assets](/code/tables/assets.md) |  |
+| 1437 | `AssetsService::createDiscoveredAsset` | **insert** [assets](/code/tables/assets.md) |  |
 
 **Called from:** [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md), [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md), [includes/intune.php](/code/files/includes/intune.php.md)
 

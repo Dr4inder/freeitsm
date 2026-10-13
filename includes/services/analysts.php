@@ -34,7 +34,11 @@ require_once __DIR__ . '/../rbac.php';
 
 final class AnalystsService
 {
-    /** The analyst row, or not_found. */
+    /**
+     * The analyst row, or not_found.
+     *
+     * @param int $id  the analyst to load
+     */
     public static function load(PDO $conn, int $id): array
     {
         $s = $conn->prepare("SELECT * FROM analysts WHERE id = ?");
@@ -49,6 +53,8 @@ final class AnalystsService
     /**
      * Create an analyst. $in: email (required), full_name, username (made unique),
      * auth_provider_id. Returns the new id.
+     *
+     * @param array $in  the request fields: email (required), full_name, username, auth_provider_id
      */
     public static function create(PDO $conn, ActorContext $ctx, array $in): int
     {
@@ -79,6 +85,9 @@ final class AnalystsService
      * Change an analyst. $in: any of full_name, email, is_active, auth_provider_id.
      * Setting auth_provider_id switches off "Follow team" (GH #41), which would
      * otherwise replace it on the next team change.
+     *
+     * @param int $id  the analyst to change
+     * @param array $in  the fields to change, any of full_name, email, is_active, auth_provider_id; absent keys are left alone
      */
     public static function update(PDO $conn, ActorContext $ctx, int $id, array $in): void
     {
@@ -138,6 +147,9 @@ final class AnalystsService
      *   effective.companies every company id they can reach
      *   effective.capabilities
      * ⚠️ The effective helpers cache per request, so only ask after any write.
+     *
+     * @param int $id  the analyst whose access to read
+     * @param bool $effective  true to add the 'effective' block (team grants and hand-assigned roles included)
      */
     public static function access(PDO $conn, int $id, bool $effective = true): array
     {
@@ -174,6 +186,9 @@ final class AnalystsService
      * Set access. $in: any of is_admin, all_modules, modules[], all_companies,
      * companies[], capabilities[]. Each list REPLACES what the analyst has in that
      * part; anything not sent stays as it is.
+     *
+     * @param int $id  the analyst whose access to set
+     * @param array $in  any of is_admin, all_modules, modules[], all_companies, companies[], capabilities[]; absent parts stay
      */
     public static function setAccess(PDO $conn, ActorContext $ctx, int $id, array $in): void
     {
@@ -241,6 +256,8 @@ final class AnalystsService
     /**
      * Refuse when this analyst is the last ACTIVE administrator - removing them
      * would leave nobody able to open System. Same rule as System -> Analysts.
+     *
+     * @param int $id  the administrator about to be demoted or deactivated
      */
     public static function assertNotLastAdmin(PDO $conn, int $id): void
     {
@@ -258,6 +275,8 @@ final class AnalystsService
      * Sets the capabilities of the analyst's API-managed role, creating the role the first
      * time and assigning it to them.
      *
+     * @param array $a  the analyst row, as loaded by load()
+     * @param array $caps  the validated capability keys the role should hold, replacing any it has; [] empties it
      * @writes rbac_roles, rbac_role_capabilities, rbac_analyst_roles - the role the
      *     REST API keeps for this analyst
      */
@@ -285,7 +304,11 @@ final class AnalystsService
         $conn->prepare("UPDATE rbac_roles SET updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$roleId]);
     }
 
-    /** Validates a list of module keys against the module registry. */
+    /**
+     * Validates a list of module keys against the module registry.
+     *
+     * @param mixed $v  the 'modules' value from the request - must be an array of module keys
+     */
     private static function moduleKeys($v): array
     {
         $keys = self::stringList($v, 'modules');
@@ -297,7 +320,11 @@ final class AnalystsService
         return $keys;
     }
 
-    /** Validates a list of company ids against the known companies. */
+    /**
+     * Validates a list of company ids against the known companies.
+     *
+     * @param mixed $v  the 'companies' value from the request - must be an array of tenant ids
+     */
     private static function companyIds(PDO $conn, $v): array
     {
         if (!is_array($v)) {
@@ -315,6 +342,8 @@ final class AnalystsService
     /**
      * Validates a list of capability keys, mapping retired keys to their current ones and
      * removing duplicates.
+     *
+     * @param mixed $v  the 'capabilities' value from the request - must be an array of capability keys
      */
     private static function capabilityKeys($v): array
     {
@@ -330,7 +359,12 @@ final class AnalystsService
         return array_values(array_unique($out));
     }
 
-    /** A list of unique trimmed strings; throws when the value is not an array. */
+    /**
+     * A list of unique trimmed strings; throws when the value is not an array.
+     *
+     * @param mixed $v  the request value that should be an array
+     * @param string $field  the request field name, used in the error message
+     */
     private static function stringList($v, string $field): array
     {
         if (!is_array($v)) {
@@ -339,14 +373,23 @@ final class AnalystsService
         return array_values(array_unique(array_map(fn($x) => trim((string)$x), $v)));
     }
 
-    /** A true/false input as a bool; accepts true, false, 0, 1, '0' or '1' and throws on anything else. */
+    /**
+     * A true/false input as a bool; accepts true, false, 0, 1, '0' or '1' and throws on anything else.
+     *
+     * @param mixed $v  the request value to read as true or false
+     * @param string $field  the request field name, used in the error message
+     */
     private static function flag($v, string $field): bool
     {
         if (is_bool($v) || $v === 0 || $v === 1 || $v === '0' || $v === '1') return (bool)(int)$v;
         throw new ServiceError('validation', 'invalid_field', "'$field' must be true or false.");
     }
 
-    /** A lower-case, validated email address, or null when blank. */
+    /**
+     * A lower-case, validated email address, or null when blank.
+     *
+     * @param mixed $v  the email address from the request; null or blank gives null
+     */
     private static function cleanEmail($v): ?string
     {
         $e = strtolower(trim((string)($v ?? '')));
@@ -357,7 +400,12 @@ final class AnalystsService
         return $e;
     }
 
-    /** Throws a conflict when another analyst already uses the email. */
+    /**
+     * Throws a conflict when another analyst already uses the email.
+     *
+     * @param string $email  the lower-cased email address to check
+     * @param int $exceptId  the analyst allowed to hold it already (the one being changed); 0 on create
+     */
     private static function assertEmailFree(PDO $conn, string $email, int $exceptId): void
     {
         $s = $conn->prepare("SELECT id FROM analysts WHERE LOWER(email) = ? AND id <> ?");
@@ -367,7 +415,11 @@ final class AnalystsService
         }
     }
 
-    /** A validated sign-in provider id, or null for none. */
+    /**
+     * A validated sign-in provider id, or null for none.
+     *
+     * @param mixed $v  the auth_provider_id from the request; null, '', 0 or '0' means none
+     */
     private static function providerId(PDO $conn, $v): ?int
     {
         if ($v === null || $v === '' || $v === 0 || $v === '0') return null;
@@ -380,7 +432,12 @@ final class AnalystsService
         return $id;
     }
 
-    /** The asked-for username, else the email's local part, made unique - the SSO sign-up rule. */
+    /**
+     * The asked-for username, else the email's local part, made unique - the SSO sign-up rule.
+     *
+     * @param string $want  the username asked for; '' falls back to the email's local part
+     * @param string $email  the analyst's email address
+     */
     private static function uniqueUsername(PDO $conn, string $want, string $email): string
     {
         $base = strtolower(preg_replace('/[^a-zA-Z0-9._-]/', '', $want !== '' ? $want : explode('@', $email)[0]));

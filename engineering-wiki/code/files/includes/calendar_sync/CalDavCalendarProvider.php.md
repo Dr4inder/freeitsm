@@ -1,6 +1,6 @@
 # includes/calendar_sync/CalDavCalendarProvider.php
 
-> PHP - 833 lines
+> PHP - 925 lines
 
 CalDavCalendarProvider — scheduled work into an analyst's calendar on any standard CalDAV server: Baikal, Nextcloud, Radicale, SOGo, Fastmail, iCloud.
 

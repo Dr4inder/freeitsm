@@ -36,6 +36,10 @@ const RP_TICKET_LOOKUPS = 'LEFT JOIN ticket_statuses ts ON ts.id = t.status_id L
 
 /**
  * WHERE for "tickets in this period, for this company, not trashed".
+ *
+ * @param string $basis  which tickets: 'created' or 'closed' in the range, or 'open' at its end
+ * @param array $range  the pack's range from rpResolveRange() - from_utc and to_utc are used
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  * @return array{0:string,1:array}
  */
 function rpTicketWhere(PDO $conn, int $analystId, string $basis, array $range, $tenant): array
@@ -56,7 +60,13 @@ function rpTicketWhere(PDO $conn, int $analystId, string $basis, array $range, $
     return [$w, $p];
 }
 
-/** Tickets block: a chart of tickets grouped by the chosen dimension (status, priority, category...). */
+/**
+ * Tickets block: a chart of tickets grouped by the chosen dimension (status, priority, category...).
+ *
+ * @param array $o  the block's cleaned options: by (an RP_TICKET_DIMENSIONS key), basis, limit, chart
+ * @param array $range  the pack's range from rpResolveRange()
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
+ */
 function rpTicketsBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$label, $join, $colour] = RP_TICKET_DIMENSIONS[$o['by']];
@@ -75,6 +85,11 @@ function rpTicketsBreakdown(PDO $conn, int $analystId, array $o, array $range, $
 /**
  * Turn [label, value, colour?] rows into chart data, folding everything past
  * `limit` into one "Other" slice so a pie never has fifty slivers.
+ *
+ * @param array $rows  the grouped rows, biggest first: label, value and optionally colour
+ * @param int $limit  how many slices to keep before the rest is folded into "Other"
+ * @param string $chart  the chart type, one of RP_CHART_TYPES
+ * @param string $seriesName  the series' name, e.g. "Tickets"
  */
 function rpChartFromRows(array $rows, int $limit, string $chart, string $seriesName): array
 {
@@ -102,6 +117,9 @@ function rpChartFromRows(array $rows, int $limit, string $chart, string $seriesN
 /**
  * Buckets for a time series over the range: day, week (Monday) or month, chosen
  * from the range's length when 'auto'. Returned as local-date keys with labels.
+ *
+ * @param array $range  the pack's range from rpResolveRange() - days, tz, from_date and to_date are used
+ * @param string $grouping  'day', 'week', 'month', or 'auto' to pick one from the range's length
  * @return array{0:string,1:array<string,string>}  [grouping, key => label]
  */
 function rpTimeBuckets(array $range, string $grouping): array
@@ -123,7 +141,12 @@ function rpTimeBuckets(array $range, string $grouping): array
     return [$grouping, $out];
 }
 
-/** The bucket a date falls in: the Monday of its week, its month (Y-m) or its day. */
+/**
+ * The bucket a date falls in: the Monday of its week, its month (Y-m) or its day.
+ *
+ * @param DateTimeImmutable $d  the date, already in the viewer's timezone
+ * @param string $grouping  'day', 'week' or 'month'
+ */
 function rpBucketKey(DateTimeImmutable $d, string $grouping): string
 {
     if ($grouping === 'week')  return $d->modify('monday this week')->format('Y-m-d');
@@ -131,7 +154,14 @@ function rpBucketKey(DateTimeImmutable $d, string $grouping): string
     return $d->format('Y-m-d');
 }
 
-/** Count UTC timestamps into local buckets. */
+/**
+ * Count UTC timestamps into local buckets.
+ *
+ * @param array $stamps  the UTC timestamps to count, 'Y-m-d H:i:s'
+ * @param array $range  the pack's range from rpResolveRange() - tz is used
+ * @param string $grouping  'day', 'week' or 'month' (as rpTimeBuckets() settled it)
+ * @param array $keys  the buckets from rpTimeBuckets(), key => label
+ */
 function rpBucketCount(array $stamps, array $range, string $grouping, array $keys): array
 {
     $zone = new DateTimeZone($range['tz']);
@@ -150,6 +180,10 @@ function rpBucketCount(array $stamps, array $range, string $grouping, array $key
  *
  * Bucketed in PHP from the timestamps, since the buckets are local days and the database
  * only knows UTC.
+ *
+ * @param array $o  the block's cleaned options: grouping, series ('created', 'closed' or 'both'), chart
+ * @param array $range  the pack's range from rpResolveRange()
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  */
 function rpTicketsTrend(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -174,6 +208,10 @@ function rpTicketsTrend(PDO $conn, int $analystId, array $o, array $range, $tena
 /**
  * Tickets block: KPI tiles - created, closed, open at the end of the period, average time
  * to close and first-time-fix rate.
+ *
+ * @param array $o  the block's cleaned options (none are read)
+ * @param array $range  the pack's range from rpResolveRange()
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  */
 function rpTicketsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -208,6 +246,10 @@ function rpTicketsKpis(PDO $conn, int $analystId, array $o, array $range, $tenan
 /**
  * Tickets block: a table of the tickets in the period, with the columns the block asks for,
  * up to its limit.
+ *
+ * @param array $o  the block's cleaned options: basis, limit, and the column switches status, priority, analyst, category, closed
+ * @param array $range  the pack's range from rpResolveRange()
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
  */
 function rpTicketsList(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -261,13 +303,21 @@ function rpTicketsList(PDO $conn, int $analystId, array $o, array $range, $tenan
 
 // ── Shared formatting (the viewer's own date format and timezone) ────────
 
-/** Formats a UTC date and time in the viewer's own format and timezone; '' for none. */
+/**
+ * Formats a UTC date and time in the viewer's own format and timezone; '' for none.
+ *
+ * @param ?string $utc  a UTC 'Y-m-d H:i:s' timestamp; null or '' gives ''
+ */
 function rpFmtDateTime(?string $utc): string
 {
     return $utc ? (function_exists('fmt_datetime') ? fmt_datetime($utc) : $utc) : '';
 }
 
-/** A LOCAL Y-m-d (already in the viewer's zone) in their date format. */
+/**
+ * A LOCAL Y-m-d (already in the viewer's zone) in their date format.
+ *
+ * @param string $ymd  a 'Y-m-d' date already in the viewer's timezone
+ */
 function rpFmtDate(string $ymd): string
 {
     if (!class_exists('DateFmt')) return $ymd;
@@ -275,7 +325,11 @@ function rpFmtDate(string $ymd): string
     return $d ? DateFmt::render($d, DateFmt::DATE_TEMPLATES[DateFmt::dateKey()]) : $ymd;
 }
 
-/** A number of seconds as a short duration: 45s, 12m, 3h 5m, 2d 4h. */
+/**
+ * A number of seconds as a short duration: 45s, 12m, 3h 5m, 2d 4h.
+ *
+ * @param int $seconds  the length of time in seconds
+ */
 function rpHumanDuration(int $seconds): string
 {
     if ($seconds < 60) return $seconds . 's';

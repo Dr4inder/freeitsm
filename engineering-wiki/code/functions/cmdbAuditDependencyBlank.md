@@ -11,7 +11,7 @@ marked as dependencies.
 function cmdbAuditDependencyBlank(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 139.
+Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 146.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,7 +24,7 @@ Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 141 | `cmdbAuditDependencyBlank` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
+| 148 | `cmdbAuditDependencyBlank` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ Outputs the scripts every analyst page shares: the analyst's toast, chime, searc
 function renderWaffleMenuJS()
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 750.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 754.
 
 **Reads:** user_preferences - so the bell and toasts need not ask on every page
 
@@ -14,7 +14,7 @@ Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 771 | `renderWaffleMenuJS` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 775 | `renderWaffleMenuJS` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Calls
 

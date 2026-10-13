@@ -66,6 +66,12 @@ class TicketsService
      * $tenantId is the adapter-resolved acting company. $defaultAnalystId is the
      * assignee when the caller sends none (UI: the creator; API: null).
      * Returns the new ticket id.
+     *
+     * @param array $in  subject (required), description, requester_email (required unless user_id), requester_name, user_id
+     *     (a requester the caller has already authorised), status_id/status, priority_id/priority, department_id,
+     *     ticket_type_id, origin_id, category_id, assigned_analyst_id, assigned_team_id, mailbox_id, sensitivity
+     * @param ?int $defaultAnalystId  the assignee when $in names none (UI: the creator; API: null for unassigned)
+     * @param string $creationNote  the text of the 'Ticket Created' audit row, e.g. "Created via API (key: X)"
      */
     public static function createTicket(PDO $conn, ActorContext $ctx, int $tenantId, array $in, ?int $defaultAnalystId, string $creationNote): int
     {
@@ -284,6 +290,10 @@ class TicketsService
      * Apply a partial update to a ticket. $writeAudit toggles the server-side
      * audit trail (API: true; UI: false — it audits client-side). Returns void;
      * the adapter reloads for its response.
+     *
+     * @param array $in  only the fields to change: subject, status/priority (by id or name), the lookup ids, assigned_analyst_id,
+     *     assigned_team_id, company_id, sensitivity, closed_message, work_start_at, work_end_at, work_all_day
+     * @param bool $writeAudit  true writes the ticket_audit rows here (API); false when the caller audits itself (UI)
      */
     public static function updateTicket(PDO $conn, ActorContext $ctx, int $ticketId, array $in, bool $writeAudit): void
     {
@@ -796,7 +806,11 @@ class TicketsService
     //  Soft delete / restore
     // ======================================================================
 
-    /** Move a ticket to the trash. $writeAudit -> the 'Trash' audit row (UI: true; API: false). */
+    /**
+     * Move a ticket to the trash. $writeAudit -> the 'Trash' audit row (UI: true; API: false).
+     *
+     * @param bool $writeAudit  true writes the 'Trash' audit row (UI); false for the API
+     */
     public static function deleteTicket(PDO $conn, ActorContext $ctx, int $ticketId, bool $writeAudit): void
     {
         $ticket = self::loadTicket($conn, $ctx, $ticketId);   // 404
@@ -814,7 +828,11 @@ class TicketsService
         calendarSyncReconcileTicket($conn, $ticketId);
     }
 
-    /** Restore a ticket from the trash. $writeAudit -> the 'Trash' audit row. */
+    /**
+     * Restore a ticket from the trash. $writeAudit -> the 'Trash' audit row.
+     *
+     * @param bool $writeAudit  true writes the 'Trash' audit row (UI); false for the API
+     */
     public static function restoreTicket(PDO $conn, ActorContext $ctx, int $ticketId, bool $writeAudit): void
     {
         $ticket = self::loadTicket($conn, $ctx, $ticketId);   // 404
@@ -831,7 +849,11 @@ class TicketsService
         calendarSyncReconcileTicket($conn, $ticketId);
     }
 
-    /** The canonical ticket workflow payload, built from a loaded (joined) row. */
+    /**
+     * The canonical ticket workflow payload, built from a loaded (joined) row.
+     *
+     * @param array $r  the ticket row, as loaded by loadTicket() or rowAfterUpdates()
+     */
     private static function eventTicket(array $r): array
     {
         return [
@@ -853,7 +875,11 @@ class TicketsService
     //  Notes
     // ======================================================================
 
-    /** Add a note. Returns the note id; touches the ticket's updated_datetime. */
+    /**
+     * Add a note. Returns the note id; touches the ticket's updated_datetime.
+     *
+     * @param array $in  text (required), is_internal (default true; false shares it with the requester and may email them)
+     */
     public static function createNote(PDO $conn, ActorContext $ctx, int $ticketId, array $in): int
     {
         $ticketRow = self::loadTicket($conn, $ctx, $ticketId);   // 404
@@ -936,7 +962,11 @@ class TicketsService
     //  Time entries
     // ======================================================================
 
-    /** Log time on a ticket. Returns the entry id. */
+    /**
+     * Log time on a ticket. Returns the entry id.
+     *
+     * @param array $in  minutes (required, above 0), notes, entry_at (ISO 8601; default now in UTC)
+     */
     public static function createTimeEntry(PDO $conn, ActorContext $ctx, int $ticketId, array $in): int
     {
         self::loadTicket($conn, $ctx, $ticketId);   // 404
@@ -955,7 +985,12 @@ class TicketsService
         return (int)$conn->lastInsertId();
     }
 
-    /** Edit a time entry (UI-only; only the owning analyst may edit). */
+    /**
+     * Edit a time entry (UI-only; only the owning analyst may edit).
+     *
+     * @param int $entryId  the time entry (ticket_time_entries.id) to edit; must be the actor's own
+     * @param array $in  minutes (required, above 0), notes, entry_at (ISO 8601; default now in UTC)
+     */
     public static function updateTimeEntry(PDO $conn, ActorContext $ctx, int $entryId, int $ticketId, array $in): void
     {
         self::loadTicket($conn, $ctx, $ticketId);   // 404
@@ -985,6 +1020,9 @@ class TicketsService
      * Soft-delete a time entry. $ticketId scopes it (API route); pass null to
      * resolve the ticket from the entry (the UI passes only the entry id).
      * $restrictToOwner enforces the UI's "only your own entry" rule.
+     *
+     * @param int $entryId  the time entry (ticket_time_entries.id) to remove
+     * @param bool $restrictToOwner  true allows only the analyst who logged it (UI); false allows any entry on a reachable ticket (API)
      */
     public static function deleteTimeEntry(PDO $conn, ActorContext $ctx, int $entryId, ?int $ticketId, bool $restrictToOwner): void
     {
@@ -1026,6 +1064,7 @@ class TicketsService
      * is actually written. Entries with no placeholder (closed_datetime =
      * UTC_TIMESTAMP()) consume no argument.
      *
+     * @param array $current  the ticket row before the update, as loaded by loadTicket()
      * @param string[] $updates  "column = ?" / "column = <expr>" fragments
      * @param array    $args     the placeholder values, in order
      */
@@ -1109,7 +1148,13 @@ class TicketsService
         return in_array($tid, $ctx->companyScope, true);
     }
 
-    /** Records one field change in the ticket's audit trail. */
+    /**
+     * Records one field change in the ticket's audit trail.
+     *
+     * @param string $field  the audit field label, e.g. 'Status', 'Team', 'Trash', 'Ticket Created'
+     * @param ?string $old  the value before, or null
+     * @param ?string $new  the value after, or null
+     */
     private static function auditWrite(PDO $conn, int $ticketId, int $analystId, string $field, ?string $old, ?string $new): void
     {
         $conn->prepare(
@@ -1130,7 +1175,11 @@ class TicketsService
     // format reaching one of them would have given analyst-raised, portal and
     // emailed tickets three different schemes.
 
-    /** Resolve a status by name or id. Returns [id, name, is_closed] or null. */
+    /**
+     * Resolve a status by name or id. Returns [id, name, is_closed] or null.
+     *
+     * @param array $in  the request: status_id wins over status (a name); neither gives null, unknown throws
+     */
     private static function resolveStatus(PDO $conn, array $in): ?array
     {
         if (isset($in['status_id']) && $in['status_id'] !== '' && $in['status_id'] !== null) {
@@ -1149,7 +1198,11 @@ class TicketsService
         return [(int)$row['id'], $row['name'], (int)$row['is_closed']];
     }
 
-    /** Resolve a priority by name or id. Empty string/null id = clear. */
+    /**
+     * Resolve a priority by name or id. Empty string/null id = clear.
+     *
+     * @param array $in  the request: priority_id (null or '' clears) wins over priority (a name); neither gives null
+     */
     private static function resolvePriority(PDO $conn, array $in): ?array
     {
         if (array_key_exists('priority_id', $in)) {
@@ -1179,7 +1232,11 @@ class TicketsService
      * "is this category allowed on this ticket type?" can never be answered from
      * the row itself — it has to climb. NULL means "offered whatever the type is".
      */
-    /** A team's name for the audit trail, or null. Never throws — this is a label. */
+    /**
+     * A team's name for the audit trail, or null. Never throws — this is a label.
+     *
+     * @param ?int $teamId  the team (teams.id); null or 0 gives null
+     */
     private static function teamName(PDO $conn, ?int $teamId): ?string
     {
         if (!$teamId) return null;
@@ -1196,6 +1253,8 @@ class TicketsService
     /**
      * The ticket type a category is bound to, taken from its top-level category; null when
      * unbound or it cannot be worked out.
+     *
+     * @param int $categoryId  the ticket category (ticket_categories.id) to start from
      */
     private static function categoryEffectiveTypeId(PDO $conn, int $categoryId): ?int
     {
@@ -1221,7 +1280,13 @@ class TicketsService
         return null;
     }
 
-    /** The name of a row in a lookup table, or null for no id; throws for an unknown id. */
+    /**
+     * The name of a row in a lookup table, or null for no id; throws for an unknown id.
+     *
+     * @param string $table  the lookup table, e.g. 'departments', 'ticket_types', 'teams' - a developer literal
+     * @param mixed $id  the id as sent; null or '' gives null
+     * @param string $label  what the lookup is called in the error message, e.g. 'ticket type'
+     */
     private static function validateLookupId(PDO $conn, string $table, $id, string $label): ?string
     {
         if ($id === null || $id === '') {
@@ -1236,7 +1301,12 @@ class TicketsService
         return $name;
     }
 
-    /** Parse a date to UTC 'Y-m-d H:i:s' (mirrors apiParseDate; 400 on garbage). */
+    /**
+     * Parse a date to UTC 'Y-m-d H:i:s' (mirrors apiParseDate; 400 on garbage).
+     *
+     * @param string $value  a date and time in any form DateTimeImmutable reads; with no zone it is read as UTC
+     * @param string $field  the field name, used in the error message
+     */
     private static function parseDate(string $value, string $field): string
     {
         $v = trim($value);

@@ -24,6 +24,7 @@ if (!in_array($module, DEMO_MODULES, true)) {
 }
 
 // Helper: get primary key column name for a table
+// @param mixed $tableName  the table a demo record goes into
 function getPrimaryKeyColumn($tableName) {
     $special = [
         'morningChecks_Checks' => 'CheckID',
@@ -34,6 +35,8 @@ function getPrimaryKeyColumn($tableName) {
 }
 
 // Helper: resolve @table.ref references to real IDs
+// @param mixed $record  one demo record, column => value; a value starting @ is a reference like @table.ref
+// @param mixed $idMap  the ids inserted so far, keyed 'table.ref'
 function resolveReferences($record, $idMap) {
     foreach ($record as $key => $value) {
         if (is_string($value) && strpos($value, '@') === 0) {
@@ -48,6 +51,7 @@ function resolveReferences($record, $idMap) {
 }
 
 // Helper: resolve special tokens
+// @param mixed $record  one demo record, column => value; tokens such as __NOW__ or __RELATIVE_DATE:-3d__ are replaced
 function resolveTokens($record, $conn) {
     foreach ($record as $key => $value) {
         if (!is_string($value)) continue;
@@ -80,6 +84,7 @@ function resolveTokens($record, $conn) {
 }
 
 // Helper: pick canvas-default size for a step type
+// @param mixed $type  the process step type, e.g. 'decision', 'start' or 'document'
 function processMapperDefaultSize($type) {
     switch ($type) {
         case 'decision': return [140, 140];
@@ -93,6 +98,7 @@ function processMapperDefaultSize($type) {
 // in $demoData['tier2']['process_steps'] using a left-to-right layered placement.
 // Each process is laid out independently. Edges that point "backwards" in JSON
 // authoring order are treated as cycle-closing back-edges and ignored for ranking.
+// @param array $demoData  the whole demo data set, by reference; tier2 process_steps get x, y, width and height
 function autoLayoutProcessMapper(array &$demoData) {
     if (empty($demoData['tier2']['process_steps'])) return;
     $allSteps = &$demoData['tier2']['process_steps'];

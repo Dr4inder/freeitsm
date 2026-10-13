@@ -11,11 +11,11 @@ because its guess gets repeated to the business.
 function warbotSystemPrompt(string $channelName): string
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 149.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 155.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$channelName` | `string` |  |  |
+| `$channelName` | `string` |  | the channel's display name, written into the prompt |
 
 **Returns:** `string`
 

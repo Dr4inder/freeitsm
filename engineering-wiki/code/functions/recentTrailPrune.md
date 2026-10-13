@@ -6,7 +6,7 @@ Keep the log to its cap, by count and by age.
 function recentTrailPrune(PDO $conn, int $analystId): void
 ```
 
-Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 240.
+Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 246.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 243 | `recentTrailPrune` | **delete** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
-| 253 | `recentTrailPrune` | **delete** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
+| 249 | `recentTrailPrune` | **delete** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
+| 259 | `recentTrailPrune` | **delete** [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
 
 ## Called from
 

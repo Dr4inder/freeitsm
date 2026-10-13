@@ -6,7 +6,7 @@ May this key access this ticket (by its owning company)? Unknown id => false.
 function apiKeyCanAccessTicket(PDO $conn, array $apiKey, int $ticketId): bool
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 246.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 263.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

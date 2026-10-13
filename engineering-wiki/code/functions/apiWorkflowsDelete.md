@@ -6,7 +6,7 @@ DELETE /workflows/{id} — executions survive (the module's audit-trail intent) 
 function apiWorkflowsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 294.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 316.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 299 | `apiWorkflowsDelete` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_name`, `workflow_id`) |  |
-| 303 | `apiWorkflowsDelete` | **delete** [workflows](/code/tables/workflows.md) |  |
+| 321 | `apiWorkflowsDelete` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_name`, `workflow_id`) |  |
+| 325 | `apiWorkflowsDelete` | **delete** [workflows](/code/tables/workflows.md) |  |
 
 ## Calls
 

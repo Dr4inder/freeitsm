@@ -20,15 +20,15 @@ function rfpAiExtractRequirements(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 524.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 559.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rfpId` | `int` |  |  |
-| `$documentId` | `int` |  |  |
-| `$rawText` | `string` |  |  |
-| `$departmentName` | `string` |  |  |
+| `$rfpId` | `int` |  | the rfps id, for the log |
+| `$documentId` | `int` |  | the rfp_documents id being read, for the log |
+| `$rawText` | `string` |  | the document's text, as extracted from the upload |
+| `$departmentName` | `string` |  | the department that wrote the document, given to the model as context |
 
 **Returns:** `array`
 

@@ -32,7 +32,11 @@ class CalendarService
     //  Events (UI + API)
     // ======================================================================
 
-    /** Create (no id) or update (id present) an event. Returns ['id','created']. */
+    /**
+     * Create (no id) or update (id present) an event. Returns ['id','created'].
+     *
+     * @param array $in  id (absent = new), title, description, category_id, start_at, end_at, all_day, location, contract_id
+     */
     public static function saveEvent(PDO $conn, ActorContext $ctx, array $in): array
     {
         if (!empty($in['id'])) {
@@ -88,7 +92,11 @@ class CalendarService
         return ['id' => $newId, 'created' => true];
     }
 
-    /** Delete an event. 404 if missing, 409 if generated. Returns the id. */
+    /**
+     * Delete an event. 404 if missing, 409 if generated. Returns the id.
+     *
+     * @param int $id  the calendar_events row to delete
+     */
     public static function deleteEvent(PDO $conn, ActorContext $ctx, int $id): int
     {
         $current = self::loadEventRow($conn, $id);
@@ -102,7 +110,11 @@ class CalendarService
     //  Categories (UI-only — no API twin; behaviour preserved verbatim)
     // ======================================================================
 
-    /** Create (no id) or update (id present) a category. Returns ['id','created']. */
+    /**
+     * Create (no id) or update (id present) a category. Returns ['id','created'].
+     *
+     * @param array $in  id (absent = new), name, color (#rrggbb, default #ef6c00), description, is_active
+     */
     public static function saveCategory(PDO $conn, ActorContext $ctx, array $in): array
     {
         $name = trim((string)($in['name'] ?? ''));
@@ -133,7 +145,11 @@ class CalendarService
         return ['id' => $newId, 'created' => true];
     }
 
-    /** Delete a category — refused (409) while events still use it. Returns the id. */
+    /**
+     * Delete a category — refused (409) while events still use it. Returns the id.
+     *
+     * @param int $id  the calendar_categories row to delete
+     */
     public static function deleteCategory(PDO $conn, ActorContext $ctx, int $id): int
     {
         if ($id <= 0) {
@@ -159,7 +175,11 @@ class CalendarService
     //  Internals
     // ======================================================================
 
-    /** Loads one calendar event; throws not found when it does not exist. */
+    /**
+     * Loads one calendar event; throws not found when it does not exist.
+     *
+     * @param int $id  the calendar_events row to load
+     */
     private static function loadEventRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare("SELECT * FROM calendar_events WHERE id = ?");
@@ -171,7 +191,11 @@ class CalendarService
         return $row;
     }
 
-    /** Generated rows belong to their sync — never edited/deleted through here. */
+    /**
+     * Generated rows belong to their sync — never edited/deleted through here.
+     *
+     * @param array $event  the calendar_events row; a non-empty source means a sync made it
+     */
     private static function guardGenerated(array $event): void
     {
         if ($event['source'] !== null && $event['source'] !== '') {
@@ -183,6 +207,9 @@ class CalendarService
      * Collect + validate the writable event fields (mirrors the API resource's
      * apiCalendarEventFields). On update, absent keys fall back to the current
      * row. Datetimes are naive server-local (Z/offset rejected).
+     *
+     * @param array $in  the request fields; only keys present are taken from here
+     * @param array $current  the stored event row on update, for absent keys; [] on create
      */
     private static function collectEventFields(PDO $conn, array $in, array $current = [], ?ActorContext $ctx = null): array
     {
@@ -239,6 +266,9 @@ class CalendarService
      * Parse a NAIVE local datetime ("YYYY-MM-DD HH:MM[:SS]", T separator OK,
      * date-only OK). Throws on timezone designators — naive-local by design.
      * (Throwing twin of the resource's apiParseNaiveDatetime.)
+     *
+     * @param mixed $value  the date or date-time from the request, server-local with no zone; null or '' gives null
+     * @param string $field  the request field name, used in the error message
      */
     private static function parseNaiveDatetime($value, string $field): ?string
     {

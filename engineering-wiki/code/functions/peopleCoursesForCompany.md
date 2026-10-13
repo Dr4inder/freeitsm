@@ -6,7 +6,7 @@ Per course, how many people in the company have finished it and how many are par
 function peopleCoursesForCompany(PDO $conn, int $tenantId): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 514.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 553.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 514.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 519 | `peopleCoursesForCompany` | read [lms_progress](/code/tables/lms_progress.md), read [users](/code/tables/users.md), read [lms_courses](/code/tables/lms_courses.md) |  |
+| 558 | `peopleCoursesForCompany` | read [lms_progress](/code/tables/lms_progress.md), read [users](/code/tables/users.md), read [lms_courses](/code/tables/lms_courses.md) |  |
 
 ## Calls
 

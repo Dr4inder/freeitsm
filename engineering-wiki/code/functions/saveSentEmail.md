@@ -16,25 +16,25 @@ somebody else must never become a file the server would execute.
 function saveSentEmail($conn, $ticketId, $mailbox, $to, $cc, $subject, $body, $attachments = [])
 ```
 
-Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 767.
+Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 818.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ticketId` |  |  |  |
-| `$mailbox` |  |  |  |
-| `$to` |  |  |  |
-| `$cc` |  |  |  |
-| `$subject` |  |  |  |
-| `$body` |  |  |  |
-| `$attachments` |  | `[]` |  |
+| `$ticketId` |  |  | the ticket the email was sent from |
+| `$mailbox` |  |  | the target_mailboxes row it was sent from - id, target_mailbox and mailbox_name are stored |
+| `$to` |  |  | the To addresses as typed |
+| `$cc` |  |  | the Cc addresses as typed |
+| `$subject` |  |  | the email subject |
+| `$body` |  |  | the analyst's HTML text, without the quoted thread |
+| `$attachments` |  | `[]` | the files the analyst attached, from the request: [{name, type, content (base64)}, ...] |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 769 | `saveSentEmail` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `cc_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction`, `mailbox_id`) |  |
-| 793 | `saveSentEmail` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
+| 820 | `saveSentEmail` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `cc_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction`, `mailbox_id`) |  |
+| 844 | `saveSentEmail` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
 
 ## Calls
 

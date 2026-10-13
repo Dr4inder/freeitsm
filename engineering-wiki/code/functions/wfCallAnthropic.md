@@ -14,14 +14,14 @@ function wfCallAnthropic(
 ): string
 ```
 
-Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 117.
+Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$systemPrompt` | `string` |  |  |
-| `$userMessage` | `string` |  |  |
-| `$maxTokens` | `int` |  |  |
+| `$cfg` | `array` |  | the AI settings - model, api_key and verify_ssl are read |
+| `$systemPrompt` | `string` |  | the system prompt sent as the Messages API "system" field |
+| `$userMessage` | `string` |  | the single user message to answer |
+| `$maxTokens` | `int` |  | the most tokens the reply may use |
 
 **Returns:** `string`
 

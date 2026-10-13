@@ -6,7 +6,7 @@ PATCH /tasks/{id}
 function apiTasksUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 390.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 392.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,6 +1,6 @@
 # includes/contract_report.php
 
-> PHP - 165 lines
+> PHP - 170 lines
 
 The equipment report for a contract: what it covers, on one page.
 
@@ -20,14 +20,14 @@ it has to be a string.
 | [contractReportCss()](/code/functions/contractReportCss.md) | 20 | Returns the contract equipment report's stylesheet as a string, so it can be inlined into the printable page and the emailed copy. |
 | [contractReportPrintCss()](/code/functions/contractReportPrintCss.md) | 44 | Extra rules that only matter on paper. |
 | [contractReportBody()](/code/functions/contractReportBody.md) | 60 | The report body. No <html> wrapper — the page and the email each supply their own, because one needs a stylesheet link and the other needs it inlined. |
-| [contractReportAssetName()](/code/functions/contractReportAssetName.md) | 131 | What to call a piece of equipment on the report. |
-| [contractReportLoad()](/code/functions/contractReportLoad.md) | 143 | The contract, with the supplier and owner names the report shows. Returns null when there is no such contract. |
+| [contractReportAssetName()](/code/functions/contractReportAssetName.md) | 134 | What to call a piece of equipment on the report. |
+| [contractReportLoad()](/code/functions/contractReportLoad.md) | 148 | The contract, with the supplier and owner names the report shows. Returns null when there is no such contract. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 150 | `contractReportLoad` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md) |  |
+| 155 | `contractReportLoad` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

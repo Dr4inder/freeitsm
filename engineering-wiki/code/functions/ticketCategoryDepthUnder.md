@@ -9,12 +9,12 @@ rather than discovering it when a report cannot render.
 function ticketCategoryDepthUnder(PDO $conn, ?int $parentId): int
 ```
 
-Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md), line 230.
+Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md), line 233.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$parentId` | `?int` |  |  |
+| `$parentId` | `?int` |  | the would-be parent category; null or 0 for a root |
 
 **Returns:** `int`
 
@@ -22,7 +22,7 @@ Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categori
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 236 | `ticketCategoryDepthUnder` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 239 | `ticketCategoryDepthUnder` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
 
 ## Called from
 

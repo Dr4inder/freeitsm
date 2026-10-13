@@ -37,6 +37,11 @@ class TelegramProvider extends MessagingProvider
     /**
      * Checks the secret token Telegram sends in the X-Telegram-Bot-Api-Secret-Token header;
      * no secret configured means refuse.
+     *
+     * @param string $rawBody  the raw request body (not used)
+     * @param array $headers  the request headers, lower-cased keys - x-telegram-bot-api-secret-token is checked
+     * @param array $params  the parsed POST parameters (not used)
+     * @param string $url  the public URL that was hit (not used)
      */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
@@ -51,7 +56,12 @@ class TelegramProvider extends MessagingProvider
         return hash_equals($expected, $presented);
     }
 
-    /** Turns a Telegram update into inbound messages - a CSAT rating press, or a new or edited message. */
+    /**
+     * Turns a Telegram update into inbound messages - a CSAT rating press, or a new or edited message.
+     *
+     * @param string $rawBody  the raw JSON Telegram update
+     * @param array $params  the parsed POST parameters (not used)
+     */
     public function parseInbound(string $rawBody, array $params): array
     {
         $payload = json_decode($rawBody, true);
@@ -134,7 +144,11 @@ class TelegramProvider extends MessagingProvider
         return [$entry];
     }
 
-    /** Pull the largest/only file out of whichever media field is present. */
+    /**
+     * Pull the largest/only file out of whichever media field is present.
+     *
+     * @param array $message  a Telegram message object, decoded
+     */
     private function extractMedia(array $message): array
     {
         if (!empty($message['photo']) && is_array($message['photo'])) {
@@ -161,7 +175,12 @@ class TelegramProvider extends MessagingProvider
         return [];
     }
 
-    /** Sends a text message to a chat and returns Telegram's message id. */
+    /**
+     * Sends a text message to a chat and returns Telegram's message id.
+     *
+     * @param string $to  the Telegram chat id; '' throws
+     * @param string $body  the message text
+     */
     public function sendMessage(string $to, string $body): string
     {
         $token = $this->channel['credentials']['bot_token'] ?? '';
@@ -191,7 +210,11 @@ class TelegramProvider extends MessagingProvider
         return (string) ($json['result']['message_id'] ?? '');
     }
 
-    /** A rating press (PR #166): one normalised entry carrying 'csat' for ingest.php. */
+    /**
+     * A rating press (PR #166): one normalised entry carrying 'csat' for ingest.php.
+     *
+     * @param array $cb  the update's callback_query object, decoded; only csat:<id>:<1-5> data is read
+     */
     private function parseRatingPress(array $cb): array
     {
         $data = (string)($cb['data'] ?? '');
@@ -224,7 +247,13 @@ class TelegramProvider extends MessagingProvider
         ]];
     }
 
-    /** Show the 1–5 buttons under the rating question. */
+    /**
+     * Show the 1–5 buttons under the rating question.
+     *
+     * @param string $to  the Telegram chat id
+     * @param string $text  the rating question
+     * @param int $responseId  the ticket_csat_responses id each button carries back
+     */
     public function sendRatingRequest(string $to, string $text, int $responseId): string
     {
         $token = $this->channel['credentials']['bot_token'] ?? '';
@@ -260,6 +289,11 @@ class TelegramProvider extends MessagingProvider
      * no buttons that would silently do nothing if tapped again.
      *
      * Best-effort, like the toast: the rating is already saved.
+     *
+     * @param string $chatId  the Telegram chat id; '' does nothing
+     * @param string $messageId  the id of the message holding the buttons; '' does nothing
+     * @param string $question  the question text to keep
+     * @param string $answerLine  the line saying what they chose, added under the question
      */
     public function closeRatingRequest(string $chatId, string $messageId, string $question, string $answerLine): void
     {
@@ -282,6 +316,9 @@ class TelegramProvider extends MessagingProvider
     /**
      * Stop the button's loading spinner and show a short toast. Best-effort: a
      * failure here must never undo a rating that has already been saved.
+     *
+     * @param string $callbackQueryId  the callback_query id from the button press; '' does nothing
+     * @param string $text  the short toast shown to the customer
      */
     public function answerCallbackQuery(string $callbackQueryId, string $text): void
     {
@@ -308,6 +345,10 @@ class TelegramProvider extends MessagingProvider
      *
      * One-time keyboard: it disappears from their client after one tap, so it
      * doesn't linger once the identity gate (ingest.php) has what it needs.
+     *
+     * @param string $chatId  the Telegram chat id
+     * @param string $promptText  the message asking for their number
+     * @param string $buttonText  the label on the share button
      */
     public function requestContact(string $chatId, string $promptText, string $buttonText = 'Share phone number'): string
     {
@@ -346,6 +387,10 @@ class TelegramProvider extends MessagingProvider
      * no 24h window to work around), so a "template" here is just this app's
      * own stored body with {{n}} placeholders rendered and sent as a normal
      * message.
+     *
+     * @param string $to  the Telegram chat id
+     * @param array $template  a messaging_templates row - its body, with {{n}} placeholders
+     * @param array $vars  ordered values for {{1}}, {{2}}, ...
      */
     public function sendTemplate(string $to, array $template, array $vars): string
     {
@@ -356,7 +401,11 @@ class TelegramProvider extends MessagingProvider
         return $this->sendMessage($to, $body);
     }
 
-    /** Downloads an inbound file: resolves its file id to a path, then fetches the bytes. */
+    /**
+     * Downloads an inbound file: resolves its file id to a path, then fetches the bytes.
+     *
+     * @param array $item  one entry from parseInbound()'s 'media' list (id = Telegram file id, content_type, filename)
+     */
     public function downloadMedia(array $item): array
     {
         $token = $this->channel['credentials']['bot_token'] ?? '';
@@ -400,6 +449,13 @@ class TelegramProvider extends MessagingProvider
      * dimension limits beyond the flat 50MB bot API cap).
      *
      * Uploaded as multipart/form-data through the shared httpMultipart().
+     *
+     * @param string $to  the Telegram chat id
+     * @param string $filePath  the file on this server's disk, already validated
+     * @param string $mimeType  the file's MIME type - image/* (not SVG) goes as a photo, anything else as a document
+     * @param string $caption  text sent with the file, cut to 1,024 characters; '' for none
+     * @param string $publicUrl  not used - Telegram takes an upload
+     * @param string $filename  the name the recipient sees; '' uses the stored name
      */
     public function sendMedia(string $to, string $filePath, string $mimeType, string $caption = '', string $publicUrl = '', string $filename = ''): string
     {
@@ -446,6 +502,8 @@ class TelegramProvider extends MessagingProvider
      * drop_pending_updates is deliberately NOT set: messages sent while the bot
      * was unregistered should still arrive once it is.
      *
+     * @param string $url  this channel's public webhook URL; must be https
+     * @param string $secret  the secret Telegram sends back on every delivery (the channel's verify_token)
      * @return string Telegram's own description, e.g. "Webhook was set"
      */
     public function setWebhook(string $url, string $secret): string

@@ -19,6 +19,8 @@ require_once '../../includes/tenancy.php';
 /**
  * Answers {success: false, error} as JSON and stops - used instead of the zip download
  * when the package cannot be built.
+ *
+ * @param string $message  the error shown to the admin
  */
 function teamsPackageFail(string $message): void
 {

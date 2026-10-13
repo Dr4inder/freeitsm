@@ -9,12 +9,12 @@ caller that forgets to check gets nothing rather than everything.
 function ssPortalIncidents(PDO $conn, int $limit = 25): array
 ```
 
-Defined in [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md), line 81.
+Defined in [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md), line 87.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$limit` | `int` | `25` |  |
+| `$limit` | `int` | `25` | the most incidents to return |
 
 **Returns:** `array`
 
@@ -22,10 +22,10 @@ Defined in [includes/service_status_portal.php](/code/files/includes/service_sta
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 95 | `ssPortalIncidents` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 112 | `ssPortalIncidents` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 133 | `ssPortalIncidents` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 160 | `ssPortalIncidents` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 101 | `ssPortalIncidents` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 118 | `ssPortalIncidents` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 139 | `ssPortalIncidents` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 166 | `ssPortalIncidents` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
 
 ## Calls
 

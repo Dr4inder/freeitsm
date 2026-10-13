@@ -26,6 +26,8 @@ require_once __DIR__ . '/documents.php';
  * Separate from rendering so a page that mounts the panel itself — one whose
  * record changes in JavaScript, like the asset detail view — can still get the
  * assets without a server-rendered container.
+ *
+ * @param string $pathPrefix  '' from the web root, '../' from a module folder - put before the asset URLs
  */
 function documentsPanelAssets(string $pathPrefix = '../'): void
 {

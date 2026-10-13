@@ -10,11 +10,11 @@ did not mean to raise.
 function integrationsLooksLikePriorityRejection(string $message): bool
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1056.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1126.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$message` | `string` |  |  |
+| `$message` | `string` |  | the error message the tracker's create call threw |
 
 **Returns:** `bool`
 

@@ -50,6 +50,9 @@ domainApiRun(function () use ($conn, $ctx, $analystId) {
  * CSV columns carry names; the service wants ids. status / owner / registrar
  * are matched by name (case-insensitive); an unmatched name is dropped rather
  * than failing the row — the domain is still worth having.
+ *
+ * @param array $fields  the domain fields mapped from the row so far; ids already set are left alone
+ * @param array $row  the CSV row keyed by column name - status, owner and registrar are read as names
  */
 function domainImportResolveNames(PDO $conn, array $fields, array $row): array
 {

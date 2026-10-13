@@ -6,12 +6,12 @@ Freeze a test into what a candidate will sit. Throws, with a sentence an analyst
 function lmsCtBuildSnapshot(PDO $conn, int $testId): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 220.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 264.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$testId` | `int` |  |  |
+| `$testId` | `int` |  | the lms_ct_tests id to freeze |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 222 | `lmsCtBuildSnapshot` | read [lms_ct_tests](/code/tables/lms_ct_tests.md) |  |
+| 266 | `lmsCtBuildSnapshot` | read [lms_ct_tests](/code/tables/lms_ct_tests.md) |  |
 
 ## Calls
 

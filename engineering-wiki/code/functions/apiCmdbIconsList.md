@@ -6,7 +6,7 @@ GET /cmdb-icons - the icon catalogue (key, label, active), the valid values for 
 function apiCmdbIconsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 939.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 1010.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 941 | `apiCmdbIconsList` | read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
+| 1012 | `apiCmdbIconsList` | read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
 
 ## Calls
 

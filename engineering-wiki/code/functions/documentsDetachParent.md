@@ -9,13 +9,13 @@ the links go at the moment the parent does.
 function documentsDetachParent(PDO $conn, string $parentType, int $parentId): int
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 597.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 622.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$parentType` | `string` |  |  |
-| `$parentId` | `int` |  |  |
+| `$parentType` | `string` |  | the deleted record's entity type key from `documentEntityRegistry()`; unknown does nothing |
+| `$parentId` | `int` |  | the deleted record's id |
 
 **Returns:** int links removed
 
@@ -23,7 +23,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 601 | `documentsDetachParent` | **delete** [document_links](/code/tables/document_links.md) |  |
+| 626 | `documentsDetachParent` | **delete** [document_links](/code/tables/document_links.md) |  |
 
 ## Calls
 

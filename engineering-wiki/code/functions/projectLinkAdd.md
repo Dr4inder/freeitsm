@@ -15,15 +15,15 @@ function projectLinkAdd(
 ): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 254.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 279.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
-| `$kind` | `string` |  |  |
-| `$targetId` | `int` |  |  |
+| `$kind` | `string` |  | the link kind, e.g. 'asset' |
+| `$targetId` | `int` |  | the id of the record to link |
 
 **Returns:** `bool`
 

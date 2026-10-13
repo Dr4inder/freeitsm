@@ -6,13 +6,13 @@ Is this user id this chat's own placeholder (and not a real person)?
 function messagingTelegramIsPlaceholder(PDO $conn, int $userId, string $chatId): bool
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 522.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 551.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
-| `$chatId` | `string` |  |  |
+| `$userId` | `int` |  | the users.id to check |
+| `$chatId` | `string` |  | the Telegram chat id |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 524 | `messagingTelegramIsPlaceholder` | read [users](/code/tables/users.md) |  |
+| 553 | `messagingTelegramIsPlaceholder` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

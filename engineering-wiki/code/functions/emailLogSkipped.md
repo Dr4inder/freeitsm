@@ -25,16 +25,16 @@ function emailLogSkipped(
 ): void
 ```
 
-Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 141.
+Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 172.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `?array` |  |  |
-| `$route` | `string` |  |  |
-| `$to` | `string` |  |  |
-| `$subject` | `string` |  |  |
-| `$reason` | `string` |  |  |
+| `$mailbox` | `?array` |  | the target_mailboxes row it would have gone through, or null if none was looked up |
+| `$route` | `string` |  | a key of EMAIL_LOG_ROUTES saying which path decided not to send |
+| `$to` | `string` |  | the address that would have received it |
+| `$subject` | `string` |  | the subject the email would have had |
+| `$reason` | `string` |  | why it was not sent, in plain words - stored as the row's message |
 | `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

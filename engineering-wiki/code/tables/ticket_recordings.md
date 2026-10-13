@@ -30,8 +30,8 @@
 |---|---|---|
 | [api/self-service/get_recording.php](/code/files/api/self-service/get_recording.php.md) | L31 |  |
 | [api/self-service/get_ticket_detail.php](/code/files/api/self-service/get_ticket_detail.php.md) | L255 |  |
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L331 |  |
-| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L553 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L341 |  |
+| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L576 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L306 |  |
 | [includes/ticket_recordings.php](/code/files/includes/ticket_recordings.php.md) | claimPendingRecordings L60 |  |
 

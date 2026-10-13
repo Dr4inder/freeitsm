@@ -99,6 +99,9 @@ if (!isset($data['hostname']) || trim($data['hostname']) === '') {
 $hostname = trim($data['hostname']);
 
 // Helper: get string value or null
+// @param mixed $data  one section of the agent's decoded JSON report (untrusted)
+// @param mixed $key  the field to read from it
+// @param mixed $maxLen  the most characters to keep (the column length); null or 0 keeps it all
 function strOrNull($data, $key, $maxLen = null) {
     $val = $data[$key] ?? null;
     if ($val === null || (is_string($val) && trim($val) === '')) return null;
@@ -108,6 +111,8 @@ function strOrNull($data, $key, $maxLen = null) {
 }
 
 // Helper: get int/bigint value or null
+// @param mixed $data  one section of the agent's decoded JSON report (untrusted)
+// @param mixed $key  the field to read; anything not numeric comes back as null
 function intOrNull($data, $key) {
     return isset($data[$key]) && is_numeric($data[$key]) ? (int)$data[$key] : null;
 }
@@ -266,6 +271,8 @@ $leftUnchanged = [];
  *
  * Silence is the other half of the bug, so a skipped section is NAMED in the
  * response rather than looking like a successful sync of nothing.
+ *
+ * @param mixed $value  one section of the report, e.g. $data['disks']; only a non-empty array counts
  */
 function reportHas($value): bool {
     return !empty($value) && is_array($value);

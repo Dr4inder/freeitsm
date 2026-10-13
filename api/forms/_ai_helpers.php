@@ -42,6 +42,8 @@ const FORMS_AI_MODEL_OPTIONS = [
 /**
  * Apply the global SSL_VERIFY_PEER kill switch on top of the per-form
  * toggle. Same behaviour as the equivalent helper on Workflow.
+ *
+ * @param bool $perCallVerify  the form's own "verify SSL" setting; the global switch can only turn it off
  */
 function formsEffectiveSslVerify(bool $perCallVerify): bool
 {

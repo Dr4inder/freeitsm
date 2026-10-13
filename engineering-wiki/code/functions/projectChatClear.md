@@ -6,13 +6,13 @@ Start again: the conversation and its memory go. A shared one needs somebody who
 function projectChatClear(PDO $conn, ActorContext $ctx, array $project): void
 ```
 
-Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 600.
+Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 654.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row whose conversation is cleared |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 607 | `projectChatClear` | **delete** [project_ai_threads](/code/tables/project_ai_threads.md) |  |
+| 661 | `projectChatClear` | **delete** [project_ai_threads](/code/tables/project_ai_threads.md) |  |
 
 ## Calls
 

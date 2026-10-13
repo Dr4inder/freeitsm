@@ -6,7 +6,7 @@ Is the analyst looking at every company they may see, rather than just one?
 function isActiveTenantAll(PDO $conn): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 643.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 667.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

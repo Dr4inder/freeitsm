@@ -6,7 +6,7 @@ Who is told a proposal is waiting: the named approver if there is one, otherwise
 function projectProposalApprovers(PDO $conn): array
 ```
 
-Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 75.
+Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.php.md), line 79.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 79 | `projectProposalApprovers` | read [analysts](/code/tables/analysts.md) |  |
+| 83 | `projectProposalApprovers` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

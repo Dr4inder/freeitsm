@@ -23,12 +23,12 @@ address being on it doesn't establish that the person belongs to the company.
 function resolveTenantForNewUser(PDO $conn, string $email): ?int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1002.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1051.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$email` | `string` |  |  |
+| `$email` | `string` |  | the new account's email address |
 
 **Returns:** int|null a tenant id, or NULL meaning "company not known".
 
@@ -36,7 +36,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 100
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1021 | `resolveTenantForNewUser` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1070 | `resolveTenantForNewUser` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
 
 ## Calls
 

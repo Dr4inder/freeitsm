@@ -27,6 +27,8 @@ requireCapabilityJson(Cap::CMDB_CLASSES);   // settings tab — see docs/design/
 /**
  * Turns a property name into a lower-case key of letters, digits and underscores,
  * falling back to 'property' when nothing is left.
+ *
+ * @param mixed $name  the property name as typed or suggested by the AI
  */
 function slugifyProp($name) {
     $slug = strtolower(trim($name));

@@ -116,6 +116,8 @@ $softwareList = $data['Software'];
 
 // --------------------------------------------------
 // Helper function to log errors/responses
+// @param mixed $hostId  the asset id the submitting machine was matched to or created as; null before that
+// @param mixed $message  the response or error to log - a string, or an array stored as JSON
 // --------------------------------------------------
 function logApiResponse($conn, $hostId, $message) {
     try {

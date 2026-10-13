@@ -1,6 +1,6 @@
 # includes/projects/nudges.php
 
-> PHP - 190 lines
+> PHP - 199 lines
 
 Projects - the overdue digest and stalled-approval nudges (3.3.0). Called by `projectAlertsScan()` (includes/projects/alerts.php), so cron or the portfolio fallback runs them; both use the workflow_scheduled_emissions ledger so a period or a nudge fires once, however often the scan runs.
 
@@ -26,8 +26,8 @@ alerts.php), and both name their audience in notify_ids.
 |---|--:|---|
 | [projectAlertsOverdueDigest()](/code/functions/projectAlertsOverdueDigest.md) | 31 | The overdue-task digests. `$projectId` = one project; null = every live one. |
 | [projectAlertsStalled()](/code/functions/projectAlertsStalled.md) | 80 | The nudges. `$projectId` = one project; null = all of them. |
-| [projectNudgeProjects()](/code/functions/projectNudgeProjects.md) | 168 | Project rows shaped for `projectEventPayload()`, by id. |
-| [projectNudgeDeciders()](/code/functions/projectNudgeDeciders.md) | 182 | Everybody who may decide a change request on this project - the setting's rule, applied to each active analyst. |
+| [projectNudgeProjects()](/code/functions/projectNudgeProjects.md) | 172 | Project rows shaped for `projectEventPayload()`, by id. |
+| [projectNudgeDeciders()](/code/functions/projectNudgeDeciders.md) | 191 | Everybody who may decide a change request on this project - the setting's rule, applied to each active analyst. |
 
 ## Database
 
@@ -41,8 +41,8 @@ alerts.php), and both name their audience in notify_ids.
 | 119 | `projectAlertsStalled` | read [project_gate_items](/code/tables/project_gate_items.md), read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
 | 130 | `projectAlertsStalled` | read [project_reports](/code/tables/project_reports.md), read [projects](/code/tables/projects.md) |  |
 | 139 | `projectAlertsStalled` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
-| 174 | `projectNudgeProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 185 | `projectNudgeDeciders` | read [analysts](/code/tables/analysts.md) |  |
+| 178 | `projectNudgeProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 194 | `projectNudgeDeciders` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

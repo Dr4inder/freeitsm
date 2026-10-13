@@ -6,7 +6,7 @@ Versions
 function apiKnowledgeVersionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 349.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 361.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowled
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 352 | `apiKnowledgeVersionsList` | read [knowledge_article_versions](/code/tables/knowledge_article_versions.md), read [analysts](/code/tables/analysts.md) |  |
+| 364 | `apiKnowledgeVersionsList` | read [knowledge_article_versions](/code/tables/knowledge_article_versions.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

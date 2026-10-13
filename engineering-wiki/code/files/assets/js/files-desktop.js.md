@@ -46,7 +46,7 @@ Levels (includes/files/acl.php): 1 View, 2 Download, 3 Upload, 4 Modify, 5 Full 
 | `viewFile(itemId, versionId)` | 287 | Open a file in the viewer (files-viewer.js). Every open is a 'view' in the audit trail. |
 | `onProperties(id)` | 292 | Opens Properties for the file shown in the viewer. |
 | `download(itemId, versionId)` | 297 | Downloads a file (or one version of it) by clicking a temporary link to download.php. |
-| `Explorer(folderId, opts)` | 309 | ════════════════════════════════════════════════════════════════════════ EXPLORER ════════════════════════════════════════════════════════════════════════ |
+| `Explorer(folderId, opts)` | 309 | EXPLORER |
 | `onClose()` | 328 | Removes this Explorer from the list that hears about folder changes when its window closes. |
 | `onFocus()` | 330 | Puts keyboard focus on the file pane when the window is focused, unless the filter box has it. |
 | `arrow(k)` | 525 | Returns the up or down sort arrow for a Details column header when that column is the sort. |
@@ -80,12 +80,12 @@ Levels (includes/files/acl.php): 1 View, 2 Download, 3 Upload, 4 Modify, 5 Full 
 | `paintOne(u)` | 1329 | Updates one upload's progress bar and status in the Transfers window, and the taskbar tray. |
 | `paint()` | 1339 | Redraws the whole Transfers list (with Cancel and "Get help with this" buttons where they apply) and the taskbar tray. |
 | `paintTray()` | 1363 | Shows the taskbar upload indicator with the count and overall progress of active uploads, or hides it when none are running. |
-| `openPermissions(folderId)` | 1379 | ════════════════════════════════════════════════════════════════════════ PERMISSIONS ════════════════════════════════════════════════════════════════════════ |
+| `openPermissions(folderId)` | 1379 | PERMISSIONS |
 | `load()` | 1391 | Fetches the folder's permissions, keeps its own (not inherited) entries as the editable list, and draws the window. |
 | `render()` | 1407 | Draws the Permissions window - own and inherited entries, inherit tick, watermark, add-a-person search and buttons - read-only without Full control. |
 | `who(e)` | 1434 | Returns the escaped name of a permission entry, with a Team badge for a team. |
 | `save()` | 1524 | Saves the folder's own permission entries, first warning when the person is lowering their own Full control; closes the window when they can no longer see the folder. |
-| `openProperties(type, id)` | 1554 | ════════════════════════════════════════════════════════════════════════ PROPERTIES ════════════════════════════════════════════════════════════════════════ |
+| `openProperties(type, id)` | 1554 | PROPERTIES |
 | `rows(pairs)` | 1565 | Builds the label and value table rows for Properties, leaving out any with no value. |
 | `openLocation(folderId, itemKey)` | 1628 | Open the folder a file lives in, with the file selected. |
 | `resultsTable(container, rows)` | 1635 | Draws a Details-style list of files and folders for Recent and Search: double-click opens, right-click offers open, location, download, desktop shortcut and Properties. |

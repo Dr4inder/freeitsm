@@ -6,12 +6,12 @@ Apply to several analysts and count the outcomes.
 function analystSignInApplyMany(PDO $conn, array $analystIds): array
 ```
 
-Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 161.
+Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 162.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$analystIds` | `array` |  |  |
+| `$analystIds` | `array` |  | the analysts to bring into line; cast to int, duplicates and ids <= 0 skipped |
 
 **Returns:** array{changed:int, conflict:int}
 

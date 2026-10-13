@@ -6,12 +6,12 @@ Merge one or more source tickets into a target.
 function mergeTickets(PDO $conn, int $actorId, array $sourceIds, int $targetId): array
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 332.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 336.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$actorId` | `int` |  |  |
+| `$actorId` | `int` |  | the analyst doing the merge, for the audit rows |
 | `$sourceIds` | `array` |  | tickets to fold away |
 | `$targetId` | `int` |  | the ticket the analyst chose to keep |
 

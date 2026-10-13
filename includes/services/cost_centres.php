@@ -56,7 +56,11 @@ class CostCentresService
         }
     }
 
-    /** The companies this caller may manage cost centres for: [[id, name, is_default], ...]. */
+    /**
+     * The companies this caller may manage cost centres for: [[id, name, is_default], ...].
+     *
+     * @param ActorContext $actor  who is acting; their companyScope decides which companies are listed
+     */
     public static function companiesFor(PDO $conn, ActorContext $actor): array
     {
         $out = [];
@@ -70,13 +74,21 @@ class CostCentresService
         return $out;
     }
 
-    /** True when the actor may reach the company. */
+    /**
+     * True when the actor may reach the company.
+     *
+     * @param ActorContext $actor  who is acting; a null companyScope reaches every company
+     */
     private static function canReach(ActorContext $actor, int $tenantId): bool
     {
         return $actor->companyScope === null || in_array($tenantId, array_map('intval', $actor->companyScope), true);
     }
 
-    /** The company exists and this caller may use it - or a ServiceError. */
+    /**
+     * The company exists and this caller may use it - or a ServiceError.
+     *
+     * @param ActorContext $actor  who is acting
+     */
     public static function assertCompany(PDO $conn, ActorContext $actor, int $tenantId): void
     {
         $known = tenancyTablesReady($conn) ? getTenantById($conn, $tenantId) !== null : $tenantId === getDefaultTenantId($conn);
@@ -91,6 +103,8 @@ class CostCentresService
     /**
      * Every cost centre of one company, active and inactive, ordered by code,
      * each with its parent's code and how many children it has.
+     *
+     * @param ActorContext $actor  who is acting; must reach $tenantId
      */
     public static function listForCompany(PDO $conn, ActorContext $actor, int $tenantId): array
     {
@@ -107,7 +121,12 @@ class CostCentresService
         return $st->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /** One cost centre, or not_found (also when it is in a company the caller cannot reach). */
+    /**
+     * One cost centre, or not_found (also when it is in a company the caller cannot reach).
+     *
+     * @param ActorContext $actor  who is acting; a cost centre outside their companies reads as not found
+     * @param int $id  the cost_centres row to load
+     */
     public static function load(PDO $conn, ActorContext $actor, int $id): array
     {
         $st = $conn->prepare(
@@ -133,6 +152,9 @@ class CostCentresService
     /**
      * Add one. $in: code, name (required); description, parent_id OR parent_code,
      * is_active (optional).
+     *
+     * @param ActorContext $actor  who is acting; must reach $tenantId
+     * @param array $in  code and name (required); description, parent_id or parent_code, is_active
      */
     public static function create(PDO $conn, ActorContext $actor, int $tenantId, array $in): int
     {
@@ -154,7 +176,13 @@ class CostCentresService
         return (int)$conn->lastInsertId();
     }
 
-    /** Change one. Only the keys present in $in are touched (PATCH semantics). */
+    /**
+     * Change one. Only the keys present in $in are touched (PATCH semantics).
+     *
+     * @param ActorContext $actor  who is acting
+     * @param int $id  the cost_centres row to change
+     * @param array $in  any of code, name, description, is_active, parent_id or parent_code; absent keys are left alone
+     */
     public static function update(PDO $conn, ActorContext $actor, int $id, array $in): void
     {
         $row = self::load($conn, $actor, $id);
@@ -183,7 +211,12 @@ class CostCentresService
         }
     }
 
-    /** Delete one - refused while anything sits below it. Make it inactive instead. */
+    /**
+     * Delete one - refused while anything sits below it. Make it inactive instead.
+     *
+     * @param ActorContext $actor  who is acting
+     * @param int $id  the cost_centres row to delete
+     */
     public static function delete(PDO $conn, ActorContext $actor, int $id): void
     {
         $row = self::load($conn, $actor, $id);
@@ -226,6 +259,9 @@ class CostCentresService
      * problem is reported, with its line. A half-applied nightly sync is worse
      * than none: the next one cannot tell what the last one did.
      *
+     * @param ActorContext $actor  who is acting; must reach $tenantId
+     * @param array $rows  the incoming list, each {line?, code, name?, description?, parent_code?, is_active?} - see above
+     * @param array $opts  dry_run and deactivate_missing, both bool - see above
      * @return array{applied: bool, dry_run: bool, counts: array, errors: array, rows: array}
      */
     public static function sync(PDO $conn, ActorContext $actor, int $tenantId, array $rows, array $opts = []): array
@@ -398,7 +434,11 @@ class CostCentresService
     //  Field rules
     // ─────────────────────────────────────────────────────────────────────────
 
-    /** Trimmed, never otherwise changed: "0010" stays "0010". */
+    /**
+     * Trimmed, never otherwise changed: "0010" stays "0010".
+     *
+     * @param mixed $v  the code as sent
+     */
     public static function cleanCode($v): string
     {
         $v = trim((string)$v);
@@ -408,7 +448,11 @@ class CostCentresService
         return $v;
     }
 
-    /** A cost centre name with control characters removed; throws when blank or too long. */
+    /**
+     * A cost centre name with control characters removed; throws when blank or too long.
+     *
+     * @param mixed $v  the name as sent
+     */
     private static function cleanName($v): string
     {
         $v = trim(preg_replace('/[\x00-\x1F\x7F]+/', ' ', (string)$v));
@@ -417,7 +461,11 @@ class CostCentresService
         return $v;
     }
 
-    /** A cost centre description with control characters removed, or null when blank; throws when too long. */
+    /**
+     * A cost centre description with control characters removed, or null when blank; throws when too long.
+     *
+     * @param mixed $v  the description as sent; blank gives null
+     */
     private static function cleanDescription($v): ?string
     {
         $v = trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/', ' ', (string)$v));
@@ -426,7 +474,12 @@ class CostCentresService
         return $v;
     }
 
-    /** true/false, 1/0, yes/no, y/n, active/inactive - what a spreadsheet or an ERP export says. */
+    /**
+     * true/false, 1/0, yes/no, y/n, active/inactive - what a spreadsheet or an ERP export says.
+     *
+     * @param mixed $v  a bool, 0/1, or a word such as yes, no, active, inactive (English or German)
+     * @param string $field  the field name, used in the error message
+     */
     public static function cleanBool($v, string $field): int
     {
         if (is_bool($v)) return $v ? 1 : 0;
@@ -438,13 +491,22 @@ class CostCentresService
         throw new ServiceError('validation', 'invalid_field', "'{$v}' is not a valid value for {$field} - use Yes or No.");
     }
 
-    /** Throws the "code already used" conflict. */
+    /**
+     * Throws the "code already used" conflict.
+     *
+     * @param string $code  the code that clashed, for the message
+     */
     private static function codeTaken(string $code): void
     {
         throw new ServiceError('conflict', 'conflict', "Code {$code} is already used by another cost centre in this company. Codes are matched ignoring capitals.");
     }
 
-    /** Throws when another cost centre in the company has the same code, ignoring case. */
+    /**
+     * Throws when another cost centre in the company has the same code, ignoring case.
+     *
+     * @param string $code  the code to check, compared ignoring case
+     * @param ?int $exceptId  the cost centre allowed to hold it (the one being changed), or null
+     */
     private static function assertCodeFree(PDO $conn, int $tenantId, string $code, ?int $exceptId): void
     {
         // The column's _ci collation makes = ignore case, matching the unique key.
@@ -456,6 +518,9 @@ class CostCentresService
     /**
      * parent_id or parent_code from the input -> a parent id or null, checked:
      * same company, not itself, not below itself.
+     *
+     * @param array $in  the request fields; parent_id, or parent_code within the same company - blank or 0 means top level
+     * @param ?int $selfId  the cost centre being changed, for the loop check; null on create
      */
     private static function resolveParentInput(PDO $conn, int $tenantId, array $in, ?int $selfId): ?int
     {

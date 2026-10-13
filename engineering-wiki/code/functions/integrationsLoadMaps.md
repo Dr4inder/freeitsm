@@ -6,12 +6,12 @@ Every mapping for one connection, as [map_type][local_key] => external_key. Empt
 function integrationsLoadMaps(PDO $conn, int $connectionId): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 930.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 988.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connectionId` | `int` |  |  |
+| `$connectionId` | `int` |  | the integration_connections id |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 935 | `integrationsLoadMaps` | read [integration_field_maps](/code/tables/integration_field_maps.md) |  |
+| 993 | `integrationsLoadMaps` | read [integration_field_maps](/code/tables/integration_field_maps.md) |  |
 
 ## Calls
 

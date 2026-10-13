@@ -12,13 +12,13 @@ A portal learner has no Preview and no override: assigned, or nothing.
 function lmsCanAccessCourse(PDO $conn, LmsLearner $learner, int $courseId): bool
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 275.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 298.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$learner` | `LmsLearner` |  |  |
-| `$courseId` | `int` |  |  |
+| `$learner` | `LmsLearner` |  | the person to check; an analyst who manages the LMS may open any course |
+| `$courseId` | `int` |  | the lms_courses id |
 
 **Returns:** `bool`
 

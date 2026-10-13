@@ -6,7 +6,7 @@ Should the resolution code field show when closing a ticket?
 function ticketResolutionCodeOn(PDO $conn, ?int $tenantId): bool
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 248.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 259.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

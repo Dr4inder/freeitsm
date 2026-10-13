@@ -6,11 +6,11 @@ The placeholder's synthetic address - MUST match `getOrCreateChannelUser()`.
 function messagingTelegramPlaceholderEmail(string $chatId): string
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 516.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 540.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$chatId` | `string` |  |  |
+| `$chatId` | `string` |  | the Telegram chat id |
 
 **Returns:** `string`
 

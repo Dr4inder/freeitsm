@@ -27,7 +27,7 @@
 
 ### portalUser
 
-*public static* - line 70
+*public static* - line 72
 
 A portal user as a recipient. Anything else passed where a recipient is expected is an analyst id, so every existing caller is unchanged.
 
@@ -37,13 +37,13 @@ function portalUser(int $userId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the portal user's id (users.id), not an analyst id |
 
 **Called from:** [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
 
 ### who
 
-*private static* - line 76
+*private static* - line 82
 
 [table, id column, id, is portal] for a recipient. The ONLY place that choice is made.
 
@@ -53,11 +53,11 @@ function who($recipient): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$recipient` |  |  |  |
+| `$recipient` |  |  | an analyst id (int), or a portal user as made by `portalUser()` |
 
 ### duringBulk
 
-*public static* - line 88
+*public static* - line 98
 
 Run `$fn` with bulk suppression on, restoring the previous state whatever happens.
 
@@ -67,13 +67,13 @@ function duringBulk(callable $fn)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fn` | `callable` |  |  |
+| `$fn` | `callable` |  | the bulk work to run; its return value is passed back |
 
 **Called from:** [api/tickets/bulk_delete_tickets.php](/code/files/api/tickets/bulk_delete_tickets.php.md), [api/tickets/bulk_update_tickets.php](/code/files/api/tickets/bulk_update_tickets.php.md)
 
 ### inBulk
 
-*public static* - line 103
+*public static* - line 113
 
 True while a `duringBulk()` call is running.
 
@@ -85,7 +85,7 @@ function inBulk(): bool
 
 ### types
 
-*public static* - line 117
+*public static* - line 127
 
 Which event types put something in the bell, and whether they do so by default. The value is the DEFAULT — every one of these is switchable per analyst under Preferences.
 
@@ -101,7 +101,7 @@ function types(): array
 
 ### typeEnabled
 
-*public static* - line 222
+*public static* - line 236
 
 True when this analyst wants this type in their bell.
 
@@ -113,13 +113,13 @@ function typeEnabled(PDO $conn, int $analystId, string $eventType): bool
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$eventType` | `string` |  |  |
+| `$eventType` | `string` |  | the event type key, e.g. 'ticket.assigned' - anything not in `types()` is never enabled |
 
 **Called from:** [includes/notifications_router.php](/code/files/includes/notifications_router.php.md)
 
 ### preferences
 
-*public static* - line 240
+*public static* - line 254
 
 The analyst's per-type overrides, as [event_type => bool].
 
@@ -139,11 +139,11 @@ function preferences(PDO $conn, int $analystId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 244 | `NotificationsService::preferences` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 258 | `NotificationsService::preferences` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ### effectivePreferences
 
-*public static* - line 260
+*public static* - line 274
 
 The full effective map for the settings UI: every type with its current state.
 
@@ -160,7 +160,7 @@ function effectivePreferences(PDO $conn, int $analystId): array
 
 ### notify
 
-*public static* - line 281
+*public static* - line 298
 
 Write a notification, applying every noise rule.
 
@@ -177,13 +177,13 @@ function notify(PDO $conn, array $in): ?int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the notification: analyst_id or portal_user_id, event_type, entity_type (default 'ticket'), entity_id, entity_ref, title, body, actor_id (or actor_user_id for portal), actor_name |
 
 **Called from:** [includes/managers.php](/code/files/includes/managers.php.md), [includes/notifications_router.php](/code/files/includes/notifications_router.php.md)
 
 ### unreadCount
 
-*public static* - line 373
+*public static* - line 394
 
 Unread count for the badge. Cheap — this is polled by every open tab.
 
@@ -194,13 +194,13 @@ function unreadCount(PDO $conn, $recipient): int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$recipient` |  |  |  |
+| `$recipient` |  |  | an analyst id (int), or a portal user as made by `portalUser()` |
 
 **Called from:** [api/notifications/clear.php](/code/files/api/notifications/clear.php.md), [api/notifications/get_notifications.php](/code/files/api/notifications/get_notifications.php.md), [api/notifications/mark_read.php](/code/files/api/notifications/mark_read.php.md), [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
 
 ### listFor
 
-*public static* - line 388
+*public static* - line 414
 
 Newest first. Unread first is deliberately NOT done — recency is the useful order.
 
@@ -211,14 +211,14 @@ function listFor(PDO $conn, $recipient, int $limit = self::LIST_LIMIT): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$recipient` |  |  |  |
-| `$limit` | `int` | `self::LIST_LIMIT` |  |
+| `$recipient` |  |  | an analyst id (int), or a portal user as made by `portalUser()` |
+| `$limit` | `int` | `self::LIST_LIMIT` | how many rows to return, clamped to 1..LIST_LIMIT (50) |
 
 **Called from:** [api/notifications/get_notifications.php](/code/files/api/notifications/get_notifications.php.md), [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
 
 ### linkFor
 
-*public static* - line 422
+*public static* - line 451
 
 Where clicking a notification goes.
 
@@ -232,14 +232,14 @@ function linkFor(string $entityType, int $entityId): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$entityType` | `string` |  |  |
-| `$entityId` | `int` |  |  |
+| `$entityType` | `string` |  | what the notification is about, e.g. 'ticket', 'task', 'project' |
+| `$entityId` | `int` |  | the id of that record |
 
 **Called from:** [includes/notifications_router.php](/code/files/includes/notifications_router.php.md)
 
 ### portalLinkFor
 
-*public static* - line 440
+*public static* - line 472
 
 Where a portal user's notification goes. Only tickets so far; the ticket page itself decides - through `portalTicketAccess()` - whether they may see it, so a stale notification can never be a way in.
 
@@ -249,12 +249,12 @@ function portalLinkFor(string $entityType, int $entityId): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$entityType` | `string` |  |  |
-| `$entityId` | `int` |  |  |
+| `$entityType` | `string` |  | what the notification is about - only 'ticket' gets a link |
+| `$entityId` | `int` |  | the ticket id |
 
 ### markRead
 
-*public static* - line 446
+*public static* - line 483
 
 Mark specific ids read. Scoped to the analyst, so ids from elsewhere do nothing.
 
@@ -265,14 +265,14 @@ function markRead(PDO $conn, $recipient, array $ids): int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$recipient` |  |  |  |
-| `$ids` | `array` |  |  |
+| `$recipient` |  |  | an analyst id (int), or a portal user as made by `portalUser()` |
+| `$ids` | `array` |  | notification ids to mark; non-positive values are dropped, other people's ids match nothing |
 
 **Called from:** [api/notifications/mark_read.php](/code/files/api/notifications/mark_read.php.md), [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
 
 ### markAllRead
 
-*public static* - line 466
+*public static* - line 505
 
 Marks every unread notification for the recipient (an analyst, or a portal user) as read and returns how many.
 
@@ -283,13 +283,13 @@ function markAllRead(PDO $conn, $recipient): int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$recipient` |  |  |  |
+| `$recipient` |  |  | an analyst id (int), or a portal user as made by `portalUser()` |
 
 **Called from:** [api/notifications/mark_read.php](/code/files/api/notifications/mark_read.php.md), [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
 
 ### clear
 
-*public static* - line 490
+*public static* - line 532
 
 Remove specific notifications outright (discussion #111).
 
@@ -310,14 +310,14 @@ function clear(PDO $conn, $recipient, array $ids): int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$recipient` |  |  |  |
-| `$ids` | `array` |  |  |
+| `$recipient` |  |  | an analyst id (int), or a portal user as made by `portalUser()` |
+| `$ids` | `array` |  | notification ids to delete; non-positive values are dropped, other people's ids match nothing |
 
 **Called from:** [api/notifications/clear.php](/code/files/api/notifications/clear.php.md), [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
 
 ### clearAll
 
-*public static* - line 513
+*public static* - line 558
 
 Empty the panel.
 
@@ -333,14 +333,14 @@ function clearAll(PDO $conn, $recipient, bool $includeUnread = false): int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$recipient` |  |  |  |
-| `$includeUnread` | `bool` | `false` |  |
+| `$recipient` |  |  | an analyst id (int), or a portal user as made by `portalUser()` |
+| `$includeUnread` | `bool` | `false` | true to delete unread rows too; false (default) keeps them |
 
 **Called from:** [api/notifications/clear.php](/code/files/api/notifications/clear.php.md), [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
 
 ### clip
 
-*private static* - line 526
+*private static* - line 576
 
 Trimmed text cut to `$max` characters, or null when blank.
 
@@ -350,6 +350,6 @@ function clip($value, int $max): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
-| `$max` | `int` |  |  |
+| `$value` |  |  | the text to tidy (any scalar, or null) |
+| `$max` | `int` |  | the most characters to keep |
 

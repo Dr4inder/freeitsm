@@ -11,11 +11,11 @@ a link that lands on the wrong host reads as a phishing attempt.
 function lmsReminderLinkFor(string $learnerType): string
 ```
 
-Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 321.
+Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md), line 335.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$learnerType` | `string` |  |  |
+| `$learnerType` | `string` |  | 'user' links to the portal's Training page; anything else to the analyst app's My courses |
 
 **Returns:** `string`
 
@@ -23,7 +23,7 @@ Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 326 | `lmsReminderLinkFor` | read [system_settings](/code/tables/system_settings.md) |  |
+| 340 | `lmsReminderLinkFor` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

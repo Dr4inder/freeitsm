@@ -6,12 +6,12 @@ Per project: change requests waiting for a decision - for the Overview, the card
 function projectChangeStats(PDO $conn, array $projectIds): array
 ```
 
-Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 256.
+Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 293.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$projectIds` | `array` |  |  |
+| `$projectIds` | `array` |  | the project ids to count for |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/projects/control.php](/code/files/includes/projects/control
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 261 | `projectChangeStats` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
+| 298 | `projectChangeStats` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
 
 ## Calls
 

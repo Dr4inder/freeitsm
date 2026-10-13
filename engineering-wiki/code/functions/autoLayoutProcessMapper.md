@@ -6,11 +6,11 @@ Auto-layout for the process-mapper module: writes x/y/width/height onto each ste
 function autoLayoutProcessMapper(array &$demoData)
 ```
 
-Defined in [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md), line 96.
+Defined in [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md), line 102.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$demoData` | `array` |  |  |
+| `$demoData` | `array` |  | the whole demo data set, by reference; tier2 process_steps get x, y, width and height |
 
 ## Calls
 

@@ -1,6 +1,6 @@
 # includes/projects/targets.php
 
-> PHP - 288 lines
+> PHP - 324 lines
 
 Projects - asset targets (3.2.0): live progress measured from Assets.
 
@@ -32,16 +32,16 @@ is amber. The project's automatic health takes the worse of tasks and targets
 | [projectTargetsReady()](/code/functions/projectTargetsReady.md) | 31 | Has Database Verification created the tables? |
 | [projectTargetDoneFields()](/code/functions/projectTargetDoneFields.md) | 45 | The fields a "done" rule can test: column, kind (list = an id from a list, text = free text) and the operators that make sense for it. |
 | [projectTargetScopeFields()](/code/functions/projectTargetScopeFields.md) | 60 | The fields a filter scope can match with "contains". |
-| [projectTargetNormalise()](/code/functions/projectTargetNormalise.md) | 69 | Check and tidy a target from the screen. Returns the row to store; throws ServiceError on anything the SQL builder would not accept. |
-| [projectTargetSql()](/code/functions/projectTargetSql.md) | 115 | [FROM/WHERE for the assets in scope, args, the "is done" expression, its args] for one target on one project. Built from the whitelists only. |
-| [projectTargetCount()](/code/functions/projectTargetCount.md) | 148 | [done, total] for one target. |
-| [projectTargetHealth()](/code/functions/projectTargetHealth.md) | 158 | green \| amber \| red for a live target; null when there is nothing to measure. |
-| [projectTargetsFor()](/code/functions/projectTargetsFor.md) | 175 | Every target on these projects with its counts and health: [project_id => [target, ...]]. Empty before Verification. |
-| [projectTargetsWorst()](/code/functions/projectTargetsWorst.md) | 206 | The worst health across a project's targets, or null. |
-| [projectTargetsDetail()](/code/functions/projectTargetsDetail.md) | 217 | For the project page: the targets, with today's point written and the last 120 days of points for the burn-up line, and the words for the rule. |
-| [projectTargetValueNames()](/code/functions/projectTargetValueNames.md) | 238 | Names for list values in rules (status 6 => Retired), keyed "field:id". |
-| [projectTargetAssets()](/code/functions/projectTargetAssets.md) | 256 | The assets still to do on a target (or all of them, `$done` = true), at most `$limit` - for the "what's left" list. Callers check Assets access first. |
-| [projectTargetOptions()](/code/functions/projectTargetOptions.md) | 274 | The lists the target dialog offers, for the project's company. |
+| [projectTargetNormalise()](/code/functions/projectTargetNormalise.md) | 71 | Check and tidy a target from the screen. Returns the row to store; throws ServiceError on anything the SQL builder would not accept. |
+| [projectTargetSql()](/code/functions/projectTargetSql.md) | 120 | [FROM/WHERE for the assets in scope, args, the "is done" expression, its args] for one target on one project. Built from the whitelists only. |
+| [projectTargetCount()](/code/functions/projectTargetCount.md) | 158 | [done, total] for one target. |
+| [projectTargetHealth()](/code/functions/projectTargetHealth.md) | 175 | green \| amber \| red for a live target; null when there is nothing to measure. |
+| [projectTargetsFor()](/code/functions/projectTargetsFor.md) | 194 | Every target on these projects with its counts and health: [project_id => [target, ...]]. Empty before Verification. |
+| [projectTargetsWorst()](/code/functions/projectTargetsWorst.md) | 229 | The worst health across a project's targets, or null. |
+| [projectTargetsDetail()](/code/functions/projectTargetsDetail.md) | 240 | For the project page: the targets, with today's point written and the last 120 days of points for the burn-up line, and the words for the rule. |
+| [projectTargetValueNames()](/code/functions/projectTargetValueNames.md) | 265 | Names for list values in rules (status 6 => Retired), keyed "field:id". |
+| [projectTargetAssets()](/code/functions/projectTargetAssets.md) | 288 | The assets still to do on a target (or all of them, `$done` = true), at most `$limit` - for the "what's left" list. Callers check Assets access first. |
+| [projectTargetOptions()](/code/functions/projectTargetOptions.md) | 310 | The lists the target dialog offers, for the project's company. |
 
 ## Database
 
@@ -49,14 +49,14 @@ is amber. The project's automatic health takes the worse of tasks and targets
 |--:|---|---|---|
 | 35 | `projectTargetsReady` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
 | 35 | `projectTargetsReady` | read [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) |  |
-| 120 | `projectTargetSql` | read [project_assets](/code/tables/project_assets.md) |  |
-| 180 | `projectTargetsFor` | read [project_asset_targets](/code/tables/project_asset_targets.md), read [projects](/code/tables/projects.md), read [asset_types](/code/tables/asset_types.md) |  |
-| 222 | `projectTargetsDetail` | **insert** [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) (`target_id`, `snap_date`, `done`, `total`) |  |
-| 224 | `projectTargetsDetail` | read [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) |  |
-| 265 | `projectTargetAssets` | read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md) |  |
-| 281 | `projectTargetOptions` | read [asset_types](/code/tables/asset_types.md) |  |
-| 282 | `projectTargetOptions` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 283 | `projectTargetOptions` | read [asset_locations](/code/tables/asset_locations.md) |  |
+| 125 | `projectTargetSql` | read [project_assets](/code/tables/project_assets.md) |  |
+| 199 | `projectTargetsFor` | read [project_asset_targets](/code/tables/project_asset_targets.md), read [projects](/code/tables/projects.md), read [asset_types](/code/tables/asset_types.md) |  |
+| 245 | `projectTargetsDetail` | **insert** [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) (`target_id`, `snap_date`, `done`, `total`) |  |
+| 247 | `projectTargetsDetail` | read [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) |  |
+| 297 | `projectTargetAssets` | read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md) |  |
+| 317 | `projectTargetOptions` | read [asset_types](/code/tables/asset_types.md) |  |
+| 318 | `projectTargetOptions` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 319 | `projectTargetOptions` | read [asset_locations](/code/tables/asset_locations.md) |  |
 
 ## How it hangs together
 
@@ -69,5 +69,5 @@ is amber. The project's automatic health takes the worse of tasks and targets
 ## Traps
 
 > [!WARNING]
-> **Line 259, in `projectTargetAssets`:** an asset with no status makes "status = 6" NULL, not false, and NOT(NULL) is NULL too - the asset would vanish from "still to do". The count's CASE WHEN already treats NULL as not done; this must agree.
+> **Line 291, in `projectTargetAssets`:** an asset with no status makes "status = 6" NULL, not false, and NOT(NULL) is NULL too - the asset would vanish from "still to do". The count's CASE WHEN already treats NULL as not done; this must agree.
 

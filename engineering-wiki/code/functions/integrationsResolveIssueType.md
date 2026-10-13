@@ -6,12 +6,12 @@ Our ticket type → the tracker's issue type. Falls back to the `*` row, so an i
 function integrationsResolveIssueType(array $maps, ?int $ticketTypeId): ?string
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1026.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1091.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$maps` | `array` |  |  |
-| `$ticketTypeId` | `?int` |  |  |
+| `$maps` | `array` |  | the connection's mappings as returned by `integrationsLoadMaps()` |
+| `$ticketTypeId` | `?int` |  | the ticket's ticket_type_id; null falls straight to the '*' row |
 
 **Returns:** `?string`
 

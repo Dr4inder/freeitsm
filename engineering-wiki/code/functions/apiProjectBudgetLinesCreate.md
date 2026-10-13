@@ -6,7 +6,7 @@ POST /projects/{id}/budget-lines - adds a budget line through ProjectToolsServic
 function apiProjectBudgetLinesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 576.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 611.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

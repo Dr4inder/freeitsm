@@ -6,7 +6,7 @@ The tools a project can switch on (phase 2). A method turns a set on by default 
 function projectToolDefinitions(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 74.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 78.
 
 **Returns:** array<string,array{label_key:string,desc_key:string}>
 

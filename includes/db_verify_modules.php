@@ -150,7 +150,11 @@ function dbVerifyModuleLabels(): array {
     ];
 }
 
-/** Which module a table belongs to. Never throws; unknown tables → 'other'. */
+/**
+ * Which module a table belongs to. Never throws; unknown tables → 'other'.
+ *
+ * @param string $table  a database table name, e.g. 'ticket_audit'
+ */
 function dbVerifyModuleForTable(string $table): string {
     global $DB_VERIFY_TABLE_OVERRIDES, $DB_VERIFY_MODULE_PREFIXES;
     if (isset($DB_VERIFY_TABLE_OVERRIDES[$table])) {

@@ -438,7 +438,11 @@ function getDebugTools() {
     ];
 }
 
-/** Find one tool by its slug (e.g. 'd001'). Returns null if not found. */
+/**
+ * Find one tool by its slug (e.g. 'd001'). Returns null if not found.
+ *
+ * @param mixed $slug  the tool's slug, e.g. 'd001', as the tool page sets it
+ */
 function getDebugToolBySlug($slug) {
     foreach (getDebugTools() as $tool) {
         if ($tool['slug'] === $slug) return $tool;
@@ -459,6 +463,8 @@ function debugToolAiFeatureOptions(): array {
 /**
  * Inline SVG markup for a debug-tool icon key. Unknown keys render a neutral
  * wrench so a typo never breaks the page. Sizing/colour come from CSS.
+ *
+ * @param mixed $key  the icon key from a tool's entry, e.g. 'ticket', 'sso'; unknown keys draw a wrench
  */
 function debugToolIcon($key) {
     $icons = [

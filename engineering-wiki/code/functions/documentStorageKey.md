@@ -11,11 +11,11 @@ which is the entire reason the column holds a key rather than a path.
 function documentStorageKey(string $storedName): string
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 723.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 754.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$storedName` | `string` |  |  |
+| `$storedName` | `string` |  | the random file name `uploadStoreFile()` gave the upload (its 'stored_name') |
 
 **Returns:** `string`
 

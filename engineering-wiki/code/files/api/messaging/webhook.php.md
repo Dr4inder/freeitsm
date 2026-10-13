@@ -1,6 +1,6 @@
 # api/messaging/webhook.php
 
-> API endpoint - 207 lines
+> API endpoint - 212 lines
 
 Public inbound webhook for messaging channels (WhatsApp via Twilio / Meta Cloud).
 
@@ -35,7 +35,7 @@ failures return 403 and unknown channels 404.
 |---|--:|---|
 | [webhookHeaders()](/code/functions/webhookHeaders.md) | 29 | Request headers with lower-cased keys (getallheaders fallback for non-Apache). |
 | [webhookFullUrl()](/code/functions/webhookFullUrl.md) | 48 | Reconstruct the exact public URL the provider called (honours ngrok proxy headers). |
-| [webhookFail()](/code/functions/webhookFail.md) | 66 | Sends an HTTP status and {success: false, error} as JSON, then stops. |
+| [webhookFail()](/code/functions/webhookFail.md) | 71 | Sends an HTTP status and {success: false, error} as JSON, then stops. |
 
 ## How it hangs together
 

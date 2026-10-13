@@ -6,11 +6,11 @@
 function statusPlannedUtc($v): ?string
 ```
 
-Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 62.
+Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 66.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | a date and time from the request, UTC unless it carries its own offset; null or '' gives null |
 
 **Returns:** `?string`
 

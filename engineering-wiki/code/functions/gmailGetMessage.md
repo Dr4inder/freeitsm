@@ -6,12 +6,12 @@ Fetch a single Gmail message and normalise to Graph-like structure.
 function gmailGetMessage(string $accessToken, string $messageId): ?array
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 275.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 310.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$messageId` | `string` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
+| `$messageId` | `string` |  | the Gmail message id, from messages.list |
 
 **Returns:** `?array`
 

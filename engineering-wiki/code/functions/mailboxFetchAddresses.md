@@ -6,11 +6,11 @@ Fetch ALL email addresses for the signed-in (delegated) mailbox — primary SMTP
 function mailboxFetchAddresses($accessToken)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 126.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
+| `$accessToken` |  |  | a delegated Graph access token; needs User.Read for the alias list |
 
 ## Calls
 

@@ -6,12 +6,12 @@ Every target on these projects with its counts and health: [project_id => [targe
 function projectTargetsFor(PDO $conn, array $projectIds): array
 ```
 
-Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 175.
+Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 194.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$projectIds` | `array` |  |  |
+| `$projectIds` | `array` |  | the project ids to read targets for |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/projects/targets.php](/code/files/includes/projects/targets
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 180 | `projectTargetsFor` | read [project_asset_targets](/code/tables/project_asset_targets.md), read [projects](/code/tables/projects.md), read [asset_types](/code/tables/asset_types.md) |  |
+| 199 | `projectTargetsFor` | read [project_asset_targets](/code/tables/project_asset_targets.md), read [projects](/code/tables/projects.md), read [asset_types](/code/tables/asset_types.md) |  |
 
 ## Calls
 

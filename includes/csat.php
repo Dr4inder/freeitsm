@@ -20,6 +20,9 @@ require_once __DIR__ . '/session_security.php'; // requestScheme() — proxy-awa
 
 /**
  * Read a system_settings key with a default fallback.
+ *
+ * @param string $key  the system_settings.setting_key, e.g. 'csat_mode'; encrypted keys are decrypted
+ * @param string $default  returned when the key has no row (the first answer is cached per request)
  */
 function csatGetSetting(PDO $conn, string $key, string $default = ''): string {
     static $cache = [];
@@ -53,6 +56,8 @@ function csatGenerateToken(): string {
  * Build the full public URL the user clicks. Uses the host the request came
  * in on so multi-domain installs (test.example.com vs example.com) work without
  * config changes.
+ *
+ * @param string $token  the survey token from ticket_csat_responses.token; URL-encoded here
  */
 function csatBuildUrl(string $token): string {
     $scheme = requestScheme();
@@ -152,6 +157,9 @@ function csatTicketChannel(PDO $conn, int $ticketId): ?array {
  * The language to write a customer-facing rating message in. Telegram has the
  * customer's own language_code (stored on the identity link); other channels do
  * not report one, so they get English.
+ *
+ * @param array $channel  the messaging_channels row as loadMessagingChannel() returns it
+ * @param string $from  the customer's id on that channel (the inbound message's from_address)
  */
 function csatChannelLocale(PDO $conn, array $channel, string $from): string {
     if (($channel['channel_type'] ?? '') !== 'telegram') {
@@ -170,6 +178,8 @@ function csatChannelLocale(PDO $conn, array $channel, string $from): string {
 /**
  * Ask a chat customer for a 1-5 rating in their chat. Returns the response id,
  * or throws - having removed its own row - so the caller can fall back to email.
+ *
+ * @param array $target  where to ask, as csatTicketChannel() returns it: channel row, from, address
  */
 function csatSendInChannel(PDO $conn, int $ticketId, array $target, ?int $analystId): int {
     require_once __DIR__ . '/messaging/messaging.php';
@@ -204,6 +214,9 @@ function csatSendInChannel(PDO $conn, int $ticketId, array $target, ?int $analys
  *   to the analyst, and a "2" next month starts a new conversation - loosen any
  *   of the three conditions and real messages vanish into a survey, with no
  *   error anywhere. tests/messaging-teams-mattermost.php checks each one.
+ *
+ * @param int $channelId  messaging_channels.id the digit arrived on
+ * @param string $from  the sender's id on that channel (from_address)
  */
 function csatPendingRequestForChat(PDO $conn, int $channelId, string $from): ?int {
     try {
@@ -227,7 +240,13 @@ function csatPendingRequestForChat(PDO $conn, int $channelId, string $from): ?in
     return $id ? (int)$id : null;
 }
 
-/** Was this request sent to this customer on this channel? Guards a button press against a forged or replayed id. */
+/**
+ * Was this request sent to this customer on this channel? Guards a button press against a forged or replayed id.
+ *
+ * @param int $responseId  ticket_csat_responses.id carried by the button (untrusted)
+ * @param int $channelId  messaging_channels.id the press arrived on
+ * @param string $from  the presser's id on that channel
+ */
 function csatResponseBelongsToChat(PDO $conn, int $responseId, int $channelId, string $from): bool {
     try {
         $stmt = $conn->prepare("SELECT 1 FROM ticket_csat_responses WHERE id = ? AND channel_id = ? AND channel_from = ?");
@@ -238,7 +257,11 @@ function csatResponseBelongsToChat(PDO $conn, int $responseId, int $channelId, s
     }
 }
 
-/** The rating a survey holds, or null while it is unanswered. */
+/**
+ * The rating a survey holds, or null while it is unanswered.
+ *
+ * @param int $responseId  ticket_csat_responses.id
+ */
 function csatStoredRating(PDO $conn, int $responseId): ?int {
     try {
         $stmt = $conn->prepare("SELECT rating FROM ticket_csat_responses WHERE id = ?");
@@ -250,7 +273,12 @@ function csatStoredRating(PDO $conn, int $responseId): ?int {
     }
 }
 
-/** Record a 1-5 rating once. Returns false if it was already answered or out of range. */
+/**
+ * Record a 1-5 rating once. Returns false if it was already answered or out of range.
+ *
+ * @param int $responseId  ticket_csat_responses.id to answer
+ * @param int $rating  the customer's score, 1 to 5
+ */
 function csatRecordRating(PDO $conn, int $responseId, int $rating): bool {
     if ($rating < 1 || $rating > 5) {
         return false;
@@ -272,6 +300,8 @@ function csatRecordRating(PDO $conn, int $responseId, int $rating): bool {
  *
  * Pre-flight checks (mode, template existence, mailbox availability) all run
  * BEFORE the row is inserted, so failed sends don't leave orphan tokens behind.
+ *
+ * @param bool $force  true to send even when one-survey-per-ticket is on and one already exists
  */
 function sendCsatSurvey(PDO $conn, int $ticketId, ?int $analystId, bool $force = false): array {
     $mode = csatGetSetting($conn, 'csat_mode', 'off');

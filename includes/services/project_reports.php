@@ -69,7 +69,11 @@ class ProjectReportsService
         return $row ? self::shape($row) : null;
     }
 
-    /** A project_reports row as the API returns it. */
+    /**
+     * A project_reports row as the API returns it.
+     *
+     * @param array $r  a project_reports row joined with the created_by / updated_by / approved_by names
+     */
     private static function shape(array $r): array
     {
         return [
@@ -83,7 +87,11 @@ class ProjectReportsService
         ];
     }
 
-    /** The Overview's briefing: the latest, or a fresh one if it is older than the cooldown. */
+    /**
+     * The Overview's briefing: the latest, or a fresh one if it is older than the cooldown.
+     *
+     * @param bool $refresh  true to ask the AI for a new briefing unless the latest is under 10 minutes old; false returns the latest
+     */
     public static function briefing(PDO $conn, ActorContext $ctx, int $projectId, bool $refresh): array
     {
         $project = ProjectsService::loadForActor($conn, $ctx, $projectId);
@@ -100,7 +108,12 @@ class ProjectReportsService
         return self::latestBriefing($conn, $projectId) + ['fresh' => true];
     }
 
-    /** Draft a report with the AI. Saved as a draft for a person to edit and approve. */
+    /**
+     * Draft a report with the AI. Saved as a draft for a person to edit and approve.
+     *
+     * @param string $kind  the report kind: 'highlight', 'exception', 'checkpoint' or 'closure'
+     * @param int $days  how many days back the facts cover, clamped to 1..90
+     */
     public static function draftWithAi(PDO $conn, ActorContext $ctx, int $projectId, string $kind, int $days = 14): int
     {
         $project = ProjectsService::loadForActor($conn, $ctx, $projectId);
@@ -118,7 +131,12 @@ class ProjectReportsService
         return $id;
     }
 
-    /** Write a report by hand (no id) or edit a draft (id). */
+    /**
+     * Write a report by hand (no id) or edit a draft (id).
+     *
+     * @param array $in  id (an existing draft to edit; absent or 0 writes a new one), title (required, up to 200), body,
+     *     kind (new reports only, default 'highlight')
+     */
     public static function save(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
         $project = ProjectsService::loadForActor($conn, $ctx, $projectId);
@@ -147,7 +165,11 @@ class ProjectReportsService
         return $id;
     }
 
-    /** Approve a draft. The project manager's, the creator's or a Projects manager's. */
+    /**
+     * Approve a draft. The project manager's, the creator's or a Projects manager's.
+     *
+     * @param int $id  the report (project_reports.id) to approve
+     */
     public static function approve(PDO $conn, ActorContext $ctx, int $projectId, int $id): void
     {
         $project = ProjectsService::loadForActor($conn, $ctx, $projectId);
@@ -162,7 +184,11 @@ class ProjectReportsService
         ProjectsService::audit($conn, $projectId, $ctx->actorId, 'report_approved', null, $cur['title'], $ctx->source === 'api' ? 'api' : 'app');
     }
 
-    /** Delete a draft (anyone who may change the project) or an approved report (those who may approve). */
+    /**
+     * Delete a draft (anyone who may change the project) or an approved report (those who may approve).
+     *
+     * @param int $id  the report (project_reports.id) to delete
+     */
     public static function delete(PDO $conn, ActorContext $ctx, int $projectId, int $id): void
     {
         $project = ProjectsService::loadForActor($conn, $ctx, $projectId);
@@ -206,7 +232,12 @@ class ProjectReportsService
         return $r ? ['schedule' => $r['report_schedule'], 'kind' => $r['report_schedule_kind']] : null;
     }
 
-    /** Set it - anyone who may change the project. */
+    /**
+     * Set it - anyone who may change the project.
+     *
+     * @param string $schedule  'off', 'weekly', 'fortnightly' or 'monthly'
+     * @param string $kind  the kind each scheduled draft is: 'highlight', 'checkpoint' or 'exception'
+     */
     public static function setSchedule(PDO $conn, ActorContext $ctx, int $projectId, string $schedule, string $kind): void
     {
         $project = ProjectsService::loadForActor($conn, $ctx, $projectId);
@@ -255,6 +286,10 @@ class ProjectReportsService
      * through the system mailbox (ssSendSystemEmail, logged as "Project report").
      * Returns ['sent' => [...], 'failed' => [...]]; what was sent is recorded on
      * the report and in the history.
+     *
+     * @param int $id  the approved report (project_reports.id) to send
+     * @param array $emails  addresses to send to; each entry may hold several split by spaces, commas or semicolons (at most 50)
+     * @param string $note  an optional covering note shown above the report, cut to 2000 characters
      */
     public static function send(PDO $conn, ActorContext $ctx, int $projectId, int $id, array $emails, string $note = ''): array
     {
@@ -297,7 +332,14 @@ class ProjectReportsService
         return ['sent' => $sent, 'failed' => $failed];
     }
 
-    /** The email: the report as the page shows it (the same three marks), in plain inline styles. */
+    /**
+     * The email: the report as the page shows it (the same three marks), in plain inline styles.
+     *
+     * @param array $project  the project row (needs id and name)
+     * @param array $report  the project_reports row (title, body, approved_datetime)
+     * @param string $sender  the name shown as "sent by"
+     * @param string $note  the covering note; '' for none
+     */
     public static function emailHtml(array $project, array $report, string $sender, string $note): string
     {
         $e = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
@@ -311,7 +353,11 @@ class ProjectReportsService
             . $e('Approved' . (!empty($report['approved_datetime']) ? ' ' . substr((string)$report['approved_datetime'], 0, 10) : '') . ', sent by ' . $sender . ' from FreeITSM.') . '</p></div>';
     }
 
-    /** Escape, then headings, bullets and **bold** - the marks the AI is told to use (projects-reports.js md()). */
+    /**
+     * Escape, then headings, bullets and **bold** - the marks the AI is told to use (projects-reports.js md()).
+     *
+     * @param string $text  the report body in the AI's limited markdown (headings, bullets, **bold**) - untrusted, escaped here
+     */
     public static function markdownHtml(string $text): string
     {
         $inline = fn($s) => preg_replace('/\*\*([^*]+)\*\*/', '<strong>$1</strong>', htmlspecialchars($s, ENT_QUOTES, 'UTF-8'));
@@ -373,7 +419,12 @@ class ProjectReportsService
         return $made;
     }
 
-    /** This period's ledger fingerprint, or null when this is not a drafting period (fortnightly, odd weeks). */
+    /**
+     * This period's ledger fingerprint, or null when this is not a drafting period (fortnightly, odd weeks).
+     *
+     * @param string $schedule  'weekly', 'fortnightly' or 'monthly'; anything else gives null
+     * @param ?int $now  a Unix timestamp to work from; null means now
+     */
     public static function periodKey(string $schedule, ?int $now = null): ?string
     {
         $now = $now ?? time();
@@ -386,7 +437,11 @@ class ProjectReportsService
         return null;
     }
 
-    /** One scheduled draft: the AI's when it is set up and answers, otherwise the facts. */
+    /**
+     * One scheduled draft: the AI's when it is set up and answers, otherwise the facts.
+     *
+     * @param array $p  the projects row (with report_schedule and report_schedule_kind) as loaded by runSchedules()
+     */
     private static function draftScheduled(PDO $conn, array $p): int
     {
         $kind = in_array($p['report_schedule_kind'], ['highlight', 'checkpoint', 'exception'], true) ? $p['report_schedule_kind'] : 'highlight';
@@ -416,7 +471,11 @@ class ProjectReportsService
         return $id;
     }
 
-    /** Loads one report (not a briefing) of the project; throws not found otherwise. */
+    /**
+     * Loads one report (not a briefing) of the project; throws not found otherwise.
+     *
+     * @param int $id  the report (project_reports.id) to load
+     */
     private static function load(PDO $conn, int $projectId, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM project_reports WHERE id = ? AND project_id = ? AND kind <> 'briefing'");

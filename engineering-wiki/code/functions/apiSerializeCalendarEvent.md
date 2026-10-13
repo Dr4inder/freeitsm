@@ -6,11 +6,11 @@ Shapes a calendar event row for the API - times stay naive server-local, source 
 function apiSerializeCalendarEvent(array $r): array
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 80.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 85.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the calendar_events row as `apiCalendarEventSelect()` loads it, with category and creator names |
 
 **Returns:** `array`
 

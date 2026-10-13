@@ -1,6 +1,6 @@
 # includes/carddav.php
 
-> PHP - 610 lines
+> PHP - 637 lines
 
 CardDAV — the transport under directory sync's policy layer.
 
@@ -42,18 +42,18 @@ themselves.
 | Function | Line | What it does |
 |---|--:|---|
 | [cardDavRequest()](/code/functions/cardDavRequest.md) | 72 | One HTTP request to a DAV server. |
-| [cardDavExplainStatus()](/code/functions/cardDavExplainStatus.md) | 191 | Turn an HTTP status into something an operator can act on. |
-| [cardDavListAddressBooks()](/code/functions/cardDavListAddressBooks.md) | 222 | List the address books an account can see. |
-| [cardDavParseAddressBooks()](/code/functions/cardDavParseAddressBooks.md) | 269 | Pull the address books out of a PROPFIND multistatus body. |
-| [cardDavFetchCards()](/code/functions/cardDavFetchCards.md) | 328 | Fetch every vCard in one address book, in a single request. |
-| [cardDavAbsoluteUrl()](/code/functions/cardDavAbsoluteUrl.md) | 383 | Resolve an href from a DAV response against the configured base URL. |
-| [cardDavUnfold()](/code/functions/cardDavUnfold.md) | 407 | Unfold a vCard into logical lines. |
-| [cardDavUnescapeText()](/code/functions/cardDavUnescapeText.md) | 437 | Turn a vCard TEXT value into the plain string a human means by it. |
-| [cardDavEscapeText()](/code/functions/cardDavEscapeText.md) | 466 | The inverse of `cardDavUnescapeText()` — a plain string as a vCard TEXT value. |
-| [cardDavProperty()](/code/functions/cardDavProperty.md) | 481 | Read one property's values out of an unfolded vCard. |
-| [cardDavScanBook()](/code/functions/cardDavScanBook.md) | 514 | What can this address book be scoped BY? |
-| [cardDavScopeList()](/code/functions/cardDavScopeList.md) | 576 | Read `carddav_scope_value` into a list. |
-| [cardDavConfigFromProvider()](/code/functions/cardDavConfigFromProvider.md) | 596 | Build the config array a request needs from an `auth_providers` row. |
+| [cardDavExplainStatus()](/code/functions/cardDavExplainStatus.md) | 193 | Turn an HTTP status into something an operator can act on. |
+| [cardDavListAddressBooks()](/code/functions/cardDavListAddressBooks.md) | 225 | List the address books an account can see. |
+| [cardDavParseAddressBooks()](/code/functions/cardDavParseAddressBooks.md) | 274 | Pull the address books out of a PROPFIND multistatus body. |
+| [cardDavFetchCards()](/code/functions/cardDavFetchCards.md) | 335 | Fetch every vCard in one address book, in a single request. |
+| [cardDavAbsoluteUrl()](/code/functions/cardDavAbsoluteUrl.md) | 393 | Resolve an href from a DAV response against the configured base URL. |
+| [cardDavUnfold()](/code/functions/cardDavUnfold.md) | 419 | Unfold a vCard into logical lines. |
+| [cardDavUnescapeText()](/code/functions/cardDavUnescapeText.md) | 451 | Turn a vCard TEXT value into the plain string a human means by it. |
+| [cardDavEscapeText()](/code/functions/cardDavEscapeText.md) | 482 | The inverse of `cardDavUnescapeText()` — a plain string as a vCard TEXT value. |
+| [cardDavProperty()](/code/functions/cardDavProperty.md) | 500 | Read one property's values out of an unfolded vCard. |
+| [cardDavScanBook()](/code/functions/cardDavScanBook.md) | 536 | What can this address book be scoped BY? |
+| [cardDavScopeList()](/code/functions/cardDavScopeList.md) | 600 | Read `carddav_scope_value` into a list. |
+| [cardDavConfigFromProvider()](/code/functions/cardDavConfigFromProvider.md) | 623 | Build the config array a request needs from an `auth_providers` row. |
 
 ## How it hangs together
 

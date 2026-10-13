@@ -1,6 +1,6 @@
 # includes/knowledge/kb_ai.php
 
-> PHP - 171 lines
+> PHP - 189 lines
 
 Knowledge-base retrieval for AI answers — the shared RAG building blocks.
 
@@ -19,19 +19,19 @@ refactoring a working endpoint as part of the web chat build.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [kbCosineSimilarity()](/code/functions/kbCosineSimilarity.md) | 23 | Cosine similarity of two equal-ish length vectors (0 if either is a zero vector). |
-| [kbGenerateEmbedding()](/code/functions/kbGenerateEmbedding.md) | 39 | Embed a query with OpenAI's small embedding model. Returns the vector or null. |
-| [kbRetrieveArticles()](/code/functions/kbRetrieveArticles.md) | 103 | Find the Knowledge articles most relevant to a question. Uses embedding similarity when an OpenAI key + embedded articles exist, else falls back to every in-scope article. Returns ['articles' => [{id,title,body}], 'method' => 'vector'\|'all']. |
-| [kbBuildContext()](/code/functions/kbBuildContext.md) | 160 | Turn retrieved articles into a plain-text context block for the AI system prompt. |
+| [kbCosineSimilarity()](/code/functions/kbCosineSimilarity.md) | 28 | Cosine similarity of two equal-ish length vectors (0 if either is a zero vector). |
+| [kbGenerateEmbedding()](/code/functions/kbGenerateEmbedding.md) | 49 | Embed a query with OpenAI's small embedding model. Returns the vector or null. |
+| [kbRetrieveArticles()](/code/functions/kbRetrieveArticles.md) | 117 | Find the Knowledge articles most relevant to a question. Uses embedding similarity when an OpenAI key + embedded articles exist, else falls back to every in-scope article. Returns ['articles' => [{id,title,body}], 'method' => 'vector'\|'all']. |
+| [kbBuildContext()](/code/functions/kbBuildContext.md) | 178 | Turn retrieved articles into a plain-text context block for the AI system prompt. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 117 | `kbRetrieveArticles` | read [system_settings](/code/tables/system_settings.md) |  |
-| 127 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 135 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 153 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 131 | `kbRetrieveArticles` | read [system_settings](/code/tables/system_settings.md) |  |
+| 141 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 149 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 167 | `kbRetrieveArticles` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

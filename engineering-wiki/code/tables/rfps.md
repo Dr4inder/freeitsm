@@ -30,8 +30,8 @@ RFP Builder (feature of the Contracts module)
 | [api/rfp-builder/delete_rfp.php](/code/files/api/rfp-builder/delete_rfp.php.md):46 |  | delete |  |  |
 | [api/rfp-builder/extract_document.php](/code/files/api/rfp-builder/extract_document.php.md):61 |  | update | `updated_datetime` |  |
 | [api/rfp-builder/extract_requirements.php](/code/files/api/rfp-builder/extract_requirements.php.md):103 |  | update | `updated_datetime` |  |
-| [api/rfp-builder/generate_framing.php](/code/files/api/rfp-builder/generate_framing.php.md):166 |  | update | `updated_datetime` |  |
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md):268 |  | update | `updated_datetime` |  |
+| [api/rfp-builder/generate_framing.php](/code/files/api/rfp-builder/generate_framing.php.md):169 |  | update | `updated_datetime` |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md):271 |  | update | `updated_datetime` |  |
 | [api/rfp-builder/invite_supplier.php](/code/files/api/rfp-builder/invite_supplier.php.md):57 |  | update | `updated_datetime` |  |
 | [api/rfp-builder/lock_consolidation.php](/code/files/api/rfp-builder/lock_consolidation.php.md):65 |  | update | `status`, `updated_datetime` |  |
 | [api/rfp-builder/lock_consolidation.php](/code/files/api/rfp-builder/lock_consolidation.php.md):72 |  | update | `status`, `updated_datetime` |  |
@@ -39,9 +39,9 @@ RFP Builder (feature of the Contracts module)
 | [api/rfp-builder/remove_invited_supplier.php](/code/files/api/rfp-builder/remove_invited_supplier.php.md):56 |  | update | `updated_datetime` |  |
 | [api/rfp-builder/resolve_conflict.php](/code/files/api/rfp-builder/resolve_conflict.php.md):73 |  | update | `updated_datetime` |  |
 | [api/rfp-builder/restore_section_version.php](/code/files/api/rfp-builder/restore_section_version.php.md):87 |  | update | `updated_datetime` |  |
-| [api/rfp-builder/restyle_framing.php](/code/files/api/rfp-builder/restyle_framing.php.md):133 |  | update | `updated_datetime` |  |
-| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md):161 |  | update | `updated_datetime` |  |
-| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):207 |  | update | `status`, `updated_datetime` |  |
+| [api/rfp-builder/restyle_framing.php](/code/files/api/rfp-builder/restyle_framing.php.md):136 |  | update | `updated_datetime` |  |
+| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md):164 |  | update | `updated_datetime` |  |
+| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):210 |  | update | `status`, `updated_datetime` |  |
 | [api/rfp-builder/save_extracted.php](/code/files/api/rfp-builder/save_extracted.php.md):58 |  | update | `updated_datetime` |  |
 | [api/rfp-builder/save_rfp.php](/code/files/api/rfp-builder/save_rfp.php.md):88 |  | update | `name`, `status`, `style_guide`, `contract_id`, `chosen_supplier_id`, `updated_datetime` |  |
 | [api/rfp-builder/save_rfp.php](/code/files/api/rfp-builder/save_rfp.php.md):99 |  | update | `tenant_id` |  |
@@ -55,7 +55,7 @@ RFP Builder (feature of the Contracts module)
 | [api/rfp-builder/update_invited_supplier.php](/code/files/api/rfp-builder/update_invited_supplier.php.md):45 |  | update | `updated_datetime` |  |
 | [api/rfp-builder/update_section.php](/code/files/api/rfp-builder/update_section.php.md):77 |  | update | `updated_datetime` |  |
 | [api/rfp-builder/upload_document.php](/code/files/api/rfp-builder/upload_document.php.md):105 |  | update | `updated_datetime` |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):226 | `ContractsService::deleteSupplier` | update | `chosen_supplier_id` |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):247 | `ContractsService::deleteSupplier` | update | `chosen_supplier_id` |  |
 
 ## Read by
 
@@ -63,7 +63,7 @@ RFP Builder (feature of the Contracts module)
 |---|---|---|
 | [api/rfp-builder/add_consolidated.php](/code/files/api/rfp-builder/add_consolidated.php.md) | L52 |  |
 | [api/rfp-builder/create_prospective_supplier.php](/code/files/api/rfp-builder/create_prospective_supplier.php.md) | L47 |  |
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L177 |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L180 |  |
 | [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L38 |  |
 | [api/rfp-builder/get_rfps.php](/code/files/api/rfp-builder/get_rfps.php.md) | L35 |  |
 | [api/rfp-builder/get_sections.php](/code/files/api/rfp-builder/get_sections.php.md) | L97 |  |
@@ -72,7 +72,7 @@ RFP Builder (feature of the Contracts module)
 | [api/rfp-builder/update_framing_context.php](/code/files/api/rfp-builder/update_framing_context.php.md) | L35 |  |
 | [api/rfp-builder/upload_document.php](/code/files/api/rfp-builder/upload_document.php.md) | L65 |  |
 | [contracts/rfp-builder/preview.php](/code/files/contracts/rfp-builder/preview.php.md) | L42 |  |
-| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiResolveStyleGuide L40, rfpAiGenerateFramingStreaming L1197 |  |
-| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpTenantReady L30, rfpTenantOf L51, rfpCanView L63, rfpIdOf L75 |  |
-| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::assertMovable L312 |  |
+| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiResolveStyleGuide L42, rfpAiGenerateFramingStreaming L1247 |  |
+| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpTenantReady L30, rfpTenantOf L63, rfpCanView L79, rfpIdOf L94 |  |
+| [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::assertMovable L349 |  |
 

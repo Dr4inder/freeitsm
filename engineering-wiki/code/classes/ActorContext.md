@@ -17,7 +17,7 @@ Who is acting, and what they may see — the only auth-derived facts a service n
 
 ### __construct
 
-*public* - line 28
+*public* - line 30
 
 Who is acting, which companies they may reach, where the call came from (ui or api), their locale and display name.
 
@@ -33,15 +33,15 @@ function __construct(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$actorId` | `int` |  |  |
+| `$actorId` | `int` |  | the acting analyst's id; 0 for a portal user or the system |
 | `$companyScope` | `?array` | `null` | null = all companies, else the allowed tenant ids |
 | `$source` | `string` | `'api'` | 'ui' \| 'api' |
-| `$locale` | `string` | `'en'` |  |
+| `$locale` | `string` | `'en'` | the actor's language code, e.g. 'en' |
 | `$actorName` | `string` | `''` | the acting analyst's display name (for *_by attribution columns) |
 
 ### fromSession
 
-*public static* - line 37
+*public static* - line 39
 
 Build from the logged-in analyst session (UI adapters).
 
@@ -57,7 +57,7 @@ function fromSession(PDO $conn): self
 
 ### fromPortalUser
 
-*public static* - line 63
+*public static* - line 65
 
 Build from a signed-in SELF-SERVICE PORTAL user.
 
@@ -82,7 +82,7 @@ function fromPortalUser(string $name = ''): self
 
 ### system
 
-*public static* - line 80
+*public static* - line 84
 
 Build for something no person did: an inventory agent, Intune, a cron job (PR #164). actorId 0 is recorded as "no analyst" (NULL) in history, and companyScope null means the caller has already decided the company - an agent's key carries it, Intune's setting names it.
 
@@ -92,13 +92,13 @@ function system(string $name = 'System'): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` | `'System'` |  |
+| `$name` | `string` | `'System'` | what to record as the actor in history, e.g. 'Intune' or 'Inventory agent' |
 
 **Called from:** [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md), [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md), [includes/intune.php](/code/files/includes/intune.php.md), [includes/sso_claims.php](/code/files/includes/sso_claims.php.md)
 
 ### fromApiKey
 
-*public static* - line 92
+*public static* - line 100
 
 Build from an authenticated API key row (API adapters).
 
@@ -108,13 +108,13 @@ function fromApiKey(array $apiKey): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$apiKey` | `array` |  |  |
+| `$apiKey` | `array` |  | the authenticated API key row from `apiAuthenticate()`, with analyst_id, company_scope and analyst_name |
 
 **Called from:** [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md)
 
 ### sessionCompanyScope
 
-*private static* - line 109
+*private static* - line 117
 
 The analyst's company scope in the API's null-means-all convention: single-company install or an all-tenant analyst → null; otherwise the explicit accessible tenant id list. (Unused by install-wide modules; the first tenant-scoped module to migrate exercises it.)
 
@@ -131,5 +131,5 @@ function sessionCompanyScope(PDO $conn, int $analystId): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 115 | `ActorContext::sessionCompanyScope` | read [analysts](/code/tables/analysts.md) |  |
+| 123 | `ActorContext::sessionCompanyScope` | read [analysts](/code/tables/analysts.md) |  |
 

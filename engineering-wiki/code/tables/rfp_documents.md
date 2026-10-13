@@ -36,7 +36,7 @@
 | [api/rfp-builder/delete_rfp.php](/code/files/api/rfp-builder/delete_rfp.php.md) | L41 |  |
 | [api/rfp-builder/extract_document.php](/code/files/api/rfp-builder/extract_document.php.md) | L37 |  |
 | [api/rfp-builder/extract_requirements.php](/code/files/api/rfp-builder/extract_requirements.php.md) | L44 |  |
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L161 |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L164 |  |
 | [api/rfp-builder/get_consolidated.php](/code/files/api/rfp-builder/get_consolidated.php.md) | L63 |  |
 | [api/rfp-builder/get_coverage.php](/code/files/api/rfp-builder/get_coverage.php.md) | L49, L63, L92, L109 |  |
 | [api/rfp-builder/get_document_text.php](/code/files/api/rfp-builder/get_document_text.php.md) | L31 |  |
@@ -45,7 +45,7 @@
 | [api/rfp-builder/get_processing_log.php](/code/files/api/rfp-builder/get_processing_log.php.md) | L61 |  |
 | [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L38 |  |
 | [api/rfp-builder/get_rfps.php](/code/files/api/rfp-builder/get_rfps.php.md) | L35 |  |
-| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md) | L87 |  |
-| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L991, rfpAiGenerateFramingStreaming L1222 |  |
-| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L76 |  |
+| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md) | L90 |  |
+| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L1037, rfpAiGenerateFramingStreaming L1272 |  |
+| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L95 |  |
 

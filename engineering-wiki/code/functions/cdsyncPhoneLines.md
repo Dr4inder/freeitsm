@@ -14,11 +14,11 @@ One selector, used by both ends, makes that class of bug unrepresentable.
 function cdsyncPhoneLines(array $lines): array
 ```
 
-Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 172.
+Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md), line 177.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$lines` | `array` |  |  |
+| `$lines` | `array` |  | the card's unfolded lines from `cardDavUnfold()` |
 
 **Returns:** array ['phone' => int|null, 'mobile' => int|null] indexes into `$lines`
 

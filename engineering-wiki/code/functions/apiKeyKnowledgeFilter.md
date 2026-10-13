@@ -20,13 +20,13 @@ includes/tenancy.php for the session-side twin.
 function apiKeyKnowledgeFilter(PDO $conn, array $apiKey, string $alias = 'a'): array
 ```
 
-Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 302.
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 330.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` | `'a'` |  |
+| `$alias` | `string` | `'a'` | the alias the query gives the knowledge_articles table |
 
 **Returns:** array [sqlFragment, params]
 

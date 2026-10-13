@@ -26,22 +26,22 @@ Gate checklists (3.3.0) - includes/projects/gatecheck.php.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):386 | `ProjectsService::deleteStage` | delete |  |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):78 | `ProjectTemplatesService::createFromTemplate` | insert | `project_id`, `stage_id`, `kind`, `title`, `position`, `created_by_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1143 | `ProjectToolsService::saveGateItem` | update | `title`, `analyst_id`, `change_id`, `notes` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1148 | `ProjectToolsService::saveGateItem` | insert | `project_id`, `stage_id`, `kind`, `title`, `analyst_id`, `change_id`, `notes`, `position`, `created_by_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1164 | `ProjectToolsService::deleteGateItem` | delete |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1187 | `ProjectToolsService::tickGateItem` | update | `done_by_id`, `done_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1196 | `ProjectToolsService::tickGateItem` | update | `document_id`, `done_by_id`, `done_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1202 | `ProjectToolsService::tickGateItem` | update | `done_by_id`, `done_datetime` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):409 | `ProjectsService::deleteStage` | delete |  |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):82 | `ProjectTemplatesService::createFromTemplate` | insert | `project_id`, `stage_id`, `kind`, `title`, `position`, `created_by_id`, `created_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1252 | `ProjectToolsService::saveGateItem` | update | `title`, `analyst_id`, `change_id`, `notes` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1257 | `ProjectToolsService::saveGateItem` | insert | `project_id`, `stage_id`, `kind`, `title`, `analyst_id`, `change_id`, `notes`, `position`, `created_by_id`, `created_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1277 | `ProjectToolsService::deleteGateItem` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1303 | `ProjectToolsService::tickGateItem` | update | `done_by_id`, `done_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1312 | `ProjectToolsService::tickGateItem` | update | `document_id`, `done_by_id`, `done_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1318 | `ProjectToolsService::tickGateItem` | update | `done_by_id`, `done_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateItemsReady L35, projectGateItems L70 |  |
+| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateItemsReady L35, projectGateItems L72 |  |
 | [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsStalled L119 |  |
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L425 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::saveGateItem L1147, ProjectToolsService::setGateKind L1220, ProjectToolsService::gateItem L1240 |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::signoffEvent L747 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L446 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::saveGateItem L1256, ProjectToolsService::setGateKind L1341, ProjectToolsService::gateItem L1365 |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::signoffEvent L841 |  |
 

@@ -17,13 +17,13 @@ two places. Two consequences, both load-bearing:
 function handleAddShortcut(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 331.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 354.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request: article_id and the folder_id the shortcut goes in |
 
 **Returns:** `void`
 
@@ -31,8 +31,8 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 350 | `handleAddShortcut` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 359 | `handleAddShortcut` | **insert** [knowledge_shortcuts](/code/tables/knowledge_shortcuts.md) (`folder_id`, `article_id`, `created_by_id`, `created_datetime`) |  |
+| 373 | `handleAddShortcut` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 382 | `handleAddShortcut` | **insert** [knowledge_shortcuts](/code/tables/knowledge_shortcuts.md) (`folder_id`, `article_id`, `created_by_id`, `created_datetime`) |  |
 
 ## Calls
 

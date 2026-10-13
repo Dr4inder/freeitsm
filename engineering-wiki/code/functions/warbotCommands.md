@@ -11,7 +11,7 @@ because parsing natural language is precisely the part that needs the model.
 function warbotCommands(): array
 ```
 
-Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 54.
+Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md), line 56.
 
 **Returns:** `array`
 

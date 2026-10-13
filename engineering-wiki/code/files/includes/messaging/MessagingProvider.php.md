@@ -1,6 +1,6 @@
 # includes/messaging/MessagingProvider.php
 
-> PHP - 240 lines
+> PHP - 272 lines
 
 MessagingProvider — the provider-agnostic contract for a chat channel (WhatsApp today; SMS/others later). Everything above this line — webhook ingestion, ticket creation, the reply path — talks to this interface and never knows whether Twilio or Meta Cloud is actually live.
 

@@ -1,6 +1,6 @@
 # includes/engineering_wiki/scanner.php
 
-> PHP - 1392 lines
+> PHP - 1622 lines
 
 Engineering wiki - the scanner that writes the Code map (engineering-wiki/code/).
 
@@ -38,11 +38,11 @@ counting as a change after that.
 ## Traps
 
 > [!WARNING]
-> **Line 235, in `EwScanner::parsePhp`:** the first doc block in a file is ALWAYS the file's description. It used to go to the next function/class instead whenever one came next, so files with a proper header showed no summary. It ALSO describes that declaration when nothing else sits between them (the common "one header, then the class" shape) - but not when another comment follows, because that comment is the declaration's own.
+> **Line 254, in `EwScanner::parsePhp`:** the first doc block in a file is ALWAYS the file's description. It used to go to the next function/class instead whenever one came next, so files with a proper header showed no summary. It ALSO describes that declaration when nothing else sits between them (the common "one header, then the class" shape) - but not when another comment follows, because that comment is the declaration's own.
 
 > [!WARNING]
-> **Line 625:** comment down to its text - comment markers stripped, from "TRAP:" to the end of its paragraph, on one line.
+> **Line 694:** comment down to its text - comment markers stripped, from "TRAP:" to the end of its paragraph, on one line.
 
 > [!WARNING]
-> **Line 1291:** comment, file by file.
+> **Line 1507:** comment, file by file.
 

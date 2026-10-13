@@ -1,6 +1,6 @@
 # includes/search/search.php
 
-> PHP - 370 lines
+> PHP - 382 lines
 
 THE search function. Nothing else in FreeITSM writes a search query.
 
@@ -33,21 +33,21 @@ wildcard to soften the first of those. See §4.6 of the wiki page.
 | Function | Line | What it does |
 |---|--:|---|
 | [searchMinTokenSize()](/code/functions/searchMinTokenSize.md) | 39 | The shortest word this server will index. Read from the server rather than assumed, because it is not the same everywhere — WAMP ships 0, stock MySQL is 3 — and requiring a term below it in boolean mode returns NOTHING AT ALL rather than ignoring it. That is the difference between "search works" and "search mysteriously returns nothing for that phrase". |
-| [searchParseQuery()](/code/functions/searchParseQuery.md) | 63 | Turn what a person typed into a MySQL boolean-mode query. |
-| [searchScopeForAnalyst()](/code/functions/searchScopeForAnalyst.md) | 130 | Build the scope structure for an analyst. |
-| [searchScopeToSql()](/code/functions/searchScopeToSql.md) | 186 | Translate the scope structure into SQL. The ONLY place this happens. |
-| [searchCorpusQuery()](/code/functions/searchCorpusQuery.md) | 247 | Search the corpus. |
-| [searchSnippet()](/code/functions/searchSnippet.md) | 354 | A readable fragment of the body around the first matching term. |
+| [searchParseQuery()](/code/functions/searchParseQuery.md) | 65 | Turn what a person typed into a MySQL boolean-mode query. |
+| [searchScopeForAnalyst()](/code/functions/searchScopeForAnalyst.md) | 134 | Build the scope structure for an analyst. |
+| [searchScopeToSql()](/code/functions/searchScopeToSql.md) | 192 | Translate the scope structure into SQL. The ONLY place this happens. |
+| [searchCorpusQuery()](/code/functions/searchCorpusQuery.md) | 255 | Search the corpus. |
+| [searchSnippet()](/code/functions/searchSnippet.md) | 366 | A readable fragment of the body around the first matching term. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 271 | `searchCorpusQuery` | read [tickets](/code/tables/tickets.md) |  |
-| 278 | `searchCorpusQuery` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 286 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
-| 293 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
-| 308 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
+| 279 | `searchCorpusQuery` | read [tickets](/code/tables/tickets.md) |  |
+| 286 | `searchCorpusQuery` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 294 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
+| 301 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
+| 316 | `searchCorpusQuery` | read [search_documents](/code/tables/search_documents.md) |  |
 
 ## How it hangs together
 

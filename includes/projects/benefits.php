@@ -41,7 +41,13 @@ function projectBenefitsReady(PDO $conn): bool
     return $ready;
 }
 
-/** The worked-out state and progress of one benefit, given its latest value. */
+/**
+ * The worked-out state and progress of one benefit, given its latest value.
+ *
+ * @param array $b  a project_benefits row - baseline_value, target_value, direction, status, target_date, review_date
+ * @param ?float $now  the latest measured value; null when it has never been measured
+ * @param ?string $today  the date to judge against as 'Y-m-d'; null means today (UTC)
+ */
 function projectBenefitState(array $b, ?float $now, ?string $today = null): array
 {
     $today = $today ?? gmdate('Y-m-d');
@@ -104,7 +110,11 @@ function projectBenefits(PDO $conn, int $projectId): array
     return $out;
 }
 
-/** Per project: benefits open and reviews due - for the Overview, the card and the assistant. */
+/**
+ * Per project: benefits open and reviews due - for the Overview, the card and the assistant.
+ *
+ * @param array $projectIds  the project ids to count for
+ */
 function projectBenefitStats(PDO $conn, array $projectIds): array
 {
     $out = [];
@@ -118,7 +128,12 @@ function projectBenefitStats(PDO $conn, array $projectIds): array
     return $out;
 }
 
-/** The next review after $from, $months on; null when it does not repeat. */
+/**
+ * The next review after $from, $months on; null when it does not repeat.
+ *
+ * @param string $from  the date the review is counted from, 'Y-m-d'
+ * @param ?int $months  the review interval in months; null or 0 means it does not repeat
+ */
 function projectBenefitNextReview(string $from, ?int $months): ?string
 {
     if (!$months || $months <= 0) return null;
@@ -127,7 +142,12 @@ function projectBenefitNextReview(string $from, ?int $months): ?string
     return $d->format('Y-m-d');
 }
 
-/** Who is reminded about a benefit's review (project_benefit_notify). */
+/**
+ * Who is reminded about a benefit's review (project_benefit_notify).
+ *
+ * @param ?int $ownerId  the benefit owner's analyst id; null when nobody owns it
+ * @param ?int $pmId  the project manager's analyst id; null when there is none
+ */
 function projectBenefitNotifyIds(PDO $conn, ?int $ownerId, ?int $pmId): array
 {
     $ids = projectSetting($conn, 'project_benefit_notify') === 'owner' ? [$ownerId ?: $pmId] : [$ownerId, $pmId];

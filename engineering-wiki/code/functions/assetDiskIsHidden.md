@@ -11,13 +11,13 @@ precisely the Microsoft Virtual Disk this feature was built for.
 function assetDiskIsHidden(array $rules, ?string $model, $sizeBytes): bool
 ```
 
-Defined in [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md), line 81.
+Defined in [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md), line 85.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rules` | `array` |  |  |
-| `$model` | `?string` |  |  |
-| `$sizeBytes` |  |  |  |
+| `$rules` | `array` |  | the rules from `assetDiskHideRulesFor()` - each {id, asset_id, model, size_bytes} |
+| `$model` | `?string` |  | the drive's model as the agent reported it; null when it reported none |
+| `$sizeBytes` |  |  | the drive's size in bytes (string from PDO or int); null when unknown |
 
 **Returns:** `bool`
 

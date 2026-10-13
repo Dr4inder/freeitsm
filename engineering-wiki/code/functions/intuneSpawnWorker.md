@@ -6,12 +6,12 @@ Spawn the CLI worker so it survives the web request. Returns true on success.
 function intuneSpawnWorker(int $jobId, ?string $phpExeOverride): bool
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 552.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 573.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$jobId` | `int` |  |  |
-| `$phpExeOverride` | `?string` |  |  |
+| `$jobId` | `int` |  | the intune_sync_jobs id passed to the worker on its command line |
+| `$phpExeOverride` | `?string` |  | a PHP CLI path from the settings, or null to search - see `intuneFindPhpExe()` |
 
 **Returns:** `bool`
 

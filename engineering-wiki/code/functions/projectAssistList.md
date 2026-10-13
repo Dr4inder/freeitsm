@@ -6,13 +6,13 @@ args: status (live | all | a status), health, q, limit.
 function projectAssistList(PDO $conn, array $scope, array $args): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 110.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 138.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `array` |  |  |
-| `$args` | `array` |  |  |
+| `$scope` | `array` |  | [sql, args]: the caller's company filter on alias p |
+| `$args` | `array` |  | the tool's arguments: status (live, all or one status), health, q, limit (1-100, default 25) |
 
 **Returns:** `string`
 

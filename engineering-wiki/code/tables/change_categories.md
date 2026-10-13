@@ -16,6 +16,6 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/change-management/get.php](/code/files/api/change-management/get.php.md) | L34 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53, apiChangeCategoriesList L525 |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::createChange L72, ChangesService::updateChange L221, ChangesService::loadJoined L707 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L57, apiChangeCategoriesList L537 |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::createChange L74, ChangesService::updateChange L226, ChangesService::loadJoined L746 |  |
 

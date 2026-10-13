@@ -6,11 +6,11 @@ Registries where a registrar "transfer lock" is not how transfers are controlled
 function domainTransferLockNotApplicable(string $name): bool
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 438.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 483.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
+| `$name` | `string` |  | a stored domain name; only its TLD is read |
 
 **Returns:** `bool`
 

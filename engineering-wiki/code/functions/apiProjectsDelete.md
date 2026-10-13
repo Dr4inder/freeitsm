@@ -6,7 +6,7 @@ DELETE /projects/{id} - its tasks are detached, never deleted
 function apiProjectsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 265.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 279.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

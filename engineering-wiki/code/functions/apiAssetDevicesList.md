@@ -6,7 +6,7 @@ GET /assets/{id}/devices - the hardware devices and drivers the inventory agent 
 function apiAssetDevicesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 581.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 592.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 584 | `apiAssetDevicesList` | read [asset_devices](/code/tables/asset_devices.md) |  |
+| 595 | `apiAssetDevicesList` | read [asset_devices](/code/tables/asset_devices.md) |  |
 
 ## Calls
 

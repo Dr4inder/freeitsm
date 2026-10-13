@@ -6,11 +6,11 @@ The prose part of a NOT_ENOUGH body, with the question lines removed.
 function writeupExtractExplanation(string $body): string
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 799.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 843.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `string` |  |  |
+| `$body` | `string` |  | the body of a NOT_ENOUGH response, from `writeupParseResponse()` |
 
 **Returns:** `string`
 

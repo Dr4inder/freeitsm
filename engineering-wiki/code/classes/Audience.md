@@ -58,7 +58,7 @@ function all(): array
 
 ### isValid
 
-*public static* - line 76
+*public static* - line 80
 
 True when the value is exactly one of the audience constants.
 
@@ -68,13 +68,13 @@ function isValid($value): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
+| `$value` |  |  | anything; only an exact audience string ('internal', 'customer', 'public') passes |
 
 **Called from:** [api/knowledge/knowledge_bulk_audience.php](/code/files/api/knowledge/knowledge_bulk_audience.php.md), [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md)
 
 ### normalise
 
-*public static* - line 85
+*public static* - line 91
 
 Normalise anything user-supplied to a valid level. Anything unrecognised becomes INTERNAL — the safe end of the ladder.
 
@@ -84,13 +84,13 @@ function normalise($value): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
+| `$value` |  |  | user-supplied audience; anything unrecognised becomes 'internal' |
 
 **Called from:** [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md)
 
 ### visibleTo
 
-*public static* - line 94
+*public static* - line 102
 
 The audiences a reader at `$viewerLevel` may see: their own rung and every more open one. An unrecognised level yields PUBLIC only (fail closed).
 
@@ -100,11 +100,11 @@ function visibleTo(string $viewerLevel): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$viewerLevel` | `string` |  |  |
+| `$viewerLevel` | `string` |  | the reader's audience level - 'internal', 'customer' or 'public' |
 
 ### sqlFilter
 
-*public static* - line 108
+*public static* - line 119
 
 SQL predicate + params restricting a query to what `$viewerLevel` may read. Returns ['', []] for an analyst — they see every rung, so no filter is needed and the SQL stays byte-identical to before this existed.
 
@@ -116,8 +116,8 @@ function sqlFilter(string $viewerLevel, string $alias = 'a'): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$viewerLevel` | `string` |  |  |
-| `$alias` | `string` | `'a'` |  |
+| `$viewerLevel` | `string` |  | the reader's audience level - 'internal', 'customer' or 'public' |
+| `$alias` | `string` | `'a'` | the knowledge articles table's alias in the calling query; '' when it has none |
 
 **Called from:** [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md)
 

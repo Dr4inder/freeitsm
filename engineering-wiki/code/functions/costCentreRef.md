@@ -6,12 +6,12 @@
 function costCentreRef(PDO $conn, $id): ?array
 ```
 
-Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 97.
+Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` |  |  |  |
+| `$id` |  |  | a cost_centres.id as stored on a record; null or 0 gives null |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_as
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 100 | `costCentreRef` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 121 | `costCentreRef` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## Called from
 

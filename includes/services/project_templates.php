@@ -29,6 +29,10 @@ class ProjectTemplatesService
     /**
      * Create a project from template $key. $in is the new-project form (name,
      * start_date, ...): anything it sets wins over the template. Returns the id.
+     *
+     * @param string $key  which template: 'builtin:<key>' or 'saved:<project_templates.id>'
+     * @param array $in  the new-project form (name, start_date, target_end_date, methodology...) - anything set wins over
+     *     the template; an empty start_date means today
      */
     public static function createFromTemplate(PDO $conn, ActorContext $ctx, string $key, array $in, ?int $tenantId): int
     {
@@ -146,7 +150,12 @@ class ProjectTemplatesService
         return $pid;
     }
 
-    /** Remove a half-built project and the tasks made for it. */
+    /**
+     * Remove a half-built project and the tasks made for it.
+     *
+     * @param int $pid  the half-built project to remove
+     * @param array $taskIds  the ids of the tasks already created for it
+     */
     private static function cleanup(PDO $conn, int $pid, array $taskIds): void
     {
         try {
@@ -173,6 +182,9 @@ class ProjectTemplatesService
      * back. The template keeps its id and whether it is offered; projects
      * already started from it are untouched. Built-ins have no id, so they can
      * only be copied, never overwritten.
+     *
+     * @param array $in  name (required), description, parts (any of plan, scope, raid, benefits, tolerances, targets),
+     *     id (a saved template to replace instead of adding a new one)
      */
     public static function saveFromProject(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
@@ -198,7 +210,12 @@ class ProjectTemplatesService
         return $id;
     }
 
-    /** Changes a project template's name, description and active flag. */
+    /**
+     * Changes a project template's name, description and active flag.
+     *
+     * @param int $id  the saved template (project_templates.id)
+     * @param array $in  name (required), description, is_active
+     */
     public static function update(PDO $conn, ActorContext $ctx, int $id, array $in): void
     {
         self::assertManage($conn, $ctx);
@@ -208,7 +225,11 @@ class ProjectTemplatesService
              ->execute([$name, $desc, !empty($in['is_active']) ? 1 : 0, $id]);
     }
 
-    /** Deletes a project template; projects made from it are untouched. */
+    /**
+     * Deletes a project template; projects made from it are untouched.
+     *
+     * @param int $id  the saved template (project_templates.id) to delete
+     */
     public static function delete(PDO $conn, ActorContext $ctx, int $id): void
     {
         self::assertManage($conn, $ctx);
@@ -217,7 +238,12 @@ class ProjectTemplatesService
         $conn->prepare("DELETE FROM project_templates WHERE id = ?")->execute([$id]);
     }
 
-    /** Hide or show a built-in template in the new-project picker. */
+    /**
+     * Hide or show a built-in template in the new-project picker.
+     *
+     * @param string $key  the built-in template's key, without the 'builtin:' prefix
+     * @param bool $hidden  true to hide it from the new-project picker, false to show it
+     */
     public static function setBuiltinHidden(PDO $conn, ActorContext $ctx, string $key, bool $hidden): void
     {
         self::assertManage($conn, $ctx);
@@ -237,7 +263,11 @@ class ProjectTemplatesService
         }
     }
 
-    /** A validated template name and optional description. */
+    /**
+     * A validated template name and optional description.
+     *
+     * @param array $in  name (required, up to 150) and description (optional, cut to 500)
+     */
     private static function nameDesc(array $in): array
     {
         $name = trim((string)($in['name'] ?? ''));
@@ -247,7 +277,11 @@ class ProjectTemplatesService
         return [$name, $desc === '' ? null : mb_substr($desc, 0, 500)];
     }
 
-    /** Loads one project template; throws not found when it does not exist. */
+    /**
+     * Loads one project template; throws not found when it does not exist.
+     *
+     * @param int $id  the saved template (project_templates.id) to load
+     */
     private static function row(PDO $conn, int $id): array
     {
         if (!projectTemplatesReady($conn)) throw new ServiceError('not_found', 'not_found', 'That template does not exist.');

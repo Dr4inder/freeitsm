@@ -29,5 +29,5 @@
 | [api/lms/assignments.php](/code/files/api/lms/assignments.php.md) | L46 |  |
 | [api/lms/groups.php](/code/files/api/lms/groups.php.md) | L19 |  |
 | [api/lms/progress.php](/code/files/api/lms/progress.php.md) | L111 |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAssignmentReachSql L218, lmsAssignedLearnersSql L483, lmsAssignmentTargetProblem L555 |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAssignmentReachSql L235, lmsAssignedLearnersSql L514, lmsAssignmentTargetProblem L589 |  |
 

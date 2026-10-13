@@ -6,12 +6,12 @@ Run the full sync for a given job id. Updates intune_sync_jobs as it goes so the
 function intuneRunSync(PDO $conn, int $jobId): void
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 427.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 443.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$jobId` | `int` |  |  |
+| `$jobId` | `int` |  | the intune_sync_jobs id whose progress this updates |
 
 **Returns:** `void`
 
@@ -19,7 +19,7 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 427.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 439 | `intuneRunSync` | **update** [intune_sync_jobs](/code/tables/intune_sync_jobs.md) (`total`, `processed`, `status`, `finished_datetime`, `message`) |  |
+| 455 | `intuneRunSync` | **update** [intune_sync_jobs](/code/tables/intune_sync_jobs.md) (`total`, `processed`, `status`, `finished_datetime`, `message`) |  |
 
 ## Calls
 

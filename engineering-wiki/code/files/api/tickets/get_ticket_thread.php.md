@@ -1,6 +1,6 @@
 # api/tickets/get_ticket_thread.php
 
-> API endpoint - 210 lines
+> API endpoint - 212 lines
 
 API Endpoint: Get all emails for a ticket (for building reply thread) Returns emails ordered by received_datetime ASC
 
@@ -16,7 +16,7 @@ API Endpoint: Get all emails for a ticket (for building reply thread) Returns em
 
 | Function | Line | What it does |
 |---|--:|---|
-| [stripQuotedThread()](/code/functions/stripQuotedThread.md) | 176 | Strip quoted/nested thread content from an email body Relies on our own visible marker text, with generic blockquote fallback |
+| [stripQuotedThread()](/code/functions/stripQuotedThread.md) | 178 | Strip quoted/nested thread content from an email body Relies on our own visible marker text, with generic blockquote fallback |
 
 ## Database
 

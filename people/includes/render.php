@@ -12,12 +12,26 @@
 
 const PPL_VISIBLE_ROWS = 10;
 
-/** HTML-escapes any value for output. */
+/**
+ * HTML-escapes any value for output.
+ *
+ * @param mixed $s  the value to print; cast to string
+ */
 function pplE($s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
-/** An app-relative path made absolute with BASE_URL; '#' when there is none. */
+/**
+ * An app-relative path made absolute with BASE_URL; '#' when there is none.
+ *
+ * @param ?string $rel  a path relative to the app root, e.g. 'tickets/?id=5'; null gives '#'
+ */
 function pplUrl(?string $rel): string { return $rel === null ? '#' : BASE_URL . $rel; }
 
-/** The coloured strip of counts across the top of a page. */
+/**
+ * The coloured strip of counts across the top of a page.
+ *
+ * @param array $sections  the page's sections from includes/people.php, keyed by section ('tickets', 'assets'...)
+ * @param bool $person  true on a person's page (person wording for assets, domains, projects), false elsewhere
+ * @param array $labels  section key => label, replacing the standard label for that figure
+ */
 function pplStats(array $sections, bool $person, array $labels = []): string
 {
     $out = '';
@@ -39,7 +53,17 @@ function pplStats(array $sections, bool $person, array $labels = []): string
     return $out === '' ? '' : '<div class="ppl-stats">' . $out . '</div>';
 }
 
-/** One section card: a heading with its count, then a table or "Nothing yet". */
+/**
+ * One section card: a heading with its count, then a table or "Nothing yet".
+ *
+ * @param string $key  the section key, used for the card's id (sec-<key>) the stats strip links to
+ * @param string $title  the card heading
+ * @param int $count  the total shown beside the heading
+ * @param array $head  the column headings, plain text
+ * @param array $rows  one array of cells per row, each cell ALREADY-ESCAPED HTML; rows past PPL_VISIBLE_ROWS start hidden
+ * @param bool $more  true to add the "only the first N are shown" note
+ * @param string $extra  extra HTML after the count, e.g. an open/total line
+ */
 function pplCard(string $key, string $title, int $count, array $head, array $rows, bool $more = false, string $extra = ''): string
 {
     $h = '<section class="ppl-card" id="sec-' . pplE($key) . '"><div class="ppl-card-h"><h3>' . pplE($title) . '</h3><span class="ppl-count">' . $count . '</span>' . $extra . '</div>';
@@ -60,13 +84,24 @@ function pplCard(string $key, string $title, int $count, array $head, array $row
     return $h . '</section>';
 }
 
-/** A link to an app-relative URL, or just the escaped text when the reader has nowhere to go. */
+/**
+ * A link to an app-relative URL, or just the escaped text when the reader has nowhere to go.
+ *
+ * @param ?string $url  a path relative to the app root; null for plain text with no link
+ * @param string $text  the link text, escaped here
+ */
 function pplLink(?string $url, string $text): string
 {
     return $url === null ? pplE($text) : '<a href="' . pplE(pplUrl($url)) . '">' . pplE($text) . '</a>';
 }
 
-/** A status pill, optionally in a colour (passed as the --pill CSS variable); '' for empty text. */
+/**
+ * A status pill, optionally in a colour (passed as the --pill CSS variable); '' for empty text.
+ *
+ * @param ?string $text  the pill text, escaped here; null or '' gives ''
+ * @param ?string $colour  a CSS colour for the pill; null for the default
+ * @param string $class  extra CSS classes, e.g. 'muted', 'good', 'bad'
+ */
 function pplPill(?string $text, ?string $colour = null, string $class = ''): string
 {
     if ($text === null || $text === '') return '';
@@ -74,7 +109,12 @@ function pplPill(?string $text, ?string $colour = null, string $class = ''): str
     return '<span class="ppl-pill ' . $class . ($colour ? ' coloured' : '') . '"' . $style . '>' . pplE($text) . '</span>';
 }
 
-/** The Tickets card: number, subject, status, priority, then the analyst (person page) or requester (company page), and the open/total count. */
+/**
+ * The Tickets card: number, subject, status, priority, then the analyst (person page) or requester (company page), and the open/total count.
+ *
+ * @param array $s  the tickets section from includes/people.php: rows, total, open
+ * @param bool $person  true on a person's page (shows the analyst), false on a company page (shows the requester)
+ */
 function pplSectionTickets(array $s, bool $person): string
 {
     $head = [t('people.section.col_number'), t('people.section.col_subject'), t('people.section.col_status'), t('people.section.col_priority')];
@@ -92,7 +132,13 @@ function pplSectionTickets(array $s, bool $person): string
     return pplCard('tickets', t('people.section.tickets'), $s['total'], $head, $rows, $s['total'] > count($s['rows']), $extra);
 }
 
-/** The Assets card: asset, type, model, status, then the date assigned (person page) or who holds it (company page). */
+/**
+ * The Assets card: asset, type, model, status, then the date assigned (person page) or who holds it (company page).
+ *
+ * @param array $s  the assets section from includes/people.php: rows, total
+ * @param bool $person  true on a person's page (shows the date assigned), false elsewhere (shows who holds it)
+ * @param ?string $title  a heading to use instead of the standard one; null for the standard
+ */
 function pplSectionAssets(array $s, bool $person, ?string $title = null): string
 {
     $head = [t('people.section.col_asset'), t('people.section.col_type'), t('people.section.col_model'), t('people.section.col_status')];
@@ -107,7 +153,13 @@ function pplSectionAssets(array $s, bool $person, ?string $title = null): string
     return pplCard('assets', $title ?? t($person ? 'people.section.assets_person' : 'people.section.assets'), $s['total'], $head, $rows, $s['total'] > count($s['rows']));
 }
 
-/** The Contracts card: contract, the other party (unless $withParty is false), status and end date, with inactive contracts marked. */
+/**
+ * The Contracts card: contract, the other party (unless $withParty is false), status and end date, with inactive contracts marked.
+ *
+ * @param array $s  the contracts section from includes/people.php: rows, total
+ * @param bool $withParty  false on a supplier's own page, to leave out the "With" column
+ * @param ?string $title  a heading to use instead of the standard one; null for the standard
+ */
 function pplSectionContracts(array $s, bool $withParty = true, ?string $title = null): string
 {
     // A supplier's own page leaves out "With" - every row would name the supplier.
@@ -124,7 +176,13 @@ function pplSectionContracts(array $s, bool $withParty = true, ?string $title = 
     return pplCard('contracts', $title ?? t('people.section.contracts'), $s['total'], $head, $rows);
 }
 
-/** The Domains card: domain, the roles it plays when the rows carry them, status, expiry and grade. */
+/**
+ * The Domains card: domain, the roles it plays when the rows carry them, status, expiry and grade.
+ *
+ * @param array $s  the domains section from includes/people.php: rows (with roles on supplier and contact pages), total
+ * @param bool $person  true on a person's page, for the heading only
+ * @param ?string $title  a heading to use instead of the standard one; null for the standard
+ */
 function pplSectionDomains(array $s, bool $person, ?string $title = null): string
 {
     // Supplier and contact pages say HOW each domain involves them (#162).
@@ -141,7 +199,11 @@ function pplSectionDomains(array $s, bool $person, ?string $title = null): strin
     return pplCard('domains', $title ?? t($person ? 'people.section.domains_person' : 'people.section.domains'), $s['total'], $head, $rows);
 }
 
-/** A person's Courses card: each course with its status pill, progress (or completion date) and deadline, overdue ones marked. */
+/**
+ * A person's Courses card: each course with its status pill, progress (or completion date) and deadline, overdue ones marked.
+ *
+ * @param array $s  the person's courses section from includes/people.php: rows, total
+ */
 function pplSectionCoursesPerson(array $s): string
 {
     $head = [t('people.section.col_course'), t('people.section.col_status'), t('people.section.col_progress'), t('people.section.col_deadline')];
@@ -160,7 +222,11 @@ function pplSectionCoursesPerson(array $s): string
     return pplCard('courses', t('people.section.courses'), $s['total'], $head, $rows);
 }
 
-/** A company's Courses card: each course with how many of its people have finished it and how many are part-way. */
+/**
+ * A company's Courses card: each course with how many of its people have finished it and how many are part-way.
+ *
+ * @param array $s  the company's courses section from includes/people.php: rows (finished, in_progress), total
+ */
 function pplSectionCoursesCompany(array $s): string
 {
     $head = [t('people.section.col_course'), t('people.section.col_finished'), t('people.section.col_in_progress')];
@@ -168,7 +234,12 @@ function pplSectionCoursesCompany(array $s): string
     return pplCard('courses', t('people.section.courses'), $s['total'], $head, $rows);
 }
 
-/** The Forms card: form, when submitted, who by (company page), approval state and the ticket it raised. */
+/**
+ * The Forms card: form, when submitted, who by (company page), approval state and the ticket it raised.
+ *
+ * @param array $s  the forms section from includes/people.php: rows, total
+ * @param bool $person  true on a person's page; false adds the "By" column
+ */
 function pplSectionForms(array $s, bool $person): string
 {
     $head = [t('people.section.col_form'), t('people.section.col_submitted')];
@@ -188,6 +259,8 @@ function pplSectionForms(array $s, bool $person): string
  * A person's RACI duties on one project, one line per letter: "Accountable for
  * Phones working on day one, Every desk patched and 2 more". The full list is
  * the line's tooltip.
+ *
+ * @param array $duties  RACI letter ('R', 'A', 'C', 'I') => list of item titles
  */
 function pplRaciDuties(array $duties): string
 {
@@ -201,7 +274,12 @@ function pplRaciDuties(array $duties): string
     return $h;
 }
 
-/** Projects (3.2.0): a person's memberships with their role and RACI duties, or a company's projects. */
+/**
+ * Projects (3.2.0): a person's memberships with their role and RACI duties, or a company's projects.
+ *
+ * @param array $s  the projects section from includes/people.php: rows, total
+ * @param bool $person  true on a person's page, adding the role and RACI duties column
+ */
 function pplSectionProjects(array $s, bool $person): string
 {
     $head = [t('people.section.col_project')];
@@ -222,7 +300,12 @@ function pplSectionProjects(array $s, bool $person): string
     return pplCard('projects', t($person ? 'people.section.projects_person' : 'people.section.projects'), $s['total'], $head, $rows, $s['total'] >= PEOPLE_SECTION_LIMIT);
 }
 
-/** Contractors (3.3.0): the tasks given to a supplier, or to one person there. */
+/**
+ * Contractors (3.3.0): the tasks given to a supplier, or to one person there.
+ *
+ * @param array $s  the contractor tasks section from includes/people.php: rows, total, open
+ * @param bool $byContact  true on a contact's page; false (supplier page) adds the contact column
+ */
 function pplSectionContractorTasks(array $s, bool $byContact): string
 {
     $head = [t('people.section.col_task'), t('people.section.col_status'), t('people.section.col_due'), t('people.section.col_project')];
@@ -239,7 +322,12 @@ function pplSectionContractorTasks(array $s, bool $byContact): string
     return pplCard('tasks', t('people.section.contractor_tasks'), $s['total'], $head, $rows, $s['total'] >= PEOPLE_SECTION_LIMIT);
 }
 
-/** Every section present, in a fixed order. */
+/**
+ * Every section present, in a fixed order.
+ *
+ * @param array $sections  the page's sections from includes/people.php, keyed by section
+ * @param bool $person  true on a person's page, false on a company page
+ */
 function pplSections(array $sections, bool $person): string
 {
     $h = '';
@@ -254,7 +342,12 @@ function pplSections(array $sections, bool $person): string
 }
 
 /** The <head> every People page shares. $extraCss: page stylesheets, linked
- *  BEFORE mobile.css so the mobile layer still wins its ties (Techniques §9). */
+ *  BEFORE mobile.css so the mobile layer still wins its ties (Techniques §9).
+ *
+ * @param string $title  the page's own title, put into the <title> by pageTitle()
+ * @param array $namespaces  the translation namespaces published to the page's JS
+ * @param array $extraCss  stylesheet paths relative to the app root, e.g. 'assets/css/help.css?v=6'
+ */
 function pplHead(string $title, array $namespaces = ['common', 'people'], array $extraCss = []): void
 {
     ?>
@@ -276,7 +369,11 @@ function pplHead(string $title, array $namespaces = ['common', 'people'], array 
     <?php
 }
 
-/** Two letters for an avatar. */
+/**
+ * Two letters for an avatar.
+ *
+ * @param string $name  a name or an email address
+ */
 function pplInitials(string $name): string
 {
     $parts = preg_split('/[\s@._-]+/u', trim($name), -1, PREG_SPLIT_NO_EMPTY);

@@ -1,6 +1,6 @@
 # api/calendar/feed.php
 
-> API endpoint - 93 lines
+> API endpoint - 96 lines
 
 API Endpoint: Calendar subscription feed (iCalendar / .ics)
 
@@ -24,14 +24,14 @@ Rotate the token from the calendar sidebar ("Reset link") to revoke an old URL.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [feed_deny()](/code/functions/feed_deny.md) | 22 | Sends an HTTP status and a plain-text message, then stops - the feed's only error path, since a calendar app shows nothing richer. |
+| [feed_deny()](/code/functions/feed_deny.md) | 25 | Sends an HTTP status and a plain-text message, then stops - the feed's only error path, since a calendar app shows nothing richer. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 39 |  | read [user_preferences](/code/tables/user_preferences.md) |  |
-| 51 |  | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 42 |  | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 54 |  | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md) |  |
 
 ## How it hangs together
 

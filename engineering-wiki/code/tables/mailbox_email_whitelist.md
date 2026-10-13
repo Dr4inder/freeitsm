@@ -21,6 +21,6 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | loadWhitelist L1454 |  |
+| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md) | loadWhitelist L1542 |  |
 | [api/tickets/get_mailbox_whitelist.php](/code/files/api/tickets/get_mailbox_whitelist.php.md) | L28 |  |
 

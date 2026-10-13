@@ -6,12 +6,12 @@ Turn a link written on page `$from` into a page path (+ #anchor), or null when i
 function ewResolveLink(string $from, string $href): ?string
 ```
 
-Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 61.
+Defined in [includes/engineering_wiki/store.php](/code/files/includes/engineering_wiki/store.php.md), line 70.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$from` | `string` |  |  |
-| `$href` | `string` |  |  |
+| `$from` | `string` |  | the page path the link is written on, e.g. "code/files/x" |
+| `$href` | `string` |  | the link target as written in the Markdown, optionally with a #fragment |
 
 **Returns:** `?string`
 

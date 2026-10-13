@@ -6,7 +6,7 @@ Everything the scheduled-trigger cron runs. SLA events are NOT here — they're 
 function workflowScheduledRun(PDO $conn): array
 ```
 
-Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 232.
+Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 237.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

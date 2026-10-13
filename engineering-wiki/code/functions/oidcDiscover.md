@@ -6,11 +6,11 @@ Fetch + cache (per request) a provider's discovery document. Throws on failure.
 function oidcDiscover(string $issuer): array
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 72.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 84.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$issuer` | `string` |  |  |
+| `$issuer` | `string` |  | the provider's issuer URL; a trailing slash is ignored |
 
 **Returns:** `array`
 

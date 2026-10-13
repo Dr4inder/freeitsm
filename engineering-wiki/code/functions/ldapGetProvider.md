@@ -6,12 +6,12 @@ Load an auth_providers row by id with the bind password decrypted. Returns null 
 function ldapGetProvider(PDO $conn, int $id): ?array
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 71.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the auth_providers id |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 71.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 72 | `ldapGetProvider` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 76 | `ldapGetProvider` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Calls
 

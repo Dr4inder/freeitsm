@@ -6,13 +6,13 @@ The Assets card: asset, type, model, status, then the date assigned (person page
 function pplSectionAssets(array $s, bool $person, ?string $title = null): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 96.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `array` |  |  |
-| `$person` | `bool` |  |  |
-| `$title` | `?string` | `null` |  |
+| `$s` | `array` |  | the assets section from includes/people.php: rows, total |
+| `$person` | `bool` |  | true on a person's page (shows the date assigned), false elsewhere (shows who holds it) |
+| `$title` | `?string` | `null` | a heading to use instead of the standard one; null for the standard |
 
 **Returns:** `string`
 

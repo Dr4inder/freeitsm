@@ -10,13 +10,13 @@ vetted list means the set of files on disk is exactly the set we approved.
 function lmsExtractPackage(ZipArchive $zip, string $destDir, array $files): void
 ```
 
-Defined in [includes/lms_package.php](/code/files/includes/lms_package.php.md), line 135.
+Defined in [includes/lms_package.php](/code/files/includes/lms_package.php.md), line 139.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$zip` | `ZipArchive` |  |  |
-| `$destDir` | `string` |  |  |
-| `$files` | `array` |  |  |
+| `$zip` | `ZipArchive` |  | the opened SCORM package |
+| `$destDir` | `string` |  | the folder to unpack into |
+| `$files` | `array` |  | the entry names `lmsValidatePackage()` approved; nothing else is written |
 
 **Returns:** `void`
 

@@ -9,12 +9,12 @@ a team channel, and a chat post cannot be taken back.
 function ticketRedactForOutbound(PDO $conn, array $payload): array
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 231.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 246.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$payload` | `array` |  |  |
+| `$payload` | `array` |  | the workflow event payload; the ticket id is read from ticket.id or ticket_id |
 
 **Returns:** `array`
 

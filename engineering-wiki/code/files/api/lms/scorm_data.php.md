@@ -1,6 +1,6 @@
 # api/lms/scorm_data.php
 
-> API endpoint - 202 lines
+> API endpoint - 204 lines
 
 LMS API: SCORM runtime data endpoint
 
@@ -19,7 +19,7 @@ POST               — Save CMI data elements (called on Commit/Finish)
 
 | Function | Line | What it does |
 |---|--:|---|
-| [mapScormStatus()](/code/functions/mapScormStatus.md) | 189 | Map SCORM status values to our normalised status |
+| [mapScormStatus()](/code/functions/mapScormStatus.md) | 191 | Map SCORM status values to our normalised status |
 
 ## Database
 

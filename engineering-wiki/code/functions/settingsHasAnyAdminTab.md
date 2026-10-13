@@ -6,11 +6,11 @@ Does this analyst hold ANY administrative capability in this module?
 function settingsHasAnyAdminTab(array $visibleTabs): bool
 ```
 
-Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 98.
+Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$visibleTabs` | `array` |  |  |
+| `$visibleTabs` | `array` |  | the tabs from `settingsVisibleTabs()` |
 
 **Returns:** `bool`
 

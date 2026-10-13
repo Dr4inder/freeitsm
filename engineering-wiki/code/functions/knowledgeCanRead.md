@@ -14,14 +14,14 @@ indistinguishable to a legitimate reader, who gets not-found either way.
 function knowledgeCanRead(PDO $conn, KnowledgeViewer $viewer, $articleId, array $opts = []): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 409.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 435.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$viewer` | `KnowledgeViewer` |  |  |
-| `$articleId` |  |  |  |
-| `$opts` | `array` | `[]` |  |
+| `$viewer` | `KnowledgeViewer` |  | who is reading |
+| `$articleId` |  |  | the knowledge article id (cast to int; 0 or less gives false) |
+| `$opts` | `array` | `[]` | passed to `knowledgeVisibilitySql()` - see there for lifecycle |
 
 **Returns:** `bool`
 
@@ -29,7 +29,7 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 416 | `knowledgeCanRead` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 442 | `knowledgeCanRead` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

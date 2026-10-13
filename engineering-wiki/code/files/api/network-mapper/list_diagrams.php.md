@@ -1,6 +1,6 @@
 # api/network-mapper/list_diagrams.php
 
-> API endpoint - 96 lines
+> API endpoint - 100 lines
 
 API: List Network Mapper diagrams.
 
@@ -24,7 +24,7 @@ Each returned row carries:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [countVersionsInChain()](/code/functions/countVersionsInChain.md) | 66 | Walk back to the root of the chain, then count members. Capped to avoid pathological loops. |
+| [countVersionsInChain()](/code/functions/countVersionsInChain.md) | 70 | Walk back to the root of the chain, then count members. Capped to avoid pathological loops. |
 
 ## Database
 
@@ -33,8 +33,8 @@ Each returned row carries:
 | 31 |  | read [network_diagrams](/code/tables/network_diagrams.md), read [analysts](/code/tables/analysts.md) |  |
 | 47 |  | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
 | 48 |  | read [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
-| 71 | `countVersionsInChain` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
-| 86 | `countVersionsInChain` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 75 | `countVersionsInChain` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 90 | `countVersionsInChain` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
 
 ## How it hangs together
 

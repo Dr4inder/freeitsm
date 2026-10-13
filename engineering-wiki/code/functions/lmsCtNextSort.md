@@ -6,12 +6,12 @@ Next sort position on a test.
 function lmsCtNextSort(PDO $conn, int $testId): int
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 195.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 232.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$testId` | `int` |  |  |
+| `$testId` | `int` |  | the lms_ct_tests id |
 
 **Returns:** `int`
 
@@ -19,7 +19,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 197 | `lmsCtNextSort` | read [lms_ct_test_questions](/code/tables/lms_ct_test_questions.md) |  |
+| 234 | `lmsCtNextSort` | read [lms_ct_test_questions](/code/tables/lms_ct_test_questions.md) |  |
 
 ## Called from
 

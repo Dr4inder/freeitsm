@@ -11,7 +11,7 @@ without ever guessing between two.
 function calendarSyncOnlyConnection(PDO $conn): ?array
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 178.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 202.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

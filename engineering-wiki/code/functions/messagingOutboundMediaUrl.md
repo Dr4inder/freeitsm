@@ -6,12 +6,12 @@ A short-lived, unguessable URL to one outbound attachment's bytes — for a prov
 function messagingOutboundMediaUrl(PDO $conn, int $attachmentId): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 164.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 176.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$attachmentId` | `int` |  |  |
+| `$attachmentId` | `int` |  | the outbound attachment whose bytes the provider will fetch |
 
 **Returns:** `string`
 

@@ -6,11 +6,11 @@
 function integrationsFormatBytes(int $bytes): string
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 736.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 784.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$bytes` | `int` |  |  |
+| `$bytes` | `int` |  | a size in bytes |
 
 **Returns:** `string`
 

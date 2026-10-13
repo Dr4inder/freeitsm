@@ -12,15 +12,15 @@ function snoozeTicket(
 ): void
 ```
 
-Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 215.
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 223.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$untilUtc` | `string` |  |  |
-| `$reason` | `string` |  |  |
+| `$untilUtc` | `string` |  | the wake time, UTC 'Y-m-d H:i:s' (from resolveSnoozeUntil) |
+| `$reason` | `string` |  | the analyst's note on why; '' stores NULL; cut to 255 characters |
 
 **Returns:** `void`
 
@@ -28,7 +28,7 @@ Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 220 | `snoozeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
+| 228 | `snoozeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
 
 ## Calls
 

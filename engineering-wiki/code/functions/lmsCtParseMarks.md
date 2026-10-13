@@ -6,11 +6,11 @@
 function lmsCtParseMarks(string $raw): ?array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 84.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | comma-separated marks as typed in the settings, e.g. '5,3,1,0' |
 
 **Returns:** `?array`
 

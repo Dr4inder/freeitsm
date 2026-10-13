@@ -6,13 +6,13 @@ Put bank questions on a test (already-there ones are skipped). Returns how many 
 function lmsCtAttach(PDO $conn, int $testId, array $questionIds): int
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 203.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 245.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$testId` | `int` |  |  |
-| `$questionIds` | `array` |  |  |
+| `$testId` | `int` |  | the lms_ct_tests id |
+| `$questionIds` | `array` |  | lms_ct_questions ids to add, in order (cast to int) |
 
 **Returns:** `int`
 
@@ -20,7 +20,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 206 | `lmsCtAttach` | **insert** [lms_ct_test_questions](/code/tables/lms_ct_test_questions.md) (`test_id`, `question_id`, `sort_order`) |  |
+| 248 | `lmsCtAttach` | **insert** [lms_ct_test_questions](/code/tables/lms_ct_test_questions.md) (`test_id`, `question_id`, `sort_order`) |  |
 
 ## Calls
 

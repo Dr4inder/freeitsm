@@ -6,11 +6,11 @@ The display name of an AI provider key (anthropic, openai, openrouter, azure), o
 function providerLabel(string $p): string
 ```
 
-Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 120.
+Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 157.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$p` | `string` |  |  |
+| `$p` | `string` |  | the provider key, e.g. 'anthropic' or 'azure' |
 
 **Returns:** `string`
 

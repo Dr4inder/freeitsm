@@ -12,13 +12,13 @@ TRAP: only ever pass an address the PLATFORM vouches for - Slack's profile,
 function messagingKnownPersonByEmail(PDO $conn, string $email, string $name): ?array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 393.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 408.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$email` | `string` |  |  |
-| `$name` | `string` |  |  |
+| `$email` | `string` |  | an address the platform vouches for; '' or invalid gives null |
+| `$name` | `string` |  | the platform's display name, used if the user row has none |
 
 **Returns:** `?array`
 
@@ -26,7 +26,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 399 | `messagingKnownPersonByEmail` | read [users](/code/tables/users.md) |  |
+| 414 | `messagingKnownPersonByEmail` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

@@ -1,6 +1,6 @@
 # api/system/photo_album.php
 
-> API endpoint - 170 lines
+> API endpoint - 179 lines
 
 API: System -> Photo Album.
 
@@ -29,17 +29,17 @@ class to remove (Service-Layer-Architecture, "Watch out for #9").
 
 | Function | Line | What it does |
 |---|--:|---|
-| [paFail()](/code/functions/paFail.md) | 36 | Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops. |
-| [paStylePattern()](/code/functions/paStylePattern.md) | 44 | Every character of a style's art must be one that style can produce. |
+| [paFail()](/code/functions/paFail.md) | 41 | Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops. |
+| [paStylePattern()](/code/functions/paStylePattern.md) | 53 | Every character of a style's art must be one that style can produce. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 69 |  | read [photo_album](/code/tables/photo_album.md) |  |
-| 88 |  | read [photo_album](/code/tables/photo_album.md) |  |
-| 149 |  | **insert** [photo_album](/code/tables/photo_album.md) (`analyst_id`, `title`, `style`, `palette`, `width_chars`, `height_chars`, `art`, `colours`, `thumbnail`, `created_datetime`) |  |
-| 158 |  | **delete** [photo_album](/code/tables/photo_album.md) |  |
+| 78 |  | read [photo_album](/code/tables/photo_album.md) |  |
+| 97 |  | read [photo_album](/code/tables/photo_album.md) |  |
+| 158 |  | **insert** [photo_album](/code/tables/photo_album.md) (`analyst_id`, `title`, `style`, `palette`, `width_chars`, `height_chars`, `art`, `colours`, `thumbnail`, `created_datetime`) |  |
+| 167 |  | **delete** [photo_album](/code/tables/photo_album.md) |  |
 
 ## How it hangs together
 

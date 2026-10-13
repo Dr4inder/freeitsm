@@ -6,13 +6,13 @@ Load a conversation by its token, scoped to the widget's channel (so a token iss
 function webchatLoadConversation(PDO $conn, string $token, int $channelId): ?array
 ```
 
-Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 125.
+Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php.md), line 137.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$token` | `string` |  |  |
-| `$channelId` | `int` |  |  |
+| `$token` | `string` |  | the conversation token the widget holds - untrusted; '' gives null |
+| `$channelId` | `int` |  | the widget's messaging_channels id the conversation must belong to |
 
 **Returns:** `?array`
 
@@ -20,7 +20,7 @@ Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 132 | `webchatLoadConversation` | read [webchat_conversations](/code/tables/webchat_conversations.md) |  |
+| 144 | `webchatLoadConversation` | read [webchat_conversations](/code/tables/webchat_conversations.md) |  |
 
 ## Called from
 

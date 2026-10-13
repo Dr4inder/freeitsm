@@ -172,6 +172,8 @@ try {
 /**
  * Strip quoted/nested thread content from an email body
  * Relies on our own visible marker text, with generic blockquote fallback
+ *
+ * @param mixed $body  an email's HTML body, which may still carry the quoted earlier thread
  */
 function stripQuotedThread($body) {
     $stripped = null;

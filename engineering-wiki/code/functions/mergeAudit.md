@@ -13,16 +13,16 @@ function mergeAudit(
 ): void
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 629.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 650.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$actorId` | `int` |  |  |
-| `$field` | `string` |  |  |
-| `$old` | `?string` |  |  |
-| `$new` | `?string` |  |  |
+| `$actorId` | `int` |  | the analyst doing the merge; 0 is stored as NULL |
+| `$field` | `string` |  | the audit field: 'Ticket Created', 'Merged' or 'Merge undone' |
+| `$old` | `?string` |  | the value before, or null |
+| `$new` | `?string` |  | the value after, or null |
 
 **Returns:** `void`
 
@@ -32,7 +32,7 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 632 | `mergeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 653 | `mergeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ## Called from
 

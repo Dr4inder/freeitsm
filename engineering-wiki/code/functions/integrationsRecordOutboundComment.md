@@ -15,14 +15,14 @@ function integrationsRecordOutboundComment(
 ): void
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1199.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1286.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$linkId` | `int` |  |  |
-| `$externalCommentId` | `string` |  |  |
-| `$localNoteId` | `?int` | `null` |  |
+| `$linkId` | `int` |  | the integration_links id the comment was posted on |
+| `$externalCommentId` | `string` |  | the tracker's id for the new comment; '' records nothing |
+| `$localNoteId` | `?int` | `null` | the ticket_notes id that was pushed, or null |
 
 **Returns:** `void`
 
@@ -30,7 +30,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1204 | `integrationsRecordOutboundComment` | **insert** [integration_comment_map](/code/tables/integration_comment_map.md) (`link_id`, `direction`, `external_comment_id`, `local_note_id`, `created_datetime`) |  |
+| 1291 | `integrationsRecordOutboundComment` | **insert** [integration_comment_map](/code/tables/integration_comment_map.md) (`link_id`, `direction`, `external_comment_id`, `local_note_id`, `created_datetime`) |  |
 
 ## Calls
 

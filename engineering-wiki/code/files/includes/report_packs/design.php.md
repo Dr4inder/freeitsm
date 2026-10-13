@@ -1,6 +1,6 @@
 # includes/report_packs/design.php
 
-> PHP - 264 lines
+> PHP - 304 lines
 
 Report Packs: the design document - its shape, its starter, and the check every save goes through.
 
@@ -28,14 +28,14 @@ remote image because there is nowhere to put one.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [rpPara()](/code/functions/rpPara.md) | 39 | A paragraph of plain text, for the starter design. |
-| [rpDefaultDesign()](/code/functions/rpDefaultDesign.md) | 45 | The design a new pack starts from: a header like Enrique's, a footer, one heading. |
-| [rpColour()](/code/functions/rpColour.md) | 83 | A #rrggbb colour in lower case, or `$default` when the value is not one. |
-| [rpNum()](/code/functions/rpNum.md) | 88 | A number clamped between `$min` and `$max`, or `$default` when the value is not numeric. |
-| [rpStr()](/code/functions/rpStr.md) | 93 | A string cut to `$max` characters, with control and zero-width characters removed. |
-| [rpPick()](/code/functions/rpPick.md) | 103 | The value when it is one of `$allowed`, else `$default`. |
-| [rpCleanDoc()](/code/functions/rpCleanDoc.md) | 109 | Check a rich-text document. Anything unrecognised is dropped, not kept. |
-| [rpCleanDesign()](/code/functions/rpCleanDesign.md) | 153 | Check a whole design from the browser. Returns the cleaned design; throws InvalidArgumentException when it is not a design at all or is too large. |
+| [rpPara()](/code/functions/rpPara.md) | 44 | A paragraph of plain text, for the starter design. |
+| [rpDefaultDesign()](/code/functions/rpDefaultDesign.md) | 54 | The design a new pack starts from: a header like Enrique's, a footer, one heading. |
+| [rpColour()](/code/functions/rpColour.md) | 97 | A #rrggbb colour in lower case, or `$default` when the value is not one. |
+| [rpNum()](/code/functions/rpNum.md) | 109 | A number clamped between `$min` and `$max`, or `$default` when the value is not numeric. |
+| [rpStr()](/code/functions/rpStr.md) | 119 | A string cut to `$max` characters, with control and zero-width characters removed. |
+| [rpPick()](/code/functions/rpPick.md) | 135 | The value when it is one of `$allowed`, else `$default`. |
+| [rpCleanDoc()](/code/functions/rpCleanDoc.md) | 146 | Check a rich-text document. Anything unrecognised is dropped, not kept. |
+| [rpCleanDesign()](/code/functions/rpCleanDesign.md) | 193 | Check a whole design from the browser. Returns the cleaned design; throws InvalidArgumentException when it is not a design at all or is too large. |
 
 ## How it hangs together
 

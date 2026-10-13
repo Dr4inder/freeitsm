@@ -23,9 +23,9 @@ Custom asset fields (docs/design/flexible-asset-fields.md) The catalogue, the se
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):484 | `AssetFieldsService::saveField` | update | `label`, `field_type`, `config`, `help_text`, `is_unique`, `is_searchable`, `show_in_list` |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):508 | `AssetFieldsService::saveField` | insert | `field_key`, `label`, `field_type`, `config`, `help_text`, `is_unique`, `is_searchable`, `show_in_list`, `tenant_id` |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):536 | `AssetFieldsService::deleteField` | update | `is_deleted` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):522 | `AssetFieldsService::saveField` | update | `label`, `field_type`, `config`, `help_text`, `is_unique`, `is_searchable`, `show_in_list` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):546 | `AssetFieldsService::saveField` | insert | `field_key`, `label`, `field_type`, `config`, `help_text`, `is_unique`, `is_searchable`, `show_in_list`, `tenant_id` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):576 | `AssetFieldsService::deleteField` | update | `is_deleted` |  |
 
 ## Read by
 
@@ -34,7 +34,7 @@ Custom asset fields (docs/design/flexible-asset-fields.md) The catalogue, the se
 | [api/assets/get_asset_fields.php](/code/files/api/assets/get_asset_fields.php.md) | L75 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L134 |  |
 | [asset-management/labels.php](/code/files/asset-management/labels.php.md) | L129 |  |
-| [includes/asset_labels.php](/code/files/includes/asset_labels.php.md) | assetLabelCustomFields L198 |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::fieldsForSets L177, AssetFieldsService::assertKeyFree L696, AssetFieldsService::assertKeyFree L700, AssetFieldsService::loadField L767 |  |
+| [includes/asset_labels.php](/code/files/includes/asset_labels.php.md) | assetLabelCustomFields L209 |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::fieldsForSets L184, AssetFieldsService::assertKeyFree L761, AssetFieldsService::assertKeyFree L765, AssetFieldsService::loadField L844 |  |
 | [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md) | HandoverTemplates::customColumns L115 |  |
 

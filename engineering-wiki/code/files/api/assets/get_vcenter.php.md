@@ -1,6 +1,6 @@
 # api/assets/get_vcenter.php
 
-> API endpoint - 347 lines
+> API endpoint - 358 lines
 
 API Endpoint: Sync VM data from vCenter REST API Connects to vCenter, fetches all VMs with specs, saves to servers table
 
@@ -15,9 +15,9 @@ API Endpoint: Sync VM data from vCenter REST API Connects to vCenter, fetches al
 
 | Function | Line | What it does |
 |---|--:|---|
-| [vcenterAuth()](/code/functions/vcenterAuth.md) | 256 | Authenticate with vCenter REST API |
-| [vcenterGet()](/code/functions/vcenterGet.md) | 294 | GET request to vCenter REST API |
-| [vcenterLogout()](/code/functions/vcenterLogout.md) | 332 | Logout from vCenter session |
+| [vcenterAuth()](/code/functions/vcenterAuth.md) | 260 | Authenticate with vCenter REST API |
+| [vcenterGet()](/code/functions/vcenterGet.md) | 302 | GET request to vCenter REST API |
+| [vcenterLogout()](/code/functions/vcenterLogout.md) | 343 | Logout from vCenter session |
 
 ## Database
 

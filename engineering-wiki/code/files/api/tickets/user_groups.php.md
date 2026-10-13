@@ -1,6 +1,6 @@
 # api/tickets/user_groups.php
 
-> API endpoint - 446 lines
+> API endpoint - 463 lines
 
 API Endpoint: people groups — a named bag of analysts and portal users. Actions: list, get, search, create, update, delete, add_member, remove_member
 
@@ -46,36 +46,36 @@ analyst looking at a requester should be able to see what they belong to.
 | Function | Line | What it does |
 |---|--:|---|
 | [handleList()](/code/functions/handleList.md) | 97 | Every active group with its member count. |
-| [handleGet()](/code/functions/handleGet.md) | 132 | One group and its members. |
-| [handleSearch()](/code/functions/handleSearch.md) | 218 | Find people to add — analysts and portal users in one list, because you know the NAME of who you want, not which table they are in. Same shape as the Knowledge principal picker. |
-| [handleCreate()](/code/functions/handleCreate.md) | 264 | Creates a user group with a name and optional description. |
-| [handleUpdate()](/code/functions/handleUpdate.md) | 297 | Renames an active user group and updates its description, refusing a name another group already has. |
-| [handleDelete()](/code/functions/handleDelete.md) | 329 | Deactivate, never DELETE. |
-| [handleAddMember()](/code/functions/handleAddMember.md) | 350 | Add one person, with an optional last day of access. |
-| [handleRemoveMember()](/code/functions/handleRemoveMember.md) | 400 | Removes one analyst or portal user from a user group. |
-| [groupExpiryToUtc()](/code/functions/groupExpiryToUtc.md) | 433 | "Access until 14 September" → the UTC instant that day ends. |
+| [handleGet()](/code/functions/handleGet.md) | 134 | One group and its members. |
+| [handleSearch()](/code/functions/handleSearch.md) | 222 | Find people to add — analysts and portal users in one list, because you know the NAME of who you want, not which table they are in. Same shape as the Knowledge principal picker. |
+| [handleCreate()](/code/functions/handleCreate.md) | 270 | Creates a user group with a name and optional description. |
+| [handleUpdate()](/code/functions/handleUpdate.md) | 305 | Renames an active user group and updates its description, refusing a name another group already has. |
+| [handleDelete()](/code/functions/handleDelete.md) | 339 | Deactivate, never DELETE. |
+| [handleAddMember()](/code/functions/handleAddMember.md) | 362 | Add one person, with an optional last day of access. |
+| [handleRemoveMember()](/code/functions/handleRemoveMember.md) | 416 | Removes one analyst or portal user from a user group. |
+| [groupExpiryToUtc()](/code/functions/groupExpiryToUtc.md) | 450 | "Access until 14 September" → the UTC instant that day ends. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 99 | `handleList` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 136 | `handleGet` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 145 | `handleGet` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [analysts](/code/tables/analysts.md) |  |
-| 157 | `handleGet` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [users](/code/tables/users.md) |  |
-| 171 | `handleGet` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
-| 226 | `handleSearch` | read [analysts](/code/tables/analysts.md) |  |
-| 242 | `handleSearch` | read [users](/code/tables/users.md) |  |
-| 272 | `handleCreate` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 285 | `handleCreate` | **insert** [knowledge_user_groups](/code/tables/knowledge_user_groups.md) (`name`, `description`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 305 | `handleUpdate` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 313 | `handleUpdate` | **update** [knowledge_user_groups](/code/tables/knowledge_user_groups.md) (`name`, `description`, `updated_datetime`) |  |
-| 334 | `handleDelete` | **update** [knowledge_user_groups](/code/tables/knowledge_user_groups.md) (`is_active`, `updated_datetime`) |  |
-| 361 | `handleAddMember` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 369 | `handleAddMember` | read [analysts](/code/tables/analysts.md) |  |
-| 374 | `handleAddMember` | read [users](/code/tables/users.md) |  |
-| 390 | `handleAddMember` | **insert** [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) (`group_id`, `member_type`, `member_id`, `expires_at`, `created_datetime`) |  |
-| 411 | `handleRemoveMember` | **delete** [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
+| 138 | `handleGet` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 147 | `handleGet` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [analysts](/code/tables/analysts.md) |  |
+| 159 | `handleGet` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [users](/code/tables/users.md) |  |
+| 173 | `handleGet` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
+| 230 | `handleSearch` | read [analysts](/code/tables/analysts.md) |  |
+| 246 | `handleSearch` | read [users](/code/tables/users.md) |  |
+| 278 | `handleCreate` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 291 | `handleCreate` | **insert** [knowledge_user_groups](/code/tables/knowledge_user_groups.md) (`name`, `description`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 313 | `handleUpdate` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 321 | `handleUpdate` | **update** [knowledge_user_groups](/code/tables/knowledge_user_groups.md) (`name`, `description`, `updated_datetime`) |  |
+| 344 | `handleDelete` | **update** [knowledge_user_groups](/code/tables/knowledge_user_groups.md) (`is_active`, `updated_datetime`) |  |
+| 373 | `handleAddMember` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 381 | `handleAddMember` | read [analysts](/code/tables/analysts.md) |  |
+| 386 | `handleAddMember` | read [users](/code/tables/users.md) |  |
+| 402 | `handleAddMember` | **insert** [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) (`group_id`, `member_type`, `member_id`, `expires_at`, `created_datetime`) |  |
+| 427 | `handleRemoveMember` | **delete** [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
 
 ## How it hangs together
 

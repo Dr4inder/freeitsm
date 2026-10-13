@@ -6,11 +6,11 @@ A volume name derived from the directory, stable and readable.
 function storagePersistenceVolumeName(string $rel): string
 ```
 
-Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 340.
+Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 353.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rel` | `string` |  |  |
+| `$rel` | `string` |  | the directory as listed by `storagePersistenceDirectories()`, e.g. 'tickets/attachments' |
 
 **Returns:** `string`
 

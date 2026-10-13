@@ -6,11 +6,11 @@ How many distinct {{n}} placeholders a template body uses (the highest index). e
 function messagingTemplateVarCount(string $body): int
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 324.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 352.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `string` |  |  |
+| `$body` | `string` |  | the template text with {{1}}, {{2}} ... placeholders |
 
 **Returns:** `int`
 

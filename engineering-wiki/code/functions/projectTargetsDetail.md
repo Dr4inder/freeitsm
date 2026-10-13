@@ -6,7 +6,7 @@ For the project page: the targets, with today's point written and the last 120 d
 function projectTargetsDetail(PDO $conn, int $projectId): array
 ```
 
-Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 217.
+Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 240.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/projects/targets.php](/code/files/includes/projects/targets
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 222 | `projectTargetsDetail` | **insert** [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) (`target_id`, `snap_date`, `done`, `total`) |  |
-| 224 | `projectTargetsDetail` | read [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) |  |
+| 245 | `projectTargetsDetail` | **insert** [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) (`target_id`, `snap_date`, `done`, `total`) |  |
+| 247 | `projectTargetsDetail` | read [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) |  |
 
 ## Calls
 

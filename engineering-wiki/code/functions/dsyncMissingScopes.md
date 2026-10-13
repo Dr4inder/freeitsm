@@ -17,12 +17,12 @@ consequence for the import is identical, and so is the thing to go and look at.
 function dsyncMissingScopes($ds, array $provider): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 209.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 229.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ds` |  |  |  |
-| `$provider` | `array` |  |  |
+| `$ds` |  |  | a bound LDAP connection |
+| `$provider` | `array` |  | the auth_providers row whose stored branches are checked |
 
 **Returns:** `array`
 

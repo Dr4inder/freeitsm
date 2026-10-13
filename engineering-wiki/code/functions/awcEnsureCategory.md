@@ -26,14 +26,14 @@ quietly overruling them.
 function awcEnsureCategory(PDO $conn, string $source, string $name, string $colour): ?int
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 190.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 203.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$source` | `string` |  |  |
-| `$name` | `string` |  |  |
-| `$colour` | `string` |  |  |
+| `$source` | `string` |  | the entry kind ('asset_warranty' or 'asset_lease'); the category id is remembered under <source>_category_id |
+| `$name` | `string` |  | the default category name to look for, and to create with |
+| `$colour` | `string` |  | the colour (#rrggbb) used only when the category is created |
 
 **Returns:** `?int`
 
@@ -41,9 +41,9 @@ Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_war
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 197 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 207 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 217 | `awcEnsureCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `is_active`) |  |
+| 210 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 220 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 230 | `awcEnsureCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `is_active`) |  |
 
 ## Calls
 

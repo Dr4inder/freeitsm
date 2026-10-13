@@ -6,13 +6,13 @@ Space out requests to one registry. Called between lookups in a batch: the same 
 function domainLookupPace(PDO $conn, string $name, float $gapSeconds = 1.5): void
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 421.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 464.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$name` | `string` |  |  |
-| `$gapSeconds` | `float` | `1.5` |  |
+| `$name` | `string` |  | the domain about to be looked up - its TLD decides which registry host is paced |
+| `$gapSeconds` | `float` | `1.5` | least time between two requests to the same host, in seconds |
 
 **Returns:** `void`
 

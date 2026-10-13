@@ -1,6 +1,6 @@
 # api/v1/resources/domains.php
 
-> API endpoint - 431 lines
+> API endpoint - 442 lines
 
 FreeITSM REST API v1 — domains resource (#154).
 
@@ -34,21 +34,21 @@ not behind a key that may be sitting in a monitoring tool's config file.
 | Function | Line | What it does |
 |---|--:|---|
 | [apiDomainSelect()](/code/functions/apiDomainSelect.md) | 34 | The SELECT for domains, with status, registrar, account, owner, technical contact and company names and, once Database Verification has added them, the customer columns. |
-| [apiSerializeDomain()](/code/functions/apiSerializeDomain.md) | 69 | Shapes a domain row for the API - names, company, status, registrar and account, dates with days to expiry, and the rest of the record. The auth code itself is never included - only auth_code_set. |
-| [apiLoadDomain()](/code/functions/apiLoadDomain.md) | 141 | The by-id gate: existence + company scope, both failing as 404. |
-| [apiDomainRefuseAuthCode()](/code/functions/apiDomainRefuseAuthCode.md) | 155 | Answers 422 and stops when a request body carries auth_code - it can only be read or set on the Domains screen, where it is permission-controlled and audited. |
-| [apiDomainsList()](/code/functions/apiDomainsList.md) | 164 | GET /domains |
-| [apiDomainsGet()](/code/functions/apiDomainsGet.md) | 249 | GET /domains/{id} |
-| [apiDomainsCreate()](/code/functions/apiDomainsCreate.md) | 256 | POST /domains |
-| [apiDomainsUpdate()](/code/functions/apiDomainsUpdate.md) | 282 | PATCH /domains/{id} |
-| [apiDomainsDelete()](/code/functions/apiDomainsDelete.md) | 298 | DELETE /domains/{id} |
-| [apiDomainsLookup()](/code/functions/apiDomainsLookup.md) | 311 | POST /domains/{id}/lookup — ask the registry now |
-| [apiDomainsCheck()](/code/functions/apiDomainsCheck.md) | 328 | POST /domains/{id}/check — run the health and security checks now |
-| [apiDomainsFindings()](/code/functions/apiDomainsFindings.md) | 345 | GET /domains/{id}/findings — the last check's findings, with English text |
-| [apiDomainFindings()](/code/functions/apiDomainFindings.md) | 352 | Findings with their English title and advice filled in — a machine consumer has no lang file. |
-| [apiDomainsHistory()](/code/functions/apiDomainsHistory.md) | 375 | GET /domains/{id}/history |
-| [apiDomainStatusesList()](/code/functions/apiDomainStatusesList.md) | 397 | GET /domain-statuses · GET /domain-registrar-accounts |
-| [apiDomainAccountsList()](/code/functions/apiDomainAccountsList.md) | 409 | GET /domain-registrar-accounts - the registrar accounts in the key's companies, with registrar, owner, company and how many domains each holds. |
+| [apiSerializeDomain()](/code/functions/apiSerializeDomain.md) | 71 | Shapes a domain row for the API - names, company, status, registrar and account, dates with days to expiry, and the rest of the record. The auth code itself is never included - only auth_code_set. |
+| [apiLoadDomain()](/code/functions/apiLoadDomain.md) | 147 | The by-id gate: existence + company scope, both failing as 404. |
+| [apiDomainRefuseAuthCode()](/code/functions/apiDomainRefuseAuthCode.md) | 161 | Answers 422 and stops when a request body carries auth_code - it can only be read or set on the Domains screen, where it is permission-controlled and audited. |
+| [apiDomainsList()](/code/functions/apiDomainsList.md) | 170 | GET /domains |
+| [apiDomainsGet()](/code/functions/apiDomainsGet.md) | 255 | GET /domains/{id} |
+| [apiDomainsCreate()](/code/functions/apiDomainsCreate.md) | 262 | POST /domains |
+| [apiDomainsUpdate()](/code/functions/apiDomainsUpdate.md) | 288 | PATCH /domains/{id} |
+| [apiDomainsDelete()](/code/functions/apiDomainsDelete.md) | 304 | DELETE /domains/{id} |
+| [apiDomainsLookup()](/code/functions/apiDomainsLookup.md) | 317 | POST /domains/{id}/lookup — ask the registry now |
+| [apiDomainsCheck()](/code/functions/apiDomainsCheck.md) | 334 | POST /domains/{id}/check — run the health and security checks now |
+| [apiDomainsFindings()](/code/functions/apiDomainsFindings.md) | 351 | GET /domains/{id}/findings — the last check's findings, with English text |
+| [apiDomainFindings()](/code/functions/apiDomainFindings.md) | 363 | Findings with their English title and advice filled in — a machine consumer has no lang file. |
+| [apiDomainsHistory()](/code/functions/apiDomainsHistory.md) | 386 | GET /domains/{id}/history |
+| [apiDomainStatusesList()](/code/functions/apiDomainStatusesList.md) | 408 | GET /domain-statuses · GET /domain-registrar-accounts |
+| [apiDomainAccountsList()](/code/functions/apiDomainAccountsList.md) | 420 | GET /domain-registrar-accounts - the registrar accounts in the key's companies, with registrar, owner, company and how many domains each holds. |
 
 ## Database
 
@@ -57,11 +57,11 @@ not behind a key that may be sitting in a monitoring tool's config file.
 | 38 | `apiDomainSelect` | read [users](/code/tables/users.md) |  |
 | 44 | `apiDomainSelect` | read [suppliers](/code/tables/suppliers.md), read [contacts](/code/tables/contacts.md), read [analysts](/code/tables/analysts.md) |  |
 | 48 | `apiDomainSelect` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [suppliers](/code/tables/suppliers.md), read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md), read [analysts](/code/tables/analysts.md), read [contacts](/code/tables/contacts.md), read [tenants](/code/tables/tenants.md) |  |
-| 235 | `apiDomainsList` | read [domains](/code/tables/domains.md) |  |
-| 379 | `apiDomainsHistory` | read [domain_audit](/code/tables/domain_audit.md) |  |
-| 382 | `apiDomainsHistory` | read [domain_audit](/code/tables/domain_audit.md), read [analysts](/code/tables/analysts.md) |  |
-| 398 | `apiDomainStatusesList` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 412 | `apiDomainAccountsList` | read [domains](/code/tables/domains.md), read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 241 | `apiDomainsList` | read [domains](/code/tables/domains.md) |  |
+| 390 | `apiDomainsHistory` | read [domain_audit](/code/tables/domain_audit.md) |  |
+| 393 | `apiDomainsHistory` | read [domain_audit](/code/tables/domain_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 409 | `apiDomainStatusesList` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 423 | `apiDomainAccountsList` | read [domains](/code/tables/domains.md), read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## How it hangs together
 

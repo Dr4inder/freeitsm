@@ -6,11 +6,11 @@ True for channels with a reply window (WhatsApp); web chat, Slack, Telegram, Tea
 function channelHasServiceWindow(string $channelType): bool
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 422.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 458.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$channelType` | `string` |  |  |
+| `$channelType` | `string` |  | the channel type, e.g. 'whatsapp' or 'slack' |
 
 **Returns:** `bool`
 

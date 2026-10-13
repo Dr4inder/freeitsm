@@ -6,13 +6,13 @@ Domains the person is the customer for / the company holds.
 function peopleDomains(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 413.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 446.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$who` | `array` |  |  |
+| `$who` | `array` |  | ['user' => users id] (domain customer) or ['company' => tenant id] |
 
 **Returns:** `array`
 
@@ -20,7 +20,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 413.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 424 | `peopleDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 457 | `peopleDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 ## Calls
 

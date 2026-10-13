@@ -6,7 +6,7 @@ DELETE /forms/{id}/submissions/{sid} — delete_submission.php, but with the dat
 function apiFormSubmissionsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 388.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 404.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

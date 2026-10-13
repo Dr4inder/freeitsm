@@ -1,6 +1,6 @@
 # api/auth/oidc_callback.php
 
-> API endpoint - 611 lines
+> API endpoint - 646 lines
 
 SSO login callback. GET ?code=...&state=... (the provider redirects the browser here)
 
@@ -25,35 +25,35 @@ Completes the OpenID Connect login:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [ssoBail()](/code/functions/ssoBail.md) | 23 | Bounce back to the originating portal's login page with an error message. |
-| [oidcLoadAnalyst()](/code/functions/oidcLoadAnalyst.md) | 321 | Loads one analyst row by id, or null when there is none. |
-| [ssLoadUser()](/code/functions/ssLoadUser.md) | 328 | Loads one self-service user row by id, or null when there is none. |
-| [oidcSyncProfile()](/code/functions/oidcSyncProfile.md) | 347 | Copy profile details from the identity provider onto a local account. |
-| [oidcExtractProfileAttributes()](/code/functions/oidcExtractProfileAttributes.md) | 393 | Pull the five profile fields out of OIDC claims. Each IdP names them its own way (Entra `jobTitle`/`businessPhones`, Okta `title`, Keycloak `job_title`, the standard `phone_number`), so each field tries the known spellings in turn. Values are trimmed and cut to the column length; missing = null. |
-| [completeSelfServiceSso()](/code/functions/completeSelfServiceSso.md) | 446 | Complete an SSO sign-in for the SELF-SERVICE portal. |
-| [oidcCreateAnalyst()](/code/functions/oidcCreateAnalyst.md) | 562 | Create a new analyst from SSO claims, assigned to the given provider. The local password is set to an unusable random hash (SSO users sign in via the IdP, not a local password). |
+| [ssoBail()](/code/functions/ssoBail.md) | 27 | Bounce back to the originating portal's login page with an error message. |
+| [oidcLoadAnalyst()](/code/functions/oidcLoadAnalyst.md) | 329 | Loads one analyst row by id, or null when there is none. |
+| [ssLoadUser()](/code/functions/ssLoadUser.md) | 340 | Loads one self-service user row by id, or null when there is none. |
+| [oidcSyncProfile()](/code/functions/oidcSyncProfile.md) | 363 | Copy profile details from the identity provider onto a local account. |
+| [oidcExtractProfileAttributes()](/code/functions/oidcExtractProfileAttributes.md) | 411 | Pull the five profile fields out of OIDC claims. Each IdP names them its own way (Entra `jobTitle`/`businessPhones`, Okta `title`, Keycloak `job_title`, the standard `phone_number`), so each field tries the known spellings in turn. Values are trimmed and cut to the column length; missing = null. |
+| [completeSelfServiceSso()](/code/functions/completeSelfServiceSso.md) | 473 | Complete an SSO sign-in for the SELF-SERVICE portal. |
+| [oidcCreateAnalyst()](/code/functions/oidcCreateAnalyst.md) | 597 | Create a new analyst from SSO claims, assigned to the given provider. The local password is set to an unusable random hash (SSO users sign in via the IdP, not a local password). |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 51 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 169 |  | read [analyst_sso_identities](/code/tables/analyst_sso_identities.md) |  |
-| 191 |  | **update** [analyst_sso_identities](/code/tables/analyst_sso_identities.md) (`last_login_datetime`, `email`) |  |
-| 200 |  | read [analysts](/code/tables/analysts.md) |  |
-| 260 |  | **insert** [analyst_sso_identities](/code/tables/analyst_sso_identities.md) (`analyst_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
-| 281 |  | **update** [analysts](/code/tables/analysts.md) (`last_login_datetime`, `failed_login_count`) |  |
-| 322 | `oidcLoadAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 329 | `ssLoadUser` | read [users](/code/tables/users.md) |  |
-| 451 | `completeSelfServiceSso` | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
-| 469 | `completeSelfServiceSso` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`last_login_datetime`, `email`) |  |
-| 478 | `completeSelfServiceSso` | read [users](/code/tables/users.md) |  |
-| 488 | `completeSelfServiceSso` | **update** [users](/code/tables/users.md) (`auth_provider_id`) |  |
-| 513 | `completeSelfServiceSso` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `job_title`, `department`, `office`, `phone`, `mobile`, `auth_provider_id`, `tenant_id`, `created_at`) |  |
-| 528 | `completeSelfServiceSso` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
-| 568 | `oidcCreateAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 589 | `oidcCreateAnalyst` | **insert** [analysts](/code/tables/analysts.md) (`username`, `password_hash`, `full_name`, `email`, `job_title`, `department`, `phone`, `mobile`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules`) |  |
-| 600 | `oidcCreateAnalyst` | **insert** [analyst_modules](/code/tables/analyst_modules.md) (`analyst_id`, `module_key`) |  |
+| 55 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 173 |  | read [analyst_sso_identities](/code/tables/analyst_sso_identities.md) |  |
+| 195 |  | **update** [analyst_sso_identities](/code/tables/analyst_sso_identities.md) (`last_login_datetime`, `email`) |  |
+| 204 |  | read [analysts](/code/tables/analysts.md) |  |
+| 264 |  | **insert** [analyst_sso_identities](/code/tables/analyst_sso_identities.md) (`analyst_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
+| 285 |  | **update** [analysts](/code/tables/analysts.md) (`last_login_datetime`, `failed_login_count`) |  |
+| 330 | `oidcLoadAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 341 | `ssLoadUser` | read [users](/code/tables/users.md) |  |
+| 478 | `completeSelfServiceSso` | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 496 | `completeSelfServiceSso` | **update** [user_sso_identities](/code/tables/user_sso_identities.md) (`last_login_datetime`, `email`) |  |
+| 505 | `completeSelfServiceSso` | read [users](/code/tables/users.md) |  |
+| 515 | `completeSelfServiceSso` | **update** [users](/code/tables/users.md) (`auth_provider_id`) |  |
+| 540 | `completeSelfServiceSso` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `job_title`, `department`, `office`, `phone`, `mobile`, `auth_provider_id`, `tenant_id`, `created_at`) |  |
+| 555 | `completeSelfServiceSso` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
+| 603 | `oidcCreateAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 624 | `oidcCreateAnalyst` | **insert** [analysts](/code/tables/analysts.md) (`username`, `password_hash`, `full_name`, `email`, `job_title`, `department`, `phone`, `mobile`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules`) |  |
+| 635 | `oidcCreateAnalyst` | **insert** [analyst_modules](/code/tables/analyst_modules.md) (`analyst_id`, `module_key`) |  |
 
 ## How it hangs together
 

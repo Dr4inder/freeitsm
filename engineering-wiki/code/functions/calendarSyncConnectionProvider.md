@@ -6,12 +6,12 @@ A connection's provider name, or '' when it does not exist. Cached per request, 
 function calendarSyncConnectionProvider(PDO $conn, ?int $connectionId): string
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 197.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 227.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connectionId` | `?int` |  |  |
+| `$connectionId` | `?int` |  | calendar_connections.id; null or 0 gives '' |
 
 **Returns:** `string`
 
@@ -19,7 +19,7 @@ Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 203 | `calendarSyncConnectionProvider` | read [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 233 | `calendarSyncConnectionProvider` | read [calendar_connections](/code/tables/calendar_connections.md) |  |
 
 ## Called from
 

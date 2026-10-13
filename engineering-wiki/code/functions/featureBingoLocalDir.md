@@ -12,7 +12,7 @@ for Docker, somewhere on a volume.
 function featureBingoLocalDir(): string
 ```
 
-Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md), line 266.
+Defined in [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md), line 274.
 
 **Returns:** `string`
 

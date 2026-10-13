@@ -34,7 +34,7 @@ guessing here means spraying passwords.
 function ldapPortalProviders(PDO $conn, ?string $identifier = null): array
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 428.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 466.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -47,9 +47,9 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 428.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 436 | `ldapPortalProviders` | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 450 | `ldapPortalProviders` | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 458 | `ldapPortalProviders` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 474 | `ldapPortalProviders` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 488 | `ldapPortalProviders` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 496 | `ldapPortalProviders` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Calls
 

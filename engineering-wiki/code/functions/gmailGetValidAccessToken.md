@@ -6,13 +6,13 @@ Get a valid Google access token, refreshing if expired.
 function gmailGetValidAccessToken(PDO $conn, array $mailbox, array $tokenData): string
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 74.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 81.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `array` |  |  |
-| `$tokenData` | `array` |  |  |
+| `$mailbox` | `array` |  | the target_mailboxes row, decrypted - passed on to `gmailRefreshAccessToken()` |
+| `$tokenData` | `array` |  | the decoded token_data; refreshed when expires_at (Unix seconds) is under 5 minutes away |
 
 **Returns:** `string`
 

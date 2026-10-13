@@ -11,11 +11,11 @@ finds — see `integrationsListConnections()`.
 function integrationsSettingKeys(string $providerKey): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 212.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$providerKey` | `string` |  |  |
+| `$providerKey` | `string` |  | the provider key from `integrationsAvailableProviders()`, e.g. 'jira' or 'azuredevops' |
 
 **Returns:** array key => default value
 

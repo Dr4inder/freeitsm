@@ -6,13 +6,13 @@
 function rfpVisibilitySql(PDO $conn, int $analystId, string $r = 'r'): array
 ```
 
-Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 35.
+Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 39.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$r` | `string` | `'r'` |  |
+| `$r` | `string` | `'r'` | the alias the calling query gives the rfps table |
 
 **Returns:** `array`
 

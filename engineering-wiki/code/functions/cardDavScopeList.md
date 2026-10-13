@@ -11,11 +11,11 @@ is opaque and must survive untouched.
 function cardDavScopeList($stored): array
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 576.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 600.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$stored` |  |  |  |
+| `$stored` |  |  | auth_providers.carddav_scope_value as stored - newline-separated; null reads as empty |
 
 **Returns:** `array`
 

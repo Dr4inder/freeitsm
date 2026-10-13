@@ -6,12 +6,12 @@ Why a replay was refused — so the UI can say "the payload was purged by your r
 function webhookReplayBlockedReason(PDO $conn, int $id): ?string
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 416.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 450.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the webhook_deliveries id the replay was refused for |
 
 **Returns:** `?string`
 
@@ -19,7 +19,7 @@ Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 417 | `webhookReplayBlockedReason` | read [webhook_deliveries](/code/tables/webhook_deliveries.md) |  |
+| 451 | `webhookReplayBlockedReason` | read [webhook_deliveries](/code/tables/webhook_deliveries.md) |  |
 
 ## Called from
 

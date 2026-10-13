@@ -51,7 +51,11 @@ class TasksService
     //  Tasks
     // ======================================================================
 
-    /** Create (no id) or update (id present) a task. Returns ['id','created']. */
+    /**
+     * Create (no id) or update (id present) a task. Returns ['id','created'].
+     *
+     * @param array $in  the canonical task fields (see the file comment); with id it updates that task, without one it creates
+     */
     public static function saveTask(PDO $conn, ActorContext $ctx, array $in): array
     {
         if (!empty($in['id'])) {
@@ -63,6 +67,9 @@ class TasksService
     /**
      * Creates a task with its status, priority, assignee, team or contractor, links, dates
      * and tags, and fires task.created. Returns the new id.
+     *
+     * @param array $in  the canonical task fields (title required), plus tenant_id, assigned_supplier_id, assigned_contact_id
+     *     and work_start_at / work_end_at / work_all_day
      */
     private static function createTask(PDO $conn, ActorContext $ctx, array $in): int
     {
@@ -189,6 +196,9 @@ class TasksService
      *
      * Closing a task stamps its completed time and lets a recurring task schedule its next
      * occurrence.
+     *
+     * @param array $in  only the fields to change - the canonical keys, plus assigned_supplier_id, assigned_contact_id,
+     *     work_start_at, work_end_at, work_all_day; id is ignored
      */
     private static function updateTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
     {
@@ -404,7 +414,12 @@ class TasksService
         return $taskId;
     }
 
-    /** Kanban move: change status (+ completed mechanics) and re-pack the target column. No workflow event. Returns the id. */
+    /**
+     * Kanban move: change status (+ completed mechanics) and re-pack the target column. No workflow event. Returns the id.
+     *
+     * @param array $in  status_id or status (a name; neither keeps the current status), position (0-based place in the
+     *     column; null or '' puts it at the end)
+     */
     public static function moveTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
     {
         $current = self::loadTaskRow($conn, $ctx, $taskId);
@@ -486,6 +501,8 @@ class TasksService
      * ⚠️ Wrapped, and swallowing Throwable rather than Exception: a task must
      * save even if the calendar file is missing on a part-upgraded install,
      * and a missing class raises an Error, which `catch (Exception)` misses.
+     *
+     * @param bool $gone  true when the task has been deleted, so its calendar entry is removed
      */
     private static function calendarOnTaskChanged(PDO $conn, int $taskId, bool $gone = false): void
     {
@@ -556,7 +573,11 @@ class TasksService
         return ['id' => $taskId, 'subtasks_deleted' => count($ids) - 1];
     }
 
-    /** Add a comment to a task (create-only). Returns the comment id. */
+    /**
+     * Add a comment to a task (create-only). Returns the comment id.
+     *
+     * @param string $text  the comment text (trimmed; required)
+     */
     public static function createComment(PDO $conn, ActorContext $ctx, int $taskId, string $text): int
     {
         self::loadTaskRow($conn, $ctx, $taskId);
@@ -583,6 +604,9 @@ class TasksService
      * a workflow reading these the way it reads task.assigned finds the person
      * accountable. Who is TOLD is a separate question, answered by the router:
      * these events reach the owner AND everybody involved.
+     *
+     * @param string $event  the workflow event, e.g. 'task.comment_added', 'task.status_changed'
+     * @param array $extra  more keys merged into the 'task' payload, e.g. ['comment_id' => 12]
      */
     private static function taskEventDispatch(PDO $conn, string $event, int $taskId, array $extra = []): void
     {
@@ -676,6 +700,8 @@ class TasksService
      * ⚠️ ONE QUERY, NOT ONE PER TASK. The board renders every task on the desk;
      * a per-task lookup here would add a query per card to the module's busiest
      * endpoint. Same reason list.php already batches its subtask and tag lookups.
+     *
+     * @param array $taskIds  task ids; non-numeric, zero and repeated values are dropped
      */
     public static function collaboratorsForMany(PDO $conn, array $taskIds): array
     {
@@ -769,6 +795,9 @@ class TasksService
      *
      * ⚠️ Only the person themselves, or the task's owner, may move a tick. Anyone
      * else marking your work done is a statement about you that you did not make.
+     *
+     * @param int $analystId  the collaborator whose tick to change - not the actor; only they or the task's owner may
+     * @param bool $done  true ticks their part, false unticks it
      */
     public static function setCollaboratorDone(PDO $conn, ActorContext $ctx, int $taskId, int $analystId, bool $done): array
     {
@@ -816,6 +845,8 @@ class TasksService
      * how you say "these four are each doing a piece"; collaborators on top of
      * that would give two overlapping ways to express the same thing and no rule
      * for which wins.
+     *
+     * @param array $taskRow  the tasks row, as loaded by loadTaskRow()
      */
     private static function assertCollaboratorsAllowed(array $taskRow): void
     {
@@ -834,6 +865,9 @@ class TasksService
      * list through this too, rather than validating only on save.
      *
      * Permissive on a single-company install, where the question does not arise.
+     *
+     * @param array $taskRow  the tasks row, as loaded by loadTaskRow()
+     * @param int $analystId  the analyst being added as a collaborator - not the actor
      */
     private static function assertAnalystInTaskCompany(PDO $conn, array $taskRow, int $analystId): void
     {
@@ -862,6 +896,9 @@ class TasksService
      * `task.assigned` once per collaborator instead would make workflows that
      * fired once fire four times. Both failures are silent. A separate event
      * cannot do either.
+     *
+     * @param string $event  'task.collaborator_added' or 'task.collaborator_removed'
+     * @param int $analystId  the collaborator added or removed - sent as collaborator_id, not the actor
      */
     private static function collaboratorDispatch(PDO $conn, string $event, int $taskId, int $analystId): void
     {
@@ -891,7 +928,11 @@ class TasksService
     //  Internals
     // ======================================================================
 
-    /** Load a task with its status is_closed flag, or throw 404. */
+    /**
+     * Load a task with its status is_closed flag, or throw 404.
+     *
+     * @param int $id  the task to load
+     */
     private static function loadTaskRow(PDO $conn, ActorContext $ctx, int $id): array
     {
         $stmt = $conn->prepare(
@@ -946,6 +987,7 @@ class TasksService
      * SUBTASKS MOVE WITH THE PARENT. That is not a convenience - leaving them
      * behind is the same broken state as (1), reached from the other direction.
      *
+     * @param int $targetTenantId  the company (tenants.id) to move the task and its subtasks to; the actor must reach it
      * @return array{moved:int, from:string, to:string}
      */
     public static function moveTaskToCompany(PDO $conn, ActorContext $ctx, int $taskId, int $targetTenantId): array
@@ -1071,6 +1113,8 @@ class TasksService
      * differs per table and changes over time: tickets and changes have one,
      * contracts do not. Cached per request - the move loop asks about the same
      * three tables, and this is called on a path a person is waiting on.
+     *
+     * @param string $table  a table name - a developer literal such as 'tickets', 'changes' or 'contracts'
      */
     private static function tableHasTenantColumn(PDO $conn, string $table): bool
     {
@@ -1097,6 +1141,8 @@ class TasksService
      * this product still supports it. The visited set is not decoration - a
      * parent chain that somehow loops would otherwise spin here for ever, and a
      * bad row in the database should not be able to hang a request.
+     *
+     * @param int $rootId  the task to start from; it is included in the result
      */
     private static function taskAndDescendantIds(PDO $conn, int $rootId): array
     {
@@ -1121,7 +1167,11 @@ class TasksService
         return $all;
     }
 
-    /** A subtask inherits its parent's company, always. */
+    /**
+     * A subtask inherits its parent's company, always.
+     *
+     * @param int $parentId  the parent task whose company a new subtask takes
+     */
     private static function parentTaskTenant(PDO $conn, int $parentId): ?int
     {
         $stmt = $conn->prepare("SELECT tenant_id FROM tasks WHERE id = ?");
@@ -1130,7 +1180,11 @@ class TasksService
         return ($v === false || $v === null) ? null : (int) $v;
     }
 
-    /** Is an already-loaded task row inside the actor's company scope? */
+    /**
+     * Is an already-loaded task row inside the actor's company scope?
+     *
+     * @param array $row  a tasks row (SELECT t.*); no tenant_id key means the column is not there yet, and allows
+     */
     private static function taskAccessible(PDO $conn, ActorContext $ctx, array $row): bool
     {
         // Column absent = an install that has not run Database Verification since
@@ -1167,6 +1221,8 @@ class TasksService
      *    working on a client does not vanish from the board the moment it is made.
      * 4. Otherwise → NULL, i.e. the Default company. The state every existing task
      *    is already in.
+     *
+     * @param array $in  the create input; only tenant_id is read (an explicit company, checked against the actor's scope)
      */
     private static function resolveNewTaskTenant(PDO $conn, ActorContext $ctx, array $in, ?int $ticketId): ?int
     {
@@ -1200,7 +1256,14 @@ class TasksService
         return null;
     }
 
-    /** Resolve a status/priority lookup by name or id — strict 422 on unknown. Returns [id, name(, is_closed)] or null. */
+    /**
+     * Resolve a status/priority lookup by name or id — strict 422 on unknown. Returns [id, name(, is_closed)] or null.
+     *
+     * @param array $in  the request; {$key}_id wins over $key (a name), neither gives null
+     * @param string $key  'status' or 'priority'
+     * @param string $table  the lookup table: 'task_statuses' or 'task_priorities' - a developer literal
+     * @param bool $withClosed  true to read and return is_closed as a third element (statuses only)
+     */
     private static function resolveLookup(PDO $conn, array $in, string $key, string $table, bool $withClosed = false): ?array
     {
         $cols = 'id, name' . ($withClosed ? ', is_closed' : '');
@@ -1240,6 +1303,9 @@ class TasksService
      * reproduce the symptom by another route; is_closed is deliberately not
      * filtered, because an admin who makes a closed status the default has said
      * what they meant.
+     *
+     * @param string $table  the lookup table: 'task_statuses' or 'task_priorities' - a developer literal
+     * @param bool $withClosed  true to read and return is_closed as a third element (statuses only)
      */
     private static function lookupDefault(PDO $conn, string $table, bool $withClosed = false): array
     {
@@ -1269,7 +1335,11 @@ class TasksService
         }
     }
 
-    /** Validate an optional team id (422 on unknown). */
+    /**
+     * Validate an optional team id (422 on unknown).
+     *
+     * @param mixed $value  a team id as sent; null or '' means no team
+     */
     private static function validateTeam(PDO $conn, $value): ?int
     {
         if ($value === '' || $value === null) {
@@ -1287,6 +1357,9 @@ class TasksService
     /**
      * Validate a link column + parent task. Ticket links are checked against the
      * actor's company scope (tickets are tenant-scoped; tasks aren't).
+     *
+     * @param string $field  which link: 'ticket_id', 'change_id', 'contract_id' or 'parent_task_id'; anything else gives null
+     * @param mixed $value  the linked record's id as sent; null or '' means no link
      */
     private static function validateLink(PDO $conn, ActorContext $ctx, string $field, $value): ?int
     {
@@ -1361,7 +1434,11 @@ class TasksService
         }
     }
 
-    /** Resolve a tags array (names or ids) to ids — strict 422 on unknown (curated list). */
+    /**
+     * Resolve a tags array (names or ids) to ids — strict 422 on unknown (curated list).
+     *
+     * @param array $tags  tag ids or names, mixed; each must already exist in task_tags
+     */
     private static function resolveTags(PDO $conn, array $tags): array
     {
         $ids = [];
@@ -1382,7 +1459,11 @@ class TasksService
         return array_keys($ids);
     }
 
-    /** Replaces a task's tags with $tagIds. */
+    /**
+     * Replaces a task's tags with $tagIds.
+     *
+     * @param array $tagIds  the task_tags ids the task should end up with; an empty array removes them all
+     */
     private static function syncTags(PDO $conn, int $taskId, array $tagIds): void
     {
         $conn->prepare("DELETE FROM task_tag_map WHERE task_id = ?")->execute([$taskId]);
@@ -1428,6 +1509,8 @@ class TasksService
      * somebody recorded. The same applies when a task changes level: drag a
      * top-level task under a parent and its time is still there, shown again the
      * moment the setting allows it.
+     *
+     * @param ?int $parentTaskId  the task's parent, or null for a top-level task
      */
     public static function timeAllowedFor(PDO $conn, ?int $parentTaskId): bool
     {
@@ -1438,7 +1521,11 @@ class TasksService
         return $scope === 'subtasks' ? $isSubtask : !$isSubtask;
     }
 
-    /** Log time against a task. Returns the entry id. */
+    /**
+     * Log time against a task. Returns the entry id.
+     *
+     * @param array $in  minutes (required, above 0), notes, entry_at (an ISO 8601 instant; default now in UTC)
+     */
     public static function createTimeEntry(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
     {
         $task = self::loadTaskRow($conn, $ctx, $taskId);          // 404 + company scope
@@ -1461,7 +1548,11 @@ class TasksService
         return (int)$conn->lastInsertId();
     }
 
-    /** Soft-delete a time entry. Only the analyst who logged it may remove it. */
+    /**
+     * Soft-delete a time entry. Only the analyst who logged it may remove it.
+     *
+     * @param int $entryId  the time entry (task_time_entries.id) to remove
+     */
     public static function deleteTimeEntry(PDO $conn, ActorContext $ctx, int $entryId): void
     {
         $stmt = $conn->prepare("SELECT task_id, analyst_id FROM task_time_entries WHERE id = ? AND is_active = 1");
@@ -1525,7 +1616,11 @@ class TasksService
         ];
     }
 
-    /** Refuse the WRITE too, not only the display — a stale tab must not slip past a setting. */
+    /**
+     * Refuse the WRITE too, not only the display — a stale tab must not slip past a setting.
+     *
+     * @param array $taskRow  the tasks row, as loaded by loadTaskRow()
+     */
     private static function assertTimeAllowed(PDO $conn, array $taskRow): void
     {
         $parent = isset($taskRow['parent_task_id']) && $taskRow['parent_task_id'] !== null
@@ -1553,6 +1648,8 @@ class TasksService
      * assigned it to yourself" is the notification layer's rule, enforced in
      * includes/notifications_router.php; a workflow may legitimately want the
      * event either way, and duplicating the rule here would let the two drift.
+     *
+     * @param int $assigneeId  the analyst the task is now assigned to
      */
     private static function assignedDispatch(PDO $conn, int $taskId, int $assigneeId): void
     {
@@ -1609,6 +1706,8 @@ class TasksService
     /**
      * An estimate in hours (3.3.0): empty = not estimated; otherwise more than 0
      * and at most 9999, to two decimals ("1.5" = an hour and a half).
+     *
+     * @param mixed $v  the estimate in hours as sent; null or blank means not estimated
      */
     private static function parseEstimate($v): ?float
     {
@@ -1619,7 +1718,12 @@ class TasksService
         return round((float)$v, 2);
     }
 
-    /** Validates an optional YYYY-MM-DD date for $field; blank gives null. */
+    /**
+     * Validates an optional YYYY-MM-DD date for $field; blank gives null.
+     *
+     * @param mixed $value  the date as sent (YYYY-MM-DD); null or '' gives null
+     * @param string $field  the field name, used in the error message
+     */
     private static function parseDateOnly($value, string $field): ?string
     {
         if ($value === null || $value === '') {
@@ -1639,6 +1743,9 @@ class TasksService
      * who reads it, so this value is never zone-converted in either direction; a
      * zone offset in the input is therefore refused rather than quietly dropped,
      * because accepting it would imply a conversion that will not happen.
+     *
+     * @param mixed $value  a wall-clock time as sent (YYYY-MM-DD HH:MM[:SS], a T allowed); null or '' gives null, an offset is refused
+     * @param string $field  the field name, used in the error message
      */
     private static function parseNaiveDateTime($value, string $field): ?string
     {
@@ -1667,6 +1774,9 @@ class TasksService
      * The opposite kind of value to the one above, and the distinction that GH
      * #116 turned on: this one IS zone-converted for each reader, so a zone-less
      * string can only be read as UTC. The browser sends ISO-8601 with a Z.
+     *
+     * @param string $value  a date and time, ISO 8601; with no zone it is read as UTC
+     * @param string $field  the field name, used in the error message
      */
     private static function parseInstant(string $value, string $field): string
     {

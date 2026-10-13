@@ -42,11 +42,11 @@ in the release notes rather than hidden in a code comment.
 function uploadPrepareWebServableDir(string $dir): void
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 365.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 369.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dir` | `string` |  |  |
+| `$dir` | `string` |  | absolute path of the directory; created (with parents) if missing |
 
 **Returns:** `void`
 

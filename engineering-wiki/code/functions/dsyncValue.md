@@ -6,12 +6,12 @@ One attribute off a raw entry, as a plain string ('' when absent).
 function dsyncValue(array $entry, string $attr): string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 328.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 363.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$entry` | `array` |  |  |
-| `$attr` | `string` |  |  |
+| `$entry` | `array` |  | one raw entry from `ldap_get_entries()` (attribute keys lower-cased) |
+| `$attr` | `string` |  | the attribute name, any case; '' gives '' |
 
 **Returns:** `string`
 

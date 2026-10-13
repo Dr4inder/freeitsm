@@ -6,7 +6,7 @@ DELETE /problems/{id} — permanent, mirrors delete.php (cascades children, tidi
 function apiProblemsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 300.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

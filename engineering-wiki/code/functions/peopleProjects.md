@@ -6,13 +6,13 @@ Projects (3.2.0): for a person, the projects they are a member of (People tab of
 function peopleProjects(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 445.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 480.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$who` | `array` |  |  |
+| `$who` | `array` |  | ['user' => users id] for projects they are a member of, or ['company' => tenant id] |
 
 **Returns:** `array`
 
@@ -20,9 +20,9 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 445.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 457 | `peopleProjects` | read [project_members](/code/tables/project_members.md), read [projects](/code/tables/projects.md), read [project_roles](/code/tables/project_roles.md), read [analysts](/code/tables/analysts.md) |  |
-| 465 | `peopleProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 478 | `peopleProjects` | read [project_raci](/code/tables/project_raci.md), read [project_members](/code/tables/project_members.md), read [project_items](/code/tables/project_items.md) |  |
+| 492 | `peopleProjects` | read [project_members](/code/tables/project_members.md), read [projects](/code/tables/projects.md), read [project_roles](/code/tables/project_roles.md), read [analysts](/code/tables/analysts.md) |  |
+| 500 | `peopleProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 513 | `peopleProjects` | read [project_raci](/code/tables/project_raci.md), read [project_members](/code/tables/project_members.md), read [project_items](/code/tables/project_items.md) |  |
 
 ## Calls
 

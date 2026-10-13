@@ -12,11 +12,11 @@ set back.
 function tikaTimeoutOverride(?int $seconds = null): ?int
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 76.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$seconds` | `?int` | `null` |  |
+| `$seconds` | `?int` | `null` | the timeout to force for this process, or null to go back to the setting; omit to only read it |
 
 **Returns:** `?int`
 

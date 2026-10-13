@@ -6,7 +6,7 @@ Budget totals for many projects at once - for health, exceptions, reports.
 function projectBudgetTotals(PDO $conn, array $projects): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 167.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 179.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 172 | `projectBudgetTotals` | read [project_budget_lines](/code/tables/project_budget_lines.md), read [contracts](/code/tables/contracts.md) |  |
+| 184 | `projectBudgetTotals` | read [project_budget_lines](/code/tables/project_budget_lines.md), read [contracts](/code/tables/contracts.md) |  |
 
 ## Calls
 

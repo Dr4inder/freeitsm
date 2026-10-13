@@ -6,11 +6,11 @@ A stored upload pointer is only ever a file inside the branding directory.
 function brandingPathIsSafe(string $rel): bool
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 95.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 99.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rel` | `string` |  |  |
+| `$rel` | `string` |  | the stored upload path, relative to the app root |
 
 **Returns:** `bool`
 

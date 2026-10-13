@@ -21,5 +21,5 @@ The self-service portal's bell (discussion #62) - `notifications` for portal use
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md) | featureBingoDismissed L222, featureBingoReady L252 |  |
+| [includes/feature_bingo.php](/code/files/includes/feature_bingo.php.md) | featureBingoDismissed L230, featureBingoReady L260 |  |
 

@@ -34,7 +34,7 @@ Here the object cannot be constructed in an invalid state.
 
 ### __construct
 
-*private* - line 43
+*private* - line 48
 
 Private: learners are built with `analyst()` or `user()`.
 
@@ -44,12 +44,12 @@ function __construct(string $type, int $id)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$type` | `string` |  |  |
-| `$id` | `int` |  |  |
+| `$type` | `string` |  | 'analyst' or 'user' (self::ANALYST or self::USER) |
+| `$id` | `int` |  | the analysts.id or users.id, matching `$type` |
 
 ### analyst
 
-*public static* - line 50
+*public static* - line 59
 
 A learner for an analyst id, or null when the id is not positive.
 
@@ -59,13 +59,13 @@ function analyst(int $id): ?self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the analysts.id; 0 or less gives null |
 
 **Called from:** [lms/player.php](/code/files/lms/player.php.md)
 
 ### user
 
-*public static* - line 56
+*public static* - line 69
 
 A learner for a self-service user id, or null when the id is not positive.
 
@@ -75,13 +75,13 @@ function user(int $id): ?self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the self-service users.id; 0 or less gives null |
 
 **Called from:** [includes/people.php](/code/files/includes/people.php.md), [self-service/course.php](/code/files/self-service/course.php.md), [self-service/includes/header.php](/code/files/self-service/includes/header.php.md)
 
 ### fromSession
 
-*public static* - line 84
+*public static* - line 97
 
 Whoever is signed in, from either front door.
 
@@ -111,7 +111,7 @@ function fromSession(): ?self
 
 ### fromRequest
 
-*public static* - line 104
+*public static* - line 117
 
 The learner this REQUEST is acting as.
 
@@ -133,7 +133,7 @@ function fromRequest(): ?self
 
 ### requestWantsPortal
 
-*private static* - line 116
+*private static* - line 129
 
 Did this request come through the portal? Read from the query string even on a POST, so one rule covers the JSON-bodied endpoints as well.
 
@@ -143,7 +143,7 @@ function requestWantsPortal(): bool
 
 ### type
 
-*public* - line 122
+*public* - line 135
 
 Whether the learner is an analyst or a self-service user.
 
@@ -153,7 +153,7 @@ function type(): string
 
 ### id
 
-*public* - line 124
+*public* - line 137
 
 The analysts.id or users.id of the learner, depending on `type()`.
 
@@ -163,7 +163,7 @@ function id(): int
 
 ### isAnalyst
 
-*public* - line 126
+*public* - line 139
 
 True when the learner is an analyst.
 
@@ -173,7 +173,7 @@ function isAnalyst(): bool
 
 ### key
 
-*public* - line 129
+*public* - line 142
 
 'analyst:12' — for logs and array keys, never for storage.
 

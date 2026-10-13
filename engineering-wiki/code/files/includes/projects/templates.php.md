@@ -1,6 +1,6 @@
 # includes/projects/templates.php
 
-> PHP - 499 lines
+> PHP - 520 lines
 
 Projects - templates (3.2.0): start a project already planned.
 
@@ -46,11 +46,11 @@ Two kinds:
 | [projectGateKindReady()](/code/functions/projectGateKindReady.md) | 48 | Has Database Verification added project_stages.gate_kind (3.3.0)? |
 | [projectTemplatesReady()](/code/functions/projectTemplatesReady.md) | 58 | True when the project_templates table exists (after Database Verification). Cached per request. |
 | [projectBuiltinTemplates()](/code/functions/projectBuiltinTemplates.md) | 68 | The templates that ship with FreeITSM. English, like the seeded roles. |
-| [projectTemplateNormalise()](/code/functions/projectTemplateNormalise.md) | 222 | Check and tidy template content (from a saved row, the screen or a built-in). Unknown keys are dropped, every list is capped, days are clamped to 0-3650. |
-| [projectTemplateSummary()](/code/functions/projectTemplateSummary.md) | 326 | What the picker shows about a template: counts, without the whole plan. |
-| [projectTemplateList()](/code/functions/projectTemplateList.md) | 344 | Every template. `$all` = false: only what the new-project picker offers (built-ins not hidden, saved ones active). true: for the Settings tab. |
-| [projectTemplateLoad()](/code/functions/projectTemplateLoad.md) | 367 | [name, content] for a key, or null when there is no such (usable) template. |
-| [projectTemplateCapture()](/code/functions/projectTemplateCapture.md) | 391 | A project as a template: its plan with dates turned into days from its start, and none of its people, companies or links. `$parts` picks what to keep: plan, scope, raid, tolerances, targets. |
+| [projectTemplateNormalise()](/code/functions/projectTemplateNormalise.md) | 224 | Check and tidy template content (from a saved row, the screen or a built-in). Unknown keys are dropped, every list is capped, days are clamped to 0-3650. |
+| [projectTemplateSummary()](/code/functions/projectTemplateSummary.md) | 337 | What the picker shows about a template: counts, without the whole plan. |
+| [projectTemplateList()](/code/functions/projectTemplateList.md) | 357 | Every template. `$all` = false: only what the new-project picker offers (built-ins not hidden, saved ones active). true: for the Settings tab. |
+| [projectTemplateLoad()](/code/functions/projectTemplateLoad.md) | 385 | [name, content] for a key, or null when there is no such (usable) template. |
+| [projectTemplateCapture()](/code/functions/projectTemplateCapture.md) | 412 | A project as a template: its plan with dates turned into days from its start, and none of its people, companies or links. `$parts` picks what to keep: plan, scope, raid, tolerances, targets. |
 
 ## Database
 
@@ -59,18 +59,18 @@ Two kinds:
 | 52 | `projectGateKindReady` | read [project_stages](/code/tables/project_stages.md) |  |
 | 62 | `projectTemplatesReady` | read [project_templates](/code/tables/project_templates.md) |  |
 | 107 | `projectBuiltinTemplates` | read [assets](/code/tables/assets.md) |  |
-| 354 | `projectTemplateList` | read [project_templates](/code/tables/project_templates.md), read [analysts](/code/tables/analysts.md) |  |
-| 377 | `projectTemplateLoad` | read [project_templates](/code/tables/project_templates.md) |  |
-| 397 | `projectTemplateCapture` | read [project_stages](/code/tables/project_stages.md) |  |
-| 411 | `projectTemplateCapture` | read [project_stages](/code/tables/project_stages.md) |  |
-| 413 | `projectTemplateCapture` | read [tasks](/code/tables/tasks.md) |  |
-| 425 | `projectTemplateCapture` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
-| 443 | `projectTemplateCapture` | read [task_dependencies](/code/tables/task_dependencies.md) |  |
-| 450 | `projectTemplateCapture` | read [project_milestones](/code/tables/project_milestones.md) |  |
-| 458 | `projectTemplateCapture` | read [project_items](/code/tables/project_items.md) |  |
-| 466 | `projectTemplateCapture` | read [project_raid](/code/tables/project_raid.md) |  |
-| 474 | `projectTemplateCapture` | read [project_benefits](/code/tables/project_benefits.md) |  |
-| 487 | `projectTemplateCapture` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
+| 367 | `projectTemplateList` | read [project_templates](/code/tables/project_templates.md), read [analysts](/code/tables/analysts.md) |  |
+| 395 | `projectTemplateLoad` | read [project_templates](/code/tables/project_templates.md) |  |
+| 418 | `projectTemplateCapture` | read [project_stages](/code/tables/project_stages.md) |  |
+| 432 | `projectTemplateCapture` | read [project_stages](/code/tables/project_stages.md) |  |
+| 434 | `projectTemplateCapture` | read [tasks](/code/tables/tasks.md) |  |
+| 446 | `projectTemplateCapture` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 464 | `projectTemplateCapture` | read [task_dependencies](/code/tables/task_dependencies.md) |  |
+| 471 | `projectTemplateCapture` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 479 | `projectTemplateCapture` | read [project_items](/code/tables/project_items.md) |  |
+| 487 | `projectTemplateCapture` | read [project_raid](/code/tables/project_raid.md) |  |
+| 495 | `projectTemplateCapture` | read [project_benefits](/code/tables/project_benefits.md) |  |
+| 508 | `projectTemplateCapture` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
 
 ## How it hangs together
 

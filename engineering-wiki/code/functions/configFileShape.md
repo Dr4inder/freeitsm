@@ -6,11 +6,11 @@ What a config file DECLARES, read with the tokeniser so commented-out lines do n
 function configFileShape(string $path): array
 ```
 
-Defined in [includes/config_requirements.php](/code/files/includes/config_requirements.php.md), line 87.
+Defined in [includes/config_requirements.php](/code/files/includes/config_requirements.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | filesystem path of the PHP config file to read; unreadable gives readable => false |
 
 **Returns:** `array`
 

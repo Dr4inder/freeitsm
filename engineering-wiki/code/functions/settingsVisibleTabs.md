@@ -11,13 +11,13 @@ capability, so administrators see the lot.
 function settingsVisibleTabs(PDO $conn, int $analystId, array $manifest): array
 ```
 
-Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 63.
+Defined in [includes/settings_manifest.php](/code/files/includes/settings_manifest.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$manifest` | `array` |  |  |
+| `$manifest` | `array` |  | a module's settings manifest (<module>/settings/manifest.php), with its 'tabs' list |
 
 **Returns:** array<int,array> the visible tab definitions
 

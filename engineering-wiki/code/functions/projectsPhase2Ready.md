@@ -6,7 +6,7 @@ Has Database Verification created the phase 2 tables? The portfolio query names 
 function projectsPhase2Ready(PDO $conn): bool
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 184.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 195.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,8 +18,8 @@ Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 188 | `projectsPhase2Ready` | read [project_tolerances](/code/tables/project_tolerances.md) |  |
-| 188 | `projectsPhase2Ready` | read [project_raid](/code/tables/project_raid.md) |  |
+| 199 | `projectsPhase2Ready` | read [project_tolerances](/code/tables/project_tolerances.md) |  |
+| 199 | `projectsPhase2Ready` | read [project_raid](/code/tables/project_raid.md) |  |
 
 ## Called from
 

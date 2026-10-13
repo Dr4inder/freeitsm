@@ -1,6 +1,6 @@
 # api/forms/ai_generate.php
 
-> API endpoint - 349 lines
+> API endpoint - 352 lines
 
 API: Forms — AI Assist (streaming)
 
@@ -31,7 +31,7 @@ with a settingsOverride so it picks up the forms-specific config.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse_send()](/code/functions/sse_send.md) | 47 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
+| [sse_send()](/code/functions/sse_send.md) | 50 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
 
 ## How it hangs together
 

@@ -6,12 +6,12 @@ Who may be offered as a collaborator on this task: active analysts, minus the ow
 function collaboratorCandidates(PDO $conn, array $task): array
 ```
 
-Defined in [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md), line 91.
+Defined in [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$task` | `array` |  |  |
+| `$task` | `array` |  | the task row from TasksService::taskForCollaborators() - id, assigned_analyst_id, tenant_id |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 93 | `collaboratorCandidates` | read [analysts](/code/tables/analysts.md) |  |
+| 95 | `collaboratorCandidates` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

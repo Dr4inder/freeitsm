@@ -90,7 +90,7 @@ function baseUrl(): string
 
 ### apiUrl
 
-*protected* - line 94
+*protected* - line 98
 
 A REST API address for `$path`, on API version 3 (Cloud) or 2 (Server / Data Center).
 
@@ -100,11 +100,11 @@ function apiUrl(string $path): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | the route under the REST base, e.g. 'issue/10042'; a leading slash is dropped |
 
 ### browseUrl
 
-*public* - line 100
+*public* - line 108
 
 The human-facing link we store on the link row and show in the panel.
 
@@ -114,11 +114,11 @@ function browseUrl(string $key): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the issue key, e.g. 'OPS-123' |
 
 ### jiraRequest
 
-*protected* - line 111
+*protected* - line 123
 
 Auth differs by flavour: Cloud uses HTTP Basic with the user's email and an API token; Data Center uses a Bearer Personal Access Token.
 
@@ -128,13 +128,13 @@ function jiraRequest(string $method, string $url, ?array $json = null): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$method` | `string` |  |  |
-| `$url` | `string` |  |  |
-| `$json` | `?array` | `null` |  |
+| `$method` | `string` |  | the HTTP method - 'GET' or 'POST' |
+| `$url` | `string` |  | the full URL from `apiUrl()`, query string included |
+| `$json` | `?array` | `null` | the body to JSON-encode; null sends no body |
 
 ### extractError
 
-*protected* - line 145
+*protected* - line 160
 
 Turn a Jira error response into something an analyst can act on.
 
@@ -149,12 +149,12 @@ function extractError(int $code, string $rawBody): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$code` | `int` |  |  |
-| `$rawBody` | `string` |  |  |
+| `$code` | `int` |  | the HTTP status code |
+| `$rawBody` | `string` |  | the response body as received |
 
 ### renderDoc
 
-*public* - line 175
+*public* - line 194
 
 ADF (an array) on Cloud; wiki markup (a string) on Data Center.
 
@@ -164,11 +164,11 @@ function renderDoc(IssueDoc $doc)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$doc` | `IssueDoc` |  |  |
+| `$doc` | `IssueDoc` |  | the description or comment to render |
 
 ### buildCreatePayload
 
-*protected* - line 190
+*protected* - line 212
 
 Builds the JSON body for creating an issue - project, issue type, a one-line summary of up to 255 characters, the rendered description and any mapped fields.
 
@@ -186,13 +186,13 @@ function buildCreatePayload(
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$target` | `array` |  | ['project' => 'OPS', 'issue_type' => 'Bug'] |
-| `$summary` | `string` |  |  |
-| `$body` | `IssueDoc` |  |  |
-| `$fields` | `array` | `[]` |  |
+| `$summary` | `string` |  | the ticket subject; whitespace collapsed, blank becomes '(no subject)' |
+| `$body` | `IssueDoc` |  | the description |
+| `$fields` | `array` | `[]` | mapped Jira fields keyed by field id (e.g. 'priority' => ['name' => 'High']), merged last |
 
 ### createIssue
 
-*public* - line 228
+*public* - line 255
 
 Creates an issue and returns it as the escalation panel needs it.
 
@@ -205,14 +205,14 @@ function createIssue(array $target, string $summary, IssueDoc $body, array $fiel
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$target` | `array` |  |  |
-| `$summary` | `string` |  |  |
-| `$body` | `IssueDoc` |  |  |
-| `$fields` | `array` | `[]` |  |
+| `$target` | `array` |  | ['project' => 'OPS', 'issue_type' => 'Bug'] - both required |
+| `$summary` | `string` |  | the ticket subject |
+| `$body` | `IssueDoc` |  | the description |
+| `$fields` | `array` | `[]` | mapped Jira fields, as for `buildCreatePayload()` |
 
 ### parseIssue
 
-*protected* - line 259
+*protected* - line 290
 
 Jira's issue JSON → our normalised shape.
 
@@ -222,11 +222,11 @@ function parseIssue(array $issue): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$issue` | `array` |  |  |
+| `$issue` | `array` |  | one issue as the Jira REST API returns it - id, key and fields |
 
 ### mapStatusCategory
 
-*protected* - line 286
+*protected* - line 319
 
 Jira's statusCategory key → our closed set.
 
@@ -242,11 +242,11 @@ function mapStatusCategory(string $categoryKey): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$categoryKey` | `string` |  |  |
+| `$categoryKey` | `string` |  | Jira's statusCategory key - 'new', 'indeterminate' or 'done' |
 
 ### fetchIssue
 
-*public* - line 297
+*public* - line 334
 
 Reads one issue's summary, status and assignee and returns it parsed.
 
@@ -256,11 +256,11 @@ function fetchIssue(string $externalId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the numeric Jira issue id (a key such as OPS-123 also works) |
 
 ### fetchIssues
 
-*public* - line 311
+*public* - line 350
 
 Batch read via JQL — one call for the whole watch list instead of one per issue, which matters because this is the poll cron's hot path.
 
@@ -273,11 +273,11 @@ function fetchIssues(array $externalIds): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalIds` | `array` |  |  |
+| `$externalIds` | `array` |  | numeric Jira issue ids; anything else is dropped |
 
 ### addComment
 
-*public* - line 386
+*public* - line 430
 
 Posts a comment on an issue, rendered for this Jira flavour, and returns the new comment's id.
 
@@ -287,12 +287,12 @@ function addComment(string $externalId, IssueDoc $body): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
-| `$body` | `IssueDoc` |  |  |
+| `$externalId` | `string` |  | the numeric Jira issue id |
+| `$body` | `IssueDoc` |  | the comment, rendered for this flavour |
 
 ### fetchComments
 
-*public* - line 402
+*public* - line 447
 
 Comments on one issue, newest first, normalised.
 
@@ -302,13 +302,13 @@ function fetchComments(string $externalId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the numeric Jira issue id |
 
 **Returns:** array [['comment_id'=>…, 'comment_body'=>plain text, 'author_identity'=>…, 'author_name'=>…, 'created_ts'=>?int], …]
 
 ### parseComment
 
-*protected* - line 423
+*protected* - line 470
 
 One Jira comment → the fields the canonical comment_added event needs.
 
@@ -323,11 +323,11 @@ function parseComment(array $c): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
+| `$c` | `array` |  | one comment as the Jira REST API returns it - id, body, author, created |
 
 ### commentBodyToText
 
-*protected* - line 445
+*protected* - line 494
 
 A comment body in whichever shape this flavour sends → plain text.
 
@@ -340,11 +340,11 @@ function commentBodyToText($body): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` |  |  |  |
+| `$body` |  |  | the comment body - an ADF array on Cloud, a wiki markup string on Data Center |
 
 ### adfToText
 
-*protected* - line 464
+*protected* - line 515
 
 ADF → plain text.
 
@@ -363,11 +363,11 @@ function adfToText($node): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$node` |  |  |  |
+| `$node` |  |  | an ADF node (array); anything else gives '' |
 
 ### tidyText
 
-*protected* - line 513
+*protected* - line 568
 
 Shared tidy-up for text pulled out of a tracker.
 
@@ -377,11 +377,11 @@ function tidyText(string $s): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `string` |  |  |
+| `$s` | `string` |  | text pulled out of a comment |
 
 ### pollChanges
 
-*public* - line 543
+*public* - line 601
 
 The inbound path until webhooks land: ask Jira what has been commented on since `$since` and return canonical `comment_added` events.
 
@@ -402,12 +402,12 @@ function pollChanges(?string $since, array $externalIds = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$since` | `?string` |  |  |
-| `$externalIds` | `array` | `[]` |  |
+| `$since` | `?string` |  | UTC 'Y-m-d H:i:s' watermark (last_poll_watermark); null on the first run returns nothing |
+| `$externalIds` | `array` | `[]` | numeric ids of the issues this connection holds links to; anything else is dropped |
 
 ### lookbackMinutes
 
-*protected* - line 591
+*protected* - line 652
 
 How many minutes back to ask Jira about. Pure, so the capping rule is provable without a clock or a network.
 
@@ -417,12 +417,12 @@ function lookbackMinutes(int $sinceTs, ?int $nowTs = null): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sinceTs` | `int` |  |  |
-| `$nowTs` | `?int` | `null` |  |
+| `$sinceTs` | `int` |  | the watermark as a Unix timestamp |
+| `$nowTs` | `?int` | `null` | the current time as a Unix timestamp; null means `time()` |
 
 ### searchUpdatedSince
 
-*protected* - line 607
+*protected* - line 671
 
 Which of our watched issues changed in the last `$minutes`.
 
@@ -438,12 +438,12 @@ function searchUpdatedSince(array $ids, int $minutes): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ids` | `array` |  |  |
-| `$minutes` | `int` |  |  |
+| `$ids` | `array` |  | numeric Jira issue ids to check |
+| `$minutes` | `int` |  | how far back to look, from `lookbackMinutes()` |
 
 ### addAttachment
 
-*public* - line 651
+*public* - line 716
 
 Upload one file to an issue.
 
@@ -465,12 +465,12 @@ function addAttachment(string $externalId, array $file): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the numeric id of the issue to attach the file to |
 | `$file` | `array` |  | ['data'=>binary, 'filename'=>string, 'content_type'=>string] |
 
 ### buildMultipart
 
-*protected* - line 692
+*protected* - line 762
 
 A single-file multipart/form-data body, and the boundary that goes with it.
 
@@ -488,14 +488,14 @@ function buildMultipart(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filename` | `string` |  |  |
-| `$contentType` | `string` |  |  |
-| `$data` | `string` |  |  |
-| `$boundary` | `?string` |  |  |
+| `$filename` | `string` |  | the file's original name; path parts, quotes and line breaks are stripped |
+| `$contentType` | `string` |  | the file's MIME type |
+| `$data` | `string` |  | the file's bytes |
+| `$boundary` | `?string` |  | set to the random boundary used - the caller puts it in the Content-Type header |
 
 ### testConnection
 
-*public* - line 719
+*public* - line 789
 
 Confirm the credentials and — just as importantly — capture who we are.
 
@@ -511,7 +511,7 @@ function testConnection(): array
 
 ### listProjects
 
-*public* - line 764
+*public* - line 834
 
 Lists the Jira projects for the mapping dropdowns - paged on Cloud (up to 1,000), one call on Server / Data Center.
 
@@ -523,7 +523,7 @@ function listProjects(): array
 
 ### listPriorities
 
-*public* - line 804
+*public* - line 874
 
 Every priority defined on the site, for the mapping screen's dropdown.
 
@@ -545,7 +545,7 @@ function listPriorities(): array
 
 ### listIssueTypes
 
-*public* - line 833
+*public* - line 905
 
 Issue types available on a project.
 
@@ -559,5 +559,5 @@ function listIssueTypes(string $project): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `string` |  |  |
+| `$project` | `string` |  | the project key, e.g. 'OPS' |
 

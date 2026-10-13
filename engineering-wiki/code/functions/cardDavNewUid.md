@@ -6,7 +6,7 @@ A random RFC 4122 v4 UUID - the card's UID, and its resource name.
 function cardDavNewUid(): string
 ```
 
-Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php.md), line 104.
+Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php.md), line 110.
 
 **Returns:** `string`
 

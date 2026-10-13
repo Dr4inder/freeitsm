@@ -6,11 +6,11 @@ Check and tidy template content (from a saved row, the screen or a built-in). Un
 function projectTemplateNormalise(array $c): array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 222.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 224.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
+| `$c` | `array` |  | the template content (untrusted): methodology, stages, tasks, milestones, items, raid, targets, benefits ... |
 
 **Returns:** `array`
 

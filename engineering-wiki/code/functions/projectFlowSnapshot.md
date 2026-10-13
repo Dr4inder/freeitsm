@@ -6,12 +6,12 @@ Record today's counts by status for these projects (top-level tasks). Quiet: nev
 function projectFlowSnapshot(PDO $conn, array $projectIds): void
 ```
 
-Defined in [includes/projects/flow.php](/code/files/includes/projects/flow.php.md), line 29.
+Defined in [includes/projects/flow.php](/code/files/includes/projects/flow.php.md), line 33.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$projectIds` | `array` |  |  |
+| `$projectIds` | `array` |  | the projects to record today's counts for |
 
 **Returns:** `void`
 
@@ -19,9 +19,9 @@ Defined in [includes/projects/flow.php](/code/files/includes/projects/flow.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 35 | `projectFlowSnapshot` | read [tasks](/code/tables/tasks.md) |  |
-| 39 | `projectFlowSnapshot` | **delete** [project_task_flow](/code/tables/project_task_flow.md) |  |
-| 40 | `projectFlowSnapshot` | **insert** [project_task_flow](/code/tables/project_task_flow.md) (`project_id`, `day`, `status_id`, `task_count`) |  |
+| 39 | `projectFlowSnapshot` | read [tasks](/code/tables/tasks.md) |  |
+| 43 | `projectFlowSnapshot` | **delete** [project_task_flow](/code/tables/project_task_flow.md) |  |
+| 44 | `projectFlowSnapshot` | **insert** [project_task_flow](/code/tables/project_task_flow.md) (`project_id`, `day`, `status_id`, `task_count`) |  |
 
 ## Calls
 

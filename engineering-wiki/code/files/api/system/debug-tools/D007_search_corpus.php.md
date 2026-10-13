@@ -1,6 +1,6 @@
 # api/system/debug-tools/D007_search_corpus.php
 
-> API endpoint - 299 lines
+> API endpoint - 309 lines
 
 D007 — Search corpus health.
 
@@ -36,9 +36,9 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 53 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
-| [yn()](/code/functions/yn.md) | 58 | Formats a boolean as YES or NO for the report. |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 63 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [addSection()](/code/functions/addSection.md) | 57 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 66 | Formats a boolean as YES or NO for the report. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 73 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
 
 ## How it hangs together
 

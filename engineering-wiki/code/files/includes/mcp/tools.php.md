@@ -1,6 +1,6 @@
 # includes/mcp/tools.php
 
-> PHP - 318 lines
+> PHP - 371 lines
 
 The MCP server's tools (3.2.0) - api/mcp/index.php is the protocol, this is what it offers.
 
@@ -42,25 +42,25 @@ assistant told about a tool it cannot use keeps reaching for it.
 |---|--:|---|
 | [mcpWarbotToolMap()](/code/functions/mcpWarbotToolMap.md) | 44 | name => [module, company_safe] for the Warbot tools. A Warbot tool not listed here is not offered. |
 | [mcpTools()](/code/functions/mcpTools.md) | 69 | Every tool: [description, schema, module, company_safe, capability, handler(conn, args, analystId, apiKey)]. |
-| [mcpEffectiveScope()](/code/functions/mcpEffectiveScope.md) | 154 | 🔴 THE KEY'S EFFECTIVE COMPANIES (security review, 2026-10-09). A key's own company_scope is null when an administrator left it on "all companies" - and the REST API reads null as EVERY company, even when the analyst the key acts as is limited to one. The MCP server promises "you see what that analyst may see", so it intersects: the key's companies AND the analyst's. |
-| [mcpToolAllowed()](/code/functions/mcpToolAllowed.md) | 163 | May this key run this tool? (permission is checked once, by the endpoint) |
-| [mcpToolsFor()](/code/functions/mcpToolsFor.md) | 173 | tools/list: what this key may use, in MCP's shape. |
-| [mcpRunTool()](/code/functions/mcpRunTool.md) | 194 | tools/call. Returns [text, isError]. An unknown or forbidden tool is null - the endpoint answers that as a protocol error, not as tool output. |
-| [mcpProjectScopeSql()](/code/functions/mcpProjectScopeSql.md) | 215 | " AND p.tenant_id ..." for the key's companies (NULL company = the Default one). |
-| [mcpProjectCompanySql()](/code/functions/mcpProjectCompanySql.md) | 230 | The company part of the MCP project filter - limits projects to the API key's companies. |
-| [mcpToolListProjects()](/code/functions/mcpToolListProjects.md) | 242 | MCP tool: lists the projects the API key may see. |
-| [mcpToolProjectOverview()](/code/functions/mcpToolProjectOverview.md) | 249 | MCP tool: one project's overview. |
-| [mcpToolProjectRaid()](/code/functions/mcpToolProjectRaid.md) | 256 | MCP tool: a project's RAID log - risks, assumptions, issues and dependencies. |
-| [mcpToolProjectTasks()](/code/functions/mcpToolProjectTasks.md) | 263 | MCP tool: a project's tasks. |
-| [mcpToolProjectDates()](/code/functions/mcpToolProjectDates.md) | 270 | MCP tool: a project's key dates. |
-| [mcpToolProjectBudget()](/code/functions/mcpToolProjectBudget.md) | 277 | The budget stays MCP-only: Warbot answers in a channel everyone in it can read. |
-| [mcpToolSearchKnowledge()](/code/functions/mcpToolSearchKnowledge.md) | 303 | ══════════════════════════════════════════════════════════════════════════ KNOWLEDGE - by the KEY's companies (KnowledgeViewer::forApiKey), not the analyst's active company, which an API call does not have. ══════════════════════════════════════════════════════════════════════════ |
+| [mcpEffectiveScope()](/code/functions/mcpEffectiveScope.md) | 156 | 🔴 THE KEY'S EFFECTIVE COMPANIES (security review, 2026-10-09). A key's own company_scope is null when an administrator left it on "all companies" - and the REST API reads null as EVERY company, even when the analyst the key acts as is limited to one. The MCP server promises "you see what that analyst may see", so it intersects: the key's companies AND the analyst's. |
+| [mcpToolAllowed()](/code/functions/mcpToolAllowed.md) | 170 | May this key run this tool? (permission is checked once, by the endpoint) |
+| [mcpToolsFor()](/code/functions/mcpToolsFor.md) | 184 | tools/list: what this key may use, in MCP's shape. |
+| [mcpRunTool()](/code/functions/mcpRunTool.md) | 209 | tools/call. Returns [text, isError]. An unknown or forbidden tool is null - the endpoint answers that as a protocol error, not as tool output. |
+| [mcpProjectScopeSql()](/code/functions/mcpProjectScopeSql.md) | 234 | " AND p.tenant_id ..." for the key's companies (NULL company = the Default one). |
+| [mcpProjectCompanySql()](/code/functions/mcpProjectCompanySql.md) | 251 | The company part of the MCP project filter - limits projects to the API key's companies. |
+| [mcpToolListProjects()](/code/functions/mcpToolListProjects.md) | 268 | MCP tool: lists the projects the API key may see. |
+| [mcpToolProjectOverview()](/code/functions/mcpToolProjectOverview.md) | 280 | MCP tool: one project's overview. |
+| [mcpToolProjectRaid()](/code/functions/mcpToolProjectRaid.md) | 292 | MCP tool: a project's RAID log - risks, assumptions, issues and dependencies. |
+| [mcpToolProjectTasks()](/code/functions/mcpToolProjectTasks.md) | 304 | MCP tool: a project's tasks. |
+| [mcpToolProjectDates()](/code/functions/mcpToolProjectDates.md) | 316 | MCP tool: a project's key dates. |
+| [mcpToolProjectBudget()](/code/functions/mcpToolProjectBudget.md) | 328 | The budget stays MCP-only: Warbot answers in a channel everyone in it can read. |
+| [mcpToolSearchKnowledge()](/code/functions/mcpToolSearchKnowledge.md) | 356 | KNOWLEDGE - by the KEY's companies (KnowledgeViewer::forApiKey), not the analyst's active company, which an API call does not have. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 310 | `mcpToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 363 | `mcpToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

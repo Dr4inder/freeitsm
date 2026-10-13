@@ -6,7 +6,7 @@ POST /service-status/services - creates a service through ServiceStatusService a
 function apiStatusServicesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 231.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 247.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

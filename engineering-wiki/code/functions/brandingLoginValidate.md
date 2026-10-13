@@ -6,13 +6,13 @@ One value, validated against its declared type. Anything that does not fit becom
 function brandingLoginValidate(string $field, $raw, array $spec)
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 233.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 252.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$field` | `string` |  |  |
-| `$raw` |  |  |  |
-| `$spec` | `array` |  |  |
+| `$field` | `string` |  | the field's name; not used by the check itself |
+| `$raw` |  |  | the stored or posted value (untrusted); null or '' gives the default |
+| `$spec` | `array` |  | the field's entry from `brandingLoginFields()` - type, default, and values/min/max as the type needs |
 
 ## Calls
 

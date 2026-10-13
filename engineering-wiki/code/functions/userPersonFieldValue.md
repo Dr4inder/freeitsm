@@ -11,11 +11,11 @@ one column over.
 function userPersonFieldValue(string $field, $value)
 ```
 
-Defined in [includes/users.php](/code/files/includes/users.php.md), line 370.
+Defined in [includes/users.php](/code/files/includes/users.php.md), line 379.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$field` | `string` |  |  |
+| `$field` | `string` |  | the users column, one of USER_PERSON_FIELDS; 'manager_id' is read as an id |
 | `$value` |  |  | raw from the request body |
 
 **Returns:** string|int|null

@@ -6,13 +6,13 @@ The project dates coming up across every project in `$scope` - stage ends, miles
 function projectAssistDates(PDO $conn, array $scope, array $args): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 262.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 307.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `array` |  |  |
-| `$args` | `array` |  |  |
+| `$scope` | `array` |  | [sql, args]: the caller's company filter on alias p |
+| `$args` | `array` |  | the tool's arguments: days ahead to look (1-90, default 14) |
 
 **Returns:** `string`
 
@@ -20,10 +20,10 @@ Defined in [includes/projects/assistant.php](/code/files/includes/projects/assis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 269 | `projectAssistDates` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
-| 271 | `projectAssistDates` | read [projects](/code/tables/projects.md) |  |
-| 275 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
-| 277 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
+| 314 | `projectAssistDates` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
+| 316 | `projectAssistDates` | read [projects](/code/tables/projects.md) |  |
+| 320 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
+| 322 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

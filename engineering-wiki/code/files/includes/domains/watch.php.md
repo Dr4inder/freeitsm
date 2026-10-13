@@ -1,6 +1,6 @@
 # includes/domains/watch.php
 
-> PHP - 219 lines
+> PHP - 237 lines
 
 Domains — watching the outside world for your names.
 
@@ -39,20 +39,20 @@ name are not worth a thousand DNS queries.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [domainCtScan()](/code/functions/domainCtScan.md) | 53 | Asks crt.sh for the unexpired certificates issued for a domain and stores any not seen before; the first scan stores them as acknowledged, later ones as new and fire domain.certificate_issued. |
-| [domainCtIssuer()](/code/functions/domainCtIssuer.md) | 95 | "C=US, O=Let's Encrypt, CN=R11" → "Let's Encrypt (R11)" |
-| [domainCtDate()](/code/functions/domainCtDate.md) | 104 | Turns a crt.sh timestamp (UTC, with or without a Z) into a 'Y-m-d H:i:s' UTC string, or null. |
-| [domainLookalikeCandidates()](/code/functions/domainLookalikeCandidates.md) | 120 | The look-alike candidates for a name, keyed by candidate => technique. Deliberately bounded (a few hundred at most): every candidate is two DNS queries. |
-| [domainLookalikeScan()](/code/functions/domainLookalikeScan.md) | 180 | Resolve the candidates and store the ones that exist. |
+| [domainCtScan()](/code/functions/domainCtScan.md) | 56 | Asks crt.sh for the unexpired certificates issued for a domain and stores any not seen before; the first scan stores them as acknowledged, later ones as new and fire domain.certificate_issued. |
+| [domainCtIssuer()](/code/functions/domainCtIssuer.md) | 102 | "C=US, O=Let's Encrypt, CN=R11" → "Let's Encrypt (R11)" |
+| [domainCtDate()](/code/functions/domainCtDate.md) | 115 | Turns a crt.sh timestamp (UTC, with or without a Z) into a 'Y-m-d H:i:s' UTC string, or null. |
+| [domainLookalikeCandidates()](/code/functions/domainLookalikeCandidates.md) | 133 | The look-alike candidates for a name, keyed by candidate => technique. Deliberately bounded (a few hundred at most): every candidate is two DNS queries. |
+| [domainLookalikeScan()](/code/functions/domainLookalikeScan.md) | 198 | Resolve the candidates and store the ones that exist. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 62 | `domainCtScan` | read [domain_certificates](/code/tables/domain_certificates.md) |  |
-| 67 | `domainCtScan` | **insert** [domain_certificates](/code/tables/domain_certificates.md) (`domain_id`, `crtsh_id`, `common_name`, `name_value`, `issuer`, `not_before`, `not_after`, `first_seen_datetime`, `acknowledged`) |  |
-| 186 | `domainLookalikeScan` | **insert** [domain_lookalikes](/code/tables/domain_lookalikes.md) (`domain_id`, `lookalike`, `technique`, `has_a`, `has_mx`, `first_seen_datetime`, `last_seen_datetime`) |  |
-| 192 | `domainLookalikeScan` | read [domain_lookalikes](/code/tables/domain_lookalikes.md) |  |
+| 65 | `domainCtScan` | read [domain_certificates](/code/tables/domain_certificates.md) |  |
+| 70 | `domainCtScan` | **insert** [domain_certificates](/code/tables/domain_certificates.md) (`domain_id`, `crtsh_id`, `common_name`, `name_value`, `issuer`, `not_before`, `not_after`, `first_seen_datetime`, `acknowledged`) |  |
+| 204 | `domainLookalikeScan` | **insert** [domain_lookalikes](/code/tables/domain_lookalikes.md) (`domain_id`, `lookalike`, `technique`, `has_a`, `has_mx`, `first_seen_datetime`, `last_seen_datetime`) |  |
+| 210 | `domainLookalikeScan` | read [domain_lookalikes](/code/tables/domain_lookalikes.md) |  |
 
 ## How it hangs together
 

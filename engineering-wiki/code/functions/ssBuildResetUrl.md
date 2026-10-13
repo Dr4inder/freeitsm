@@ -11,11 +11,11 @@ a phishing attempt.
 function ssBuildResetUrl(string $rawToken): string
 ```
 
-Defined in [includes/self_service_email.php](/code/files/includes/self_service_email.php.md), line 112.
+Defined in [includes/self_service_email.php](/code/files/includes/self_service_email.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawToken` | `string` |  |  |
+| `$rawToken` | `string` |  | the unhashed password-reset token that goes in the link |
 
 **Returns:** `string`
 

@@ -53,7 +53,13 @@ filesApiRun(function () use ($conn, $analystId) {
     filesApiOk(['done' => $done, 'failed' => $failed]);
 });
 
-/** RuntimeException = a refusal to report for this one entry. */
+/**
+ * RuntimeException = a refusal to report for this one entry.
+ *
+ * @param string $mode  'move' or 'copy'
+ * @param int $id  the files_items id being moved or copied
+ * @param int $target  the destination folder id; 0 or less is refused, as files cannot sit at the top level
+ */
 function filesTransferItem(PDO $conn, int $analystId, string $mode, int $id, int $target): void
 {
     $it = filesItem($conn, $id);
@@ -82,7 +88,13 @@ function filesTransferItem(PDO $conn, int $analystId, string $mode, int $id, int
                ['from' => $fromPath, 'source_item_id' => $id]);
 }
 
-/** A new file row whose single version shares the source's current bytes. */
+/**
+ * A new file row whose single version shares the source's current bytes.
+ *
+ * @param array $it  the source files_items row (size_bytes, mime_type, current_version_id are copied)
+ * @param int $target  the folder the copy goes into
+ * @param string $name  the copy's file name, already made unique in that folder
+ */
 function filesCopyItemRow(PDO $conn, int $analystId, array $it, int $target, string $name): int
 {
     $conn->prepare("INSERT INTO files_items (folder_id, name, size_bytes, mime_type, created_by, created_datetime)
@@ -106,6 +118,10 @@ function filesCopyItemRow(PDO $conn, int $analystId, array $it, int $target, str
  * inside itself. A move keeps the folder's own permission entries; a copy is built by
  * filesCopyFolderTree(). Anything that lands at the top level gives the person doing it
  * Full control. Both are audited.
+ *
+ * @param string $mode  'move' or 'copy'
+ * @param int $id  the files_folders id being moved or copied
+ * @param int $target  the destination folder id; 0 means the top level
  */
 function filesTransferFolder(PDO $conn, int $analystId, string $mode, int $id, int $target): void
 {
@@ -160,6 +176,9 @@ function filesTransferFolder(PDO $conn, int $analystId, string $mode, int $id, i
  * subfolder that shuts the copier out is skipped, so copying never becomes a way to read
  * what they cannot read.
  *
+ * @param int $srcId  the folder being copied
+ * @param ?int $parentId  the folder the copy goes into; null for the top level
+ * @param string $name  the new folder's name, already made unique where it lands
  * @writes files_folders, files_items, files_versions - the copied tree; file copies share the source's stored bytes
  */
 function filesCopyFolderTree(PDO $conn, int $analystId, int $srcId, ?int $parentId, string $name): int
@@ -190,6 +209,7 @@ function filesCopyFolderTree(PDO $conn, int $analystId, int $srcId, ?int $parent
  * Gives an analyst Full control on a folder, upgrading an existing entry - used when a
  * folder lands at the top level, as when creating one there.
  *
+ * @param int $folderId  the folder to give $analystId Full control on
  * @writes files_permissions(level) - an analyst entry for the folder
  */
 function filesGrantCreatorFull(PDO $conn, int $analystId, int $folderId): void

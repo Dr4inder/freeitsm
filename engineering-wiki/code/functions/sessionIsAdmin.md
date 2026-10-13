@@ -6,7 +6,7 @@ Cosmetic (UI-layer) admin check for pages: "should this analyst see System?". Re
 function sessionIsAdmin(): bool
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 242.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 246.
 
 **Returns:** `bool`
 

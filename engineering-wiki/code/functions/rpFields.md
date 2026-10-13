@@ -6,11 +6,11 @@ Drop the empties, so callers can just list every field they might have.
 function rpFields(array $fields): array
 ```
 
-Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 111.
+Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 124.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fields` | `array` |  |  |
+| `$fields` | `array` |  | the fields from `rpField()`, nulls included - they are dropped |
 
 **Returns:** `array`
 

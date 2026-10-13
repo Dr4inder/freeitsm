@@ -6,12 +6,12 @@ Every setting with its default applied. Cached; `$fresh` after a save.
 function projectSettings(PDO $conn, bool $fresh = false): array
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 151.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 155.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$fresh` | `bool` | `false` |  |
+| `$fresh` | `bool` | `false` | true to re-read from the database (after a save) instead of the per-request cache |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/projects/settings.php](/code/files/includes/projects/settin
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 160 | `projectSettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 164 | `projectSettings` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

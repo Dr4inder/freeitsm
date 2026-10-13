@@ -6,11 +6,11 @@ Page gate: bounce an analyst who lacks `$capability` back to the launcher, so a 
 function requireCapability(string $capability, ?PDO $conn = null): void
 ```
 
-Defined in [includes/rbac.php](/code/files/includes/rbac.php.md), line 107.
+Defined in [includes/rbac.php](/code/files/includes/rbac.php.md), line 111.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$capability` | `string` |  |  |
+| `$capability` | `string` |  | the capability key the page needs, a Cap:: constant |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

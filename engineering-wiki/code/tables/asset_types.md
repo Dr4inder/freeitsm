@@ -40,11 +40,11 @@
 | [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52 |  |
 | [asset-management/labels.php](/code/files/asset-management/labels.php.md) | L104 |  |
 | [asset-management/scan.php](/code/files/asset-management/scan.php.md) | L65 |  |
-| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractAssetSelect L64, contractAssetSearch L250 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleAssets L349, peopleSupplierAssets L781 |  |
-| [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetsFor L180, projectTargetOptions L281 |  |
-| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewAsset L288 |  |
+| [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractAssetSelect L64, contractAssetSearch L263 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleAssets L374, peopleSupplierAssets L850 |  |
+| [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetsFor L199, projectTargetOptions L317 |  |
+| [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewAsset L306 |  |
 | [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | L14 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1077 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L546 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1135 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L569 |  |
 

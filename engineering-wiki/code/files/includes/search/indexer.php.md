@@ -1,6 +1,6 @@
 # includes/search/indexer.php
 
-> PHP - 425 lines
+> PHP - 434 lines
 
 Keep the search corpus current as tickets happen.
 
@@ -41,21 +41,21 @@ which is close to undebuggable.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [searchIndexTicket()](/code/functions/searchIndexTicket.md) | 53 | Index (or reindex) one ticket and everything on it. |
-| [searchIndexTicketAttachments()](/code/functions/searchIndexTicketAttachments.md) | 152 | Index the readable text of a ticket's attachments (discussion #53, tier 1). |
-| [searchIndexArticle()](/code/functions/searchIndexArticle.md) | 329 | Index (or reindex) one knowledge article. |
-| [searchIndexHandleEvent()](/code/functions/searchIndexHandleEvent.md) | 385 | The dispatch subscriber. Called for EVERY workflow event, so it decides quickly whether it cares and gets out of the way. |
+| [searchIndexTicket()](/code/functions/searchIndexTicket.md) | 54 | Index (or reindex) one ticket and everything on it. |
+| [searchIndexTicketAttachments()](/code/functions/searchIndexTicketAttachments.md) | 155 | Index the readable text of a ticket's attachments (discussion #53, tier 1). |
+| [searchIndexArticle()](/code/functions/searchIndexArticle.md) | 335 | Index (or reindex) one knowledge article. |
+| [searchIndexHandleEvent()](/code/functions/searchIndexHandleEvent.md) | 394 | The dispatch subscriber. Called for EVERY workflow event, so it decides quickly whether it cares and gets out of the way. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 59 | `searchIndexTicket` | read [tickets](/code/tables/tickets.md) |  |
-| 91 | `searchIndexTicket` | read [emails](/code/tables/emails.md) |  |
-| 113 | `searchIndexTicket` | read [ticket_notes](/code/tables/ticket_notes.md) |  |
-| 161 | `searchIndexTicketAttachments` | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md), read [attachment_text](/code/tables/attachment_text.md) |  |
-| 269 | `searchIndexTicketAttachments` | **insert** [attachment_text](/code/tables/attachment_text.md) (`attachment_id`, `status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime`) |  |
-| 340 | `searchIndexArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 60 | `searchIndexTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 92 | `searchIndexTicket` | read [emails](/code/tables/emails.md) |  |
+| 114 | `searchIndexTicket` | read [ticket_notes](/code/tables/ticket_notes.md) |  |
+| 164 | `searchIndexTicketAttachments` | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md), read [attachment_text](/code/tables/attachment_text.md) |  |
+| 272 | `searchIndexTicketAttachments` | **insert** [attachment_text](/code/tables/attachment_text.md) (`attachment_id`, `status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime`) |  |
+| 346 | `searchIndexArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

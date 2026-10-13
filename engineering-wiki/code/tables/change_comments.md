@@ -16,8 +16,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):409 | `ChangesService::createComment` | insert | `change_id`, `analyst_id`, `comment_text`, `is_internal`, `created_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):438 | `ChangesService::deleteComment` | delete |  |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):423 | `ChangesService::createComment` | insert | `change_id`, `analyst_id`, `comment_text`, `is_internal`, `created_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):455 | `ChangesService::deleteComment` | delete |  |  |
 
 ## Read by
 
@@ -25,6 +25,6 @@
 |---|---|---|
 | [api/change-management/get.php](/code/files/api/change-management/get.php.md) | L77 |  |
 | [api/change-management/get_comments.php](/code/files/api/change-management/get_comments.php.md) | L33 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeCommentsList L379 |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::deleteComment L429 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeCommentsList L389 |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::deleteComment L446 |  |
 

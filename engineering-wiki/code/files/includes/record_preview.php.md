@@ -1,6 +1,6 @@
 # includes/record_preview.php
 
-> PHP - 442 lines
+> PHP - 463 lines
 
 At-a-glance previews of a linked record (discussion #91).
 
@@ -36,31 +36,31 @@ as the contract they are:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [recordPreview()](/code/functions/recordPreview.md) | 54 | A preview, or NULL when the type is unknown, the record does not exist, or this analyst may not see it. One answer for all three, deliberately. |
-| [rpField()](/code/functions/rpField.md) | 81 | Shorthand for one line of a preview. |
-| [rpFields()](/code/functions/rpFields.md) | 111 | Drop the empties, so callers can just list every field they might have. |
-| [recordPreviewTicket()](/code/functions/recordPreviewTicket.md) | 117 | ── Ticket ────────────────────────────────────────────────────────────────── |
-| [recordPreviewTask()](/code/functions/recordPreviewTask.md) | 160 | ── Task ──────────────────────────────────────────────────────────────────── |
-| [recordPreviewChange()](/code/functions/recordPreviewChange.md) | 206 | ── Change ────────────────────────────────────────────────────────────────── |
-| [recordPreviewProblem()](/code/functions/recordPreviewProblem.md) | 245 | ── Problem ───────────────────────────────────────────────────────────────── |
-| [recordPreviewAsset()](/code/functions/recordPreviewAsset.md) | 281 | ── Asset ─────────────────────────────────────────────────────────────────── |
-| [recordPreviewContract()](/code/functions/recordPreviewContract.md) | 343 | ── Contract ──────────────────────────────────────────────────────────────── |
-| [recordPreviewDomain()](/code/functions/recordPreviewDomain.md) | 381 | ── Domain (#154) ─────────────────────────────────────────────────────────── |
-| [recordPreviewKnowledgeArticle()](/code/functions/recordPreviewKnowledgeArticle.md) | 414 | ── Knowledge article ─────────────────────────────────────────────────────── |
+| [recordPreview()](/code/functions/recordPreview.md) | 57 | A preview, or NULL when the type is unknown, the record does not exist, or this analyst may not see it. One answer for all three, deliberately. |
+| [rpField()](/code/functions/rpField.md) | 90 | Shorthand for one line of a preview. |
+| [rpFields()](/code/functions/rpFields.md) | 124 | Drop the empties, so callers can just list every field they might have. |
+| [recordPreviewTicket()](/code/functions/recordPreviewTicket.md) | 131 | ── Ticket ────────────────────────────────────────────────────────────────── |
+| [recordPreviewTask()](/code/functions/recordPreviewTask.md) | 175 | ── Task ──────────────────────────────────────────────────────────────────── |
+| [recordPreviewChange()](/code/functions/recordPreviewChange.md) | 222 | ── Change ────────────────────────────────────────────────────────────────── |
+| [recordPreviewProblem()](/code/functions/recordPreviewProblem.md) | 262 | ── Problem ───────────────────────────────────────────────────────────────── |
+| [recordPreviewAsset()](/code/functions/recordPreviewAsset.md) | 299 | ── Asset ─────────────────────────────────────────────────────────────────── |
+| [recordPreviewContract()](/code/functions/recordPreviewContract.md) | 362 | ── Contract ──────────────────────────────────────────────────────────────── |
+| [recordPreviewDomain()](/code/functions/recordPreviewDomain.md) | 401 | ── Domain (#154) ─────────────────────────────────────────────────────────── |
+| [recordPreviewKnowledgeArticle()](/code/functions/recordPreviewKnowledgeArticle.md) | 435 | ── Knowledge article ─────────────────────────────────────────────────────── |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 127 | `recordPreviewTicket` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
-| 173 | `recordPreviewTask` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
-| 215 | `recordPreviewChange` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
-| 256 | `recordPreviewProblem` | read [problem_tickets](/code/tables/problem_tickets.md), read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 288 | `recordPreviewAsset` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md) |  |
-| 320 | `recordPreviewAsset` | read [assets](/code/tables/assets.md) |  |
-| 351 | `recordPreviewContract` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
-| 387 | `recordPreviewDomain` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md), read [suppliers](/code/tables/suppliers.md) |  |
-| 423 | `recordPreviewKnowledgeArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 141 | `recordPreviewTicket` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
+| 188 | `recordPreviewTask` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
+| 231 | `recordPreviewChange` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 273 | `recordPreviewProblem` | read [problem_tickets](/code/tables/problem_tickets.md), read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 306 | `recordPreviewAsset` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md) |  |
+| 338 | `recordPreviewAsset` | read [assets](/code/tables/assets.md) |  |
+| 370 | `recordPreviewContract` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 407 | `recordPreviewDomain` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 444 | `recordPreviewKnowledgeArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

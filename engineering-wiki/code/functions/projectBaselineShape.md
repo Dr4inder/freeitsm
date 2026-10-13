@@ -6,11 +6,11 @@ A stored baseline row in the snapshot shape.
 function projectBaselineShape(array $r): array
 ```
 
-Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 191.
+Defined in [includes/projects/control.php](/code/files/includes/projects/control.php.md), line 217.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | a project_baselines row, its snapshot column still JSON |
 
 **Returns:** `array`
 

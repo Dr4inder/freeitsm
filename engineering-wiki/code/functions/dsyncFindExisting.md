@@ -12,13 +12,13 @@ Returns [row|null, howMatched].
 function dsyncFindExisting(PDO $conn, array $provider, array $p): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 383.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 424.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$provider` | `array` |  |  |
-| `$p` | `array` |  |  |
+| `$provider` | `array` |  | the auth_providers row - id and tenant_id are read |
+| `$p` | `array` |  | the person as `dsyncMapPerson()` (or the CardDAV mapper) returns it |
 
 **Returns:** `array`
 
@@ -26,10 +26,10 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 389 | `dsyncFindExisting` | read [user_sso_identities](/code/tables/user_sso_identities.md), read [users](/code/tables/users.md) |  |
-| 398 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
-| 411 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
-| 414 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 430 | `dsyncFindExisting` | read [user_sso_identities](/code/tables/user_sso_identities.md), read [users](/code/tables/users.md) |  |
+| 439 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 452 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 455 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

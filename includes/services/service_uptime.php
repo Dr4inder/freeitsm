@@ -84,6 +84,8 @@ class ServiceUptime
      * Returned newest first, each with its own start, end (null = ongoing) and
      * the impact level recorded against THIS service.
      *
+     * @param int $serviceId  the service (status_services.id)
+     * @param int $windowDays  how many days back to look; an incident counts if it is still open or ended inside the window
      * @return array<int,array{incident_id:int,title:string,impact:string,colour:?string,
      *                         counts:bool,started:string,ended:?string,seconds:int,ongoing:bool}>
      */
@@ -201,6 +203,10 @@ class ServiceUptime
      * array would mean "the log says this service was never impacted", which is a
      * completely different claim and would erase every historical outage.
      *
+     * @param int $incidentId  the incident (status_incidents.id)
+     * @param int $serviceId  the service (status_services.id) whose periods to read from the update log
+     * @param string $incidentStart  when the incident was created (UTC 'Y-m-d H:i:s')
+     * @param ?string $incidentEnd  when it was resolved (UTC 'Y-m-d H:i:s'); null while still open, which runs to now
      * @return array|null
      */
     private static function segmentsFor(PDO $conn, int $incidentId, int $serviceId, string $incidentStart, ?string $incidentEnd): ?array
@@ -308,6 +314,8 @@ class ServiceUptime
      * maintenance does not make a well-run service look worse than a neglected
      * one. That is a per-level setting — see Status → Settings → Impact levels.
      *
+     * @param int $serviceId  the service (status_services.id)
+     * @param int $windowDays  the window in days, ending now
      * @return array{window_days:int,window_seconds:int,downtime_seconds:int,
      *                uptime_percent:float,incident_count:int,counted_count:int}
      */
@@ -367,6 +375,8 @@ class ServiceUptime
      * incident are 'ok'; days touched only by a non-counting level are 'info',
      * which is how planned maintenance stays visible without being punitive.
      *
+     * @param int $serviceId  the service (status_services.id)
+     * @param int $windowDays  how many days (bars) to return, ending today (UTC)
      * @return array<int,array{date:string,state:string,impact:?string,colour:?string,seconds:int}>
      */
     public static function dailyStrip(PDO $conn, int $serviceId, int $windowDays): array
@@ -436,6 +446,10 @@ class ServiceUptime
      * Every incident (or update-log segment) touching this service that overlaps
      * [$fromUtc, $toUtc). Same shape as incidentsFor(). An incident still open
      * runs to now, or to the end of the range if that is earlier.
+     *
+     * @param int $serviceId  the service (status_services.id)
+     * @param string $fromUtc  the start of the range, inclusive (UTC 'Y-m-d H:i:s')
+     * @param string $toUtc  the end of the range, exclusive (UTC 'Y-m-d H:i:s')
      */
     public static function incidentsBetween(PDO $conn, int $serviceId, string $fromUtc, string $toUtc): array
     {
@@ -495,6 +509,10 @@ class ServiceUptime
      * Uptime over [$fromUtc, $toUtc). Downtime is clipped to the range AND to now,
      * so a range running into the future is measured only up to the present.
      *
+     * @param int $serviceId  the service (status_services.id)
+     * @param string $fromUtc  the start of the range, inclusive (UTC 'Y-m-d H:i:s')
+     * @param string $toUtc  the end of the range, exclusive (UTC 'Y-m-d H:i:s'); clipped to now
+     * @param ?array $incidents  rows already loaded by incidentsBetween() for this range, to save a second query; null loads them
      * @return array{range_seconds:int,downtime_seconds:int,uptime_percent:float,incident_count:int,counted_count:int}
      */
     public static function summaryBetween(PDO $conn, int $serviceId, string $fromUtc, string $toUtc, ?array $incidents = null): array
@@ -528,6 +546,12 @@ class ServiceUptime
     /**
      * One entry per LOCAL day from $fromDate to $toDate inclusive (Y-m-d in $tz),
      * oldest first - the bar strip for a report. Same states as dailyStrip().
+     *
+     * @param int $serviceId  the service (status_services.id)
+     * @param string $fromDate  the first day (Y-m-d) in $tz
+     * @param string $toDate  the last day (Y-m-d) in $tz, inclusive
+     * @param string $tz  a timezone name for the day boundaries, e.g. 'Europe/London'; an invalid one falls back to UTC
+     * @param ?array $incidents  rows already loaded by incidentsBetween() covering these days; null loads them
      */
     public static function dailyStripBetween(PDO $conn, int $serviceId, string $fromDate, string $toDate, string $tz, ?array $incidents = null): array
     {
@@ -577,6 +601,8 @@ class ServiceUptime
      * Merge overlapping [start, end] pairs and total the result.
      *
      * The whole reason summaryFor() cannot simply SUM durations.
+     *
+     * @param array $spans  [start, end] pairs of Unix timestamps, in any order and possibly overlapping
      */
     private static function unionSeconds(array $spans): int
     {
@@ -598,7 +624,12 @@ class ServiceUptime
         return $total + ($curEnd - $curStart);
     }
 
-    /** Seconds between two UTC stamps; an open incident runs to now. */
+    /**
+     * Seconds between two UTC stamps; an open incident runs to now.
+     *
+     * @param string $started  the start (UTC 'Y-m-d H:i:s')
+     * @param ?string $ended  the end (UTC 'Y-m-d H:i:s'); null means still open, so now
+     */
     private static function spanSeconds(string $started, ?string $ended): int
     {
         $s = strtotime($started . ' UTC');
@@ -609,7 +640,11 @@ class ServiceUptime
         return $e - $s;
     }
 
-    /** "2h 15m" / "45m" / "3d 4h" — the shape the request asked for. */
+    /**
+     * "2h 15m" / "45m" / "3d 4h" — the shape the request asked for.
+     *
+     * @param int $seconds  a duration in seconds
+     */
     public static function humanDuration(int $seconds): string
     {
         if ($seconds < 60)  return $seconds . 's';

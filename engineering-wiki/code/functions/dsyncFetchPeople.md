@@ -8,12 +8,12 @@ Throws when nothing is ticked, a branch cannot be searched, or more than DSYNC_M
 function dsyncFetchPeople($ds, array $provider): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 253.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 278.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$ds` |  |  | a bound LDAP connection |
-| `$provider` | `array` |  |  |
+| `$provider` | `array` |  | the auth_providers row being synced (its ldap_attr_* and sync_* columns) |
 
 **Returns:** array  raw LDAP entries
 

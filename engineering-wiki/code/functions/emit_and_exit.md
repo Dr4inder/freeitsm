@@ -9,11 +9,11 @@ Prints every section, separated by blank lines, and stops - the end of the repor
 function emit_and_exit($sections)
 ```
 
-Defined in [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md), line 45.
+Defined in [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sections` |  |  |  |
+| `$sections` |  |  | the report, a list of section strings as built by `addSection()` |
 
 ## Called from
 

@@ -16,12 +16,12 @@ The same idea for SELF-SERVICE PORTAL users, who have no analyst row and so cann
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md):62 | `portalPrefSet` | update | `preference_value`, `updated_datetime` |  |
-| [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md):66 | `portalPrefSet` | insert | `user_id`, `preference_key`, `preference_value`, `updated_datetime` |  |
+| [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md):68 | `portalPrefSet` | update | `preference_value`, `updated_datetime` |  |
+| [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md):72 | `portalPrefSet` | insert | `user_id`, `preference_key`, `preference_value`, `updated_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md) | portalPrefGet L31, portalPrefSet L57 |  |
+| [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md) | portalPrefGet L33, portalPrefSet L63 |  |
 

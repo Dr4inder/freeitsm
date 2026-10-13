@@ -106,6 +106,7 @@ final class MandatoryFieldsService
      * Split and validate an address list. Invalid entries are dropped, so the
      * saved list and the one actually mailed can never disagree.
      *
+     * @param string $raw  email addresses as typed, separated by spaces, commas or semicolons
      * @return string[]
      */
     public static function parseAddresses(string $raw): array
@@ -144,7 +145,11 @@ final class MandatoryFieldsService
         return $out;
     }
 
-    /** Can this field be filled in on a ticket belonging to this company? */
+    /**
+     * Can this field be filled in on a ticket belonging to this company?
+     *
+     * @param string $key  a FIELDS key, e.g. 'category' or 'team'
+     */
     public static function fieldAvailable(PDO $conn, ?int $tenantId, string $key): bool
     {
         switch ($key) {
@@ -228,6 +233,8 @@ final class MandatoryFieldsService
      * analysts, so a workflow (actor 0) cannot write there - which is why the
      * workflow engine's own "add note" action writes to ticket_audit with a NULL
      * analyst, and this follows it. UTC at rest (GH #126).
+     *
+     * @param string $note  the note text
      */
     public static function writeNote(PDO $conn, ActorContext $ctx, int $ticketId, string $note): void
     {
@@ -255,7 +262,13 @@ final class MandatoryFieldsService
         return "Closed by {$who} via {$via}.";
     }
 
-    /** Emails the chosen people that a ticket was closed with mandatory fields empty, listing them. */
+    /**
+     * Emails the chosen people that a ticket was closed with mandatory fields empty, listing them.
+     *
+     * @param array $to  the email addresses to tell, from parseAddresses()
+     * @param array $missing  [field key => English label] of the fields left empty
+     * @param string $closedBy  who closed it, from closedByLine()
+     */
     private static function notify(PDO $conn, int $ticketId, array $to, array $missing, string $closedBy): void
     {
         require_once __DIR__ . '/../template_email.php';

@@ -11,7 +11,7 @@ folders — and a warning there would be pure noise.
 function storagePersistenceReport(): array
 ```
 
-Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 226.
+Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 229.
 
 **Returns:** `array`
 

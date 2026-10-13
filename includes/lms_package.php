@@ -59,6 +59,7 @@ const LMS_ALLOWED_EXTENSIONS = [
  * Check every entry in the archive. Returns the entries that should be written
  * (directories excluded), or throws with a message naming the offending file.
  *
+ * @param ZipArchive $zip  the uploaded SCORM package, already opened - untrusted
  * @throws Exception if the package is unsafe or oversized.
  * @return array<int,string> Entry names, safe to extract.
  */
@@ -130,6 +131,9 @@ function lmsValidatePackage(ZipArchive $zip): array
  * everything, including anything validation would have rejected. Passing the
  * vetted list means the set of files on disk is exactly the set we approved.
  *
+ * @param ZipArchive $zip  the opened SCORM package
+ * @param string $destDir  the folder to unpack into
+ * @param array $files  the entry names lmsValidatePackage() approved; nothing else is written
  * @throws Exception on any write failure.
  */
 function lmsExtractPackage(ZipArchive $zip, string $destDir, array $files): void
@@ -146,6 +150,8 @@ function lmsExtractPackage(ZipArchive $zip, string $destDir, array $files): void
  * script through, Apache still refuses to run it. Written once, next to the
  * courses. Needs AllowOverride to be on — which is why it is the SECOND line of
  * defence and not the first.
+ *
+ * @param string $contentRoot  the folder that holds every unpacked course; the .htaccess is written here
  */
 function lmsHardenContentDir(string $contentRoot): void
 {

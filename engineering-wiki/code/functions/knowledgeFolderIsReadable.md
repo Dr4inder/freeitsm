@@ -6,13 +6,13 @@ May this viewer reach this folder? Delegates; never re-implements the rule.
 function knowledgeFolderIsReadable(PDO $conn, KnowledgeViewer $viewer, int $folderId): bool
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 136.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 141.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$viewer` | `KnowledgeViewer` |  |  |
-| `$folderId` | `int` |  |  |
+| `$viewer` | `KnowledgeViewer` |  | who is looking, as built by KnowledgeViewer::forAnalyst() |
+| `$folderId` | `int` |  | the knowledge_folders id to check |
 
 **Returns:** `bool`
 

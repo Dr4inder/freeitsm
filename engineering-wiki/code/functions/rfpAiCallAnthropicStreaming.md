@@ -30,14 +30,14 @@ function rfpAiCallAnthropicStreaming(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 250.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 266.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$opts` | `array` |  |  |
-| `$onEvent` | `callable` |  |  |
-| `$settingsOverride` | `?array` | `null` |  |
+| `$opts` | `array` |  | system, user (the prompts), max_tokens (default 4096), temperature (default 0.0) |
+| `$onEvent` | `callable` |  | fn(string `$eventType`, array `$data`) - called with 'text' deltas and 'usage' updates as they arrive |
+| `$settingsOverride` | `?array` | `null` | another feature's own settings (provider, api_key, model) to bill to; null uses the RFP AI settings |
 
 **Returns:** `array`
 

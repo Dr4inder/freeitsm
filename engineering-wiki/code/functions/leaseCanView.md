@@ -6,13 +6,13 @@ True when the lease is in a company the analyst may read.
 function leaseCanView(PDO $conn, int $analystId, int $leaseId): bool
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 63.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$leaseId` | `int` |  |  |
+| `$leaseId` | `int` |  | the leases id |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 63.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 66 | `leaseCanView` | read [leases](/code/tables/leases.md) |  |
+| 78 | `leaseCanView` | read [leases](/code/tables/leases.md) |  |
 
 ## Calls
 

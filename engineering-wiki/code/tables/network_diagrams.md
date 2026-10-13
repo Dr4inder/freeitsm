@@ -30,25 +30,25 @@ Network Mapper — visual diagrams over the CMDB graph (see freeitsm.sql header)
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3280 |  | update | `parent_diagram_id` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3282 |  | update | `created_by_analyst_id` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):774 | `apiNmNodesCreate` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):817 | `apiNmNodesUpdate` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):836 | `apiNmNodesDelete` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):882 | `apiNmConnectorsCreate` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):915 | `apiNmConnectorsUpdate` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):927 | `apiNmConnectorsDelete` | update | `updated_datetime` |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):54 | `NetworkMapperService::createDiagram` | insert | `parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right` |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):106 | `NetworkMapperService::saveDiagram` | update | `title`, `description`, `version_label`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center` |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):158 | `NetworkMapperService::deleteDiagram` | delete |  |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):179 | `NetworkMapperService::createVersion` | insert | `parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):845 | `apiNmNodesCreate` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):888 | `apiNmNodesUpdate` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):907 | `apiNmNodesDelete` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):953 | `apiNmConnectorsCreate` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):986 | `apiNmConnectorsUpdate` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):998 | `apiNmConnectorsDelete` | update | `updated_datetime` |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):58 | `NetworkMapperService::createDiagram` | insert | `parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right` |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):115 | `NetworkMapperService::saveDiagram` | update | `title`, `description`, `version_label`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center` |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):172 | `NetworkMapperService::deleteDiagram` | delete |  |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):198 | `NetworkMapperService::createVersion` | insert | `parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/network-mapper/get_diagram.php](/code/files/api/network-mapper/get_diagram.php.md) | L34 |  |
-| [api/network-mapper/list_diagrams.php](/code/files/api/network-mapper/list_diagrams.php.md) | L31, countVersionsInChain L71, countVersionsInChain L86 |  |
+| [api/network-mapper/list_diagrams.php](/code/files/api/network-mapper/list_diagrams.php.md) | L31, countVersionsInChain L75, countVersionsInChain L90 |  |
 | [api/network-mapper/list_versions.php](/code/files/api/network-mapper/list_versions.php.md) | L33, L49, L60 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3266, L3272, L3280 |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmDiagramSelect L75, apiNmChainIds L127, apiNmChainIds L138, apiNmDiagramsList L443, apiNmDiagramsList L467 |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::loadDiagram L240, NetworkMapperService::chainIds L265, NetworkMapperService::chainIds L276 |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmDiagramSelect L75, apiNmChainIds L149, apiNmChainIds L160, apiNmDiagramsList L505, apiNmDiagramsList L529 |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::loadDiagram L263, NetworkMapperService::chainIds L296, NetworkMapperService::chainIds L307 |  |
 

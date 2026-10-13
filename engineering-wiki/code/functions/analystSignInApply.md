@@ -6,7 +6,7 @@ Bring one analyst's stored method in line with their teams, if they follow their
 function analystSignInApply(PDO $conn, int $analystId): string
 ```
 
-Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 129.
+Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 134 | `analystSignInApply` | read [analysts](/code/tables/analysts.md) |  |
-| 150 | `analystSignInApply` | **update** [analysts](/code/tables/analysts.md) (`auth_provider_id`, `last_modified_datetime`) |  |
+| 135 | `analystSignInApply` | read [analysts](/code/tables/analysts.md) |  |
+| 151 | `analystSignInApply` | **update** [analysts](/code/tables/analysts.md) (`auth_provider_id`, `last_modified_datetime`) |  |
 
 ## Calls
 

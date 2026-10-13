@@ -70,7 +70,11 @@ function projectInstallCurrency(PDO $conn): string
     return projectSetting($conn, 'project_currency') ?: 'GBP';
 }
 
-/** A project's currency: its own, or - not yet stamped - the install's. */
+/**
+ * A project's currency: its own, or - not yet stamped - the install's.
+ *
+ * @param array $p  the projects row - its currency column is read
+ */
 function projectCurrencyOf(PDO $conn, array $p): string
 {
     return !empty($p['currency']) ? strtoupper((string)$p['currency']) : projectInstallCurrency($conn);
@@ -103,7 +107,14 @@ function projectLabourRatesReset(): void
     unset($GLOBALS['__prj_labour_rates']);
 }
 
-/** The rate in force on $date for one scope/ref, or null. */
+/**
+ * The rate in force on $date for one scope/ref, or null.
+ *
+ * @param array $rates  every rate, as projectLabourRates() returns it: [scope][ref] => [[from, rate], ...] newest first
+ * @param string $scope  'default', 'project' or 'analyst'
+ * @param int $ref  the project or analyst id the rate belongs to; 0 for the default rate
+ * @param string $date  the day to price, 'Y-m-d'
+ */
 function projectRateOn(array $rates, string $scope, int $ref, string $date): ?float
 {
     foreach ($rates[$scope][$ref] ?? [] as [$from, $rate]) {
@@ -115,6 +126,7 @@ function projectRateOn(array $rates, string $scope, int $ref, string $date): ?fl
 /**
  * Labour for projects: time logged on their tasks, and what it cost.
  * @param array $projects id => row (needs id, currency)
+ * @param bool $byDay  true to add 'days' => [date => cost] to each project, for the spend chart
  * @return array id => [minutes, priced_minutes, cost (null in hours mode), unpriced_minutes]
  */
 function projectLabour(PDO $conn, array $projects, bool $byDay = false): array
@@ -209,6 +221,9 @@ function projectBudgetTotals(PDO $conn, array $projects): array
 /**
  * One line's actual and where it came from: [amount|null, 'typed'|'contract'|null, mismatch?].
  * A typed actual wins; otherwise a linked contract's value - only in the same currency.
+ *
+ * @param array $r  a project_budget_lines row, with the linked contract's contract_value and contract_currency
+ * @param string $currency  the project's currency code, e.g. 'GBP'
  */
 function projectLineActual(array $r, string $currency): array
 {
@@ -221,7 +236,12 @@ function projectLineActual(array $r, string $currency): array
     return [null, null, false];
 }
 
-/** A line's forecast: what was typed, else the larger of planned and actual; null when it has neither (3.3.0). */
+/**
+ * A line's forecast: what was typed, else the larger of planned and actual; null when it has neither (3.3.0).
+ *
+ * @param array $r  a project_budget_lines row - forecast_amount and planned_amount are read
+ * @param ?float $actual  the line's actual from projectLineActual(); null when it has none
+ */
 function projectLineForecast(array $r, ?float $actual): ?float
 {
     if (isset($r['forecast_amount']) && $r['forecast_amount'] !== null && $r['forecast_amount'] !== '') return (float)$r['forecast_amount'];
@@ -234,6 +254,8 @@ function projectLineForecast(array $r, ?float $actual): ?float
  * A labour line with no typed actual is the PLAN for labour: the time logged on
  * the project's tasks is what it is spent on, so the forecast takes the larger
  * of these lines and labour, never both (3.3.0).
+ *
+ * @param array $r  a project_budget_lines row - category and actual_amount are read
  */
 function projectLineCoversLabour(array $r): bool
 {
@@ -245,6 +267,8 @@ function projectLineCoversLabour(array $r): bool
  * each task's estimate less the time logged on that task - priced at the rate
  * in force today, the same rules as projectLabour(). In hours mode, or where no
  * rate applies, the hours are counted and the cost is left out.
+ *
+ * @param array $projects  id => projects row (needs currency)
  * @return array id => [hours, cost|null, unpriced_hours, open_unestimated]
  */
 function projectLabourToCome(PDO $conn, array $projects): array
@@ -295,6 +319,13 @@ function projectLabourToCome(PDO $conn, array $projects): array
  * with the forecast from today to the target finish and the lines to measure
  * against. Undated planned money counts from the start; undated actual money
  * from the day its line was last saved; labour on the day it was logged.
+ *
+ * @param array $project  the projects row - start_date, created_datetime and target_end_date are read
+ * @param array $lineRows  one entry per budget line: planned, actual, currency_mismatch, planned_date, spent_date, saved
+ * @param array $labourDays  labour cost by day, date => amount, from projectLabour(..., true)
+ * @param float $planned  the planned total
+ * @param float $actual  the actual total, labour included
+ * @param float $forecast  the forecast total (estimate at completion)
  */
 function projectBudgetTimeline(PDO $conn, array $project, array $lineRows, array $labourDays, float $planned, float $actual, float $forecast): array
 {
@@ -342,6 +373,9 @@ function projectBudgetTimeline(PDO $conn, array $project, array $lineRows, array
  * Today's indices: CPI = EV / AC (above 1 = under budget), SPI = EV / PV (above 1 =
  * ahead), CV = EV - AC, SV = EV - PV, EAC = BAC / CPI, VAC = BAC - EAC.
  * Null when there is no planned budget or no work to measure.
+ *
+ * @param array $timeline  the spend timeline from projectBudgetTimeline() - its points are used as PV and AC
+ * @param float $bac  budget at completion: the planned total
  */
 function projectEarnedValue(PDO $conn, int $projectId, array $timeline, float $bac): ?array
 {
@@ -395,7 +429,11 @@ function projectEarnedValue(PDO $conn, int $projectId, array $timeline, float $b
     ];
 }
 
-/** Everything the Budget tab shows. */
+/**
+ * Everything the Budget tab shows.
+ *
+ * @param array $project  the projects row
+ */
 function projectBudgetDetail(PDO $conn, array $project, int $analystId): array
 {
     $pid = (int)$project['id'];
@@ -467,7 +505,11 @@ function projectBudgetDetail(PDO $conn, array $project, int $analystId): array
     ];
 }
 
-/** Active cost centres of the project's company (NULL company = the Default one). */
+/**
+ * Active cost centres of the project's company (NULL company = the Default one).
+ *
+ * @param array $project  the projects row - tenant_id picks the company
+ */
 function projectBudgetCostCentres(PDO $conn, array $project): array
 {
     try {
@@ -491,7 +533,11 @@ function projectBudgetContracts(PDO $conn, int $projectId): array
     } catch (Throwable $e) { return []; }
 }
 
-/** A money amount from input: null for empty, else a number with at most two decimals. */
+/**
+ * A money amount from input: null for empty, else a number with at most two decimals.
+ *
+ * @param mixed $v  the amount as typed (untrusted); commas and spaces are ignored, null or '' gives null
+ */
 function projectMoney($v): ?float
 {
     if ($v === null || $v === '') return null;
@@ -500,7 +546,11 @@ function projectMoney($v): ?float
     return (float)$s;
 }
 
-/** ISO 4217 code check (three letters). */
+/**
+ * ISO 4217 code check (three letters).
+ *
+ * @param string $c  the currency code to check, e.g. 'GBP' (must already be upper case)
+ */
 function projectValidCurrency(string $c): bool
 {
     return (bool)preg_match('/^[A-Z]{3}$/', $c);

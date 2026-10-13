@@ -24,8 +24,8 @@
 | [api/rfp-builder/lock_consolidation.php](/code/files/api/rfp-builder/lock_consolidation.php.md):54 |  | update | `is_locked`, `updated_datetime` |  |
 | [api/rfp-builder/merge_consolidated.php](/code/files/api/rfp-builder/merge_consolidated.php.md):92 |  | insert | `rfp_id`, `category_id`, `requirement_text`, `requirement_type`, `priority`, `ai_rationale` |  |
 | [api/rfp-builder/merge_consolidated.php](/code/files/api/rfp-builder/merge_consolidated.php.md):111 |  | delete |  |  |
-| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):129 |  | delete |  |  |
-| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):149 |  | insert | `rfp_id`, `category_id`, `requirement_text`, `requirement_type`, `priority`, `ai_rationale` |  |
+| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):132 |  | delete |  |  |
+| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):152 |  | insert | `rfp_id`, `category_id`, `requirement_text`, `requirement_type`, `priority`, `ai_rationale` |  |
 | [api/rfp-builder/split_consolidated.php](/code/files/api/rfp-builder/split_consolidated.php.md):111 |  | insert | `rfp_id`, `category_id`, `requirement_text`, `requirement_type`, `priority`, `ai_rationale` |  |
 | [api/rfp-builder/split_consolidated.php](/code/files/api/rfp-builder/split_consolidated.php.md):131 |  | delete |  |  |
 | [api/rfp-builder/update_consolidated.php](/code/files/api/rfp-builder/update_consolidated.php.md):62 |  | update | `requirement_text`, `requirement_type`, `priority`, `category_id`, `ai_rationale`, `updated_datetime` |  |
@@ -35,8 +35,8 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/rfp-builder/delete_consolidated.php](/code/files/api/rfp-builder/delete_consolidated.php.md) | L32 |  |
-| [api/rfp-builder/generate_framing.php](/code/files/api/rfp-builder/generate_framing.php.md) | L83 |  |
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L95, L146 |  |
+| [api/rfp-builder/generate_framing.php](/code/files/api/rfp-builder/generate_framing.php.md) | L86 |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L98, L149 |  |
 | [api/rfp-builder/get_compare_data.php](/code/files/api/rfp-builder/get_compare_data.php.md) | L52 |  |
 | [api/rfp-builder/get_consolidated.php](/code/files/api/rfp-builder/get_consolidated.php.md) | L46, L87 |  |
 | [api/rfp-builder/get_coverage.php](/code/files/api/rfp-builder/get_coverage.php.md) | L63, L92, L109, L136 |  |
@@ -46,11 +46,11 @@
 | [api/rfp-builder/get_sections.php](/code/files/api/rfp-builder/get_sections.php.md) | L37, L71 |  |
 | [api/rfp-builder/lock_consolidation.php](/code/files/api/rfp-builder/lock_consolidation.php.md) | L44 |  |
 | [api/rfp-builder/merge_consolidated.php](/code/files/api/rfp-builder/merge_consolidated.php.md) | L63 |  |
-| [api/rfp-builder/restyle_framing.php](/code/files/api/rfp-builder/restyle_framing.php.md) | L75 |  |
-| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md) | L80 |  |
+| [api/rfp-builder/restyle_framing.php](/code/files/api/rfp-builder/restyle_framing.php.md) | L78 |  |
+| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md) | L83 |  |
 | [api/rfp-builder/save_score.php](/code/files/api/rfp-builder/save_score.php.md) | L55 |  |
 | [api/rfp-builder/split_consolidated.php](/code/files/api/rfp-builder/split_consolidated.php.md) | L52 |  |
 | [api/rfp-builder/update_consolidated.php](/code/files/api/rfp-builder/update_consolidated.php.md) | L50 |  |
-| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L975, rfpAiGenerateFramingStreaming L1206 |  |
-| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L78 |  |
+| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L1021, rfpAiGenerateFramingStreaming L1256 |  |
+| [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L97 |  |
 

@@ -1,6 +1,6 @@
 # includes/email_log.php
 
-> PHP - 144 lines
+> PHP - 175 lines
 
 Outbound email log.
 
@@ -28,17 +28,17 @@ in EMAIL_LOG_ROUTES below; add to it when a new way to send email appears.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [emailLogRecord()](/code/functions/emailLogRecord.md) | 71 | Record one send attempt. NEVER throws and never returns a failure: logging a send must not be able to break the send it is logging, and must not turn a delivered email into an error the caller reports as undelivered. |
-| [emailLogSent()](/code/functions/emailLogSent.md) | 113 | Convenience: a send that succeeded. |
-| [emailLogFailed()](/code/functions/emailLogFailed.md) | 118 | Convenience: a send that failed, with whatever the provider said about it. |
-| [emailLogRouteLabel()](/code/functions/emailLogRouteLabel.md) | 123 | Human label for a route key, falling back to the key itself for unknown ones. |
-| [emailLogSkipped()](/code/functions/emailLogSkipped.md) | 141 | Convenience: an email that was deliberately NOT sent, and why. |
+| [emailLogRecord()](/code/functions/emailLogRecord.md) | 77 | Record one send attempt. NEVER throws and never returns a failure: logging a send must not be able to break the send it is logging, and must not turn a delivered email into an error the caller reports as undelivered. |
+| [emailLogSent()](/code/functions/emailLogSent.md) | 126 | Convenience: a send that succeeded. |
+| [emailLogFailed()](/code/functions/emailLogFailed.md) | 139 | Convenience: a send that failed, with whatever the provider said about it. |
+| [emailLogRouteLabel()](/code/functions/emailLogRouteLabel.md) | 148 | Human label for a route key, falling back to the key itself for unknown ones. |
+| [emailLogSkipped()](/code/functions/emailLogSkipped.md) | 172 | Convenience: an email that was deliberately NOT sent, and why. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 85 | `emailLogRecord` | **insert** [email_send_log](/code/tables/email_send_log.md) (`mailbox_id`, `ticket_id`, `route`, `provider`, `auth_mode`, `to_address`, `subject`, `status`, `error_message`, `created_datetime`) |  |
+| 91 | `emailLogRecord` | **insert** [email_send_log](/code/tables/email_send_log.md) (`mailbox_id`, `ticket_id`, `route`, `provider`, `auth_mode`, `to_address`, `subject`, `status`, `error_message`, `created_datetime`) |  |
 
 ## How it hangs together
 

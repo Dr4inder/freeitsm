@@ -6,11 +6,11 @@ Shapes a morning check row for the API - name, description, active flag, order a
 function apiSerializeMorningCheck(array $r): array
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 38.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 42.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | a morningChecks_Checks row (PascalCase columns) |
 
 **Returns:** `array`
 

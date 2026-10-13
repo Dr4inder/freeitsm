@@ -21,14 +21,14 @@ function notificationsTaskAssignedEmail(
 ): void
 ```
 
-Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 400.
+Defined in [includes/notifications_router.php](/code/files/includes/notifications_router.php.md), line 421.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$payload` | `array` |  |  |
-| `$actorId` | `int` |  |  |
-| `$actorName` | `?string` |  |  |
+| `$payload` | `array` |  | the task.assigned payload - task.id and task.assignee_id are read |
+| `$actorId` | `int` |  | the analyst who did the assigning; 0 for none. No email when they assigned themselves |
+| `$actorName` | `?string` |  | their display name for the heading; null gives the plain wording |
 
 **Returns:** `void`
 
@@ -36,9 +36,9 @@ Defined in [includes/notifications_router.php](/code/files/includes/notification
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 409 | `notificationsTaskAssignedEmail` | read [user_preferences](/code/tables/user_preferences.md) |  |
-| 417 | `notificationsTaskAssignedEmail` | read [analysts](/code/tables/analysts.md) |  |
-| 425 | `notificationsTaskAssignedEmail` | read [tasks](/code/tables/tasks.md), read [task_priorities](/code/tables/task_priorities.md) |  |
+| 430 | `notificationsTaskAssignedEmail` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 438 | `notificationsTaskAssignedEmail` | read [analysts](/code/tables/analysts.md) |  |
+| 446 | `notificationsTaskAssignedEmail` | read [tasks](/code/tables/tasks.md), read [task_priorities](/code/tables/task_priorities.md) |  |
 
 ## Calls
 

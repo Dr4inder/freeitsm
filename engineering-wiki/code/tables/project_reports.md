@@ -30,20 +30,20 @@ AI project manager (3.2.0): briefings and reports - see includes/projects/ai.php
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):96 | `ProjectReportsService::briefing` | delete |  |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):97 | `ProjectReportsService::briefing` | insert | `project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):113 | `ProjectReportsService::draftWithAi` | insert | `project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):136 | `ProjectReportsService::save` | update | `title`, `body`, `ai_edited`, `updated_by_id`, `updated_datetime` |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):142 | `ProjectReportsService::save` | insert | `project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):160 | `ProjectReportsService::approve` | update | `status`, `approved_by_id`, `approved_datetime` |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):177 | `ProjectReportsService::delete` | delete |  |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):293 | `ProjectReportsService::send` | update | `sent_datetime`, `sent_by_id`, `sent_to` |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):411 | `ProjectReportsService::draftScheduled` | insert | `project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):104 | `ProjectReportsService::briefing` | delete |  |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):105 | `ProjectReportsService::briefing` | insert | `project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):126 | `ProjectReportsService::draftWithAi` | insert | `project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):154 | `ProjectReportsService::save` | update | `title`, `body`, `ai_edited`, `updated_by_id`, `updated_datetime` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):160 | `ProjectReportsService::save` | insert | `project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):182 | `ProjectReportsService::approve` | update | `status`, `approved_by_id`, `approved_datetime` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):203 | `ProjectReportsService::delete` | delete |  |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):328 | `ProjectReportsService::send` | update | `sent_datetime`, `sent_by_id`, `sent_to` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):466 | `ProjectReportsService::draftScheduled` | insert | `project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsStalled L130 |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) | ProjectReportsService::ready L38, ProjectReportsService::listFor L46, ProjectReportsService::latestBriefing L63, ProjectReportsService::scheduleReady L193, ProjectReportsService::load L422 |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) | ProjectReportsService::ready L38, ProjectReportsService::listFor L46, ProjectReportsService::latestBriefing L63, ProjectReportsService::scheduleReady L219, ProjectReportsService::load L481 |  |
 

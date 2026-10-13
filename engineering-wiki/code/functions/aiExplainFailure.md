@@ -8,12 +8,12 @@ Shared by the Test button and debug tool D014, so the two never disagree.
 function aiExplainFailure(array $cfg, string $msg): string
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 398.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 426.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$msg` | `string` |  |  |
+| `$cfg` | `array` |  | the AI settings the call used - provider, model, azure_deployment and azure_api_version are read |
+| `$msg` | `string` |  | the failure's message, as thrown by `aiProviderHttpPost()` (includes "(HTTP nnn)") |
 
 **Returns:** `string`
 

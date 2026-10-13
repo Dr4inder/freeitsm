@@ -6,11 +6,11 @@ Returns the definition (table, column, module...) of one link kind; throws a val
 function domainLinkKind(string $kind): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 65.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 67.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$kind` | `string` |  |  |
+| `$kind` | `string` |  | the link kind - cmdb \| service \| ticket \| article (untrusted) |
 
 **Returns:** `array`
 

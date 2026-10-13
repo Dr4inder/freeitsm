@@ -6,12 +6,12 @@ Bind as the configured read-only service account. Throws with a useful message o
 function ldapBindService($ds, array $p): void
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 137.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 152.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ds` |  |  |  |
-| `$p` | `array` |  |  |
+| `$ds` |  |  | the connection from `ldapOpen()` |
+| `$p` | `array` |  | the provider row (ldap_bind_dn, ldap_bind_password decrypted); a blank bind DN binds anonymously |
 
 **Returns:** `void`
 

@@ -6,14 +6,14 @@ Store one preference. Returns false if it could not be stored — the caller dec
 function portalPrefSet(PDO $conn, int $userId, string $key, string $value): bool
 ```
 
-Defined in [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md), line 50.
+Defined in [includes/portal_preferences.php](/code/files/includes/portal_preferences.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
-| `$key` | `string` |  |  |
-| `$value` | `string` |  |  |
+| `$userId` | `int` |  | the portal user (users id); 0 or less stores nothing |
+| `$key` | `string` |  | the preference_key, e.g. 'kb_layout'; '' stores nothing |
+| `$value` | `string` |  | the value to store, as text |
 
 **Returns:** `bool`
 
@@ -21,9 +21,9 @@ Defined in [includes/portal_preferences.php](/code/files/includes/portal_prefere
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 57 | `portalPrefSet` | read [portal_user_preferences](/code/tables/portal_user_preferences.md) |  |
-| 62 | `portalPrefSet` | **update** [portal_user_preferences](/code/tables/portal_user_preferences.md) (`preference_value`, `updated_datetime`) |  |
-| 66 | `portalPrefSet` | **insert** [portal_user_preferences](/code/tables/portal_user_preferences.md) (`user_id`, `preference_key`, `preference_value`, `updated_datetime`) |  |
+| 63 | `portalPrefSet` | read [portal_user_preferences](/code/tables/portal_user_preferences.md) |  |
+| 68 | `portalPrefSet` | **update** [portal_user_preferences](/code/tables/portal_user_preferences.md) (`preference_value`, `updated_datetime`) |  |
+| 72 | `portalPrefSet` | **insert** [portal_user_preferences](/code/tables/portal_user_preferences.md) (`user_id`, `preference_key`, `preference_value`, `updated_datetime`) |  |
 
 ## Called from
 

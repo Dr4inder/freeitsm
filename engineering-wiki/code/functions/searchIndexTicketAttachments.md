@@ -19,15 +19,15 @@ function searchIndexTicketAttachments(
 ): int
 ```
 
-Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php.md), line 152.
+Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php.md), line 155.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `string` |  |  |
-| `$maxBody` | `int` |  |  |
+| `$scope` | `string` |  | the ticket's corpus tenant_scope, SEARCH_SCOPE_DEFAULT or SEARCH_SCOPE_COMPANY |
+| `$maxBody` | `int` |  | the most characters of extracted text kept per attachment; longer text is truncated |
 
 **Returns:** int corpus rows written
 
@@ -35,8 +35,8 @@ Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 161 | `searchIndexTicketAttachments` | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md), read [attachment_text](/code/tables/attachment_text.md) |  |
-| 269 | `searchIndexTicketAttachments` | **insert** [attachment_text](/code/tables/attachment_text.md) (`attachment_id`, `status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime`) |  |
+| 164 | `searchIndexTicketAttachments` | read [email_attachments](/code/tables/email_attachments.md), read [emails](/code/tables/emails.md), read [attachment_text](/code/tables/attachment_text.md) |  |
+| 272 | `searchIndexTicketAttachments` | **insert** [attachment_text](/code/tables/attachment_text.md) (`attachment_id`, `status`, `extractor`, `extracted_text`, `chars`, `extracted_datetime`) |  |
 
 ## Calls
 

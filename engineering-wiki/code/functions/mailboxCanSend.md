@@ -12,11 +12,11 @@ install reported "no email mailbox is configured" when one plainly was.
 function mailboxCanSend($mailbox)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 271.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 296.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row, decrypted |
 
 ## Calls
 

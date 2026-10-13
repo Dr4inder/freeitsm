@@ -6,15 +6,15 @@ Refuse unless the caller holds `$need` on the folder. Below View the folder does
 function filesNeed(PDO $conn, int $analystId, int $folderId, int $need, string $what = ''): int
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 73.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `int` |  |  |
-| `$need` | `int` |  |  |
-| `$what` | `string` | `''` |  |
+| `$folderId` | `int` |  | the files_folders id being acted on |
+| `$need` | `int` |  | the lowest level the action needs, one of FilesAcl::VIEW to FilesAcl::FULL |
+| `$what` | `string` | `''` | the action being attempted ('rename', 'upload' ...), recorded as 'doing' in the audit row |
 
 **Returns:** `int`
 

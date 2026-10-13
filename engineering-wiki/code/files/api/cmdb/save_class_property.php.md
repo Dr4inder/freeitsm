@@ -1,6 +1,6 @@
 # api/cmdb/save_class_property.php
 
-> API endpoint - 140 lines
+> API endpoint - 142 lines
 
 API: Create or update a property definition on a class. Handles dropdown options inline (passed as `options` array; we wipe and re-insert).
 
@@ -16,19 +16,19 @@ API: Create or update a property definition on a class. Handles dropdown options
 
 | Function | Line | What it does |
 |---|--:|---|
-| [slugifyProp()](/code/functions/slugifyProp.md) | 27 | Turns a property name into a lower-case key of letters, digits and underscores, falling back to 'property' when nothing is left. |
+| [slugifyProp()](/code/functions/slugifyProp.md) | 29 | Turns a property name into a lower-case key of letters, digits and underscores, falling back to 'property' when nothing is left. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 73 |  | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
-| 82 |  | **insert** [cmdb_class_properties](/code/tables/cmdb_class_properties.md) (`class_id`, `property_key`, `label`, `property_type`, `target_class_id`, `is_required`, `spreads_impact`, `display_order`, `created_datetime`) |  |
-| 90 |  | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
-| 97 |  | **update** [cmdb_class_properties](/code/tables/cmdb_class_properties.md) (`property_key`, `label`, `property_type`, `target_class_id`, `is_required`, `spreads_impact`, `display_order`) |  |
-| 109 |  | **delete** [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md) |  |
-| 110 |  | **insert** [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md) (`property_id`, `option_value`, `colour`, `display_order`) |  |
-| 130 |  | **delete** [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md) |  |
+| 75 |  | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 84 |  | **insert** [cmdb_class_properties](/code/tables/cmdb_class_properties.md) (`class_id`, `property_key`, `label`, `property_type`, `target_class_id`, `is_required`, `spreads_impact`, `display_order`, `created_datetime`) |  |
+| 92 |  | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 99 |  | **update** [cmdb_class_properties](/code/tables/cmdb_class_properties.md) (`property_key`, `label`, `property_type`, `target_class_id`, `is_required`, `spreads_impact`, `display_order`) |  |
+| 111 |  | **delete** [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md) |  |
+| 112 |  | **insert** [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md) (`property_id`, `option_value`, `colour`, `display_order`) |  |
+| 132 |  | **delete** [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md) |  |
 
 ## How it hangs together
 

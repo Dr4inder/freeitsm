@@ -11,12 +11,12 @@ retried against the same window, not skipped past.
 function integrationsPullComments(PDO $conn, array $connection): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1320.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 1414.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connection` | `array` |  |  |
+| `$connection` | `array` |  | the connection row as loaded by `integrationsLoadConnection()`; inbound_enabled must be set |
 
 **Returns:** array ['pulled'=>int, 'imported'=>int, 'skipped'=>['echo'=>n, …]]
 
@@ -24,8 +24,8 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1330 | `integrationsPullComments` | read [integration_links](/code/tables/integration_links.md) |  |
-| 1356 | `integrationsPullComments` | **update** [integration_connections](/code/tables/integration_connections.md) (`last_poll_watermark`) |  |
+| 1424 | `integrationsPullComments` | read [integration_links](/code/tables/integration_links.md) |  |
+| 1450 | `integrationsPullComments` | **update** [integration_connections](/code/tables/integration_connections.md) (`last_poll_watermark`) |  |
 
 ## Calls
 

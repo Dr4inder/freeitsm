@@ -6,12 +6,12 @@ Every company's answer for one key, for rendering a settings table.
 function tenantSettingsForKey(PDO $conn, string $key): array
 ```
 
-Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 131.
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | the setting key |
 
 **Returns:** array<int,string> tenant_id => value, containing ONLY companies that have their own answer. Anything absent follows the install default, which the caller shows separately.
 
@@ -19,7 +19,7 @@ Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 135 | `tenantSettingsForKey` | read [tenant_settings](/code/tables/tenant_settings.md) |  |
+| 146 | `tenantSettingsForKey` | read [tenant_settings](/code/tables/tenant_settings.md) |  |
 
 ## Called from
 

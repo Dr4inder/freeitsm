@@ -13,14 +13,14 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):574 | `AssetFieldsService::deleteSet` | delete |  |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):631 | `AssetFieldsService::setTypeSets` | delete |  |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):633 | `AssetFieldsService::setTypeSets` | insert | `asset_type_id`, `set_id`, `sort_order` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):620 | `AssetFieldsService::deleteSet` | delete |  |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):685 | `AssetFieldsService::setTypeSets` | delete |  |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):687 | `AssetFieldsService::setTypeSets` | insert | `asset_type_id`, `set_id`, `sort_order` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_fields.php](/code/files/api/assets/get_asset_fields.php.md) | L82, L103 |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::setsForAsset L118 |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::setsForAsset L119 |  |
 

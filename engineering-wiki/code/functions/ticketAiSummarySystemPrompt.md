@@ -11,7 +11,7 @@ the only signal telling somebody to go and read the thread themselves.
 function ticketAiSummarySystemPrompt(): string
 ```
 
-Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line 246.
+Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line 254.
 
 **Returns:** `string`
 

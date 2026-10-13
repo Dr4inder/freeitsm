@@ -1,6 +1,6 @@
 # includes/settings_keys.php
 
-> PHP - 276 lines
+> PHP - 283 lines
 
 Who owns each key in `system_settings`.
 
@@ -54,11 +54,11 @@ areas are admin-only with no special-casing here.
 |---|--:|---|
 | [settingKeyOwners()](/code/functions/settingKeyOwners.md) | 58 | Exact key -> owner. 'tab' is documentation: it names the settings tab the key belongs to, so the eventual per-tab capability is obvious when the module converts. |
 | [settingKeyPrefixes()](/code/functions/settingKeyPrefixes.md) | 180 | Prefix -> owner, for keys generated at runtime rather than named in code. |
-| [settingKeyOwner()](/code/functions/settingKeyOwner.md) | 193 | Who owns this setting key? null = nobody, so it may not be written through the generic endpoint. Exact matches win over prefixes. |
-| [analystCanManageAiNamespace()](/code/functions/analystCanManageAiNamespace.md) | 220 | May this analyst manage the AI configuration for a namespace ('knowledge_ai', 'cmdb_ai', 'tickets_reply_cleanup', …)? |
-| [analystCanManageAnyAiNamespace()](/code/functions/analystCanManageAnyAiNamespace.md) | 236 | May this analyst manage the AI settings of ANY namespace? |
-| [requireAiNamespaceJson()](/code/functions/requireAiNamespaceJson.md) | 248 | The API twin: refuse with a 403 unless this analyst may manage the namespace's AI config. |
-| [analystCanWriteSettingKey()](/code/functions/analystCanWriteSettingKey.md) | 266 | May this analyst write this setting key? |
+| [settingKeyOwner()](/code/functions/settingKeyOwner.md) | 194 | Who owns this setting key? null = nobody, so it may not be written through the generic endpoint. Exact matches win over prefixes. |
+| [analystCanManageAiNamespace()](/code/functions/analystCanManageAiNamespace.md) | 223 | May this analyst manage the AI configuration for a namespace ('knowledge_ai', 'cmdb_ai', 'tickets_reply_cleanup', …)? |
+| [analystCanManageAnyAiNamespace()](/code/functions/analystCanManageAnyAiNamespace.md) | 239 | May this analyst manage the AI settings of ANY namespace? |
+| [requireAiNamespaceJson()](/code/functions/requireAiNamespaceJson.md) | 253 | The API twin: refuse with a 403 unless this analyst may manage the namespace's AI config. |
+| [analystCanWriteSettingKey()](/code/functions/analystCanWriteSettingKey.md) | 273 | May this analyst write this setting key? |
 
 ## How it hangs together
 

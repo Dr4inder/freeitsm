@@ -6,11 +6,11 @@ Escapes a command or path and wraps it in <code> for dropping into a `dk()` plac
 function dkCode(string $s): string
 ```
 
-Defined in [system/docker/index.php](/code/files/system/docker/index.php.md), line 55.
+Defined in [system/docker/index.php](/code/files/system/docker/index.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` | `string` |  |  |
+| `$s` | `string` |  | the command or path, escaped here |
 
 **Returns:** `string`
 

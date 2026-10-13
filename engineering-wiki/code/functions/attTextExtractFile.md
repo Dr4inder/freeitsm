@@ -13,13 +13,13 @@ function attTextExtractFile(
 ): array
 ```
 
-Defined in [includes/search/extract.php](/code/files/includes/search/extract.php.md), line 124.
+Defined in [includes/search/extract.php](/code/files/includes/search/extract.php.md), line 137.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
-| `$filename` | `string` |  |  |
-| `$maxChars` | `int` | `ATT_TEXT_MAX_CHARS` |  |
+| `$path` | `string` |  | the file's path on disk, already checked to be inside the uploads directory |
+| `$filename` | `string` |  | the file's original name - its extension picks the reader |
+| `$maxChars` | `int` | `ATT_TEXT_MAX_CHARS` | the most characters to keep; longer text is cut and marked truncated |
 
 **Returns:** array{status:string,text:string}
 

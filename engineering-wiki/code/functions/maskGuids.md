@@ -9,11 +9,11 @@ Identifiers (client IDs, tenant GUIDs) aren't secrets, but this report is made t
 function maskGuids($s)
 ```
 
-Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 92.
+Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 114.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | text that may contain GUIDs; each one is shortened, the rest is left alone |
 
 ## Called from
 

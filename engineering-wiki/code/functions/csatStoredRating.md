@@ -6,12 +6,12 @@ The rating a survey holds, or null while it is unanswered.
 function csatStoredRating(PDO $conn, int $responseId): ?int
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 242.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 265.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$responseId` | `int` |  |  |
+| `$responseId` | `int` |  | ticket_csat_responses.id |
 
 **Returns:** `?int`
 
@@ -19,7 +19,7 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 242.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 244 | `csatStoredRating` | read [ticket_csat_responses](/code/tables/ticket_csat_responses.md) |  |
+| 267 | `csatStoredRating` | read [ticket_csat_responses](/code/tables/ticket_csat_responses.md) |  |
 
 ## Called from
 

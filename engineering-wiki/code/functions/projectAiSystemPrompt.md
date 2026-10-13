@@ -6,7 +6,7 @@ The standing rules every prompt starts with.
 function projectAiSystemPrompt(): string
 ```
 
-Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 325.
+Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 328.
 
 **Returns:** `string`
 

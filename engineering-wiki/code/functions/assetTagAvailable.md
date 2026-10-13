@@ -16,14 +16,14 @@ that WRITES a tag goes through AssetTagsService::withLock() (PR #164).
 function assetTagAvailable(PDO $conn, ?int $tenantId, string $tag, ?int $exceptAssetId = null): bool
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 128.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 135.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$tag` | `string` |  |  |
-| `$exceptAssetId` | `?int` | `null` |  |
+| `$tag` | `string` |  | the asset tag to check, trimmed here; '' is always available |
+| `$exceptAssetId` | `?int` | `null` | the asset being edited, so its own tag does not count as taken; null for a new asset |
 
 **Returns:** `bool`
 
@@ -31,7 +31,7 @@ Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 132 | `assetTagAvailable` | read [assets](/code/tables/assets.md) |  |
+| 139 | `assetTagAvailable` | read [assets](/code/tables/assets.md) |  |
 
 ## Calls
 

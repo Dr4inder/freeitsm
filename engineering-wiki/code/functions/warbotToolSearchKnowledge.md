@@ -6,12 +6,12 @@ search_knowledge: up to eight live Knowledge article titles matching the query t
 function warbotToolSearchKnowledge(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 900.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 955.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$args` | `array` |  |  |
+| `$args` | `array` |  | the model's arguments - untrusted: query (words to find in an article title) |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
@@ -20,7 +20,7 @@ Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 923 | `warbotToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 978 | `warbotToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

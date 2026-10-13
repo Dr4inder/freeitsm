@@ -13,16 +13,16 @@ function templateSaveSentEmail(
 ): void
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 710.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 748.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `array` |  |  |
-| `$to` | `string` |  |  |
-| `$subject` | `string` |  |  |
-| `$body` | `string` |  |  |
+| `$mailbox` | `array` |  | the target_mailboxes row it was sent from (id, target_mailbox, name) |
+| `$to` | `string` |  | the recipient's address |
+| `$subject` | `string` |  | the subject as sent |
+| `$body` | `string` |  | the HTML body as sent |
 
 **Returns:** `void`
 
@@ -30,8 +30,8 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 712 | `templateSaveSentEmail` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction`, `mailbox_id`) |  |
-| 729 | `templateSaveSentEmail` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
+| 750 | `templateSaveSentEmail` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction`, `mailbox_id`) |  |
+| 767 | `templateSaveSentEmail` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
 
 ## Called from
 

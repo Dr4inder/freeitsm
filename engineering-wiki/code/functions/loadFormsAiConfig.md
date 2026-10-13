@@ -9,7 +9,7 @@ provider, model, api_key (decrypted), verify_ssl.
 function loadFormsAiConfig(PDO $conn): array
 ```
 
-Defined in [api/forms/_ai_helpers.php](/code/files/api/forms/_ai_helpers.php.md), line 59.
+Defined in [api/forms/_ai_helpers.php](/code/files/api/forms/_ai_helpers.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

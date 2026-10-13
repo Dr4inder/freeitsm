@@ -11,11 +11,11 @@ defence and not the first.
 function lmsHardenContentDir(string $contentRoot): void
 ```
 
-Defined in [includes/lms_package.php](/code/files/includes/lms_package.php.md), line 150.
+Defined in [includes/lms_package.php](/code/files/includes/lms_package.php.md), line 156.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$contentRoot` | `string` |  |  |
+| `$contentRoot` | `string` |  | the folder that holds every unpacked course; the .htaccess is written here |
 
 **Returns:** `void`
 

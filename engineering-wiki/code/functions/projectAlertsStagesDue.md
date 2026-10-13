@@ -6,7 +6,7 @@ Stages ending soon -> project.stage_due, once per window per end date. Only the 
 function projectAlertsStagesDue(PDO $conn, ?int $projectId = null): int
 ```
 
-Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 221.
+Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), line 234.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/projects/alerts.php](/code/files/includes/projects/alerts.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 225 | `projectAlertsStagesDue` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 240 | `projectAlertsStagesDue` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 238 | `projectAlertsStagesDue` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 253 | `projectAlertsStagesDue` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
 
 ## Calls
 

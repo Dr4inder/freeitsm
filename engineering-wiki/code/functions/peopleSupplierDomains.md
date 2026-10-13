@@ -6,13 +6,13 @@ Domains a supplier or a contact is involved in, and how: registrar, customer, te
 function peopleSupplierDomains(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 810.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 881.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$who` | `array` |  |  |
+| `$who` | `array` |  | ['supplier' => suppliers id] or ['contact' => contacts id] |
 
 **Returns:** `array`
 
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 810.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 820 | `peopleSupplierDomains` | read [contacts](/code/tables/contacts.md) |  |
-| 832 | `peopleSupplierDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 891 | `peopleSupplierDomains` | read [contacts](/code/tables/contacts.md) |  |
+| 903 | `peopleSupplierDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 ## Calls
 

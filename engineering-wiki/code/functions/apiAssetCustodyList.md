@@ -6,7 +6,7 @@ GET /assets/{id}/custody - the asset's check-out and check-in history, newest fi
 function apiAssetCustodyList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 470.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 481.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 473 | `apiAssetCustodyList` | read [asset_checkout_log](/code/tables/asset_checkout_log.md), read [analysts](/code/tables/analysts.md) |  |
+| 484 | `apiAssetCustodyList` | read [asset_checkout_log](/code/tables/asset_checkout_log.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ POST /morning-checks/results — save_check_result.php's upsert: one result per 
 function apiMorningCheckResultsRecord(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 285.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 304.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

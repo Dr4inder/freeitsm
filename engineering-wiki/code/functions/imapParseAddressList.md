@@ -6,11 +6,11 @@ Parse an RFC 2822 address-list header into the Graph-like recipient shape. Uses 
 function imapParseAddressList(string $raw): array
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 340.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 376.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | a raw address-list header, e.g. 'Name <a@b>, c@d' |
 
 **Returns:** `array`
 

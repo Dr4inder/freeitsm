@@ -9,13 +9,13 @@ schema cannot express "not a descendant of itself", so it is checked here.
 function ticketCategoryWouldCycle(PDO $conn, int $id, ?int $parentId): bool
 ```
 
-Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md), line 280.
+Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md), line 289.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$parentId` | `?int` |  |  |
+| `$id` | `int` |  | the category being re-parented |
+| `$parentId` | `?int` |  | the proposed parent; null or 0 (a root) never loops |
 
 **Returns:** `bool`
 
@@ -23,7 +23,7 @@ Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categori
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 287 | `ticketCategoryWouldCycle` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 296 | `ticketCategoryWouldCycle` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
 
 ## Called from
 

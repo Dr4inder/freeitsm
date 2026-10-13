@@ -6,13 +6,13 @@ Gives an analyst Full control on a folder, upgrading an existing entry - used wh
 function filesGrantCreatorFull(PDO $conn, int $analystId, int $folderId): void
 ```
 
-Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line 195.
+Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line 215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `int` |  |  |
+| `$folderId` | `int` |  | the folder to give `$analystId` Full control on |
 
 **Returns:** `void`
 
@@ -22,7 +22,7 @@ Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 197 | `filesGrantCreatorFull` | **insert** [files_permissions](/code/tables/files_permissions.md) (`folder_id`, `principal_type`, `principal_id`, `level`, `granted_by`, `granted_datetime`) |  |
+| 217 | `filesGrantCreatorFull` | **insert** [files_permissions](/code/tables/files_permissions.md) (`folder_id`, `principal_type`, `principal_id`, `level`, `granted_by`, `granted_datetime`) |  |
 
 ## Called from
 

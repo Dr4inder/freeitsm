@@ -24,5 +24,5 @@ Which companies a TEAM grants its members (only consulted when the team is NOT f
 |---|---|---|
 | [api/tickets/get_analysts.php](/code/files/api/tickets/get_analysts.php.md) | L49 |  |
 | [api/tickets/get_team_companies.php](/code/files/api/tickets/get_team_companies.php.md) | L32 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getAccessibleTenantIds L228 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getAccessibleTenantIds L230 |  |
 

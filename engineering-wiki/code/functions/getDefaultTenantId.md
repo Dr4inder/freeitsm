@@ -6,7 +6,7 @@ The id of the silent Default tenant (the one that owns everything on a single-co
 function getDefaultTenantId(PDO $conn): int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 132.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,8 +18,8 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 132
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 138 | `getDefaultTenantId` | read [tenants](/code/tables/tenants.md) |  |
 | 140 | `getDefaultTenantId` | read [tenants](/code/tables/tenants.md) |  |
+| 142 | `getDefaultTenantId` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

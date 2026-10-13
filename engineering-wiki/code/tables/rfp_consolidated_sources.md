@@ -15,17 +15,17 @@
 |---|---|---|---|---|
 | [api/rfp-builder/add_consolidated.php](/code/files/api/rfp-builder/add_consolidated.php.md):88 |  | insert | `consolidated_id`, `extracted_id` |  |
 | [api/rfp-builder/merge_consolidated.php](/code/files/api/rfp-builder/merge_consolidated.php.md):101 |  | insert | `consolidated_id`, `extracted_id` |  |
-| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):154 |  | insert | `consolidated_id`, `extracted_id` |  |
+| [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md):157 |  | insert | `consolidated_id`, `extracted_id` |  |
 | [api/rfp-builder/split_consolidated.php](/code/files/api/rfp-builder/split_consolidated.php.md):116 |  | insert | `consolidated_id`, `extracted_id` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L161 |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L164 |  |
 | [api/rfp-builder/get_consolidated.php](/code/files/api/rfp-builder/get_consolidated.php.md) | L63 |  |
 | [api/rfp-builder/get_coverage.php](/code/files/api/rfp-builder/get_coverage.php.md) | L63, L92, L109 |  |
 | [api/rfp-builder/merge_consolidated.php](/code/files/api/rfp-builder/merge_consolidated.php.md) | L84 |  |
 | [api/rfp-builder/split_consolidated.php](/code/files/api/rfp-builder/split_consolidated.php.md) | L61 |  |
-| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L991 |  |
+| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L1037 |  |
 

@@ -6,11 +6,11 @@ Normalise ids to ints for the JSON.
 function cmdbAuditRows(PDOStatement $st): array
 ```
 
-Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 232.
+Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), line 243.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$st` | `PDOStatement` |  |  |
+| `$st` | `PDOStatement` |  | an executed finding query whose rows include an object_id column |
 
 **Returns:** `array`
 

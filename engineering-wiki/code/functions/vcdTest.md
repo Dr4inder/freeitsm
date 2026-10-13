@@ -6,11 +6,11 @@ The Test button: logs in, reads one VM record and one edge gateway, logs out and
 function vcdTest(array $c): string
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 149.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 190.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
+| `$c` | `array` |  | the connection row from `vcdLoadConnection()`, with the password decrypted |
 
 **Returns:** `string`
 

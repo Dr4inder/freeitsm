@@ -33,19 +33,19 @@ function cardDavLogWrite(
 ): void
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 569.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 610.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
-| `$userId` | `?int` |  |  |
-| `$displayName` | `string` |  |  |
-| `$outcome` | `string` |  |  |
-| `$fields` | `array` |  |  |
-| `$status` | `?int` |  |  |
-| `$response` | `string` |  |  |
-| `$message` | `string` |  |  |
+| `$providerId` | `int` |  | auth_providers.id of the address book |
+| `$userId` | `?int` |  | users.id of the person; null or 0 stores NULL |
+| `$displayName` | `string` |  | the person's name, kept so the row still says who it was after a delete |
+| `$outcome` | `string` |  | 'ok', 'created', 'conflict', 'failed' or 'skipped' |
+| `$fields` | `array` |  | the person fields involved, e.g. ['mobile'] |
+| `$status` | `?int` |  | the HTTP status the server gave; null or 0 when no request was made |
+| `$response` | `string` |  | the server's response body, stored verbatim up to CARDDAV_LOG_RESPONSE_MAX |
+| `$message` | `string` |  | a plain sentence for the write log; cut to 1000 characters |
 | `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
@@ -54,7 +54,7 @@ Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 575 | `cardDavLogWrite` | **insert** [carddav_write_log](/code/tables/carddav_write_log.md) (`provider_id`, `user_id`, `display_name`, `outcome`, `fields`, `http_status`, `server_response`, `message`, `triggered_by_analyst_id`, `created_datetime`) |  |
+| 616 | `cardDavLogWrite` | **insert** [carddav_write_log](/code/tables/carddav_write_log.md) (`provider_id`, `user_id`, `display_name`, `outcome`, `fields`, `http_status`, `server_response`, `message`, `triggered_by_analyst_id`, `created_datetime`) |  |
 
 ## Called from
 

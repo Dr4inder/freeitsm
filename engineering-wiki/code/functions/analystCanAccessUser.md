@@ -16,13 +16,13 @@ tenant is Default-owned; unknown id → false.
 function analystCanAccessUser(PDO $conn, int $analystId, $userId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 301.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 307.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` |  |  |  |
+| `$userId` |  |  | the portal user / requester (users.id), any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -30,7 +30,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 301
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 310 | `analystCanAccessUser` | read [users](/code/tables/users.md) |  |
+| 316 | `analystCanAccessUser` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

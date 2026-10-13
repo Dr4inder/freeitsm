@@ -6,11 +6,11 @@ ISO 4217 code check (three letters).
 function projectValidCurrency(string $c): bool
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 504.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 554.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `string` |  |  |
+| `$c` | `string` |  | the currency code to check, e.g. 'GBP' (must already be upper case) |
 
 **Returns:** `bool`
 

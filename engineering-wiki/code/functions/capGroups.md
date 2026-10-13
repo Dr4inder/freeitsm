@@ -9,7 +9,7 @@ tick-box appear. There is no second list to keep in step.
 function capGroups(): array
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 513.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 547.
 
 **Returns:** `array`
 

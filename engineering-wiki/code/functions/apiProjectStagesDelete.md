@@ -6,7 +6,7 @@ DELETE /projects/{id}/stages/{stageId} - deletes a stage through ProjectsService
 function apiProjectStagesDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 351.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 370.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

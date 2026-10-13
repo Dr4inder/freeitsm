@@ -80,6 +80,10 @@ try {
  * returns the reply text with the token counts.
  *
  * Throws with the provider's own error message (or the HTTP code) when the call fails.
+ *
+ * @param string $apiKey  the Anthropic API key to test, in plain text
+ * @param string $model  the model id to call, as chosen in the form's AI settings
+ * @param bool $verifySsl  the "verify SSL" tick from the request - unused: sslApplyCurl() follows the global switch alone
  */
 function formsTestAnthropic(string $apiKey, string $model, bool $verifySsl): array
 {
@@ -128,6 +132,10 @@ function formsTestAnthropic(string $apiKey, string $model, bool $verifySsl): arr
  * work, and returns the reply text with the token counts.
  *
  * Throws with the provider's own error message (or the HTTP code) when the call fails.
+ *
+ * @param string $apiKey  the OpenAI API key to test, in plain text
+ * @param string $model  the model id to call, as chosen in the form's AI settings
+ * @param bool $verifySsl  the "verify SSL" tick from the request - unused: sslApplyCurl() follows the global switch alone
  */
 function formsTestOpenAI(string $apiKey, string $model, bool $verifySsl): array
 {

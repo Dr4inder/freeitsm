@@ -11,7 +11,7 @@ The analyst's current working company context.
 function getActiveTenantId(PDO $conn, ?int $analystId = null): int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 596.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 620.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

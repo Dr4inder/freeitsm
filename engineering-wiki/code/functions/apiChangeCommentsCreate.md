@@ -6,7 +6,7 @@ POST /changes/{id}/comments - adds a comment to the change through ChangesServic
 function apiChangeCommentsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 395.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 405.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

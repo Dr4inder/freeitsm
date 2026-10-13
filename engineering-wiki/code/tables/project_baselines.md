@@ -29,14 +29,14 @@ Change control (3.3.0) - includes/projects/control.php.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/demo_data.php](/code/files/includes/demo_data.php.md):43 | `demoAfterImport` | update | `snapshot`, `start_date`, `target_end_date`, `budget_planned`, `task_count`, `estimate_hours`, `must_count` |  |
-| [includes/projects/control.php](/code/files/includes/projects/control.php.md):116 | `projectTakeBaseline` | insert | `project_id`, `number`, `label`, `reason`, `stage_id`, `change_request_id`, `start_date`, `target_end_date`, `budget_planned`, `currency` |  |
+| [includes/demo_data.php](/code/files/includes/demo_data.php.md):45 | `demoAfterImport` | update | `snapshot`, `start_date`, `target_end_date`, `budget_planned`, `task_count`, `estimate_hours`, `must_count` |  |
+| [includes/projects/control.php](/code/files/includes/projects/control.php.md):124 | `projectTakeBaseline` | insert | `project_id`, `number`, `label`, `reason`, `stage_id`, `change_request_id`, `start_date`, `target_end_date`, `budget_planned`, `currency` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/demo_data.php](/code/files/includes/demo_data.php.md) | demoAfterImport L38 |  |
-| [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectControlReady L43, projectTakeBaseline L115, projectBaselineAuto L237, projectBaselineAuto L241, projectBaselineAuto L247, projectControlDetail L274 ... |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::takeBaseline L1380 |  |
+| [includes/demo_data.php](/code/files/includes/demo_data.php.md) | demoAfterImport L40 |  |
+| [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectControlReady L43, projectTakeBaseline L123, projectBaselineAuto L270, projectBaselineAuto L274, projectBaselineAuto L280, projectControlDetail L315 ... |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::takeBaseline L1530 |  |
 

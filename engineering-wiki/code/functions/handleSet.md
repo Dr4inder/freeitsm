@@ -6,13 +6,13 @@ Saves the install-wide folder permission model ('filing', anything else meaning 
 function handleSet(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), line 168.
+Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), line 171.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request; model is 'filing', anything else meaning 'containers' |
 
 **Returns:** `void`
 
@@ -22,7 +22,7 @@ Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 173 | `handleSet` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 176 | `handleSet` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## Calls
 

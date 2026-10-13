@@ -218,6 +218,8 @@ function projectBuiltinTemplates(): array
 /**
  * Check and tidy template content (from a saved row, the screen or a built-in).
  * Unknown keys are dropped, every list is capped, days are clamped to 0-3650.
+ *
+ * @param array $c  the template content (untrusted): methodology, stages, tasks, milestones, items, raid, targets, benefits ...
  */
 function projectTemplateNormalise(array $c): array
 {
@@ -322,7 +324,16 @@ function projectTemplateNormalise(array $c): array
     return $out;
 }
 
-/** What the picker shows about a template: counts, without the whole plan. */
+/**
+ * What the picker shows about a template: counts, without the whole plan.
+ *
+ * @param string $key  the template key: 'builtin:<name>' or 'saved:<id>'
+ * @param string $name  the template's name
+ * @param ?string $desc  its description; null for none
+ * @param array $c  the content, already through projectTemplateNormalise()
+ * @param bool $builtin  true for a template that ships with FreeITSM
+ * @param bool $active  false when it is hidden from the new-project picker
+ */
 function projectTemplateSummary(string $key, string $name, ?string $desc, array $c, bool $builtin, bool $active = true): array
 {
     $tasks = count($c['tasks']);
@@ -340,6 +351,8 @@ function projectTemplateSummary(string $key, string $name, ?string $desc, array 
 /**
  * Every template. $all = false: only what the new-project picker offers
  * (built-ins not hidden, saved ones active). true: for the Settings tab.
+ *
+ * @param bool $all  true for every template (the Settings tab); false for only what the new-project picker offers
  */
 function projectTemplateList(PDO $conn, bool $all = false): array
 {
@@ -363,7 +376,12 @@ function projectTemplateList(PDO $conn, bool $all = false): array
     return $out;
 }
 
-/** [name, content] for a key, or null when there is no such (usable) template. */
+/**
+ * [name, content] for a key, or null when there is no such (usable) template.
+ *
+ * @param string $key  the template key: 'builtin:<name>' or 'saved:<id>'
+ * @param bool $evenHidden  true to load a hidden built-in or an inactive saved template too
+ */
 function projectTemplateLoad(PDO $conn, string $key, bool $evenHidden = false): ?array
 {
     if (strpos($key, 'builtin:') === 0) {
@@ -387,6 +405,9 @@ function projectTemplateLoad(PDO $conn, string $key, bool $evenHidden = false): 
  * A project as a template: its plan with dates turned into days from its start,
  * and none of its people, companies or links. $parts picks what to keep:
  * plan, scope, raid, tolerances, targets.
+ *
+ * @param array $project  the projects row to copy the plan from
+ * @param array $parts  what to keep: any of 'plan', 'scope', 'raid', 'benefits', 'tolerances', 'targets'
  */
 function projectTemplateCapture(PDO $conn, array $project, array $parts): array
 {

@@ -6,13 +6,13 @@ Remove one source's row. Safe to call for something never indexed.
 function searchCorpusDelete(PDO $conn, string $sourceType, int $sourceId): void
 ```
 
-Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 129.
+Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.md), line 137.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$sourceType` | `string` |  |  |
-| `$sourceId` | `int` |  |  |
+| `$sourceType` | `string` |  | the source type, a SEARCH_SOURCE_* value such as 'email' or 'document' |
+| `$sourceId` | `int` |  | the source row's id in its own table |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 130 | `searchCorpusDelete` | **delete** [search_documents](/code/tables/search_documents.md) |  |
+| 138 | `searchCorpusDelete` | **delete** [search_documents](/code/tables/search_documents.md) |  |
 
 ## Called from
 

@@ -39,6 +39,9 @@ final class HypervisorHttp
      * https://host:port, nothing after it. Throws a readable message.
      *
      * TRAP: keep this https-only. The credential travels with every request.
+     *
+     * @param string $host     the server address as the administrator typed it; a trailing slash is dropped
+     * @param string $example  a sample address for the error message, e.g. 'https://pve.example.com:8006'
      */
     public static function validateHost(string $host, string $example): string
     {
@@ -55,6 +58,13 @@ final class HypervisorHttp
     /**
      * One request. Returns [code, body, headers]. Throws only when the server
      * could not be reached; an HTTP error status is returned for the caller to judge.
+     *
+     * @param string $method   the HTTP method, e.g. 'GET' or 'POST'
+     * @param string $url      the full URL; anything not https:// is refused
+     * @param array $headers   request headers as 'Name: value' strings, including the credential
+     * @param ?string $body    the request body; null sends none
+     * @param bool $verify     false skips certificate checks - the server's "Verify certificate" box unticked
+     * @param int $timeout     the whole request's time limit, in seconds
      */
     public static function request(string $method, string $url, array $headers, ?string $body, bool $verify, int $timeout = 60): array
     {

@@ -6,7 +6,7 @@ DELETE /suppliers/{id} — mirrors delete_supplier.php's explicit nullify-then-d
 function apiSuppliersDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 450.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 464.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

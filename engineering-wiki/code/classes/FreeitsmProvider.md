@@ -13,7 +13,7 @@
 
 ### verifyWebhook
 
-*public* - line 23
+*public* - line 30
 
 Webchat has its own public endpoints, so the shared webhook never routes here.
 
@@ -23,14 +23,14 @@ function verifyWebhook(string $rawBody, array $headers, array $params, string $u
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawBody` | `string` |  |  |
-| `$headers` | `array` |  |  |
-| `$params` | `array` |  |  |
-| `$url` | `string` |  |  |
+| `$rawBody` | `string` |  | the raw request body (ignored) |
+| `$headers` | `array` |  | the request headers (ignored) |
+| `$params` | `array` |  | the parsed POST parameters (ignored) |
+| `$url` | `string` |  | the public URL that was hit (ignored) |
 
 ### parseInbound
 
-*public* - line 29
+*public* - line 41
 
 Not used — inbound is handled by api/webchat/send.php, not parseInbound.
 
@@ -40,12 +40,12 @@ function parseInbound(string $rawBody, array $params): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawBody` | `string` |  |  |
-| `$params` | `array` |  |  |
+| `$rawBody` | `string` |  | the raw request body (ignored) |
+| `$params` | `array` |  | the parsed POST parameters (ignored) |
 
 ### sendMessage
 
-*public* - line 39
+*public* - line 54
 
 "Send" an outbound reply. There is nothing to transmit — the message row is stored by the caller and delivered when the visitor next polls — so we only mint a stable id. Prefixed 'wc_out_' so it's recognisable in the emails table.
 
@@ -55,12 +55,12 @@ function sendMessage(string $to, string $body): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$to` | `string` |  |  |
-| `$body` | `string` |  |  |
+| `$to` | `string` |  | the web chat visitor's address (ignored - the caller stores the message) |
+| `$body` | `string` |  | the reply text (ignored - the caller stores the message) |
 
 ### testConnection
 
-*public* - line 45
+*public* - line 60
 
 Nothing to reach; the channel is healthy as long as it exists and is active.
 

@@ -6,12 +6,12 @@ Joins and columns that name a contract's customer, for alias `$c`: customer_comp
 function contractPartySql(PDO $conn, string $c = 'c'): array
 ```
 
-Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 155.
+Defined in [includes/contract_party.php](/code/files/includes/contract_party.php.md), line 176.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$c` | `string` | `'c'` |  |
+| `$c` | `string` | `'c'` | the alias the calling query gives the contracts table (trusted - put straight into SQL) |
 
 **Returns:** array{0:string,1:string} [select columns (with leading comma), joins]
 
@@ -19,7 +19,7 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 166 | `contractPartySql` | read [tenants](/code/tables/tenants.md), read [users](/code/tables/users.md) |  |
+| 187 | `contractPartySql` | read [tenants](/code/tables/tenants.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

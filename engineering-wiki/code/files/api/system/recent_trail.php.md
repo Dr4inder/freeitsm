@@ -1,6 +1,6 @@
 # api/system/recent_trail.php
 
-> API endpoint - 71 lines
+> API endpoint - 75 lines
 
 API: this analyst's recent trail, grouped into headings (discussion #124). GET — no parameters. Always the caller's own trail; there is nothing to ask for.
 
@@ -36,7 +36,7 @@ calls this the first time the Recent tab is opened.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [recentTrailIso()](/code/functions/recentTrailIso.md) | 67 | 'YYYY-MM-DD HH:MM:SS' as stored (UTC) → an ISO instant the browser can read. |
+| [recentTrailIso()](/code/functions/recentTrailIso.md) | 71 | 'YYYY-MM-DD HH:MM:SS' as stored (UTC) → an ISO instant the browser can read. |
 
 ## How it hangs together
 

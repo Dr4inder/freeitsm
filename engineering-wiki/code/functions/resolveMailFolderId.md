@@ -12,12 +12,12 @@ so the button and the fetch can no longer answer differently.
 function resolveMailFolderId($accessToken, $folderName)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 655.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 682.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
-| `$folderName` |  |  |  |
+| `$accessToken` |  |  | the mailbox's Microsoft Graph access token, from `getValidAccessToken()` |
+| `$folderName` |  |  | the folder name as typed in the mailbox settings, or a well-known alias such as 'deleteditems' |
 
 ## Calls
 

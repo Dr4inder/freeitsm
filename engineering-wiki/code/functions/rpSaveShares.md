@@ -6,14 +6,14 @@ Replace a pack's shares with `$shares` (the whole list, as the dialog sends it).
 function rpSaveShares(PDO $conn, int $packId, int $ownerId, array $shares): void
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 192.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 213.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$packId` | `int` |  |  |
-| `$ownerId` | `int` |  |  |
-| `$shares` | `array` |  |  |
+| `$packId` | `int` |  | the report_packs id |
+| `$ownerId` | `int` |  | the pack owner's analyst id - a share to them is dropped |
+| `$shares` | `array` |  | the whole list from the share dialog (untrusted): each {type: analyst\|team\|department, id or value, can_edit} |
 
 **Returns:** `void`
 
@@ -21,8 +21,8 @@ Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 216 | `rpSaveShares` | **delete** [report_pack_shares](/code/tables/report_pack_shares.md) |  |
-| 217 | `rpSaveShares` | **insert** [report_pack_shares](/code/tables/report_pack_shares.md) (`pack_id`, `target_type`, `target_id`, `target_value`, `can_edit`) |  |
+| 237 | `rpSaveShares` | **delete** [report_pack_shares](/code/tables/report_pack_shares.md) |  |
+| 238 | `rpSaveShares` | **insert** [report_pack_shares](/code/tables/report_pack_shares.md) (`pack_id`, `target_type`, `target_id`, `target_value`, `can_edit`) |  |
 
 ## Calls
 

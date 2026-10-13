@@ -6,13 +6,13 @@ Is this course assigned to this learner? This is what they are *entitled* to tak
 function lmsCourseAssignedTo(PDO $conn, LmsLearner $learner, int $courseId): bool
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 253.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 273.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$learner` | `LmsLearner` |  |  |
-| `$courseId` | `int` |  |  |
+| `$learner` | `LmsLearner` |  | the person to check |
+| `$courseId` | `int` |  | the lms_courses id; 0 or less gives false |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 257 | `lmsCourseAssignedTo` | read [lms_course_assignments](/code/tables/lms_course_assignments.md) |  |
+| 277 | `lmsCourseAssignedTo` | read [lms_course_assignments](/code/tables/lms_course_assignments.md) |  |
 
 ## Calls
 

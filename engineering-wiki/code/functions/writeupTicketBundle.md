@@ -12,7 +12,7 @@ silent one buried in here.
 function writeupTicketBundle(PDO $conn, int $ticketId): ?array
 ```
 
-Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 228.
+Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/writeup_ai.php.md), line 235.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,11 +25,11 @@ Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/wr
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 231 | `writeupTicketBundle` | read [tickets](/code/tables/tickets.md) |  |
-| 245 | `writeupTicketBundle` | read [emails](/code/tables/emails.md) |  |
-| 255 | `writeupTicketBundle` | read [ticket_notes](/code/tables/ticket_notes.md) |  |
-| 267 | `writeupTicketBundle` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
-| 277 | `writeupTicketBundle` | read [problem_tickets](/code/tables/problem_tickets.md) |  |
+| 238 | `writeupTicketBundle` | read [tickets](/code/tables/tickets.md) |  |
+| 252 | `writeupTicketBundle` | read [emails](/code/tables/emails.md) |  |
+| 262 | `writeupTicketBundle` | read [ticket_notes](/code/tables/ticket_notes.md) |  |
+| 274 | `writeupTicketBundle` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 284 | `writeupTicketBundle` | read [problem_tickets](/code/tables/problem_tickets.md) |  |
 
 ## Calls
 

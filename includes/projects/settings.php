@@ -147,7 +147,11 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         ];
     }
 
-    /** Every setting with its default applied. Cached; $fresh after a save. */
+    /**
+     * Every setting with its default applied. Cached; $fresh after a save.
+     *
+     * @param bool $fresh  true to re-read from the database (after a save) instead of the per-request cache
+     */
     function projectSettings(PDO $conn, bool $fresh = false): array
     {
         static $cache = null;
@@ -168,13 +172,22 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         return $cache = $out;
     }
 
-    /** One Projects setting as a string; '' when it is not set. */
+    /**
+     * One Projects setting as a string; '' when it is not set.
+     *
+     * @param string $key  the setting key, e.g. 'project_currency' (see projectSettingDefinitions())
+     */
     function projectSetting(PDO $conn, string $key): string
     {
         return (string)(projectSettings($conn)[$key] ?? '');
     }
 
-    /** Saves one Projects setting to system_settings (insert or update). */
+    /**
+     * Saves one Projects setting to system_settings (insert or update).
+     *
+     * @param string $key  the setting key, e.g. 'project_currency'
+     * @param string $value  the value to store, already checked by projectSettingValidate()
+     */
     function projectSettingWrite(PDO $conn, string $key, string $value): void
     {
         $conn->prepare(
@@ -184,7 +197,12 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         )->execute([$key, $value]);
     }
 
-    /** Validate one incoming value; throws InvalidArgumentException with a message fit to show. */
+    /**
+     * Validate one incoming value; throws InvalidArgumentException with a message fit to show.
+     *
+     * @param string $key  the setting key; an unknown one throws
+     * @param mixed $raw  the value as sent by the settings form (untrusted) - a string, or an array for scales and weekdays
+     */
     function projectSettingValidate(string $key, $raw): string
     {
         $defs = projectSettingDefinitions();
@@ -340,6 +358,8 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
      * viewer's language. They live in lang/<locale>/projects.php, not in the
      * setting, so an install that never changed them reads them in German for a
      * German analyst.
+     *
+     * @param string $scale  'probability', 'impact' or 'priority'
      */
     function projectScaleDefaults(string $scale): array
     {
@@ -356,6 +376,8 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
      * Read a stored scale. A JSON array is the format; a comma-separated string
      * is what the first 3.2.0 builds wrote, read the same way so nothing needs
      * migrating (it is rewritten as JSON the next time the tab is saved).
+     *
+     * @param string $stored  the setting as stored: a JSON array, or the older comma-separated list; '' gives []
      */
     function projectScaleParse(string $stored): array
     {
@@ -368,13 +390,21 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         return array_values(array_filter(array_map('trim', explode(',', $stored)), fn($p) => $p !== ''));
     }
 
-    /** How many steps a scale has: five for the RAID scales, four for priority (3.3.0). */
+    /**
+     * How many steps a scale has: five for the RAID scales, four for priority (3.3.0).
+     *
+     * @param string $scale  'probability', 'impact' or 'priority'
+     */
     function projectScaleSize(string $scale): int
     {
         return $scale === 'priority' ? 4 : 5;
     }
 
-    /** The words to show for a scale: the saved ones, or the translated defaults. */
+    /**
+     * The words to show for a scale: the saved ones, or the translated defaults.
+     *
+     * @param string $scale  'probability', 'impact' or 'priority'
+     */
     function projectScaleLabels(PDO $conn, string $scale): array
     {
         $saved = projectScaleParse(projectSetting($conn, 'project_' . $scale . '_labels'));
@@ -410,6 +440,8 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
      * Is this analyst on the project's team: its manager, its creator or a
      * member? (Members arrive with project_members; until that table exists the
      * team is the manager and the creator.)
+     *
+     * @param array $project  the projects row - id, owner_analyst_id and created_by_id are read
      */
     function projectIsTeam(PDO $conn, int $analystId, array $project): bool
     {
@@ -429,6 +461,8 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
     /**
      * True when the analyst may change the project - anyone, if the change policy says so,
      * else its team and project managers.
+     *
+     * @param array $project  the projects row - id, owner_analyst_id and created_by_id are read
      */
     function projectCanChange(PDO $conn, int $analystId, array $project): bool
     {
@@ -436,7 +470,11 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         return projectIsTeam($conn, $analystId, $project) || projectIsManager($conn, $analystId);
     }
 
-    /** Deleting is never "anyone": the project manager, its creator, or Manage Projects. */
+    /**
+     * Deleting is never "anyone": the project manager, its creator, or Manage Projects.
+     *
+     * @param array $project  the projects row - owner_analyst_id and created_by_id are read
+     */
     function projectCanDelete(PDO $conn, int $analystId, array $project): bool
     {
         if ((int)($project['owner_analyst_id'] ?? 0) === $analystId || (int)($project['created_by_id'] ?? 0) === $analystId) return true;

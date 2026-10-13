@@ -6,11 +6,11 @@ Locate a usable PHP CLI binary so the web request can spawn a worker. Tries: exp
 function intuneFindPhpExe(?string $override): string
 ```
 
-Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 526.
+Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 544.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$override` | `?string` |  |  |
+| `$override` | `?string` |  | a PHP CLI path from the intune_php_exe setting, tried first; null or '' to search |
 
 **Returns:** `string`
 

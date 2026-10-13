@@ -6,11 +6,11 @@ Fetch unread messages, normalised to the Graph-like structure the importer expec
 function imapGetEmails(array $mailbox): array
 ```
 
-Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 90.
+Defined in [includes/mailbox_imap.php](/code/files/includes/mailbox_imap.php.md), line 98.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$mailbox` | `array` |  |  |
+| `$mailbox` | `array` |  | the target_mailboxes row, decrypted (max_emails_per_check caps how many are read) |
 
 **Returns:** `array`
 

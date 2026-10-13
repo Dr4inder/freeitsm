@@ -10,13 +10,13 @@ table.
 function searchIndexTicket(PDO $conn, int $ticketId, int $maxBody = SEARCH_INDEX_MAX_BODY): array
 ```
 
-Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php.md), line 53.
+Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$maxBody` | `int` | `SEARCH_INDEX_MAX_BODY` |  |
+| `$maxBody` | `int` | `SEARCH_INDEX_MAX_BODY` | the most characters of any one body (message, note, attachment) to index |
 
 **Returns:** array{tickets:int,emails:int,notes:int,attachments:int,skipped:int}
 
@@ -24,9 +24,9 @@ Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 59 | `searchIndexTicket` | read [tickets](/code/tables/tickets.md) |  |
-| 91 | `searchIndexTicket` | read [emails](/code/tables/emails.md) |  |
-| 113 | `searchIndexTicket` | read [ticket_notes](/code/tables/ticket_notes.md) |  |
+| 60 | `searchIndexTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 92 | `searchIndexTicket` | read [emails](/code/tables/emails.md) |  |
+| 114 | `searchIndexTicket` | read [ticket_notes](/code/tables/ticket_notes.md) |  |
 
 ## Calls
 

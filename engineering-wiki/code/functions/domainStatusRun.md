@@ -6,7 +6,7 @@ The scheduled part: raise (mode auto) and resolve (domain_status_auto_resolve). 
 function domainStatusRun(PDO $conn): array
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 219.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 244.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,12 +18,12 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 227 | `domainStatusRun` | read [domain_status_services](/code/tables/domain_status_services.md) |  |
-| 236 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
-| 246 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
-| 250 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
-| 255 | `domainStatusRun` | read [status_incidents](/code/tables/status_incidents.md) |  |
-| 266 | `domainStatusRun` | **update** [domain_status_incidents](/code/tables/domain_status_incidents.md) (`resolved_datetime`) |  |
+| 252 | `domainStatusRun` | read [domain_status_services](/code/tables/domain_status_services.md) |  |
+| 261 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
+| 271 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
+| 275 | `domainStatusRun` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
+| 280 | `domainStatusRun` | read [status_incidents](/code/tables/status_incidents.md) |  |
+| 291 | `domainStatusRun` | **update** [domain_status_incidents](/code/tables/domain_status_incidents.md) (`resolved_datetime`) |  |
 
 ## Calls
 

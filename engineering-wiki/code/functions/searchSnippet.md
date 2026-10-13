@@ -10,13 +10,13 @@ content and the one place it must not be trusted is on its way to a page.
 function searchSnippet(string $body, array $parsed, int $len = 220): string
 ```
 
-Defined in [includes/search/search.php](/code/files/includes/search/search.php.md), line 354.
+Defined in [includes/search/search.php](/code/files/includes/search/search.php.md), line 366.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `string` |  |  |
-| `$parsed` | `array` |  |  |
-| `$len` | `int` | `220` |  |
+| `$body` | `string` |  | the matched document's plain-text body |
+| `$parsed` | `array` |  | the parsed query from `searchParseQuery()`; its phrases and terms locate the excerpt |
+| `$len` | `int` | `220` | the most characters to return, before any ellipses |
 
 **Returns:** `string`
 

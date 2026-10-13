@@ -6,12 +6,12 @@ The company an RFP belongs to (NULL read as Default), or null if there is no suc
 function rfpTenantOf(PDO $conn, int $rfpId): ?int
 ```
 
-Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 49.
+Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 61.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$rfpId` | `int` |  |  |
+| `$rfpId` | `int` |  | the rfps id |
 
 **Returns:** `?int`
 
@@ -19,8 +19,8 @@ Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 51 | `rfpTenantOf` | read [rfps](/code/tables/rfps.md) |  |
-| 51 | `rfpTenantOf` | read [rfps](/code/tables/rfps.md) |  |
+| 63 | `rfpTenantOf` | read [rfps](/code/tables/rfps.md) |  |
+| 63 | `rfpTenantOf` | read [rfps](/code/tables/rfps.md) |  |
 
 ## Calls
 

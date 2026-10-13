@@ -20,7 +20,7 @@ Tasks had NO history at all until calendar sync could change one from outside Fr
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):318 | `calendarPullTaskAudit` | insert | `task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime` |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):746 | `ChecklistsService::recordTaskCompletionOverride` | insert | `task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):1051 | `TasksService::moveTaskToCompany` | insert | `task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):353 | `calendarPullTaskAudit` | insert | `task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime` |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):792 | `ChecklistsService::recordTaskCompletionOverride` | insert | `task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):1093 | `TasksService::moveTaskToCompany` | insert | `task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime` |  |
 

@@ -6,11 +6,11 @@ Hard gate for a settings JSON write API: refuse a lacking analyst with 403. The 
 function requireCapabilityJson(string $capability, ?PDO $conn = null): void
 ```
 
-Defined in [includes/rbac.php](/code/files/includes/rbac.php.md), line 128.
+Defined in [includes/rbac.php](/code/files/includes/rbac.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$capability` | `string` |  |  |
+| `$capability` | `string` |  | the capability key the endpoint needs, a Cap:: constant |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

@@ -108,7 +108,15 @@ function projectPlanSnapshot(PDO $conn, int $projectId): array
     ];
 }
 
-/** Take a baseline of the plan as it is now. Returns its id. */
+/**
+ * Take a baseline of the plan as it is now. Returns its id.
+ *
+ * @param ?int $actorId  the analyst taking it; null or 0 records nobody (a system action)
+ * @param string $reason  why it was taken: 'manual', 'start', 'stage' or 'change'
+ * @param ?string $label  the name the person gave it; null for none
+ * @param ?int $stageId  the stage that started, for a 'stage' baseline
+ * @param ?int $changeId  the change request applied, for a 'change' baseline
+ */
 function projectTakeBaseline(PDO $conn, int $projectId, ?int $actorId, string $reason, ?string $label, ?int $stageId = null, ?int $changeId = null): int
 {
     $s = projectPlanSnapshot($conn, $projectId);
@@ -123,7 +131,12 @@ function projectTakeBaseline(PDO $conn, int $projectId, ?int $actorId, string $r
     return (int)$conn->lastInsertId();
 }
 
-/** Whole days from $a to $b (both Y-m-d); null if either is missing. */
+/**
+ * Whole days from $a to $b (both Y-m-d); null if either is missing.
+ *
+ * @param ?string $a  the earlier date, 'Y-m-d'; null gives null
+ * @param ?string $b  the later date, 'Y-m-d'; null gives null (negative when it is before $a)
+ */
 function projectDaysBetween(?string $a, ?string $b): ?int
 {
     if (!$a || !$b) return null;
@@ -135,6 +148,9 @@ function projectDaysBetween(?string $a, ?string $b): ?int
  * by item: moved (days), added (in the plan now, not in the baseline) and
  * removed (in the baseline, gone now). Items are matched by id, so a renamed
  * milestone is the same milestone.
+ *
+ * @param array $base  the baseline in the snapshot shape (projectBaselineShape())
+ * @param array $now  the plan as it is now (projectPlanSnapshot())
  */
 function projectBaselineVariance(array $base, array $now): array
 {
@@ -172,7 +188,13 @@ function projectBaselineVariance(array $base, array $now): array
     return $out;
 }
 
-/** Dated items compared by id on one date column: [{name, kind: moved|added|removed, from, to, days}]. */
+/**
+ * Dated items compared by id on one date column: [{name, kind: moved|added|removed, from, to, days}].
+ *
+ * @param array $base  the baseline's items (stages or milestones), each with id, name and the date column
+ * @param array $now  the same items as they are now
+ * @param string $col  the date column to compare, e.g. 'due_date' or 'end_date'
+ */
 function projectVarianceItems(array $base, array $now, string $col): array
 {
     $out = [];
@@ -187,7 +209,11 @@ function projectVarianceItems(array $base, array $now, string $col): array
     return $out;
 }
 
-/** A stored baseline row in the snapshot shape. */
+/**
+ * A stored baseline row in the snapshot shape.
+ *
+ * @param array $r  a project_baselines row, its snapshot column still JSON
+ */
 function projectBaselineShape(array $r): array
 {
     $snap = json_decode((string)($r['snapshot'] ?? ''), true) ?: [];
@@ -205,6 +231,9 @@ function projectBaselineShape(array $r): array
  * (team = anyone who may change the project; owner = its project manager or
  * Manage Projects; managers = Manage Projects only), and project_change_self
  * whether the person who raised it may decide it too.
+ *
+ * @param array $project  the projects row - owner_analyst_id is read
+ * @param ?int $raisedBy  the analyst who raised the change request; null when unknown or not asking about one
  */
 function projectCanDecideChange(PDO $conn, int $analystId, array $project, ?int $raisedBy = null): bool
 {
@@ -222,6 +251,10 @@ function projectCanDecideChange(PDO $conn, int $analystId, array $project, ?int 
  * stage, and once only for the project starting. Quiet: it must never break the
  * change that triggered it.
  *   $trigger 'start' - the project went active; 'stage' - $stageId started
+ *
+ * @param ?int $actorId  the analyst whose change set it off; null for the system
+ * @param string $trigger  'start' (the project went active) or 'stage' (a stage started)
+ * @param ?int $stageId  the stage that started, for 'stage'
  */
 function projectBaselineAuto(PDO $conn, int $projectId, ?int $actorId, string $trigger, ?int $stageId = null): ?int
 {
@@ -252,7 +285,11 @@ function projectBaselineAuto(PDO $conn, int $projectId, ?int $actorId, string $t
     }
 }
 
-/** Per project: change requests waiting for a decision - for the Overview, the card and the assistant. */
+/**
+ * Per project: change requests waiting for a decision - for the Overview, the card and the assistant.
+ *
+ * @param array $projectIds  the project ids to count for
+ */
 function projectChangeStats(PDO $conn, array $projectIds): array
 {
     $out = [];
@@ -265,7 +302,11 @@ function projectChangeStats(PDO $conn, array $projectIds): array
     return $out;
 }
 
-/** Everything the Change control tab shows. null before Database Verification. */
+/**
+ * Everything the Change control tab shows. null before Database Verification.
+ *
+ * @param array $project  the projects row
+ */
 function projectControlDetail(PDO $conn, array $project, int $analystId): ?array
 {
     if (!projectControlReady($conn)) return null;

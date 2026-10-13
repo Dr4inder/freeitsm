@@ -39,7 +39,7 @@ escalation.
 
 ### __construct
 
-*private* - line 116
+*private* - line 124
 
 Private: viewers are built through the named constructors, so every caller states who is reading.
 
@@ -56,16 +56,16 @@ function __construct(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$level` | `string` |  |  |
+| `$level` | `string` |  | the audience rung - 'internal', 'customer' or 'public'; anything else becomes 'internal' |
 | `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `?int` |  |  |
-| `$companyScope` | `?array` |  |  |
-| `$unrestricted` | `bool` | `false` |  |
-| `$unrestrictedReason` | `string` | `''` |  |
+| `$userId` | `?int` |  | the portal user reading, or null when the reader is not a portal user |
+| `$companyScope` | `?array` |  | null for no company limit, [] for shared articles only, or the company ids allowed |
+| `$unrestricted` | `bool` | `false` | true only for `forSystem()` - skips every permission filter |
+| `$unrestrictedReason` | `string` | `''` | why the filters are skipped; '' unless `$unrestricted` |
 
 ### scopeForOneCompany
 
-*private static* - line 140
+*private static* - line 148
 
 One company id in the set form, honouring the two conditions under which Knowledge does no company filtering at all: multi-tenancy dormant, or the column absent on an install that has not run Database Verify.
 
@@ -83,7 +83,7 @@ function scopeForOneCompany(PDO $conn, ?int $tenantId): ?array
 
 ### forAnalyst
 
-*public static* - line 154
+*public static* - line 162
 
 A signed-in analyst, reading from whichever company they have switched to.
 
@@ -104,7 +104,7 @@ function forAnalyst(PDO $conn, int $analystId): self
 
 ### scopeForAllAccessible
 
-*private static* - line 188
+*private static* - line 196
 
 Every company this analyst may see, in the same set form as `scopeForOneCompany()`. Honours the same two "no filtering at all" cases.
 
@@ -119,7 +119,7 @@ function scopeForAllAccessible(PDO $conn, int $analystId): ?array
 
 ### forApiKey
 
-*public static* - line 206
+*public static* - line 216
 
 An authenticated REST API key.
 
@@ -135,13 +135,13 @@ function forApiKey(PDO $conn, array $apiKey): self
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$apiKey` | `array` |  |  |
+| `$apiKey` | `array` |  | the authenticated api_keys row (analyst_id, company_scope) |
 
 **Called from:** [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md)
 
 ### forPortalUser
 
-*public static* - line 227
+*public static* - line 241
 
 A signed-in self-service portal user.
 
@@ -152,14 +152,14 @@ function forPortalUser(PDO $conn, ?int $userId, ?int $tenantId): self
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `?int` |  |  |
+| `$userId` | `?int` |  | the portal user's users.id; null or 0 for no named user |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md)
 
 ### forWebChat
 
-*public static* - line 236
+*public static* - line 250
 
 An anonymous web-chat visitor. They typed a name and an email and neither was verified, which is the whole reason PUBLIC is the bottom rung.
 
@@ -176,7 +176,7 @@ function forWebChat(PDO $conn, ?int $tenantId): self
 
 ### fromLegacyAudienceString
 
-*public static* - line 255
+*public static* - line 271
 
 ⚠️ COMPATIBILITY ONLY — do not use in new code.
 
@@ -199,13 +199,13 @@ function fromLegacyAudienceString(PDO $conn, ?int $tenantId, string $level): sel
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$level` | `string` |  |  |
+| `$level` | `string` |  | the audience rung the caller states - 'internal', 'customer' or 'public' |
 
 **Called from:** [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md)
 
 ### forSystem
 
-*public static* - line 269
+*public static* - line 287
 
 No filtering whatsoever — for internal machinery that must process every article regardless of who could read it (the search indexer building rows it will later filter at query time; the embedding backfill).
 
@@ -219,13 +219,13 @@ function forSystem(string $reason): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$reason` | `string` |  |  |
+| `$reason` | `string` |  | why this caller may see every article, e.g. 'search indexer'; blank throws |
 
 **Called from:** [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md)
 
 ### level
 
-*public* - line 278
+*public* - line 296
 
 The audience rung this viewer reads at.
 
@@ -235,7 +235,7 @@ function level(): string
 
 ### analystId
 
-*public* - line 280
+*public* - line 298
 
 The analyst reading, or null for a portal user, a visitor or a system reader.
 
@@ -245,7 +245,7 @@ function analystId(): ?int
 
 ### userId
 
-*public* - line 282
+*public* - line 300
 
 The self-service user reading, or null when the reader is not a portal user.
 
@@ -255,7 +255,7 @@ function userId(): ?int
 
 ### companyScope
 
-*public* - line 284
+*public* - line 302
 
 The company ids the viewer may read from, or null for no company limit.
 
@@ -265,7 +265,7 @@ function companyScope(): ?array
 
 ### isUnrestricted
 
-*public* - line 286
+*public* - line 304
 
 True for a `forSystem()` reader, which skips all filtering.
 
@@ -275,7 +275,7 @@ function isUnrestricted(): bool
 
 ### unrestrictedReason
 
-*public* - line 288
+*public* - line 306
 
 The reason given to `forSystem()` for skipping all filtering; empty for every other viewer.
 
@@ -285,7 +285,7 @@ function unrestrictedReason(): string
 
 ### isAnalyst
 
-*public* - line 290
+*public* - line 308
 
 True for an analyst reading (internal level and not an unrestricted system reader).
 

@@ -1,6 +1,6 @@
 # api/tickets/calendar_enrolment.php
 
-> API endpoint - 496 lines
+> API endpoint - 500 lines
 
 API: an analyst's OWN calendar choice (GH #75, CalDAV #133).
 
@@ -47,7 +47,7 @@ subscription. A single value makes that unrepresentable.
 |---|--:|---|
 | [enrolBackfillTickets()](/code/functions/enrolBackfillTickets.md) | 55 | Put what is already scheduled into a calendar that has just been switched on (or just changed), rather than only tickets touched from now on — an empty calendar after opting in reads as "it didn't work". |
 | [enrolReconcileTasks()](/code/functions/enrolReconcileTasks.md) | 90 | Tasks, whenever the choice moved at all (#75). |
-| [enrolSwitchConnection()](/code/functions/enrolSwitchConnection.md) | 125 | Move an analyst onto another connection. Returns true when anything moved. |
+| [enrolSwitchConnection()](/code/functions/enrolSwitchConnection.md) | 129 | Move an analyst onto another connection. Returns true when anything moved. |
 
 ## Database
 
@@ -55,12 +55,12 @@ subscription. A single value makes that unrepresentable.
 |--:|---|---|---|
 | 59 | `enrolBackfillTickets` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 | 94 | `enrolReconcileTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
-| 131 | `enrolSwitchConnection` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`) |  |
-| 151 | `enrolSwitchConnection` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`, `mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`, `updated_datetime`) |  |
-| 240 |  | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `last_error`, `updated_datetime`) |  |
-| 330 |  | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `mode`, `connection_id`, `calendar_address`, `credentials`) |  |
-| 397 |  | read [analysts](/code/tables/analysts.md) |  |
-| 459 |  | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `mode`, `task_mode`, `connection_id`) |  |
+| 135 | `enrolSwitchConnection` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`) |  |
+| 155 | `enrolSwitchConnection` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`connection_id`, `mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`, `updated_datetime`) |  |
+| 244 |  | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`mode`, `calendar_address`, `credentials`, `delta_token`, `delta_synced_datetime`, `last_error`, `updated_datetime`) |  |
+| 334 |  | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `mode`, `connection_id`, `calendar_address`, `credentials`) |  |
+| 401 |  | read [analysts](/code/tables/analysts.md) |  |
+| 463 |  | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `mode`, `task_mode`, `connection_id`) |  |
 
 ## How it hangs together
 

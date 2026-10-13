@@ -6,12 +6,12 @@ Returns the ticket a checklist belongs to, or 0 when it does not exist - so the 
 function checklistTicketForChecklist(PDO $conn, int $checklistId): int
 ```
 
-Defined in [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md), line 58.
+Defined in [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$checklistId` | `int` |  |  |
+| `$checklistId` | `int` |  | the ticket_checklists id |
 
 **Returns:** `int`
 
@@ -19,7 +19,7 @@ Defined in [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_ch
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 60 | `checklistTicketForChecklist` | read [ticket_checklists](/code/tables/ticket_checklists.md) |  |
+| 64 | `checklistTicketForChecklist` | read [ticket_checklists](/code/tables/ticket_checklists.md) |  |
 
 ## Called from
 

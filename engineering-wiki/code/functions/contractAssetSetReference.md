@@ -6,14 +6,14 @@ Change the note on an existing link.
 function contractAssetSetReference(PDO $conn, int $analystId, int $linkId, ?string $reference): void
 ```
 
-Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 189.
+Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 196.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$linkId` | `int` |  |  |
-| `$reference` | `?string` |  |  |
+| `$linkId` | `int` |  | contract_assets.id |
+| `$reference` | `?string` |  | the new note; trimmed, cut to 190 characters, empty or null clears it |
 
 **Returns:** `void`
 
@@ -21,7 +21,7 @@ Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 196 | `contractAssetSetReference` | **update** [contract_assets](/code/tables/contract_assets.md) (`reference`) |  |
+| 203 | `contractAssetSetReference` | **update** [contract_assets](/code/tables/contract_assets.md) (`reference`) |  |
 
 ## Calls
 

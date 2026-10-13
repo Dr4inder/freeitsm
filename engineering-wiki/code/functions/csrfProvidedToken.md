@@ -6,7 +6,7 @@ The token the request carried, from the header, a form field, or the query strin
 function csrfProvidedToken(): string
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 136.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 140.
 
 **Returns:** `string`
 

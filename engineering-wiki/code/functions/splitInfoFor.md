@@ -10,7 +10,7 @@ as history.
 function splitInfoFor(PDO $conn, int $ticketId): array
 ```
 
-Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 340.
+Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 361.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,8 +23,8 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 343 | `splitInfoFor` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
-| 349 | `splitInfoFor` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
+| 364 | `splitInfoFor` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
+| 370 | `splitInfoFor` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
 
 ## Called from
 

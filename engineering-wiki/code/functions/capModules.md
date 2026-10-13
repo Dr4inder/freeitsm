@@ -6,7 +6,7 @@ Modules that own capabilities, and how to name them in the Roles picker. DERIVED
 function capModules(): array
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 341.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 345.
 
 **Returns:** `array`
 

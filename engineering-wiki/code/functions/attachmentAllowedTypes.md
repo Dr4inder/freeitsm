@@ -17,7 +17,7 @@ refuses everything (which would look identical to the product being broken).
 function attachmentAllowedTypes(PDO $conn): array
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 915.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 953.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -29,7 +29,7 @@ Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 915
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 921 | `attachmentAllowedTypes` | read [system_settings](/code/tables/system_settings.md) |  |
+| 959 | `attachmentAllowedTypes` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

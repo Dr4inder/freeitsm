@@ -6,7 +6,7 @@ Pagination from ?page= and ?per_page= (defaults 1 / 25, per_page capped at 100).
 function apiPagination(): array
 ```
 
-Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 84.
+Defined in [api/v1/lib/response.php](/code/files/api/v1/lib/response.php.md), line 106.
 
 **Returns:** `array`
 

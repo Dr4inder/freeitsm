@@ -22,11 +22,11 @@ segment after the first is resolved through childFolders, since
 function mailboxResolveFolderId($folderName, callable $get)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 338.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 367.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$folderName` |  |  |  |
+| `$folderName` |  |  | the folder as typed in the mailbox settings, e.g. 'Inbox/freeitsm'; a slash means a nested folder |
 | `$get` | `callable` |  | fn(string `$url`): array — performs an authenticated GET and returns ['code' => int, 'body' => array\|null]. Passed in so this has no opinion about how callers do HTTP. |
 
 **Returns:** string   The folder id, or a well-known alias (also valid in a path).

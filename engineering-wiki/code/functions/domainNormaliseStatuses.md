@@ -6,11 +6,11 @@
 function domainNormaliseStatuses(array $raw): array
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 231.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 246.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `array` |  |  |
+| `$raw` | `array` |  | status strings as the registry sent them, RDAP words or WHOIS EPP codes with URLs |
 
 **Returns:** `array`
 

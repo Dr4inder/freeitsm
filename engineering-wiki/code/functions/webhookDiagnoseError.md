@@ -20,11 +20,11 @@ benefit too — no schema column, nothing to backfill.
 function webhookDiagnoseError(?string $err): ?array
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 180.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 196.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$err` | `?string` |  |  |
+| `$err` | `?string` |  | the stored last_error (a cURL error or 'HTTP nnn'); null or '' gives null |
 
 **Returns:** `?array`
 

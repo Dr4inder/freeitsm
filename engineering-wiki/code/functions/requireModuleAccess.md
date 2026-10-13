@@ -6,11 +6,11 @@ Page gate: bounce an analyst who can't use `$moduleKey` back to the launcher, so
 function requireModuleAccess(string $moduleKey, ?PDO $conn = null): void
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 293.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 301.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$moduleKey` | `string` |  |  |
+| `$moduleKey` | `string` |  | the module the page belongs to, e.g. 'tickets'; also sent back as ?denied= on refusal |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

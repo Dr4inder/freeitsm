@@ -1,6 +1,6 @@
 # includes/files/acl.php
 
-> PHP - 282 lines
+> PHP - 307 lines
 
 Files — who may do what to a folder. The ONE place that answers it.
 
@@ -45,10 +45,10 @@ fine; if that ever stops being true, materialise levels per principal.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 78 | `FilesAcl::tree` | read [files_folders](/code/tables/files_folders.md) |  |
-| 113 | `FilesAcl::teamIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
-| 132 | `FilesAcl::levels` | read [files_permissions](/code/tables/files_permissions.md) |  |
-| 201 | `FilesAcl::entries` | read [files_permissions](/code/tables/files_permissions.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
+| 82 | `FilesAcl::tree` | read [files_folders](/code/tables/files_folders.md) |  |
+| 117 | `FilesAcl::teamIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 136 | `FilesAcl::levels` | read [files_permissions](/code/tables/files_permissions.md) |  |
+| 216 | `FilesAcl::entries` | read [files_permissions](/code/tables/files_permissions.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
 
 ## How it hangs together
 

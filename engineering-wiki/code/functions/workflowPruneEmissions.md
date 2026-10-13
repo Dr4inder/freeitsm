@@ -6,12 +6,12 @@ Drop ledger rows for events long past. Keeping them forever would grow without b
 function workflowPruneEmissions(PDO $conn, int $keepDays = 365): int
 ```
 
-Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 267.
+Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 274.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$keepDays` | `int` | `365` |  |
+| `$keepDays` | `int` | `365` | ledger rows older than this many days are deleted |
 
 **Returns:** `int`
 
@@ -19,7 +19,7 @@ Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_sched
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 271 | `workflowPruneEmissions` | **delete** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) |  |
+| 278 | `workflowPruneEmissions` | **delete** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) |  |
 
 ## Called from
 

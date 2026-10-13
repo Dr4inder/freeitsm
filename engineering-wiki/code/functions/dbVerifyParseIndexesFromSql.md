@@ -12,11 +12,11 @@ rather than silently becoming the wrong kind of index.
 function dbVerifyParseIndexesFromSql(string $sql): array
 ```
 
-Defined in [includes/db_verify_index_parse.php](/code/files/includes/db_verify_index_parse.php.md), line 28.
+Defined in [includes/db_verify_index_parse.php](/code/files/includes/db_verify_index_parse.php.md), line 30.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$sql` | `string` |  |  |
+| `$sql` | `string` |  | the full text of database/freeitsm.sql |
 
 **Returns:** `array`
 

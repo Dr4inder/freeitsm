@@ -6,11 +6,11 @@ Run a service call and turn any failure into the UI's {success:false} shape.
 function projectApiRun(callable $fn): void
 ```
 
-Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 80.
+Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 95.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$fn` | `callable` |  |  |
+| `$fn` | `callable` |  | the work to run; a ServiceError or any other failure becomes a {success:false} reply |
 
 **Returns:** `void`
 

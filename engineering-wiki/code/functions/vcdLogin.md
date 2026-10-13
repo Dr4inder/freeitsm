@@ -6,11 +6,11 @@ Session: Basic auth as "user@org", and the access token comes back in a response
 function vcdLogin(array $c): string
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 86.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 106.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$c` | `array` |  |  |
+| `$c` | `array` |  | the connection row from `vcdLoadConnection()`, with the password decrypted |
 
 **Returns:** `string`
 

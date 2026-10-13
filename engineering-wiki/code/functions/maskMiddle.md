@@ -6,11 +6,11 @@ Shortens a value to its first and last four characters (the first two for a shor
 function maskMiddle($s)
 ```
 
-Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 82.
+Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | the value to shorten; empty gives '(empty)' |
 
 ## Called from
 

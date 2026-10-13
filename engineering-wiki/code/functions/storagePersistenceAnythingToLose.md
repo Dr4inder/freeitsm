@@ -6,11 +6,11 @@ Is anything actually stored in the directories that are at risk?
 function storagePersistenceAnythingToLose(array $report): bool
 ```
 
-Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 311.
+Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 318.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$report` | `array` |  |  |
+| `$report` | `array` |  | the report from `storagePersistenceReport()` |
 
 **Returns:** `bool`
 

@@ -89,14 +89,22 @@ function handleList($conn) {
     ]);
 }
 
-/** Restores an archived article through KnowledgeService. */
+/**
+ * Restores an archived article through KnowledgeService.
+ *
+ * @param mixed $input  the decoded JSON request; id is the archived article to restore
+ */
 function handleRestore($conn, $input) {
     // Thin UI adapter over KnowledgeService (errors bubble to the caller's catch).
     KnowledgeService::restoreArticle($conn, ActorContext::fromSession($conn), (int)($input['id'] ?? 0));
     echo json_encode(['success' => true, 'message' => 'Article restored']);
 }
 
-/** Permanently deletes an archived article through KnowledgeService. */
+/**
+ * Permanently deletes an archived article through KnowledgeService.
+ *
+ * @param mixed $input  the decoded JSON request; id is the archived article to delete for good
+ */
 function handleHardDelete($conn, $input) {
     // Thin UI adapter over KnowledgeService (errors bubble to the caller's catch).
     KnowledgeService::purgeArticle($conn, ActorContext::fromSession($conn), (int)($input['id'] ?? 0));

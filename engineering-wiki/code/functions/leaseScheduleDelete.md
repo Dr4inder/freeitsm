@@ -6,13 +6,13 @@ Delete a schedule and its asset rows (the assets keep their dates). The last sch
 function leaseScheduleDelete(PDO $conn, ActorContext $ctx, int $id): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 460.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 526.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the lease_schedules id |
 
 **Returns:** `void`
 
@@ -20,8 +20,8 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 460.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 463 | `leaseScheduleDelete` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
-| 468 | `leaseScheduleDelete` | **delete** [lease_schedules](/code/tables/lease_schedules.md) |  |
+| 529 | `leaseScheduleDelete` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
+| 534 | `leaseScheduleDelete` | **delete** [lease_schedules](/code/tables/lease_schedules.md) |  |
 
 ## Calls
 

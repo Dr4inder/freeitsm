@@ -6,12 +6,12 @@ Auto-placement for nodes sent without coordinates: a fresh column to the right o
 function apiNmAutoPlacer(PDO $conn, int $diagramId): callable
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 420.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 482.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$diagramId` | `int` |  |  |
+| `$diagramId` | `int` |  | the network_diagrams id whose current nodes set the starting column |
 
 **Returns:** `callable`
 
@@ -19,7 +19,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 421 | `apiNmAutoPlacer` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 483 | `apiNmAutoPlacer` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
 
 ## Called from
 

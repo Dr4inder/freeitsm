@@ -11,7 +11,7 @@ to expose. The reverse is fine and encouraged.
 function scheduleFeedDetail(PDO $conn, int $analystId): string
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 385.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 418.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,7 +24,7 @@ Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 391 | `scheduleFeedDetail` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 424 | `scheduleFeedDetail` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Calls
 

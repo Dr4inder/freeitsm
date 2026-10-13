@@ -6,14 +6,14 @@ The facts about one project, as plain text, for the model - only what the analys
 function projectAiFacts(PDO $conn, array $project, int $analystId, int $days = 14): string
 ```
 
-Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 69.
+Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 72.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$project` | `array` |  |  |
+| `$project` | `array` |  | the projects row (goal, summary, business_case and intake fields are read from it) |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$days` | `int` | `14` |  |
+| `$days` | `int` | `14` | how many days back "the period" reaches |
 
 **Returns:** `string`
 
@@ -21,16 +21,16 @@ Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 81 | `projectAiFacts` | read [analysts](/code/tables/analysts.md) |  |
-| 110 | `projectAiFacts` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
-| 124 | `projectAiFacts` | read [project_stages](/code/tables/project_stages.md) |  |
-| 150 | `projectAiFacts` | read [suppliers](/code/tables/suppliers.md) |  |
-| 153 | `projectAiFacts` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md) |  |
-| 248 | `projectAiFacts` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 270 | `projectAiFacts` | read [project_stages](/code/tables/project_stages.md) |  |
-| 282 | `projectAiFacts` | read [suppliers](/code/tables/suppliers.md) |  |
-| 283 | `projectAiFacts` | read [project_members](/code/tables/project_members.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md), read [users](/code/tables/users.md) |  |
-| 306 | `projectAiFacts` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 84 | `projectAiFacts` | read [analysts](/code/tables/analysts.md) |  |
+| 113 | `projectAiFacts` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
+| 127 | `projectAiFacts` | read [project_stages](/code/tables/project_stages.md) |  |
+| 153 | `projectAiFacts` | read [suppliers](/code/tables/suppliers.md) |  |
+| 156 | `projectAiFacts` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 251 | `projectAiFacts` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 273 | `projectAiFacts` | read [project_stages](/code/tables/project_stages.md) |  |
+| 285 | `projectAiFacts` | read [suppliers](/code/tables/suppliers.md) |  |
+| 286 | `projectAiFacts` | read [project_members](/code/tables/project_members.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md), read [users](/code/tables/users.md) |  |
+| 309 | `projectAiFacts` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 
@@ -44,5 +44,5 @@ Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), 
 ## Traps
 
 > [!WARNING]
-> **Line 195, in `projectAiFacts`:** `projectAlertRows()` rows carry no '_budget' (only the assistant's rows do), so reading it from `$p` meant the budget never reached the model - worked out here instead.
+> **Line 198, in `projectAiFacts`:** `projectAlertRows()` rows carry no '_budget' (only the assistant's rows do), so reading it from `$p` meant the budget never reached the model - worked out here instead.
 

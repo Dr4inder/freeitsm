@@ -6,11 +6,11 @@ The file's real mime type, or null if this server cannot tell us.
 function uploadDetectMime(string $path): ?string
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 608.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 625.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$path` | `string` |  |  |
+| `$path` | `string` |  | absolute path of the file on disk |
 
 **Returns:** `?string`
 

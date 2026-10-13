@@ -6,11 +6,11 @@ Build the identity record for a freshly-authenticated delegated token: ['primary
 function mailboxIdentityRecord($accessToken)
 ```
 
-Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 157.
+Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md), line 167.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` |  |  |  |
+| `$accessToken` |  |  | a freshly issued delegated Graph access token |
 
 ## Calls
 

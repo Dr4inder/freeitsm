@@ -6,11 +6,11 @@ Check every entry in the archive. Returns the entries that should be written (di
 function lmsValidatePackage(ZipArchive $zip): array
 ```
 
-Defined in [includes/lms_package.php](/code/files/includes/lms_package.php.md), line 65.
+Defined in [includes/lms_package.php](/code/files/includes/lms_package.php.md), line 66.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$zip` | `ZipArchive` |  |  |
+| `$zip` | `ZipArchive` |  | the uploaded SCORM package, already opened - untrusted |
 
 **Returns:** array<int,string> Entry names, safe to extract.
 

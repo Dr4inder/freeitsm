@@ -1,6 +1,6 @@
 # includes/storage_persistence.php
 
-> PHP - 386 lines
+> PHP - 401 lines
 
 Storage persistence — does what FreeITSM writes actually survive an update?
 
@@ -60,13 +60,13 @@ ADD ONE THERE.
 | [storagePersistenceInContainer()](/code/functions/storagePersistenceInContainer.md) | 117 | Is this PHP running inside a container? |
 | [storagePersistenceRootReadable()](/code/functions/storagePersistenceRootReadable.md) | 135 | Would `open_basedir` stop us reading /.dockerenv? |
 | [storagePersistenceDirectories()](/code/functions/storagePersistenceDirectories.md) | 153 | Every directory the running application writes user files into. |
-| [storagePersistenceStatus()](/code/functions/storagePersistenceStatus.md) | 197 | Assess one directory. Returns 'persisted' \| 'at_risk' \| 'missing' \| 'unknown'. |
-| [storagePersistenceReport()](/code/functions/storagePersistenceReport.md) | 226 | The whole picture, for whichever screen is asking. |
-| [storagePersistenceHasFiles()](/code/functions/storagePersistenceHasFiles.md) | 284 | Does this directory hold anything an operator would mind losing? |
-| [storagePersistenceAnythingToLose()](/code/functions/storagePersistenceAnythingToLose.md) | 311 | Is anything actually stored in the directories that are at risk? |
-| [storagePersistenceSuggestedVolumes()](/code/functions/storagePersistenceSuggestedVolumes.md) | 327 | The volume lines an operator would need to add, ready to paste. |
-| [storagePersistenceVolumeName()](/code/functions/storagePersistenceVolumeName.md) | 340 | A volume name derived from the directory, stable and readable. |
-| [storagePersistenceOverrideFile()](/code/functions/storagePersistenceOverrideFile.md) | 368 | A COMPLETE docker-compose.override.yml, ready to save as a new file. |
+| [storagePersistenceStatus()](/code/functions/storagePersistenceStatus.md) | 200 | Assess one directory. Returns 'persisted' \| 'at_risk' \| 'missing' \| 'unknown'. |
+| [storagePersistenceReport()](/code/functions/storagePersistenceReport.md) | 229 | The whole picture, for whichever screen is asking. |
+| [storagePersistenceHasFiles()](/code/functions/storagePersistenceHasFiles.md) | 289 | Does this directory hold anything an operator would mind losing? |
+| [storagePersistenceAnythingToLose()](/code/functions/storagePersistenceAnythingToLose.md) | 318 | Is anything actually stored in the directories that are at risk? |
+| [storagePersistenceSuggestedVolumes()](/code/functions/storagePersistenceSuggestedVolumes.md) | 336 | The volume lines an operator would need to add, ready to paste. |
+| [storagePersistenceVolumeName()](/code/functions/storagePersistenceVolumeName.md) | 353 | A volume name derived from the directory, stable and readable. |
+| [storagePersistenceOverrideFile()](/code/functions/storagePersistenceOverrideFile.md) | 383 | A COMPLETE docker-compose.override.yml, ready to save as a new file. |
 
 ## How it hangs together
 

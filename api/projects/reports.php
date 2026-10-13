@@ -21,7 +21,11 @@ require_once __DIR__ . '/../../includes/services/project_reports.php';
 require_once __DIR__ . '/../../includes/i18n.php';
 I18n::initFromSession();   // the AI writes in the analyst's language
 
-/** A provider problem in words the page can show. */
+/**
+ * A provider problem in words the page can show.
+ *
+ * @param RuntimeException $e  the AI call's failure; the message 'not_configured' means no provider is set up
+ */
 function projectReportsAiFail(RuntimeException $e): void
 {
     if ($e instanceof PDOException) throw $e;   // a database error is not a provider problem

@@ -12,11 +12,11 @@ it by URL.
 function cardDavListAddressBooks(array $cfg): array
 ```
 
-Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 222.
+Defined in [includes/carddav.php](/code/files/includes/carddav.php.md), line 225.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
+| `$cfg` | `array` |  | request settings from `cardDavConfigFromProvider()` - url (the account's DAV home), username, password, auth |
 
 **Returns:** array ['ok'=>bool, 'books'=>[['href'=>…,'name'=>…,'description'=>…]], 'auth'=>…, 'error'=>…, 'status'=>int]
 

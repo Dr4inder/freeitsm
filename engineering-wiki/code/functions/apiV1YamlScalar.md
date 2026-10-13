@@ -6,11 +6,11 @@ A scalar as YAML - null, true, false and numbers as they are, a string plain onl
 function apiV1YamlScalar($v): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 434.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 484.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
+| `$v` |  |  | a null, boolean, number or string |
 
 **Returns:** `string`
 

@@ -6,12 +6,12 @@ The block appended to a message body when attachments were not accepted, so the 
 function attachmentIngestNotice(array $rejected, array $quarantined): string
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 945.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 986.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rejected` | `array` |  |  |
-| `$quarantined` | `array` |  |  |
+| `$rejected` | `array` |  | files not saved, each ['name' => original filename, 'reason' => why] |
+| `$quarantined` | `array` |  | files stored as inert .bin, each ['name' => original filename, 'reason' => why] |
 
 **Returns:** `string`
 

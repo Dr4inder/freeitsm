@@ -169,6 +169,8 @@ const USER_SELF_EDITABLE_FIELDS = [
  * this code does not recognise, or one that has since been deleted - keeps the
  * old, safe answer: the person signs in elsewhere, and no local password may
  * be planted on the account.
+ *
+ * @param mixed $providerId  the person's users.auth_provider_id; null or 0 means not linked
  */
 function userSignsInElsewhere(PDO $conn, $providerId): bool
 {
@@ -213,6 +215,7 @@ function userSourceFilter($source): array
  * never reveals how many people another company has in a shared directory.
  *
  * @param string $tenantSql  activeTenantFilter() for alias `u`
+ * @param array $tenantArgs  the bound values that go with $tenantSql
  */
 function userSourcesInScope(PDO $conn, string $tenantSql, array $tenantArgs): array
 {
@@ -252,7 +255,11 @@ function userSourcesInScope(PDO $conn, string $tenantSql, array $tenantArgs): ar
 const PORTAL_PROFILE_FIELDS_SETTING       = 'portal_profile_fields';
 const PORTAL_PROFILE_ADDRESS_BOOK_SETTING = 'portal_profile_address_book';
 
-/** A raw system_settings value, or null when it has never been saved. */
+/**
+ * A raw system_settings value, or null when it has never been saved.
+ *
+ * @param string $key  the system_settings key, e.g. PORTAL_PROFILE_FIELDS_SETTING
+ */
 function portalProfileSettingRaw(PDO $conn, string $key): ?string
 {
     try {
@@ -292,6 +299,7 @@ function portalProfileAddressBookWrites(PDO $conn): bool
  * How the portal treats one person's contact details. One answer, used by both
  * the read and the save, so the form and the endpoint cannot disagree.
  *
+ * @param int $userId  the portal user (users.id) whose details are being read or saved
  * @return array|null null when the person does not exist. Otherwise:
  *   fields       - what the portal offers them (the administrator's choice)
  *   locked       - of those, the ones they may not change: a directory owns them
@@ -364,6 +372,7 @@ function portalProfileAccess(PDO $conn, int $userId): ?array
  * destroys that distinction — the same trap `users.email` documents at length,
  * one column over.
  *
+ * @param string $field  the users column, one of USER_PERSON_FIELDS; 'manager_id' is read as an id
  * @param  mixed  $value  raw from the request body
  * @return string|int|null
  */
@@ -387,6 +396,9 @@ function userPersonFieldValue(string $field, $value)
  * then walk it forever. Checked here because the database cannot express it.
  *
  * Returns true if the assignment is SAFE.
+ *
+ * @param int $userId  the person (users.id) being given a manager
+ * @param ?int $managerId  the proposed manager's users.id; null (no manager) is always safe
  */
 function userManagerIsSafe(PDO $conn, int $userId, ?int $managerId): bool
 {

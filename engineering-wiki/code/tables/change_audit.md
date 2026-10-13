@@ -19,12 +19,12 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/change-management/move_to_company.php](/code/files/api/change-management/move_to_company.php.md):68 |  | insert | `change_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [includes/services/changes.php](/code/files/includes/services/changes.php.md):745 | `ChangesService::auditWrite` | insert | `change_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/services/changes.php](/code/files/includes/services/changes.php.md):792 | `ChangesService::auditWrite` | insert | `change_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/change-management/get_audit.php](/code/files/api/change-management/get_audit.php.md) | L33 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeAuditList L416 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeAuditList L426 |  |
 

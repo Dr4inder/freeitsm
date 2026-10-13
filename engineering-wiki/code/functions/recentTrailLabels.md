@@ -17,13 +17,13 @@ eight), so there was never a resolver here to reuse for that one.
 function recentTrailLabels(PDO $conn, int $analystId, array $rows): array
 ```
 
-Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 387.
+Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 398.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$rows` | `array` |  |  |
+| `$rows` | `array` |  | analyst_recent_trail rows - entity_type and entity_id are read |
 
 **Returns:** array<string,string> "type:id" => label, for the visible ones only.
 

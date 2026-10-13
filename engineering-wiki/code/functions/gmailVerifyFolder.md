@@ -19,13 +19,13 @@ which is the GH #77 failure shape wearing a Gmail hat.
 function gmailVerifyFolder(string $accessToken, array $mailbox, string $folderName): array
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 576.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 632.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$mailbox` | `array` |  |  |
-| `$folderName` | `string` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
+| `$mailbox` | `array` |  | the target_mailboxes row; only max_emails_per_check is read (for the backlog note) |
+| `$folderName` | `string` |  | the label name to check, as typed in the mailbox settings |
 
 **Returns:** array{displayName:string, totalItemCount:int, unreadItemCount:int, note:string|null}
 

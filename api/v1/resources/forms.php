@@ -70,6 +70,8 @@ function apiFormSelect(): string {
 /**
  * Shapes a form field row for the API - type, label, decoded options, required flag,
  * order and its conditional-visibility config.
+ *
+ * @param array $r  a form_fields row (options and config still JSON text)
  */
 function apiSerializeFormField(array $r): array {
     $options = null;
@@ -99,6 +101,9 @@ function apiSerializeFormField(array $r): array {
 /**
  * Shapes a form row for the API - title, version (is_current marks the editable one),
  * counts and people, plus its live fields unless $withFields is false.
+ *
+ * @param array $r  the forms row as apiFormSelect() loads it, with child, field and submission counts and people names
+ * @param bool $withFields  false to leave out the 'fields' list (and its extra query), as the list endpoint does
  */
 function apiSerializeForm(PDO $conn, array $r, bool $withFields = true): array {
     $form = [
@@ -129,7 +134,11 @@ function apiSerializeForm(PDO $conn, array $r, bool $withFields = true): array {
     return $form;
 }
 
-/** Loads one form row (apiFormSelect), or answers 404 and stops. */
+/**
+ * Loads one form row (apiFormSelect), or answers 404 and stops.
+ *
+ * @param int $formId  the forms id
+ */
 function apiLoadForm(PDO $conn, int $formId): array {
     $stmt = $conn->prepare(apiFormSelect() . " WHERE f.id = ?");
     $stmt->execute([$formId]);
@@ -144,6 +153,8 @@ function apiLoadForm(PDO $conn, int $formId): array {
  * Shapes a submission for the API with every answer beside its field - checkbox answers
  * decoded to lists, and a table's answer decoded to rows with its column definitions
  * (retired columns included and marked).
+ *
+ * @param array $r  the form_submissions row as apiLoadFormSubmission() loads it, with form_title and submitted_by_name
  */
 function apiSerializeFormSubmission(PDO $conn, array $r): array {
     // Answers joined to their field definitions; checkboxes values are
@@ -203,7 +214,12 @@ function apiSerializeFormSubmission(PDO $conn, array $r): array {
     ];
 }
 
-/** Loads one submission that belongs to the given form, or answers 404 and stops. */
+/**
+ * Loads one submission that belongs to the given form, or answers 404 and stops.
+ *
+ * @param int $formId  the forms id the submission must belong to
+ * @param int $submissionId  the form_submissions id
+ */
 function apiLoadFormSubmission(PDO $conn, int $formId, int $submissionId): array {
     $stmt = $conn->prepare(
         "SELECT s.*, f.title AS form_title, a.full_name AS submitted_by_name

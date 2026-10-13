@@ -13,12 +13,12 @@ permissions screen nobody will audit.
 function handleGet(PDO $conn, array $src): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 106.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$src` | `array` |  |  |
+| `$src` | `array` |  | the query string (`$_GET`): object_type ('folder' or 'article') and object_id |
 
 **Returns:** `void`
 
@@ -26,7 +26,7 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 110 | `handleGet` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 116 | `handleGet` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
 
 ## Calls
 

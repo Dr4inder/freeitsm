@@ -6,11 +6,11 @@ Check a question from the editor or the AI. Returns [`$clean`, null] or [null, '
 function lmsCtValidateQuestion(array $in): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 108.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | untrusted question fields: skill, difficulty, format, question_text, answers [{text, marks}], explanation, status |
 
 **Returns:** `array`
 

@@ -6,11 +6,11 @@ Would Tika be asked about this file, if configured?
 function tikaHandles(string $filename): bool
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 104.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filename` | `string` |  |  |
+| `$filename` | `string` |  | the attachment's file name; only its extension is checked against TIKA_EXTENSIONS |
 
 **Returns:** `bool`
 

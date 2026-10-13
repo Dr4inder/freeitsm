@@ -6,12 +6,12 @@ Domains by id, shaped for a list on another module's page.
 function domainLinkDomainRows(PDO $conn, array $ids): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 309.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 360.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ids` | `array` |  |  |
+| `$ids` | `array` |  | domain ids, already checked as visible to the analyst |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 314 | `domainLinkDomainRows` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 365 | `domainLinkDomainRows` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 ## Calls
 

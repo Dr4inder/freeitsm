@@ -6,13 +6,13 @@ A cost centre of company `$tenantId` by its CODE (ignoring case), or null.
 function costCentreByCode(PDO $conn, int $tenantId, string $code): ?array
 ```
 
-Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 86.
+Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$code` | `string` |  |  |
+| `$code` | `string` |  | the cost centre code to find, e.g. from an import; trimmed, empty gives null |
 
 **Returns:** `?array`
 
@@ -20,7 +20,7 @@ Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_as
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 90 | `costCentreByCode` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 107 | `costCentreByCode` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## Called from
 

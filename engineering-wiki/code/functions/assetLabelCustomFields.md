@@ -6,7 +6,7 @@ Custom asset fields a label can print: key ('cf_' + field_key) => its own label.
 function assetLabelCustomFields(PDO $conn, ?int $tenantId = null): array
 ```
 
-Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 195.
+Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md), line 206.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 198 | `assetLabelCustomFields` | read [asset_fields](/code/tables/asset_fields.md) |  |
+| 209 | `assetLabelCustomFields` | read [asset_fields](/code/tables/asset_fields.md) |  |
 
 ## Calls
 

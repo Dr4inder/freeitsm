@@ -12,13 +12,13 @@ knowledgeTenantFilterForCompany above for why).
 function knowledgeTenantFilter(PDO $conn, int $analystId, string $alias = 'a'): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 947.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 993.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` | `'a'` |  |
+| `$alias` | `string` | `'a'` | the knowledge_articles alias in the calling query; '' for none |
 
 **Returns:** array [sqlFragment, params]
 

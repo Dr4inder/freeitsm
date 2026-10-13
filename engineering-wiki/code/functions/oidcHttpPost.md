@@ -8,12 +8,12 @@ Throws only on a network error.
 function oidcHttpPost(string $url, array $fields): string
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 235.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 270.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
-| `$fields` | `array` |  |  |
+| `$url` | `string` |  | the absolute endpoint URL, e.g. the token endpoint |
+| `$fields` | `array` |  | the form fields to send, URL-encoded as the body |
 
 **Returns:** `string`
 

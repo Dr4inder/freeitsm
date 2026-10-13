@@ -6,7 +6,7 @@ The folder tree as [id => ['parent'=>?int,'restricted'=>int,'inherit'=>int]].
 function knowledgeFolderIndex(PDO $conn): array
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 818.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 875.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 824 | `knowledgeFolderIndex` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 881 | `knowledgeFolderIndex` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
 
 ## Called from
 

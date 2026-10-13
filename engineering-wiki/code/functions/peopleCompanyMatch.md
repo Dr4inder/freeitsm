@@ -6,13 +6,13 @@
 function peopleCompanyMatch(PDO $conn, int $tenantId, string $qualified): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 47.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$qualified` | `string` |  |  |
+| `$qualified` | `string` |  | the company column to match, alias included, e.g. 't.tenant_id' |
 
 **Returns:** `array`
 

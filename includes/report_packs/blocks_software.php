@@ -12,7 +12,12 @@
  * is assets.id). The Software dashboard itself counts every company's machines.
  */
 
-/** "JOIN assets + company + system components" for inventory queries. */
+/**
+ * "JOIN assets + company + system components" for inventory queries.
+ *
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id (matched through the machine's asset)
+ * @param bool $includeSystem  true to count system components too; false leaves them out
+ */
 function rpSoftwareScope(PDO $conn, int $analystId, $tenant, bool $includeSystem): array
 {
     [$tSql, $tParams] = rpTenantClause($conn, $analystId, $tenant, 'h.tenant_id');
@@ -20,7 +25,13 @@ function rpSoftwareScope(PDO $conn, int $analystId, $tenant, bool $includeSystem
     return ["INNER JOIN assets h ON h.id = d.host_id", "WHERE 1=1$sys$tSql", $tParams];
 }
 
-/** Software block: a chart of how many machines have software from each publisher. A snapshot of today. */
+/**
+ * Software block: a chart of how many machines have software from each publisher. A snapshot of today.
+ *
+ * @param array $o  the block's cleaned options: system (include system components), limit, chart
+ * @param array $range  the pack's range (not used - a snapshot of today)
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
+ */
 function rpSoftwareByPublisher(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$join, $where, $params] = rpSoftwareScope($conn, $analystId, $tenant, $o['system']);
@@ -35,7 +46,13 @@ function rpSoftwareByPublisher(PDO $conn, int $analystId, array $o, array $range
     return $data;
 }
 
-/** Software block: a chart of the most installed applications, by number of machines. A snapshot of today. */
+/**
+ * Software block: a chart of the most installed applications, by number of machines. A snapshot of today.
+ *
+ * @param array $o  the block's cleaned options: system (include system components), limit, chart
+ * @param array $range  the pack's range (not used - a snapshot of today)
+ * @param mixed $tenant  the pack's company: 'active', 'all' or a company id
+ */
 function rpSoftwareTopApps(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$join, $where, $params] = rpSoftwareScope($conn, $analystId, $tenant, $o['system']);
@@ -58,6 +75,10 @@ function rpSoftwareTopApps(PDO $conn, int $analystId, array $o, array $range, $t
 /**
  * Software block: KPI tiles - applications, machines and installs in the inventory, and
  * licence renewals in the period.
+ *
+ * @param array $o  the block's cleaned options (none are read)
+ * @param array $range  the pack's range from rpResolveRange() - for licence renewals in the period
+ * @param mixed $tenant  the pack's company, for the inventory counts (the renewals count is not split by company)
  */
 function rpSoftwareKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
@@ -81,6 +102,10 @@ function rpSoftwareKpis(PDO $conn, int $analystId, array $o, array $range, $tena
 /**
  * Licences, optionally only those renewing in the range. Licence keys are NEVER
  * included - a report is printed, emailed and left on desks.
+ *
+ * @param array $o  the block's cleaned options: renewing (only licences renewing in the range)
+ * @param array $range  the pack's range from rpResolveRange() - from_date and to_date are used
+ * @param mixed $tenant  the pack's company (not used - licences are not split by company)
  */
 function rpSoftwareLicences(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {

@@ -63,6 +63,8 @@ function projectGateChanges(PDO $conn, int $projectId): array
 /**
  * Every gate item of a project, each with `done` worked out, grouped by stage id.
  * $showChanges = this analyst may open Changes (otherwise a change's title is left out).
+ *
+ * @param bool $showChanges  whether the analyst may open Changes; false leaves each change's title out
  */
 function projectGateItems(PDO $conn, int $projectId, bool $showChanges = true): array
 {
@@ -98,7 +100,11 @@ function projectGateItems(PDO $conn, int $projectId, bool $showChanges = true): 
     return $out;
 }
 
-/** The items still open at one stage's gate: [{id, kind, title}]. */
+/**
+ * The items still open at one stage's gate: [{id, kind, title}].
+ *
+ * @param int $stageId  the project_stages id whose gate is checked
+ */
 function projectGateOpenItems(PDO $conn, int $projectId, int $stageId): array
 {
     $items = projectGateItems($conn, $projectId)[$stageId] ?? [];

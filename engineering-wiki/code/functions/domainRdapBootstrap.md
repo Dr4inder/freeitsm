@@ -6,7 +6,7 @@ TLD → RDAP base URL, from IANA's bootstrap file, cached for seven days. A fail
 function domainRdapBootstrap(PDO $conn): array
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 79.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,8 +18,8 @@ Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 86 | `domainRdapBootstrap` | read [system_settings](/code/tables/system_settings.md) |  |
-| 112 | `domainRdapBootstrap` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 90 | `domainRdapBootstrap` | read [system_settings](/code/tables/system_settings.md) |  |
+| 116 | `domainRdapBootstrap` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## Calls
 

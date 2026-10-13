@@ -1,6 +1,6 @@
 # api/system/debug-tools/D014_ai_connections.php
 
-> API endpoint - 285 lines
+> API endpoint - 322 lines
 
 Debug Tool D014 — AI connections: what is sent and what comes back
 
@@ -40,15 +40,15 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 59 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 67 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
-| [keyHint()](/code/functions/keyHint.md) | 73 | First four characters and a length — enough to tell a wrong key from no key. |
-| [redactKey()](/code/functions/redactKey.md) | 78 | Replace the key wherever it appears with its hint. |
-| [prettyBody()](/code/functions/prettyBody.md) | 82 | JSON pretty-printed for reading; anything else as it came, trimmed to a length. |
-| [indent()](/code/functions/indent.md) | 89 | Indents every line of a block of text by `$pad`. |
-| [traceLines()](/code/functions/traceLines.md) | 93 | Print one recorded HTTP exchange. |
-| [setupKey()](/code/functions/setupKey.md) | 111 | The address and key of a setup, so features sharing one are called once. |
-| [providerLabel()](/code/functions/providerLabel.md) | 120 | The display name of an AI provider key (anthropic, openai, openrouter, azure), or the key itself when it is not one of those. |
+| [addSection()](/code/functions/addSection.md) | 63 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 73 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [keyHint()](/code/functions/keyHint.md) | 83 | First four characters and a length — enough to tell a wrong key from no key. |
+| [redactKey()](/code/functions/redactKey.md) | 93 | Replace the key wherever it appears with its hint. |
+| [prettyBody()](/code/functions/prettyBody.md) | 102 | JSON pretty-printed for reading; anything else as it came, trimmed to a length. |
+| [indent()](/code/functions/indent.md) | 114 | Indents every line of a block of text by `$pad`. |
+| [traceLines()](/code/functions/traceLines.md) | 124 | Print one recorded HTTP exchange. |
+| [setupKey()](/code/functions/setupKey.md) | 146 | The address and key of a setup, so features sharing one are called once. |
+| [providerLabel()](/code/functions/providerLabel.md) | 157 | The display name of an AI provider key (anthropic, openai, openrouter, azure), or the key itself when it is not one of those. |
 
 ## How it hangs together
 

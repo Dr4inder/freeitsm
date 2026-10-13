@@ -24,11 +24,11 @@ Specific sender addresses mapped to a company (shared-intake routing). The addre
 | File | Where | Purpose |
 |---|---|---|
 | [api/system/add_tenant_sender.php](/code/files/api/system/add_tenant_sender.php.md) | L57 |  |
-| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L273 |  |
+| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L299 |  |
 | [api/system/email_routing_test.php](/code/files/api/system/email_routing_test.php.md) | L96 |  |
 | [api/system/get_tenant_email_routing.php](/code/files/api/system/get_tenant_email_routing.php.md) | L67 |  |
 | [api/system/get_tenant_senders.php](/code/files/api/system/get_tenant_senders.php.md) | L31 |  |
 | [api/system/get_topology.php](/code/files/api/system/get_topology.php.md) | L63 |  |
 | [api/tickets/resolve_triage.php](/code/files/api/tickets/resolve_triage.php.md) | L106 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | resolveTicketTenantForEmail L1085, resolveTenantIdForAddress L1188 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | resolveTicketTenantForEmail L1134, resolveTenantIdForAddress L1239 |  |
 

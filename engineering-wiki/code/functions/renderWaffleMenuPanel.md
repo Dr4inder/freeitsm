@@ -6,13 +6,13 @@ Renders the waffle drawer: the module launcher (System for administrators only, 
 function renderWaffleMenuPanel($modules, $current_module, $path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 677.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 681.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$modules` |  |  |  |
-| `$current_module` |  |  |  |
-| `$path_prefix` |  |  |  |
+| `$modules` |  |  | the `$modules` list at the top of this file: key => [name, path, icon SVG markup] |
+| `$current_module` |  |  | the key of the module being shown, highlighted in the drawer |
+| `$path_prefix` |  |  | relative path from the page to the app root, e.g. '../'; not used here (links use BASE_URL) |
 
 ## Calls
 

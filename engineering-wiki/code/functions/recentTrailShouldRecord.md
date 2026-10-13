@@ -11,7 +11,7 @@ push everything you actually did off the end of the log.
 function recentTrailShouldRecord(): bool
 ```
 
-Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 220.
+Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 226.
 
 **Returns:** `bool`
 

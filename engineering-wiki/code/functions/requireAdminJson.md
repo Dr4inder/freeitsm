@@ -6,7 +6,7 @@ Hard gate for System JSON APIs: refuse non-admins with a 403. Authoritative (DB-
 function requireAdminJson(PDO $conn): void
 ```
 
-Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 260.
+Defined in [includes/functions.php](/code/files/includes/functions.php.md), line 264.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

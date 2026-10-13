@@ -6,7 +6,7 @@ GET /change-types - the change types.
 function apiChangeTypesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 512.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 524.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,11 +6,11 @@
 function dbErrorIsUnknownColumn(PDOException $e): bool
 ```
 
-Defined in [includes/db_errors.php](/code/files/includes/db_errors.php.md), line 33.
+Defined in [includes/db_errors.php](/code/files/includes/db_errors.php.md), line 37.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$e` | `PDOException` |  |  |
+| `$e` | `PDOException` |  | the exception a query threw |
 
 **Returns:** `bool`
 

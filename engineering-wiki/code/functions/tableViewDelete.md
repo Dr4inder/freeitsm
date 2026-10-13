@@ -6,13 +6,13 @@ Delete a view. Owner only.
 function tableViewDelete(PDO $conn, int $analystId, int $viewId): void
 ```
 
-Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 208.
+Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 221.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$viewId` | `int` |  |  |
+| `$viewId` | `int` |  | the view (table_views.id) to delete; must be the analyst's own |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 210 | `tableViewDelete` | **delete** [table_views](/code/tables/table_views.md) |  |
+| 223 | `tableViewDelete` | **delete** [table_views](/code/tables/table_views.md) |  |
 
 ## Called from
 

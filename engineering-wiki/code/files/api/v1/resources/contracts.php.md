@@ -1,6 +1,6 @@
 # api/v1/resources/contracts.php
 
-> API endpoint - 599 lines
+> API endpoint - 615 lines
 
 FreeITSM REST API v1 — contracts resource (contracts, suppliers, contacts, contract terms). The RFP Builder is deliberately NOT exposed (internal-only by design).
 
@@ -49,34 +49,34 @@ supplier CONTACTS endpoints, and the read-only lookup lists stay here.
 |---|--:|---|
 | [apiContractSelect()](/code/functions/apiContractSelect.md) | 54 | The SELECT for contracts, with supplier, owner, status and payment schedule names, the customer and company columns and, once Database Verification has added it, the cost centre. |
 | [apiContractVisibility()](/code/functions/apiContractVisibility.md) | 80 | The key's view of customer contracts (#153): " AND (...)" + its args. |
-| [apiSerializeContract()](/code/functions/apiSerializeContract.md) | 88 | Shapes a contract row for the API - number, title, company, supplier or customer (company and person), owner, status, dates, value and the rest of the record. |
-| [apiLoadContract()](/code/functions/apiLoadContract.md) | 138 | Loads one contract row the key may see (apiContractVisibility), or answers 404 and stops. |
-| [apiSupplierSelect()](/code/functions/apiSupplierSelect.md) | 150 | The SELECT for suppliers, with type and status names and their numbers of contacts and contracts. |
-| [apiSerializeSupplier()](/code/functions/apiSerializeSupplier.md) | 165 | Shapes a supplier row for the API - legal, trading and display name, registration numbers, type, status, address and counts. |
-| [apiLoadSupplier()](/code/functions/apiLoadSupplier.md) | 200 | Loads one supplier row (apiSupplierSelect), or answers 404 and stops. |
-| [apiContractsList()](/code/functions/apiContractsList.md) | 213 | GET /contracts |
-| [apiContractsGet()](/code/functions/apiContractsGet.md) | 327 | GET /contracts/{id} - one contract. |
-| [apiContractCompany()](/code/functions/apiContractCompany.md) | 339 | `company_id` from a request body as the service's tenant_id: checked to exist and to be in the key's reach (403), or - on a create with none - the key's default company. On an update with none, nothing: the contract stays put. |
-| [apiContractsCreate()](/code/functions/apiContractsCreate.md) | 357 | POST /contracts - creates a contract through ContractsService in the company named (or the key's default) and returns it. |
-| [apiContractsUpdate()](/code/functions/apiContractsUpdate.md) | 368 | PATCH /contracts/{id} |
-| [apiContractsDelete()](/code/functions/apiContractsDelete.md) | 379 | DELETE /contracts/{id} — explicit children (the contracts domain had no FKs) |
-| [apiContractTermsGet()](/code/functions/apiContractTermsGet.md) | 389 | Contract terms — GET + bulk upsert (mirrors save_contract_terms.php) |
-| [apiContractTermsSave()](/code/functions/apiContractTermsSave.md) | 412 | POST /contracts/{id}/terms - saves the contract's terms through ContractsService and returns them. |
-| [apiSuppliersGet()](/code/functions/apiSuppliersGet.md) | 422 | Suppliers — full CRUD (GET /suppliers stays the lite reference list) |
-| [apiSuppliersCreate()](/code/functions/apiSuppliersCreate.md) | 434 | POST /suppliers - creates a supplier through ContractsService and returns it. |
-| [apiSuppliersUpdate()](/code/functions/apiSuppliersUpdate.md) | 442 | PATCH /suppliers/{id} - updates a supplier through ContractsService and returns it. |
-| [apiSuppliersDelete()](/code/functions/apiSuppliersDelete.md) | 450 | DELETE /suppliers/{id} — mirrors delete_supplier.php's explicit nullify-then-delete. |
-| [apiSerializeContact()](/code/functions/apiSerializeContact.md) | 460 | Supplier contacts |
-| [apiSupplierContactsList()](/code/functions/apiSupplierContactsList.md) | 475 | GET /suppliers/{id}/contacts - the supplier's contacts, by surname. |
-| [apiSupplierContactsCreate()](/code/functions/apiSupplierContactsCreate.md) | 489 | POST /suppliers/{id}/contacts - adds a contact to the supplier. First name and surname are required. |
-| [apiSupplierContactsUpdate()](/code/functions/apiSupplierContactsUpdate.md) | 518 | PATCH /suppliers/{id}/contacts/{contactId} - updates the fields sent, keeping the rest. First name and surname cannot be emptied. |
-| [apiSupplierContactsDelete()](/code/functions/apiSupplierContactsDelete.md) | 551 | DELETE /suppliers/{id}/contacts/{contactId} - deletes one of the supplier's contacts. |
-| [apiContractLookupList()](/code/functions/apiContractLookupList.md) | 565 | Reference lookups |
-| [apiContractStatusesList()](/code/functions/apiContractStatusesList.md) | 580 | GET /contract-statuses - the contract statuses. |
-| [apiPaymentSchedulesList()](/code/functions/apiPaymentSchedulesList.md) | 584 | GET /payment-schedules - the payment schedules. |
-| [apiSupplierTypesList()](/code/functions/apiSupplierTypesList.md) | 588 | GET /supplier-types - the supplier types. |
-| [apiSupplierStatusesList()](/code/functions/apiSupplierStatusesList.md) | 592 | GET /supplier-statuses - the supplier statuses. |
-| [apiContractTermTabsList()](/code/functions/apiContractTermTabsList.md) | 596 | GET /contract-term-tabs - the contract term tabs. |
+| [apiSerializeContract()](/code/functions/apiSerializeContract.md) | 90 | Shapes a contract row for the API - number, title, company, supplier or customer (company and person), owner, status, dates, value and the rest of the record. |
+| [apiLoadContract()](/code/functions/apiLoadContract.md) | 144 | Loads one contract row the key may see (apiContractVisibility), or answers 404 and stops. |
+| [apiSupplierSelect()](/code/functions/apiSupplierSelect.md) | 156 | The SELECT for suppliers, with type and status names and their numbers of contacts and contracts. |
+| [apiSerializeSupplier()](/code/functions/apiSerializeSupplier.md) | 173 | Shapes a supplier row for the API - legal, trading and display name, registration numbers, type, status, address and counts. |
+| [apiLoadSupplier()](/code/functions/apiLoadSupplier.md) | 212 | Loads one supplier row (apiSupplierSelect), or answers 404 and stops. |
+| [apiContractsList()](/code/functions/apiContractsList.md) | 225 | GET /contracts |
+| [apiContractsGet()](/code/functions/apiContractsGet.md) | 339 | GET /contracts/{id} - one contract. |
+| [apiContractCompany()](/code/functions/apiContractCompany.md) | 353 | `company_id` from a request body as the service's tenant_id: checked to exist and to be in the key's reach (403), or - on a create with none - the key's default company. On an update with none, nothing: the contract stays put. |
+| [apiContractsCreate()](/code/functions/apiContractsCreate.md) | 371 | POST /contracts - creates a contract through ContractsService in the company named (or the key's default) and returns it. |
+| [apiContractsUpdate()](/code/functions/apiContractsUpdate.md) | 382 | PATCH /contracts/{id} |
+| [apiContractsDelete()](/code/functions/apiContractsDelete.md) | 393 | DELETE /contracts/{id} — explicit children (the contracts domain had no FKs) |
+| [apiContractTermsGet()](/code/functions/apiContractTermsGet.md) | 403 | Contract terms — GET + bulk upsert (mirrors save_contract_terms.php) |
+| [apiContractTermsSave()](/code/functions/apiContractTermsSave.md) | 426 | POST /contracts/{id}/terms - saves the contract's terms through ContractsService and returns them. |
+| [apiSuppliersGet()](/code/functions/apiSuppliersGet.md) | 436 | Suppliers — full CRUD (GET /suppliers stays the lite reference list) |
+| [apiSuppliersCreate()](/code/functions/apiSuppliersCreate.md) | 448 | POST /suppliers - creates a supplier through ContractsService and returns it. |
+| [apiSuppliersUpdate()](/code/functions/apiSuppliersUpdate.md) | 456 | PATCH /suppliers/{id} - updates a supplier through ContractsService and returns it. |
+| [apiSuppliersDelete()](/code/functions/apiSuppliersDelete.md) | 464 | DELETE /suppliers/{id} — mirrors delete_supplier.php's explicit nullify-then-delete. |
+| [apiSerializeContact()](/code/functions/apiSerializeContact.md) | 475 | Supplier contacts |
+| [apiSupplierContactsList()](/code/functions/apiSupplierContactsList.md) | 490 | GET /suppliers/{id}/contacts - the supplier's contacts, by surname. |
+| [apiSupplierContactsCreate()](/code/functions/apiSupplierContactsCreate.md) | 504 | POST /suppliers/{id}/contacts - adds a contact to the supplier. First name and surname are required. |
+| [apiSupplierContactsUpdate()](/code/functions/apiSupplierContactsUpdate.md) | 533 | PATCH /suppliers/{id}/contacts/{contactId} - updates the fields sent, keeping the rest. First name and surname cannot be emptied. |
+| [apiSupplierContactsDelete()](/code/functions/apiSupplierContactsDelete.md) | 566 | DELETE /suppliers/{id}/contacts/{contactId} - deletes one of the supplier's contacts. |
+| [apiContractLookupList()](/code/functions/apiContractLookupList.md) | 581 | Reference lookups |
+| [apiContractStatusesList()](/code/functions/apiContractStatusesList.md) | 596 | GET /contract-statuses - the contract statuses. |
+| [apiPaymentSchedulesList()](/code/functions/apiPaymentSchedulesList.md) | 600 | GET /payment-schedules - the payment schedules. |
+| [apiSupplierTypesList()](/code/functions/apiSupplierTypesList.md) | 604 | GET /supplier-types - the supplier types. |
+| [apiSupplierStatusesList()](/code/functions/apiSupplierStatusesList.md) | 608 | GET /supplier-statuses - the supplier statuses. |
+| [apiContractTermTabsList()](/code/functions/apiContractTermTabsList.md) | 612 | GET /contract-term-tabs - the contract term tabs. |
 
 ## Database
 
@@ -84,17 +84,17 @@ supplier CONTACTS endpoints, and the read-only lookup lists stay here.
 |--:|---|---|---|
 | 63 | `apiContractSelect` | read [cost_centres](/code/tables/cost_centres.md) |  |
 | 65 | `apiContractSelect` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [payment_schedules](/code/tables/payment_schedules.md) |  |
-| 151 | `apiSupplierSelect` | read [contacts](/code/tables/contacts.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
-| 312 | `apiContractsList` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md) |  |
-| 392 | `apiContractTermsGet` | read [contract_term_tabs](/code/tables/contract_term_tabs.md), read [contract_term_values](/code/tables/contract_term_values.md) |  |
-| 425 | `apiSuppliersGet` | read [contacts](/code/tables/contacts.md) |  |
-| 478 | `apiSupplierContactsList` | read [contacts](/code/tables/contacts.md) |  |
-| 501 | `apiSupplierContactsCreate` | **insert** [contacts](/code/tables/contacts.md) (`supplier_id`, `first_name`, `surname`, `email`, `mobile`, `job_title`, `direct_dial`, `switchboard`, `is_active`, `created_datetime`) |  |
-| 509 | `apiSupplierContactsCreate` | read [contacts](/code/tables/contacts.md) |  |
-| 521 | `apiSupplierContactsUpdate` | read [contacts](/code/tables/contacts.md) |  |
-| 540 | `apiSupplierContactsUpdate` | **update** [contacts](/code/tables/contacts.md) (`first_name`, `surname`, `email`, `mobile`, `job_title`, `direct_dial`, `switchboard`, `is_active`) |  |
-| 545 | `apiSupplierContactsUpdate` | read [contacts](/code/tables/contacts.md) |  |
-| 554 | `apiSupplierContactsDelete` | **delete** [contacts](/code/tables/contacts.md) |  |
+| 157 | `apiSupplierSelect` | read [contacts](/code/tables/contacts.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
+| 324 | `apiContractsList` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 406 | `apiContractTermsGet` | read [contract_term_tabs](/code/tables/contract_term_tabs.md), read [contract_term_values](/code/tables/contract_term_values.md) |  |
+| 439 | `apiSuppliersGet` | read [contacts](/code/tables/contacts.md) |  |
+| 493 | `apiSupplierContactsList` | read [contacts](/code/tables/contacts.md) |  |
+| 516 | `apiSupplierContactsCreate` | **insert** [contacts](/code/tables/contacts.md) (`supplier_id`, `first_name`, `surname`, `email`, `mobile`, `job_title`, `direct_dial`, `switchboard`, `is_active`, `created_datetime`) |  |
+| 524 | `apiSupplierContactsCreate` | read [contacts](/code/tables/contacts.md) |  |
+| 536 | `apiSupplierContactsUpdate` | read [contacts](/code/tables/contacts.md) |  |
+| 555 | `apiSupplierContactsUpdate` | **update** [contacts](/code/tables/contacts.md) (`first_name`, `surname`, `email`, `mobile`, `job_title`, `direct_dial`, `switchboard`, `is_active`) |  |
+| 560 | `apiSupplierContactsUpdate` | read [contacts](/code/tables/contacts.md) |  |
+| 569 | `apiSupplierContactsDelete` | **delete** [contacts](/code/tables/contacts.md) |  |
 
 ## How it hangs together
 

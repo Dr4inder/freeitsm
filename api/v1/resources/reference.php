@@ -91,7 +91,12 @@ function apiOriginsList(PDO $conn, array $apiKey, array $params, array $body): v
     apiTenantConfigList($conn, $apiKey, 'ticket_origins', 'ticket_origin');
 }
 
-/** Shared list for the tenant-overridable config tables (add/hide model). */
+/**
+ * Shared list for the tenant-overridable config tables (add/hide model).
+ *
+ * @param string $table  the config table to list (e.g. 'ticket_types') - a fixed name from the caller, never input
+ * @param string $entityType  its key in tenant_config_hidden (e.g. 'ticket_type'), for the per-company overrides
+ */
 function apiTenantConfigList(PDO $conn, array $apiKey, string $table, string $entityType): void {
     if (isset($_GET['company_id']) && $_GET['company_id'] !== '') {
         $cid = (int)$_GET['company_id'];

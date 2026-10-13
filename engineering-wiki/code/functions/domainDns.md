@@ -10,13 +10,13 @@ system lookup is retried over DoH.
 function domainDns(string $name, string $type, string $resolver = 'system'): array
 ```
 
-Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 35.
+Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 39.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$name` | `string` |  |  |
-| `$type` | `string` |  |  |
-| `$resolver` | `string` | `'system'` |  |
+| `$name` | `string` |  | the DNS name to ask about, e.g. 'example.com' or '_dmarc.example.com' |
+| `$type` | `string` |  | record type - A, AAAA, NS, CNAME, MX, TXT, CAA, DS or DNSKEY (any case) |
+| `$resolver` | `string` | `'system'` | auto \| system \| google \| cloudflare (the domain_dns_resolver setting); '' means auto |
 
 **Returns:** array{ok:bool, nxdomain:bool, records:array, error:?string} records: A/AAAA → list of IPs; NS/CNAME → host names; MX → [[pri, host]]; TXT → strings; CAA → [[flags, tag, value]]; DS → [string] (presence is what matters)
 

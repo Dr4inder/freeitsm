@@ -1,6 +1,6 @@
 # api/assets/get_asset_custom_fields.php
 
-> API endpoint - 147 lines
+> API endpoint - 151 lines
 
 API: the custom fields that apply to ONE asset, with its values.
 
@@ -25,14 +25,14 @@ apart from "no" or zero.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [assetFieldOptions()](/code/functions/assetFieldOptions.md) | 30 | Dropdown options for a field, memoised for the life of the request. |
+| [assetFieldOptions()](/code/functions/assetFieldOptions.md) | 34 | Dropdown options for a field, memoised for the life of the request. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 35 | `assetFieldOptions` | read [asset_field_options](/code/tables/asset_field_options.md) |  |
-| 60 |  | read [assets](/code/tables/assets.md) |  |
+| 39 | `assetFieldOptions` | read [asset_field_options](/code/tables/asset_field_options.md) |  |
+| 64 |  | read [assets](/code/tables/assets.md) |  |
 
 ## How it hangs together
 

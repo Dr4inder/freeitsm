@@ -6,14 +6,14 @@ A number clamped between `$min` and `$max`, or `$default` when the value is not 
 function rpNum($v, float $min, float $max, float $default): float
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 88.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 109.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` |  |  |  |
-| `$min` | `float` |  |  |
-| `$max` | `float` |  |  |
-| `$default` | `float` |  |  |
+| `$v` |  |  | the value to check (untrusted) |
+| `$min` | `float` |  | the smallest value allowed |
+| `$max` | `float` |  | the largest value allowed |
+| `$default` | `float` |  | what to return when it is not numeric |
 
 **Returns:** `float`
 

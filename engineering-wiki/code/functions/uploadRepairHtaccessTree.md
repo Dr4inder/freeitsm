@@ -11,11 +11,11 @@ them. Database Verify calls this so an upgraded install is repaired in one go.
 function uploadRepairHtaccessTree(string $appRoot): int
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 566.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 577.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$appRoot` | `string` |  |  |
+| `$appRoot` | `string` |  | absolute path of the FreeITSM folder; UPLOAD_HTACCESS_ROOTS are relative to it |
 
 **Returns:** `int`
 

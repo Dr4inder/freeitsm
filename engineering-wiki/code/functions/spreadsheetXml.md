@@ -6,11 +6,11 @@ Parses one XML part of an .xlsx file safely (no network, no entity expansion); n
 function spreadsheetXml(?string $xml)
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 341.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 373.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$xml` | `?string` |  |  |
+| `$xml` | `?string` |  | one XML part's bytes from the workbook - untrusted; null or '' gives null |
 
 ## Called from
 

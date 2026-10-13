@@ -6,7 +6,7 @@ GET /asset-statuses - the asset statuses for the key's default company.
 function apiAssetStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 647.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 658.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

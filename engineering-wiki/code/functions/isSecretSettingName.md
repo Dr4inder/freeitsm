@@ -6,11 +6,11 @@ Is this key named like a credential (*_password, *_secret, *_token, *_api_key)? 
 function isSecretSettingName($key)
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 195.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 205.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` |  |  |  |
+| `$key` |  |  | a system_settings.setting_key; cast to string, matched case-insensitively |
 
 ## Called from
 

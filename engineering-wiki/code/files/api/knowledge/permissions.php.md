@@ -1,6 +1,6 @@
 # api/knowledge/permissions.php
 
-> API endpoint - 363 lines
+> API endpoint - 388 lines
 
 API Endpoint: who may read a Knowledge folder or article. Actions: get, set_mode, add, remove, search_principals
 
@@ -39,33 +39,33 @@ nothing by the end of the week.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [requireObject()](/code/functions/requireObject.md) | 80 | 'folder' or 'article', and an id that exists. Anything else is refused. |
-| [handleGet()](/code/functions/handleGet.md) | 106 | The current state of one object's access. |
-| [resolveInherited()](/code/functions/resolveInherited.md) | 150 | Walk up to the folder whose rules actually apply, and describe them. |
-| [principalName()](/code/functions/principalName.md) | 204 | Resolve a principal to something a human can check. |
-| [handleSetMode()](/code/functions/handleSetMode.md) | 234 | Set Open/Restricted and the inherit tickbox. |
-| [handleAdd()](/code/functions/handleAdd.md) | 268 | Adds an analyst, team, portal user or user group to a folder's or article's access list, and audits it. Adding someone already listed is treated as success. |
-| [handleRemove()](/code/functions/handleRemove.md) | 296 | Removes one entry from a folder's or article's access list and audits it. The reply's now_unreachable is true when a restricted object is left with nobody on its list. |
-| [handleSearch()](/code/functions/handleSearch.md) | 333 | Find people, teams and groups to add. |
-| [permAudit()](/code/functions/permAudit.md) | 359 | Permission changes are the rows people actually come looking for. Never silent. |
+| [requireObject()](/code/functions/requireObject.md) | 84 | 'folder' or 'article', and an id that exists. Anything else is refused. |
+| [handleGet()](/code/functions/handleGet.md) | 112 | The current state of one object's access. |
+| [resolveInherited()](/code/functions/resolveInherited.md) | 159 | Walk up to the folder whose rules actually apply, and describe them. |
+| [principalName()](/code/functions/principalName.md) | 216 | Resolve a principal to something a human can check. |
+| [handleSetMode()](/code/functions/handleSetMode.md) | 248 | Set Open/Restricted and the inherit tickbox. |
+| [handleAdd()](/code/functions/handleAdd.md) | 283 | Adds an analyst, team, portal user or user group to a folder's or article's access list, and audits it. Adding someone already listed is treated as success. |
+| [handleRemove()](/code/functions/handleRemove.md) | 313 | Removes one entry from a folder's or article's access list and audits it. The reply's now_unreachable is true when a restricted object is left with nobody on its list. |
+| [handleSearch()](/code/functions/handleSearch.md) | 352 | Find people, teams and groups to add. |
+| [permAudit()](/code/functions/permAudit.md) | 384 | Permission changes are the rows people actually come looking for. Never silent. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 110 | `handleGet` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 156 | `resolveInherited` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 170 | `resolveInherited` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 174 | `resolveInherited` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 244 | `handleSetMode` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 247 | `handleSetMode` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 279 | `handleAdd` | **insert** [knowledge_acl](/code/tables/knowledge_acl.md) (`object_type`, `object_id`, `principal_type`, `principal_id`, `created_by_id`, `created_datetime`) |  |
-| 302 | `handleRemove` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 312 | `handleRemove` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 350 | `handleSearch` | read [analysts](/code/tables/analysts.md) |  |
-| 351 | `handleSearch` | read [teams](/code/tables/teams.md) |  |
-| 352 | `handleSearch` | read [users](/code/tables/users.md) |  |
-| 353 | `handleSearch` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 116 | `handleGet` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 165 | `resolveInherited` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 179 | `resolveInherited` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 183 | `resolveInherited` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 258 | `handleSetMode` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 261 | `handleSetMode` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 294 | `handleAdd` | **insert** [knowledge_acl](/code/tables/knowledge_acl.md) (`object_type`, `object_id`, `principal_type`, `principal_id`, `created_by_id`, `created_datetime`) |  |
+| 319 | `handleRemove` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 329 | `handleRemove` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 369 | `handleSearch` | read [analysts](/code/tables/analysts.md) |  |
+| 370 | `handleSearch` | read [teams](/code/tables/teams.md) |  |
+| 371 | `handleSearch` | read [users](/code/tables/users.md) |  |
+| 372 | `handleSearch` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
 
 ## How it hangs together
 

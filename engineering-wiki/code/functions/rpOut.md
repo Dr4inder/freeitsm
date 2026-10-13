@@ -6,12 +6,12 @@ Sends a JSON reply with the given HTTP status and ends the request.
 function rpOut(array $payload, int $code = 200): void
 ```
 
-Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 18.
+Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 23.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$payload` | `array` |  |  |
-| `$code` | `int` | `200` |  |
+| `$payload` | `array` |  | the reply, sent as JSON |
+| `$code` | `int` | `200` | the HTTP status |
 
 **Returns:** `void`
 

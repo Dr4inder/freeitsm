@@ -6,11 +6,11 @@ Check if a system_settings key should be masked when returned to the client.
 function isMaskedSettingKey($key)
 ```
 
-Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 92.
+Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), line 94.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` |  |  |  |
+| `$key` |  |  | a system_settings.setting_key, matched exactly against MASKED_SETTING_KEYS |
 
 ## Called from
 

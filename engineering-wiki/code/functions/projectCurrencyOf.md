@@ -6,12 +6,12 @@ A project's currency: its own, or - not yet stamped - the install's.
 function projectCurrencyOf(PDO $conn, array $p): string
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 74.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$p` | `array` |  |  |
+| `$p` | `array` |  | the projects row - its currency column is read |
 
 **Returns:** `string`
 

@@ -6,13 +6,13 @@ A status pill, optionally in a colour (passed as the --pill CSS variable); '' fo
 function pplPill(?string $text, ?string $colour = null, string $class = ''): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 70.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$text` | `?string` |  |  |
-| `$colour` | `?string` | `null` |  |
-| `$class` | `string` | `''` |  |
+| `$text` | `?string` |  | the pill text, escaped here; null or '' gives '' |
+| `$colour` | `?string` | `null` | a CSS colour for the pill; null for the default |
+| `$class` | `string` | `''` | extra CSS classes, e.g. 'muted', 'good', 'bad' |
 
 **Returns:** `string`
 

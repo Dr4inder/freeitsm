@@ -6,13 +6,13 @@ Read a system_settings key with a default fallback.
 function csatGetSetting(PDO $conn, string $key, string $default = ''): string
 ```
 
-Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 24.
+Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 27.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$default` | `string` | `''` |  |
+| `$key` | `string` |  | the system_settings.setting_key, e.g. 'csat_mode'; encrypted keys are decrypted |
+| `$default` | `string` | `''` | returned when the key has no row (the first answer is cached per request) |
 
 **Returns:** `string`
 
@@ -20,7 +20,7 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 24.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 27 | `csatGetSetting` | read [system_settings](/code/tables/system_settings.md) |  |
+| 30 | `csatGetSetting` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

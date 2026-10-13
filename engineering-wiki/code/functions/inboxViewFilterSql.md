@@ -16,13 +16,13 @@ against a NULL status_id is NULL, and would silently drop it.
 function inboxViewFilterSql(array $filter, int $analystId, string $alias = 't'): string
 ```
 
-Defined in [includes/inbox_view_filter.php](/code/files/includes/inbox_view_filter.php.md), line 44.
+Defined in [includes/inbox_view_filter.php](/code/files/includes/inbox_view_filter.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$filter` | `array` |  |  |
+| `$filter` | `array` |  | array{mine:bool,hide_closed:bool} as from `inboxViewFilterFromRequest()` |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` | `'t'` |  |
+| `$alias` | `string` | `'t'` | the alias the calling query gives the tickets table (trusted - written into the SQL) |
 
 **Returns:** `string`
 
@@ -30,7 +30,7 @@ Defined in [includes/inbox_view_filter.php](/code/files/includes/inbox_view_filt
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 50 | `inboxViewFilterSql` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 53 | `inboxViewFilterSql` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Called from
 

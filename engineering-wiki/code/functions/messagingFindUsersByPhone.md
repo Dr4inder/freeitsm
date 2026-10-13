@@ -24,12 +24,12 @@ rarely normalised at entry, so SQL equality would miss real matches.
 function messagingFindUsersByPhone(PDO $conn, string $phone, ?int $tenantId): array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 849.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 908.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$phone` | `string` |  |  |
+| `$phone` | `string` |  | the number to look for, any format; under 7 digits matches nobody |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
@@ -38,7 +38,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 855 | `messagingFindUsersByPhone` | read [users](/code/tables/users.md) |  |
+| 914 | `messagingFindUsersByPhone` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

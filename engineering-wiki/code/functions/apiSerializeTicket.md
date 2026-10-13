@@ -6,11 +6,11 @@ Shapes a ticket row for the API - number, subject, status (with is_closed), prio
 function apiSerializeTicket(array $r): array
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 62.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the tickets row as `apiTicketSelect()` loads it, with the lookup, analyst, requester and company names |
 
 **Returns:** `array`
 

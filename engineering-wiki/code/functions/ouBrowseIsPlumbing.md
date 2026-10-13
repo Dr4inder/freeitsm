@@ -11,12 +11,12 @@ deliberately short and only covers what AD creates itself.
 function ouBrowseIsPlumbing(string $dn, string $root): bool
 ```
 
-Defined in [api/system/browse_directory_ous.php](/code/files/api/system/browse_directory_ous.php.md), line 219.
+Defined in [api/system/browse_directory_ous.php](/code/files/api/system/browse_directory_ous.php.md), line 230.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dn` | `string` |  |  |
-| `$root` | `string` |  |  |
+| `$dn` | `string` |  | the distinguished name of a container found by the search |
+| `$root` | `string` |  | the base DN being browsed; only containers directly under it are judged |
 
 **Returns:** `bool`
 

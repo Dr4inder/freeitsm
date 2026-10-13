@@ -6,7 +6,7 @@ Contracts approaching their end date → `contract.expiring`.
 function workflowEmitContractExpiries(PDO $conn): int
 ```
 
-Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 113.
+Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_sched
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 130 | `workflowEmitContractExpiries` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 135 | `workflowEmitContractExpiries` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md) |  |
 
 ## Calls
 

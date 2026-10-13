@@ -24,13 +24,13 @@ function integrationsBodyToText(
 ): string
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 246.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 257.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `?string` |  |  |
-| `$bodyType` | `string` | `'text'` |  |
-| `$maxChars` | `int` | `8000` |  |
+| `$raw` | `?string` |  | the email body as stored; null or '' gives '' |
+| `$bodyType` | `string` | `'text'` | 'html' or 'text'; a body containing <html or <div is treated as HTML whatever this says |
+| `$maxChars` | `int` | `8000` | the most characters kept before a "truncated" note is appended |
 
 **Returns:** `string`
 

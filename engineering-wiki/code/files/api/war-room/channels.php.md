@@ -1,6 +1,6 @@
 # api/war-room/channels.php
 
-> API endpoint - 121 lines
+> API endpoint - 125 lines
 
 API: War room — create, rename, archive a channel, or open a DM.
 
@@ -27,7 +27,7 @@ all: their identity is derived, and the way to remove one is to remove the team.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [warRoomMayManage()](/code/functions/warRoomMayManage.md) | 35 | Who may reshape this channel: its creator, or someone with war_room.manage. |
+| [warRoomMayManage()](/code/functions/warRoomMayManage.md) | 39 | Who may reshape this channel: its creator, or someone with war_room.manage. |
 
 ## How it hangs together
 

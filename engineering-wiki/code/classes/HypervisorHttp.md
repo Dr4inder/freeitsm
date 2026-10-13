@@ -11,7 +11,7 @@
 
 ### validateHost
 
-*public static* - line 43
+*public static* - line 46
 
 Normalise and check a server address as typed: https://host or https://host:port, nothing after it. Throws a readable message.
 
@@ -23,14 +23,14 @@ function validateHost(string $host, string $example): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$host` | `string` |  |  |
-| `$example` | `string` |  |  |
+| `$host` | `string` |  | the server address as the administrator typed it; a trailing slash is dropped |
+| `$example` | `string` |  | a sample address for the error message, e.g. 'https://pve.example.com:8006' |
 
 **Called from:** [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md)
 
 ### request
 
-*public static* - line 59
+*public static* - line 69
 
 One request. Returns [code, body, headers]. Throws only when the server could not be reached; an HTTP error status is returned for the caller to judge.
 
@@ -47,12 +47,12 @@ function request(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$method` | `string` |  |  |
-| `$url` | `string` |  |  |
-| `$headers` | `array` |  |  |
-| `$body` | `?string` |  |  |
-| `$verify` | `bool` |  |  |
-| `$timeout` | `int` | `60` |  |
+| `$method` | `string` |  | the HTTP method, e.g. 'GET' or 'POST' |
+| `$url` | `string` |  | the full URL; anything not https:// is refused |
+| `$headers` | `array` |  | request headers as 'Name: value' strings, including the credential |
+| `$body` | `?string` |  | the request body; null sends none |
+| `$verify` | `bool` |  | false skips certificate checks - the server's "Verify certificate" box unticked |
+| `$timeout` | `int` | `60` | the whole request's time limit, in seconds |
 
 **Called from:** [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md)
 

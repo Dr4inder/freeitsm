@@ -19,14 +19,14 @@ Echo suppression + idempotency for comment sync. One row per comment that has cr
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1204 | `integrationsRecordOutboundComment` | insert | `link_id`, `direction`, `external_comment_id`, `local_note_id`, `created_datetime` |  |
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1263 | `integrationsApplyCommentEvent` | insert | `link_id`, `direction`, `external_comment_id`, `author_identity`, `author_name`, `created_datetime` |  |
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1286 | `integrationsApplyCommentEvent` | update | `local_note_id` |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1291 | `integrationsRecordOutboundComment` | insert | `link_id`, `direction`, `external_comment_id`, `local_note_id`, `created_datetime` |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1356 | `integrationsApplyCommentEvent` | insert | `link_id`, `direction`, `external_comment_id`, `author_identity`, `author_name`, `created_datetime` |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md):1379 | `integrationsApplyCommentEvent` | update | `local_note_id` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/tickets/get_notes.php](/code/files/api/tickets/get_notes.php.md) | L65 |  |
-| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | integrationsCommentSchemaReady L1104, integrationsKnownCommentIds L1184 |  |
+| [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md) | integrationsCommentSchemaReady L1177, integrationsKnownCommentIds L1267 |  |
 

@@ -20,11 +20,11 @@ use and are excluded.
 function storagePersistenceHasFiles(string $dir): bool
 ```
 
-Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 284.
+Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 289.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$dir` | `string` |  |  |
+| `$dir` | `string` |  | the absolute directory to look in, sub-directories included |
 
 **Returns:** `bool`
 

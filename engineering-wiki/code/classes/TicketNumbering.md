@@ -68,7 +68,7 @@ function forget(): void
 
 ### withSettings
 
-*public static* - line 112
+*public static* - line 116
 
 Run with a specific configuration — used by the live preview and tests.
 
@@ -78,11 +78,11 @@ function withSettings(?array $settings): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$settings` | `?array` |  |  |
+| `$settings` | `?array` |  | numbering settings keyed as in DEFAULTS, laid over the defaults; null goes back to the saved settings |
 
 ### config
 
-*private static* - line 118
+*private static* - line 122
 
 The settings to number with: a `withSettings()` override over the defaults when one is set, otherwise `settings()`.
 
@@ -96,7 +96,7 @@ function config(PDO $conn): array
 
 ### next
 
-*public static* - line 135
+*public static* - line 139
 
 The next ticket number.
 
@@ -114,7 +114,7 @@ function next(PDO $conn, ?int $ticketTypeId = null, ?int $tenantId = null): stri
 
 ### windCounterTo
 
-*private static* - line 183
+*private static* - line 190
 
 Move a counter forward to at least `$value`. Never backwards.
 
@@ -128,18 +128,18 @@ function windCounterTo(PDO $conn, string $key, int $value): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
-| `$value` | `int` |  |  |
+| `$key` | `string` |  | the counter (ticket_number_counters.counter_key), from `counterKey()` |
+| `$value` | `int` |  | the lowest next_value the counter may hold afterwards |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 186 | `TicketNumbering::windCounterTo` | **insert** [ticket_number_counters](/code/tables/ticket_number_counters.md) (`counter_key`, `next_value`) |  |
+| 193 | `TicketNumbering::windCounterTo` | **insert** [ticket_number_counters](/code/tables/ticket_number_counters.md) (`counter_key`, `next_value`) |  |
 
 ### randomNumber
 
-*private static* - line 192
+*private static* - line 199
 
 Today's format: three letters, three digits, five digits.
 
@@ -153,7 +153,7 @@ function randomNumber(PDO $conn): string
 
 ### render
 
-*public static* - line 211
+*public static* - line 223
 
 Substitute the tokens.
 
@@ -173,18 +173,18 @@ function render(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$format` | `string` |  |  |
-| `$seq` | `int` |  |  |
+| `$format` | `string` |  | the number format, e.g. 'INC-{YYYY}-{######}' |
+| `$seq` | `int` |  | the sequence number for the {#...} token |
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ticketTypeId` | `?int` | `null` |  |
-| `$at` | `?DateTimeImmutable` | `null` |  |
+| `$ticketTypeId` | `?int` | `null` | the ticket type, for {TYPE}; null renders it empty |
+| `$at` | `?DateTimeImmutable` | `null` | the date for {YYYY}, {YY}, {MM} and {DD}; null means now (UTC) |
 | `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md)
 
 ### typeCode
 
-*private static* - line 245
+*private static* - line 259
 
 A short code for a ticket type, for {TYPE}.
 
@@ -199,17 +199,17 @@ function typeCode(?PDO $conn, ?int $ticketTypeId): string
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$ticketTypeId` | `?int` |  |  |
+| `$ticketTypeId` | `?int` |  | the ticket type (ticket_types.id); null or 0 gives '' |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 251 | `TicketNumbering::typeCode` | read [ticket_types](/code/tables/ticket_types.md) |  |
+| 265 | `TicketNumbering::typeCode` | read [ticket_types](/code/tables/ticket_types.md) |  |
 
 ### resolveTenant
 
-*public static* - line 280
+*public static* - line 294
 
 A ticket's company, with NULL read as what it actually means.
 
@@ -238,11 +238,11 @@ function resolveTenant(?PDO $conn, ?int $tenantId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 288 | `TicketNumbering::resolveTenant` | read [tenants](/code/tables/tenants.md) |  |
+| 302 | `TicketNumbering::resolveTenant` | read [tenants](/code/tables/tenants.md) |  |
 
 ### companyCode
 
-*private static* - line 310
+*private static* - line 324
 
 A short code for a company, for {COMPANY}.
 
@@ -270,12 +270,12 @@ function companyCode(?PDO $conn, ?int $tenantId): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 316 | `TicketNumbering::companyCode` | read [tenants](/code/tables/tenants.md) |  |
-| 323 | `TicketNumbering::companyCode` | read [tenants](/code/tables/tenants.md) |  |
+| 330 | `TicketNumbering::companyCode` | read [tenants](/code/tables/tenants.md) |  |
+| 337 | `TicketNumbering::companyCode` | read [tenants](/code/tables/tenants.md) |  |
 
 ### codeFor
 
-*public static* - line 340
+*public static* - line 356
 
 The effective code for a company row — what {COMPANY} would render.
 
@@ -289,13 +289,13 @@ function codeFor(array $tenant): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$tenant` | `array` |  |  |
+| `$tenant` | `array` |  | a tenants row: ticket_code, slug and name are read, in that order of preference |
 
 **Called from:** [api/system/get_tenants.php](/code/files/api/system/get_tenants.php.md)
 
 ### cleanCode
 
-*public static* - line 356
+*public static* - line 376
 
 Letters and digits, upper case, at most 12 — the shape a code may take.
 
@@ -305,13 +305,13 @@ function cleanCode(string $raw): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the code as typed |
 
 **Called from:** [api/system/save_tenant.php](/code/files/api/system/save_tenant.php.md)
 
 ### codeClashes
 
-*public static* - line 372
+*public static* - line 392
 
 Companies that would produce the SAME ticket numbers as each other.
 
@@ -335,13 +335,13 @@ function codeClashes(PDO $conn): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 375 | `TicketNumbering::codeClashes` | read [tenants](/code/tables/tenants.md) |  |
+| 395 | `TicketNumbering::codeClashes` | read [tenants](/code/tables/tenants.md) |  |
 
 **Called from:** [api/tickets/numbering_preview.php](/code/files/api/tickets/numbering_preview.php.md)
 
 ### claimNext
 
-*private static* - line 404
+*private static* - line 427
 
 Take the next number from the right counter, atomically.
 
@@ -357,19 +357,19 @@ function claimNext(PDO $conn, array $cfg, ?int $ticketTypeId, ?int $tenantId): i
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$cfg` | `array` |  |  |
-| `$ticketTypeId` | `?int` |  |  |
+| `$cfg` | `array` |  | the numbering settings, as from `config()` |
+| `$ticketTypeId` | `?int` |  | the ticket type, for the per-type counter |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 410 | `TicketNumbering::claimNext` | **insert** [ticket_number_counters](/code/tables/ticket_number_counters.md) (`counter_key`, `next_value`) |  |
+| 433 | `TicketNumbering::claimNext` | **insert** [ticket_number_counters](/code/tables/ticket_number_counters.md) (`counter_key`, `next_value`) |  |
 
 ### counterKey
 
-*public static* - line 434
+*public static* - line 461
 
 Which counter a ticket draws from.
 
@@ -388,14 +388,14 @@ function counterKey(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$ticketTypeId` | `?int` |  |  |
+| `$cfg` | `array` |  | the numbering settings (ticket_number_scope, ticket_number_reset) |
+| `$ticketTypeId` | `?int` |  | the ticket type, for the per-type scope |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
-| `$at` | `?DateTimeImmutable` | `null` |  |
+| `$at` | `?DateTimeImmutable` | `null` | the ticket's date, for a yearly or monthly reset; null means now (UTC) |
 
 ### inUse
 
-*public static* - line 463
+*public static* - line 492
 
 Is this number already taken — by a live ticket OR by history?
 
@@ -410,18 +410,18 @@ function inUse(PDO $conn, string $number): bool
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$number` | `string` |  |  |
+| `$number` | `string` |  | a ticket number as it would be stored |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 465 | `TicketNumbering::inUse` | read [tickets](/code/tables/tickets.md) |  |
-| 471 | `TicketNumbering::inUse` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
+| 494 | `TicketNumbering::inUse` | read [tickets](/code/tables/tickets.md) |  |
+| 500 | `TicketNumbering::inUse` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
 
 ### findTicketId
 
-*public static* - line 486
+*public static* - line 517
 
 The ticket id for a number — current OR any it has ever had.
 
@@ -436,20 +436,20 @@ function findTicketId(PDO $conn, string $number): ?int
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$number` | `string` |  |  |
+| `$number` | `string` |  | a ticket number, current or one a ticket used to have |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 488 | `TicketNumbering::findTicketId` | read [tickets](/code/tables/tickets.md) |  |
-| 495 | `TicketNumbering::findTicketId` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
+| 519 | `TicketNumbering::findTicketId` | read [tickets](/code/tables/tickets.md) |  |
+| 526 | `TicketNumbering::findTicketId` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
 
 **Called from:** [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md)
 
 ### preview
 
-*public static* - line 526
+*public static* - line 560
 
 What the next few numbers would look like under a given configuration, without writing anything. Drives the live preview in settings.
 
@@ -459,14 +459,14 @@ function preview(array $cfg, int $count = 3): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$cfg` | `array` |  |  |
-| `$count` | `int` | `3` |  |
+| `$cfg` | `array` |  | numbering settings to preview, laid over DEFAULTS - may be unsaved |
+| `$count` | `int` | `3` | how many numbers to show |
 
 **Called from:** [api/tickets/numbering_preview.php](/code/files/api/tickets/numbering_preview.php.md)
 
 ### validateFormat
 
-*public static* - line 555
+*public static* - line 591
 
 Sanity-check a format before it is saved.
 
@@ -476,8 +476,8 @@ function validateFormat(string $format, string $scope = "global"): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$format` | `string` |  |  |
-| `$scope` | `string` | `"global"` |  |
+| `$format` | `string` |  | the number format to check |
+| `$scope` | `string` | `"global"` | the counting scope it will be used with: 'global', 'per_type' or 'per_company' |
 
 **Returns:** string[] problems, empty when the format is usable
 
@@ -485,7 +485,7 @@ function validateFormat(string $format, string $scope = "global"): array
 
 ### planRenumber
 
-*public static* - line 622
+*public static* - line 659
 
 Work out what a renumber would do, and refuse it if the answer is unsafe. Writes nothing.
 
@@ -496,7 +496,7 @@ function planRenumber(PDO $conn, array $cfg, ?array $rows = null): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$cfg` | `array` |  |  |
+| `$cfg` | `array` |  | the numbering settings to renumber to, laid over DEFAULTS; must be sequential |
 | `$rows` | `?array` | `null` | the tickets to plan over. Defaults to ALL of them, which is what the tool does; tests pass a set of their own so a run cannot rewrite the real estate. |
 
 **Returns:** array{total:int, changing:int, skipped:int, planned:array, seqs:array, next_after:?string}
@@ -505,13 +505,13 @@ function planRenumber(PDO $conn, array $cfg, ?array $rows = null): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 638 | `TicketNumbering::planRenumber` | read [tickets](/code/tables/tickets.md) |  |
+| 675 | `TicketNumbering::planRenumber` | read [tickets](/code/tables/tickets.md) |  |
 
 **Called from:** [api/tickets/numbering_renumber.php](/code/files/api/tickets/numbering_renumber.php.md)
 
 ### assertPlanSafe
 
-*private static* - line 718
+*private static* - line 757
 
 The guard that does not depend on me having thought of the cause.
 
@@ -530,17 +530,17 @@ function assertPlanSafe(PDO $conn, array $planned): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$planned` | `array` |  |  |
+| `$planned` | `array` |  | the 'planned' list from `planRenumber()`: [{id, from, to}, ...] |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 743 | `TicketNumbering::assertPlanSafe` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
+| 782 | `TicketNumbering::assertPlanSafe` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
 
 ### applyRenumber
 
-*public static* - line 766
+*public static* - line 807
 
 Carry out a plan from `planRenumber()`.
 
@@ -554,14 +554,14 @@ function applyRenumber(PDO $conn, array $plan): void
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$plan` | `array` |  |  |
+| `$plan` | `array` |  | the result of `planRenumber()` - its 'planned' and 'seqs' are used |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 771 | `TicketNumbering::applyRenumber` | **insert** [ticket_number_history](/code/tables/ticket_number_history.md) (`ticket_id`, `ticket_number`, `reason`) |  |
-| 773 | `TicketNumbering::applyRenumber` | **update** [tickets](/code/tables/tickets.md) (`ticket_number`) |  |
+| 812 | `TicketNumbering::applyRenumber` | **insert** [ticket_number_history](/code/tables/ticket_number_history.md) (`ticket_id`, `ticket_number`, `reason`) |  |
+| 814 | `TicketNumbering::applyRenumber` | **update** [tickets](/code/tables/tickets.md) (`ticket_number`) |  |
 
 **Called from:** [api/tickets/numbering_renumber.php](/code/files/api/tickets/numbering_renumber.php.md)
 

@@ -6,7 +6,7 @@ Answers 422 and stops when a request body carries auth_code - it can only be rea
 function apiDomainRefuseAuthCode(array $body): void
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 155.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 161.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

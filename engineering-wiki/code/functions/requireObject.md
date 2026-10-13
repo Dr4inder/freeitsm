@@ -6,12 +6,12 @@
 function requireObject(PDO $conn, array $src): array
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 80.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 84.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$src` | `array` |  |  |
+| `$src` | `array` |  | the request (`$_GET` or the decoded JSON body) carrying object_type and object_id |
 
 **Returns:** `array`
 

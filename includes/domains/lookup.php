@@ -36,6 +36,10 @@ const DOMAIN_HTTP_UA = 'FreeITSM-Domains/1.0 (+https://freeitsm.co.uk)';
 /**
  * One outbound GET. Never throws.
  *
+ * @param string $url      the full http(s) URL to fetch
+ * @param string $accept   the Accept header value
+ * @param int    $timeout  whole-request timeout in seconds (connecting is capped at 6)
+ *
  * @return array{0:int,1:string,2:string} [http code (0 = no answer), body, error]
  */
 function domainHttpGet(string $url, string $accept = 'application/json', int $timeout = 12): array
@@ -127,6 +131,8 @@ function domainRdapBootstrap(PDO $conn): array
 /**
  * Look a domain up at its registry.
  *
+ * @param string $name  a stored domain name, already through domainNormalise() (ASCII, lower case)
+ *
  * @return array The normalised result. Always has 'ok' and 'source'. On success:
  *   registrar, registrant, registration_date, expiry_date, updated_date,
  *   last_renewed_date (Y-m-d or null), statuses (list, lower-case words),
@@ -156,6 +162,9 @@ function domainLookup(PDO $conn, string $name): array
  * Looks a domain up at its registry's RDAP server and reads the dates, statuses, locks, registrar, name servers, DNSSEC and registrant into the standard result shape.
  *
  * A 404 comes back with not_found set, which callers treat as an answer rather than a failure.
+ *
+ * @param string $base  the registry's RDAP base URL from domainRdapBootstrap(), ending in "/"
+ * @param string $name  a stored domain name, already through domainNormalise()
  */
 function domainRdapLookup(string $base, string $name): array
 {
@@ -211,7 +220,11 @@ function domainRdapLookup(string $base, string $name): array
     return $out;
 }
 
-/** The result shape every source fills in. */
+/**
+ * The result shape every source fills in.
+ *
+ * @param string $source  where the answer came from - 'rdap' or 'whois'
+ */
 function domainBlankResult(string $source): array
 {
     return [
@@ -227,6 +240,8 @@ function domainBlankResult(string $source): array
 /**
  * "client transfer prohibited" (RDAP) and "clientTransferProhibited
  * https://icann.org/epp#…" (WHOIS) → "client transfer prohibited".
+ *
+ * @param array $raw  status strings as the registry sent them, RDAP words or WHOIS EPP codes with URLs
  */
 function domainNormaliseStatuses(array $raw): array
 {
@@ -248,6 +263,9 @@ function domainNormaliseStatuses(array $raw): array
  * ⚠️ REGISTRY LOCK IS INFERRED. It is the three server*Prohibited statuses
  * together — which is how registries apply it, but a registry can set them for
  * other reasons too (a legal hold). The screen says "likely registry-locked".
+ *
+ * @param array  $r     the lookup result being built (domainBlankResult() shape) - its lock and state flags are set in place
+ * @param string $name  the domain name, used only to spot TLDs where a transfer lock does not apply ('' for none)
  */
 function domainDeriveFlags(array &$r, string $name = ''): void
 {
@@ -281,7 +299,12 @@ function domainDeriveFlags(array &$r, string $name = ''): void
     $r['pending_delete'] = in_array('pending delete', $s, true);
 }
 
-/** Returns one field's value (for example 'fn' or 'org') from an RDAP jCard, or null when absent or empty. */
+/**
+ * Returns one field's value (for example 'fn' or 'org') from an RDAP jCard, or null when absent or empty.
+ *
+ * @param array  $vcard  an RDAP entity's vcardArray (jCard) - ['vcard', [[name, params, type, value], ...]]
+ * @param string $field  the jCard property name to read, e.g. 'fn' or 'org'
+ */
 function domainVcardField(array $vcard, string $field): ?string
 {
     foreach ($vcard[1] ?? [] as $v) {
@@ -296,13 +319,19 @@ function domainVcardField(array $vcard, string $field): ?string
 
 /**
  * True when a registrant value is a privacy placeholder ("REDACTED", "Domains By Proxy", GDPR wording) rather than a real name.
+ *
+ * @param string $v  the registrant name or organisation the registry gave
  */
 function domainLooksRedacted(string $v): bool
 {
     return (bool)preg_match('/redacted|privacy|withheld|not disclosed|data protected|gdpr|contact privacy|whoisguard|domains by proxy/i', $v);
 }
 
-/** Any date string → Y-m-d, or null. */
+/**
+ * Any date string → Y-m-d, or null.
+ *
+ * @param string $raw  a date as a registry wrote it - ISO, yyyy.mm.dd, dd.mm.yyyy or anything strtotime() reads
+ */
 function domainDateOnly(string $raw): ?string
 {
     $raw = trim($raw);
@@ -318,7 +347,11 @@ function domainDateOnly(string $raw): ?string
 //  WHOIS fallback
 // ============================================================================
 
-/** The WHOIS server for a TLD, from IANA's referral, cached with the bootstrap. */
+/**
+ * The WHOIS server for a TLD, from IANA's referral, cached with the bootstrap.
+ *
+ * @param string $tld  the top-level domain without a dot, e.g. 'de'
+ */
 function domainWhoisServer(PDO $conn, string $tld): ?string
 {
     static $mem = [];
@@ -343,7 +376,12 @@ function domainWhoisServer(PDO $conn, string $tld): ?string
     return $mem[$tld] = $server;
 }
 
-/** One port-43 query. null when the server could not be reached. */
+/**
+ * One port-43 query. null when the server could not be reached.
+ *
+ * @param string $server  the WHOIS server host name, e.g. 'whois.iana.org'
+ * @param string $query   the line to send - normally the domain or TLD, with server-specific flags where needed
+ */
 function domainWhoisQuery(string $server, string $query): ?string
 {
     $f = @fsockopen($server, 43, $errno, $errstr, 8);
@@ -365,6 +403,8 @@ function domainWhoisQuery(string $server, string $query): ?string
  * Looks a domain up over WHOIS, for registries without RDAP, and reads the dates, statuses, registrar, name servers and DNSSEC from the text reply.
  *
  * An answer saying the name is not registered comes back with not_found set.
+ *
+ * @param string $name  a stored domain name, already through domainNormalise()
  */
 function domainWhoisLookup(PDO $conn, string $name): array
 {
@@ -417,6 +457,9 @@ function domainWhoisLookup(PDO $conn, string $name): array
 /**
  * Space out requests to one registry. Called between lookups in a batch: the
  * same RDAP/WHOIS host is not asked again within $gapSeconds.
+ *
+ * @param string $name        the domain about to be looked up - its TLD decides which registry host is paced
+ * @param float  $gapSeconds  least time between two requests to the same host, in seconds
  */
 function domainLookupPace(PDO $conn, string $name, float $gapSeconds = 1.5): void
 {
@@ -434,6 +477,8 @@ function domainLookupPace(PDO $conn, string $name, float $gapSeconds = 1.5): voi
 /**
  * Registries where a registrar "transfer lock" is not how transfers are
  * controlled, so its absence is not a weakness. .uk: Nominet registrar tags.
+ *
+ * @param string $name  a stored domain name; only its TLD is read
  */
 function domainTransferLockNotApplicable(string $name): bool
 {

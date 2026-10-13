@@ -1,6 +1,6 @@
 # api/rfp-builder/run_consolidation.php
 
-> API endpoint - 242 lines
+> API endpoint - 245 lines
 
 Run Pass 2 (AI consolidation) as a Server-Sent Events stream so the browser can show live output (claude.ai-style) instead of waiting 60-180s on a spinner. Same DB shape as before — categories, consolidated rows, M:N source links, conflicts — but the AI call is streamed and progress is forwarded to the browser.
 
@@ -26,20 +26,20 @@ if anything fails mid-stream, no data is written.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse()](/code/functions/sse.md) | 45 | Send one SSE event to the browser. Always flushes. |
+| [sse()](/code/functions/sse.md) | 48 | Send one SSE event to the browser. Always flushes. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 87 |  | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
-| 129 |  | **delete** [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 131 |  | **delete** [rfp_categories](/code/tables/rfp_categories.md) |  |
-| 135 |  | **insert** [rfp_categories](/code/tables/rfp_categories.md) (`rfp_id`, `name`, `description`, `sort_order`) |  |
-| 149 |  | **insert** [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) (`rfp_id`, `category_id`, `requirement_text`, `requirement_type`, `priority`, `ai_rationale`) |  |
-| 154 |  | **insert** [rfp_consolidated_sources](/code/tables/rfp_consolidated_sources.md) (`consolidated_id`, `extracted_id`) |  |
-| 190 |  | **insert** [rfp_conflicts](/code/tables/rfp_conflicts.md) (`rfp_id`, `consolidated_id_a`, `consolidated_id_b`, `ai_explanation`, `resolution`) |  |
-| 207 |  | **update** [rfps](/code/tables/rfps.md) (`status`, `updated_datetime`) |  |
+| 90 |  | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
+| 132 |  | **delete** [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 134 |  | **delete** [rfp_categories](/code/tables/rfp_categories.md) |  |
+| 138 |  | **insert** [rfp_categories](/code/tables/rfp_categories.md) (`rfp_id`, `name`, `description`, `sort_order`) |  |
+| 152 |  | **insert** [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) (`rfp_id`, `category_id`, `requirement_text`, `requirement_type`, `priority`, `ai_rationale`) |  |
+| 157 |  | **insert** [rfp_consolidated_sources](/code/tables/rfp_consolidated_sources.md) (`consolidated_id`, `extracted_id`) |  |
+| 193 |  | **insert** [rfp_conflicts](/code/tables/rfp_conflicts.md) (`rfp_id`, `consolidated_id_a`, `consolidated_id_b`, `ai_explanation`, `resolution`) |  |
+| 210 |  | **update** [rfps](/code/tables/rfps.md) (`status`, `updated_datetime`) |  |
 
 ## How it hangs together
 

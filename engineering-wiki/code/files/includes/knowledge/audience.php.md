@@ -1,6 +1,6 @@
 # includes/knowledge/audience.php
 
-> PHP - 118 lines
+> PHP - 129 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Knowledge Folders and Security Developer Guide](https://github.com/edmozley/freeitsm/wiki/Knowledge-Folders-and-Security-Developer-Guide)

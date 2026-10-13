@@ -6,12 +6,12 @@ The whole design, validated. Safe to call on the login page: it swallows any dat
 function brandingLoginDesign(?PDO $conn = null, string $scope = 'login'): array
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 271.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 292.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `string` | `'login'` |  |
+| `$scope` | `string` | `'login'` | which screen - login, portal or home; anything else is treated as login |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 2
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 285 | `brandingLoginDesign` | read [system_settings](/code/tables/system_settings.md) |  |
+| 306 | `brandingLoginDesign` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

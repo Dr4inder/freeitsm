@@ -25,15 +25,15 @@ function knowledgeNodePermits(
 ): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 616.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 659.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$type` | `string` |  |  |
-| `$id` | `int` |  |  |
-| `$isRestricted` | `int` |  |  |
-| `$acl` | `array` |  |  |
-| `$principals` | `array` |  |  |
+| `$type` | `string` |  | 'folder' or 'article' |
+| `$id` | `int` |  | the folder or article id |
+| `$isRestricted` | `int` |  | 1 for a Restricted node (grants admit), 0 for an Open one (denies exclude) |
+| `$acl` | `array` |  | the access rows from `knowledgeAclIndex()`, [type][object_id]['principal:id' => true] |
+| `$principals` | `array` |  | the viewer's 'type:id' strings from `knowledgeViewerPrincipals()` |
 
 **Returns:** `bool`
 

@@ -1,6 +1,6 @@
 # system/sso/provider.php
 
-> PHP - 1137 lines
+> PHP - 1142 lines
 
 System → Authentication → one LDAP / Active Directory provider.
 
@@ -21,7 +21,7 @@ application has already taught people to expect.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [v()](/code/functions/v.md) | 75 | Print a value into an input safely. |
+| [v()](/code/functions/v.md) | 80 | Print a value into an input safely. |
 
 ## Database
 

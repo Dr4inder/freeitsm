@@ -6,11 +6,11 @@ Parse recipients string into Graph API format
 function parseRecipients($recipientString)
 ```
 
-Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 566.
+Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md), line 598.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$recipientString` |  |  |  |
+| `$recipientString` |  |  | addresses separated by ; or ,; invalid ones are dropped |
 
 ## Called from
 

@@ -11,13 +11,13 @@ you would hit during an incident, when both are trying to reach the other.
 function warRoomOpenDm(PDO $conn, int $analystId, int $otherId): int
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 376.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 410.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$otherId` | `int` |  |  |
+| `$otherId` | `int` |  | the other analyst's id; must be active and not the caller |
 
 **Returns:** `int`
 
@@ -25,9 +25,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 376
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 380 | `warRoomOpenDm` | read [analysts](/code/tables/analysts.md) |  |
-| 386 | `warRoomOpenDm` | read [warroom_channels](/code/tables/warroom_channels.md) |  |
-| 393 | `warRoomOpenDm` | **insert** [warroom_channels](/code/tables/warroom_channels.md) (`kind`, `dm_key`, `is_private`, `created_by`, `created_datetime`) |  |
+| 414 | `warRoomOpenDm` | read [analysts](/code/tables/analysts.md) |  |
+| 420 | `warRoomOpenDm` | read [warroom_channels](/code/tables/warroom_channels.md) |  |
+| 427 | `warRoomOpenDm` | **insert** [warroom_channels](/code/tables/warroom_channels.md) (`kind`, `dm_key`, `is_private`, `created_by`, `created_datetime`) |  |
 
 ## Calls
 

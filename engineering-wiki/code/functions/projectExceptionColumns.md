@@ -6,7 +6,7 @@ The columns the exceptions are read from, as SQL - NULLs before Verification.
 function projectExceptionColumns(PDO $conn): string
 ```
 
-Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 195.
+Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.md), line 206.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/projects/read.php](/code/files/includes/projects/read.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 198 | `projectExceptionColumns` | read [project_raid](/code/tables/project_raid.md), read [project_tolerances](/code/tables/project_tolerances.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 209 | `projectExceptionColumns` | read [project_raid](/code/tables/project_raid.md), read [project_tolerances](/code/tables/project_tolerances.md), read [project_stages](/code/tables/project_stages.md) |  |
 
 ## Calls
 

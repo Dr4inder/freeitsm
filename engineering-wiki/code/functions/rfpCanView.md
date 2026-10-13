@@ -6,13 +6,13 @@ May this analyst see RFP `$id`? False for one that does not exist - the same ans
 function rfpCanView(PDO $conn, int $analystId, int $rfpId): bool
 ```
 
-Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 59.
+Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$rfpId` | `int` |  |  |
+| `$rfpId` | `int` |  | the rfps id; 0 or less gives false |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 63 | `rfpCanView` | read [rfps](/code/tables/rfps.md) |  |
+| 79 | `rfpCanView` | read [rfps](/code/tables/rfps.md) |  |
 
 ## Calls
 

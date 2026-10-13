@@ -1,6 +1,6 @@
 # api/projects/assistant_chat.php
 
-> API endpoint - 65 lines
+> API endpoint - 69 lines
 
 Projects - the AI project assistant (3.3.0). Every rule is in includes/projects/assistant_chat.php; this only routes.
 
@@ -26,7 +26,7 @@ POST {action, project_id, ...}
 
 | Function | Line | What it does |
 |---|--:|---|
-| [projectChatAiFail()](/code/functions/projectChatAiFail.md) | 22 | A provider problem in words the panel can show (as reports.php). |
+| [projectChatAiFail()](/code/functions/projectChatAiFail.md) | 26 | A provider problem in words the panel can show (as reports.php). |
 
 ## How it hangs together
 

@@ -12,15 +12,15 @@ function lmsCtParseDrafts(
 ): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 429.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 514.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$content` | `string` |  |  |
-| `$skill` | `string` |  |  |
-| `$difficulty` | `string` |  |  |
-| `$format` | `string` |  |  |
-| `$marks` | `array` |  |  |
+| `$content` | `string` |  | the model's reply text, expected to be JSON |
+| `$skill` | `string` |  | the skill the questions were written for |
+| `$difficulty` | `string` |  | 'beginner', 'intermediate' or 'advanced' |
+| `$format` | `string` |  | 'choice' or 'graded' |
+| `$marks` | `array` |  | the graded marks, best first, from `lmsCtGradedMarks()`; used only for 'graded' |
 
 **Returns:** `array`
 

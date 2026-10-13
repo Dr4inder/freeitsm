@@ -10,7 +10,7 @@ sensibly means themselves — not nobody.
 function wtTeamAnalystIds(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 162.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 170.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 167 | `wtTeamAnalystIds` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 175 | `wtTeamAnalystIds` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Called from
 

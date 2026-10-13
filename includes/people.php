@@ -36,14 +36,22 @@ require_once __DIR__ . '/entity_links.php';
 
 const PEOPLE_SECTION_LIMIT = 50;
 
-/** " AND (<col> IN (accessible) [OR <col> IS NULL])", or '' on a single-company install. */
+/**
+ * " AND (<col> IN (accessible) [OR <col> IS NULL])", or '' on a single-company install.
+ *
+ * @param string $qualified  the company column to filter on, alias included, e.g. 'u.tenant_id'
+ */
 function peopleScope(PDO $conn, int $analystId, string $qualified): array
 {
     if (!isMultiTenant($conn)) return ['', []];
     return allAccessibleTenantsFilter($conn, $analystId, $qualified);
 }
 
-/** " AND <col> = ?" for one company - NULL counts as the Default company's. */
+/**
+ * " AND <col> = ?" for one company - NULL counts as the Default company's.
+ *
+ * @param string $qualified  the company column to match, alias included, e.g. 't.tenant_id'
+ */
 function peopleCompanyMatch(PDO $conn, int $tenantId, string $qualified): array
 {
     if (!isMultiTenant($conn)) return ['', []];
@@ -51,7 +59,11 @@ function peopleCompanyMatch(PDO $conn, int $tenantId, string $qualified): array
     return [" AND $qualified = ?", [$tenantId]];
 }
 
-/** The name to show for a person: preferred name, then display name, email, username, or #id. */
+/**
+ * The name to show for a person: preferred name, then display name, email, username, or #id.
+ *
+ * @param array $r  a users row - preferred_name, display_name, email, username and id are read
+ */
 function peopleName(array $r): string
 {
     foreach (['preferred_name', 'display_name', 'email', 'username'] as $k) {
@@ -68,6 +80,7 @@ function peopleName(array $r): string
 /**
  * People the analyst can see, newest-relevant first by name.
  * @param array $f q, company (tenant id), status ('active' default | 'leavers' | 'all')
+ * @param int $limit  the most rows to return
  */
 function peopleListRows(PDO $conn, int $analystId, array $f = [], int $limit = 200): array
 {
@@ -190,7 +203,11 @@ function peopleCompanyCards(PDO $conn, int $analystId): array
 //  One person
 // ---------------------------------------------------------------------------
 
-/** Everything about one person this analyst may see, or null (unknown or out of reach). */
+/**
+ * Everything about one person this analyst may see, or null (unknown or out of reach).
+ *
+ * @param int $userId  the users id of the person
+ */
 function personDetail(PDO $conn, int $analystId, int $userId): ?array
 {
     if ($userId <= 0 || !analystCanAccessUser($conn, $analystId, $userId)) return null;
@@ -301,7 +318,11 @@ function companyDetail(PDO $conn, int $analystId, int $tenantId): ?array
 //  Sections - each takes $who = ['user' => id] or ['company' => id]
 // ---------------------------------------------------------------------------
 
-/** Tickets raised by the person / in the company: the latest, and how many are open. */
+/**
+ * Tickets raised by the person / in the company: the latest, and how many are open.
+ *
+ * @param array $who  ['user' => users id] for one person, or ['company' => tenant id] for a company
+ */
 function peopleTickets(PDO $conn, int $analystId, array $who): array
 {
     [$scope, $args] = peopleScope($conn, $analystId, 't.tenant_id');
@@ -341,7 +362,11 @@ function peopleTickets(PDO $conn, int $analystId, array $who): array
     return ['total' => $total, 'open' => $open, 'rows' => $rows];
 }
 
-/** Assets the person holds now / assets belonging to the company. */
+/**
+ * Assets the person holds now / assets belonging to the company.
+ *
+ * @param array $who  ['user' => users id] for what the person holds, or ['company' => tenant id]
+ */
 function peopleAssets(PDO $conn, int $analystId, array $who): array
 {
     [$scope, $args] = peopleScope($conn, $analystId, 'a.tenant_id');
@@ -372,7 +397,11 @@ function peopleAssets(PDO $conn, int $analystId, array $who): array
     return ['total' => $total, 'rows' => $rows];
 }
 
-/** Contracts where the person / the company is the CUSTOMER (#153 step 1). */
+/**
+ * Contracts where the person / the company is the CUSTOMER (#153 step 1).
+ *
+ * @param array $who  ['user' => users id] or ['company' => tenant id] - the contract's customer
+ */
 function peopleContracts(PDO $conn, int $analystId, array $who): array
 {
     require_once __DIR__ . '/contract_party.php';
@@ -409,7 +438,11 @@ function peopleContracts(PDO $conn, int $analystId, array $who): array
     return ['total' => count($rows), 'rows' => $rows];
 }
 
-/** Domains the person is the customer for / the company holds. */
+/**
+ * Domains the person is the customer for / the company holds.
+ *
+ * @param array $who  ['user' => users id] (domain customer) or ['company' => tenant id]
+ */
 function peopleDomains(PDO $conn, int $analystId, array $who): array
 {
     [$scope, $args] = peopleScope($conn, $analystId, 'd.tenant_id');
@@ -441,6 +474,8 @@ function peopleDomains(PDO $conn, int $analystId, array $who): array
  * tab of a project) with their role and their RACI duties ("Accountable for
  * Phones working on day one"); for a company, its projects. Live ones first.
  * Limited to the companies the analyst can access, like Projects itself.
+ *
+ * @param array $who  ['user' => users id] for projects they are a member of, or ['company' => tenant id]
  */
 function peopleProjects(PDO $conn, int $analystId, array $who): array
 {
@@ -494,7 +529,11 @@ function peopleProjects(PDO $conn, int $analystId, array $who): array
     return ['total' => count($rows), 'rows' => $rows];
 }
 
-/** The person's courses - exactly what their own My courses page shows. */
+/**
+ * The person's courses - exactly what their own My courses page shows.
+ *
+ * @param int $userId  the users id of the learner
+ */
 function peopleCoursesForPerson(PDO $conn, int $userId): array
 {
     require_once __DIR__ . '/lms_access.php';
@@ -535,7 +574,11 @@ function peopleCoursesForCompany(PDO $conn, int $tenantId): array
     return ['total' => count($rows), 'rows' => $rows];
 }
 
-/** Forms the person submitted / people in the company submitted (from the portal). */
+/**
+ * Forms the person submitted / people in the company submitted (from the portal).
+ *
+ * @param array $who  ['user' => users id] for the submitter, or ['company' => tenant id]
+ */
 function peopleForms(PDO $conn, int $analystId, array $who): array
 {
     if (isset($who['user'])) {
@@ -586,14 +629,22 @@ function peopleCanSeeSuppliers(PDO $conn, int $analystId): bool
     return analystCanAccessModule($conn, $analystId, 'people') && analystCanAccessModule($conn, $analystId, 'contracts');
 }
 
-/** The name to show for a supplier: trading name, else legal name, else #id. */
+/**
+ * The name to show for a supplier: trading name, else legal name, else #id.
+ *
+ * @param array $r  a suppliers row - trading_name, legal_name and id are read
+ */
 function peopleSupplierName(array $r): string
 {
     $t = trim((string)($r['trading_name'] ?? ''));
     return $t !== '' ? $t : (string)($r['legal_name'] ?? ('#' . (int)($r['id'] ?? 0)));
 }
 
-/** The name to show for a supplier contact: first name and surname, else email, else #id. */
+/**
+ * The name to show for a supplier contact: first name and surname, else email, else #id.
+ *
+ * @param array $r  a contacts row - first_name, surname, email and id are read
+ */
 function peopleContactName(array $r): string
 {
     $n = trim(($r['first_name'] ?? '') . ' ' . ($r['surname'] ?? ''));
@@ -642,7 +693,11 @@ function peopleSupplierRows(PDO $conn, int $analystId, array $f = []): array
     ], $st->fetchAll(PDO::FETCH_ASSOC));
 }
 
-/** Everything about one supplier this analyst may see, or null. */
+/**
+ * Everything about one supplier this analyst may see, or null.
+ *
+ * @param int $supplierId  the suppliers id
+ */
 function supplierDetail(PDO $conn, int $analystId, int $supplierId): ?array
 {
     if ($supplierId <= 0 || !peopleCanSeeSuppliers($conn, $analystId)) return null;
@@ -682,7 +737,11 @@ function supplierDetail(PDO $conn, int $analystId, int $supplierId): ?array
     return ['supplier' => $supplier, 'sections' => $sections];
 }
 
-/** Everything about one supplier contact this analyst may see, or null. */
+/**
+ * Everything about one supplier contact this analyst may see, or null.
+ *
+ * @param int $contactId  the contacts id (a supplier contact)
+ */
 function supplierContactDetail(PDO $conn, int $analystId, int $contactId): ?array
 {
     if ($contactId <= 0 || !peopleCanSeeSuppliers($conn, $analystId)) return null;
@@ -715,6 +774,8 @@ function supplierContactDetail(PDO $conn, int $analystId, int $contactId): ?arra
  * Tasks given to a supplier, or to one person there, as a contractor (3.3.0,
  * includes/task_contractors.php) - open first. In companies the analyst can
  * access; a task in a members-only project they cannot see is left out.
+ *
+ * @param array $who  ['supplier' => suppliers id] for the whole supplier, or ['contact' => contacts id] for one person there
  */
 function peopleContractorTasks(PDO $conn, int $analystId, array $who): array
 {
@@ -749,7 +810,11 @@ function peopleContractorTasks(PDO $conn, int $analystId, array $who): array
     return ['total' => count($rows), 'open' => count(array_filter($rows, fn($r) => !$r['closed'])), 'rows' => $rows];
 }
 
-/** Contracts with the supplier - the ordinary, "we buy from them" kind. */
+/**
+ * Contracts with the supplier - the ordinary, "we buy from them" kind.
+ *
+ * @param int $supplierId  the suppliers id
+ */
 function peopleSupplierContracts(PDO $conn, int $analystId, int $supplierId): array
 {
     require_once __DIR__ . '/contract_party.php';
@@ -774,7 +839,11 @@ function peopleSupplierContracts(PDO $conn, int $analystId, int $supplierId): ar
     return ['total' => count($rows), 'rows' => $rows];
 }
 
-/** Assets bought from the supplier, in companies the analyst can access. */
+/**
+ * Assets bought from the supplier, in companies the analyst can access.
+ *
+ * @param int $supplierId  the suppliers id, matched on assets.supplier_id
+ */
 function peopleSupplierAssets(PDO $conn, int $analystId, int $supplierId): array
 {
     [$scope, $args] = peopleScope($conn, $analystId, 'a.tenant_id');
@@ -806,6 +875,8 @@ function peopleSupplierAssets(PDO $conn, int $analystId, int $supplierId): array
  * Domains a supplier or a contact is involved in, and how: registrar, customer,
  * technical contact. $who = ['supplier' => id] or ['contact' => id]. A domain
  * belongs to a company, so only companies the analyst can access count.
+ *
+ * @param array $who  ['supplier' => suppliers id] or ['contact' => contacts id]
  */
 function peopleSupplierDomains(PDO $conn, int $analystId, array $who): array
 {
@@ -849,7 +920,11 @@ function peopleSupplierDomains(PDO $conn, int $analystId, array $who): array
     return ['total' => count($rows), 'rows' => $rows];
 }
 
-/** A bare date (a contract end, a domain expiry, a deadline) - shown as stored, never shifted by a timezone. */
+/**
+ * A bare date (a contract end, a domain expiry, a deadline) - shown as stored, never shifted by a timezone.
+ *
+ * @param ?string $d  a 'Y-m-d' date (anything after the first 10 characters is ignored); null or '' gives ''
+ */
 function peopleBareDate(?string $d): string
 {
     if ($d === null || $d === '') return '';

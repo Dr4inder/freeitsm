@@ -13,16 +13,16 @@ function simCleanup(
 ): void
 ```
 
-Defined in [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md), line 202.
+Defined in [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md), line 221.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `?int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$sender` | `string` |  |  |
-| `$channelType` | `string` |  |  |
-| `$channelId` | `int` |  |  |
-| `$prevStamp` |  |  |  |
+| `$sender` | `string` |  | the fake sender the simulation used (a phone number or Telegram chat id) |
+| `$channelType` | `string` |  | the channel type, e.g. 'whatsapp' or 'telegram' - picks how `$sender` is normalised |
+| `$channelId` | `int` |  | the messaging_channels id whose last-inbound stamp is restored |
+| `$prevStamp` |  |  | the channel's last_inbound_datetime before the test; empty restores NULL |
 
 **Returns:** `void`
 
@@ -30,12 +30,12 @@ Defined in [api/messaging/test_channel.php](/code/files/api/messaging/test_chann
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 206 | `simCleanup` | **delete** [emails](/code/tables/emails.md) |  |
-| 207 | `simCleanup` | **delete** [tickets](/code/tables/tickets.md) |  |
-| 213 | `simCleanup` | read [users](/code/tables/users.md) |  |
-| 217 | `simCleanup` | read [tickets](/code/tables/tickets.md) |  |
-| 220 | `simCleanup` | **delete** [users](/code/tables/users.md) |  |
-| 224 | `simCleanup` | **update** [messaging_channels](/code/tables/messaging_channels.md) (`last_inbound_datetime`) |  |
+| 225 | `simCleanup` | **delete** [emails](/code/tables/emails.md) |  |
+| 226 | `simCleanup` | **delete** [tickets](/code/tables/tickets.md) |  |
+| 232 | `simCleanup` | read [users](/code/tables/users.md) |  |
+| 236 | `simCleanup` | read [tickets](/code/tables/tickets.md) |  |
+| 239 | `simCleanup` | **delete** [users](/code/tables/users.md) |  |
+| 243 | `simCleanup` | **update** [messaging_channels](/code/tables/messaging_channels.md) (`last_inbound_datetime`) |  |
 
 ## Calls
 

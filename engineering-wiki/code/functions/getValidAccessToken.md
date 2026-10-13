@@ -9,13 +9,13 @@ Get valid access token (refresh if expired)
 function getValidAccessToken($conn, $mailbox, $tokenData)
 ```
 
-Defined in [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md), line 259.
+Defined in [api/change-management/send_share_email.php](/code/files/api/change-management/send_share_email.php.md), line 276.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` |  |  |  |
-| `$tokenData` |  |  |  |
+| `$mailbox` |  |  | the target_mailboxes row, decrypted (id and the azure_* columns are used for a refresh) |
+| `$tokenData` |  |  | the mailbox's decoded token_data: access_token, refresh_token, expires_at (Unix time) |
 
 ## Calls
 

@@ -11,13 +11,13 @@ ticked would be its own small betrayal. So it throws rather than silently droppi
 function splitMessagesByIds(PDO $conn, int $ticketId, array $emailIds): array
 ```
 
-Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 121.
+Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 125.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
-| `$emailIds` | `array` |  |  |
+| `$emailIds` | `array` |  | the emails.id values the analyst ticked; split markers and ids not on this ticket throw |
 
 **Returns:** `array`
 
@@ -25,7 +25,7 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 132 | `splitMessagesByIds` | read [emails](/code/tables/emails.md) |  |
+| 136 | `splitMessagesByIds` | read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

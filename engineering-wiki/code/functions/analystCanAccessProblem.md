@@ -6,13 +6,13 @@ May this analyst access this *problem* (by its owning company)? The Problem Mana
 function analystCanAccessProblem(PDO $conn, int $analystId, $problemId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 329.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 337.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$problemId` |  |  |  |
+| `$problemId` |  |  | the problem (problems.id), any form; cast to int, and 0 or less is false |
 
 **Returns:** `bool`
 
@@ -20,7 +20,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 329
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 338 | `analystCanAccessProblem` | read [problems](/code/tables/problems.md) |  |
+| 346 | `analystCanAccessProblem` | read [problems](/code/tables/problems.md) |  |
 
 ## Calls
 

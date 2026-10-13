@@ -6,12 +6,12 @@ Remove one mapped event from the calendar it was written to, and forget it.
 function calendarSyncRemoveRow(PDO $conn, array $row): void
 ```
 
-Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md), line 378.
+Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md), line 385.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | one calendar_sync_events row - connection_id, analyst_id, remote_calendar, remote_event_id |
 
 **Returns:** `void`
 
@@ -19,7 +19,7 @@ Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 402 | `calendarSyncRemoveRow` | **delete** [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
+| 409 | `calendarSyncRemoveRow` | **delete** [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
 
 ## Calls
 

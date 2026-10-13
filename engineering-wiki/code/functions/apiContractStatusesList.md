@@ -6,7 +6,7 @@ GET /contract-statuses - the contract statuses.
 function apiContractStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 580.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 596.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

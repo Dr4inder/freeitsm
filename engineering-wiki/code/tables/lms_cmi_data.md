@@ -15,7 +15,7 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md):55 | `lmsWriteCmi` | insert | `progress_id`, `element`, `value`, `created_datetime`, `updated_datetime` |  |
+| [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md):69 | `lmsWriteCmi` | insert | `progress_id`, `element`, `value`, `created_datetime`, `updated_datetime` |  |
 | [api/lms/scorm_data.php](/code/files/api/lms/scorm_data.php.md):110 |  | update | `value`, `updated_datetime` |  |
 | [api/lms/scorm_data.php](/code/files/api/lms/scorm_data.php.md):111 |  | insert | `progress_id`, `element`, `value`, `updated_datetime` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3927 |  | delete |  |  |

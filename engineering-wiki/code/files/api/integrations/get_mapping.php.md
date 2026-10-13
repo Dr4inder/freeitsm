@@ -1,6 +1,6 @@
 # api/integrations/get_mapping.php
 
-> API endpoint - 74 lines
+> API endpoint - 78 lines
 
 The mapping for one connection, plus the local lists it maps FROM (companies, departments, ticket types, priorities) so the screen can label every row.
 
@@ -20,16 +20,16 @@ screen is opened.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [mappingList()](/code/functions/mappingList.md) | 33 | A lookup list, tolerant of a table that is not there on every install. |
+| [mappingList()](/code/functions/mappingList.md) | 37 | A lookup list, tolerant of a table that is not there on every install. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 53 |  | read [tenants](/code/tables/tenants.md) |  |
-| 54 |  | read [departments](/code/tables/departments.md) |  |
-| 62 |  | read [ticket_types](/code/tables/ticket_types.md), read [tenants](/code/tables/tenants.md) |  |
-| 67 |  | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 57 |  | read [tenants](/code/tables/tenants.md) |  |
+| 58 |  | read [departments](/code/tables/departments.md) |  |
+| 66 |  | read [ticket_types](/code/tables/ticket_types.md), read [tenants](/code/tables/tenants.md) |  |
+| 71 |  | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
 
 ## How it hangs together
 

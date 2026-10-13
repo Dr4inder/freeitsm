@@ -6,15 +6,15 @@ Decorated project rows (health, progress, exceptions, budget totals) for a WHERE
 function projectAssistRows(PDO $conn, array $scope, string $where, array $args, int $limit): array
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 31.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 38.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$scope` | `array` |  |  |
-| `$where` | `string` |  |  |
-| `$args` | `array` |  |  |
-| `$limit` | `int` |  |  |
+| `$scope` | `array` |  | [sql, args]: the caller's company filter on alias p, e.g. [' AND p.tenant_id IN (?)', [3]] |
+| `$where` | `string` |  | the SQL condition on projects p, with ? placeholders |
+| `$args` | `array` |  | the values for `$where`'s placeholders |
+| `$limit` | `int` |  | the most rows to return (kept between 1 and 500) |
 
 **Returns:** `array`
 
@@ -22,8 +22,8 @@ Defined in [includes/projects/assistant.php](/code/files/includes/projects/assis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 34 | `projectAssistRows` | read [project_stages](/code/tables/project_stages.md) |  |
-| 36 | `projectAssistRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 41 | `projectAssistRows` | read [project_stages](/code/tables/project_stages.md) |  |
+| 43 | `projectAssistRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

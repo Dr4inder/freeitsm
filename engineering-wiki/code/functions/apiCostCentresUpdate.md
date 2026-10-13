@@ -6,7 +6,7 @@ PATCH /cost-centres/{id}
 function apiCostCentresUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 174.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 184.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

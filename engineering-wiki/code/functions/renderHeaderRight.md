@@ -6,18 +6,18 @@ Renders the right-hand side of the analyst header: the "Back to" link, the compa
 function renderHeaderRight($analyst_name, $path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1462.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1473.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$analyst_name` |  |  |  |
-| `$path_prefix` |  |  |  |
+| `$analyst_name` |  |  | the signed-in analyst's display name, for the avatar initials and the menu |
+| `$path_prefix` |  |  | relative path from the page to the app root, e.g. '../' |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1495 | `renderHeaderRight` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1506 | `renderHeaderRight` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Calls
 

@@ -26,13 +26,13 @@ and exactly what makes it look like the software is lying to them.
 function d012_whyMissing($abs, $baseDir, $storedKey)
 ```
 
-Defined in [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md), line 134.
+Defined in [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md), line 157.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$abs` |  |  |  |
-| `$baseDir` |  |  |  |
-| `$storedKey` |  |  |  |
+| `$abs` |  |  | the absolute path the file was expected at |
+| `$baseDir` |  |  | the storage folder the stored value is relative to; null when unknown |
+| `$storedKey` |  |  | the path or key exactly as stored in the database row |
 
 ## Calls
 

@@ -6,11 +6,11 @@ Guard the table name. Returns the safe literal or null. Interpolating a caller-s
 function mfaThrottleTable(string $table): ?string
 ```
 
-Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 63.
+Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 65.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$table` | `string` |  |  |
+| `$table` | `string` |  | the account table asked for - only 'analysts' or 'users' pass |
 
 **Returns:** `?string`
 

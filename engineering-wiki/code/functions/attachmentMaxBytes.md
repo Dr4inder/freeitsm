@@ -6,7 +6,7 @@ The install-wide largest single attachment, in bytes. What uploads.php uses when
 function attachmentMaxBytes(?PDO $conn = null): int
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 67.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

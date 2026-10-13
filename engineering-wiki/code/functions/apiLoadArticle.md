@@ -11,13 +11,13 @@ service layer has already run the same check by then.
 function apiLoadArticle(PDO $conn, int $articleId, ?array $apiKey = null): array
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 117.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$articleId` | `int` |  |  |
-| `$apiKey` | `?array` | `null` | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
+| `$articleId` | `int` |  | the knowledge_articles id |
+| `$apiKey` | `?array` | `null` | the calling API key on a read path; null skips the read check (post-write callers, already checked) |
 
 **Returns:** `array`
 

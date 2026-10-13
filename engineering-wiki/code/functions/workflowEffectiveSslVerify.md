@@ -17,11 +17,11 @@ self-signed cert).
 function workflowEffectiveSslVerify(bool $perCallVerify): bool
 ```
 
-Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 70.
+Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 72.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$perCallVerify` | `bool` |  |  |
+| `$perCallVerify` | `bool` |  | the form's or provider's own verify-SSL tick; ignored (false) when SSL_VERIFY_PEER is false |
 
 **Returns:** `bool`
 

@@ -6,12 +6,12 @@ Load a connection with its secrets decrypted. Returns null if missing or if the 
 function integrationsLoadConnection(PDO $conn, $connectionId): ?array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 303.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 324.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$connectionId` |  |  |  |
+| `$connectionId` |  |  | the integration_connections id (cast to int) |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 307 | `integrationsLoadConnection` | read [integration_connections](/code/tables/integration_connections.md) |  |
+| 328 | `integrationsLoadConnection` | read [integration_connections](/code/tables/integration_connections.md) |  |
 
 ## Calls
 

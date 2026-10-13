@@ -6,12 +6,12 @@ Property definitions for a class, keyed by property_key.
 function apiCmdbClassDefs(PDO $conn, int $classId): array
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 184.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 195.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$classId` | `int` |  |  |
+| `$classId` | `int` |  | the cmdb_classes id whose property definitions to load |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 186 | `apiCmdbClassDefs` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 197 | `apiCmdbClassDefs` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
 
 ## Called from
 

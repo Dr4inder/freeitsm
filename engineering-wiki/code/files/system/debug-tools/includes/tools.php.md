@@ -1,6 +1,6 @@
 # system/debug-tools/includes/tools.php
 
-> PHP - 477 lines
+> PHP - 483 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [System](https://github.com/edmozley/freeitsm/wiki/System)
@@ -24,9 +24,9 @@ To add a new diagnostic:
 | Function | Line | What it does |
 |---|--:|---|
 | [getDebugTools()](/code/functions/getDebugTools.md) | 25 | Every Debug Tool with its card and page metadata - id, slug, backend file, title, category, description, search keywords, when to run it, what it checks. |
-| [getDebugToolBySlug()](/code/functions/getDebugToolBySlug.md) | 442 | Find one tool by its slug (e.g. 'd001'). Returns null if not found. |
-| [debugToolAiFeatureOptions()](/code/functions/debugToolAiFeatureOptions.md) | 450 | D014's feature picker: every AI feature, plus "all" (GH #171). |
-| [debugToolIcon()](/code/functions/debugToolIcon.md) | 463 | Inline SVG markup for a debug-tool icon key. Unknown keys render a neutral wrench so a typo never breaks the page. Sizing/colour come from CSS. |
+| [getDebugToolBySlug()](/code/functions/getDebugToolBySlug.md) | 446 | Find one tool by its slug (e.g. 'd001'). Returns null if not found. |
+| [debugToolAiFeatureOptions()](/code/functions/debugToolAiFeatureOptions.md) | 454 | D014's feature picker: every AI feature, plus "all" (GH #171). |
+| [debugToolIcon()](/code/functions/debugToolIcon.md) | 469 | Inline SVG markup for a debug-tool icon key. Unknown keys render a neutral wrench so a typo never breaks the page. Sizing/colour come from CSS. |
 
 ## How it hangs together
 

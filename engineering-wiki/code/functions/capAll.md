@@ -6,7 +6,7 @@ Every declared capability key. Enum twin: Capability::cases().
 function capAll(): array
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 413.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 417.
 
 **Returns:** `array`
 

@@ -11,12 +11,12 @@ counts. Unknown → known is the first sighting, recorded without an alert.
 function domainBaselineDiff(?array $old, array $new): array
 ```
 
-Defined in [includes/domains/monitor.php](/code/files/includes/domains/monitor.php.md), line 58.
+Defined in [includes/domains/monitor.php](/code/files/includes/domains/monitor.php.md), line 66.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$old` | `?array` |  |  |
-| `$new` | `array` |  |  |
+| `$old` | `?array` |  | the previous baseline from domains.watch_baseline, or null on the first run |
+| `$new` | `array` |  | the baseline `domainBaseline()` just built |
 
 **Returns:** array<int,array{field:string,old:string,new:string}>
 

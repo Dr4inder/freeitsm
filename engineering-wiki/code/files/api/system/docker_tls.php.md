@@ -1,6 +1,6 @@
 # api/system/docker_tls.php
 
-> API endpoint - 75 lines
+> API endpoint - 80 lines
 
 API: HTTPS certificate for the Docker image (System → Docker).
 
@@ -22,7 +22,7 @@ is configured by whoever runs it, and nothing here would reach it.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [dockerTlsJson()](/code/functions/dockerTlsJson.md) | 18 | Sends an HTTP status and the given body as JSON, then stops. |
+| [dockerTlsJson()](/code/functions/dockerTlsJson.md) | 23 | Sends an HTTP status and the given body as JSON, then stops. |
 
 ## How it hangs together
 

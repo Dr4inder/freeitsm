@@ -6,12 +6,12 @@ Attempt to deliver one already-claimed row (status must be 'delivering'). Update
 function webhookAttemptDelivery(PDO $conn, array $row): string
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 302.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 326.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$row` | `array` |  |  |
+| `$row` | `array` |  | the webhook_deliveries row, already claimed (status 'delivering') |
 
 **Returns:** `string`
 
@@ -19,9 +19,9 @@ Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 322 | `webhookAttemptDelivery` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`status`, `attempts`, `last_status_code`, `last_error`, `response_snippet`, `delivered_datetime`, `next_attempt_at`, `updated_datetime`) |  |
-| 335 | `webhookAttemptDelivery` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`status`, `attempts`, `last_status_code`, `last_error`, `response_snippet`, `next_attempt_at`, `updated_datetime`) |  |
-| 344 | `webhookAttemptDelivery` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`status`, `attempts`, `last_status_code`, `last_error`, `response_snippet`, `next_attempt_at`, `updated_datetime`) |  |
+| 346 | `webhookAttemptDelivery` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`status`, `attempts`, `last_status_code`, `last_error`, `response_snippet`, `delivered_datetime`, `next_attempt_at`, `updated_datetime`) |  |
+| 359 | `webhookAttemptDelivery` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`status`, `attempts`, `last_status_code`, `last_error`, `response_snippet`, `next_attempt_at`, `updated_datetime`) |  |
+| 368 | `webhookAttemptDelivery` | **update** [webhook_deliveries](/code/tables/webhook_deliveries.md) (`status`, `attempts`, `last_status_code`, `last_error`, `response_snippet`, `next_attempt_at`, `updated_datetime`) |  |
 
 ## Calls
 

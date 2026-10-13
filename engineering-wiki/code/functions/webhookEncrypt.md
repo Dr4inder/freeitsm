@@ -6,11 +6,11 @@ Encrypt if we can; fall back to plaintext rather than breaking the webhook.
 function webhookEncrypt(?string $v): ?string
 ```
 
-Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 46.
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 50.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$v` | `?string` |  |  |
+| `$v` | `?string` |  | the value to store, e.g. a webhook URL; null and '' come back unchanged |
 
 **Returns:** `?string`
 

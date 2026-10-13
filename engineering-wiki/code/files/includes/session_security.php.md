@@ -1,6 +1,6 @@
 # includes/session_security.php
 
-> PHP - 179 lines
+> PHP - 181 lines
 
 Session hardening.
 
@@ -55,8 +55,8 @@ cookie that matters.
 | [requestIsHttps()](/code/functions/requestIsHttps.md) | 58 | Is this request actually over HTTPS? |
 | [requestScheme()](/code/functions/requestScheme.md) | 90 | 'https' or 'http' — the scheme to put on an absolute URL built from this request. |
 | [sessionCookieOptions()](/code/functions/sessionCookieOptions.md) | 103 | The attributes an authenticated session cookie must carry. |
-| [sessionPromoteToAuthenticated()](/code/functions/sessionPromoteToAuthenticated.md) | 128 | Call at every point that turns an anonymous session into an identified one, and whenever a password changes. |
-| [sessionCookieParamsAreHardened()](/code/functions/sessionCookieParamsAreHardened.md) | 160 | Did the server's own configuration already give the session cookie the attributes we require? (i.e. did one of .user.ini / .htaccess / docker php.ini apply?) |
+| [sessionPromoteToAuthenticated()](/code/functions/sessionPromoteToAuthenticated.md) | 130 | Call at every point that turns an anonymous session into an identified one, and whenever a password changes. |
+| [sessionCookieParamsAreHardened()](/code/functions/sessionCookieParamsAreHardened.md) | 162 | Did the server's own configuration already give the session cookie the attributes we require? (i.e. did one of .user.ini / .htaccess / docker php.ini apply?) |
 
 ## How it hangs together
 

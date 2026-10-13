@@ -6,12 +6,12 @@ May `$userId` be the customer of a domain in company `$tenantId`? An active user
 function domainCustomerPersonOk(PDO $conn, int $userId, ?int $tenantId): bool
 ```
 
-Defined in [includes/domains/customer.php](/code/files/includes/domains/customer.php.md), line 47.
+Defined in [includes/domains/customer.php](/code/files/includes/domains/customer.php.md), line 49.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$userId` | `int` |  |  |
+| `$userId` | `int` |  | the users.id proposed as the customer contact |
 | `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `bool`
@@ -20,7 +20,7 @@ Defined in [includes/domains/customer.php](/code/files/includes/domains/customer
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 49 | `domainCustomerPersonOk` | read [users](/code/tables/users.md) |  |
+| 51 | `domainCustomerPersonOk` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

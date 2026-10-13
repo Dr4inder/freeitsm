@@ -6,15 +6,15 @@ Close a run off.
 function dsyncFinishRun(PDO $conn, int $runId, string $status, array $c, string $message): void
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 928.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 1022.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$runId` | `int` |  |  |
-| `$status` | `string` |  |  |
-| `$c` | `array` |  |  |
-| `$message` | `string` |  |  |
+| `$runId` | `int` |  | directory_sync_runs.id |
+| `$status` | `string` |  | 'ok', 'stopped' or 'failed' |
+| `$c` | `array` |  | the run's counts: seen, created, updated, adopted, deactivated, conflict, error |
+| `$message` | `string` |  | the run's summary or error text; empty stores NULL |
 
 **Returns:** `void`
 
@@ -22,7 +22,7 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 931 | `dsyncFinishRun` | **update** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `adopted_count`, `deactivated_count`, `conflict_count`, `error_count`, `message`) |  |
+| 1025 | `dsyncFinishRun` | **update** [directory_sync_runs](/code/tables/directory_sync_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `adopted_count`, `deactivated_count`, `conflict_count`, `error_count`, `message`) |  |
 
 ## Called from
 

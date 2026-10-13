@@ -6,7 +6,7 @@ POST /knowledge/articles
 function apiKnowledgeArticlesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 297.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 309.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

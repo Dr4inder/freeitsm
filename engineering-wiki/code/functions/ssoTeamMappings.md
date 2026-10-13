@@ -6,12 +6,12 @@ A provider's group -> team rows, with the team names.
 function ssoTeamMappings(PDO $conn, int $providerId): array
 ```
 
-Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 107.
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 124.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$providerId` | `int` |  |  |
+| `$providerId` | `int` |  | the sign-in provider (auth_providers.id) |
 
 **Returns:** `array`
 
@@ -19,7 +19,7 @@ Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 110 | `ssoTeamMappings` | read [sso_group_teams](/code/tables/sso_group_teams.md), read [teams](/code/tables/teams.md) |  |
+| 127 | `ssoTeamMappings` | read [sso_group_teams](/code/tables/sso_group_teams.md), read [teams](/code/tables/teams.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ GET /service-status/services — the health board (derived current_status inline
 function apiStatusServicesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 181.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 197.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 197 | `apiStatusServicesList` | read [status_services](/code/tables/status_services.md) |  |
+| 213 | `apiStatusServicesList` | read [status_services](/code/tables/status_services.md) |  |
 
 ## Calls
 

@@ -1,6 +1,6 @@
 # includes/mime_message.php
 
-> PHP - 158 lines
+> PHP - 178 lines
 
 Build a raw RFC 2822 / MIME email — shared by the two send paths that hand the provider a finished message: SMTP (basic IMAP mailboxes) and the Gmail API. Microsoft Graph takes JSON instead and builds its own MIME.
 
@@ -24,12 +24,12 @@ attachment appeared on the ticket and never reached the customer.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [mimeEncodeHeader()](/code/functions/mimeEncodeHeader.md) | 25 | RFC 2047 encode a header value if it contains non-ASCII. |
-| [mimeMessageId()](/code/functions/mimeMessageId.md) | 38 | A globally unique Message-ID on the sender's own domain, e.g. <3f9c...e1.1790805999@example.com>. Falls back to a fixed domain if the From address has none we can use. |
-| [mimeBuildMessage()](/code/functions/mimeBuildMessage.md) | 53 | Builds a complete raw MIME message - headers, the HTML body, inline images and attachments - ready for SMTP or the Gmail API. |
-| [mimeHtmlPart()](/code/functions/mimeHtmlPart.md) | 100 | The HTML body as a [headers, content] entity. |
-| [mimeFilePart()](/code/functions/mimeFilePart.md) | 108 | One file (inline image or attachment) as a [headers, content] entity. |
-| [mimeMultipart()](/code/functions/mimeMultipart.md) | 147 | Wrap [headers, content] entities in a multipart/<subtype> entity. |
+| [mimeEncodeHeader()](/code/functions/mimeEncodeHeader.md) | 29 | RFC 2047 encode a header value if it contains non-ASCII. |
+| [mimeMessageId()](/code/functions/mimeMessageId.md) | 44 | A globally unique Message-ID on the sender's own domain, e.g. <3f9c...e1.1790805999@example.com>. Falls back to a fixed domain if the From address has none we can use. |
+| [mimeBuildMessage()](/code/functions/mimeBuildMessage.md) | 59 | Builds a complete raw MIME message - headers, the HTML body, inline images and attachments - ready for SMTP or the Gmail API. |
+| [mimeHtmlPart()](/code/functions/mimeHtmlPart.md) | 110 | The HTML body as a [headers, content] entity. |
+| [mimeFilePart()](/code/functions/mimeFilePart.md) | 122 | One file (inline image or attachment) as a [headers, content] entity. |
+| [mimeMultipart()](/code/functions/mimeMultipart.md) | 167 | Wrap [headers, content] entities in a multipart/<subtype> entity. |
 
 ## How it hangs together
 

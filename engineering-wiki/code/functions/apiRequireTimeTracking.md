@@ -14,7 +14,7 @@ time", which is a different and untrue statement.
 function apiRequireTimeTracking(PDO $conn, int $ticketId): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 445.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 447.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

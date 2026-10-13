@@ -6,12 +6,12 @@ Validate one incoming value; throws InvalidArgumentException with a message fit 
 function projectSettingValidate(string $key, $raw): string
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 188.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 206.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$key` | `string` |  |  |
-| `$raw` |  |  |  |
+| `$key` | `string` |  | the setting key; an unknown one throws |
+| `$raw` |  |  | the value as sent by the settings form (untrusted) - a string, or an array for scales and weekdays |
 
 **Returns:** `string`
 

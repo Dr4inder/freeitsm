@@ -6,7 +6,7 @@ GET /tickets/{id}/time-entries - the ticket's active time entries, oldest first.
 function apiTicketTimeEntriesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 456.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 458.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 460 | `apiTicketTimeEntriesList` | read [ticket_time_entries](/code/tables/ticket_time_entries.md), read [analysts](/code/tables/analysts.md) |  |
+| 462 | `apiTicketTimeEntriesList` | read [ticket_time_entries](/code/tables/ticket_time_entries.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

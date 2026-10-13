@@ -6,7 +6,7 @@ PATCH /projects/{id}/items/{itemId} - updates the scope item fields sent through
 function apiProjectItemsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 414.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 439.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -10,7 +10,7 @@ means none: an administrator unticking everything meant exactly that.
 function portalProfileEditableFields(PDO $conn): array
 ```
 
-Defined in [includes/users.php](/code/files/includes/users.php.md), line 275.
+Defined in [includes/users.php](/code/files/includes/users.php.md), line 282.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

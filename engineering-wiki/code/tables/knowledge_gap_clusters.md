@@ -28,20 +28,20 @@
 | [api/knowledge/gap_dismiss.php](/code/files/api/knowledge/gap_dismiss.php.md):72 |  | update | `status`, `dismissed_by_id`, `dismissed_datetime` |  |
 | [api/knowledge/gap_dismiss.php](/code/files/api/knowledge/gap_dismiss.php.md):75 |  | update | `status`, `dismissed_by_id`, `dismissed_datetime` |  |
 | [api/knowledge/writeup_save.php](/code/files/api/knowledge/writeup_save.php.md):84 |  | update | `status`, `article_id` |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):474 | `gapPersistClusters` | update |  |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):481 | `gapPersistClusters` | insert |  |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):496 | `gapPersistClusters` | update | `status`, `article_id` |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):508 | `gapPersistClusters` | delete |  |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):511 | `gapPersistClusters` | delete |  |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):520 | `gapClearOpenClusters` | delete |  |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):494 | `gapPersistClusters` | update |  |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):501 | `gapPersistClusters` | insert |  |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):516 | `gapPersistClusters` | update | `status`, `article_id` |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):528 | `gapPersistClusters` | delete |  |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):531 | `gapPersistClusters` | delete |  |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md):540 | `gapClearOpenClusters` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/knowledge/gap_clusters.php](/code/files/api/knowledge/gap_clusters.php.md) | L60, gapStatusCounts L138 |  |
+| [api/knowledge/gap_clusters.php](/code/files/api/knowledge/gap_clusters.php.md) | L60, gapStatusCounts L143 |  |
 | [api/knowledge/gap_dismiss.php](/code/files/api/knowledge/gap_dismiss.php.md) | L54 |  |
 | [api/knowledge/writeup_save.php](/code/files/api/knowledge/writeup_save.php.md) | L81 |  |
-| [api/knowledge/writeup_stream.php](/code/files/api/knowledge/writeup_stream.php.md) | L106 |  |
-| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapPersistClusters L408 |  |
+| [api/knowledge/writeup_stream.php](/code/files/api/knowledge/writeup_stream.php.md) | L109 |  |
+| [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapPersistClusters L428 |  |
 

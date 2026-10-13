@@ -15,9 +15,9 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):109 |  | delete |  |  |
-| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):110 |  | insert | `property_id`, `option_value`, `colour`, `display_order` |  |
-| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):130 |  | delete |  |  |
+| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):111 |  | delete |  |  |
+| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):112 |  | insert | `property_id`, `option_value`, `colour`, `display_order` |  |
+| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):132 |  | delete |  |  |
 
 ## Read by
 
@@ -26,5 +26,5 @@
 | [api/cmdb/get_class_properties.php](/code/files/api/cmdb/get_class_properties.php.md) | L42 |  |
 | [api/cmdb/get_object.php](/code/files/api/cmdb/get_object.php.md) | L127 |  |
 | [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbClassesGet L107 |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::propertyOptionValues L549 |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::propertyOptionValues L601 |  |
 

@@ -6,11 +6,11 @@ Partially masks a client or tenant id - GUIDs and long opaque ids through `maskM
 function maskId($s)
 ```
 
-Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 101.
+Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 125.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$s` |  |  |  |
+| `$s` |  |  | a client or tenant id; empty gives '(empty!)' |
 
 ## Calls
 

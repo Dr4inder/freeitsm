@@ -6,13 +6,13 @@ Refuse anything the caller may not reach, in the same words as "not found".
 function requireFolderAccess(PDO $conn, int $analystId, ?int $folderId): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 151.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 160.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$folderId` | `?int` |  |  |
+| `$folderId` | `?int` |  | the folder to check; null means the root, which everyone may reach |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 155 | `requireFolderAccess` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 164 | `requireFolderAccess` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
 
 ## Calls
 

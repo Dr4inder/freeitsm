@@ -12,13 +12,13 @@ can see what is already there. The caller must be able to read the parent.
 function handleCreate(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 169.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 180.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the decoded JSON request: name, and parent_id (empty or null for the top level) |
 
 **Returns:** `void`
 
@@ -26,7 +26,7 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 182 | `handleCreate` | **insert** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `name`, `is_restricted`, `inherit_permissions`, `created_by_id`, `owner_id`, `created_datetime`, `modified_datetime`) |  |
+| 193 | `handleCreate` | **insert** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `name`, `is_restricted`, `inherit_permissions`, `created_by_id`, `owner_id`, `created_datetime`, `modified_datetime`) |  |
 
 ## Calls
 

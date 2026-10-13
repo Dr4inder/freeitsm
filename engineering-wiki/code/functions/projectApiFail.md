@@ -6,12 +6,12 @@ Sends a failure JSON reply ({success: false, error}) with an optional HTTP statu
 function projectApiFail(string $message, int $status = 200): void
 ```
 
-Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 50.
+Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$message` | `string` |  |  |
-| `$status` | `int` | `200` |  |
+| `$message` | `string` |  | the error text sent as 'error' |
+| `$status` | `int` | `200` | the HTTP status to send; 200 leaves it alone |
 
 **Returns:** `void`
 

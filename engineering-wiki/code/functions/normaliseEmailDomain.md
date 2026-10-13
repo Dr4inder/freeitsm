@@ -6,11 +6,11 @@ Normalise a user-entered email domain for storage/matching: lower-cased, trimmed
 function normaliseEmailDomain(string $raw): string
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1269.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1324.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `string` |  |  |
+| `$raw` | `string` |  | the domain as typed - may carry '@', 'https://', 'www.', a path or a whole address |
 
 **Returns:** `string`
 

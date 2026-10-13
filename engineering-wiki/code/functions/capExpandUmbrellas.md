@@ -11,7 +11,7 @@ safe direction, and it is why deny-by-default survives the convenience.
 function capExpandUmbrellas(array $held): array
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 494.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 528.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

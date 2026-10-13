@@ -6,15 +6,15 @@ Stage ends and target finishes inside the range, and whether each was met.
 function rpProjectsMilestones(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 152.
+Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 184.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$o` | `array` |  |  |
-| `$range` | `array` |  |  |
-| `$tenant` |  |  |  |
+| `$o` | `array` |  | the block's cleaned options: projects (ids; [] for all) |
+| `$range` | `array` |  | the pack's range from `rpResolveRange()` - from_date and to_date are used |
+| `$tenant` |  |  | the pack's company: 'active', 'all' or a company id |
 
 **Returns:** `array`
 
@@ -22,8 +22,8 @@ Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 160 | `rpProjectsMilestones` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
-| 168 | `rpProjectsMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
+| 192 | `rpProjectsMilestones` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
+| 200 | `rpProjectsMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

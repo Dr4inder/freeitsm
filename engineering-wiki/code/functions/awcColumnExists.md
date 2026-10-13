@@ -6,13 +6,13 @@ True when the table has the column (information_schema), so the sync can wait fo
 function awcColumnExists(PDO $conn, string $table, string $col): bool
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 284.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 312.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$col` | `string` |  |  |
+| `$table` | `string` |  | the table name in the current database |
+| `$col` | `string` |  | the column name to look for |
 
 **Returns:** `bool`
 

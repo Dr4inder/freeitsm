@@ -41,7 +41,11 @@ function projectIntakeReady(PDO $conn): bool
     return $ready;
 }
 
-/** Does a new project wait for approval? $fromForm = it was proposed through a form. */
+/**
+ * Does a new project wait for approval? $fromForm = it was proposed through a form.
+ *
+ * @param bool $fromForm  true when the project was proposed through a form
+ */
 function projectProposalNeedsApproval(PDO $conn, bool $fromForm): bool
 {
     if (!projectIntakeReady($conn)) return false;
@@ -82,13 +86,22 @@ function projectProposalApprovers(PDO $conn): array
     return $out;
 }
 
-/** A pending proposal may only stay proposed or be withdrawn (cancelled). */
+/**
+ * A pending proposal may only stay proposed or be withdrawn (cancelled).
+ *
+ * @param array $project  the projects row - approval_status is read
+ * @param string $newStatus  the status the project would move to, e.g. 'active'
+ */
 function projectProposalBlocksStatus(array $project, string $newStatus): bool
 {
     return ($project['approval_status'] ?? null) === 'pending' && !in_array($newStatus, ['proposed', 'cancelled'], true);
 }
 
-/** The proposal panel on a project's page; null when it never needed approval. */
+/**
+ * The proposal panel on a project's page; null when it never needed approval.
+ *
+ * @param array $project  the projects row - only its id is read
+ */
 function projectProposalDetail(PDO $conn, array $project, int $analystId): ?array
 {
     if (!projectIntakeReady($conn)) return null;
@@ -134,6 +147,8 @@ function projectProposalApprovalColumn(PDO $conn): string
  * Answers fill what the action leaves blank - the same rule the form-to-ticket
  * path follows: an override always wins, the submission fills the rest.
  *
+ * @param array $a  the action's settings: name, summary, business_case, goal, estimated_cost, methodology, priority, owner_analyst_id ...
+ * @param array $payload  the workflow event payload - submission.id and submission.email are read
  * @return array{project_id:int, code:string, name:string, approval:?string}
  */
 function projectCreateFromAction(PDO $conn, array $a, array $payload): array

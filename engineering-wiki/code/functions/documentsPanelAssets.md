@@ -10,11 +10,11 @@ assets without a server-rendered container.
 function documentsPanelAssets(string $pathPrefix = '../'): void
 ```
 
-Defined in [includes/documents_panel.php](/code/files/includes/documents_panel.php.md), line 30.
+Defined in [includes/documents_panel.php](/code/files/includes/documents_panel.php.md), line 32.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$pathPrefix` | `string` | `'../'` |  |
+| `$pathPrefix` | `string` | `'../'` | '' from the web root, '../' from a module folder - put before the asset URLs |
 
 **Returns:** `void`
 

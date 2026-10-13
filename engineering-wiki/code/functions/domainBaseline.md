@@ -6,12 +6,12 @@ Build the baseline from a domain row plus the check snapshot.
 function domainBaseline(array $d, array $snapshot): array
 ```
 
-Defined in [includes/domains/monitor.php](/code/files/includes/domains/monitor.php.md), line 30.
+Defined in [includes/domains/monitor.php](/code/files/includes/domains/monitor.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$d` | `array` |  |  |
-| `$snapshot` | `array` |  |  |
+| `$d` | `array` |  | the domain row (registrar_name, nameservers, transfer_lock, registry_lock, dnssec) |
+| `$snapshot` | `array` |  | the 'snapshot' from `domainRunChecks()` - array{dns_ns:string[],mx:string[],spf:string,dmarc:string} |
 
 **Returns:** `array`
 

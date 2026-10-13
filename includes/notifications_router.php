@@ -42,6 +42,9 @@ function notificationsCurrentActor(): array
  *
  * Never throws: a notification must not be able to break the thing that caused
  * it. Never re-enters: writing a notification dispatches nothing.
+ *
+ * @param string $event  the workflow event name, e.g. 'task.assigned'; anything not in NotificationsService::types() is ignored
+ * @param array $payload  the event's dispatch payload, as passed to WorkflowEngine::dispatch()
  */
 function notificationsHandleEvent(string $event, array $payload): void
 {
@@ -130,6 +133,8 @@ function notificationsHandleEvent(string $event, array $payload): void
  * equivalent list of people on a ticket, and inventing one from "who has touched
  * it" is the firehose that was rejected.
  *
+ * @param string $event  the workflow event name, e.g. 'task.comment_added' or 'ticket.team_assigned'
+ * @param array $payload  the event's dispatch payload - reads notify_ids, task, team_id, ticket, domain or project from it
  * @return array<int> analyst ids, de-duplicated. Empty when nobody can be named.
  */
 function notificationsAudienceFor(PDO $conn, string $event, array $payload): array
@@ -208,6 +213,9 @@ function notificationsAudienceFor(PDO $conn, string $event, array $payload): arr
  * Kept separate from the audience above because these two answer different
  * questions: this one is "whose news is this?", and it is also what the
  * ticket events — which have no list of involved people — still use.
+ *
+ * @param string $event  the workflow event name, e.g. 'ticket.assigned'
+ * @param array $payload  the event's dispatch payload - reads analyst_id, ticket, task, domain or project from it
  */
 function notificationsRecipientFor(string $event, array $payload): int
 {
@@ -249,7 +257,13 @@ function notificationsRecipientFor(string $event, array $payload): int
     return 0;
 }
 
-/** Display data for the row: id, human reference, and what it is about. */
+/**
+ * Display data for the row: id, human reference, and what it is about.
+ *
+ * @param string $event  the workflow event name, used to word domain and project titles
+ * @param array $payload  the event's dispatch payload, holding the task, domain, project or ticket array
+ * @param string $entityType  the notification type's entity: 'task', 'domain', 'project', or anything else for a ticket
+ */
 function notificationsEntityFor(string $event, array $payload, string $entityType): ?array
 {
     if ($entityType === 'task') {
@@ -374,6 +388,9 @@ function notificationsEntityFor(string $event, array $payload, string $entityTyp
  * Kept as translatable keys resolved at render time rather than baked English in
  * the database — otherwise a row written today reads in whatever language the
  * writer happened to be using, forever.
+ *
+ * @param string $event  the workflow event name (not used - the bell picks the wording by event at render time)
+ * @param ?string $actorName  the display name of whoever caused the event; null when nobody did (e.g. cron)
  */
 function notificationsBodyFor(string $event, ?string $actorName): string
 {
@@ -396,6 +413,10 @@ function notificationsBodyFor(string $event, ?string $actorName): string
  * route the portal and the training reminders use - and logged in the send log
  * under 'task'. Written in the RECIPIENT's interface language, not the language
  * of whoever did the assigning. Never throws.
+ *
+ * @param array $payload  the task.assigned payload - task.id and task.assignee_id are read
+ * @param int $actorId  the analyst who did the assigning; 0 for none. No email when they assigned themselves
+ * @param ?string $actorName  their display name for the heading; null gives the plain wording
  */
 function notificationsTaskAssignedEmail(PDO $conn, array $payload, int $actorId, ?string $actorName): void
 {

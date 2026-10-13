@@ -26,5 +26,5 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/reply_templates.php](/code/files/includes/reply_templates.php.md) | replyTemplatesVisibleTo L115, replyTemplateWriteScope L144 |  |
+| [includes/reply_templates.php](/code/files/includes/reply_templates.php.md) | replyTemplatesVisibleTo L118, replyTemplateWriteScope L149 |  |
 

@@ -6,7 +6,7 @@ True when the analyst may create projects - anyone, if the create policy says so
 function projectCanCreate(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 404.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 434.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

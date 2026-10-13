@@ -16,7 +16,7 @@ The analyst's trail, resolved and grouped into level-1 headings.
 function entityRecentTrail(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 280.
+Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), line 286.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -29,7 +29,7 @@ Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 287 | `entityRecentTrail` | read [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
+| 293 | `entityRecentTrail` | read [analyst_recent_trail](/code/tables/analyst_recent_trail.md) |  |
 
 ## Calls
 

@@ -10,13 +10,13 @@ function gmailGetAttachmentsGraphShape(
 ): array
 ```
 
-Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 364.
+Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 403.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$accessToken` | `string` |  |  |
-| `$messageId` | `string` |  |  |
-| `$payload` | `array` |  |  |
+| `$accessToken` | `string` |  | a valid Google OAuth access token for the mailbox |
+| `$messageId` | `string` |  | the Gmail message id the attachments belong to |
+| `$payload` | `array` |  | the message's payload from messages.get?format=full (mimeType, headers, parts...) |
 
 **Returns:** `array`
 

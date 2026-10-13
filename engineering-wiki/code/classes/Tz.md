@@ -67,7 +67,7 @@ function current()
 
 ### isValid
 
-*public static* - line 80
+*public static* - line 84
 
 True if `$tz` is a known IANA identifier.
 
@@ -77,11 +77,11 @@ function isValid($tz)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$tz` |  |  |  |
+| `$tz` |  |  | the zone name to check, e.g. 'Europe/London'; non-strings and '' are invalid |
 
 ### scriptTag
 
-*public static* - line 99
+*public static* - line 103
 
 A <script> tag that publishes the effective zone to the browser so JS date helpers can convert UTC → the analyst's zone. Emit once in <head>, before any script that formats dates.
 

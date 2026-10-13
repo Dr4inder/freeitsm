@@ -6,11 +6,11 @@ The tickets date column a time-based property counts by - closed_datetime for 'c
 function getDateField($prop)
 ```
 
-Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 153.
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 161.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$prop` |  |  |  |
+| `$prop` |  |  | a time-based aggregate_property: 'created' or 'closed' |
 
 ## Called from
 

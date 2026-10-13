@@ -17,15 +17,15 @@ function contractAssetSearch(
 ): array
 ```
 
-Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 239.
+Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 252.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$contractId` | `int` |  |  |
-| `$q` | `string` |  |  |
-| `$limit` | `int` | `25` |  |
+| `$contractId` | `int` |  | contracts.id the assets would be added to; its company bounds the search |
+| `$q` | `string` |  | the search text, matched as a substring; empty lists everything not yet linked |
+| `$limit` | `int` | `25` | most rows to return |
 
 **Returns:** `array`
 
@@ -33,7 +33,7 @@ Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 250 | `contractAssetSearch` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_locations](/code/tables/asset_locations.md), read [contract_assets](/code/tables/contract_assets.md) |  |
+| 263 | `contractAssetSearch` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_locations](/code/tables/asset_locations.md), read [contract_assets](/code/tables/contract_assets.md) |  |
 
 ## Calls
 

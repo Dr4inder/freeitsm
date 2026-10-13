@@ -6,11 +6,11 @@ A mapping key as YAML - plain when it is a simple identifier or path, double-quo
 function apiV1YamlKey(string $k): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 425.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 473.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$k` | `string` |  |  |
+| `$k` | `string` |  | a mapping key |
 
 **Returns:** `string`
 

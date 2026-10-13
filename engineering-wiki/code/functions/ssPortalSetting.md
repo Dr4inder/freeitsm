@@ -6,12 +6,12 @@ One setting, falling back to its default.
 function ssPortalSetting(PDO $conn, string $key): string
 ```
 
-Defined in [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md), line 64.
+Defined in [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$key` | `string` |  |  |
+| `$key` | `string` |  | one of the SS_PORTAL_DEFAULTS keys, e.g. 'service_status_portal_mode' |
 
 **Returns:** `string`
 

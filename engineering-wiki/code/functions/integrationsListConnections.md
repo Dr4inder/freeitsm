@@ -18,12 +18,12 @@ credential leak rather than a convenience.
 function integrationsListConnections(PDO $conn, bool $activeOnly = false): array
 ```
 
-Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 340.
+Defined in [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), line 363.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$activeOnly` | `bool` | `false` |  |
+| `$activeOnly` | `bool` | `false` | true to leave out connections switched off (is_active = 0) |
 
 **Returns:** `array`
 
@@ -31,7 +31,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 345 | `integrationsListConnections` | read [integration_connections](/code/tables/integration_connections.md) |  |
+| 368 | `integrationsListConnections` | read [integration_connections](/code/tables/integration_connections.md) |  |
 
 ## Calls
 

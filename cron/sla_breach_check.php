@@ -42,6 +42,9 @@ $runId = null;
 
 /**
  * Helper — record a run row. Returns the inserted id (or null if logging fails).
+ *
+ * @param bool $isCli  true when run from the command line (logged as 'cli'), false for an HTTP call ('http')
+ * @param ?string $clientIp  the caller's REMOTE_ADDR for an HTTP call; null from the command line
  */
 function sla_cron_log_start(PDO $conn, bool $isCli, ?string $clientIp): ?int {
     try {
@@ -55,6 +58,11 @@ function sla_cron_log_start(PDO $conn, bool $isCli, ?string $clientIp): ?int {
 
 /**
  * Completes this run's sla_cron_runs row with its end time, duration, outcome, counts and notes; does nothing when the start row was never written.
+ *
+ * @param ?int $runId  the row id from sla_cron_log_start(); null when that insert failed
+ * @param string $outcome  ok, error, auth_failed, config_missing or rate_limited
+ * @param array $counts  array{sent?:int,skipped?:int,errors?:int} - missing keys are logged as 0
+ * @param ?string $notes  free text for the log (cut to 65,000 characters); null or empty stores NULL
  * @writes sla_cron_runs(ended_at, duration_ms, outcome, sent_count, skipped_count, error_count, notes) - the run log shown in SLA settings
  */
 function sla_cron_log_finish(PDO $conn, ?int $runId, string $outcome, array $counts = [], ?string $notes = null): void {

@@ -15,7 +15,7 @@
 
 ### saveLicence
 
-*public static* - line 37
+*public static* - line 40
 
 Create (no id) or update (id present) a licence. Returns ['id' => int, 'created' => bool].
 
@@ -27,20 +27,20 @@ function saveLicence(PDO $conn, ActorContext $ctx, array $in): array
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | id (a licence to change; absent creates one), app_id, licence_type, licence_key, quantity, renewal_date, notice_period_days, portal_url, cost, currency, purchase_date, vendor_contact, notes, status |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 48 | `SoftwareService::saveLicence` | **update** [software_licences](/code/tables/software_licences.md) (`app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date`, `vendor_contact`, `notes`) |  |
-| 64 | `SoftwareService::saveLicence` | **insert** [software_licences](/code/tables/software_licences.md) (`app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date`, `vendor_contact`, `notes`) |  |
+| 51 | `SoftwareService::saveLicence` | **update** [software_licences](/code/tables/software_licences.md) (`app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date`, `vendor_contact`, `notes`) |  |
+| 67 | `SoftwareService::saveLicence` | **insert** [software_licences](/code/tables/software_licences.md) (`app_id`, `licence_type`, `licence_key`, `quantity`, `renewal_date`, `notice_period_days`, `portal_url`, `cost`, `currency`, `purchase_date`, `vendor_contact`, `notes`) |  |
 
 **Called from:** [api/software/save_licence.php](/code/files/api/software/save_licence.php.md), [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md)
 
 ### deleteLicence
 
-*public static* - line 81
+*public static* - line 88
 
 Delete a licence (leaf table). Returns the id. 404 if it does not exist.
 
@@ -52,19 +52,19 @@ function deleteLicence(PDO $conn, ActorContext $ctx, int $id): int
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the licence (software_licences.id) to delete |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 84 | `SoftwareService::deleteLicence` | **delete** [software_licences](/code/tables/software_licences.md) |  |
+| 91 | `SoftwareService::deleteLicence` | **delete** [software_licences](/code/tables/software_licences.md) |  |
 
 **Called from:** [api/software/delete_licence.php](/code/files/api/software/delete_licence.php.md), [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md)
 
 ### resyncRenewalCalendar
 
-*private static* - line 107
+*private static* - line 114
 
 Push renewal dates back into the calendar after any licence write (#1551).
 
@@ -88,7 +88,7 @@ function resyncRenewalCalendar(PDO $conn): void
 
 ### loadLicenceRow
 
-*private static* - line 119
+*private static* - line 130
 
 Load a licence row for update/delete, or throw 404.
 
@@ -99,17 +99,17 @@ function loadLicenceRow(PDO $conn, int $id): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the licence (software_licences.id) to load |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 121 | `SoftwareService::loadLicenceRow` | read [software_licences](/code/tables/software_licences.md) |  |
+| 132 | `SoftwareService::loadLicenceRow` | read [software_licences](/code/tables/software_licences.md) |  |
 
 ### collectFields
 
-*private static* - line 135
+*private static* - line 149
 
 Collect + validate the writable licence fields (mirrors the API resource's apiSoftwareLicenceFields coercions). On update, absent keys fall back to the current row; on create they fall back to the column default.
 
@@ -120,18 +120,18 @@ function collectFields(PDO $conn, array $in, array $current = []): array
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$in` | `array` |  |  |
-| `$current` | `array` | `[]` |  |
+| `$in` | `array` |  | the licence fields as sent (see `saveLicence()`) |
+| `$current` | `array` | `[]` | the stored row when updating, so absent keys keep their value; empty when creating |
 
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 146 | `SoftwareService::collectFields` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 160 | `SoftwareService::collectFields` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ### parseDateOnly
 
-*private static* - line 190
+*private static* - line 209
 
 Validate an optional YYYY-MM-DD date (throwing version of apiParseDateOnly).
 
@@ -141,6 +141,6 @@ function parseDateOnly($value, string $field): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
-| `$field` | `string` |  |  |
+| `$value` |  |  | the date as sent (YYYY-MM-DD); null or '' gives null |
+| `$field` | `string` |  | the field name, used in the error message |
 

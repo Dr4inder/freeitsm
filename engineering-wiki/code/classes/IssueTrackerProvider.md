@@ -71,7 +71,7 @@ tickets.merged_into_id for the last time that bit us.
 
 ### __construct
 
-*public* - line 68
+*public* - line 72
 
 Keeps the decrypted integration_connections row the connector works with.
 
@@ -81,11 +81,11 @@ function __construct(array $connection)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$connection` | `array` |  |  |
+| `$connection` | `array` |  | the integration_connections row, with its credentials already decrypted to an array |
 
 ### getProvider
 
-*public* - line 74
+*public* - line 78
 
 The provider key from the connection row ('jira' or 'azuredevops').
 
@@ -95,7 +95,7 @@ function getProvider(): string
 
 ### createIssue
 
-*public* - line 94
+*public* - line 98
 
 Create an issue and return the bits we store on the link.
 
@@ -107,14 +107,14 @@ function createIssue(array $target, string $summary, IssueDoc $body, array $fiel
 |---|---|---|---|
 | `$target` | `array` |  | provider-shaped destination — Jira: ['project'=>'OPS', 'issue_type'=>'Bug']; GitHub: ['repo'=>'org/name']; DevOps: ['project'=>…,'area_path'=>…,'work_item_type'=>…]. Opaque to core on purpose: the arity genuinely differs. |
 | `$summary` | `string` |  | plain text |
-| `$body` | `IssueDoc` |  |  |
+| `$body` | `IssueDoc` |  | the description, rendered for the provider by `renderDoc()` |
 | `$fields` | `array` | `[]` | extra mapped fields (V3+); [] in V1 |
 
 **Returns:** array ['external_id'=>…, 'external_key'=>…, 'external_url'=>…, 'status_name'=>…, 'status_category'=>…]
 
 ### fetchIssue
 
-*public* - line 100
+*public* - line 106
 
 Read one issue's current state. Same return shape as `createIssue()`. Throws if the issue is gone — the caller decides whether that orphans the link.
 
@@ -124,11 +124,11 @@ function fetchIssue(string $externalId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the tracker's own id for the issue, as stored in integration_links.external_id |
 
 ### fetchIssues
 
-*public* - line 113
+*public* - line 119
 
 Read several issues at once. The default loops `fetchIssue()`, which is always correct; providers that can do it in one call (Jira via JQL) should override, because the poll cron is the hot path.
 
@@ -141,13 +141,13 @@ function fetchIssues(array $externalIds): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalIds` | `array` |  |  |
+| `$externalIds` | `array` |  | tracker ids of the issues to read (integration_links.external_id values) |
 
 **Returns:** array    external_id => issue array (same shape as fetchIssue)
 
 ### addComment
 
-*public* - line 127
+*public* - line 138
 
 Post a comment. Returns the provider's comment id (recorded for echo suppression).
 
@@ -157,12 +157,12 @@ function addComment(string $externalId, IssueDoc $body): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
-| `$body` | `IssueDoc` |  |  |
+| `$externalId` | `string` |  | the tracker id of the issue to comment on |
+| `$body` | `IssueDoc` |  | the comment, rendered for the provider by `renderDoc()` |
 
 ### addAttachment
 
-*public* - line 138
+*public* - line 150
 
 Attaches a file to an external issue. The default throws; connectors that declare CAP_ATTACHMENTS override it.
 
@@ -172,12 +172,12 @@ function addAttachment(string $externalId, array $file): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
+| `$externalId` | `string` |  | the tracker id of the issue to attach the file to |
 | `$file` | `array` |  | ['data'=>binary, 'filename'=>string, 'content_type'=>string] |
 
 ### updateFields
 
-*public* - line 144
+*public* - line 161
 
 Updates fields on an external issue. The default throws; a connector that supports it overrides it.
 
@@ -187,12 +187,12 @@ function updateFields(string $externalId, array $fields): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$externalId` | `string` |  |  |
-| `$fields` | `array` |  |  |
+| `$externalId` | `string` |  | the tracker id of the issue to update |
+| `$fields` | `array` |  | provider field name => new value, in the provider's own field naming |
 
 ### verifyWebhook
 
-*public* - line 158
+*public* - line 178
 
 Verify an inbound webhook really came from the provider. Return false to reject — the endpoint 403s.
 
@@ -205,12 +205,12 @@ function verifyWebhook(string $rawBody, array $headers): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$rawBody` | `string` |  |  |
-| `$headers` | `array` |  |  |
+| `$rawBody` | `string` |  | the request body exactly as received, before any JSON decoding |
+| `$headers` | `array` |  | the inbound request's HTTP headers |
 
 ### normaliseEvent
 
-*public* - line 164
+*public* - line 188
 
 Raw webhook payload → zero or more canonical events (see the file header).
 
@@ -220,11 +220,11 @@ function normaliseEvent(array $raw): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$raw` | `array` |  |  |
+| `$raw` | `array` |  | the webhook payload, JSON-decoded |
 
 ### pollChanges
 
-*public* - line 186
+*public* - line 210
 
 The firewalled-install path: ask the provider what changed since `$since` and return the SAME canonical events a webhook would have produced.
 
@@ -249,7 +249,7 @@ function pollChanges(?string $since, array $externalIds = []): array
 
 ### testConnection
 
-*public* - line 207
+*public* - line 231
 
 Verify the connection with a lightweight read-only call and return BOTH a human-readable detail for the settings screen and the authenticated account's identity.
 
@@ -267,7 +267,7 @@ function testConnection(): array
 
 ### listProjects
 
-*public* - line 215
+*public* - line 239
 
 Lists the tracker's projects for the mapping dropdowns. The default throws; connectors override it.
 
@@ -279,7 +279,7 @@ function listProjects(): array
 
 ### listIssueTypes
 
-*public* - line 226
+*public* - line 251
 
 Lists the issue types available in a project. The default throws; connectors that declare CAP_ISSUE_TYPES override it.
 
@@ -289,13 +289,13 @@ function listIssueTypes(string $project): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$project` | `string` |  |  |
+| `$project` | `string` |  | the project's key, as `listProjects()` returns it |
 
 **Returns:** array [['id'=>'10001','name'=>'Bug'], …]
 
 ### renderDoc
 
-*public* - line 241
+*public* - line 267
 
 Render a body into whatever this provider's API wants. Usually one line delegating to IssueDoc — `$doc`->toAdf(), ->toMarkdown(), ->toHtml(), ->toWikiMarkup() — which is why adding a provider rarely means writing a renderer.
 
@@ -305,13 +305,13 @@ function renderDoc(IssueDoc $doc)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$doc` | `IssueDoc` |  |  |
+| `$doc` | `IssueDoc` |  | the description or comment to render |
 
 **Returns:** mixed array (ADF) or string (Markdown / HTML / wiki markup)
 
 ### supports
 
-*public* - line 246
+*public* - line 276
 
 Does this provider have `$capability`? Default: no.
 
@@ -321,11 +321,11 @@ function supports(string $capability): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$capability` | `string` |  |  |
+| `$capability` | `string` |  | one of the CAP_* constants |
 
 ### capabilities
 
-*protected* - line 256
+*protected* - line 286
 
 The optional features this connector supports. The base class declares none.
 
@@ -337,7 +337,7 @@ function capabilities(): array
 
 ### httpRequest
 
-*protected* - line 279
+*protected* - line 310
 
 Shared cURL. Returns [httpCode, bodyString]; an HTTP error code is NOT an exception, because the caller knows what a 404 means for the call it made.
 
@@ -357,6 +357,6 @@ function httpRequest(string $url, array $opts = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$url` | `string` |  |  |
+| `$url` | `string` |  | the full request URL, query string included |
 | `$opts` | `array` | `[]` | ['method'=>'POST','headers'=>[],'body'=>string\|array,'auth'=>'user:pass','timeout'=>int] |
 

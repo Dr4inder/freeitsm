@@ -12,15 +12,15 @@ function domainLinkRemove(
 ): bool
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 203.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 239.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$domainId` | `int` |  |  |
-| `$kind` | `string` |  |  |
-| `$targetId` | `int` |  |  |
+| `$domainId` | `int` |  | the domain to unlink from |
+| `$kind` | `string` |  | the link kind - cmdb \| service \| ticket \| article (untrusted; unknown throws) |
+| `$targetId` | `int` |  | the id of the linked record |
 
 **Returns:** `bool`
 

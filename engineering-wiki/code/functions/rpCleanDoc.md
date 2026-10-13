@@ -6,12 +6,12 @@ Check a rich-text document. Anything unrecognised is dropped, not kept.
 function rpCleanDoc($doc, int &$budget): array
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 109.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 146.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$doc` |  |  |  |
-| `$budget` | `int` |  |  |
+| `$doc` |  |  | the rich-text document from the browser (untrusted): a list of paragraphs |
+| `$budget` | `int` |  | paragraphs still allowed across the whole design; counted down as each is read |
 
 **Returns:** `array`
 

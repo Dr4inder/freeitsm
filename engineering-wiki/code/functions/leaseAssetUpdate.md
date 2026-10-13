@@ -6,14 +6,14 @@ Change one asset on a schedule: outcome_id, outcome_date, start_date / end_date 
 function leaseAssetUpdate(PDO $conn, ActorContext $ctx, int $id, array $in): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 539.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 616.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
-| `$in` | `array` |  |  |
+| `$id` | `int` |  | the lease_assets row id (not the asset id) |
+| `$in` | `array` |  | any of outcome_id, outcome_date, start_date, end_date, notes; a key left out keeps the current value |
 
 **Returns:** `void`
 
@@ -21,10 +21,10 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 539.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 548 | `leaseAssetUpdate` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 569 | `leaseAssetUpdate` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 572 | `leaseAssetUpdate` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 577 | `leaseAssetUpdate` | **update** [lease_assets](/code/tables/lease_assets.md) (`outcome_id`, `start_date`, `end_date`, `outcome_date`, `notes`, `updated_datetime`) |  |
+| 625 | `leaseAssetUpdate` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 646 | `leaseAssetUpdate` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 649 | `leaseAssetUpdate` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 654 | `leaseAssetUpdate` | **update** [lease_assets](/code/tables/lease_assets.md) (`outcome_id`, `start_date`, `end_date`, `outcome_date`, `notes`, `updated_datetime`) |  |
 
 ## Calls
 

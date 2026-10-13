@@ -6,13 +6,13 @@ The company a NEW project belongs to: the one the request names (checked against
 function projectApiTenantForCreate(PDO $conn, int $analystId, $requested): int
 ```
 
-Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 67.
+Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$requested` |  |  |  |
+| `$requested` |  |  | the company id the request asked for (untrusted); null, '' or 0 means the active company |
 
 **Returns:** `int`
 

@@ -6,11 +6,11 @@ Display name for a module slug. Enum twin: `$module`->label().
 function capModuleLabel(string $module): string
 ```
 
-Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 452.
+Defined in [includes/capabilities.php](/code/files/includes/capabilities.php.md), line 474.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$module` | `string` |  |  |
+| `$module` | `string` |  | a Layer 1 module slug; an unknown one is returned as its own label |
 
 **Returns:** `string`
 

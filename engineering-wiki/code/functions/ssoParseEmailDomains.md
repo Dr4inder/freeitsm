@@ -15,11 +15,11 @@ match would quietly route addresses nobody listed.
 function ssoParseEmailDomains($value): array
 ```
 
-Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 133.
+Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md), line 142.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$value` |  |  |  |
+| `$value` |  |  | what the admin typed (one domain per line, commas or semicolons), or an array of domains |
 
 **Returns:** `array`
 

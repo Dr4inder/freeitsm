@@ -1,6 +1,6 @@
 # includes/domains/monitor.php
 
-> PHP - 97 lines
+> PHP - 112 lines
 
 Domains — change detection: noticing that something important moved.
 
@@ -23,10 +23,10 @@ bury the one alert that matters under hundreds that do not.
 | Function | Line | What it does |
 |---|--:|---|
 | [domainWatchedFields()](/code/functions/domainWatchedFields.md) | 21 | The fields compared, and a label key for each (lang: domains.watch.<key>). |
-| [domainBaseline()](/code/functions/domainBaseline.md) | 30 | Build the baseline from a domain row plus the check snapshot. |
-| [domainBaselineDiff()](/code/functions/domainBaselineDiff.md) | 58 | What changed between the previous baseline and this one. |
-| [domainBaselineMerge()](/code/functions/domainBaselineMerge.md) | 77 | Keep the previous value of a field when this run could not see it, so a one-off gap never erases what we knew (and never makes tomorrow's reappearance look like a change). |
-| [domainChangeIsSerious()](/code/functions/domainChangeIsSerious.md) | 89 | Is this change one that should wake somebody up (vs. merely be recorded)? |
+| [domainBaseline()](/code/functions/domainBaseline.md) | 35 | Build the baseline from a domain row plus the check snapshot. |
+| [domainBaselineDiff()](/code/functions/domainBaselineDiff.md) | 66 | What changed between the previous baseline and this one. |
+| [domainBaselineMerge()](/code/functions/domainBaselineMerge.md) | 88 | Keep the previous value of a field when this run could not see it, so a one-off gap never erases what we knew (and never makes tomorrow's reappearance look like a change). |
+| [domainChangeIsSerious()](/code/functions/domainChangeIsSerious.md) | 104 | Is this change one that should wake somebody up (vs. merely be recorded)? |
 
 ## How it hangs together
 

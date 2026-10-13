@@ -6,7 +6,7 @@ Is project_contractor_email on?
 function tasksContractorEmailOn(PDO $conn): bool
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 117.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

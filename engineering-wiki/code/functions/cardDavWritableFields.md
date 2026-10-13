@@ -14,7 +14,7 @@ own and are never sent to the server.
 function cardDavWritableFields(): array
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 424.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 453.
 
 **Returns:** `array`
 

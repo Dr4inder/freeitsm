@@ -6,12 +6,12 @@ Shapes a workflow row for the API - trigger, active flag, people, dates, last ru
 function apiSerializeWorkflow(array $r, bool $full): array
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 51.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$r` | `array` |  |  |
-| `$full` | `bool` |  |  |
+| `$r` | `array` |  | the workflows row as `apiWorkflowSelect()` loads it (conditions and actions still JSON text) |
+| `$full` | `bool` |  | true to include the conditions and actions in full; false gives only their counts |
 
 **Returns:** `array`
 

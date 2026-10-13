@@ -69,6 +69,9 @@ $translationNamespaces = ['common', 'tickets'];
  * the Mailboxes tab (prefix 'ovd') and a mailbox's own rules in its dialog
  * (prefix 'ovm', which also carries the two limits). files: oversizeFields()/
  * setOversizeFields() in the script read and fill them by prefix.
+ *
+ * @param string $px  the element id prefix: 'ovd' for the install defaults, 'ovm' for a mailbox's own rules
+ * @param bool $withLimits  true to include the two size limits (the mailbox dialog)
  */
 function renderOversizeFields(string $px, bool $withLimits): void
 {

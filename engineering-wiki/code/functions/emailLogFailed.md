@@ -14,16 +14,16 @@ function emailLogFailed(
 ): void
 ```
 
-Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 118.
+Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 139.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$mailbox` | `?array` |  |  |
-| `$route` | `string` |  |  |
-| `$to` | `string` |  |  |
-| `$subject` | `string` |  |  |
-| `$error` | `string` |  |  |
+| `$mailbox` | `?array` |  | the target_mailboxes row it was sent through, or null if none was resolved |
+| `$route` | `string` |  | a key of EMAIL_LOG_ROUTES saying which path sent it |
+| `$to` | `string` |  | the recipient address(es) it was meant for |
+| `$subject` | `string` |  | the email's subject line |
+| `$error` | `string` |  | the provider's error message, stored as the failure reason |
 | `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`

@@ -1,6 +1,6 @@
 # api/lms/ai_author.php
 
-> API endpoint - 184 lines
+> API endpoint - 189 lines
 
 LMS API: the three AI authoring helpers.
 
@@ -26,14 +26,14 @@ looked at.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [lmsPlainText()](/code/functions/lmsPlainText.md) | 33 | HTML (a knowledge article, a lesson body) down to the plain text the model should read. |
+| [lmsPlainText()](/code/functions/lmsPlainText.md) | 38 | HTML (a knowledge article, a lesson body) down to the plain text the model should read. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 87 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 134 |  | read [lms_lessons](/code/tables/lms_lessons.md) |  |
+| 92 |  | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 139 |  | read [lms_lessons](/code/tables/lms_lessons.md) |  |
 
 ## How it hangs together
 

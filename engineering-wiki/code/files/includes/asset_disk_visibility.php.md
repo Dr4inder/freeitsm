@@ -1,6 +1,6 @@
 # includes/asset_disk_visibility.php
 
-> PHP - 117 lines
+> PHP - 123 lines
 
 Hiding physical drives you do not want to look at (discussion #97).
 
@@ -37,15 +37,15 @@ NULL-tenant rows.
 |---|--:|---|
 | [assetDiskHideSchemaReady()](/code/functions/assetDiskHideSchemaReady.md) | 40 | Has Database Verification created the table yet? Everything here answers "nothing is hidden" when it has not, so an install that has pulled the update and not yet verified shows its drives rather than an error. |
 | [assetDiskHideRulesFor()](/code/functions/assetDiskHideRulesFor.md) | 58 | The rules that could hide a drive on this asset: its own, plus every estate-wide one, scoped to the analyst's active company. |
-| [assetDiskIsHidden()](/code/functions/assetDiskIsHidden.md) | 81 | Does any of `$rules` hide this drive? |
-| [assetDiskMatchCount()](/code/functions/assetDiskMatchCount.md) | 102 | How many drives across the estate look like this one, and on how many assets. |
+| [assetDiskIsHidden()](/code/functions/assetDiskIsHidden.md) | 85 | Does any of `$rules` hide this drive? |
+| [assetDiskMatchCount()](/code/functions/assetDiskMatchCount.md) | 108 | How many drives across the estate look like this one, and on how many assets. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 61 | `assetDiskHideRulesFor` | read [asset_disk_hide_rules](/code/tables/asset_disk_hide_rules.md) |  |
-| 104 | `assetDiskMatchCount` | read [asset_physical_disks](/code/tables/asset_physical_disks.md), read [assets](/code/tables/assets.md) |  |
+| 110 | `assetDiskMatchCount` | read [asset_physical_disks](/code/tables/asset_physical_disks.md), read [assets](/code/tables/assets.md) |  |
 
 ## How it hangs together
 

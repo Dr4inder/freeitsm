@@ -9,13 +9,13 @@ Record one wrong code. Returns: ['locked' => bool, 'minutes' => int, 'attempts' 
 function mfaThrottleRecordFailure(PDO $conn, string $table, int $accountId): array
 ```
 
-Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 135.
+Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 147.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$table` | `string` |  |  |
-| `$accountId` | `int` |  |  |
+| `$table` | `string` |  | the account table: 'analysts' or 'users' |
+| `$accountId` | `int` |  | the account's id in that table; 0 or less counts nothing |
 
 **Returns:** `array`
 

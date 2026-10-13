@@ -1,6 +1,6 @@
 # includes/contract_party.php
 
-> PHP - 239 lines
+> PHP - 265 lines
 
 Who OWNS a contract, who it is WITH, and who may see it.
 
@@ -29,32 +29,32 @@ that forgets it shows one company's contract and its value to another's analyst.
 | Function | Line | What it does |
 |---|--:|---|
 | [contractTenantReady()](/code/functions/contractTenantReady.md) | 32 | True once Database Verification has added contracts.tenant_id. |
-| [contractTenantOf()](/code/functions/contractTenantOf.md) | 41 | The company a contract belongs to (NULL resolved to Default), or null if there is no such contract. |
-| [contractStoreTenant()](/code/functions/contractStoreTenant.md) | 52 | How a company is stored on a contract: the Default company is NULL, like every scoped table. |
-| [contractPartyReady()](/code/functions/contractPartyReady.md) | 59 | True once Database Verification has added the party columns. |
-| [contractCustomerTenantExpr()](/code/functions/contractCustomerTenantExpr.md) | 71 | The SQL expression for a contract's customer company, for alias `$c`. Uses the customer person's company when no company was chosen. |
-| [contractVisibilitySql()](/code/functions/contractVisibilitySql.md) | 83 | " AND (...)" keeping only contracts in a company this analyst can reach, for a query over `contracts` aliased `$c` - every company they may see, whatever the switcher says. For search, previews, links and anything else that is not the contracts list itself. ['', []] on a single-company install. |
-| [contractVisibilitySqlForScope()](/code/functions/contractVisibilitySqlForScope.md) | 96 | The same rule for an explicit company list, in the API's null-means-all convention (ActorContext::`$companyScope`). |
-| [contractListSql()](/code/functions/contractListSql.md) | 116 | The contracts LIST and its dashboard: the active company, or every company the analyst can see when the switcher says "All companies" - the same as Assets and Domains. ['', []] on a single-company install. |
-| [contractCanView()](/code/functions/contractCanView.md) | 125 | May this analyst see contract `$id`? (Existence is the caller's business.) |
-| [contractOwnerSql()](/code/functions/contractOwnerSql.md) | 139 | The owning company, for alias `$c`: tenant_id (NULL read as Default) and company_name. A NULL column before Database Verification, so callers need no second branch. |
-| [contractPartySql()](/code/functions/contractPartySql.md) | 155 | Joins and columns that name a contract's customer, for alias `$c`: customer_company_name, customer_person_name, customer_person_email Empty strings before Database Verification, so callers need no second branch. |
-| [contractPartyLabel()](/code/functions/contractPartyLabel.md) | 175 | One line naming who a contract is with, for lists, previews and payloads: the supplier's name, or "Company · Person" / "Company" / "Person". |
-| [contractNormaliseParty()](/code/functions/contractNormaliseParty.md) | 197 | Check and normalise the party fields of a contract being saved. Throws InvalidArgumentException with a message fit for the analyst. |
+| [contractTenantOf()](/code/functions/contractTenantOf.md) | 45 | The company a contract belongs to (NULL resolved to Default), or null if there is no such contract. |
+| [contractStoreTenant()](/code/functions/contractStoreTenant.md) | 56 | How a company is stored on a contract: the Default company is NULL, like every scoped table. |
+| [contractPartyReady()](/code/functions/contractPartyReady.md) | 63 | True once Database Verification has added the party columns. |
+| [contractCustomerTenantExpr()](/code/functions/contractCustomerTenantExpr.md) | 77 | The SQL expression for a contract's customer company, for alias `$c`. Uses the customer person's company when no company was chosen. |
+| [contractVisibilitySql()](/code/functions/contractVisibilitySql.md) | 91 | " AND (...)" keeping only contracts in a company this analyst can reach, for a query over `contracts` aliased `$c` - every company they may see, whatever the switcher says. For search, previews, links and anything else that is not the contracts list itself. ['', []] on a single-company install. |
+| [contractVisibilitySqlForScope()](/code/functions/contractVisibilitySqlForScope.md) | 107 | The same rule for an explicit company list, in the API's null-means-all convention (ActorContext::`$companyScope`). |
+| [contractListSql()](/code/functions/contractListSql.md) | 129 | The contracts LIST and its dashboard: the active company, or every company the analyst can see when the switcher says "All companies" - the same as Assets and Domains. ['', []] on a single-company install. |
+| [contractCanView()](/code/functions/contractCanView.md) | 142 | May this analyst see contract `$id`? (Existence is the caller's business.) |
+| [contractOwnerSql()](/code/functions/contractOwnerSql.md) | 158 | The owning company, for alias `$c`: tenant_id (NULL read as Default) and company_name. A NULL column before Database Verification, so callers need no second branch. |
+| [contractPartySql()](/code/functions/contractPartySql.md) | 176 | Joins and columns that name a contract's customer, for alias `$c`: customer_company_name, customer_person_name, customer_person_email Empty strings before Database Verification, so callers need no second branch. |
+| [contractPartyLabel()](/code/functions/contractPartyLabel.md) | 199 | One line naming who a contract is with, for lists, previews and payloads: the supplier's name, or "Company · Person" / "Company" / "Person". |
+| [contractNormaliseParty()](/code/functions/contractNormaliseParty.md) | 223 | Check and normalise the party fields of a contract being saved. Throws InvalidArgumentException with a message fit for the analyst. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 36 | `contractTenantReady` | read [contracts](/code/tables/contracts.md) |  |
-| 44 | `contractTenantOf` | read [contracts](/code/tables/contracts.md) |  |
-| 63 | `contractPartyReady` | read [contracts](/code/tables/contracts.md) |  |
-| 73 | `contractCustomerTenantExpr` | read [users](/code/tables/users.md) |  |
-| 128 | `contractCanView` | read [contracts](/code/tables/contracts.md) |  |
-| 146 | `contractOwnerSql` | read [tenants](/code/tables/tenants.md) |  |
-| 166 | `contractPartySql` | read [tenants](/code/tables/tenants.md), read [users](/code/tables/users.md) |  |
-| 219 | `contractNormaliseParty` | read [tenants](/code/tables/tenants.md) |  |
-| 226 | `contractNormaliseParty` | read [users](/code/tables/users.md) |  |
+| 48 | `contractTenantOf` | read [contracts](/code/tables/contracts.md) |  |
+| 67 | `contractPartyReady` | read [contracts](/code/tables/contracts.md) |  |
+| 79 | `contractCustomerTenantExpr` | read [users](/code/tables/users.md) |  |
+| 145 | `contractCanView` | read [contracts](/code/tables/contracts.md) |  |
+| 165 | `contractOwnerSql` | read [tenants](/code/tables/tenants.md) |  |
+| 187 | `contractPartySql` | read [tenants](/code/tables/tenants.md), read [users](/code/tables/users.md) |  |
+| 245 | `contractNormaliseParty` | read [tenants](/code/tables/tenants.md) |  |
+| 252 | `contractNormaliseParty` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

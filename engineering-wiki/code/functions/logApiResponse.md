@@ -6,19 +6,19 @@ Helper function to log errors/responses
 function logApiResponse($conn, $hostId, $message)
 ```
 
-Defined in [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md), line 120.
+Defined in [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md), line 122.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$hostId` |  |  |  |
-| `$message` |  |  |  |
+| `$hostId` |  |  | the asset id the submitting machine was matched to or created as; null before that |
+| `$message` |  |  | the response or error to log - a string, or an array stored as JSON |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 122 | `logApiResponse` | **insert** [software_inventory_log](/code/tables/software_inventory_log.md) (`host_id`, `api_response`) |  |
+| 124 | `logApiResponse` | **insert** [software_inventory_log](/code/tables/software_inventory_log.md) (`host_id`, `api_response`) |  |
 
 ## Called from
 

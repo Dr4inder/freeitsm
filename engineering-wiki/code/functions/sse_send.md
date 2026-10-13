@@ -9,12 +9,12 @@ Sends one server-sent event (an event name and a JSON data line) and flushes it 
 function sse_send(string $event, array $data): void
 ```
 
-Defined in [api/forms/ai_generate.php](/code/files/api/forms/ai_generate.php.md), line 47.
+Defined in [api/forms/ai_generate.php](/code/files/api/forms/ai_generate.php.md), line 50.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$event` | `string` |  |  |
-| `$data` | `array` |  |  |
+| `$event` | `string` |  | the event name the browser listens for, e.g. 'text', 'usage' or 'error' |
+| `$data` | `array` |  | the payload, sent as one JSON line |
 
 **Returns:** `void`
 

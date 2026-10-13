@@ -1,6 +1,6 @@
 # includes/hypervisor_http.php
 
-> PHP - 105 lines
+> PHP - 115 lines
 
 The one HTTP door for the hypervisor syncs (Proxmox VE, VMware Cloud Director).
 

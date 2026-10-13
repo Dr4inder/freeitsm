@@ -6,11 +6,11 @@ Purposes that should never send or receive mail, so get "lock it down" advice.
 function domainPurposeIsNonMail(string $purpose): bool
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 151.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 171.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$purpose` | `string` |  |  |
+| `$purpose` | `string` |  | a key from `domainPurposes()`, e.g. 'parked' |
 
 **Returns:** `bool`
 

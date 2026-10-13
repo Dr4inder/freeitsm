@@ -1,6 +1,6 @@
 # includes/integrations/IssueTrackerProvider.php
 
-> PHP - 308 lines
+> PHP - 339 lines
 
 IssueTrackerProvider — the provider-agnostic contract for an external issue tracker (Jira first; GitHub, GitLab and Azure DevOps behind the same door).
 

@@ -6,12 +6,12 @@ Loads one analyst row by id, or null when there is none.
 function oidcLoadAnalyst(PDO $conn, int $id): ?array
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 321.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 329.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the analysts.id to load |
 
 **Returns:** `?array`
 
@@ -19,7 +19,7 @@ Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 322 | `oidcLoadAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 330 | `oidcLoadAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Called from
 

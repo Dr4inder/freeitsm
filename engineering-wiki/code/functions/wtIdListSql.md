@@ -6,11 +6,11 @@ A safe `IN (…)` fragment from a list of ints. '(0)' when empty, so it matches 
 function wtIdListSql(array $ids): string
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 354.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 373.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ids` | `array` |  |  |
+| `$ids` | `array` |  | the ids to list; cast to int, so untrusted values are safe |
 
 **Returns:** `string`
 

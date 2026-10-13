@@ -12,12 +12,12 @@ desk number when asked to change the mobile, silently and with no error.
 function cardDavLocateField(array $spans, string $field): ?int
 ```
 
-Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 447.
+Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.md), line 479.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$spans` | `array` |  |  |
-| `$field` | `string` |  |  |
+| `$spans` | `array` |  | `cardDavLineSpans()` of the card |
+| `$field` | `string` |  | a person field from `cardDavWritableFields()`, e.g. 'mobile'; any other gives null |
 
 **Returns:** `?int`
 

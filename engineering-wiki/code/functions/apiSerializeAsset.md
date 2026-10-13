@@ -6,12 +6,12 @@ Shapes an asset row for the API - identity, company, type, status, location with
 function apiSerializeAsset(PDO $conn, array $r): array
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 99.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$r` | `array` |  |  |
+| `$r` | `array` |  | the asset row as `apiAssetSelect()` loads it, with its type, status, location, supplier and company names |
 
 **Returns:** `array`
 

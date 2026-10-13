@@ -19,12 +19,12 @@ page says so plainly.
 function ldapAccessRole(array $provider, array $ldapUser): ?string
 ```
 
-Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 381.
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 419.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$provider` | `array` |  |  |
-| `$ldapUser` | `array` |  |  |
+| `$provider` | `array` |  | the provider row (ldap_analyst_group, ldap_user_group) |
+| `$ldapUser` | `array` |  | the 'user' from a successful `ldapAuthenticate()` - its 'groups' are read |
 
 **Returns:** `?string`
 

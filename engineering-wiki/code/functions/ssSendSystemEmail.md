@@ -12,15 +12,15 @@ function ssSendSystemEmail(
 ): bool
 ```
 
-Defined in [includes/self_service_email.php](/code/files/includes/self_service_email.php.md), line 32.
+Defined in [includes/self_service_email.php](/code/files/includes/self_service_email.php.md), line 37.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$to` | `string` |  |  |
-| `$subject` | `string` |  |  |
-| `$htmlBody` | `string` |  |  |
-| `$route` | `string` | `'portal'` |  |
+| `$to` | `string` |  | the recipient's email address |
+| `$subject` | `string` |  | the email subject |
+| `$htmlBody` | `string` |  | the email body as HTML, already escaped by the caller |
+| `$route` | `string` | `'portal'` | a key of EMAIL_LOG_ROUTES for the send log, e.g. 'portal' or 'training' |
 
 **Returns:** `bool`
 

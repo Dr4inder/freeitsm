@@ -6,7 +6,7 @@ The SQL for the Source filter. Expects auth_providers joined as `ap`.
 function userSourceFilter($source): array
 ```
 
-Defined in [includes/users.php](/code/files/includes/users.php.md), line 200.
+Defined in [includes/users.php](/code/files/includes/users.php.md), line 202.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

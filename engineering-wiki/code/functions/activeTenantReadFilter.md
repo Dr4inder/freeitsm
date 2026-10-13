@@ -20,14 +20,14 @@ function activeTenantReadFilter(
 ): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 807.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 846.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
-| `$alias` | `string` | `'t'` |  |
-| `$col` | `string` | `'tenant_id'` |  |
+| `$alias` | `string` | `'t'` | the table's alias in the calling query; '' for none |
+| `$col` | `string` | `'tenant_id'` | the company column on that table (default 'tenant_id') |
 
 **Returns:** `array`
 

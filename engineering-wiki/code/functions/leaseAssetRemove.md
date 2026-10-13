@@ -6,13 +6,13 @@ Take an asset off a schedule altogether (a mistake, not a return - use an outcom
 function leaseAssetRemove(PDO $conn, ActorContext $ctx, int $id): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 585.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 666.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
-| `$id` | `int` |  |  |
+| `$id` | `int` |  | the lease_assets row id (not the asset id) |
 
 **Returns:** `void`
 
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 585.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 588 | `leaseAssetRemove` | **delete** [lease_assets](/code/tables/lease_assets.md) |  |
+| 669 | `leaseAssetRemove` | **delete** [lease_assets](/code/tables/lease_assets.md) |  |
 
 ## Calls
 

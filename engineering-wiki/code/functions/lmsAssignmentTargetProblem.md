@@ -11,13 +11,13 @@ the row is there on the screen, and nothing ever happens because of it.
 function lmsAssignmentTargetProblem(PDO $conn, string $targetType, int $groupId): ?string
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 550.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 584.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$targetType` | `string` |  |  |
-| `$groupId` | `int` |  |  |
+| `$targetType` | `string` |  | one of LMS_TARGET_TYPES - 'learning_group', 'user_group', 'all_users', 'analyst', 'user' |
+| `$groupId` | `int` |  | the target's id, whose meaning depends on `$targetType` (ignored for 'all_users') |
 
 **Returns:** `?string`
 
@@ -25,10 +25,10 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 555 | `lmsAssignmentTargetProblem` | read [lms_learning_groups](/code/tables/lms_learning_groups.md) |  |
-| 562 | `lmsAssignmentTargetProblem` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 568 | `lmsAssignmentTargetProblem` | read [analysts](/code/tables/analysts.md) |  |
-| 574 | `lmsAssignmentTargetProblem` | read [users](/code/tables/users.md) |  |
+| 589 | `lmsAssignmentTargetProblem` | read [lms_learning_groups](/code/tables/lms_learning_groups.md) |  |
+| 596 | `lmsAssignmentTargetProblem` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 602 | `lmsAssignmentTargetProblem` | read [analysts](/code/tables/analysts.md) |  |
+| 608 | `lmsAssignmentTargetProblem` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

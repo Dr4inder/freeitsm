@@ -6,7 +6,7 @@ A single tenant row, or null if not found.
 function getTenantById(PDO $conn, int $tenantId): ?array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 169.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 171.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 169
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 171 | `getTenantById` | read [tenants](/code/tables/tenants.md) |  |
+| 173 | `getTenantById` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

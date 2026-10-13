@@ -673,6 +673,10 @@ function renderWaffleMenuButton() {
  * Renders the waffle drawer: the module launcher (System for administrators
  * only, every other module filtered by the analyst's allowed modules) and the
  * Recent tab, whose trail ships empty and is fetched the first time it opens.
+ *
+ * @param mixed $modules  the $modules list at the top of this file: key => [name, path, icon SVG markup]
+ * @param mixed $current_module  the key of the module being shown, highlighted in the drawer
+ * @param mixed $path_prefix  relative path from the page to the app root, e.g. '../'; not used here (links use BASE_URL)
  */
 function renderWaffleMenuPanel($modules, $current_module, $path_prefix) {
     $allowed = $_SESSION['allowed_modules'] ?? null;
@@ -1228,6 +1232,8 @@ function renderWaffleMenuJS() {
  * Polls a COUNT for the badge and only fetches the list when the panel opens:
  * this runs in every open tab of every analyst, so the idle cost is the cost
  * that matters, not the cost of opening it.
+ *
+ * @param mixed $path_prefix  relative path from the page to the app root, e.g. '../', for the API and link URLs
  */
 function renderNotificationBell($path_prefix) {
     if (!isset($_SESSION['analyst_id'])) return;
@@ -1248,6 +1254,8 @@ function renderNotificationBell($path_prefix) {
  * api/war-room/alerts.php every minute and stay hidden until something is
  * waiting. Not polled on the War Room page itself; desktop popups only when the
  * analyst's warroom_desktop_alerts preference is on.
+ *
+ * @param mixed $path_prefix  relative path from the page to the app root, e.g. '../'; '' is read as './'
  */
 function renderWarRoomAlerts($path_prefix) {
     if (!isset($_SESSION['analyst_id'])) return;
@@ -1458,6 +1466,9 @@ function renderWarRoomAlerts($path_prefix) {
  * button, the initials avatar and its account menu (preferences, password, MFA, the portal
  * link when the analyst could sign in there, appearance, log out), plus the
  * password and MFA dialogs and their script.
+ *
+ * @param mixed $analyst_name  the signed-in analyst's display name, for the avatar initials and the menu
+ * @param mixed $path_prefix  relative path from the page to the app root, e.g. '../'
  */
 function renderHeaderRight($analyst_name, $path_prefix) {
     // Extract initials from analyst name

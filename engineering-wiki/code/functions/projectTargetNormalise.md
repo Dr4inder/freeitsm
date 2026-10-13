@@ -6,11 +6,11 @@ Check and tidy a target from the screen. Returns the row to store; throws Servic
 function projectTargetNormalise(array $in): array
 ```
 
-Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 69.
+Defined in [includes/projects/targets.php](/code/files/includes/projects/targets.php.md), line 71.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$in` | `array` |  |  |
+| `$in` | `array` |  | the target as sent by the screen, or a stored project_asset_targets row (untrusted either way) |
 
 **Returns:** `array`
 

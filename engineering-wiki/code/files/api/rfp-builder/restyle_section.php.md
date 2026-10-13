@@ -1,6 +1,6 @@
 # api/rfp-builder/restyle_section.php
 
-> API endpoint - 184 lines
+> API endpoint - 187 lines
 
 Restyle one category section: re-run the AI over the existing HTML to apply the style guide without changing the substance. Same streaming SSE protocol as generate_section.php so the document page can drop a restyle into the same batch UI.
 
@@ -24,17 +24,17 @@ version pill still bumps so the analyst can see a restyle happened.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse()](/code/functions/sse.md) | 42 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
+| [sse()](/code/functions/sse.md) | 45 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 80 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
-| 94 |  | read [rfp_output_sections](/code/tables/rfp_output_sections.md), read [rfp_categories](/code/tables/rfp_categories.md) |  |
-| 134 |  | **insert** [rfp_section_history](/code/tables/rfp_section_history.md) (`section_id`, `version`, `section_content`, `is_manually_edited`) |  |
-| 151 |  | **update** [rfp_output_sections](/code/tables/rfp_output_sections.md) (`section_content`, `version`, `is_manually_edited`, `edited_datetime`, `generated_datetime`) |  |
-| 161 |  | **update** [rfps](/code/tables/rfps.md) (`updated_datetime`) |  |
+| 83 |  | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md) |  |
+| 97 |  | read [rfp_output_sections](/code/tables/rfp_output_sections.md), read [rfp_categories](/code/tables/rfp_categories.md) |  |
+| 137 |  | **insert** [rfp_section_history](/code/tables/rfp_section_history.md) (`section_id`, `version`, `section_content`, `is_manually_edited`) |  |
+| 154 |  | **update** [rfp_output_sections](/code/tables/rfp_output_sections.md) (`section_content`, `version`, `is_manually_edited`, `edited_datetime`, `generated_datetime`) |  |
+| 164 |  | **update** [rfps](/code/tables/rfps.md) (`updated_datetime`) |  |
 
 ## How it hangs together
 

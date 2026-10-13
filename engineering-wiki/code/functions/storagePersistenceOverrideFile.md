@@ -25,11 +25,11 @@ checked by eye against what we printed.
 function storagePersistenceOverrideFile(array $report): string
 ```
 
-Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 368.
+Defined in [includes/storage_persistence.php](/code/files/includes/storage_persistence.php.md), line 383.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$report` | `array` |  |  |
+| `$report` | `array` |  | the report from `storagePersistenceReport()` |
 
 **Returns:** `string`
 

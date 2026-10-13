@@ -6,11 +6,11 @@ The Accept header for a legacy /api (XML) call at the connection's API version.
 function vcdAcceptXml(string $version): array
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 80.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 96.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$version` | `string` |  |  |
+| `$version` | `string` |  | the connection's API version, e.g. '38.0' |
 
 **Returns:** `array`
 

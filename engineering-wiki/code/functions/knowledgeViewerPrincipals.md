@@ -12,12 +12,12 @@ remembering to take it away.
 function knowledgeViewerPrincipals(PDO $conn, KnowledgeViewer $viewer): array
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 670.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 721.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$viewer` | `KnowledgeViewer` |  |  |
+| `$viewer` | `KnowledgeViewer` |  | who is reading |
 
 **Returns:** `array`
 
@@ -25,8 +25,8 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 681 | `knowledgeViewerPrincipals` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 695 | `knowledgeViewerPrincipals` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 732 | `knowledgeViewerPrincipals` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 746 | `knowledgeViewerPrincipals` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
 
 ## Called from
 

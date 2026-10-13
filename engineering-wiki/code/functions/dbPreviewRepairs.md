@@ -13,12 +13,12 @@ COUNTS ONLY. Nothing here writes, and nothing here may.
 function dbPreviewRepairs(PDO $conn, string $dbName): array
 ```
 
-Defined in [includes/db_verify_preview.php](/code/files/includes/db_verify_preview.php.md), line 119.
+Defined in [includes/db_verify_preview.php](/code/files/includes/db_verify_preview.php.md), line 137.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
-| `$dbName` | `string` |  |  |
+| `$dbName` | `string` |  | the database (schema) name being verified |
 
 **Returns:** array<int,array{key:string,table:string,rows:int,what:string}>
 
@@ -26,7 +26,7 @@ Defined in [includes/db_verify_preview.php](/code/files/includes/db_verify_previ
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 130 | `dbPreviewRepairs` | read [assets](/code/tables/assets.md), read [asset_history](/code/tables/asset_history.md) |  |
+| 148 | `dbPreviewRepairs` | read [assets](/code/tables/assets.md), read [asset_history](/code/tables/asset_history.md) |  |
 
 ## Calls
 
