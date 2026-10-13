@@ -3424,13 +3424,18 @@ async function askAi() {
  * Markdown becomes bold, italics, code, paragraphs and lists.
  */
 function formatAiResponse(text, articlesList) {
+    // TRAP: escape the WHOLE answer first, then add markup. The answer is model
+    // output built from article text, so it can contain HTML; formatting the raw
+    // text and handing it to innerHTML would run it. Only the tags added below may appear.
+    text = escapeHtml(String(text == null ? '' : text));
     // Replace quoted article titles with hyperlinks before any other formatting
     if (articlesList && articlesList.length > 0) {
         // Sort by title length descending so longer titles match first
         const sorted = [...articlesList].sort((a, b) => b.title.length - a.title.length);
         sorted.forEach(article => {
-            // Match title in quotes: "Title" or "Title", with optional (ID: X) suffix
-            const escapedTitle = article.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            // Match title in quotes: "Title" or "Title", with optional (ID: X) suffix -
+            // against the escaped answer, so escape the title the same way
+            const escapedTitle = escapeHtml(article.title).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             // Match with optional " (ID: X)" suffix that AI sometimes adds
             const regex = new RegExp('["\u201c]' + escapedTitle + '(\\s*\\(ID:\\s*\\d+\\))?["\u201d]', 'gi');
             const link = '<a href="javascript:void(0)" data-article-id="' + article.id + '" class="ai-article-link">\u201c' + escapeHtml(article.title) + '\u201d</a>';

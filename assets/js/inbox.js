@@ -9454,11 +9454,18 @@ async function _sendTicketAiMessage(question, isAutoContext) {
  * TRAP: only the article titles are escaped - any HTML in the rest of the answer reaches the page as markup.
  */
 function formatTicketAiResponse(text, articlesList) {
+    // TRAP: escape the WHOLE answer first, then add markup. The answer is model
+    // output, and the model reads the ticket - text a customer wrote - so it can be
+    // steered into replying with HTML. Formatting raw text and handing it to
+    // innerHTML ran that HTML in the analyst's browser. Only the tags added below
+    // (links, strong, em, code, lists) may appear.
+    text = escapeHtml(String(text == null ? '' : text));
     // Replace quoted article titles with hyperlinks
     if (articlesList && articlesList.length > 0) {
         const sorted = [...articlesList].sort((a, b) => b.title.length - a.title.length);
         sorted.forEach(article => {
-            const escapedTitle = article.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            // matched against the escaped answer, so escape the title the same way
+            const escapedTitle = escapeHtml(article.title).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const regex = new RegExp('["\u201c]' + escapedTitle + '(\\s*\\(ID:\\s*\\d+\\))?["\u201d]', 'gi');
             const link = '<a href="../knowledge/?id=' + article.id + '" target="_blank" class="ai-article-link">\u201c' + escapeHtml(article.title) + '\u201d</a>';
             text = text.replace(regex, link);
