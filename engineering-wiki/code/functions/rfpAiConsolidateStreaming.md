@@ -23,7 +23,7 @@ Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 810.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$rfpId` | `int` |  |  |
 | `$extractedRows` | `array` |  |  |
 | `$onEvent` | `callable` |  |  |

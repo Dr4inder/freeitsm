@@ -18,7 +18,7 @@ Defined in [includes/self_service_settings.php](/code/files/includes/self_servic
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

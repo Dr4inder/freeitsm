@@ -10,7 +10,7 @@ Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$connectionId` | `int` |  |  |
 
 **Returns:** `array`

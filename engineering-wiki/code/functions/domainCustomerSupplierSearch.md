@@ -10,7 +10,7 @@ Defined in [includes/domains/customer.php](/code/files/includes/domains/customer
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$q` | `string` |  |  |
 | `$limit` | `int` | `15` |  |
 

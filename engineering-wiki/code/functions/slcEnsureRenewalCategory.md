@@ -10,7 +10,7 @@ Defined in [includes/software_licence_calendar.php](/code/files/includes/softwar
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?int`
 

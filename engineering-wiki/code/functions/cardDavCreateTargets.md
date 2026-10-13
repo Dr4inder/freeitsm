@@ -10,7 +10,7 @@ Defined in [includes/carddav_create.php](/code/files/includes/carddav_create.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$user` | `array` |  |  |
 
 **Returns:** array ['books' => [provider rows], 'reason' => '' | why nothing is offered]

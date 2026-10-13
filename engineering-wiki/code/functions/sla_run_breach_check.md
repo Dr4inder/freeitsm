@@ -10,7 +10,7 @@ Defined in [includes/sla_notifications.php](/code/files/includes/sla_notificatio
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

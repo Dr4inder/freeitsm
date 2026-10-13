@@ -10,8 +10,8 @@ Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?array`
 

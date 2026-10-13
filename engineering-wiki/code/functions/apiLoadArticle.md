@@ -15,9 +15,9 @@ Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowled
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$articleId` | `int` |  |  |
-| `$apiKey` | `?array` | `null` |  |
+| `$apiKey` | `?array` | `null` | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

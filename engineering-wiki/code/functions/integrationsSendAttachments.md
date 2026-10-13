@@ -20,7 +20,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$connection` | `array` |  |  |
 | `$link` | `array` |  |  |
 | `$attachments` | `array` |  |  |

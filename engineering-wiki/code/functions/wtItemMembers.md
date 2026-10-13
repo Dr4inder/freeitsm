@@ -13,7 +13,7 @@ Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_se
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$itemKey` | `string` |  |  |
 
 **Returns:** `?array`

@@ -38,7 +38,7 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 428.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$identifier` | `?string` | `null` | what the user typed (email or username), or null |
 
 **Returns:** `array`

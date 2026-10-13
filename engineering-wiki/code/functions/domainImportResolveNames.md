@@ -10,7 +10,7 @@ Defined in [api/domains/bulk_add.php](/code/files/api/domains/bulk_add.php.md), 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$fields` | `array` |  |  |
 | `$row` | `array` |  |  |
 

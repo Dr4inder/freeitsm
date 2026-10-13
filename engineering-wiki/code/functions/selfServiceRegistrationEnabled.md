@@ -10,7 +10,7 @@ Defined in [includes/self_service.php](/code/files/includes/self_service.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `bool`
 

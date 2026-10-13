@@ -18,8 +18,8 @@ Defined in [includes/ticket_reply.php](/code/files/includes/ticket_reply.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** bool true if the ticket was actually reopened (for the caller's UI message)
 

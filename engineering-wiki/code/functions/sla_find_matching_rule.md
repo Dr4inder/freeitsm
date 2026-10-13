@@ -24,8 +24,8 @@ Defined in [includes/sla_notifications.php](/code/files/includes/sla_notificatio
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$trigger` | `string` |  |  |
 | `$targetType` | `string` |  |  |
 

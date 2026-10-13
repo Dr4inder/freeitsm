@@ -37,8 +37,8 @@ function saveCheck(PDO $conn, ActorContext $ctx, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Called from:** [api/morning-checks/add_check.php](/code/files/api/morning-checks/add_check.php.md), [api/morning-checks/update_check.php](/code/files/api/morning-checks/update_check.php.md), [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md)
@@ -79,7 +79,7 @@ function assertExists(PDO $conn, ?int $id, string $table, string $idCol, string 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `?int` |  |  |
 | `$table` | `string` |  |  |
 | `$idCol` | `string` |  |  |
@@ -97,7 +97,7 @@ function listGroups(PDO $conn, bool $activeOnly = false): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$activeOnly` | `bool` | `false` |  |
 
 **Database**
@@ -120,8 +120,8 @@ function saveGroup(PDO $conn, ActorContext $ctx, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Called from:** [api/morning-checks/save_group.php](/code/files/api/morning-checks/save_group.php.md)
@@ -142,8 +142,8 @@ function deleteGroup(PDO $conn, ActorContext $ctx, int $id): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Called from:** [api/morning-checks/delete_group.php](/code/files/api/morning-checks/delete_group.php.md)
@@ -185,8 +185,8 @@ function deleteCheck(PDO $conn, ActorContext $ctx, int $id): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Called from:** [api/morning-checks/delete_check.php](/code/files/api/morning-checks/delete_check.php.md), [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md)
@@ -203,7 +203,7 @@ function loadCheckRow(PDO $conn, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 ### recordResult
@@ -218,8 +218,8 @@ function recordResult(PDO $conn, ActorContext $ctx, array $in): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Called from:** [api/morning-checks/save_check_result.php](/code/files/api/morning-checks/save_check_result.php.md), [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md)
@@ -251,8 +251,8 @@ function clearResult(PDO $conn, ActorContext $ctx, int $checkId, ?string $date =
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$checkId` | `int` |  |  |
 | `$date` | `?string` | `null` |  |
 
@@ -309,8 +309,8 @@ function saveStatus(PDO $conn, ActorContext $ctx, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Called from:** [api/morning-checks/save_status.php](/code/files/api/morning-checks/save_status.php.md)
@@ -327,8 +327,8 @@ function deleteStatus(PDO $conn, ActorContext $ctx, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Called from:** [api/morning-checks/delete_status.php](/code/files/api/morning-checks/delete_status.php.md)
@@ -345,8 +345,8 @@ function reorderChecks(PDO $conn, ActorContext $ctx, array $order): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$order` | `array` |  |  |
 
 **Called from:** [api/morning-checks/reorder_checks.php](/code/files/api/morning-checks/reorder_checks.php.md)
@@ -363,8 +363,8 @@ function reorderStatuses(PDO $conn, ActorContext $ctx, array $order): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$order` | `array` |  |  |
 
 **Called from:** [api/morning-checks/reorder_statuses.php](/code/files/api/morning-checks/reorder_statuses.php.md)
@@ -381,8 +381,8 @@ function normaliseStatuses(PDO $conn, ActorContext $ctx, array $mappings): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$mappings` | `array` |  |  |
 
 **Called from:** [api/morning-checks/normalise_status.php](/code/files/api/morning-checks/normalise_status.php.md)

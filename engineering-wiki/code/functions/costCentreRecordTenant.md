@@ -10,7 +10,7 @@ Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_as
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` |  |  |  |
 
 **Returns:** `int`

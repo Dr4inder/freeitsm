@@ -63,8 +63,8 @@ function config(PDO $conn, ?int $tenantId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/assets/get_asset_tag_settings.php](/code/files/api/assets/get_asset_tag_settings.php.md), [api/assets/save_asset_tag_settings.php](/code/files/api/assets/save_asset_tag_settings.php.md)
 
@@ -80,8 +80,8 @@ function isAutogenEnabled(PDO $conn, ?int $tenantId): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### validateFormat
 
@@ -129,8 +129,8 @@ function storeTenant(PDO $conn, ?int $tenantId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/services/assets.php](/code/files/includes/services/assets.php.md)
 
@@ -146,9 +146,9 @@ function counterKey(PDO $conn, array $cfg, ?int $tenantId): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$cfg` | `array` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### nextNumber
 
@@ -162,8 +162,8 @@ function nextNumber(PDO $conn, ?int $tenantId): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -185,8 +185,8 @@ function setNextNumber(PDO $conn, ?int $tenantId, int $next): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$next` | `int` |  |  |
 
 **Called from:** [api/assets/save_asset_tag_settings.php](/code/files/api/assets/save_asset_tag_settings.php.md)
@@ -203,7 +203,7 @@ function windCounterTo(PDO $conn, string $key, int $lastIssued): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$key` | `string` |  |  |
 | `$lastIssued` | `int` |  |  |
 
@@ -225,7 +225,7 @@ function claimNext(PDO $conn, string $key, int $start): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$key` | `string` |  |  |
 | `$start` | `int` |  |  |
 
@@ -247,8 +247,8 @@ function generate(PDO $conn, ?int $tenantId): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### noteManualTag
 
@@ -262,8 +262,8 @@ function noteManualTag(PDO $conn, ?int $tenantId, string $tag): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$tag` | `string` |  |  |
 
 ### withLock
@@ -278,8 +278,8 @@ function withLock(PDO $conn, ?int $tenantId, callable $fn)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$fn` | `callable` |  |  |
 
 **Returns:** T
@@ -296,7 +296,7 @@ function clashMessage(PDO $conn, ?int $storeTenant, string $tag, ?int $exceptAss
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$storeTenant` | `?int` |  |  |
 | `$tag` | `string` |  |  |
 | `$exceptAssetId` | `?int` | `null` |  |
@@ -319,8 +319,8 @@ function createWithTag(PDO $conn, ?int $tenantId, ?string $manualTag, callable $
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$manualTag` | `?string` |  |  |
 | `$insert` | `callable` |  | writes the asset with the given tag, returns its id |
 
@@ -340,9 +340,9 @@ function assign(PDO $conn, ActorContext $ctx, int $assetId, string $tag): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 | `$tag` | `string` |  |  |
 
 **Returns:** array{asset_tag:string, unchanged:bool}

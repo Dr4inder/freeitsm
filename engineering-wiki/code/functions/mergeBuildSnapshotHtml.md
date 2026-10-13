@@ -24,7 +24,7 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$sourceId` | `int` |  |  |
 | `$source` | `array` |  |  |
 

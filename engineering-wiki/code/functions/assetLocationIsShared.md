@@ -10,7 +10,7 @@ Defined in [includes/asset_locations.php](/code/files/includes/asset_locations.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$locationId` | `int` |  |  |
 
 **Returns:** `bool`

@@ -57,7 +57,7 @@ function __construct(
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$level` | `string` |  |  |
-| `$analystId` | `?int` |  |  |
+| `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$userId` | `?int` |  |  |
 | `$companyScope` | `?array` |  |  |
 | `$unrestricted` | `bool` | `false` |  |
@@ -78,8 +78,8 @@ function scopeForOneCompany(PDO $conn, ?int $tenantId): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### forAnalyst
 
@@ -97,8 +97,8 @@ function forAnalyst(PDO $conn, int $analystId): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/files/shortcut.php](/code/files/api/files/shortcut.php.md), [api/knowledge/ai_chat.php](/code/files/api/knowledge/ai_chat.php.md), [api/knowledge/audit.php](/code/files/api/knowledge/audit.php.md), [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), [api/knowledge/generate_embedding.php](/code/files/api/knowledge/generate_embedding.php.md), [api/knowledge/get_articles_for_embedding.php](/code/files/api/knowledge/get_articles_for_embedding.php.md), [api/knowledge/get_embedding_stats.php](/code/files/api/knowledge/get_embedding_stats.php.md), [api/knowledge/get_review_list.php](/code/files/api/knowledge/get_review_list.php.md), [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md), [api/knowledge/knowledge_article.php](/code/files/api/knowledge/knowledge_article.php.md), [api/knowledge/knowledge_articles.php](/code/files/api/knowledge/knowledge_articles.php.md), [api/knowledge/knowledge_tags.php](/code/files/api/knowledge/knowledge_tags.php.md), [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), [api/system/global_search.php](/code/files/api/system/global_search.php.md), [includes/documents.php](/code/files/includes/documents.php.md), [includes/domains/links.php](/code/files/includes/domains/links.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), [includes/projects/links.php](/code/files/includes/projects/links.php.md), [includes/recent_trail.php](/code/files/includes/recent_trail.php.md), [includes/record_preview.php](/code/files/includes/record_preview.php.md), [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md)
 
@@ -114,8 +114,8 @@ function scopeForAllAccessible(PDO $conn, int $analystId): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 ### forApiKey
 
@@ -134,7 +134,7 @@ function forApiKey(PDO $conn, array $apiKey): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$apiKey` | `array` |  |  |
 
 **Called from:** [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md)
@@ -151,9 +151,9 @@ function forPortalUser(PDO $conn, ?int $userId, ?int $tenantId): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$userId` | `?int` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md)
 
@@ -169,8 +169,8 @@ function forWebChat(PDO $conn, ?int $tenantId): self
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/webchat/ai.php](/code/files/includes/webchat/ai.php.md)
 
@@ -197,8 +197,8 @@ function fromLegacyAudienceString(PDO $conn, ?int $tenantId, string $level): sel
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$level` | `string` |  |  |
 
 **Called from:** [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md)

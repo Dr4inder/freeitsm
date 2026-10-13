@@ -10,8 +10,8 @@ Defined in [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_ch
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

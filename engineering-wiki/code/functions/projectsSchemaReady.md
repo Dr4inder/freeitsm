@@ -16,7 +16,7 @@ Defined in [includes/projects/methodologies.php](/code/files/includes/projects/m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `bool`
 

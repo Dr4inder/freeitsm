@@ -10,7 +10,7 @@ Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$force` | `bool` | `false` |  |
 
 **Returns:** array{models: array<int,array>, cached_at: int, stale: bool} models: [{id,name,context_length,prompt_price,completion_price}]

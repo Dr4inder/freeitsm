@@ -10,7 +10,7 @@ Defined in [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$task` | `array` |  |  |
 
 **Returns:** `array`

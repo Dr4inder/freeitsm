@@ -10,7 +10,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 2
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$m` | `array` |  | the manager's row (id, tenant_id) from `managerRow()` |
 
 **Returns:** array{0:string, 1:array}

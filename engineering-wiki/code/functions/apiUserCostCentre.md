@@ -10,9 +10,9 @@ Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$body` | `array` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$body` | `array` |  | The request's JSON body, decoded. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$currentId` | `?int` |  |  |
 
 **Returns:** `array`

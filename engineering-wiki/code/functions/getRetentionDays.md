@@ -10,7 +10,7 @@ Defined in [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowl
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 ## Database
 

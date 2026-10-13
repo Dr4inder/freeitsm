@@ -10,8 +10,8 @@ Defined in [includes/asset_locations.php](/code/files/includes/asset_locations.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$alias` | `string` | `'l'` | the asset_locations alias ('' for none) |
 
 **Returns:** array [sqlFragment, params] to append to a WHERE

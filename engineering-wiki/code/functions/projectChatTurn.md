@@ -16,8 +16,8 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$project` | `array` |  |  |
 | `$mode` | `string` |  |  |
 | `$text` | `string` | `''` |  |

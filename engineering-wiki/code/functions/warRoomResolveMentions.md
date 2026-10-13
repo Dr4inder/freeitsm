@@ -29,7 +29,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 681
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$channelId` | `int` |  |  |
 | `$authorId` | `int` |  |  |
 | `$body` | `string` |  |  |

@@ -22,7 +22,7 @@ Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$module` | `string` |  |  |
 | `$table` | `string` |  |  |
 | `$dbMessage` | `string` |  |  |

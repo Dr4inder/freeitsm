@@ -28,9 +28,9 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$phone` | `string` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

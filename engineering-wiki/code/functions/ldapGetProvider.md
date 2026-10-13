@@ -10,7 +10,7 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 71.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Returns:** `?array`

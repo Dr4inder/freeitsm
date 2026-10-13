@@ -10,8 +10,8 @@ Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensiti
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$sourceIds` | `array` |  |  |
 | `$reason` | `string` |  |  |
 

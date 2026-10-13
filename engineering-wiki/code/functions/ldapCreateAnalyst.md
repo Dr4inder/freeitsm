@@ -25,7 +25,7 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 511.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$providerId` | `int` |  |  |
 | `$preferredUser` | `string` |  |  |
 | `$name` | `string` |  |  |

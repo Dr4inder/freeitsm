@@ -10,7 +10,7 @@ Defined in [includes/projects/flow.php](/code/files/includes/projects/flow.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$projectIds` | `array` |  |  |
 
 **Returns:** `void`

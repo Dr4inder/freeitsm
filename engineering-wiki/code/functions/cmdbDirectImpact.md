@@ -10,7 +10,7 @@ Defined in [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md), 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Returns:** `array`

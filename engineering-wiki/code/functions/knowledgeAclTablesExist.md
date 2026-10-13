@@ -15,7 +15,7 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `bool`
 

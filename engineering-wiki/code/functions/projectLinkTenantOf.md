@@ -10,7 +10,7 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 | `$id` | `int` |  |  |
 

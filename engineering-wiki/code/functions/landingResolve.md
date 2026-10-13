@@ -14,7 +14,7 @@ Defined in [includes/landing.php](/code/files/includes/landing.php.md), line 80.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

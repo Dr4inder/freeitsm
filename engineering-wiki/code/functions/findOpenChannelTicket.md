@@ -25,7 +25,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$from` | `string` |  |  |
 | `$channelType` | `string` |  |  |
 | `$replyAddress` | `string` | `''` |  |

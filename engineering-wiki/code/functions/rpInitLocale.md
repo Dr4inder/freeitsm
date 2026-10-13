@@ -10,7 +10,7 @@ Defined in [includes/report_packs/api_common.php](/code/files/includes/report_pa
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

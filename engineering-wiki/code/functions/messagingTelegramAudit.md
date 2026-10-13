@@ -16,8 +16,8 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$field` | `string` |  |  |
 | `$old` | `?string` |  |  |
 | `$new` | `string` |  |  |

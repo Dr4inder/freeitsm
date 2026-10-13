@@ -17,8 +17,8 @@ Defined in [api/messaging/test_channel.php](/code/files/api/messaging/test_chann
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `?int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$sender` | `string` |  |  |
 | `$channelType` | `string` |  |  |
 | `$channelId` | `int` |  |  |

@@ -17,7 +17,7 @@ Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$articleId` | `int` |  |  |
 | `$analyst` | `?int` |  |  |
 | `$user` | `?int` | `null` |  |

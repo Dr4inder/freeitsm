@@ -10,9 +10,9 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$create` | `bool` |  |  |
 
 **Returns:** `?array`

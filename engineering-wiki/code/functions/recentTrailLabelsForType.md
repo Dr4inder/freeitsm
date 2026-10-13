@@ -10,8 +10,8 @@ Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$type` | `string` |  |  |
 | `$ids` | `array` |  |  |
 

@@ -17,7 +17,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 121
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

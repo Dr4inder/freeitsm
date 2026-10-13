@@ -10,7 +10,7 @@ Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$name` | `string` |  |  |
 | `$gapSeconds` | `float` | `1.5` |  |
 

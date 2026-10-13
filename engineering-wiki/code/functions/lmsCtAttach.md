@@ -10,7 +10,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$testId` | `int` |  |  |
 | `$questionIds` | `array` |  |  |
 

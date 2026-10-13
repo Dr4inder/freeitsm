@@ -20,8 +20,8 @@ Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$gone` | `bool` | `false` | true when the task is being deleted and its row may already be unreadable. |
 
 **Returns:** `void`

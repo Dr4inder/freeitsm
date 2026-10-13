@@ -10,7 +10,7 @@ Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), li
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$providerId` | `int` |  |  |
 | `$labels` | `array` |  |  |
 

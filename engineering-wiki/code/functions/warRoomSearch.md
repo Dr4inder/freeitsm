@@ -37,8 +37,8 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 968
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$query` | `string` |  |  |
 | `$channelId` | `?int` | `null` |  |
 | `$limit` | `int` | `60` |  |

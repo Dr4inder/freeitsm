@@ -40,8 +40,8 @@ function resolveTenantId(PDO $conn, ActorContext $ctx, $raw): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$raw` |  |  |  |
 
 ### resolveFolderId
@@ -65,7 +65,7 @@ function resolveFolderId(PDO $conn, $raw): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$raw` |  |  |  |
 
 **Database**
@@ -108,8 +108,8 @@ function assertCanAccessArticle(PDO $conn, ActorContext $ctx, int $articleId): v
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$articleId` | `int` |  |  |
 
 **Database**
@@ -130,8 +130,8 @@ function saveArticle(PDO $conn, ActorContext $ctx, array $in): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -165,7 +165,7 @@ function reindexForSearch(PDO $conn, int $articleId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$articleId` | `int` |  |  |
 
 ### archiveArticle
@@ -180,8 +180,8 @@ function archiveArticle(PDO $conn, ActorContext $ctx, int $id): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -204,8 +204,8 @@ function restoreArticle(PDO $conn, ActorContext $ctx, int $id): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -228,8 +228,8 @@ function purgeArticle(PDO $conn, ActorContext $ctx, int $id): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -255,7 +255,7 @@ function loadArticleRow(PDO $conn, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -276,7 +276,7 @@ function setTags(PDO $conn, int $articleId, array $tags): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$articleId` | `int` |  |  |
 | `$tags` | `array` |  |  |
 
@@ -301,7 +301,7 @@ function updateEmbedding(PDO $conn, int $articleId, string $title, string $body)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$articleId` | `int` |  |  |
 | `$title` | `string` |  |  |
 | `$body` | `string` |  |  |
@@ -325,8 +325,8 @@ function resolveAnalyst(PDO $conn, int $analystId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 

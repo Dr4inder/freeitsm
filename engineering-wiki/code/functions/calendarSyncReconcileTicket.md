@@ -10,8 +10,8 @@ Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$gone` | `bool` | `false` | true when the ticket is going away entirely (trashed or purged) and its row may no longer be readable. |
 
 **Returns:** `void`

@@ -10,8 +10,8 @@ Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$apiKey` | `array` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Returns:** `array`

@@ -18,7 +18,7 @@ Defined in [includes/knowledge/writeup_ai.php](/code/files/includes/knowledge/wr
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `bool`
 

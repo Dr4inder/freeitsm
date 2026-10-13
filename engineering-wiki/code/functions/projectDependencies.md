@@ -10,8 +10,8 @@ Defined in [includes/projects/dependencies.php](/code/files/includes/projects/de
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

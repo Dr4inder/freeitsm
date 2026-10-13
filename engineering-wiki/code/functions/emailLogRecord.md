@@ -22,14 +22,14 @@ Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` |  |  |
+| `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailbox` | `?array` |  |  |
 | `$route` | `string` |  |  |
 | `$to` | `string` |  |  |
 | `$subject` | `string` |  |  |
-| `$sent` |  |  |  |
+| `$sent` |  |  | bool for sent/failed, or a status string |
 | `$error` | `?string` | `null` |  |
-| `$ticketId` | `?int` | `null` |  |
+| `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

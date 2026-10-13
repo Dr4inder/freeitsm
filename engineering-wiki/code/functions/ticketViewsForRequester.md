@@ -10,8 +10,8 @@ Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$requesterUserId` | `int` |  |  |
 
 **Returns:** array<int, array{name:string, first:string, last:string, count:int}>

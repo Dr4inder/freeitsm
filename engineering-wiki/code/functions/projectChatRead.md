@@ -10,7 +10,7 @@ Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$pid` | `int` |  |  |
 | `$name` | `string` |  |  |
 | `$a` | `array` |  |  |

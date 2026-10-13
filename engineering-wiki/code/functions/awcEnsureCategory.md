@@ -30,7 +30,7 @@ Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_war
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$source` | `string` |  |  |
 | `$name` | `string` |  |  |
 | `$colour` | `string` |  |  |

@@ -33,7 +33,7 @@ Defined in [includes/sso_identity.php](/code/files/includes/sso_identity.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 | `$providerId` | `int` |  |  |
 | `$sub` | `string` |  |  |

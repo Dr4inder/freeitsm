@@ -14,9 +14,9 @@ Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$body` | `string` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

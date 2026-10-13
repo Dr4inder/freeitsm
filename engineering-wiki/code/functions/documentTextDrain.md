@@ -15,7 +15,7 @@ Defined in [includes/search/documents_index.php](/code/files/includes/search/doc
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$limit` | `int` | `5` |  |
 | `$deadline` | `float` | `0` |  |
 

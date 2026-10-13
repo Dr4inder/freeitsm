@@ -15,7 +15,7 @@ Defined in [includes/lms/knowledge_source.php](/code/files/includes/lms/knowledg
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

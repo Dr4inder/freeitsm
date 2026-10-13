@@ -19,10 +19,10 @@ Defined in [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$provider` | `array` |  |  |
 | `$mode` | `string` | `'live'` | 'live' \| 'preview' |
-| `$analystId` | `?int` | `null` |  |
+| `$analystId` | `?int` | `null` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

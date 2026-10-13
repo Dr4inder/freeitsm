@@ -48,8 +48,8 @@ function hasAttachedChecklists(PDO $conn, int $ticketId): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -69,8 +69,8 @@ function outstandingMandatorySteps(PDO $conn, int $ticketId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array<int, array{checklist: string, step: string, item_id: int}>
 
@@ -109,9 +109,9 @@ function effectiveClosureMode(PDO $conn, string $mode, ?int $tenantId = null): s
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mode` | `string` |  |  |
-| `$tenantId` | `?int` | `null` |  |
+| `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md)
 
@@ -139,9 +139,9 @@ function assertClosureAllowed(PDO $conn, int $ticketId, ?int $tenantId = null): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
-| `$tenantId` | `?int` | `null` |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/services/tickets.php](/code/files/includes/services/tickets.php.md), [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md)
 
@@ -167,10 +167,10 @@ function recordClosureOverride(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$ticketId` | `int` |  |  |
-| `$tenantId` | `?int` | `null` |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array<int, array{checklist: string, step: string, item_id: int}>
 
@@ -188,7 +188,7 @@ function closedBy(ActorContext $ctx): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ctx` | `ActorContext` |  |  |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 
 ### writeClosureNote
 
@@ -216,9 +216,9 @@ function writeClosureNote(PDO $conn, ActorContext $ctx, int $ticketId, string $n
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$note` | `string` |  |  |
 
 **Database**
@@ -259,8 +259,8 @@ function saveLookup(PDO $conn, ActorContext $ctx, string $kind, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$kind` | `string` |  |  |
 | `$in` | `array` |  |  |
 
@@ -290,8 +290,8 @@ function deleteLookup(PDO $conn, ActorContext $ctx, string $kind, int $id): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$kind` | `string` |  |  |
 | `$id` | `int` |  |  |
 
@@ -309,7 +309,7 @@ function tasksEnabled(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -331,8 +331,8 @@ function taskTenantId(PDO $conn, int $taskId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -352,8 +352,8 @@ function taskChecklists(PDO $conn, int $taskId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -376,8 +376,8 @@ function templatesForTask(PDO $conn, int $taskId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -402,9 +402,9 @@ function attachTemplateToTask(PDO $conn, ActorContext $ctx, int $taskId, int $te
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$templateId` | `int` |  |  |
 
 **Database**
@@ -434,8 +434,8 @@ function copyTemplateToTask(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$templateId` | `int` |  |  |
 | `$title` | `string` |  |  |
 | `$closureMode` | `string` |  |  |
@@ -461,8 +461,8 @@ function nextTaskChecklistOrder(PDO $conn, int $taskId): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -482,8 +482,8 @@ function reorderTaskChecklists(PDO $conn, int $taskId, array $ids): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$ids` | `array` |  |  |
 
 **Database**
@@ -506,7 +506,7 @@ function reorderTaskChecklistItems(PDO $conn, int $checklistId, array $ids): voi
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$checklistId` | `int` |  |  |
 | `$ids` | `array` |  |  |
 
@@ -530,7 +530,7 @@ function taskIdForItem(PDO $conn, int $itemId): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$itemId` | `int` |  |  |
 
 **Database**
@@ -553,7 +553,7 @@ function taskIdForChecklist(PDO $conn, int $checklistId): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$checklistId` | `int` |  |  |
 
 **Database**
@@ -584,8 +584,8 @@ function toggleTaskItem(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$itemId` | `int` |  |  |
 | `$completed` | `bool` |  |  |
 | `$value` | `?string` |  |  |
@@ -613,7 +613,7 @@ function removeTaskChecklist(PDO $conn, int $checklistId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$checklistId` | `int` |  |  |
 
 **Database**
@@ -637,7 +637,7 @@ function deleteForTasks(PDO $conn, array $taskIds): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$taskIds` | `array` |  |  |
 
 **Database**
@@ -661,8 +661,8 @@ function taskOutstandingMandatorySteps(PDO $conn, int $taskId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -682,8 +682,8 @@ function taskCompletionCheck(PDO $conn, int $taskId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array{blocking: array<string,string[]>, warning: array<string,string[]>}
 
@@ -704,8 +704,8 @@ function assertTaskCompletionAllowed(PDO $conn, int $taskId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/tasks/reorder.php](/code/files/api/tasks/reorder.php.md), [api/tasks/toggle_subtask.php](/code/files/api/tasks/toggle_subtask.php.md), [includes/services/tasks.php](/code/files/includes/services/tasks.php.md)
 
@@ -726,9 +726,9 @@ function recordTaskCompletionOverride(PDO $conn, ActorContext $ctx, int $taskId)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -755,7 +755,7 @@ function copyTaskChecklists(PDO $conn, int $fromTaskId, int $toTaskId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$fromTaskId` | `int` |  |  |
 | `$toTaskId` | `int` |  |  |
 

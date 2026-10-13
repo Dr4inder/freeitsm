@@ -21,8 +21,8 @@ Defined in [includes/reply_templates.php](/code/files/includes/reply_templates.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$activeOnly` | `bool` | `true` |  |
 
 **Returns:** array rows with an extra 'scope' => 'shared'|'mine'

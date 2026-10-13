@@ -20,8 +20,8 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$allowedModules` | `?array` |  |  |
 | `$type` | `string` |  |  |
 | `$parentId` | `int` |  |  |

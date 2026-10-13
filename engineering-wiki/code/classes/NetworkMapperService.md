@@ -36,8 +36,8 @@ function createDiagram(PDO $conn, ActorContext $ctx, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -60,8 +60,8 @@ function saveDiagram(PDO $conn, ActorContext $ctx, int $diagramId, array $in): i
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$diagramId` | `int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -85,8 +85,8 @@ function deleteDiagram(PDO $conn, ActorContext $ctx, int $diagramId, bool $chain
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$diagramId` | `int` |  |  |
 | `$chain` | `bool` | `false` |  |
 
@@ -112,8 +112,8 @@ function createVersion(PDO $conn, ActorContext $ctx, int $parentId, array $in): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$parentId` | `int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -141,7 +141,7 @@ function loadDiagram(PDO $conn, int $diagramId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$diagramId` | `int` |  |  |
 
 **Database**
@@ -176,7 +176,7 @@ function chainIds(PDO $conn, int $diagramId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$diagramId` | `int` |  |  |
 
 **Database**
@@ -236,8 +236,8 @@ function replaceContents(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$diagramId` | `int` |  |  |
 | `$nodesIn` | `array` |  |  |
 | `$connectorsIn` | `array` |  |  |
@@ -263,8 +263,8 @@ function validateNodeInput(PDO $conn, ActorContext $ctx, array $n, int $index): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$n` | `array` |  |  |
 | `$index` | `int` |  |  |
 
@@ -280,7 +280,7 @@ function autoPlacer(PDO $conn, int $diagramId): callable
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$diagramId` | `int` |  |  |
 
 **Database**
@@ -301,7 +301,7 @@ function resolveRelationshipId(PDO $conn, $raw, int $fromNodeId, int $toNodeId):
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$raw` |  |  |  |
 | `$fromNodeId` | `int` |  |  |
 | `$toNodeId` | `int` |  |  |
@@ -325,8 +325,8 @@ function validateObjectExists(PDO $conn, ActorContext $ctx, int $objectId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$objectId` | `int` |  |  |
 
 **Database**
@@ -375,7 +375,7 @@ function validateIcon(PDO $conn, string $iconKey): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$iconKey` | `string` |  |  |
 
 **Database**

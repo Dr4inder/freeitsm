@@ -43,6 +43,7 @@
 | [prose()](#prose) | Comment prose into Markdown: keep paragraphs and lists, stop "*" and "_" in code-ish text turning into emphasis. |
 | [signature()](#signature) | A function's signature as written, wrapped one parameter per line when it is over 100 characters. |
 | [paramsTable()](#paramstable) | The parameters table - name, type, default, and the meaning from its `@param` tag. |
+| [standardParam()](#standardparam) | The meaning of a parameter that means the same everywhere (handbook/standard-parameters.md), used only when the function's own comment says nothing about it. Marked "standard" so a reader knows where it came from. |
 | [tagRows()](#tagrows) | The doc comment's tags of the wanted kinds, as [tag, value] pairs. |
 | [filePage()](#filepage) | Builds a file's page - its description, the endpoint box for an API file, its functions and classes, its SQL, what it includes and is included by, what it calls, and its traps. |
 | [guardText()](#guardtext) | How an endpoint is protected: the checks it makes itself, else the ones made by a file it includes (a shared bootstrap like includes/files/api_bootstrap.php), at the top level of that file - a check inside a function only guards that function's callers. |
@@ -235,7 +236,7 @@ function params(array $tokens, int $open): array
 
 ### tidyParams
 
-*private* - line 478
+*private* - line 487
 
 Trims each parsed parameter's type and default (whitespace in a default collapsed to single spaces).
 
@@ -249,7 +250,7 @@ function tidyParams(array $ps): array
 
 ### evalPath
 
-*private* - line 485
+*private* - line 494
 
 Work out the file an include points at: string pieces, __DIR__, dirname(__DIR__[, n]).
 
@@ -264,7 +265,7 @@ function evalPath(array $expr, string $rel): ?string
 
 ### normalise
 
-*private* - line 523
+*private* - line 532
 
 Resolves '.' and '..' in a relative path; null when it climbs above the app root or ends up empty.
 
@@ -278,7 +279,7 @@ function normalise(string $path): ?string
 
 ### resolveRel
 
-*private* - line 537
+*private* - line 546
 
 Resolves a script src or link found in a page to a path from the app root; null for external URLs and PHP-built paths.
 
@@ -293,7 +294,7 @@ function resolveRel(string $from, string $href): ?string
 
 ### sqlOf
 
-*private* - line 547
+*private* - line 556
 
 Is this string SQL? Which tables does it read and which does it write (with the columns written)?
 
@@ -307,7 +308,7 @@ function sqlOf(string $s): ?array
 
 ### parseDoc
 
-*private* - line 574
+*private* - line 583
 
 A /** doc comment * / split into summary, body and `@tags`.
 
@@ -321,7 +322,7 @@ function parseDoc(string $raw): array
 
 ### lineDoc
 
-*private* - line 596
+*private* - line 605
 
 A run of // lines, or a plain block comment, used as a description when there is no doc comment. Decorative rules (// ----, // ====) and a lone TRAP are not descriptions.
 
@@ -335,7 +336,7 @@ function lineDoc(array $comments): ?array
 
 ### trapText
 
-*private* - line 619
+*private* - line 628
 
 Cleans a TRAP: comment down to its text - comment markers stripped, from "TRAP:" to the end of its paragraph, on one line.
 
@@ -349,7 +350,7 @@ function trapText(string $raw): string
 
 ### parseJs
 
-*private* - line 637
+*private* - line 646
 
 JavaScript: its functions (with /** comments) and the API endpoints it calls.
 
@@ -364,7 +365,7 @@ function parseJs(string $src, string $rel): array
 
 ### phaseWrite
 
-*private* - line 698
+*private* - line 707
 
 Phase 3 - builds every page (files, functions, classes, tables, indexes, endpoints, traps) from the manifest, writes only those that changed and deletes pages no longer produced.
 
@@ -374,7 +375,7 @@ function phaseWrite(): void
 
 ### cleanEmptyDirs
 
-*private* - line 794
+*private* - line 803
 
 Removes empty folders under the output, keeping _scan; returns true when the folder itself is empty.
 
@@ -388,7 +389,7 @@ function cleanEmptyDirs(string $dir): bool
 
 ### matchEndpoint
 
-*private* - line 807
+*private* - line 816
 
 "api/tickets/save.php" from a JS reference like "../api/tickets/save.php" or "api/tickets/save.php".
 
@@ -403,7 +404,7 @@ function matchEndpoint(string $e, array $files): array
 
 ### link
 
-*private* - line 816
+*private* - line 825
 
 A Markdown link to a wiki page.
 
@@ -418,7 +419,7 @@ function link(string $page, string $label): string
 
 ### fileLink
 
-*private* - line 818
+*private* - line 827
 
 A link to a file's page.
 
@@ -433,7 +434,7 @@ function fileLink(string $rel, ?string $label = null): string
 
 ### fnLink
 
-*private* - line 820
+*private* - line 829
 
 A link to a function's page, labelled `name()`.
 
@@ -447,7 +448,7 @@ function fnLink(string $name): string
 
 ### tableLink
 
-*private* - line 822
+*private* - line 831
 
 A link to a table's page.
 
@@ -461,7 +462,7 @@ function tableLink(string $t): string
 
 ### fnSlug
 
-*private* - line 824
+*private* - line 833
 
 A function or class name made safe for a page file name.
 
@@ -475,7 +476,7 @@ function fnSlug(string $name): string
 
 ### mdText
 
-*private* - line 826
+*private* - line 835
 
 Text safe inside a link label or table cell.
 
@@ -489,7 +490,7 @@ function mdText(string $s): string
 
 ### cell
 
-*private* - line 828
+*private* - line 837
 
 Text made safe for a Markdown table cell - pipes escaped, line breaks flattened.
 
@@ -503,7 +504,7 @@ function cell(string $s): string
 
 ### code
 
-*private* - line 830
+*private* - line 839
 
 Text as inline code (any backtick inside becomes a quote).
 
@@ -517,7 +518,7 @@ function code(string $s): string
 
 ### docMd
 
-*private* - line 833
+*private* - line 842
 
 A parsed doc comment as Markdown - the wiki link box, then the summary (optional) and the body.
 
@@ -532,7 +533,7 @@ function docMd(?array $doc, bool $withSummary = true): string
 
 ### wikiLinks
 
-*private* - line 848
+*private* - line 857
 
 The GitHub wiki pages a comment points at, as a box that stands out at the top of the page - a LINK only; the wiki's text is never copied into FreeITSM. From "@wiki Page-Name" (or a full URL) and from any github.com/edmozley/freeitsm/wiki/... link already written in the comment.
 
@@ -546,7 +547,7 @@ function wikiLinks(array $doc): string
 
 ### prose
 
-*private* - line 867
+*private* - line 876
 
 Comment prose into Markdown: keep paragraphs and lists, stop "*" and "_" in code-ish text turning into emphasis.
 
@@ -560,7 +561,7 @@ function prose(string $t): string
 
 ### signature
 
-*private* - line 876
+*private* - line 885
 
 A function's signature as written, wrapped one parameter per line when it is over 100 characters.
 
@@ -574,7 +575,7 @@ function signature(array $fn): string
 
 ### paramsTable
 
-*private* - line 887
+*private* - line 896
 
 The parameters table - name, type, default, and the meaning from its `@param` tag.
 
@@ -586,9 +587,24 @@ function paramsTable(array $fn): string
 |---|---|---|---|
 | `$fn` | `array` |  |  |
 
+### standardParam
+
+*private* - line 916
+
+The meaning of a parameter that means the same everywhere (handbook/standard-parameters.md), used only when the function's own comment says nothing about it. Marked "standard" so a reader knows where it came from.
+
+```php
+function standardParam(array $p, string $file): string
+```
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$p` | `array` |  |  |
+| `$file` | `string` |  |  |
+
 ### tagRows
 
-*private* - line 903
+*private* - line 936
 
 The doc comment's tags of the wanted kinds, as [tag, value] pairs.
 
@@ -603,7 +619,7 @@ function tagRows(?array $doc, array $want): array
 
 ### filePage
 
-*private* - line 913
+*private* - line 946
 
 Builds a file's page - its description, the endpoint box for an API file, its functions and classes, its SQL, what it includes and is included by, what it calls, and its traps.
 
@@ -631,7 +647,7 @@ function filePage(
 
 ### guardText
 
-*private* - line 979
+*private* - line 1012
 
 How an endpoint is protected: the checks it makes itself, else the ones made by a file it includes (a shared bootstrap like includes/files/api_bootstrap.php), at the top level of that file - a check inside a function only guards that function's callers.
 
@@ -646,7 +662,7 @@ function guardText(string $rel, array $d): string
 
 ### guardsOf
 
-*private* - line 1006
+*private* - line 1039
 
 The sign-in and permission checks a file makes at its top level (admin guard, module access, capability), each suffixed with `$via`.
 
@@ -661,7 +677,7 @@ function guardsOf(array $d, string $via): array
 
 ### sqlMd
 
-*private* - line 1025
+*private* - line 1058
 
 The Database table for a list of queries - line, function, tables read or written (with columns), and the SQL: note.
 
@@ -676,7 +692,7 @@ function sqlMd(array $sql, array $tableSet): string
 
 ### trapsMd
 
-*private* - line 1040
+*private* - line 1073
 
 The Traps section - each trap as a warning box with its line and function.
 
@@ -690,7 +706,7 @@ function trapsMd(array $traps): string
 
 ### seeLink
 
-*private* - line 1049
+*private* - line 1082
 
 An `@see` value as a file link when it names a file in the app, otherwise as code.
 
@@ -704,7 +720,7 @@ function seeLink(string $v): string
 
 ### functionPage
 
-*private* - line 1059
+*private* - line 1092
 
 Builds a function's page - description, signature, parameters, return, the tables it touches (warning when the comment names one its SQL does not), what it calls, its callers and its traps.
 
@@ -728,7 +744,7 @@ function functionPage(
 
 ### classPage
 
-*private* - line 1108
+*private* - line 1141
 
 Builds a class's page - its description, then each method with its signature, parameters, tags, SQL and callers.
 
@@ -746,7 +762,7 @@ function classPage(string $cls, array $c, array $callers, array $files, array $t
 
 ### tablePage
 
-*private* - line 1135
+*private* - line 1168
 
 Builds a table's page - its columns from the schema with their comments, then who writes it and who reads it.
 
@@ -762,7 +778,7 @@ function tablePage(string $t, array $def, array $use): string
 
 ### indexPage
 
-*private* - line 1164
+*private* - line 1197
 
 Builds the Code map front page - counts of files, endpoints, functions, classes, tables and traps, with links.
 
@@ -779,7 +795,7 @@ function indexPage(array $files, array $fnIndex, array $classIndex, array $schem
 
 ### functionsIndex
 
-*private* - line 1182
+*private* - line 1215
 
 Builds the A-Z list of functions outside classes, with file and summary.
 
@@ -793,7 +809,7 @@ function functionsIndex(array $fnIndex): string
 
 ### classesIndex
 
-*private* - line 1198
+*private* - line 1231
 
 Builds the list of classes, with file, method count and summary.
 
@@ -807,7 +823,7 @@ function classesIndex(array $classIndex): string
 
 ### tablesIndex
 
-*private* - line 1212
+*private* - line 1245
 
 Builds the list of tables, with column count, how many files read and write each, and the first sentence of its note.
 
@@ -822,7 +838,7 @@ function tablesIndex(array $schema, array $use): string
 
 ### filesIndex
 
-*private* - line 1225
+*private* - line 1258
 
 Builds the files index - a count per top folder, then the top-level files with their summaries.
 
@@ -836,7 +852,7 @@ function filesIndex(array $files): string
 
 ### endpointsPage
 
-*private* - line 1241
+*private* - line 1274
 
 Builds the API endpoints page - every api/ PHP file by folder, with its protection, summary and the scripts that call it.
 
@@ -851,7 +867,7 @@ function endpointsPage(array $files, array $jsCallers): string
 
 ### trapsPage
 
-*private* - line 1259
+*private* - line 1292
 
 Builds the page listing every TRAP: comment, file by file.
 
@@ -865,7 +881,7 @@ function trapsPage(array $files): string
 
 ### loadSchema
 
-*private* - line 1279
+*private* - line 1312
 
 Loads the table definitions from includes/db_verify_schema.php, with the comments written above each table and above or beside each column as notes.
 
@@ -877,7 +893,7 @@ function loadSchema(): array
 
 ### loadManifest
 
-*private* - line 1328
+*private* - line 1361
 
 Loads the saved manifest, unless it was written by a different VERSION of the scanner (which forces a full re-read).
 
@@ -887,7 +903,7 @@ function loadManifest(): void
 
 ### saveManifest
 
-*private* - line 1334
+*private* - line 1367
 
 Saves the manifest.
 
@@ -897,7 +913,7 @@ function saveManifest(): void
 
 ### saveState
 
-*private* - line 1336
+*private* - line 1369
 
 Saves the scan's progress; a finished scan saves an empty state.
 
@@ -907,7 +923,7 @@ function saveState(): void
 
 ### readJson
 
-*private* - line 1338
+*private* - line 1371
 
 Reads a JSON file from the state folder, or `$default` when it is missing or unreadable.
 
@@ -922,7 +938,7 @@ function readJson(string $name, $default)
 
 ### writeJson
 
-*private* - line 1346
+*private* - line 1379
 
 Writes a JSON file to the state folder through a temporary file and a rename, so a reader never sees half a file.
 
@@ -937,7 +953,7 @@ function writeJson(string $name, $data): void
 
 ### lastScan
 
-*public static* - line 1354
+*public static* - line 1387
 
 When the last scan finished, and what it did - for the reader's Rescan button.
 

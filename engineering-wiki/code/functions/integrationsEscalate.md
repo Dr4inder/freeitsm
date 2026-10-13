@@ -12,7 +12,7 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$opts` | `array` |  | ['entity_type'=>'ticket', 'entity_id'=>1042, 'connection_id'=>3, 'target'=>['project'=>'OPS','issue_type'=>'Bug'], 'summary'=>'…', 'body'=>IssueDoc, 'analyst_id'=>7, 'skip_if_linked'=>true, 'dry_run'=>false] |
 
 **Returns:** array the created link row, or ['skipped'=>true, …] / ['dry_run'=>true, …]

@@ -21,7 +21,7 @@ Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 915
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array ext => [mime, …], ready to pass as `$allowed`
 

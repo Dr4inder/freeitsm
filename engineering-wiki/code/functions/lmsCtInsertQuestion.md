@@ -16,11 +16,11 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$q` | `array` |  |  |
 | `$source` | `string` |  |  |
 | `$role` | `?string` |  |  |
-| `$analystId` | `?int` |  |  |
+| `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `int`
 

@@ -25,8 +25,8 @@ function saveLicence(PDO $conn, ActorContext $ctx, array $in): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -50,8 +50,8 @@ function deleteLicence(PDO $conn, ActorContext $ctx, int $id): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -84,7 +84,7 @@ function resyncRenewalCalendar(PDO $conn): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 ### loadLicenceRow
 
@@ -98,7 +98,7 @@ function loadLicenceRow(PDO $conn, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -119,7 +119,7 @@ function collectFields(PDO $conn, array $in, array $current = []): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 | `$current` | `array` | `[]` |  |
 

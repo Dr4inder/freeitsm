@@ -36,7 +36,7 @@ function load(PDO $conn, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -59,8 +59,8 @@ function create(PDO $conn, ActorContext $ctx, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -83,8 +83,8 @@ function update(PDO $conn, ActorContext $ctx, int $id, array $in): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -108,7 +108,7 @@ function access(PDO $conn, int $id, bool $effective = true): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 | `$effective` | `bool` | `true` |  |
 
@@ -134,8 +134,8 @@ function setAccess(PDO $conn, ActorContext $ctx, int $id, array $in): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -163,8 +163,8 @@ function managedRoleId(PDO $conn, int $analystId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -184,7 +184,7 @@ function assertNotLastAdmin(PDO $conn, int $id): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -205,8 +205,8 @@ function writeManagedRole(PDO $conn, ActorContext $ctx, array $a, array $caps): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$a` | `array` |  |  |
 | `$caps` | `array` |  |  |
 
@@ -248,7 +248,7 @@ function companyIds(PDO $conn, $v): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$v` |  |  |  |
 
 ### capabilityKeys
@@ -321,7 +321,7 @@ function assertEmailFree(PDO $conn, string $email, int $exceptId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$email` | `string` |  |  |
 | `$exceptId` | `int` |  |  |
 
@@ -343,7 +343,7 @@ function providerId(PDO $conn, $v): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$v` |  |  |  |
 
 **Database**
@@ -364,7 +364,7 @@ function uniqueUsername(PDO $conn, string $want, string $email): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$want` | `string` |  |  |
 | `$email` | `string` |  |  |
 

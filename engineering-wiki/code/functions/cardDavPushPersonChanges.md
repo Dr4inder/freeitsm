@@ -56,11 +56,11 @@ Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$userId` | `int` |  |  |
 | `$changes` | `array` |  | field => the value just saved |
 | `$previous` | `array` |  | field => the value FreeITSM held BEFORE this save |
-| `$analystId` | `?int` | `null` |  |
+| `$analystId` | `?int` | `null` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$fromPortal` | `bool` | `false` | the person changed it themselves, in the portal |
 
 **Returns:** array ['attempted'=>bool, 'ok'=>bool, 'changed'=>string[], 'conflict'=>bool, 'error'=>string, 'reason'=>string] `reason` explains an attempted=false, which is the ordinary case for every person who is not a CardDAV contact.

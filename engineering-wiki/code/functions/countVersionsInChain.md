@@ -10,7 +10,7 @@ Defined in [api/network-mapper/list_diagrams.php](/code/files/api/network-mapper
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$leafId` |  |  |  |
 
 ## Database

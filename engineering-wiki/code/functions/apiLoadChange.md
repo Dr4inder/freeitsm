@@ -10,8 +10,8 @@ Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$apiKey` | `array` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
 | `$changeId` | `int` |  |  |
 
 **Returns:** `array`

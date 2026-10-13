@@ -26,7 +26,7 @@ Defined in [includes/recent_trail.php](/code/files/includes/recent_trail.php.md)
 |---|---|---|---|
 | `$type` | `string` |  |  |
 | `$id` | `int` |  |  |
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

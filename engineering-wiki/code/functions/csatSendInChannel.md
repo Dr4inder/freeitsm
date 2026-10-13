@@ -10,10 +10,10 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 174.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$target` | `array` |  |  |
-| `$analystId` | `?int` |  |  |
+| `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `int`
 

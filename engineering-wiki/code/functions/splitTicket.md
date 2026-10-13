@@ -18,9 +18,9 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actorId` | `int` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$fromEmailId` | `int` |  |  |
 | `$includeNewer` | `bool` |  |  |
 | `$newSubject` | `?string` | `null` |  |

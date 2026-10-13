@@ -16,9 +16,9 @@ Defined in [includes/projects/assistant.php](/code/files/includes/projects/assis
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$scope` | `array` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$args` | `array` |  |  |
 | `$withBudget` | `bool` |  |  |
 

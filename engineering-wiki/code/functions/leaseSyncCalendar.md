@@ -14,7 +14,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 751.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

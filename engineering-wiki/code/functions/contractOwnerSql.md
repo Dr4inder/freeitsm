@@ -10,7 +10,7 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$c` | `string` | `'c'` |  |
 
 **Returns:** array{0:string,1:string} [select columns (with leading comma), joins]

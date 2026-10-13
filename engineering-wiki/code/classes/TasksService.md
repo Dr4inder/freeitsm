@@ -67,8 +67,8 @@ function saveTask(PDO $conn, ActorContext $ctx, array $in): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Called from:** [api/tasks/save.php](/code/files/api/tasks/save.php.md), [api/tickets/save_ticket_task.php](/code/files/api/tickets/save_ticket_task.php.md), [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), [includes/services/projects.php](/code/files/includes/services/projects.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
@@ -85,8 +85,8 @@ function createTask(PDO $conn, ActorContext $ctx, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -114,9 +114,9 @@ function updateTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -138,9 +138,9 @@ function moveTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -173,8 +173,8 @@ function calendarOnTaskChanged(PDO $conn, int $taskId, bool $gone = false): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$gone` | `bool` | `false` |  |
 
 ### recurrenceOnClosed
@@ -189,8 +189,8 @@ function recurrenceOnClosed(PDO $conn, int $taskId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 ### deleteTask
 
@@ -204,9 +204,9 @@ function deleteTask(PDO $conn, ActorContext $ctx, int $taskId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -231,9 +231,9 @@ function createComment(PDO $conn, ActorContext $ctx, int $taskId, string $text):
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$text` | `string` |  |  |
 
 **Database**
@@ -262,9 +262,9 @@ function taskEventDispatch(PDO $conn, string $event, int $taskId, array $extra =
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$event` | `string` |  |  |
-| `$taskId` | `int` |  |  |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$extra` | `array` | `[]` |  |
 
 **Database**
@@ -289,7 +289,7 @@ function collaboratorCompletionEnabled(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -316,9 +316,9 @@ function taskForCollaborators(PDO $conn, ActorContext $ctx, int $taskId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md)
 
@@ -339,8 +339,8 @@ function collaboratorsFor(PDO $conn, int $taskId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md), [api/tasks/get.php](/code/files/api/tasks/get.php.md), [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md)
 
@@ -360,7 +360,7 @@ function collaboratorsForMany(PDO $conn, array $taskIds): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$taskIds` | `array` |  |  |
 
 **Database**
@@ -383,10 +383,10 @@ function addCollaborator(PDO $conn, ActorContext $ctx, int $taskId, int $analyst
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -410,10 +410,10 @@ function removeCollaborator(PDO $conn, ActorContext $ctx, int $taskId, int $anal
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -451,10 +451,10 @@ function setCollaboratorDone(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$done` | `bool` |  |  |
 
 **Database**
@@ -479,8 +479,8 @@ function collaboratorsOutstanding(PDO $conn, int $taskId): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -521,9 +521,9 @@ function assertAnalystInTaskCompany(PDO $conn, array $taskRow, int $analystId): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$taskRow` | `array` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 ### collaboratorDispatch
 
@@ -545,10 +545,10 @@ function collaboratorDispatch(PDO $conn, string $event, int $taskId, int $analys
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$event` | `string` |  |  |
-| `$taskId` | `int` |  |  |
-| `$analystId` | `int` |  |  |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -568,8 +568,8 @@ function loadTaskRow(PDO $conn, ActorContext $ctx, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -616,9 +616,9 @@ function moveTaskToCompany(PDO $conn, ActorContext $ctx, int $taskId, int $targe
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$targetTenantId` | `int` |  |  |
 
 **Returns:** array{moved:int, from:string, to:string}
@@ -649,7 +649,7 @@ function tableHasTenantColumn(PDO $conn, string $table): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 
 ### taskAndDescendantIds
@@ -669,7 +669,7 @@ function taskAndDescendantIds(PDO $conn, int $rootId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$rootId` | `int` |  |  |
 
 **Database**
@@ -690,7 +690,7 @@ function parentTaskTenant(PDO $conn, int $parentId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$parentId` | `int` |  |  |
 
 **Database**
@@ -711,8 +711,8 @@ function taskAccessible(PDO $conn, ActorContext $ctx, array $row): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$row` | `array` |  |  |
 
 ### resolveNewTaskTenant
@@ -738,10 +738,10 @@ function resolveNewTaskTenant(PDO $conn, ActorContext $ctx, array $in, ?int $tic
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
-| `$ticketId` | `?int` |  |  |
+| `$ticketId` | `?int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -767,7 +767,7 @@ function resolveLookup(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 | `$key` | `string` |  |  |
 | `$table` | `string` |  |  |
@@ -799,7 +799,7 @@ function lookupDefault(PDO $conn, string $table, bool $withClosed = false): arra
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 | `$withClosed` | `bool` | `false` |  |
 
@@ -815,8 +815,8 @@ function contractorAllowed(PDO $conn, ActorContext $ctx): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 
 ### validateTeam
 
@@ -830,7 +830,7 @@ function validateTeam(PDO $conn, $value): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$value` |  |  |  |
 
 **Database**
@@ -851,8 +851,8 @@ function validateLink(PDO $conn, ActorContext $ctx, string $field, $value): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$field` | `string` |  |  |
 | `$value` |  |  |  |
 
@@ -876,9 +876,9 @@ function ticketAccessible(PDO $conn, ActorContext $ctx, int $ticketId): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -898,7 +898,7 @@ function resolveTags(PDO $conn, array $tags): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tags` | `array` |  |  |
 
 **Database**
@@ -920,8 +920,8 @@ function syncTags(PDO $conn, int $taskId, array $tagIds): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$tagIds` | `array` |  |  |
 
 **Database**
@@ -948,7 +948,7 @@ function timeScope(PDO $conn): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -974,7 +974,7 @@ function timeAllowedFor(PDO $conn, ?int $parentTaskId): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$parentTaskId` | `?int` |  |  |
 
 **Called from:** [api/tasks/get_time_entries.php](/code/files/api/tasks/get_time_entries.php.md)
@@ -991,9 +991,9 @@ function createTimeEntry(PDO $conn, ActorContext $ctx, int $taskId, array $in): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -1016,8 +1016,8 @@ function deleteTimeEntry(PDO $conn, ActorContext $ctx, int $entryId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$entryId` | `int` |  |  |
 
 **Database**
@@ -1049,9 +1049,9 @@ function timeEntriesFor(PDO $conn, ActorContext $ctx, int $taskId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -1074,7 +1074,7 @@ function assertTimeAllowed(PDO $conn, array $taskRow): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$taskRow` | `array` |  |  |
 
 ### assignedDispatch
@@ -1103,8 +1103,8 @@ function assignedDispatch(PDO $conn, int $taskId, int $assigneeId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$assigneeId` | `int` |  |  |
 
 **Database**
@@ -1125,8 +1125,8 @@ function completedDispatch(PDO $conn, int $taskId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -1146,8 +1146,8 @@ function resolveAnalyst(PDO $conn, int $analystId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 

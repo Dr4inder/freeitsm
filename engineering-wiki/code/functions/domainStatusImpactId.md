@@ -14,7 +14,7 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$chosen` | `int` |  |  |
 
 **Returns:** `int`

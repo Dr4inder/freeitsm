@@ -10,7 +10,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 121.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$activeOnly` | `bool` | `false` |  |
 
 **Returns:** `array`

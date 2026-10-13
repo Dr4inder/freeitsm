@@ -10,7 +10,7 @@ Defined in [includes/back_link.php](/code/files/includes/back_link.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$side` | `string` |  |  |
 
 **Returns:** `string`

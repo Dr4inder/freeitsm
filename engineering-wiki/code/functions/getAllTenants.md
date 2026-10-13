@@ -10,7 +10,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 152
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$activeOnly` | `bool` | `false` | only return tenants with is_active = 1 |
 
 **Returns:** `array`

@@ -18,7 +18,7 @@ Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Returns:** `int`

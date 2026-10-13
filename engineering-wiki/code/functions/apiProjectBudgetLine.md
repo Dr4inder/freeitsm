@@ -10,10 +10,10 @@ Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$p` | `array` |  |  |
 | `$lineId` | `int` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

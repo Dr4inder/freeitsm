@@ -10,7 +10,7 @@ Defined in [includes/projects/templates.php](/code/files/includes/projects/templ
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$all` | `bool` | `false` |  |
 
 **Returns:** `array`

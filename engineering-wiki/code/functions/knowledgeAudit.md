@@ -17,11 +17,11 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$type` | `string` |  |  |
 | `$id` | `int` |  |  |
 | `$action` | `string` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$detail` | `?array` |  |  |
 
 **Returns:** `void`

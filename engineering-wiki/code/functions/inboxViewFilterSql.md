@@ -21,7 +21,7 @@ Defined in [includes/inbox_view_filter.php](/code/files/includes/inbox_view_filt
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$filter` | `array` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$alias` | `string` | `'t'` |  |
 
 **Returns:** `string`

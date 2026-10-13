@@ -37,9 +37,16 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 ## assets/js/inbox.js
 
-- **Line 11234:** on a phone the strip picker opens inside the Links sheet, which
+- **Line 9457:** escape the WHOLE answer first, then add markup. The answer is model
+- **Line 11241:** on a phone the strip picker opens inside the Links sheet, which
 
 [Open inbox.js](/code/files/assets/js/inbox.js.md)
+
+## assets/js/knowledge.js
+
+- **Line 3427:** escape the WHOLE answer first, then add markup. The answer is model
+
+[Open knowledge.js](/code/files/assets/js/knowledge.js.md)
 
 ## includes/catalogue_approvals.php
 
@@ -60,8 +67,8 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 ## includes/engineering_wiki/scanner.php
 
 - **Line 235, `EwScanner::parsePhp`:** the first doc block in a file is ALWAYS the file's description. It used to go to the next function/class instead whenever one came next, so files with a proper header showed no summary. It ALSO describes that declaration when nothing else sits between them (the common "one header, then the class" shape) - but not when another comment follows, because that comment is the declaration's own.
-- **Line 616:** comment down to its text - comment markers stripped, from "TRAP:" to the end of its paragraph, on one line.
-- **Line 1258:** comment, file by file.
+- **Line 625:** comment down to its text - comment markers stripped, from "TRAP:" to the end of its paragraph, on one line.
+- **Line 1291:** comment, file by file.
 
 [Open scanner.php](/code/files/includes/engineering_wiki/scanner.php.md)
 

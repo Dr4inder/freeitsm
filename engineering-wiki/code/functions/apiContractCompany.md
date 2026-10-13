@@ -10,9 +10,9 @@ Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contrac
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$apiKey` | `array` |  |  |
-| `$body` | `array` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
+| `$body` | `array` |  | The request's JSON body, decoded. *([standard](/handbook/standard-parameters.md))* |
 | `$creating` | `bool` |  |  |
 
 **Returns:** `array`

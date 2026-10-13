@@ -10,8 +10,8 @@ Defined in [api/v1/resources/reference.php](/code/files/api/v1/resources/referen
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$apiKey` | `array` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 | `$entityType` | `string` |  |  |
 

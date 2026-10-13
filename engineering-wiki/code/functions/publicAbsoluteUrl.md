@@ -10,7 +10,7 @@ Defined in [includes/public_url.php](/code/files/includes/public_url.php.md), li
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$path` | `string` |  |  |
 
 **Returns:** `string`

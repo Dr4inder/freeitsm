@@ -10,7 +10,7 @@ Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

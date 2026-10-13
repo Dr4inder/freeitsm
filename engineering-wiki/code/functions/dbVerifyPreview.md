@@ -10,7 +10,7 @@ Defined in [includes/db_verify_preview.php](/code/files/includes/db_verify_previ
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$schema` | `array` |  | the db_verify table => [column => definition] map |
 | `$dbName` | `string` |  |  |
 

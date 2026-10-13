@@ -55,7 +55,7 @@ function availableMatchKeys(PDO $conn): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -77,7 +77,7 @@ function schemaReady(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -138,9 +138,9 @@ function suggestMapping(PDO $conn, array $headers, int $analystId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$headers` | `array` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/assets/import_upload.php](/code/files/api/assets/import_upload.php.md)
 
@@ -163,8 +163,8 @@ function run(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$rows` | `array` |  |  |
 | `$mapping` | `array` |  |  |
 | `$opts` | `array` |  | profile-shaped settings; see asset_import_profiles. |
@@ -195,13 +195,13 @@ function processRow(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$row` | `array` |  |  |
 | `$mapping` | `array` |  |  |
 | `$opts` | `array` |  |  |
 | `$matchKeys` | `array` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$live` | `bool` |  |  |
 
 **Returns:** array ['action', 'asset_id'?, 'source_ref'?, 'display_name'?, 'detail'?]
@@ -232,9 +232,9 @@ function resolveLookups(PDO $conn, array $core, ?int $tenantId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$core` | `array` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### hasTenantColumn
 
@@ -248,7 +248,7 @@ function hasTenantColumn(PDO $conn, string $table): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 
 ### applyMapping
@@ -282,10 +282,10 @@ function findMatch(PDO $conn, array $core, array $matchKeys, ?int $tenantId): ar
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$core` | `array` |  |  |
 | `$matchKeys` | `array` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -317,14 +317,14 @@ function applyCreate(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$core` | `array` |  |  |
 | `$fields` | `array` |  |  |
 | `$opts` | `array` |  |  |
 | `$ref` | `string` |  |  |
 | `$name` | `?string` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$live` | `bool` |  |  |
 
 ### applyUpdate
@@ -352,9 +352,9 @@ function applyUpdate(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 | `$core` | `array` |  |  |
 | `$fields` | `array` |  |  |
 | `$opts` | `array` |  |  |
@@ -378,9 +378,9 @@ function writeFields(PDO $conn, ActorContext $ctx, int $assetId, array $fields, 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 | `$fields` | `array` |  |  |
 | `$opts` | `array` |  |  |
 
@@ -396,7 +396,7 @@ function resolveOption(PDO $conn, array $def, string $value, array $opts): ?stri
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$def` | `array` |  |  |
 | `$value` | `string` |  |  |
 | `$opts` | `array` |  |  |
@@ -420,9 +420,9 @@ function attachProfileSet(PDO $conn, ActorContext $ctx, int $assetId, array $opt
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 | `$opts` | `array` |  |  |
 
 ### handleMissing
@@ -448,12 +448,12 @@ function handleMissing(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$runId` | `int` |  |  |
 | `$profileId` | `int` |  |  |
 | `$touchedIds` | `array` |  |  |
 | `$policy` | `string` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -474,8 +474,8 @@ function inactiveStatusId(PDO $conn, ?int $tenantId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -495,7 +495,7 @@ function unresolved(PDO $conn, ?int $runId = null, int $limit = 200): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$runId` | `?int` | `null` |  |
 | `$limit` | `int` | `200` |  |
 
@@ -519,7 +519,7 @@ function resolveEntry(PDO $conn, int $entryId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$entryId` | `int` |  |  |
 
 **Database**
@@ -542,11 +542,11 @@ function startRun(PDO $conn, ActorContext $ctx, array $opts, string $mode, ?int 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$opts` | `array` |  |  |
 | `$mode` | `string` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -566,7 +566,7 @@ function finishRun(PDO $conn, int $runId, int $seen, array $counts): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$runId` | `int` |  |  |
 | `$seen` | `int` |  |  |
 | `$counts` | `array` |  |  |
@@ -589,7 +589,7 @@ function loadRun(PDO $conn, int $runId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$runId` | `int` |  |  |
 
 **Database**
@@ -612,7 +612,7 @@ function runEntries(PDO $conn, int $runId, ?string $action = null, int $limit = 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$runId` | `int` |  |  |
 | `$action` | `?string` | `null` |  |
 | `$limit` | `int` | `500` |  |
@@ -647,11 +647,11 @@ function logEntry(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$runId` | `int` |  |  |
 | `$rowNo` | `?int` |  |  |
 | `$action` | `string` |  |  |
-| `$assetId` | `?int` |  |  |
+| `$assetId` | `?int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 | `$ref` | `?string` |  |  |
 | `$name` | `?string` |  |  |
 | `$detail` | `?string` |  |  |
@@ -675,8 +675,8 @@ function loadCore(PDO $conn, int $assetId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 

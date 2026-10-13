@@ -14,7 +14,7 @@ Defined in [includes/users.php](/code/files/includes/users.php.md), line 275.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

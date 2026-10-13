@@ -10,7 +10,7 @@ Defined in [includes/watchtower_queries.php](/code/files/includes/watchtower_que
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` |  | `0` |  |
 | `$scope` |  | `WT_SCOPE_ALL` |  |
 

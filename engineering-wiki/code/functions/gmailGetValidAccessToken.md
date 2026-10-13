@@ -10,7 +10,7 @@ Defined in [includes/gmail.php](/code/files/includes/gmail.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailbox` | `array` |  |  |
 | `$tokenData` | `array` |  |  |
 

@@ -10,7 +10,7 @@ Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array{0:?int,1:string}
 

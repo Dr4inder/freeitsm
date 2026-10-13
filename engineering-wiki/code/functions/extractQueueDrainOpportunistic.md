@@ -13,7 +13,7 @@ Defined in [includes/search/extract_queue.php](/code/files/includes/search/extra
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

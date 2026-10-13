@@ -29,7 +29,7 @@ Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), li
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$keys` | `array` |  |  |
 
 **Returns:** array<string,string> key => plaintext value, missing keys absent

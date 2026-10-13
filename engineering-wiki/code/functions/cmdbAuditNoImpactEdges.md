@@ -14,7 +14,7 @@ Defined in [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md), li
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

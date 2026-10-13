@@ -10,7 +10,7 @@ Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$key` | `string` |  |  |
 
 **Returns:** array<int,string> tenant_id => value, containing ONLY companies that have their own answer. Anything absent follows the install default, which the caller shows separately.

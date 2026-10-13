@@ -134,7 +134,7 @@ function writeValues(PDO $conn, array $schema, int $ownerId, array $defs, array 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$schema` | `array` |  |  |
 | `$ownerId` | `int` |  |  |
 | `$defs` | `array` |  | Canonical definitions, keyed by field key. |
@@ -157,7 +157,7 @@ function coerce(PDO $conn, array $schema, array $def, $rawValue, int $ownerId): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$schema` | `array` |  |  |
 | `$def` | `array` |  |  |
 | `$rawValue` |  |  |  |
@@ -175,7 +175,7 @@ function validateRef(PDO $conn, array $def, int $refId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$def` | `array` |  |  |
 | `$refId` | `int` |  |  |
 
@@ -204,7 +204,7 @@ function readValues(PDO $conn, array $schema, array $defs, array $ownerIds): arr
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$schema` | `array` |  |  |
 | `$defs` | `array` |  | Canonical definitions, keyed by field key. |
 | `$ownerIds` | `array` |  | Owner row ids. |
@@ -245,7 +245,7 @@ function refLabels(PDO $conn, string $kind, array $ids): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$kind` | `string` |  |  |
 | `$ids` | `array` |  |  |
 

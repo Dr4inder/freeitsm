@@ -10,7 +10,7 @@ Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$key` | `string` |  |  |
 | `$value` | `string` |  |  |
 

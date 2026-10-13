@@ -10,7 +10,7 @@ Defined in [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowl
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Writes:** knowledge_article_versions, knowledge_article_tags, knowledge_articles, knowledge_tags - children first, since the versions foreign key has no cascade
 

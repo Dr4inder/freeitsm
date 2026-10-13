@@ -10,7 +10,7 @@ Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ids` | `array` |  |  |
 
 **Returns:** `array`

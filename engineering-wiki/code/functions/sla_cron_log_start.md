@@ -10,7 +10,7 @@ Defined in [cron/sla_breach_check.php](/code/files/cron/sla_breach_check.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$isCli` | `bool` |  |  |
 | `$clientIp` | `?string` |  |  |
 

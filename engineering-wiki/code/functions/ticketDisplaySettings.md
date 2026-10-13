@@ -15,7 +15,7 @@ Defined in [includes/ticket_display.php](/code/files/includes/ticket_display.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

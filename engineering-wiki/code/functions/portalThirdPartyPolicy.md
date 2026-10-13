@@ -14,7 +14,7 @@ Defined in [includes/portal_visibility.php](/code/files/includes/portal_visibili
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

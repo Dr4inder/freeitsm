@@ -10,7 +10,7 @@ Defined in [includes/users.php](/code/files/includes/users.php.md), line 303.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$userId` | `int` |  |  |
 
 **Returns:** array|null null when the person does not exist. Otherwise: fields       - what the portal offers them (the administrator's choice) locked       - of those, the ones they may not change: a directory owns them address_book - their changes are sent to an address book, and only saved here once it has accepted them managed      - a directory keeps this record up to date at all row          - the record's current values, for the save's three-way merge

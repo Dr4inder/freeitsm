@@ -10,7 +10,7 @@ Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$task` | `string` |  |  |
 | `$facts` | `string` |  |  |
 | `$maxTokens` | `int` |  |  |

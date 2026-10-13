@@ -10,7 +10,7 @@ Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflo
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$workflowId` | `int` |  |  |
 
 **Returns:** `array`

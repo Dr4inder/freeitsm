@@ -10,7 +10,7 @@ Defined in [includes/inbox_display.php](/code/files/includes/inbox_display.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

@@ -10,8 +10,8 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 680.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$days` | `int` | `90` |  |
 | `$leaseId` | `int` | `0` |  |
 

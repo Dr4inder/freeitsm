@@ -10,9 +10,9 @@ Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$source` | `string` |  |  |
-| `$analystId` | `int` | `0` |  |
+| `$analystId` | `int` | `0` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

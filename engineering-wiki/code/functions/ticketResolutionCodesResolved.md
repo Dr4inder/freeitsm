@@ -10,8 +10,8 @@ Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categori
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$opts` | `array` | `[]` | activeOnly — drop retired codes (default false) |
 
 **Returns:** `array`

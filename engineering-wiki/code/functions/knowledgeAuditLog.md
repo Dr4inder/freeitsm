@@ -18,7 +18,7 @@ Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$type` | `string` |  | 'article' \| 'folder' |
 | `$id` | `int` |  | the object it happened to |
 | `$action` | `string` |  | one of KNOWLEDGE_AUDIT_ACTIONS |

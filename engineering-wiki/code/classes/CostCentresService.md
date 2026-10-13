@@ -36,7 +36,7 @@ function ready(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -58,7 +58,7 @@ function companiesFor(PDO $conn, ActorContext $actor): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actor` | `ActorContext` |  |  |
 
 **Called from:** [api/system/cost_centres.php](/code/files/api/system/cost_centres.php.md)
@@ -76,7 +76,7 @@ function canReach(ActorContext $actor, int $tenantId): bool
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$actor` | `ActorContext` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### assertCompany
 
@@ -90,9 +90,9 @@ function assertCompany(PDO $conn, ActorContext $actor, int $tenantId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actor` | `ActorContext` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### listForCompany
 
@@ -106,9 +106,9 @@ function listForCompany(PDO $conn, ActorContext $actor, int $tenantId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actor` | `ActorContext` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -130,7 +130,7 @@ function load(PDO $conn, ActorContext $actor, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actor` | `ActorContext` |  |  |
 | `$id` | `int` |  |  |
 
@@ -152,9 +152,9 @@ function create(PDO $conn, ActorContext $actor, int $tenantId, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actor` | `ActorContext` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -177,7 +177,7 @@ function update(PDO $conn, ActorContext $actor, int $id, array $in): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actor` | `ActorContext` |  |  |
 | `$id` | `int` |  |  |
 | `$in` | `array` |  |  |
@@ -202,7 +202,7 @@ function delete(PDO $conn, ActorContext $actor, int $id): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actor` | `ActorContext` |  |  |
 | `$id` | `int` |  |  |
 
@@ -241,9 +241,9 @@ function sync(PDO $conn, ActorContext $actor, int $tenantId, array $rows, array 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actor` | `ActorContext` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$rows` | `array` |  |  |
 | `$opts` | `array` | `[]` |  |
 
@@ -343,8 +343,8 @@ function assertCodeFree(PDO $conn, int $tenantId, string $code, ?int $exceptId):
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$code` | `string` |  |  |
 | `$exceptId` | `?int` |  |  |
 
@@ -366,8 +366,8 @@ function resolveParentInput(PDO $conn, int $tenantId, array $in, ?int $selfId): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 | `$selfId` | `?int` |  |  |
 

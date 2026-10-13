@@ -10,7 +10,7 @@ Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailboxId` |  |  |  |
 
 ## Database

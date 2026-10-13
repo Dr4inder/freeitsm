@@ -70,10 +70,10 @@ function saveProject(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId = n
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
-| `$tenantId` | `?int` | `null` |  |
+| `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/projects/save.php](/code/files/api/projects/save.php.md)
 
@@ -93,10 +93,10 @@ function createProject(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId):
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -121,8 +121,8 @@ function updateProject(PDO $conn, ActorContext $ctx, int $id, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -146,8 +146,8 @@ function deleteProject(PDO $conn, ActorContext $ctx, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -175,8 +175,8 @@ function applyMethodology(PDO $conn, int $projectId, string $method): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$method` | `string` |  |  |
 
 **Database**
@@ -199,9 +199,9 @@ function saveStage(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -227,9 +227,9 @@ function deleteStage(PDO $conn, ActorContext $ctx, int $projectId, int $stageId)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$stageId` | `int` |  |  |
 
 **Database**
@@ -255,9 +255,9 @@ function reorderStages(PDO $conn, ActorContext $ctx, int $projectId, array $ids)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$ids` | `array` |  |  |
 
 **Database**
@@ -286,10 +286,10 @@ function assignTask(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$taskId` | `int` |  |  |
-| `$projectId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `?int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$stageId` | `?int` | `null` |  |
 
 **Database**
@@ -325,9 +325,9 @@ function createTaskInProject(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$stageId` | `?int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -351,7 +351,7 @@ function loadRow(PDO $conn, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -374,8 +374,8 @@ function loadForActor(PDO $conn, ActorContext $ctx, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Called from:** [api/projects/assistant_chat.php](/code/files/api/projects/assistant_chat.php.md), [api/projects/export.php](/code/files/api/projects/export.php.md), [api/projects/get.php](/code/files/api/projects/get.php.md), [api/projects/reports.php](/code/files/api/projects/reports.php.md), [api/projects/tools.php](/code/files/api/projects/tools.php.md), [includes/projects/links.php](/code/files/includes/projects/links.php.md), [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md), [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
@@ -392,7 +392,7 @@ function loadStage(PDO $conn, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -413,8 +413,8 @@ function assertCanChange(PDO $conn, ActorContext $ctx, array $project): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$project` | `array` |  |  |
 
 **Called from:** [includes/projects/links.php](/code/files/includes/projects/links.php.md), [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
@@ -431,8 +431,8 @@ function assertScope(PDO $conn, ActorContext $ctx, array $row, string $notFound)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$row` | `array` |  |  |
 | `$notFound` | `string` |  |  |
 
@@ -448,7 +448,7 @@ function sameTenant(PDO $conn, $a, $b): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$a` |  |  |  |
 | `$b` |  |  |  |
 
@@ -464,8 +464,8 @@ function storeTenant(PDO $conn, ?int $tenantId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ### validateField
 
@@ -479,7 +479,7 @@ function validateField(PDO $conn, string $field, $v, array $def)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$field` | `string` |  |  |
 | `$v` |  |  |  |
 | `$def` | `array` |  |  |
@@ -561,7 +561,7 @@ function source(ActorContext $ctx): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ctx` | `ActorContext` |  |  |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 
 ### syncCalendar
 
@@ -575,7 +575,7 @@ function syncCalendar(PDO $conn): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md), [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
@@ -591,8 +591,8 @@ function afterChange(PDO $conn, int $projectId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
@@ -614,8 +614,8 @@ function stageClosed(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$stageId` | `int` |  |  |
 | `$decision` | `?string` |  |  |
 | `$next` | `?string` |  |  |
@@ -634,8 +634,8 @@ function raidEscalated(PDO $conn, int $projectId, array $r): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$r` | `array` |  |  |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
@@ -652,8 +652,8 @@ function signoffEvent(PDO $conn, int $projectId, int $itemId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$itemId` | `int` |  |  |
 
 **Database**
@@ -682,9 +682,9 @@ function decideProposal(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$decision` | `string` |  |  |
 | `$notes` |  |  |  |
 
@@ -708,8 +708,8 @@ function proposalEvent(PDO $conn, int $projectId, string $event): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$event` | `string` |  |  |
 
 **Database**
@@ -732,8 +732,8 @@ function changeEvent(PDO $conn, int $projectId, string $event, array $cr): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$event` | `string` |  |  |
 | `$cr` | `array` |  |  |
 
@@ -751,8 +751,8 @@ function milestoneReached(PDO $conn, int $projectId, array $m): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 | `$m` | `array` |  |  |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
@@ -769,7 +769,7 @@ function eventFor(PDO $conn, int $id): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 ### dispatch
@@ -784,7 +784,7 @@ function dispatch(PDO $conn, string $event, int $id, array $extra = []): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$event` | `string` |  |  |
 | `$id` | `int` |  |  |
 | `$extra` | `array` | `[]` |  |
@@ -801,8 +801,8 @@ function touchProject(PDO $conn, int $projectId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md)
 
@@ -818,8 +818,8 @@ function touch(PDO $conn, int $projectId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -847,9 +847,9 @@ function audit(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
-| `$analystId` | `?int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$field` | `string` |  |  |
 | `$old` |  |  |  |
 | `$new` |  |  |  |
@@ -877,7 +877,7 @@ function auditDisplay(PDO $conn, string $field, $v): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$field` | `string` |  |  |
 | `$v` |  |  |  |
 

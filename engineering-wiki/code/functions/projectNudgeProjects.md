@@ -10,7 +10,7 @@ Defined in [includes/projects/nudges.php](/code/files/includes/projects/nudges.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ids` | `array` |  |  |
 
 **Returns:** `array`

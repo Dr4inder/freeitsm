@@ -10,7 +10,7 @@ Defined in [api/knowledge/gap_clusters.php](/code/files/api/knowledge/gap_cluste
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tSql` | `string` |  |  |
 | `$tArgs` | `array` |  |  |
 

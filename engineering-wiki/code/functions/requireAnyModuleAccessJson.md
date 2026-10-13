@@ -20,7 +20,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$moduleKeys` | `array` |  |  |
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

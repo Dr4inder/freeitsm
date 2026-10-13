@@ -10,7 +10,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 2
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` |  |  |  |
 
 **Returns:** `int`

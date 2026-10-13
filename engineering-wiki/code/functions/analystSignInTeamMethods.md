@@ -10,7 +10,7 @@ Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `?int` | `null` | one analyst, or null for everyone (System -> Analysts) |
 
 **Returns:** array<int, array<int, array{team_id:int, team_name:string, key:int, label:?string}>> analyst_id => their teams' methods; key 0 = local password, otherwise the auth_providers.id, and label is that provider's name.

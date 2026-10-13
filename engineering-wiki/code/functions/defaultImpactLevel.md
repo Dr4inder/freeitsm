@@ -10,7 +10,7 @@ Defined in [includes/service_impact_levels.php](/code/files/includes/service_imp
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array{id:?int,name:string,colour:?string} The default impact level. Per-connection cached — it is read several times to build one page.
 

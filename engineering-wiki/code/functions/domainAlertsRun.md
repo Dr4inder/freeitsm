@@ -10,7 +10,7 @@ Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$dryRun` | `bool` | `false` | count what WOULD be sent and send nothing — the settings screen shows this before anybody switches e-mail on. |
 
 **Returns:** array{due:int, events:int, emails:int, recipients:int, failed:int, actions:int, would_email:array}

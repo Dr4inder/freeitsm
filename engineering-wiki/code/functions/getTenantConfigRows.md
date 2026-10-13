@@ -30,7 +30,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 133
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  | the config table (e.g. 'ticket_types') |
 | `$entityType` | `string` |  | key used in tenant_config_hidden (e.g. 'ticket_type') |
 | `$tenantId` | `int` |  | the company to resolve for (usually the active tenant) |

@@ -10,7 +10,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

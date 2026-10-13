@@ -15,7 +15,7 @@ Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calen
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?array`
 

@@ -10,7 +10,7 @@ Defined in [includes/projects/control.php](/code/files/includes/projects/control
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `bool`
 

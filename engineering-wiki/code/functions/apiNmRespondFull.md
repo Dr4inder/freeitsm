@@ -10,7 +10,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$diagramId` | `int` |  |  |
 | `$status` | `int` | `200` |  |
 

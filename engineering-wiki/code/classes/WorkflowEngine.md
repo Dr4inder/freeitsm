@@ -222,7 +222,7 @@ function enrichWithReferences(PDO $conn, array $payload): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$payload` | `array` |  |  |
 
 ### enrichPayloadForTemplates
@@ -241,7 +241,7 @@ function enrichPayloadForTemplates(PDO $conn, array $payload): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$payload` | `array` |  |  |
 
 **Called from:** [api/workflow/webhook_test.php](/code/files/api/workflow/webhook_test.php.md)
@@ -278,7 +278,7 @@ function lookupLabel(PDO $conn, array $spec, int $id): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$spec` | `array` |  |  |
 | `$id` | `int` |  |  |
 
@@ -305,7 +305,7 @@ function enrichWithLookupNames(PDO $conn, array $payload): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$payload` | `array` |  |  |
 
 ### dotSet
@@ -1302,7 +1302,7 @@ function enrichWithFullObjects(PDO $conn, array $payload): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$payload` | `array` |  |  |
 
 ### fullObjectLoaders
@@ -1317,7 +1317,7 @@ function fullObjectLoaders(PDO $conn): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 ### dotGet
 

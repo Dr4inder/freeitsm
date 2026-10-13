@@ -20,7 +20,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$type` | `string` |  |  |
 | `$parentId` | `int` |  |  |
 

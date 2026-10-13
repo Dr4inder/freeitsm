@@ -10,8 +10,8 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$c` | `string` | `'c'` |  |
 
 **Returns:** array{0:string,1:array}

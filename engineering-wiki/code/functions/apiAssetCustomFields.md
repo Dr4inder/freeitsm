@@ -16,8 +16,8 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 | `$assetTypeId` | `?int` |  |  |
 
 **Returns:** `array`

@@ -10,7 +10,7 @@ Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categori
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | the company whose lists apply, or null for the install |
 | `$opts` | `array` | `[]` | activeOnly  — drop retired categories (default false) portalOnly  — only those a requester may see (default false) typeId      — only categories offered for this ticket type (roots with no type, plus that type's roots, plus everything beneath either) |
 

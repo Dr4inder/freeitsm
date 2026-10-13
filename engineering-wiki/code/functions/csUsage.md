@@ -10,7 +10,7 @@ Defined in [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$connectionId` | `int` |  |  |
 
 **Returns:** array{mapped:int, pushing:int}

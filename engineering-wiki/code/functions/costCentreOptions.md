@@ -10,8 +10,8 @@ Defined in [includes/cost_centre_assign.php](/code/files/includes/cost_centre_as
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$keepId` | `?int` | `null` |  |
 
 **Returns:** array<int,array{id:int,code:string,name:string,is_active:bool}>

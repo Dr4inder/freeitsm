@@ -18,13 +18,13 @@ Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` |  |  |
+| `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailbox` | `?array` |  |  |
 | `$route` | `string` |  |  |
 | `$to` | `string` |  |  |
 | `$subject` | `string` |  |  |
 | `$error` | `string` |  |  |
-| `$ticketId` | `?int` | `null` |  |
+| `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

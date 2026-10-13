@@ -16,7 +16,7 @@ Defined in [includes/self_service_email.php](/code/files/includes/self_service_e
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$to` | `string` |  |  |
 | `$subject` | `string` |  |  |
 | `$htmlBody` | `string` |  |  |

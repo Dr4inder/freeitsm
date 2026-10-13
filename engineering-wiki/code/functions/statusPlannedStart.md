@@ -10,7 +10,7 @@ Defined in [includes/service_status_planned.php](/code/files/includes/service_st
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$p` | `array` |  |  |
 
 **Returns:** `void`

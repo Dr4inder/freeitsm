@@ -10,7 +10,7 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$taskIds` | `array` |  |  |
 
 **Returns:** `array`

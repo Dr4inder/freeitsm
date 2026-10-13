@@ -10,7 +10,7 @@ Defined in [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_ch
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$itemId` | `int` |  |  |
 
 **Returns:** `int`

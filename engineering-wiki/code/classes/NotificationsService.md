@@ -111,8 +111,8 @@ function typeEnabled(PDO $conn, int $analystId, string $eventType): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$eventType` | `string` |  |  |
 
 **Called from:** [includes/notifications_router.php](/code/files/includes/notifications_router.php.md)
@@ -132,8 +132,8 @@ function preferences(PDO $conn, int $analystId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -153,8 +153,8 @@ function effectivePreferences(PDO $conn, int $analystId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [system/preferences/index.php](/code/files/system/preferences/index.php.md)
 
@@ -176,7 +176,7 @@ function notify(PDO $conn, array $in): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Called from:** [includes/managers.php](/code/files/includes/managers.php.md), [includes/notifications_router.php](/code/files/includes/notifications_router.php.md)
@@ -193,7 +193,7 @@ function unreadCount(PDO $conn, $recipient): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recipient` |  |  |  |
 
 **Called from:** [api/notifications/clear.php](/code/files/api/notifications/clear.php.md), [api/notifications/get_notifications.php](/code/files/api/notifications/get_notifications.php.md), [api/notifications/mark_read.php](/code/files/api/notifications/mark_read.php.md), [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
@@ -210,7 +210,7 @@ function listFor(PDO $conn, $recipient, int $limit = self::LIST_LIMIT): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recipient` |  |  |  |
 | `$limit` | `int` | `self::LIST_LIMIT` |  |
 
@@ -264,7 +264,7 @@ function markRead(PDO $conn, $recipient, array $ids): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recipient` |  |  |  |
 | `$ids` | `array` |  |  |
 
@@ -282,7 +282,7 @@ function markAllRead(PDO $conn, $recipient): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recipient` |  |  |  |
 
 **Called from:** [api/notifications/mark_read.php](/code/files/api/notifications/mark_read.php.md), [api/self-service/notifications.php](/code/files/api/self-service/notifications.php.md)
@@ -309,7 +309,7 @@ function clear(PDO $conn, $recipient, array $ids): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recipient` |  |  |  |
 | `$ids` | `array` |  |  |
 
@@ -332,7 +332,7 @@ function clearAll(PDO $conn, $recipient, bool $includeUnread = false): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recipient` |  |  |  |
 | `$includeUnread` | `bool` | `false` |  |
 

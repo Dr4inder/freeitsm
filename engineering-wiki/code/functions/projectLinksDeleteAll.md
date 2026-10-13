@@ -10,8 +10,8 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `int` |  | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

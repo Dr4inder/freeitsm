@@ -10,7 +10,7 @@ Defined in [includes/contract_party.php](/code/files/includes/contract_party.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$contractId` | `int` |  |  |
 
 **Returns:** `?int`

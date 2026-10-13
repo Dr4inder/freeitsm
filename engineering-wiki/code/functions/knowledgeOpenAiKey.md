@@ -15,7 +15,7 @@ Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

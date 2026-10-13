@@ -10,7 +10,7 @@ Defined in [includes/search/search.php](/code/files/includes/search/search.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `int`
 

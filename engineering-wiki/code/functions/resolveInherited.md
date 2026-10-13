@@ -15,7 +15,7 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$type` | `string` |  |  |
 | `$id` | `int` |  |  |
 

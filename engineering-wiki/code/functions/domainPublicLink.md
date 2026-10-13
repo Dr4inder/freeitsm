@@ -10,7 +10,7 @@ Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Returns:** `string`

@@ -10,7 +10,7 @@ Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$body` | `array` |  |  |
+| `$body` | `array` |  | The request's JSON body, decoded. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

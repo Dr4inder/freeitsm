@@ -37,7 +37,7 @@ Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$provider` | `array` |  |  |
 | `$providerId` | `int` |  |  |
 | `$sub` | `string` |  |  |

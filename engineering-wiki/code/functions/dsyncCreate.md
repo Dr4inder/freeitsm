@@ -10,7 +10,7 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$provider` | `array` |  |  |
 | `$p` | `array` |  |  |
 | `$preview` | `bool` |  |  |

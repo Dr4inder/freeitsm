@@ -19,7 +19,7 @@ Defined in [includes/ticket_events.php](/code/files/includes/ticket_events.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` | `int` |  | the ticket that now exists |
 | `$createdBy` | `?int` | `null` | who performed the creation, if anyone |
 | `$requesterEmail` | `?string` | `null` | overrides the address resolved from user_id |

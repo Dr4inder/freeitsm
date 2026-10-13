@@ -10,8 +10,8 @@ Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$companyIds` | `?array` |  |  |
 
 **Returns:** `void`

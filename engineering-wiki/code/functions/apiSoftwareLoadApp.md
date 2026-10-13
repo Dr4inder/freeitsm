@@ -10,7 +10,7 @@ Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$appId` | `int` |  |  |
 
 **Returns:** `array`

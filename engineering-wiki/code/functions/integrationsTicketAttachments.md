@@ -28,8 +28,8 @@ Defined in [includes/integrations/integrations.php](/code/files/includes/integra
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$maxFiles` | `int` | `INTEGRATION_ATTACH_MAX_FILES` |  |
 
 **Returns:** array [['id','filename','content_type','size','path','skip_reason'], …] `skip_reason` set means: show it, do not send it.

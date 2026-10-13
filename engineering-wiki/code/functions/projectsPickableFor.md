@@ -16,8 +16,8 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$kind` | `string` |  |  |
 | `$targetId` | `int` |  |  |
 | `$q` | `string` |  |  |

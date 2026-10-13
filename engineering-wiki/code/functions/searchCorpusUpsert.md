@@ -10,7 +10,7 @@ Defined in [includes/search/corpus.php](/code/files/includes/search/corpus.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$doc` | `array` |  | source_type, source_id, and optionally ticket_id, tenant_id, tenant_scope, is_internal, title, body, source_datetime. |
 
 **Returns:** `void`

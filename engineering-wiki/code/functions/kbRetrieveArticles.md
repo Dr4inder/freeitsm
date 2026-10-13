@@ -42,10 +42,10 @@ Defined in [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$question` | `string` |  |  |
 | `$limit` | `int` | `5` |  |
-| `$tenantId` | `?int` | `null` |  |
+| `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$viewer` |  | `Audience::PUBLIC` |  |
 
 **Returns:** `array`

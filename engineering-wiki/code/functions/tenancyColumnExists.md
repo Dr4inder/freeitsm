@@ -16,7 +16,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 878
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 | `$column` | `string` |  |  |
 

@@ -158,7 +158,7 @@ function lookupTenantClause(PDO $conn, array $meta, array $tenantIds): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$meta` | `array` |  |  |
 | `$tenantIds` | `array` |  | non-empty; callers handle null/empty themselves. |
 
@@ -188,7 +188,7 @@ function lookupSearch(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$source` | `string` |  |  |
 | `$term` | `string` |  |  |
 | `$tenantIds` | `?array` |  | companies whose rows may be returned. `null` means UNRESTRICTED and is only ever correct for an analyst who can see every company. There is no "all" string — a typo in a string would silently mean everything. |
@@ -216,7 +216,7 @@ function lookupValueAllowed(PDO $conn, string $source, int $id, ?array $tenantId
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$source` | `string` |  |  |
 | `$id` | `int` |  |  |
 | `$tenantIds` | `?array` |  |  |
@@ -255,7 +255,7 @@ function collectionsAvailable(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/forms/get_collections.php](/code/files/api/forms/get_collections.php.md), [api/forms/get_forms.php](/code/files/api/forms/get_forms.php.md)
 
@@ -271,7 +271,7 @@ function closeEffect(PDO $conn): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -299,7 +299,7 @@ function listCollections(PDO $conn): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -321,7 +321,7 @@ function collectionForms(PDO $conn, int $collectionId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$collectionId` | `int` |  |  |
 
 **Database**
@@ -353,8 +353,8 @@ function setCollectionForms(PDO $conn, ActorContext $ctx, int $collectionId, arr
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$collectionId` | `int` |  |  |
 | `$formIds` | `array` |  | leaf form ids that should be in the collection |
 
@@ -384,7 +384,7 @@ function formsForPicker(PDO $conn): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -411,7 +411,7 @@ function collectionSubmissions(PDO $conn, int $collectionId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$collectionId` | `int` |  |  |
 
 **Database**
@@ -436,7 +436,7 @@ function requireCollections(PDO $conn): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 ### saveCollection
 
@@ -450,8 +450,8 @@ function saveCollection(PDO $conn, ActorContext $ctx, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -483,8 +483,8 @@ function setCollectionClosed(PDO $conn, ActorContext $ctx, int $id, bool $closed
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 | `$closed` | `bool` |  |  |
 
@@ -514,8 +514,8 @@ function deleteCollection(PDO $conn, ActorContext $ctx, int $id): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -543,7 +543,7 @@ function submissionsBlockedBy(PDO $conn, int $formId): ?string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 
 **Database**
@@ -567,7 +567,7 @@ function portalCatalogueFilter(PDO $conn, string $formsAlias = 'f'): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formsAlias` | `string` | `'f'` |  |
 
 **Database**
@@ -592,8 +592,8 @@ function saveForm(PDO $conn, ActorContext $ctx, array $in): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -617,8 +617,8 @@ function deleteForm(PDO $conn, ActorContext $ctx, int $id, bool $chain = false):
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 | `$chain` | `bool` | `false` |  |
 
@@ -677,7 +677,7 @@ function actionLists(PDO $conn, int $formId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 
 **Returns:** array{submitted: ?array, approved: ?array, rejected: ?array}
@@ -702,8 +702,8 @@ function createVersion(PDO $conn, ActorContext $ctx, int $parentId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$parentId` | `int` |  |  |
 
 **Database**
@@ -737,8 +737,8 @@ function submitForm(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 | `$data` | `array` |  |  |
 | `$portalUserId` | `?int` | `null` | a REQUESTER (users.id) submitting through the self-service request catalogue, or null for the analyst paths. It is a separate argument rather than `$ctx`->actorId because the two are DIFFERENT ID SPACES. `submitted_by` has no foreign key and every reader LEFT JOINs it to `analysts`, so writing a users.id there would silently attribute a customer's request to whichever analyst happened to share the number. They go in different columns and exactly one is set. |
@@ -765,8 +765,8 @@ function deleteSubmission(PDO $conn, ActorContext $ctx, int $submissionId, ?int 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$submissionId` | `int` |  |  |
 | `$formId` | `?int` | `null` |  |
 
@@ -793,7 +793,7 @@ function loadFormRow(PDO $conn, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -943,7 +943,7 @@ function audiencesAvailable(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/forms/audience.php](/code/files/api/forms/audience.php.md), [api/forms/get_forms.php](/code/files/api/forms/get_forms.php.md)
 
@@ -959,7 +959,7 @@ function formAudiences(PDO $conn, int $formId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 
 **Database**
@@ -987,7 +987,7 @@ function setFormAudiences(PDO $conn, int $formId, array $groupIds): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 | `$groupIds` | `array` |  |  |
 
@@ -1020,7 +1020,7 @@ function portalAudienceSql(PDO $conn, string $formAlias = 'f'): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formAlias` | `string` | `'f'` |  |
 
 **Database**
@@ -1043,7 +1043,7 @@ function portalCanUseForm(PDO $conn, int $formId, int $userId): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 | `$userId` | `int` |  |  |
 
@@ -1065,7 +1065,7 @@ function draftsAvailable(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 ### saveDraft
 
@@ -1086,7 +1086,7 @@ function saveDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId, arra
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 | `$ownerKind` | `string` |  |  |
 | `$ownerId` | `int` |  |  |
@@ -1120,7 +1120,7 @@ function loadDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId): ?ar
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 | `$ownerKind` | `string` |  |  |
 | `$ownerId` | `int` |  |  |
@@ -1146,7 +1146,7 @@ function deleteDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId): v
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 | `$ownerKind` | `string` |  |  |
 | `$ownerId` | `int` |  |  |
@@ -1171,7 +1171,7 @@ function draftsForOwner(PDO $conn, string $ownerKind, int $ownerId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ownerKind` | `string` |  |  |
 | `$ownerId` | `int` |  |  |
 
@@ -1198,7 +1198,7 @@ function layoutAvailable(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [api/forms/get_form.php](/code/files/api/forms/get_form.php.md), [api/self-service/get_catalogue_form.php](/code/files/api/self-service/get_catalogue_form.php.md)
 
@@ -1374,7 +1374,7 @@ function syncFields(PDO $conn, int $formId, array $fields): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 | `$fields` | `array` |  |  |
 

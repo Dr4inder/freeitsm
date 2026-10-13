@@ -10,7 +10,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 113
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `int`
 

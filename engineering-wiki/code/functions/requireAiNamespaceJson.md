@@ -10,7 +10,7 @@ Defined in [includes/settings_keys.php](/code/files/includes/settings_keys.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ns` | `string` |  |  |
 
 **Returns:** `void`

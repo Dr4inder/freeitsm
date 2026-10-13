@@ -13,8 +13,8 @@ Defined in [api/self-service/create_ticket.php](/code/files/api/self-service/cre
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
-| `$tenantId` | `?int` | `null` |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 ## Called from
 

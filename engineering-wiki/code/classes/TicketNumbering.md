@@ -42,7 +42,7 @@ function settings(PDO $conn): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Reads:** system_settings - the numbering keys named in DEFAULTS
 
@@ -92,7 +92,7 @@ function config(PDO $conn): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 ### next
 
@@ -106,7 +106,7 @@ function next(PDO $conn, ?int $ticketTypeId = null, ?int $tenantId = null): stri
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketTypeId` | `?int` | `null` | used by the per_type scope and {TYPE} |
 | `$tenantId` | `?int` | `null` | used by the per_company scope |
 
@@ -127,7 +127,7 @@ function windCounterTo(PDO $conn, string $key, int $value): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$key` | `string` |  |  |
 | `$value` | `int` |  |  |
 
@@ -149,7 +149,7 @@ function randomNumber(PDO $conn): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 ### render
 
@@ -175,10 +175,10 @@ function render(
 |---|---|---|---|
 | `$format` | `string` |  |  |
 | `$seq` | `int` |  |  |
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketTypeId` | `?int` | `null` |  |
 | `$at` | `?DateTimeImmutable` | `null` |  |
-| `$tenantId` | `?int` | `null` |  |
+| `$tenantId` | `?int` | `null` | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md)
 
@@ -198,7 +198,7 @@ function typeCode(?PDO $conn, ?int $ticketTypeId): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` |  |  |
+| `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketTypeId` | `?int` |  |  |
 
 **Database**
@@ -231,8 +231,8 @@ function resolveTenant(?PDO $conn, ?int $tenantId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -263,8 +263,8 @@ function companyCode(?PDO $conn, ?int $tenantId): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$conn` | `?PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -327,7 +327,7 @@ function codeClashes(PDO $conn): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array<string, string[]> code => company names sharing it
 
@@ -356,10 +356,10 @@ function claimNext(PDO $conn, array $cfg, ?int $ticketTypeId, ?int $tenantId): i
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$cfg` | `array` |  |  |
 | `$ticketTypeId` | `?int` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -390,7 +390,7 @@ function counterKey(
 |---|---|---|---|
 | `$cfg` | `array` |  |  |
 | `$ticketTypeId` | `?int` |  |  |
-| `$tenantId` | `?int` |  |  |
+| `$tenantId` | `?int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$at` | `?DateTimeImmutable` | `null` |  |
 
 ### inUse
@@ -409,7 +409,7 @@ function inUse(PDO $conn, string $number): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$number` | `string` |  |  |
 
 **Database**
@@ -435,7 +435,7 @@ function findTicketId(PDO $conn, string $number): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$number` | `string` |  |  |
 
 **Database**
@@ -495,7 +495,7 @@ function planRenumber(PDO $conn, array $cfg, ?array $rows = null): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$cfg` | `array` |  |  |
 | `$rows` | `?array` | `null` | the tickets to plan over. Defaults to ALL of them, which is what the tool does; tests pass a set of their own so a run cannot rewrite the real estate. |
 
@@ -529,7 +529,7 @@ function assertPlanSafe(PDO $conn, array $planned): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$planned` | `array` |  |  |
 
 **Database**
@@ -553,7 +553,7 @@ function applyRenumber(PDO $conn, array $plan): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$plan` | `array` |  |  |
 
 **Database**

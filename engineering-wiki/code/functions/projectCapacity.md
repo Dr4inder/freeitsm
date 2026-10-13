@@ -10,7 +10,7 @@ Defined in [includes/projects/capacity.php](/code/files/includes/projects/capaci
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$viewerId` | `int` |  |  |
 | `$weeks` | `int` | `4` | 1-12 |
 

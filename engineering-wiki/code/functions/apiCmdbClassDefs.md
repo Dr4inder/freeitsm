@@ -10,7 +10,7 @@ Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$classId` | `int` |  |  |
 
 **Returns:** `array`

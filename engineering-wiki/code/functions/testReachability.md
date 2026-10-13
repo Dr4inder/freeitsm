@@ -10,7 +10,7 @@ Defined in [api/messaging/test_channel.php](/code/files/api/messaging/test_chann
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$channelId` | `int` |  |  |
 
 **Returns:** `array`

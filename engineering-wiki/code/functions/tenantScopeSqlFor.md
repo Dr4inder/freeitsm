@@ -10,8 +10,8 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 859
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$tenantId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 | `$qualified` | `string` |  | the already-qualified column, e.g. "l.tenant_id" |
 
 **Returns:** `array`

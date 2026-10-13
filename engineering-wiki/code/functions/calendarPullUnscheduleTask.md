@@ -10,9 +10,9 @@ Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$row` | `array` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$address` | `string` |  |  |
 
 **Returns:** `void`

@@ -10,9 +10,9 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$apiKey` | `array` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

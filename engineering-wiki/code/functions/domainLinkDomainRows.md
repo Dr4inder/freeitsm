@@ -10,7 +10,7 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ids` | `array` |  |  |
 
 **Returns:** `array`

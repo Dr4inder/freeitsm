@@ -10,7 +10,7 @@ Defined in [api/lms/native_progress.php](/code/files/api/lms/native_progress.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$progressId` | `int` |  |  |
 | `$element` | `string` |  |  |
 | `$value` | `string` |  |  |

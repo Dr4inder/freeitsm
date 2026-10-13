@@ -15,8 +15,8 @@ Defined in [includes/projects/control.php](/code/files/includes/projects/control
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$project` | `array` |  |  |
 | `$raisedBy` | `?int` | `null` |  |
 

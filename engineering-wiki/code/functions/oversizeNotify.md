@@ -27,7 +27,7 @@ Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limi
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailbox` | `array` |  |  |
 | `$rules` | `array` |  |  |
 | `$fromAddress` | `string` |  |  |
@@ -36,7 +36,7 @@ Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limi
 | `$atts` | `array` |  | [['name','size'], ...]   `$plan` from `oversizePlan()` |
 | `$plan` | `array` |  |  |
 | `$outcome` | `string` |  | 'rejected' (no ticket) \| 'stripped' (ticket kept, files removed) |
-| `$ticketId` | `?int` | `null` |  |
+| `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

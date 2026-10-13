@@ -16,7 +16,7 @@ Defined in [includes/ticket_presence.php](/code/files/includes/ticket_presence.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

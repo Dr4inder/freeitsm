@@ -10,7 +10,7 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Returns:** `?array`

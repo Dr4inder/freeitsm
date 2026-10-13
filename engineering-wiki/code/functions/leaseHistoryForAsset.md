@@ -10,9 +10,9 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 655.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

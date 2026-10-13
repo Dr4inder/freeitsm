@@ -10,9 +10,9 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 3
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$userId` | `int` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array|null null = no (and the caller answers "not found", never "forbidden"). Otherwise: role      'requester' | 'manager' stub      true = a manager sees only that a confidential ticket exists can_reply / can_close ticket    the row (id, user_id, tenant_id, sensitivity)
 

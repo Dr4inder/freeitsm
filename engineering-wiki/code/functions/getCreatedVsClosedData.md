@@ -10,7 +10,7 @@ Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$timeGrouping` |  |  |  |
 | `$dateRange` |  |  |  |
 | `$where` |  |  |  |

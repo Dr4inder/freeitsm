@@ -10,8 +10,8 @@ Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$fields` | `array` |  |  |
 
 **Returns:** `void`

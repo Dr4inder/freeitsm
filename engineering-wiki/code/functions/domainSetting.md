@@ -10,7 +10,7 @@ Defined in [includes/domains/settings.php](/code/files/includes/domains/settings
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$key` | `string` |  |  |
 
 **Returns:** `string`

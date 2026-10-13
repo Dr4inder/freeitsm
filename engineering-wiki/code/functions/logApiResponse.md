@@ -10,7 +10,7 @@ Defined in [api/external/software-inventory/submit/index.php](/code/files/api/ex
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$hostId` |  |  |  |
 | `$message` |  |  |  |
 

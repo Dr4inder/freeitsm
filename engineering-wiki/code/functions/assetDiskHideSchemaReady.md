@@ -10,7 +10,7 @@ Defined in [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `bool`
 

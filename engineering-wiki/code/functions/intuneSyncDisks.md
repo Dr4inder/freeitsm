@@ -12,7 +12,7 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 376.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `int`
 

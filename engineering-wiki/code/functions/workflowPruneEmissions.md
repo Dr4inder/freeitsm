@@ -10,7 +10,7 @@ Defined in [includes/workflow_scheduled.php](/code/files/includes/workflow_sched
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$keepDays` | `int` | `365` |  |
 
 **Returns:** `int`

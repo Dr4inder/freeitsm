@@ -10,8 +10,8 @@ Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_app
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$filter` | `string` | `'mine'` | 'mine' (pending, assigned to me) \| 'all' (every pending) \| 'decided' (recently decided by me) |
 
 **Returns:** array { items: [...], counts: { mine, all, decided } }

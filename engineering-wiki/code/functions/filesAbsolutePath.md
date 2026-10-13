@@ -10,7 +10,7 @@ Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$rel` | `string` |  |  |
 
 **Returns:** `?string`

@@ -10,7 +10,7 @@ Defined in [includes/messaging/TeamsPackage.php](/code/files/includes/messaging/
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$channel` | `array` |  |  |
 | `$outPath` | `string` |  |  |
 

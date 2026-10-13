@@ -21,8 +21,8 @@ Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$contractId` | `int` |  |  |
 | `$q` | `string` |  |  |
 | `$limit` | `int` | `25` |  |

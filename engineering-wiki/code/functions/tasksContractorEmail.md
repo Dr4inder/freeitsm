@@ -10,8 +10,8 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$kind` | `string` |  |  |
 
 **Returns:** `bool`

@@ -10,7 +10,7 @@ Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `int`
 

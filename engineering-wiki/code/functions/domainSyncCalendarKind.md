@@ -20,7 +20,7 @@ Defined in [includes/domains/calendar.php](/code/files/includes/domains/calendar
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$source` | `string` |  |  |
 | `$surface` | `string` |  |  |
 | `$categoryName` | `string` |  |  |

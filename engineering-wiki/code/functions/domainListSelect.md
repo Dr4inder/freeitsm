@@ -10,7 +10,7 @@ Defined in [includes/domains/read.php](/code/files/includes/domains/read.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

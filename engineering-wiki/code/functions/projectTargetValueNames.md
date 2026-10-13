@@ -10,7 +10,7 @@ Defined in [includes/projects/targets.php](/code/files/includes/projects/targets
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$targets` | `array` |  |  |
 
 **Returns:** `array`

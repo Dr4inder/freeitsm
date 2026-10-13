@@ -10,7 +10,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$incidentId` | `int` |  |  |
 
 **Returns:** `array`

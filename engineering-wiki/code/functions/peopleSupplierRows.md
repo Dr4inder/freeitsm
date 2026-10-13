@@ -10,8 +10,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 607.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$f` | `array` | `[]` | q, status ('active' default \| 'all') |
 
 **Returns:** `array`

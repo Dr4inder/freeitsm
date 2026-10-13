@@ -10,7 +10,7 @@ Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$apiKey` | `array` |  |  |
+| `$apiKey` | `array` |  | The API key that authenticated the call - its scopes and company limit. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `ActorContext`
 

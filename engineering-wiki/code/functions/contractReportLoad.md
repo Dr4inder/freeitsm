@@ -10,9 +10,9 @@ Defined in [includes/contract_report.php](/code/files/includes/contract_report.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$contractId` | `int` |  |  |
-| `$analystId` | `?int` | `null` |  |
+| `$analystId` | `?int` | `null` | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?array`
 

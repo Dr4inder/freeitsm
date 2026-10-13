@@ -19,7 +19,7 @@ Defined in [includes/ticket_recordings.php](/code/files/includes/ticket_recordin
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recordingIds` | `array` |  | ids the client claims to own (untrusted) |
 | `$ticketId` | `int` |  | the ticket they now belong to |
 | `$userId` | `int` |  | the portal user doing the claiming |

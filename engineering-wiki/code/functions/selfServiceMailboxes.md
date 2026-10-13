@@ -10,7 +10,7 @@ Defined in [includes/self_service_mailboxes.php](/code/files/includes/self_servi
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$userId` | `int` |  |  |
 
 **Returns:** array<int,array{id:int,name:string,target_mailbox:string,shared:bool}> keyed by mailbox id, the user's own company's first, then shared.

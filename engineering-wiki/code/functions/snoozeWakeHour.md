@@ -10,7 +10,7 @@ Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `int`
 

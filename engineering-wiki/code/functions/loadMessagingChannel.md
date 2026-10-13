@@ -10,7 +10,7 @@ Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/mes
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$channelId` |  |  |  |
 
 **Returns:** `?array`

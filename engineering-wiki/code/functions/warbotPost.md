@@ -15,7 +15,7 @@ Defined in [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$channelId` | `int` |  |  |
 | `$body` | `string` |  |  |
 | `$replyTo` | `int` | `0` |  |

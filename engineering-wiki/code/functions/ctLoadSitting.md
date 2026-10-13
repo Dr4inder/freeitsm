@@ -10,7 +10,7 @@ Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Returns:** `array`

@@ -10,7 +10,7 @@ Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$cap` | `string` |  |  |
 
 **Returns:** `void`

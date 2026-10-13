@@ -10,7 +10,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 619
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$tenantId` | `int` |  |  |
+| `$tenantId` | `int` |  | A company (tenant) id; null means the Default company. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

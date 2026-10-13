@@ -10,7 +10,7 @@ Defined in [includes/webchat/public.php](/code/files/includes/webchat/public.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ip` | `string` |  |  |
 
 **Returns:** `void`

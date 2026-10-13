@@ -16,7 +16,7 @@ Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_app
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actorId` | `int` |  |  |
 | `$submissionId` | `int` |  |  |
 | `$decision` | `string` |  | 'approved' or 'rejected' |

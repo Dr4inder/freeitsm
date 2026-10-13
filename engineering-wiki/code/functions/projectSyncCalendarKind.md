@@ -17,7 +17,7 @@ Defined in [includes/projects/calendar.php](/code/files/includes/projects/calend
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$source` | `string` |  |  |
 | `$on` | `bool` |  |  |
 | `$sql` | `string` |  |  |

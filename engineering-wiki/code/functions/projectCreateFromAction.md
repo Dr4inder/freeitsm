@@ -10,7 +10,7 @@ Defined in [includes/projects/intake.php](/code/files/includes/projects/intake.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$a` | `array` |  |  |
 | `$payload` | `array` |  |  |
 

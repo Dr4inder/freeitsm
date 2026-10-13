@@ -18,8 +18,8 @@ Defined in [includes/report_packs/criteria.php](/code/files/includes/report_pack
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$tenant` |  |  |  |
 | `$qualified` | `string` |  |  |
 

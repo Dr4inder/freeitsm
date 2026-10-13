@@ -18,7 +18,7 @@ Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$tenantId` | `?int` |  | the requester's company (null = shared only) |
 | `$alias` | `string` | `'a'` | the table alias used in the caller's query |
 

@@ -10,10 +10,10 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$type` | `string` |  |  |
 | `$id` | `int` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$detail` | `array` |  |  |
 
 **Returns:** `void`

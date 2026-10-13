@@ -10,9 +10,9 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$diagramId` | `int` |  |  |
-| `$body` | `array` |  |  |
+| `$body` | `array` |  | The request's JSON body, decoded. *([standard](/handbook/standard-parameters.md))* |
 | `$prefix` | `string` |  |  |
 
 **Returns:** `int`

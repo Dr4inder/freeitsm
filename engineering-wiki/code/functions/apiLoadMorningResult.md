@@ -10,7 +10,7 @@ Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/mo
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$resultId` | `int` |  |  |
 
 **Returns:** `array`

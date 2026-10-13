@@ -25,7 +25,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$limit` | `int` | `200` |  |
 
 **Returns:** array{links_removed:int,documents_orphaned:int,files_removed:int,errors:string[]}

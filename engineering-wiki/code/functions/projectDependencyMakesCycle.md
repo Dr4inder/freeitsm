@@ -11,7 +11,7 @@ Defined in [includes/projects/dependencies.php](/code/files/includes/projects/de
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$deps` | `array` |  |  |
-| `$taskId` | `int` |  |  |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 | `$dependsOnId` | `int` |  |  |
 
 **Returns:** `bool`

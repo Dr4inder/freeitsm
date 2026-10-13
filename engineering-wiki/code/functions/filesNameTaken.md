@@ -21,7 +21,7 @@ Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_boo
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$parentId` | `?int` |  |  |
 | `$name` | `string` |  |  |
 | `$exceptType` | `string` | `''` |  |

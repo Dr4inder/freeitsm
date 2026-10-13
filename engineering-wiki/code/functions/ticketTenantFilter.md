@@ -18,8 +18,8 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 716
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$alias` | `string` | `'t'` |  |
 | `$forceSingle` | `bool` | `false` | ignore the consolidated view and scope to the ONE active company. For destructive endpoints — see the note in api/tickets/empty_trash.php. Reading wider is the point of the combined board; DELETING wider is not. |
 

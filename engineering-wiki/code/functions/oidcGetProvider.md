@@ -10,7 +10,7 @@ Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Returns:** `?array`

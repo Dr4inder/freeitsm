@@ -10,7 +10,7 @@ Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 | `$hasIsClosed` | `bool` | `false` |  |
 

@@ -10,7 +10,7 @@ Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 20.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

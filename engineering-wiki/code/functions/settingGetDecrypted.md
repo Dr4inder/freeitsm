@@ -10,7 +10,7 @@ Defined in [includes/encryption.php](/code/files/includes/encryption.php.md), li
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$key` | `string` |  |  |
 | `$default` | `string` | `''` |  |
 

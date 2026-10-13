@@ -10,7 +10,7 @@ Defined in [includes/portal_preferences.php](/code/files/includes/portal_prefere
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$userId` | `int` |  |  |
 | `$key` | `string` |  |  |
 | `$default` | `string` | `''` | returned when unset, unreadable, or the table is absent |

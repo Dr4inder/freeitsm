@@ -10,7 +10,7 @@ Defined in [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailbox` |  |  |  |
 
 ## Database

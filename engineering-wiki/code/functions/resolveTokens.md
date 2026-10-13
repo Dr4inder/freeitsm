@@ -11,7 +11,7 @@ Defined in [api/system/import_demo_data.php](/code/files/api/system/import_demo_
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$record` |  |  |  |
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 ## Calls
 

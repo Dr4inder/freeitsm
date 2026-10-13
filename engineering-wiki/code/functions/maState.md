@@ -10,7 +10,7 @@ Defined in [api/tickets/manager_access.php](/code/files/api/tickets/manager_acce
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$m` | `array` |  |  |
 
 **Returns:** `array`

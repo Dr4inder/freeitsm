@@ -1,6 +1,6 @@
 # assets/js/inbox.js
 
-> JavaScript - 12411 lines
+> JavaScript - 12418 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Tickets](https://github.com/edmozley/freeitsm/wiki/Tickets)
@@ -365,124 +365,124 @@ Inbox JavaScript - Service Desk Ticketing System
 | `askTicketAi()` | 9368 | Sends the question typed in the Ask AI box and clears the box. |
 | `_sendTicketAiMessage(question, isAutoContext)` | 9384 | Posts a question to the knowledge base AI chat (api/knowledge/ai_chat.php) and adds the question and the answer as chat bubbles. |
 | `formatTicketAiResponse(text, articlesList)` | 9456 | Turns the AI's answer into HTML: quoted article titles become links to the article, and simple Markdown (bold, italics, code, lists, paragraphs) is rendered. |
-| `toggleTicketPopout()` | 9532 | --- Pop-out (full-screen) ticket view --- Toggles a body class that hides the folder list + email list and floats the ticket properties container as a right-hand panel. Pure CSS — no DOM restructuring. Preference persists in localStorage so the analyst's choice sticks across reloads / ticket selections. |
-| `selectEmailFullScreen(emailId)` | 9542 | Double-click on an email row: open it AND pop out. Sets the popout pref so the syncPopoutToTicketState call inside displayEmail applies the class once the ticket renders. Goes through the same storage path as the toggle button so the state is consistent (an F5 mid-popout will land you in 3-col view, but as soon as you pick a ticket again you're back in popout). |
-| `loadTimeEntries(ticketId)` | 9558 | Loads a ticket's time entries from get_time_entries.php and draws them with the running total. |
-| `formatMinutes(mins)` | 9585 | Convert minutes int to a short display string: 45 → "45m", 90 → "1h 30m". |
-| `renderTimeEntries(totalMinutes)` | 9596 | Draws the Time entries section: the total, an add form (minutes and notes), and the entries, with a delete button only on the analyst's own. |
-| `saveTimeEntry()` | 9648 | Logs time against the open ticket through save_time_entry.php, then reloads the entries. |
-| `deleteTimeEntry(id)` | 9683 | After a confirmation, deletes one of the analyst's time entries through delete_time_entry.php and reloads the list. |
-| `syncPopoutToTicketState(hasTicket)` | 9709 | Sync body.ticket-popout to the actual reading-pane state. Called by the ticket-render path (hasTicket=true: apply class if pref says so) and by every empty / loading / error state in the reading pane (hasTicket=false: always strip the class). Tying popout to a rendered ticket avoids the trap where an F5 with the pref saved leaves the user with folder + list hidden and the empty "select a ticket" message in the reading pane. |
-| `openTicketContextMenu(event, ticketId, ticketRef)` | 9744 | Opens the ticket right-click menu for a row, or the full-screen sheet on a phone. |
-| `populateContextStatusSubmenu()` | 9842 | Build the Set-status submenu HTML from the active ticket_statuses lookup. Tick mark on the row matching the currently-open ticket's status (only shows when right-clicking the ticket that's in the reading pane, since context actions can target any ticket regardless of selection). |
-| `populateContextPrioritySubmenu()` | 9867 | Build the Set-priority submenu HTML from the active ticket_priorities lookup. Priority is nullable on tickets, so the first row is a "no priority" option that clears the assignment. Same chip + tick pattern as the status submenu — colour swatch from the priority's stored colour. |
-| `setPriorityFromContext(priorityId)` | 9897 | Set a ticket's priority from the right-click menu. Empty string clears the priority (priority_id is nullable on tickets). SLA recomputes lazily on the next ticket fetch — no explicit recompute call needed. |
-| `populateContextDepartmentSubmenu()` | 9947 | Build the Set-department submenu HTML from the analyst's team departments (same `departments` lookup as the in-panel Department dropdown). department_id is nullable, so the first row is a "(no department)" option that clears it. |
-| `setDepartmentFromContext(departmentId)` | 9974 | Set a ticket's department from the right-click menu. Empty string clears it (department_id is nullable). Refreshes folder counts + the list because the inbox can be grouped by department. |
-| `populateContextCompanySubmenu()` | 10019 | Build the Move-to-company submenu (multi-company installs only; hidden at N=1). Lists the companies this analyst can access; the current one is ticked when right-clicking the ticket open in the reading pane. |
-| `moveToCompanyFromContext(tenantId)` | 10042 | Move a ticket to another company from the right-click menu. The endpoint writes the audit entry server-side, so (unlike the other context actions) there's no client-side logAudit here. |
-| `populateContextTypeSubmenu()` | 10072 | Build the Set-type submenu HTML from the active ticket_types lookup (same `ticketTypes` source as the in-panel Type dropdown). ticket_type_id is nullable, so the first row is a "(no type)" option that clears it. |
-| `setTypeFromContext(typeId)` | 10098 | Set a ticket's type from the right-click menu. Empty string clears it (ticket_type_id is nullable). |
-| `populateContextAssigneeSubmenu()` | 10143 | Build the Assign-to submenu HTML from the loaded analysts list. Picking an analyst sets both assigned_analyst_id and owner_id (mirrors the drag-to-analyst-folder behaviour in assign_ticket.php). The first row is an "Unassigned" option that clears both fields. |
-| `populateContextTeamSubmenu()` | 10180 | The Assign-to-team submenu (#1566). |
-| `setTeamFromContext(teamId)` | 10221 | Hand a ticket (or the whole selection) to a team. Empty string takes it out of every queue. |
-| `setAssigneeFromContext(analystId)` | 10268 | Set a ticket's assignee from the right-click menu. Empty string = unassign. Sends assigned_analyst_id to assign_ticket.php, which sets both assigned_analyst_id and owner_id (same behaviour as drag-to-folder). |
-| `setStatusFromContext(statusName)` | 10314 | Set a ticket's status from the right-click menu — works on whichever ticket was right-clicked, even if a different ticket is open in the reading pane. |
-| `closeTicketContextMenu()` | 10355 | Closes the ticket context menu (popup or phone sheet) and empties the sheet's second level. |
-| `ticketMenuIsSheet()` | 10380 | True when the screen is 768px wide or less, so the ticket menu shows as a full-screen sheet. |
-| `openTicketMenuSheet(menu)` | 10390 | Shows the ticket menu as a full-screen phone sheet. |
-| `openTicketMenuLevel(menu, label, sub)` | 10432 | Slides a submenu into the phone sheet as its second level, with a Back button and the parent's label. |
-| `cancel()` | 10460 | Stops a pending long-press timer. |
-| `preventDefault()` | 10478 | No-op stand-in, so the synthetic long-press event can be passed where a real event is expected. |
-| `contextMoveToTrash()` | 10499 | Right-click a ticket -> Move to trash (soft-delete the context-menu target). |
-| `availableSnoozePresets()` | 10550 | Returns the snooze presets whose name is still true right now ("This evening" drops out after 18:00). |
-| `snoozeWakeHour()` | 10555 | The install's snooze wake hour from window.SNOOZE_WAKE_HOUR, or 9 when it is missing or invalid. |
-| `atHourLocal(hour, addDays)` | 10562 | A Date at `hour` today plus `addDays`. Mirrors the server's "tonight"/"tomorrow" arithmetic; "tonight" rolls forward a day when 18:00 has already gone. |
-| `nextMondayLocal(hour)` | 10571 | Returns the next Monday (1 to 7 days ahead, never today) at the given hour, local time. |
-| `formatWakeTime(value)` | 10583 | "Today 15:00" / "Tomorrow 09:00" / "Mon 4 Aug, 09:00" — in the analyst's zone. Deliberately always carries the time: "Thursday" alone leaves them wondering whether the ticket is back first thing or at the end of the day. |
-| `inboxRowStyle(field)` | 10627 | Returns the analyst's display style for a row field (priority, status, agent) from INBOX_ROW_DISPLAY. |
-| `inboxAnyStyleIs(placement)` | 10634 | Is any field currently asking for this placement? Lets us skip empty containers. |
-| `inboxInitials(name)` | 10643 | "Ed Mozley" → "EM". Falls back to the first two characters of a single word, so a mononym or a service account still renders something rather than a blank chip that looks like a bug. |
-| `inboxSafeColour(value)` | 10651 | A safe CSS colour, or null. Anything unrecognised is dropped rather than emitted. |
-| `inboxRowStripes(email)` | 10657 | The left-edge stripes. Both priority and status may ask for one; they stack. |
-| `inboxRowBlocks(email)` | 10676 | The top-right blocks. Same stacking rule as stripes. |
-| `inboxRowChips(email)` | 10695 | Pills and dots for the footer row, plus the agent chip. |
-| `colourField(field, value, colour)` | 10699 | Adds a pill or dot for one field to the footer chips when that field is set to pill or dot. |
-| `snoozeRowPill(snoozedUntil, reason)` | 10740 | The moon pill showing when a snoozed ticket wakes, for its list row. |
-| `populateContextSnoozeSubmenu()` | 10754 | Build the Snooze flyout. Rebuilt on every open so the labels carry live times — a menu built at page load would still be offering "Tomorrow · Wed 09:00" on Thursday, and an analyst reads the label, not the key behind it. |
-| `ctxTargetIsSnoozed()` | 10772 | Is the context-menu target asleep? Read from the loaded list row, or from the open ticket when the menu was raised on the one in the reading pane. |
-| `ctxSnoozeTargets()` | 10780 | Which tickets does a snooze/wake act on? Same rule as every other context action: the whole selection when the menu was raised inside it, else the one row. |
-| `snoozeFromContext(preset, untilLocal, reason)` | 10793 | Snoozes the context-menu target (or the whole selection) via snooze_ticket.php. |
-| `wakeFromContext()` | 10829 | Wakes the context-menu target, or the whole selection, from the right-click menu. |
-| `wakeTickets(ids)` | 10836 | Shared by the context menu and the reading-pane banner button. |
-| `openSnoozeModal()` | 10869 | Opens the "snooze until" dialog for the context-menu targets, defaulting to tomorrow at the wake hour. |
-| `closeSnoozeModal()` | 10892 | Closes the "snooze until" dialog and forgets its targets. |
-| `saveCustomSnooze()` | 10898 | Snoozes the dialog's tickets until the picked date and time, through the same path as the presets. |
-| `buildSnoozeBanner(email)` | 10918 | Reading-pane banner on a sleeping ticket. Quiet like the split banners rather than loud like merged-away: nothing is wrong here, the ticket is just resting, and the one thing an analyst wants is the way out of it. |
-| `startPresence(ticketId)` | 10958 | Start (or move) the heartbeat to a ticket. Safe to call repeatedly. |
-| `stopPresence()` | 10978 | Stop announcing entirely (the reading pane emptied). |
-| `beatPresence()` | 10993 | Sends one presence heartbeat for the open ticket and repaints who else is in it. |
-| `leavePresence(ticketId)` | 11020 | Fire-and-forget leave. Uses sendBeacon during teardown, when fetch is unreliable. |
-| `setPresenceComposing(on)` | 11042 | Tell the server whether our composer is open. |
-| `joinNames(names)` | 11055 | Join names the way a person would: "A", "A and B", "A, B and C". The conjunction is translated — `t()` returns the KEY when a string is missing, so it must be a real one rather than a `\|\| 'and'` fallback that would render the literal text "common.and" on screen. |
-| `renderPresenceStrip()` | 11067 | Paint the strip. Two states, because they deserve different weight: someone merely having the ticket open is information, someone WRITING is the moment your work becomes duplicated effort. |
-| `renderComposerCollisionWarning()` | 11117 | The warning inside our own composer. |
-| `openTrashContextMenu(event)` | 11142 | Opens the Trash folder's right-click menu (Empty trash) at the cursor, kept inside the viewport. |
-| `closeTrashContextMenu()` | 11155 | Closes the Trash folder's right-click menu. |
-| `emptyTrash()` | 11164 | Permanently deletes every ticket in the trash after a confirm, via empty_trash.php. |
-| `openContextLinkTask()` | 11230 | Right-click → Link to task (discussion #83). |
-| `openLinkTaskModal(ticketId, ticketRef)` | 11251 | Opens the phone "Link to task" dialog for a ticket and loads the task list. |
-| `closeLinkTaskModal()` | 11260 | Closes the phone "Link to task" dialog. |
-| `linkTaskSearchDebounced()` | 11262 | Reloads the "Link to task" list 250ms after the analyst stops typing. |
-| `loadLinkTaskList()` | 11269 | Fills the phone "Link to task" list from search_linkable_tasks.php for the typed search. |
-| `pickLinkTask(idx)` | 11307 | Links the picked task to the ticket, or creates a task from the typed text when idx is -1. |
-| `openContextLinkCmdb()` | 11337 | Opens the "Link CMDB object" dialog for the right-clicked ticket, with an empty search and log. |
-| `closeContextCmdbModal()` | 11350 | Closes the "Link CMDB object" dialog, refreshing the open ticket's CMDB list if it gained a link. |
-| `linkContextCmdbObject(objectId, objectName)` | 11398 | Links a CMDB object to the right-clicked ticket and adds it to the dialog's log. |
-| `openContextSchedule()` | 11435 | Schedule work on the right-clicked ticket, which may not be the one open in the reading pane. The row in `emails` carries the schedule columns, so the modal prefills what this ticket is already set to rather than the open one's. |
-| `openContextRecordTime()` | 11446 | Opens the "Record time" dialog for the right-clicked ticket, set to now in the display zone. |
-| `closeContextTimeModal()` | 11463 | Closes the "Record time" dialog. |
-| `saveContextTimeEntry()` | 11472 | Saves a time entry on the right-clicked ticket via save_time_entry.php, sending the time as UTC. |
-| `loadSlaState(ticketId)` | 11521 | --- SLA panel in the reading pane --------------------------------------- Fetches /api/tickets/get_ticket_sla.php and renders a small status panel showing response + resolution targets, elapsed / remaining / percent, and a green/amber/red colour-coded badge per target. Hides itself silently if SLA is disabled for the ticket (no priority, no target set, ticket pre-dates cutoff, SLA disabled globally) — so the section just doesn't appear and doesn't bother the analyst with "SLA disabled for this ticket" noise. |
-| `renderSlaPanel(sla)` | 11536 | Renders the SLA panel in the reading pane - a row with a progress bar for response and for resolution. |
-| `fmt(mins)` | 11542 | Formats minutes as "45m", "2h" or "2h 15m" (negative keeps its sign, null shows a dash). |
-| `renderRow(label, target)` | 11552 | Builds one SLA target row - green when achieved or under 80%, amber from 80%, red once breached. |
-| `ticketIsClosed(email)` | 11612 | Is this ticket in a status the admin has marked as closed? |
-| `buildWriteUpButton(email)` | 11619 | The "Write up" toolbar button, only when the Knowledge write-up is turned on and the ticket is closed. |
-| `openWriteUpModal()` | 11632 | Opens the "Write this up" dialog for the open ticket (building it on first use) and starts the stream. |
-| `closeWriteUpModal()` | 11665 | Hides the "Write this up" dialog. |
-| `wuRetryWithAnswers()` | 11671 | Sends the analyst's answers to the assistant's questions back with the ticket and streams a new attempt. |
-| `wuStream(payload)` | 11691 | Stream the write-up. The server sends the verdict as its own event before any prose, so nothing is rendered until we know whether this is an article or a refusal — otherwise the words "VERDICT: ARTICLE" land in the analyst's draft. |
-| `statusEl()` | 11694 | The write-up dialog's status line. |
-| `contentEl()` | 11696 | The write-up dialog's content area. |
-| `handle(event, data)` | 11717 | Handles one streamed event (error, verdict, text, done) from writeup_stream.php. |
-| `wuFinish(data)` | 11768 | Finishes the write-up dialog once the stream is done. |
-| `wuSaveDraft()` | 11809 | Saves the write-up to Knowledge as an unpublished draft via writeup_save.php. |
-| `loadMySignatures(force)` | 11859 | Loads the analyst's email signatures, cached unless force is set. |
-| `signatureWrap(sig)` | 11876 | Wraps a rendered signature in the data-signature div that lets the picker find and replace it. |
-| `applyDefaultSignature()` | 11881 | Drop the analyst's default signature into a freshly opened composer. |
-| `setSignatureInEditor(sig)` | 11899 | Put this signature in, replacing whichever one is already there. |
-| `toggleSignatureMenu(event)` | 11928 | Opens or closes the composer's signature menu, re-fetching the signatures each time it opens. |
-| `closeSignatureMenu()` | 11941 | Closes the composer's signature menu. |
-| `renderSignatureMenu()` | 11958 | Builds the signature menu: one row per signature (default marked), Remove, and a link to manage them. |
-| `pickSignature(id)` | 11994 | Puts the chosen signature into the editor, or removes the current one when id is 0. |
-| `aiSummaryOn()` | 12037 | True when an administrator has turned on the AI ticket summary. |
-| `aiReadOn()` | 12039 | True when an administrator has turned on "Read this ticket for me". |
-| `buildAiSummarySlot()` | 12042 | The slot. Empty markup when the feature is off, so nothing reserves space. |
-| `buildReadForMeButton()` | 12048 | The "Read this ticket for me" toolbar button, or '' when the feature is off. |
-| `loadAiSummary(ticketId)` | 12065 | Loads the stored AI summary for a ticket from ai_summary.php and renders it. |
-| `renderAiSummary()` | 12100 | Paints the AI summary slot: not configured, none yet, or the summary with its meta line and actions. |
-| `toggleAiSummary()` | 12165 | Shows or hides the AI summary text and remembers the choice in localStorage. |
-| `refreshAiSummary(auto)` | 12180 | Asks ai_summary.php to write a new summary for the open ticket. |
-| `showAiSummaryHistory()` | 12233 | Every version ever written, because nothing here is ever overwritten. |
-| `openReadForMe()` | 12261 | Opening the panel READS what is already stored — from the database, never the provider — so a briefing you have seen comes back instantly and free. Only "Read again" spends anything, and only when there is nothing stored at all is one written without being asked for. |
-| `runReadForMe()` | 12285 | ⚠️ A REASONING MODEL CAN TAKE A MINUTE, and every call here is PAID. The first version showed a motionless "Reading the ticket…" for the whole of it, which is precisely when somebody clicks again — so a slow answer billed twice and the second call overwrote the first. The guard is the part that matters; the counter only stops it LOOKING broken. |
-| `aiReadRender(b, versionCount)` | 12321 | One renderer for a stored briefing and a freshly written one, so a re-read cannot come back looking different from what reopening shows. |
-| `aiReadShowError(code)` | 12346 | Shows an AI error code, in words, in the AI panel body. |
-| `showAiReadHistory()` | 12352 | Every briefing ever written for this ticket — nothing is overwritten. |
-| `showAiPanel(title, html)` | 12372 | Opens the shared AI panel with a title and body HTML, building it on first use. |
-| `closeAiPanel()` | 12393 | Closes the shared AI panel. |
-| `aiErrorText(code)` | 12399 | Every failure this can have, said in words rather than as a code. |
+| `toggleTicketPopout()` | 9539 | --- Pop-out (full-screen) ticket view --- Toggles a body class that hides the folder list + email list and floats the ticket properties container as a right-hand panel. Pure CSS — no DOM restructuring. Preference persists in localStorage so the analyst's choice sticks across reloads / ticket selections. |
+| `selectEmailFullScreen(emailId)` | 9549 | Double-click on an email row: open it AND pop out. Sets the popout pref so the syncPopoutToTicketState call inside displayEmail applies the class once the ticket renders. Goes through the same storage path as the toggle button so the state is consistent (an F5 mid-popout will land you in 3-col view, but as soon as you pick a ticket again you're back in popout). |
+| `loadTimeEntries(ticketId)` | 9565 | Loads a ticket's time entries from get_time_entries.php and draws them with the running total. |
+| `formatMinutes(mins)` | 9592 | Convert minutes int to a short display string: 45 → "45m", 90 → "1h 30m". |
+| `renderTimeEntries(totalMinutes)` | 9603 | Draws the Time entries section: the total, an add form (minutes and notes), and the entries, with a delete button only on the analyst's own. |
+| `saveTimeEntry()` | 9655 | Logs time against the open ticket through save_time_entry.php, then reloads the entries. |
+| `deleteTimeEntry(id)` | 9690 | After a confirmation, deletes one of the analyst's time entries through delete_time_entry.php and reloads the list. |
+| `syncPopoutToTicketState(hasTicket)` | 9716 | Sync body.ticket-popout to the actual reading-pane state. Called by the ticket-render path (hasTicket=true: apply class if pref says so) and by every empty / loading / error state in the reading pane (hasTicket=false: always strip the class). Tying popout to a rendered ticket avoids the trap where an F5 with the pref saved leaves the user with folder + list hidden and the empty "select a ticket" message in the reading pane. |
+| `openTicketContextMenu(event, ticketId, ticketRef)` | 9751 | Opens the ticket right-click menu for a row, or the full-screen sheet on a phone. |
+| `populateContextStatusSubmenu()` | 9849 | Build the Set-status submenu HTML from the active ticket_statuses lookup. Tick mark on the row matching the currently-open ticket's status (only shows when right-clicking the ticket that's in the reading pane, since context actions can target any ticket regardless of selection). |
+| `populateContextPrioritySubmenu()` | 9874 | Build the Set-priority submenu HTML from the active ticket_priorities lookup. Priority is nullable on tickets, so the first row is a "no priority" option that clears the assignment. Same chip + tick pattern as the status submenu — colour swatch from the priority's stored colour. |
+| `setPriorityFromContext(priorityId)` | 9904 | Set a ticket's priority from the right-click menu. Empty string clears the priority (priority_id is nullable on tickets). SLA recomputes lazily on the next ticket fetch — no explicit recompute call needed. |
+| `populateContextDepartmentSubmenu()` | 9954 | Build the Set-department submenu HTML from the analyst's team departments (same `departments` lookup as the in-panel Department dropdown). department_id is nullable, so the first row is a "(no department)" option that clears it. |
+| `setDepartmentFromContext(departmentId)` | 9981 | Set a ticket's department from the right-click menu. Empty string clears it (department_id is nullable). Refreshes folder counts + the list because the inbox can be grouped by department. |
+| `populateContextCompanySubmenu()` | 10026 | Build the Move-to-company submenu (multi-company installs only; hidden at N=1). Lists the companies this analyst can access; the current one is ticked when right-clicking the ticket open in the reading pane. |
+| `moveToCompanyFromContext(tenantId)` | 10049 | Move a ticket to another company from the right-click menu. The endpoint writes the audit entry server-side, so (unlike the other context actions) there's no client-side logAudit here. |
+| `populateContextTypeSubmenu()` | 10079 | Build the Set-type submenu HTML from the active ticket_types lookup (same `ticketTypes` source as the in-panel Type dropdown). ticket_type_id is nullable, so the first row is a "(no type)" option that clears it. |
+| `setTypeFromContext(typeId)` | 10105 | Set a ticket's type from the right-click menu. Empty string clears it (ticket_type_id is nullable). |
+| `populateContextAssigneeSubmenu()` | 10150 | Build the Assign-to submenu HTML from the loaded analysts list. Picking an analyst sets both assigned_analyst_id and owner_id (mirrors the drag-to-analyst-folder behaviour in assign_ticket.php). The first row is an "Unassigned" option that clears both fields. |
+| `populateContextTeamSubmenu()` | 10187 | The Assign-to-team submenu (#1566). |
+| `setTeamFromContext(teamId)` | 10228 | Hand a ticket (or the whole selection) to a team. Empty string takes it out of every queue. |
+| `setAssigneeFromContext(analystId)` | 10275 | Set a ticket's assignee from the right-click menu. Empty string = unassign. Sends assigned_analyst_id to assign_ticket.php, which sets both assigned_analyst_id and owner_id (same behaviour as drag-to-folder). |
+| `setStatusFromContext(statusName)` | 10321 | Set a ticket's status from the right-click menu — works on whichever ticket was right-clicked, even if a different ticket is open in the reading pane. |
+| `closeTicketContextMenu()` | 10362 | Closes the ticket context menu (popup or phone sheet) and empties the sheet's second level. |
+| `ticketMenuIsSheet()` | 10387 | True when the screen is 768px wide or less, so the ticket menu shows as a full-screen sheet. |
+| `openTicketMenuSheet(menu)` | 10397 | Shows the ticket menu as a full-screen phone sheet. |
+| `openTicketMenuLevel(menu, label, sub)` | 10439 | Slides a submenu into the phone sheet as its second level, with a Back button and the parent's label. |
+| `cancel()` | 10467 | Stops a pending long-press timer. |
+| `preventDefault()` | 10485 | No-op stand-in, so the synthetic long-press event can be passed where a real event is expected. |
+| `contextMoveToTrash()` | 10506 | Right-click a ticket -> Move to trash (soft-delete the context-menu target). |
+| `availableSnoozePresets()` | 10557 | Returns the snooze presets whose name is still true right now ("This evening" drops out after 18:00). |
+| `snoozeWakeHour()` | 10562 | The install's snooze wake hour from window.SNOOZE_WAKE_HOUR, or 9 when it is missing or invalid. |
+| `atHourLocal(hour, addDays)` | 10569 | A Date at `hour` today plus `addDays`. Mirrors the server's "tonight"/"tomorrow" arithmetic; "tonight" rolls forward a day when 18:00 has already gone. |
+| `nextMondayLocal(hour)` | 10578 | Returns the next Monday (1 to 7 days ahead, never today) at the given hour, local time. |
+| `formatWakeTime(value)` | 10590 | "Today 15:00" / "Tomorrow 09:00" / "Mon 4 Aug, 09:00" — in the analyst's zone. Deliberately always carries the time: "Thursday" alone leaves them wondering whether the ticket is back first thing or at the end of the day. |
+| `inboxRowStyle(field)` | 10634 | Returns the analyst's display style for a row field (priority, status, agent) from INBOX_ROW_DISPLAY. |
+| `inboxAnyStyleIs(placement)` | 10641 | Is any field currently asking for this placement? Lets us skip empty containers. |
+| `inboxInitials(name)` | 10650 | "Ed Mozley" → "EM". Falls back to the first two characters of a single word, so a mononym or a service account still renders something rather than a blank chip that looks like a bug. |
+| `inboxSafeColour(value)` | 10658 | A safe CSS colour, or null. Anything unrecognised is dropped rather than emitted. |
+| `inboxRowStripes(email)` | 10664 | The left-edge stripes. Both priority and status may ask for one; they stack. |
+| `inboxRowBlocks(email)` | 10683 | The top-right blocks. Same stacking rule as stripes. |
+| `inboxRowChips(email)` | 10702 | Pills and dots for the footer row, plus the agent chip. |
+| `colourField(field, value, colour)` | 10706 | Adds a pill or dot for one field to the footer chips when that field is set to pill or dot. |
+| `snoozeRowPill(snoozedUntil, reason)` | 10747 | The moon pill showing when a snoozed ticket wakes, for its list row. |
+| `populateContextSnoozeSubmenu()` | 10761 | Build the Snooze flyout. Rebuilt on every open so the labels carry live times — a menu built at page load would still be offering "Tomorrow · Wed 09:00" on Thursday, and an analyst reads the label, not the key behind it. |
+| `ctxTargetIsSnoozed()` | 10779 | Is the context-menu target asleep? Read from the loaded list row, or from the open ticket when the menu was raised on the one in the reading pane. |
+| `ctxSnoozeTargets()` | 10787 | Which tickets does a snooze/wake act on? Same rule as every other context action: the whole selection when the menu was raised inside it, else the one row. |
+| `snoozeFromContext(preset, untilLocal, reason)` | 10800 | Snoozes the context-menu target (or the whole selection) via snooze_ticket.php. |
+| `wakeFromContext()` | 10836 | Wakes the context-menu target, or the whole selection, from the right-click menu. |
+| `wakeTickets(ids)` | 10843 | Shared by the context menu and the reading-pane banner button. |
+| `openSnoozeModal()` | 10876 | Opens the "snooze until" dialog for the context-menu targets, defaulting to tomorrow at the wake hour. |
+| `closeSnoozeModal()` | 10899 | Closes the "snooze until" dialog and forgets its targets. |
+| `saveCustomSnooze()` | 10905 | Snoozes the dialog's tickets until the picked date and time, through the same path as the presets. |
+| `buildSnoozeBanner(email)` | 10925 | Reading-pane banner on a sleeping ticket. Quiet like the split banners rather than loud like merged-away: nothing is wrong here, the ticket is just resting, and the one thing an analyst wants is the way out of it. |
+| `startPresence(ticketId)` | 10965 | Start (or move) the heartbeat to a ticket. Safe to call repeatedly. |
+| `stopPresence()` | 10985 | Stop announcing entirely (the reading pane emptied). |
+| `beatPresence()` | 11000 | Sends one presence heartbeat for the open ticket and repaints who else is in it. |
+| `leavePresence(ticketId)` | 11027 | Fire-and-forget leave. Uses sendBeacon during teardown, when fetch is unreliable. |
+| `setPresenceComposing(on)` | 11049 | Tell the server whether our composer is open. |
+| `joinNames(names)` | 11062 | Join names the way a person would: "A", "A and B", "A, B and C". The conjunction is translated — `t()` returns the KEY when a string is missing, so it must be a real one rather than a `\|\| 'and'` fallback that would render the literal text "common.and" on screen. |
+| `renderPresenceStrip()` | 11074 | Paint the strip. Two states, because they deserve different weight: someone merely having the ticket open is information, someone WRITING is the moment your work becomes duplicated effort. |
+| `renderComposerCollisionWarning()` | 11124 | The warning inside our own composer. |
+| `openTrashContextMenu(event)` | 11149 | Opens the Trash folder's right-click menu (Empty trash) at the cursor, kept inside the viewport. |
+| `closeTrashContextMenu()` | 11162 | Closes the Trash folder's right-click menu. |
+| `emptyTrash()` | 11171 | Permanently deletes every ticket in the trash after a confirm, via empty_trash.php. |
+| `openContextLinkTask()` | 11237 | Right-click → Link to task (discussion #83). |
+| `openLinkTaskModal(ticketId, ticketRef)` | 11258 | Opens the phone "Link to task" dialog for a ticket and loads the task list. |
+| `closeLinkTaskModal()` | 11267 | Closes the phone "Link to task" dialog. |
+| `linkTaskSearchDebounced()` | 11269 | Reloads the "Link to task" list 250ms after the analyst stops typing. |
+| `loadLinkTaskList()` | 11276 | Fills the phone "Link to task" list from search_linkable_tasks.php for the typed search. |
+| `pickLinkTask(idx)` | 11314 | Links the picked task to the ticket, or creates a task from the typed text when idx is -1. |
+| `openContextLinkCmdb()` | 11344 | Opens the "Link CMDB object" dialog for the right-clicked ticket, with an empty search and log. |
+| `closeContextCmdbModal()` | 11357 | Closes the "Link CMDB object" dialog, refreshing the open ticket's CMDB list if it gained a link. |
+| `linkContextCmdbObject(objectId, objectName)` | 11405 | Links a CMDB object to the right-clicked ticket and adds it to the dialog's log. |
+| `openContextSchedule()` | 11442 | Schedule work on the right-clicked ticket, which may not be the one open in the reading pane. The row in `emails` carries the schedule columns, so the modal prefills what this ticket is already set to rather than the open one's. |
+| `openContextRecordTime()` | 11453 | Opens the "Record time" dialog for the right-clicked ticket, set to now in the display zone. |
+| `closeContextTimeModal()` | 11470 | Closes the "Record time" dialog. |
+| `saveContextTimeEntry()` | 11479 | Saves a time entry on the right-clicked ticket via save_time_entry.php, sending the time as UTC. |
+| `loadSlaState(ticketId)` | 11528 | --- SLA panel in the reading pane --------------------------------------- Fetches /api/tickets/get_ticket_sla.php and renders a small status panel showing response + resolution targets, elapsed / remaining / percent, and a green/amber/red colour-coded badge per target. Hides itself silently if SLA is disabled for the ticket (no priority, no target set, ticket pre-dates cutoff, SLA disabled globally) — so the section just doesn't appear and doesn't bother the analyst with "SLA disabled for this ticket" noise. |
+| `renderSlaPanel(sla)` | 11543 | Renders the SLA panel in the reading pane - a row with a progress bar for response and for resolution. |
+| `fmt(mins)` | 11549 | Formats minutes as "45m", "2h" or "2h 15m" (negative keeps its sign, null shows a dash). |
+| `renderRow(label, target)` | 11559 | Builds one SLA target row - green when achieved or under 80%, amber from 80%, red once breached. |
+| `ticketIsClosed(email)` | 11619 | Is this ticket in a status the admin has marked as closed? |
+| `buildWriteUpButton(email)` | 11626 | The "Write up" toolbar button, only when the Knowledge write-up is turned on and the ticket is closed. |
+| `openWriteUpModal()` | 11639 | Opens the "Write this up" dialog for the open ticket (building it on first use) and starts the stream. |
+| `closeWriteUpModal()` | 11672 | Hides the "Write this up" dialog. |
+| `wuRetryWithAnswers()` | 11678 | Sends the analyst's answers to the assistant's questions back with the ticket and streams a new attempt. |
+| `wuStream(payload)` | 11698 | Stream the write-up. The server sends the verdict as its own event before any prose, so nothing is rendered until we know whether this is an article or a refusal — otherwise the words "VERDICT: ARTICLE" land in the analyst's draft. |
+| `statusEl()` | 11701 | The write-up dialog's status line. |
+| `contentEl()` | 11703 | The write-up dialog's content area. |
+| `handle(event, data)` | 11724 | Handles one streamed event (error, verdict, text, done) from writeup_stream.php. |
+| `wuFinish(data)` | 11775 | Finishes the write-up dialog once the stream is done. |
+| `wuSaveDraft()` | 11816 | Saves the write-up to Knowledge as an unpublished draft via writeup_save.php. |
+| `loadMySignatures(force)` | 11866 | Loads the analyst's email signatures, cached unless force is set. |
+| `signatureWrap(sig)` | 11883 | Wraps a rendered signature in the data-signature div that lets the picker find and replace it. |
+| `applyDefaultSignature()` | 11888 | Drop the analyst's default signature into a freshly opened composer. |
+| `setSignatureInEditor(sig)` | 11906 | Put this signature in, replacing whichever one is already there. |
+| `toggleSignatureMenu(event)` | 11935 | Opens or closes the composer's signature menu, re-fetching the signatures each time it opens. |
+| `closeSignatureMenu()` | 11948 | Closes the composer's signature menu. |
+| `renderSignatureMenu()` | 11965 | Builds the signature menu: one row per signature (default marked), Remove, and a link to manage them. |
+| `pickSignature(id)` | 12001 | Puts the chosen signature into the editor, or removes the current one when id is 0. |
+| `aiSummaryOn()` | 12044 | True when an administrator has turned on the AI ticket summary. |
+| `aiReadOn()` | 12046 | True when an administrator has turned on "Read this ticket for me". |
+| `buildAiSummarySlot()` | 12049 | The slot. Empty markup when the feature is off, so nothing reserves space. |
+| `buildReadForMeButton()` | 12055 | The "Read this ticket for me" toolbar button, or '' when the feature is off. |
+| `loadAiSummary(ticketId)` | 12072 | Loads the stored AI summary for a ticket from ai_summary.php and renders it. |
+| `renderAiSummary()` | 12107 | Paints the AI summary slot: not configured, none yet, or the summary with its meta line and actions. |
+| `toggleAiSummary()` | 12172 | Shows or hides the AI summary text and remembers the choice in localStorage. |
+| `refreshAiSummary(auto)` | 12187 | Asks ai_summary.php to write a new summary for the open ticket. |
+| `showAiSummaryHistory()` | 12240 | Every version ever written, because nothing here is ever overwritten. |
+| `openReadForMe()` | 12268 | Opening the panel READS what is already stored — from the database, never the provider — so a briefing you have seen comes back instantly and free. Only "Read again" spends anything, and only when there is nothing stored at all is one written without being asked for. |
+| `runReadForMe()` | 12292 | ⚠️ A REASONING MODEL CAN TAKE A MINUTE, and every call here is PAID. The first version showed a motionless "Reading the ticket…" for the whole of it, which is precisely when somebody clicks again — so a slow answer billed twice and the second call overwrote the first. The guard is the part that matters; the counter only stops it LOOKING broken. |
+| `aiReadRender(b, versionCount)` | 12328 | One renderer for a stored briefing and a freshly written one, so a re-read cannot come back looking different from what reopening shows. |
+| `aiReadShowError(code)` | 12353 | Shows an AI error code, in words, in the AI panel body. |
+| `showAiReadHistory()` | 12359 | Every briefing ever written for this ticket — nothing is overwritten. |
+| `showAiPanel(title, html)` | 12379 | Opens the shared AI panel with a title and body HTML, building it on first use. |
+| `closeAiPanel()` | 12400 | Closes the shared AI panel. |
+| `aiErrorText(code)` | 12406 | Every failure this can have, said in words rather than as a code. |
 
 ## API endpoints it calls
 
@@ -529,5 +529,8 @@ Inbox JavaScript - Service Desk Ticketing System
 ## Traps
 
 > [!WARNING]
-> **Line 11234:** on a phone the strip picker opens inside the Links sheet, which
+> **Line 9457:** escape the WHOLE answer first, then add markup. The answer is model
+
+> [!WARNING]
+> **Line 11241:** on a phone the strip picker opens inside the Links sheet, which
 

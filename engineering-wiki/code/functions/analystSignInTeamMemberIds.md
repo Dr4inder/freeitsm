@@ -10,7 +10,7 @@ Defined in [includes/analyst_signin.php](/code/files/includes/analyst_signin.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$teamId` | `int` |  |  |
 
 **Returns:** `array`

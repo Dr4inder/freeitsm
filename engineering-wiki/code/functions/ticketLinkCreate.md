@@ -16,8 +16,8 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$sourceId` | `int` |  |  |
 | `$targetId` | `int` |  |  |
 | `$uiRelation` | `string` |  |  |

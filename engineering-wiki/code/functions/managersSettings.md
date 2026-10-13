@@ -10,7 +10,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 6
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

@@ -10,7 +10,7 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 170.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$d` | `array` |  |  |
 
 **Returns:** `void`

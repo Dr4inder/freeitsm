@@ -225,8 +225,8 @@ function ruleForTask(PDO $conn, int $taskId): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -256,8 +256,8 @@ function onTaskClosed(PDO $conn, int $taskId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$taskId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$taskId` | `int` |  | The id of the task. *([standard](/handbook/standard-parameters.md))* |
 
 **Called from:** [includes/services/tasks.php](/code/files/includes/services/tasks.php.md)
 
@@ -284,7 +284,7 @@ function runDue(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$today` | `?string` | `null` |  |
 | `$capPerSeries` | `int` | `24` |  |
 | `$onlyRecurrenceIds` | `?array` | `null` |  |
@@ -327,7 +327,7 @@ function project(PDO $conn, string $from, string $to, int $capPerSeries = 60): a
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$from` | `string` |  |  |
 | `$to` | `string` |  |  |
 | `$capPerSeries` | `int` | `60` |  |
@@ -352,7 +352,7 @@ function deactivate(PDO $conn, int $recurrenceId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recurrenceId` | `int` |  |  |
 
 **Database**
@@ -373,7 +373,7 @@ function occurrenceExistsFor(PDO $conn, int $recurrenceId, string $due): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recurrenceId` | `int` |  |  |
 | `$due` | `string` |  |  |
 
@@ -492,7 +492,7 @@ function taskRow(PDO $conn, int $id): ?array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -513,7 +513,7 @@ function latestOccurrence(PDO $conn, int $recurrenceId): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$recurrenceId` | `int` |  |  |
 
 **Database**
@@ -539,7 +539,7 @@ function createOccurrence(PDO $conn, int $sourceTaskId, array $rule, string $due
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$sourceTaskId` | `int` |  |  |
 | `$rule` | `array` |  |  |
 | `$due` | `string` |  |  |
@@ -574,7 +574,7 @@ function defaultOpenStatusId(PDO $conn): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 

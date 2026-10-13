@@ -36,7 +36,7 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$eventTrigger` | `string` |  |  |
 | `$recipientEmail` | `?string` | `null` |  |
 

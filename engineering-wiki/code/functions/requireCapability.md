@@ -11,7 +11,7 @@ Defined in [includes/rbac.php](/code/files/includes/rbac.php.md), line 107.
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$capability` | `string` |  |  |
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

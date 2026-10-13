@@ -15,7 +15,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 596
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analystId` | `?int` | `null` | omit to skip access checks (returns the session value or the default tenant). |
 
 **Returns:** `int`

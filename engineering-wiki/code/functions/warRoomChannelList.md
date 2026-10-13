@@ -14,8 +14,8 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 122
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$includeArchived` | `bool` | `false` |  |
 
 **Returns:** array<int,array{id:int,kind:string,name:string,topic:?string, is_private:bool,archived:bool,unread:int,members:?int}>

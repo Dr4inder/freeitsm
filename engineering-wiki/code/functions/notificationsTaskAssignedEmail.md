@@ -25,7 +25,7 @@ Defined in [includes/notifications_router.php](/code/files/includes/notification
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$payload` | `array` |  |  |
 | `$actorId` | `int` |  |  |
 | `$actorName` | `?string` |  |  |

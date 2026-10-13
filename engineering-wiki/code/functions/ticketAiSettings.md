@@ -16,7 +16,7 @@ Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

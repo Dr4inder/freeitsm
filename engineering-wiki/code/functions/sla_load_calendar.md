@@ -10,7 +10,7 @@ Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 346.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$calendar_id` | `int` |  |  |
 
 **Returns:** `?array`

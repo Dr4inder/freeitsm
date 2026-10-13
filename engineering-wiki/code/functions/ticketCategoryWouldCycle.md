@@ -13,7 +13,7 @@ Defined in [includes/ticket_categories.php](/code/files/includes/ticket_categori
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 | `$parentId` | `?int` |  |  |
 

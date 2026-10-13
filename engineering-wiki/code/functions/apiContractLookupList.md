@@ -10,7 +10,7 @@ Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contrac
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$table` | `string` |  |  |
 
 **Returns:** `void`

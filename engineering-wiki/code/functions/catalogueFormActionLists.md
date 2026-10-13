@@ -15,7 +15,7 @@ Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_app
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 
 **Returns:** array{submitted: ?array, approved: ?array, rejected: ?array}

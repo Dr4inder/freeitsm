@@ -11,7 +11,7 @@ Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$r` | `array` |  |  |
-| `$analystId` | `int` |  |  |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

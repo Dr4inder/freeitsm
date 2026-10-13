@@ -16,7 +16,7 @@ Defined in [includes/domains/scheduler.php](/code/files/includes/domains/schedul
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$budgetSeconds` | `float` | `240` |  |
 | `$includeWatches` | `bool` | `true` |  |
 

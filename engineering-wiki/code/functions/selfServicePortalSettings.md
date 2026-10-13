@@ -12,7 +12,7 @@ Defined in [includes/self_service_settings.php](/code/files/includes/self_servic
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** array{ logo_path:string, header_colour:string, table_header_colour:string, background_pattern:string, allow_self_close:bool, show_my_assets:bool
 

@@ -20,7 +20,7 @@ Defined in [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticketId` |  |  |  |
 | `$mailbox` |  |  |  |
 | `$to` |  |  |  |

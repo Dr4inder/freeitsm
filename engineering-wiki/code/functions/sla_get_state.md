@@ -12,7 +12,7 @@ Defined in [includes/sla.php](/code/files/includes/sla.php.md), line 36.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$ticket_id` | `int` |  |  |
 
 **Returns:** `array`

@@ -10,7 +10,7 @@ Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 

@@ -1,6 +1,6 @@
 # assets/js/knowledge.js
 
-> JavaScript - 3776 lines
+> JavaScript - 3781 lines
 
 Knowledge Base JavaScript
 
@@ -152,20 +152,20 @@ Knowledge Base JavaScript
 | `closeAiChat()` | 3344 | Closes the AI chat panel. |
 | `askAi()` | 3350 | Sends the typed question to ai_chat.php and adds the answer, or the error, to the chat panel. |
 | `formatAiResponse(text, articlesList)` | 3426 | Turns the AI's answer into HTML - quoted article titles become links to the articles, and simple Markdown becomes bold, italics, code, paragraphs and lists. |
-| `kbFolderOptions(selectedId)` | 3526 | Returns the option HTML for a folder picker, indented by depth with the given folder pre-selected. |
-| `walk(parent, depth)` | 3529 | Walks the folders from a parent, adding an indented option for each one in name order. |
-| `kbMoveCurrentArticle()` | 3544 | Opens the move dialog for the article being read, pre-selected to its current folder. |
-| `kbCloseMoveModal()` | 3556 | Closes the move dialog. |
-| `kbConfirmMoveArticle()` | 3562 | Moves the article being read to the chosen folder through the same action as a drag. |
-| `mountEditorDocuments()` | 3586 | The documents panel inside the EDITOR — where attaching actually happens. |
-| `openAuditModal(type, id, name)` | 3638 | Opens the history dialog for a folder or an article and loads its entries. |
-| `closeAuditModal()` | 3652 | Closes the history dialog. |
-| `openArticleAuditModal()` | 3659 | The current article's history, from the article itself. |
-| `auditLoad()` | 3665 | Fetches the history entries for the folder or article in the history dialog and draws them. |
-| `renderAuditEntry(e)` | 3694 | One line of history. |
-| `renderAuditDetail(e)` | 3726 | The detail blob, in words where we understand it. |
-| `principalLabel(raw)` | 3757 | "team:21" -> "Team 21" is useless; resolve what we can from what is loaded. |
-| `formatDateTime(dateStr)` | 3772 | A stored timestamp as a date AND a time in the reader's zone. |
+| `kbFolderOptions(selectedId)` | 3531 | Returns the option HTML for a folder picker, indented by depth with the given folder pre-selected. |
+| `walk(parent, depth)` | 3534 | Walks the folders from a parent, adding an indented option for each one in name order. |
+| `kbMoveCurrentArticle()` | 3549 | Opens the move dialog for the article being read, pre-selected to its current folder. |
+| `kbCloseMoveModal()` | 3561 | Closes the move dialog. |
+| `kbConfirmMoveArticle()` | 3567 | Moves the article being read to the chosen folder through the same action as a drag. |
+| `mountEditorDocuments()` | 3591 | The documents panel inside the EDITOR — where attaching actually happens. |
+| `openAuditModal(type, id, name)` | 3643 | Opens the history dialog for a folder or an article and loads its entries. |
+| `closeAuditModal()` | 3657 | Closes the history dialog. |
+| `openArticleAuditModal()` | 3664 | The current article's history, from the article itself. |
+| `auditLoad()` | 3670 | Fetches the history entries for the folder or article in the history dialog and draws them. |
+| `renderAuditEntry(e)` | 3699 | One line of history. |
+| `renderAuditDetail(e)` | 3731 | The detail blob, in words where we understand it. |
+| `principalLabel(raw)` | 3762 | "team:21" -> "Team 21" is useless; resolve what we can from what is loaded. |
+| `formatDateTime(dateStr)` | 3777 | A stored timestamp as a date AND a time in the reader's zone. |
 
 ## API endpoints it calls
 
@@ -177,4 +177,9 @@ Knowledge Base JavaScript
 ## Loaded by
 
 - [knowledge/index.php](/code/files/knowledge/index.php.md)
+
+## Traps
+
+> [!WARNING]
+> **Line 3427:** escape the WHOLE answer first, then add markup. The answer is model
 

@@ -39,8 +39,8 @@ function assertScope(PDO $conn, ActorContext $ctx, array $row): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$row` | `array` |  |  |
 
 ### resolveTenantForCreate
@@ -59,8 +59,8 @@ function resolveTenantForCreate(PDO $conn, ActorContext $ctx, array $in): ?int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 ### assertSameCompany
@@ -75,7 +75,7 @@ function assertSameCompany(PDO $conn, int $aId, int $bId, string $what): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$aId` | `int` |  |  |
 | `$bId` | `int` |  |  |
 | `$what` | `string` |  |  |
@@ -98,8 +98,8 @@ function saveObject(PDO $conn, ActorContext $ctx, array $in): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Called from:** [api/cmdb/save_object.php](/code/files/api/cmdb/save_object.php.md), [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
@@ -116,8 +116,8 @@ function createObject(PDO $conn, ActorContext $ctx, array $in): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$in` | `array` |  |  |
 
 **Database**
@@ -140,8 +140,8 @@ function updateObject(PDO $conn, ActorContext $ctx, int $objectId, array $in): i
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$objectId` | `int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -164,8 +164,8 @@ function deleteObject(PDO $conn, ActorContext $ctx, int $objectId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$objectId` | `int` |  |  |
 
 **Database**
@@ -195,8 +195,8 @@ function createRelationship(PDO $conn, ActorContext $ctx, int $fromId, array $in
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$fromId` | `int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -222,8 +222,8 @@ function deleteRelationship(PDO $conn, ActorContext $ctx, int $relId, ?int $obje
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$relId` | `int` |  |  |
 | `$objectId` | `?int` | `null` |  |
 
@@ -249,7 +249,7 @@ function tenantOf(PDO $conn, int $id): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -278,8 +278,8 @@ function assertObjectRefsInCompany(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ctx` | `ActorContext` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ctx` | `ActorContext` |  | Who is acting, which companies they may reach, ui or api, and their language. *([standard](/handbook/standard-parameters.md))* |
 | `$classId` | `int` |  |  |
 | `$values` | `array` |  |  |
 | `$ownTenant` | `?int` |  |  |
@@ -296,7 +296,7 @@ function loadObjectRow(PDO $conn, int $id): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$id` | `int` |  |  |
 
 **Database**
@@ -325,7 +325,7 @@ function classDefs(PDO $conn, int $classId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$classId` | `int` |  |  |
 
 **Database**
@@ -364,7 +364,7 @@ function normaliseProperties(PDO $conn, int $classId, array $in): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$classId` | `int` |  |  |
 | `$in` | `array` |  |  |
 
@@ -386,7 +386,7 @@ function propertyOptionValues(PDO $conn, int $propertyId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$propertyId` | `int` |  |  |
 
 **Database**
@@ -411,7 +411,7 @@ function writeProperties(PDO $conn, int $objectId, int $classId, array $values):
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$objectId` | `int` |  |  |
 | `$classId` | `int` |  |  |
 | `$values` | `array` |  |  |
@@ -428,7 +428,7 @@ function checkRequired(PDO $conn, int $classId, array $values, bool $isCreate): 
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$classId` | `int` |  |  |
 | `$values` | `array` |  |  |
 | `$isCreate` | `bool` |  |  |
@@ -445,7 +445,7 @@ function validateParent(PDO $conn, ?int $objectId, ?int $parentId): void
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$objectId` | `?int` |  |  |
 | `$parentId` | `?int` |  |  |
 
@@ -468,7 +468,7 @@ function descendantIds(PDO $conn, int $rootId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$rootId` | `int` |  |  |
 
 **Database**

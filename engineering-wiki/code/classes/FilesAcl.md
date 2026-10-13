@@ -93,7 +93,7 @@ function tree(PDO $conn): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -115,8 +115,8 @@ function teamIds(PDO $conn, int $analystId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -136,8 +136,8 @@ function levels(PDO $conn, int $analystId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -159,8 +159,8 @@ function level(PDO $conn, int $analystId, int $folderId): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$folderId` | `int` |  |  |
 
 **Called from:** [api/files/download.php](/code/files/api/files/download.php.md), [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [api/files/properties.php](/code/files/api/files/properties.php.md), [api/files/transfer.php](/code/files/api/files/transfer.php.md), [api/files/view.php](/code/files/api/files/view.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md)
@@ -177,8 +177,8 @@ function can(PDO $conn, int $analystId, int $folderId, int $need): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$folderId` | `int` |  |  |
 | `$need` | `int` |  |  |
 
@@ -194,7 +194,7 @@ function entries(PDO $conn, int $folderId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$folderId` | `int` |  |  |
 
 **Database**
@@ -217,7 +217,7 @@ function watermark(PDO $conn, int $folderId): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$folderId` | `int` |  |  |
 
 **Called from:** [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [api/files/view.php](/code/files/api/files/view.php.md)
@@ -234,7 +234,7 @@ function path(PDO $conn, ?int $folderId): string
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$folderId` | `?int` |  |  |
 
 **Called from:** [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/list.php](/code/files/api/files/list.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [api/files/properties.php](/code/files/api/files/properties.php.md), [api/files/recent.php](/code/files/api/files/recent.php.md), [api/files/search.php](/code/files/api/files/search.php.md), [api/files/settings.php](/code/files/api/files/settings.php.md), [api/files/shortcut.php](/code/files/api/files/shortcut.php.md), [api/files/transfer.php](/code/files/api/files/transfer.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), [includes/files/audit.php](/code/files/includes/files/audit.php.md)
@@ -251,7 +251,7 @@ function descendants(PDO $conn, int $folderId): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$folderId` | `int` |  |  |
 
 **Called from:** [api/files/properties.php](/code/files/api/files/properties.php.md), [api/files/transfer.php](/code/files/api/files/transfer.php.md)

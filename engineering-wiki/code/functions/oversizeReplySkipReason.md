@@ -15,7 +15,7 @@ Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limi
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailboxId` | `int` |  |  |
 | `$from` | `string` |  |  |
 | `$mailboxAddress` | `string` |  |  |

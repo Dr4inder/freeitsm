@@ -16,7 +16,7 @@ Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$domainId` | `int` |  |  |
 | `$name` | `string` |  |  |
 | `$resolver` | `string` | `'auto'` |  |

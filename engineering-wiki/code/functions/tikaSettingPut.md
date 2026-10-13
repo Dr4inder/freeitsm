@@ -10,7 +10,7 @@ Defined in [api/system/tika_settings.php](/code/files/api/system/tika_settings.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$key` | `string` |  |  |
 | `$value` | `string` |  |  |
 

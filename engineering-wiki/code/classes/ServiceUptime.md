@@ -32,7 +32,7 @@ function defaultWindowDays(PDO $conn): int
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -54,7 +54,7 @@ function shownInPortal(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -79,7 +79,7 @@ function incidentsFor(PDO $conn, int $serviceId, int $windowDays): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$serviceId` | `int` |  |  |
 | `$windowDays` | `int` |  |  |
 
@@ -110,7 +110,7 @@ function updateLogAvailable(PDO $conn): bool
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Database**
 
@@ -147,7 +147,7 @@ function segmentsFor(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$incidentId` | `int` |  |  |
 | `$serviceId` | `int` |  |  |
 | `$incidentStart` | `string` |  |  |
@@ -183,7 +183,7 @@ function summaryFor(PDO $conn, int $serviceId, int $windowDays): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$serviceId` | `int` |  |  |
 | `$windowDays` | `int` |  |  |
 
@@ -208,7 +208,7 @@ function dailyStrip(PDO $conn, int $serviceId, int $windowDays): array
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$serviceId` | `int` |  |  |
 | `$windowDays` | `int` |  |  |
 
@@ -234,7 +234,7 @@ function incidentsBetween(PDO $conn, int $serviceId, string $fromUtc, string $to
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$serviceId` | `int` |  |  |
 | `$fromUtc` | `string` |  |  |
 | `$toUtc` | `string` |  |  |
@@ -266,7 +266,7 @@ function summaryBetween(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$serviceId` | `int` |  |  |
 | `$fromUtc` | `string` |  |  |
 | `$toUtc` | `string` |  |  |
@@ -295,7 +295,7 @@ function dailyStripBetween(
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$serviceId` | `int` |  |  |
 | `$fromDate` | `string` |  |  |
 | `$toDate` | `string` |  |  |

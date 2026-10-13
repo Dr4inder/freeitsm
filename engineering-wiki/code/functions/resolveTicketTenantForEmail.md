@@ -32,7 +32,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 105
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailboxId` |  |  | the importing mailbox's id |
 | `$fromAddress` | `string` |  | the sender's email address |
 

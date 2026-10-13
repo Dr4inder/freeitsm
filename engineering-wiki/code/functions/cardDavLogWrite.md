@@ -37,7 +37,7 @@ Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$providerId` | `int` |  |  |
 | `$userId` | `?int` |  |  |
 | `$displayName` | `string` |  |  |
@@ -46,7 +46,7 @@ Defined in [includes/carddav_write.php](/code/files/includes/carddav_write.php.m
 | `$status` | `?int` |  |  |
 | `$response` | `string` |  |  |
 | `$message` | `string` |  |  |
-| `$analystId` | `?int` |  |  |
+| `$analystId` | `?int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `void`
 

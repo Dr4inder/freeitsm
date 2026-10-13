@@ -27,7 +27,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 100
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$email` | `string` |  |  |
 
 **Returns:** int|null a tenant id, or NULL meaning "company not known".

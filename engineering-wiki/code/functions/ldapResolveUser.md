@@ -35,7 +35,7 @@ Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 693.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$provider` | `array` |  |  |
 | `$ldapUser` | `array` |  |  |
 

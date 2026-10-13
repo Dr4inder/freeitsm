@@ -14,8 +14,8 @@ Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$ticketId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$ticketId` | `int` |  | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 | `$maxBody` | `int` | `SEARCH_INDEX_MAX_BODY` |  |
 
 **Returns:** array{tickets:int,emails:int,notes:int,attachments:int,skipped:int}

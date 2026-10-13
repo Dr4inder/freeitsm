@@ -10,7 +10,7 @@ Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

@@ -20,13 +20,13 @@ Defined in [includes/mailbox_send.php](/code/files/includes/mailbox_send.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailbox` | `array` |  |  |
 | `$to` | `string` |  |  |
 | `$subject` | `string` |  |  |
 | `$htmlBody` | `string` |  |  |
 | `$route` | `string` |  |  |
-| `$ticketId` | `?int` | `null` |  |
+| `$ticketId` | `?int` | `null` | The id of the ticket. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `?string`
 

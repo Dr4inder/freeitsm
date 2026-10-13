@@ -9,6 +9,6 @@ Written by the scanner from FreeITSM's own code - do not edit these pages, they 
 | [Functions](/code/functions/index.md) | 2624 |
 | [Classes](/code/classes/index.md) | 67 |
 | [Database tables](/code/tables/index.md) | 371 |
-| [Traps](/code/traps.md) | 44 |
+| [Traps](/code/traps.md) | 46 |
 
 How to make these pages say more: [[handbook/comments|Writing comments for the wiki]].

@@ -16,7 +16,7 @@ Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$conversationId` | `int` |  |  |
 | `$sender` | `string` |  |  |
 | `$body` | `string` |  |  |

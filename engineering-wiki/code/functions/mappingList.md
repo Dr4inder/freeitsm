@@ -10,7 +10,7 @@ Defined in [api/integrations/get_mapping.php](/code/files/api/integrations/get_m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$sql` | `string` |  |  |
 
 **Returns:** `array`

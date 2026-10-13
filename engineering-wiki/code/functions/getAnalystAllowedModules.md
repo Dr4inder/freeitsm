@@ -13,7 +13,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$analyst_id` |  |  |  |
 
 ## Database

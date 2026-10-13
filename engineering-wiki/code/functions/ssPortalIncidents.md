@@ -13,7 +13,7 @@ Defined in [includes/service_status_portal.php](/code/files/includes/service_sta
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$limit` | `int` | `25` |  |
 
 **Returns:** `array`

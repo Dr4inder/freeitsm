@@ -10,8 +10,8 @@ Defined in [includes/projects/nudges.php](/code/files/includes/projects/nudges.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$projectId` | `?int` | `null` |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$projectId` | `?int` | `null` | The id of the project. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `int`
 

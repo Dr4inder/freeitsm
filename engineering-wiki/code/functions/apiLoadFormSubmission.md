@@ -10,7 +10,7 @@ Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$formId` | `int` |  |  |
 | `$submissionId` | `int` |  |  |
 

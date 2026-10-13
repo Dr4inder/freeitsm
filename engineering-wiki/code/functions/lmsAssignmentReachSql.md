@@ -27,7 +27,7 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$learner` | `LmsLearner` |  |  |
 
 **Returns:** array{0:string,1:array}

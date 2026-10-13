@@ -26,7 +26,7 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$actorId` | `int` |  |  |
 | `$splitId` | `int` |  |  |
 

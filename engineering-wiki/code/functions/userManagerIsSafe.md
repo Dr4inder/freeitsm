@@ -16,7 +16,7 @@ Defined in [includes/users.php](/code/files/includes/users.php.md), line 391.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$userId` | `int` |  |  |
 | `$managerId` | `?int` |  |  |
 

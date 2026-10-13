@@ -15,8 +15,8 @@ Defined in [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$analystId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$analystId` | `int` |  | The analyst doing this - normally the one signed in. *([standard](/handbook/standard-parameters.md))* |
 | `$model` | `?string` |  |  |
 | `$sizeBytes` |  |  |  |
 

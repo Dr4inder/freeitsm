@@ -10,7 +10,7 @@ Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 2
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$scope` | `string` | `'login'` |  |
 
 **Returns:** `array`

@@ -21,7 +21,7 @@ Defined in [api/change-management/send_share_email.php](/code/files/api/change-m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` |  |  |  |
+| `$conn` |  |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$mailboxId` |  |  |  |
 | `$toEmail` |  |  |  |
 | `$subject` |  |  |  |

@@ -10,7 +10,7 @@ Defined in [includes/csat.php](/code/files/includes/csat.php.md), line 231.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$responseId` | `int` |  |  |
 | `$channelId` | `int` |  |  |
 | `$from` | `string` |  |  |

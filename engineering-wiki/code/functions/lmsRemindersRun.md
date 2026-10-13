@@ -10,7 +10,7 @@ Defined in [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$dryRun` | `bool` | `false` | true to work out what WOULD be sent and send nothing — which is what the settings screen shows before you switch the feature on. Nobody should have to turn on a mail merge to find out how big it is. |
 
 **Returns:** array{would:int,sent:int,skipped:int,unreachable:int,failed:int,capped:bool}

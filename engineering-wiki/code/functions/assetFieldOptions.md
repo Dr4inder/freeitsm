@@ -10,7 +10,7 @@ Defined in [api/assets/get_asset_custom_fields.php](/code/files/api/assets/get_a
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$fieldId` | `int` |  |  |
 
 **Returns:** `array`

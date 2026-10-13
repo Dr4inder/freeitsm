@@ -21,7 +21,7 @@ Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permis
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$target` | `string` |  |  |
 
 **Returns:** `void`

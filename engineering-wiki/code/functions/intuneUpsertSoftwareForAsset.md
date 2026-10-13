@@ -10,8 +10,8 @@ Defined in [includes/intune.php](/code/files/includes/intune.php.md), line 702.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
-| `$assetId` | `int` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
+| `$assetId` | `int` |  | The id of the asset. *([standard](/handbook/standard-parameters.md))* |
 | `$apps` | `array` |  |  |
 
 **Returns:** `int`

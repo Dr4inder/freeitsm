@@ -21,7 +21,7 @@ Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.m
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$preset` | `string` |  | three_hours \| tonight \| tomorrow \| next_week \| custom |
 | `$customLocal` | `?string` |  | 'Y-m-d H:i' in the analyst's zone, required when `$preset` is custom |
 | `$localZone` | `string` |  |  |

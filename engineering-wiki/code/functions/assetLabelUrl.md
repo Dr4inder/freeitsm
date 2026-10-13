@@ -25,7 +25,7 @@ Defined in [includes/asset_labels.php](/code/files/includes/asset_labels.php.md)
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$token` | `string` |  |  |
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

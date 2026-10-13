@@ -32,7 +32,7 @@ final class EwScanner
     private const SKIP_DIRS = ['.git', 'vendor', 'node_modules', 'engineering-wiki', 'lang', 'tests', 'local', 'docs',
                                'database', 'uploads', 'recordings', 'logs', 'data', 'cache', 'tmp', 'releases', 'samples', 'system-wiki',
                                'tinymce'];   // third-party editor - not ours to document
-    private const VERSION = 7;   // bump when the parse output changes shape - forces a full re-read
+    private const VERSION = 9;   // bump when the parse output changes shape - forces a full re-read
 
     private string $app;
     private string $out;
@@ -462,7 +462,16 @@ final class EwScanner
                 if ($depth === 0 && $tid === ')') { if ($cur['name'] !== '') $params[] = $cur; return [$this->tidyParams($params), $k]; }
             }
             if ($depth === 1 && $tid === ',') { if ($cur['name'] !== '') $params[] = $cur; $cur = ['type' => '', 'name' => '', 'default' => '', 'ref' => false, 'variadic' => false]; $inDefault = false; continue; }
-            if (in_array($tid, [T_COMMENT, T_DOC_COMMENT], true)) continue;
+            if (in_array($tid, [T_COMMENT, T_DOC_COMMENT], true)) {
+                // A comment on a parameter's own line is its meaning: after the comma it
+                // belongs to the parameter just finished, before it to the current one.
+                if ($depth === 1 && $tid === T_COMMENT) {
+                    $note = trim(preg_replace(['#^//+\s?#', '#^/\*+\s?#', '#\s*\*+/$#'], '', trim($tx)));
+                    if ($cur['name'] !== '') $cur['note'] = trim(($cur['note'] ?? '') . ' ' . $note);
+                    elseif ($params) $params[count($params) - 1]['note'] = trim(($params[count($params) - 1]['note'] ?? '') . ' ' . $note);
+                }
+                continue;
+            }
             if ($inDefault) { $cur['default'] .= $tx; continue; }
             if ($depth === 1 && $tid === '=') { $inDefault = true; continue; }
             if ($tid === T_VARIABLE) { $cur['name'] = $tx; continue; }
@@ -478,7 +487,7 @@ final class EwScanner
     private function tidyParams(array $ps): array
     {
         return array_map(fn($p) => ['type' => trim($p['type']), 'name' => $p['name'], 'default' => trim(preg_replace('/\s+/', ' ', $p['default'])),
-                                    'ref' => $p['ref'], 'variadic' => $p['variadic']], $ps);
+                                    'ref' => $p['ref'], 'variadic' => $p['variadic'], 'note' => $p['note'] ?? ''], $ps);
     }
 
     /** Work out the file an include points at: string pieces, __DIR__, dirname(__DIR__[, n]). */
@@ -893,9 +902,33 @@ final class EwScanner
         $out = "| Parameter | Type | Default | Meaning |\n|---|---|---|---|\n";
         foreach ($fn['params'] as $p) {
             $out .= '| ' . $this->code(($p['variadic'] ? '...' : '') . $p['name']) . ' | ' . ($p['type'] !== '' ? $this->code($p['type']) : '') . ' | '
-                . ($p['default'] !== '' ? $this->code($p['default']) : '') . ' | ' . $this->cell($this->prose($descr[$p['name']] ?? '')) . " |\n";
+                . ($p['default'] !== '' ? $this->code($p['default']) : '') . ' | ' . $this->cell($this->prose($descr[$p['name']] ?? (($p['note'] ?? '') !== '' ? $p['note'] : $this->standardParam($p, (string)($fn['file'] ?? ''))))) . " |\n";
         }
         return $out . "\n";
+    }
+
+    /**
+     * The meaning of a parameter that means the same everywhere (handbook/standard-parameters.md),
+     * used only when the function's own comment says nothing about it. Marked "standard" so a
+     * reader knows where it came from.
+     */
+    private function standardParam(array $p, string $file): string
+    {
+        $type = ltrim($p['type'], '?\\');   // "?int" and "\PDO" read as int / PDO
+        $api = strpos($file, 'api/v1/') === 0;
+        $m = null;
+        switch ($p['name']) {
+            case '$conn':      if ($type === 'PDO' || $type === '') $m = 'The database connection.'; break;
+            case '$analystId': if ($type === 'int') $m = 'The analyst doing this - normally the one signed in.'; break;
+            case '$ctx':       if ($type === 'ActorContext') $m = 'Who is acting, which companies they may reach, ui or api, and their language.'; break;
+            case '$tenantId':  if ($type === 'int') $m = 'A company (tenant) id; null means the Default company.'; break;
+            case '$projectId': case '$ticketId': case '$taskId': case '$assetId':
+                if ($type === 'int') $m = 'The id of the ' . substr($p['name'], 1, -2) . '.'; break;
+            case '$apiKey':    if ($api && $type === 'array') $m = 'The API key that authenticated the call - its scopes and company limit.'; break;
+            case '$params':    if ($api && $type === 'array') $m = 'The ids captured from the URL path, in order, as integers.'; break;
+            case '$body':      if ($api && $type === 'array') $m = 'The request\'s JSON body, decoded.'; break;
+        }
+        return $m === null ? '' : $m . ' *([standard](/handbook/standard-parameters.md))*';
     }
 
     /** The doc comment's tags of the wanted kinds, as [tag, value] pairs. */

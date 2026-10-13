@@ -10,7 +10,7 @@ Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.p
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `?PDO` | `null` |  |
+| `$conn` | `?PDO` | `null` | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `string`
 

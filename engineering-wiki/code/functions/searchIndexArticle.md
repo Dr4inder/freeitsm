@@ -26,7 +26,7 @@ Defined in [includes/search/indexer.php](/code/files/includes/search/indexer.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$articleId` | `int` |  |  |
 | `$maxBody` | `int` | `SEARCH_INDEX_MAX_BODY` |  |
 

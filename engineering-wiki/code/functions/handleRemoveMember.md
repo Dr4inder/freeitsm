@@ -10,7 +10,7 @@ Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$input` | `array` |  |  |
 
 **Returns:** `void`

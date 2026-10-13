@@ -20,7 +20,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 113
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 | `$channelId` |  |  | the receiving channel's id |
 | `$fromIdentifier` | `string` |  | the sender's phone, normalised ('+digits') |
 

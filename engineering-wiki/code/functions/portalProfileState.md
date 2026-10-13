@@ -10,7 +10,7 @@ Defined in [api/system/portal_profile.php](/code/files/api/system/portal_profile
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$conn` | `PDO` |  |  |
+| `$conn` | `PDO` |  | The database connection. *([standard](/handbook/standard-parameters.md))* |
 
 **Returns:** `array`
 
