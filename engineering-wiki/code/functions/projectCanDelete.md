@@ -1,0 +1,29 @@
+# projectCanDelete()
+
+Deleting is never "anyone": the project manager, its creator, or Manage Projects.
+
+```php
+function projectCanDelete(PDO $conn, int $analystId, array $project): bool
+```
+
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 430.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$project` | `array` |  |  |
+
+**Returns:** `bool`
+
+## Calls
+
+[projectIsManager()](/code/functions/projectIsManager.md)
+
+## Called from
+
+- [api/projects/get.php](/code/files/api/projects/get.php.md)
+- [api/projects/reports.php](/code/files/api/projects/reports.php.md)
+- [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) - in `ProjectReportsService::approve`, `ProjectReportsService::delete`, `ProjectReportsService::send`
+- [includes/services/projects.php](/code/files/includes/services/projects.php.md) - in `ProjectsService::deleteProject`
+

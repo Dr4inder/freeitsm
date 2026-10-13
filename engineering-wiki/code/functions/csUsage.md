@@ -1,0 +1,28 @@
+# csUsage()
+
+How many events and analysts depend on one connection.
+
+```php
+function csUsage(PDO $conn, int $connectionId): array
+```
+
+Defined in [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md), line 51.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$connectionId` | `int` |  |  |
+
+**Returns:** array{mapped:int, pushing:int}
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 53 | `csUsage` | read [calendar_sync_events](/code/tables/calendar_sync_events.md) |  |
+| 55 | `csUsage` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+
+## Called from
+
+- [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md)
+

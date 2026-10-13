@@ -1,0 +1,37 @@
+# sendTemplateEmail()
+
+Main entry point — send a template email for a ticket event. Returns silently if no active template exists or no mailbox is found. Never throws — errors go to `error_log()`.
+
+`$extraMergeData` allows callers (e.g. the CSAT flow) to inject additional
+placeholders like `csat_link` that aren't derivable from the ticket alone.
+
+```php
+function sendTemplateEmail(
+    PDO $conn,
+    int $ticketId,
+    string $eventTrigger,
+    array $extraMergeData = []
+): void
+```
+
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 41.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ticketId` | `int` |  |  |
+| `$eventTrigger` | `string` |  |  |
+| `$extraMergeData` | `array` | `[]` |  |
+
+**Returns:** `void`
+
+## Calls
+
+[buildTemplateEmailBody()](/code/functions/buildTemplateEmailBody.md), [buildTicketMergeData()](/code/functions/buildTicketMergeData.md), [emailLogFailed()](/code/functions/emailLogFailed.md), [emailLogSent()](/code/functions/emailLogSent.md), [emailLogSkipped()](/code/functions/emailLogSkipped.md), [gmailGetValidAccessToken()](/code/functions/gmailGetValidAccessToken.md), [gmailSendEmail()](/code/functions/gmailSendEmail.md), [imapSmtpSend()](/code/functions/imapSmtpSend.md), [resolveMergeCodes()](/code/functions/resolveMergeCodes.md), [templateEventAudience()](/code/functions/templateEventAudience.md), [templateGetMailboxForTicket()](/code/functions/templateGetMailboxForTicket.md), [templateGraphContext()](/code/functions/templateGraphContext.md), [templateSaveSentEmail()](/code/functions/templateSaveSentEmail.md), [templateSelectForRecipient()](/code/functions/templateSelectForRecipient.md), [templateSendViaGraph()](/code/functions/templateSendViaGraph.md)
+
+## Called from
+
+- [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md)
+- [includes/csat.php](/code/files/includes/csat.php.md) - in [sendCsatSurvey()](/code/functions/sendCsatSurvey.md)
+- [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) - in `TicketsService::updateTicket`, `TicketsService::createNote`
+

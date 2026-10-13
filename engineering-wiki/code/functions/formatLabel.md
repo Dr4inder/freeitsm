@@ -1,0 +1,17 @@
+# formatLabel()
+
+```php
+function formatLabel($raw, $timeGrouping)
+```
+
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 228.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$raw` |  |  |  |
+| `$timeGrouping` |  |  |  |
+
+## Called from
+
+- [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) - in [getTimeData()](/code/functions/getTimeData.md), [getTimeWithSeries()](/code/functions/getTimeWithSeries.md), [getCreatedVsClosedData()](/code/functions/getCreatedVsClosedData.md)
+

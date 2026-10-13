@@ -1,0 +1,31 @@
+# rpFail()
+
+```php
+function rpFail(string $message, int $code = 400): void
+```
+
+Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 24.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$message` | `string` |  |  |
+| `$code` | `int` | `400` |  |
+
+**Returns:** `void`
+
+## Calls
+
+[rpOut()](/code/functions/rpOut.md)
+
+## Called from
+
+- [api/reporting/packs/block_data.php](/code/files/api/reporting/packs/block_data.php.md)
+- [api/reporting/packs/catalogue.php](/code/files/api/reporting/packs/catalogue.php.md)
+- [api/reporting/packs/context.php](/code/files/api/reporting/packs/context.php.md)
+- [api/reporting/packs/create.php](/code/files/api/reporting/packs/create.php.md)
+- [api/reporting/packs/delete.php](/code/files/api/reporting/packs/delete.php.md)
+- [api/reporting/packs/get.php](/code/files/api/reporting/packs/get.php.md)
+- [api/reporting/packs/list.php](/code/files/api/reporting/packs/list.php.md)
+- [api/reporting/packs/save.php](/code/files/api/reporting/packs/save.php.md)
+- [api/reporting/packs/shares.php](/code/files/api/reporting/packs/shares.php.md)
+

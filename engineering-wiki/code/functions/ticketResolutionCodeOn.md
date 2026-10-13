@@ -1,0 +1,26 @@
+# ticketResolutionCodeOn()
+
+Should the resolution code field show when closing a ticket?
+
+```php
+function ticketResolutionCodeOn(PDO $conn, ?int $tenantId): bool
+```
+
+Defined in [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md), line 248.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$tenantId` | `?int` |  |  |
+
+**Returns:** `bool`
+
+## Calls
+
+[tenantSettingOn()](/code/functions/tenantSettingOn.md)
+
+## Called from
+
+- [includes/services/mandatory_fields.php](/code/files/includes/services/mandatory_fields.php.md) - in `MandatoryFieldsService::fieldAvailable`
+- [includes/tenant_settings.php](/code/files/includes/tenant_settings.php.md) - in [ticketClassificationSettings()](/code/functions/ticketClassificationSettings.md)
+

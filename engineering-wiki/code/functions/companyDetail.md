@@ -1,0 +1,33 @@
+# companyDetail()
+
+Everything about one company this analyst may see, or null.
+
+```php
+function companyDetail(PDO $conn, int $analystId, int $tenantId): ?array
+```
+
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 258.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$tenantId` | `int` |  |  |
+
+**Returns:** `?array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 269 | `companyDetail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 275 | `companyDetail` | read [users](/code/tables/users.md) |  |
+
+## Calls
+
+[analystCanAccessModule()](/code/functions/analystCanAccessModule.md), [analystCanAccessTenant()](/code/functions/analystCanAccessTenant.md), [getDefaultTenantId()](/code/functions/getDefaultTenantId.md), [getTenantById()](/code/functions/getTenantById.md), [isMultiTenant()](/code/functions/isMultiTenant.md), [peopleAssets()](/code/functions/peopleAssets.md), [peopleCompanyMatch()](/code/functions/peopleCompanyMatch.md), [peopleContracts()](/code/functions/peopleContracts.md), [peopleCoursesForCompany()](/code/functions/peopleCoursesForCompany.md), [peopleDomains()](/code/functions/peopleDomains.md), [peopleForms()](/code/functions/peopleForms.md), [peopleListRows()](/code/functions/peopleListRows.md), [peopleProjects()](/code/functions/peopleProjects.md), [peopleTickets()](/code/functions/peopleTickets.md)
+
+## Called from
+
+- [people/company.php](/code/files/people/company.php.md)
+

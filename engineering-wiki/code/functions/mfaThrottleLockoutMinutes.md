@@ -1,0 +1,24 @@
+# mfaThrottleLockoutMinutes()
+
+How long the code step stays locked, in minutes.
+
+```php
+function mfaThrottleLockoutMinutes(PDO $conn): int
+```
+
+Defined in [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md), line 96.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+
+**Returns:** `int`
+
+## Calls
+
+[mfaThrottleSetting()](/code/functions/mfaThrottleSetting.md)
+
+## Called from
+
+- [includes/mfa_throttle.php](/code/files/includes/mfa_throttle.php.md) - in [mfaThrottleRecordFailure()](/code/functions/mfaThrottleRecordFailure.md)
+

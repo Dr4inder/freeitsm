@@ -1,0 +1,31 @@
+# snoozeStateFor()
+
+Read the sleep state of one ticket for the reading pane: null when it is awake, otherwise the wake time (UTC), who put it there and why.
+
+```php
+function snoozeStateFor(PDO $conn, int $ticketId): ?array
+```
+
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 277.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ticketId` | `int` |  |  |
+
+**Returns:** `?array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 281 | `snoozeStateFor` | read [tickets](/code/tables/tickets.md), read [analysts](/code/tables/analysts.md) |  |
+
+## Calls
+
+[snoozeSchemaReady()](/code/functions/snoozeSchemaReady.md)
+
+## Called from
+
+- [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md)
+

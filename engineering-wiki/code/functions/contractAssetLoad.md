@@ -1,0 +1,32 @@
+# contractAssetLoad()
+
+One link, but only if this analyst can reach the asset on it.
+
+```php
+function contractAssetLoad(PDO $conn, int $analystId, int $linkId): array
+```
+
+Defined in [includes/contract_assets.php](/code/files/includes/contract_assets.php.md), line 217.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$linkId` | `int` |  |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 219 | `contractAssetLoad` | read [contract_assets](/code/tables/contract_assets.md) |  |
+
+## Calls
+
+[contractAssetCanReach()](/code/functions/contractAssetCanReach.md), [contractCanView()](/code/functions/contractCanView.md)
+
+## Called from
+
+- [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) - in [contractAssetSetReference()](/code/functions/contractAssetSetReference.md), [contractAssetUnlink()](/code/functions/contractAssetUnlink.md)
+

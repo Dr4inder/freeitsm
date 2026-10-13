@@ -1,0 +1,30 @@
+# webchatGetMessages()
+
+Read a conversation's transcript messages after `$afterId` (ascending).
+
+```php
+function webchatGetMessages(PDO $conn, int $conversationId, int $afterId = 0): array
+```
+
+Defined in [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md), line 402.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$conversationId` | `int` |  |  |
+| `$afterId` | `int` | `0` |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 405 | `webchatGetMessages` | read [webchat_messages](/code/tables/webchat_messages.md) |  |
+
+## Called from
+
+- [api/webchat/poll.php](/code/files/api/webchat/poll.php.md)
+- [api/webchat/send.php](/code/files/api/webchat/send.php.md)
+- [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) - in [webchatTranscriptText()](/code/functions/webchatTranscriptText.md)
+

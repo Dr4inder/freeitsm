@@ -1,0 +1,49 @@
+# emailLogSkipped()
+
+Convenience: an email that was deliberately NOT sent, and why.
+
+⚠️ THIS IS THE ONE THAT MATTERS TWELVE MONTHS LATER. When email templates are
+scoped to particular senders, a sender matching none of them gets no reply —
+which is correct, and is also indistinguishable from a fault unless somebody
+wrote it down. The scenario this exists for is a new customer domain being
+onboarded long after the templates were set up, by people who never saw the
+settings screen: without this row, the only evidence is an absence, and the
+only way to understand it is to already suspect the cause.
+
+The mailbox may legitimately be null: not sending happens before a mailbox is
+looked up, and the row is still worth having.
+
+```php
+function emailLogSkipped(
+    ?PDO $conn,
+    ?array $mailbox,
+    string $route,
+    string $to,
+    string $subject,
+    string $reason,
+    ?int $ticketId = null
+): void
+```
+
+Defined in [includes/email_log.php](/code/files/includes/email_log.php.md), line 141.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `?PDO` |  |  |
+| `$mailbox` | `?array` |  |  |
+| `$route` | `string` |  |  |
+| `$to` | `string` |  |  |
+| `$subject` | `string` |  |  |
+| `$reason` | `string` |  |  |
+| `$ticketId` | `?int` | `null` |  |
+
+**Returns:** `void`
+
+## Calls
+
+[emailLogRecord()](/code/functions/emailLogRecord.md)
+
+## Called from
+
+- [includes/template_email.php](/code/files/includes/template_email.php.md) - in [sendTemplateEmail()](/code/functions/sendTemplateEmail.md)
+

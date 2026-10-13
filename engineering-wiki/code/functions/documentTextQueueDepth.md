@@ -1,0 +1,26 @@
+# documentTextQueueDepth()
+
+How many documents are waiting for their text. Drives the "indexing" state.
+
+```php
+function documentTextQueueDepth(PDO $conn): int
+```
+
+Defined in [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), line 80.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+
+**Returns:** `int`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 83 | `documentTextQueueDepth` | read [document_text](/code/tables/document_text.md) |  |
+
+## Called from
+
+- [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md) - in [documentTextDrain()](/code/functions/documentTextDrain.md)
+

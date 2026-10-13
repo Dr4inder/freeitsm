@@ -1,0 +1,38 @@
+# assetDiskMatchCount()
+
+How many drives across the estate look like this one, and on how many assets.
+
+🔴 SCOPED TO WHAT THE ANALYST CAN SEE. This count is shown to a person before
+they press a button, so an unscoped COUNT would tell them how many machines
+another company has — the exact leak this codebase has shipped once before,
+by scoping the list and forgetting the count.
+
+```php
+function assetDiskMatchCount(PDO $conn, int $analystId, ?string $model, $sizeBytes): array
+```
+
+Defined in [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md), line 102.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$model` | `?string` |  |  |
+| `$sizeBytes` |  |  |  |
+
+**Returns:** array{drives:int,assets:int}
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 104 | `assetDiskMatchCount` | read [asset_physical_disks](/code/tables/asset_physical_disks.md), read [assets](/code/tables/assets.md) |  |
+
+## Calls
+
+[activeTenantFilter()](/code/functions/activeTenantFilter.md)
+
+## Called from
+
+- [api/assets/count_matching_disks.php](/code/files/api/assets/count_matching_disks.php.md)
+

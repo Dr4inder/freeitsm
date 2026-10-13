@@ -1,0 +1,30 @@
+# ssoSaveTeamMappings()
+
+Replace a provider's group -> team rows. `$rows`: [['group' => .., 'team_id' => ..]]. Blank rows are skipped; an unknown team is refused (ServiceError).
+
+```php
+function ssoSaveTeamMappings(PDO $conn, int $providerId, array $rows): void
+```
+
+Defined in [includes/sso_claims.php](/code/files/includes/sso_claims.php.md), line 122.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$providerId` | `int` |  |  |
+| `$rows` | `array` |  |  |
+
+**Returns:** `void`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 125 | `ssoSaveTeamMappings` | read [teams](/code/tables/teams.md) |  |
+| 135 | `ssoSaveTeamMappings` | **delete** [sso_group_teams](/code/tables/sso_group_teams.md) |  |
+| 136 | `ssoSaveTeamMappings` | **insert** [sso_group_teams](/code/tables/sso_group_teams.md) (`provider_id`, `group_name`, `team_id`) |  |
+
+## Called from
+
+- [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md)
+

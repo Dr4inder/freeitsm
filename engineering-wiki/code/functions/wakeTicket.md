@@ -1,0 +1,35 @@
+# wakeTicket()
+
+Wake a ticket early. Returns true if it was actually asleep, so a caller can stay quiet rather than announcing a wake that woke nothing.
+
+```php
+function wakeTicket(PDO $conn, int $ticketId, ?int $analystId, string $why = ''): bool
+```
+
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 232.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ticketId` | `int` |  |  |
+| `$analystId` | `?int` |  |  |
+| `$why` | `string` | `''` |  |
+
+**Returns:** `bool`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 236 | `wakeTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 242 | `wakeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
+
+## Calls
+
+[snoozeAudit()](/code/functions/snoozeAudit.md), [snoozeSchemaReady()](/code/functions/snoozeSchemaReady.md)
+
+## Called from
+
+- [api/tickets/wake_ticket.php](/code/files/api/tickets/wake_ticket.php.md)
+- [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md) - in [wakeSnoozedTicketOnCustomerReply()](/code/functions/wakeSnoozedTicketOnCustomerReply.md)
+

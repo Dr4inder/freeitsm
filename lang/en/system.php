@@ -642,6 +642,11 @@ return [
         'clear'              => 'Clear',
         'empty_folder'       => 'Nothing here yet.',
         'nothing_yet'        => 'Not scanned yet.',
+        'rescan'             => 'Rescan',
+        'rescan_hint'        => 'Read the code again and rebuild the Code map - only files changed since the last scan are re-read',
+        'scanning'           => 'Scanning {done}/{total}',
+        'scan_done'          => 'Code map rebuilt: {changed} changed files, {pages} pages',
+        'scan_failed'        => 'The scan stopped: {error}',
     ],
     'db_verify' => [
         'heading'     => 'Database Verification',

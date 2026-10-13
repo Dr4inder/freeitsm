@@ -1,0 +1,31 @@
+# rpTicketsKpis()
+
+```php
+function rpTicketsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
+```
+
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 165.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$o` | `array` |  |  |
+| `$range` | `array` |  |  |
+| `$tenant` |  |  |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 169 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
+| 178 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
+
+## Calls
+
+[rpFmtDate()](/code/functions/rpFmtDate.md), [rpHumanDuration()](/code/functions/rpHumanDuration.md), [rpTicketWhere()](/code/functions/rpTicketWhere.md), [t()](/code/functions/t.md)
+
+*Nothing calls this function by name.*
+

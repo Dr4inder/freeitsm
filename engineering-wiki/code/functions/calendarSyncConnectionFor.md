@@ -1,0 +1,28 @@
+# calendarSyncConnectionFor()
+
+The connection this analyst's calendar work goes through, or null.
+
+```php
+function calendarSyncConnectionFor(PDO $conn, array $enrolment): ?array
+```
+
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 184.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$enrolment` | `array` |  |  |
+
+**Returns:** `?array`
+
+## Calls
+
+[calendarSyncLoadConnection()](/code/functions/calendarSyncLoadConnection.md), [calendarSyncOnlyConnection()](/code/functions/calendarSyncOnlyConnection.md)
+
+## Called from
+
+- [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md)
+- [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md)
+- [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md) - in [calendarSyncPullForAnalyst()](/code/functions/calendarSyncPullForAnalyst.md), [calendarSyncEnsureSubscription()](/code/functions/calendarSyncEnsureSubscription.md)
+- [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) - in [calendarSyncReconcileTicket()](/code/functions/calendarSyncReconcileTicket.md), [calendarSyncReconcileTask()](/code/functions/calendarSyncReconcileTask.md)
+

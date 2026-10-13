@@ -1,0 +1,27 @@
+# portalProfileSettingRaw()
+
+A raw system_settings value, or null when it has never been saved.
+
+```php
+function portalProfileSettingRaw(PDO $conn, string $key): ?string
+```
+
+Defined in [includes/users.php](/code/files/includes/users.php.md), line 256.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$key` | `string` |  |  |
+
+**Returns:** `?string`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 259 | `portalProfileSettingRaw` | read [system_settings](/code/tables/system_settings.md) |  |
+
+## Called from
+
+- [includes/users.php](/code/files/includes/users.php.md) - in [portalProfileEditableFields()](/code/functions/portalProfileEditableFields.md), [portalProfileAddressBookWrites()](/code/functions/portalProfileAddressBookWrites.md)
+

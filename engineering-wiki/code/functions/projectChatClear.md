@@ -1,0 +1,32 @@
+# projectChatClear()
+
+Start again: the conversation and its memory go. A shared one needs somebody who may change the project.
+
+```php
+function projectChatClear(PDO $conn, ActorContext $ctx, array $project): void
+```
+
+Defined in [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md), line 600.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ctx` | `ActorContext` |  |  |
+| `$project` | `array` |  |  |
+
+**Returns:** `void`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 607 | `projectChatClear` | **delete** [project_ai_threads](/code/tables/project_ai_threads.md) |  |
+
+## Calls
+
+[projectCanChange()](/code/functions/projectCanChange.md), [projectChatThread()](/code/functions/projectChatThread.md)
+
+## Called from
+
+- [api/projects/assistant_chat.php](/code/files/api/projects/assistant_chat.php.md)
+

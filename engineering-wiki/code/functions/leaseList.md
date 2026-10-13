@@ -1,0 +1,32 @@
+# leaseList()
+
+The Leases list: one row per lease with its schedule dates, asset counts and next end.
+
+```php
+function leaseList(PDO $conn, int $analystId, string $search = ''): array
+```
+
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 269.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$search` | `string` | `''` |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 280 | `leaseList` | read [lease_schedules](/code/tables/lease_schedules.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md), read [leases](/code/tables/leases.md), read [suppliers](/code/tables/suppliers.md), read [tenants](/code/tables/tenants.md) |  |
+
+## Calls
+
+[getDefaultTenantId()](/code/functions/getDefaultTenantId.md), [leaseActiveSql()](/code/functions/leaseActiveSql.md), [leaseListSql()](/code/functions/leaseListSql.md)
+
+## Called from
+
+- [api/assets/leases/list.php](/code/files/api/assets/leases/list.php.md)
+

@@ -1,0 +1,27 @@
+# projectsLinkedTo()
+
+The projects one record (asset, change, ticket, contract, CI, article) is linked to that this analyst may see. Empty - never an error - when they cannot open Projects, the other module, or the record, so a page can call it unconditionally.
+
+```php
+function projectsLinkedTo(PDO $conn, ActorContext $ctx, string $kind, int $targetId): array
+```
+
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 371.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ctx` | `ActorContext` |  |  |
+| `$kind` | `string` |  |  |
+| `$targetId` | `int` |  |  |
+
+**Returns:** `array`
+
+## Calls
+
+[projectLinkKindAllowed()](/code/functions/projectLinkKindAllowed.md), [projectLinkKinds()](/code/functions/projectLinkKinds.md), [projectLinkProjectRows()](/code/functions/projectLinkProjectRows.md), [projectLinksReady()](/code/functions/projectLinksReady.md), [projectLinkTargetOk()](/code/functions/projectLinkTargetOk.md)
+
+## Called from
+
+- [api/projects/links.php](/code/files/api/projects/links.php.md)
+

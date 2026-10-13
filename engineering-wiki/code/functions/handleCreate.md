@@ -1,0 +1,34 @@
+# handleCreate()
+
+> [!NOTE]
+> Defined in 2 places (each behind a function_exists() check, or in files never loaded together): [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md)
+
+```php
+function handleCreate(PDO $conn, int $analystId, array $in): void
+```
+
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 163.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$in` | `array` |  |  |
+
+**Returns:** `void`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 176 | `handleCreate` | **insert** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `name`, `is_restricted`, `inherit_permissions`, `created_by_id`, `owner_id`, `created_datetime`, `modified_datetime`) |  |
+
+## Calls
+
+[knowledgeAclResetCaches()](/code/functions/knowledgeAclResetCaches.md), [knowledgeAudit()](/code/functions/knowledgeAudit.md), [requireFolderAccess()](/code/functions/requireFolderAccess.md)
+
+## Called from
+
+- [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
+- [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md)
+

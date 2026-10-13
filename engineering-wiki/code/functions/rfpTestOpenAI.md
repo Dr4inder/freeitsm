@@ -1,0 +1,24 @@
+# rfpTestOpenAI()
+
+```php
+function rfpTestOpenAI(string $apiKey, string $model, bool $verifySsl): array
+```
+
+Defined in [api/rfp-builder/test_ai_connection.php](/code/files/api/rfp-builder/test_ai_connection.php.md), line 122.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$apiKey` | `string` |  |  |
+| `$model` | `string` |  |  |
+| `$verifySsl` | `bool` |  |  |
+
+**Returns:** `array`
+
+## Calls
+
+[sslApplyCurl()](/code/functions/sslApplyCurl.md)
+
+## Called from
+
+- [api/rfp-builder/test_ai_connection.php](/code/files/api/rfp-builder/test_ai_connection.php.md)
+

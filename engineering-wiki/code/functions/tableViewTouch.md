@@ -1,0 +1,37 @@
+# tableViewTouch()
+
+Stamp a view as used.
+
+⚠️ One timestamp for the view, not one per reader. On a shared view this
+answers "is anybody still using this?", which is the question that decides
+whether it can be deleted. "When did I last use it?" would need a row per
+person per view to answer, and nobody has asked that.
+
+```php
+function tableViewTouch(PDO $conn, int $analystId, int $viewId): void
+```
+
+Defined in [includes/table_views.php](/code/files/includes/table_views.php.md), line 225.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$viewId` | `int` |  |  |
+
+**Returns:** `void`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 228 | `tableViewTouch` | **update** [table_views](/code/tables/table_views.md) (`last_used_datetime`) |  |
+
+## Calls
+
+[tableViewLoad()](/code/functions/tableViewLoad.md)
+
+## Called from
+
+- [api/table-views/use.php](/code/files/api/table-views/use.php.md)
+

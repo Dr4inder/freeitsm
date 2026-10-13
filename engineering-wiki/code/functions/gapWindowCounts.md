@@ -1,0 +1,32 @@
+# gapWindowCounts()
+
+How many tickets are in the window, and how many already have an embedding.
+
+```php
+function gapWindowCounts(PDO $conn, int $analystId, int $lookbackDays): array
+```
+
+Defined in [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md), line 81.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$lookbackDays` | `int` |  |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 90 | `gapWindowCounts` | read [knowledge_gap_tickets](/code/tables/knowledge_gap_tickets.md) |  |
+
+## Calls
+
+[gapWindowSql()](/code/functions/gapWindowSql.md)
+
+## Called from
+
+- [api/knowledge/analyse_gaps.php](/code/files/api/knowledge/analyse_gaps.php.md)
+

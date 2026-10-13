@@ -1,0 +1,42 @@
+# warRoomMyMentions()
+
+The notifications panel: messages naming this analyst that they have not read.
+
+"Unread" is derived from `warroom_reads`, not from a column here — so opening
+the channel clears the mention, which is what a reader expects and what stops
+the panel and the channel badge ever disagreeing.
+
+⚠️ Channel access is re-checked in SQL, not assumed from the mention row. A
+mention written before somebody was removed from a private channel must stop
+being visible to them, not linger in their panel with a snippet attached.
+
+```php
+function warRoomMyMentions(PDO $conn, int $analystId, int $limit = 20): array
+```
+
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 795.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$limit` | `int` | `20` |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 798 | `warRoomMyMentions` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_mentions](/code/tables/warroom_mentions.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md), read [warroom_reads](/code/tables/warroom_reads.md) |  |
+| 815 | `warRoomMyMentions` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 819 | `warRoomMyMentions` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+
+## Calls
+
+[t()](/code/functions/t.md), [warRoomChannelName()](/code/functions/warRoomChannelName.md), [warRoomSnippet()](/code/functions/warRoomSnippet.md)
+
+## Called from
+
+- [api/war-room/alerts.php](/code/files/api/war-room/alerts.php.md)
+

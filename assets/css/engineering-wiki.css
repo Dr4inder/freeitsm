@@ -116,6 +116,15 @@ html[data-theme-mode="dark"] .ew-app {
     outline: none;
 }
 
+.ew-rescan {
+    display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; flex-shrink: 0;
+    border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); color: var(--text-muted);
+    font-size: 13px; cursor: pointer; white-space: nowrap;
+}
+.ew-rescan:hover:not(:disabled) { color: var(--text); border-color: var(--accent); }
+.ew-rescan:disabled { cursor: progress; }
+.ew-rescan svg { width: 15px; height: 15px; }
+
 .ew-search {
     width: 260px;
     flex-shrink: 1;

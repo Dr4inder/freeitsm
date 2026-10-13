@@ -1,0 +1,34 @@
+# warRoomSend()
+
+Post a message. Returns the new id, or 0 if the body was empty.
+
+```php
+function warRoomSend(PDO $conn, int $analystId, int $channelId, string $body): int
+```
+
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 625.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$channelId` | `int` |  |  |
+| `$body` | `string` |  |  |
+
+**Returns:** `int`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 632 | `warRoomSend` | **insert** [warroom_messages](/code/tables/warroom_messages.md) (`channel_id`, `analyst_id`, `body`, `created_datetime`) |  |
+
+## Calls
+
+[warRoomPrune()](/code/functions/warRoomPrune.md), [warRoomResolveMentions()](/code/functions/warRoomResolveMentions.md), [warRoomStoreMentions()](/code/functions/warRoomStoreMentions.md)
+
+## Called from
+
+- [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md)
+- [api/war-room/send.php](/code/files/api/war-room/send.php.md)
+

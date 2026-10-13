@@ -1,0 +1,26 @@
+# messagingIdentityLinksReady()
+
+Has Database Verification created messaging_identity_links yet? Cached per request.
+
+```php
+function messagingIdentityLinksReady(PDO $conn): bool
+```
+
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 502.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+
+**Returns:** `bool`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 507 | `messagingIdentityLinksReady` | read [messaging_identity_links](/code/tables/messaging_identity_links.md) |  |
+
+## Called from
+
+- [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) - in [messagingTelegramResolveIdentity()](/code/functions/messagingTelegramResolveIdentity.md)
+

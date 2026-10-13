@@ -1,0 +1,16 @@
+# processMapperDefaultSize()
+
+```php
+function processMapperDefaultSize($type)
+```
+
+Defined in [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md), line 83.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$type` |  |  |  |
+
+## Called from
+
+- [api/system/import_demo_data.php](/code/files/api/system/import_demo_data.php.md) - in [autoLayoutProcessMapper()](/code/functions/autoLayoutProcessMapper.md)
+

@@ -1,0 +1,34 @@
+# peopleListRows()
+
+People the analyst can see, newest-relevant first by name.
+
+```php
+function peopleListRows(PDO $conn, int $analystId, array $f = [], int $limit = 200): array
+```
+
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 71.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$f` | `array` | `[]` | q, company (tenant id), status ('active' default \| 'leavers' \| 'all') |
+| `$limit` | `int` | `200` |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 92 | `peopleListRows` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
+
+## Calls
+
+[analystCanAccessTenant()](/code/functions/analystCanAccessTenant.md), [getDefaultTenantId()](/code/functions/getDefaultTenantId.md), [getTenantById()](/code/functions/getTenantById.md), [isMultiTenant()](/code/functions/isMultiTenant.md), [peopleCompanyMatch()](/code/functions/peopleCompanyMatch.md), [peopleName()](/code/functions/peopleName.md), [peopleScope()](/code/functions/peopleScope.md)
+
+## Called from
+
+- [api/people/list.php](/code/files/api/people/list.php.md)
+- [includes/people.php](/code/files/includes/people.php.md) - in [companyDetail()](/code/functions/companyDetail.md)
+

@@ -1,0 +1,34 @@
+# splitMessagesFrom()
+
+Which messages a split would move, oldest first.
+
+Shared by the preview and the split itself so the dialog can never promise
+something different from what happens.
+
+```php
+function splitMessagesFrom(PDO $conn, int $ticketId, int $fromEmailId, bool $includeNewer): array
+```
+
+Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 47.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ticketId` | `int` |  |  |
+| `$fromEmailId` | `int` |  |  |
+| `$includeNewer` | `bool` |  |  |
+
+**Returns:** array rows of [id, subject, from_name, from_address, received_datetime, direction]
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 49 | `splitMessagesFrom` | read [emails](/code/tables/emails.md) |  |
+| 65 | `splitMessagesFrom` | read [emails](/code/tables/emails.md) |  |
+
+## Called from
+
+- [api/tickets/split_ticket_preview.php](/code/files/api/tickets/split_ticket_preview.php.md)
+- [includes/ticket_split.php](/code/files/includes/ticket_split.php.md) - in [splitTicket()](/code/functions/splitTicket.md)
+

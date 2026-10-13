@@ -1,0 +1,29 @@
+# apiAssetHistoryList()
+
+```php
+function apiAssetHistoryList(PDO $conn, array $apiKey, array $params, array $body): void
+```
+
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 436.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$apiKey` | `array` |  |  |
+| `$params` | `array` |  |  |
+| `$body` | `array` |  |  |
+
+**Returns:** `void`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 439 | `apiAssetHistoryList` | read [asset_history](/code/tables/asset_history.md), read [analysts](/code/tables/analysts.md) |  |
+
+## Calls
+
+[apiIsoDate()](/code/functions/apiIsoDate.md), [apiLoadAsset()](/code/functions/apiLoadAsset.md), [apiRespond()](/code/functions/apiRespond.md)
+
+*Nothing calls this function by name.*
+

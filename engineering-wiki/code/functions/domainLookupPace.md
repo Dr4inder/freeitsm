@@ -1,0 +1,27 @@
+# domainLookupPace()
+
+Space out requests to one registry. Called between lookups in a batch: the same RDAP/WHOIS host is not asked again within `$gapSeconds`.
+
+```php
+function domainLookupPace(PDO $conn, string $name, float $gapSeconds = 1.5): void
+```
+
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 407.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$name` | `string` |  |  |
+| `$gapSeconds` | `float` | `1.5` |  |
+
+**Returns:** `void`
+
+## Calls
+
+[domainRdapBootstrap()](/code/functions/domainRdapBootstrap.md), [domainTld()](/code/functions/domainTld.md)
+
+## Called from
+
+- [api/domains/process.php](/code/files/api/domains/process.php.md)
+- [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md) - in [domainScheduledRun()](/code/functions/domainScheduledRun.md)
+

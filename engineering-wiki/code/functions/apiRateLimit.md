@@ -1,0 +1,35 @@
+# apiRateLimit()
+
+Rate limiting — fixed one-minute windows in api_key_rate_limits, same mechanism as the proven api_rate_limits implementation. Default limit comes from system_settings.api_rate_limit_per_minute (fallback 60); a key can carry its own override. Fails open if the rate-limit table errors.
+
+```php
+function apiRateLimit(PDO $conn, int $keyId, ?int $override): void
+```
+
+Defined in [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md), line 115.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$keyId` | `int` |  |  |
+| `$override` | `?int` |  |  |
+
+**Returns:** `void`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 121 | `apiRateLimit` | read [system_settings](/code/tables/system_settings.md) |  |
+| 134 | `apiRateLimit` | **insert** [api_key_rate_limits](/code/tables/api_key_rate_limits.md) (`api_key_id`, `request_count`, `window_start`) |  |
+| 140 | `apiRateLimit` | read [api_key_rate_limits](/code/tables/api_key_rate_limits.md) |  |
+| 144 | `apiRateLimit` | **delete** [api_key_rate_limits](/code/tables/api_key_rate_limits.md) |  |
+
+## Calls
+
+[apiError()](/code/functions/apiError.md)
+
+## Called from
+
+- [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) - in [apiAuthenticate()](/code/functions/apiAuthenticate.md)
+

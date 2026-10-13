@@ -1,0 +1,28 @@
+# warbotRunTool()
+
+Run one tool. NEVER throws — a failure is returned as words, because "the CMDB lookup failed" is something the model can usefully tell the room, whereas an exception here would lose the whole answer.
+
+```php
+function warbotRunTool(PDO $conn, int $analystId, string $name, array $args): string
+```
+
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 361.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$name` | `string` |  |  |
+| `$args` | `array` |  |  |
+
+**Returns:** `string`
+
+## Calls
+
+[warbotToolAllowed()](/code/functions/warbotToolAllowed.md), [warbotTools()](/code/functions/warbotTools.md)
+
+## Called from
+
+- [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md)
+- [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md) - in [warbotTryCommand()](/code/functions/warbotTryCommand.md), [warbotAnswer()](/code/functions/warbotAnswer.md)
+

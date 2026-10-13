@@ -1,0 +1,29 @@
+# projectGateChanges()
+
+The project's linked changes with whether each is approved - what a change item may point at.
+
+```php
+function projectGateChanges(PDO $conn, int $projectId): array
+```
+
+Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 52.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$projectId` | `int` |  |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 55 | `projectGateChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md) |  |
+
+## Called from
+
+- [api/projects/get.php](/code/files/api/projects/get.php.md)
+- [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) - in [projectGateItems()](/code/functions/projectGateItems.md)
+- [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) - in `ProjectToolsService::saveGateItem`
+

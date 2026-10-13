@@ -1,0 +1,29 @@
+# recordPreviewAsset()
+
+```php
+function recordPreviewAsset(PDO $conn, int $analystId, int $id): ?array
+```
+
+Defined in [includes/record_preview.php](/code/files/includes/record_preview.php.md), line 281.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$id` | `int` |  |  |
+
+**Returns:** `?array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 288 | `recordPreviewAsset` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md) |  |
+| 320 | `recordPreviewAsset` | read [assets](/code/tables/assets.md) |  |
+
+## Calls
+
+[analystCanAccessAsset()](/code/functions/analystCanAccessAsset.md), [assetLabelsSchemaReady()](/code/functions/assetLabelsSchemaReady.md), [rpField()](/code/functions/rpField.md), [rpFields()](/code/functions/rpFields.md), [t()](/code/functions/t.md)
+
+*Nothing calls this function by name.*
+

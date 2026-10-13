@@ -1,0 +1,28 @@
+# extractQueueSettingOn()
+
+Read a boolean setting that defaults to ON when absent.
+
+```php
+function extractQueueSettingOn(PDO $conn, string $key): bool
+```
+
+Defined in [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md), line 44.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$key` | `string` |  |  |
+
+**Returns:** `bool`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 46 | `extractQueueSettingOn` | read [system_settings](/code/tables/system_settings.md) |  |
+
+## Called from
+
+- [cron/attachment_extract.php](/code/files/cron/attachment_extract.php.md)
+- [includes/search/extract_queue.php](/code/files/includes/search/extract_queue.php.md) - in [extractQueueDrainOpportunistic()](/code/functions/extractQueueDrainOpportunistic.md)
+

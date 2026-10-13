@@ -1,0 +1,27 @@
+# rpStatusServices()
+
+The services a block covers: the chosen ones, or every active one.
+
+```php
+function rpStatusServices(PDO $conn, array $ids): array
+```
+
+Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 19.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ids` | `array` |  |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 21 | `rpStatusServices` | read [status_services](/code/tables/status_services.md) |  |
+
+## Called from
+
+- [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) - in [rpStatusUptime()](/code/functions/rpStatusUptime.md), [rpStatusUptimeTable()](/code/functions/rpStatusUptimeTable.md), [rpStatusKpis()](/code/functions/rpStatusKpis.md)
+

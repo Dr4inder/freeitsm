@@ -1,0 +1,27 @@
+# webhookPayloadRetentionDays()
+
+Days to keep payload bodies. 0 = never store, -1 = forever.
+
+```php
+function webhookPayloadRetentionDays(PDO $conn): int
+```
+
+Defined in [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md), line 121.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+
+**Returns:** `int`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 123 | `webhookPayloadRetentionDays` | read [system_settings](/code/tables/system_settings.md) |  |
+
+## Called from
+
+- [includes/webhook_delivery.php](/code/files/includes/webhook_delivery.php.md) - in [webhookPurgePayloads()](/code/functions/webhookPurgePayloads.md), [webhookScrubIfNoRetention()](/code/functions/webhookScrubIfNoRetention.md)
+- [system/webhooks/index.php](/code/files/system/webhooks/index.php.md)
+

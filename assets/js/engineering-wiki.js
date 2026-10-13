@@ -554,6 +554,31 @@
         }
     });
 
+    // ------------------------------------------------------------ Rescan: small steps until done
+
+    var rescanBtn = document.getElementById('ewRescan'), rescanText = document.getElementById('ewRescanText');
+    function rescanStep() {
+        return fetch(C.api + 'scan.php', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: '{}' })
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+                if (!d.success) throw new Error(d.error || 'error');
+                if (d.phase === 'busy') throw new Error(d.message);
+                rescanText.textContent = T.scanning.replace('{done}', d.done_files).replace('{total}', d.total_files);
+                return d.done ? d : rescanStep();
+            });
+    }
+    rescanBtn.addEventListener('click', function () {
+        rescanBtn.disabled = true;
+        rescanText.textContent = T.scanning.replace('{done}', 0).replace('{total}', '...');
+        rescanStep().then(function (d) {
+            cache = {};
+            panes.forEach(function (_, i) { showTab(i); });
+            if (!search.value) buildTree();
+            toast(T.scan_done.replace('{changed}', d.changed).replace('{pages}', d.pages));
+        }).catch(function (e) { toast(T.scan_failed.replace('{error}', e.message)); })
+          .then(function () { rescanBtn.disabled = false; rescanText.textContent = T.rescan; });
+    });
+
     // ------------------------------------------------------------ start
 
     try { if (localStorage.getItem(STORE + '.sidebar') === '0' && !narrow()) app.classList.add('ew-no-sidebar'); } catch (e) { /* ignore */ }

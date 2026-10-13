@@ -1,0 +1,32 @@
+# analystCanAccessProject()
+
+May this analyst access this *project* (by its company)? The same rules as a change: single-company -> yes; NULL company = the Default one; unknown id -> no. Added for documents on projects (3.3.0).
+
+```php
+function analystCanAccessProject(PDO $conn, int $analystId, $projectId): bool
+```
+
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 384.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$analystId` | `int` |  |  |
+| `$projectId` |  |  |  |
+
+**Returns:** `bool`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 392 | `analystCanAccessProject` | read [projects](/code/tables/projects.md) |  |
+
+## Calls
+
+[analystCanAccessTenant()](/code/functions/analystCanAccessTenant.md), [getDefaultTenantId()](/code/functions/getDefaultTenantId.md), [isMultiTenant()](/code/functions/isMultiTenant.md), [projectIdVisibleTo()](/code/functions/projectIdVisibleTo.md), [tenancyDegradeAllowed()](/code/functions/tenancyDegradeAllowed.md)
+
+## Called from
+
+- [includes/documents.php](/code/files/includes/documents.php.md) - in [documentEntityRegistry()](/code/functions/documentEntityRegistry.md)
+

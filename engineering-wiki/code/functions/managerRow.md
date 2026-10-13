@@ -1,0 +1,28 @@
+# managerRow()
+
+The manager's own row, or null if they cannot be a manager (missing, or left).
+
+```php
+function managerRow(PDO $conn, int $managerUserId): ?array
+```
+
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 108.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$managerUserId` | `int` |  |  |
+
+**Returns:** `?array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 110 | `managerRow` | read [users](/code/tables/users.md) |  |
+
+## Called from
+
+- [api/self-service/get_team_tickets.php](/code/files/api/self-service/get_team_tickets.php.md)
+- [includes/managers.php](/code/files/includes/managers.php.md) - in [managerTeamUserIds()](/code/functions/managerTeamUserIds.md), [portalTicketAccess()](/code/functions/portalTicketAccess.md)
+

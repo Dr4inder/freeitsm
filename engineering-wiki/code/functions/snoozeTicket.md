@@ -1,0 +1,40 @@
+# snoozeTicket()
+
+Put one ticket to sleep. Caller has already checked access. Deliberately does NOT bump updated_datetime — snoozing is the desk deciding not to act, not activity on the ticket, and shoving it to the top of a sort by last-updated on its way out of the list would be a lie.
+
+```php
+function snoozeTicket(
+    PDO $conn,
+    int $ticketId,
+    int $analystId,
+    string $untilUtc,
+    string $reason
+): void
+```
+
+Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md), line 215.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ticketId` | `int` |  |  |
+| `$analystId` | `int` |  |  |
+| `$untilUtc` | `string` |  |  |
+| `$reason` | `string` |  |  |
+
+**Returns:** `void`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 220 | `snoozeTicket` | **update** [tickets](/code/tables/tickets.md) (`snoozed_until`, `snoozed_at`, `snoozed_by`, `snooze_reason`) |  |
+
+## Calls
+
+[snoozeAudit()](/code/functions/snoozeAudit.md), [snoozeSchemaReady()](/code/functions/snoozeSchemaReady.md)
+
+## Called from
+
+- [api/tickets/snooze_ticket.php](/code/files/api/tickets/snooze_ticket.php.md)
+

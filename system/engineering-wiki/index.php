@@ -34,7 +34,7 @@ $ewT = [];
 foreach (['back', 'forward', 'reload', 'sidebar', 'search_placeholder', 'address_hint', 'new_tab', 'close_tab',
           'open', 'open_new_tab', 'open_beside', 'copy_link', 'link_copied', 'close_others', 'move_beside',
           'outline', 'generated', 'handbook', 'code_map', 'updated', 'loading', 'not_found', 'no_results',
-          'results_for', 'clear', 'empty_folder', 'nothing_yet'] as $k) {
+          'results_for', 'clear', 'empty_folder', 'nothing_yet', 'rescan', 'rescan_hint', 'scanning', 'scan_done', 'scan_failed'] as $k) {
     $ewT[$k] = t('system.engineering_wiki.' . $k);
 }
 $startPage = 'handbook/start';
@@ -48,7 +48,7 @@ $startPage = 'handbook/start';
     <title><?php echo htmlspecialchars(pageTitle('system', t('system.engineering_wiki.heading'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/engineering-wiki.css?v=3">
+    <link rel="stylesheet" href="../../assets/css/engineering-wiki.css?v=4">
     <style>
         /* System module accent (blue-grey), as on every System page. */
         body {
@@ -71,6 +71,7 @@ $startPage = 'handbook/start';
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 <input type="text" id="ewAddress" spellcheck="false" autocomplete="off">
             </label>
+            <button class="ew-rescan" id="ewRescan" title="<?php echo htmlspecialchars($ewT['rescan_hint']); ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><polyline points="8 11 10 13 14 9"></polyline></svg><span id="ewRescanText"><?php echo htmlspecialchars($ewT['rescan']); ?></span></button>
             <input type="search" class="ew-search" id="ewSearch" placeholder="<?php echo htmlspecialchars($ewT['search_placeholder']); ?>" autocomplete="off">
         </div>
         <div class="ew-body">
@@ -87,7 +88,7 @@ $startPage = 'handbook/start';
             t: <?php echo json_encode($ewT, JSON_UNESCAPED_UNICODE); ?>
         };
     </script>
-    <script src="../../assets/js/engineering-wiki.js?v=5"></script>
+    <script src="../../assets/js/engineering-wiki.js?v=6"></script>
     <script src="../../assets/js/mobile.js?v=78"></script>
 </body>
 </html>

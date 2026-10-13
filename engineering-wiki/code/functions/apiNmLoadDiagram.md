@@ -1,0 +1,23 @@
+# apiNmLoadDiagram()
+
+```php
+function apiNmLoadDiagram(PDO $conn, int $diagramId): array
+```
+
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 79.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$diagramId` | `int` |  |  |
+
+**Returns:** `array`
+
+## Calls
+
+[apiError()](/code/functions/apiError.md), [apiNmDiagramSelect()](/code/functions/apiNmDiagramSelect.md)
+
+## Called from
+
+- [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) - in [apiNmDiagramsGet()](/code/functions/apiNmDiagramsGet.md), [apiNmRespondFull()](/code/functions/apiNmRespondFull.md), [apiNmVersionsList()](/code/functions/apiNmVersionsList.md), [apiNmSuggestionsList()](/code/functions/apiNmSuggestionsList.md), [apiNmNodesCreate()](/code/functions/apiNmNodesCreate.md), [apiNmNodesUpdate()](/code/functions/apiNmNodesUpdate.md), [apiNmNodesDelete()](/code/functions/apiNmNodesDelete.md), [apiNmConnectorsCreate()](/code/functions/apiNmConnectorsCreate.md), [apiNmConnectorsUpdate()](/code/functions/apiNmConnectorsUpdate.md), [apiNmConnectorsDelete()](/code/functions/apiNmConnectorsDelete.md)
+

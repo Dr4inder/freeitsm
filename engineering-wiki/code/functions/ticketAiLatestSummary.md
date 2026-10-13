@@ -1,0 +1,29 @@
+# ticketAiLatestSummary()
+
+The newest stored summary (or briefing) for a ticket, or null.
+
+```php
+function ticketAiLatestSummary(PDO $conn, int $ticketId, string $kind = 'summary'): ?array
+```
+
+Defined in [includes/ticket_ai.php](/code/files/includes/ticket_ai.php.md), line 221.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$ticketId` | `int` |  |  |
+| `$kind` | `string` | `'summary'` |  |
+
+**Returns:** `?array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 227 | `ticketAiLatestSummary` | read [ticket_ai_summaries](/code/tables/ticket_ai_summaries.md), read [analysts](/code/tables/analysts.md) |  |
+
+## Called from
+
+- [api/tickets/ai_read.php](/code/files/api/tickets/ai_read.php.md)
+- [api/tickets/ai_summary.php](/code/files/api/tickets/ai_summary.php.md)
+

@@ -1,0 +1,37 @@
+# ldapResolveAnalyst()
+
+Map an authenticated directory user onto an analyst id, creating one if the provider allows it. Mirrors the OIDC resolution order: 1) existing link by (provider, subject), 2) match an existing analyst by email — STRICTLY isolated: the analyst must already be assigned to this provider, 3) just-in-time create, if auto_create_analysts is on (auto_create_users is the PORTAL switch - see `ldapResolveUser()`).
+
+Returns ['ok' => true, 'analyst_id' => int] or ['ok' => false, 'error' => string].
+
+```php
+function ldapResolveAnalyst(PDO $conn, array $provider, array $ldapUser): array
+```
+
+Defined in [includes/ldap.php](/code/files/includes/ldap.php.md), line 568.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$provider` | `array` |  |  |
+| `$ldapUser` | `array` |  |  |
+
+**Returns:** `array`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 574 | `ldapResolveAnalyst` | read [analyst_sso_identities](/code/tables/analyst_sso_identities.md) |  |
+| 583 | `ldapResolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 601 | `ldapResolveAnalyst` | **update** [analyst_sso_identities](/code/tables/analyst_sso_identities.md) (`last_login_datetime`, `email`) |  |
+| 604 | `ldapResolveAnalyst` | **update** [analysts](/code/tables/analysts.md) (`email`) |  |
+| 612 | `ldapResolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 653 | `ldapResolveAnalyst` | **insert** [analyst_sso_identities](/code/tables/analyst_sso_identities.md) (`analyst_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime`) |  |
+
+## Calls
+
+[ldapCreateAnalyst()](/code/functions/ldapCreateAnalyst.md), [ssoClearDanglingLink()](/code/functions/ssoClearDanglingLink.md)
+
+*Nothing calls this function by name.*
+

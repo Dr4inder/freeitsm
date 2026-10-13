@@ -1,0 +1,23 @@
+# apiLoadSupplier()
+
+```php
+function apiLoadSupplier(PDO $conn, int $supplierId): array
+```
+
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 184.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$supplierId` | `int` |  |  |
+
+**Returns:** `array`
+
+## Calls
+
+[apiError()](/code/functions/apiError.md), [apiSupplierSelect()](/code/functions/apiSupplierSelect.md)
+
+## Called from
+
+- [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) - in [apiSuppliersGet()](/code/functions/apiSuppliersGet.md), [apiSuppliersCreate()](/code/functions/apiSuppliersCreate.md), [apiSuppliersUpdate()](/code/functions/apiSuppliersUpdate.md), [apiSupplierContactsList()](/code/functions/apiSupplierContactsList.md), [apiSupplierContactsCreate()](/code/functions/apiSupplierContactsCreate.md), [apiSupplierContactsUpdate()](/code/functions/apiSupplierContactsUpdate.md), [apiSupplierContactsDelete()](/code/functions/apiSupplierContactsDelete.md)
+

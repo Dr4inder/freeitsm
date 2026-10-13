@@ -1,0 +1,27 @@
+# projectAssistRaid()
+
+args: project, type (risk | assumption | issue | dependency | decision | lesson), status (open | closed | all).
+
+```php
+function projectAssistRaid(PDO $conn, array $scope, array $args): string
+```
+
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 204.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$scope` | `array` |  |  |
+| `$args` | `array` |  |  |
+
+**Returns:** `string`
+
+## Calls
+
+[projectAssistFind()](/code/functions/projectAssistFind.md)
+
+## Called from
+
+- [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) - in [mcpToolProjectRaid()](/code/functions/mcpToolProjectRaid.md)
+- [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) - in [warbotToolProjectRaid()](/code/functions/warbotToolProjectRaid.md)
+

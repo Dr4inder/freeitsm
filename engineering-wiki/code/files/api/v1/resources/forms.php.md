@@ -1,0 +1,99 @@
+# api/v1/resources/forms.php
+
+> API endpoint - 372 lines
+
+FreeITSM REST API v1 — forms resource (forms, fields, versions, submissions).
+
+Mirrors the module's internal endpoints:
+  - GET /forms is get_forms.php: ONE row per version chain (the leaf — the
+    current editable version), with field + submission counts;
+  - PATCH replicates save_form.php's field sync EXACTLY, and refuses to touch
+    a frozen historical version (409, like the server-side leaf check).
+    ⚠️ That sync is now BY ID, not positional. Send each field's `id` back (as
+    GET returns it) and it is updated in place. A field with no `id` is treated
+    as new, and any field you omit is RETIRED — soft-deleted, keeping the
+    answers people already gave it. A client that rebuilds the field list from
+    scratch without ids therefore replaces the questions rather than renaming
+    them; that is deliberate, and the opposite of the old behaviour, which
+    quietly re-pointed historical answers at whichever question had landed in
+    that position;
+  - POST /forms/{id}/versions is create_version.php: fork the leaf into a
+    new row (parent_form_id chain, version_number + 1), fields cloned;
+  - POST /forms/{id}/submissions is submit_form.php: per-type required +
+    format validation, then the form.submitted workflow dispatch with the
+    label-keyed answers map (the "new starter form → tickets" use case) —
+    fired after commit and swallowed on error, exactly like the UI.
+
+Deliberate differences from the UI, documented:
+  - unknown field ids in a submission are a 422 (the UI inserts them
+    blindly and hits the FK);
+  - a field with an empty label is a 422 on create/update (the UI
+    silently drops it — machines deserve the error), and field_type must
+    be one of the module's eight types (the UI stores anything);
+  - PATCH can set is_active — NOTHING in the UI writes it today (the
+    column only carries across version clones), so the API is the only
+    way to retire a form without deleting it;
+  - DELETE refuses a non-leaf version (409) unless ?chain=true, which
+    removes the WHOLE chain + all its submissions transactionally —
+    deleting just the leaf resurfaces the previous version in the list.
+
+Field types: text, textarea, email, number, checkbox (single yes/no),
+checkboxes (multi — stored as a JSON array string), dropdown, radio.
+`options` is a JSON array for dropdown / radio / checkboxes.
+
+Install-wide (no company scoping — matches the UI); no audit trail exists.
+The module's AI form-generation endpoints stay UI-only.
+
+## The endpoint
+
+| | |
+|---|---|
+| URL | `api/v1/resources/forms.php` |
+| Protected by | REST API key |
+| Reads | `GET is_active`, `GET q`, `GET chain` |
+
+## Functions
+
+| Function | Line | What it does |
+|---|--:|---|
+| [apiFormSelect()](/code/functions/apiFormSelect.md) | 56 |  |
+| [apiSerializeFormField()](/code/functions/apiSerializeFormField.md) | 66 |  |
+| [apiSerializeForm()](/code/functions/apiSerializeForm.md) | 91 |  |
+| [apiLoadForm()](/code/functions/apiLoadForm.md) | 120 |  |
+| [apiSerializeFormSubmission()](/code/functions/apiSerializeFormSubmission.md) | 130 |  |
+| [apiLoadFormSubmission()](/code/functions/apiLoadFormSubmission.md) | 188 |  |
+| [apiFormsList()](/code/functions/apiFormsList.md) | 209 |  |
+| [apiFormsGet()](/code/functions/apiFormsGet.md) | 229 |  |
+| [apiFormsCreate()](/code/functions/apiFormsCreate.md) | 234 |  |
+| [apiFormsUpdate()](/code/functions/apiFormsUpdate.md) | 242 |  |
+| [apiFormsDelete()](/code/functions/apiFormsDelete.md) | 251 |  |
+| [apiFormVersionsList()](/code/functions/apiFormVersionsList.md) | 264 |  |
+| [apiFormVersionsCreate()](/code/functions/apiFormVersionsCreate.md) | 298 |  |
+| [apiFormSubmissionsSelect()](/code/functions/apiFormSubmissionsSelect.md) | 309 |  |
+| [apiFormSubmissionsList()](/code/functions/apiFormSubmissionsList.md) | 317 |  |
+| [apiFormSubmissionsGet()](/code/functions/apiFormSubmissionsGet.md) | 350 |  |
+| [apiFormSubmissionsCreate()](/code/functions/apiFormSubmissionsCreate.md) | 356 |  |
+| [apiFormSubmissionsDelete()](/code/functions/apiFormSubmissionsDelete.md) | 366 |  |
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 57 | `apiFormSelect` | read [forms](/code/tables/forms.md), read [form_fields](/code/tables/form_fields.md), read [form_submissions](/code/tables/form_submissions.md), read [analysts](/code/tables/analysts.md) |  |
+| 113 | `apiSerializeForm` | read [form_fields](/code/tables/form_fields.md) |  |
+| 134 | `apiSerializeFormSubmission` | read [form_submission_data](/code/tables/form_submission_data.md), read [form_fields](/code/tables/form_fields.md) |  |
+| 190 | `apiLoadFormSubmission` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [analysts](/code/tables/analysts.md) |  |
+| 210 | `apiFormsList` | read [forms](/code/tables/forms.md) |  |
+| 270 | `apiFormVersionsList` | read [forms](/code/tables/forms.md) |  |
+| 281 | `apiFormVersionsList` | read [forms](/code/tables/forms.md) |  |
+| 310 | `apiFormSubmissionsSelect` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [analysts](/code/tables/analysts.md) |  |
+| 330 | `apiFormSubmissionsList` | read [form_submissions](/code/tables/form_submissions.md) |  |
+
+## How it hangs together
+
+**Includes:** [includes/service_context.php](/code/files/includes/service_context.php.md), [includes/services/forms.php](/code/files/includes/services/forms.php.md)
+
+**Included by:** [api/v1/index.php](/code/files/api/v1/index.php.md)
+
+**Calls:** [apiError()](/code/functions/apiError.md), [apiFailFromService()](/code/functions/apiFailFromService.md), [apiIsoDate()](/code/functions/apiIsoDate.md), [apiPagination()](/code/functions/apiPagination.md), [apiParseDate()](/code/functions/apiParseDate.md), [apiRespond()](/code/functions/apiRespond.md)
+

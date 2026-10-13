@@ -1,0 +1,24 @@
+# dockerTlsCertInfo()
+
+Read one PEM certificate's details, or null.
+
+```php
+function dockerTlsCertInfo(string $pem): ?array
+```
+
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 130.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$pem` | `string` |  |  |
+
+**Returns:** `?array`
+
+## Calls
+
+[dockerTlsFingerprintNormalise()](/code/functions/dockerTlsFingerprintNormalise.md)
+
+## Called from
+
+- [includes/docker_tls.php](/code/files/includes/docker_tls.php.md) - in [dockerTlsState()](/code/functions/dockerTlsState.md), [dockerTlsNeedsNewCa()](/code/functions/dockerTlsNeedsNewCa.md), [dockerTlsGenerate()](/code/functions/dockerTlsGenerate.md)
+

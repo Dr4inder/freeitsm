@@ -1,0 +1,41 @@
+# proxmoxSaveConnection()
+
+Save a server from the settings form. Returns its id.
+
+Moved here from api/assets/proxmox_connections.php at merge time so that the
+rules are in one place, and tests/hypervisor-sync.php runs the real ones.
+
+TRAP: the password field holds the API token SECRET (or the user's password).
+  It is stored only through `encryptValue()`, never returned to the browser
+  (proxmoxConnectionOut() says has_password and nothing more), and a blank or
+  all-asterisks value on edit keeps the stored one.
+
+```php
+function proxmoxSaveConnection(PDO $conn, array $in): int
+```
+
+Defined in [includes/proxmox_sync.php](/code/files/includes/proxmox_sync.php.md), line 426.
+
+| Parameter | Type | Default | Meaning |
+|---|---|---|---|
+| `$conn` | `PDO` |  |  |
+| `$in` | `array` |  |  |
+
+**Returns:** `int`
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 448 | `proxmoxSaveConnection` | read [proxmox_connections](/code/tables/proxmox_connections.md) |  |
+| 463 | `proxmoxSaveConnection` | **update** [proxmox_connections](/code/tables/proxmox_connections.md) (`name`, `host`, `username`, `password_enc`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
+| 469 | `proxmoxSaveConnection` | **insert** [proxmox_connections](/code/tables/proxmox_connections.md) (`name`, `host`, `username`, `password_enc`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
+
+## Calls
+
+[encryptValue()](/code/functions/encryptValue.md)
+
+## Called from
+
+- [api/assets/proxmox_connections.php](/code/files/api/assets/proxmox_connections.php.md)
+
