@@ -13,7 +13,7 @@ that matters, not the cost of opening it.
 function renderNotificationBell($path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1238.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1242.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

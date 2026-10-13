@@ -6,7 +6,7 @@ Renders the header's War Room alert button and panel, which poll api/war-room/al
 function renderWarRoomAlerts($path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1260.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1264.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,7 +16,7 @@ Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1270 | `renderWarRoomAlerts` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 1274 | `renderWarRoomAlerts` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Calls
 

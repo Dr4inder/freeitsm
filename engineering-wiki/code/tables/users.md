@@ -181,7 +181,7 @@
 | [includes/ticket_views.php](/code/files/includes/ticket_views.php.md) | ticketViewsAsAuditRows L88, ticketViewsForRequester L136 |  |
 | [includes/typed_fields.php](/code/files/includes/typed_fields.php.md) | L514, L521 |  |
 | [includes/users.php](/code/files/includes/users.php.md) | userSourcesInScope L224, portalProfileAccess L318, userManagerIsSafe L410 |  |
-| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderHeaderRight L1506 |  |
+| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderHeaderRight L1510 |  |
 | [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatGetOrCreateUser L181 |  |
 | [self-service/verify-email.php](/code/files/self-service/verify-email.php.md) | L40 |  |
 | [tickets/csat/index.php](/code/files/tickets/csat/index.php.md) | L166, L195 |  |

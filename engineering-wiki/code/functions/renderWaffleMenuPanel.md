@@ -6,7 +6,7 @@ Renders the waffle drawer: the module launcher (System for administrators only, 
 function renderWaffleMenuPanel($modules, $current_module, $path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 681.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 685.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

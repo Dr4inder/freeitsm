@@ -126,7 +126,7 @@
 | [includes/sso_claims.php](/code/files/includes/sso_claims.php.md) | ssoClaimsReady L42 |  |
 | [includes/sso_identity.php](/code/files/includes/sso_identity.php.md) | ssoJitColumnsReady L67, ssoAnalystProfileLocked L100, ssoPortalRoutingColumnsReady L120, ssoPortalProviderForEmail L179, ssoJitCompanyReady L196, ssoApplyJitCompanies L223 |  |
 | [includes/users.php](/code/files/includes/users.php.md) | userSignsInElsewhere L180, userSourcesInScope L224, portalProfileAccess L318 |  |
-| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderHeaderRight L1506 |  |
+| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderHeaderRight L1510 |  |
 | [self-service/login.php](/code/files/self-service/login.php.md) | L69, L77, L88 |  |
 | [system/analysts/index.php](/code/files/system/analysts/index.php.md) | L264 |  |
 | [system/sso/carddav.php](/code/files/system/sso/carddav.php.md) | L59 |  |

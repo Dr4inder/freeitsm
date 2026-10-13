@@ -6,7 +6,7 @@ Renders the right-hand side of the analyst header: the "Back to" link, the compa
 function renderHeaderRight($analyst_name, $path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1473.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1477.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +17,7 @@ Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1506 | `renderHeaderRight` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1510 | `renderHeaderRight` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Calls
 

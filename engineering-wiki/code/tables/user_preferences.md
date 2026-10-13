@@ -47,7 +47,7 @@
 | [includes/services/notifications.php](/code/files/includes/services/notifications.php.md) | NotificationsService::preferences L258 |  |
 | [includes/theme.php](/code/files/includes/theme.php.md) | Theme::active L128 |  |
 | [includes/timezone.php](/code/files/includes/timezone.php.md) | Tz::init L49, DateFmt::init L231 |  |
-| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderWaffleMenuJS L775, renderWarRoomAlerts L1270 |  |
+| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderWaffleMenuJS L779, renderWarRoomAlerts L1274 |  |
 | [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtImpersonalOnMine L134, wtScopeFor L151 |  |
 | [knowledge/index.php](/code/files/knowledge/index.php.md) | L32 |  |
 | [morning-checks/index.php](/code/files/morning-checks/index.php.md) | L51 |  |

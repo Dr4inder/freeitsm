@@ -6,7 +6,7 @@ Output the waffle menu button and panel
 function renderWaffleMenuButton()
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 660.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 664.
 
 ## Calls
 
