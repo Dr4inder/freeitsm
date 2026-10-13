@@ -7,7 +7,7 @@ Every PHP and JavaScript file the scanner read, by folder. Open a folder in the 
 | top level | 3 |
 | `api/` | 989 |
 | `asset-management/` | 19 |
-| `assets/` | 175 |
+| `assets/` | 99 |
 | `browser-extension/` | 3 |
 | `calendar/` | 6 |
 | `change-management/` | 9 |

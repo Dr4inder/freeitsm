@@ -30,7 +30,8 @@ final class EwScanner
 {
     /** Folders that are never code. Anything whose .htaccess denies all is skipped as well (upload folders). */
     private const SKIP_DIRS = ['.git', 'vendor', 'node_modules', 'engineering-wiki', 'lang', 'tests', 'local', 'docs',
-                               'database', 'uploads', 'recordings', 'logs', 'data', 'cache', 'tmp', 'releases', 'samples', 'system-wiki'];
+                               'database', 'uploads', 'recordings', 'logs', 'data', 'cache', 'tmp', 'releases', 'samples', 'system-wiki',
+                               'tinymce'];   // third-party editor - not ours to document
     private const VERSION = 5;   // bump when the parse output changes shape - forces a full re-read
 
     private string $app;

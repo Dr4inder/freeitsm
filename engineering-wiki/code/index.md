@@ -4,7 +4,7 @@ Written by the scanner from FreeITSM's own code - do not edit these pages, they 
 
 | | |
 |---|--:|
-| [Files](/code/files/index.md) | 1673 PHP, 186 JavaScript |
+| [Files](/code/files/index.md) | 1673 PHP, 110 JavaScript |
 | [API endpoints](/code/endpoints.md) | 988 |
 | [Functions](/code/functions/index.md) | 2624 |
 | [Classes](/code/classes/index.md) | 67 |

@@ -70,7 +70,7 @@
 
 ### __construct
 
-*public* - line 44
+*public* - line 45
 
 ```php
 function __construct()
@@ -78,7 +78,7 @@ function __construct()
 
 ### step
 
-*public* - line 57
+*public* - line 58
 
 Do up to `$seconds` of work. Call again until 'done' is true.
 
@@ -95,7 +95,7 @@ function step(float $seconds = 8.0, bool $fresh = false): array
 
 ### runAll
 
-*public* - line 83
+*public* - line 84
 
 Run to the end (command line).
 
@@ -109,7 +109,7 @@ function runAll(?callable $progress = null): array
 
 ### report
 
-*private* - line 92
+*private* - line 93
 
 ```php
 function report(string $phase, string $message): array
@@ -122,7 +122,7 @@ function report(string $phase, string $message): array
 
 ### ensureDirs
 
-*private* - line 105
+*private* - line 106
 
 ```php
 function ensureDirs(): void
@@ -130,7 +130,7 @@ function ensureDirs(): void
 
 ### phaseList
 
-*private* - line 115
+*private* - line 116
 
 ```php
 function phaseList(): void
@@ -138,7 +138,7 @@ function phaseList(): void
 
 ### walk
 
-*private* - line 141
+*private* - line 142
 
 ```php
 function walk(string $abs, string $rel, callable $fn): void
@@ -152,7 +152,7 @@ function walk(string $abs, string $rel, callable $fn): void
 
 ### phaseParse
 
-*private* - line 160
+*private* - line 161
 
 ```php
 function phaseParse(): void
@@ -160,7 +160,7 @@ function phaseParse(): void
 
 ### parsePhp
 
-*private* - line 180
+*private* - line 181
 
 Everything worth knowing about one PHP file.
 
@@ -175,7 +175,7 @@ function parsePhp(string $src, string $rel): array
 
 ### hasModifier
 
-*private* - line 403
+*private* - line 404
 
 ```php
 function hasModifier(array $tokens, int $i, callable $sig, int $mod): bool
@@ -190,7 +190,7 @@ function hasModifier(array $tokens, int $i, callable $sig, int $mod): bool
 
 ### visibility
 
-*private* - line 413
+*private* - line 414
 
 ```php
 function visibility(array $tokens, int $i, callable $sig): string
@@ -204,7 +204,7 @@ function visibility(array $tokens, int $i, callable $sig): string
 
 ### params
 
-*private* - line 426
+*private* - line 427
 
 The parameters between ( and the matching ). `@return` array{0:array,1:int} [params, index of ")"]
 
@@ -219,7 +219,7 @@ function params(array $tokens, int $open): array
 
 ### tidyParams
 
-*private* - line 450
+*private* - line 451
 
 ```php
 function tidyParams(array $ps): array
@@ -231,7 +231,7 @@ function tidyParams(array $ps): array
 
 ### evalPath
 
-*private* - line 457
+*private* - line 458
 
 Work out the file an include points at: string pieces, __DIR__, dirname(__DIR__[, n]).
 
@@ -246,7 +246,7 @@ function evalPath(array $expr, string $rel): ?string
 
 ### normalise
 
-*private* - line 494
+*private* - line 495
 
 ```php
 function normalise(string $path): ?string
@@ -258,7 +258,7 @@ function normalise(string $path): ?string
 
 ### resolveRel
 
-*private* - line 505
+*private* - line 506
 
 ```php
 function resolveRel(string $from, string $href): ?string
@@ -271,7 +271,7 @@ function resolveRel(string $from, string $href): ?string
 
 ### sqlOf
 
-*private* - line 515
+*private* - line 516
 
 Is this string SQL? Which tables does it read and which does it write (with the columns written)?
 
@@ -285,7 +285,7 @@ function sqlOf(string $s): ?array
 
 ### parseDoc
 
-*private* - line 542
+*private* - line 543
 
 A /** doc comment * / split into summary, body and `@tags`.
 
@@ -299,7 +299,7 @@ function parseDoc(string $raw): array
 
 ### lineDoc
 
-*private* - line 564
+*private* - line 565
 
 A run of // lines, or a plain block comment, used as a description when there is no doc comment. Decorative rules (// ----, // ====) and a lone TRAP are not descriptions.
 
@@ -313,7 +313,7 @@ function lineDoc(array $comments): ?array
 
 ### trapText
 
-*private* - line 584
+*private* - line 585
 
 ```php
 function trapText(string $raw): string
@@ -325,7 +325,7 @@ function trapText(string $raw): string
 
 ### parseJs
 
-*private* - line 602
+*private* - line 603
 
 JavaScript: its functions (with /** comments) and the API endpoints it calls.
 
@@ -340,7 +340,7 @@ function parseJs(string $src, string $rel): array
 
 ### phaseWrite
 
-*private* - line 659
+*private* - line 660
 
 ```php
 function phaseWrite(): void
@@ -348,7 +348,7 @@ function phaseWrite(): void
 
 ### cleanEmptyDirs
 
-*private* - line 754
+*private* - line 755
 
 ```php
 function cleanEmptyDirs(string $dir): bool
@@ -360,7 +360,7 @@ function cleanEmptyDirs(string $dir): bool
 
 ### matchEndpoint
 
-*private* - line 767
+*private* - line 768
 
 "api/tickets/save.php" from a JS reference like "../api/tickets/save.php" or "api/tickets/save.php".
 
@@ -375,7 +375,7 @@ function matchEndpoint(string $e, array $files): array
 
 ### link
 
-*private* - line 775
+*private* - line 776
 
 ```php
 function link(string $page, string $label): string
@@ -388,7 +388,7 @@ function link(string $page, string $label): string
 
 ### fileLink
 
-*private* - line 776
+*private* - line 777
 
 ```php
 function fileLink(string $rel, ?string $label = null): string
@@ -401,7 +401,7 @@ function fileLink(string $rel, ?string $label = null): string
 
 ### fnLink
 
-*private* - line 777
+*private* - line 778
 
 ```php
 function fnLink(string $name): string
@@ -413,7 +413,7 @@ function fnLink(string $name): string
 
 ### tableLink
 
-*private* - line 778
+*private* - line 779
 
 ```php
 function tableLink(string $t): string
@@ -425,7 +425,7 @@ function tableLink(string $t): string
 
 ### fnSlug
 
-*private* - line 779
+*private* - line 780
 
 ```php
 function fnSlug(string $name): string
@@ -437,7 +437,7 @@ function fnSlug(string $name): string
 
 ### mdText
 
-*private* - line 781
+*private* - line 782
 
 Text safe inside a link label or table cell.
 
@@ -451,7 +451,7 @@ function mdText(string $s): string
 
 ### cell
 
-*private* - line 782
+*private* - line 783
 
 ```php
 function cell(string $s): string
@@ -463,7 +463,7 @@ function cell(string $s): string
 
 ### code
 
-*private* - line 783
+*private* - line 784
 
 ```php
 function code(string $s): string
@@ -475,7 +475,7 @@ function code(string $s): string
 
 ### docMd
 
-*private* - line 785
+*private* - line 786
 
 ```php
 function docMd(?array $doc, bool $withSummary = true): string
@@ -488,7 +488,7 @@ function docMd(?array $doc, bool $withSummary = true): string
 
 ### wikiLinks
 
-*private* - line 800
+*private* - line 801
 
 The GitHub wiki pages a comment points at, as a box that stands out at the top of the page - a LINK only; the wiki's text is never copied into FreeITSM. From "@wiki Page-Name" (or a full URL) and from any github.com/edmozley/freeitsm/wiki/... link already written in the comment.
 
@@ -502,7 +502,7 @@ function wikiLinks(array $doc): string
 
 ### prose
 
-*private* - line 819
+*private* - line 820
 
 Comment prose into Markdown: keep paragraphs and lists, stop "*" and "_" in code-ish text turning into emphasis.
 
@@ -516,7 +516,7 @@ function prose(string $t): string
 
 ### signature
 
-*private* - line 827
+*private* - line 828
 
 ```php
 function signature(array $fn): string
@@ -528,7 +528,7 @@ function signature(array $fn): string
 
 ### paramsTable
 
-*private* - line 837
+*private* - line 838
 
 ```php
 function paramsTable(array $fn): string
@@ -540,7 +540,7 @@ function paramsTable(array $fn): string
 
 ### tagRows
 
-*private* - line 852
+*private* - line 853
 
 ```php
 function tagRows(?array $doc, array $want): array
@@ -553,7 +553,7 @@ function tagRows(?array $doc, array $want): array
 
 ### filePage
 
-*private* - line 859
+*private* - line 860
 
 ```php
 function filePage(
@@ -579,7 +579,7 @@ function filePage(
 
 ### guardText
 
-*private* - line 925
+*private* - line 926
 
 How an endpoint is protected: the checks it makes itself, else the ones made by a file it includes (a shared bootstrap like includes/files/api_bootstrap.php), at the top level of that file - a check inside a function only guards that function's callers.
 
@@ -594,7 +594,7 @@ function guardText(string $rel, array $d): string
 
 ### guardsOf
 
-*private* - line 949
+*private* - line 950
 
 ```php
 function guardsOf(array $d, string $via): array
@@ -607,7 +607,7 @@ function guardsOf(array $d, string $via): array
 
 ### sqlMd
 
-*private* - line 965
+*private* - line 966
 
 ```php
 function sqlMd(array $sql, array $tableSet): string
@@ -620,7 +620,7 @@ function sqlMd(array $sql, array $tableSet): string
 
 ### trapsMd
 
-*private* - line 979
+*private* - line 980
 
 ```php
 function trapsMd(array $traps): string
@@ -632,7 +632,7 @@ function trapsMd(array $traps): string
 
 ### seeLink
 
-*private* - line 987
+*private* - line 988
 
 ```php
 function seeLink(string $v): string
@@ -644,7 +644,7 @@ function seeLink(string $v): string
 
 ### functionPage
 
-*private* - line 994
+*private* - line 995
 
 ```php
 function functionPage(
@@ -666,7 +666,7 @@ function functionPage(
 
 ### classPage
 
-*private* - line 1042
+*private* - line 1043
 
 ```php
 function classPage(string $cls, array $c, array $callers, array $files, array $tableSet): string
@@ -682,7 +682,7 @@ function classPage(string $cls, array $c, array $callers, array $files, array $t
 
 ### tablePage
 
-*private* - line 1068
+*private* - line 1069
 
 ```php
 function tablePage(string $t, array $def, array $use): string
@@ -696,7 +696,7 @@ function tablePage(string $t, array $def, array $use): string
 
 ### indexPage
 
-*private* - line 1096
+*private* - line 1097
 
 ```php
 function indexPage(array $files, array $fnIndex, array $classIndex, array $schema): string
@@ -711,7 +711,7 @@ function indexPage(array $files, array $fnIndex, array $classIndex, array $schem
 
 ### functionsIndex
 
-*private* - line 1113
+*private* - line 1114
 
 ```php
 function functionsIndex(array $fnIndex): string
@@ -723,7 +723,7 @@ function functionsIndex(array $fnIndex): string
 
 ### classesIndex
 
-*private* - line 1128
+*private* - line 1129
 
 ```php
 function classesIndex(array $classIndex): string
@@ -735,7 +735,7 @@ function classesIndex(array $classIndex): string
 
 ### tablesIndex
 
-*private* - line 1139
+*private* - line 1140
 
 ```php
 function tablesIndex(array $schema, array $use): string
@@ -748,7 +748,7 @@ function tablesIndex(array $schema, array $use): string
 
 ### filesIndex
 
-*private* - line 1151
+*private* - line 1152
 
 ```php
 function filesIndex(array $files): string
@@ -760,7 +760,7 @@ function filesIndex(array $files): string
 
 ### endpointsPage
 
-*private* - line 1164
+*private* - line 1165
 
 ```php
 function endpointsPage(array $files, array $jsCallers): string
@@ -773,7 +773,7 @@ function endpointsPage(array $files, array $jsCallers): string
 
 ### trapsPage
 
-*private* - line 1181
+*private* - line 1182
 
 ```php
 function trapsPage(array $files): string
@@ -785,7 +785,7 @@ function trapsPage(array $files): string
 
 ### loadSchema
 
-*private* - line 1196
+*private* - line 1197
 
 ```php
 function loadSchema(): array
@@ -795,7 +795,7 @@ function loadSchema(): array
 
 ### loadManifest
 
-*private* - line 1242
+*private* - line 1243
 
 ```php
 function loadManifest(): void
@@ -803,7 +803,7 @@ function loadManifest(): void
 
 ### saveManifest
 
-*private* - line 1247
+*private* - line 1248
 
 ```php
 function saveManifest(): void
@@ -811,7 +811,7 @@ function saveManifest(): void
 
 ### saveState
 
-*private* - line 1248
+*private* - line 1249
 
 ```php
 function saveState(): void
@@ -819,7 +819,7 @@ function saveState(): void
 
 ### readJson
 
-*private* - line 1249
+*private* - line 1250
 
 ```php
 function readJson(string $name, $default)
@@ -832,7 +832,7 @@ function readJson(string $name, $default)
 
 ### writeJson
 
-*private* - line 1256
+*private* - line 1257
 
 ```php
 function writeJson(string $name, $data): void
@@ -845,7 +845,7 @@ function writeJson(string $name, $data): void
 
 ### lastScan
 
-*public static* - line 1264
+*public static* - line 1265
 
 When the last scan finished, and what it did - for the reader's Rescan button.
 
