@@ -21,6 +21,8 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2317 | Knowledge         | Fix         | Opening a link to an article (?article=N) no longer shows the folder's article list for a moment before the article; the list is hidden from the first paint and only comes back if the article cannot be opened. |
 | 2318 | Assets            | Fix         | Machines that have gone back (every lease row Returned, Bought out or another closed outcome) no longer count on the Watchtower lease card or get a "Lease ends" calendar entry, and changing a machine's lease outcome now refreshes those calendar entries straight away. |
 | 2319 | Files             | Fix         | The Explorer status bar says "1 item" rather than "1 items". |
+| 2320 | Projects          | Fix         | The earned value line on a project's Budget tab no longer falls when tasks are added: each date's share of work done is measured against today's whole scope, so the line only rises; today's EV, CPI, SPI and EAC are unchanged. |
+| 2321 | Tickets           | Fix         | The Triage queue and Settings -> Activity pages follow dark mode like the rest of Tickets (theme set on the page and their colours moved to theme tokens). |
 
 
 

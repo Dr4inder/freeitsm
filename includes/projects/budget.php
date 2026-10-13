@@ -331,8 +331,9 @@ function projectBudgetTimeline(PDO $conn, array $project, array $lineRows, array
  * Earned value (3.3.0), from what the budget already holds:
  *   BAC  budget at completion - the planned total
  *   PV   planned value by date - the cumulative planned spend (the timeline's planned line)
- *   EV   earned value by date - BAC x the share of the work done by then: by estimated
- *        hours when the project's open-and-done tasks have estimates, otherwise by count
+ *   EV   earned value by date - BAC x the share of today's whole scope that was done by
+ *        then: by estimated hours when the project's tasks have estimates, otherwise by
+ *        count. It only ever rises.
  *   AC   actual cost by date - the cumulative actual (the timeline's actual line)
  * Today's indices: CPI = EV / AC (above 1 = under budget), SPI = EV / PV (above 1 =
  * ahead), CV = EV - AC, SV = EV - PV, EAC = BAC / CPI, VAC = BAC - EAC.
@@ -355,13 +356,18 @@ function projectEarnedValue(PDO $conn, int $projectId, array $timeline, float $b
     $weight = fn($t) => $byHours ? (float)($t['h'] ?? 0) : 1.0;
     // A finished task with no completed date counts as finished from when it was created.
     $doneOn = fn($t) => $t['f'] ?: ((int)$t['closed'] === 1 ? $t['c'] : null);
-    $pct = function (string $d) use ($tasks, $weight, $doneOn) {
-        $scope = 0.0; $done = 0.0;
+    // TRAP: the share is measured against TODAY's whole scope, never the scope as it
+    // stood on that date. Measuring against "tasks that existed by then" made earned
+    // value FALL whenever work was added (6 of 10 done = 60%, add 10 tasks = 30%), and
+    // earned value never falls - the work done is still done. Today's figures are the
+    // same either way; only the history changes, and now it can only rise.
+    $scope = 0.0;
+    foreach ($tasks as $t) $scope += $weight($t);
+    $pct = function (string $d) use ($tasks, $weight, $doneOn, $scope) {
+        $done = 0.0;
         foreach ($tasks as $t) {
-            if (!$t['c'] || $t['c'] > $d) continue;
-            $w = $weight($t); $scope += $w;
             $fin = $doneOn($t);
-            if ($fin && $fin <= $d) $done += $w;
+            if ($fin && $fin <= $d) $done += $weight($t);
         }
         return $scope > 0 ? $done / $scope : 0.0;
     };
