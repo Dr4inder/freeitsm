@@ -125,10 +125,16 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
         // The column name is interpolated, never bound - a placeholder cannot
         // stand for an identifier. It comes from this file's own two call sites
         // and never from a request, so there is nothing here a caller can steer.
+        // A machine already handed back keeps its lease_expiry as a record - no "Lease ends" entry for it.
+        $goneBack = '';
+        if ($column === 'lease_expiry') {
+            require_once __DIR__ . '/leases.php';
+            if (leaseReady($conn)) $goneBack = ' AND NOT ' . leaseGoneBackSql('a');
+        }
         $rows = $conn->query(
-            "SELECT id, hostname, `{$column}` AS expiry_date
-             FROM assets
-             WHERE `{$column}` IS NOT NULL"
+            "SELECT a.id, a.hostname, a.`{$column}` AS expiry_date
+             FROM assets a
+             WHERE a.`{$column}` IS NOT NULL{$goneBack}"
         )->fetchAll(PDO::FETCH_ASSOC);
 
         if (!$rows) {

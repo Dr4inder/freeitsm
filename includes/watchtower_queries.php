@@ -755,7 +755,10 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     $asLease = 0;
     if ($wtShowLease) {
         try {
-            $l = $conn->prepare("SELECT COUNT(*) FROM assets WHERE lease_expiry IS NOT NULL AND lease_expiry <= DATE_ADD({$todaySql}, INTERVAL ? DAY)");
+            // Machines already handed back keep their lease_expiry as a record - not due back.
+            require_once __DIR__ . '/leases.php';
+            $goneBack = leaseReady($conn) ? ' AND NOT ' . leaseGoneBackSql('a') : '';
+            $l = $conn->prepare("SELECT COUNT(*) FROM assets a WHERE a.lease_expiry IS NOT NULL AND a.lease_expiry <= DATE_ADD({$todaySql}, INTERVAL ? DAY){$goneBack}");
             $l->execute([$ltDays]);
             $asLease = (int)$l->fetchColumn();
         } catch (Exception $e) { $wtShowLease = false; }

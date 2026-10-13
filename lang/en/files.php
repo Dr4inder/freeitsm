@@ -36,6 +36,7 @@ return [
         'back' => 'Back',
         'copy' => 'Copy',
         'count' => '{n} items',
+        'count_one' => '1 item',
         'cut' => 'Cut',
         'del_file_q' => 'Delete "{name}"?',
         'del_folder_q' => 'Delete the folder "{name}" and everything in it?',

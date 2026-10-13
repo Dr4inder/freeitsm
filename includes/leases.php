@@ -100,6 +100,22 @@ function leaseActiveSql(string $la = 'la', string $lo = 'lo'): string
     return "($la.outcome_id IS NULL OR $lo.kind = 'active')";
 }
 
+/**
+ * SQL: the asset (alias $a) has GONE BACK - it is on a lease, and none of its
+ * lease rows is still out (every one is Returned, Bought out, ...).
+ *
+ * TRAP: a returned asset keeps lease_expiry as the record of what happened (see
+ * the header), so anything that alerts on lease_expiry must skip these, or a
+ * machine handed back in March is "due back" for ever. Call only when leaseReady().
+ */
+function leaseGoneBackSql(string $a = 'a'): string
+{
+    return "(EXISTS (SELECT 1 FROM lease_assets gb1 WHERE gb1.asset_id = $a.id)
+             AND NOT EXISTS (SELECT 1 FROM lease_assets gb2
+                             LEFT JOIN lease_outcomes gbo ON gbo.id = gb2.outcome_id
+                             WHERE gb2.asset_id = $a.id AND " . leaseActiveSql('gb2', 'gbo') . "))";
+}
+
 /** Outcomes, in order. $activeOnly drops switched-off ones (still shown where in use). */
 function leaseOutcomes(PDO $conn, bool $activeOnly = false): array
 {
@@ -555,7 +571,8 @@ function leaseAssetUpdate(PDO $conn, ActorContext $ctx, int $id, array $in): voi
     $conn->prepare("UPDATE lease_assets SET outcome_id = ?, start_date = ?, end_date = ?, outcome_date = ?, notes = ?, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
          ->execute([$outcomeId, $start, $end, $outDate, leaseText($pick('notes'), 500), $id]);
     if ($kind === 'active') leaseSyncAsset($conn, $ctx, (int)$r['asset_id']);
-    leaseSyncCalendar($conn);
+    // The full sync, not just the notice entries: a machine just returned must lose its "Lease ends" entry too.
+    leaseSyncAllCalendar($conn);
 }
 
 /** Take an asset off a schedule altogether (a mistake, not a return - use an outcome for that). */
@@ -563,7 +580,7 @@ function leaseAssetRemove(PDO $conn, ActorContext $ctx, int $id): void
 {
     leaseLoadAssetRow($conn, $ctx->actorId, $id);
     $conn->prepare("DELETE FROM lease_assets WHERE id = ?")->execute([$id]);
-    leaseSyncCalendar($conn);
+    leaseSyncAllCalendar($conn);
 }
 
 // ============================================================================
@@ -706,6 +723,15 @@ function leaseDueBack(PDO $conn, int $analystId, int $days = 90, int $leaseId = 
  * them. Follows the same Assets -> Settings switch as the lease end entries
  * (asset_lease_surface: calendar / both) and sits in the same category.
  */
+/** Every asset-date calendar entry (warranty, "Lease ends", lease notice) - it calls leaseSyncCalendar() itself. */
+function leaseSyncAllCalendar(PDO $conn): void
+{
+    try {
+        require_once __DIR__ . '/asset_warranty_calendar.php';
+        syncAssetWarrantyCalendar($conn);
+    } catch (Throwable $e) { /* the calendar is never worth failing a lease edit over */ }
+}
+
 function leaseSyncCalendar(PDO $conn): void
 {
     try {

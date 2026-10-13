@@ -536,7 +536,7 @@
     Explorer.prototype.updateStatus = function () {
         var all = this.order.length;
         var sel = this.selected();
-        this.stCount.textContent = L('ex.count', '{n} items', { n: all });
+        this.stCount.textContent = all === 1 ? L('ex.count_one', '1 item') : L('ex.count', '{n} items', { n: all });
         if (sel.length) {
             var bytes = 0, files = 0;
             sel.forEach(function (e) { if (e.type === 'item') { bytes += e.size || 0; files++; } });
