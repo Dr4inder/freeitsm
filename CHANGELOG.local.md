@@ -19,6 +19,8 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2315 | Files             | Improvement | Search and the "Filter this folder" box accept * and ? as Windows-style wildcards over the whole name (e.g. *.png, report*); plain text still matches anywhere in the name. |
 | 2316 | Files             | Feature     | Shortcuts to Knowledge articles: "Shortcut to article..." on a folder's or the desktop's right-click menu picks an article the person can read; double-clicking opens a sandboxed preview window with "Open in Knowledge" (new tab), and a folder shortcut is only listed for people who can read the article (Knowledge's own visibility clause, no admin floor). |
 | 2317 | Knowledge         | Fix         | Opening a link to an article (?article=N) no longer shows the folder's article list for a moment before the article; the list is hidden from the first paint and only comes back if the article cannot be opened. |
+| 2318 | Assets            | Fix         | Machines that have gone back (every lease row Returned, Bought out or another closed outcome) no longer count on the Watchtower lease card or get a "Lease ends" calendar entry, and changing a machine's lease outcome now refreshes those calendar entries straight away. |
+| 2319 | Files             | Fix         | The Explorer status bar says "1 item" rather than "1 items". |
 
 
 
