@@ -1,6 +1,9 @@
 # assets/js/projects-templates.js
 
-> JavaScript - 80 lines
+> JavaScript - 85 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Projects Internals 8 Connections and Templates](https://github.com/edmozley/freeitsm/wiki/Projects-Internals-8-Connections-and-Templates)
 
 Projects - save this project as a template (3.2.0).
 
@@ -18,10 +21,10 @@ Starting a project FROM a template is the picker in the project form
 
 | Function | Line | What it does |
 |---|--:|---|
-| `$(id)` | 29 |  |
-| `mode()` | 32 |  |
-| `projectName()` | 33 |  |
-| `fillFromMode()` | 35 | New: the project's name. Replace: the chosen template's name and description. |
+| `$(id)` | 32 | Shorthand for document.getElementById. |
+| `mode()` | 36 | Which way the dialog saves - 'new' for a new template, or 'replace' to overwrite one of the analyst's own. |
+| `projectName()` | 38 | The project's name as shown on the page. |
+| `fillFromMode()` | 40 | New: the project's name. Replace: the chosen template's name and description. |
 
 ## Loaded by
 

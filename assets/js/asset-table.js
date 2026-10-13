@@ -10,6 +10,10 @@
 (function () {
     'use strict';
 
+    /**
+     * Translates a key under asset-management, returning the key itself when
+     * translations are not loaded.
+     */
     const tt = (k, p) => (window.t ? window.t('asset-management.' + k, p) : k);
 
     const COLUMNS = [
@@ -101,6 +105,11 @@
         return Number.isFinite(n) && n > 0 && n <= 3650 ? n : null;
     }
 
+    /**
+     * When the page was opened with ?stale=N, keeps only assets last seen more than N
+     * days ago (never-seen assets excluded, matching the Watchtower count) and shows the
+     * banner with a link back to all assets.
+     */
     function applyStaleFilter(rows) {
         const days = staleDaysFromUrl();
         if (days === null) return rows;

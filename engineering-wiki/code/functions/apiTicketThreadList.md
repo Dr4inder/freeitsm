@@ -6,7 +6,7 @@ Thread (emails / channel messages)
 function apiTicketThreadList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 356.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 369.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 359 | `apiTicketThreadList` | read [emails](/code/tables/emails.md) |  |
+| 372 | `apiTicketThreadList` | read [emails](/code/tables/emails.md) |  |
 
 ## Calls
 

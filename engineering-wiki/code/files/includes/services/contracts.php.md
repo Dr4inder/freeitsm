@@ -1,6 +1,6 @@
 # includes/services/contracts.php
 
-> PHP - 555 lines
+> PHP - 560 lines
 
 ContractsService — the shared write rules for the contracts module's core entities: contracts, suppliers and contract-term values.
 
@@ -52,11 +52,11 @@ relied on the server-local column default).
 | 311 | `ContractsService::assertMovable` | read [project_contracts](/code/tables/project_contracts.md), read [projects](/code/tables/projects.md) |  |
 | 312 | `ContractsService::assertMovable` | read [rfps](/code/tables/rfps.md) |  |
 | 359 | `ContractsService::costCentreFor` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 371 | `ContractsService::writeCostCentre` | **update** [contracts](/code/tables/contracts.md) (`cost_centre_id`) |  |
-| 377 | `ContractsService::writeTenant` | **update** [contracts](/code/tables/contracts.md) (`tenant_id`) |  |
-| 388 | `ContractsService::assertVisible` | read [contracts](/code/tables/contracts.md) |  |
-| 424 | `ContractsService::writeParty` | **update** [contracts](/code/tables/contracts.md) (`party_type`, `customer_tenant_id`, `customer_user_id`) |  |
-| 535 | `ContractsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 372 | `ContractsService::writeCostCentre` | **update** [contracts](/code/tables/contracts.md) (`cost_centre_id`) |  |
+| 379 | `ContractsService::writeTenant` | **update** [contracts](/code/tables/contracts.md) (`tenant_id`) |  |
+| 390 | `ContractsService::assertVisible` | read [contracts](/code/tables/contracts.md) |  |
+| 427 | `ContractsService::writeParty` | **update** [contracts](/code/tables/contracts.md) (`party_type`, `customer_tenant_id`, `customer_user_id`) |  |
+| 540 | `ContractsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

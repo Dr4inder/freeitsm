@@ -7,7 +7,7 @@
 | Method | What it does |
 |---|---|
 | [availableMatchKeys()](#availablematchkeys) | MATCH_KEYS minus anything this install has not got yet. |
-| [schemaReady()](#schemaready) |  |
+| [schemaReady()](#schemaready) | True when the asset import tables exist (after Database Verification). Cached per request. |
 | [readCsv()](#readcsv) | Read a CSV into [headers, rows]. Rows are [header => value]. |
 | [dedupeHeaders()](#dedupeheaders) | "Serial", "Serial" -> "Serial", "Serial (2)". |
 | [suggestMapping()](#suggestmapping) | Guess a mapping from the column names, so the screen opens mostly done. |
@@ -17,26 +17,26 @@
 | [hasTenantColumn()](#hastenantcolumn) | Not every lookup table is company-scoped (suppliers may not be). |
 | [applyMapping()](#applymapping) | Split a source row into core columns and custom field values. |
 | [findMatch()](#findmatch) | Find the existing asset for this row, trying each match key IN ORDER. |
-| [applyCreate()](#applycreate) |  |
-| [applyUpdate()](#applyupdate) |  |
+| [applyCreate()](#applycreate) | Creates an asset from one import row, with its custom fields, or describes it on a preview. |
+| [applyUpdate()](#applyupdate) | Updates an existing asset from one import row, or describes it on a preview. |
 | [writeFields()](#writefields) | Write the custom fields, honouring on_unknown_option. |
 | [resolveOption()](#resolveoption) | A dropdown value the option list does not have (§6.7). reject -> the row fails; add -> the option is created. |
 | [attachProfileSet()](#attachprofileset) | The profile's field set, applied to everything it touches. |
 | [handleMissing()](#handlemissing) | Rows present last run and absent now (§6.6). |
-| [inactiveStatusId()](#inactivestatusid) |  |
+| [inactiveStatusId()](#inactivestatusid) | The asset status to give an asset that has dropped out of the source - the first active status whose name contains retired, disposed or inactive. |
 | [unresolved()](#unresolved) | Rows that could not be imported and have not been dealt with. |
 | [resolveEntry()](#resolveentry) | Mark a parked row dealt with — either retried successfully, or dismissed. |
-| [startRun()](#startrun) |  |
-| [finishRun()](#finishrun) |  |
-| [loadRun()](#loadrun) |  |
+| [startRun()](#startrun) | Records the start of an import run and returns its id. |
+| [finishRun()](#finishrun) | Marks an import run finished with its counts, and returns the run. |
+| [loadRun()](#loadrun) | Loads one import run with its counts as integers; throws not found when it does not exist. |
 | [runEntries()](#runentries) | Every row's outcome for a run. |
-| [logEntry()](#logentry) |  |
-| [loadCore()](#loadcore) |  |
-| [firstNonEmpty()](#firstnonempty) |  |
-| [refOf()](#refof) |  |
-| [nameOf()](#nameof) |  |
+| [logEntry()](#logentry) | Writes one row of an import run's log. |
+| [loadCore()](#loadcore) | An asset's id and core columns, for comparing with an import row. |
+| [firstNonEmpty()](#firstnonempty) | The first of `$keys` that has a non-blank value in `$core`, or null. |
+| [refOf()](#refof) | The value an import row is matched on - the first non-blank of the match keys. |
+| [nameOf()](#nameof) | The asset name an import row maps to. |
 | [describe()](#describe) | A human sentence describing what a row did, for the log. |
-| [short()](#short) |  |
+| [short()](#short) | A value cut to 40 characters for the run log. |
 
 ### availableMatchKeys
 
@@ -67,7 +67,9 @@ function availableMatchKeys(PDO $conn): array
 
 ### schemaReady
 
-*public static* - line 104
+*public static* - line 105
+
+True when the asset import tables exist (after Database Verification). Cached per request.
 
 ```php
 function schemaReady(PDO $conn): bool
@@ -81,13 +83,13 @@ function schemaReady(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 109 | `AssetImportService::schemaReady` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 110 | `AssetImportService::schemaReady` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
 
 **Called from:** [api/assets/import_history.php](/code/files/api/assets/import_history.php.md), [api/assets/import_upload.php](/code/files/api/assets/import_upload.php.md)
 
 ### readCsv
 
-*public static* - line 130
+*public static* - line 131
 
 Read a CSV into [headers, rows]. Rows are [header => value].
 
@@ -109,7 +111,7 @@ function readCsv(string $path, array $config = []): array
 
 ### dedupeHeaders
 
-*private static* - line 196
+*private static* - line 197
 
 "Serial", "Serial" -> "Serial", "Serial (2)".
 
@@ -123,7 +125,7 @@ function dedupeHeaders(array $headers): array
 
 ### suggestMapping
 
-*public static* - line 218
+*public static* - line 219
 
 Guess a mapping from the column names, so the screen opens mostly done.
 
@@ -144,7 +146,7 @@ function suggestMapping(PDO $conn, array $headers, int $analystId): array
 
 ### run
 
-*public static* - line 285
+*public static* - line 286
 
 Import rows. `$mode` of 'preview' does every check and writes nothing.
 
@@ -174,7 +176,7 @@ function run(
 
 ### processRow
 
-*private static* - line 388
+*private static* - line 389
 
 One row: map it, find it, write it.
 
@@ -206,7 +208,7 @@ function processRow(
 
 ### resolveLookups
 
-*private static* - line 450
+*private static* - line 451
 
 Turn the NAMES a spreadsheet contains into the ids the columns hold.
 
@@ -236,7 +238,7 @@ function resolveLookups(PDO $conn, array $core, ?int $tenantId): array
 
 ### hasTenantColumn
 
-*private static* - line 510
+*private static* - line 511
 
 Not every lookup table is company-scoped (suppliers may not be).
 
@@ -251,7 +253,7 @@ function hasTenantColumn(PDO $conn, string $table): bool
 
 ### applyMapping
 
-*private static* - line 525
+*private static* - line 526
 
 Split a source row into core columns and custom field values.
 
@@ -266,7 +268,7 @@ function applyMapping(array $row, array $mapping): array
 
 ### findMatch
 
-*private static* - line 553
+*private static* - line 554
 
 Find the existing asset for this row, trying each match key IN ORDER.
 
@@ -289,11 +291,15 @@ function findMatch(PDO $conn, array $core, array $matchKeys, ?int $tenantId): ar
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 563 | `AssetImportService::findMatch` | read [assets](/code/tables/assets.md) |  |
+| 564 | `AssetImportService::findMatch` | read [assets](/code/tables/assets.md) |  |
 
 ### applyCreate
 
-*private static* - line 574
+*private static* - line 581
+
+Creates an asset from one import row, with its custom fields, or describes it on a preview.
+
+Throws when nothing is mapped to the asset name.
 
 ```php
 function applyCreate(
@@ -323,7 +329,12 @@ function applyCreate(
 
 ### applyUpdate
 
-*private static* - line 598
+*private static* - line 611
+
+Updates an existing asset from one import row, or describes it on a preview.
+
+Works out the changes first so a preview and a live run report the same thing; in
+fill mode only empty values are written, and the name is never changed.
 
 ```php
 function applyUpdate(
@@ -353,7 +364,7 @@ function applyUpdate(
 
 ### writeFields
 
-*private static* - line 666
+*private static* - line 679
 
 Write the custom fields, honouring on_unknown_option.
 
@@ -375,7 +386,7 @@ function writeFields(PDO $conn, ActorContext $ctx, int $assetId, array $fields, 
 
 ### resolveOption
 
-*private static* - line 705
+*private static* - line 718
 
 A dropdown value the option list does not have (§6.7). reject -> the row fails; add -> the option is created.
 
@@ -394,12 +405,12 @@ function resolveOption(PDO $conn, array $def, string $value, array $opts): ?stri
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 707 | `AssetImportService::resolveOption` | read [asset_field_options](/code/tables/asset_field_options.md) |  |
-| 716 | `AssetImportService::resolveOption` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `display_order`) |  |
+| 720 | `AssetImportService::resolveOption` | read [asset_field_options](/code/tables/asset_field_options.md) |  |
+| 729 | `AssetImportService::resolveOption` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `display_order`) |  |
 
 ### attachProfileSet
 
-*private static* - line 726
+*private static* - line 739
 
 The profile's field set, applied to everything it touches.
 
@@ -416,7 +427,7 @@ function attachProfileSet(PDO $conn, ActorContext $ctx, int $assetId, array $opt
 
 ### handleMissing
 
-*private static* - line 741
+*private static* - line 754
 
 Rows present last run and absent now (§6.6).
 
@@ -448,12 +459,14 @@ function handleMissing(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 745 | `AssetImportService::handleMissing` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
-| 767 | `AssetImportService::handleMissing` | **update** [assets](/code/tables/assets.md) (`asset_status_id`) |  |
+| 758 | `AssetImportService::handleMissing` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 780 | `AssetImportService::handleMissing` | **update** [assets](/code/tables/assets.md) (`asset_status_id`) |  |
 
 ### inactiveStatusId
 
-*private static* - line 783
+*private static* - line 800
+
+The asset status to give an asset that has dropped out of the source - the first active status whose name contains retired, disposed or inactive.
 
 ```php
 function inactiveStatusId(PDO $conn, ?int $tenantId): ?int
@@ -468,11 +481,11 @@ function inactiveStatusId(PDO $conn, ?int $tenantId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 786 | `AssetImportService::inactiveStatusId` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 803 | `AssetImportService::inactiveStatusId` | read [asset_status_types](/code/tables/asset_status_types.md) |  |
 
 ### unresolved
 
-*public static* - line 801
+*public static* - line 818
 
 Rows that could not be imported and have not been dealt with.
 
@@ -490,13 +503,13 @@ function unresolved(PDO $conn, ?int $runId = null, int $limit = 200): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 806 | `AssetImportService::unresolved` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 823 | `AssetImportService::unresolved` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md), read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
 
 **Called from:** [api/assets/import_history.php](/code/files/api/assets/import_history.php.md)
 
 ### resolveEntry
 
-*public static* - line 829
+*public static* - line 846
 
 Mark a parked row dealt with — either retried successfully, or dismissed.
 
@@ -513,13 +526,15 @@ function resolveEntry(PDO $conn, int $entryId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 831 | `AssetImportService::resolveEntry` | **update** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`resolved_datetime`) |  |
+| 848 | `AssetImportService::resolveEntry` | **update** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`resolved_datetime`) |  |
 
 **Called from:** [api/assets/import_resolve.php](/code/files/api/assets/import_resolve.php.md)
 
 ### startRun
 
-*private static* - line 839
+*private static* - line 857
+
+Records the start of an import run and returns its id.
 
 ```php
 function startRun(PDO $conn, ActorContext $ctx, array $opts, string $mode, ?int $tenantId): int
@@ -537,11 +552,13 @@ function startRun(PDO $conn, ActorContext $ctx, array $opts, string $mode, ?int 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 847 | `AssetImportService::startRun` | **insert** [asset_import_runs](/code/tables/asset_import_runs.md) (`profile_id`, `mode`, `status`, `source_name`, `stored_file`, `triggered_by_analyst_id`, `tenant_id`, `started_datetime`) |  |
+| 865 | `AssetImportService::startRun` | **insert** [asset_import_runs](/code/tables/asset_import_runs.md) (`profile_id`, `mode`, `status`, `source_name`, `stored_file`, `triggered_by_analyst_id`, `tenant_id`, `started_datetime`) |  |
 
 ### finishRun
 
-*private static* - line 862
+*private static* - line 881
+
+Marks an import run finished with its counts, and returns the run.
 
 ```php
 function finishRun(PDO $conn, int $runId, int $seen, array $counts): array
@@ -558,11 +575,13 @@ function finishRun(PDO $conn, int $runId, int $seen, array $counts): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 865 | `AssetImportService::finishRun` | **update** [asset_import_runs](/code/tables/asset_import_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `unchanged_count`, `conflict_count`, `skipped_count`, `error_count`) |  |
+| 884 | `AssetImportService::finishRun` | **update** [asset_import_runs](/code/tables/asset_import_runs.md) (`status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `unchanged_count`, `conflict_count`, `skipped_count`, `error_count`) |  |
 
 ### loadRun
 
-*public static* - line 878
+*public static* - line 898
+
+Loads one import run with its counts as integers; throws not found when it does not exist.
 
 ```php
 function loadRun(PDO $conn, int $runId): array
@@ -577,13 +596,13 @@ function loadRun(PDO $conn, int $runId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 880 | `AssetImportService::loadRun` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
+| 900 | `AssetImportService::loadRun` | read [asset_import_runs](/code/tables/asset_import_runs.md) |  |
 
 **Called from:** [api/assets/import_history.php](/code/files/api/assets/import_history.php.md)
 
 ### runEntries
 
-*public static* - line 894
+*public static* - line 914
 
 Every row's outcome for a run.
 
@@ -602,13 +621,15 @@ function runEntries(PDO $conn, int $runId, ?string $action = null, int $limit = 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 896 | `AssetImportService::runEntries` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md) |  |
+| 916 | `AssetImportService::runEntries` | read [asset_import_run_entries](/code/tables/asset_import_run_entries.md) |  |
 
 **Called from:** [api/assets/import_history.php](/code/files/api/assets/import_history.php.md), [api/assets/import_run.php](/code/files/api/assets/import_run.php.md)
 
 ### logEntry
 
-*private static* - line 908
+*private static* - line 929
+
+Writes one row of an import run's log.
 
 ```php
 function logEntry(
@@ -640,11 +661,13 @@ function logEntry(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 917 | `AssetImportService::logEntry` | **insert** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`run_id`, `row_number`, `action`, `asset_id`, `source_ref`, `display_name`, `detail`, `raw_row`) |  |
+| 938 | `AssetImportService::logEntry` | **insert** [asset_import_run_entries](/code/tables/asset_import_run_entries.md) (`run_id`, `row_number`, `action`, `asset_id`, `source_ref`, `display_name`, `detail`, `raw_row`) |  |
 
 ### loadCore
 
-*private static* - line 937
+*private static* - line 959
+
+An asset's id and core columns, for comparing with an import row.
 
 ```php
 function loadCore(PDO $conn, int $assetId): array
@@ -659,11 +682,13 @@ function loadCore(PDO $conn, int $assetId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 940 | `AssetImportService::loadCore` | read [assets](/code/tables/assets.md) |  |
+| 962 | `AssetImportService::loadCore` | read [assets](/code/tables/assets.md) |  |
 
 ### firstNonEmpty
 
-*private static* - line 945
+*private static* - line 968
+
+The first of `$keys` that has a non-blank value in `$core`, or null.
 
 ```php
 function firstNonEmpty(array $core, array $keys): ?string
@@ -676,7 +701,9 @@ function firstNonEmpty(array $core, array $keys): ?string
 
 ### refOf
 
-*private static* - line 955
+*private static* - line 979
+
+The value an import row is matched on - the first non-blank of the match keys.
 
 ```php
 function refOf(array $row, array $mapping, array $matchKeys): ?string
@@ -690,7 +717,9 @@ function refOf(array $row, array $mapping, array $matchKeys): ?string
 
 ### nameOf
 
-*private static* - line 961
+*private static* - line 986
+
+The asset name an import row maps to.
 
 ```php
 function nameOf(array $row, array $mapping): ?string
@@ -703,7 +732,7 @@ function nameOf(array $row, array $mapping): ?string
 
 ### describe
 
-*private static* - line 968
+*private static* - line 993
 
 A human sentence describing what a row did, for the log.
 
@@ -718,7 +747,9 @@ function describe(array $core, array $fields): string
 
 ### short
 
-*private static* - line 988
+*private static* - line 1014
+
+A value cut to 40 characters for the run log.
 
 ```php
 function short($v): string

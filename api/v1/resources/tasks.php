@@ -37,6 +37,7 @@ require_once dirname(__DIR__, 3) . '/includes/timezone.php';   // naive_today_sq
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+/** The SELECT for tasks, with status, priority, analyst, team and creator names. */
 function apiTaskSelect(): string {
     return "SELECT t.*,
                    ts.name AS status_name, ts.is_closed AS status_is_closed, ts.colour AS status_colour,
@@ -58,6 +59,10 @@ function apiTaskContractor(PDO $conn, int $taskId): ?array {
     return tasksContractors($conn, [$taskId])[$taskId] ?? null;
 }
 
+/**
+ * Shapes a task row for the API, with its tags and subtask progress (total and done)
+ * read alongside.
+ */
 function apiSerializeTask(PDO $conn, array $r): array {
     $rel = function ($id, $name, array $extra = []) {
         return $id === null ? null : array_merge(['id' => (int)$id, 'name' => $name], $extra);
@@ -124,6 +129,10 @@ function apiSerializeTask(PDO $conn, array $r): array {
     ];
 }
 
+/**
+ * Loads one task row, or answers 404 and stops - also for a task in a company the key
+ * cannot reach, when the key is given.
+ */
 function apiLoadTask(PDO $conn, int $taskId, ?array $apiKey = null): array {
     $stmt = $conn->prepare(apiTaskSelect() . " WHERE t.id = ?");
     $stmt->execute([$taskId]);
@@ -430,6 +439,7 @@ function apiTaskCommentsList(PDO $conn, array $apiKey, array $params, array $bod
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/** POST /tasks/{id}/comments - adds a comment to the task through TasksService. */
 function apiTaskCommentsCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         $commentId = TasksService::createComment($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], (string)($body['text'] ?? ''));
@@ -458,6 +468,7 @@ function apiTaskStatusesList(PDO $conn, array $apiKey, array $params, array $bod
     }, $rows));
 }
 
+/** GET /task-priorities - the task priorities, in display order. */
 function apiTaskPrioritiesList(PDO $conn, array $apiKey, array $params, array $body): void {
     $rows = $conn->query(
         "SELECT id, name, is_default, colour, is_active FROM task_priorities ORDER BY display_order, name"
@@ -473,6 +484,7 @@ function apiTaskPrioritiesList(PDO $conn, array $apiKey, array $params, array $b
     }, $rows));
 }
 
+/** GET /task-tags - the task tags, with how many tasks carry each. */
 function apiTaskTagsList(PDO $conn, array $apiKey, array $params, array $body): void {
     $rows = $conn->query(
         "SELECT t.id, t.name, t.colour,

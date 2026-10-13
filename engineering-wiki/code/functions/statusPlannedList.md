@@ -6,7 +6,7 @@ Planned maintenance for a list: scheduled and in progress by default, soonest fi
 function statusPlannedList(PDO $conn, array $opts = []): array
 ```
 
-Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 140.
+Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 141.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/service_status_planned.php](/code/files/includes/service_st
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 148 | `statusPlannedList` | read [status_planned](/code/tables/status_planned.md), read [analysts](/code/tables/analysts.md), read [projects](/code/tables/projects.md) |  |
-| 159 | `statusPlannedList` | read [status_planned_services](/code/tables/status_planned_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 149 | `statusPlannedList` | read [status_planned](/code/tables/status_planned.md), read [analysts](/code/tables/analysts.md), read [projects](/code/tables/projects.md) |  |
+| 160 | `statusPlannedList` | read [status_planned_services](/code/tables/status_planned_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## Calls
 

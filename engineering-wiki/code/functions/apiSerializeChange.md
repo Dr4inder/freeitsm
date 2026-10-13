@@ -6,7 +6,7 @@ Summary shape (lists). Detail adds the longtext bodies, PIR, attachments, links.
 function apiSerializeChange(array $r): array
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 73.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

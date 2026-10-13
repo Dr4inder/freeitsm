@@ -6,7 +6,7 @@ Domains the person is the customer for / the company holds.
 function peopleDomains(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 412.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 413.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 412.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 423 | `peopleDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 424 | `peopleDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 ## Calls
 

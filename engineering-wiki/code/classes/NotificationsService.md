@@ -9,7 +9,7 @@
 | [portalUser()](#portaluser) | A portal user as a recipient. Anything else passed where a recipient is expected is an analyst id, so every existing caller is unchanged. |
 | [who()](#who) | [table, id column, id, is portal] for a recipient. The ONLY place that choice is made. |
 | [duringBulk()](#duringbulk) | Run `$fn` with bulk suppression on, restoring the previous state whatever happens. |
-| [inBulk()](#inbulk) |  |
+| [inBulk()](#inbulk) | True while a `duringBulk()` call is running. |
 | [types()](#types) | Which event types put something in the bell, and whether they do so by default. The value is the DEFAULT — every one of these is switchable per analyst under Preferences. |
 | [typeEnabled()](#typeenabled) | True when this analyst wants this type in their bell. |
 | [preferences()](#preferences) | The analyst's per-type overrides, as [event_type => bool]. |
@@ -20,10 +20,10 @@
 | [linkFor()](#linkfor) | Where clicking a notification goes. |
 | [portalLinkFor()](#portallinkfor) | Where a portal user's notification goes. Only tickets so far; the ticket page itself decides - through `portalTicketAccess()` - whether they may see it, so a stale notification can never be a way in. |
 | [markRead()](#markread) | Mark specific ids read. Scoped to the analyst, so ids from elsewhere do nothing. |
-| [markAllRead()](#markallread) |  |
+| [markAllRead()](#markallread) | Marks every unread notification for the recipient (an analyst, or a portal user) as read and returns how many. |
 | [clear()](#clear) | Remove specific notifications outright (discussion #111). |
 | [clearAll()](#clearall) | Empty the panel. |
-| [clip()](#clip) |  |
+| [clip()](#clip) | Trimmed text cut to `$max` characters, or null when blank. |
 
 ### portalUser
 
@@ -73,7 +73,9 @@ function duringBulk(callable $fn)
 
 ### inBulk
 
-*public static* - line 102
+*public static* - line 103
+
+True while a `duringBulk()` call is running.
 
 ```php
 function inBulk(): bool
@@ -83,7 +85,7 @@ function inBulk(): bool
 
 ### types
 
-*public static* - line 116
+*public static* - line 117
 
 Which event types put something in the bell, and whether they do so by default. The value is the DEFAULT — every one of these is switchable per analyst under Preferences.
 
@@ -99,7 +101,7 @@ function types(): array
 
 ### typeEnabled
 
-*public static* - line 221
+*public static* - line 222
 
 True when this analyst wants this type in their bell.
 
@@ -117,7 +119,7 @@ function typeEnabled(PDO $conn, int $analystId, string $eventType): bool
 
 ### preferences
 
-*public static* - line 239
+*public static* - line 240
 
 The analyst's per-type overrides, as [event_type => bool].
 
@@ -137,11 +139,11 @@ function preferences(PDO $conn, int $analystId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 243 | `NotificationsService::preferences` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 244 | `NotificationsService::preferences` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ### effectivePreferences
 
-*public static* - line 259
+*public static* - line 260
 
 The full effective map for the settings UI: every type with its current state.
 
@@ -158,7 +160,7 @@ function effectivePreferences(PDO $conn, int $analystId): array
 
 ### notify
 
-*public static* - line 280
+*public static* - line 281
 
 Write a notification, applying every noise rule.
 
@@ -181,7 +183,7 @@ function notify(PDO $conn, array $in): ?int
 
 ### unreadCount
 
-*public static* - line 372
+*public static* - line 373
 
 Unread count for the badge. Cheap — this is polled by every open tab.
 
@@ -198,7 +200,7 @@ function unreadCount(PDO $conn, $recipient): int
 
 ### listFor
 
-*public static* - line 387
+*public static* - line 388
 
 Newest first. Unread first is deliberately NOT done — recency is the useful order.
 
@@ -216,7 +218,7 @@ function listFor(PDO $conn, $recipient, int $limit = self::LIST_LIMIT): array
 
 ### linkFor
 
-*public static* - line 421
+*public static* - line 422
 
 Where clicking a notification goes.
 
@@ -237,7 +239,7 @@ function linkFor(string $entityType, int $entityId): ?string
 
 ### portalLinkFor
 
-*public static* - line 439
+*public static* - line 440
 
 Where a portal user's notification goes. Only tickets so far; the ticket page itself decides - through `portalTicketAccess()` - whether they may see it, so a stale notification can never be a way in.
 
@@ -252,7 +254,7 @@ function portalLinkFor(string $entityType, int $entityId): ?string
 
 ### markRead
 
-*public static* - line 445
+*public static* - line 446
 
 Mark specific ids read. Scoped to the analyst, so ids from elsewhere do nothing.
 
@@ -270,7 +272,9 @@ function markRead(PDO $conn, $recipient, array $ids): int
 
 ### markAllRead
 
-*public static* - line 461
+*public static* - line 466
+
+Marks every unread notification for the recipient (an analyst, or a portal user) as read and returns how many.
 
 ```php
 function markAllRead(PDO $conn, $recipient): int
@@ -285,7 +289,7 @@ function markAllRead(PDO $conn, $recipient): int
 
 ### clear
 
-*public static* - line 485
+*public static* - line 490
 
 Remove specific notifications outright (discussion #111).
 
@@ -313,7 +317,7 @@ function clear(PDO $conn, $recipient, array $ids): int
 
 ### clearAll
 
-*public static* - line 508
+*public static* - line 513
 
 Empty the panel.
 
@@ -336,7 +340,9 @@ function clearAll(PDO $conn, $recipient, bool $includeUnread = false): int
 
 ### clip
 
-*private static* - line 520
+*private static* - line 526
+
+Trimmed text cut to `$max` characters, or null when blank.
 
 ```php
 function clip($value, int $max): ?string

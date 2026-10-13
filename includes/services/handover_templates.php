@@ -228,6 +228,10 @@ class HandoverTemplates
     //  Storage
     // ======================================================================
 
+    /**
+     * Every handover template (id, name, default, active, updated), the default first;
+     * empty before the table exists.
+     */
     public static function listAll(PDO $conn): array
     {
         try {
@@ -246,6 +250,7 @@ class HandoverTemplates
         return $rows;
     }
 
+    /** Loads one handover template with its blocks cleaned, or null when it does not exist. */
     public static function load(PDO $conn, int $id): ?array
     {
         self::customColumns($conn);   // see effective() — sanitiseBlocks needs it warm
@@ -297,6 +302,7 @@ class HandoverTemplates
         return ['id' => 0, 'name' => 'Default', 'blocks' => self::defaultBlocks()];
     }
 
+    /** Adds or updates a handover template and returns its id; can also make it the default. */
     public static function save(PDO $conn, array $in): int
     {
         $name = trim((string)($in['name'] ?? ''));
@@ -334,6 +340,7 @@ class HandoverTemplates
         $conn->prepare("UPDATE asset_handover_templates SET is_default = 1, is_active = 1 WHERE id = ?")->execute([$id]);
     }
 
+    /** Deletes a handover template. */
     public static function delete(PDO $conn, int $id): void
     {
         $conn->prepare("DELETE FROM asset_handover_templates WHERE id = ?")->execute([$id]);
@@ -463,6 +470,7 @@ class HandoverTemplates
         return $html;
     }
 
+    /** The HTML table of the handed-over assets, with the chosen columns including custom asset fields. */
     private static function renderAssetTable(array $assets, array $cols, callable $L): string
     {
         $defs = [

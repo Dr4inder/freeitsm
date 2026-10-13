@@ -6,7 +6,7 @@ Is this course assigned to this learner? This is what they are *entitled* to tak
 function lmsCourseAssignedTo(PDO $conn, LmsLearner $learner, int $courseId): bool
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 247.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 253.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 251 | `lmsCourseAssignedTo` | read [lms_course_assignments](/code/tables/lms_course_assignments.md) |  |
+| 257 | `lmsCourseAssignedTo` | read [lms_course_assignments](/code/tables/lms_course_assignments.md) |  |
 
 ## Calls
 

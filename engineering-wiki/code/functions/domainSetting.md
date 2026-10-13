@@ -1,10 +1,12 @@
 # domainSetting()
 
+Returns one Domains setting as a string, from the cached settings (its default when not saved).
+
 ```php
 function domainSetting(PDO $conn, string $key): string
 ```
 
-Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 159.
+Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 160.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

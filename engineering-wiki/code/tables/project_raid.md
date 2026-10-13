@@ -35,14 +35,14 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):115 | `ProjectTemplatesService::createFromTemplate` | insert | `project_id`, `type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `status`, `raised_by_id` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):343 | `ProjectToolsService::saveRaid` | update | `type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `owner_analyst_id`, `status`, `due_date` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):354 | `ProjectToolsService::saveRaid` | insert | `type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `owner_analyst_id`, `status`, `due_date` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):359 | `ProjectToolsService::saveRaid` | update | `decided_by`, `decided_date`, `rationale` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):375 | `ProjectToolsService::deleteRaid` | delete |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):407 | `ProjectToolsService::escalateRaid` | update | `escalated_datetime`, `escalated_by_id`, `escalation_note`, `updated_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):420 | `ProjectToolsService::deescalateRaid` | update | `escalated_datetime`, `escalated_by_id`, `escalation_note`, `updated_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):508 | `ProjectToolsService::lessonToKnowledge` | update | `knowledge_article_id`, `updated_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):561 | `ProjectToolsService::issueToTicket` | update | `ticket_id`, `updated_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):362 | `ProjectToolsService::saveRaid` | update | `type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `owner_analyst_id`, `status`, `due_date` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):373 | `ProjectToolsService::saveRaid` | insert | `type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `owner_analyst_id`, `status`, `due_date` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):378 | `ProjectToolsService::saveRaid` | update | `decided_by`, `decided_date`, `rationale` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):398 | `ProjectToolsService::deleteRaid` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):430 | `ProjectToolsService::escalateRaid` | update | `escalated_datetime`, `escalated_by_id`, `escalation_note`, `updated_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):447 | `ProjectToolsService::deescalateRaid` | update | `escalated_datetime`, `escalated_by_id`, `escalation_note`, `updated_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):536 | `ProjectToolsService::lessonToKnowledge` | update | `knowledge_article_id`, `updated_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):589 | `ProjectToolsService::issueToTicket` | update | `ticket_id`, `updated_datetime` |  |
 
 ## Read by
 
@@ -51,9 +51,9 @@
 | [api/projects/portfolio_charts.php](/code/files/api/projects/portfolio_charts.php.md) | L36 |  |
 | [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMaturity L120, projectChatMaturity L121, projectChatRead L248 |  |
 | [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectTaskStats L82, projectsPhase2Ready L188, projectExceptionColumns L198 |  |
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L465 |  |
-| [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md) | rpProjectsRisks L196 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L466 |  |
+| [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md) | rpProjectsRisks L205 |  |
 | [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md) | ProjectTemplatesService::cleanup L157 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::saveRaid L296, ProjectToolsService::deleteRaid L369, ProjectToolsService::raidLogReady L385, ProjectToolsService::raidRow L574, ProjectToolsService::raid L723 |  |
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::deleteProject L240 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::saveRaid L315, ProjectToolsService::deleteRaid L392, ProjectToolsService::raidLogReady L408, ProjectToolsService::raidRow L602, ProjectToolsService::raid L757 |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md) | ProjectsService::deleteProject L254 |  |
 

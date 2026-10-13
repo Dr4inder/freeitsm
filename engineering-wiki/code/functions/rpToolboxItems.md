@@ -6,7 +6,7 @@ The toolbox: [key => [handler, preset opts, area, default span, keywords]]. Titl
 function rpToolboxItems(): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 266.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 270.
 
 **Returns:** `array`
 

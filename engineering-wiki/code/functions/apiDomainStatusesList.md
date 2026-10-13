@@ -6,7 +6,7 @@ GET /domain-statuses · GET /domain-registrar-accounts
 function apiDomainStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 384.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 397.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 385 | `apiDomainStatusesList` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 398 | `apiDomainStatusesList` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 ## Calls
 

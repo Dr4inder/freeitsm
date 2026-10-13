@@ -22,9 +22,9 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):341 |  | update | `display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `last_seen` |  |
-| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):366 |  | insert | `host_id`, `app_id`, `display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `created_at`, `last_seen` |  |
-| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):415 |  | delete |  |  |
+| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):356 |  | update | `display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `last_seen` |  |
+| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):381 |  | insert | `host_id`, `app_id`, `display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `created_at`, `last_seen` |  |
+| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):430 |  | delete |  |  |
 | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):495 |  | update | `display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `last_seen` |  |
 | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):505 |  | insert | `host_id`, `app_id`, `display_version`, `install_date`, `uninstall_string`, `install_location`, `estimated_size`, `system_component`, `created_at`, `last_seen` |  |
 | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):520 |  | delete |  |  |
@@ -36,7 +36,7 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_software.php](/code/files/api/assets/get_asset_software.php.md) | L34 |  |
-| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md) | L151, L335 |  |
+| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md) | L166, L350 |  |
 | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md) | L436, L490 |  |
 | [api/intune/app_sync_freshness.php](/code/files/api/intune/app_sync_freshness.php.md) | L31 |  |
 | [api/intune/list_app_sync_jobs.php](/code/files/api/intune/list_app_sync_jobs.php.md) | L39 |  |
@@ -45,8 +45,8 @@
 | [api/software/get_apps.php](/code/files/api/software/get_apps.php.md) | L46 |  |
 | [api/software/get_software_drilldown.php](/code/files/api/software/get_software_drilldown.php.md) | L33, L46, L59 |  |
 | [api/software/get_software_widget_data.php](/code/files/api/software/get_software_widget_data.php.md) | L51, L68, L87 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSoftwareList L583 |  |
-| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareAppsList L70, apiSoftwareAppsList L80, apiSoftwareInstallCount L123, apiSoftwareAppMachinesList L185, apiSoftwareLicenceSelect L208 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSoftwareList L608 |  |
+| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareAppsList L78, apiSoftwareAppsList L88, apiSoftwareInstallCount L132, apiSoftwareAppMachinesList L194, apiSoftwareLicenceSelect L221 |  |
 | [includes/intune.php](/code/files/includes/intune.php.md) | intuneGetAppSyncCandidates L604 |  |
-| [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md) | rpSoftwareByPublisher L26, rpSoftwareTopApps L40, rpSoftwareKpis L59 |  |
+| [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md) | rpSoftwareByPublisher L27, rpSoftwareTopApps L42, rpSoftwareKpis L65 |  |
 

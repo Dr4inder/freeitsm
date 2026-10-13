@@ -67,6 +67,7 @@ function projectAssistFind(PDO $conn, array $scope, $ref): array
     return $rows[0];
 }
 
+/** Formats an amount with its currency to two decimals; null shows as "-". */
 function projectAssistMoney(?float $v, string $cur): string
 {
     return $v === null ? '-' : $cur . ' ' . number_format($v, 2);
@@ -92,6 +93,10 @@ function projectAssistWhy(array $p): string
     return implode('; ', $why);
 }
 
+/**
+ * One project as a single line of text for the assistant - code, name, status, health,
+ * priority, progress, target date, manager and why it needs attention.
+ */
 function projectAssistLine(array $p): string
 {
     $why = projectAssistWhy($p);

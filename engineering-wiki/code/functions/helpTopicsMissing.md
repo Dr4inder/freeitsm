@@ -6,7 +6,7 @@ System areas that still have no help page — the gap this registry exists to ma
 function helpTopicsMissing($multiTenant = false)
 ```
 
-Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 599.
+Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 605.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

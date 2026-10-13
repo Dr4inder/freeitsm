@@ -1,10 +1,12 @@
 # filesApiOk()
 
+Sends a success JSON reply ({success: true} plus `$data`) and ends the request.
+
 ```php
 function filesApiOk(array $data = []): void
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 44.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 45.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

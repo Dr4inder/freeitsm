@@ -28,19 +28,19 @@
 |---|---|---|---|---|
 | [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):61 | `ProjectToolsService::addMember` | insert | `project_id`, `$col`, `role_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime` |  |
 | [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):90 | `ProjectToolsService::addContractorMember` | insert | `project_id`, `supplier_id`, `contact_id`, `role_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):139 | `ProjectToolsService::updateMember` | update |  |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):171 | `ProjectToolsService::removeMember` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):143 | `ProjectToolsService::updateMember` | update |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):179 | `ProjectToolsService::removeMember` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/projects/settings.php](/code/files/api/projects/settings.php.md) | projectRolesForSettings L31 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L456, peopleProjects L477 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L457, peopleProjects L478 |  |
 | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L283 |  |
 | [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMaturity L118 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L140 |  |
-| [includes/projects/settings.php](/code/files/includes/projects/settings.php.md) | projectIsTeam L413 |  |
-| [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md) | projectVisibleSql L72 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L143 |  |
+| [includes/projects/settings.php](/code/files/includes/projects/settings.php.md) | projectIsTeam L419 |  |
+| [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md) | projectVisibleSql L73 |  |
 | [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addMember L56, ProjectToolsService::addMember L60, ProjectToolsService::addContractorMember L77, ProjectToolsService::addContractorMember L85, ProjectToolsService::addContractorMember L89, ProjectToolsService::contractorMemberSql L103 ... |  |
 

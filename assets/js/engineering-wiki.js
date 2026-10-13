@@ -27,6 +27,7 @@
     var nextId = 1;
     var panes = [];
     var activePane = 0;
+    /** True on a phone-width screen (900px or less), where there is one pane and the sidebar slides in. */
     var narrow = function () { return window.matchMedia('(max-width: 900px)').matches; };
 
     var ICON = {
@@ -41,12 +42,20 @@
         list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>'
     };
 
+    /** Escapes a value for use in HTML text or an attribute. */
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    /** Splits a "page#anchor" target into [page, anchor]; the anchor is '' when there is none. */
     function splitTarget(t) { var h = t.indexOf('#'); return h < 0 ? [t, ''] : [t.slice(0, h), t.slice(h + 1)]; }
+    /** Returns the full address of a wiki page (with ?page=), for Copy link. */
     function pageUrl(target) { return location.origin + location.pathname + '?page=' + encodeURIComponent(target).replace(/%2F/g, '/').replace(/%23/g, '#'); }
 
     // ------------------------------------------------------------ data
 
+    /**
+     * Fetches one rendered page from the API, from the cache when it has been loaded before.
+     *
+     * Only successful pages are cached; a network error resolves to {success: false} rather than rejecting.
+     */
     function fetchPage(page) {
         if (cache[page]) return Promise.resolve(cache[page]);
         return fetch(C.api + 'page.php?page=' + encodeURIComponent(page), { credentials: 'same-origin' })
@@ -57,9 +66,16 @@
 
     // ------------------------------------------------------------ tabs and panes
 
+    /** Creates a new tab object with its own history, starting at the given target. */
     function newTabObj(target) { return { id: nextId++, history: [target], index: 0, title: target, scroll: 0 }; }
+    /** Returns the target a tab is showing now - its current history entry. */
     function cur(tab) { return tab.history[tab.index]; }
 
+    /**
+     * Opens a target in a new tab in a pane, after the active tab; a pane index past the end adds a new pane.
+     *
+     * A background tab does not take focus and only fetches its title for the tab strip.
+     */
     function openIn(paneIdx, target, background) {
         if (paneIdx >= panes.length) { panes.push({ tabs: [], active: 0 }); paneIdx = panes.length - 1; }
         var pane = panes[paneIdx];
@@ -75,6 +91,11 @@
         save();
     }
 
+    /**
+     * Goes to a target in a pane's active tab, adding it to the tab's history like a browser does.
+     *
+     * Remembers the scroll position first; the same target again just redraws the tab.
+     */
     function navigate(paneIdx, target) {
         var pane = panes[paneIdx], tab = pane.tabs[pane.active];
         var view = paneView(paneIdx);
@@ -89,6 +110,7 @@
         save();
     }
 
+    /** Moves the active tab back (-1) or forward (1) through its history. */
     function go(delta) {
         var pane = panes[activePane], tab = pane.tabs[pane.active];
         var n = tab.index + delta;
@@ -98,6 +120,11 @@
         save();
     }
 
+    /**
+     * Closes a tab and picks the tab to show next.
+     *
+     * With two panes, closing a pane's last tab removes the pane; with one, the start page opens instead.
+     */
     function closeTab(paneIdx, tabIdx) {
         var pane = panes[paneIdx];
         pane.tabs.splice(tabIdx, 1);
@@ -112,6 +139,7 @@
         save();
     }
 
+    /** Opens a target in the other pane, making a second pane if needed; on a narrow screen, a new tab. */
     function openBeside(target, fromPane) {
         if (narrow()) { openIn(activePane, target, false); return; }
         var other = panes.length > 1 ? (fromPane === 0 ? 1 : 0) : 1;
@@ -120,8 +148,14 @@
 
     // ------------------------------------------------------------ rendering
 
+    /** Returns the scrolling page area of a pane, or null when the pane is not drawn. */
     function paneView(i) { var p = panesEl.querySelector('.ew-pane[data-pane="' + i + '"]'); return p && p.querySelector('.ew-view'); }
 
+    /**
+     * Rebuilds every pane, its tab strip and the divider between two panes, with empty page areas.
+     *
+     * Callers follow it with showTab() for each pane to fill the pages in.
+     */
     function renderAll() {
         panesEl.innerHTML = '';
         panesEl.classList.toggle('ew-split', panes.length > 1);
@@ -148,11 +182,13 @@
         });
     }
 
+    /** Fetches a background tab's page so its tab can show the real title. */
     function loadTitle(tab) {
         var t = splitTarget(cur(tab));
         fetchPage(t[0]).then(function (d) { if (d.success) { tab.title = d.title; renderTabStrips(); } });
     }
 
+    /** Updates the titles in every tab strip without rebuilding the panes. */
     function renderTabStrips() {
         panes.forEach(function (pane, pi) {
             var p = panesEl.querySelector('.ew-pane[data-pane="' + pi + '"]');
@@ -163,6 +199,7 @@
         });
     }
 
+    /** Returns the breadcrumb HTML for a page path, naming the top folder Handbook or Code map. */
     function crumbs(page) {
         var parts = page.split('/'), out = [], path = '';
         parts.forEach(function (p, i) {
@@ -173,6 +210,12 @@
         return out.join(' / ');
     }
 
+    /**
+     * Draws a pane's active tab: fetches its page and renders the header, badges, outline and body.
+     *
+     * Scrolls to the anchor when there is one, otherwise back to where the tab was. A result that arrives after
+     * the tab has moved on is dropped.
+     */
     function showTab(pi) {
         var pane = panes[pi]; if (!pane) return;
         var tab = pane.tabs[pane.active];
@@ -223,6 +266,7 @@
         updateToolbar();
     }
 
+    /** Syncs back/forward, the address box, the window title and ?page= in the URL with the active tab. */
     function updateToolbar() {
         var pane = panes[activePane]; if (!pane) return;
         var tab = pane.tabs[pane.active];
@@ -233,12 +277,14 @@
         try { history.replaceState(null, '', '?page=' + encodeURIComponent(cur(tab)).replace(/%2F/g, '/').replace(/%23/g, '#')); } catch (e) { /* ignore */ }
     }
 
+    /** Marks which pane is the active one. */
     function highlightActive() {
         panesEl.querySelectorAll('.ew-pane').forEach(function (p) { p.classList.toggle('ew-pane-active', +p.dataset.pane === activePane); });
     }
 
     // ------------------------------------------------------------ remembered tabs
 
+    /** Remembers the open panes and tabs in localStorage, keeping the last 30 history entries per tab. */
     function save() {
         try {
             localStorage.setItem(STORE, JSON.stringify({
@@ -248,6 +294,11 @@
         } catch (e) { /* private window or storage off - the page still works */ }
     }
 
+    /**
+     * Puts back the panes and tabs saved in localStorage - one pane on a narrow screen.
+     *
+     * @return bool  true when something was restored
+     */
     function restore() {
         try {
             var s = JSON.parse(localStorage.getItem(STORE) || 'null');
@@ -262,6 +313,7 @@
 
     // ------------------------------------------------------------ sidebar: tree and search
 
+    /** Builds one sidebar tree item - a folder that expands, or a link to a page. */
     function treeRow(item, isDir) {
         var li = document.createElement('li');
         li.className = 'ew-tree-node';
@@ -280,6 +332,7 @@
         return li;
     }
 
+    /** Fetches one folder's pages and subfolders and adds them to the sidebar tree under an element. */
     function loadDir(dir, into) {
         return fetch(C.api + 'tree.php?dir=' + encodeURIComponent(dir), { credentials: 'same-origin' })
             .then(function (r) { return r.json(); })
@@ -294,6 +347,7 @@
             });
     }
 
+    /** Rebuilds the sidebar with its two top sections, Handbook and Code map. */
     function buildTree() {
         sidebar.innerHTML = '';
         [['handbook', T.handbook], ['code', T.code_map]].forEach(function (s) {
@@ -307,6 +361,7 @@
         });
     }
 
+    /** Highlights the sidebar entry for the page the active tab is showing. */
     function markCurrent() {
         var pane = panes[activePane]; if (!pane) return;
         var page = splitTarget(cur(pane.tabs[pane.active]))[0];
@@ -314,6 +369,11 @@
     }
 
     var searchTimer = null;
+    /**
+     * Searches the wiki and shows the results in the sidebar; under two characters it shows the tree again.
+     *
+     * Results for a query the box no longer holds are thrown away.
+     */
     function runSearch(q) {
         if (q.trim().length < 2) { buildTree(); return; }
         fetch(C.api + 'search.php?q=' + encodeURIComponent(q), { credentials: 'same-origin' })
@@ -334,7 +394,11 @@
     // ------------------------------------------------------------ right-click menu
 
     var menu = null;
+    /** Removes the right-click menu, if one is open. */
     function closeMenu() { if (menu) { menu.remove(); menu = null; } }
+    /**
+     * Shows a right-click menu of items (icon, label, run) at a point, kept inside the window; '-' is a separator.
+     */
     function showMenu(x, y, items) {
         closeMenu();
         menu = document.createElement('div');
@@ -352,6 +416,7 @@
         menu.style.top = Math.min(y, window.innerHeight - r.height - 8) + 'px';
     }
 
+    /** Shows the right-click menu for a page link: Open, Open in new tab, Open beside and Copy link. */
     function linkMenu(x, y, target, paneIdx) {
         showMenu(x, y, [
             { icon: ICON.open, label: T.open, run: function () { navigate(paneIdx, target); } },
@@ -362,11 +427,16 @@
         ]);
     }
 
+    /**
+     * Copies text to the clipboard, falling back to a hidden textarea outside a secure context, then shows a toast.
+     */
     function copy(text) {
+        /** Shows the "link copied" toast. */
         var done = function () { toast(T.link_copied); };
         if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
         else { fallbackCopy(text); done(); }
     }
+    /** Copies text with a hidden textarea and execCommand, for browsers without the async clipboard. */
     function fallbackCopy(text) {
         var ta = document.createElement('textarea');
         ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
@@ -375,6 +445,7 @@
         ta.remove();
     }
     var toastEl = null, toastTimer = null;
+    /** Shows a short message at the bottom of the page for 1.6 seconds. */
     function toast(msg) {
         if (!toastEl) { toastEl = document.createElement('div'); toastEl.className = 'ew-toast'; document.body.appendChild(toastEl); }
         toastEl.textContent = msg;
@@ -385,17 +456,20 @@
 
     // ------------------------------------------------------------ split divider
 
+    /** Makes the divider between two panes draggable, sharing the width between them (20% to 80% each). */
     function bindDivider(div) {
         div.addEventListener('mousedown', function (e) {
             e.preventDefault();
             div.classList.add('ew-dragging');
             var rect = panesEl.getBoundingClientRect();
+            /** Resizes the two panes to follow the mouse while the divider is dragged. */
             function move(ev) {
                 var f = Math.min(0.8, Math.max(0.2, (ev.clientX - rect.left) / rect.width));
                 panes[0].flex = f + ' 1 0'; panes[1].flex = (1 - f) + ' 1 0';
                 var ps = panesEl.querySelectorAll('.ew-pane');
                 ps[0].style.flex = panes[0].flex; ps[1].style.flex = panes[1].flex;
             }
+            /** Ends a divider drag and removes its mouse listeners. */
             function up() { div.classList.remove('ew-dragging'); document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); }
             document.addEventListener('mousemove', move);
             document.addEventListener('mouseup', up);
@@ -404,6 +478,7 @@
 
     // ------------------------------------------------------------ events
 
+    /** Returns the index of the pane an element is in, or the active pane when it is in none. */
     function paneOf(el) { var p = el.closest('.ew-pane'); return p ? +p.dataset.pane : activePane; }
 
     panesEl.addEventListener('mousedown', function (e) {
@@ -473,7 +548,9 @@
         }
     });
 
+    /** Closes any open page outline. */
     function closeOutlines() { document.querySelectorAll('.ew-outline').forEach(function (o) { o.remove(); }); }
+    /** Opens or closes the outline (the page's headings) under a pane's Outline button. */
     function toggleOutline(btn, pi) {
         var open = btn.querySelector('.ew-outline');
         closeOutlines();
@@ -557,6 +634,12 @@
     // ------------------------------------------------------------ Rescan: small steps until done
 
     var rescanBtn = document.getElementById('ewRescan'), rescanText = document.getElementById('ewRescanText');
+    /**
+     * Runs the Code map scanner one step at a time through the API, showing progress, until it reports done.
+     *
+     * Rejects when the API fails or another scan is already running.
+     * @return Promise  the final scan result
+     */
     function rescanStep() {
         return fetch(C.api + 'scan.php', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: '{}' })
             .then(function (r) { return r.json(); })

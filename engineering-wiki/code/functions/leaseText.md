@@ -1,10 +1,12 @@
 # leaseText()
 
+Trims optional text and cuts it to `$max` characters; blank gives null.
+
 ```php
 function leaseText($v, int $max): ?string
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 148.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 154.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

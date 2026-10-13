@@ -12,7 +12,7 @@ sending from the wrong mailbox.
 function templateSendViaGraph(string $accessToken, array $message, string $graphBase): void
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 591.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 596.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

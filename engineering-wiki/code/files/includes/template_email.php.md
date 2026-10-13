@@ -1,6 +1,6 @@
 # includes/template_email.php
 
-> PHP - 731 lines
+> PHP - 736 lines
 
 Email Template Engine
 
@@ -18,13 +18,13 @@ Templates are configured in Tickets > Settings > Templates.
 | [templateRulesByTemplate()](/code/functions/templateRulesByTemplate.md) | 306 | Sender rules for the given templates, keyed by template id, values lowercased. |
 | [buildTicketMergeData()](/code/functions/buildTicketMergeData.md) | 333 | Build merge data from ticket, analyst, and department tables. |
 | [resolveMergeCodes()](/code/functions/resolveMergeCodes.md) | 412 | Replace [merge_code] placeholders with actual values. |
-| [buildTemplateEmailBody()](/code/functions/buildTemplateEmailBody.md) | 429 |  |
-| [templateGetMailboxForTicket()](/code/functions/templateGetMailboxForTicket.md) | 455 | Get the mailbox associated with a ticket's emails. |
-| [templateGetValidAccessToken()](/code/functions/templateGetValidAccessToken.md) | 476 | Get a valid access token, refreshing if expired. |
-| [templateGraphContext()](/code/functions/templateGraphContext.md) | 546 | Everything a Microsoft send needs for one mailbox: a valid access token and the Graph base path to send from. Returns null if no usable token could be obtained. |
-| [templateSendViaGraph()](/code/functions/templateSendViaGraph.md) | 591 | Send an email message via Microsoft Graph API. |
-| [internalTicketEmail()](/code/functions/internalTicketEmail.md) | 638 | Send an internal notification ABOUT a ticket to staff addresses - an SLA alert, a closure with fields missing - from the ticket's own mailbox, or the first active mailbox when the ticket has none (a ticket raised by hand or through the API never touched one). |
-| [templateSaveSentEmail()](/code/functions/templateSaveSentEmail.md) | 705 | Save the sent template email to the emails table. |
+| [buildTemplateEmailBody()](/code/functions/buildTemplateEmailBody.md) | 434 | Wraps a template email body in the house HTML, the "Please reply above this line" marker and the hidden SDREF tag that threads a reply back to the ticket. |
+| [templateGetMailboxForTicket()](/code/functions/templateGetMailboxForTicket.md) | 460 | Get the mailbox associated with a ticket's emails. |
+| [templateGetValidAccessToken()](/code/functions/templateGetValidAccessToken.md) | 481 | Get a valid access token, refreshing if expired. |
+| [templateGraphContext()](/code/functions/templateGraphContext.md) | 551 | Everything a Microsoft send needs for one mailbox: a valid access token and the Graph base path to send from. Returns null if no usable token could be obtained. |
+| [templateSendViaGraph()](/code/functions/templateSendViaGraph.md) | 596 | Send an email message via Microsoft Graph API. |
+| [internalTicketEmail()](/code/functions/internalTicketEmail.md) | 643 | Send an internal notification ABOUT a ticket to staff addresses - an SLA alert, a closure with fields missing - from the ticket's own mailbox, or the first active mailbox when the ticket has none (a ticket raised by hand or through the API never touched one). |
+| [templateSaveSentEmail()](/code/functions/templateSaveSentEmail.md) | 710 | Save the sent template email to the emails table. |
 
 ## Database
 
@@ -33,11 +33,11 @@ Templates are configured in Tickets > Settings > Templates.
 | 257 | `templateSelectForRecipient` | read [ticket_email_templates](/code/tables/ticket_email_templates.md) |  |
 | 311 | `templateRulesByTemplate` | read [ticket_email_template_rules](/code/tables/ticket_email_template_rules.md) |  |
 | 334 | `buildTicketMergeData` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md), read [departments](/code/tables/departments.md) |  |
-| 456 | `templateGetMailboxForTicket` | read [emails](/code/tables/emails.md), read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 516 | `templateGetValidAccessToken` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
-| 641 | `internalTicketEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 707 | `templateSaveSentEmail` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction`, `mailbox_id`) |  |
-| 724 | `templateSaveSentEmail` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
+| 461 | `templateGetMailboxForTicket` | read [emails](/code/tables/emails.md), read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 521 | `templateGetValidAccessToken` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
+| 646 | `internalTicketEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 712 | `templateSaveSentEmail` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction`, `mailbox_id`) |  |
+| 729 | `templateSaveSentEmail` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
 
 ## How it hangs together
 

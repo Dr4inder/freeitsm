@@ -6,7 +6,7 @@ Session: Basic auth as "user@org", and the access token comes back in a response
 function vcdLogin(array $c): string
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 78.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 86.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

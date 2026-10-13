@@ -6,7 +6,7 @@ What a shortcut points at, IF the caller can see it - else null. The one place s
 function filesShortcutTarget(PDO $conn, int $analystId, string $type, int $id): ?array
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 142.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,24 +6,26 @@
 
 | Method | What it does |
 |---|---|
-| [verifyWebhook()](#verifywebhook) |  |
+| [verifyWebhook()](#verifywebhook) | Checks an inbound Bot Framework activity: the bearer JWT's signature, issuer and audience (the app id), and that its service URL is an allowed Microsoft host matching the token. |
 | [hostAllowed()](#hostallowed) | An https URL whose host is one of `$hosts` (exact, or a suffix starting with a dot). |
 | [splitAddress()](#splitaddress) | "<serviceUrl>\|<conversationId>" -> [serviceUrl, conversationId]. A bare id uses the default region. |
-| [parseInbound()](#parseinbound) |  |
+| [parseInbound()](#parseinbound) | Turns a Teams activity into inbound messages - a CSAT rating press or a message in a one-to-one chat. |
 | [sendRatingRequest()](#sendratingrequest) | The rating question as an Adaptive Card with five buttons, 1 to 5. A press comes back as a message whose value carries csat.r (response id) and csat.v (rating). |
-| [sendMessage()](#sendmessage) |  |
+| [sendMessage()](#sendmessage) | Sends a text reply into the Teams conversation and returns the activity id. |
 | [sendMedia()](#sendmedia) | Teams shows an image sent as an attachment with contentUrl. That URL must be a public https address — `messagingOutboundMediaUrl()` provides one, which is why images are the only kind this sends. Other files are refused with a plain message, not sent as a broken attachment. |
 | [downloadMedia()](#downloadmedia) | Inbound images: fetch with the bot's token — Teams does not serve them anonymously. |
-| [testConnection()](#testconnection) |  |
-| [appId()](#appid) |  |
+| [testConnection()](#testconnection) | Checks the bot credentials by getting an access token, and returns the app id. |
+| [appId()](#appid) | The channel's Microsoft app (bot) id. |
 | [accessToken()](#accesstoken) | Azure AD client-credentials token for the Bot Framework scope. |
 | [lookupUser()](#lookupuser) | Who a Teams user is: ['name' => …, 'email' => …], either may be ''. Bot Framework's "get conversation member" - the bot's own token, no Microsoft Graph permission. Used to file their tickets under the person FreeITSM already knows (messagingResolveRequesterByEmail()). Never throws. |
-| [postActivity()](#postactivity) |  |
+| [postActivity()](#postactivity) | Posts an activity to a conversation through its Bot Framework service URL and returns the new activity id. |
 | [botFrameworkKeys()](#botframeworkkeys) | Bot Framework's published signing keys, cached for a day. The key set is public and rotates rarely, so a cache file holds nothing secret. |
 
 ### verifyWebhook
 
-*public* - line 82
+*public* - line 87
+
+Checks an inbound Bot Framework activity: the bearer JWT's signature, issuer and audience (the app id), and that its service URL is an allowed Microsoft host matching the token.
 
 ```php
 function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
@@ -38,7 +40,7 @@ function verifyWebhook(string $rawBody, array $headers, array $params, string $u
 
 ### hostAllowed
 
-*private static* - line 120
+*private static* - line 125
 
 An https URL whose host is one of `$hosts` (exact, or a suffix starting with a dot).
 
@@ -53,7 +55,7 @@ function hostAllowed(string $url, array $hosts): bool
 
 ### splitAddress
 
-*private static* - line 136
+*private static* - line 141
 
 "<serviceUrl>|<conversationId>" -> [serviceUrl, conversationId]. A bare id uses the default region.
 
@@ -67,7 +69,12 @@ function splitAddress(string $to): array
 
 ### parseInbound
 
-*public* - line 145
+*public* - line 157
+
+Turns a Teams activity into inbound messages - a CSAT rating press or a message in a one-to-one chat.
+
+Group chats and channels are ignored, since one conversation there is shared by many
+people.
 
 ```php
 function parseInbound(string $rawBody, array $params): array
@@ -80,7 +87,7 @@ function parseInbound(string $rawBody, array $params): array
 
 ### sendRatingRequest
 
-*public* - line 217
+*public* - line 229
 
 The rating question as an Adaptive Card with five buttons, 1 to 5. A press comes back as a message whose value carries csat.r (response id) and csat.v (rating).
 
@@ -96,7 +103,9 @@ function sendRatingRequest(string $to, string $text, int $responseId): string
 
 ### sendMessage
 
-*public* - line 242
+*public* - line 255
+
+Sends a text reply into the Teams conversation and returns the activity id.
 
 ```php
 function sendMessage(string $to, string $body): string
@@ -109,7 +118,7 @@ function sendMessage(string $to, string $body): string
 
 ### sendMedia
 
-*public* - line 256
+*public* - line 269
 
 Teams shows an image sent as an attachment with contentUrl. That URL must be a public https address — `messagingOutboundMediaUrl()` provides one, which is why images are the only kind this sends. Other files are refused with a plain message, not sent as a broken attachment.
 
@@ -135,7 +144,7 @@ function sendMedia(
 
 ### downloadMedia
 
-*public* - line 276
+*public* - line 289
 
 Inbound images: fetch with the bot's token — Teams does not serve them anonymously.
 
@@ -149,7 +158,9 @@ function downloadMedia(array $item): array
 
 ### testConnection
 
-*public* - line 299
+*public* - line 313
+
+Checks the bot credentials by getting an access token, and returns the app id.
 
 ```php
 function testConnection(): string
@@ -157,7 +168,9 @@ function testConnection(): string
 
 ### appId
 
-*private* - line 307
+*private* - line 322
+
+The channel's Microsoft app (bot) id.
 
 ```php
 function appId(): string
@@ -165,7 +178,7 @@ function appId(): string
 
 ### accessToken
 
-*private* - line 314
+*private* - line 329
 
 Azure AD client-credentials token for the Bot Framework scope.
 
@@ -175,7 +188,7 @@ function accessToken(): string
 
 ### lookupUser
 
-*public* - line 355
+*public* - line 370
 
 Who a Teams user is: ['name' => …, 'email' => …], either may be ''. Bot Framework's "get conversation member" - the bot's own token, no Microsoft Graph permission. Used to file their tickets under the person FreeITSM already knows (messagingResolveRequesterByEmail()). Never throws.
 
@@ -196,7 +209,12 @@ function lookupUser(string $to, string $memberId): array
 
 ### postActivity
 
-*private* - line 383
+*private* - line 405
+
+Posts an activity to a conversation through its Bot Framework service URL and returns the new activity id.
+
+Throws when the address is incomplete, the host is not allowed, or Teams rejects the
+message.
 
 ```php
 function postActivity(string $to, array $activity): string
@@ -209,7 +227,7 @@ function postActivity(string $to, array $activity): string
 
 ### botFrameworkKeys
 
-*private* - line 406
+*private* - line 428
 
 Bot Framework's published signing keys, cached for a day. The key set is public and rotates rarely, so a cache file holds nothing secret.
 

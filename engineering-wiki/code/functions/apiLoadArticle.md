@@ -11,7 +11,7 @@ service layer has already run the same check by then.
 function apiLoadArticle(PDO $conn, int $articleId, ?array $apiKey = null): array
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 115.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

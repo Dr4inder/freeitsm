@@ -1,16 +1,20 @@
 # renderWaffleMenuJS()
 
+Outputs the scripts every analyst page shares: the analyst's toast, chime, search-panel and desktop-notification preferences as window globals (one user_preferences query), toast/confirm/clipboard, the command palette with the modules this analyst may see, and the waffle drawer's own JS.
+
 ```php
 function renderWaffleMenuJS()
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 737.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 750.
+
+**Reads:** user_preferences - so the bell and toasts need not ask on every page
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 758 | `renderWaffleMenuJS` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 771 | `renderWaffleMenuJS` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Calls
 

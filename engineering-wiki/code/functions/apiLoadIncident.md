@@ -1,10 +1,12 @@
 # apiLoadIncident()
 
+Loads one incident row (apiServiceIncidentSelect), or answers 404 and stops.
+
 ```php
 function apiLoadIncident(PDO $conn, int $incidentId): array
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 148.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 163.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

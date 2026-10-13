@@ -6,7 +6,7 @@
 function fmt_weekday(?string $utc, bool $short = false): string
 ```
 
-Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 522.
+Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 528.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

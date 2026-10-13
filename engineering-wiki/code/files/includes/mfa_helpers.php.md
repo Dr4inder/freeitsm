@@ -2,6 +2,8 @@
 
 > PHP - 47 lines
 
+MFA Helper - Shared authentication context for both analysts and self-service users. Used by api/myaccount/ MFA endpoints to support both user types without duplication.
+
 ## Functions
 
 | Function | Line | What it does |

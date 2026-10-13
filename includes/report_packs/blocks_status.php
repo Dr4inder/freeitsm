@@ -29,6 +29,10 @@ function rpStatusServices(PDO $conn, array $ids): array
     return $s->fetchAll(PDO::FETCH_ASSOC);
 }
 
+/**
+ * Service status block: each chosen service's uptime over the period, with an optional
+ * daily strip and incident list.
+ */
 function rpStatusUptime(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $out = [];
@@ -73,6 +77,10 @@ function rpPercent(float $p): string
     return rtrim(rtrim(number_format($p, 2, '.', ''), '0'), '.') . '%';
 }
 
+/**
+ * Service status block: a table of each chosen service's uptime, downtime and incident
+ * count over the period.
+ */
 function rpStatusUptimeTable(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $rows = [];
@@ -215,6 +223,10 @@ function rpStatusIncidentSummary(PDO $conn, int $analystId, array $o, array $ran
     ]];
 }
 
+/**
+ * Service status block: KPI tiles - average uptime, incidents open during the period,
+ * services affected and total downtime.
+ */
 function rpStatusKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $services = rpStatusServices($conn, []);

@@ -18,6 +18,8 @@
  * the one page that did not load i18n.js, and because the throw happened above
  * the try, it never even made its request (GH #78). Same pattern as calendar.js
  * and war-room.js: fall back to English rather than take the page down.
+ *
+ * @wiki Attached-Documents-Developer-Guide
  */
 (function () {
     'use strict';
@@ -60,6 +62,9 @@
         currently_on: 'currently on {where}'
     };
 
+    /**
+     * Translates a key under common.documents, falling back to the English in FALLBACK with {name} placeholders filled.
+     */
     function t(key, params) {
         var full = 'common.documents.' + key;
         if (typeof window.t === 'function') {
@@ -75,12 +80,14 @@
         return s;
     }
 
+    /** HTML-escapes a value for building the panel's markup. */
     function esc(s) {
         return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
         });
     }
 
+    /** Formats a byte count as B, KB or MB. */
     function bytes(n) {
         if (n == null) return '';
         if (n < 1024) return n + ' B';
@@ -93,12 +100,18 @@
         return /^https?:\/\//i.test(String(url || '')) ? String(url) : '#';
     }
 
+    /** The inline SVG icon for a document row - a chain link for a DMS link, a page for an uploaded file. */
     function icon(kind) {
         return kind === 'link'
             ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>'
             : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>';
     }
 
+    /**
+     * One Documents panel mounted on a record: reads the options, draws the panel and loads the first page of documents.
+     *
+     * Created by FreeITSMDocuments.mount().
+     */
     function Panel(el, opts) {
         this.el         = el;
         this.parentType = opts.parentType;
@@ -499,13 +512,20 @@
        overlay, not a list on a record. One implementation, two callers, same
        reason the resolver is shared server-side. */
 
+    /** Removes the document details dialog and its Escape handler. */
     function closeInfo() {
         var old = document.getElementById('fdInfoOverlay');
         if (old) old.remove();
         document.removeEventListener('keydown', onInfoKey);
     }
+    /** Closes the document details dialog on Escape. */
     function onInfoKey(e) { if (e.key === 'Escape') closeInfo(); }
 
+    /**
+     * Opens the document details dialog: what the document is, whether its contents are searchable, and every record it is attached to.
+     *
+     * Reads api/documents/links.php. Records the analyst cannot see are shown only as a count.
+     */
     function showInfo(apiBase, documentId, baseUrl) {
         closeInfo();
         var ov = document.createElement('div');
@@ -580,6 +600,9 @@
     }
 
     window.FreeITSMDocuments = {
+        /**
+         * Mounts a Documents panel in an element (or a selector) and returns it, or null when the element is missing.
+         */
         mount: function (el, opts) {
             if (typeof el === 'string') el = document.querySelector(el);
             if (!el) return null;

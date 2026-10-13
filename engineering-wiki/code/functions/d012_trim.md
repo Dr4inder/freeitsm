@@ -6,7 +6,7 @@ Mask nothing, but keep a runaway value from swamping the report.
 function d012_trim($s, $max = 120)
 ```
 
-Defined in [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md), line 97.
+Defined in [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md), line 106.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

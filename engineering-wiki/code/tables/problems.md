@@ -30,27 +30,27 @@ Problem Management A Problem is the root cause behind one or more incidents (tic
 | [includes/services/problems.php](/code/files/includes/services/problems.php.md):81 | `ProblemsService::createProblem` | update | `problem_number` |  |
 | [includes/services/problems.php](/code/files/includes/services/problems.php.md):202 | `ProblemsService::updateProblem` | update |  |  |
 | [includes/services/problems.php](/code/files/includes/services/problems.php.md):235 | `ProblemsService::deleteProblem` | delete |  |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):449 | `ProblemsService::touch` | update | `updated_datetime` |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):451 | `ProblemsService::touch` | update | `updated_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/problem-management/ai_root_cause.php](/code/files/api/problem-management/ai_root_cause.php.md) | L28 |  |
-| [api/problem-management/delete_problem_priority.php](/code/files/api/problem-management/delete_problem_priority.php.md) | L15 |  |
-| [api/problem-management/delete_problem_status.php](/code/files/api/problem-management/delete_problem_status.php.md) | L15 |  |
+| [api/problem-management/delete_problem_priority.php](/code/files/api/problem-management/delete_problem_priority.php.md) | L24 |  |
+| [api/problem-management/delete_problem_status.php](/code/files/api/problem-management/delete_problem_status.php.md) | L24 |  |
 | [api/problem-management/get.php](/code/files/api/problem-management/get.php.md) | L22 |  |
 | [api/problem-management/link_ticket.php](/code/files/api/problem-management/link_ticket.php.md) | L24 |  |
 | [api/problem-management/list.php](/code/files/api/problem-management/list.php.md) | L28, L47 |  |
 | [api/problem-management/list_linkable_tickets.php](/code/files/api/problem-management/list_linkable_tickets.php.md) | L27 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L243 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L204 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L301 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L37, apiProblemsList L176 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L207, projectLinkSearch L314 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L310 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L184 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L211, projectLinkSearch L331 |  |
 | [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L441 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewProblem L256 |  |
 | [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L388 |  |
 | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessProblem L338 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolKnownErrors L612 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolKnownErrors L632 |  |
 

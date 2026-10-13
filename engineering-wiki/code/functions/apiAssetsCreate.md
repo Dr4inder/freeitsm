@@ -6,7 +6,7 @@ POST /assets
 function apiAssetsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 360.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 370.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ As above, but reads the module's JSON from disk. Returns [] if unreadable.
 function demoModuleTables(string $module): array
 ```
 
-Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 90.
+Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 91.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Every asset-date calendar entry (warranty, "Lease ends", lease notice) - it call
 function leaseSyncAllCalendar(PDO $conn): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 727.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 733.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

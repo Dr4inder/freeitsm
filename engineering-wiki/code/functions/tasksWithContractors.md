@@ -6,7 +6,7 @@ Add the contractor fields to task rows (each with an 'id').
 function tasksWithContractors(PDO $conn, array $rows): array
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 67.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 69.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

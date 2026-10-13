@@ -1,10 +1,12 @@
 # documentEntityDef()
 
+Returns one record type's registry entry (label, URL, title column, access checks), or null when unknown.
+
 ```php
 function documentEntityDef(string $type): ?array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 341.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 346.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

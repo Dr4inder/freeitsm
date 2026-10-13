@@ -12,7 +12,7 @@ function domainLookalikeScan(
 ): array
 ```
 
-Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 174.
+Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 180.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,8 +28,8 @@ Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 180 | `domainLookalikeScan` | **insert** [domain_lookalikes](/code/tables/domain_lookalikes.md) (`domain_id`, `lookalike`, `technique`, `has_a`, `has_mx`, `first_seen_datetime`, `last_seen_datetime`) |  |
-| 186 | `domainLookalikeScan` | read [domain_lookalikes](/code/tables/domain_lookalikes.md) |  |
+| 186 | `domainLookalikeScan` | **insert** [domain_lookalikes](/code/tables/domain_lookalikes.md) (`domain_id`, `lookalike`, `technique`, `has_a`, `has_mx`, `first_seen_datetime`, `last_seen_datetime`) |  |
+| 192 | `domainLookalikeScan` | read [domain_lookalikes](/code/tables/domain_lookalikes.md) |  |
 
 ## Calls
 

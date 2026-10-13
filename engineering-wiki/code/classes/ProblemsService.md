@@ -16,8 +16,8 @@
 | [unlinkChange()](#unlinkchange) | Unlink a change. 404 if not linked. |
 | [loadProblem()](#loadproblem) | Load the joined problem row, enforcing the actor's company scope; 404 if the problem is unknown OR outside scope (indistinguishable, by design). |
 | [canAccessTenantRow()](#canaccesstenantrow) | May the actor access this row of a tenant-scoped table (by its company)? Generic mirror of apiKeyCanAccessTenantRow / analystCanAccessTicket. `$table` is a developer literal, never user input. |
-| [auditWrite()](#auditwrite) |  |
-| [touch()](#touch) |  |
+| [auditWrite()](#auditwrite) | Records one action or field change in the problem's audit trail. |
+| [touch()](#touch) | Sets the problem's updated time to now. |
 | [resolveStatus()](#resolvestatus) | Resolve a problem status by name or id. Returns [id, name, is_closed] or null. |
 | [resolvePriority()](#resolvepriority) | Resolve a problem priority by name or id. Explicit null/'' clears. |
 | [resolveAnalyst()](#resolveanalyst) | Validate an analyst id (active); returns full_name. |
@@ -269,7 +269,9 @@ function canAccessTenantRow(PDO $conn, ActorContext $ctx, string $table, int $ro
 
 ### auditWrite
 
-*private static* - line 435
+*private static* - line 436
+
+Records one action or field change in the problem's audit trail.
 
 ```php
 function auditWrite(
@@ -297,11 +299,13 @@ function auditWrite(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 438 | `ProblemsService::auditWrite` | **insert** [problem_audit](/code/tables/problem_audit.md) (`problem_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 439 | `ProblemsService::auditWrite` | **insert** [problem_audit](/code/tables/problem_audit.md) (`problem_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### touch
 
-*private static* - line 447
+*private static* - line 449
+
+Sets the problem's updated time to now.
 
 ```php
 function touch(PDO $conn, int $problemId): void
@@ -316,11 +320,11 @@ function touch(PDO $conn, int $problemId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 449 | `ProblemsService::touch` | **update** [problems](/code/tables/problems.md) (`updated_datetime`) |  |
+| 451 | `ProblemsService::touch` | **update** [problems](/code/tables/problems.md) (`updated_datetime`) |  |
 
 ### resolveStatus
 
-*private static* - line 453
+*private static* - line 455
 
 Resolve a problem status by name or id. Returns [id, name, is_closed] or null.
 
@@ -337,12 +341,12 @@ function resolveStatus(PDO $conn, array $in): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 456 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 459 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 458 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 461 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
 
 ### resolvePriority
 
-*private static* - line 472
+*private static* - line 474
 
 Resolve a problem priority by name or id. Explicit null/'' clears.
 
@@ -359,12 +363,12 @@ function resolvePriority(PDO $conn, array $in): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 478 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
-| 481 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 480 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 483 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
 
 ### resolveAnalyst
 
-*private static* - line 494
+*private static* - line 496
 
 Validate an analyst id (active); returns full_name.
 
@@ -381,5 +385,5 @@ function resolveAnalyst(PDO $conn, int $analystId): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 496 | `ProblemsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 498 | `ProblemsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 

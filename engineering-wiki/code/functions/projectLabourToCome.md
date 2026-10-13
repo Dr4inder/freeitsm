@@ -6,7 +6,7 @@ Labour still to come (3.3.0): the hours left on open tasks' estimates - each tas
 function projectLabourToCome(PDO $conn, array $projects): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 246.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 250.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 257 | `projectLabourToCome` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 261 | `projectLabourToCome` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
 
 ## Calls
 

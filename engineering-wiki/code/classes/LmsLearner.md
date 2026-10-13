@@ -21,20 +21,22 @@ Here the object cannot be constructed in an invalid state.
 
 | Method | What it does |
 |---|---|
-| [__construct()](#__construct) |  |
-| [analyst()](#analyst) |  |
-| [user()](#user) |  |
+| [__construct()](#__construct) | Private: learners are built with `analyst()` or `user()`. |
+| [analyst()](#analyst) | A learner for an analyst id, or null when the id is not positive. |
+| [user()](#user) | A learner for a self-service user id, or null when the id is not positive. |
 | [fromSession()](#fromsession) | Whoever is signed in, from either front door. |
 | [fromRequest()](#fromrequest) | The learner this REQUEST is acting as. |
 | [requestWantsPortal()](#requestwantsportal) | Did this request come through the portal? Read from the query string even on a POST, so one rule covers the JSON-bodied endpoints as well. |
-| [type()](#type) |  |
-| [id()](#id) |  |
-| [isAnalyst()](#isanalyst) |  |
+| [type()](#type) | Whether the learner is an analyst or a self-service user. |
+| [id()](#id) | The analysts.id or users.id of the learner, depending on `type()`. |
+| [isAnalyst()](#isanalyst) | True when the learner is an analyst. |
 | [key()](#key) | 'analyst:12' — for logs and array keys, never for storage. |
 
 ### __construct
 
-*private* - line 42
+*private* - line 43
+
+Private: learners are built with `analyst()` or `user()`.
 
 ```php
 function __construct(string $type, int $id)
@@ -47,7 +49,9 @@ function __construct(string $type, int $id)
 
 ### analyst
 
-*public static* - line 48
+*public static* - line 50
+
+A learner for an analyst id, or null when the id is not positive.
 
 ```php
 function analyst(int $id): ?self
@@ -61,7 +65,9 @@ function analyst(int $id): ?self
 
 ### user
 
-*public static* - line 53
+*public static* - line 56
+
+A learner for a self-service user id, or null when the id is not positive.
 
 ```php
 function user(int $id): ?self
@@ -75,7 +81,7 @@ function user(int $id): ?self
 
 ### fromSession
 
-*public static* - line 81
+*public static* - line 84
 
 Whoever is signed in, from either front door.
 
@@ -105,7 +111,7 @@ function fromSession(): ?self
 
 ### fromRequest
 
-*public static* - line 101
+*public static* - line 104
 
 The learner this REQUEST is acting as.
 
@@ -127,7 +133,7 @@ function fromRequest(): ?self
 
 ### requestWantsPortal
 
-*private static* - line 113
+*private static* - line 116
 
 Did this request come through the portal? Read from the query string even on a POST, so one rule covers the JSON-bodied endpoints as well.
 
@@ -137,7 +143,9 @@ function requestWantsPortal(): bool
 
 ### type
 
-*public* - line 118
+*public* - line 122
+
+Whether the learner is an analyst or a self-service user.
 
 ```php
 function type(): string
@@ -145,7 +153,9 @@ function type(): string
 
 ### id
 
-*public* - line 119
+*public* - line 124
+
+The analysts.id or users.id of the learner, depending on `type()`.
 
 ```php
 function id(): int
@@ -153,7 +163,9 @@ function id(): int
 
 ### isAnalyst
 
-*public* - line 120
+*public* - line 126
+
+True when the learner is an analyst.
 
 ```php
 function isAnalyst(): bool
@@ -161,7 +173,7 @@ function isAnalyst(): bool
 
 ### key
 
-*public* - line 123
+*public* - line 129
 
 'analyst:12' — for logs and array keys, never for storage.
 

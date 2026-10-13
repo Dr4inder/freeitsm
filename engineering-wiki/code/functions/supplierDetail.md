@@ -6,7 +6,7 @@ Everything about one supplier this analyst may see, or null.
 function supplierDetail(PDO $conn, int $analystId, int $supplierId): ?array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 643.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 646.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 643.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 647 | `supplierDetail` | read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
-| 666 | `supplierDetail` | read [contacts](/code/tables/contacts.md) |  |
+| 650 | `supplierDetail` | read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
+| 669 | `supplierDetail` | read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

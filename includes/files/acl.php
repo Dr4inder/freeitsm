@@ -57,6 +57,7 @@ final class FilesAcl
         self::$levels = [];
     }
 
+    /** The short key for a permission level ('view', 'download', 'upload', 'modify', 'full'), or 'none'. */
     public static function levelKey(int $level): string
     {
         switch ($level) {
@@ -165,11 +166,13 @@ final class FilesAcl
         return self::$levels[$analystId] = $out;
     }
 
+    /** The analyst's effective level on one folder - 0 when they have no grant there. */
     public static function level(PDO $conn, int $analystId, int $folderId): int
     {
         return self::levels($conn, $analystId)[$folderId] ?? 0;
     }
 
+    /** True when the analyst's level on the folder is at least $need (levels are cumulative). */
     public static function can(PDO $conn, int $analystId, int $folderId, int $need): bool
     {
         return self::level($conn, $analystId, $folderId) >= $need;

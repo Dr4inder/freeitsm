@@ -1,10 +1,12 @@
 # apiSoftwareLoadApp()
 
+Loads one discovered application row, or answers 404 and stops.
+
 ```php
 function apiSoftwareLoadApp(PDO $conn, int $appId): array
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 110.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 119.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +19,7 @@ Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 111 | `apiSoftwareLoadApp` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 120 | `apiSoftwareLoadApp` | read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ## Calls
 

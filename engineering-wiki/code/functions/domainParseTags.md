@@ -6,7 +6,7 @@
 function domainParseTags(string $record): array
 ```
 
-Defined in [includes/domains/checks.php](/code/files/includes/domains/checks.php.md), line 293.
+Defined in [includes/domains/checks.php](/code/files/includes/domains/checks.php.md), line 299.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

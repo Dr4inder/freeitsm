@@ -25,12 +25,17 @@ require __DIR__ . '/../lib/openapi.php';
 $data = require $SCHEMA_FILE;
 $schemas = $data['schemas']; $responses = $data['responses']; $reqBodies = $data['requestBodies'] ?? [];
 
+/** GETs one API URL with the bearer key and returns [HTTP code, decoded JSON]. */
 function oaf_get($url, $key) {
     $ch = curl_init($url);
     curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER=>true, CURLOPT_HTTPHEADER=>['Authorization: Bearer '.$key], CURLOPT_TIMEOUT=>20]);
     $b = curl_exec($ch); $c = curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
     return [$c, json_decode($b, true)];
 }
+/**
+ * Builds an OpenAPI schema from a live value - its type, nested properties or list
+ * items, and nullable for nulls, strings and objects, which can be empty in other rows.
+ */
 function oaf_infer($v) {
     if ($v === null)   return ['nullable' => true];
     if (is_bool($v))   return ['type' => 'boolean'];
@@ -46,6 +51,15 @@ function oaf_infer($v) {
     return [];
 }
 $patches = 0;
+/**
+ * Brings a schema node into line with one live value, in place: follows $ref into the
+ * shared component schemas, marks nullable where the value is null, types a typeless
+ * node, adds missing object properties and drops required fields the response does not
+ * have.
+ *
+ * Counts every change in the global $patches, so the script can say whether anything was
+ * fixed.
+ */
 function oaf_patch(&$node, $data, &$schemas, $depth = 0) {
     global $patches;
     if ($depth > 40 || !is_array($node)) return;
@@ -82,6 +96,11 @@ function oaf_patch(&$node, $data, &$schemas, $depth = 0) {
     }
 }
 $idCache = [];
+/**
+ * Turns a path template into a real path by replacing each {id} with the first id its
+ * parent collection returns - null when there is no row to use. Ids are cached per
+ * collection.
+ */
 function oaf_resolvePath($template, $base, $key) {
     global $idCache;
     while (preg_match('/\{([^}]+)\}/', $template, $m, PREG_OFFSET_CAPTURE)) {

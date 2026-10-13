@@ -46,19 +46,19 @@ datetime through this would reintroduce GH #116 by another route.
 | [dayOfMonth()](#dayofmonth) | A day number within the month `$first` belongs to. -1 means the last day. Anything past the end of a short month CLAMPS to its last day: "the 31st" in a 30-day month means the 30th, not the 1st of the month after, which is what naive date arithmetic produces. |
 | [nthWeekdayOf()](#nthweekdayof) | The nth given weekday of the month `$first` belongs to - "the 2nd Tuesday", "the last Friday". `$nth` of -1 means the last one. |
 | [isExhausted()](#isexhausted) | Has the series finished? Checked BEFORE creating, so a series that ends "after 6 occurrences" produces six and not seven. |
-| [mkDate()](#mkdate) |  |
+| [mkDate()](#mkdate) | A YYYY-MM-DD string as a UTC date, or null when it is not one. |
 | [ruleForTask()](#rulefortask) | The rule a task belongs to, or null. |
 | [onTaskClosed()](#ontaskclosed) | A task has just been completed. If it repeats on completion, make the next one and return its id. |
 | [runDue()](#rundue) | Produce every occurrence now due on a fixed schedule. Returns the ids made. |
 | [project()](#project) | Dates a FIXED SCHEDULE will land on between two dates, without creating anything. |
-| [deactivate()](#deactivate) |  |
+| [deactivate()](#deactivate) | Switches a recurrence off. |
 | [occurrenceExistsFor()](#occurrenceexistsfor) | Does this series already have a top-level occurrence due on that date? |
 | [clampInt()](#clampint) | Keep a value inside a range, or null. |
 | [ruleFromInput()](#rulefrominput) | Build a rule from whatever the browser sent, discarding anything invalid. |
 | [previewRule()](#previewrule) | Every date a rule will produce, for showing somebody BEFORE they commit. |
 | [startForDue()](#startfordue) | The day work on an occurrence due `$due` can BEGIN. |
-| [taskRow()](#taskrow) |  |
-| [latestOccurrence()](#latestoccurrence) |  |
+| [taskRow()](#taskrow) | Loads one task row, or null. |
+| [latestOccurrence()](#latestoccurrence) | The newest top-level task made by the recurrence, or null. |
 | [createOccurrence()](#createoccurrence) | Copy `$sourceTaskId` into a new task due on `$due`, honouring the rule's copy_* flags, and count it against the series. |
 | [defaultOpenStatusId()](#defaultopenstatusid) | The status a new occurrence starts in: the configured default, but only among OPEN statuses. |
 
@@ -201,7 +201,9 @@ function isExhausted(array $rule, string $nextDate): bool
 
 ### mkDate
 
-*private static* - line 209
+*private static* - line 210
+
+A YYYY-MM-DD string as a UTC date, or null when it is not one.
 
 ```php
 function mkDate(string $ymd): ?DateTimeImmutable
@@ -213,7 +215,7 @@ function mkDate(string $ymd): ?DateTimeImmutable
 
 ### ruleForTask
 
-*public static* - line 220
+*public static* - line 221
 
 The rule a task belongs to, or null.
 
@@ -230,11 +232,11 @@ function ruleForTask(PDO $conn, int $taskId): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 223 | `TaskRecurrence::ruleForTask` | read [task_recurrences](/code/tables/task_recurrences.md), read [tasks](/code/tables/tasks.md) |  |
+| 224 | `TaskRecurrence::ruleForTask` | read [task_recurrences](/code/tables/task_recurrences.md), read [tasks](/code/tables/tasks.md) |  |
 
 ### onTaskClosed
 
-*public static* - line 245
+*public static* - line 246
 
 A task has just been completed. If it repeats on completion, make the next one and return its id.
 
@@ -261,7 +263,7 @@ function onTaskClosed(PDO $conn, int $taskId): ?int
 
 ### runDue
 
-*public static* - line 275
+*public static* - line 276
 
 Produce every occurrence now due on a fixed schedule. Returns the ids made.
 
@@ -291,14 +293,14 @@ function runDue(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 301 | `TaskRecurrence::runDue` | read [task_recurrences](/code/tables/task_recurrences.md) |  |
-| 353 | `TaskRecurrence::runDue` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`next_due_date`) |  |
+| 302 | `TaskRecurrence::runDue` | read [task_recurrences](/code/tables/task_recurrences.md) |  |
+| 354 | `TaskRecurrence::runDue` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`next_due_date`) |  |
 
 **Called from:** [cron/task_recurrence.php](/code/files/cron/task_recurrence.php.md)
 
 ### project
 
-*public static* - line 380
+*public static* - line 381
 
 Dates a FIXED SCHEDULE will land on between two dates, without creating anything.
 
@@ -334,13 +336,15 @@ function project(PDO $conn, string $from, string $to, int $capPerSeries = 60): a
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 384 | `TaskRecurrence::project` | read [task_recurrences](/code/tables/task_recurrences.md), read [tasks](/code/tables/tasks.md) |  |
+| 385 | `TaskRecurrence::project` | read [task_recurrences](/code/tables/task_recurrences.md), read [tasks](/code/tables/tasks.md) |  |
 
 **Called from:** [api/tasks/projected.php](/code/files/api/tasks/projected.php.md)
 
 ### deactivate
 
-*private static* - line 438
+*private static* - line 440
+
+Switches a recurrence off.
 
 ```php
 function deactivate(PDO $conn, int $recurrenceId): void
@@ -355,11 +359,11 @@ function deactivate(PDO $conn, int $recurrenceId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 440 | `TaskRecurrence::deactivate` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`is_active`, `updated_datetime`) |  |
+| 442 | `TaskRecurrence::deactivate` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`is_active`, `updated_datetime`) |  |
 
 ### occurrenceExistsFor
 
-*private static* - line 445
+*private static* - line 447
 
 Does this series already have a top-level occurrence due on that date?
 
@@ -377,11 +381,11 @@ function occurrenceExistsFor(PDO $conn, int $recurrenceId, string $due): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 448 | `TaskRecurrence::occurrenceExistsFor` | read [tasks](/code/tables/tasks.md) |  |
+| 450 | `TaskRecurrence::occurrenceExistsFor` | read [tasks](/code/tables/tasks.md) |  |
 
 ### clampInt
 
-*private static* - line 457
+*private static* - line 459
 
 Keep a value inside a range, or null.
 
@@ -397,7 +401,7 @@ function clampInt($v, int $min, int $max): ?int
 
 ### ruleFromInput
 
-*public static* - line 471
+*public static* - line 473
 
 Build a rule from whatever the browser sent, discarding anything invalid.
 
@@ -418,7 +422,7 @@ function ruleFromInput(array $in): array
 
 ### previewRule
 
-*public static* - line 526
+*public static* - line 528
 
 Every date a rule will produce, for showing somebody BEFORE they commit.
 
@@ -450,7 +454,7 @@ function previewRule(array $rule, array $task, int $limit = 25): array
 
 ### startForDue
 
-*public static* - line 586
+*public static* - line 588
 
 The day work on an occurrence due `$due` can BEGIN.
 
@@ -478,7 +482,9 @@ function startForDue(array $task, string $due): ?string
 
 ### taskRow
 
-*private static* - line 608
+*private static* - line 611
+
+Loads one task row, or null.
 
 ```php
 function taskRow(PDO $conn, int $id): ?array
@@ -493,11 +499,13 @@ function taskRow(PDO $conn, int $id): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 610 | `TaskRecurrence::taskRow` | read [tasks](/code/tables/tasks.md) |  |
+| 613 | `TaskRecurrence::taskRow` | read [tasks](/code/tables/tasks.md) |  |
 
 ### latestOccurrence
 
-*private static* - line 616
+*private static* - line 620
+
+The newest top-level task made by the recurrence, or null.
 
 ```php
 function latestOccurrence(PDO $conn, int $recurrenceId): ?int
@@ -512,11 +520,11 @@ function latestOccurrence(PDO $conn, int $recurrenceId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 619 | `TaskRecurrence::latestOccurrence` | read [tasks](/code/tables/tasks.md) |  |
+| 623 | `TaskRecurrence::latestOccurrence` | read [tasks](/code/tables/tasks.md) |  |
 
 ### createOccurrence
 
-*private static* - line 636
+*private static* - line 640
 
 Copy `$sourceTaskId` into a new task due on `$due`, honouring the rule's copy_* flags, and count it against the series.
 
@@ -540,17 +548,17 @@ function createOccurrence(PDO $conn, int $sourceTaskId, array $rule, string $due
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 638 | `TaskRecurrence::createOccurrence` | read [tasks](/code/tables/tasks.md) |  |
-| 651 | `TaskRecurrence::createOccurrence` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `ticket_id`, `change_id`, `contract_id`, `tenant_id`) |  |
-| 682 | `TaskRecurrence::createOccurrence` | **insert** [task_tag_map](/code/tables/task_tag_map.md) (`task_id`, `tag_id`) |  |
-| 691 | `TaskRecurrence::createOccurrence` | read [tasks](/code/tables/tasks.md) |  |
-| 696 | `TaskRecurrence::createOccurrence` | **insert** [tasks](/code/tables/tasks.md) (`title`, `status_id`, `priority_id`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `tenant_id`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 716 | `TaskRecurrence::createOccurrence` | **insert** [document_links](/code/tables/document_links.md) (`document_id`, `parent_type`, `parent_id`, `linked_by_id`, `created_datetime`) |  |
-| 737 | `TaskRecurrence::createOccurrence` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`occurrences_created`, `updated_datetime`) |  |
+| 642 | `TaskRecurrence::createOccurrence` | read [tasks](/code/tables/tasks.md) |  |
+| 655 | `TaskRecurrence::createOccurrence` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `ticket_id`, `change_id`, `contract_id`, `tenant_id`) |  |
+| 686 | `TaskRecurrence::createOccurrence` | **insert** [task_tag_map](/code/tables/task_tag_map.md) (`task_id`, `tag_id`) |  |
+| 695 | `TaskRecurrence::createOccurrence` | read [tasks](/code/tables/tasks.md) |  |
+| 700 | `TaskRecurrence::createOccurrence` | **insert** [tasks](/code/tables/tasks.md) (`title`, `status_id`, `priority_id`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `tenant_id`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 720 | `TaskRecurrence::createOccurrence` | **insert** [document_links](/code/tables/document_links.md) (`document_id`, `parent_type`, `parent_id`, `linked_by_id`, `created_datetime`) |  |
+| 741 | `TaskRecurrence::createOccurrence` | **update** [task_recurrences](/code/tables/task_recurrences.md) (`occurrences_created`, `updated_datetime`) |  |
 
 ### defaultOpenStatusId
 
-*private static* - line 755
+*private static* - line 759
 
 The status a new occurrence starts in: the configured default, but only among OPEN statuses.
 
@@ -572,5 +580,5 @@ function defaultOpenStatusId(PDO $conn): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 758 | `TaskRecurrence::defaultOpenStatusId` | read [task_statuses](/code/tables/task_statuses.md) |  |
+| 762 | `TaskRecurrence::defaultOpenStatusId` | read [task_statuses](/code/tables/task_statuses.md) |  |
 

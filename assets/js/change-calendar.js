@@ -418,6 +418,7 @@ function formatEventTime(evt) {
     const start = parseNaiveDate(evt.start_datetime);
     const end = evt.end_datetime ? parseNaiveDate(evt.end_datetime) : null;
 
+    /** A time as "2 PM" or "2:30 PM". */
     const formatTime = (d) => {
         let hours = d.getHours();
         const minutes = d.getMinutes();
@@ -440,6 +441,7 @@ function formatDatetimeRange(startStr, endStr) {
     const start = parseNaiveDate(startStr);
     const end = endStr ? parseNaiveDate(endStr) : null;
 
+    /** A date and time as "Mar 5, 2 PM" or "Mar 5, 2:30 PM". */
     const formatDt = (d) => {
         const month = MONTHS[d.getMonth()].slice(0, 3);
         const day = d.getDate();

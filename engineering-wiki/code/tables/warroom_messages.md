@@ -23,17 +23,17 @@ analyst_id is NULLABLE on purpose (FK is ON DELETE SET NULL, see db_verify.php):
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):1348 |  | update | `channel_id` |  |
 | [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md):328 | `warbotPost` | insert | `channel_id`, `analyst_id`, `body`, `is_bot`, `reply_to_id`, `created_datetime` |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):566 | `warRoomEditMessage` | update | `body`, `edited_datetime` |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):607 | `warRoomDeleteMessage` | update | `body`, `deleted_datetime`, `deleted_by` |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):632 | `warRoomSend` | insert | `channel_id`, `analyst_id`, `body`, `created_datetime` |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):1183 | `warRoomPrune` | delete |  |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):567 | `warRoomEditMessage` | update | `body`, `edited_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):608 | `warRoomDeleteMessage` | update | `body`, `deleted_datetime`, `deleted_by` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):633 | `warRoomSend` | insert | `channel_id`, `analyst_id`, `body`, `created_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):1184 | `warRoomPrune` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L1340, L1361 |  |
-| [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L237, L312 |  |
+| [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L246, L321 |  |
 | [includes/warbot/warbot.php](/code/files/includes/warbot/warbot.php.md) | warbotAlreadyAnswered L349 |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L131, warRoomMessages L472, warRoomMessages L480, warRoomMessageRow L618, warRoomMyMentions L798, warRoomMentionCounts L854 ... |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L131, warRoomMessages L473, warRoomMessages L481, warRoomMessageRow L619, warRoomMyMentions L799, warRoomMentionCounts L855 ... |  |
 

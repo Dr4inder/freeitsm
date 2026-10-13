@@ -269,7 +269,13 @@ function domainRunChecks(array $d, array $settings): array
     ];
 }
 
-/** @return array{0:int,1:string} */
+/**
+ * Scores a domain's health findings out of 100 (each takes off its weight) and
+ * turns the score into a grade, A+ to F; an expired, redemption or NXDOMAIN
+ * finding is always F.
+ *
+ * @return array{0:int,1:string}
+ */
 function domainGrade(array $findings): array
 {
     $score = 100;

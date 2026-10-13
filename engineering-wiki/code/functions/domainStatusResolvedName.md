@@ -6,7 +6,7 @@ The first active "resolved" incident status, by its own order.
 function domainStatusResolvedName(PDO $conn): ?string
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 205.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 208.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 207 | `domainStatusResolvedName` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 210 | `domainStatusResolvedName` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
 
 ## Called from
 

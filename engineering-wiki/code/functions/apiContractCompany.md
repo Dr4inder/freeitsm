@@ -6,7 +6,7 @@
 function apiContractCompany(PDO $conn, array $apiKey, array $body, bool $creating): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 322.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 339.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

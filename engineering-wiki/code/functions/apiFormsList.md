@@ -6,7 +6,7 @@ GET /forms — one row per chain (the current version), like the module list.
 function apiFormsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 209.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 228.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 210 | `apiFormsList` | read [forms](/code/tables/forms.md) |  |
+| 229 | `apiFormsList` | read [forms](/code/tables/forms.md) |  |
 
 ## Calls
 

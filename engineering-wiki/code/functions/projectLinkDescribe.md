@@ -6,7 +6,7 @@ Linked records, shaped for display: id, label, a sub-line, a status and a link.
 function projectLinkDescribe(PDO $conn, string $kind, array $ids): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 156.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 160.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,13 +20,13 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 163 | `projectLinkDescribe` | read [assets](/code/tables/assets.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 172 | `projectLinkDescribe` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
-| 181 | `projectLinkDescribe` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 190 | `projectLinkDescribe` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [suppliers](/code/tables/suppliers.md) |  |
-| 201 | `projectLinkDescribe` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 207 | `projectLinkDescribe` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 215 | `projectLinkDescribe` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 167 | `projectLinkDescribe` | read [assets](/code/tables/assets.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 176 | `projectLinkDescribe` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 185 | `projectLinkDescribe` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 194 | `projectLinkDescribe` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 205 | `projectLinkDescribe` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 211 | `projectLinkDescribe` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 219 | `projectLinkDescribe` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

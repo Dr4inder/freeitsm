@@ -54,6 +54,7 @@ class IssueDoc
         return ['_link' => true, 'href' => $href, 'text' => $text];
     }
 
+    /** Adds a heading block; blank text is ignored. */
     public function heading(string $text): self
     {
         if (trim($text) !== '') {
@@ -89,7 +90,11 @@ class IssueDoc
         return $this;
     }
 
-    /** @param string[] $items */
+    /**
+     * Adds a bullet list, dropping blank items; nothing is added if every item is blank.
+     *
+     * @param string[] $items
+     */
     public function bullets(array $items): self
     {
         $clean = [];
@@ -103,6 +108,7 @@ class IssueDoc
         return $this;
     }
 
+    /** Adds a code block; an empty string is ignored. */
     public function code(string $text): self
     {
         if ($text !== '') {
@@ -111,6 +117,7 @@ class IssueDoc
         return $this;
     }
 
+    /** Adds a horizontal rule, unless the document is empty or already ends with one. */
     public function rule(): self
     {
         // A leading rule, or two in a row, is always a mistake in generated
@@ -121,6 +128,7 @@ class IssueDoc
         return $this;
     }
 
+    /** True when no block has been added. */
     public function isEmpty(): bool
     {
         return $this->blocks === [];
@@ -183,6 +191,7 @@ class IssueDoc
         return ['type' => 'doc', 'version' => 1, 'content' => $content];
     }
 
+    /** Converts a paragraph's parts to ADF text nodes, giving links a link mark. */
     private function adfInlines(array $inlines): array
     {
         $out = [];
@@ -340,6 +349,7 @@ class IssueDoc
 
     // ---------------------------------------------------------------- escaping
 
+    /** HTML-escapes text for toHtml(). */
     private function h(string $s): string
     {
         return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');

@@ -25,7 +25,7 @@ function knowledgeNodePermits(
 ): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 608.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 616.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

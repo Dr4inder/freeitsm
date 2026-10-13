@@ -64,11 +64,13 @@ abstract class IssueTrackerProvider
     /** @var array decrypted integration_connections row */
     protected $connection;
 
+    /** Keeps the decrypted integration_connections row the connector works with. */
     public function __construct(array $connection)
     {
         $this->connection = $connection;
     }
 
+    /** The provider key from the connection row ('jira' or 'azuredevops'). */
     public function getProvider(): string
     {
         return $this->connection['provider'] ?? '';
@@ -127,12 +129,18 @@ abstract class IssueTrackerProvider
         throw new Exception('Comments are not supported for this provider.');
     }
 
-    /** @param array $file ['data'=>binary, 'filename'=>string, 'content_type'=>string] */
+    /**
+     * Attaches a file to an external issue. The default throws; connectors that declare
+     * CAP_ATTACHMENTS override it.
+     *
+     * @param array $file ['data'=>binary, 'filename'=>string, 'content_type'=>string]
+     */
     public function addAttachment(string $externalId, array $file): void
     {
         throw new Exception('Attachments are not supported for this provider.');
     }
 
+    /** Updates fields on an external issue. The default throws; a connector that supports it overrides it. */
     public function updateFields(string $externalId, array $fields): void
     {
         throw new Exception('Field updates are not supported for this provider.');
@@ -198,13 +206,23 @@ abstract class IssueTrackerProvider
      */
     abstract public function testConnection(): array;
 
-    /** @return array [['key'=>'OPS','name'=>'Operations'], …] */
+    /**
+     * Lists the tracker's projects for the mapping dropdowns. The default throws;
+     * connectors override it.
+     *
+     * @return array [['key'=>'OPS','name'=>'Operations'], …]
+     */
     public function listProjects(): array
     {
         throw new Exception('Project discovery is not supported for this provider.');
     }
 
-    /** @return array [['id'=>'10001','name'=>'Bug'], …] */
+    /**
+     * Lists the issue types available in a project. The default throws; connectors that
+     * declare CAP_ISSUE_TYPES override it.
+     *
+     * @return array [['id'=>'10001','name'=>'Bug'], …]
+     */
     public function listIssueTypes(string $project): array
     {
         throw new Exception('Issue types are not supported for this provider.');
@@ -230,7 +248,11 @@ abstract class IssueTrackerProvider
         return in_array($capability, $this->capabilities(), true);
     }
 
-    /** @return string[] the CAP_* keys this provider offers */
+    /**
+     * The optional features this connector supports. The base class declares none.
+     *
+     * @return string[] the CAP_* keys this provider offers
+     */
     protected function capabilities(): array
     {
         return [];

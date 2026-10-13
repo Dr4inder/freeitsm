@@ -12,7 +12,7 @@ Does nothing once an id is recorded, and nothing if there are no entries.
 function awcAdoptExistingCategory(PDO $conn, string $source): void
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 229.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 236.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,8 +25,8 @@ Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_war
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 234 | `awcAdoptExistingCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 240 | `awcAdoptExistingCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 241 | `awcAdoptExistingCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 247 | `awcAdoptExistingCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
 
 ## Calls
 

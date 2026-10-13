@@ -6,7 +6,7 @@ The mime type we record for a stored file: sniffed, else guessed from the name.
 function filesDetectMime(string $absPath, string $name): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 102.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 106.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

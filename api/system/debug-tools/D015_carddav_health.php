@@ -52,10 +52,15 @@ require_once __DIR__ . '/../../../includes/encryption.php';
 require_once __DIR__ . '/../../../includes/carddav_write.php';
 
 $sections = [];
+/**
+ * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
+ * string or an array of lines.
+ */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
     $sections[] = "=== {$title} ===\n" . rtrim($body, "\n");
 }
+/** Formats a boolean as YES or NO for the report. */
 function yn($v) { return $v ? 'YES' : 'NO'; }
 /** Hide the host and the account, keep the shape. Reports get sent on. */
 function maskUrl(string $u): string {
@@ -64,10 +69,15 @@ function maskUrl(string $u): string {
     return ($p['scheme'] ?? 'http') . '://' . preg_replace('/[^.]/', '*', $p['host'])
          . (isset($p['port']) ? ':' . $p['port'] : '') . ($p['path'] ?? '');
 }
+/** Masks a username to its first character followed by stars. */
 function maskUser(string $u): string {
     if ($u === '') return '(none)';
     return mb_substr($u, 0, 1) . str_repeat('*', max(1, mb_strlen($u) - 1));
 }
+/**
+ * Prints every section, separated by blank lines, and stops - the end of the report, and
+ * the early exit when a check cannot go on.
+ */
 function emit_and_exit($sections) {
     echo implode("\n\n", $sections) . "\n";
     exit;

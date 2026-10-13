@@ -1,6 +1,6 @@
 # cron/sla_breach_check.php
 
-> PHP - 211 lines
+> PHP - 215 lines
 
 SLA Breach Check — cron entry point.
 
@@ -33,18 +33,18 @@ Pruned at end-of-run based on sla_cron_log_retention_days (default 30).
 | Function | Line | What it does |
 |---|--:|---|
 | [sla_cron_log_start()](/code/functions/sla_cron_log_start.md) | 46 | Helper — record a run row. Returns the inserted id (or null if logging fails). |
-| [sla_cron_log_finish()](/code/functions/sla_cron_log_finish.md) | 56 |  |
+| [sla_cron_log_finish()](/code/functions/sla_cron_log_finish.md) | 60 | Completes this run's sla_cron_runs row with its end time, duration, outcome, counts and notes; does nothing when the start row was never written. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 48 | `sla_cron_log_start` | **insert** [sla_cron_runs](/code/tables/sla_cron_runs.md) (`started_at`, `invocation`, `client_ip`, `outcome`) |  |
-| 59 | `sla_cron_log_finish` | **update** [sla_cron_runs](/code/tables/sla_cron_runs.md) (`ended_at`, `duration_ms`, `outcome`, `sent_count`, `skipped_count`, `error_count`, `notes`) |  |
-| 88 |  | read [system_settings](/code/tables/system_settings.md) |  |
-| 100 |  | read [sla_cron_runs](/code/tables/sla_cron_runs.md) |  |
-| 137 |  | read [sla_cron_runs](/code/tables/sla_cron_runs.md) |  |
-| 175 |  | **delete** [sla_cron_runs](/code/tables/sla_cron_runs.md) |  |
+| 63 | `sla_cron_log_finish` | **update** [sla_cron_runs](/code/tables/sla_cron_runs.md) (`ended_at`, `duration_ms`, `outcome`, `sent_count`, `skipped_count`, `error_count`, `notes`) |  |
+| 92 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 104 |  | read [sla_cron_runs](/code/tables/sla_cron_runs.md) |  |
+| 141 |  | read [sla_cron_runs](/code/tables/sla_cron_runs.md) |  |
+| 179 |  | **delete** [sla_cron_runs](/code/tables/sla_cron_runs.md) |  |
 
 ## How it hangs together
 

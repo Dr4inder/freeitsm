@@ -1,10 +1,12 @@
 # domainStatusReady()
 
+True once Database Verification has created the domain_status_incidents and domain_status_services tables; checked once per request.
+
 ```php
 function domainStatusReady(PDO $conn): bool
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 40.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 43.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,8 +18,8 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 45 | `domainStatusReady` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
-| 46 | `domainStatusReady` | read [domain_status_services](/code/tables/domain_status_services.md) |  |
+| 48 | `domainStatusReady` | read [domain_status_incidents](/code/tables/domain_status_incidents.md) |  |
+| 49 | `domainStatusReady` | read [domain_status_services](/code/tables/domain_status_services.md) |  |
 
 ## Called from
 

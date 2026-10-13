@@ -6,7 +6,7 @@ Has Database Verification added projects.visibility? Before it, everything is vi
 function projectVisibilityReady(PDO $conn): bool
 ```
 
-Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 39.
+Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 40.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/projects/visibility.php](/code/files/includes/projects/visi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 43 | `projectVisibilityReady` | read [projects](/code/tables/projects.md) |  |
+| 44 | `projectVisibilityReady` | read [projects](/code/tables/projects.md) |  |
 
 ## Called from
 

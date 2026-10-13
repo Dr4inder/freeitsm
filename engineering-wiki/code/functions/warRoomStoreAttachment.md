@@ -18,7 +18,7 @@ temptation is removed rather than documented.
 function warRoomStoreAttachment(PDO $conn, int $messageId, array $file): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 890.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 891.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -32,7 +32,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 890
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 895 | `warRoomStoreAttachment` | **insert** [warroom_attachments](/code/tables/warroom_attachments.md) (`message_id`, `stored_name`, `original_name`, `size_bytes`, `created_datetime`) |  |
+| 896 | `warRoomStoreAttachment` | **insert** [warroom_attachments](/code/tables/warroom_attachments.md) (`message_id`, `stored_name`, `original_name`, `size_bytes`, `created_datetime`) |  |
 
 ## Calls
 

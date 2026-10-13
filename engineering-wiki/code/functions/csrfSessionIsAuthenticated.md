@@ -6,7 +6,7 @@ Is the session signed in - an analyst or a portal user?
 function csrfSessionIsAuthenticated(): bool
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 94.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 96.
 
 **Returns:** `bool`
 

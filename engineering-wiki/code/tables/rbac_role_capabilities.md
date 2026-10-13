@@ -15,8 +15,8 @@
 |---|---|---|---|---|
 | [api/system/role.php](/code/files/api/system/role.php.md):92 |  | delete |  |  |
 | [api/system/role.php](/code/files/api/system/role.php.md):93 |  | insert | `role_id`, `capability_key` |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):273 | `AnalystsService::writeManagedRole` | delete |  |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):274 | `AnalystsService::writeManagedRole` | insert | `role_id`, `capability_key` |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):280 | `AnalystsService::writeManagedRole` | delete |  |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):281 | `AnalystsService::writeManagedRole` | insert | `role_id`, `capability_key` |  |
 
 ## Read by
 

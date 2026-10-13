@@ -6,7 +6,7 @@ A window of the message around the first term that matched, so a result is reada
 function warRoomSnippet(string $body, array $terms, int $len = 200): string
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1042.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1043.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

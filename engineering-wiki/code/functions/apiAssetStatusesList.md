@@ -1,10 +1,12 @@
 # apiAssetStatusesList()
 
+GET /asset-statuses - the asset statuses for the key's default company.
+
 ```php
 function apiAssetStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 621.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 647.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -28,7 +28,7 @@ safe to call on a part-migrated install.
 function resolveTicketTenantForEmail(PDO $conn, $mailboxId, string $fromAddress): ?int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1053.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1059.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -42,9 +42,9 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 105
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1062 | `resolveTicketTenantForEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 1079 | `resolveTicketTenantForEmail` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
-| 1097 | `resolveTicketTenantForEmail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1068 | `resolveTicketTenantForEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 1085 | `resolveTicketTenantForEmail` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
+| 1103 | `resolveTicketTenantForEmail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
 
 ## Calls
 

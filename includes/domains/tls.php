@@ -18,6 +18,10 @@
 if (file_exists(__DIR__ . '/../ssl.php')) require_once __DIR__ . '/../ssl.php';
 
 /**
+ * Reads the certificate a host presents - subject, issuer, dates, days left and
+ * names - then says whether it matches the host name and whether the chain
+ * verifies against the trusted CA bundle.
+ *
  * @return array{ok:bool, host:string, error:?string, subject:?string, issuer:?string,
  *               valid_from:?string, valid_to:?string, days_left:?int, sans:array,
  *               hostname_match:?bool, chain_valid:?bool}

@@ -70,6 +70,7 @@ function csrfRequestPath(): string
     return ltrim((string)parse_url((string)($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH), '/');
 }
 
+/** True when the path is on CSRF_EXEMPT_PATHS - an exact file, or anything under an entry ending in '/'. */
 function csrfIsExempt(string $path): bool
 {
     foreach (CSRF_EXEMPT_PATHS as $p) {
@@ -78,6 +79,7 @@ function csrfIsExempt(string $path): bool
     return false;
 }
 
+/** True for any request method other than GET, HEAD and OPTIONS. */
 function csrfIsStateChanging(): bool
 {
     $m = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'));

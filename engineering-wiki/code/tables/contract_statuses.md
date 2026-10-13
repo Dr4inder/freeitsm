@@ -25,13 +25,13 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/contracts/delete_contract_status.php](/code/files/api/contracts/delete_contract_status.php.md) | L33 |  |
-| [api/contracts/get_contract.php](/code/files/api/contracts/get_contract.php.md) | L28 |  |
+| [api/contracts/get_contract.php](/code/files/api/contracts/get_contract.php.md) | L39 |  |
 | [api/contracts/get_contract_statuses.php](/code/files/api/contracts/get_contract_statuses.php.md) | L19 |  |
-| [api/contracts/get_contracts.php](/code/files/api/contracts/get_contracts.php.md) | L24 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractSelect L60 |  |
+| [api/contracts/get_contracts.php](/code/files/api/contracts/get_contracts.php.md) | L37 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractSelect L65 |  |
 | [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractsForAsset L109 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleContracts L390, peopleSupplierContracts L755 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L190 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleContracts L391, peopleSupplierContracts L758 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L194 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewContract L351 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolSupplierContact L736 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolSupplierContact L766 |  |
 

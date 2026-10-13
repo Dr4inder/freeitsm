@@ -6,7 +6,7 @@ The report body. No <html> wrapper — the page and the email each supply their 
 function contractReportBody(array $contract, array $assets): string
 ```
 
-Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 57.
+Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 60.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

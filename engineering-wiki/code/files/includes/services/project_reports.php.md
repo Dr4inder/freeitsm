@@ -1,6 +1,6 @@
 # includes/services/project_reports.php
 
-> PHP - 425 lines
+> PHP - 429 lines
 
 ProjectReportsService - a project's briefing and reports (3.2.0), and the rules for who may write, approve and delete them. The AI side is includes/projects/ai.php.
 
@@ -31,27 +31,27 @@ Every write is in the project's history.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 37 | `ProjectReportsService::ready` | read [project_reports](/code/tables/project_reports.md) |  |
-| 45 | `ProjectReportsService::listFor` | read [project_reports](/code/tables/project_reports.md), read [analysts](/code/tables/analysts.md) |  |
-| 61 | `ProjectReportsService::latestBriefing` | read [project_reports](/code/tables/project_reports.md), read [analysts](/code/tables/analysts.md) |  |
-| 93 | `ProjectReportsService::briefing` | **delete** [project_reports](/code/tables/project_reports.md) |  |
-| 94 | `ProjectReportsService::briefing` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 110 | `ProjectReportsService::draftWithAi` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 133 | `ProjectReportsService::save` | **update** [project_reports](/code/tables/project_reports.md) (`title`, `body`, `ai_edited`, `updated_by_id`, `updated_datetime`) |  |
-| 139 | `ProjectReportsService::save` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 157 | `ProjectReportsService::approve` | **update** [project_reports](/code/tables/project_reports.md) (`status`, `approved_by_id`, `approved_datetime`) |  |
-| 174 | `ProjectReportsService::delete` | **delete** [project_reports](/code/tables/project_reports.md) |  |
-| 190 | `ProjectReportsService::scheduleReady` | read [projects](/code/tables/projects.md) |  |
-| 190 | `ProjectReportsService::scheduleReady` | read [project_reports](/code/tables/project_reports.md) |  |
-| 200 | `ProjectReportsService::schedule` | read [projects](/code/tables/projects.md) |  |
-| 216 | `ProjectReportsService::setSchedule` | **update** [projects](/code/tables/projects.md) (`report_schedule`, `report_schedule_kind`) |  |
-| 234 | `ProjectReportsService::recipients` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 239 | `ProjectReportsService::recipients` | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
-| 290 | `ProjectReportsService::send` | **update** [project_reports](/code/tables/project_reports.md) (`sent_datetime`, `sent_by_id`, `sent_to`) |  |
-| 340 | `ProjectReportsService::runSchedules` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 346 | `ProjectReportsService::runSchedules` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
-| 408 | `ProjectReportsService::draftScheduled` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 418 | `ProjectReportsService::load` | read [project_reports](/code/tables/project_reports.md) |  |
+| 38 | `ProjectReportsService::ready` | read [project_reports](/code/tables/project_reports.md) |  |
+| 46 | `ProjectReportsService::listFor` | read [project_reports](/code/tables/project_reports.md), read [analysts](/code/tables/analysts.md) |  |
+| 63 | `ProjectReportsService::latestBriefing` | read [project_reports](/code/tables/project_reports.md), read [analysts](/code/tables/analysts.md) |  |
+| 96 | `ProjectReportsService::briefing` | **delete** [project_reports](/code/tables/project_reports.md) |  |
+| 97 | `ProjectReportsService::briefing` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 113 | `ProjectReportsService::draftWithAi` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 136 | `ProjectReportsService::save` | **update** [project_reports](/code/tables/project_reports.md) (`title`, `body`, `ai_edited`, `updated_by_id`, `updated_datetime`) |  |
+| 142 | `ProjectReportsService::save` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 160 | `ProjectReportsService::approve` | **update** [project_reports](/code/tables/project_reports.md) (`status`, `approved_by_id`, `approved_datetime`) |  |
+| 177 | `ProjectReportsService::delete` | **delete** [project_reports](/code/tables/project_reports.md) |  |
+| 193 | `ProjectReportsService::scheduleReady` | read [projects](/code/tables/projects.md) |  |
+| 193 | `ProjectReportsService::scheduleReady` | read [project_reports](/code/tables/project_reports.md) |  |
+| 203 | `ProjectReportsService::schedule` | read [projects](/code/tables/projects.md) |  |
+| 219 | `ProjectReportsService::setSchedule` | **update** [projects](/code/tables/projects.md) (`report_schedule`, `report_schedule_kind`) |  |
+| 237 | `ProjectReportsService::recipients` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 242 | `ProjectReportsService::recipients` | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 293 | `ProjectReportsService::send` | **update** [project_reports](/code/tables/project_reports.md) (`sent_datetime`, `sent_by_id`, `sent_to`) |  |
+| 343 | `ProjectReportsService::runSchedules` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 349 | `ProjectReportsService::runSchedules` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 411 | `ProjectReportsService::draftScheduled` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 422 | `ProjectReportsService::load` | read [project_reports](/code/tables/project_reports.md) |  |
 
 ## How it hangs together
 

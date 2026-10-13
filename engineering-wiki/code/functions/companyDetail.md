@@ -6,7 +6,7 @@ Everything about one company this analyst may see, or null.
 function companyDetail(PDO $conn, int $analystId, int $tenantId): ?array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 258.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 259.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 258.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 269 | `companyDetail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 275 | `companyDetail` | read [users](/code/tables/users.md) |  |
+| 270 | `companyDetail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 276 | `companyDetail` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

@@ -10,7 +10,7 @@ the service is fine.
 function domainStatusImpactId(PDO $conn, int $chosen): int
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 188.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 191.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,8 +23,8 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 191 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 197 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 194 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 200 | `domainStatusImpactId` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## Called from
 

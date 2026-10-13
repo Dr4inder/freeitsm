@@ -6,7 +6,7 @@ Delete a lease, its schedules and its asset rows. The assets themselves keep the
 function leaseDelete(PDO $conn, ActorContext $ctx, int $id): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 257.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 263.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 257.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 260 | `leaseDelete` | **delete** [leases](/code/tables/leases.md) |  |
+| 266 | `leaseDelete` | **delete** [leases](/code/tables/leases.md) |  |
 
 ## Calls
 

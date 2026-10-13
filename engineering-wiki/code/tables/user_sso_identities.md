@@ -18,11 +18,11 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):467 | `completeSelfServiceSso` | update | `last_login_datetime`, `email` |  |
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):526 | `completeSelfServiceSso` | insert | `user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime` |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):469 | `completeSelfServiceSso` | update | `last_login_datetime`, `email` |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):528 | `completeSelfServiceSso` | insert | `user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime` |  |
 | [api/tickets/unlink_user_signin.php](/code/files/api/tickets/unlink_user_signin.php.md):73 |  | delete |  |  |
 | [includes/carddav_write.php](/code/files/includes/carddav_write.php.md):786 | `cardDavPushPersonChanges` | update | `source_etag` |  |
-| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):788 | `dsyncLinkIdentity` | insert | `user_id`, `provider_id`, `subject`, `email`, `source_ref`, `source_etag`, `linked_datetime` |  |
+| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):801 | `dsyncLinkIdentity` | insert | `user_id`, `provider_id`, `subject`, `email`, `source_ref`, `source_etag`, `linked_datetime` |  |
 | [includes/ldap.php](/code/files/includes/ldap.php.md):728 | `ldapResolveUser` | update | `last_login_datetime`, `email` |  |
 | [includes/ldap.php](/code/files/includes/ldap.php.md):811 | `ldapResolveUser` | insert | `user_id`, `provider_id`, `subject`, `email`, `linked_datetime`, `last_login_datetime` |  |
 
@@ -30,13 +30,13 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md) | completeSelfServiceSso L449 |  |
-| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L281 |  |
-| [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | L408 |  |
-| [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md) | L88, L202, L203 |  |
-| [api/system/debug-tools/D016_carddav_drift.php](/code/files/api/system/debug-tools/D016_carddav_drift.php.md) | L125 |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md) | completeSelfServiceSso L451 |  |
+| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L299 |  |
+| [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | L429 |  |
+| [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md) | L98, L212, L213 |  |
+| [api/system/debug-tools/D016_carddav_drift.php](/code/files/api/system/debug-tools/D016_carddav_drift.php.md) | L133 |  |
 | [api/tickets/unlink_user_signin.php](/code/files/api/tickets/unlink_user_signin.php.md) | L49 |  |
 | [includes/carddav_write.php](/code/files/includes/carddav_write.php.md) | cardDavPushPersonChanges L659 |  |
-| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md) | dsyncFindExisting L382 |  |
+| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md) | dsyncFindExisting L389 |  |
 | [includes/ldap.php](/code/files/includes/ldap.php.md) | ldapResolveUser L704 |  |
 

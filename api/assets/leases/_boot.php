@@ -17,6 +17,16 @@ require_once __DIR__ . '/../../../includes/functions.php';
 require_once __DIR__ . '/../../../includes/tenancy.php';
 require_once __DIR__ . '/../../../includes/leases.php';
 
+/**
+ * Runs one Leases endpoint: checks sign-in, Assets module access, the HTTP method and
+ * that the lease tables exist, then calls $fn and echoes its result as JSON.
+ *
+ * A ServiceError is shown to the caller as its message; any other exception is logged
+ * and reported as a generic error.
+ *
+ * @param string   $method  'GET' or 'POST' - anything else is refused with HTTP 405
+ * @param callable $fn      function (PDO $conn, ActorContext $ctx, array $in): ?array - its array is merged into {success: true}
+ */
 function leaseEndpoint(string $method, callable $fn): void
 {
     header('Content-Type: application/json');

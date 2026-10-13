@@ -14,7 +14,7 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md):371 |  | insert | `department_id`, `team_id` |  |
+| [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md):384 |  | insert | `department_id`, `team_id` |  |
 | [api/tickets/save_department_teams.php](/code/files/api/tickets/save_department_teams.php.md):38 |  | delete |  |  |
 | [api/tickets/save_department_teams.php](/code/files/api/tickets/save_department_teams.php.md):44 |  | insert | `department_id`, `team_id` |  |
 | [api/tickets/save_team_departments.php](/code/files/api/tickets/save_team_departments.php.md):44 |  | delete |  |  |

@@ -1,6 +1,6 @@
 # includes/services/forms.php
 
-> PHP - 2850 lines
+> PHP - 2864 lines
 
 FormsService — the single home for the forms module's write rules: form save (create + id-based field sync), version fork, delete (leaf/chain), submission create (with the form.submitted workflow dispatch) and submission delete.
 
@@ -43,58 +43,58 @@ escaping there would fail a submission that is already saved.
 | 718 | `FormsService::collectionSubmissions` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md) |  |
 | 741 | `FormsService::collectionSubmissions` | read [form_submission_data](/code/tables/form_submission_data.md) |  |
 | 759 | `FormsService::collectionSubmissions` | read [form_fields](/code/tables/form_fields.md) |  |
-| 803 | `FormsService::saveCollection` | read [form_collections](/code/tables/form_collections.md) |  |
-| 810 | `FormsService::saveCollection` | **update** [form_collections](/code/tables/form_collections.md) (`name`, `description`, `modified_date`) |  |
-| 813 | `FormsService::saveCollection` | read [form_collections](/code/tables/form_collections.md) |  |
-| 821 | `FormsService::saveCollection` | **insert** [form_collections](/code/tables/form_collections.md) (`name`, `description`, `created_by`, `created_date`, `modified_date`) |  |
-| 841 | `FormsService::setCollectionClosed` | **update** [form_collections](/code/tables/form_collections.md) (`closed_datetime`, `closed_by`, `modified_date`) |  |
+| 804 | `FormsService::saveCollection` | read [form_collections](/code/tables/form_collections.md) |  |
+| 811 | `FormsService::saveCollection` | **update** [form_collections](/code/tables/form_collections.md) (`name`, `description`, `modified_date`) |  |
+| 814 | `FormsService::saveCollection` | read [form_collections](/code/tables/form_collections.md) |  |
+| 822 | `FormsService::saveCollection` | **insert** [form_collections](/code/tables/form_collections.md) (`name`, `description`, `created_by`, `created_date`, `modified_date`) |  |
 | 842 | `FormsService::setCollectionClosed` | **update** [form_collections](/code/tables/form_collections.md) (`closed_datetime`, `closed_by`, `modified_date`) |  |
-| 847 | `FormsService::setCollectionClosed` | read [form_collections](/code/tables/form_collections.md) |  |
-| 865 | `FormsService::deleteCollection` | read [form_submissions](/code/tables/form_submissions.md) |  |
-| 872 | `FormsService::deleteCollection` | **delete** [form_collections](/code/tables/form_collections.md) |  |
-| 891 | `FormsService::submissionsBlockedBy` | read [forms](/code/tables/forms.md), read [form_collections](/code/tables/form_collections.md) |  |
-| 916 | `FormsService::portalCatalogueFilter` | read [form_collections](/code/tables/form_collections.md) |  |
-| 954 | `FormsService::saveForm` | **update** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `modified_by`) |  |
-| 1007 | `FormsService::saveForm` | **insert** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `created_by`, `modified_by`, `version_number`, `created_date`, `modified_date`) |  |
-| 1046 | `FormsService::deleteForm` | read [forms](/code/tables/forms.md) |  |
-| 1057 | `FormsService::deleteForm` | read [forms](/code/tables/forms.md) |  |
-| 1075 | `FormsService::deleteForm` | **delete** [form_submission_data](/code/tables/form_submission_data.md), read [form_submissions](/code/tables/form_submissions.md) |  |
-| 1079 | `FormsService::deleteForm` | **delete** [form_submissions](/code/tables/form_submissions.md) |  |
-| 1080 | `FormsService::deleteForm` | **delete** [form_fields](/code/tables/form_fields.md) |  |
-| 1083 | `FormsService::deleteForm` | **delete** [forms](/code/tables/forms.md) |  |
-| 1157 | `FormsService::actionLists` | read [forms](/code/tables/forms.md) |  |
-| 1201 | `FormsService::createVersion` | **insert** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `created_by`, `modified_by`, `parent_form_id`, `version_number{$colSql}`, `created_date`) |  |
-| 1272 | `FormsService::createVersion` | read [form_fields](/code/tables/form_fields.md) |  |
-| 1281 | `FormsService::createVersion` | **insert** [form_fields](/code/tables/form_fields.md) (`form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`, `config`) |  |
-| 1290 | `FormsService::createVersion` | **update** [form_fields](/code/tables/form_fields.md) (`config`) |  |
-| 1311 | `FormsService::createVersion` | **update** [forms](/code/tables/forms.md) (`layout`) |  |
-| 1327 | `FormsService::createVersion` | **insert** [form_audiences](/code/tables/form_audiences.md) (`form_id`, `principal_type`, `principal_id`) |  |
-| 1400 | `FormsService::submitForm` | read [form_fields](/code/tables/form_fields.md) |  |
-| 1671 | `FormsService::submitForm` | **insert** [form_submissions](/code/tables/form_submissions.md) (`$cols`) |  |
-| 1674 | `FormsService::submitForm` | **insert** [form_submission_data](/code/tables/form_submission_data.md) (`submission_id`, `field_id`, `field_value`) |  |
-| 1769 | `FormsService::deleteSubmission` | read [form_submissions](/code/tables/form_submissions.md) |  |
+| 843 | `FormsService::setCollectionClosed` | **update** [form_collections](/code/tables/form_collections.md) (`closed_datetime`, `closed_by`, `modified_date`) |  |
+| 848 | `FormsService::setCollectionClosed` | read [form_collections](/code/tables/form_collections.md) |  |
+| 866 | `FormsService::deleteCollection` | read [form_submissions](/code/tables/form_submissions.md) |  |
+| 873 | `FormsService::deleteCollection` | **delete** [form_collections](/code/tables/form_collections.md) |  |
+| 892 | `FormsService::submissionsBlockedBy` | read [forms](/code/tables/forms.md), read [form_collections](/code/tables/form_collections.md) |  |
+| 917 | `FormsService::portalCatalogueFilter` | read [form_collections](/code/tables/form_collections.md) |  |
+| 960 | `FormsService::saveForm` | **update** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `modified_by`) |  |
+| 1013 | `FormsService::saveForm` | **insert** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `created_by`, `modified_by`, `version_number`, `created_date`, `modified_date`) |  |
+| 1052 | `FormsService::deleteForm` | read [forms](/code/tables/forms.md) |  |
+| 1063 | `FormsService::deleteForm` | read [forms](/code/tables/forms.md) |  |
+| 1081 | `FormsService::deleteForm` | **delete** [form_submission_data](/code/tables/form_submission_data.md), read [form_submissions](/code/tables/form_submissions.md) |  |
+| 1085 | `FormsService::deleteForm` | **delete** [form_submissions](/code/tables/form_submissions.md) |  |
+| 1086 | `FormsService::deleteForm` | **delete** [form_fields](/code/tables/form_fields.md) |  |
+| 1089 | `FormsService::deleteForm` | **delete** [forms](/code/tables/forms.md) |  |
+| 1163 | `FormsService::actionLists` | read [forms](/code/tables/forms.md) |  |
+| 1207 | `FormsService::createVersion` | **insert** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `created_by`, `modified_by`, `parent_form_id`, `version_number{$colSql}`, `created_date`) |  |
+| 1278 | `FormsService::createVersion` | read [form_fields](/code/tables/form_fields.md) |  |
+| 1287 | `FormsService::createVersion` | **insert** [form_fields](/code/tables/form_fields.md) (`form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`, `config`) |  |
+| 1296 | `FormsService::createVersion` | **update** [form_fields](/code/tables/form_fields.md) (`config`) |  |
+| 1317 | `FormsService::createVersion` | **update** [forms](/code/tables/forms.md) (`layout`) |  |
+| 1333 | `FormsService::createVersion` | **insert** [form_audiences](/code/tables/form_audiences.md) (`form_id`, `principal_type`, `principal_id`) |  |
+| 1406 | `FormsService::submitForm` | read [form_fields](/code/tables/form_fields.md) |  |
+| 1677 | `FormsService::submitForm` | **insert** [form_submissions](/code/tables/form_submissions.md) (`$cols`) |  |
+| 1680 | `FormsService::submitForm` | **insert** [form_submission_data](/code/tables/form_submission_data.md) (`submission_id`, `field_id`, `field_value`) |  |
 | 1775 | `FormsService::deleteSubmission` | read [form_submissions](/code/tables/form_submissions.md) |  |
-| 1783 | `FormsService::deleteSubmission` | **delete** [form_submission_data](/code/tables/form_submission_data.md) |  |
-| 1784 | `FormsService::deleteSubmission` | **delete** [form_submissions](/code/tables/form_submissions.md) |  |
-| 1801 | `FormsService::loadFormRow` | read [forms](/code/tables/forms.md) |  |
-| 2040 | `FormsService::formAudiences` | read [form_audiences](/code/tables/form_audiences.md) |  |
-| 2066 | `FormsService::setFormAudiences` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 2079 | `FormsService::setFormAudiences` | **delete** [form_audiences](/code/tables/form_audiences.md) |  |
-| 2083 | `FormsService::setFormAudiences` | **insert** [form_audiences](/code/tables/form_audiences.md) (`form_id`, `principal_type`, `principal_id`) |  |
-| 2110 | `FormsService::portalAudienceSql` | read [form_audiences](/code/tables/form_audiences.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 2129 | `FormsService::portalCanUseForm` | read [forms](/code/tables/forms.md) |  |
-| 2188 | `FormsService::saveDraft` | read [form_fields](/code/tables/form_fields.md) |  |
-| 2215 | `FormsService::saveDraft` | **insert** [form_drafts](/code/tables/form_drafts.md) (`form_id`, `owner_kind`, `owner_id`, `answers`, `created_date`, `modified_date`) |  |
-| 2242 | `FormsService::loadDraft` | read [form_drafts](/code/tables/form_drafts.md) |  |
-| 2254 | `FormsService::loadDraft` | read [forms](/code/tables/forms.md) |  |
-| 2271 | `FormsService::deleteDraft` | **delete** [form_drafts](/code/tables/form_drafts.md) |  |
-| 2281 | `FormsService::draftsForOwner` | read [form_drafts](/code/tables/form_drafts.md) |  |
-| 2787 | `FormsService::syncFields` | read [form_fields](/code/tables/form_fields.md) |  |
-| 2793 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`field_type`, `label`, `options`, `is_required`, `sort_order`, `is_deleted`) |  |
-| 2798 | `FormsService::syncFields` | **insert** [form_fields](/code/tables/form_fields.md) (`form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`) |  |
-| 2820 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`is_deleted`) |  |
-| 2823 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`is_deleted`) |  |
-| 2827 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`config`) |  |
+| 1781 | `FormsService::deleteSubmission` | read [form_submissions](/code/tables/form_submissions.md) |  |
+| 1789 | `FormsService::deleteSubmission` | **delete** [form_submission_data](/code/tables/form_submission_data.md) |  |
+| 1790 | `FormsService::deleteSubmission` | **delete** [form_submissions](/code/tables/form_submissions.md) |  |
+| 1807 | `FormsService::loadFormRow` | read [forms](/code/tables/forms.md) |  |
+| 2049 | `FormsService::formAudiences` | read [form_audiences](/code/tables/form_audiences.md) |  |
+| 2075 | `FormsService::setFormAudiences` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 2088 | `FormsService::setFormAudiences` | **delete** [form_audiences](/code/tables/form_audiences.md) |  |
+| 2092 | `FormsService::setFormAudiences` | **insert** [form_audiences](/code/tables/form_audiences.md) (`form_id`, `principal_type`, `principal_id`) |  |
+| 2119 | `FormsService::portalAudienceSql` | read [form_audiences](/code/tables/form_audiences.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 2138 | `FormsService::portalCanUseForm` | read [forms](/code/tables/forms.md) |  |
+| 2197 | `FormsService::saveDraft` | read [form_fields](/code/tables/form_fields.md) |  |
+| 2224 | `FormsService::saveDraft` | **insert** [form_drafts](/code/tables/form_drafts.md) (`form_id`, `owner_kind`, `owner_id`, `answers`, `created_date`, `modified_date`) |  |
+| 2251 | `FormsService::loadDraft` | read [form_drafts](/code/tables/form_drafts.md) |  |
+| 2263 | `FormsService::loadDraft` | read [forms](/code/tables/forms.md) |  |
+| 2280 | `FormsService::deleteDraft` | **delete** [form_drafts](/code/tables/form_drafts.md) |  |
+| 2290 | `FormsService::draftsForOwner` | read [form_drafts](/code/tables/form_drafts.md) |  |
+| 2801 | `FormsService::syncFields` | read [form_fields](/code/tables/form_fields.md) |  |
+| 2807 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`field_type`, `label`, `options`, `is_required`, `sort_order`, `is_deleted`) |  |
+| 2812 | `FormsService::syncFields` | **insert** [form_fields](/code/tables/form_fields.md) (`form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`) |  |
+| 2834 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`is_deleted`) |  |
+| 2837 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`is_deleted`) |  |
+| 2841 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`config`) |  |
 
 ## How it hangs together
 

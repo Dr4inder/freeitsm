@@ -7,18 +7,29 @@
  *
  * Every URL is built from window.PRJ_API (set by the page from BASE_URL) -
  * never a root-relative "/api/...", which 404s on an install in a sub-directory.
+ *
+ * @wiki Projects-Developer-Guide
  */
 (function () {
     'use strict';
 
+    /** Translates a key under projects.*, or returns the key when the i18n helper is not loaded. */
     const T = (k, p) => (window.t ? window.t('projects.' + k, p) : k);
+    /** Translates a key under common.*, or returns the key when the i18n helper is not loaded. */
     const TC = (k, p) => (window.t ? window.t('common.' + k, p) : k);
 
+    /** HTML-escapes a value for safe insertion into markup; null and undefined become an empty string. */
     function esc(v) {
         if (v === null || v === undefined) return '';
         return String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
+    /**
+     * Calls a Projects API endpoint under window.PRJ_API - a GET with no body, a JSON POST with one.
+     *
+     * Resolves to the parsed reply; throws an Error with a readable message when the server cannot be
+     * reached, replies with non-JSON or says success is false.
+     */
     async function api(path, body) {
         const opts = body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
         let res;
@@ -35,6 +46,7 @@
 
     // ---- Lookups (loaded once per page) --------------------------------------
     let lookupsPromise = null;
+    /** Fetches lookups.php once per page and caches the promise, so every caller shares one request. */
     function lookups() {
         if (!lookupsPromise) lookupsPromise = api('lookups.php');
         return lookupsPromise;
@@ -63,6 +75,10 @@
         sparkles: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
         heart:    '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
     };
+    /**
+     * Returns an inline SVG for an icon key at the given size (24px by default), falling back to the
+     * rocket.
+     */
     function icon(key, size) {
         const s = size || 24;
         return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[key] || ICONS.rocket) + '</svg>';
@@ -70,10 +86,12 @@
 
     // ---- Colours: the palette comes from the server; a fallback for first paint
     let palette = { coral: ['#f43f5e', '#e11d48'] };
+    /** Returns the CSS linear-gradient for a colour key from the server palette, falling back to coral. */
     function gradient(key) {
         const c = palette[key] || palette.coral || ['#f43f5e', '#e11d48'];
         return 'linear-gradient(135deg, ' + c[0] + ', ' + c[1] + ')';
     }
+    /** Replaces the colour palette with the server's list of {key, from, to} colours. */
     function setPalette(list) {
         palette = {};
         (list || []).forEach(c => { palette[c.key] = [c.from, c.to]; });
@@ -97,6 +115,7 @@
             + '</svg><span class="prj-ring-pct">' + pct + '<small>%</small></span></span>';
     }
 
+    /** Returns the coloured pill markup for a project status, with its translated label. */
     function statusPill(status) {
         return '<span class="prj-pill s-' + esc(status) + '">' + esc(T('status.' + status)) + '</span>';
     }
@@ -107,26 +126,38 @@
      * gets no chip - only the exceptions stand out, as with task priorities.
      */
     let priorityWords = null;
+    /** Stores the priority words from Projects -> Settings, in low-to-critical order. */
     function setPriorityLabels(l) { priorityWords = l; }
+    /** Returns the display word for a priority key - the configured label, else the translated default. */
     function priorityLabel(key) {
         const i = ['low', 'medium', 'high', 'critical'].indexOf(key || 'medium');
         return (priorityWords && priorityWords[i]) || T('scale.priority_' + (i + 1));
     }
+    /** Returns the priority chip markup, or nothing for medium (or no priority) unless always is set. */
     function priorityChip(key, always) {
         if (!always && (!key || key === 'medium')) return '';
         return '<span class="prj-prio p-' + esc(key || 'medium') + '">' + esc(priorityLabel(key)) + '</span>';
     }
 
+    /**
+     * Returns the health badge (dot and word) for green, amber or red, or nothing when there is no
+     * health.
+     */
     function healthBadge(health) {
         if (!health) return '';
         return '<span class="prj-health-badge h-' + esc(health) + '"><span class="dot"></span>' + esc(T('health.' + health)) + '</span>';
     }
 
     // ---- Dates ------------------------------------------------------------------
+    /**
+     * Formats a Y-m-d (or datetime) as a date for display, using the shared fmtNaiveDate when it is
+     * loaded.
+     */
     function fmtDate(d) {
         if (!d) return '';
         return window.fmtNaiveDate ? window.fmtNaiveDate(String(d).slice(0, 10) + 'T00:00:00') : String(d).slice(0, 10);
     }
+    /** Returns today's local date as Y-m-d. */
     function todayStr() {
         const n = new Date();
         return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0');
@@ -149,27 +180,35 @@
         return { text: T('portfolio.due_in', { days: d }), cls: d <= 14 ? 'soon' : 'ok' };
     }
 
+    /** Returns the upper-case initials of a name (first and last word), or "?" when there is no name. */
     function initials(name) {
         if (!name) return '?';
         const parts = String(name).trim().split(/\s+/);
         return ((parts[0] || '')[0] || '').toUpperCase() + ((parts.length > 1 ? parts[parts.length - 1][0] : '') || '').toUpperCase();
     }
 
+    /**
+     * Returns the lower-case translated word for a timebox kind (phase, stage or sprint; phase by
+     * default), singular or plural.
+     */
     function timeboxWord(kind, plural) {
         return T('timebox.' + (kind || 'phase') + (plural ? 's' : '')).toLowerCase();
     }
 
+    /** Shows a toast through the shared showToast helper, if the page has one; success by default. */
     function toast(msg, type) {
         if (typeof window.showToast === 'function') window.showToast(msg, type || 'success');
     }
 
     // ---- Modals -------------------------------------------------------------------
+    /** Shows a modal by id and marks it visible to assistive technology. */
     function openModal(id) {
         const m = document.getElementById(id);
         if (!m) return;
         m.classList.add('active');
         m.setAttribute('aria-hidden', 'false');
     }
+    /** Hides a modal by id and marks it hidden to assistive technology. */
     function closeModal(id) {
         const m = document.getElementById(id);
         if (!m) return;
@@ -190,6 +229,10 @@
     // ---- The project dialog ---------------------------------------------------------
     let formState = { colour: 'coral', icon: 'rocket', method: 'simple', origMethod: null, onSaved: null };
 
+    /**
+     * Repaints the project dialog's preview banner from the chosen colour, icon and name, and tints
+     * the selected icon choice.
+     */
     function paintBanner() {
         const b = document.getElementById('pfBanner');
         if (!b) return;
@@ -203,6 +246,10 @@
         });
     }
 
+    /**
+     * Marks the one option in a radio-style card group whose attribute equals value as selected (class
+     * and aria-checked).
+     */
     function pick(containerId, attr, value) {
         document.querySelectorAll('#' + containerId + ' [' + attr + ']').forEach(el => {
             const on = el.getAttribute(attr) === value;
@@ -211,6 +258,14 @@
         });
     }
 
+    /**
+     * Opens the create / edit project dialog, filling every field from the lookups and the project (or
+     * defaults for a new one).
+     *
+     * New projects get a random colour, the default method, the current analyst as owner, and the
+     * template and company pickers; edit-only fields (status, health, tools, actual end) show only
+     * when editing. onSaved is called after a successful save.
+     */
     async function openProjectForm(project, onSaved) {
         const L = await lookups();
         setPalette(L.colours);
@@ -224,6 +279,7 @@
             tplGoal: null,
             onSaved: onSaved,
         };
+        /** Shorthand for document.getElementById. */
         const $ = id => document.getElementById(id);
         $('pfTitle').textContent = isEdit ? T('form.edit_title') : T('form.new_title');
         $('pfId').value = isEdit ? project.id : '';
@@ -306,14 +362,23 @@
 
     /** "4 stages · 16 tasks · 12 weeks" - what a template brings. */
     function templateMeta(t) {
+        /** Returns the translated count phrase, using the _one form when the count is 1. */
         const n = (key, count) => count === 1 ? T('templates.' + key + '_one') : T('templates.' + key, { count: count });
         const bits = [n('count_stages', t.counts.stages), n('count_tasks', t.counts.tasks)];
         if (t.duration_days) bits.push(n('weeks', Math.max(1, Math.round(t.duration_days / 7))));
         return bits.join(' · ');
     }
 
+    /**
+     * Applies a project template in the dialog - its method, colour, icon and goal - or clears back to
+     * Blank when the key matches none.
+     *
+     * The goal is only replaced while it is empty or still the previous template's goal, so typed text
+     * is kept.
+     */
     async function chooseTemplate(key) {
         const L = await lookups();
+        /** Shorthand for document.getElementById. */
         const $ = id => document.getElementById(id);
         const t = (L.templates || []).find(x => x.key === key);
         formState.template = t ? key : '';
@@ -334,10 +399,18 @@
         $('pfTplNote').hidden = !t;
     }
 
+    /**
+     * Wires the project dialog's click, input and save handlers once (guarded by data-wired on the
+     * modal).
+     *
+     * Save validates the name, builds the body (edit adds status, health and tools; new adds company
+     * and template), posts to save.php and calls the onSaved callback.
+     */
     function wireForm() {
         const modal = document.getElementById('prjFormModal');
         if (!modal || modal.dataset.wired) return;
         modal.dataset.wired = '1';
+        /** Shorthand for document.getElementById. */
         const $ = id => document.getElementById(id);
         $('pfTemplates').addEventListener('click', e => {
             const b = e.target.closest('[data-tpl]'); if (b) chooseTemplate(b.getAttribute('data-tpl'));
@@ -401,6 +474,7 @@
             }
         });
     }
+    /** Shows a message in the project dialog's error box. */
     function showFormError(msg) {
         const e = document.getElementById('pfError');
         e.textContent = msg; e.hidden = false;

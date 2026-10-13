@@ -99,6 +99,7 @@ async function loadTicketChecklists(ticketId) {
     }
 }
 
+/** Finds a step by id across the ticket's attached checklists and returns {checklist, item}, or null. */
 function findChecklistItem(itemId) {
     for (const chk of ticketChecklistsData) {
         for (const it of (chk.items || [])) {
@@ -110,6 +111,9 @@ function findChecklistItem(itemId) {
     return null;
 }
 
+/**
+ * Lists the mandatory steps not yet completed, with each checklist's closure mode - read by inbox.js before a ticket is closed.
+ */
 function getIncompleteMandatorySteps() {
     const list = [];
     (ticketChecklistsData || []).forEach(chk => {
@@ -363,6 +367,7 @@ function openChecklistModal(ticketId) {
     modal.style.display = 'flex';
 }
 
+/** Hides the ticket checklist pop-out. */
 function closeChecklistModal() {
     const modal = document.getElementById('ticketChecklistModal');
     if (modal) modal.style.display = 'none';
@@ -432,6 +437,7 @@ function promptDataCapture(ticketId, item, checklistTitle, reopenPopout) {
     const err = document.getElementById('chkCaptureError');
     input.focus();
 
+    /** Refuses a blank value; otherwise closes the prompt and completes the step with the value recorded. */
     const doSave = () => {
         const val = input.value.trim();
         if (!val) {
@@ -452,6 +458,7 @@ function promptDataCapture(ticketId, item, checklistTitle, reopenPopout) {
     };
 }
 
+/** Hides the step data-capture prompt. */
 function closeDataCaptureModal() {
     const modal = document.getElementById('chkDataCaptureModal');
     if (modal) modal.style.display = 'none';
@@ -485,6 +492,9 @@ async function executeToggleItem(ticketId, itemId, completed, responseValue, che
     }
 }
 
+/**
+ * Adds an internal ticket note saying a step was completed (with any recorded value) or reopened, then reloads the notes.
+ */
 async function logStepNote(ticketId, checklistTitle, stepTitle, completed, responseValue) {
     let noteText = "";
     if (completed) {
@@ -619,6 +629,7 @@ function categoryPillClass(name) {
     return 'chk-pill-c' + (h % 6);
 }
 
+/** Lists the templates matching the attach dialogue's search, best match first, each with an Attach button. */
 function filterTemplatesList(ticketId) {
     const list = document.getElementById('chkTemplatesList');
     if (!list) return;
@@ -667,6 +678,9 @@ function filterTemplatesList(ticketId) {
     list.innerHTML = html;
 }
 
+/**
+ * Attaches a checklist template to the ticket through ticket_checklists.php, then reloads and opens the ticket's checklists.
+ */
 async function attachSopToTicket(ticketId, templateId) {
     try {
         const res = await fetch(CHK_API + '', {
@@ -691,11 +705,13 @@ async function attachSopToTicket(ticketId, templateId) {
     }
 }
 
+/** Hides the attach-checklist dialogue. */
 function closeAttachModal() {
     const modal = document.getElementById('ticketAttachChecklistModal');
     if (modal) modal.style.display = 'none';
 }
 
+/** Escapes text for safe use in HTML and attributes. */
 function escapeHtml(str) {
     if (str === null || str === undefined) return '';
     return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#039;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -705,11 +721,15 @@ function escapeHtml(str) {
 window.loadTicketChecklists = loadTicketChecklists;
 window.openChecklistModal = openChecklistModal;
 window.openAttachChecklistModal = openAttachChecklistModal;
+/** Returns how many checklists are attached to the open ticket - read by inbox.js at close. */
 function getAttachedChecklistsCount() {
     if (!Array.isArray(ticketChecklistsData)) return 0;
     return ticketChecklistsData.length;
 }
 
+/**
+ * Returns what closing a ticket with no checklist does ('off' unless the page set window.ticketChecklistEmptyClosureMode).
+ */
 function getTicketChecklistEmptyClosureMode() {
     return window.ticketChecklistEmptyClosureMode || 'off';
 }
@@ -762,6 +782,9 @@ if (typeof MutationObserver !== "undefined") {
 
 window.dismissedSuggestions = window.dismissedSuggestions || {};
 
+/**
+ * Asks ticket_checklists.php for templates that suit this ticket and shows them, with confidence and Attach buttons, in the empty-checklist box (unless dismissed).
+ */
 async function checkAndShowSopSuggestion(ticketId) {
     if (window.dismissedSuggestions[ticketId]) return;
     try {
@@ -855,6 +878,7 @@ async function checkAndShowSopSuggestion(ticketId) {
     }
 }
 
+/** Hides the suggestions for this ticket for the rest of the page visit and puts back the plain "none attached" box. */
 function dismissSopSuggestion(ticketId) {
     window.dismissedSuggestions[ticketId] = true;
     const hostDiv = document.getElementById(`sopEmptyStateHost_${ticketId}`);

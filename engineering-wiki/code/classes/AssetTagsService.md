@@ -9,14 +9,14 @@
 | [withSettings()](#withsettings) | Run with a specific configuration — used by the tests. |
 | [forget()](#forget) | Drop the override and the settings cache. |
 | [config()](#config) | The effective configuration for one company (null = Default). |
-| [isAutogenEnabled()](#isautogenenabled) |  |
+| [isAutogenEnabled()](#isautogenenabled) | True when asset tags are generated automatically for the company. |
 | [validateFormat()](#validateformat) | What is wrong with a format, in words an administrator can act on. Empty means it is usable. |
 | [preview()](#preview) | A few example tags for a proposed configuration. Writes nothing. |
 | [storeTenant()](#storetenant) | Assets store the Default company as NULL; so does every check here. |
 | [counterKey()](#counterkey) | Which counter a company draws from. |
 | [nextNumber()](#nextnumber) | The number the next generated tag will carry. Reads only. |
 | [setNextNumber()](#setnextnumber) | Make the next generated tag at least `$next`. Only ever forward. |
-| [windCounterTo()](#windcounterto) |  |
+| [windCounterTo()](#windcounterto) | Moves the tag counter forward to `$lastIssued`, never back. |
 | [claimNext()](#claimnext) | Claim the next number. Same statement, and the same `rowCount()` trap, as TicketNumbering::claimNext(). |
 | [generate()](#generate) | The next generated tag for a company. Call it inside `withLock()` and inside the transaction that writes the asset, so a failed write gives the number back. Uniqueness is proven against the assets, never assumed from the counter: a counter can be behind (a restored backup, tags typed by hand). |
 | [noteManualTag()](#notemanualtag) | A tag typed by hand that has the generated SHAPE and a number ahead of the counter winds the counter past it, so the generator never has to skip it later. Anything else is left alone. |
@@ -70,7 +70,9 @@ function config(PDO $conn, ?int $tenantId): array
 
 ### isAutogenEnabled
 
-*public static* - line 100
+*public static* - line 101
+
+True when asset tags are generated automatically for the company.
 
 ```php
 function isAutogenEnabled(PDO $conn, ?int $tenantId): bool
@@ -83,7 +85,7 @@ function isAutogenEnabled(PDO $conn, ?int $tenantId): bool
 
 ### validateFormat
 
-*public static* - line 109
+*public static* - line 110
 
 What is wrong with a format, in words an administrator can act on. Empty means it is usable.
 
@@ -99,7 +101,7 @@ function validateFormat(string $format): array
 
 ### preview
 
-*public static* - line 137
+*public static* - line 138
 
 A few example tags for a proposed configuration. Writes nothing.
 
@@ -117,7 +119,7 @@ function preview(array $cfg, int $start, int $count = 3): array
 
 ### storeTenant
 
-*public static* - line 154
+*public static* - line 155
 
 Assets store the Default company as NULL; so does every check here.
 
@@ -134,7 +136,7 @@ function storeTenant(PDO $conn, ?int $tenantId): ?int
 
 ### counterKey
 
-*public static* - line 161
+*public static* - line 162
 
 Which counter a company draws from.
 
@@ -150,7 +152,7 @@ function counterKey(PDO $conn, array $cfg, ?int $tenantId): string
 
 ### nextNumber
 
-*public static* - line 170
+*public static* - line 171
 
 The number the next generated tag will carry. Reads only.
 
@@ -167,13 +169,13 @@ function nextNumber(PDO $conn, ?int $tenantId): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 174 | `AssetTagsService::nextNumber` | read [asset_tag_counters](/code/tables/asset_tag_counters.md) |  |
+| 175 | `AssetTagsService::nextNumber` | read [asset_tag_counters](/code/tables/asset_tag_counters.md) |  |
 
 **Called from:** [api/assets/get_asset_tag_settings.php](/code/files/api/assets/get_asset_tag_settings.php.md), [api/assets/save_asset_tag_settings.php](/code/files/api/assets/save_asset_tag_settings.php.md)
 
 ### setNextNumber
 
-*public static* - line 185
+*public static* - line 186
 
 Make the next generated tag at least `$next`. Only ever forward.
 
@@ -191,7 +193,9 @@ function setNextNumber(PDO $conn, ?int $tenantId, int $next): void
 
 ### windCounterTo
 
-*private static* - line 191
+*private static* - line 193
+
+Moves the tag counter forward to `$lastIssued`, never back.
 
 ```php
 function windCounterTo(PDO $conn, string $key, int $lastIssued): void
@@ -207,11 +211,11 @@ function windCounterTo(PDO $conn, string $key, int $lastIssued): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 194 | `AssetTagsService::windCounterTo` | **insert** [asset_tag_counters](/code/tables/asset_tag_counters.md) (`counter_key`, `next_value`) |  |
+| 196 | `AssetTagsService::windCounterTo` | **insert** [asset_tag_counters](/code/tables/asset_tag_counters.md) (`counter_key`, `next_value`) |  |
 
 ### claimNext
 
-*private static* - line 200
+*private static* - line 202
 
 Claim the next number. Same statement, and the same `rowCount()` trap, as TicketNumbering::claimNext().
 
@@ -229,11 +233,11 @@ function claimNext(PDO $conn, string $key, int $start): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 203 | `AssetTagsService::claimNext` | **insert** [asset_tag_counters](/code/tables/asset_tag_counters.md) (`counter_key`, `next_value`) |  |
+| 205 | `AssetTagsService::claimNext` | **insert** [asset_tag_counters](/code/tables/asset_tag_counters.md) (`counter_key`, `next_value`) |  |
 
 ### generate
 
-*public static* - line 225
+*public static* - line 227
 
 The next generated tag for a company. Call it inside `withLock()` and inside the transaction that writes the asset, so a failed write gives the number back. Uniqueness is proven against the assets, never assumed from the counter: a counter can be behind (a restored backup, tags typed by hand).
 
@@ -248,7 +252,7 @@ function generate(PDO $conn, ?int $tenantId): string
 
 ### noteManualTag
 
-*public static* - line 258
+*public static* - line 260
 
 A tag typed by hand that has the generated SHAPE and a number ahead of the counter winds the counter past it, so the generator never has to skip it later. Anything else is left alone.
 
@@ -264,7 +268,7 @@ function noteManualTag(PDO $conn, ?int $tenantId, string $tag): void
 
 ### withLock
 
-*public static* - line 285
+*public static* - line 287
 
 Run `$fn` holding the per-company tag lock. Fails closed: a lock that cannot be had is an error, never "carry on unguarded".
 
@@ -282,7 +286,7 @@ function withLock(PDO $conn, ?int $tenantId, callable $fn)
 
 ### clashMessage
 
-*public static* - line 301
+*public static* - line 303
 
 The plain message for a tag that is taken, naming where.
 
@@ -301,11 +305,11 @@ function clashMessage(PDO $conn, ?int $storeTenant, string $tag, ?int $exceptAss
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 303 | `AssetTagsService::clashMessage` | read [assets](/code/tables/assets.md) |  |
+| 305 | `AssetTagsService::clashMessage` | read [assets](/code/tables/assets.md) |  |
 
 ### createWithTag
 
-*public static* - line 323
+*public static* - line 325
 
 Create an asset that may carry a tag: typed in (`$manualTag`), generated (when switched on for the company and nothing was typed), or none. Takes the lock when a tag is involved, and runs `$insert` inside a transaction - the caller's, if it already has one - so the counter claim, the insert and whatever `$insert` audits succeed or fail together.
 
@@ -326,7 +330,7 @@ function createWithTag(PDO $conn, ?int $tenantId, ?string $manualTag, callable $
 
 ### assign
 
-*public static* - line 365
+*public static* - line 367
 
 Change an existing asset's tag (the box on the asset page). Blank clears it. Recorded in the asset's history. The caller has already checked the analyst may see the asset.
 
@@ -347,9 +351,9 @@ function assign(PDO $conn, ActorContext $ctx, int $assetId, string $tag): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 371 | `AssetTagsService::assign` | read [assets](/code/tables/assets.md) |  |
-| 385 | `AssetTagsService::assign` | **update** [assets](/code/tables/assets.md) (`asset_tag`) |  |
-| 389 | `AssetTagsService::assign` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 373 | `AssetTagsService::assign` | read [assets](/code/tables/assets.md) |  |
+| 387 | `AssetTagsService::assign` | **update** [assets](/code/tables/assets.md) (`asset_tag`) |  |
+| 391 | `AssetTagsService::assign` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 **Called from:** [api/assets/save_asset_tag.php](/code/files/api/assets/save_asset_tag.php.md)
 

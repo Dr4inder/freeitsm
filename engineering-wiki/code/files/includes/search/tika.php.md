@@ -1,6 +1,6 @@
 # includes/search/tika.php
 
-> PHP - 202 lines
+> PHP - 206 lines
 
 Apache Tika client — attachment extraction, tier 2 (discussion #53).
 
@@ -27,18 +27,18 @@ but the setting screen says it.
 |---|--:|---|
 | [tikaUrl()](/code/functions/tikaUrl.md) | 56 | The configured endpoint, or '' when tier 2 is switched off. |
 | [tikaTimeoutOverride()](/code/functions/tikaTimeoutOverride.md) | 76 | Force a shorter timeout for the current process. |
-| [tikaTimeout()](/code/functions/tikaTimeout.md) | 82 |  |
-| [tikaConfigured()](/code/functions/tikaConfigured.md) | 95 | Is tier 2 switched on at all? |
-| [tikaHandles()](/code/functions/tikaHandles.md) | 100 | Would Tika be asked about this file, if configured? |
-| [tikaExtract()](/code/functions/tikaExtract.md) | 120 | Ask Tika for the text of a file. |
-| [tikaPing()](/code/functions/tikaPing.md) | 180 | Is the service answering? Used by the settings screen's Test button, and NOWHERE in the indexing path — a health check before every attachment would be an extra HTTP round trip per file. There, the extraction attempt IS the check. |
+| [tikaTimeout()](/code/functions/tikaTimeout.md) | 86 | How many seconds to wait for Tika, from the override or the system setting, kept within the allowed range. |
+| [tikaConfigured()](/code/functions/tikaConfigured.md) | 99 | Is tier 2 switched on at all? |
+| [tikaHandles()](/code/functions/tikaHandles.md) | 104 | Would Tika be asked about this file, if configured? |
+| [tikaExtract()](/code/functions/tikaExtract.md) | 124 | Ask Tika for the text of a file. |
+| [tikaPing()](/code/functions/tikaPing.md) | 184 | Is the service answering? Used by the settings screen's Test button, and NOWHERE in the indexing path — a health check before every attachment would be an extra HTTP round trip per file. There, the extraction attempt IS the check. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 60 | `tikaUrl` | read [system_settings](/code/tables/system_settings.md) |  |
-| 87 | `tikaTimeout` | read [system_settings](/code/tables/system_settings.md) |  |
+| 91 | `tikaTimeout` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

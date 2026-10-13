@@ -6,7 +6,7 @@ The last label: "co.uk" is not a TLD, "uk" is.
 function domainTld(string $name): string
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 79.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

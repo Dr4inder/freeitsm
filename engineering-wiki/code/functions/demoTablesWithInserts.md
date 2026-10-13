@@ -12,7 +12,7 @@ deliberately the narrow reading.
 function demoTablesWithInserts(array $demoData): array
 ```
 
-Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 73.
+Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

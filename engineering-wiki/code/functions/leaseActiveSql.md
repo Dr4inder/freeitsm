@@ -6,7 +6,7 @@ SQL: this lease_assets row (alias `$la`, outcome alias `$lo`) is still out on le
 function leaseActiveSql(string $la = 'la', string $lo = 'lo'): string
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 98.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 99.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

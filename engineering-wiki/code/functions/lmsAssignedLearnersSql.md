@@ -24,7 +24,7 @@ for training they can no longer open.
 function lmsAssignedLearnersSql(PDO $conn): string
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 472.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 478.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -36,11 +36,11 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 477 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_learning_groups](/code/tables/lms_learning_groups.md), read [lms_learning_group_members](/code/tables/lms_learning_group_members.md), read [analysts](/code/tables/analysts.md) |  |
-| 487 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
-| 497 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [users](/code/tables/users.md) |  |
-| 507 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [analysts](/code/tables/analysts.md) |  |
-| 513 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [users](/code/tables/users.md) |  |
+| 483 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_learning_groups](/code/tables/lms_learning_groups.md), read [lms_learning_group_members](/code/tables/lms_learning_group_members.md), read [analysts](/code/tables/analysts.md) |  |
+| 493 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
+| 503 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [users](/code/tables/users.md) |  |
+| 513 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [analysts](/code/tables/analysts.md) |  |
+| 519 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ Map a ServiceError kind to the HTTP status the API adapter should return.
 function serviceErrorHttpStatus(string $kind): int
 ```
 
-Defined in [includes/service_context.php](/code/files/includes/service_context.php.md), line 141.
+Defined in [includes/service_context.php](/code/files/includes/service_context.php.md), line 150.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

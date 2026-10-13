@@ -2,6 +2,17 @@
 
 > API endpoint - 443 lines
 
+FreeITSM REST API v1 — permission catalog.
+
+The single source of truth for every permission an API key can carry, used
+by three consumers: the v1 auth layer (enforcement), the System > API admin
+page (the checkbox matrix when creating/editing a key), and the docs page
+(each endpoint states which permission it needs).
+
+A key's permissions are stored on api_keys.permissions as JSON:
+  { "tickets": ["read","create"], "ticket_notes": ["read"] }
+Anything not present is denied — keys start from zero.
+
 ## The endpoint
 
 | | |

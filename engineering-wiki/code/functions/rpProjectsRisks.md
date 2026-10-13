@@ -6,7 +6,7 @@ The open risks that matter most, across the chosen projects.
 function rpProjectsRisks(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 190.
+Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 199.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,7 +22,7 @@ Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 196 | `rpProjectsRisks` | read [project_raid](/code/tables/project_raid.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 205 | `rpProjectsRisks` | read [project_raid](/code/tables/project_raid.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

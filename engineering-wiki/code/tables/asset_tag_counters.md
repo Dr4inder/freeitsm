@@ -14,12 +14,12 @@ Generated asset tag counters (PR #164) - ticket_number_counters' shape, and the 
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md):194 | `AssetTagsService::windCounterTo` | insert | `counter_key`, `next_value` |  |
-| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md):203 | `AssetTagsService::claimNext` | insert | `counter_key`, `next_value` |  |
+| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md):196 | `AssetTagsService::windCounterTo` | insert | `counter_key`, `next_value` |  |
+| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md):205 | `AssetTagsService::claimNext` | insert | `counter_key`, `next_value` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md) | AssetTagsService::nextNumber L174 |  |
+| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md) | AssetTagsService::nextNumber L175 |  |
 

@@ -1,10 +1,12 @@
 # apiLoadMorningResult()
 
+Loads one morning check result row, or answers 404 and stops.
+
 ```php
 function apiLoadMorningResult(PDO $conn, int $resultId): array
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 91.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 98.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

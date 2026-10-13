@@ -27,8 +27,8 @@ Files: secure file and folder sharing (files/) PESSIMISTIC: nothing is visible u
 | [api/files/folder.php](/code/files/api/files/folder.php.md):74 |  | update | `deleted_by`, `deleted_datetime` |  |
 | [api/files/folder.php](/code/files/api/files/folder.php.md):86 |  | update | `watermark`, `updated_by`, `updated_datetime` |  |
 | [api/files/folder.php](/code/files/api/files/folder.php.md):120 |  | update | `inherit_permissions`, `updated_by`, `updated_datetime` |  |
-| [api/files/transfer.php](/code/files/api/files/transfer.php.md):122 | `filesTransferFolder` | update | `parent_id`, `name`, `updated_by`, `updated_datetime` |  |
-| [api/files/transfer.php](/code/files/api/files/transfer.php.md):148 | `filesCopyFolderTree` | insert | `parent_id`, `name`, `inherit_permissions`, `created_by`, `created_datetime` |  |
+| [api/files/transfer.php](/code/files/api/files/transfer.php.md):131 | `filesTransferFolder` | update | `parent_id`, `name`, `updated_by`, `updated_datetime` |  |
+| [api/files/transfer.php](/code/files/api/files/transfer.php.md):167 | `filesCopyFolderTree` | insert | `parent_id`, `name`, `inherit_permissions`, `created_by`, `created_datetime` |  |
 
 ## Read by
 
@@ -36,6 +36,6 @@ Files: secure file and folder sharing (files/) PESSIMISTIC: nothing is visible u
 |---|---|---|
 | [api/files/list.php](/code/files/api/files/list.php.md) | L38 |  |
 | [api/files/properties.php](/code/files/api/files/properties.php.md) | L16 |  |
-| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::tree L77 |  |
-| [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md) | filesNameTaken L113 |  |
+| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::tree L78 |  |
+| [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md) | filesNameTaken L119 |  |
 

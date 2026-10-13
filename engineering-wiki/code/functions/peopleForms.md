@@ -6,7 +6,7 @@ Forms the person submitted / people in the company submitted (from the portal).
 function peopleForms(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 538.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 539.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 538.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 550 | `peopleForms` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [users](/code/tables/users.md), read [tickets](/code/tables/tickets.md) |  |
+| 551 | `peopleForms` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [users](/code/tables/users.md), read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

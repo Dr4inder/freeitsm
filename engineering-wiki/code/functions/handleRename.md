@@ -1,10 +1,12 @@
 # handleRename()
 
+Renames a knowledge folder the caller can read, and audits the change.
+
 ```php
 function handleRename(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 186.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 193 | `handleRename` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`name`, `modified_datetime`) |  |
+| 200 | `handleRename` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`name`, `modified_datetime`) |  |
 
 ## Calls
 

@@ -1,10 +1,12 @@
 # rpStatusKpis()
 
+Service status block: KPI tiles - average uptime, incidents open during the period, services affected and total downtime.
+
 ```php
 function rpStatusKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 218.
+Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 230.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +22,7 @@ Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 228 | `rpStatusKpis` | read [status_incidents](/code/tables/status_incidents.md) |  |
+| 240 | `rpStatusKpis` | read [status_incidents](/code/tables/status_incidents.md) |  |
 
 ## Calls
 

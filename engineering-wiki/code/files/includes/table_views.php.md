@@ -2,6 +2,24 @@
 
 > PHP - 231 lines
 
+Saved table views (discussion #96, dschipfel; library and sharing by Ed).
+
+A view is a saved way of LOOKING at a table: which columns, in what order,
+sorted how, filtered to what. It belongs to the shared data-table engine
+(assets/js/data-table.js), so every table running that engine gets views for
+free — assets, tasks, calendar and change management today.
+
+⚠️ EVERY read goes through `viewVisibleClause()`. One place decides who can see
+what, because there are three answers (mine, my team's, everyone's) and a
+fourth that must never happen (somebody else's private view). Four endpoints
+each writing their own clause is four chances to get that wrong.
+
+🔑 A view is not data. It carries no tenant_id and needs none: its filters are
+applied to rows the reader was already allowed to load, so a shared view
+cannot show anybody another company's assets. It can name a value that means
+nothing to the reader, which shows up as a filter matching nothing — an empty
+table, not a leak.
+
 ## Functions
 
 | Function | Line | What it does |

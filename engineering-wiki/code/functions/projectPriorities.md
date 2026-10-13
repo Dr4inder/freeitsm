@@ -6,7 +6,7 @@ Project priorities, lowest first (3.3.0). Stored as these keys; shown as project
 function projectPriorities(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 107.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 108.
 
 **Returns:** `array`
 

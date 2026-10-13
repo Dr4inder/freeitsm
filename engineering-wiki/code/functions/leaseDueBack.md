@@ -6,7 +6,7 @@ Assets still out on lease whose (effective) end falls in a window: `$days` ahead
 function leaseDueBack(PDO $conn, int $analystId, int $days = 90, int $leaseId = 0): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 674.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 680.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 674.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 684 | `leaseDueBack` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [assets](/code/tables/assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md), read [suppliers](/code/tables/suppliers.md), read [asset_locations](/code/tables/asset_locations.md), read [tenants](/code/tables/tenants.md) |  |
+| 690 | `leaseDueBack` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [assets](/code/tables/assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md), read [suppliers](/code/tables/suppliers.md), read [asset_locations](/code/tables/asset_locations.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

@@ -1,10 +1,12 @@
 # apiV1YamlQuote()
 
+Double-quotes a string for YAML, escaping backslashes, quotes, newlines, tabs and carriage returns.
+
 ```php
 function apiV1YamlQuote(string $s): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 437.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 452.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

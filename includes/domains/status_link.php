@@ -37,6 +37,9 @@ require_once __DIR__ . '/../services/service_status.php';
 if (!defined('DOMAIN_STATUS_LINK_LOADED')) {
     define('DOMAIN_STATUS_LINK_LOADED', true);
 
+    /**
+     * True once Database Verification has created the domain_status_incidents and domain_status_services tables; checked once per request.
+     */
     function domainStatusReady(PDO $conn): bool
     {
         static $ready = null;

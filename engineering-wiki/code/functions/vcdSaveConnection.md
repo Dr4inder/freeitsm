@@ -13,7 +13,7 @@ TRAP: the password is stored only through `encryptValue()`, never returned to
 function vcdSaveConnection(PDO $conn, array $in): int
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 391.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 405.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,9 +26,9 @@ Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 418 | `vcdSaveConnection` | read [vcloud_connections](/code/tables/vcloud_connections.md) |  |
-| 433 | `vcdSaveConnection` | **update** [vcloud_connections](/code/tables/vcloud_connections.md) (`name`, `host`, `org`, `username`, `password_enc`, `api_version`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
-| 439 | `vcdSaveConnection` | **insert** [vcloud_connections](/code/tables/vcloud_connections.md) (`name`, `host`, `org`, `username`, `password_enc`, `api_version`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
+| 432 | `vcdSaveConnection` | read [vcloud_connections](/code/tables/vcloud_connections.md) |  |
+| 447 | `vcdSaveConnection` | **update** [vcloud_connections](/code/tables/vcloud_connections.md) (`name`, `host`, `org`, `username`, `password_enc`, `api_version`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
+| 453 | `vcdSaveConnection` | **insert** [vcloud_connections](/code/tables/vcloud_connections.md) (`name`, `host`, `org`, `username`, `password_enc`, `api_version`, `verify_ssl`, `is_active`, `sync_interval_minutes`) |  |
 
 ## Calls
 

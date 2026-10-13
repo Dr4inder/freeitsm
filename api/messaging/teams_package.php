@@ -16,6 +16,10 @@ require_once '../../includes/messaging/messaging.php';
 require_once '../../includes/messaging/TeamsPackage.php';
 require_once '../../includes/tenancy.php';
 
+/**
+ * Answers {success: false, error} as JSON and stops - used instead of the zip download
+ * when the package cannot be built.
+ */
 function teamsPackageFail(string $message): void
 {
     header('Content-Type: application/json');

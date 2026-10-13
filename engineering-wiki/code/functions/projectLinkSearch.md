@@ -12,7 +12,7 @@ function projectLinkSearch(
 ): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 285.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 302.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,13 +28,13 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 298 | `projectLinkSearch` | read [assets](/code/tables/assets.md) |  |
-| 302 | `projectLinkSearch` | read [changes](/code/tables/changes.md) |  |
-| 306 | `projectLinkSearch` | read [tickets](/code/tables/tickets.md) |  |
-| 310 | `projectLinkSearch` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 314 | `projectLinkSearch` | read [problems](/code/tables/problems.md) |  |
-| 318 | `projectLinkSearch` | read [contracts](/code/tables/contracts.md) |  |
-| 324 | `projectLinkSearch` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 315 | `projectLinkSearch` | read [assets](/code/tables/assets.md) |  |
+| 319 | `projectLinkSearch` | read [changes](/code/tables/changes.md) |  |
+| 323 | `projectLinkSearch` | read [tickets](/code/tables/tickets.md) |  |
+| 327 | `projectLinkSearch` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 331 | `projectLinkSearch` | read [problems](/code/tables/problems.md) |  |
+| 335 | `projectLinkSearch` | read [contracts](/code/tables/contracts.md) |  |
+| 341 | `projectLinkSearch` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

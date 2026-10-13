@@ -1,5 +1,14 @@
 <?php
 /**
+ * Audience - the ladder of who may read a Knowledge article: internal, customer, public.
+ *
+ * Readers state their own rung and get everything at that rung or more open; sqlFilter()
+ * gives the matching SQL. Constants, so a typo fails loudly rather than matching nothing.
+ *
+ * @wiki Knowledge-Folders-and-Security-Developer-Guide
+ */
+
+/**
  * Who is allowed to read a Knowledge article.
  *
  * `knowledge_articles.audience` answers "who may read this", which is a
@@ -63,6 +72,7 @@ class Audience
         return self::$ladder;
     }
 
+    /** True when the value is exactly one of the audience constants. */
     public static function isValid($value): bool
     {
         return is_string($value) && in_array($value, self::$ladder, true);

@@ -1,10 +1,12 @@
 # getDateField()
 
+The tickets date column a time-based property counts by - closed_datetime for 'closed', created_datetime otherwise.
+
 ```php
 function getDateField($prop)
 ```
 
-Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 144.
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 153.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

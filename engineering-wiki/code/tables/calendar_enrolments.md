@@ -35,10 +35,10 @@
 | [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):330 |  | insert | `analyst_id`, `mode`, `connection_id`, `calendar_address`, `credentials` |  |
 | [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md):459 |  | insert | `analyst_id`, `mode`, `task_mode`, `connection_id` |  |
 | [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):90 | `calendarSyncPullForAnalyst` | update | `delta_token`, `delta_synced_datetime` |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):469 | `calendarStoreSubscription` | update | `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error` |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):479 | `calendarClearSubscription` | update | `subscription_id`, `subscription_expires`, `subscription_secret` |  |
-| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):473 | `calendarSyncRecordError` | insert | `analyst_id`, `mode`, `last_error` |  |
-| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):485 | `calendarSyncClearError` | update | `last_error`, `last_sync_datetime` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):473 | `calendarStoreSubscription` | update | `subscription_id`, `subscription_expires`, `subscription_secret`, `last_error` |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md):487 | `calendarClearSubscription` | update | `subscription_id`, `subscription_expires`, `subscription_secret` |  |
+| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):477 | `calendarSyncRecordError` | insert | `analyst_id`, `mode`, `last_error` |  |
+| [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md):493 | `calendarSyncClearError` | update | `last_error`, `last_sync_datetime` |  |
 
 ## Read by
 
@@ -46,6 +46,6 @@
 |---|---|---|
 | [api/calendar/graph_notify.php](/code/files/api/calendar/graph_notify.php.md) | L93 |  |
 | [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | csUsage L55, csTakeBack L84, L181, L182, L196, L208 |  |
-| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncEnrolment L306 |  |
-| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md) | calendarSyncPullAll L332, calendarSyncEnsureAllSubscriptions L493 |  |
+| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncEnrolment L307 |  |
+| [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md) | calendarSyncPullAll L332, calendarSyncEnsureAllSubscriptions L501 |  |
 

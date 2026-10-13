@@ -16,8 +16,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md):114 | `purgeExpired` | delete |  |  |
-| [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md):150 | `apiKnowledgePurgeExpired` | delete |  |  |
+| [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md):129 | `purgeExpired` | delete |  |  |
+| [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md):152 | `apiKnowledgePurgeExpired` | delete |  |  |
 | [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md):218 | `KnowledgeService::saveArticle` | insert | `article_id`, `version`, `title`, `body`, `saved_by_id`, `saved_datetime` |  |
 | [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md):394 | `KnowledgeService::purgeArticle` | delete |  |  |
 
@@ -25,5 +25,5 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | apiKnowledgeVersionsList L342, apiKnowledgeVersionsGet L360 |  |
+| [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | apiKnowledgeVersionsList L352, apiKnowledgeVersionsGet L374 |  |
 

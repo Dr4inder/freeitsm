@@ -20,7 +20,7 @@ function rfpAiRestyleStreaming(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1341.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1349.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -12,6 +12,8 @@
  *
  * Only same-origin requests get the token: it must never be sent to another site.
  * GET and HEAD are left alone, except for EventSource, whose streams can write.
+ *
+ * @wiki CSRF-Protection-Developer-Guide
  */
 (function () {
     'use strict';
@@ -24,9 +26,11 @@
     var HEADER = 'X-CSRF-Token', FIELD = '_csrf_token', QUERY = '_csrf';
     var SAFE = { GET: 1, HEAD: 1, OPTIONS: 1 };
 
+    /** Whether a URL points at this site - the token is never sent anywhere else. */
     function sameOrigin(url) {
         try { return new URL(url, location.href).origin === location.origin; } catch (e) { return false; }
     }
+    /** Adds ?_csrf=token to a same-origin URL that does not already have it; any other URL comes back unchanged. */
     function withQuery(url) {
         try {
             var u = new URL(url, location.href);
@@ -39,6 +43,9 @@
     // ── fetch ────────────────────────────────────────────────────────────────
     if (window.fetch) {
         var origFetch = window.fetch;
+        /**
+         * Wraps fetch() to add the X-CSRF-Token header to same-origin requests that are not GET, HEAD or OPTIONS.
+         */
         window.fetch = function (input, init) {
             try {
                 var isReq = typeof Request !== 'undefined' && input instanceof Request;
@@ -58,15 +65,18 @@
     // ── XMLHttpRequest ───────────────────────────────────────────────────────
     if (window.XMLHttpRequest) {
         var proto = XMLHttpRequest.prototype, origOpen = proto.open, origSend = proto.send, origSet = proto.setRequestHeader;
+        /** Notes whether this XMLHttpRequest needs the token (same origin, unsafe method). */
         proto.open = function (method, url) {
             this.__csrf = !SAFE[String(method).toUpperCase()] && sameOrigin(url);
             this.__csrfSet = false;
             return origOpen.apply(this, arguments);
         };
+        /** Notes when the caller sets the CSRF header itself, so send() does not add a second one. */
         proto.setRequestHeader = function (name) {
             if (String(name).toLowerCase() === HEADER.toLowerCase()) this.__csrfSet = true;
             return origSet.apply(this, arguments);
         };
+        /** Adds the X-CSRF-Token header before sending, when open() decided it was needed. */
         proto.send = function () {
             if (this.__csrf && !this.__csrfSet) { try { origSet.call(this, HEADER, TOKEN); } catch (e) {} }
             return origSend.apply(this, arguments);
@@ -96,10 +106,12 @@
     // ── sendBeacon and EventSource ───────────────────────────────────────────
     if (navigator.sendBeacon) {
         var origBeacon = navigator.sendBeacon.bind(navigator);
+        /** Wraps navigator.sendBeacon() to carry the token in the URL, as a beacon cannot send headers. */
         navigator.sendBeacon = function (url, data) { return origBeacon(withQuery(url), data); };
     }
     if (window.EventSource) {
         var OrigES = window.EventSource;
+        /** Stand-in EventSource constructor that carries the token in the URL, as a stream cannot send headers. */
         var ES = function (url, cfg) { return new OrigES(withQuery(url), cfg); };
         ES.prototype = OrigES.prototype;
         ES.CONNECTING = OrigES.CONNECTING; ES.OPEN = OrigES.OPEN; ES.CLOSED = OrigES.CLOSED;

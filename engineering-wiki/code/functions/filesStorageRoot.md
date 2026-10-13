@@ -6,7 +6,7 @@ The storage root, created and guarded on first use. No trailing slash.
 function filesStorageRoot(PDO $conn): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 48.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 51.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

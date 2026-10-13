@@ -1,6 +1,6 @@
 # includes/services/knowledge.php
 
-> PHP - 519 lines
+> PHP - 520 lines
 
 KnowledgeService — the shared write rules for the Knowledge Base: article create/update (tags + save-as-version + best-effort embedding regeneration) and the recycle-bin trio archive / restore / purge.
 
@@ -51,14 +51,14 @@ save_as_version. The UI adapter maps its `body` to `body_html`.
 | 395 | `KnowledgeService::purgeArticle` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
 | 396 | `KnowledgeService::purgeArticle` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 | 397 | `KnowledgeService::purgeArticle` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 415 | `KnowledgeService::loadArticleRow` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 427 | `KnowledgeService::setTags` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 433 | `KnowledgeService::setTags` | read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
-| 437 | `KnowledgeService::setTags` | **insert** [knowledge_tags](/code/tables/knowledge_tags.md) (`name`, `created_datetime`) |  |
-| 440 | `KnowledgeService::setTags` | **insert** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) (`article_id`, `tag_id`) |  |
-| 453 | `KnowledgeService::updateEmbedding` | read [system_settings](/code/tables/system_settings.md) |  |
-| 485 | `KnowledgeService::updateEmbedding` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`embedding`, `embedding_updated`) |  |
-| 499 | `KnowledgeService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 416 | `KnowledgeService::loadArticleRow` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 428 | `KnowledgeService::setTags` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 434 | `KnowledgeService::setTags` | read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
+| 438 | `KnowledgeService::setTags` | **insert** [knowledge_tags](/code/tables/knowledge_tags.md) (`name`, `created_datetime`) |  |
+| 441 | `KnowledgeService::setTags` | **insert** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) (`article_id`, `tag_id`) |  |
+| 454 | `KnowledgeService::updateEmbedding` | read [system_settings](/code/tables/system_settings.md) |  |
+| 486 | `KnowledgeService::updateEmbedding` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`embedding`, `embedding_updated`) |  |
+| 500 | `KnowledgeService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

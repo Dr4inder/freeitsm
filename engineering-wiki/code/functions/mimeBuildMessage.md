@@ -1,10 +1,12 @@
 # mimeBuildMessage()
 
+Builds a complete raw MIME message - headers, the HTML body, inline images and attachments - ready for SMTP or the Gmail API.
+
 ```php
 function mimeBuildMessage(array $m): string
 ```
 
-Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 50.
+Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 53.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

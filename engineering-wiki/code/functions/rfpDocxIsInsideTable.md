@@ -6,7 +6,7 @@ True if the given element has any <w:tbl> ancestor. Used to skip paragraphs that
 function rfpDocxIsInsideTable(DOMElement $node): bool
 ```
 
-Defined in [includes/rfp_docx_parser.php](/code/files/includes/rfp_docx_parser.php.md), line 84.
+Defined in [includes/rfp_docx_parser.php](/code/files/includes/rfp_docx_parser.php.md), line 91.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

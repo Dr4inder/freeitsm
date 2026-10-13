@@ -27,6 +27,6 @@
 |---|---|---|
 | [api/lms/assignment.php](/code/files/api/lms/assignment.php.md) | L52 |  |
 | [api/lms/assignments.php](/code/files/api/lms/assignments.php.md) | L55 |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsCourseAssignedTo L251, lmsMyCourses L307, lmsAssignedLearnersSql L477, lmsAssignedLearnersSql L487, lmsAssignedLearnersSql L497, lmsAssignedLearnersSql L507 ... |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsCourseAssignedTo L257, lmsMyCourses L313, lmsAssignedLearnersSql L483, lmsAssignedLearnersSql L493, lmsAssignedLearnersSql L503, lmsAssignedLearnersSql L513 ... |  |
 | [self-service/includes/header.php](/code/files/self-service/includes/header.php.md) | L153 |  |
 

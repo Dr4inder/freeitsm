@@ -22,13 +22,18 @@
  *
  * Words use window.tf() with English fallbacks, so a host page does not have to
  * export the whole 'projects' translation namespace to show one panel.
+ *
+ * @wiki Projects-Internals-8-Connections-and-Templates
  */
 (function () {
     'use strict';
     if (window.ProjectLinks) return;
 
+    /** Translates a projects.* key, falling back to the English given when the host page has not loaded it. */
     const L = (k, en, p) => (window.tf ? window.tf('projects.' + k, en, p) : en);
+    /** Escapes a value for safe use in HTML. */
     const esc = v => (v === null || v === undefined) ? '' : String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    /** Shows a toast when the host page has the shared toaster. */
     const toast = (m, k) => { if (window.showToast) window.showToast(m, k); };
     // English for the words a host page may not have exported (projects.status / projects.health).
     const EN = {
@@ -36,6 +41,7 @@
         health: { green: 'On track', amber: 'At risk', red: 'Off track', none: 'Finished' }
     };
 
+    /** Calls an api/projects/ endpoint - a GET without a body, a JSON POST with one - and throws on failure. */
     async function call(base, path, body) {
         const opts = body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
         const r = await fetch(base + 'api/projects/' + path, Object.assign({ credentials: 'same-origin' }, opts));
@@ -44,6 +50,7 @@
         return d;
     }
 
+    /** One project row - colour dot, name, code, status, owner, health dot, progress bar and, when editable, the unlink button. */
     function row(p, editable, base) {
         const health = p.health ? '<span class="pl-health h-' + esc(p.health) + '" title="' + esc(L('health.' + p.health, EN.health[p.health] || p.health)) + '"></span>' : '';
         return '<li class="pl-row">'
@@ -58,12 +65,14 @@
             + '</li>';
     }
 
+    /** Draws the Projects panel for one record into host and wires its search-to-add box and unlink buttons. */
     function mount(host, o) {
         if (!host) return;
         const base = o.base || window.APP_BASE || '/';
         const editable = o.editable !== false;
         let rows = [];
 
+        /** Redraws the panel from the loaded rows - as a card, or just the body when bare, or nothing when hideEmpty and empty. */
         function draw() {
             if (!rows.length && o.hideEmpty) { host.innerHTML = ''; host.hidden = true; return; }
             host.hidden = false;
@@ -76,6 +85,7 @@
                 + '<div class="pl-body">' + body + '</div></div>';
         }
 
+        /** Loads the projects this record belongs to and redraws. */
         async function load() {
             try { rows = (await call(base, 'links.php?for=' + o.kind + '&id=' + o.id)).projects || []; } catch (e) { rows = []; }
             draw();

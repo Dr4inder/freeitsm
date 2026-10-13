@@ -36,7 +36,7 @@
 | [api/lms/scorm_data.php](/code/files/api/lms/scorm_data.php.md):173 |  | update |  |  |
 | [api/lms/scorm_data.php](/code/files/api/lms/scorm_data.php.md):175 |  | update | `last_access`, `updated_datetime` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3998 |  | update | `learner_id`, `learner_type` |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md):434 | `lmsProgressRowFor` | insert | `analyst_id`, `learner_type`, `learner_id`, `course_id`, `status`, `first_access`, `last_access`, `attempt_count`, `created_datetime`, `updated_datetime` |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md):440 | `lmsProgressRowFor` | insert | `analyst_id`, `learner_type`, `learner_id`, `course_id`, `status`, `first_access`, `last_access`, `attempt_count`, `created_datetime`, `updated_datetime` |  |
 
 ## Read by
 
@@ -47,7 +47,7 @@
 | [api/lms/progress.php](/code/files/api/lms/progress.php.md) | L62 |  |
 | [api/lms/scorm_data.php](/code/files/api/lms/scorm_data.php.md) | L40, L95 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L4008 |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsMyCourses L307, lmsProgressRowFor L422 |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsMyCourses L313, lmsProgressRowFor L428 |  |
 | [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md) | lmsRemindersDue L149 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleCoursesForCompany L518 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleCoursesForCompany L519 |  |
 

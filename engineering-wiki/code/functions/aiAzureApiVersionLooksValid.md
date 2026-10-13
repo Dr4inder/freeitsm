@@ -13,7 +13,7 @@ will fall behind, which costs nothing because a working call never asks.
 function aiAzureApiVersionLooksValid(string $v): bool
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 245.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 249.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

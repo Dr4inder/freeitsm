@@ -12,7 +12,7 @@ function ticketLinkCreate(
 ): array
 ```
 
-Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 47.
+Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,12 +28,12 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 94 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 103 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 101 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
 | 110 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 120 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 130 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 137 | `ticketLinkCreate` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
+| 117 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 127 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 137 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 144 | `ticketLinkCreate` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
 
 ## Calls
 

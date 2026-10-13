@@ -6,7 +6,7 @@ Permission changes are the rows people actually come looking for. Never silent.
 function permAudit(PDO $conn, string $type, int $id, int $analystId, array $detail): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 349.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 359.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

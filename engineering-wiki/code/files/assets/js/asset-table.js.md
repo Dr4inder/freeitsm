@@ -1,6 +1,6 @@
 # assets/js/asset-table.js
 
-> JavaScript - 164 lines
+> JavaScript - 173 lines
 
 FreeITSM Asset Management — table view config
 
@@ -14,9 +14,9 @@ asset — and adds PDF export on top of the shared CSV. Everything else
 
 | Function | Line | What it does |
 |---|--:|---|
-| `tt(k, p)` | 13 |  |
-| `staleDaysFromUrl()` | 97 | "Not seen in N days", arrived at from the Watchtower assets card (#97). |
-| `applyStaleFilter(rows)` | 104 |  |
+| `tt(k, p)` | 17 | Translates a key under asset-management, returning the key itself when translations are not loaded. |
+| `staleDaysFromUrl()` | 101 | "Not seen in N days", arrived at from the Watchtower assets card (#97). |
+| `applyStaleFilter(rows)` | 113 | When the page was opened with ?stale=N, keeps only assets last seen more than N days ago (never-seen assets excluded, matching the Watchtower count) and shows the banner with a link back to all assets. |
 
 ## API endpoints it calls
 

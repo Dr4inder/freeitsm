@@ -30,7 +30,7 @@ function rfpAiCallAnthropicStreaming(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 242.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 250.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

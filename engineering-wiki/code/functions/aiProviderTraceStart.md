@@ -11,7 +11,7 @@ Off unless started, so no ordinary request pays for it.
 function aiProviderTraceStart(): void
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 375.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 379.
 
 **Returns:** `void`
 

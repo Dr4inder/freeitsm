@@ -6,7 +6,7 @@ The project's linked changes with whether each is approved - what a change item 
 function projectGateChanges(PDO $conn, int $projectId): array
 ```
 
-Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 52.
+Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 53.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatec
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 55 | `projectGateChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md) |  |
+| 56 | `projectGateChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md) |  |
 
 ## Called from
 

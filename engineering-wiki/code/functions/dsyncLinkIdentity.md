@@ -6,7 +6,7 @@ Store the directory's own id for this person, so a rename or OU move is survivab
 function dsyncLinkIdentity(PDO $conn, int $providerId, int $userId, array $p): void
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 778.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 791.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 788 | `dsyncLinkIdentity` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `source_ref`, `source_etag`, `linked_datetime`) |  |
+| 801 | `dsyncLinkIdentity` | **insert** [user_sso_identities](/code/tables/user_sso_identities.md) (`user_id`, `provider_id`, `subject`, `email`, `source_ref`, `source_etag`, `linked_datetime`) |  |
 
 ## Called from
 

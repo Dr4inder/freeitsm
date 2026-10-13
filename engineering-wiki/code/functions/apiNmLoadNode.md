@@ -1,10 +1,12 @@
 # apiNmLoadNode()
 
+Loads one node row that belongs to the given diagram, or answers 404 and stops.
+
 ```php
 function apiNmLoadNode(PDO $conn, int $diagramId, int $nodeId): array
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 96.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 102.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 97 | `apiNmLoadNode` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 103 | `apiNmLoadNode` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
 
 ## Calls
 

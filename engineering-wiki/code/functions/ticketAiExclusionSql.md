@@ -6,7 +6,7 @@ For AI features that read MANY tickets (problem root cause, suggested problems, 
 function ticketAiExclusionSql(PDO $conn, string $alias = 't'): string
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 201.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 203.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

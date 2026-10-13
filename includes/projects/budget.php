@@ -50,6 +50,10 @@ require_once __DIR__ . '/settings.php';
 
 const PROJECT_BUDGET_CATEGORIES = ['hardware', 'software', 'services', 'labour', 'travel', 'other'];
 
+/**
+ * True when the budget tables and the projects.currency column exist (after Database
+ * Verification). Cached per request.
+ */
 function projectBudgetReady(PDO $conn): bool
 {
     static $ready = null;

@@ -6,7 +6,7 @@ A bare date (a contract end, a domain expiry, a deadline) - shown as stored, nev
 function peopleBareDate(?string $d): string
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 850.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 853.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

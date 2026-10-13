@@ -1,10 +1,12 @@
 # rpSoftwareKpis()
 
+Software block: KPI tiles - applications, machines and installs in the inventory, and licence renewals in the period.
+
 ```php
 function rpSoftwareKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md), line 56.
+Defined in [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +22,8 @@ Defined in [includes/report_packs/blocks_software.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 59 | `rpSoftwareKpis` | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
-| 64 | `rpSoftwareKpis` | read [software_licences](/code/tables/software_licences.md) |  |
+| 65 | `rpSoftwareKpis` | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 70 | `rpSoftwareKpis` | read [software_licences](/code/tables/software_licences.md) |  |
 
 ## Calls
 

@@ -1,6 +1,6 @@
 # includes/lms_access.php
 
-> PHP - 575 lines
+> PHP - 581 lines
 
 LMS access rules — the learner/manager split (RBAC pilot).
 
@@ -16,18 +16,18 @@ APIs and the playback gate so the rule can't drift between them.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [lmsCanManage()](/code/functions/lmsCanManage.md) | 127 | May this analyst manage the LMS? (is_admin bypasses, via analystHasCapability.) |
-| [lmsIsOverdue()](/code/functions/lmsIsOverdue.md) | 155 | Has this course's deadline passed? |
-| [lmsUserGroupsAvailable()](/code/functions/lmsUserGroupsAvailable.md) | 173 | Are the shared people groups available on this install? |
-| [lmsAssignmentReachSql()](/code/functions/lmsAssignmentReachSql.md) | 206 | THE ONE PLACE THAT SAYS WHICH ASSIGNMENTS REACH A LEARNER. |
-| [lmsCourseAssignedTo()](/code/functions/lmsCourseAssignedTo.md) | 247 | Is this course assigned to this learner? This is what they are *entitled* to take, by any of the routes above. |
-| [lmsCanAccessCourse()](/code/functions/lmsCanAccessCourse.md) | 269 | May this learner open/play this course? Managers (and admins) may open any course — that's how Preview works. Everyone else may open only what's assigned to them. This is the gate the player and the learner content APIs enforce. |
-| [requireLmsCourseAccessJson()](/code/functions/requireLmsCourseAccessJson.md) | 280 | Hard gate for a learner course API: 403 unless the caller may access `$courseId`. Resolves the learner from whichever session is present, so one guard covers both the analyst app and the portal. Assumes the session check and module gate have already run. |
-| [lmsMyCourses()](/code/functions/lmsMyCourses.md) | 304 | The courses assigned to a learner by any route, each with their own progress — the data behind My Courses and the portal's Training page. One row per course even if it reaches them several ways (earliest deadline wins). is_overdue is computed here so the page and any caller agree. |
-| [lmsAttachLessonProgress()](/code/functions/lmsAttachLessonProgress.md) | 357 | How far through a course somebody is, as "lesson N of M". |
-| [lmsProgressRowFor()](/code/functions/lmsProgressRowFor.md) | 420 | This learner's progress row for a course, created on first sight. |
-| [lmsAssignedLearnersSql()](/code/functions/lmsAssignedLearnersSql.md) | 472 | THE OTHER DIRECTION: every (learner, course) an assignment reaches. |
-| [lmsAssignmentTargetProblem()](/code/functions/lmsAssignmentTargetProblem.md) | 544 | Is this target real? Returns a human-readable problem, or null if it is fine. |
+| [lmsCanManage()](/code/functions/lmsCanManage.md) | 133 | May this analyst manage the LMS? (is_admin bypasses, via analystHasCapability.) |
+| [lmsIsOverdue()](/code/functions/lmsIsOverdue.md) | 161 | Has this course's deadline passed? |
+| [lmsUserGroupsAvailable()](/code/functions/lmsUserGroupsAvailable.md) | 179 | Are the shared people groups available on this install? |
+| [lmsAssignmentReachSql()](/code/functions/lmsAssignmentReachSql.md) | 212 | THE ONE PLACE THAT SAYS WHICH ASSIGNMENTS REACH A LEARNER. |
+| [lmsCourseAssignedTo()](/code/functions/lmsCourseAssignedTo.md) | 253 | Is this course assigned to this learner? This is what they are *entitled* to take, by any of the routes above. |
+| [lmsCanAccessCourse()](/code/functions/lmsCanAccessCourse.md) | 275 | May this learner open/play this course? Managers (and admins) may open any course — that's how Preview works. Everyone else may open only what's assigned to them. This is the gate the player and the learner content APIs enforce. |
+| [requireLmsCourseAccessJson()](/code/functions/requireLmsCourseAccessJson.md) | 286 | Hard gate for a learner course API: 403 unless the caller may access `$courseId`. Resolves the learner from whichever session is present, so one guard covers both the analyst app and the portal. Assumes the session check and module gate have already run. |
+| [lmsMyCourses()](/code/functions/lmsMyCourses.md) | 310 | The courses assigned to a learner by any route, each with their own progress — the data behind My Courses and the portal's Training page. One row per course even if it reaches them several ways (earliest deadline wins). is_overdue is computed here so the page and any caller agree. |
+| [lmsAttachLessonProgress()](/code/functions/lmsAttachLessonProgress.md) | 363 | How far through a course somebody is, as "lesson N of M". |
+| [lmsProgressRowFor()](/code/functions/lmsProgressRowFor.md) | 426 | This learner's progress row for a course, created on first sight. |
+| [lmsAssignedLearnersSql()](/code/functions/lmsAssignedLearnersSql.md) | 478 | THE OTHER DIRECTION: every (learner, course) an assignment reaches. |
+| [lmsAssignmentTargetProblem()](/code/functions/lmsAssignmentTargetProblem.md) | 550 | Is this target real? Returns a human-readable problem, or null if it is fine. |
 
 ## Classes
 
@@ -37,23 +37,23 @@ APIs and the playback gate so the rule can't drift between them.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 177 | `lmsUserGroupsAvailable` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 212 | `lmsAssignmentReachSql` | read [lms_learning_groups](/code/tables/lms_learning_groups.md), read [lms_learning_group_members](/code/tables/lms_learning_group_members.md) |  |
-| 230 | `lmsAssignmentReachSql` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
-| 251 | `lmsCourseAssignedTo` | read [lms_course_assignments](/code/tables/lms_course_assignments.md) |  |
-| 307 | `lmsMyCourses` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
-| 377 | `lmsAttachLessonProgress` | read [lms_lessons](/code/tables/lms_lessons.md) |  |
-| 422 | `lmsProgressRowFor` | read [lms_progress](/code/tables/lms_progress.md) |  |
-| 434 | `lmsProgressRowFor` | **insert** [lms_progress](/code/tables/lms_progress.md) (`analyst_id`, `learner_type`, `learner_id`, `course_id`, `status`, `first_access`, `last_access`, `attempt_count`, `created_datetime`, `updated_datetime`) |  |
-| 477 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_learning_groups](/code/tables/lms_learning_groups.md), read [lms_learning_group_members](/code/tables/lms_learning_group_members.md), read [analysts](/code/tables/analysts.md) |  |
-| 487 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
-| 497 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [users](/code/tables/users.md) |  |
-| 507 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [analysts](/code/tables/analysts.md) |  |
-| 513 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [users](/code/tables/users.md) |  |
-| 549 | `lmsAssignmentTargetProblem` | read [lms_learning_groups](/code/tables/lms_learning_groups.md) |  |
-| 556 | `lmsAssignmentTargetProblem` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 562 | `lmsAssignmentTargetProblem` | read [analysts](/code/tables/analysts.md) |  |
-| 568 | `lmsAssignmentTargetProblem` | read [users](/code/tables/users.md) |  |
+| 183 | `lmsUserGroupsAvailable` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 218 | `lmsAssignmentReachSql` | read [lms_learning_groups](/code/tables/lms_learning_groups.md), read [lms_learning_group_members](/code/tables/lms_learning_group_members.md) |  |
+| 236 | `lmsAssignmentReachSql` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
+| 257 | `lmsCourseAssignedTo` | read [lms_course_assignments](/code/tables/lms_course_assignments.md) |  |
+| 313 | `lmsMyCourses` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
+| 383 | `lmsAttachLessonProgress` | read [lms_lessons](/code/tables/lms_lessons.md) |  |
+| 428 | `lmsProgressRowFor` | read [lms_progress](/code/tables/lms_progress.md) |  |
+| 440 | `lmsProgressRowFor` | **insert** [lms_progress](/code/tables/lms_progress.md) (`analyst_id`, `learner_type`, `learner_id`, `course_id`, `status`, `first_access`, `last_access`, `attempt_count`, `created_datetime`, `updated_datetime`) |  |
+| 483 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_learning_groups](/code/tables/lms_learning_groups.md), read [lms_learning_group_members](/code/tables/lms_learning_group_members.md), read [analysts](/code/tables/analysts.md) |  |
+| 493 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
+| 503 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [users](/code/tables/users.md) |  |
+| 513 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [analysts](/code/tables/analysts.md) |  |
+| 519 | `lmsAssignedLearnersSql` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [users](/code/tables/users.md) |  |
+| 555 | `lmsAssignmentTargetProblem` | read [lms_learning_groups](/code/tables/lms_learning_groups.md) |  |
+| 562 | `lmsAssignmentTargetProblem` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 568 | `lmsAssignmentTargetProblem` | read [analysts](/code/tables/analysts.md) |  |
+| 574 | `lmsAssignmentTargetProblem` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

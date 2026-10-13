@@ -1,6 +1,6 @@
 # api/v1/dev/openapi_verify.php
 
-> API endpoint - 102 lines
+> API endpoint - 117 lines
 
 Verify the typed OpenAPI response schemas against LIVE responses from a running install. For every GET endpoint it resolves any {id} parameters from a sibling collection, fetches the real response, and validates the `data` payload against the bound schema — OpenAPI-aware (`$ref`, allOf, nullable). Reports type violations AND response fields the schema fails to document.
 
@@ -23,10 +23,10 @@ to auto-apply the fixes this reports, then re-run this to confirm zero.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [oav_get()](/code/functions/oav_get.md) | 28 |  |
-| [oav_resolveRef()](/code/functions/oav_resolveRef.md) | 34 |  |
-| [oav_validate()](/code/functions/oav_validate.md) | 39 |  |
-| [oav_resolvePath()](/code/functions/oav_resolvePath.md) | 72 |  |
+| [oav_get()](/code/functions/oav_get.md) | 29 | GETs one API URL with the bearer key and returns [HTTP code, decoded JSON]. |
+| [oav_resolveRef()](/code/functions/oav_resolveRef.md) | 39 | Follows a schema's `$ref` chain into the component schemas and returns the schema it ends on (an empty array when a name is missing). |
+| [oav_validate()](/code/functions/oav_validate.md) | 49 | Validates a live value against an OpenAPI schema (`$ref`, allOf, nullable) and returns every problem as "path: message" - type mismatches, missing required properties and response fields the schema does not document. |
+| [oav_resolvePath()](/code/functions/oav_resolvePath.md) | 87 | Turns a path template into a real path by replacing each {id} with the first id its parent collection returns - null when there is no row to use. Ids are cached per collection. |
 
 ## How it hangs together
 

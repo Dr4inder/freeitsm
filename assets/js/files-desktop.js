@@ -9,6 +9,8 @@
  * menu items are offered; a hidden button is a courtesy, never the protection.
  *
  * Levels (includes/files/acl.php): 1 View, 2 Download, 3 Upload, 4 Modify, 5 Full control.
+ *
+ * @wiki Files-Developer-Guide
  */
 (function () {
     'use strict';
@@ -20,6 +22,7 @@
     var esc = WM.esc;
 
     var LV = { VIEW: 1, DOWNLOAD: 2, UPLOAD: 3, MODIFY: 4, FULL: 5 };
+    /** Returns the translated name of each access level (1 View to 5 Full control), keyed by number. */
     var LEVEL_NAMES = function () {
         return {
             1: L('level.view', 'View'), 2: L('level.download', 'Download'), 3: L('level.upload', 'Upload'),
@@ -59,13 +62,18 @@
      * as api/files/search.php, which does this for the Search window.
      */
     function hasWildcard(q) { return /[*?]/.test(q); }
+    /**
+     * Returns a test function for a name: a whole-name wildcard match when the text holds * or ?, otherwise a case-insensitive "contains".
+     */
     function nameMatcher(q) {
         q = String(q).toLowerCase();
         if (!hasWildcard(q)) return function (name) { return name.toLowerCase().indexOf(q) >= 0; };
         var re = new RegExp('^' + q.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$', 'i');
         return function (name) { return re.test(name); };
     }
+    /** Shows an error (or anything thrown) as an error notification. */
     function fail(e) { WM.notify(e && e.message ? e.message : String(e), 'error'); }
+    /** Formats a byte count as B, KB, MB, GB or TB with sensible rounding; empty for null. */
     function fmtSize(n) {
         if (n == null) return '';
         if (n < 1024) return n + ' B';
@@ -73,7 +81,13 @@
         do { n /= 1024; i++; } while (n >= 1024 && i < u.length - 1);
         return (n >= 100 ? Math.round(n) : n.toFixed(n >= 10 ? 1 : 2)) + ' ' + u[i];
     }
+    /**
+     * Formats a date-time with the app's fmtDateTime when it is loaded, else returns it as given; empty for none.
+     */
     function fmtWhen(s) { return s ? (window.fmtDateTime ? window.fmtDateTime(s) : s) : ''; }
+    /**
+     * Returns the friendly type of a file from its name ("PDF document", "Spreadsheet", "PNG file"), as shown in Details view and Properties.
+     */
     function typeName(name) {
         var t = FI.type(name);
         var names = {
@@ -85,16 +99,19 @@
         };
         return names[t.key] || (t.ext ? L('type.other', '{ext} file', { ext: t.ext.toUpperCase() }) : L('type.file', 'File'));
     }
+    /** Returns a wrapper that runs fn only once calls have stopped for ms milliseconds. */
     function debounce(fn, ms) {
         var t = null;
         return function () { var a = arguments, s = this; clearTimeout(t); t = setTimeout(function () { fn.apply(s, a); }, ms); };
     }
+    /** Creates an element with an optional class and optional inner HTML. */
     function h(tag, cls, html) {
         var e = document.createElement(tag);
         if (cls) e.className = cls;
         if (html != null) e.innerHTML = html;
         return e;
     }
+    /** Wraps SVG path markup in a 16px stroked icon, for the toolbar and menu icons in IC. */
     function svgIcon(path) {
         return '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg>';
     }
@@ -126,16 +143,23 @@
     var windowsPref = prefs.windows && !Array.isArray(prefs.windows) ? prefs.windows : {};
     var saveWindows = debounce(function () { api('prefs.php', { windows: windowsPref }).catch(function () {}); }, 800);
     WM.onGeometry(function (kind, g) { windowsPref[kind] = g; saveWindows(); });
+    /** Returns the remembered size and position for a kind of window, or null when there is none. */
     function geoFor(kind) { return windowsPref[kind] || null; }
 
     // ── A tiny event bus: "these folders changed, refresh what shows them" ──
     var explorers = [];
+    /**
+     * Tells every open Explorer (and the phone list) that these folders changed, so each refreshes what it shows; an empty list means refresh everything.
+     */
     function changed(folderIds) {
         explorers.forEach(function (x) { x.onChanged(folderIds || []); });
     }
 
     // ── The clipboard ──────────────────────────────────────────────────────
     var clip = null;   // {mode: 'cut'|'copy', entries: [{type, id, name}], from: folderId}
+    /**
+     * Puts entries on the clipboard as a cut or a copy (or clears it when there are none) and repaints the faded cut look in every Explorer.
+     */
     function setClip(mode, entries, from) {
         clip = entries.length ? { mode: mode, entries: entries, from: from } : null;
         explorers.forEach(function (x) { x.markCut(); });
@@ -148,6 +172,9 @@
         return dropEntries({ entries: c.entries, from: c.from }, target, c.mode === 'copy')
             .then(function () { if (c.mode === 'cut') setClip('cut', []); });
     }
+    /**
+     * Moves or copies files and folders into a target folder through transfer.php, reports each one that failed, then refreshes both folders.
+     */
     function transfer(mode, entries, from, target) {
         return api('transfer.php', { mode: mode, target: target, entries: entries })
             .then(function (r) { (r.failed || []).forEach(function (f) { WM.notify(f.error, 'error'); }); changed([target, from]); })
@@ -171,6 +198,11 @@
             { label: L('sc.desktop', 'On desktop'), action: function () { createShortcut(type, id, 'desktop'); } }
         ] };
     }
+    /**
+     * Creates a shortcut to a file, folder or Knowledge article through shortcut.php - in a folder or on the desktop - then refreshes where it landed.
+     *
+     * @return Promise  the server's reply (name, where, folder_id), or undefined after an error
+     */
     function createShortcut(type, id, where, folderId) {
         return api('shortcut.php', { action: 'create', target_type: type, target_id: id, where: where, folder_id: folderId || 0 }).then(function (r) {
             if (r.where === 'desktop') {
@@ -211,6 +243,7 @@
             w.body.querySelector('.fd-kbv-title').textContent = a.title;
             // The frame cannot see the theme, so hand it the colours it needs.
             var cs = getComputedStyle(document.documentElement);
+            /** Reads a theme colour variable from the page, or the fallback when it is not set. */
             var v = function (n, d) { return (cs.getPropertyValue(n) || '').trim() || d; };
             w.body.querySelector('iframe').srcdoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><base target="_blank">' +
                 '<style>body{margin:0;padding:18px 22px;font:14px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;background:' + v('--surface', '#fff') + ';color:' + v('--text', '#333') + '}' +
@@ -255,10 +288,12 @@
         return window.FilesViewer.open(itemId, versionId || 0, {
             geometry: geoFor('viewer'),
             phone: window.matchMedia('(max-width: 768px)').matches,
+            /** Opens Properties for the file shown in the viewer. */
             onProperties: function (id) { openProperties('item', id); }
         }).catch(fail);
     }
 
+    /** Downloads a file (or one version of it) by clicking a temporary link to download.php. */
     function download(itemId, versionId) {
         var a = document.createElement('a');
         a.href = B.api + 'download.php?id=' + itemId + (versionId ? '&version=' + versionId : '');
@@ -289,7 +324,9 @@
         this.win = WM.open({
             kind: 'explorer', title: L('app.documents', 'Documents'), icon: FI.folder(16),
             width: 900, height: 560, geometry: geoFor('explorer'), cascade: explorers.length > 0,
+            /** Removes this Explorer from the list that hears about folder changes when its window closes. */
             onClose: function () { var i = explorers.indexOf(self); if (i >= 0) explorers.splice(i, 1); },
+            /** Puts keyboard focus on the file pane when the window is focused, unless the filter box has it. */
             onFocus: function () { if (self.pane && document.activeElement !== self.filterInput) self.pane.focus({ preventScroll: true }); }
         });
         var b = this.win.body;
@@ -484,6 +521,7 @@
         L_.className = 'fx-list fx-view-' + this.view;
         var html = '';
         if (this.view === 'details') {
+            /** Returns the up or down sort arrow for a Details column header when that column is the sort. */
             var arrow = function (k) { return s.key === k ? '<span class="fx-sort">' + (s.dir > 0 ? '▲' : '▼') + '</span>' : ''; };
             html += '<div class="fx-dhead">' +
                 '<button type="button" data-sort="name">' + esc(L('col.name', 'Name')) + arrow('name') + '</button>' +
@@ -548,6 +586,7 @@
     Explorer.prototype.can = function () {
         var d = this.data || { can: {} };
         var sel = this.selected();
+        /** True when something is selected and every selected entry has at least the given access level. */
         var min = function (need) { return sel.length > 0 && sel.every(function (e) { return e.level >= need; }); };
         return {
             upload: !!(d.can.upload),
@@ -567,6 +606,7 @@
     };
     Explorer.prototype.updateCommands = function () {
         var c = this.can(), cmd = this.win.body.querySelector('.fx-cmd');
+        /** Enables or disables one command-bar button. */
         var set = function (act, on) { var b = cmd.querySelector('[data-act="' + act + '"]'); if (b) b.disabled = !on; };
         set('newfolder', c.newFolder); set('upload', c.uploadFiles); set('cut', c.cut); set('copy', c.copy);
         set('paste', c.paste); set('rename', c.rename); set('delete', c.del); set('download', c.download);
@@ -619,6 +659,7 @@
             case 'view-details': return this.setView('details');
         }
     };
+    /** Reduces an entry to the type, id and name the clipboard and drag data carry. */
     function toRef(e) { return { type: e.type, id: e.id, name: e.name }; }
 
     Explorer.prototype.open = function (e, newWindow) {
@@ -664,6 +705,9 @@
         var dot = e.type === 'item' ? e.name.lastIndexOf('.') : -1;
         input.setSelectionRange(0, dot > 0 ? dot : e.name.length);
         var done = false;
+        /**
+         * Ends an in-place rename once: saves the new name through the folder, shortcut or item API when it changed, otherwise just redraws.
+         */
         function finish(commit) {
             if (done) return;
             done = true;
@@ -746,6 +790,7 @@
     };
     Explorer.prototype.paneMenu = function (ev) {
         var self = this, c = this.can(), d = this.data;
+        /** Returns a menu action that sorts by a column, flipping the direction when it is already the sort. */
         var sortBy = function (k) { return function () { self.sort = { key: k, dir: self.sort.key === k ? -self.sort.dir : 1 }; self.render(); }; };
         WM.menu(ev.clientX, ev.clientY, [
             { label: L('ex.view', 'View'), sub: [
@@ -843,6 +888,9 @@
             var base = (ev.ctrlKey || ev.metaKey) ? Object.assign({}, self.sel) : {};
             var m = self.marquee;
             pane.setPointerCapture(ev.pointerId);
+            /**
+             * Draws the rubber-band rectangle as the pointer moves and selects every entry it touches (after 5px, so a click stays a click).
+             */
             function move(e) {
                 var x = e.clientX - pr.left + pane.scrollLeft, y = e.clientY - pr.top + pane.scrollTop;
                 if (!self.marqueeMoved && Math.abs(x - sx) + Math.abs(y - sy) < 5) return;
@@ -859,6 +907,7 @@
                 });
                 self.paint();
             }
+            /** Ends the rubber-band selection: unhooks the handlers and hides the rectangle. */
             function up() {
                 pane.removeEventListener('pointermove', move);
                 pane.removeEventListener('pointerup', up);
@@ -892,6 +941,9 @@
      */
     Explorer.prototype.dropTarget = function (node, getFolder, isPane) {
         var self = this;
+        /**
+         * Says what is being dragged: 'entries' from an Explorer or the desktop, 'files' from the computer, or null.
+         */
         function kind(ev) {
             var t = ev.dataTransfer && ev.dataTransfer.types ? Array.prototype.slice.call(ev.dataTransfer.types) : [];
             if (t.indexOf('application/x-freeitsm-files') >= 0) return 'entries';
@@ -1005,7 +1057,9 @@
             ev.preventDefault();
             bar.setPointerCapture(ev.pointerId);
             var x0 = ev.clientX, w0 = self.treeEl.offsetWidth;
+            /** Resizes the folder tree as the splitter is dragged, between 120px and 480px. */
             function move(e) { self.treeEl.style.width = Math.max(120, Math.min(480, w0 + e.clientX - x0)) + 'px'; }
+            /** Stops the splitter drag by unhooking its pointer handlers. */
             function up() { bar.removeEventListener('pointermove', move); bar.removeEventListener('pointerup', up); }
             bar.addEventListener('pointermove', move);
             bar.addEventListener('pointerup', up);
@@ -1102,8 +1156,12 @@
             if (queue.some(function (u) { return u.status === 'queued' || u.status === 'uploading'; })) { ev.preventDefault(); ev.returnValue = ''; }
         });
 
+        /** Opens the computer's file picker to upload into a folder. */
         function pick(folderId) { pickFolder = folderId; input.click(); }
 
+        /**
+         * Queues files for upload into a folder (refusing any over the size limit or with no folder), opens Transfers and starts the queue.
+         */
         function add(files, folderId) {
             if (!folderId) { WM.notify(L('up.need_folder', 'Open a folder first - files go inside folders.'), 'error'); return; }
             conflictAll = null;
@@ -1118,6 +1176,7 @@
             pump();
         }
 
+        /** Starts queued uploads until two are running; each one finishing calls it again for the next. */
         function pump() {
             while (running < MAX_PARALLEL) {
                 var next = queue.filter(function (u) { return u.status === 'queued'; })[0];
@@ -1129,6 +1188,11 @@
             paint();
         }
 
+        /**
+         * Asks whether to replace, keep both or skip when the folder already has a file of that name, and remembers a "do this for all" answer for the rest of the batch.
+         *
+         * @return Promise  'version', 'rename' or 'skip'
+         */
         function askConflict(u, name) {
             if (conflictAll) return Promise.resolve(conflictAll);
             var more = queue.filter(function (x) { return x.status === 'queued'; }).length > 0;
@@ -1148,6 +1212,11 @@
             });
         }
 
+        /**
+         * Uploads one file: starts it with upload.php (asking about a name clash first), sends the chunks, finishes it and refreshes the folder.
+         *
+         * On failure the upload is marked as an error and the server's half-finished upload is cancelled.
+         */
         function run(u, onConflict) {
             return api('upload.php?action=start', { folder_id: u.folder, name: u.name, size: u.size, on_conflict: onConflict || 'ask' })
                 .then(function (r) {
@@ -1175,8 +1244,14 @@
                 });
         }
 
+        /**
+         * Sends the file to upload.php in chunks of the size the server asked for, one after another, updating progress as it goes.
+         */
         function sendChunks(u, chunk) {
             return new Promise(function (resolve, reject) {
+                /**
+                 * Sends the chunk starting at offset, then carries on from what the server says it has received.
+                 */
                 function next(offset) {
                     if (u.status === 'cancelled') { reject(new Error('cancelled')); return; }
                     if (offset >= u.size) { resolve(); return; }
@@ -1185,6 +1260,9 @@
                     xhr.open('POST', B.api + 'upload.php?action=chunk&token=' + u.token + '&offset=' + offset);
                     xhr.setRequestHeader('Content-Type', 'application/octet-stream');
                     xhr.upload.onprogress = function (e) { u.sent = offset + (e.loaded || 0); paintOne(u); };
+                    /**
+                     * Checks the server's reply to a chunk and moves on, or fails with the server's error or a description of a non-JSON reply.
+                     */
                     xhr.onload = function () {
                         var j = null;
                         try { j = JSON.parse(xhr.responseText); } catch (e) { /* not JSON */ }
@@ -1193,6 +1271,7 @@
                         paintOne(u);
                         next(j.received);
                     };
+                    /** Fails the upload when the connection drops. */
                     xhr.onerror = function () { reject(new Error(L('up.network', 'The connection dropped.'))); };
                     xhr.send(u.file.slice(offset, end));
                 }
@@ -1200,6 +1279,9 @@
             });
         }
 
+        /**
+         * Cancels a waiting or running upload, aborting the request and telling the server to throw away what it has.
+         */
         function cancel(u) {
             if (u.status === 'queued') { u.status = 'cancelled'; paint(); return; }
             if (u.status !== 'uploading') return;
@@ -1209,10 +1291,12 @@
             paint();
         }
 
+        /** Opens the Transfers window, or brings it forward when it is already open (unless quiet). */
         function openWindow(quiet) {
             if (win && !win.closed) { if (!quiet) { win.restore(); win.focus(); } return; }
             win = WM.open({ kind: 'transfers', title: L('app.transfers', 'Transfers'), icon: FI.app('transfers', 16),
                 width: 460, height: 320, geometry: geoFor('transfers'), single: true,
+                /** Forgets the Transfers window when it closes. */
                 onClose: function () { win = null; } });
             win.body.classList.add('fd-transfers');
             win.body.innerHTML = '<div class="fd-tr-head"><button type="button" class="fd-btn fd-tr-clear">' + esc(L('up.clear', 'Clear')) + '</button></div><div class="fd-tr-list"></div>';
@@ -1224,6 +1308,9 @@
             paint();
         }
 
+        /**
+         * Returns the status line for one upload: waiting, progress, uploaded (with its version), skipped, cancelled or the error.
+         */
         function statusText(u) {
             switch (u.status) {
                 case 'queued': return L('up.waiting', 'Waiting');
@@ -1235,8 +1322,10 @@
             }
             return '';
         }
+        /** Returns how far one upload has got, as a whole percentage. */
         function pct(u) { return u.size ? Math.round(100 * u.sent / u.size) : (u.status === 'done' ? 100 : 0); }
 
+        /** Updates one upload's progress bar and status in the Transfers window, and the taskbar tray. */
         function paintOne(u) {
             var row = listEl && listEl.querySelector('[data-up="' + u.id + '"]');
             if (!row) return;
@@ -1244,6 +1333,9 @@
             row.querySelector('.fd-tr-st').textContent = statusText(u);
             paintTray();
         }
+        /**
+         * Redraws the whole Transfers list (with Cancel and "Get help with this" buttons where they apply) and the taskbar tray.
+         */
         function paint() {
             paintTray();
             if (!listEl || !win || win.closed) return;
@@ -1265,6 +1357,9 @@
                 paintOne(u);
             });
         }
+        /**
+         * Shows the taskbar upload indicator with the count and overall progress of active uploads, or hides it when none are running.
+         */
         function paintTray() {
             var active = queue.filter(function (u) { return u.status === 'queued' || u.status === 'uploading'; });
             if (!active.length) { tray.hidden = true; return; }
@@ -1290,6 +1385,9 @@
         w.body.classList.add('fd-perm');
         w.body.innerHTML = '<div class="fd-pad">' + esc(L('loading', 'Loading...')) + '</div>';
 
+        /**
+         * Fetches the folder's permissions, keeps its own (not inherited) entries as the editable list, and draws the window.
+         */
         function load() {
             return api('permissions.php?folder=' + folderId).then(function (r) {
                 state = r;
@@ -1301,6 +1399,11 @@
             }).catch(function (e) { fail(e); w.close(); });
         }
 
+        /**
+         * Draws the Permissions window - own and inherited entries, inherit tick, watermark, add-a-person search and buttons - read-only without Full control.
+         *
+         * The inherit tick and the watermark save at once; the access list saves only on Save.
+         */
         function render() {
             var names = LEVEL_NAMES();
             var ro = !state.can_edit;
@@ -1327,6 +1430,7 @@
             b.querySelector('.fd-perm-name').textContent = state.folder.name;
             b.querySelector('.fd-perm-path').textContent = state.folder.path;
             var tb = b.querySelector('tbody');
+            /** Returns the escaped name of a permission entry, with a Team badge for a team. */
             var who = function (e) {
                 return (e.principal_type === 'team' ? '<span class="fd-badge">' + esc(L('perm.team', 'Team')) + '</span> ' : '') + esc(e.name);
             };
@@ -1414,6 +1518,9 @@
             });
         }
 
+        /**
+         * Saves the folder's own permission entries, first warning when the person is lowering their own Full control; closes the window when they can no longer see the folder.
+         */
         function save() {
             // Warn before someone removes their own Full control - they would lose
             // the ability to undo it (Take ownership is the only way back).
@@ -1454,6 +1561,7 @@
         api('properties.php?type=' + (type === 'folder' ? 'folder' : 'item') + '&id=' + id).then(function (r) {
             var p = r.properties, names = LEVEL_NAMES();
             w.setTitle(L('props.title_for', '{name} Properties', { name: p.name }));
+            /** Builds the label and value table rows for Properties, leaving out any with no value. */
             var rows = function (pairs) {
                 return pairs.filter(function (x) { return x && x[1] !== null && x[1] !== undefined && x[1] !== ''; })
                     .map(function (x) { return '<tr><th>' + esc(x[0]) + '</th><td>' + esc(x[1]) + '</td></tr>'; }).join('');
@@ -1521,6 +1629,9 @@
         new Explorer(folderId, { select: itemKey });
     }
 
+    /**
+     * Draws a Details-style list of files and folders for Recent and Search: double-click opens, right-click offers open, location, download, desktop shortcut and Properties.
+     */
     function resultsTable(container, rows) {
         if (!rows.length) { container.innerHTML = '<div class="fd-pad fd-muted">' + esc(L('none_found', 'Nothing found.')) + '</div>'; return; }
         container.innerHTML = '<div class="fx-list fx-view-details fd-results"><div class="fx-dhead"><button type="button">' + esc(L('col.name', 'Name')) +
@@ -1533,6 +1644,7 @@
             }).join('') + '</div>';
         container.querySelectorAll('.fx-item').forEach(function (n) {
             var r = rows[+n.dataset.i];
+            /** Opens a result's location: a folder in a new Explorer, a file's folder with the file selected. */
             var go = function () { r.type === 'folder' ? new Explorer(r.id) : openLocation(r.folder_id, 'i:' + r.id); };
             n.addEventListener('dblclick', function () { r.type === 'folder' ? new Explorer(r.id) : viewFile(r.id); });
             n.addEventListener('click', function () {
@@ -1552,6 +1664,7 @@
         });
     }
 
+    /** Opens the Recent window listing files the person recently used, from recent.php. */
     function openRecent() {
         var w = WM.open({ kind: 'recent', single: true, title: L('app.recent', 'Recent'), icon: FI.app('recent', 16), width: 720, height: 420, geometry: geoFor('recent') });
         w.body.classList.add('fd-scroll');
@@ -1560,6 +1673,9 @@
         }).catch(fail);
     }
 
+    /**
+     * Opens the Search window, which searches file and folder names through search.php as the person types (two letters, or a wildcard).
+     */
     function openSearch() {
         var w = WM.open({ kind: 'search', single: true, title: L('app.search', 'Search'), icon: FI.app('search', 16), width: 760, height: 460, geometry: geoFor('search') });
         if (w.loaded) { w.body.querySelector('input').focus(); return; }
@@ -1581,6 +1697,9 @@
     }
 
     var SWATCHES = ['#1e3a5f', '#0b5394', '#134f5c', '#274e13', '#7f6000', '#783f04', '#660000', '#4c1130', '#20124d', '#3c3c3c', '#111827', '#5b6b7f'];
+    /**
+     * Opens Personalise, where the person picks their desktop colour and how the top navigation bar shows; both save to their own preferences.
+     */
     function openPersonalise() {
         var w = WM.open({ kind: 'personalise', single: true, title: L('app.personalise', 'Personalise'), icon: FI.app('personalise', 16), width: 440, height: 400, geometry: geoFor('personalise') });
         if (w.loaded) return;
@@ -1601,6 +1720,7 @@
         var picker = w.body.querySelector('input[type=color]');
         picker.value = /^#[0-9a-f]{6}$/i.test(current) ? current : '#1e3a5f';
         var saveColour = debounce(function (c) { api('prefs.php', { desktop_colour: c }).catch(fail); }, 400);
+        /** Applies a desktop colour straight away, marks its swatch and saves it (debounced). */
         function setColour(c) {
             document.getElementById('fdDesktop').style.setProperty('--fd-bg', c);
             w.body.querySelectorAll('.fd-swatch').forEach(function (s) { s.classList.toggle('fd-on', s.dataset.c === c); });
@@ -1647,8 +1767,12 @@
         APPS.push({ key: 'settings', label: function () { return L('app.settings', 'Settings'); }, run: function () { location.href = B.urls.settings; } });
     }
     var DESKTOP_ICONS = ['documents', 'recent', 'search', 'help'].concat(B.caps.folders || B.caps.storage ? ['settings'] : []);
+    /** Returns the app (Documents, Recent, Search...) with this key. */
     function appByKey(k) { return APPS.filter(function (a) { return a.key === k; })[0]; }
 
+    /**
+     * Draws the desktop's app icons (double-click or Enter opens), then the person's desktop shortcuts after them.
+     */
     function renderDesktopIcons() {
         var box = document.getElementById('fdIcons');
         box.innerHTML = '';
@@ -1679,9 +1803,13 @@
     }
 
     var desktopShortcuts = [];
+    /** Fetches the person's desktop shortcuts from shortcut.php and redraws the desktop icons. */
     function loadDesktopShortcuts() {
         return api('shortcut.php?desktop=1').then(function (r) { desktopShortcuts = r.shortcuts; renderDesktopIcons(); }).catch(function () {});
     }
+    /**
+     * Adds a desktop icon for each desktop shortcut - open, drag into a folder, rename, delete, Properties - greyed out when its target has gone.
+     */
     function renderDesktopShortcuts(box) {
         desktopShortcuts.forEach(function (s) {
             var b = h('button', 'fd-dicon fd-dicon-sc' + (s.ok ? '' : ' fd-dicon-gone'));
@@ -1690,10 +1818,12 @@
             b.title = s.ok ? L('sc.tip', 'Shortcut to {path}', { path: s.path }) : L('sc.gone', 'What this shortcut pointed to has been deleted, or is no longer shared with you.');
             b.innerHTML = shortcutIcon(s.target_type, s.target_name || s.name, 44) + '<span></span>';
             b.querySelector('span:last-child').textContent = s.name;
+            /** Opens what a desktop shortcut points to, or says it has gone. */
             var openIt = function () {
                 if (!s.ok) { WM.notify(L('sc.gone', 'What this shortcut pointed to has been deleted, or is no longer shared with you.'), 'error'); return; }
                 openShortcutTarget(s);
             };
+            /** Asks, then deletes a desktop shortcut (never what it points to) and redraws the desktop. */
             var removeIt = function () {
                 WM.dialog({ title: L('ex.delete', 'Delete'), message: L('sc.del_q', 'Delete the shortcut "{name}"? What it points to is not affected.', { name: s.name }),
                     buttons: [{ label: L('btn.delete', 'Delete'), value: true, primary: true }, { label: L('btn.cancel', 'Cancel'), value: false, cancel: true }] })
@@ -1745,6 +1875,7 @@
             if (a) a.blur();
         }
     });
+    /** Says what is being dragged over the page: 'entries' from Files, 'files' from the computer, or null. */
     function dragKind(ev) {
         var t = ev.dataTransfer && ev.dataTransfer.types ? Array.prototype.slice.call(ev.dataTransfer.types) : [];
         if (t.indexOf('application/x-freeitsm-files') >= 0) return 'entries';
@@ -1795,7 +1926,9 @@
     // Start menu
     var startBtn = document.getElementById('fdStart');
     var startMenu = document.getElementById('fdStartMenu');
+    /** Hides the start menu. */
     function closeStart() { startMenu.hidden = true; startBtn.classList.remove('fd-on'); }
+    /** Builds and shows the start menu: search box, apps, the other FreeITSM modules, recent files and Sign out. */
     function openStart() {
         WM.closeMenus();
         WM.hidePreview();
@@ -1883,11 +2016,15 @@
     var Mobile = (function () {
         var box = document.getElementById('fdMobile');
         var cur = 0, data = null;
+        /** Loads a folder into the phone list, falling back to the top level when it cannot be opened. */
         function load(id) {
             cur = id;
             box.innerHTML = '<div class="fd-pad fd-muted">' + esc(L('loading', 'Loading...')) + '</div>';
             api('list.php?folder=' + id).then(function (r) { data = r; render(); }).catch(function (e) { fail(e); if (id) load(0); });
         }
+        /**
+         * Draws the phone list of the current folder: a bar with back, upload and new folder, then its folders, files and shortcuts.
+         */
         function render() {
             var d = data;
             var html = '<div class="fdm-bar">' +

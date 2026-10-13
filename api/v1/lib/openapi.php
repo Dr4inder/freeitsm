@@ -376,10 +376,15 @@ function apiV1HandlerSuccessCodes(): array {
 // numbers, leading zeros, dates). No dependency on ext-yaml.
 // ---------------------------------------------------------------------------
 
+/** Renders the OpenAPI document as YAML, with a generated-file header line. */
 function apiV1OpenApiToYaml(array $data): string {
     return "# FreeITSM REST API — OpenAPI 3.0.3 (generated)\n" . apiV1YamlNode($data, 0);
 }
 
+/**
+ * Renders one value as YAML at the given indent - lists as "- " items with the first key
+ * of a mapping hung on the dash, mappings as "key: value", empty arrays as [] or {}.
+ */
 function apiV1YamlNode($value, int $indent): string {
     $pad = str_repeat('  ', $indent);
     if (is_array($value)) {
@@ -416,10 +421,16 @@ function apiV1YamlNode($value, int $indent): string {
     return $pad . apiV1YamlScalar($value) . "\n";
 }
 
+/** A mapping key as YAML - plain when it is a simple identifier or path, double-quoted otherwise. */
 function apiV1YamlKey(string $k): string {
     return preg_match('/^[A-Za-z_][A-Za-z0-9_\-\.\/{}$]*$/', $k) ? $k : apiV1YamlQuote($k);
 }
 
+/**
+ * A scalar as YAML - null, true, false and numbers as they are, a string plain only when
+ * it is unambiguous text and double-quoted otherwise, so nothing is read back as another
+ * type.
+ */
 function apiV1YamlScalar($v): string {
     if ($v === null)  return 'null';
     if ($v === true)  return 'true';
@@ -434,6 +445,10 @@ function apiV1YamlScalar($v): string {
     return apiV1YamlQuote($s);
 }
 
+/**
+ * Double-quotes a string for YAML, escaping backslashes, quotes, newlines, tabs and
+ * carriage returns.
+ */
 function apiV1YamlQuote(string $s): string {
     $s = str_replace(['\\', '"', "\n", "\t", "\r"], ['\\\\', '\\"', '\\n', '\\t', '\\r'], $s);
     return '"' . $s . '"';

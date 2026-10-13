@@ -6,7 +6,7 @@ May this ticket's content go to an AI provider?
 function ticketAiAllowed(PDO $conn, int $ticketId): bool
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 187.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 189.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

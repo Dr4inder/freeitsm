@@ -1,10 +1,12 @@
 # apiProjectSelect()
 
+The SELECT for projects, with owner and company names, the first active stage and the columns the exceptions are read from.
+
 ```php
 function apiProjectSelect(PDO $conn): string
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 37.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 41.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,8 +18,8 @@ Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 38 | `apiProjectSelect` | read [project_stages](/code/tables/project_stages.md) |  |
-| 41 | `apiProjectSelect` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 42 | `apiProjectSelect` | read [project_stages](/code/tables/project_stages.md) |  |
+| 45 | `apiProjectSelect` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

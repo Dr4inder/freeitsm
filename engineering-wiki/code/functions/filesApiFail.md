@@ -1,10 +1,12 @@
 # filesApiFail()
 
+Sends a failure JSON reply ({success: false, error}) with an optional HTTP status and extra keys, and ends the request.
+
 ```php
 function filesApiFail(string $message, int $status = 200, array $extra = []): void
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 50.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

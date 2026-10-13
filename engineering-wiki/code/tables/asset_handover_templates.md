@@ -18,15 +18,15 @@ Optional grouping + routing for the morning round (discussion #64). ⚠️ Assig
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):312 | `HandoverTemplates::save` | update | `name`, `blocks`, `is_active`, `updated_datetime` |  |
-| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):318 | `HandoverTemplates::save` | insert | `name`, `blocks`, `is_active`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):333 | `HandoverTemplates::makeDefault` | update | `is_default` |  |
-| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):334 | `HandoverTemplates::makeDefault` | update | `is_default`, `is_active` |  |
-| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):339 | `HandoverTemplates::delete` | delete |  |  |
+| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):318 | `HandoverTemplates::save` | update | `name`, `blocks`, `is_active`, `updated_datetime` |  |
+| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):324 | `HandoverTemplates::save` | insert | `name`, `blocks`, `is_active`, `created_datetime`, `updated_datetime` |  |
+| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):339 | `HandoverTemplates::makeDefault` | update | `is_default` |  |
+| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):340 | `HandoverTemplates::makeDefault` | update | `is_default`, `is_active` |  |
+| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md):346 | `HandoverTemplates::delete` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md) | HandoverTemplates::listAll L235, HandoverTemplates::load L252, HandoverTemplates::effective L285 |  |
+| [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md) | HandoverTemplates::listAll L239, HandoverTemplates::load L257, HandoverTemplates::effective L290 |  |
 

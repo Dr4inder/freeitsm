@@ -1,10 +1,12 @@
 # apiKnowledgeVersionsGet()
 
+GET /knowledge/articles/{id}/versions/{version} - one saved version of an article: title, body HTML, who saved it and when.
+
 ```php
 function apiKnowledgeVersionsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 357.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 371.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowled
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 360 | `apiKnowledgeVersionsGet` | read [knowledge_article_versions](/code/tables/knowledge_article_versions.md), read [analysts](/code/tables/analysts.md) |  |
+| 374 | `apiKnowledgeVersionsGet` | read [knowledge_article_versions](/code/tables/knowledge_article_versions.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

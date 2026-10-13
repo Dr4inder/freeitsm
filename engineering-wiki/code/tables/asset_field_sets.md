@@ -24,6 +24,6 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::setsForAsset L118, AssetFieldsService::setsForAsset L132, AssetFieldsService::fieldsForSets L177, AssetFieldsService::loadSet L826 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1113 |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::setsForAsset L118, AssetFieldsService::setsForAsset L132, AssetFieldsService::fieldsForSets L177, AssetFieldsService::loadSet L838 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1117 |  |
 

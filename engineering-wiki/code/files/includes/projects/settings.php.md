@@ -1,6 +1,6 @@
 # includes/projects/settings.php
 
-> PHP - 436 lines
+> PHP - 446 lines
 
 Projects - settings: the keys, their defaults, the one reader, and the permission rules they drive (3.2.0).
 
@@ -20,26 +20,26 @@ a project page is somebody's plan and the delete button sat on it.
 |---|--:|---|
 | [projectSettingDefinitions()](/code/functions/projectSettingDefinitions.md) | 23 | key => [default, validator, tab]. |
 | [projectSettings()](/code/functions/projectSettings.md) | 151 | Every setting with its default applied. Cached; `$fresh` after a save. |
-| [projectSetting()](/code/functions/projectSetting.md) | 171 |  |
-| [projectSettingWrite()](/code/functions/projectSettingWrite.md) | 176 |  |
-| [projectSettingValidate()](/code/functions/projectSettingValidate.md) | 186 | Validate one incoming value; throws InvalidArgumentException with a message fit to show. |
-| [projectScaleDefaults()](/code/functions/projectScaleDefaults.md) | 342 | The five default words for a scale ('probability' or 'impact') in the viewer's language. They live in lang/<locale>/projects.php, not in the setting, so an install that never changed them reads them in German for a German analyst. |
-| [projectScaleParse()](/code/functions/projectScaleParse.md) | 358 | Read a stored scale. A JSON array is the format; a comma-separated string is what the first 3.2.0 builds wrote, read the same way so nothing needs migrating (it is rewritten as JSON the next time the tab is saved). |
-| [projectScaleSize()](/code/functions/projectScaleSize.md) | 370 | How many steps a scale has: five for the RAID scales, four for priority (3.3.0). |
-| [projectScaleLabels()](/code/functions/projectScaleLabels.md) | 376 | The words to show for a scale: the saved ones, or the translated defaults. |
-| [projectIsManager()](/code/functions/projectIsManager.md) | 387 | Holds Manage Projects (admins always do - analystHasCapability short-circuits is_admin). |
-| [projectCanCreate()](/code/functions/projectCanCreate.md) | 398 |  |
-| [projectIsTeam()](/code/functions/projectIsTeam.md) | 408 | Is this analyst on the project's team: its manager, its creator or a member? (Members arrive with project_members; until that table exists the team is the manager and the creator.) |
-| [projectCanChange()](/code/functions/projectCanChange.md) | 423 |  |
-| [projectCanDelete()](/code/functions/projectCanDelete.md) | 430 | Deleting is never "anyone": the project manager, its creator, or Manage Projects. |
+| [projectSetting()](/code/functions/projectSetting.md) | 172 | One Projects setting as a string; '' when it is not set. |
+| [projectSettingWrite()](/code/functions/projectSettingWrite.md) | 178 | Saves one Projects setting to system_settings (insert or update). |
+| [projectSettingValidate()](/code/functions/projectSettingValidate.md) | 188 | Validate one incoming value; throws InvalidArgumentException with a message fit to show. |
+| [projectScaleDefaults()](/code/functions/projectScaleDefaults.md) | 344 | The five default words for a scale ('probability' or 'impact') in the viewer's language. They live in lang/<locale>/projects.php, not in the setting, so an install that never changed them reads them in German for a German analyst. |
+| [projectScaleParse()](/code/functions/projectScaleParse.md) | 360 | Read a stored scale. A JSON array is the format; a comma-separated string is what the first 3.2.0 builds wrote, read the same way so nothing needs migrating (it is rewritten as JSON the next time the tab is saved). |
+| [projectScaleSize()](/code/functions/projectScaleSize.md) | 372 | How many steps a scale has: five for the RAID scales, four for priority (3.3.0). |
+| [projectScaleLabels()](/code/functions/projectScaleLabels.md) | 378 | The words to show for a scale: the saved ones, or the translated defaults. |
+| [projectIsManager()](/code/functions/projectIsManager.md) | 389 | Holds Manage Projects (admins always do - analystHasCapability short-circuits is_admin). |
+| [projectCanCreate()](/code/functions/projectCanCreate.md) | 404 | True when the analyst may create projects - anyone, if the create policy says so, else project managers only. |
+| [projectIsTeam()](/code/functions/projectIsTeam.md) | 414 | Is this analyst on the project's team: its manager, its creator or a member? (Members arrive with project_members; until that table exists the team is the manager and the creator.) |
+| [projectCanChange()](/code/functions/projectCanChange.md) | 433 | True when the analyst may change the project - anyone, if the change policy says so, else its team and project managers. |
+| [projectCanDelete()](/code/functions/projectCanDelete.md) | 440 | Deleting is never "anyone": the project manager, its creator, or Manage Projects. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 160 | `projectSettings` | read [system_settings](/code/tables/system_settings.md) |  |
-| 179 | `projectSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
-| 413 | `projectIsTeam` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 181 | `projectSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 419 | `projectIsTeam` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## How it hangs together
 

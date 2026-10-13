@@ -15,6 +15,8 @@
  *
  * Text from a pack (names, titles, data) is put on the page with textContent;
  * the only HTML this file writes is its own fixed markup.
+ *
+ * @wiki Report-Packs-Internals-1-The-Designer
  */
 (function () {
     'use strict';
@@ -22,6 +24,10 @@
     const API = window.RP_API;
     const E = window.RPEngine;
     const PX_PER_MM = 96 / 25.4;
+    /**
+     * Translates a key under reporting.packs, or returns the key itself when the translation helper is
+     * not loaded.
+     */
     const T = (k, p) => (window.t ? window.t('reporting.packs.' + k, p) : k);
     const app = document.getElementById('rpApp');
     const packId = parseInt(app.dataset.pack, 10) || 0;
@@ -37,6 +43,7 @@
         drag: null,
     };
     const rt = window.RPRuntime.create(API, window.RP_LOGO);
+    /** True when the signed-in analyst owns the pack or has edit rights on it. */
     const canEdit = () => S.role === 'owner' || S.role === 'edit';
 
     // ── Small helpers ────────────────────────────────────────────────────
@@ -54,11 +61,22 @@
         kids.flat().forEach(c => { if (c !== null && c !== undefined && c !== false) e.append(c.nodeType ? c : document.createTextNode(String(c))); });
         return e;
     }
+    /** Deep-copies a plain object through JSON. */
     const clone = (o) => JSON.parse(JSON.stringify(o));
+    /** Makes a short random block id starting with "b". */
     const uid = () => 'b' + Math.random().toString(36).slice(2, 9);
+    /** Finds a block in the current design by its id. */
     const byId = (id) => S.design.blocks.find(b => b.id === id);
+    /** Returns a block's position in the design's block list, or -1. */
     const idx = (id) => S.design.blocks.findIndex(b => b.id === id);
 
+    /**
+     * Calls a Report Packs API endpoint - a GET with no body, otherwise a JSON POST - and returns the
+     * parsed reply.
+     *
+     * Throws an Error carrying the server's message, the HTTP status and the reply data when the reply
+     * is not JSON or success is false.
+     */
     async function api(path, body, method) {
         const opts = body === undefined && !method ? {} : { method: method || 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) };
         const res = await fetch(API + path, opts);
@@ -121,6 +139,7 @@
         highlight: 'M9 11l-6 6v3h9l3-3M22 12l-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4',
         warn: 'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01',
     };
+    /** Builds an inline SVG icon from a path in ICON, 18px unless a size is given. */
     function icon(name, size) {
         const ns = 'http://www.w3.org/2000/svg';
         const s = document.createElementNS(ns, 'svg');
@@ -162,6 +181,10 @@
         scheduleRender();
     }
 
+    /**
+     * Steps back one change: closes any open text editor, pushes the current design on the redo stack
+     * and restores the previous snapshot and selection.
+     */
     function undo() {
         if (RPEditor.isActive()) { RPEditor.close(true); }
         const step = S.undo.pop();
@@ -171,6 +194,7 @@
         S.sel = byId(step.sel) ? step.sel : null;
         setDirty(true); loadData(); scheduleRender();
     }
+    /** Re-applies the last undone change and pushes the current design back on the undo stack. */
     function redo() {
         const step = S.redo.pop();
         if (!step) return;
@@ -180,6 +204,10 @@
         setDirty(true); loadData(); scheduleRender();
     }
 
+    /**
+     * Records whether the pack has unsaved changes and updates the Saving / Unsaved / Saved label in
+     * the title bar.
+     */
     function setDirty(d) {
         S.dirty = d;
         const st = document.getElementById('rpSaveState');
@@ -190,6 +218,7 @@
     }
     window.addEventListener('beforeunload', (e) => { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
 
+    /** Fetches the data for every data block again and redraws when it arrives. */
     function loadData() {
         rt.loadData().then(scheduleRender);
     }
@@ -217,6 +246,12 @@
 
     // ── Layout of the app ────────────────────────────────────────────────
     let els = {};
+    /**
+     * Builds the whole designer screen - title bar, ribbon, toolbox, canvas with ruler, properties
+     * pane and status bar - then binds the canvas and keyboard.
+     *
+     * Read-only viewers get no toolbox, a view-only banner and the Data tab only.
+     */
     function build() {
         els.name = h('input', {
             class: 'rp-title-input', value: S.name, maxlength: 200, 'aria-label': T('list.name'),
@@ -256,6 +291,7 @@
         bindKeys();
     }
 
+    /** A small icon-only button with the title as its tooltip and accessible name. */
     function iconBtn(name, title, fn, id) {
         return h('button', { class: 'rp-icon-btn', title, 'aria-label': title, onclick: fn, id }, icon(name));
     }
@@ -272,6 +308,10 @@
         return canEdit() ? tabs : tabs.filter(t => t.id === 'data');
     }
 
+    /**
+     * Redraws the ribbon: the tab strip and the groups of the active tab, then refreshes pressed and
+     * disabled states.
+     */
     function buildRibbon() {
         const tabs = ribbonTabs();
         const tabBar = h('div', { class: 'rp-tabs', role: 'tablist' }, tabs.map(t =>
@@ -300,6 +340,12 @@
         return b;
     }
 
+    /**
+     * A ribbon drop-down from {value, label} options that calls onChange with the chosen value.
+     *
+     * With opts.keepFocus it sets S.keepEdit on mousedown so the text being edited keeps its
+     * selection.
+     */
     function sel(options, value, onChange, opts) {
         opts = opts || {};
         const s = h('select', { class: 'rp-rsel' + (opts.cls ? ' ' + opts.cls : ''), 'aria-label': opts.label || '', title: opts.label || '', disabled: opts.disabled ? true : null, onchange: () => onChange(s.value) });
@@ -308,6 +354,10 @@
         return s;
     }
 
+    /**
+     * A colour picker with a swatch that calls onChange when the colour is chosen (and while dragging
+     * when opts.live is set).
+     */
     function colourPick(value, onChange, label, opts) {
         opts = opts || {};
         const wrap = h('label', { class: 'rp-colour', title: label });
@@ -320,9 +370,15 @@
         return wrap;
     }
 
+    /**
+     * Returns a click handler that runs an editor command on the text being edited and refreshes the
+     * ribbon.
+     */
     const textCmd = (name, value) => () => { RPEditor.cmd(name, value); refreshRibbonState(); };
 
+    /** The Home tab: clipboard, font, paragraph and paragraph style groups. */
     function homeGroups() {
+        /** True while something is being edited in place. */
         const ed = () => !!S.editing;
         const sizes = [7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48].map(v => ({ value: v, label: String(v) }));
         return [
@@ -369,6 +425,10 @@
         ];
     }
 
+    /**
+     * The Insert tab: cover and contents pages, page break, text blocks, header and footer, inline
+     * fields and the logo, and a button that jumps to the toolbox search.
+     */
     function insertGroups() {
         const d = S.design;
         const fieldMenu = sel([{ value: '', label: T('designer.insert_field') }].concat(RPEditor.FIELD_KEYS.map(f => ({ value: f, label: T('field.' + f) }))), '',
@@ -401,12 +461,17 @@
     }
 
     const MARGINS = { normal: { t: 18, r: 16, b: 18, l: 16 }, narrow: { t: 12, r: 12, b: 12, l: 12 }, wide: { t: 25, r: 25, b: 25, l: 25 } };
+    /** Names the margin preset (normal, narrow, wide) that matches the page margins exactly, or "custom". */
     function marginName(m) {
         for (const k in MARGINS) if (MARGINS[k].t === m.t && MARGINS[k].r === m.r && MARGINS[k].b === m.b && MARGINS[k].l === m.l) return k;
         return 'custom';
     }
     const WIDTHS = [[12, 'designer.w_full'], [9, 'designer.w_three_quarters'], [8, 'designer.w_two_thirds'], [6, 'designer.w_half'], [4, 'designer.w_third'], [3, 'designer.w_quarter']];
 
+    /**
+     * The Layout tab: page size, margins and orientation, and the width, move and new-row controls for
+     * the selected block.
+     */
     function layoutGroups() {
         const d = S.design, b = S.sel && byId(S.sel);
         const sizable = b && (b.type === 'data' || b.type === 'text' || b.type === 'spacer');
@@ -434,14 +499,23 @@
         ];
     }
 
+    /** A little bar showing a width as a share of the 12-column grid. */
     function widthGlyph(span) {
         const g = h('span', { class: 'rp-width-glyph', 'aria-hidden': 'true' });
         g.append(h('i', { style: { width: (span / 12 * 100) + '%' } }));
         return g;
     }
 
+    /**
+     * The Design tab: theme font and body size, heading and table colours, chart palette and table
+     * stripes.
+     */
     function designGroups() {
         const th = S.design.theme;
+        /**
+         * Returns a setter for one theme property; quick repeated changes to the same property merge
+         * into one undo step.
+         */
         const set = (k) => (v) => commit(x => { x.theme[k] = v; }, { merge: 'theme-' + k });
         return [
             { label: T('designer.grp.theme'), items: [
@@ -470,9 +544,19 @@
         ];
     }
 
+    /**
+     * The Data tab: reporting period (with custom dates), company when there is more than one, and
+     * Refresh.
+     *
+     * Viewers can change these too - their changes redraw the pack but do not mark it unsaved.
+     */
     function dataGroups() {
         const cr = S.design.criteria;
         const viewerOpts = canEdit() ? {} : { viewer: true };
+        /**
+         * Applies a change to the criteria and refetches the data, as a viewer-only change when the
+         * analyst cannot edit.
+         */
         const setCr = (fn) => commit(x => fn(x.criteria), Object.assign({ data: true }, viewerOpts));
         const items = [
             h('div', { class: 'rp-stack' },
@@ -496,6 +580,10 @@
         return groups;
     }
 
+    /**
+     * Reloads the header context (dates, company) after a criteria change, then redraws the page and
+     * the ribbon.
+     */
     function afterCriteria() {
         rt.loadContext().then(() => { scheduleRender(); buildRibbon(); });
     }
@@ -521,10 +609,15 @@
 
     // ── The toolbox ──────────────────────────────────────────────────────
     const AREAS = [['layout', 'designer.area.layout'], ['tickets', 'designer.area.tickets'], ['status', 'designer.area.status'], ['software', 'designer.area.software'], ['assets', 'designer.area.assets'], ['projects', 'designer.area.projects']];
+    /**
+     * Picks the toolbox icon for a tool from its block type, or for a data block from its handler's
+     * kind (chart, table, KPI, uptime).
+     */
     const TOOL_ICON = (t) => t.type === 'heading' ? 'heading' : t.type === 'text' ? 'text' : t.type === 'pagebreak' ? 'pagebreak'
         : t.type === 'spacer' ? 'space' : t.type === 'divider' ? 'line'
         : ({ chart: 'chart', table: 'table', kpi: 'kpi', uptime: 'uptime' }[(S.catalogue.handlers[t.handler] || {}).kind] || 'chart');
 
+    /** Builds the toolbox pane: the search box (Down arrow moves into the list), a hint and the tool list. */
     function buildToolbox() {
         const search = h('input', {
             type: 'search', id: 'rpToolSearch', class: 'rp-tool-search', placeholder: T('designer.search_blocks'), 'aria-label': T('designer.search_blocks'),
@@ -540,8 +633,15 @@
         renderTools();
     }
 
+    /**
+     * Redraws the tool list grouped by area, filtered by the search text.
+     *
+     * Available tools can be dragged, double-clicked or entered to insert, walked with the arrow keys,
+     * and show a live preview on hover or focus; unavailable ones say which module they need.
+     */
     function renderTools() {
         const q = S.query;
+        /** True when the search text appears in the tool's title, description, keywords or area name. */
         const match = (t) => !q || (t.title + ' ' + t.desc + ' ' + t.keywords + ' ' + T('designer.area.' + t.area)).toLowerCase().includes(q);
         const groups = AREAS.map(([area, key]) => {
             const tools = S.catalogue.tools.filter(t => t.area === area && match(t));
@@ -605,14 +705,22 @@
 
     // Live preview popover
     let previewTimer = null, previewEl = null;
+    /** Shows a tool's live preview after a short pause, so moving across the list does not flash previews. */
     function schedulePreview(t, item) {
         clearTimeout(previewTimer);
         previewTimer = setTimeout(() => showPreview(t, item), 280);
     }
+    /** Cancels a pending preview and removes the one showing. */
     function hidePreview() {
         clearTimeout(previewTimer);
         if (previewEl) { previewEl.remove(); previewEl = null; }
     }
+    /**
+     * Shows a popover beside a toolbox item with the block laid out alone on a page as wide as this
+     * pack's, using real data for data blocks.
+     *
+     * Gives up if a drag is under way or another preview replaced it while the data was loading.
+     */
     async function showPreview(t, item) {
         if (S.drag) return;
         hidePreview();
@@ -645,14 +753,23 @@
 
     // ── The canvas: pages, rulers, frames ────────────────────────────────
     let renderQueued = false;
+    /** Queues one render for the next animation frame, however many times it is called before then. */
     function scheduleRender() {
         if (renderQueued) return;
         renderQueued = true;
         requestAnimationFrame(() => { renderQueued = false; render(); });
     }
 
+    /** Screen pixels per millimetre at the current zoom. */
     function pxmm() { return PX_PER_MM * S.zoom; }
 
+    /**
+     * Lays the pack out and redraws every page as SVG with its overlay of margin guide,
+     * header/footer/cover hit areas and block frames, plus the rulers, status bar and properties pane.
+     *
+     * Skips the redraw while text is being edited so the page never changes under the cursor, and
+     * keeps the canvas scroll position.
+     */
     function render() {
         if (!S.design) return;
         if (S.editing) { refreshRibbonState(); return; }   // never redraw under the cursor
@@ -701,6 +818,7 @@
         refreshRibbonState();
     }
 
+    /** An invisible hit area over the header, footer or cover that opens it for editing on double-click. */
     function regionHit(kind, x, y, w, hgt) {
         return h('div', {
             class: 'rp-region rp-region-' + kind, style: { left: x + 'px', top: y + 'px', width: w + 'px', height: hgt + 'px' },
@@ -709,6 +827,10 @@
         }, h('span', { class: 'rp-region-label', text: T('designer.' + kind) }));
     }
 
+    /**
+     * The HTML frame over a laid-out block, used for selection; when selected and editable it gets a
+     * label tag and width or height handles.
+     */
     function frame(it, k) {
         const selected = S.sel === it.id;
         const f = h('div', {
@@ -733,6 +855,10 @@
         return f;
     }
 
+    /**
+     * The name shown for a block: a data block's title (or its tool's), a heading's text, or the tool
+     * name for the type.
+     */
     function frameLabel(b) {
         if (!b) return '';
         if (b.type === 'data') return b.title || (S.catalogue.tools.find(t => t.handler === b.handler) || {}).title || b.handler;
@@ -769,6 +895,7 @@
         els.ruler.scrollLeft = els.canvas.scrollLeft;
     }
 
+    /** Draws the vertical ruler beside a page in millimetres, with the top and bottom margins shaded. */
     function vRuler(G, k) {
         const hgt = G.ph * k, dpr = window.devicePixelRatio || 1;
         const can = h('canvas', { class: 'rp-ruler-v', width: Math.round(18 * dpr), height: Math.round(hgt * dpr), style: { height: hgt + 'px' }, 'aria-hidden': 'true' });
@@ -785,6 +912,10 @@
         return can;
     }
 
+    /**
+     * Redraws the status bar: page and block counts, the period, a warning when something cannot be
+     * exported, and the zoom controls.
+     */
     function renderStatus() {
         const L = S.layout;
         const unsupported = rt.checkUnsupported();
@@ -804,11 +935,13 @@
         ].filter(Boolean));
     }
 
+    /** Sets the zoom (40% to 200%, in steps of 10%), remembers it in the browser and redraws. */
     function setZoom(z) {
         S.zoom = Math.max(0.4, Math.min(2, Math.round(z * 10) / 10));
         try { localStorage.setItem('rp.zoom', String(S.zoom)); } catch (e) { /* private mode */ }
         scheduleRender();
     }
+    /** Zooms so the page fits the width of the canvas. */
     function fitWidth() {
         const G = E.pageGeometry(S.design);
         setZoom((els.canvas.clientWidth - 80) / (G.pw * PX_PER_MM));
@@ -825,12 +958,21 @@
         }));
     }
 
+    /**
+     * Redraws the properties pane - the pack's settings (description, pages, header, footer, margins)
+     * when nothing is selected, otherwise the selected block's settings.
+     *
+     * Every change goes through commit(); read-only viewers see the same fields disabled.
+     */
     function renderProps() {
         const b = S.sel && byId(S.sel);
         const ro = !canEdit();
         const body = [];
+        /** A labelled control with an optional hint underneath. */
         const field = (label, control, hint) => h('div', { class: 'rp-prop' }, h('label', { class: 'rp-prop-label' }, h('span', { text: label }), control), hint ? h('p', { class: 'rp-prop-hint', text: hint }) : null);
+        /** A labelled checkbox that calls onChange with its new state. */
         const check = (label, value, onChange) => h('label', { class: 'rp-check' }, h('input', { type: 'checkbox', checked: value ? true : null, disabled: ro ? true : null, onchange: (e) => onChange(e.target.checked) }), h('span', { text: label }));
+        /** Commits a change to the selected block. */
         const upd = (fn, opts) => commit(d => { const bb = d.blocks.find(x => x.id === S.sel); if (bb) fn(bb); }, opts);
 
         if (!b) {
@@ -901,14 +1043,20 @@
         els.props.replaceChildren(h('div', { class: 'rp-pane-head' }, h('h2', { text: T('designer.properties') })), h('div', { class: 'rp-props-body' }, body));
     }
 
+    /** A drop-down for the properties pane that calls onChange with the chosen value. */
     function selectCtl(options, value, onChange, ro) {
         const s = h('select', { class: 'rp-input', disabled: ro ? true : null, onchange: () => onChange(s.value) });
         options.forEach(o => { const op = h('option', { value: o.value, text: o.label }); if (String(o.value) === String(value)) op.selected = true; s.append(op); });
         return s;
     }
 
+    /**
+     * The control for one of a data block's options, shaped by the handler's option definition
+     * (select, number, tick box or multi-choice list).
+     */
     function optionControl(b, k, def, ro, upd) {
         const v = (b.opts || {})[k] !== undefined ? b.opts[k] : def.default;
+        /** Saves the option's new value on the block and refetches its data. */
         const set = (val) => upd(bb => { bb.opts = Object.assign({}, bb.opts, { [k]: val }); }, { data: true });
         let ctl;
         if (def.type === 'select') ctl = selectCtl(def.values, v, set, ro);
@@ -931,6 +1079,7 @@
         span = Math.max(1, Math.min(12, Math.round(span)));
         commit(d => { const b = d.blocks.find(x => x.id === id); if (b && (b.type === 'data' || b.type === 'text' || b.type === 'spacer')) b.span = span; });
     }
+    /** Moves a block one place up (-1) or down (1) in the design and keeps it selected. */
     function moveBlock(id, dir) {
         if (!id) return;
         commit(d => {
@@ -941,6 +1090,10 @@
         });
         select(id, true);
     }
+    /**
+     * Deletes a block, selects the one now in its place (or the last) and announces it for screen
+     * readers.
+     */
     function deleteBlock(id) {
         if (!id) return;
         const i = idx(id);
@@ -953,10 +1106,15 @@
 
     // Clipboard: inside the designer, and across packs through localStorage when allowed.
     let memClip = null;
+    /**
+     * The copied block - from memory, or from localStorage so it can be pasted into another pack - or
+     * null.
+     */
     function clip() {
         if (memClip) return memClip;
         try { const c = JSON.parse(localStorage.getItem('rp.clip') || 'null'); return c && c.type ? c : null; } catch (e) { return null; }
     }
+    /** Copies the selected block to the designer's clipboard and to localStorage when allowed. */
     function copyBlock() {
         const b = S.sel && byId(S.sel);
         if (!b) return;
@@ -965,7 +1123,9 @@
         refreshRibbonState();
         announce(T('designer.copied'));
     }
+    /** Copies the selected block, then deletes it. */
     function cutBlock() { if (!S.sel) return; copyBlock(); deleteBlock(S.sel); }
+    /** Pastes the copied block, with a new id, after the selection or at the end. */
     function pasteBlock() {
         const c = clip();
         if (!c || !canEdit()) return;
@@ -973,6 +1133,7 @@
         commit(d => { const i = S.sel ? idx(S.sel) + 1 : d.blocks.length; d.blocks.splice(i, 0, b); }, { data: b.type === 'data' });
         select(b.id, true);
     }
+    /** Inserts a copy of the selected block straight after it and selects the copy. */
     function duplicateBlock() {
         const b = S.sel && byId(S.sel);
         if (!b) return;
@@ -982,6 +1143,7 @@
     }
 
     let liveRegion = null;
+    /** Says a message to screen readers through a polite live region. */
     function announce(msg) {
         if (!liveRegion) { liveRegion = h('div', { class: 'rp-sr', 'aria-live': 'polite' }); document.body.append(liveRegion); }
         liveRegion.textContent = msg;
@@ -1040,6 +1202,7 @@
         const mx = (cx - pr.left) / k, my = (cy - pr.top) / k;
         const items = pg.items.filter(it => it.id !== movingId && it.type !== 'pagebreak');
         if (pg.type !== 'body') return { index: pi === 0 ? 0 : 0, side: null, page, y: S.layout.geometry.m.t + S.layout.headerH, x: S.layout.geometry.m.l, w: S.layout.geometry.cw };
+        /** True for the block types that can share a row (data, text, spacer). */
         const sideable = (it) => it.block.type === 'data' || it.block.type === 'text' || it.block.type === 'spacer';
         for (const it of items) {
             if (mx >= it.x && mx <= it.x + it.w && my >= it.y && my <= it.y + it.h) {
@@ -1069,11 +1232,22 @@
         return { index: later ? idx(later.id) : S.design.blocks.length, side: null, page, y: S.layout.geometry.m.t + S.layout.headerH + 2, x: S.layout.geometry.m.l, w: S.layout.geometry.cw };
     }
 
+    /**
+     * Starts dragging a toolbox item or an existing block; nothing happens until the pointer has moved
+     * 5px.
+     *
+     * While dragging it shows a ghost and the drop guide and scrolls the canvas near its edges; on
+     * release it drops the block where the guide was.
+     */
     function startDrag(e, what) {
         if (e.button !== 0 || !canEdit()) return;
         const sx = e.clientX, sy = e.clientY;
         let started = false, ghost = null, guide = null, target = null;
         const label = what.tool ? what.tool.title : frameLabel(byId(what.move));
+        /**
+         * Pointer move: starts the drag once past the threshold, then follows the pointer and updates
+         * the drop target.
+         */
         const move = (ev) => {
             if (!started) {
                 if (Math.hypot(ev.clientX - sx, ev.clientY - sy) < 5) return;
@@ -1092,6 +1266,7 @@
             target = dropTarget(ev.clientX, ev.clientY, what.move);
             showGuide(guide, target);
         };
+        /** Pointer up: tidies the drag away and applies the drop, if there is a target. */
         const up = () => {
             window.removeEventListener('pointermove', move);
             window.removeEventListener('pointerup', up);
@@ -1107,6 +1282,10 @@
         window.addEventListener('pointerup', up);
     }
 
+    /**
+     * Places the drop guide on the target page - a vertical bar for a side drop, a horizontal line
+     * otherwise - or removes it when there is no target.
+     */
     function showGuide(guide, t) {
         if (!t || !t.page || t.y === null) { guide.remove(); return; }
         const k = pxmm();
@@ -1118,12 +1297,14 @@
     }
 
     let scrollTimer = null, scrollDir = 0;
+    /** Scrolls the canvas while the pointer is within 50px of its top or bottom edge. */
     function autoScroll(cy) {
         const r = els.canvas.getBoundingClientRect();
         scrollDir = cy < r.top + 50 ? -1 : cy > r.bottom - 50 ? 1 : 0;
         if (scrollDir && !scrollTimer) scrollTimer = setInterval(() => { els.canvas.scrollTop += scrollDir * 18; }, 16);
         if (!scrollDir) stopAutoScroll();
     }
+    /** Stops the drag auto-scroll. */
     function stopAutoScroll() { clearInterval(scrollTimer); scrollTimer = null; }
 
     /** Put the dragged block where the guide was. Side drops share the row. */
@@ -1180,6 +1361,12 @@
         return found || [];
     }
 
+    /**
+     * Resizes a block from a handle: east or west changes its width in grid columns, south changes a
+     * chart's or spacer's height in millimetres.
+     *
+     * Shows the column grid and a size tip while dragging and commits once on release.
+     */
     function startResize(e, id, edge) {
         e.preventDefault(); e.stopPropagation();
         const b = byId(id);
@@ -1196,6 +1383,7 @@
         const tip = h('div', { class: 'rp-size-tip' });
         document.body.append(tip);
         let span = startSpan, hgt = startH;
+        /** Pointer move: works out the new height or column span and resizes the frame to preview it. */
         const move = (ev) => {
             if (edge === 's') {
                 hgt = Math.round(Math.max(b.type === 'spacer' ? 2 : 30, Math.min(b.type === 'spacer' ? 120 : 250, startH + (ev.clientY - startY) / k)));
@@ -1211,6 +1399,7 @@
             }
             tip.style.left = (ev.clientX + 14) + 'px'; tip.style.top = (ev.clientY + 14) + 'px';
         };
+        /** Pointer up: removes the guides and commits the new height or span. */
         const up = () => {
             window.removeEventListener('pointermove', move);
             window.removeEventListener('pointerup', up);
@@ -1236,6 +1425,11 @@
             (doc) => commit(d => { const x = d.blocks.find(q => q.id === id); if (x) x.doc = doc; }), T('tool.text.title'));
     }
 
+    /**
+     * Edits a heading in place with a text box over its frame, sized to match the heading.
+     *
+     * Enter or leaving the box keeps the text; Escape discards it.
+     */
     function editHeading(b) {
         const fr = els.canvas.querySelector('.rp-frame[data-id="' + b.id + '"]');
         if (!fr) return;
@@ -1246,6 +1440,7 @@
         fr.append(input);
         input.focus(); input.select();
         S.editing = { kind: 'heading', id: b.id };
+        /** Finishes editing the heading, saving the text when keep is true. */
         const done = (keep) => {
             if (!S.editing) return;
             S.editing = null;
@@ -1258,6 +1453,10 @@
         input.addEventListener('blur', () => done(true));
     }
 
+    /**
+     * Opens the header, footer or cover for editing on the first page that has it, turning it on first
+     * if it is off.
+     */
     function editRegion(kind) {
         if (!canEdit()) return;
         // Turning on a header/footer/cover that is off is part of editing it.
@@ -1278,6 +1477,12 @@
         }, 40);
     }
 
+    /**
+     * Opens the rich-text editor over a part of a page, at the page's drawn scale, and switches the
+     * ribbon to Home if another tab is showing.
+     *
+     * When editing ends the new content is passed to onSave and the page redraws.
+     */
     function openEditor(what, pageEl, x, y, w, hgt, doc, onSave, label) {
         // The scale of the page AS DRAWN, not the zoom setting: if a zoom change
         // has not been painted yet, the editor must still sit exactly on the text.
@@ -1302,6 +1507,7 @@
         refreshRibbonState();
         // Clicking anywhere outside the editor (but not on the ribbon) finishes editing.
         setTimeout(() => document.addEventListener('pointerdown', outside, true), 0);
+        /** Closes the editor (keeping the text) on a click outside it, the ribbon and the title bar. */
         function outside(e) {
             const ed = RPEditor.element();
             if (!ed) { document.removeEventListener('pointerdown', outside, true); return; }
@@ -1313,9 +1519,17 @@
 
     // ── Context menu ─────────────────────────────────────────────────────
     let menuEl = null;
+    /**
+     * Shows the right-click menu for a block - edit, clipboard, move, width, new row and delete - kept
+     * on screen and focused on its first item.
+     */
     function contextMenu(x, y, id) {
         closeMenu();
         const b = byId(id);
+        /**
+         * A context menu item that closes the menu and runs its action, with an optional shortcut
+         * shown beside it.
+         */
         const item = (label, fn, opts) => h('button', { class: 'rp-menu-item', role: 'menuitem', disabled: opts && opts.disabled ? true : null, onclick: () => { closeMenu(); fn(); } },
             h('span', { text: label }), opts && opts.key ? h('kbd', { text: opts.key }) : null);
         const sizable = b.type === 'data' || b.type === 'text' || b.type === 'spacer';
@@ -1340,7 +1554,9 @@
         menuEl.querySelector('.rp-menu-item:not([disabled])')?.focus();
         setTimeout(() => document.addEventListener('pointerdown', menuOutside, true), 0);
     }
+    /** Closes the context menu on a click outside it. */
     function menuOutside(e) { if (menuEl && !menuEl.contains(e.target)) closeMenu(); }
+    /** Removes the context menu and stops listening for clicks outside it. */
     function closeMenu() { if (menuEl) { menuEl.remove(); menuEl = null; } document.removeEventListener('pointerdown', menuOutside, true); }
 
     // ── Keyboard ─────────────────────────────────────────────────────────
@@ -1404,6 +1620,10 @@
         }
     }
 
+    /**
+     * Asks what to do when someone else saved the pack first: reload their version, or save this one
+     * over it.
+     */
     function conflictDialog(msg) {
         const m = h('div', { class: 'modal active', role: 'alertdialog', 'aria-modal': 'true' },
             h('div', { class: 'modal-content rp-modal-sm' },
@@ -1416,6 +1636,7 @@
         m.querySelector('.btn-primary').focus();
     }
 
+    /** Makes the analyst's own copy of the pack and opens it in the designer. */
     async function copyPack() {
         try {
             const r = await api('create.php', { name: T('list.copy_name', { name: S.name }), description: S.desc, copy_of: packId });
@@ -1423,6 +1644,10 @@
         } catch (e) { toast(e.message, true); }
     }
 
+    /**
+     * Exports the pack to PDF behind a busy overlay, closing any open editor first and warning when
+     * some content could not be exported.
+     */
     async function exportPdf() {
         if (RPEditor.isActive()) RPEditor.close(true);
         const over = h('div', { class: 'rp-busy', role: 'status' }, h('div', { class: 'rp-busy-box' }, h('div', { class: 'rp-spinner' }), h('span', { text: T('designer.exporting') })));
@@ -1437,6 +1662,10 @@
     }
 
     let toastTimer = null;
+    /**
+     * Shows a message at the bottom of the screen for five seconds, styled as a warning when warn is
+     * true.
+     */
     function toast(msg, warn) {
         let t = document.querySelector('.rp-toast');
         if (!t) { t = h('div', { class: 'rp-toast', role: 'status' }); document.body.append(t); }

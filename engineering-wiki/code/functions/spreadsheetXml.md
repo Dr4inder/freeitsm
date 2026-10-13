@@ -1,10 +1,12 @@
 # spreadsheetXml()
 
+Parses one XML part of an .xlsx file safely (no network, no entity expansion); null when empty or not valid XML.
+
 ```php
 function spreadsheetXml(?string $xml)
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 337.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 341.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -40,12 +40,14 @@ function domainApiBody(): array
     return $b;
 }
 
+/** Sends {success: true} merged with $data as JSON and ends the request. */
 function domainApiOk(array $data = []): void
 {
     echo json_encode(['success' => true] + $data);
     exit;
 }
 
+/** Sends {success: false, error} as JSON, with an HTTP status when one other than 200 is given, and ends the request. */
 function domainApiFail(string $message, int $status = 200): void
 {
     if ($status !== 200) http_response_code($status);
@@ -53,11 +55,13 @@ function domainApiFail(string $message, int $status = 200): void
     exit;
 }
 
+/** Stops the request with a JSON refusal unless the signed-in analyst holds the capability. */
 function domainRequireCap(PDO $conn, string $cap): void
 {
     requireCapabilityJson($cap, $conn);
 }
 
+/** True when the analyst holds the capability; false on any error. */
 function domainHasCap(PDO $conn, int $analystId, string $cap): bool
 {
     try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { return false; }

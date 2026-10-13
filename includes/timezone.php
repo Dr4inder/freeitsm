@@ -17,6 +17,8 @@
  * so server-side date math on a page is unaffected. Conversion is always
  * explicit (fmt_local / setTimezone), which keeps UTC-at-rest the single
  * source of truth.
+ *
+ * @wiki Timezones-and-Time-Handling
  */
 class Tz {
     /** Effective display zone for this request. Null until init(); then always a valid IANA id. */
@@ -298,6 +300,10 @@ class DateFmt {
     }
 
     /**
+     * The translated names in one calendar group (common.calendar.<group>, or
+     * <group>_short), in the order of $keys - a missing string falls back to the
+     * capitalised English key rather than a dotted key path.
+     *
      * @param bool $optional When true, return NULL if the locale does not define
      *                       this group at all, rather than falling back. Used by
      *                       months_in_date, which most languages do not need.

@@ -30,12 +30,12 @@ Network Mapper — visual diagrams over the CMDB graph (see freeitsm.sql header)
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3280 |  | update | `parent_diagram_id` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3282 |  | update | `created_by_analyst_id` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):740 | `apiNmNodesCreate` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):783 | `apiNmNodesUpdate` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):802 | `apiNmNodesDelete` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):848 | `apiNmConnectorsCreate` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):881 | `apiNmConnectorsUpdate` | update | `updated_datetime` |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):893 | `apiNmConnectorsDelete` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):774 | `apiNmNodesCreate` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):817 | `apiNmNodesUpdate` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):836 | `apiNmNodesDelete` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):882 | `apiNmConnectorsCreate` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):915 | `apiNmConnectorsUpdate` | update | `updated_datetime` |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md):927 | `apiNmConnectorsDelete` | update | `updated_datetime` |  |
 | [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):54 | `NetworkMapperService::createDiagram` | insert | `parent_diagram_id`, `title`, `description`, `version_label`, `created_by_analyst_id`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right` |  |
 | [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):106 | `NetworkMapperService::saveDiagram` | update | `title`, `description`, `version_label`, `paper_size`, `paper_orientation`, `header_left`, `header_center`, `header_right`, `footer_left`, `footer_center` |  |
 | [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md):158 | `NetworkMapperService::deleteDiagram` | delete |  |  |
@@ -49,6 +49,6 @@ Network Mapper — visual diagrams over the CMDB graph (see freeitsm.sql header)
 | [api/network-mapper/list_diagrams.php](/code/files/api/network-mapper/list_diagrams.php.md) | L31, countVersionsInChain L71, countVersionsInChain L86 |  |
 | [api/network-mapper/list_versions.php](/code/files/api/network-mapper/list_versions.php.md) | L33, L49, L60 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3266, L3272, L3280 |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmDiagramSelect L71, apiNmChainIds L120, apiNmChainIds L131, apiNmDiagramsList L409, apiNmDiagramsList L433 |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::loadDiagram L239, NetworkMapperService::chainIds L263, NetworkMapperService::chainIds L274 |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmDiagramSelect L75, apiNmChainIds L127, apiNmChainIds L138, apiNmDiagramsList L443, apiNmDiagramsList L467 |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::loadDiagram L240, NetworkMapperService::chainIds L265, NetworkMapperService::chainIds L276 |  |
 

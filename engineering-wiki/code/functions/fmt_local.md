@@ -6,7 +6,7 @@ Format a UTC datetime (as stored in the DB) in the current analyst's display zon
 function fmt_local(?string $utc, string $format = 'Y-m-d H:i'): string
 ```
 
-Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 112.
+Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 114.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

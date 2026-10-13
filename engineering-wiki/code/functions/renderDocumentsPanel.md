@@ -1,5 +1,10 @@
 # renderDocumentsPanel()
 
+Renders the attached-documents panel for one record, loading its CSS and JS once.
+
+Renders nothing for an unknown record type, or for an unsaved record (id 0)
+unless `$jsVar` is given so the page can point it at a record later.
+
 ```php
 function renderDocumentsPanel(
     string $parentType,
@@ -10,7 +15,7 @@ function renderDocumentsPanel(
 ): void
 ```
 
-Defined in [includes/documents_panel.php](/code/files/includes/documents_panel.php.md), line 49.
+Defined in [includes/documents_panel.php](/code/files/includes/documents_panel.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

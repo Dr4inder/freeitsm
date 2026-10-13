@@ -6,7 +6,7 @@ May this analyst use this tool? The capability, and - for a tool that names one 
 function warbotToolAllowed(PDO $conn, int $analystId, array $t): bool
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 333.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 338.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

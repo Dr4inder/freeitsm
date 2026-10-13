@@ -1,6 +1,6 @@
 # includes/domains/alerts.php
 
-> PHP - 397 lines
+> PHP - 407 lines
 
 Domains — who hears about what, and when.
 
@@ -43,30 +43,30 @@ failed send releases its claim so the failure is not permanent and silent.
 | Function | Line | What it does |
 |---|--:|---|
 | [domainAlertClaim()](/code/functions/domainAlertClaim.md) | 46 | Claim an alert. true = ours to send; false = already sent (or claimed a moment ago). |
-| [domainAlertRelease()](/code/functions/domainAlertRelease.md) | 53 |  |
-| [domainAlertAlreadySent()](/code/functions/domainAlertAlreadySent.md) | 58 |  |
-| [domainAlertsDue()](/code/functions/domainAlertsDue.md) | 70 | Everything due today for expiry and certificates. |
-| [domainAlertsRun()](/code/functions/domainAlertsRun.md) | 121 | The run: events, e-mail digests and renewal actions. |
-| [domainAlertRecipients()](/code/functions/domainAlertRecipients.md) | 201 | email => display name, for one due item. |
-| [domainAlertPayload()](/code/functions/domainAlertPayload.md) | 217 |  |
-| [domainPublicLink()](/code/functions/domainPublicLink.md) | 229 | Absolute link to a domain, for mail sent by a cron with no request host. |
-| [domainAlertDigest()](/code/functions/domainAlertDigest.md) | 236 | Subject and HTML for one recipient's digest. |
-| [domainAlertWhen()](/code/functions/domainAlertWhen.md) | 278 |  |
-| [fmt_domain_date()](/code/functions/fmt_domain_date.md) | 287 | 'YYYY-MM-DD' → '20 November 2026'. Plain and not zone-shifted. |
-| [domainAlertOnChange()](/code/functions/domainAlertOnChange.md) | 299 | Change detection's e-mail. Called by DomainsService::runChecks() when something serious moved — separate from the daily digest because a possible hijack cannot wait for tomorrow's run. |
-| [domainWatchLabel()](/code/functions/domainWatchLabel.md) | 331 |  |
-| [domainRenewalActionsRun()](/code/functions/domainRenewalActionsRun.md) | 345 | Raise a task or a ticket for each domain entering the renewal window. Once per expiry date (a renewed domain re-arms). Ownerless domains get an unassigned task — renewing is still somebody's job even when nobody has been named. |
+| [domainAlertRelease()](/code/functions/domainAlertRelease.md) | 57 | Gives back a claimed alert, so the next run tries it again - used when every e-mail for it failed. |
+| [domainAlertAlreadySent()](/code/functions/domainAlertAlreadySent.md) | 63 | True when this alert (domain, kind, fingerprint) has already been claimed or sent. |
+| [domainAlertsDue()](/code/functions/domainAlertsDue.md) | 75 | Everything due today for expiry and certificates. |
+| [domainAlertsRun()](/code/functions/domainAlertsRun.md) | 126 | The run: events, e-mail digests and renewal actions. |
+| [domainAlertRecipients()](/code/functions/domainAlertRecipients.md) | 206 | email => display name, for one due item. |
+| [domainAlertPayload()](/code/functions/domainAlertPayload.md) | 223 | Shapes a due domain row into the 'domain' payload the domain.expiring and domain.ssl_expiring workflow events carry. |
+| [domainPublicLink()](/code/functions/domainPublicLink.md) | 235 | Absolute link to a domain, for mail sent by a cron with no request host. |
+| [domainAlertDigest()](/code/functions/domainAlertDigest.md) | 242 | Subject and HTML for one recipient's digest. |
+| [domainAlertWhen()](/code/functions/domainAlertWhen.md) | 285 | Says when in words - "expired 3 days ago", "today", "tomorrow", "in 30 days". |
+| [fmt_domain_date()](/code/functions/fmt_domain_date.md) | 294 | 'YYYY-MM-DD' → '20 November 2026'. Plain and not zone-shifted. |
+| [domainAlertOnChange()](/code/functions/domainAlertOnChange.md) | 306 | Change detection's e-mail. Called by DomainsService::runChecks() when something serious moved — separate from the daily digest because a possible hijack cannot wait for tomorrow's run. |
+| [domainWatchLabel()](/code/functions/domainWatchLabel.md) | 341 | The plain-English name of a watched field for the change e-mail (registrar, locks, DNSSEC, name servers, MX, SPF, DMARC). |
+| [domainRenewalActionsRun()](/code/functions/domainRenewalActionsRun.md) | 355 | Raise a task or a ticket for each domain entering the renewal window. Once per expiry date (a renewed domain re-arms). Ownerless domains get an unassigned task — renewing is still somebody's job even when nobody has been named. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 48 | `domainAlertClaim` | **insert** [domain_alerts_sent](/code/tables/domain_alerts_sent.md) (`domain_id`, `alert_kind`, `fingerprint`, `sent_datetime`) |  |
-| 55 | `domainAlertRelease` | **delete** [domain_alerts_sent](/code/tables/domain_alerts_sent.md) |  |
-| 60 | `domainAlertAlreadySent` | read [domain_alerts_sent](/code/tables/domain_alerts_sent.md) |  |
-| 80 | `domainAlertsDue` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
-| 308 | `domainAlertOnChange` | read [analysts](/code/tables/analysts.md) |  |
-| 349 | `domainRenewalActionsRun` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md) |  |
+| 59 | `domainAlertRelease` | **delete** [domain_alerts_sent](/code/tables/domain_alerts_sent.md) |  |
+| 65 | `domainAlertAlreadySent` | read [domain_alerts_sent](/code/tables/domain_alerts_sent.md) |  |
+| 85 | `domainAlertsDue` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 315 | `domainAlertOnChange` | read [analysts](/code/tables/analysts.md) |  |
+| 359 | `domainRenewalActionsRun` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

@@ -1,6 +1,6 @@
 # includes/messaging/messaging.php
 
-> PHP - 461 lines
+> PHP - 470 lines
 
 Messaging channels — shared entry point.
 
@@ -35,10 +35,10 @@ own keys out of that array (shapes documented on each provider class).
 | [messagingTemplateVarCount()](/code/functions/messagingTemplateVarCount.md) | 324 | How many distinct {{n}} placeholders a template body uses (the highest index). e.g. "Hi {{1}}, ref {{2}}" → 2. |
 | [messagingRenderTemplate()](/code/functions/messagingRenderTemplate.md) | 336 | Substitute {{1}}, {{2}}, … in a template body with the given ordered values, for storing/showing what was actually sent. Missing values are left blank. |
 | [messagingBuildTranscript()](/code/functions/messagingBuildTranscript.md) | 350 | Build a plain-text transcript of a channel conversation (oldest first), capped to keep token usage predictable. Used by the AI summary / suggested-reply endpoints. Non-channel (email) rows are excluded. |
-| [messagingReplyAddress()](/code/functions/messagingReplyAddress.md) | 407 |  |
-| [channelHasServiceWindow()](/code/functions/channelHasServiceWindow.md) | 414 |  |
-| [channelWindowOpen()](/code/functions/channelWindowOpen.md) | 419 |  |
-| [messagingAdminMayAdministerChannel()](/code/functions/messagingAdminMayAdministerChannel.md) | 448 | Authorise a request that acts on ONE messaging channel. |
+| [messagingReplyAddress()](/code/functions/messagingReplyAddress.md) | 411 | The address to reply to on a conversation row - to_recipients on threaded channels (Slack, Teams, Mattermost), from_address elsewhere. |
+| [channelHasServiceWindow()](/code/functions/channelHasServiceWindow.md) | 422 | True for channels with a reply window (WhatsApp); web chat, Slack, Telegram, Teams and Mattermost have none. |
+| [channelWindowOpen()](/code/functions/channelWindowOpen.md) | 428 | True when the last inbound message (UTC) was under 24 hours ago, so a free-form reply is still allowed. |
+| [messagingAdminMayAdministerChannel()](/code/functions/messagingAdminMayAdministerChannel.md) | 457 | Authorise a request that acts on ONE messaging channel. |
 
 ## Database
 
@@ -47,7 +47,7 @@ own keys out of that array (shapes documented on each provider class).
 | 68 | `loadMessagingChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
 | 113 | `messagingPublicBaseUrl` | read [system_settings](/code/tables/system_settings.md) |  |
 | 353 | `messagingBuildTranscript` | read [emails](/code/tables/emails.md) |  |
-| 454 | `messagingAdminMayAdministerChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 463 | `messagingAdminMayAdministerChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
 
 ## How it hangs together
 

@@ -6,7 +6,7 @@ The colour a project picks for its card: a fixed palette, never free CSS, so a s
 function projectColours(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 138.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 143.
 
 **Returns:** array<string,array{0:string,1:string}> key => [from, to]
 

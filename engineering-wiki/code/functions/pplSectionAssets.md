@@ -1,10 +1,12 @@
 # pplSectionAssets()
 
+The Assets card: asset, type, model, status, then the date assigned (person page) or who holds it (company page).
+
 ```php
 function pplSectionAssets(array $s, bool $person, ?string $title = null): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 88.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 96.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

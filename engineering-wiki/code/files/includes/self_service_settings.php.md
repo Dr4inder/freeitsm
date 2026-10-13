@@ -2,7 +2,14 @@
 
 > PHP - 130 lines
 
-'waves' was removed after review: it drew a chain of overlapping ovals rather than texture, and no amount of lightening made it calm. An install that had already chosen it degrades to no pattern, because the getter below blanks any value not on this list.
+Self-service portal settings — read from one place, by both sides.
+
+🔑 The settings screen and the portal itself both need these, and a second
+copy of the defaults is how the two drift: the screen shows a switch as off
+while the portal behaves as though it were on. One function, both callers.
+
+Every value degrades to the behaviour the portal had before these settings
+existed, so an install that has never opened the screen is unchanged.
 
 ## Functions
 

@@ -1,10 +1,12 @@
 # apiNmValidateIcon()
 
+Returns the icon key when it is in cmdb_icons, otherwise answers 422 pointing at GET /cmdb-icons.
+
 ```php
 function apiNmValidateIcon(PDO $conn, string $iconKey): string
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 285.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 319.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +19,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 286 | `apiNmValidateIcon` | read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
+| 320 | `apiNmValidateIcon` | read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
 
 ## Calls
 

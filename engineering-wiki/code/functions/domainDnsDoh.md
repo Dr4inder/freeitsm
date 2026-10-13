@@ -1,10 +1,12 @@
 # domainDnsDoh()
 
+Answers a DNS question over DNS-over-HTTPS JSON from Google or Cloudflare, normalised and sorted; NXDOMAIN comes back as ok with nxdomain true.
+
 ```php
 function domainDnsDoh(string $name, string $type, string $provider): array
 ```
 
-Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 78.
+Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 91.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

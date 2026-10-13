@@ -32,6 +32,7 @@ const PA_STYLES   = ['braille', 'classic', 'blocks'];
 const PA_PALETTES = ['green', 'amber', 'paper', 'colour'];
 const PA_THUMB_MAX = 200 * 1024;   // bytes of JPEG, decoded
 
+/** Sends an HTTP status (200 by default) and {success: false, error} as JSON, then stops. */
 function paFail(string $message, int $status = 200): void
 {
     http_response_code($status);

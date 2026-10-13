@@ -6,7 +6,7 @@ Would Tika be asked about this file, if configured?
 function tikaHandles(string $filename): bool
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 100.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 104.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

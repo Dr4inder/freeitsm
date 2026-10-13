@@ -1,17 +1,21 @@
 # dsyncFetchPeople()
 
+Reads every person under the provider's ticked directory branches with a paged LDAP search, skipping carved-out branches and counting each DN once.
+
+Throws when nothing is ticked, a branch cannot be searched, or more than DSYNC_MAX_PEOPLE match.
+
 ```php
 function dsyncFetchPeople($ds, array $provider): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 246.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 253.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$ds` |  |  |  |
+| `$ds` |  |  | a bound LDAP connection |
 | `$provider` | `array` |  |  |
 
-**Returns:** `array`
+**Returns:** array  raw LDAP entries
 
 ## Calls
 

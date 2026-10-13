@@ -6,7 +6,7 @@ Why a project is the colour it is, in words.
 function projectAssistWhy(array $p): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 76.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 77.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

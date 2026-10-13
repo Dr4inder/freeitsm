@@ -10,7 +10,7 @@ login screen and cannot tell you why.
 function brandingContrastRatio(string $hexA, string $hexB): float
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 388.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 389.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

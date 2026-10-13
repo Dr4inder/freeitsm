@@ -16,7 +16,7 @@ function warRoomTranscriptSince(
 ): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1266.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1267.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -32,9 +32,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 126
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1276 | `warRoomTranscriptSince` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
-| 1290 | `warRoomTranscriptSince` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 1294 | `warRoomTranscriptSince` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+| 1277 | `warRoomTranscriptSince` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
+| 1291 | `warRoomTranscriptSince` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 1295 | `warRoomTranscriptSince` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
 
 ## Calls
 

@@ -168,11 +168,13 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         return $cache = $out;
     }
 
+    /** One Projects setting as a string; '' when it is not set. */
     function projectSetting(PDO $conn, string $key): string
     {
         return (string)(projectSettings($conn)[$key] ?? '');
     }
 
+    /** Saves one Projects setting to system_settings (insert or update). */
     function projectSettingWrite(PDO $conn, string $key, string $value): void
     {
         $conn->prepare(
@@ -395,6 +397,10 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         }
     }
 
+    /**
+     * True when the analyst may create projects - anyone, if the create policy says so,
+     * else project managers only.
+     */
     function projectCanCreate(PDO $conn, int $analystId): bool
     {
         return projectSetting($conn, 'project_create_policy') === 'anyone' || projectIsManager($conn, $analystId);
@@ -420,6 +426,10 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
         }
     }
 
+    /**
+     * True when the analyst may change the project - anyone, if the change policy says so,
+     * else its team and project managers.
+     */
     function projectCanChange(PDO $conn, int $analystId, array $project): bool
     {
         if (projectSetting($conn, 'project_change_policy') === 'anyone') return true;

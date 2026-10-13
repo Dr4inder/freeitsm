@@ -6,7 +6,7 @@ Global shorthand. Recommended call style in views and modules.
 function t($key, $params = [])
 ```
 
-Defined in [includes/i18n.php](/code/files/includes/i18n.php.md), line 304.
+Defined in [includes/i18n.php](/code/files/includes/i18n.php.md), line 313.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

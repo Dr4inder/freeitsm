@@ -1,10 +1,12 @@
 # oaf_resolvePath()
 
+Turns a path template into a real path by replacing each {id} with the first id its parent collection returns - null when there is no row to use. Ids are cached per collection.
+
 ```php
 function oaf_resolvePath($template, $base, $key)
 ```
 
-Defined in [api/v1/dev/openapi_fix.php](/code/files/api/v1/dev/openapi_fix.php.md), line 85.
+Defined in [api/v1/dev/openapi_fix.php](/code/files/api/v1/dev/openapi_fix.php.md), line 104.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,10 +1,12 @@
 # apiProjectStage()
 
+One stage of a project (apiProjectStages), or answers 404 and stops.
+
 ```php
 function apiProjectStage(PDO $conn, int $projectId, int $stageId): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 297.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 311.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

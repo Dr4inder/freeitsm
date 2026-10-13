@@ -1,10 +1,12 @@
 # apiLoadSupplier()
 
+Loads one supplier row (apiSupplierSelect), or answers 404 and stops.
+
 ```php
 function apiLoadSupplier(PDO $conn, int $supplierId): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 184.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 200.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

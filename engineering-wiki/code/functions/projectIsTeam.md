@@ -6,7 +6,7 @@ Is this analyst on the project's team: its manager, its creator or a member? (Me
 function projectIsTeam(PDO $conn, int $analystId, array $project): bool
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 408.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 414.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/projects/settings.php](/code/files/includes/projects/settin
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 413 | `projectIsTeam` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 419 | `projectIsTeam` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Called from
 

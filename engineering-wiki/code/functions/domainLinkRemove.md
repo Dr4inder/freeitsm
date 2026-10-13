@@ -1,5 +1,7 @@
 # domainLinkRemove()
 
+Removes a domain link, under the same access rules as adding one; returns false when there was nothing to remove.
+
 ```php
 function domainLinkRemove(
     PDO $conn,
@@ -10,7 +12,7 @@ function domainLinkRemove(
 ): bool
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 196.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 203.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

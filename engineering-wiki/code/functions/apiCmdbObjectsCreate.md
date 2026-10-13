@@ -6,7 +6,7 @@ POST /cmdb/objects
 function apiCmdbObjectsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 397.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 405.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

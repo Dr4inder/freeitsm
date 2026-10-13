@@ -14,6 +14,6 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusReady L46, domainStatusServiceIds L93, domainStatusRun L224 |  |
+| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusReady L49, domainStatusServiceIds L96, domainStatusRun L227 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L641 |  |
 

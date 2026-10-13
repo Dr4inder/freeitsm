@@ -6,7 +6,7 @@ The Leases list: one row per lease with its schedule dates, asset counts and nex
 function leaseList(PDO $conn, int $analystId, string $search = ''): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 269.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 275.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 269.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 280 | `leaseList` | read [lease_schedules](/code/tables/lease_schedules.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md), read [leases](/code/tables/leases.md), read [suppliers](/code/tables/suppliers.md), read [tenants](/code/tables/tenants.md) |  |
+| 286 | `leaseList` | read [lease_schedules](/code/tables/lease_schedules.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md), read [leases](/code/tables/leases.md), read [suppliers](/code/tables/suppliers.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

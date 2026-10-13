@@ -198,6 +198,7 @@ class ProjectTemplatesService
         return $id;
     }
 
+    /** Changes a project template's name, description and active flag. */
     public static function update(PDO $conn, ActorContext $ctx, int $id, array $in): void
     {
         self::assertManage($conn, $ctx);
@@ -207,6 +208,7 @@ class ProjectTemplatesService
              ->execute([$name, $desc, !empty($in['is_active']) ? 1 : 0, $id]);
     }
 
+    /** Deletes a project template; projects made from it are untouched. */
     public static function delete(PDO $conn, ActorContext $ctx, int $id): void
     {
         self::assertManage($conn, $ctx);
@@ -226,6 +228,7 @@ class ProjectTemplatesService
         projectSettings($conn, true);
     }
 
+    /** Throws unless the actor holds the Projects templates capability; system callers (actor 0) pass. */
     private static function assertManage(PDO $conn, ActorContext $ctx): void
     {
         if ($ctx->actorId <= 0) return;
@@ -234,6 +237,7 @@ class ProjectTemplatesService
         }
     }
 
+    /** A validated template name and optional description. */
     private static function nameDesc(array $in): array
     {
         $name = trim((string)($in['name'] ?? ''));
@@ -243,6 +247,7 @@ class ProjectTemplatesService
         return [$name, $desc === '' ? null : mb_substr($desc, 0, 500)];
     }
 
+    /** Loads one project template; throws not found when it does not exist. */
     private static function row(PDO $conn, int $id): array
     {
         if (!projectTemplatesReady($conn)) throw new ServiceError('not_found', 'not_found', 'That template does not exist.');

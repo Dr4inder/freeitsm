@@ -38,5 +38,5 @@ Change control (3.3.0) - includes/projects/control.php.
 |---|---|---|
 | [includes/demo_data.php](/code/files/includes/demo_data.php.md) | demoAfterImport L38 |  |
 | [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectControlReady L43, projectTakeBaseline L115, projectBaselineAuto L237, projectBaselineAuto L241, projectBaselineAuto L247, projectControlDetail L274 ... |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::takeBaseline L1331 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::takeBaseline L1380 |  |
 

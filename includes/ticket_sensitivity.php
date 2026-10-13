@@ -33,6 +33,8 @@
  *
  * Confidential does NOT restrict analysts. Who on the service desk can see a
  * ticket is still decided by teams, departments and companies, as before.
+ *
+ * @wiki Confidential-Tickets-Developer-Guide
  */
 
 const TICKET_SENSITIVITIES = ['normal', 'confidential'];

@@ -21,6 +21,7 @@ const FILES_DEFAULT_MAX_UPLOAD_MB = 4096;
 /** Each upload piece. Under PHP's default post_max_size (8M) with room to spare. */
 const FILES_CHUNK_BYTES = 4 * 1024 * 1024;
 
+/** Reads a Files setting from system_settings, cached per request; blank or missing gives $default. */
 function filesSetting(PDO $conn, string $key, string $default = ''): string
 {
     static $cache = [];
@@ -33,12 +34,14 @@ function filesSetting(PDO $conn, string $key, string $default = ''): string
     return ($cache[$key] === null || $cache[$key] === '') ? $default : $cache[$key];
 }
 
+/** Saves one Files setting to system_settings (insert or update). */
 function filesSaveSetting(PDO $conn, string $key, ?string $value): void
 {
     $conn->prepare("INSERT INTO system_settings (setting_key, setting_value) VALUES (?, ?)
                     ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)")->execute([$key, $value]);
 }
 
+/** The storage folder used when none is set: uploads/files under the application root. */
 function filesDefaultStorageRoot(): string
 {
     return str_replace('\\', '/', dirname(__DIR__, 2)) . '/uploads/files';
@@ -52,6 +55,7 @@ function filesStorageRoot(PDO $conn): string
     return $root;
 }
 
+/** The largest file an analyst may upload, in bytes, from the files_max_upload_mb setting. */
 function filesMaxUploadBytes(PDO $conn): int
 {
     $mb = (int)filesSetting($conn, 'files_max_upload_mb', (string)FILES_DEFAULT_MAX_UPLOAD_MB);
@@ -123,6 +127,11 @@ function filesGetPrefs(PDO $conn, int $analystId): array
     ];
 }
 
+/**
+ * Saves one of the analyst's own Files preferences (insert or update).
+ *
+ * @writes user_preferences(preference_value) - per-analyst choices such as the view
+ */
 function filesSavePref(PDO $conn, int $analystId, string $key, string $value): void
 {
     $conn->prepare("INSERT INTO user_preferences (analyst_id, preference_key, preference_value, updated_datetime)

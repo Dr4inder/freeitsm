@@ -1,41 +1,78 @@
 # includes/ticket_sensitivity.php
 
-> PHP - 310 lines
+> PHP - 312 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Confidential Tickets Developer Guide](https://github.com/edmozley/freeitsm/wiki/Confidential-Tickets-Developer-Guide)
+
+Ticket sensitivity: Normal or Confidential (discussion #62, step 1).
+
+WHY THIS EXISTS BEFORE MANAGERS DO
+----------------------------------
+Managers are coming to the self-service portal: people who can read tickets
+raised by the people they manage. Before that ships, a ticket has to be able
+to say "not for my manager". Someone emailing HR about a diagnosis, or about
+how to raise a grievance against their own manager, must never have that
+ticket shown to the manager. Confidential is how a ticket says so; step 3
+decides what a manager sees of one (default: nothing at all).
+
+THE DANGEROUS MOMENT IS BEFORE ANYONE HAS LOOKED
+------------------------------------------------
+An analyst can mark a ticket confidential - but a grievance emailed to HR
+sits unmarked until someone gets to it. So a ticket also becomes confidential
+WITHOUT anyone deciding, when:
+  - the requester ticks Confidential when raising it in the portal;
+  - it arrives through a mailbox set to confidential (an HR mailbox);
+  - it is in, or is moved into, a service-desk department set to confidential;
+  - it is split from, or merged with, a confidential ticket.
+
+🔴 DEFAULTS ONLY EVER RAISE. Nothing automatic ever makes a ticket Normal
+again: moving a ticket OUT of HR leaves it confidential until a person
+decides otherwise. Lowering is always a deliberate act by an analyst.
+
+🔴 EVERY PATH THAT CREATES A TICKET MUST CALL `ticketSensitivityApplyDefaults()`
+after its insert. There were eleven such paths when this was written and only
+two went through TicketsService, so a hook in the service alone would have
+missed nine - including the mailbox ingest, which is where the HR email lands.
+The list is in the wiki: Confidential-Tickets-Developer-Guide.
+
+Confidential does NOT restrict analysts. Who on the service desk can see a
+ticket is still decided by teams, departments and companies, as before.
 
 ## Functions
 
 | Function | Line | What it does |
 |---|--:|---|
-| [ticketSensitivityReady()](/code/functions/ticketSensitivityReady.md) | 45 | Have the columns been added yet? New code reaches an install before System -> Database Verification runs, and every ticket path calls into here, so a missing column must mean "do nothing", never an error. |
-| [ticketSensitivityNormalise()](/code/functions/ticketSensitivityNormalise.md) | 62 | Anything unrecognised reads as normal - the column's own default. |
-| [ticketSensitivityRaise()](/code/functions/ticketSensitivityRaise.md) | 75 | Make a ticket confidential if it is not already, and say why in the audit trail. Returns true if it changed. |
-| [ticketSensitivityApplyDefaults()](/code/functions/ticketSensitivityApplyDefaults.md) | 102 | Apply the automatic defaults to a ticket: its service-desk department's, and the mailbox it arrived through, if there was one. Call after every insert, and after every change of department. |
-| [ticketSensitivityInherit()](/code/functions/ticketSensitivityInherit.md) | 135 | A ticket made from, or combined with, others is confidential if any of them was. Used by split (one source) and merge (several). |
-| [ticketIsConfidential()](/code/functions/ticketIsConfidential.md) | 158 | Is this ticket confidential? False before Database Verification (no column). |
-| [ticketAiConfidentialPolicy()](/code/functions/ticketAiConfidentialPolicy.md) | 175 | Tickets -> Settings -> "Confidential tickets and AI": 'block' (the default - never send) or 'allow'. Never saved means block: an upgrade must not start sending confidential tickets to a provider it was not sending them to. |
-| [ticketAiAllowed()](/code/functions/ticketAiAllowed.md) | 187 | May this ticket's content go to an AI provider? |
-| [ticketAiExclusionSql()](/code/functions/ticketAiExclusionSql.md) | 201 | For AI features that read MANY tickets (problem root cause, suggested problems, knowledge gap analysis, Warbot): an SQL condition that leaves the confidential ones out, or '' when the policy allows them or the column does not exist yet. Pass the tickets table's alias. |
-| [ticketAiSubjectSql()](/code/functions/ticketAiSubjectSql.md) | 212 | The ticket's subject as an AI may see it: 'Confidential ticket' in place of a confidential one's (under the block policy), so a count or a list stays true while its content stays home. An SQL expression; pass the tickets alias. |
-| [ticketRedactForOutbound()](/code/functions/ticketRedactForOutbound.md) | 229 | A workflow event's payload as it may leave for a webhook, Slack or Teams (discussion #62). Unchanged for a normal ticket. For a confidential one it is cut down to an ALLOW-LIST - identifiers, number, status, priority, department, team, dates - because a deny-list of "content" fields would miss the next one somebody adds. The subject becomes "Confidential ticket" and `confidential` is set, so a message template still reads sensibly. |
-| [ticketEmailRecipientsAllowed()](/code/functions/ticketEmailRecipientsAllowed.md) | 275 | May a workflow email about this ticket go to these addresses? |
-| [ticketSensitivitySelectSql()](/code/functions/ticketSensitivitySelectSql.md) | 306 | The SELECT expression for a ticket's sensitivity that is safe before Database Verification has added the column. Pass the tickets alias. |
+| [ticketSensitivityReady()](/code/functions/ticketSensitivityReady.md) | 47 | Have the columns been added yet? New code reaches an install before System -> Database Verification runs, and every ticket path calls into here, so a missing column must mean "do nothing", never an error. |
+| [ticketSensitivityNormalise()](/code/functions/ticketSensitivityNormalise.md) | 64 | Anything unrecognised reads as normal - the column's own default. |
+| [ticketSensitivityRaise()](/code/functions/ticketSensitivityRaise.md) | 77 | Make a ticket confidential if it is not already, and say why in the audit trail. Returns true if it changed. |
+| [ticketSensitivityApplyDefaults()](/code/functions/ticketSensitivityApplyDefaults.md) | 104 | Apply the automatic defaults to a ticket: its service-desk department's, and the mailbox it arrived through, if there was one. Call after every insert, and after every change of department. |
+| [ticketSensitivityInherit()](/code/functions/ticketSensitivityInherit.md) | 137 | A ticket made from, or combined with, others is confidential if any of them was. Used by split (one source) and merge (several). |
+| [ticketIsConfidential()](/code/functions/ticketIsConfidential.md) | 160 | Is this ticket confidential? False before Database Verification (no column). |
+| [ticketAiConfidentialPolicy()](/code/functions/ticketAiConfidentialPolicy.md) | 177 | Tickets -> Settings -> "Confidential tickets and AI": 'block' (the default - never send) or 'allow'. Never saved means block: an upgrade must not start sending confidential tickets to a provider it was not sending them to. |
+| [ticketAiAllowed()](/code/functions/ticketAiAllowed.md) | 189 | May this ticket's content go to an AI provider? |
+| [ticketAiExclusionSql()](/code/functions/ticketAiExclusionSql.md) | 203 | For AI features that read MANY tickets (problem root cause, suggested problems, knowledge gap analysis, Warbot): an SQL condition that leaves the confidential ones out, or '' when the policy allows them or the column does not exist yet. Pass the tickets table's alias. |
+| [ticketAiSubjectSql()](/code/functions/ticketAiSubjectSql.md) | 214 | The ticket's subject as an AI may see it: 'Confidential ticket' in place of a confidential one's (under the block policy), so a count or a list stays true while its content stays home. An SQL expression; pass the tickets alias. |
+| [ticketRedactForOutbound()](/code/functions/ticketRedactForOutbound.md) | 231 | A workflow event's payload as it may leave for a webhook, Slack or Teams (discussion #62). Unchanged for a normal ticket. For a confidential one it is cut down to an ALLOW-LIST - identifiers, number, status, priority, department, team, dates - because a deny-list of "content" fields would miss the next one somebody adds. The subject becomes "Confidential ticket" and `confidential` is set, so a message template still reads sensibly. |
+| [ticketEmailRecipientsAllowed()](/code/functions/ticketEmailRecipientsAllowed.md) | 277 | May a workflow email about this ticket go to these addresses? |
+| [ticketSensitivitySelectSql()](/code/functions/ticketSensitivitySelectSql.md) | 308 | The SELECT expression for a ticket's sensitivity that is safe before Database Verification has added the column. Pass the tickets alias. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 50 | `ticketSensitivityReady` | read [tickets](/code/tables/tickets.md) |  |
-| 51 | `ticketSensitivityReady` | read [departments](/code/tables/departments.md) |  |
-| 52 | `ticketSensitivityReady` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 80 | `ticketSensitivityRaise` | **update** [tickets](/code/tables/tickets.md) (`sensitivity`) |  |
-| 86 | `ticketSensitivityRaise` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 108 | `ticketSensitivityApplyDefaults` | read [tickets](/code/tables/tickets.md), read [departments](/code/tables/departments.md) |  |
-| 119 | `ticketSensitivityApplyDefaults` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 142 | `ticketSensitivityInherit` | read [tickets](/code/tables/tickets.md) |  |
-| 162 | `ticketIsConfidential` | read [tickets](/code/tables/tickets.md) |  |
-| 178 | `ticketAiConfidentialPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
-| 283 | `ticketEmailRecipientsAllowed` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
-| 287 | `ticketEmailRecipientsAllowed` | read [analysts](/code/tables/analysts.md) |  |
+| 52 | `ticketSensitivityReady` | read [tickets](/code/tables/tickets.md) |  |
+| 53 | `ticketSensitivityReady` | read [departments](/code/tables/departments.md) |  |
+| 54 | `ticketSensitivityReady` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 82 | `ticketSensitivityRaise` | **update** [tickets](/code/tables/tickets.md) (`sensitivity`) |  |
+| 88 | `ticketSensitivityRaise` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 110 | `ticketSensitivityApplyDefaults` | read [tickets](/code/tables/tickets.md), read [departments](/code/tables/departments.md) |  |
+| 121 | `ticketSensitivityApplyDefaults` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 144 | `ticketSensitivityInherit` | read [tickets](/code/tables/tickets.md) |  |
+| 164 | `ticketIsConfidential` | read [tickets](/code/tables/tickets.md) |  |
+| 180 | `ticketAiConfidentialPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
+| 285 | `ticketEmailRecipientsAllowed` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
+| 289 | `ticketEmailRecipientsAllowed` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

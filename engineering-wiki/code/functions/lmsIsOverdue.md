@@ -27,7 +27,7 @@ worse than either of them being wrong on its own.
 function lmsIsOverdue(?string $deadline, string $status): bool
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 155.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 161.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -2,6 +2,39 @@
 
 > PHP - 166 lines
 
+Where is this installation reachable from, seen from outside?
+
+WHY THIS EXISTS AT ALL
+----------------------
+BASE_URL answers "where does the app live under the web root" and nothing more.
+It is a path — `/freeitsm-app/` — which is the right and sufficient answer for
+every link on a page FreeITSM itself renders, because the browser already knows
+the host.
+
+It is the wrong answer for a link FreeITSM *sends somewhere else*: an email, a
+Jira issue, a Slack message. There the reader's browser resolves the address
+against whatever host they happen to be on, and a bare path 404s.
+
+THE CASE THIS IS REALLY FOR: THERE IS NO REQUEST
+------------------------------------------------
+The obvious fix — read the host off the current request — works for the analyst
+who clicked something, and fails for everything unattended. Mail collected by
+cron, an SLA breach notification, a workflow escalation: no request exists, so
+`$_SERVER`['HTTP_HOST'] is simply absent. **Unattended is the normal case for
+outbound mail, not the exception**, which is why an explicitly configured
+address has to come first and cannot merely be a fallback.
+
+WHY IT MOVED HERE
+-----------------
+This logic was written for issue trackers and lived in integrations.php, where
+`integrationsAbsoluteUrl()` still is — it now calls this. The [ticket_url] merge
+code (discussion #80) needs precisely the same answer, and a second copy of
+"how do I address this install" is exactly the kind of duplication that drifts:
+one of them would get the reverse-proxy handling and the other would not.
+`includes/csat.php` and `includes/self_service_email.php` each still build their
+own; they are older, they only ever run in request context, and folding them in
+is a separate job with its own testing.
+
 ## Functions
 
 | Function | Line | What it does |

@@ -18,7 +18,7 @@ is partial. It goes at the next MAJOR, and this line goes with it.
 function lmsProgressRowFor(PDO $conn, LmsLearner $learner, int $courseId): array
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 420.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 426.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -32,8 +32,8 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 422 | `lmsProgressRowFor` | read [lms_progress](/code/tables/lms_progress.md) |  |
-| 434 | `lmsProgressRowFor` | **insert** [lms_progress](/code/tables/lms_progress.md) (`analyst_id`, `learner_type`, `learner_id`, `course_id`, `status`, `first_access`, `last_access`, `attempt_count`, `created_datetime`, `updated_datetime`) |  |
+| 428 | `lmsProgressRowFor` | read [lms_progress](/code/tables/lms_progress.md) |  |
+| 440 | `lmsProgressRowFor` | **insert** [lms_progress](/code/tables/lms_progress.md) (`analyst_id`, `learner_type`, `learner_id`, `course_id`, `status`, `first_access`, `last_access`, `attempt_count`, `created_datetime`, `updated_datetime`) |  |
 
 ## Called from
 

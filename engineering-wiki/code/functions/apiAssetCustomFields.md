@@ -12,7 +12,7 @@ line to change.
 function apiAssetCustomFields(PDO $conn, int $assetId, ?int $assetTypeId): array
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 169.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 179.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

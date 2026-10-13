@@ -23,7 +23,7 @@ function aiProviderCallOpenAICompatible(
 ): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 267.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 271.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

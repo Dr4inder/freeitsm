@@ -35,7 +35,7 @@ function knowledgeAclSql(
 ): array
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 495.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 503.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -50,7 +50,7 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 554 | `knowledgeAclSql` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 562 | `knowledgeAclSql` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

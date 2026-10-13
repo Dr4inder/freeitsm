@@ -8,7 +8,7 @@ Shared by the Test button and debug tool D014, so the two never disagree.
 function aiExplainFailure(array $cfg, string $msg): string
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 394.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 398.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

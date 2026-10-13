@@ -6,7 +6,7 @@ Create or update a schedule. `$in`: id? | lease_id, name, reference, start_date,
 function leaseScheduleSave(PDO $conn, ActorContext $ctx, array $in): int
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 386.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 392.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,11 +20,11 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 386.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 420 | `leaseScheduleSave` | read [lease_assets](/code/tables/lease_assets.md) |  |
-| 430 | `leaseScheduleSave` | **update** [lease_schedules](/code/tables/lease_schedules.md) (`name`, `reference`, `start_date`, `end_date`, `cost`, `cost_period`, `currency`, `order_number`, `notes`) |  |
-| 438 | `leaseScheduleSave` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
-| 441 | `leaseScheduleSave` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
-| 445 | `leaseScheduleSave` | **insert** [lease_schedules](/code/tables/lease_schedules.md) (`lease_id`, `name`, `reference`, `start_date`, `end_date`, `cost`, `cost_period`, `currency`, `order_number`, `notes`, `display_order`) |  |
+| 426 | `leaseScheduleSave` | read [lease_assets](/code/tables/lease_assets.md) |  |
+| 436 | `leaseScheduleSave` | **update** [lease_schedules](/code/tables/lease_schedules.md) (`name`, `reference`, `start_date`, `end_date`, `cost`, `cost_period`, `currency`, `order_number`, `notes`) |  |
+| 444 | `leaseScheduleSave` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
+| 447 | `leaseScheduleSave` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
+| 451 | `leaseScheduleSave` | **insert** [lease_schedules](/code/tables/lease_schedules.md) (`lease_id`, `name`, `reference`, `start_date`, `end_date`, `cost`, `cost_period`, `currency`, `order_number`, `notes`, `display_order`) |  |
 
 ## Calls
 

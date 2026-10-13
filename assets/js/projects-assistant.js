@@ -13,23 +13,31 @@
  * a greeting for an empty conversation, a "since we last spoke" after a while,
  * or nothing. An assistant message with proposals gets a card: a box per change
  * (all ticked), Apply and Dismiss; each line then shows applied / dismissed / why it failed.
+ *
+ * @wiki Projects-Internals-7-Alerts-Reports-and-AI
  */
 (function () {
     'use strict';
     const P = window.Prj;
+    /** Translates a key under projects.assistant.*. */
     const T = (k, p) => P.T('assistant.' + k, p);
     const esc = P.esc;
     let ctx = null, state = null, busy = false, opened = false;
 
+    /** Shorthand for document.getElementById. */
     const $ = id => document.getElementById(id);
+    /** Renders an assistant reply's Markdown through the reports renderer, or escapes it with line breaks when that is not loaded. */
     const md = s => (window.PrjReports && window.PrjReports.md) ? window.PrjReports.md(s) : esc(s).replace(/\n/g, '<br>');
+    /** Posts an action to assistant_chat.php for the bound project. */
     const call = body => P.api('assistant_chat.php', Object.assign({ project_id: ctx.projectId }, body));
 
+    /** Shows a not-configured or unreachable note when the reply carries an AI error; returns true when it did. */
     function aiError(r) {
         if (!r || !r.ai_error) return false;
         note(r.ai_error === 'not_configured' ? T('not_configured') : T('unreachable', { detail: r.detail || '' }), true);
         return true;
     }
+    /** Adds a plain or error note to the bottom of the conversation. */
     function note(text, bad) {
         const box = $('paMessages');
         const d = document.createElement('div');
@@ -39,6 +47,7 @@
         box.scrollTop = box.scrollHeight;
     }
 
+    /** The suggested-question chips for the project's maturity stage - blank, early, finished or in flight. */
     function chips() {
         const m = state && state.maturity;
         if (!m || !state.ai_ready) return [];
@@ -48,6 +57,7 @@
         return ['chip_attention', 'chip_overdue', 'chip_risks', 'chip_week'];
     }
 
+    /** The card under an assistant message that proposes changes - a tick box per pending change, the state of the rest, and Apply / Dismiss for analysts who can change the project. */
     function proposalCard(msg) {
         const props = msg.proposals || [];
         const pending = props.some(p => p.status === 'pending');
@@ -60,6 +70,7 @@
             + '</div>';
     }
 
+    /** Redraws the conversation - not-ready and not-configured states, messages grouped by day, proposal cards, the thinking dots, the chips and the memory/shared notes. */
     function draw() {
         const box = $('paMessages');
         if (!state) { box.innerHTML = ''; return; }
@@ -92,11 +103,13 @@
         box.scrollTop = box.scrollHeight;
     }
 
+    /** Loads the project's conversation state and redraws. */
     async function load() {
         try { state = await P.api('assistant_chat.php?project_id=' + ctx.projectId); } catch (e) { state = null; P.toast(e.message, 'error'); }
         draw();
     }
 
+    /** Asks the server to open the conversation, which may add a greeting or a "since we last spoke" message. */
     async function openTurn() {
         if (!state || !state.ready || !state.ai_ready) return;
         busy = true; draw();
@@ -107,6 +120,7 @@
         busy = false; draw();
     }
 
+    /** Sends the typed (or chip) question, showing it straight away, and replaces the messages with the server's reply. */
     async function send(text) {
         text = String(text || '').trim();
         if (!text || busy) return;
@@ -121,6 +135,7 @@
         $('paInput').focus();
     }
 
+    /** Applies the ticked changes on a proposal card, or dismisses them all, then reports how many worked and redraws the project when any did. */
     async function act(card, dismiss) {
         const id = Number(card.dataset.paMsg);
         const items = [...card.querySelectorAll('[data-pa-item]:checked')].map(c => Number(c.dataset.paItem));
@@ -142,12 +157,14 @@
         draw();
     }
 
+    /** Asks, then clears the conversation and its memory and opens a fresh one. */
     async function clear() {
         const ok = await window.showConfirm({ title: T('clear_title'), message: T(state.shared ? 'clear_body_shared' : 'clear_body'), okLabel: T('clear'), okClass: 'danger' });
         if (!ok) return;
         try { await call({ action: 'clear' }); state.messages = []; state.remembers = false; draw(); openTurn(); } catch (e) { P.toast(e.message, 'error'); }
     }
 
+    /** Opens the Ask AI panel, loading and opening the conversation the first time. */
     async function open() {
         if (!ctx) return;
         $('paOverlay').classList.add('active');
@@ -156,11 +173,13 @@
         else draw();
         setTimeout(() => $('paInput').focus(), 50);
     }
+    /** Closes the Ask AI panel. */
     function close() {
         $('paOverlay').classList.remove('active');
         $('paPanel').classList.remove('active');
     }
 
+    /** Wires the panel's close, send, Enter key, clear, chip, Apply and Dismiss controls, and Escape to close. */
     function wire() {
         $('paClose').addEventListener('click', close);
         $('paOverlay').addEventListener('click', close);

@@ -7,6 +7,8 @@
  * three tool panels from that same data, so nothing here can disagree with the
  * banner or the plan. Every change goes to api/projects/tools.php and then asks
  * the view to refresh.
+ *
+ * @wiki Projects-Internals-1-Architecture
  */
 (function () {
     'use strict';
@@ -16,15 +18,20 @@
     let wired = false;
     const MOSCOW = ['must', 'should', 'could', 'wont'];
 
+    /** True unless the server says the viewer may not change this project. */
     function canChange() { return !(ctx.data.permissions && !ctx.data.permissions.can_change); }
+    /** Posts a tools action to tools.php for the current project. */
     async function call(body) { return P.api('tools.php', Object.assign({ project_id: ctx.projectId }, body)); }
 
     // ---- People ---------------------------------------------------------------------
+    /** The small icon for a member's kind - team, person, contractor or analyst. */
     function kindIcon(kind) { return P.icon(kind === 'team' ? 'users' : (kind === 'person' ? 'heart' : (kind === 'contractor' ? 'building' : 'laptop')), 14); }
 
+    /** Draws the People tab - a card per member with kind, role picker and stakeholder placing, plus the stakeholder map when it is switched on. */
     function renderPeople() {
         const box = document.getElementById('pvPeople');
         const d = ctx.data, L = ctx.L;
+        /** The project role options, with "No role" first and the member's role selected. */
         const roleOpts = (sel) => '<option value="">' + esc(T('people.no_role')) + '</option>'
             + (L.roles || []).map(r => '<option value="' + r.id + '"' + (String(r.id) === String(sel) ? ' selected' : '') + '>' + esc(r.name) + '</option>').join('');
         const pm = d.project.owner_analyst_id;
@@ -58,8 +65,11 @@
     // Power (can they affect it?) against interest (does it affect them?), 1-5 each.
     // 3 and up is "high": the four classic quadrants. Stance always in words.
     const STANCES = ['champion', 'supporter', 'neutral', 'sceptic', 'blocker'];
+    /** A member's stakeholder quadrant from power and interest - 'hh', 'hl', 'lh' or 'll', where 3 and up counts as high. */
     function quadrant(m) { return (m.power >= 3 ? 'h' : 'l') + (m.interest >= 3 ? 'h' : 'l'); }
+    /** A stakeholder's stance as a labelled chip, in words. */
     function stanceChip(s) { return '<span class="prj-stance st-' + esc(s) + '">' + esc(T('stake.stance_' + s)) + '</span>'; }
+    /** The stakeholder map - the four power / interest quadrants with the people in each, then the communications plan, most important first. */
     function stakeMap(members) {
         const placed = members.filter(m => m.power && m.interest);
         let html = '<div class="prj-panel prj-stake-panel"><h3>' + esc(T('stake.title')) + ' <small class="prj-muted">' + esc(T('stake.subtitle')) + '</small></h3>'
@@ -79,9 +89,11 @@
         return html + '</div>';
     }
     let stakeMember = null;
+    /** Opens the stakeholder dialog for a member - power, interest, stance and how they are kept informed. */
     function openStake(id) {
         stakeMember = ctx.data.members.find(m => String(m.id) === String(id));
         if (!stakeMember) return;
+        /** Fills a 1-5 level drop-down, with "Not set" first and the current level selected. */
         const lv = (sel, v) => { document.getElementById(sel).innerHTML = '<option value="">' + esc(T('stake.not_set')) + '</option>' + [1, 2, 3, 4, 5].map(n => '<option value="' + n + '"' + (String(v) === String(n) ? ' selected' : '') + '>' + n + ' - ' + esc(T('stake.level_' + n)) + '</option>').join(''); };
         document.getElementById('pstkName').textContent = stakeMember.name;
         lv('pstkPower', stakeMember.power); lv('pstkInterest', stakeMember.interest);
@@ -90,6 +102,7 @@
         document.getElementById('pstkError').hidden = true;
         P.openModal('prjStakeModal');
     }
+    /** Saves the member's stakeholder placing and redraws the project. */
     async function saveStake() {
         try {
             await call({ action: 'member_update', member_id: stakeMember.id, power: document.getElementById('pstkPower').value, interest: document.getElementById('pstkInterest').value,
@@ -99,6 +112,7 @@
     }
 
     let memberKind = 'analyst';
+    /** Opens the add-a-member dialog on the Analyst kind; the Contractor kind shows only for viewers who can see suppliers. */
     function openMember() {
         const L = ctx.L;
         memberKind = 'analyst';
@@ -112,6 +126,7 @@
     }
     // Contractors (3.3.0): suppliers and their contacts - the same list the Tasks screen uses, only with Contracts.
     let ctrChoices = null;
+    /** Loads the suppliers and their contacts once from the Tasks contractors endpoint - false when the viewer has no Contracts access or it is not ready. */
     async function loadContractors() {
         if (ctrChoices !== null) return ctrChoices;
         try {
@@ -120,11 +135,13 @@
         } catch (e) { ctrChoices = false; }
         return ctrChoices;
     }
+    /** Fills the contact list for the chosen supplier, with "Whole supplier" first. */
     function fillContacts() {
         const s = (ctrChoices || []).find(x => String(x.id) === document.getElementById('pmSupplier').value);
         document.getElementById('pmContact').innerHTML = '<option value="">' + esc(T('contractors.whole_supplier')) + '</option>'
             + ((s && s.contacts) || []).map(c => '<option value="' + c.id + '">' + esc(c.name + (c.job_title ? ' - ' + c.job_title : '')) + '</option>').join('');
     }
+    /** Shows the picker for the chosen member kind - analysts or teams not already on the project, the person search, or the supplier and contact lists. */
     function fillMemberPick() {
         const L = ctx.L, taken = ctx.data.members;
         const person = memberKind === 'person', ctr = memberKind === 'contractor';
@@ -149,6 +166,7 @@
             .map(x => '<option value="' + x.id + '">' + esc(x.name) + '</option>').join('');
     }
     let peopleTimer = null;
+    /** Searches People (after a 180ms pause) for someone to add, leaving out those already on the project. */
     function searchPeople() {
         clearTimeout(peopleTimer);
         const q = document.getElementById('pmPerson').value.trim();
@@ -165,6 +183,7 @@
             } catch (e) { P.toast(e.message, 'error'); }
         }, 180);
     }
+    /** Adds the chosen analyst, team, person or contractor with the chosen role and redraws the project. */
     async function saveMember() {
         const body = { action: 'member_add', role_id: document.getElementById('pmRole').value || null };
         if (memberKind === 'person') body.user_id = document.getElementById('pmPersonId').value;
@@ -182,6 +201,7 @@
     }
 
     // ---- Scope / MoSCoW ----------------------------------------------------------------
+    /** One scope item's card on the MoSCoW board - title, status and stage; draggable for those who may change it. */
     function itemCard(it) {
         const stage = it.stage_name ? '<span class="prj-item-stage">' + esc(it.stage_name) + '</span>' : '';
         return '<div class="prj-item' + (it.status === 'dropped' ? ' dropped' : '') + (it.status === 'accepted' ? ' accepted' : '') + '"' + (canChange() ? ' draggable="true"' : '') + ' data-item="' + it.id + '">'
@@ -190,6 +210,7 @@
             + '</div>';
     }
 
+    /** Draws the Scope tab - the MoSCoW columns (must, should, could, won't, unsorted) with counts, cards and an add box in each. */
     function renderScope() {
         const box = document.getElementById('pvScope');
         const items = ctx.data.items;
@@ -209,6 +230,7 @@
         box.innerHTML = html;
     }
 
+    /** Opens the scope item dialog filled from it, or empty for a new one; read-only for viewers who may not change the project. */
     function openItem(it) {
         const d = ctx.data;
         document.getElementById('piTitle').textContent = it ? T('scope.item_edit') : T('scope.item_new');
@@ -229,6 +251,7 @@
         document.getElementById('piError').hidden = true;
         P.openModal('prjItemModal');
     }
+    /** Saves the scope item dialog through tools.php and redraws the project. */
     async function saveItem() {
         const id = document.getElementById('piId').value;
         try {
@@ -242,6 +265,7 @@
     }
 
     // ---- RACI ---------------------------------------------------------------------------
+    /** Draws the RACI tab - a deliverable-by-member grid of letter buttons, flagging rows with no A or no R; an empty state until there are people and items. */
     function renderRaci() {
         const box = document.getElementById('pvRaci');
         const d = ctx.data, members = d.members, items = d.items.filter(i => i.status !== 'dropped');
@@ -273,6 +297,7 @@
         box.innerHTML = html;
     }
 
+    /** Moves a RACI cell to the next letter (blank, R, A, C, I) straight away, then takes the server's row - which may have moved an A from someone else. */
     async function cycleRaci(btn) {
         const [itemId, memberId] = btn.dataset.raci.split(':');
         const order = ['', 'R', 'A', 'C', 'I'];
@@ -294,13 +319,16 @@
     // dependency (3.3.0): something the project needs from outside it, by a date.
     const RAID_TYPES = ['risk', 'assumption', 'issue', 'dependency', 'decision', 'lesson'];
     const RAID_PLURAL = { dependency: 'dependencies' };
+    /** The plural name of a RAID type, such as "Dependencies". */
     const raidPlural = t => T('raid.' + (RAID_PLURAL[t] || t + 's'));
     /** A dependency or a decision still open after its date is LATE - it turns health amber. */
     const raidLate = r => r.status === 'open' && (r.type === 'dependency' || r.type === 'decision') && r.due_date && r.due_date < P.todayStr();
     let raidFilter = { type: '', closed: false, cell: null };   // cell = 'p:i' from the heat map
 
+    /** The colour class for a probability x impact score - high from 15, medium from 8. */
     function scoreClass(s) { return s >= 15 ? 'sc-high' : (s >= 8 ? 'sc-mid' : 'sc-low'); }
 
+    /** The risk heat map - a 5x5 grid of probability against impact, each cell showing how many open risks sit there, clickable to filter. */
     function heatMap(risks) {
         const L = ctx.L;
         const open = risks.filter(r => r.status === 'open' && r.probability && r.impact);
@@ -319,6 +347,7 @@
         return html;
     }
 
+    /** One RAID log row - type, title, owner, dates (late in red), actions done, response, linked ticket and article, escalation badge and score. */
     function raidRow(r) {
         const score = r.score ? '<span class="prj-raid-score ' + scoreClass(Number(r.score)) + '" title="' + esc(T('raid.score', { score: r.score })) + '">' + esc(r.score) + '</span>' : '';
         const meta = [];
@@ -341,6 +370,7 @@
             + escBadge + score + '</li>';
     }
 
+    /** Draws the RAID tab - the risk heat map, the type filters with open counts, show closed, export, and the filtered log (as a decision log under the Decisions filter). */
     function renderRaid() {
         const box = document.getElementById('pvRaid');
         const all = ctx.data.raid || [];
@@ -374,6 +404,7 @@
     }
 
     let raidType = 'risk';
+    /** Switches the RAID dialog to a type, showing only the fields that type uses and wording the date to suit it. */
     function setRaidType(t) {
         raidType = t;
         document.querySelectorAll('#prType [data-rtype]').forEach(b => b.classList.toggle('active', b.dataset.rtype === t));
@@ -411,6 +442,7 @@
         if (!rows && !add) return '';
         return '<label>' + esc(T('raid.actions')) + '</label>' + (rows ? '<ul class="prj-raid-action-list">' + rows + '</ul>' : '<p class="prj-hint">' + esc(T('raid.actions_none')) + '</p>') + add;
     }
+    /** Fills the RAID dialog's escalation and follow-up action sections for a saved entry, hiding each when empty. */
     function fillRaidExtras(r) {
         raidOpen = r;
         const e = document.getElementById('prEscalation'), a = document.getElementById('prActions');
@@ -423,6 +455,7 @@
         const r = (ctx.data.raid || []).find(x => String(x.id) === String(id));
         if (r) fillRaidExtras(r);
     }
+    /** Escalates the open RAID entry with the typed note and refreshes the dialog. */
     async function raidEscalate(btn) {
         const er = document.getElementById('prError'); er.hidden = true;
         btn.disabled = true;
@@ -432,6 +465,7 @@
             await raidReopen(raidOpen.id);
         } catch (e) { er.textContent = e.message; er.hidden = false; btn.disabled = false; }
     }
+    /** Adds a follow-up action task to the open RAID entry, or removes one, and refreshes the dialog. */
     async function raidAction(add, btn) {
         const er = document.getElementById('prError'); er.hidden = true;
         btn.disabled = true;
@@ -443,8 +477,10 @@
             if (add) { const t = document.getElementById('prActTitle'); if (t) t.focus(); }
         } catch (e) { er.textContent = e.message; er.hidden = false; btn.disabled = false; }
     }
+    /** Opens the RAID dialog filled from r, or empty for a new entry of the filtered type; read-only for viewers who may not change the project. */
     function openRaid(r) {
         const L = ctx.L;
+        /** The 1-5 options for a probability or impact drop-down, each with its label. */
         const scale = (labels) => '<option value="">' + esc(T('raid.none')) + '</option>' + [1, 2, 3, 4, 5].map(n => '<option value="' + n + '">' + n + ' - ' + esc((labels || [])[n - 1] || '') + '</option>').join('');
         document.getElementById('prTitle').textContent = r ? T('raid.edit') : T('raid.new');
         document.getElementById('prId').value = r ? r.id : '';
@@ -480,6 +516,7 @@
         P.openModal('prjRaidModal');
         setTimeout(() => document.getElementById('prName').focus(), 60);
     }
+    /** The RAID entry as typed in the dialog, ready to send to raid_save. */
     function raidBody() {
         return { action: 'raid_save', id: document.getElementById('prId').value || null, type: raidType,
             title: document.getElementById('prName').value, description: document.getElementById('prDesc').value,
@@ -490,6 +527,7 @@
             decided_by: document.getElementById('prDecidedBy').value, decided_date: document.getElementById('prDecidedDate').value || null,
             rationale: document.getElementById('prRationale').value };
     }
+    /** Saves the RAID dialog through tools.php and redraws the project. */
     async function saveRaid() {
         try {
             await call(raidBody());
@@ -511,11 +549,13 @@
         return '<button type="button" class="btn btn-secondary" data-raid-act="raid_to_knowledge">' + esc(T('raid.kb_button')) + '</button>'
             + '<span class="prj-hint">' + esc(T('raid.kb_hint')) + '</span>';
     }
+    /** The "Raise a ticket" button for a saved issue with no ticket yet, when the viewer may change the project and can use Tickets. */
     function raidRaiseHtml(r) {
         if (!r || r.type !== 'issue' || r.ticket_id || !canChange() || !ctx.L.can_tickets) return '';
         return '<button type="button" class="btn btn-secondary" data-raid-act="raid_to_ticket">' + esc(T('raid.ticket_raise')) + '</button>'
             + '<span class="prj-hint">' + esc(T('raid.ticket_raise_hint')) + '</span>';
     }
+    /** Saves the RAID dialog first, then turns the entry into a ticket or a draft Knowledge article and says which. */
     async function raidAct(action, btn) {
         const er = document.getElementById('prError');
         er.hidden = true;
@@ -534,6 +574,7 @@
         }
     }
     let ticketTimer = null;
+    /** Searches tickets (after a 180ms pause) to link to the RAID entry. */
     function searchTicket() {
         clearTimeout(ticketTimer);
         const input = document.getElementById('prTicket'), list = document.getElementById('prTicketResults');
@@ -556,6 +597,7 @@
             + exc.map(x => '<li>' + esc(T('gates.exc_' + x.kind, x)) + '</li>').join('') + '</ul><p>' + esc(T('gates.exc_hint')) + '</p></div>';
     }
 
+    /** Draws the Gates tab - exceptions banner, business case, tolerances (cost only with the Budget tool), and each stage's gate with its decision, unapproved changes and checklist. */
     function renderGates() {
         const box = document.getElementById('pvGates');
         const d = ctx.data, p = d.project, tol = d.tolerances || {};
@@ -608,6 +650,7 @@
         const list = ctx.data.gate_changes;
         return Array.isArray(list) ? list : [];
     }
+    /** The warning listing linked changes not yet approved, shown in the gate dialog; empty when there are none. */
     function gateChangesBox() {
         const list = gateChanges();
         if (!list.length) return '';
@@ -620,6 +663,7 @@
     }
 
     let gateDecision = null;
+    /** Opens the gate decision dialog for a stage, warning of unapproved changes and open checklist items unless the stage is already closed. */
     function openGate(stage) {
         gateDecision = stage.gate_decision || null;
         document.getElementById('pgTitle').textContent = T('gates.title', { stage: stage.name });
@@ -633,6 +677,7 @@
         document.getElementById('pgError').hidden = true;
         P.openModal('prjGateModal');
     }
+    /** Records the gate decision and redraws; a go that closes the stage is cheered and names the next one started. */
     async function saveGate() {
         const err = document.getElementById('pgError');
         if (!gateDecision) { err.textContent = T('gates.choose'); err.hidden = false; return; }
@@ -648,6 +693,7 @@
     }
 
     // ---- Wiring (once) --------------------------------------------------------------------
+    /** Wires every click, change, submit and drag on the tools tabs (people, stakeholders, scope board, RACI, RAID, gates) and their dialogs, once. */
     function wire() {
         if (wired) return;
         wired = true;
@@ -795,6 +841,7 @@
 
     window.PrjTools = {
         exceptionsBanner: exceptionsBanner,
+        /** Keeps the page's data and draws each tool tab the project has switched on. */
         render(c) {
             ctx = c;
             wire();

@@ -101,6 +101,7 @@ class AssetImportService
 
     const MAX_ROWS = 5000;
 
+    /** True when the asset import tables exist (after Database Verification). Cached per request. */
     public static function schemaReady(PDO $conn): bool
     {
         static $ready = null;
@@ -571,6 +572,12 @@ class AssetImportService
         return ['count' => 0, 'id' => null, 'key' => null, 'value' => null];
     }
 
+    /**
+     * Creates an asset from one import row, with its custom fields, or describes it on a
+     * preview.
+     *
+     * Throws when nothing is mapped to the asset name.
+     */
     private static function applyCreate(
         PDO $conn, ActorContext $ctx, array $core, array $fields, array $opts,
         string $ref, ?string $name, ?int $tenantId, bool $live): array
@@ -595,6 +602,12 @@ class AssetImportService
                 'display_name' => $name, 'detail' => self::describe($core, $written)];
     }
 
+    /**
+     * Updates an existing asset from one import row, or describes it on a preview.
+     *
+     * Works out the changes first so a preview and a live run report the same thing; in
+     * fill mode only empty values are written, and the name is never changed.
+     */
     private static function applyUpdate(
         PDO $conn, ActorContext $ctx, int $assetId, array $core, array $fields,
         array $opts, string $ref, ?string $name, bool $live): array
@@ -780,6 +793,10 @@ class AssetImportService
         return $n;
     }
 
+    /**
+     * The asset status to give an asset that has dropped out of the source - the first
+     * active status whose name contains retired, disposed or inactive.
+     */
     private static function inactiveStatusId(PDO $conn, ?int $tenantId): ?int
     {
         $stmt = $conn->prepare(
@@ -836,6 +853,7 @@ class AssetImportService
     //  Run bookkeeping
     // ====================================================================
 
+    /** Records the start of an import run and returns its id. */
     private static function startRun(PDO $conn, ActorContext $ctx, array $opts, string $mode, ?int $tenantId): int
     {
         // ⚠️ started_datetime is written EXPLICITLY as UTC_TIMESTAMP(), not left
@@ -859,6 +877,7 @@ class AssetImportService
         return (int)$conn->lastInsertId();
     }
 
+    /** Marks an import run finished with its counts, and returns the run. */
     private static function finishRun(PDO $conn, int $runId, int $seen, array $counts): array
     {
         $stmt = $conn->prepare(
@@ -875,6 +894,7 @@ class AssetImportService
         return self::loadRun($conn, $runId);
     }
 
+    /** Loads one import run with its counts as integers; throws not found when it does not exist. */
     public static function loadRun(PDO $conn, int $runId): array
     {
         $stmt = $conn->prepare("SELECT * FROM asset_import_runs WHERE id = ?");
@@ -905,6 +925,7 @@ class AssetImportService
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /** Writes one row of an import run's log. */
     private static function logEntry(
         PDO $conn, int $runId, ?int $rowNo, string $action, ?int $assetId,
         ?string $ref, ?string $name, ?string $detail, ?array $raw): void
@@ -934,6 +955,7 @@ class AssetImportService
     //  Small helpers
     // ====================================================================
 
+    /** An asset's id and core columns, for comparing with an import row. */
     private static function loadCore(PDO $conn, int $assetId): array
     {
         $cols = implode(', ', array_map(static fn($c) => "`{$c}`", self::CORE_TARGETS));
@@ -942,6 +964,7 @@ class AssetImportService
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
     }
 
+    /** The first of $keys that has a non-blank value in $core, or null. */
     private static function firstNonEmpty(array $core, array $keys): ?string
     {
         foreach ($keys as $k) {
@@ -952,12 +975,14 @@ class AssetImportService
         return null;
     }
 
+    /** The value an import row is matched on - the first non-blank of the match keys. */
     private static function refOf(array $row, array $mapping, array $matchKeys): ?string
     {
         [$core] = self::applyMapping($row, $mapping);
         return self::firstNonEmpty($core, $matchKeys);
     }
 
+    /** The asset name an import row maps to. */
     private static function nameOf(array $row, array $mapping): ?string
     {
         [$core] = self::applyMapping($row, $mapping);
@@ -985,6 +1010,7 @@ class AssetImportService
         return $out;
     }
 
+    /** A value cut to 40 characters for the run log. */
     private static function short($v): string
     {
         $s = (string)$v;

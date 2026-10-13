@@ -609,6 +609,7 @@ function mergeFirstClosedStatusId(PDO $conn): ?int {
     }
 }
 
+/** A ticket's number for audit and note text; "#id" if the lookup fails. */
 function mergeTicketNumber(PDO $conn, int $ticketId): string {
     try {
         $stmt = $conn->prepare("SELECT ticket_number FROM tickets WHERE id = ?");
@@ -619,6 +620,12 @@ function mergeTicketNumber(PDO $conn, int $ticketId): string {
     }
 }
 
+/**
+ * Writes one ticket_audit row for a merge step, best-effort - a failed audit
+ * write never stops the merge. An actor id of 0 is stored as NULL.
+ *
+ * @writes ticket_audit - the merge shows in each ticket's history
+ */
 function mergeAudit(PDO $conn, int $ticketId, int $actorId, string $field, ?string $old, ?string $new): void {
     try {
         $conn->prepare(

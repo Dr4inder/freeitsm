@@ -1,10 +1,12 @@
 # renderSubscribeModal()
 
+Prints the "subscribe to this calendar feed" dialogue - feed address, QR code and phone instructions - with the labels given.
+
 ```php
 function renderSubscribeModal(string $id, array $labels): void
 ```
 
-Defined in [includes/subscribe_modal.php](/code/files/includes/subscribe_modal.php.md), line 25.
+Defined in [includes/subscribe_modal.php](/code/files/includes/subscribe_modal.php.md), line 28.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

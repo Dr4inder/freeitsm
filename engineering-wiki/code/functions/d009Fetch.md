@@ -6,7 +6,7 @@ Fetch a URL from this server. Returns [httpCode, transportError]. A transport er
 function d009Fetch(string $url): array
 ```
 
-Defined in [api/system/debug-tools/D009_guarded_paths.php](/code/files/api/system/debug-tools/D009_guarded_paths.php.md), line 85.
+Defined in [api/system/debug-tools/D009_guarded_paths.php](/code/files/api/system/debug-tools/D009_guarded_paths.php.md), line 90.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

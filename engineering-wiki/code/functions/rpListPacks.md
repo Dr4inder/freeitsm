@@ -6,7 +6,7 @@ Every pack this analyst can open, newest change first, with their role on each.
 function rpListPacks(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 114.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 115.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 120 | `rpListPacks` | read [report_pack_shares](/code/tables/report_pack_shares.md), read [report_packs](/code/tables/report_packs.md), read [analysts](/code/tables/analysts.md) |  |
+| 121 | `rpListPacks` | read [report_pack_shares](/code/tables/report_pack_shares.md), read [report_packs](/code/tables/report_packs.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

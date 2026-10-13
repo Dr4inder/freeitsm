@@ -16,7 +16,7 @@ Defensive (try/catch) so it is safe on a part-migrated install.
 function resolveTicketTenantForChannel(PDO $conn, $channelId, string $fromIdentifier): ?int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1130.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1136.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -30,8 +30,8 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 113
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1138 | `resolveTicketTenantForChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
-| 1153 | `resolveTicketTenantForChannel` | read [tenant_channel_senders](/code/tables/tenant_channel_senders.md) |  |
+| 1144 | `resolveTicketTenantForChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 1159 | `resolveTicketTenantForChannel` | read [tenant_channel_senders](/code/tables/tenant_channel_senders.md) |  |
 
 ## Calls
 

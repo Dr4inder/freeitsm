@@ -6,7 +6,7 @@ Raise a task or a ticket for each domain entering the renewal window. Once per e
 function domainRenewalActionsRun(PDO $conn, array $s): int
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 345.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 355.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 349 | `domainRenewalActionsRun` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md) |  |
+| 359 | `domainRenewalActionsRun` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

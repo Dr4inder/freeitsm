@@ -1,10 +1,12 @@
 # renderWaffleMenuPanel()
 
+Renders the waffle drawer: the module launcher (System for administrators only, every other module filtered by the analyst's allowed modules) and the Recent tab, whose trail ships empty and is fetched the first time it opens.
+
 ```php
 function renderWaffleMenuPanel($modules, $current_module, $path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 672.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 677.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

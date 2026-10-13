@@ -1,10 +1,12 @@
 # pplSectionForms()
 
+The Forms card: form, when submitted, who by (company page), approval state and the ticket it raised.
+
 ```php
 function pplSectionForms(array $s, bool $person): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 159.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 172.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

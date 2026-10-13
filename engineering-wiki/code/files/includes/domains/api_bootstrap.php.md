@@ -1,6 +1,6 @@
 # includes/domains/api_bootstrap.php
 
-> PHP - 94 lines
+> PHP - 98 lines
 
 Domains — the start of every api/domains/*.php endpoint.
 
@@ -16,12 +16,12 @@ Lives in includes/ so it cannot be requested on its own.
 | Function | Line | What it does |
 |---|--:|---|
 | [domainApiBody()](/code/functions/domainApiBody.md) | 33 | The decoded JSON body (never null). |
-| [domainApiOk()](/code/functions/domainApiOk.md) | 43 |  |
-| [domainApiFail()](/code/functions/domainApiFail.md) | 49 |  |
-| [domainRequireCap()](/code/functions/domainRequireCap.md) | 56 |  |
-| [domainHasCap()](/code/functions/domainHasCap.md) | 61 |  |
-| [domainApiTenantForCreate()](/code/functions/domainApiTenantForCreate.md) | 70 | The company a NEW record belongs to: the one the request names (checked against what this analyst may reach), else the analyst's active company. |
-| [domainApiRun()](/code/functions/domainApiRun.md) | 83 | Run a service call and turn any failure into the UI's {success:false} shape. |
+| [domainApiOk()](/code/functions/domainApiOk.md) | 44 | Sends {success: true} merged with `$data` as JSON and ends the request. |
+| [domainApiFail()](/code/functions/domainApiFail.md) | 51 | Sends {success: false, error} as JSON, with an HTTP status when one other than 200 is given, and ends the request. |
+| [domainRequireCap()](/code/functions/domainRequireCap.md) | 59 | Stops the request with a JSON refusal unless the signed-in analyst holds the capability. |
+| [domainHasCap()](/code/functions/domainHasCap.md) | 65 | True when the analyst holds the capability; false on any error. |
+| [domainApiTenantForCreate()](/code/functions/domainApiTenantForCreate.md) | 74 | The company a NEW record belongs to: the one the request names (checked against what this analyst may reach), else the analyst's active company. |
+| [domainApiRun()](/code/functions/domainApiRun.md) | 87 | Run a service call and turn any failure into the UI's {success:false} shape. |
 
 ## How it hangs together
 

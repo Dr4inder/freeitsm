@@ -15,5 +15,5 @@ Ingest log for software-inventory agent submissions — the submit endpoint alwa
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):107 | `logApiResponse` | insert | `host_id`, `api_response` |  |
+| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):122 | `logApiResponse` | insert | `host_id`, `api_response` |  |
 

@@ -1,10 +1,12 @@
 # apiSerializeWorkflowExecution()
 
+Shapes a workflow execution for the API - workflow, trigger, status, times and error, plus the trigger payload and step log when `$full`.
+
 ```php
 function apiSerializeWorkflowExecution(array $r, bool $full): array
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 93.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 108.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

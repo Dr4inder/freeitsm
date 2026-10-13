@@ -15,19 +15,28 @@
     var DIFFS = ['beginner', 'intermediate', 'advanced'];
     var FORMATS = ['choice', 'graded'];
 
+    /**
+     * Translates a key from the lms.tests language section, or fills the {placeholders} in the English
+     * given at the call site.
+     */
     function L(key, en, p) { return window.tf ? window.tf('lms.tests.' + key, en, p) : en.replace(/\{(\w+)\}/g, function (m, k) { return p && p[k] != null ? p[k] : m; }); }
+    /** Escapes a value for safe use in HTML; null and undefined become an empty string. */
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    /** Shorthand for document.getElementById. */
     function $(id) { return document.getElementById(id); }
 
+    /** GETs api/lms/tests.php with the given query parameters and returns the parsed JSON. */
     function get(params) {
         return fetch(API + '?' + new URLSearchParams(params), { credentials: 'same-origin' }).then(function (r) { return r.json(); });
     }
+    /** POSTs a JSON body to api/lms/tests.php and returns the parsed JSON. */
     function post(body) {
         return fetch(API, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
             .then(function (r) { return r.json(); });
     }
 
     var toastEl;
+    /** Shows a short toast message, creating the toast element on first use; errors stay up longer. */
     function toast(msg, kind) {
         if (!toastEl) { toastEl = document.createElement('div'); toastEl.className = 'toast'; document.body.appendChild(toastEl); }
         toastEl.textContent = msg;
@@ -35,17 +44,28 @@
         clearTimeout(toastEl._t);
         toastEl._t = setTimeout(function () { toastEl.className = 'toast'; }, kind === 'error' ? 5000 : 2600);
     }
+    /** Shows the API's error, or a generic "That did not work", as an error toast. */
     function fail(d) { toast((d && d.error) || L('failed', 'That did not work.'), 'error'); }
 
+    /** The translated label for a question difficulty (beginner, intermediate, advanced). */
     function diffLabel(d) { return { beginner: L('diff_beginner', 'Beginner'), intermediate: L('diff_intermediate', 'Intermediate'), advanced: L('diff_advanced', 'Advanced') }[d] || d; }
+    /** The translated label for a question format - graded (best answer) or multiple choice. */
     function fmtLabel(f) { return f === 'graded' ? L('fmt_graded', 'Graded (best answer)') : L('fmt_choice', 'Multiple choice'); }
+    /** The translated label for a question status (draft, approved, hidden). */
     function statusLabel(s) { return { draft: L('st_draft', 'Draft'), approved: L('st_approved', 'Approved'), hidden: L('st_hidden', 'Hidden') }[s] || s; }
+    /**
+     * The translated label for a candidate's sitting state; a sitting whose time ran out still shows as In
+     * progress.
+     */
     function stateLabel(s) {
         return { ready: L('state_ready', 'Not started'), in_progress: L('state_in_progress', 'In progress'), submitted: L('state_submitted', 'Finished'),
                  expired: L('state_expired', 'Link expired'), cancelled: L('state_cancelled', 'Cancelled'), timeup: L('state_in_progress', 'In progress') }[s] || s;
     }
+    /** Formats a UTC date-time for display in the user's time zone. */
     function when(utc) { if (!utc) return ''; return window.fmtDateTime ? window.fmtDateTime(utc) : (window.Tz && Tz.formatDateTime ? Tz.formatDateTime(utc) : utc.slice(0, 16)); }
+    /** Formats a number as a percentage to one decimal place, or an empty string when there is none. */
     function pct(n) { return n == null ? '' : (Math.round(n * 10) / 10) + '%'; }
+    /** HTML option list from a list of values, labelled through the given label function, with one selected. */
     function opts(list, sel, label) { return list.map(function (v) { return '<option value="' + v + '"' + (v === sel ? ' selected' : '') + '>' + esc(label(v)) + '</option>'; }).join(''); }
 
     // ------------------------------------------------------------------ modal shell
@@ -63,6 +83,7 @@
         m.classList.add('active');
         return m;
     }
+    /** Closes a modal. */
     function closeModal(m) { m.classList.remove('active'); }
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') document.querySelectorAll('.modal.active').forEach(function (m) { m.classList.remove('active'); });
@@ -92,6 +113,11 @@
 
     // ------------------------------------------------------------------ question editor
     var gradedDefault = [5, 3, 1, 0];
+    /**
+     * Opens the question editor modal for a new or existing question and saves it through save_question.
+     * Switching the format converts the answers - choice to graded ranks the correct answer highest,
+     * graded to choice keeps only the best as correct.
+     */
     function editQuestion(q, onSaved, testId) {
         q = q || { skill: '', difficulty: 'intermediate', format: 'choice', question_text: '', explanation: '', status: 'approved',
                    answers: [{ text: '', marks: 1 }, { text: '', marks: 0 }, { text: '', marks: 0 }, { text: '', marks: 0 }] };
@@ -107,6 +133,7 @@
             '<button class="btn btn-secondary" data-close>' + esc(L('cancel', 'Cancel')) + '</button><button class="btn btn-primary" id="qeSave">' + esc(L('save', 'Save')) + '</button>');
         var answers = q.answers.map(function (a) { return { text: a.text, marks: a.marks }; });
 
+        /** Copies what is typed in the answer rows back into the answers list before a redraw or save. */
         function readRows() {
             m.querySelectorAll('.ct-ans-row').forEach(function (row, i) {
                 answers[i].text = row.querySelector('.qeT').value;
@@ -115,6 +142,10 @@
                 else answers[i].marks = parseInt(mk.value, 10) || 0;
             });
         }
+        /**
+         * Redraws the answer rows for the current format - a radio button per answer for choice, a marks box
+         * per answer for graded.
+         */
         function draw() {
             var graded = $('qeFmt').value === 'graded';
             $('qeAnsLabel').textContent = graded ? L('answers_graded', 'Answers and their marks (best answer scores most)') : L('answers_choice', 'Answers (tick the correct one)');
@@ -169,10 +200,15 @@
                 + opts(['draft', 'approved', 'hidden'], '', statusLabel) + '<option value="all">' + esc(L('status_all', 'Everything')) + '</option></select>' : '')
             + '</div>';
     }
+    /**
+     * The question bank query (search, skill, difficulty, format, status) read from the filter controls
+     * with the given id prefix.
+     */
     function bankQuery(prefix, statusOverride) {
         return { action: 'bank', q: $(prefix + 'Q').value.trim(), skill: $(prefix + 'Skill').value, difficulty: $(prefix + 'Diff').value,
                  format: $(prefix + 'Fmt').value, status: statusOverride || ($(prefix + 'Status') ? $(prefix + 'Status').value : 'usable') };
     }
+    /** Re-runs a bank search when any filter with the given id prefix changes, debouncing typing in the search box. */
     function wireFilters(prefix, run) {
         var t;
         ['Q', 'Skill', 'Diff', 'Fmt', 'Status'].forEach(function (k) {
@@ -182,6 +218,10 @@
         });
     }
 
+    /**
+     * Opens the picker of approved and draft bank questions not already on the test, and adds the ticked
+     * ones to it through add_questions.
+     */
     function pickFromBank(testId, already, done) {
         get({ action: 'skills' }).then(function (sd) {
             var m = modal('ctPickModal', L('add_from_bank', 'Add questions from the bank'),
@@ -190,7 +230,9 @@
                 '<span class="ct-note" id="pkCount" style="margin-right:auto"></span><button class="btn btn-secondary" data-close>' + esc(L('cancel', 'Cancel')) + '</button>'
                 + '<button class="btn btn-primary" id="pkAdd">' + esc(L('add', 'Add')) + '</button>');
             var picked = {};
+            /** Shows how many questions are ticked in the bank picker. */
             function count() { $('pkCount').textContent = L('n_selected', '{n} selected', { n: Object.keys(picked).length }); }
+            /** Searches the bank with the picker's filters and lists the matches not already on the test. */
             function run() {
                 get(bankQuery('pk', 'usable')).then(function (d) {
                     var list = (d.questions || []).filter(function (q) { return already.indexOf(q.id) === -1; });
@@ -237,6 +279,7 @@
                     + '<td style="white-space:nowrap">' + acts + '</td></tr>';
             }).join('') + '</tbody></table>';
     }
+    /** Shows the candidate's one-time test link in a modal with a Copy button, saying whether it was emailed. */
     function showLink(link, note, emailed) {
         var m = modal('ctLinkModal', L('link_title', 'The candidate\'s link'),
             (emailed === true ? '<p>' + esc(L('link_emailed', 'Emailed to the candidate. A copy is below in case you need it.')) + '</p>' : '')
@@ -252,7 +295,9 @@
         });
         m.querySelector('[data-close]').addEventListener('click', function () { closeModal(m); });
     }
+    /** The note shown under a candidate link - shown only once, works once, and how many days it stays open. */
     function linkNote(days) { return L('link_note', 'This is the only time the link is shown - it is not stored. It works once, for one person, and stays open for {days} day(s) until they press Start. Lost it? Use Link on their row to make a new one.', { days: days }); }
+    /** Wires the New link, Cancel and Delete buttons on a candidates table, then reloads it. */
     function wireSittingActions(host, reload) {
         host.addEventListener('click', function (e) {
             var b = e.target.closest('[data-sit]');
@@ -270,6 +315,10 @@
             }
         });
     }
+    /**
+     * Opens the Send modal that creates a sitting for a candidate (name, optional email) and shows the
+     * link, emailing it when ticked and a mailbox can send.
+     */
     function sendToCandidate(testId, canEmail, done) {
         var m = modal('ctSendModal', L('send_title', 'Send to a candidate'),
             '<div class="form-group"><label>' + esc(L('f_cand_name', 'Candidate\'s name')) + '</label><input id="sdName" maxlength="200"></div>'
@@ -294,6 +343,10 @@
     // ================================================================== INDEX
     function initIndex() {
         var tabs = document.querySelectorAll('.lms-tab');
+        /**
+         * Switches the Tests page to a tab (Tests, Question bank, Candidates), records it in the URL hash and
+         * loads it.
+         */
         function show(tab) {
             tabs.forEach(function (t) { t.classList.toggle('active', t.dataset.tab === tab); });
             document.querySelectorAll('.ct-panel').forEach(function (p) { p.hidden = p.id !== 'panel-' + tab; });
@@ -302,6 +355,10 @@
         }
         tabs.forEach(function (t) { t.addEventListener('click', function () { show(t.dataset.tab); }); });
 
+        /**
+         * Loads and lists the tests with their skills, question and candidate counts, and how many questions
+         * still need checking.
+         */
         function loadTests() {
             get({ action: 'tests' }).then(function (d) {
                 if (!d.success) return fail(d);
@@ -324,6 +381,7 @@
         });
 
         var bankReady = false, bankPicked = {};
+        /** Builds the question bank filters on first use, then runs the bank search. */
         function loadBank() {
             if (!bankReady) {
                 bankReady = true;
@@ -335,6 +393,10 @@
             }
             runBank();
         }
+        /**
+         * Searches the question bank with the tab's filters and lists the questions with Approve, Edit, Hide /
+         * Unhide and Delete actions; clears the ticked selection.
+         */
         function runBank() {
             get(bankQuery('bk')).then(function (d) {
                 if (!d.success) return fail(d);
@@ -352,6 +414,10 @@
                 $('bankList')._qs = qs;
             });
         }
+        /**
+         * Shows the bulk Approve / Hide bar with the number of ticked bank questions, or hides it when none
+         * are ticked.
+         */
         function bulk() {
             var n = Object.keys(bankPicked).length;
             $('bankBulk').innerHTML = n ? esc(L('n_selected', '{n} selected', { n: n }))
@@ -383,6 +449,10 @@
         });
         $('bankNew').addEventListener('click', function () { editQuestion(null, function () { bankReady = false; loadBank(); }); });
 
+        /**
+         * Loads every candidate sitting into the Candidates tab and shows the retention setting for finished
+         * candidates.
+         */
         function loadCandidates() {
             get({ action: 'sittings' }).then(function (d) {
                 if (!d.success) return fail(d);
@@ -405,6 +475,10 @@
         var data = { test: null, skills: [], questions: [] };
         var canEmail = false;
 
+        /**
+         * Adds an editable skill row (skill, difficulty, number of questions, format, Fill and Remove) to the
+         * test builder and returns it.
+         */
         function skillRow(sk) {
             sk = sk || { id: 0, skill: '', difficulty: 'intermediate', question_count: 5, format: 'choice' };
             var div = document.createElement('div');
@@ -420,6 +494,7 @@
             $('skills').appendChild(div);
             return div;
         }
+        /** The save_test payload read from the builder - title, role, time limit, pass mark and the skill rows. */
         function readTest() {
             var skills = [];
             document.querySelectorAll('.ct-skill').forEach(function (row) {
@@ -429,6 +504,7 @@
             return { action: 'save_test', id: testId, title: $('tTitle').value, role_description: $('tRole').value,
                      time_limit_minutes: $('tLimit').value, pass_mark: $('tPass').value, skills: skills };
         }
+        /** Saves the test through save_test, switching the URL to the new id on first save, then reloads it. */
         function save(quiet) {
             return post(readTest()).then(function (d) {
                 if (!d.success) { fail(d); throw new Error('save'); }
@@ -437,9 +513,14 @@
                 return load();
             });
         }
+        /** How many of the test's questions (not hidden) match a skill row's skill, difficulty and format. */
         function haveFor(sk) {
             return data.questions.filter(function (q) { return q.skill === sk.skill && q.difficulty === sk.difficulty && q.format === sk.format && q.status !== 'hidden'; }).length;
         }
+        /**
+         * Loads the test with its skills and questions into the builder, then draws them and the candidates; a
+         * new unsaved test just draws.
+         */
         function load() {
             if (!testId) { render(); return Promise.resolve(); }
             return get({ action: 'test', id: testId }).then(function (d) {
@@ -455,6 +536,10 @@
                 loadSittings();
             });
         }
+        /**
+         * Draws the builder's question counts per skill, the question list with its actions, and enables Send
+         * only when every question is approved.
+         */
         function render() {
             document.querySelectorAll('.ct-skill').forEach(function (row, i) {
                 var sk = data.skills[i];
@@ -479,15 +564,24 @@
             $('sendHint').textContent = !qs.length ? '' : drafts ? L('send_blocked', 'Approve or remove the draft questions first - nothing goes to a candidate unchecked.')
                 : (qs.some(function (q) { return q.status === 'hidden'; }) ? L('send_hidden', 'Remove the hidden questions first.') : '');
         }
+        /** Loads the candidates for this test into the builder's candidates table. */
         function loadSittings() {
             if (!testId) return;
             get({ action: 'sittings', test_id: testId }).then(function (d) { if (d.success) $('sittings').innerHTML = candidatesTable(d.sittings || [], false); });
         }
 
+        /**
+         * Fills the given skills with questions one at a time through generate - from the bank first when
+         * ticked, the AI writing the rest - then reports the totals and any errors.
+         */
         function fill(rows) {
             var useBank = $('useBank').checked;
             var total = { bank: 0, ai: 0 }, msgs = [];
             var i = 0;
+            /**
+             * Fills the next skill in the list, or finishes - re-enabling the buttons, reporting the totals and
+             * reloading the test.
+             */
             function next() {
                 if (i >= rows.length) {
                     $('fillStatus').textContent = '';

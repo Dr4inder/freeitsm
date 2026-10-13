@@ -1,10 +1,12 @@
 # apiLoadChange()
 
+Loads one change row (apiChangeSelect), or answers 404 and stops - including for a change in a company the key cannot reach.
+
 ```php
 function apiLoadChange(PDO $conn, array $apiKey, int $changeId): array
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 119.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 128.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

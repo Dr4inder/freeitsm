@@ -6,7 +6,7 @@
 function domainNormaliseStatuses(array $raw): array
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 226.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 231.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,10 +1,12 @@
 # pplE()
 
+HTML-escapes any value for output.
+
 ```php
 function pplE($s): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 13.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 16.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

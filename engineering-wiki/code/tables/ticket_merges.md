@@ -31,7 +31,7 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L126 |  |
+| [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L130 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L275 |  |
 | [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | unmergeTicket L172, unmergeTicket L263, mergedAwayInfo L304 |  |
 

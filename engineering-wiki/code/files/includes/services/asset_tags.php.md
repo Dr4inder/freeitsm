@@ -1,6 +1,6 @@
 # includes/services/asset_tags.php
 
-> PHP - 397 lines
+> PHP - 399 lines
 
 AssetTagsService — the ONE place an asset tag is generated, checked or changed (PR #164, built on Sandy's original).
 
@@ -45,13 +45,13 @@ AST-00005 and a generated AST-00005 both through.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 174 | `AssetTagsService::nextNumber` | read [asset_tag_counters](/code/tables/asset_tag_counters.md) |  |
-| 194 | `AssetTagsService::windCounterTo` | **insert** [asset_tag_counters](/code/tables/asset_tag_counters.md) (`counter_key`, `next_value`) |  |
-| 203 | `AssetTagsService::claimNext` | **insert** [asset_tag_counters](/code/tables/asset_tag_counters.md) (`counter_key`, `next_value`) |  |
-| 303 | `AssetTagsService::clashMessage` | read [assets](/code/tables/assets.md) |  |
-| 371 | `AssetTagsService::assign` | read [assets](/code/tables/assets.md) |  |
-| 385 | `AssetTagsService::assign` | **update** [assets](/code/tables/assets.md) (`asset_tag`) |  |
-| 389 | `AssetTagsService::assign` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 175 | `AssetTagsService::nextNumber` | read [asset_tag_counters](/code/tables/asset_tag_counters.md) |  |
+| 196 | `AssetTagsService::windCounterTo` | **insert** [asset_tag_counters](/code/tables/asset_tag_counters.md) (`counter_key`, `next_value`) |  |
+| 205 | `AssetTagsService::claimNext` | **insert** [asset_tag_counters](/code/tables/asset_tag_counters.md) (`counter_key`, `next_value`) |  |
+| 305 | `AssetTagsService::clashMessage` | read [assets](/code/tables/assets.md) |  |
+| 373 | `AssetTagsService::assign` | read [assets](/code/tables/assets.md) |  |
+| 387 | `AssetTagsService::assign` | **update** [assets](/code/tables/assets.md) (`asset_tag`) |  |
+| 391 | `AssetTagsService::assign` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ## How it hangs together
 

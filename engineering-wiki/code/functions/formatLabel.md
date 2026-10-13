@@ -1,10 +1,12 @@
 # formatLabel()
 
+Turns a bucket key into the axis label in the analyst's date format - day and month buckets are rendered without a time-zone shift, years as they are.
+
 ```php
 function formatLabel($raw, $timeGrouping)
 ```
 
-Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 228.
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 257.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -18,7 +18,7 @@ Types:
 function brandingLoginFields(string $scope = 'login'): array
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 147.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

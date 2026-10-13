@@ -7,17 +7,26 @@
  *
  * Every URL is built from window.DOM_API (set by the page from BASE_URL) —
  * never a root-relative "/api/…", which 404s on an install in a sub-directory.
+ *
+ * @wiki Domains-Developer-Guide
  */
 (function () {
     'use strict';
 
+    /** Translates a key from the 'domains' namespace, or returns the key when no translator is loaded. */
     const T = (k, p) => (window.t ? window.t('domains.' + k, p) : k);
 
+    /** HTML-escapes a value; null and undefined become an empty string. */
     function esc(v) {
         if (v === null || v === undefined) return '';
         return String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
+    /**
+     * Calls a Domains endpoint under window.DOM_API - a GET, or a JSON POST when a body is given.
+     *
+     * @return the decoded reply; throws a translated error on a network fault, a bad reply or success false
+     */
     async function api(path, body) {
         const opts = body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
         let res;
@@ -32,11 +41,13 @@
         return data;
     }
 
+    /** Formats a stored date as a calendar date in the analyst's format, never shifted by time zone. */
     function fmtDate(d) {
         if (!d) return '';
         return window.fmtNaiveDate ? window.fmtNaiveDate(String(d).slice(0, 10) + 'T00:00:00') : String(d).slice(0, 10);
     }
 
+    /** Draws the security grade badge (a dash when not graded); big for the domain page's hero. */
     function grade(g, big) {
         if (!g) return '<span class="dom-grade' + (big ? ' big' : '') + '" title="' + esc(T('grade.none')) + '">–</span>';
         const cls = 'g-' + g.replace('+', 'plus');
@@ -58,6 +69,7 @@
         return '<span class="dom-pill ' + cls + '">' + esc(label) + '</span>';
     }
 
+    /** Draws a domain status with its coloured dot, or "no status". */
     function status(name, colour) {
         if (!name) return '<span class="dom-status"><span class="dot"></span>' + esc(T('status.none')) + '</span>';
         return '<span class="dom-status"><span class="dot" style="background:' + esc(colour || '#94a3b8') + '"></span>' + esc(name) + '</span>';
@@ -68,6 +80,7 @@
     const ICON_SHIELD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
     const ICON_KEY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg>';
 
+    /** Draws one lock icon as on, off or unknown, with a tooltip naming the lock and its state. */
     function lockIcon(state, icon, labelKey) {
         const cls = state === true ? 'on' : (state === false ? 'off' : 'unknown');
         const word = state === true ? T('lock.on') : (state === false ? T('lock.off') : T('lock.unknown'));
@@ -84,9 +97,12 @@
             + '</span>';
     }
 
+    /** Returns the translated name of a domain purpose. */
     function purpose(p) { return T('purpose.' + p); }
+    /** Returns the translated name of a renewal mode. */
     function renewal(m) { return T('renewal.' + m); }
 
+    /** Draws a comma-separated tag list as tag chips. */
     function tags(s) {
         if (!s) return '';
         return String(s).split(',').map(x => x.trim()).filter(Boolean).map(x => '<span class="dom-tag">' + esc(x) + '</span>').join('');
@@ -112,6 +128,7 @@
             + (f.weight ? '<span class="pts">−' + esc(f.weight) + '</span>' : '') + '</div>';
     }
 
+    /** Formats an amount in a currency (GBP when none is given); blank for no amount. */
     function money(v, cur) {
         if (v === null || v === undefined || v === '') return '';
         try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur || 'GBP' }).format(v); }
@@ -127,7 +144,9 @@
         try { fetch(window.DOM_API + 'tick.php', { method: 'POST', keepalive: true }).catch(() => {}); } catch (e) {}
     }
 
+    /** Opens a dialog by id. */
     function openModal(id) { const m = document.getElementById(id); if (m) m.classList.add('active'); }
+    /** Closes a dialog by id. */
     function closeModal(id) { const m = document.getElementById(id); if (m) m.classList.remove('active'); }
 
     /** Fill a <select> from a list of {id,name}. */

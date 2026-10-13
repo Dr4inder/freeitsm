@@ -112,6 +112,7 @@ final class KnowledgeViewer
     private bool $unrestricted;
     private string $unrestrictedReason;
 
+    /** Private: viewers are built through the named constructors, so every caller states who is reading. */
     private function __construct(
         string $level,
         ?int $analystId,
@@ -273,12 +274,19 @@ final class KnowledgeViewer
         return new self(Audience::INTERNAL, null, null, null, true, $reason);
     }
 
+    /** The audience rung this viewer reads at. */
     public function level(): string             { return $this->level; }
+    /** The analyst reading, or null for a portal user, a visitor or a system reader. */
     public function analystId(): ?int           { return $this->analystId; }
+    /** The self-service user reading, or null when the reader is not a portal user. */
     public function userId(): ?int              { return $this->userId; }
+    /** The company ids the viewer may read from, or null for no company limit. */
     public function companyScope(): ?array      { return $this->companyScope; }
+    /** True for a forSystem() reader, which skips all filtering. */
     public function isUnrestricted(): bool      { return $this->unrestricted; }
+    /** The reason given to forSystem() for skipping all filtering; empty for every other viewer. */
     public function unrestrictedReason(): string { return $this->unrestrictedReason; }
+    /** True for an analyst reading (internal level and not an unrestricted system reader). */
     public function isAnalyst(): bool           { return $this->level === Audience::INTERNAL && !$this->unrestricted; }
 }
 
@@ -712,7 +720,11 @@ final class KnowledgeAclCache
 {
     private static array $store = [];
 
-    /** @return mixed|null null = not cached (distinct from a cached null) */
+    /**
+     * The cached value for $key, or null when nothing is cached.
+     *
+     * @return mixed|null null = not cached (distinct from a cached null)
+     */
     public static function get(string $key)
     {
         return array_key_exists($key, self::$store) ? self::$store[$key] : null;
@@ -725,6 +737,7 @@ final class KnowledgeAclCache
         return $value;
     }
 
+    /** Empties the per-request cache. */
     public static function clear(): void { self::$store = []; }
 }
 

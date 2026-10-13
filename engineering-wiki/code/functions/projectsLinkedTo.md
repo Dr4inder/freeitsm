@@ -6,7 +6,7 @@ The projects one record (asset, change, ticket, contract, CI, article) is linked
 function projectsLinkedTo(PDO $conn, ActorContext $ctx, string $kind, int $targetId): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 371.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 388.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

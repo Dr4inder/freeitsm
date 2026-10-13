@@ -22,7 +22,7 @@ Search corpus — one row per searchable unit (ticket subject, email body, note,
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/search/backfill.php](/code/files/includes/search/backfill.php.md):156 | `searchBackfillPrune` | delete |  |  |
+| [includes/search/backfill.php](/code/files/includes/search/backfill.php.md):159 | `searchBackfillPrune` | delete |  |  |
 | [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):101 | `searchCorpusUpsert` | insert | `source_type`, `source_id`, `ticket_id`, `tenant_id`, `tenant_scope`, `is_internal`, `title`, `body`, `source_datetime`, `indexed_datetime` |  |
 | [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):130 | `searchCorpusDelete` | delete |  |  |
 | [includes/search/corpus.php](/code/files/includes/search/corpus.php.md):136 | `searchCorpusDeleteTicket` | delete |  |  |

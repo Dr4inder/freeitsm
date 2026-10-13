@@ -6,7 +6,7 @@ The name a supplier goes by.
 function tasksSupplierNameSql(string $alias = 'sp'): string
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 40.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 42.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

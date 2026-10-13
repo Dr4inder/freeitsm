@@ -1,10 +1,12 @@
 # warRoomIsMember()
 
+True when the analyst is a listed member of the channel - what decides access to a private channel or a DM.
+
 ```php
 function warRoomIsMember(PDO $conn, int $analystId, int $channelId): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 258.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 259.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 258
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 260 | `warRoomIsMember` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+| 261 | `warRoomIsMember` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
 
 ## Called from
 

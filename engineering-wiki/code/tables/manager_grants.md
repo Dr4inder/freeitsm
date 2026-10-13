@@ -29,5 +29,5 @@ Management lines (discussion #62, step 3): who a portal user may see the tickets
 |---|---|---|
 | [api/system/managers.php](/code/files/api/system/managers.php.md) | managersStatus L48, L98, L113, L128 |  |
 | [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md) | maReady L62, maState L96, L212, L337 |  |
-| [includes/managers.php](/code/files/includes/managers.php.md) | managersActive L100, managerTeamUserIds L137, managersNotifyNewTicket L397 |  |
+| [includes/managers.php](/code/files/includes/managers.php.md) | managersActive L101, managerTeamUserIds L138, managersNotifyNewTicket L398 |  |
 

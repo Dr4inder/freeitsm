@@ -11,7 +11,7 @@ clamped. Nothing else may be interpolated into CSS.
 function brandingLoginCss(array $d): string
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 306.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 307.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

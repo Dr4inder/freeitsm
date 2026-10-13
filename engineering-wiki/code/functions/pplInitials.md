@@ -6,7 +6,7 @@ Two letters for an avatar.
 function pplInitials(string $name): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 267.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 280.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -2,6 +2,8 @@
 
 > PHP - 39 lines
 
+The notification bell's markup - one bell for the analyst app and the self-service portal (discussions #55 and #62). The look is assets/css/notification-bell.css and the behaviour assets/js/notification-bell.js; each header prints this and calls NotificationBell.init() with its own URLs.
+
 ## Functions
 
 | Function | Line | What it does |

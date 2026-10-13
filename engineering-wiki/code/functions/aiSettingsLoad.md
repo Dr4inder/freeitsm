@@ -6,7 +6,7 @@ Load a ready-to-use config (decrypted key) for `aiProviderChat()`. Defaults: pro
 function aiSettingsLoad(PDO $conn, string $ns): array
 ```
 
-Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 144.
+Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 151 | `aiSettingsLoad` | read [system_settings](/code/tables/system_settings.md) |  |
+| 155 | `aiSettingsLoad` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

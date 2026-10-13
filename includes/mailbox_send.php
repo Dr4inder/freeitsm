@@ -14,6 +14,12 @@
 
 require_once __DIR__ . '/email_log.php';
 
+/**
+ * Sends one HTML email from a mailbox through its own provider (IMAP/SMTP, Gmail or
+ * Microsoft Graph) and logs it.
+ *
+ * Returns null on success, or the error message when sending failed.
+ */
 function mailboxSendSimple(PDO $conn, array $mailbox, string $to, string $subject, string $htmlBody, string $route, ?int $ticketId = null): ?string
 {
     $provider = $mailbox['provider'] ?? 'microsoft';

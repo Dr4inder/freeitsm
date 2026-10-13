@@ -1,6 +1,6 @@
 # assets/js/search-panel-dismiss.js
 
-> JavaScript - 92 lines
+> JavaScript - 100 lines
 
 Search panel dismissal — Escape, and optionally clicking away (GH #144).
 
@@ -38,7 +38,7 @@ do not share a close routine.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `initSearchPanelDismiss(opts)` | 47 |  |
-| `panel()` | 52 |  |
-| `isOpen()` | 54 |  |
+| `initSearchPanelDismiss(opts)` | 50 | Wires one module's search panel to close on Escape and, when the analyst's preference is on, on a click outside it (and outside opts.inside). |
+| `panel()` | 56 | Returns the panel element. |
+| `isOpen()` | 62 | Whether the panel is showing - the module's own test when given, otherwise the panel's active class. |
 

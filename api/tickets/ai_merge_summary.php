@@ -50,6 +50,10 @@ header('X-Accel-Buffering: no');
 header('Connection: keep-alive');
 set_time_limit(0);
 
+/**
+ * Sends one server-sent event (an event name and a JSON data line) and flushes it to the
+ * browser straight away.
+ */
 function sse_send(string $event, array $data): void
 {
     echo "event: {$event}\n";

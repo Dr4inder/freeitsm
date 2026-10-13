@@ -11,7 +11,7 @@ for sending to AI for requirement extraction.
 function rfpExtractDocxText(string $filePath): string
 ```
 
-Defined in [includes/rfp_docx_parser.php](/code/files/includes/rfp_docx_parser.php.md), line 13.
+Defined in [includes/rfp_docx_parser.php](/code/files/includes/rfp_docx_parser.php.md), line 20.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

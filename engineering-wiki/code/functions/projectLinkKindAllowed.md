@@ -6,7 +6,7 @@ May this analyst use links of this kind at all? (Projects AND the other module.)
 function projectLinkKindAllowed(PDO $conn, int $analystId, string $kind): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 78.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

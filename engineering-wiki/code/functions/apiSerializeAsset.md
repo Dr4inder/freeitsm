@@ -1,10 +1,12 @@
 # apiSerializeAsset()
 
+Shapes an asset row for the API - identity, company, type, status, location with its path, hardware, operating system and the rest of the record.
+
 ```php
 function apiSerializeAsset(PDO $conn, array $r): array
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 89.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 99.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

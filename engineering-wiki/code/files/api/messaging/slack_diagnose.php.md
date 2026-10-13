@@ -1,6 +1,6 @@
 # api/messaging/slack_diagnose.php
 
-> API endpoint - 296 lines
+> API endpoint - 300 lines
 
 API Endpoint: a full health check of one Slack channel.
 
@@ -33,7 +33,7 @@ Every check returns the same shape so the UI never has to special-case one:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addCheck()](/code/functions/addCheck.md) | 69 |  |
+| [addCheck()](/code/functions/addCheck.md) | 73 | Appends one result row (key, label, status, detail and an optional fix) to the global `$checks` list the diagnosis returns. |
 
 ## How it hangs together
 

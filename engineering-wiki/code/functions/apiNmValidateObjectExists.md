@@ -1,10 +1,12 @@
 # apiNmValidateObjectExists()
 
+Answers 422 and stops unless the CMDB object exists and, when a key is given, belongs to a company the key can reach - the same message either way, so another company's object is never revealed.
+
 ```php
 function apiNmValidateObjectExists(PDO $conn, int $objectId, ?array $apiKey = null): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 255.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 280.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 256 | `apiNmValidateObjectExists` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 281 | `apiNmValidateObjectExists` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ## Calls
 

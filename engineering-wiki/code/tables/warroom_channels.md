@@ -25,16 +25,16 @@ War room — the fallback chat analysts use when Teams/Slack is unavailable.  Ev
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):1340 |  | insert | `kind`, `team_id`, `created_datetime` |  |
 | [includes/warroom.php](/code/files/includes/warroom.php.md):88 | `warRoomEnsureChannels` | insert | `kind`, `name`, `created_datetime` |  |
 | [includes/warroom.php](/code/files/includes/warroom.php.md):95 | `warRoomEnsureChannels` | insert | `kind`, `team_id`, `created_datetime` |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):298 | `warRoomCreateChannel` | insert | `kind`, `name`, `topic`, `is_private`, `created_by`, `created_datetime` |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):342 | `warRoomSetArchived` | update | `archived_datetime` |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):356 | `warRoomUpdateChannel` | update | `name`, `topic` |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):392 | `warRoomOpenDm` | insert | `kind`, `dm_key`, `is_private`, `created_by`, `created_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):299 | `warRoomCreateChannel` | insert | `kind`, `name`, `topic`, `is_private`, `created_by`, `created_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):343 | `warRoomSetArchived` | update | `archived_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):357 | `warRoomUpdateChannel` | update | `name`, `topic` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):393 | `warRoomOpenDm` | insert | `kind`, `dm_key`, `is_private`, `created_by`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L1298, L1340, L1348 |  |
-| [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L157, L166, L167, L174, L181, L291 |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomEnsureChannels L89, warRoomEnsureChannels L96, warRoomChannelList L131, warRoomChannel L213, warRoomOpenDm L385, warRoomMyMentions L798 ... |  |
+| [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L166, L175, L176, L183, L190, L300 |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomEnsureChannels L89, warRoomEnsureChannels L96, warRoomChannelList L131, warRoomChannel L213, warRoomOpenDm L386, warRoomMyMentions L799 ... |  |
 

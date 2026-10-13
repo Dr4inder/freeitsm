@@ -6,7 +6,7 @@ Licences, optionally only those renewing in the range. Licence keys are NEVER in
 function rpSoftwareLicences(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md), line 79.
+Defined in [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md), line 85.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,7 +22,7 @@ Defined in [includes/report_packs/blocks_software.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 83 | `rpSoftwareLicences` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 89 | `rpSoftwareLicences` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ## Calls
 

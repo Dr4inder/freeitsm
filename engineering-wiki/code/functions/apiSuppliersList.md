@@ -1,10 +1,12 @@
 # apiSuppliersList()
 
+GET /suppliers - every supplier's id, display name (trading name, else legal name) and whether it supplies assets.
+
 ```php
 function apiSuppliersList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 643.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 677.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 645 | `apiSuppliersList` | read [suppliers](/code/tables/suppliers.md) |  |
+| 679 | `apiSuppliersList` | read [suppliers](/code/tables/suppliers.md) |  |
 
 ## Calls
 

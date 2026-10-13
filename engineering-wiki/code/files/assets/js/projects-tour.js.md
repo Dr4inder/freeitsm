@@ -1,6 +1,9 @@
 # assets/js/projects-tour.js
 
-> JavaScript - 159 lines
+> JavaScript - 175 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Projects Developer Guide](https://github.com/edmozley/freeitsm/wiki/Projects-Developer-Guide)
 
 Projects help - "How it fits together" (3.3.0): an interactive map of the parts of a project and what feeds what, with a 12-step walk through an office move, and a filter showing what each way of running starts with.
 
@@ -18,22 +21,22 @@ button too). Lines are decoration, redrawn on resize.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `T(k, p)` | 18 |  |
-| `TT(k)` | 19 |  |
-| `esc(s)` | 20 |  |
-| `cfg()` | 52 |  |
-| `mount(el)` | 54 |  |
-| `onClick(e)` | 80 |  |
-| `syncMode()` | 88 |  |
-| `isOff(tool)` | 90 |  |
-| `related(id)` | 91 |  |
-| `draw()` | 93 |  |
-| `nodePanel(id)` | 109 |  |
-| `chips(list)` | 113 |  |
-| `walkPanel()` | 122 |  |
-| `lines()` | 133 | Lines between the lit box and what it feeds / is fed by (explore), or between the step's boxes (walk). |
-| `rect(id)` | 138 |  |
-| `ends(a, b)` | 140 | From edge to edge, so the arrowhead is never under a box: side by side across columns, else top/bottom. |
+| `T(k, p)` | 21 | Translates a key under projects.tour.*, or returns the key when the i18n helper is not loaded. |
+| `TT(k)` | 23 | Translates a tool's name under projects.tools.*. |
+| `esc(s)` | 25 | Escapes a value for safe use in HTML. |
+| `cfg()` | 58 | The methods and their tools from window.PRJ_TOUR, or empty when the page sent none. |
+| `mount(el)` | 61 | Builds the map into el - the explore / walk switch, the method filter, a column of part buttons per group and the side panel - and wires its clicks, arrow keys and resize. |
+| `onClick(e)` | 88 | Handles clicks on the map - a part selects it (leaving the walk), the mode switch changes mode, and the walk's Back / Next / Restart step it. |
+| `syncMode()` | 97 | Highlights the button of the current mode, explore or walk. |
+| `isOff(tool)` | 100 | True when the chosen method does not switch on the tool behind a part. |
+| `related(id)` | 102 | What a part feeds and what feeds it. |
+| `draw()` | 105 | Redraws the map's state - lit, related, dimmed and switched-off parts - the side panel and the lines. |
+| `nodePanel(id)` | 122 | The side panel for a chosen part - what it is, where to find it, which methods switch it on, and buttons for what it feeds and is fed by. |
+| `chips(list)` | 127 | A button per related part. |
+| `walkPanel()` | 137 | The side panel for the current walk step - step count and dots, its title and text, and Back / Next (Restart on the last). |
+| `lines()` | 148 | Lines between the lit box and what it feeds / is fed by (explore), or between the step's boxes (walk). |
+| `rect(id)` | 154 | A part's box on the map, relative to the map's corner. |
+| `ends(a, b)` | 156 | From edge to edge, so the arrowhead is never under a box: side by side across columns, else top/bottom. |
 
 ## Loaded by
 

@@ -46,6 +46,11 @@ require_once dirname(__DIR__, 3) . '/includes/timezone.php';   // naive_today_sq
 // Serializers + loaders
 // ---------------------------------------------------------------------------
 
+/**
+ * The SELECT for contracts, with supplier, owner, status and payment schedule names, the
+ * customer and company columns and, once Database Verification has added it, the cost
+ * centre.
+ */
 function apiContractSelect(PDO $conn): string {
     [$partyCols, $partyJoins] = contractPartySql($conn, 'c');
     // After c.*, so its effective tenant_id (NULL read as Default) wins the key.
@@ -76,6 +81,10 @@ function apiContractVisibility(PDO $conn, array $apiKey): array {
     return contractVisibilitySqlForScope($conn, $apiKey['company_scope'] ?? null, 'c');
 }
 
+/**
+ * Shapes a contract row for the API - number, title, company, supplier or customer
+ * (company and person), owner, status, dates, value and the rest of the record.
+ */
 function apiSerializeContract(array $r): array {
     $rel = function ($id, $name) {
         return $id === null ? null : ['id' => (int)$id, 'name' => $name];
@@ -125,6 +134,7 @@ function apiSerializeContract(array $r): array {
     ];
 }
 
+/** Loads one contract row the key may see (apiContractVisibility), or answers 404 and stops. */
 function apiLoadContract(PDO $conn, int $contractId, array $apiKey): array {
     [$vis, $visArgs] = apiContractVisibility($conn, $apiKey);
     $stmt = $conn->prepare(apiContractSelect($conn) . " WHERE c.id = ?$vis");
@@ -136,6 +146,7 @@ function apiLoadContract(PDO $conn, int $contractId, array $apiKey): array {
     return $row;
 }
 
+/** The SELECT for suppliers, with type and status names and their numbers of contacts and contracts. */
 function apiSupplierSelect(): string {
     return "SELECT s.*,
                    st.name AS type_name,
@@ -147,6 +158,10 @@ function apiSupplierSelect(): string {
             LEFT JOIN supplier_statuses ss ON ss.id = s.supplier_status_id";
 }
 
+/**
+ * Shapes a supplier row for the API - legal, trading and display name, registration
+ * numbers, type, status, address and counts.
+ */
 function apiSerializeSupplier(array $r): array {
     $rel = function ($id, $name) {
         return $id === null ? null : ['id' => (int)$id, 'name' => $name];
@@ -181,6 +196,7 @@ function apiSerializeSupplier(array $r): array {
     ];
 }
 
+/** Loads one supplier row (apiSupplierSelect), or answers 404 and stops. */
 function apiLoadSupplier(PDO $conn, int $supplierId): array {
     $stmt = $conn->prepare(apiSupplierSelect() . " WHERE s.id = ?");
     $stmt->execute([$supplierId]);
@@ -307,6 +323,7 @@ function apiContractsList(PDO $conn, array $apiKey, array $params, array $body):
     ]);
 }
 
+/** GET /contracts/{id} - one contract. */
 function apiContractsGet(PDO $conn, array $apiKey, array $params, array $body): void {
     apiRespond(apiSerializeContract(apiLoadContract($conn, $params[0], $apiKey)));
 }
@@ -333,6 +350,10 @@ function apiContractCompany(PDO $conn, array $apiKey, array $body, bool $creatin
     return $body;
 }
 
+/**
+ * POST /contracts - creates a contract through ContractsService in the company named (or
+ * the key's default) and returns it.
+ */
 function apiContractsCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     $body = apiContractCompany($conn, $apiKey, $body, true);
     try {
@@ -384,6 +405,10 @@ function apiContractTermsGet(PDO $conn, array $apiKey, array $params, array $bod
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/**
+ * POST /contracts/{id}/terms - saves the contract's terms through ContractsService and
+ * returns them.
+ */
 function apiContractTermsSave(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         ContractsService::saveTerms($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $body['terms'] ?? null);
@@ -405,6 +430,7 @@ function apiSuppliersGet(PDO $conn, array $apiKey, array $params, array $body): 
     apiRespond($supplier);
 }
 
+/** POST /suppliers - creates a supplier through ContractsService and returns it. */
 function apiSuppliersCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         $res = ContractsService::saveSupplier($conn, ActorContext::fromApiKey($apiKey), $body);
@@ -412,6 +438,7 @@ function apiSuppliersCreate(PDO $conn, array $apiKey, array $params, array $body
     } catch (ServiceError $e) { apiFailFromService($e); }
 }
 
+/** PATCH /suppliers/{id} - updates a supplier through ContractsService and returns it. */
 function apiSuppliersUpdate(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         $res = ContractsService::saveSupplier($conn, ActorContext::fromApiKey($apiKey), array_merge($body, ['id' => (int)$params[0]]));
@@ -444,6 +471,7 @@ function apiSerializeContact(array $c): array {
     ];
 }
 
+/** GET /suppliers/{id}/contacts - the supplier's contacts, by surname. */
 function apiSupplierContactsList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadSupplier($conn, $params[0]);
     $stmt = $conn->prepare(
@@ -454,6 +482,10 @@ function apiSupplierContactsList(PDO $conn, array $apiKey, array $params, array 
     apiRespond(array_map('apiSerializeContact', $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/**
+ * POST /suppliers/{id}/contacts - adds a contact to the supplier. First name and surname
+ * are required.
+ */
 function apiSupplierContactsCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadSupplier($conn, $params[0]);
     $firstName = trim((string)($body['first_name'] ?? ''));
@@ -479,6 +511,10 @@ function apiSupplierContactsCreate(PDO $conn, array $apiKey, array $params, arra
     apiRespond(apiSerializeContact($get->fetch(PDO::FETCH_ASSOC)), 201);
 }
 
+/**
+ * PATCH /suppliers/{id}/contacts/{contactId} - updates the fields sent, keeping the
+ * rest. First name and surname cannot be emptied.
+ */
 function apiSupplierContactsUpdate(PDO $conn, array $apiKey, array $params, array $body): void {
     [$supplierId, $contactId] = $params;
     apiLoadSupplier($conn, $supplierId);
@@ -511,6 +547,7 @@ function apiSupplierContactsUpdate(PDO $conn, array $apiKey, array $params, arra
     apiRespond(apiSerializeContact($out->fetch(PDO::FETCH_ASSOC)));
 }
 
+/** DELETE /suppliers/{id}/contacts/{contactId} - deletes one of the supplier's contacts. */
 function apiSupplierContactsDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     [$supplierId, $contactId] = $params;
     apiLoadSupplier($conn, $supplierId);
@@ -539,18 +576,23 @@ function apiContractLookupList(PDO $conn, string $table): void {
     }, $rows));
 }
 
+/** GET /contract-statuses - the contract statuses. */
 function apiContractStatusesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiContractLookupList($conn, 'contract_statuses');
 }
+/** GET /payment-schedules - the payment schedules. */
 function apiPaymentSchedulesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiContractLookupList($conn, 'payment_schedules');
 }
+/** GET /supplier-types - the supplier types. */
 function apiSupplierTypesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiContractLookupList($conn, 'supplier_types');
 }
+/** GET /supplier-statuses - the supplier statuses. */
 function apiSupplierStatusesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiContractLookupList($conn, 'supplier_statuses');
 }
+/** GET /contract-term-tabs - the contract term tabs. */
 function apiContractTermTabsList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiContractLookupList($conn, 'contract_term_tabs');
 }

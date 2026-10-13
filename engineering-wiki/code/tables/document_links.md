@@ -20,9 +20,9 @@ What each document is attached to. A ROW, deliberately, not a column on `documen
 | [api/documents/attach.php](/code/files/api/documents/attach.php.md):62 |  | insert | `document_id`, `parent_type`, `parent_id`, `linked_by_id` |  |
 | [api/documents/save.php](/code/files/api/documents/save.php.md):139 |  | insert | `document_id`, `parent_type`, `parent_id`, `linked_by_id` |  |
 | [api/documents/unlink.php](/code/files/api/documents/unlink.php.md):61 |  | delete |  |  |
-| [includes/documents.php](/code/files/includes/documents.php.md):596 | `documentsDetachParent` | delete |  |  |
-| [includes/documents.php](/code/files/includes/documents.php.md):638 | `documentsCollectOrphans` | delete |  |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):716 | `TaskRecurrence::createOccurrence` | insert | `document_id`, `parent_type`, `parent_id`, `linked_by_id`, `created_datetime` |  |
+| [includes/documents.php](/code/files/includes/documents.php.md):601 | `documentsDetachParent` | delete |  |  |
+| [includes/documents.php](/code/files/includes/documents.php.md):643 | `documentsCollectOrphans` | delete |  |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):720 | `TaskRecurrence::createOccurrence` | insert | `document_id`, `parent_type`, `parent_id`, `linked_by_id`, `created_datetime` |  |
 
 ## Read by
 
@@ -34,10 +34,10 @@ What each document is attached to. A ROW, deliberately, not a column on `documen
 | [api/documents/unlink.php](/code/files/api/documents/unlink.php.md) | L65 |  |
 | [api/self-service/get_document.php](/code/files/api/self-service/get_document.php.md) | L64 |  |
 | [api/self-service/get_ticket_detail.php](/code/files/api/self-service/get_ticket_detail.php.md) | L222 |  |
-| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L475, L919, L961 |  |
+| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L484, L928, L970 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L482, L685 |  |
 | [api/tickets/get_notes.php](/code/files/api/tickets/get_notes.php.md) | L98 |  |
-| [includes/documents.php](/code/files/includes/documents.php.md) | documentVisibilityClause L425, documentCanView L468, documentVisibleParents L535, documentsCollectOrphans L658 |  |
-| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateDocuments L44 |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::createOccurrence L716 |  |
+| [includes/documents.php](/code/files/includes/documents.php.md) | documentVisibilityClause L430, documentCanView L473, documentVisibleParents L540, documentsCollectOrphans L663 |  |
+| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateDocuments L45 |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::createOccurrence L720 |  |
 

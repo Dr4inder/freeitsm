@@ -6,7 +6,7 @@ The WHOIS server for a TLD, from IANA's referral, cached with the bootstrap.
 function domainWhoisServer(PDO $conn, string $tld): ?string
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 313.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 322.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 320 | `domainWhoisServer` | read [system_settings](/code/tables/system_settings.md) |  |
-| 330 | `domainWhoisServer` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 329 | `domainWhoisServer` | read [system_settings](/code/tables/system_settings.md) |  |
+| 339 | `domainWhoisServer` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## Calls
 

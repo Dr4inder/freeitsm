@@ -1,10 +1,12 @@
 # peopleContactName()
 
+The name to show for a supplier contact: first name and surname, else email, else #id.
+
 ```php
 function peopleContactName(array $r): string
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 594.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 597.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

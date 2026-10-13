@@ -1,10 +1,12 @@
 # apiSupplierStatusesList()
 
+GET /supplier-statuses - the supplier statuses.
+
 ```php
 function apiSupplierStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 551.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 592.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ The settings, with their defaults.
 function managersSettings(PDO $conn): array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 61.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 6
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 77 | `managersSettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 78 | `managersSettings` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

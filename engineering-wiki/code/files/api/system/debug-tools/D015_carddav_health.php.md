@@ -1,6 +1,6 @@
 # api/system/debug-tools/D015_carddav_health.php
 
-> API endpoint - 260 lines
+> API endpoint - 270 lines
 
 Debug Tool D015 — Is the CardDAV connection healthy, in both directions?
 
@@ -37,24 +37,24 @@ Output: plain text, section-delimited with === HEADERS ===.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 55 |  |
-| [yn()](/code/functions/yn.md) | 59 |  |
-| [maskUrl()](/code/functions/maskUrl.md) | 61 | Hide the host and the account, keep the shape. Reports get sent on. |
-| [maskUser()](/code/functions/maskUser.md) | 67 |  |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 71 |  |
+| [addSection()](/code/functions/addSection.md) | 59 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 64 | Formats a boolean as YES or NO for the report. |
+| [maskUrl()](/code/functions/maskUrl.md) | 66 | Hide the host and the account, keep the shape. Reports get sent on. |
+| [maskUser()](/code/functions/maskUser.md) | 73 | Masks a username to its first character followed by stars. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 81 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 87 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 88 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
-| 101 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 200 |  | read [users](/code/tables/users.md) |  |
-| 202 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
-| 203 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
-| 223 |  | read [carddav_write_log](/code/tables/carddav_write_log.md) |  |
-| 228 |  | read [carddav_write_log](/code/tables/carddav_write_log.md) |  |
+| 97 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 98 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 111 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 210 |  | read [users](/code/tables/users.md) |  |
+| 212 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 213 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 233 |  | read [carddav_write_log](/code/tables/carddav_write_log.md) |  |
+| 238 |  | read [carddav_write_log](/code/tables/carddav_write_log.md) |  |
 
 ## How it hangs together
 

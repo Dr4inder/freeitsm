@@ -255,6 +255,7 @@ final class MandatoryFieldsService
         return "Closed by {$who} via {$via}.";
     }
 
+    /** Emails the chosen people that a ticket was closed with mandatory fields empty, listing them. */
     private static function notify(PDO $conn, int $ticketId, array $to, array $missing, string $closedBy): void
     {
         require_once __DIR__ . '/../template_email.php';

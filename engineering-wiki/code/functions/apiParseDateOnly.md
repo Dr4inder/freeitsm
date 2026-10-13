@@ -6,7 +6,7 @@ Validate a DATE field (YYYY-MM-DD); 422 naming the field on garbage. Null/'' cle
 function apiParseDateOnly($value, string $field): ?string
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 205.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

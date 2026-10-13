@@ -1,10 +1,12 @@
 # apiSerializeLicence()
 
+Shapes a licence row for the API, adding renewal_status - overdue, due_soon (inside the notice period, 30 days by default) or ok - computed the way the licence screen colours it.
+
 ```php
 function apiSerializeLicence(array $r): array
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 217.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 235.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

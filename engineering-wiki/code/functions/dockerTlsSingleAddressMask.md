@@ -6,7 +6,7 @@ The netmask that pins a name constraint to exactly one address.
 function dockerTlsSingleAddressMask(string $ip): string
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 229.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 230.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

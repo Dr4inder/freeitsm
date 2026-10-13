@@ -1,10 +1,12 @@
 # renderHeaderRight()
 
+Renders the right-hand side of the analyst header: the "Back to" link, the company switcher, the notification bell, War Room alerts, the mail-check button, the initials avatar and its account menu (preferences, password, MFA, the portal link when the analyst could sign in there, appearance, log out), plus the password and MFA dialogs and their script.
+
 ```php
 function renderHeaderRight($analyst_name, $path_prefix)
 ```
 
-Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1436.
+Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), line 1462.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -15,7 +17,7 @@ Defined in [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1469 | `renderHeaderRight` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1495 | `renderHeaderRight` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## Calls
 

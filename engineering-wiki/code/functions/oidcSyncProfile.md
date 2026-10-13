@@ -21,7 +21,7 @@ function oidcSyncProfile(
 ): void
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 345.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 347.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

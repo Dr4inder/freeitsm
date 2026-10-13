@@ -1,10 +1,12 @@
 # handleSet()
 
+Saves the install-wide folder permission model ('filing', anything else meaning 'containers') and writes an audit row naming the old and new model.
+
 ```php
 function handleSet(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), line 161.
+Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), line 168.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -14,11 +16,13 @@ Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permis
 
 **Returns:** `void`
 
+**Writes:** system_settings(knowledge_folder_permission_model)
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 166 | `handleSet` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 173 | `handleSet` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ Every section present, in a fixed order.
 function pplSections(array $sections, bool $person): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 230.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 243.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

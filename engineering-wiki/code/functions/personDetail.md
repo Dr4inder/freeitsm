@@ -6,7 +6,7 @@ Everything about one person this analyst may see, or null (unknown or out of rea
 function personDetail(PDO $conn, int $analystId, int $userId): ?array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 193.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 194.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,9 +20,9 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 193.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 201 | `personDetail` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 227 | `personDetail` | read [users](/code/tables/users.md) |  |
-| 232 | `personDetail` | read [users](/code/tables/users.md) |  |
+| 202 | `personDetail` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 228 | `personDetail` | read [users](/code/tables/users.md) |  |
+| 233 | `personDetail` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

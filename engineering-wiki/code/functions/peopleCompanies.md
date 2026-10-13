@@ -6,7 +6,7 @@ The companies this analyst can access, with how many people are in each.
 function peopleCompanies(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 111.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 111.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 117 | `peopleCompanies` | read [tenants](/code/tables/tenants.md) |  |
-| 121 | `peopleCompanies` | read [users](/code/tables/users.md) |  |
+| 118 | `peopleCompanies` | read [tenants](/code/tables/tenants.md) |  |
+| 122 | `peopleCompanies` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

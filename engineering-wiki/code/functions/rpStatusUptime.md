@@ -1,10 +1,12 @@
 # rpStatusUptime()
 
+Service status block: each chosen service's uptime over the period, with an optional daily strip and incident list.
+
 ```php
 function rpStatusUptime(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 32.
+Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 36.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

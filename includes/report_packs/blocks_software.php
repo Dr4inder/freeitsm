@@ -20,6 +20,7 @@ function rpSoftwareScope(PDO $conn, int $analystId, $tenant, bool $includeSystem
     return ["INNER JOIN assets h ON h.id = d.host_id", "WHERE 1=1$sys$tSql", $tParams];
 }
 
+/** Software block: a chart of how many machines have software from each publisher. A snapshot of today. */
 function rpSoftwareByPublisher(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$join, $where, $params] = rpSoftwareScope($conn, $analystId, $tenant, $o['system']);
@@ -34,6 +35,7 @@ function rpSoftwareByPublisher(PDO $conn, int $analystId, array $o, array $range
     return $data;
 }
 
+/** Software block: a chart of the most installed applications, by number of machines. A snapshot of today. */
 function rpSoftwareTopApps(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$join, $where, $params] = rpSoftwareScope($conn, $analystId, $tenant, $o['system']);
@@ -53,6 +55,10 @@ function rpSoftwareTopApps(PDO $conn, int $analystId, array $o, array $range, $t
     ];
 }
 
+/**
+ * Software block: KPI tiles - applications, machines and installs in the inventory, and
+ * licence renewals in the period.
+ */
 function rpSoftwareKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$join, $where, $params] = rpSoftwareScope($conn, $analystId, $tenant, false);

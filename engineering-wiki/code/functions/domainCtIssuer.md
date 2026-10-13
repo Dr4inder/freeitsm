@@ -6,7 +6,7 @@
 function domainCtIssuer(string $dn): string
 ```
 
-Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 90.
+Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 95.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

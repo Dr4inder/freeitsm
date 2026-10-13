@@ -1,6 +1,6 @@
 # includes/messaging/MattermostProvider.php
 
-> PHP - 327 lines
+> PHP - 342 lines
 
 MattermostProvider — a Mattermost support channel, via an Outgoing Webhook (inbound) and the REST API v4 with a bot account (outbound). Contributed by turbay-a in PR #166; see the Teams and Mattermost developer guide for what changed at merge.
 
@@ -44,14 +44,14 @@ because the outgoing webhook does not carry them.
 ## Traps
 
 > [!WARNING]
-> **Line 52, in `MattermostProvider::verifyWebhook`:** compare secrets with `hash_equals()`, never === (timing).
+> **Line 58, in `MattermostProvider::verifyWebhook`:** compare secrets with `hash_equals()`, never === (timing).
 
 > [!WARNING]
-> **Line 99, in `MattermostProvider::parseInbound`:** drop the bot's own posts. Our replies are posted in the same channel, so the webhook hands them straight back; without this every analyst reply would arrive as a new message from "the customer".
+> **Line 106, in `MattermostProvider::parseInbound`:** drop the bot's own posts. Our replies are posted in the same channel, so the webhook hands them straight back; without this every analyst reply would arrive as a new message from "the customer".
 
 > [!WARNING]
-> **Line 213:** Mattermost refuses a root_id that is itself a reply, and the outgoing webhook never says which a post is - so ask, rather than threading under whatever post came in last.
+> **Line 222:** Mattermost refuses a root_id that is itself a reply, and the outgoing webhook never says which a post is - so ask, rather than threading under whatever post came in last.
 
 > [!WARNING]
-> **Line 279:** the email is returned ONLY when Mattermost says it is verified. A server can allow sign-up without proving the address, and an unverified email is just text anyone typed: someone registering as ceo@yourcompany.com would have their chats filed under the real CEO. An empty email (the server hides addresses from this bot) is normal - the person simply gets a named contact instead.
+> **Line 294:** the email is returned ONLY when Mattermost says it is verified. A server can allow sign-up without proving the address, and an unverified email is just text anyone typed: someone registering as ceo@yourcompany.com would have their chats filed under the real CEO. An empty email (the server hides addresses from this bot) is normal - the person simply gets a named contact instead.
 

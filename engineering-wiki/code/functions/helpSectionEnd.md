@@ -1,10 +1,12 @@
 # helpSectionEnd()
 
+Closes a section opened by `helpSection()`.
+
 ```php
 function helpSectionEnd(): void
 ```
 
-Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 57.
+Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 58.
 
 **Returns:** `void`
 

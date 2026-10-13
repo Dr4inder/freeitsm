@@ -1,10 +1,12 @@
 # channelWindowOpen()
 
+True when the last inbound message (UTC) was under 24 hours ago, so a free-form reply is still allowed.
+
 ```php
 function channelWindowOpen(?string $lastInboundAt): bool
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 419.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 428.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -259,6 +259,12 @@ function handleSetMode(PDO $conn, int $analystId, array $in): void
     echo json_encode(['success' => true, 'dropped' => $dropped]);
 }
 
+/**
+ * Adds an analyst, team, portal user or user group to a folder's or article's access
+ * list, and audits it. Adding someone already listed is treated as success.
+ *
+ * @writes knowledge_acl - one entry for the object
+ */
 function handleAdd(PDO $conn, int $analystId, array $in): void
 {
     [$type, $id] = requireObject($conn, $in);
@@ -283,6 +289,10 @@ function handleAdd(PDO $conn, int $analystId, array $in): void
     echo json_encode(['success' => true]);
 }
 
+/**
+ * Removes one entry from a folder's or article's access list and audits it. The reply's
+ * now_unreachable is true when a restricted object is left with nobody on its list.
+ */
 function handleRemove(PDO $conn, int $analystId, array $in): void
 {
     [$type, $id] = requireObject($conn, $in);

@@ -1,10 +1,12 @@
 # selfServiceMailboxes()
 
+The active mailboxes a self-service user may raise a ticket through - their own company's and the shared ones. Used for the dropdown and to re-check the posted choice.
+
 ```php
 function selfServiceMailboxes(PDO $conn, int $userId): array
 ```
 
-Defined in [includes/self_service_mailboxes.php](/code/files/includes/self_service_mailboxes.php.md), line 31.
+Defined in [includes/self_service_mailboxes.php](/code/files/includes/self_service_mailboxes.php.md), line 34.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,8 +19,8 @@ Defined in [includes/self_service_mailboxes.php](/code/files/includes/self_servi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 33 | `selfServiceMailboxes` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 36 | `selfServiceMailboxes` | read [users](/code/tables/users.md) |  |
+| 36 | `selfServiceMailboxes` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 39 | `selfServiceMailboxes` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

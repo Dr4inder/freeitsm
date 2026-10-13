@@ -6,7 +6,7 @@
 function brandingLoginKey(string $field, string $scope = 'login'): string
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 223.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 224.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

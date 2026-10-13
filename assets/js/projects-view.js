@@ -9,6 +9,8 @@
  * dragged onto another lane (or onto "not in a phase yet"), and a task can be
  * added in place. Task rows open the task on the Tasks board - the task window
  * there is the one place a task is edited, so this page never grows a second one.
+ *
+ * @wiki Projects-Internals-1-Architecture
  */
 (function () {
     'use strict';
@@ -24,16 +26,19 @@
     let openAdd = null;
     let links = null;     // {links: {kind: [...]}, ready} from api/projects/links.php   // the lane (stage id, '' = not in one) whose add-a-task form is open
 
+    /** What the project's way of running calls its time boxes - phase, stage or sprint. */
     function timeboxKind() {
         const m = (L && L.methodologies || []).find(x => x.key === data.project.methodology);
         return m ? m.timebox : 'phase';
     }
+    /** The name of the project's way of running, for the banner. */
     function methodLabel() {
         const m = (L && L.methodologies || []).find(x => x.key === data.project.methodology);
         return m ? m.label : data.project.methodology;
     }
 
     // ---- Banner -------------------------------------------------------------------
+    /** Draws the project banner - colour, icon, code, status, method, members-only and priority chips, company, name, goal, owner and dates, and the progress ring with its health. */
     function renderBanner() {
         const p = data.project;
         const b = document.getElementById('prjBanner');
@@ -78,6 +83,7 @@
     }
 
     // ---- Overview -----------------------------------------------------------------
+    /** Draws the Overview - the tiles, the warnings (exceptions, ticket spike, missed milestones, late RAID, benefit reviews, waiting change requests, escalations), the slots the other files fill, About, Now, Next up, Recent and the connections summary. */
     function renderOverview() {
         const p = data.project;
         const open = p.task_total - p.task_done;
@@ -188,15 +194,20 @@
      * reading of what is stored.
      */
     function burnupPoints() {
+        /** What one task counts for on the burn-up - one, or its estimate in hours. */
         const val = t => burnMeasure === 'hours' ? (t.estimate_hours !== null && t.estimate_hours !== undefined ? Number(t.estimate_hours) : 0) : 1;
         const tasks = data.tasks.filter(t => !burnStage || String(t.project_stage_id || '') === burnStage);
         if (!tasks.length) return null;
+        /** The date a task was created, as Y-m-d. */
         const created = t => String(t.created_datetime || '').slice(0, 10);
+        /** The date a closed task was completed, or null while it is open. */
         const doneOn = t => Number(t.is_closed) && t.completed_datetime ? String(t.completed_datetime).slice(0, 10) : null;
         const today = P.todayStr();
         let first = tasks.map(created).filter(Boolean).sort()[0] || today;
         if (data.project.start_date && data.project.start_date < first) first = data.project.start_date;
+        /** A Y-m-d date as a whole day number (days since 1970, UTC). */
         const dn = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000;
+        /** A day number back to a Y-m-d date. */
         const iso = n => new Date(n * 86400000).toISOString().slice(0, 10);
         const span = dn(today) - dn(first);
         const step = span > 120 ? 7 : 1;
@@ -207,6 +218,7 @@
             scope: tasks.reduce((s, t) => s + (created(t) && created(t) <= d ? val(t) : 0), 0),
             done: tasks.reduce((s, t) => s + (doneOn(t) && doneOn(t) <= d ? val(t) : 0), 0) }));
     }
+    /** Draws the progress-over-time panel - stage, tasks / hours and burn-up / burndown switches, then the chart, or a note when there is nothing to plot. */
     function renderBurnup() {
         const box = document.getElementById('pvBurnup');
         if (!box || !window.PrjCharts) return;
@@ -254,6 +266,7 @@
         });
     }
 
+    /** A small card for an active stage on the Overview - name, tasks done of total, goal and a progress bar. */
     function stageMini(s) {
         const total = Number(s.task_total), done = Number(s.task_done);
         const pct = total ? Math.round(done * 100 / total) : 0;
@@ -264,6 +277,7 @@
     }
 
     // ---- History ------------------------------------------------------------------
+    /** One history line - who, what changed in the viewer's words, the detail (translated where the stored value is a key) and when. */
     function historyItem(h) {
         const who = h.analyst_name || T('history.someone');
         const f = h.field_name;
@@ -301,6 +315,7 @@
             + (detail ? ' <span class="prj-feed-detail">' + esc(detail) + '</span>' : '') + '</span><span class="prj-feed-when">' + esc(when) + '</span></div></li>';
     }
 
+    /** Draws the History tab - every history line, newest first, or a note when there is none. */
     function renderHistory() {
         document.getElementById('pvHistory').innerHTML = '<div class="prj-panel">'
             + (data.history.length ? '<ul class="prj-feed big">' + data.history.map(historyItem).join('') + '</ul>' : '<p class="prj-muted">' + esc(T('view.no_history')) + '</p>')
@@ -328,6 +343,7 @@
             + ' value="' + (est !== null ? est : '') + '" placeholder="' + esc(T('effort.ph')) + '" title="' + esc(T('effort.input_tip')) + '" aria-label="' + esc(T('effort.input_tip')) + '"></span>';
     }
 
+    /** One task row in a Plan lane - drag grip, status, title linking to the task, subtasks, priority (when not the default), estimate, waiting / clash flags, contractor, due date, assignee and remove. */
     function taskRow(t) {
         const closed = !!Number(t.is_closed);
         const late = !closed && t.due_date && t.due_date < P.todayStr();
@@ -374,6 +390,7 @@
             + '</form>';
     }
 
+    /** One Plan lane - a stage's header (kind, name, goal, milestones, dates, status, counts, effort, start / finish and edit buttons), progress bar, task rows and add row; or the "not in a stage yet" lane when stage is null. */
     function lane(stage, tasks) {
         const kind = timeboxKind();
         if (!stage) {
@@ -412,6 +429,7 @@
             + addRow(stage.id) + '</section>';
     }
 
+    /** Draws the Plan tab - the intro, Milestone and add-stage buttons, the project milestones strip, a lane per stage and the unassigned lane. */
     function renderPlan() {
         const kind = timeboxKind();
         const byStage = {};
@@ -430,6 +448,7 @@
     }
 
     // ---- Drawing everything ---------------------------------------------------------
+    /** Redraws the whole page from the data - applies the viewer's permissions, draws the banner, Overview, Plan, Connections and History, shows only switched-on tool tabs, and hands the data to every other Projects file. */
     function renderAll() {
         // What this analyst may do (Projects -> Settings -> General). The server
         // refuses anything else; this only stops the page offering it.
@@ -470,6 +489,7 @@
         if (window.PrjTimeline) window.PrjTimeline.render(toolCtx);   // after showTab: it draws only when visible
     }
 
+    /** Shows a tab and puts it in the address bar; charts on the shown tab draw now that they can measure their width, and the Gates tab refreshes if a document was added meanwhile. */
     function showTab(name) {
         // A document attached since the page loaded is something a gate's document item can now point at.
         if (name === 'gates' && docsTouched) { docsTouched = false; refresh(); }
@@ -483,6 +503,7 @@
         try { history.replaceState(null, '', '#' + name); } catch (e) { /* ignore */ }
     }
 
+    /** Loads the project, the lookups and its connections together and draws the page, or shows "not found"; a new empty project opens with the add-a-task box ready. */
     async function load() {
         try {
             const [d, lk, ln] = await Promise.all([P.api('get.php?id=' + projectId), P.lookups(), P.api('links.php?project_id=' + projectId).catch(() => null)]);
@@ -503,6 +524,7 @@
         }
     }
 
+    /** Reloads the project from get.php and redraws the page. */
     async function refresh() {
         const d = await P.api('get.php?id=' + projectId);
         data = d;
@@ -514,6 +536,7 @@
         asset: 'laptop', change: 'wrench', ticket: 'mail', contract: 'box', cmdb: 'network', article: 'star', problem: 'shield',
     };
 
+    /** A connection's history value ("asset: name") with the kind in the viewer's words. */
     function linkHistoryText(v) {
         const m = /^(\w+): (.*)$/.exec(v);
         if (!m) return v;
@@ -530,6 +553,7 @@
         return '<div class="prj-panel prj-ov-links"><h3>' + esc(T('links.summary')) + '</h3><div class="prj-link-chips">' + chips.join('') + '</div></div>';
     }
 
+    /** One connected record on the Connections tab - label linking to it, sub-line, status and unlink. */
     function linkRow(kind, r) {
         return '<li class="prj-conn-row' + (r.closed ? ' closed' : '') + '">'
             + '<a href="' + esc(window.PRJ_BASE + r.url) + '" class="prj-conn-main">'
@@ -552,6 +576,7 @@
         const a = data.announcements;
         if (!a || (a.mode === 'off' && !a.list.length)) return '';
         const can = data.permissions && data.permissions.can_change && a.mode !== 'off';
+        /** An announcement's time in words - from start to end, or from start with no end yet. */
         const when = p => p.end ? T('announce.when_range', { start: window.fmtDateTime(p.start), end: window.fmtDateTime(p.end) })
                                 : T('announce.when_open', { start: window.fmtDateTime(p.start) });
         const rows = a.list.map(p => '<li class="prj-conn-row' + (p.state === 'finished' || p.state === 'cancelled' ? ' closed' : '') + '">'
@@ -570,6 +595,7 @@
             + '</section>';
     }
 
+    /** Adds a service-and-impact row to the announce dialog; the impact defaults to the most serious level that is neither downtime nor the all-clear (Maintenance on a stock install). */
     function announceRow(serviceId, impactId) {
         const a = data.announcements;
         // Default impact by meaning: the most serious level that does not count
@@ -585,6 +611,7 @@
         document.getElementById('paServices').appendChild(row);
     }
 
+    /** Opens the announce-disruption dialog, empty, with one service row and, for planned work, the active stage's end as a suggested start. */
     function openAnnounce() {
         const a = data.announcements;
         const planned = a.mode === 'planned';
@@ -603,6 +630,7 @@
         P.openModal('prjAnnounceModal');
     }
 
+    /** Announces the disruption on Service Status through tools.php, then reloads the project and redraws Connections and History. */
     async function saveAnnounce() {
         const err = document.getElementById('paError');
         const services = Array.from(document.querySelectorAll('#paServices .prj-ann-row')).map(r => ({
@@ -621,6 +649,7 @@
         } catch (e) { err.textContent = e.message; err.hidden = false; }
     }
 
+    /** Asks, then withdraws a scheduled announcement and redraws Connections. */
     async function withdrawAnnounce(id) {
         const p = (data.announcements.list || []).find(x => String(x.id) === String(id));
         if (!p) return;
@@ -634,6 +663,7 @@
         } catch (e) { P.toast(e.message, 'error'); }
     }
 
+    /** Draws the Connections tab - the Service Status panel, then a panel per kind of linked record with its rows and a search box to add one. */
     function renderConnections() {
         const box = document.getElementById('pvConnections');
         if (!links) { box.innerHTML = ''; return; }
@@ -654,6 +684,7 @@
             }).join('') + '</div>';
     }
 
+    /** Reloads the project's connections and redraws the Connections tab and the Overview. */
     async function reloadLinks() {
         try { links = await P.api('links.php?project_id=' + projectId); } catch (e) { /* keep the last copy */ }
         renderConnections();
@@ -661,6 +692,7 @@
     }
 
     let searchTimer = null;
+    /** Searches records of one kind (after a 180ms pause) to connect to the project, showing the matches under the box. */
     function searchLinks(input) {
         clearTimeout(searchTimer);
         const kind = input.dataset.linkSearch;
@@ -677,6 +709,7 @@
         }, 180);
     }
 
+    /** Connects or disconnects a record, then reloads the project and its connections and redraws; after adding, the search box keeps focus for the next one. */
     async function linkAction(action, value) {
         const [kind, id] = value.split(':');
         try {
@@ -692,6 +725,7 @@
     }
 
     // ---- Stages -------------------------------------------------------------------
+    /** Opens the stage dialog filled from stage, or empty for a new one, worded for the project's kind of time box. */
     function openStage(stage) {
         const kind = stage ? (stage.kind || timeboxKind()) : timeboxKind();
         const word = P.timeboxWord(kind);
@@ -709,6 +743,7 @@
         setTimeout(() => document.getElementById('psName').focus(), 60);
     }
 
+    /** Saves the stage dialog through stage_save.php and redraws; closing a stage this way is cheered. */
     async function saveStage() {
         const id = document.getElementById('psId').value;
         const body = {
@@ -731,6 +766,7 @@
         }
     }
 
+    /** Starts or finishes a stage from its lane's button and redraws; finishing is cheered. */
     async function setStageStatus(id, status) {
         const s = data.stages.find(x => String(x.id) === String(id));
         if (!s) return;
@@ -741,12 +777,14 @@
         } catch (e) { P.toast(e.message, 'error'); }
     }
 
+    /** Celebrates a finished stage on its lane (or the ring) with a toast. */
     function cheer(name, stageId) {
         const el = document.querySelector('[data-lane="' + stageId + '"] .prj-lane-head') || document.getElementById('pvRing');
         P.celebrate(el);
         P.toast(T('celebrate.stage_done', { name: name }));
     }
 
+    /** Asks, then deletes the stage open in the dialog. */
     async function deleteStage() {
         const id = document.getElementById('psId').value;
         const s = data.stages.find(x => String(x.id) === id);
@@ -762,6 +800,7 @@
     }
 
     // ---- Tasks --------------------------------------------------------------------
+    /** Creates a task in a lane from its add form through task_create.php, redraws and puts the cursor back in the same form for the next one. */
     async function addTask(form) {
         const title = form.title.value.trim();
         if (!title) { form.title.focus(); return; }
@@ -785,6 +824,7 @@
         }
     }
 
+    /** Moves a task to another lane (or out of every lane) through task_assign.php and redraws; nothing happens when it is already there. */
     async function moveTask(taskId, stageId) {
         const t = data.tasks.find(x => String(x.id) === String(taskId));
         if (!t || String(t.project_stage_id || '') === String(stageId || '')) return;
@@ -794,6 +834,7 @@
         } catch (e) { P.toast(e.message, 'error'); }
     }
 
+    /** Asks, then takes a task off the project (the task itself is kept) and redraws. */
     async function removeTask(taskId) {
         const ok = await window.showConfirm({ title: T('plan.remove_task'), message: T('plan.remove_task_body'), okLabel: T('plan.remove'), okClass: 'danger' });
         if (!ok) return;
@@ -804,6 +845,7 @@
     }
 
     // ---- Project actions -------------------------------------------------------------
+    /** Opens the project form and redraws after saving; closing the project this way is cheered. */
     function editProject() {
         const before = data.project.status;
         P.openProjectForm(data.project, async (id, isNew, body) => {
@@ -816,6 +858,7 @@
         });
     }
 
+    /** Asks, then deletes the project and goes back to the portfolio. */
     async function deleteProject() {
         const kind = timeboxKind();
         const ok = await window.showConfirm({

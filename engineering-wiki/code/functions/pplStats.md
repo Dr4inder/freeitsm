@@ -6,7 +6,7 @@ The coloured strip of counts across the top of a page.
 function pplStats(array $sections, bool $person, array $labels = []): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 17.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 21.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,10 +1,12 @@
 # rpTicketsKpis()
 
+Tickets block: KPI tiles - created, closed, open at the end of the period, average time to close and first-time-fix rate.
+
 ```php
 function rpTicketsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 165.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 178.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +22,8 @@ Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/repor
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 169 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
-| 178 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
+| 182 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
+| 191 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

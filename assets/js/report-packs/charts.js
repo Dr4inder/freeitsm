@@ -6,6 +6,8 @@
  * devicePixelRatio is the zoom on screen and ~300 dpi for the PDF. Because
  * Chart.js lays out in CSS pixels, the legend, labels and bars land in the same
  * places at every resolution - the PDF's chart is the screen's chart, sharper.
+ *
+ * @wiki Report-Packs-Internals-2-The-Layout-Engine
  */
 (function () {
     'use strict';
@@ -22,6 +24,10 @@
         vivid:   ['#ff006e', '#3a86ff', '#ffbe0b', '#8338ec', '#fb5607', '#06d6a0', '#118ab2', '#ef476f', '#ffd166', '#073b4c', '#7209b7', '#4cc9f0'],
     };
 
+    /**
+     * Returns one colour per label - the data's own colour where set, otherwise the theme palette in
+     * turn.
+     */
     function colours(data, palette) {
         const p = PALETTES[palette] || PALETTES.default;
         return (data.labels || []).map((_, i) => (data.colours && data.colours[i]) || p[i % p.length]);
@@ -50,6 +56,7 @@
         const d = chart.data;
         const type = d.chart || 'bar';
         const round = type === 'doughnut' || type === 'pie';
+        /** Converts a font size in points to layout pixels on the millimetre canvas. */
         const fontPx = (pt) => pt * PT * PX_PER_MM;
         const font = { family: window.RPEngine.FONT_CSS[theme.font] || 'Helvetica, Arial, sans-serif', size: fontPx(theme.size - 1.5) };
         const pal = colours(d, theme.palette);

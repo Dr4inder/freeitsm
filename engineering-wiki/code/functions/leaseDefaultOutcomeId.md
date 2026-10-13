@@ -6,7 +6,7 @@ The outcome a newly added asset starts with: the default, else the first active 
 function leaseDefaultOutcomeId(PDO $conn): ?int
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 130.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 131.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 130.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 132 | `leaseDefaultOutcomeId` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 133 | `leaseDefaultOutcomeId` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
 
 ## Called from
 

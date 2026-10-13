@@ -77,17 +77,17 @@
 | [api/tasks/get.php](/code/files/api/tasks/get.php.md) | L39 |  |
 | [api/tasks/search_links.php](/code/files/api/tasks/search_links.php.md) | L56 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L220 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L48, apiChangesList L239 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L227 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksGet L340 |  |
-| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateChanges L55 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L172, projectLinkSearch L302, projectUnapprovedChanges L444 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53, apiChangesList L248 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L235 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksGet L349 |  |
+| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateChanges L56 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L176, projectLinkSearch L319, projectUnapprovedChanges L461 |  |
 | [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L447 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewChange L215 |  |
 | [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::voteCab L551, ChangesService::loadJoined L707 |  |
 | [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::linkChange L334 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::validateLink L1289 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::validateLink L1304 |  |
 | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessChange L366 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolRecentChanges L467 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolRecentChanges L479 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L288, getWatchtowerData L312, getWatchtowerData L325, getWatchtowerData L346, getWatchtowerData L373 |  |
 

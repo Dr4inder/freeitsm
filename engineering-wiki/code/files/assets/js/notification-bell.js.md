@@ -1,6 +1,9 @@
 # assets/js/notification-bell.js
 
-> JavaScript - 345 lines
+> JavaScript - 360 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Notifications Developer Guide](https://github.com/edmozley/freeitsm/wiki/Notifications-Developer-Guide)
 
 The notification bell - ONE script for both the analyst app (discussion #55) and the self-service portal (discussion #62).
 
@@ -25,19 +28,19 @@ showConfirm / showToast when present.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `init(cfg)` | 23 |  |
-| `esc(s)` | 36 |  |
-| `ago(utc)` | 41 | Stored UTC without a zone marker; left as-is, Safari and Firefox read it as local time and every notification looks hours old. |
-| `describe(n)` | 53 |  |
-| `render(items)` | 61 |  |
-| `paintBadge(unread)` | 88 |  |
-| `recordSeen(unread)` | 102 |  |
-| `chimeIfNew(unread)` | 105 |  |
-| `desktopNotify()` | 128 |  |
-| `onclick()` | 155 |  |
-| `onclick()` | 167 |  |
-| `poll()` | 175 |  |
-| `open()` | 182 |  |
-| `clearOne(id, item)` | 243 | Awaited, unlike mark-read: this one removes something from the screen, so a row must not vanish before the server has agreed that it is gone. |
-| `doClearAll(includeUnread)` | 318 |  |
+| `init(cfg)` | 26 | Wires up the bell on this page - badge, panel, mark-read, clear and the 60-second poll - from the URLs in cfg. |
+| `esc(s)` | 40 | Escapes a value for safe use in HTML. |
+| `ago(utc)` | 45 | Stored UTC without a zone marker; left as-is, Safari and Firefox read it as local time and every notification looks hours old. |
+| `describe(n)` | 58 | The notification's one-line description in the viewer's language, falling back to the actor's name when no string exists for the event type. |
+| `render(items)` | 67 | Draws the notification rows into the panel, or the empty message when there are none. |
+| `paintBadge(unread)` | 95 | Shows the unread count on the bell (capped at 99+) and hides the badge at zero. |
+| `recordSeen(unread)` | 110 | Stores the unread count as this tab's baseline for the chime. |
+| `chimeIfNew(unread)` | 114 | Plays the chime and raises desktop notifications when the unread count has risen since the last poll in this tab. |
+| `desktopNotify()` | 138 | Raises desktop notifications for unread items newer than any already shown, at most three plus a "more" line; the first run only records a baseline. |
+| `onclick()` | 166 | Clicking the desktop notification focuses the tab and opens what it was about. |
+| `onclick()` | 179 | Clicking the "more" notification focuses the tab and opens the bell panel. |
+| `poll()` | 188 | Fetches the unread count only, repaints the badge and chimes if something new arrived. |
+| `open()` | 196 | Opens the panel and loads the full list, re-baselining the chime because the viewer is now looking at it. |
+| `clearOne(id, item)` | 257 | Awaited, unlike mark-read: this one removes something from the screen, so a row must not vanish before the server has agreed that it is gone. |
+| `doClearAll(includeUnread)` | 333 | Deletes notifications for good - read ones only unless includeUnread - then reloads the panel, saying so when nothing was cleared. |
 

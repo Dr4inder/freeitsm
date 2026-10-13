@@ -30,7 +30,7 @@ How a ticket ENDED, not what it was about. Flat on purpose: the moment this grow
 |---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3425 |  |
 | [api/tickets/delete_ticket_resolution_code.php](/code/files/api/tickets/delete_ticket_resolution_code.php.md) | L38 |  |
-| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L281, getCategoricalWithSeries L335 |  |
+| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L317, getCategoricalWithSeries L377 |  |
 | [api/tickets/save_ticket_resolution_code.php](/code/files/api/tickets/save_ticket_resolution_code.php.md) | L54, L64 |  |
 | [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L31 |  |
 | [includes/ticket_categories.php](/code/files/includes/ticket_categories.php.md) | ticketResolutionCodesResolved L316, ticketResolutionCodeName L349 |  |

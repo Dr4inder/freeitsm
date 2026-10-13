@@ -1,6 +1,6 @@
 # api/knowledge/permission_model.php
 
-> API endpoint - 177 lines
+> API endpoint - 184 lines
 
 API Endpoint: the install-wide folder permission model. Actions: get, preview, set
 
@@ -43,19 +43,19 @@ itself is audited.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [handleGet()](/code/functions/handleGet.md) | 68 |  |
-| [handlePreview()](/code/functions/handlePreview.md) | 87 | How many documents would change hands, and for whom. |
-| [handleSet()](/code/functions/handleSet.md) | 161 |  |
+| [handleGet()](/code/functions/handleGet.md) | 69 | Returns the install-wide folder permission model in use: 'containers' or 'filing'. |
+| [handlePreview()](/code/functions/handlePreview.md) | 88 | How many documents would change hands, and for whom. |
+| [handleSet()](/code/functions/handleSet.md) | 168 | Saves the install-wide folder permission model ('filing', anything else meaning 'containers') and writes an audit row naming the old and new model. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 106 | `handlePreview` | read [analysts](/code/tables/analysts.md) |  |
-| 113 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 125 | `handlePreview` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 143 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 166 | `handleSet` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 107 | `handlePreview` | read [analysts](/code/tables/analysts.md) |  |
+| 114 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 126 | `handlePreview` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 144 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 173 | `handleSet` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## How it hangs together
 

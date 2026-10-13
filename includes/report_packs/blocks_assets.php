@@ -28,6 +28,10 @@ const RP_INTUNE_DIMENSIONS = [
     'encryption'   => "CASE WHEN is_encrypted = 1 THEN 'Encrypted' WHEN is_encrypted = 0 THEN 'Not encrypted' ELSE 'Unknown' END",
 ];
 
+/**
+ * Assets block: a chart of how many assets there are, grouped by the chosen dimension. A
+ * snapshot of today, not the period.
+ */
 function rpAssetsBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$label, $join] = RP_ASSET_DIMENSIONS[$o['by']];
@@ -40,6 +44,10 @@ function rpAssetsBreakdown(PDO $conn, int $analystId, array $o, array $range, $t
     return $data;
 }
 
+/**
+ * Assets block: KPI tiles - total assets, assets added in the period, warranties ending in
+ * the period and assets already out of warranty.
+ */
 function rpAssetsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$tSql, $tParams] = rpTenantClause($conn, $analystId, $tenant, 'x.tenant_id');
@@ -91,6 +99,7 @@ function rpAssetsExpiring(PDO $conn, int $analystId, array $o, array $range, $te
     return ['kind' => 'table', 'rows' => $rows, 'columns' => $cols, 'empty' => t('reporting.packs.empty.expiring')];
 }
 
+/** Intune block: a chart of Intune devices grouped by the chosen dimension. A snapshot of today. */
 function rpIntuneBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $label = RP_INTUNE_DIMENSIONS[$o['by']];
@@ -100,6 +109,10 @@ function rpIntuneBreakdown(PDO $conn, int $analystId, array $o, array $range, $t
     return $data;
 }
 
+/**
+ * Intune block: KPI tiles - device count, percentage compliant and encrypted, and devices
+ * not synced for 30 days.
+ */
 function rpIntuneKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $r = $conn->query("SELECT COUNT(*) AS total,

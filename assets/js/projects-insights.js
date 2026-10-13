@@ -11,16 +11,21 @@
  * validated slots; a seventh status and on share the neutral. Days before the
  * flow was first recorded are two neutral bands - finished, and open - with a
  * marker where real history starts.
+ *
+ * @wiki Projects-Internals-5-Health-and-Charts
  */
 (function () {
     'use strict';
     const P = window.Prj;
+    /** Translates a key under projects.insights.*. */
     const T = (k, p) => P.T('insights.' + k, p);
     const esc = P.esc;
     let ctx = null;
 
+    /** The chart colour slot for the status at board position i - the first six get slots 1-6, the rest share the neutral. */
     const slotOf = i => i < 6 ? i + 1 : 'n';
 
+    /** Lays out the Overview's three chart panels (task status, progress by stage, flow over time) and draws them; empties the box when the project has no tasks. */
     function render(c) {
         ctx = c;
         const box = document.getElementById('pvInsights');

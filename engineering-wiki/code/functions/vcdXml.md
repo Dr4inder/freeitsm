@@ -1,10 +1,12 @@
 # vcdXml()
 
+Parses an XML response body quietly; null for an empty or unparseable body.
+
 ```php
 function vcdXml(?string $body): ?SimpleXMLElement
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 118.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 127.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

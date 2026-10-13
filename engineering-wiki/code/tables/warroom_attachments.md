@@ -17,13 +17,13 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md):603 | `warRoomDeleteMessage` | delete |  |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md):895 | `warRoomStoreAttachment` | insert | `message_id`, `stored_name`, `original_name`, `size_bytes`, `created_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):604 | `warRoomDeleteMessage` | delete |  |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):896 | `warRoomStoreAttachment` | insert | `message_id`, `stored_name`, `original_name`, `size_bytes`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L209 |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomMessages L526, warRoomDeleteMessage L597, warRoomAttachmentFor L925, warRoomPrune L1172, warRoomPrune L1193, warRoomSweepOrphanFiles L1232 |  |
+| [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L218 |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomMessages L527, warRoomDeleteMessage L598, warRoomAttachmentFor L926, warRoomPrune L1173, warRoomPrune L1194, warRoomSweepOrphanFiles L1233 |  |
 

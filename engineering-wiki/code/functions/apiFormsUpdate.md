@@ -6,7 +6,7 @@ PATCH /forms/{id} — save_form.php's in-place save (id-based field sync).
 function apiFormsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 242.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 262.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,10 +1,12 @@
 # catalogueScalar()
 
+Runs a prepared query and returns its first column of the first row (false when there is no row).
+
 ```php
 function catalogueScalar(PDO $conn, string $sql, array $params)
 ```
 
-Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 601.
+Defined in [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), line 602.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

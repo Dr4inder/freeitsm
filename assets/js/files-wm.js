@@ -17,6 +17,8 @@
  * TRAP: a minimised window is display:none, so it has no layout. The preview
  * clones it into a box sized from its remembered geometry instead of measuring
  * it - measuring a hidden element returns zeros and the preview is blank.
+ *
+ * @wiki Files-Developer-Guide
  */
 (function () {
     'use strict';
@@ -34,19 +36,24 @@
     var geometryHook = null;
     var MIN_W = 280, MIN_H = 180;
 
+    /** Creates an element with an optional class and inner HTML. */
     function el(tag, cls, html) {
         var e = document.createElement(tag);
         if (cls) e.className = cls;
         if (html != null) e.innerHTML = html;
         return e;
     }
+    /** Escapes a value for HTML, treating null as an empty string. */
     function esc(s) {
         return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
         });
     }
+    /** Translates a Files string (key under 'files.'), falling back to the English when tf() is not loaded. */
     function L(key, english, params) { return window.tf ? window.tf('files.' + key, english, params) : english; }
+    /** Returns the desktop's rectangle - the space windows live in. */
     function area() { return desktop.getBoundingClientRect(); }
+    /** Keeps a number between lo and hi. */
     function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
     // ── Windows ────────────────────────────────────────────────────────────
@@ -174,6 +181,7 @@
         this.btn.classList.add('fd-min');
         this.blur();
         var to = this.btn.getBoundingClientRect(), from = e.getBoundingClientRect();
+        /** Hides the minimised window once its shrink animation ends and focuses the next one up. */
         var done = function () { e.style.display = 'none'; focusTopmost(); };
         if (e.animate) {
             var dx = (to.left + to.width / 2) - (from.left + from.width / 2);
@@ -232,6 +240,7 @@
         self.closed = true;
     };
 
+    /** Focuses the highest window that is not minimised, if there is one. */
     function focusTopmost() {
         var best = null, bz = -1;
         wins.forEach(function (w) {
@@ -242,6 +251,10 @@
         if (best) best.focus();
     }
 
+    /**
+     * Hands a window's position, size and maximised state to the hook set by onGeometry(),
+     * to be remembered per kind.
+     */
     function saveGeo(w) {
         if (geometryHook) geometryHook(w.kind, { x: w.geo.x, y: w.geo.y, w: w.geo.w, h: w.geo.h, max: w.maximized });
     }
@@ -254,6 +267,7 @@
         if (ev.clientX >= a.right - 3) return 'right';
         return null;
     }
+    /** Shows the snap outline for 'max', 'left' or 'right', or hides it when there is no zone. */
     function showGhost(zone) {
         if (!zone) { ghost.hidden = true; return; }
         var a = area();
@@ -266,6 +280,11 @@
         ghost.hidden = false;
     }
 
+    /**
+     * Starts moving a window by its title bar, with snapping to the top (maximise) or a side (half screen).
+     *
+     * A maximised or snapped window goes back to its normal size under the pointer once it moves.
+     */
     function startDrag(w, ev) {
         if (ev.button !== 0 || ev.target.closest('.fd-wb')) return;
         ev.preventDefault();
@@ -276,6 +295,9 @@
         var tb = ev.currentTarget;
         tb.setPointerCapture(ev.pointerId);
 
+        /**
+         * Moves the window with the pointer (after a 4px dead zone) and shows the snap outline for the edge it is at.
+         */
         function move(e) {
             // TRAP: a button released where we never hear about it (over the Help
             // window's frame, outside the browser) left the drag running - and the
@@ -304,6 +326,7 @@
             zone = snapZone(e);
             showGhost(zone);
         }
+        /** Ends the drag once - snaps or maximises if it ended in a zone, otherwise saves the new position. */
         function up(e) {
             tb.removeEventListener('pointermove', move);
             tb.removeEventListener('pointerup', up);
@@ -335,6 +358,7 @@
     // Belt and braces: whatever happened, a click anywhere puts the outline away.
     document.addEventListener('pointerdown', function () { if (!document.body.classList.contains('fd-dragging')) ghost.hidden = true; }, true);
 
+    /** Starts resizing a window from an edge or corner handle (not while maximised), keeping the minimum size. */
     function startResize(w, ev, dir) {
         if (ev.button !== 0 || w.maximized) return;
         ev.preventDefault();
@@ -345,6 +369,7 @@
         var g0 = { x: w.geo.x, y: w.geo.y, w: w.geo.w, h: w.geo.h };
         var a = area();
         document.body.classList.add('fd-dragging');
+        /** Resizes the window from the grabbed edge or corner as the pointer moves, and clears any snap. */
         function move(e) {
             if (e.buttons === 0) { up(); return; }
             var dx = e.clientX - sx, dy = e.clientY - sy, g = { x: g0.x, y: g0.y, w: g0.w, h: g0.h };
@@ -358,6 +383,7 @@
             if (w.onResize) w.onResize(w);
         }
         var done = false;
+        /** Ends the resize once and saves the window's new geometry. */
         function up() {
             h.removeEventListener('pointermove', move);
             h.removeEventListener('pointerup', up);
@@ -389,15 +415,18 @@
 
     // ── Taskbar previews ───────────────────────────────────────────────────
     var pvTimer = null, pvHideTimer = null, pvFor = null;
+    /** Shows a window's taskbar preview after a hover delay - short when a preview is already showing. */
     function schedulePreview(w) {
         clearTimeout(pvHideTimer);
         clearTimeout(pvTimer);
         pvTimer = setTimeout(function () { showPreview(w); }, pvFor ? 60 : 380);
     }
+    /** Hides the taskbar preview shortly after the pointer leaves, so it can move onto the preview. */
     function schedulePreviewHide() {
         clearTimeout(pvTimer);
         pvHideTimer = setTimeout(hidePreview, 260);
     }
+    /** Hides and empties the taskbar preview at once. */
     function hidePreview() {
         clearTimeout(pvTimer);
         previewEl.hidden = true;
@@ -441,6 +470,11 @@
         return holder;
     }
 
+    /**
+     * Shows the live preview of a window above its taskbar button, with a close button.
+     *
+     * Clicking the picture restores and focuses the window.
+     */
     function showPreview(w) {
         if (w.closed) return;
         pvFor = w;
@@ -484,6 +518,11 @@
         ctxEl.tabIndex = -1;
         ctxEl.focus({ preventScroll: true });
     }
+    /**
+     * Fills a menu container with items, separators and nested submenus.
+     *
+     * Clicking an item closes the menus and runs its action.
+     */
     function build(container, items) {
         container.innerHTML = '';
         items.forEach(function (it) {
@@ -506,6 +545,7 @@
             container.appendChild(b);
         });
     }
+    /** Hides and empties the context menu. */
     function closeMenus() {
         ctxEl.hidden = true;
         ctxEl.innerHTML = '';
@@ -559,6 +599,10 @@
             }
             var btns = box.querySelector('.fd-dialog-btns');
             var cancelVal = null;
+            /**
+             * Closes the dialog and resolves its promise - with the button's value, or {button, value} / {button, checked}
+             * when it has an input or a tick box.
+             */
             function finish(v) {
                 document.removeEventListener('keydown', onKey, true);
                 overlay.remove();
@@ -575,6 +619,9 @@
                 btns.appendChild(b);
             });
             box.querySelector('.fd-wb-close').addEventListener('click', function () { finish(cancelVal); });
+            /**
+             * Escape picks the cancel button; Enter picks the primary button (from the input, when there is one).
+             */
             function onKey(ev) {
                 if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); finish(cancelVal); }
                 else if (ev.key === 'Enter' && (!input || document.activeElement === input)) {
@@ -600,6 +647,7 @@
 
     // ── Notifications ──────────────────────────────────────────────────────
     var notifyBox = null;
+    /** Shows a toast in the corner that fades away - after 6 seconds for an error, 3.2 seconds otherwise. */
     function notify(text, kind) {
         if (!notifyBox) { notifyBox = el('div', 'fd-notify-stack'); document.body.appendChild(notifyBox); }
         var n = el('div', 'fd-notify fd-notify-' + (kind || 'info'));
@@ -610,6 +658,7 @@
 
     // ── Clock ──────────────────────────────────────────────────────────────
     var clock = document.getElementById('fdClock');
+    /** Redraws the taskbar clock (time and date) in the person's time zone. */
     function tick() {
         var now = new Date();
         var opts = window.tzOpts ? window.tzOpts() : {};
@@ -627,10 +676,12 @@
     var navwrap = document.getElementById('fdNavwrap');
     var sensor = document.getElementById('fdNavsensor');
     var navHideTimer = null;
+    /** Sets --fd-top to the navbar's height when it is always on, so the desktop starts below it; 0 otherwise. */
     function layoutTop() {
         var mode = document.body.dataset.navbar;
         document.documentElement.style.setProperty('--fd-top', mode === 'on' ? navwrap.offsetHeight + 'px' : '0px');
     }
+    /** Switches the navbar to 'on', 'auto' (auto-hide) or 'off' and re-lays the desktop out. */
     function setNavbar(mode) {
         document.body.dataset.navbar = mode;
         document.body.classList.remove('fd-nav-shown');
@@ -655,6 +706,9 @@
     window.addEventListener('resize', layoutTop);
 
     window.FilesWM = {
+        /**
+         * Opens a new window, or with single: true restores and focuses an existing one of the same kind and key.
+         */
         open: function (opts) {
             // single: re-use (and focus) an existing window with the same kind+key.
             if (opts.single) {
@@ -664,13 +718,18 @@
             }
             return new Win(opts);
         },
+        /** Returns a copy of the list of open windows, in taskbar order. */
         windows: function () { return wins.slice(); },
+        /** Returns the focused window, or null. */
         active: function () { return active; },
         menu: menu,
         closeMenus: closeMenus,
         dialog: dialog,
         notify: notify,
         setNavbar: setNavbar,
+        /**
+         * Sets the function told whenever a window is moved, resized or maximised, so its geometry can be saved.
+         */
         onGeometry: function (fn) { geometryHook = fn; },
         hidePreview: hidePreview,
         esc: esc,

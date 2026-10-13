@@ -6,7 +6,7 @@ One value, validated against its declared type. Anything that does not fit becom
 function brandingLoginValidate(string $field, $raw, array $spec)
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 232.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 233.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ GET /users/{id}
 function apiUsersGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 108.
+Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 116 | `apiUsersGet` | read [users](/code/tables/users.md) |  |
-| 127 | `apiUsersGet` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 120 | `apiUsersGet` | read [users](/code/tables/users.md) |  |
+| 131 | `apiUsersGet` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Calls
 

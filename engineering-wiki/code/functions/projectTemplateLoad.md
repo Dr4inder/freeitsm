@@ -6,7 +6,7 @@
 function projectTemplateLoad(PDO $conn, string $key, bool $evenHidden = false): ?array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 366.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 367.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/projects/templates.php](/code/files/includes/projects/templ
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 376 | `projectTemplateLoad` | read [project_templates](/code/tables/project_templates.md) |  |
+| 377 | `projectTemplateLoad` | read [project_templates](/code/tables/project_templates.md) |  |
 
 ## Calls
 

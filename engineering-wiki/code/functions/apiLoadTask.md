@@ -1,10 +1,12 @@
 # apiLoadTask()
 
+Loads one task row, or answers 404 and stops - also for a task in a company the key cannot reach, when the key is given.
+
 ```php
 function apiLoadTask(PDO $conn, int $taskId, ?array $apiKey = null): array
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 127.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 136.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

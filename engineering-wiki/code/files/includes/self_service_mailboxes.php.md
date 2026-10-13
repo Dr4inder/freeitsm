@@ -1,6 +1,6 @@
 # includes/self_service_mailboxes.php
 
-> PHP - 63 lines
+> PHP - 66 lines
 
 Which mailboxes a self-service user may raise a ticket through (GH #172).
 
@@ -26,14 +26,14 @@ posted id against this, because a narrowed dropdown has never been a check.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [selfServiceMailboxes()](/code/functions/selfServiceMailboxes.md) | 31 |  |
+| [selfServiceMailboxes()](/code/functions/selfServiceMailboxes.md) | 34 | The active mailboxes a self-service user may raise a ticket through - their own company's and the shared ones. Used for the dropdown and to re-check the posted choice. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 33 | `selfServiceMailboxes` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 36 | `selfServiceMailboxes` | read [users](/code/tables/users.md) |  |
+| 36 | `selfServiceMailboxes` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 39 | `selfServiceMailboxes` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

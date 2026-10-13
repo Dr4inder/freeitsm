@@ -1,10 +1,12 @@
 # domainNormalise()
 
+Turns a typed or pasted URL, e-mail address or name into the one stored domain name - lower case, no scheme, path, port, root dot or leading www., internationalised names as punycode with the Unicode form as the display name.
+
 ```php
 function domainNormalise(string $raw): array
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 19.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 23.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

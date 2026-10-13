@@ -1,10 +1,12 @@
 # brandingScopeValid()
 
+Returns the scope when it is one of the branded screens (login, portal, home), otherwise 'login'.
+
 ```php
 function brandingScopeValid(string $scope): string
 ```
 
-Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 128.
+Defined in [includes/branding.php](/code/files/includes/branding.php.md), line 129.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

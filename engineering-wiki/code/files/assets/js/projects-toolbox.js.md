@@ -1,6 +1,9 @@
 # assets/js/projects-toolbox.js
 
-> JavaScript - 103 lines
+> JavaScript - 110 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Projects Internals 6 Governance](https://github.com/edmozley/freeitsm/wiki/Projects-Internals-6-Governance)
 
 Projects - the Toolbox on the Overview (3.3.0).
 
@@ -24,12 +27,12 @@ Off for the whole install with Projects -> Settings -> General -> Toolbox
 
 | Function | Line | What it does |
 |---|--:|---|
-| `T(k, p)` | 23 |  |
-| `hiddenKey(id)` | 30 |  |
-| `isHidden(id)` | 31 |  |
-| `reason(tool, d)` | 34 | Why the project itself suggests a tool, or null. Reads only what get.php already sent. |
-| `render(c)` | 54 |  |
-| `add(tool)` | 79 |  |
+| `T(k, p)` | 26 | Translates a key under projects.toolbox.*. |
+| `hiddenKey(id)` | 34 | The browser storage key that remembers the Toolbox was hidden on this project. |
+| `isHidden(id)` | 36 | True when the Toolbox was hidden for this project in this browser. |
+| `reason(tool, d)` | 39 | Why the project itself suggests a tool, or null. Reads only what get.php already sent. |
+| `render(c)` | 60 | Draws the Toolbox on the Overview - a card per tool not yet in use, the ones the project suggests first, each with what it is for and Add; hidden when switched off, finished, read-only, nothing is left to add or the viewer hid it. |
+| `add(tool)` | 86 | Switches a tool on for the project (with the tools it needs - RACI brings People and Scope) by saving its tailoring, then redraws. |
 
 ## Loaded by
 

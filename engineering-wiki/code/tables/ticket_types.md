@@ -31,12 +31,12 @@
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L843 |  |
 | [api/tickets/delete_ticket_type.php](/code/files/api/tickets/delete_ticket_type.php.md) | L41, L68 |  |
 | [api/tickets/get_ticket_types.php](/code/files/api/tickets/get_ticket_types.php.md) | L87, L98 |  |
-| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L249, getCategoricalWithSeries L316 |  |
+| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L285, getCategoricalWithSeries L358 |  |
 | [api/tickets/save_ticket_category.php](/code/files/api/tickets/save_ticket_category.php.md) | L109 |  |
 | [api/tickets/save_ticket_type.php](/code/files/api/tickets/save_ticket_type.php.md) | L56, L57, L73 |  |
 | [api/tickets/set_ticket_type_hidden.php](/code/files/api/tickets/set_ticket_type_hidden.php.md) | L53 |  |
-| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L34 |  |
+| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L38 |  |
 | [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L27 |  |
 | [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::loadTicket L1061 |  |
-| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md) | TicketNumbering::typeCode L244 |  |
+| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md) | TicketNumbering::typeCode L251 |  |
 

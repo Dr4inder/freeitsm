@@ -6,7 +6,7 @@ PATCH /calendar/events/{id}
 function apiCalendarEventsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 195.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 203.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

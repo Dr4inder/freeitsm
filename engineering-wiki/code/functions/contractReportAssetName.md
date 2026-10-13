@@ -10,7 +10,7 @@ which on a printed report nobody can then look up either.
 function contractReportAssetName(array $a): string
 ```
 
-Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 128.
+Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 131.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

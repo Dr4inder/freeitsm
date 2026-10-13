@@ -15,7 +15,7 @@ custom domains (getCustomFreemailDomains).
 function isFreemailDomain(PDO $conn, string $domain): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1251.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1257.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

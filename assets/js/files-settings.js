@@ -1,17 +1,23 @@
 /**
  * Files → Settings (files/settings/index.php). Both tabs read and write through
  * api/files/settings.php; Take ownership is api/files/permissions.php.
+ *
+ * @wiki Files-Developer-Guide
  */
 (function () {
     'use strict';
     var API = window.FILES_API;
+    /** Translates a Files string (key under 'files.'), falling back to the English when tf() is not loaded. */
     function L(k, en, p) { return window.tf ? window.tf('files.' + k, en, p) : en; }
+    /** Escapes a value for HTML, treating null as an empty string. */
     function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    /** Calls an api/files endpoint - a GET with no body, a JSON POST with one - and rejects on success: false. */
     function api(path, body) {
         return fetch(API + path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {})
             .then(function (r) { return r.json(); })
             .then(function (j) { if (!j.success) throw new Error(j.error || 'Error'); return j; });
     }
+    /** Formats a byte count as B, KB, MB, GB or TB. */
     function fmtSize(n) {
         if (n < 1024) return n + ' B';
         var u = ['KB', 'MB', 'GB', 'TB'], i = -1;
@@ -19,6 +25,7 @@
         return n.toFixed(n >= 10 ? 1 : 2) + ' ' + u[i];
     }
 
+    /** Shows one settings tab and puts it in the address (?tab=) so a reload opens the same tab. */
     window.switchTab = function (id) {
         document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === id); });
         document.querySelectorAll('.tab-content').forEach(function (c) { c.classList.toggle('active', c.id === id + '-tab'); });
@@ -30,11 +37,18 @@
     // ── Folders ────────────────────────────────────────────────────────────
     var folBody = document.getElementById('folBody');
     var folders = [];
+    /** Fetches every folder for the Folders tab and draws the table, or shows the error in it. */
     function loadFolders() {
         if (!folBody) return;
         api('settings.php?tab=folders').then(function (r) { folders = r.folders; renderFolders(); })
             .catch(function (e) { folBody.innerHTML = '<tr><td colspan="6">' + esc(e.message) + '</td></tr>'; });
     }
+    /**
+     * Draws the Folders table, filtered by the path box.
+     *
+     * A folder with no entries of its own and nothing to inherit is marked as one nobody can reach,
+     * and every folder where the viewer is short of Full control gets a Take ownership button.
+     */
     function renderFolders() {
         var q = (document.getElementById('folFilter').value || '').toLowerCase();
         var rows = folders.filter(function (f) { return !q || f.path.toLowerCase().indexOf(q) >= 0; });
@@ -54,6 +68,9 @@
             var b = ev.target.closest('[data-own]');
             if (!b) return;
             var f = folders.filter(function (x) { return x.id === +b.dataset.own; })[0];
+            /**
+             * Takes ownership of the folder (Full control, audited by the server) once confirmed, then reloads the table.
+             */
             var go = function () {
                 b.disabled = true;
                 api('permissions.php', { action: 'take_ownership', folder: f.id }).then(loadFolders).catch(function (e) { alert(e.message); b.disabled = false; });

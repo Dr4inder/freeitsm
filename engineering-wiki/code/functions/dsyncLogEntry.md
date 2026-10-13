@@ -13,7 +13,7 @@ function dsyncLogEntry(
 ): void
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 456.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 463.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -30,7 +30,7 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 460 | `dsyncLogEntry` | **insert** [directory_sync_entries](/code/tables/directory_sync_entries.md) (`run_id`, `action`, `user_id`, `directory_username`, `display_name`, `detail`, `created_datetime`) |  |
+| 467 | `dsyncLogEntry` | **insert** [directory_sync_entries](/code/tables/directory_sync_entries.md) (`run_id`, `action`, `user_id`, `directory_username`, `display_name`, `detail`, `created_datetime`) |  |
 
 ## Called from
 

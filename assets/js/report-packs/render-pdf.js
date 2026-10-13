@@ -6,12 +6,15 @@
  * charts are images at ~300 dpi, and the logo is embedded ONCE under an alias
  * however many pages carry it (see the note in assets/js/form-pdf.js on what an
  * un-aliased logo does to file size).
+ *
+ * @wiki Report-Packs-Internals-2-The-Layout-Engine
  */
 (function () {
     'use strict';
 
     const PT = 25.4 / 72;
 
+    /** Converts a #rrggbb colour to an [r, g, b] array, falling back to dark grey. */
     function rgb(hex) {
         const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
         const n = m ? parseInt(m[1], 16) : 0x222222;
@@ -20,6 +23,10 @@
 
     /** Characters the standard fonts cannot encode become '?' rather than garbage. */
     const EXTRA = '€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ';
+    /**
+     * Replaces characters outside WinAnsi with "?" (an open bullet becomes "-") so the PDF never
+     * prints garbage.
+     */
     function safe(text) {
         let out = '';
         for (const ch of String(text)) {
@@ -29,12 +36,17 @@
         return out;
     }
 
+    /** Sets jsPDF's font, style, size and text colour from a run style. */
     function setStyle(doc, st) {
         doc.setFont(st.font || 'helvetica', window.RPEngine.styleKey(st.b, st.i));
         doc.setFontSize(st.size);
         doc.setTextColor(...rgb(st.color || '#222222'));
     }
 
+    /**
+     * Draws a run of text at its baseline, with its highlight behind it and underline or
+     * strike-through lines.
+     */
     function drawText(doc, x, y, text, st, w) {
         if (!text) return;
         if (st.hl) {
@@ -51,6 +63,7 @@
         }
     }
 
+    /** Draws one engine primitive (text, rect, line or dot leader) into the PDF. */
     function drawPrim(doc, d) {
         switch (d.k) {
             case 'text': drawText(doc, d.x, d.y, d.text, d.st, d.w); break;
@@ -78,6 +91,10 @@
         }
     }
 
+    /**
+     * Draws laid-out rich text - the logo images (embedded once under the rp-logo alias), list markers
+     * and text runs - at its position.
+     */
     function drawRich(doc, rich, logo) {
         if (!rich || !rich.L) return;
         const { L, x, y } = rich;

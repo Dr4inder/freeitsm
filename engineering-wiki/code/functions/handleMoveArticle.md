@@ -17,7 +17,7 @@ overwriting an edit somebody else was making.
 function handleMoveArticle(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 288.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 295.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -31,7 +31,7 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 303 | `handleMoveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`folder_id`, `modified_datetime`) |  |
+| 310 | `handleMoveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`folder_id`, `modified_datetime`) |  |
 
 ## Calls
 

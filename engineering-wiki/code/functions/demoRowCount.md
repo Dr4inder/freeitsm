@@ -10,7 +10,7 @@ a module whose feature was never set up simply has no demo rows.
 function demoRowCount(PDO $conn, string $module): int
 ```
 
-Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 104.
+Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

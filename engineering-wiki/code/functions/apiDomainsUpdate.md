@@ -6,7 +6,7 @@ PATCH /domains/{id}
 function apiDomainsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 269.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 282.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

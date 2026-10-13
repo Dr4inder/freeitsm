@@ -206,6 +206,7 @@ class TaskRecurrence
         return false;
     }
 
+    /** A YYYY-MM-DD string as a UTC date, or null when it is not one. */
     private static function mkDate(string $ymd): ?DateTimeImmutable
     {
         $d = DateTimeImmutable::createFromFormat('!Y-m-d', substr(trim($ymd), 0, 10), new DateTimeZone('UTC'));
@@ -435,6 +436,7 @@ class TaskRecurrence
         return $out;
     }
 
+    /** Switches a recurrence off. */
     private static function deactivate(PDO $conn, int $recurrenceId): void
     {
         $conn->prepare("UPDATE task_recurrences SET is_active = 0, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
@@ -605,6 +607,7 @@ class TaskRecurrence
         return (new DateTimeImmutable($due, $tz))->modify("-{$gap} days")->format('Y-m-d');
     }
 
+    /** Loads one task row, or null. */
     private static function taskRow(PDO $conn, int $id): ?array
     {
         $s = $conn->prepare("SELECT * FROM tasks WHERE id = ?");
@@ -613,6 +616,7 @@ class TaskRecurrence
         return $row ?: null;
     }
 
+    /** The newest top-level task made by the recurrence, or null. */
     private static function latestOccurrence(PDO $conn, int $recurrenceId): ?int
     {
         $s = $conn->prepare(

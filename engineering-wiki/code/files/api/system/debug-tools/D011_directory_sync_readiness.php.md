@@ -1,6 +1,6 @@
 # api/system/debug-tools/D011_directory_sync_readiness.php
 
-> API endpoint - 583 lines
+> API endpoint - 605 lines
 
 Debug Tool D011 — Why can't this sign-in method import people?
 
@@ -38,23 +38,23 @@ Output: plain text, section-delimited with === HEADERS ===.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 53 |  |
-| [yn()](/code/functions/yn.md) | 57 |  |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 58 |  |
-| [mask()](/code/functions/mask.md) | 64 |  |
-| [maskDn()](/code/functions/maskDn.md) | 79 | Keep the attribute NAMES and the shape of the tree; mask every value. |
-| [maskDnList()](/code/functions/maskDnList.md) | 91 |  |
-| [colExists()](/code/functions/colExists.md) | 121 |  |
-| [tableExists()](/code/functions/tableExists.md) | 129 |  |
-| [storedValue()](/code/functions/storedValue.md) | 266 | Describe what is actually stored, keeping the three "blank" cases apart: the column is absent, the value is NULL, or the value is an empty string. |
+| [addSection()](/code/functions/addSection.md) | 57 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 62 | Formats a boolean as YES or NO for the report. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 67 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [mask()](/code/functions/mask.md) | 77 | Masks a value for a report that will be sent on - all stars when very short, otherwise the first one or two characters (and the last, for a long value) with stars between. |
+| [maskDn()](/code/functions/maskDn.md) | 92 | Keep the attribute NAMES and the shape of the tree; mask every value. |
+| [maskDnList()](/code/functions/maskDnList.md) | 105 | Masks a newline-separated list of DNs, one `maskDn()` per line - ['(none)'] when it is empty. |
+| [colExists()](/code/functions/colExists.md) | 139 | Whether a column exists in this database - false on any error, so an older install reads as not ready rather than breaking the report. |
+| [tableExists()](/code/functions/tableExists.md) | 151 | Whether a table exists in this database - false on any error, so an older install reads as not ready rather than breaking the report. |
+| [storedValue()](/code/functions/storedValue.md) | 288 | Describe what is actually stored, keeping the three "blank" cases apart: the column is absent, the value is NULL, or the value is an empty string. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 310 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 358 |  | **update** [auth_providers](/code/tables/auth_providers.md) (`protocol`) |  |
-| 507 |  | read [directory_sync_runs](/code/tables/directory_sync_runs.md) |  |
+| 332 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 380 |  | **update** [auth_providers](/code/tables/auth_providers.md) (`protocol`) |  |
+| 529 |  | read [directory_sync_runs](/code/tables/directory_sync_runs.md) |  |
 
 ## How it hangs together
 

@@ -6,7 +6,7 @@ Every card Watchtower draws, in the order it draws them.
 function wtCardKeys(): array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 34.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 36.
 
 **Returns:** `array`
 

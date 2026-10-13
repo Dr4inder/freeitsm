@@ -24,6 +24,13 @@
 
 if (!function_exists('syncAssetWarrantyCalendar')) {
     /**
+     * Rebuilds the auto-generated warranty-expiry and lease-end calendar entries
+     * from the asset dates, then the lease "give notice" entries.
+     *
+     * Each kind follows its own setting (asset_warranty_surface, asset_lease_surface)
+     * and is skipped quietly while its column has not been added by Database
+     * Verification yet.
+     *
      * @param PDO $conn
      * @return array{success:bool, synced?:int, error?:string}
      */
@@ -258,6 +265,7 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
         } catch (Exception $e) { /* next sync will work it out again */ }
     }
 
+    /** Reads one system_settings value, returning $default when it is missing, empty or unreadable. */
     function awcGetSetting(PDO $conn, string $key, string $default): string
     {
         try {
@@ -270,6 +278,9 @@ if (!function_exists('syncAssetWarrantyCalendar')) {
         }
     }
 
+    /**
+     * True when the table has the column (information_schema), so the sync can wait for Database Verification instead of failing.
+     */
     function awcColumnExists(PDO $conn, string $table, string $col): bool
     {
         try {

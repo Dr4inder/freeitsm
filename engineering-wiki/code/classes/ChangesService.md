@@ -17,7 +17,7 @@
 | [unlinkTicket()](#unlinkticket) | Unlink an incident from a change. 404 if not linked. Audited. |
 | [canAccessTenantRow()](#canaccesstenantrow) | May the actor access this row of a tenant-scoped table (by its company)? Generic mirror of ProblemsService::canAccessTenantRow. `$table` is a developer literal, never user input. |
 | [loadJoined()](#loadjoined) | Load the joined change row (with lookup + people display names), enforcing the actor's company scope; 404 if the change is unknown OR outside scope (indistinguishable, by design). NULL tenant_id normalises to the Default company. No-op at N=1. |
-| [auditWrite()](#auditwrite) |  |
+| [auditWrite()](#auditwrite) | Records one action or field change in the change's audit trail. |
 | [riskLevel()](#risklevel) | The risk banding (score = likelihood × impact). |
 | [resolveLookup()](#resolvelookup) | Resolve a change lookup (type/status/priority/impact) by name or id from input keys "<key>" / "<key>_id". Strict: unknown values are a 422. Returns [id, name, extraCol?] or null when neither key was sent. |
 | [lookupDefault()](#lookupdefault) | The default row of a change lookup table: [id, name] or [null, null]. |
@@ -312,7 +312,9 @@ function loadJoined(PDO $conn, ActorContext $ctx, int $changeId): array
 
 ### auditWrite
 
-*private static* - line 741
+*private static* - line 742
+
+Records one action or field change in the change's audit trail.
 
 ```php
 function auditWrite(
@@ -340,11 +342,11 @@ function auditWrite(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 744 | `ChangesService::auditWrite` | **insert** [change_audit](/code/tables/change_audit.md) (`change_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 745 | `ChangesService::auditWrite` | **insert** [change_audit](/code/tables/change_audit.md) (`change_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### riskLevel
 
-*private static* - line 750
+*private static* - line 751
 
 The risk banding (score = likelihood × impact).
 
@@ -358,7 +360,7 @@ function riskLevel(?int $score): ?string
 
 ### resolveLookup
 
-*private static* - line 765
+*private static* - line 766
 
 Resolve a change lookup (type/status/priority/impact) by name or id from input keys "<key>" / "<key>_id". Strict: unknown values are a 422. Returns [id, name, extraCol?] or null when neither key was sent.
 
@@ -382,7 +384,7 @@ function resolveLookup(
 
 ### lookupDefault
 
-*private static* - line 798
+*private static* - line 799
 
 The default row of a change lookup table: [id, name] or [null, null].
 
@@ -404,7 +406,7 @@ function lookupDefault(PDO $conn, string $table): array
 
 ### riskInput
 
-*private static* - line 808
+*private static* - line 809
 
 Validate a 1-5 risk input. Null/'' clears.
 
@@ -419,7 +421,7 @@ function riskInput($value, string $field): ?int
 
 ### resolveAnalyst
 
-*private static* - line 821
+*private static* - line 822
 
 Resolve an analyst id to its name; 422 if unknown/inactive (mirrors apiResolveAnalyst).
 
@@ -436,11 +438,11 @@ function resolveAnalyst(PDO $conn, int $analystId): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 823 | `ChangesService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 824 | `ChangesService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ### parseDate
 
-*private static* - line 833
+*private static* - line 834
 
 Parse a date to UTC 'Y-m-d H:i:s' (mirrors the API's apiParseDate; 400 on garbage).
 
@@ -455,7 +457,7 @@ function parseDate(string $value, string $field): string
 
 ### approvedDispatch
 
-*private static* - line 845
+*private static* - line 846
 
 Fire change.approved (best-effort; the engine swallows its own errors).
 

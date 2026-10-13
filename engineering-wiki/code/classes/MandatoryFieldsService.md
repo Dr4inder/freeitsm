@@ -14,7 +14,7 @@
 | [afterClosure()](#afterclosure) | After a close that went ahead with fields empty: write the note and send the email, as configured. Never throws - a failed note or email must not turn a close that happened into an error. |
 | [writeNote()](#writenote) | An internal note from an analyst, or a 'Workflow Note' audit entry when nobody is acting. ticket_notes.analyst_id is NOT NULL with a foreign key to analysts, so a workflow (actor 0) cannot write there - which is why the workflow engine's own "add note" action writes to ticket_audit with a NULL analyst, and this follows it. UTC at rest (GH #126). |
 | [closedByLine()](#closedbyline) | "Closed by Jo Bloggs via the API." / "Closed by a workflow." |
-| [notify()](#notify) |  |
+| [notify()](#notify) | Emails the chosen people that a ticket was closed with mandatory fields empty, listing them. |
 
 ### settings
 
@@ -179,7 +179,9 @@ function closedByLine(ActorContext $ctx): string
 
 ### notify
 
-*private static* - line 258
+*private static* - line 259
+
+Emails the chosen people that a ticket was closed with mandatory fields empty, listing them.
 
 ```php
 function notify(PDO $conn, int $ticketId, array $to, array $missing, string $closedBy): void

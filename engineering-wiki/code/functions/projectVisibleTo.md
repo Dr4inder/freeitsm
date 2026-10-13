@@ -6,7 +6,7 @@ May this analyst see this project row (needs id, owner_analyst_id, created_by_id
 function projectVisibleTo(PDO $conn, int $analystId, array $project): bool
 ```
 
-Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 80.
+Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 81.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

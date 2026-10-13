@@ -16,7 +16,7 @@ the registry, which is code, so neither is ever attacker-supplied.
 function documentParentName(PDO $conn, string $type, int $parentId): ?string
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 499.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 504.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

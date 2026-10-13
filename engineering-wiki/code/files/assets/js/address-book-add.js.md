@@ -1,6 +1,6 @@
 # assets/js/address-book-add.js
 
-> JavaScript - 87 lines
+> JavaScript - 97 lines
 
 "Add to address book" for a person who is not in one (#133).
 
@@ -16,10 +16,10 @@ do on a single click.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `t(k, p)` | 16 |  |
-| `confirmText(book, person)` | 18 |  |
-| `add(book, userId, person, apiBase, onDone, btn)` | 28 |  |
-| `mount(host, userId, person, apiBase, onDone)` | 62 | Draw the button(s) into `host` if this person can be added anywhere. One address book: one button naming it. Several: one each. None, or a person who is already linked: nothing at all. |
+| `t(k, p)` | 17 | Translates a key under common.address_book_add. |
+| `confirmText(book, person)` | 23 | The confirmation message for adding a person to an address book - what will be written, any category or group it is filed under, and the checks the server makes. |
+| `add(book, userId, person, apiBase, onDone, btn)` | 38 | Asks for confirmation, then adds the person to the address book through address_book_add.php and calls onDone when it worked. The button is disabled while the request runs. |
+| `mount(host, userId, person, apiBase, onDone)` | 72 | Draw the button(s) into `host` if this person can be added anywhere. One address book: one button naming it. Several: one each. None, or a person who is already linked: nothing at all. |
 
 ## Loaded by
 

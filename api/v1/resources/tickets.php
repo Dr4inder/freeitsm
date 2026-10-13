@@ -30,6 +30,10 @@ require_once dirname(__DIR__, 3) . '/includes/services/tickets.php';
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * The SELECT for tickets, with status, priority, type, origin, department, analyst,
+ * requester and company names.
+ */
 function apiTicketSelect(): string {
     return "SELECT t.*,
                    ts.name  AS status_name,  ts.is_closed AS status_is_closed,
@@ -51,6 +55,10 @@ function apiTicketSelect(): string {
             LEFT JOIN tenants           tn  ON tn.id  = t.tenant_id";
 }
 
+/**
+ * Shapes a ticket row for the API - number, subject, status (with is_closed), priority,
+ * type, origin, department, analyst, requester and the rest of the record.
+ */
 function apiSerializeTicket(array $r): array {
     $rel = function ($id, $name, array $extra = []) {
         return $id === null ? null : array_merge(['id' => (int)$id, 'name' => $name], $extra);
@@ -308,6 +316,7 @@ function apiTicketsDelete(PDO $conn, array $apiKey, array $params, array $body):
     apiRespond(['id' => $params[0], 'deleted' => true]);
 }
 
+/** POST /tickets/{id}/restore - restores a deleted ticket through TicketsService and returns it. */
 function apiTicketsRestore(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         TicketsService::restoreTicket($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], false);
@@ -338,6 +347,10 @@ function apiTicketNotesList(PDO $conn, array $apiKey, array $params, array $body
     apiRespond($notes);
 }
 
+/**
+ * POST /tickets/{id}/notes - adds a note to the ticket through TicketsService. Notes are
+ * internal unless is_internal is false.
+ */
 function apiTicketNotesCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         $noteId = TicketsService::createNote($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $body);
@@ -436,6 +449,10 @@ function apiRequireTimeTracking(PDO $conn, int $ticketId): void {
     }
 }
 
+/**
+ * GET /tickets/{id}/time-entries - the ticket's active time entries, oldest first.
+ * Refused when time tracking is off for the ticket.
+ */
 function apiTicketTimeEntriesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadTicket($conn, $apiKey, $params[0]);
     apiRequireTimeTracking($conn, (int) $params[0]);
@@ -459,6 +476,10 @@ function apiTicketTimeEntriesList(PDO $conn, array $apiKey, array $params, array
     apiRespond($entries);
 }
 
+/**
+ * POST /tickets/{id}/time-entries - logs time on the ticket through TicketsService,
+ * returning the minutes and time as stored.
+ */
 function apiTicketTimeEntriesCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     apiRequireTimeTracking($conn, (int) $params[0]);
     try {
@@ -476,6 +497,7 @@ function apiTicketTimeEntriesCreate(PDO $conn, array $apiKey, array $params, arr
     ], 201);
 }
 
+/** DELETE /tickets/{id}/time-entries/{entryId} - deletes a time entry through TicketsService. */
 function apiTicketTimeEntriesDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     apiRequireTimeTracking($conn, (int) $params[0]);
     try {

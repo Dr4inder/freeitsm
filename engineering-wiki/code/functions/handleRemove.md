@@ -1,10 +1,12 @@
 # handleRemove()
 
+Removes one entry from a folder's or article's access list and audits it. The reply's now_unreachable is true when a restricted object is left with nobody on its list.
+
 ```php
 function handleRemove(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 286.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 296.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,8 +20,8 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 292 | `handleRemove` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 302 | `handleRemove` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 302 | `handleRemove` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 312 | `handleRemove` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
 
 ## Calls
 

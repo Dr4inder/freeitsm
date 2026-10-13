@@ -6,7 +6,7 @@ args: project, open_only (default true). Overdue first, then by due date.
 function projectAssistTasks(PDO $conn, array $scope, array $args): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 227.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 232.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/projects/assistant.php](/code/files/includes/projects/assis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 231 | `projectAssistTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 236 | `projectAssistTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [project_stages](/code/tables/project_stages.md) |  |
 
 ## Calls
 

@@ -12,7 +12,7 @@ through teams (see getAccessibleTenantIds).
 function analystHasAllTenantAccess(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 817.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 823.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

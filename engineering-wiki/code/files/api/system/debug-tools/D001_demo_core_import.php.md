@@ -1,6 +1,6 @@
 # api/system/debug-tools/D001_demo_core_import.php
 
-> API endpoint - 530 lines
+> API endpoint - 543 lines
 
 Debug Tool D001 — Demo Core Data Import
 
@@ -23,17 +23,17 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 23 |  |
-| [bool_str()](/code/functions/bool_str.md) | 27 |  |
-| [safe_size()](/code/functions/safe_size.md) | 28 |  |
-| [redact_row()](/code/functions/redact_row.md) | 33 |  |
+| [addSection()](/code/functions/addSection.md) | 27 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [bool_str()](/code/functions/bool_str.md) | 32 | Formats a boolean as YES or NO for the report. |
+| [safe_size()](/code/functions/safe_size.md) | 37 | Returns a file's size in bytes for the report - 'n/a' when it does not exist, 'unknown' when it cannot be read. |
+| [redact_row()](/code/functions/redact_row.md) | 46 | Replaces the personal values in a row (names, email, username, password hash, MFA secret) with "[redacted N chars]", so the report can be shared. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 360 |  | **insert** [analyst_teams](/code/tables/analyst_teams.md) (`analyst_id`, `team_id`) |  |
-| 371 |  | **insert** [department_teams](/code/tables/department_teams.md) (`department_id`, `team_id`) |  |
+| 373 |  | **insert** [analyst_teams](/code/tables/analyst_teams.md) (`analyst_id`, `team_id`) |  |
+| 384 |  | **insert** [department_teams](/code/tables/department_teams.md) (`department_id`, `team_id`) |  |
 
 ## How it hangs together
 

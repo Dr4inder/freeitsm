@@ -1,10 +1,12 @@
 # warbotToolListProjects()
 
+list_projects: the projects the asker may see, ten by default, via `projectAssistList()`.
+
 ```php
 function warbotToolListProjects(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 930.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 965.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

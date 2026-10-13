@@ -6,7 +6,7 @@ Record that the floor let somebody past an access list they were not on.
 function knowledgeAuditAdminOverride(PDO $conn, KnowledgeViewer $viewer, int $articleId): void
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 461.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 469.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

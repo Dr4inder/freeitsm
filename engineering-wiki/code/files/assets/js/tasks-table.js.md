@@ -1,6 +1,6 @@
 # assets/js/tasks-table.js
 
-> JavaScript - 185 lines
+> JavaScript - 194 lines
 
 FreeITSM Tasks — table view config
 
@@ -15,12 +15,12 @@ are wired here too; everything else is the shared engine.
 | Function | Line | What it does |
 |---|--:|---|
 | `formatDate(iso)` | 24 | created_datetime is a stored UTC timestamp; render its date in the analyst's chosen display zone (parseUTCDate / tzOpts from assets/js/tz.js). |
-| `loadLookups()` | 55 |  |
-| `loadDropdowns()` | 66 |  |
-| `setFilter(filter)` | 88 |  |
-| `setTeamFilter(id)` | 99 |  |
-| `setAnalystFilter(id)` | 108 |  |
-| `esc(s)` | 118 |  |
+| `loadLookups()` | 56 | Loads the active task statuses and priorities for the table. |
+| `loadDropdowns()` | 68 | Loads analysts and teams and fills the Analyst and Team filter drop-downs. |
+| `setFilter(filter)` | 94 | Switches to a preset filter (my, all...), clears the team and analyst filters and reloads the table. |
+| `setTeamFilter(id)` | 106 | Shows one team's tasks, or goes back to My tasks when cleared. |
+| `setAnalystFilter(id)` | 116 | Shows one analyst's tasks, or goes back to My tasks when cleared. |
+| `esc(s)` | 127 | HTML-escapes a value; null and undefined become an empty string. |
 
 ## API endpoints it calls
 

@@ -32,6 +32,7 @@ class MicrosoftCalendarProvider extends CalendarSyncProvider
     // $conn (the optional PDO for persisting the token cache) is declared on the
     // base class, so assigning it is valid against the abstract type.
 
+    /** Microsoft Graph supports all-day events, HTML bodies, checking a mailbox exists, and change notifications. */
     public function supports(string $capability): bool
     {
         return in_array($capability, [
@@ -191,6 +192,7 @@ class MicrosoftCalendarProvider extends CalendarSyncProvider
 
     // -------------------------------------------------------------- outbound
 
+    /** Creates the event in the mailbox's calendar through Graph and returns Graph's event id. */
     public function createEvent(string $calendarAddress, array $event): string
     {
         [$http, $data, $raw] = $this->call(
@@ -202,6 +204,7 @@ class MicrosoftCalendarProvider extends CalendarSyncProvider
         return (string)$data['id'];
     }
 
+    /** PATCHes the event through Graph; throws CalendarEventMissing on a 404 so the caller can create a fresh one. */
     public function updateEvent(string $calendarAddress, string $remoteEventId, array $event): void
     {
         [$http, , $raw] = $this->call(
@@ -220,6 +223,7 @@ class MicrosoftCalendarProvider extends CalendarSyncProvider
         }
     }
 
+    /** Deletes the event through Graph; a 404 counts as success. */
     public function deleteEvent(string $calendarAddress, string $remoteEventId): void
     {
         [$http, , $raw] = $this->call(
@@ -346,6 +350,10 @@ class MicrosoftCalendarProvider extends CalendarSyncProvider
      */
     const SUBSCRIPTION_MINUTES = 4100;
 
+    /**
+     * Subscribes to updates and deletions in the mailbox's calendar, posting to $notifyUrl with $secret as clientState, for SUBSCRIPTION_MINUTES.
+     * @return array  ['id' => subscription id, 'expires' => naive local datetime]
+     */
     public function createSubscription(string $calendarAddress, string $notifyUrl, string $secret): array
     {
         [$http, $data, $raw] = $this->call('POST', '/subscriptions', [
@@ -365,6 +373,9 @@ class MicrosoftCalendarProvider extends CalendarSyncProvider
         return ['id' => (string)$data['id'], 'expires' => $this->expiryToLocal($data['expirationDateTime'] ?? null)];
     }
 
+    /**
+     * Extends a Graph subscription by SUBSCRIPTION_MINUTES; throws CalendarSubscriptionMissing when it has already lapsed.
+     */
     public function renewSubscription(string $subscriptionId): array
     {
         [$http, $data, $raw] = $this->call('PATCH', '/subscriptions/' . rawurlencode($subscriptionId), [
@@ -381,6 +392,7 @@ class MicrosoftCalendarProvider extends CalendarSyncProvider
         return ['id' => $subscriptionId, 'expires' => $this->expiryToLocal($data['expirationDateTime'] ?? null)];
     }
 
+    /** Removes a Graph subscription; one already gone counts as success. */
     public function deleteSubscription(string $subscriptionId): void
     {
         [$http, , $raw] = $this->call('DELETE', '/subscriptions/' . rawurlencode($subscriptionId));
@@ -397,6 +409,7 @@ class MicrosoftCalendarProvider extends CalendarSyncProvider
 
     // ------------------------------------------------------------- discovery
 
+    /** True when Graph can read the mailbox's calendar - i.e. the address exists and the app can reach it. */
     public function verifyTarget(string $calendarAddress): bool
     {
         try {

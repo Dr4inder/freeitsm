@@ -27,6 +27,10 @@ require_once dirname(__DIR__, 3) . '/includes/services/domains.php';
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * The SELECT for domains, with status, registrar, account, owner, technical contact and
+ * company names and, once Database Verification has added them, the customer columns.
+ */
 function apiDomainSelect(?PDO $conn = null): string {
     require_once dirname(__DIR__, 3) . '/includes/domains/customer.php';
     $cust = $conn !== null && domainCustomerReady($conn);   // #153, once Database Verification has run
@@ -57,6 +61,11 @@ function apiDomainSelect(?PDO $conn = null): string {
          LEFT JOIN tenants tn                 ON tn.id = d.tenant_id$custJoin";
 }
 
+/**
+ * Shapes a domain row for the API - names, company, status, registrar and account, dates
+ * with days to expiry, and the rest of the record. The auth code itself is never
+ * included - only auth_code_set.
+ */
 function apiSerializeDomain(array $r): array {
     $rel = function ($id, $name) { return $id === null ? null : ['id' => (int)$id, 'name' => $name]; };
     $tri = function ($v) { return $v === null ? null : (bool)(int)$v; };
@@ -139,6 +148,10 @@ function apiLoadDomain(PDO $conn, array $apiKey, int $id): array {
     return $row;
 }
 
+/**
+ * Answers 422 and stops when a request body carries auth_code - it can only be read or
+ * set on the Domains screen, where it is permission-controlled and audited.
+ */
 function apiDomainRefuseAuthCode(array $body): void {
     if (array_key_exists('auth_code', $body)) {
         apiError(422, 'invalid_field', "'auth_code' cannot be read or set through the API. Use the Domains screen, where it is permission-controlled and audited.");
@@ -389,6 +402,10 @@ function apiDomainStatusesList(PDO $conn, array $apiKey, array $params, array $b
     ], $rows));
 }
 
+/**
+ * GET /domain-registrar-accounts - the registrar accounts in the key's companies, with
+ * registrar, owner, company and how many domains each holds.
+ */
 function apiDomainAccountsList(PDO $conn, array $apiKey, array $params, array $body): void {
     [$scopeSql, $scopeArgs] = apiKeyTenantFilter($conn, $apiKey, 'acc');
     $st = $conn->prepare(

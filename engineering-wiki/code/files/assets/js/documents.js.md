@@ -1,6 +1,9 @@
 # assets/js/documents.js
 
-> JavaScript - 602 lines
+> JavaScript - 625 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Attached Documents Developer Guide](https://github.com/edmozley/freeitsm/wiki/Attached-Documents-Developer-Guide)
 
 Documents panel — attach files or DMS links to any record (discussion #76).
 
@@ -26,16 +29,16 @@ and war-room.js: fall back to English rather than take the page down.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `t(key, params)` | 63 |  |
-| `esc(s)` | 78 |  |
-| `bytes(n)` | 84 |  |
-| `safeHref(url)` | 92 | Only ever produce an href we built, from a scheme we checked. |
-| `icon(kind)` | 96 |  |
-| `Panel(el, opts)` | 102 |  |
-| `uploadFiles(api, parentType, parentId, files)` | 332 | Upload files against a parent, one request per file. |
-| `closeInfo()` | 502 |  |
-| `onInfoKey(e)` | 507 |  |
-| `showInfo(apiBase, documentId, baseUrl)` | 509 |  |
-| `mount(el, opts)` | 583 |  |
-| `upload(parentType, parentId, files, apiBase)` | 597 | Attach already-chosen files to a parent, without a panel. |
+| `t(key, params)` | 68 | Translates a key under common.documents, falling back to the English in FALLBACK with {name} placeholders filled. |
+| `esc(s)` | 84 | HTML-escapes a value for building the panel's markup. |
+| `bytes(n)` | 91 | Formats a byte count as B, KB or MB. |
+| `safeHref(url)` | 99 | Only ever produce an href we built, from a scheme we checked. |
+| `icon(kind)` | 104 | The inline SVG icon for a document row - a chain link for a DMS link, a page for an uploaded file. |
+| `Panel(el, opts)` | 115 | One Documents panel mounted on a record: reads the options, draws the panel and loads the first page of documents. |
+| `uploadFiles(api, parentType, parentId, files)` | 345 | Upload files against a parent, one request per file. |
+| `closeInfo()` | 516 | Removes the document details dialog and its Escape handler. |
+| `onInfoKey(e)` | 522 | Closes the document details dialog on Escape. |
+| `showInfo(apiBase, documentId, baseUrl)` | 529 | Opens the document details dialog: what the document is, whether its contents are searchable, and every record it is attached to. |
+| `mount(el, opts)` | 606 | Mounts a Documents panel in an element (or a selector) and returns it, or null when the element is missing. |
+| `upload(parentType, parentId, files, apiBase)` | 620 | Attach already-chosen files to a parent, without a panel. |
 

@@ -1,6 +1,9 @@
 # assets/js/record-preview.js
 
-> JavaScript - 278 lines
+> JavaScript - 296 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Record Previews Developer Guide](https://github.com/edmozley/freeitsm/wiki/Record-Previews-Developer-Guide)
 
 At-a-glance previews of a linked record (discussion #91).
 
@@ -38,17 +41,17 @@ and, after changing a record whose preview may be cached:
 
 | Function | Line | What it does |
 |---|--:|---|
-| `esc(s)` | 57 |  |
-| `rt(key, fallback)` | 64 | A `common.preview.*` string, with an English fallback if i18n is absent. |
-| `badge(type, id)` | 80 | The badge, as an HTML string — modules build their rows with template literals, so handing back a node would mean every caller changed shape. |
-| `ensurePopover()` | 88 |  |
-| `close()` | 98 |  |
-| `place(anchor)` | 117 | Anchor the card to its badge, flipping when there is no room. |
-| `renderLoading(anchor)` | 149 |  |
-| `renderUnavailable(anchor, message)` | 155 |  |
-| `render(anchor, p)` | 162 |  |
-| `show(anchor)` | 190 |  |
-| `forget(type, id)` | 272 | Drop a cached preview after the record behind it has been edited. |
+| `esc(s)` | 60 | HTML-escapes a value; null and undefined become an empty string. |
+| `rt(key, fallback)` | 67 | A `common.preview.*` string, with an English fallback if i18n is absent. |
+| `badge(type, id)` | 83 | The badge, as an HTML string — modules build their rows with template literals, so handing back a node would mean every caller changed shape. |
+| `ensurePopover()` | 92 | Returns the page's one popover element, creating it hidden on first use. |
+| `close()` | 103 | Hides the popover, drops the phone sheet mode and resets the badge it belonged to. |
+| `place(anchor)` | 122 | Anchor the card to its badge, flipping when there is no room. |
+| `renderLoading(anchor)` | 155 | Shows the loading message in the popover next to the badge. |
+| `renderUnavailable(anchor, message)` | 165 | Shows the single "cannot be shown" card - used alike for not found, not allowed and network failure. |
+| `render(anchor, p)` | 176 | Draws a record preview into the popover - heading, label / value rows (with a colour dot where given), lead text and an Open link. |
+| `show(anchor)` | 208 | Opens the popover for a badge, from the cache when possible, otherwise fetching record_preview.php and caching the answer (or "gone"). |
+| `forget(type, id)` | 290 | Drop a cached preview after the record behind it has been edited. |
 
 ## API endpoints it calls
 

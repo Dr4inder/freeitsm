@@ -6,7 +6,7 @@ POST /software/licences
 function apiSoftwareLicencesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 336.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 356.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

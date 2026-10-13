@@ -26,7 +26,7 @@ quietly overruling them.
 function awcEnsureCategory(PDO $conn, string $source, string $name, string $colour): ?int
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 183.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 190.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -41,9 +41,9 @@ Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_war
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 190 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 200 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 210 | `awcEnsureCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `is_active`) |  |
+| 197 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 207 | `awcEnsureCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 217 | `awcEnsureCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `is_active`) |  |
 
 ## Calls
 

@@ -1,10 +1,12 @@
 # pplSectionDomains()
 
+The Domains card: domain, the roles it plays when the rows carry them, status, expiry and grade.
+
 ```php
 function pplSectionDomains(array $s, bool $person, ?string $title = null): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 118.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 128.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

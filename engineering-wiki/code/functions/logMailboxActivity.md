@@ -6,7 +6,7 @@ Log mailbox activity (imports and rejections)
 function logMailboxActivity($conn, $mailboxId, $entries)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1495.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1499.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1497 | `logMailboxActivity` | **insert** [mailbox_activity_log](/code/tables/mailbox_activity_log.md) (`mailbox_id`, `action`, `from_address`, `from_name`, `subject`, `reason`, `ticket_id`, `processing_log`, `created_datetime`) |  |
+| 1501 | `logMailboxActivity` | **insert** [mailbox_activity_log](/code/tables/mailbox_activity_log.md) (`mailbox_id`, `action`, `from_address`, `from_name`, `subject`, `reason`, `ticket_id`, `processing_log`, `created_datetime`) |  |
 
 ## Called from
 

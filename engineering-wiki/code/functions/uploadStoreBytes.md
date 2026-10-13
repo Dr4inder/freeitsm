@@ -18,7 +18,7 @@ function uploadStoreBytes(
 ): array
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 785.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 786.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

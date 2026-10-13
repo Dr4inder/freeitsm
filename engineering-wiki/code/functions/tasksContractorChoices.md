@@ -6,7 +6,7 @@ Suppliers to choose from, each with its active contacts.
 function tasksContractorChoices(PDO $conn): array
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 105.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,8 +18,8 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 107 | `tasksContractorChoices` | read [suppliers](/code/tables/suppliers.md) |  |
-| 108 | `tasksContractorChoices` | read [contacts](/code/tables/contacts.md) |  |
+| 109 | `tasksContractorChoices` | read [suppliers](/code/tables/suppliers.md) |  |
+| 110 | `tasksContractorChoices` | read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

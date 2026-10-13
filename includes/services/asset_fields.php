@@ -655,6 +655,7 @@ class AssetFieldsService
 
     // ---- admin helpers ---------------------------------------------------
 
+    /** Validates a custom field type; a link field must also name a valid ref_kind. */
     private static function assertType(string $type, array $config): string
     {
         if (!in_array($type, self::TYPES, true)) {
@@ -719,6 +720,12 @@ class AssetFieldsService
         return (int)$active;
     }
 
+    /**
+     * Replaces a dropdown field's option list, skipping blanks and duplicates; a field that
+     * is not a dropdown loses its options.
+     *
+     * Leaves the list alone when no options were sent.
+     */
     private static function saveOptions(PDO $conn, int $fieldId, string $type, $options): void
     {
         if ($options === null || !is_array($options)) {
@@ -746,6 +753,7 @@ class AssetFieldsService
         }
     }
 
+    /** True when any asset has a value stored for the field. */
     private static function fieldHasValues(PDO $conn, int $fieldId): bool
     {
         $stmt = $conn->prepare("SELECT 1 FROM asset_field_values WHERE field_id = ? LIMIT 1");
@@ -753,6 +761,7 @@ class AssetFieldsService
         return $stmt->fetchColumn() !== false;
     }
 
+    /** Loads one custom field that has not been deleted; throws not found otherwise. */
     private static function loadField(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare("SELECT * FROM asset_fields WHERE id = ? AND is_deleted = 0");
@@ -764,6 +773,7 @@ class AssetFieldsService
         return $row;
     }
 
+    /** Trimmed text, or null when blank. */
     private static function nullIfBlank($v): ?string
     {
         $v = ($v === null) ? '' : trim((string)$v);
@@ -810,6 +820,7 @@ class AssetFieldsService
         return $rows;
     }
 
+    /** Loads an asset's id, type and company; throws not found when it does not exist. */
     private static function loadAsset(PDO $conn, int $assetId): array
     {
         $stmt = $conn->prepare("SELECT id, asset_type_id, tenant_id FROM assets WHERE id = ?");
@@ -821,6 +832,7 @@ class AssetFieldsService
         return $row;
     }
 
+    /** Loads one field set that has not been deleted; throws not found otherwise. */
     private static function loadSet(PDO $conn, int $setId): array
     {
         $stmt = $conn->prepare("SELECT id, name FROM asset_field_sets WHERE id = ? AND is_deleted = 0");
@@ -832,6 +844,7 @@ class AssetFieldsService
         return $row;
     }
 
+    /** The company id of an asset, or null. */
     private static function tenantOfAsset(PDO $conn, int $assetId): ?int
     {
         $stmt = $conn->prepare("SELECT tenant_id FROM assets WHERE id = ?");

@@ -6,7 +6,7 @@ Is `$host` this domain or one of its sub-domains? Used to keep the "extra hosts 
 function domainHostBelongsTo(string $host, string $domain): bool
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 90.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 94.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

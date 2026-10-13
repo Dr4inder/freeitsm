@@ -51,42 +51,42 @@
 | [api/assets/quick_add_supplier.php](/code/files/api/assets/quick_add_supplier.php.md) | L36 |  |
 | [api/assets/search_linkable_contracts.php](/code/files/api/assets/search_linkable_contracts.php.md) | L62 |  |
 | [api/assets/search_suppliers.php](/code/files/api/assets/search_suppliers.php.md) | L23 |  |
-| [api/contracts/get_contacts.php](/code/files/api/contracts/get_contacts.php.md) | L18 |  |
-| [api/contracts/get_contract.php](/code/files/api/contracts/get_contract.php.md) | L28 |  |
-| [api/contracts/get_contracts.php](/code/files/api/contracts/get_contracts.php.md) | L24 |  |
-| [api/contracts/get_dashboard_stats.php](/code/files/api/contracts/get_dashboard_stats.php.md) | L34 |  |
-| [api/contracts/get_suppliers.php](/code/files/api/contracts/get_suppliers.php.md) | L17 |  |
+| [api/contracts/get_contacts.php](/code/files/api/contracts/get_contacts.php.md) | L24 |  |
+| [api/contracts/get_contract.php](/code/files/api/contracts/get_contract.php.md) | L39 |  |
+| [api/contracts/get_contracts.php](/code/files/api/contracts/get_contracts.php.md) | L37 |  |
+| [api/contracts/get_dashboard_stats.php](/code/files/api/contracts/get_dashboard_stats.php.md) | L45 |  |
+| [api/contracts/get_suppliers.php](/code/files/api/contracts/get_suppliers.php.md) | L22 |  |
 | [api/domains/accounts.php](/code/files/api/domains/accounts.php.md) | L20 |  |
 | [api/domains/bulk_add.php](/code/files/api/domains/bulk_add.php.md) | domainImportResolveNames L59 |  |
 | [api/rfp-builder/get_available_suppliers.php](/code/files/api/rfp-builder/get_available_suppliers.php.md) | L31 |  |
 | [api/rfp-builder/get_compare_data.php](/code/files/api/rfp-builder/get_compare_data.php.md) | L67 |  |
 | [api/rfp-builder/get_invited_suppliers.php](/code/files/api/rfp-builder/get_invited_suppliers.php.md) | L32 |  |
-| [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L28 |  |
-| [api/rfp-builder/get_rfps.php](/code/files/api/rfp-builder/get_rfps.php.md) | L27 |  |
+| [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L38 |  |
+| [api/rfp-builder/get_rfps.php](/code/files/api/rfp-builder/get_rfps.php.md) | L35 |  |
 | [api/rfp-builder/get_scores.php](/code/files/api/rfp-builder/get_scores.php.md) | L40 |  |
 | [api/rfp-builder/invite_supplier.php](/code/files/api/rfp-builder/invite_supplier.php.md) | L43 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3531 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L369, L380 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L47, apiSuppliersList L645 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractSelect L60, apiSupplierSelect L140, apiContractsList L296 |  |
-| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L40, apiDomainSelect L44, apiDomainAccountsList L395 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52, apiSuppliersList L679 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractSelect L65, apiSupplierSelect L151, apiContractsList L312 |  |
+| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L44, apiDomainSelect L48, apiDomainAccountsList L412 |  |
 | [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractsForAsset L109 |  |
-| [includes/contract_report.php](/code/files/includes/contract_report.php.md) | contractReportLoad L147 |  |
+| [includes/contract_report.php](/code/files/includes/contract_report.php.md) | contractReportLoad L150 |  |
 | [includes/domains/customer.php](/code/files/includes/domains/customer.php.md) | domainCustomerSupplierSearch L69, domainCustomerSupplierSearch L76 |  |
 | [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L32, domainListSelect L39, domainApiLookups L190, domainApiLookups L201 |  |
-| [includes/leases.php](/code/files/includes/leases.php.md) | leaseSave L193, leaseList L280, leaseGet L321, leaseDueBack L684 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleSupplierRows L619, supplierDetail L647, supplierContactDetail L687 |  |
+| [includes/leases.php](/code/files/includes/leases.php.md) | leaseSave L199, leaseList L286, leaseGet L327, leaseDueBack L690 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleSupplierRows L622, supplierDetail L650, supplierContactDetail L690 |  |
 | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L150, projectAiFacts L282 |  |
 | [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatRead L231, projectChatTurn L360 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L125 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L190 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L128 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L194 |  |
 | [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsOverdueDigest L38 |  |
 | [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L499 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewContract L351, recordPreviewDomain L387 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::validateField L746, AssetsService::auditDisplay L808 |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::matchSupplier L808, DomainsService::auditDisplay L864, DomainsService::auditDisplay L869 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::validateField L750, AssetsService::auditDisplay L812 |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::matchSupplier L839, DomainsService::auditDisplay L900, DomainsService::auditDisplay L905 |  |
 | [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::contractorMemberSql L103, ProjectToolsService::contractorMemberSql L110 |  |
-| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractors L55, tasksContractorValidate L97, tasksContractorChoices L107, tasksContractorEmail L135 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolSupplierContact L719 |  |
+| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractors L57, tasksContractorValidate L99, tasksContractorChoices L109, tasksContractorEmail L137 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolSupplierContact L749 |  |
 | [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md) | workflowEmitContractExpiries L130 |  |
 

@@ -1,6 +1,6 @@
 # includes/software_licence_calendar.php
 
-> PHP - 145 lines
+> PHP - 151 lines
 
 Software licence renewals → Calendar sync (#1551).
 
@@ -37,18 +37,18 @@ commitment in somebody's calendar.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [syncSoftwareLicenceCalendar()](/code/functions/syncSoftwareLicenceCalendar.md) | 41 |  |
-| [slcEnsureRenewalCategory()](/code/functions/slcEnsureRenewalCategory.md) | 128 | Find or create the "Renewals" calendar category; returns its id (or null). |
+| [syncSoftwareLicenceCalendar()](/code/functions/syncSoftwareLicenceCalendar.md) | 47 | Rebuilds the software renewal entries in the calendar from the active licences' renewal dates. |
+| [slcEnsureRenewalCategory()](/code/functions/slcEnsureRenewalCategory.md) | 134 | Find or create the "Renewals" calendar category; returns its id (or null). |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 54 | `syncSoftwareLicenceCalendar` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
-| 66 | `syncSoftwareLicenceCalendar` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
-| 78 | `syncSoftwareLicenceCalendar` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
-| 130 | `slcEnsureRenewalCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 137 | `slcEnsureRenewalCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `is_active`) |  |
+| 60 | `syncSoftwareLicenceCalendar` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
+| 72 | `syncSoftwareLicenceCalendar` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 84 | `syncSoftwareLicenceCalendar` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
+| 136 | `slcEnsureRenewalCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 143 | `slcEnsureRenewalCategory` | **insert** [calendar_categories](/code/tables/calendar_categories.md) (`name`, `color`, `is_active`) |  |
 
 ## How it hangs together
 

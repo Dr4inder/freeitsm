@@ -6,7 +6,7 @@ ISO 4217 code check (three letters).
 function projectValidCurrency(string $c): bool
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 500.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 504.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

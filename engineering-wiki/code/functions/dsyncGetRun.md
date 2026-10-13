@@ -6,7 +6,7 @@ Read a run back.
 function dsyncGetRun(PDO $conn, int $runId): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 930.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 943.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 932 | `dsyncGetRun` | read [directory_sync_runs](/code/tables/directory_sync_runs.md) |  |
+| 945 | `dsyncGetRun` | read [directory_sync_runs](/code/tables/directory_sync_runs.md) |  |
 
 ## Called from
 

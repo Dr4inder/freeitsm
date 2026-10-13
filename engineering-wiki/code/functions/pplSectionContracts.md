@@ -1,10 +1,12 @@
 # pplSectionContracts()
 
+The Contracts card: contract, the other party (unless `$withParty` is false), status and end date, with inactive contracts marked.
+
 ```php
 function pplSectionContracts(array $s, bool $withParty = true, ?string $title = null): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 102.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 111.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

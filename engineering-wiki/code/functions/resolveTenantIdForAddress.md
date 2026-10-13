@@ -9,7 +9,7 @@ domain, or a freemail address) → caller falls back to local login.
 function resolveTenantIdForAddress(PDO $conn, string $email): ?int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1176.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1182.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,8 +22,8 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 117
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1182 | `resolveTenantIdForAddress` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
-| 1192 | `resolveTenantIdForAddress` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1188 | `resolveTenantIdForAddress` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
+| 1198 | `resolveTenantIdForAddress` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
 
 ## Called from
 

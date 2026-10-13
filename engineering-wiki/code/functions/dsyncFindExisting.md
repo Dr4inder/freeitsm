@@ -12,7 +12,7 @@ Returns [row|null, howMatched].
 function dsyncFindExisting(PDO $conn, array $provider, array $p): array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 376.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 383.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,10 +26,10 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 382 | `dsyncFindExisting` | read [user_sso_identities](/code/tables/user_sso_identities.md), read [users](/code/tables/users.md) |  |
-| 391 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
-| 404 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
-| 407 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 389 | `dsyncFindExisting` | read [user_sso_identities](/code/tables/user_sso_identities.md), read [users](/code/tables/users.md) |  |
+| 398 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 411 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
+| 414 | `dsyncFindExisting` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

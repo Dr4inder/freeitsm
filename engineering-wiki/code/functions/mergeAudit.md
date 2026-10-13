@@ -1,5 +1,7 @@
 # mergeAudit()
 
+Writes one ticket_audit row for a merge step, best-effort - a failed audit write never stops the merge. An actor id of 0 is stored as NULL.
+
 ```php
 function mergeAudit(
     PDO $conn,
@@ -11,7 +13,7 @@ function mergeAudit(
 ): void
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 622.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 629.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,11 +26,13 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 **Returns:** `void`
 
+**Writes:** ticket_audit - the merge shows in each ticket's history
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 625 | `mergeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 632 | `mergeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ## Called from
 

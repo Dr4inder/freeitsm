@@ -36,6 +36,7 @@ if (!is_array($data)) {
     exit;
 }
 
+/** Answers {success: false, error} as JSON and stops. */
 function bail(string $msg): void {
     echo json_encode(['success' => false, 'error' => $msg]);
     exit;

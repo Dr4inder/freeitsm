@@ -11,7 +11,7 @@ replaced.
 function knowledgeAclResetCaches(): void
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 739.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 752.
 
 **Returns:** `void`
 

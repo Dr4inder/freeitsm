@@ -1,6 +1,6 @@
 # includes/mcp/tools.php
 
-> PHP - 307 lines
+> PHP - 318 lines
 
 The MCP server's tools (3.2.0) - api/mcp/index.php is the protocol, this is what it offers.
 
@@ -47,20 +47,20 @@ assistant told about a tool it cannot use keeps reaching for it.
 | [mcpToolsFor()](/code/functions/mcpToolsFor.md) | 173 | tools/list: what this key may use, in MCP's shape. |
 | [mcpRunTool()](/code/functions/mcpRunTool.md) | 194 | tools/call. Returns [text, isError]. An unknown or forbidden tool is null - the endpoint answers that as a protocol error, not as tool output. |
 | [mcpProjectScopeSql()](/code/functions/mcpProjectScopeSql.md) | 215 | " AND p.tenant_id ..." for the key's companies (NULL company = the Default one). |
-| [mcpProjectCompanySql()](/code/functions/mcpProjectCompanySql.md) | 224 |  |
-| [mcpToolListProjects()](/code/functions/mcpToolListProjects.md) | 235 |  |
-| [mcpToolProjectOverview()](/code/functions/mcpToolProjectOverview.md) | 241 |  |
-| [mcpToolProjectRaid()](/code/functions/mcpToolProjectRaid.md) | 247 |  |
-| [mcpToolProjectTasks()](/code/functions/mcpToolProjectTasks.md) | 253 |  |
-| [mcpToolProjectDates()](/code/functions/mcpToolProjectDates.md) | 259 |  |
-| [mcpToolProjectBudget()](/code/functions/mcpToolProjectBudget.md) | 266 | The budget stays MCP-only: Warbot answers in a channel everyone in it can read. |
-| [mcpToolSearchKnowledge()](/code/functions/mcpToolSearchKnowledge.md) | 292 | ══════════════════════════════════════════════════════════════════════════ KNOWLEDGE - by the KEY's companies (KnowledgeViewer::forApiKey), not the analyst's active company, which an API call does not have. ══════════════════════════════════════════════════════════════════════════ |
+| [mcpProjectCompanySql()](/code/functions/mcpProjectCompanySql.md) | 230 | The company part of the MCP project filter - limits projects to the API key's companies. |
+| [mcpToolListProjects()](/code/functions/mcpToolListProjects.md) | 242 | MCP tool: lists the projects the API key may see. |
+| [mcpToolProjectOverview()](/code/functions/mcpToolProjectOverview.md) | 249 | MCP tool: one project's overview. |
+| [mcpToolProjectRaid()](/code/functions/mcpToolProjectRaid.md) | 256 | MCP tool: a project's RAID log - risks, assumptions, issues and dependencies. |
+| [mcpToolProjectTasks()](/code/functions/mcpToolProjectTasks.md) | 263 | MCP tool: a project's tasks. |
+| [mcpToolProjectDates()](/code/functions/mcpToolProjectDates.md) | 270 | MCP tool: a project's key dates. |
+| [mcpToolProjectBudget()](/code/functions/mcpToolProjectBudget.md) | 277 | The budget stays MCP-only: Warbot answers in a channel everyone in it can read. |
+| [mcpToolSearchKnowledge()](/code/functions/mcpToolSearchKnowledge.md) | 303 | ══════════════════════════════════════════════════════════════════════════ KNOWLEDGE - by the KEY's companies (KnowledgeViewer::forApiKey), not the analyst's active company, which an API call does not have. ══════════════════════════════════════════════════════════════════════════ |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 299 | `mcpToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 310 | `mcpToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

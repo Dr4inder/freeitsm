@@ -10,7 +10,7 @@ other reasons too (a legal hold). The screen says "likely registry-locked".
 function domainDeriveFlags(array &$r, string $name = ''): void
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 247.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 252.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

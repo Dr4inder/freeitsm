@@ -2,6 +2,18 @@
 
 > API endpoint - 345 lines
 
+FreeITSM REST API v1 — key authentication, permissions and company scoping.
+
+Keys live in the api_keys table (separate from the legacy plaintext
+`apikeys` table used by api/external/). Only a SHA-256 hash of the key is
+stored; the full key (fitsm_...) is shown once at creation.
+
+Every key acts as an analyst (api_keys.analyst_id) so that audit rows,
+notes and workflow events keep a real author, and carries:
+  - a granular permission map (see lib/permissions.php)
+  - an optional company scope (api_keys.company_ids JSON; NULL = all)
+  - an optional expiry and per-minute rate-limit override
+
 ## The endpoint
 
 | | |

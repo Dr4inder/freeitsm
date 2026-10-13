@@ -6,7 +6,7 @@ The key's view of customer contracts (#153): " AND (...)" + its args.
 function apiContractVisibility(PDO $conn, array $apiKey): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 75.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 80.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

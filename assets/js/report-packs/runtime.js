@@ -6,12 +6,19 @@
  * block never refetches it), the header fields for the period, the logo, and
  * the chart images. layout() asks the engine for pages; exportPdf() turns the
  * same pages into a file.
+ *
+ * @wiki Report-Packs-Internals-1-The-Designer
  */
 (function () {
     'use strict';
 
+    /** Translates a key under reporting.packs.*, or returns the key when the i18n helper is not loaded. */
     const T = (k, p) => (window.t ? window.t('reporting.packs.' + k, p) : k);
 
+    /**
+     * Creates a pack runtime for one API base and logo - the data cache, fetch queue, chart cache and
+     * the load, layout and export methods.
+     */
     function create(apiBase, logoUrl) {
         const rt = {
             design: null, name: '', fields: {}, logo: null,
@@ -22,15 +29,24 @@
         const chartCache = new Map();
         let queue = [], running = 0;
 
+        /**
+         * POSTs JSON to a Report Packs endpoint; a reply that is not JSON becomes a failure with the
+         * block error message.
+         */
         function post(path, body) {
             return fetch(apiBase + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
                 .then(r => r.json().catch(() => ({ success: false, error: T('err.block') })));
         }
 
+        /** Returns the cache key for a data block - its handler, options and the pack's criteria. */
         function keyFor(b) {
             return JSON.stringify([b.handler, b.opts || {}, rt.design.criteria]);
         }
 
+        /**
+         * Runs queued block_data.php fetches, at most four at once, storing each result and calling
+         * onChange (unless quiet).
+         */
         function pump() {
             while (running < 4 && queue.length) {
                 const job = queue.shift();
@@ -84,6 +100,10 @@
         /** Forget cached data (the Refresh button, or new criteria). */
         rt.refresh = function () { rt.data.clear(); chartCache.clear(); return rt.loadContext().then(rt.loadData); };
 
+        /**
+         * Returns block id -> cached {data} or {error} for every data block, or undefined while still
+         * loading.
+         */
         rt.dataMap = function () {
             const m = {};
             rt.design.blocks.forEach(b => {
@@ -105,6 +125,7 @@
             });
         };
 
+        /** Loads the logo and rasterises it once to a PNG at print size; resolves to the logo or null. */
         rt.loadLogo = function () {
             return new Promise(resolve => {
                 if (!logoUrl) { resolve(null); return; }
@@ -127,6 +148,10 @@
             });
         };
 
+        /**
+         * Returns the layout context for the engine - fields, title, logo size and the loading /
+         * snapshot labels.
+         */
         rt.ctx = function () {
             return {
                 fields: rt.fields, title: rt.name,
@@ -135,6 +160,7 @@
             };
         };
 
+        /** Lays out the pack into pages with the current design and data. */
         rt.layout = function () {
             return window.RPEngine.paginate(rt.design, rt.dataMap(), rt.ctx());
         };
@@ -157,6 +183,7 @@
         rt.checkUnsupported = function () {
             const E = window.RPEngine;
             const texts = [];
+            /** Collects the plain text runs of a rich-text document into texts. */
             const docText = d => (d || []).forEach(p => (p.r || []).forEach(r => r.x && texts.push(r.x)));
             docText(rt.design.header.doc); docText(rt.design.footer.doc); docText(rt.design.cover.doc);
             rt.design.blocks.forEach(b => { if (b.doc) docText(b.doc); if (b.text) texts.push(b.text); if (b.title) texts.push(b.title); });
@@ -165,7 +192,12 @@
             return rt.unsupported;
         };
 
+        /**
+         * Returns the PDF file name - the pack name plus the date period, with characters files cannot
+         * hold replaced.
+         */
         rt.fileName = function () {
+            /** Replaces characters not allowed in file names with "-" and collapses whitespace. */
             const clean = s => String(s || '').replace(/[\\/:*?"<>|\u0000-\u001f]+/g, '-').replace(/\s+/g, ' ').trim();
             const period = rt.fields.date_from && rt.fields.date_to
                 ? ' - ' + clean(rt.fields.date_from).replace(/\//g, '.') + ' to ' + clean(rt.fields.date_to).replace(/\//g, '.')
@@ -185,6 +217,7 @@
             });
         };
 
+        /** Builds the PDF and saves it as a download; resolves to the jsPDF document. */
         rt.exportPdf = async function () {
             const doc = await rt.buildPdf();
             doc.save(rt.fileName());

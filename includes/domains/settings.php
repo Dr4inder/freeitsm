@@ -156,6 +156,7 @@ if (!defined('DOMAIN_SETTINGS_LOADED')) {
         return $cache = $out;
     }
 
+    /** Returns one Domains setting as a string, from the cached settings (its default when not saved). */
     function domainSetting(PDO $conn, string $key): string
     {
         return (string)(domainSettings($conn)[$key] ?? '');

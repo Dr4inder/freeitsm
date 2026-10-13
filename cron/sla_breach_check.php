@@ -53,6 +53,10 @@ function sla_cron_log_start(PDO $conn, bool $isCli, ?string $clientIp): ?int {
     }
 }
 
+/**
+ * Completes this run's sla_cron_runs row with its end time, duration, outcome, counts and notes; does nothing when the start row was never written.
+ * @writes sla_cron_runs(ended_at, duration_ms, outcome, sent_count, skipped_count, error_count, notes) - the run log shown in SLA settings
+ */
 function sla_cron_log_finish(PDO $conn, ?int $runId, string $outcome, array $counts = [], ?string $notes = null): void {
     if (!$runId) return;
     try {

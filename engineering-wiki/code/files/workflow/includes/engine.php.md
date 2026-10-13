@@ -1,51 +1,86 @@
 # workflow/includes/engine.php
 
-> PHP - 2935 lines
+> PHP - 3020 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Workflows](https://github.com/edmozley/freeitsm/wiki/Workflows)
+
+Workflow Engine ----------------------------------------------------------------------
+
+Cross-module automation. Other modules CALL into this engine when their
+events happen (e.g. tickets/save.php calls WorkflowEngine::dispatch(
+'ticket.created', ['ticket' => `$row`]) after a successful insert). The
+engine finds active workflows matching the event, evaluates conditions
+against the payload, executes actions in order, and writes a row to
+workflow_executions for every run so the user can see what happened.
+
+The contract is deliberately small in v1:
+
+  - Triggers are flat event-name strings. The catalogue lives in
+    `availableTriggers()`; new ones are added here and wired in their
+    module's save flow.
+
+  - Conditions are an array of {field, op, value} objects. The engine
+    reads `field` from the payload via dot-notation (`ticket.priority`).
+    All conditions must match (AND). If empty, the workflow always fires.
+
+  - Actions are an array of {type, args} objects executed in order.
+    The catalogue lives in `availableActions()`; the handlers live as
+    private methods on this class so each action's contract is in one
+    place.
+
+  - Execution is synchronous in v1. Each event triggers a same-request
+    pass through the engine. An async queue + retries are planned but
+    not built — keep actions fast and idempotent.
+
+Failures don't propagate. The engine catches per-step exceptions, logs
+them in the execution row, and continues. The point is that a buggy
+workflow can't take down the host module's request.
 
 ## Classes
 
-- [WorkflowEngine](/code/classes/WorkflowEngine.md) (class, line 36) - Workflow Engine ----------------------------------------------------------------------
+- [WorkflowEngine](/code/classes/WorkflowEngine.md) (class, line 38) - Workflow Engine ----------------------------------------------------------------------
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 572 | `WorkflowEngine::webhookFormats` | read [webhook_message_formats](/code/tables/webhook_message_formats.md) |  |
-| 981 |  | read [forms](/code/tables/forms.md) |  |
-| 1453 | `WorkflowEngine::dispatch` | read [workflows](/code/tables/workflows.md) |  |
-| 1477 | `WorkflowEngine::manualFire` | read [workflows](/code/tables/workflows.md) |  |
-| 1541 | `WorkflowEngine::recordAbortedRun` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`, `finished_datetime`, `step_log`, `error_message`) |  |
-| 1553 | `WorkflowEngine::recordAbortedRun` | **update** [workflows](/code/tables/workflows.md) (`last_run_datetime`, `last_run_status`) |  |
-| 1596 | `WorkflowEngine::runInner` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`) |  |
-| 1630 | `WorkflowEngine::runInner` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`status`, `finished_datetime`, `step_log`, `error_message`) |  |
-| 1640 | `WorkflowEngine::runInner` | **update** [workflows](/code/tables/workflows.md) (`last_run_datetime`, `last_run_status`, `run_count`) |  |
-| 1903 | `WorkflowEngine::runActionList` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`) |  |
-| 1914 | `WorkflowEngine::runActionList` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`status`, `finished_datetime`, `step_log`, `error_message`) |  |
-| 2027 | `WorkflowEngine::action_attach_checklist` | read [ticket_checklists](/code/tables/ticket_checklists.md) |  |
-| 2034 | `WorkflowEngine::action_attach_checklist` | read [checklist_templates](/code/tables/checklist_templates.md) |  |
-| 2041 | `WorkflowEngine::action_attach_checklist` | **insert** [ticket_checklists](/code/tables/ticket_checklists.md) (`ticket_id`, `template_id`, `title`, `closure_mode`, `created_by_id`, `created_datetime`) |  |
-| 2046 | `WorkflowEngine::action_attach_checklist` | read [checklist_template_items](/code/tables/checklist_template_items.md) |  |
-| 2050 | `WorkflowEngine::action_attach_checklist` | **insert** [ticket_checklist_items](/code/tables/ticket_checklist_items.md) (`ticket_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`) |  |
-| 2087 | `WorkflowEngine::action_set_ticket_status` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 2098 | `WorkflowEngine::action_set_ticket_status` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 2129 | `WorkflowEngine::action_set_ticket_status` | **update** [tickets](/code/tables/tickets.md) |  |
-| 2148 | `WorkflowEngine::action_set_ticket_priority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 2152 | `WorkflowEngine::action_set_ticket_priority` | **update** [tickets](/code/tables/tickets.md) (`priority_id`, `updated_datetime`) |  |
-| 2164 | `WorkflowEngine::action_assign_ticket` | read [analysts](/code/tables/analysts.md) |  |
-| 2171 | `WorkflowEngine::action_assign_ticket` | **update** [tickets](/code/tables/tickets.md) (`assigned_analyst_id`, `owner_id`, `updated_datetime`) |  |
-| 2188 | `WorkflowEngine::action_add_ticket_note` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 2252 | `WorkflowEngine::action_send_email` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 2372 | `WorkflowEngine::action_create_task` | read [task_statuses](/code/tables/task_statuses.md) |  |
-| 2373 | `WorkflowEngine::action_create_task` | read [task_statuses](/code/tables/task_statuses.md) |  |
-| 2377 | `WorkflowEngine::action_create_task` | read [task_priorities](/code/tables/task_priorities.md) |  |
-| 2384 | `WorkflowEngine::action_create_task` | read [tasks](/code/tables/tasks.md) |  |
-| 2389 | `WorkflowEngine::action_create_task` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `ticket_id`, `board_position`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 2477 | `WorkflowEngine::action_create_ticket` | read [users](/code/tables/users.md) |  |
-| 2481 | `WorkflowEngine::action_create_ticket` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
-| 2491 | `WorkflowEngine::action_create_ticket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 2501 | `WorkflowEngine::action_create_ticket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_team_id`, `assigned_analyst_id`, `user_id`, `created_datetime`, `updated_datetime`) |  |
-| 2523 | `WorkflowEngine::action_create_ticket` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance`, `is_read`, `ticket_id`) |  |
-| 2537 | `WorkflowEngine::action_create_ticket` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 574 | `WorkflowEngine::webhookFormats` | read [webhook_message_formats](/code/tables/webhook_message_formats.md) |  |
+| 985 |  | read [forms](/code/tables/forms.md) |  |
+| 1457 | `WorkflowEngine::dispatch` | read [workflows](/code/tables/workflows.md) |  |
+| 1481 | `WorkflowEngine::manualFire` | read [workflows](/code/tables/workflows.md) |  |
+| 1545 | `WorkflowEngine::recordAbortedRun` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`, `finished_datetime`, `step_log`, `error_message`) |  |
+| 1557 | `WorkflowEngine::recordAbortedRun` | **update** [workflows](/code/tables/workflows.md) (`last_run_datetime`, `last_run_status`) |  |
+| 1614 | `WorkflowEngine::runInner` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`) |  |
+| 1648 | `WorkflowEngine::runInner` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`status`, `finished_datetime`, `step_log`, `error_message`) |  |
+| 1658 | `WorkflowEngine::runInner` | **update** [workflows](/code/tables/workflows.md) (`last_run_datetime`, `last_run_status`, `run_count`) |  |
+| 1929 | `WorkflowEngine::runActionList` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`) |  |
+| 1940 | `WorkflowEngine::runActionList` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`status`, `finished_datetime`, `step_log`, `error_message`) |  |
+| 2064 | `WorkflowEngine::action_attach_checklist` | read [ticket_checklists](/code/tables/ticket_checklists.md) |  |
+| 2071 | `WorkflowEngine::action_attach_checklist` | read [checklist_templates](/code/tables/checklist_templates.md) |  |
+| 2078 | `WorkflowEngine::action_attach_checklist` | **insert** [ticket_checklists](/code/tables/ticket_checklists.md) (`ticket_id`, `template_id`, `title`, `closure_mode`, `created_by_id`, `created_datetime`) |  |
+| 2083 | `WorkflowEngine::action_attach_checklist` | read [checklist_template_items](/code/tables/checklist_template_items.md) |  |
+| 2087 | `WorkflowEngine::action_attach_checklist` | **insert** [ticket_checklist_items](/code/tables/ticket_checklist_items.md) (`ticket_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`) |  |
+| 2134 | `WorkflowEngine::action_set_ticket_status` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 2145 | `WorkflowEngine::action_set_ticket_status` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 2176 | `WorkflowEngine::action_set_ticket_status` | **update** [tickets](/code/tables/tickets.md) |  |
+| 2196 | `WorkflowEngine::action_set_ticket_priority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 2200 | `WorkflowEngine::action_set_ticket_priority` | **update** [tickets](/code/tables/tickets.md) (`priority_id`, `updated_datetime`) |  |
+| 2213 | `WorkflowEngine::action_assign_ticket` | read [analysts](/code/tables/analysts.md) |  |
+| 2220 | `WorkflowEngine::action_assign_ticket` | **update** [tickets](/code/tables/tickets.md) (`assigned_analyst_id`, `owner_id`, `updated_datetime`) |  |
+| 2243 | `WorkflowEngine::action_add_ticket_note` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 2317 | `WorkflowEngine::action_send_email` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 2444 | `WorkflowEngine::action_create_task` | read [task_statuses](/code/tables/task_statuses.md) |  |
+| 2445 | `WorkflowEngine::action_create_task` | read [task_statuses](/code/tables/task_statuses.md) |  |
+| 2449 | `WorkflowEngine::action_create_task` | read [task_priorities](/code/tables/task_priorities.md) |  |
+| 2456 | `WorkflowEngine::action_create_task` | read [tasks](/code/tables/tasks.md) |  |
+| 2461 | `WorkflowEngine::action_create_task` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `ticket_id`, `board_position`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 2561 | `WorkflowEngine::action_create_ticket` | read [users](/code/tables/users.md) |  |
+| 2565 | `WorkflowEngine::action_create_ticket` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
+| 2575 | `WorkflowEngine::action_create_ticket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 2585 | `WorkflowEngine::action_create_ticket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_team_id`, `assigned_analyst_id`, `user_id`, `created_datetime`, `updated_datetime`) |  |
+| 2607 | `WorkflowEngine::action_create_ticket` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance`, `is_read`, `ticket_id`) |  |
+| 2621 | `WorkflowEngine::action_create_ticket` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ## How it hangs together
 
@@ -58,5 +93,5 @@
 ## Traps
 
 > [!WARNING]
-> **Line 2494, in `WorkflowEngine::action_create_ticket`:** the install's numbering, never a number made here - see `messagingGenerateTicketNumber()` for what went wrong when it was. No company is stored on this ticket, which means the default one.
+> **Line 2578, in `WorkflowEngine::action_create_ticket`:** the install's numbering, never a number made here - see `messagingGenerateTicketNumber()` for what went wrong when it was. No company is stored on this ticket, which means the default one.
 

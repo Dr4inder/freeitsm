@@ -6,7 +6,7 @@ One attribute off a raw entry, as a plain string ('' when absent).
 function dsyncValue(array $entry, string $attr): string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 321.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 328.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

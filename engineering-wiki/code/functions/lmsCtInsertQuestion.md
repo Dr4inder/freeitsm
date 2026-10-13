@@ -12,7 +12,7 @@ function lmsCtInsertQuestion(
 ): int
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 167.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 169.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,7 +28,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 169 | `lmsCtInsertQuestion` | **insert** [lms_ct_questions](/code/tables/lms_ct_questions.md) (`skill`, `difficulty`, `format`, `question_text`, `answers_json`, `explanation`, `status`, `source`, `role_context`, `created_by_analyst_id`, `created_datetime`) |  |
+| 171 | `lmsCtInsertQuestion` | **insert** [lms_ct_questions](/code/tables/lms_ct_questions.md) (`skill`, `difficulty`, `format`, `question_text`, `answers_json`, `explanation`, `status`, `source`, `role_context`, `created_by_analyst_id`, `created_datetime`) |  |
 
 ## Called from
 

@@ -6,7 +6,7 @@ Any date string → Y-m-d, or null.
 function domainDateOnly(string $raw): ?string
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 297.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

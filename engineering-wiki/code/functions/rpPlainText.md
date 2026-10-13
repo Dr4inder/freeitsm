@@ -6,7 +6,7 @@ Rich text from an incident comment, flattened for a table's detail line.
 function rpPlainText(string $html): string
 ```
 
-Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 241.
+Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 253.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

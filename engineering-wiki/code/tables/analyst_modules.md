@@ -12,7 +12,7 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):598 | `oidcCreateAnalyst` | insert | `analyst_id`, `module_key` |  |
+| [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md):600 | `oidcCreateAnalyst` | insert | `analyst_id`, `module_key` |  |
 | [api/system/save_analyst_modules.php](/code/files/api/system/save_analyst_modules.php.md):38 |  | delete |  |  |
 | [api/system/save_analyst_modules.php](/code/files/api/system/save_analyst_modules.php.md):45 |  | insert | `analyst_id`, `module_key` |  |
 | [api/system/save_module_grants.php](/code/files/api/system/save_module_grants.php.md):46 |  | delete |  |  |

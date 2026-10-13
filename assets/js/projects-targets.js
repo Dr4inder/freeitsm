@@ -7,6 +7,8 @@
  * PrjTargets.render({data, projectId, refresh}). Every rule - the whitelisted
  * fields, the company, Assets access - is server-side in
  * includes/projects/targets.php; this file only draws and asks.
+ *
+ * @wiki Projects-Internals-5-Health-and-Charts
  */
 (function () {
     'use strict';
@@ -14,14 +16,20 @@
     const T = P.T, esc = P.esc;
     let ctx = null, opts = null, wired = false, previewTimer = null, listTarget = null, listShow = 'left';
 
+    /** True unless the server says the viewer may not change this project. */
     const canChange = () => !(ctx.data.permissions && !ctx.data.permissions.can_change);
+    /** True when the viewer can open Assets, which setting up a target and listing its assets need. */
     const canAssets = () => !!ctx.data.can_assets;
+    /** A GET to tools.php for the current project with the given query string. */
     const get = (q) => P.api('tools.php?project_id=' + ctx.projectId + '&' + q);
+    /** Posts a targets action to tools.php for the current project. */
     const call = (body) => P.api('tools.php', Object.assign({ project_id: ctx.projectId }, body));
+    /** Shorthand for document.getElementById. */
     const $ = (id) => document.getElementById(id);
     const PENCIL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
 
     // ---- Words for a rule -------------------------------------------------------
+    /** Which assets a target counts, in words - those linked to the project, or the asset type and field filter. */
     function scopePhrase(t) {
         if (t.scope === 'linked') return T('targets.scope_linked');
         const bits = [];
@@ -29,12 +37,14 @@
         if (t.scope_field) bits.push(T('targets.sfield.' + t.scope_field) + ' ' + T('targets.op.contains') + ' "' + t.scope_value + '"');
         return bits.join(' · ');
     }
+    /** What counts as done for a target, in words - "Status is Retired". */
     function rulePhrase(t) {
         const v = t.done_value_name !== undefined ? t.done_value_name : t.done_value;
         return T('targets.field.' + t.done_field) + ' ' + T('targets.op.' + t.done_op) + ' ' + (v === '' || v === null ? T('targets.blank') : v);
     }
 
     // ---- The burn-up line ------------------------------------------------------
+    /** The target's small burn-up line as an inline SVG, or a "line soon" note until there are two points. */
     function spark(t) {
         const pts = t.points || [];
         if (pts.length < 2) return '<div class="prj-tg-spark empty">' + esc(T('targets.line_soon')) + '</div>';
@@ -48,6 +58,7 @@
             + '<polyline fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" points="' + line + '"/></svg>';
     }
 
+    /** One target's card - name, health dot, edit button, done of total with the percentage, the rule, progress bar, burn-up line, scope, due date and the "show what is left" link. */
     function card(t) {
         const finished = t.total > 0 && t.done >= t.total;
         const today = P.todayStr();
@@ -68,6 +79,7 @@
             + '</div>';
     }
 
+    /** Draws the Overview's asset targets panel - a card per target, or an inviting empty state for those who may add one; hidden otherwise. */
     function render() {
         const box = $('pvTargets');
         if (!box) return;
@@ -86,10 +98,12 @@
     }
 
     // ---- The dialog ------------------------------------------------------------
+    /** The target dialog's choices (asset types, fields, operators, statuses, locations), fetched once. */
     async function options() {
         if (!opts) opts = (await get('target_options=1')).options;
         return opts;
     }
+    /** Fills the operator list for the chosen done-field and shows a drop-down of statuses or locations, or a text box, for the value. */
     function fillOps(field, sel) {
         const f = opts.fields[field];
         $('ptOp').innerHTML = f.ops.map(o => '<option value="' + o + '">' + esc(T('targets.op.' + o)) + '</option>').join('');
@@ -98,6 +112,7 @@
         $('ptValueList').hidden = !list; $('ptValue').hidden = !!list;
         if (list) $('ptValueList').innerHTML = list.map(o => '<option value="' + o.id + '">' + esc(o.name) + '</option>').join('');
     }
+    /** Switches the dialog between counting linked assets and counting a filter, and refreshes the preview. */
     function setScope(s) {
         $('ptScope').dataset.scope = s;
         document.querySelectorAll('#ptScope [data-scope]').forEach(b => b.classList.toggle('active', b.dataset.scope === s));
@@ -105,6 +120,7 @@
         $('ptLinkedNote').hidden = s !== 'linked';
         preview();
     }
+    /** The target as typed in the dialog, ready to send. */
     function rule() {
         const field = $('ptField').value;
         const isList = field === 'status' || field === 'location';
@@ -115,6 +131,7 @@
             target_date: $('ptDue').value || null,
         };
     }
+    /** After a 250ms pause, asks the server how many assets the dialog's rule matches and how many are done, and shows it. */
     function preview() {
         clearTimeout(previewTimer);
         previewTimer = setTimeout(async () => {
@@ -127,6 +144,7 @@
             } catch (e) { out.className = 'prj-tg-preview none'; out.textContent = e.message; }
         }, 250);
     }
+    /** Opens the target dialog filled from t, or empty for a new one, loading its choices first. */
     async function open(t) {
         try { await options(); } catch (e) { P.toast(e.message, 'error'); return; }
         $('ptTitle').textContent = t ? T('targets.edit') : T('targets.new');
@@ -150,6 +168,7 @@
         P.openModal('prjTargetModal');
         setTimeout(() => $('ptName').focus(), 60);
     }
+    /** Saves the target dialog through tools.php and redraws the project. */
     async function save() {
         try {
             await call(Object.assign({ action: 'target_save', id: $('ptId').value || null }, rule()));
@@ -159,6 +178,7 @@
     }
 
     // ---- What's left -----------------------------------------------------------
+    /** Opens the list of a target's assets still to do (or done) - up to 200, with a note when there are more. */
     async function openList(t, show) {
         listTarget = t; listShow = show || (t.total > 0 && t.done >= t.total ? 'done' : 'left');
         $('ptlTitle').textContent = t.name;
@@ -184,8 +204,10 @@
         } catch (e) { body.innerHTML = '<p class="prj-form-error">' + esc(e.message) + '</p>'; }
     }
 
+    /** The target with this id. */
     function find(id) { return (ctx.data.targets || []).find(t => String(t.id) === String(id)); }
 
+    /** Wires the targets panel's add, edit and list buttons, the dialog's fields (which refresh the preview), save and delete, and the list's left / done switch, once. */
     function wire() {
         if (wired) return;
         wired = true;

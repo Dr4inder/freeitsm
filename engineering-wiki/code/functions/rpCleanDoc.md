@@ -6,7 +6,7 @@ Check a rich-text document. Anything unrecognised is dropped, not kept.
 function rpCleanDoc($doc, int &$budget): array
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 105.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 109.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

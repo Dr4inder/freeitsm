@@ -11,7 +11,7 @@ system openssl.cnf, which on some PHP builds is missing altogether.
 function dockerTlsOpensslConfig(string $host, ?string $ip): string
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 244.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 245.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

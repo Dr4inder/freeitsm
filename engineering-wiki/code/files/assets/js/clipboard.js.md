@@ -1,6 +1,6 @@
 # assets/js/clipboard.js
 
-> JavaScript - 86 lines
+> JavaScript - 93 lines
 
 Copying text to the clipboard, in the one place.
 
@@ -32,8 +32,8 @@ Resolves to true only if the text really was copied.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `legacyCopy(text)` | 31 |  |
-| `copyToClipboard(text)` | 70 |  |
+| `legacyCopy(text)` | 36 | Copies text with execCommand('copy') through a hidden-but-rendered textarea, then restores the page's selection. |
+| `copyToClipboard(text)` | 77 | Copies text to the clipboard - the Clipboard API where the page is a secure context, otherwise (or if it is refused) the execCommand fallback. |
 
 ## Loaded by
 

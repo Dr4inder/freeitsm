@@ -61,6 +61,7 @@ class AzureDevOpsProvider extends IssueTrackerProvider
     const COMMENT_OVERLAP_MINUTES    = 5;
     const COMMENT_LOOKBACK_CAP_HOURS = 24;
 
+    /** The optional features Azure DevOps supports - everything except a priority list. */
     protected function capabilities(): array
     {
         return [
@@ -305,6 +306,11 @@ class AzureDevOpsProvider extends IssueTrackerProvider
         return mb_strlen($s) > 255 ? (mb_substr($s, 0, 252) . '...') : $s;
     }
 
+    /**
+     * Creates a work item of the target's type in the target project and returns it parsed.
+     *
+     * Throws when no project is given or Azure DevOps returns no id.
+     */
     public function createIssue(array $target, string $summary, IssueDoc $body, array $fields = []): array
     {
         $project = (string)($target['project'] ?? '');
@@ -442,6 +448,7 @@ class AzureDevOpsProvider extends IssueTrackerProvider
         return 'System.Title,System.State,System.WorkItemType,System.AssignedTo,System.TeamProject';
     }
 
+    /** Reads one work item by its numeric id and returns it parsed for the escalation panel. */
     public function fetchIssue(string $externalId): array
     {
         if (!ctype_digit((string)$externalId)) {
@@ -506,6 +513,7 @@ class AzureDevOpsProvider extends IssueTrackerProvider
         return $cache[$externalId] = $project;
     }
 
+    /** Posts a comment, rendered to HTML, on a work item and returns the new comment's id. */
     public function addComment(string $externalId, IssueDoc $body): string
     {
         $url = $this->projectUrl($this->projectOf($externalId),
@@ -739,7 +747,13 @@ class AzureDevOpsProvider extends IssueTrackerProvider
         return gmdate('Y-m-d\TH:i:s', $ts) . '.0000000Z';
     }
 
-    /** @return string[] ids of watched work items changed since $cutoff */
+    /**
+     * Asks WIQL which of the watched work items changed since $cutoff, in chunks.
+     *
+     * A chunk that fails is skipped rather than failing the whole poll.
+     *
+     * @return string[] ids of watched work items changed since $cutoff
+     */
     protected function searchChangedSince(array $ids, int $cutoff): array
     {
         $out   = [];
@@ -794,7 +808,12 @@ class AzureDevOpsProvider extends IssueTrackerProvider
         ];
     }
 
-    /** @return array [['key'=>'Support','name'=>'Support'], …] */
+    /**
+     * Lists the organisation's well-formed projects for the mapping dropdowns, a page of
+     * 100 at a time up to 1,000.
+     *
+     * @return array [['key'=>'Support','name'=>'Support'], …]
+     */
     public function listProjects(): array
     {
         $out  = [];

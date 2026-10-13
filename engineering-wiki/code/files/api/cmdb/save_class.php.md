@@ -1,6 +1,6 @@
 # api/cmdb/save_class.php
 
-> API endpoint - 93 lines
+> API endpoint - 97 lines
 
 API: Create or update a CMDB class. On create, class_key is auto-generated from the name if blank. On update, class_key is updatable but defaults to the existing value (immutable in spirit — see docs/cmdb.md — though changes are technically allowed).
 
@@ -16,16 +16,16 @@ API: Create or update a CMDB class. On create, class_key is auto-generated from 
 
 | Function | Line | What it does |
 |---|--:|---|
-| [slugify()](/code/functions/slugify.md) | 23 |  |
+| [slugify()](/code/functions/slugify.md) | 27 | Turns a class name into a lower-case key of letters, digits and underscores, falling back to 'class' when nothing is left. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 57 |  | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 66 |  | **insert** [cmdb_classes](/code/tables/cmdb_classes.md) (`class_key`, `name`, `description`, `icon_id`, `display_order`, `is_active`, `created_datetime`, `updated_datetime`) |  |
-| 75 |  | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 82 |  | **update** [cmdb_classes](/code/tables/cmdb_classes.md) (`class_key`, `name`, `description`, `icon_id`, `display_order`, `is_active`, `updated_datetime`) |  |
+| 61 |  | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 70 |  | **insert** [cmdb_classes](/code/tables/cmdb_classes.md) (`class_key`, `name`, `description`, `icon_id`, `display_order`, `is_active`, `created_datetime`, `updated_datetime`) |  |
+| 79 |  | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 86 |  | **update** [cmdb_classes](/code/tables/cmdb_classes.md) (`class_key`, `name`, `description`, `icon_id`, `display_order`, `is_active`, `updated_datetime`) |  |
 
 ## How it hangs together
 

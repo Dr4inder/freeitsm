@@ -6,7 +6,7 @@ The services linked to a domain, ids only (install-wide records).
 function domainStatusServiceIds(PDO $conn, int $domainId): array
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 91.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 94.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 93 | `domainStatusServiceIds` | read [domain_status_services](/code/tables/domain_status_services.md), read [status_services](/code/tables/status_services.md) |  |
+| 96 | `domainStatusServiceIds` | read [domain_status_services](/code/tables/domain_status_services.md), read [status_services](/code/tables/status_services.md) |  |
 
 ## Called from
 

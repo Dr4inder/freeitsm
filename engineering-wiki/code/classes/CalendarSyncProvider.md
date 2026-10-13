@@ -49,8 +49,8 @@ the single most likely way to get this integration subtly wrong.
 | Method | What it does |
 |---|---|
 | [withAccount()](#withaccount) | Act as this analyst. Returns `$this` so it chains off the factory. |
-| [__construct()](#__construct) |  |
-| [getProvider()](#getprovider) |  |
+| [__construct()](#__construct) | Keeps the decrypted calendar_connections row (credentials already an array) the provider works from. |
+| [getProvider()](#getprovider) | Returns the connection's provider key (for example 'microsoft' or 'caldav'), or ''. |
 | [supports()](#supports) | Does this provider do X? |
 | [createEvent()](#createevent) | Create an event in `$calendarAddress`'s calendar. Returns the provider's id for it, which the caller stores in calendar_sync_events. |
 | [updateEvent()](#updateevent) | Update an event in place. |
@@ -78,7 +78,9 @@ function withAccount(array $account): self
 
 ### __construct
 
-*public* - line 96
+*public* - line 97
+
+Keeps the decrypted calendar_connections row (credentials already an array) the provider works from.
 
 ```php
 function __construct(array $connection)
@@ -90,7 +92,9 @@ function __construct(array $connection)
 
 ### getProvider
 
-*public* - line 101
+*public* - line 103
+
+Returns the connection's provider key (for example 'microsoft' or 'caldav'), or ''.
 
 ```php
 function getProvider(): string
@@ -98,7 +102,7 @@ function getProvider(): string
 
 ### supports
 
-*public* - line 113
+*public* - line 115
 
 Does this provider do X?
 
@@ -116,7 +120,7 @@ function supports(string $capability): bool
 
 ### createEvent
 
-*public* - line 129
+*public* - line 131
 
 Create an event in `$calendarAddress`'s calendar. Returns the provider's id for it, which the caller stores in calendar_sync_events.
 
@@ -136,7 +140,7 @@ function createEvent(string $calendarAddress, array $event): string
 
 ### updateEvent
 
-*public* - line 139
+*public* - line 141
 
 Update an event in place.
 
@@ -157,7 +161,7 @@ function updateEvent(string $calendarAddress, string $remoteEventId, array $even
 
 ### deleteEvent
 
-*public* - line 148
+*public* - line 150
 
 Remove an event.
 
@@ -176,7 +180,7 @@ function deleteEvent(string $calendarAddress, string $remoteEventId): void
 
 ### verifyConnection
 
-*public* - line 161
+*public* - line 163
 
 Prove the connection works at all: credentials valid, permission granted.
 
@@ -194,7 +198,7 @@ function verifyConnection(): void
 
 ### pollChanges
 
-*public* - line 190
+*public* - line 192
 
 What has changed in this calendar since last time (GH #75, bi-directional).
 
@@ -221,7 +225,7 @@ function pollChanges(string $calendarAddress, ?string $token): array
 
 ### createSubscription
 
-*public* - line 212
+*public* - line 214
 
 Ask the provider to tell us when this calendar changes.
 
@@ -245,7 +249,7 @@ function createSubscription(string $calendarAddress, string $notifyUrl, string $
 
 ### renewSubscription
 
-*public* - line 218
+*public* - line 220
 
 Push an existing subscription's expiry out. Same return as create.
 
@@ -259,7 +263,7 @@ function renewSubscription(string $subscriptionId): array
 
 ### deleteSubscription
 
-*public* - line 227
+*public* - line 229
 
 Stop notifications. An ALREADY-GONE subscription is a success: the desired end state is "not subscribed", and that is satisfied.
 
@@ -273,7 +277,7 @@ function deleteSubscription(string $subscriptionId): void
 
 ### verifyTarget
 
-*public* - line 245
+*public* - line 247
 
 Does this address have a calendar we can write to?
 

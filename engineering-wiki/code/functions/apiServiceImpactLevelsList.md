@@ -1,10 +1,12 @@
 # apiServiceImpactLevelsList()
 
+GET /service-impact-levels - the impact levels, in severity order.
+
 ```php
 function apiServiceImpactLevelsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 334.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 362.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 336 | `apiServiceImpactLevelsList` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 364 | `apiServiceImpactLevelsList` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## Calls
 

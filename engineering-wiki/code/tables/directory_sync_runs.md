@@ -27,14 +27,14 @@ One row per directory sync RUN — the attempt, not just the success. A sync tha
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md):337 | `cardDavSyncRun` | insert | `provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id` |  |
-| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):487 | `directorySyncRun` | insert | `provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id` |  |
-| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):918 | `dsyncFinishRun` | update | `status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `adopted_count`, `deactivated_count`, `conflict_count`, `error_count`, `message` |  |
+| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):494 | `directorySyncRun` | insert | `provider_id`, `mode`, `status`, `started_datetime`, `triggered_by_analyst_id` |  |
+| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):931 | `dsyncFinishRun` | update | `status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `adopted_count`, `deactivated_count`, `conflict_count`, `error_count`, `message` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md) | L507 |  |
+| [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md) | L529 |  |
 | [api/system/get_directory_sync_log.php](/code/files/api/system/get_directory_sync_log.php.md) | L67 |  |
-| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md) | dsyncGetRun L932 |  |
+| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md) | dsyncGetRun L945 |  |
 

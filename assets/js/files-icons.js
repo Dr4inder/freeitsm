@@ -8,6 +8,8 @@
  *   FilesIcons.file(name, px)        a page for that file name's type
  *   FilesIcons.app(key, px)          desktop / start menu icons
  *   FilesIcons.type(name)            {key, label, colour} for a file name
+ *
+ * @wiki Files-Developer-Guide
  */
 (function () {
     'use strict';
@@ -32,8 +34,15 @@
     var BY_EXT = {};
     Object.keys(KINDS).forEach(function (k) { KINDS[k].ext.forEach(function (e) { BY_EXT[e] = k; }); });
 
+    /** Escapes &, <, > and " so a label can go inside the SVG markup. */
     function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
+    /**
+     * Works out a file's kind from its extension - the key, the extension, the band label and colour.
+     *
+     * An extension that is not in KINDS gives the key 'other', a grey band and the extension itself
+     * (up to four letters) as the label.
+     */
     function type(name) {
         var m = /\.([A-Za-z0-9]{1,8})$/.exec(name || '');
         var ext = m ? m[1].toLowerCase() : '';
@@ -47,6 +56,7 @@
         };
     }
 
+    /** Returns the manila folder icon as inline SVG (48px unless a size is given). */
     function folder(px) {
         px = px || 48;
         return '<svg class="fi fi-folder" width="' + px + '" height="' + px + '" viewBox="0 0 48 48" aria-hidden="true">' +
@@ -56,6 +66,12 @@
             '</svg>';
     }
 
+    /**
+     * Returns a page icon for a file name, with a band in its kind's colour.
+     *
+     * At 24px or smaller the band has no label (it would not be readable); above that the label's
+     * font size shrinks as the label gets longer.
+     */
     function file(name, px) {
         px = px || 48;
         var t = type(name);
@@ -94,6 +110,11 @@
         signout:     ['#b91c1c', '<path d="M14 8H9a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M18 11l5 5-5 5M23 16H13" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>']
     };
 
+    /**
+     * Returns a desktop or start menu icon - a rounded coloured tile with a white glyph.
+     *
+     * An unknown key falls back to the Documents icon.
+     */
     function app(key, px) {
         px = px || 44;
         var a = APPS[key] || APPS.documents;

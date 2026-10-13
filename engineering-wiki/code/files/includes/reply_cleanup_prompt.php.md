@@ -2,6 +2,12 @@
 
 > PHP - 136 lines
 
+Single source of truth for the AI Reply Cleanup system prompt.
+
+Used both by the streaming endpoint at runtime (with real values) and by the
+settings page (with placeholder values) so the read-only panel shows
+exactly the same scaffold Claude sees, just with a sample greeting + tone.
+
 ## Functions
 
 | Function | Line | What it does |

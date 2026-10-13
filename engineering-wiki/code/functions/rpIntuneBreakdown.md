@@ -1,10 +1,12 @@
 # rpIntuneBreakdown()
 
+Intune block: a chart of Intune devices grouped by the chosen dimension. A snapshot of today.
+
 ```php
 function rpIntuneBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md), line 94.
+Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +22,7 @@ Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 97 | `rpIntuneBreakdown` | read [intune_devices](/code/tables/intune_devices.md) |  |
+| 106 | `rpIntuneBreakdown` | read [intune_devices](/code/tables/intune_devices.md) |  |
 
 ## Calls
 

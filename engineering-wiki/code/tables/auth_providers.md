@@ -77,12 +77,12 @@
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):515 |  | update | `auto_create_analysts` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):516 |  | update | `analyst_fallback_mode` |  |
-| [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md):358 |  | update | `protocol` |  |
+| [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md):380 |  | update | `protocol` |  |
 | [api/system/delete_sso_provider.php](/code/files/api/system/delete_sso_provider.php.md):50 |  | delete |  |  |
-| [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md):524 |  | update | `last_modified_datetime` |  |
-| [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md):543 |  | insert | `$names` |  |
+| [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md):525 |  | update | `last_modified_datetime` |  |
+| [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md):544 |  | insert | `$names` |  |
 | [includes/carddav_sync.php](/code/files/includes/carddav_sync.php.md):477 | `cardDavSyncRun` | update | `sync_last_run_datetime`, `sync_last_count` |  |
-| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):638 | `directorySyncRun` | update | `sync_last_run_datetime`, `sync_last_count` |  |
+| [includes/directory_sync.php](/code/files/includes/directory_sync.php.md):645 | `directorySyncRun` | update | `sync_last_run_datetime`, `sync_last_count` |  |
 | [includes/sso_claims.php](/code/files/includes/sso_claims.php.md):185 | `ssoRememberGroups` | update | `oidc_groups_last_seen` |  |
 
 ## Read by
@@ -93,18 +93,18 @@
 | [api/auth/resolve_login.php](/code/files/api/auth/resolve_login.php.md) | L50, L56, L103 |  |
 | [api/self-service/reset_password.php](/code/files/api/self-service/reset_password.php.md) | L73 |  |
 | [api/system/browse_directory_ous.php](/code/files/api/system/browse_directory_ous.php.md) | L50 |  |
-| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L228, L229, L230, L231, L279, L280 ... |  |
-| [api/system/debug-tools/D004_local_login.php](/code/files/api/system/debug-tools/D004_local_login.php.md) | L262 |  |
-| [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | L259, L295 |  |
-| [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md) | L310 |  |
-| [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md) | L87, L101 |  |
-| [api/system/debug-tools/D016_carddav_drift.php](/code/files/api/system/debug-tools/D016_carddav_drift.php.md) | L71 |  |
+| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L246, L247, L248, L249, L297, L298 ... |  |
+| [api/system/debug-tools/D004_local_login.php](/code/files/api/system/debug-tools/D004_local_login.php.md) | L272 |  |
+| [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | L280, L316 |  |
+| [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md) | L332 |  |
+| [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md) | L97, L111 |  |
+| [api/system/debug-tools/D016_carddav_drift.php](/code/files/api/system/debug-tools/D016_carddav_drift.php.md) | L79 |  |
 | [api/system/get_carddav_write_log.php](/code/files/api/system/get_carddav_write_log.php.md) | L40 |  |
 | [api/system/get_sso_providers.php](/code/files/api/system/get_sso_providers.php.md) | L45 |  |
 | [api/system/get_topology.php](/code/files/api/system/get_topology.php.md) | L64 |  |
 | [api/system/portal_profile.php](/code/files/api/system/portal_profile.php.md) | portalProfileState L36 |  |
 | [api/system/run_directory_sync.php](/code/files/api/system/run_directory_sync.php.md) | L43 |  |
-| [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md) | L385, L432, L488 |  |
+| [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md) | L386, L433, L489 |  |
 | [api/system/test_carddav_connection.php](/code/files/api/system/test_carddav_connection.php.md) | L57 |  |
 | [api/system/test_carddav_write.php](/code/files/api/system/test_carddav_write.php.md) | L50 |  |
 | [api/system/test_directory_mapping.php](/code/files/api/system/test_directory_mapping.php.md) | L45 |  |
@@ -120,13 +120,13 @@
 | [includes/feature_bingo/cards/system-core.php](/code/files/includes/feature_bingo/cards/system-core.php.md) | L703 |  |
 | [includes/ldap.php](/code/files/includes/ldap.php.md) | ldapGetProvider L72, ldapPortalProviders L436, ldapPortalProviders L450, ldapPortalProviders L458, ldapAnalystProviders L485 |  |
 | [includes/oidc.php](/code/files/includes/oidc.php.md) | oidcGetProvider L60 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | personDetail L201 |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md) | AnalystsService::providerId L357 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::people L948, AssetsService::assetsForUser L1019 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | personDetail L202 |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md) | AnalystsService::providerId L375 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::people L952, AssetsService::assetsForUser L1023 |  |
 | [includes/sso_claims.php](/code/files/includes/sso_claims.php.md) | ssoClaimsReady L42 |  |
 | [includes/sso_identity.php](/code/files/includes/sso_identity.php.md) | ssoJitColumnsReady L63, ssoAnalystProfileLocked L93, ssoPortalRoutingColumnsReady L113, ssoPortalProviderForEmail L168, ssoJitCompanyReady L185, ssoApplyJitCompanies L209 |  |
 | [includes/users.php](/code/files/includes/users.php.md) | userSignsInElsewhere L178, userSourcesInScope L221, portalProfileAccess L310 |  |
-| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderHeaderRight L1469 |  |
+| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderHeaderRight L1495 |  |
 | [self-service/login.php](/code/files/self-service/login.php.md) | L69, L77, L88 |  |
 | [system/analysts/index.php](/code/files/system/analysts/index.php.md) | L264 |  |
 | [system/sso/carddav.php](/code/files/system/sso/carddav.php.md) | L59 |  |

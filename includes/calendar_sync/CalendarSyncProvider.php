@@ -93,11 +93,13 @@ abstract class CalendarSyncProvider
      */
     public $conn = null;
 
+    /** Keeps the decrypted calendar_connections row (credentials already an array) the provider works from. */
     public function __construct(array $connection)
     {
         $this->connection = $connection;
     }
 
+    /** Returns the connection's provider key (for example 'microsoft' or 'caldav'), or ''. */
     public function getProvider(): string
     {
         return $this->connection['provider'] ?? '';

@@ -1,4 +1,22 @@
 <?php
+/**
+ * API: create or update an RFP - name, status, style guide, contract and chosen
+ * supplier.
+ *
+ * On a multi-company install the RFP's company must be one the analyst can reach, and a
+ * linked contract must be visible to them and in the same company - refused, never
+ * quietly replaced.
+ *
+ * @input  id                  the RFP to update - omit to create one
+ * @input  name                required
+ * @input  status              draft, collecting, consolidating, generating, scoring, closed or abandoned
+ * @input  style_guide         optional writing guidance for the AI-generated sections
+ * @input  contract_id         optional contract the RFP leads to
+ * @input  chosen_supplier_id  optional winning supplier
+ * @input  tenant_id           optional company (multi-company installs)
+ * @output {success, id}
+ * @wiki Contracts
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

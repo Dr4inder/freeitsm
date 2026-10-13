@@ -6,27 +6,35 @@
  * shown and never added; changing the project's currency is a relabel, and the
  * page says so before anyone confirms. Rates have dates, so a new rate never
  * re-prices the past - the panel shows the project's own rate history.
+ *
+ * @wiki Projects-Internals-6-Governance
  */
 (function () {
     'use strict';
     const P = window.Prj;
+    /** Translates a key under projects.budget.*. */
     const T = (k, p) => P.T('budget.' + k, p);
     const esc = P.esc;
     let ctx = null;
     let wired = false;
 
+    /** An amount formatted in the given currency for the viewer's locale, or "-" when empty. */
     function money(v, cur) {
         if (v === null || v === undefined || v === '') return '-';
         try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(v); }
         catch (e) { return cur + ' ' + Number(v).toFixed(2); }
     }
+    /** Minutes shown as hours to one decimal place, such as "2.5 h". */
     function hours(min) {
         const h = (min || 0) / 60;
         return (Math.round(h * 10) / 10).toLocaleString() + ' h';
     }
+    /** True when the viewer may change this project. */
     const canChange = () => !!(ctx.data.permissions && ctx.data.permissions.can_change);
+    /** Posts a budget action to tools.php for the current project. */
     const call = body => P.api('tools.php', Object.assign({ project_id: ctx.projectId }, body));
 
+    /** Draws the Budget tab - the planned / actual / forecast / remaining / used tiles, the chart boxes, the currency line, the budget lines table and the labour panel with its rates. */
     function render() {
         const box = document.getElementById('pvBudget');
         const b = ctx.data.budget;
@@ -129,6 +137,7 @@
         if (!wrap || !window.PrjCharts || !tabPanel || tabPanel.hidden) return;
         wrap.hidden = !e;
         if (!e) return;
+        /** The good or bad word for an earned-value index - good at 1 or more - or "unknown" when there is none. */
         const word = (v, good, bad) => v === null ? T('ev_unknown') : (v >= 1 ? good : bad);
         const tiles = [
             { n: e.cpi === null ? '-' : e.cpi.toFixed(2), l: T('ev_cpi'), sub: word(e.cpi, T('ev_cpi_good'), T('ev_cpi_bad')), cls: e.cpi !== null && e.cpi < 1 ? 'bad' : '' },
@@ -206,6 +215,7 @@
         });
     }
 
+    /** Opens the budget line dialog filled from line, or empty for a new one, with the contract and cost centre lists (keeping a switched-off cost centre the line already uses). */
     function openLine(line) {
         const b = ctx.data.budget;
         document.getElementById('pbTitle').textContent = line ? T('edit_line') : T('new_line');
@@ -231,6 +241,7 @@
         P.openModal('prjBudgetModal');
     }
 
+    /** Saves the budget line dialog through tools.php and redraws the project. */
     async function saveLine() {
         const err = document.getElementById('pbError');
         const body = { action: 'budget_line_save', id: document.getElementById('pbId').value || undefined,
@@ -243,6 +254,7 @@
         catch (e) { err.textContent = e.message; err.hidden = false; }
     }
 
+    /** Asks, then deletes the budget line open in the dialog. */
     async function deleteLine() {
         const ok = await window.showConfirm({ title: T('delete_title'), message: T('delete_body'), okLabel: P.TC('delete'), okClass: 'danger' });
         if (!ok) return;
@@ -250,6 +262,7 @@
         catch (e) { P.toast(e.message, 'error'); }
     }
 
+    /** Asks for a new currency code and, after a warning that amounts are relabelled and not converted, changes the project's currency. */
     async function changeCurrency() {
         const b = ctx.data.budget;
         const code = (window.prompt(T('currency_prompt', { currency: b.currency }), b.currency) || '').trim().toUpperCase();
@@ -259,6 +272,7 @@
         try { await call({ action: 'budget_currency', currency: code }); await ctx.refresh(); } catch (e) { P.toast(e.message, 'error'); }
     }
 
+    /** Wires the tab's buttons (add line, change currency, open a line, add and delete a rate) and the dialog's save and delete, once. */
     function wire() {
         if (wired) return;
         wired = true;
@@ -280,6 +294,7 @@
     }
 
     window.PrjBudget = {
+        /** Draws the Budget tab when the project has the budget tool switched on. */
         render(c) {
             ctx = c;
             if (!(c.data.project.tools || []).includes('budget')) return;

@@ -17,7 +17,7 @@ worse than either.
 function handlePreview(PDO $conn, string $target): void
 ```
 
-Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), line 87.
+Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -30,10 +30,10 @@ Defined in [api/knowledge/permission_model.php](/code/files/api/knowledge/permis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 106 | `handlePreview` | read [analysts](/code/tables/analysts.md) |  |
-| 113 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 125 | `handlePreview` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 143 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 107 | `handlePreview` | read [analysts](/code/tables/analysts.md) |  |
+| 114 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 126 | `handlePreview` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 144 | `handlePreview` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## Calls
 

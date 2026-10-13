@@ -65,6 +65,7 @@ try {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 
+/** Returns the install-wide folder permission model in use: 'containers' or 'filing'. */
 function handleGet(PDO $conn): void
 {
     echo json_encode(['success' => true, 'model' => knowledgeFolderPermissionModel($conn)]);
@@ -158,6 +159,12 @@ function handlePreview(PDO $conn, string $target): void
     ]);
 }
 
+/**
+ * Saves the install-wide folder permission model ('filing', anything else meaning
+ * 'containers') and writes an audit row naming the old and new model.
+ *
+ * @writes system_settings(knowledge_folder_permission_model)
+ */
 function handleSet(PDO $conn, int $analystId, array $in): void
 {
     $model = ($in['model'] ?? '') === 'filing' ? 'filing' : 'containers';

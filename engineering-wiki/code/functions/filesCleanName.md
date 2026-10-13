@@ -6,7 +6,7 @@ A file or folder name as a person typed it, made safe to store and display.
 function filesCleanName(string $name): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 96.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 100.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

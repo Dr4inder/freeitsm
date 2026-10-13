@@ -16,13 +16,13 @@
 | [assertNumberFree()](#assertnumberfree) | Contract numbers are unique within a company - two clients can both have C-001. |
 | [assertMovable()](#assertmovable) | Moving a contract to another company is refused while anything of the old company hangs off it - its assets, projects or RFPs would otherwise link across companies, which nothing here allows. Say what is in the way. |
 | [costCentreFor()](#costcentrefor) | The cost centre a contract is charged to (GH #160), and what is left of the free text from before 3.5.0. Returns [cost_centre_id, legacy text]. |
-| [writeCostCentre()](#writecostcentre) |  |
-| [writeTenant()](#writetenant) |  |
+| [writeCostCentre()](#writecostcentre) | Sets a contract's cost centre, once that column exists. |
+| [writeTenant()](#writetenant) | Sets a contract's company, once that column exists. |
 | [assertVisible()](#assertvisible) | A contract in a company the actor cannot reach is reported as not found, never forbidden, so ids cannot be probed. By the ACTOR's company scope, not the analyst's: an API key can be narrower than the analyst it acts as. |
 | [partyFields()](#partyfields) | Who the contract is with. Fields not sent keep their current value, so an update that only changes the title leaves a customer contract a customer contract. A supplier id is checked against suppliers as before. |
-| [writeParty()](#writeparty) |  |
-| [partyPayload()](#partypayload) |  |
-| [loadRow()](#loadrow) |  |
+| [writeParty()](#writeparty) | Sets who a contract is with (supplier or customer), once those columns exist. |
+| [partyPayload()](#partypayload) | The party fields of a contract as an array. |
+| [loadRow()](#loadrow) | Loads one row from the given table by id; throws not found with `$notFoundMsg` when it does not exist. |
 | [contractParams()](#contractparams) | Ordered contract column values for INSERT/UPDATE (matches both statements' column order). |
 | [contractFields()](#contractfields) | Collect + validate contract fields (mirrors the API resource's apiContractFieldsFromBody). |
 | [lookup()](#lookup) | Validate a nullable lookup id against a table; 422 with the label on unknown. |
@@ -273,7 +273,9 @@ function costCentreFor(PDO $conn, array $in, array $current, int $tenant): array
 
 ### writeCostCentre
 
-*private static* - line 368
+*private static* - line 369
+
+Sets a contract's cost centre, once that column exists.
 
 ```php
 function writeCostCentre(PDO $conn, int $id, ?int $ccId): void
@@ -289,11 +291,13 @@ function writeCostCentre(PDO $conn, int $id, ?int $ccId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 371 | `ContractsService::writeCostCentre` | **update** [contracts](/code/tables/contracts.md) (`cost_centre_id`) |  |
+| 372 | `ContractsService::writeCostCentre` | **update** [contracts](/code/tables/contracts.md) (`cost_centre_id`) |  |
 
 ### writeTenant
 
-*private static* - line 374
+*private static* - line 376
+
+Sets a contract's company, once that column exists.
 
 ```php
 function writeTenant(PDO $conn, int $id, int $tenant): void
@@ -309,11 +313,11 @@ function writeTenant(PDO $conn, int $id, int $tenant): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 377 | `ContractsService::writeTenant` | **update** [contracts](/code/tables/contracts.md) (`tenant_id`) |  |
+| 379 | `ContractsService::writeTenant` | **update** [contracts](/code/tables/contracts.md) (`tenant_id`) |  |
 
 ### assertVisible
 
-*private static* - line 385
+*private static* - line 387
 
 A contract in a company the actor cannot reach is reported as not found, never forbidden, so ids cannot be probed. By the ACTOR's company scope, not the analyst's: an API key can be narrower than the analyst it acts as.
 
@@ -331,11 +335,11 @@ function assertVisible(PDO $conn, ActorContext $ctx, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 388 | `ContractsService::assertVisible` | read [contracts](/code/tables/contracts.md) |  |
+| 390 | `ContractsService::assertVisible` | read [contracts](/code/tables/contracts.md) |  |
 
 ### partyFields
 
-*private static* - line 400
+*private static* - line 402
 
 Who the contract is with. Fields not sent keep their current value, so an update that only changes the title leaves a customer contract a customer contract. A supplier id is checked against suppliers as before.
 
@@ -352,7 +356,9 @@ function partyFields(PDO $conn, ActorContext $ctx, array $in, array $current): a
 
 ### writeParty
 
-*private static* - line 421
+*private static* - line 424
+
+Sets who a contract is with (supplier or customer), once those columns exist.
 
 ```php
 function writeParty(PDO $conn, int $id, array $p): void
@@ -368,11 +374,13 @@ function writeParty(PDO $conn, int $id, array $p): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 424 | `ContractsService::writeParty` | **update** [contracts](/code/tables/contracts.md) (`party_type`, `customer_tenant_id`, `customer_user_id`) |  |
+| 427 | `ContractsService::writeParty` | **update** [contracts](/code/tables/contracts.md) (`party_type`, `customer_tenant_id`, `customer_user_id`) |  |
 
 ### partyPayload
 
-*private static* - line 428
+*private static* - line 432
+
+The party fields of a contract as an array.
 
 ```php
 function partyPayload(array $p): array
@@ -384,7 +392,9 @@ function partyPayload(array $p): array
 
 ### loadRow
 
-*private static* - line 433
+*private static* - line 438
+
+Loads one row from the given table by id; throws not found with `$notFoundMsg` when it does not exist.
 
 ```php
 function loadRow(PDO $conn, string $table, int $id, string $notFoundMsg): array
@@ -399,7 +409,7 @@ function loadRow(PDO $conn, string $table, int $id, string $notFoundMsg): array
 
 ### contractParams
 
-*private static* - line 445
+*private static* - line 450
 
 Ordered contract column values for INSERT/UPDATE (matches both statements' column order).
 
@@ -413,7 +423,7 @@ function contractParams(array $f): array
 
 ### contractFields
 
-*private static* - line 456
+*private static* - line 461
 
 Collect + validate contract fields (mirrors the API resource's apiContractFieldsFromBody).
 
@@ -429,7 +439,7 @@ function contractFields(PDO $conn, array $in, array $current = []): array
 
 ### lookup
 
-*private static* - line 518
+*private static* - line 523
 
 Validate a nullable lookup id against a table; 422 with the label on unknown.
 
@@ -446,7 +456,7 @@ function lookup(PDO $conn, string $table, $value, string $label): ?int
 
 ### resolveAnalyst
 
-*private static* - line 533
+*private static* - line 538
 
 Validate an analyst id exists + is active (throwing twin of apiResolveAnalyst).
 
@@ -463,11 +473,11 @@ function resolveAnalyst(PDO $conn, int $analystId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 535 | `ContractsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 540 | `ContractsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ### parseDateOnly
 
-*private static* - line 543
+*private static* - line 548
 
 Validate an optional YYYY-MM-DD date (throwing twin of apiParseDateOnly).
 

@@ -124,6 +124,7 @@ function statusPlannedCancel(PDO $conn, ActorContext $ctx, int $id): void
     $conn->prepare("UPDATE status_planned SET state = 'cancelled', updated_datetime = UTC_TIMESTAMP() WHERE id = ? AND state = 'scheduled'")->execute([$id]);
 }
 
+/** Loads one planned maintenance row; throws not found when it does not exist. */
 function statusPlannedLoad(PDO $conn, int $id): array
 {
     $st = $conn->prepare("SELECT * FROM status_planned WHERE id = ?");
@@ -260,6 +261,13 @@ function statusPlannedStatusId(PDO $conn): ?int
     return $id === false ? null : (int)$id;
 }
 
+/**
+ * Starts a planned maintenance: opens an external incident on its services and backdates it
+ * to the planned start.
+ *
+ * @writes status_incidents, status_incident_updates(created_datetime),
+ *     status_planned(incident_id)
+ */
 function statusPlannedStart(PDO $conn, array $p): void
 {
     $svc = $conn->prepare("SELECT service_id, impact_level_id FROM status_planned_services WHERE planned_id = ?");
@@ -281,6 +289,12 @@ function statusPlannedStart(PDO $conn, array $p): void
     $conn->prepare("UPDATE status_planned SET incident_id = ? WHERE id = ?")->execute([$incidentId, (int)$p['id']]);
 }
 
+/**
+ * Finishes a planned maintenance: resolves its incident with the first resolved status and
+ * backdates the end to the planned end.
+ *
+ * Does nothing if the incident is gone, already resolved, or no resolved status exists.
+ */
 function statusPlannedFinish(PDO $conn, array $p): void
 {
     $incidentId = (int)($p['incident_id'] ?? 0);

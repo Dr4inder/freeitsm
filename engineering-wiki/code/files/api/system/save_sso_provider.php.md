@@ -1,6 +1,6 @@
 # api/system/save_sso_provider.php
 
-> API endpoint - 556 lines
+> API endpoint - 557 lines
 
 API: Create or update an authentication provider.
 
@@ -29,18 +29,18 @@ stored one untouched" so the admin needn't re-enter it every save.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [bail()](/code/functions/bail.md) | 39 |  |
-| [ssoDnLines()](/code/functions/ssoDnLines.md) | 62 | Normalise a list of DNs (an array, or newline-separated text) for storage. |
+| [bail()](/code/functions/bail.md) | 40 | Answers {success: false, error} as JSON and stops. |
+| [ssoDnLines()](/code/functions/ssoDnLines.md) | 63 | Normalise a list of DNs (an array, or newline-separated text) for storage. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 385 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 432 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 488 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 524 |  | **update** [auth_providers](/code/tables/auth_providers.md) (`last_modified_datetime`) |  |
-| 543 |  | **insert** [auth_providers](/code/tables/auth_providers.md) (`$names`) |  |
+| 386 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 433 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 489 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 525 |  | **update** [auth_providers](/code/tables/auth_providers.md) (`last_modified_datetime`) |  |
+| 544 |  | **insert** [auth_providers](/code/tables/auth_providers.md) (`$names`) |  |
 
 ## How it hangs together
 

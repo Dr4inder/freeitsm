@@ -24,5 +24,5 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetNetworkAdaptersList L543 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetNetworkAdaptersList L560 |  |
 

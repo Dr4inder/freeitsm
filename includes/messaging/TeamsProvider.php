@@ -79,6 +79,11 @@ class TeamsProvider extends MessagingProvider
     /** Test hook: a key set to verify against instead of Bot Framework's (tests/messaging-teams-mattermost.php). */
     public static $testKeys = null;
 
+    /**
+     * Checks an inbound Bot Framework activity: the bearer JWT's signature, issuer and
+     * audience (the app id), and that its service URL is an allowed Microsoft host matching
+     * the token.
+     */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
         $appId = (string)($this->channel['credentials']['app_id'] ?? '');
@@ -142,6 +147,13 @@ class TeamsProvider extends MessagingProvider
         return [substr($to, 0, $bar), substr($to, $bar + 1)];
     }
 
+    /**
+     * Turns a Teams activity into inbound messages - a CSAT rating press or a message in a
+     * one-to-one chat.
+     *
+     * Group chats and channels are ignored, since one conversation there is shared by many
+     * people.
+     */
     public function parseInbound(string $rawBody, array $params): array
     {
         $a = json_decode($rawBody, true);
@@ -239,6 +251,7 @@ class TeamsProvider extends MessagingProvider
         ]);
     }
 
+    /** Sends a text reply into the Teams conversation and returns the activity id. */
     public function sendMessage(string $to, string $body): string
     {
         if ($to === '') {
@@ -296,6 +309,7 @@ class TeamsProvider extends MessagingProvider
         return ['data' => $body, 'content_type' => $mime, 'filename' => $name];
     }
 
+    /** Checks the bot credentials by getting an access token, and returns the app id. */
     public function testConnection(): string
     {
         $this->accessToken(); // throws with a readable message if the credentials are wrong
@@ -304,6 +318,7 @@ class TeamsProvider extends MessagingProvider
 
     // ── internals ──────────────────────────────────────────────────────────────
 
+    /** The channel's Microsoft app (bot) id. */
     private function appId(): string
     {
         return (string)($this->channel['credentials']['app_id'] ?? '');
@@ -380,6 +395,13 @@ class TeamsProvider extends MessagingProvider
         }
     }
 
+    /**
+     * Posts an activity to a conversation through its Bot Framework service URL and returns
+     * the new activity id.
+     *
+     * Throws when the address is incomplete, the host is not allowed, or Teams rejects the
+     * message.
+     */
     private function postActivity(string $to, array $activity): string
     {
         [$serviceUrl, $conversationId] = self::splitAddress($to);

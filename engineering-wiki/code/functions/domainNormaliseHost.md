@@ -6,7 +6,7 @@ A host name (may be a sub-domain, keeps "www."), or null when it is not one.
 function domainNormaliseHost(string $h): ?string
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 116.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 120.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

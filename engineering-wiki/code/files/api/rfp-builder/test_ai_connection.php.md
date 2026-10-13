@@ -1,6 +1,6 @@
 # api/rfp-builder/test_ai_connection.php
 
-> API endpoint - 163 lines
+> API endpoint - 175 lines
 
 Send a tiny "say ok" prompt to the chosen provider to verify that the API key + model are valid. The user can submit a fresh key to test BEFORE saving; passing the masked placeholder ("****abcd") falls back to the stored key.
 
@@ -15,8 +15,8 @@ Send a tiny "say ok" prompt to the chosen provider to verify that the API key + 
 
 | Function | Line | What it does |
 |---|--:|---|
-| [rfpTestAnthropic()](/code/functions/rfpTestAnthropic.md) | 73 |  |
-| [rfpTestOpenAI()](/code/functions/rfpTestOpenAI.md) | 122 |  |
+| [rfpTestAnthropic()](/code/functions/rfpTestAnthropic.md) | 79 | Sends a tiny prompt to the Anthropic Messages API to prove the key and model work, and returns the reply text with the token counts. |
+| [rfpTestOpenAI()](/code/functions/rfpTestOpenAI.md) | 134 | Sends a tiny prompt to the OpenAI Chat Completions API to prove the key and model work, and returns the reply text with the token counts. |
 
 ## Database
 

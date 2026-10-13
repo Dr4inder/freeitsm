@@ -9,7 +9,7 @@ this decision that should consult a value the sender chose.
 function attachmentServeRules(string $filename): array
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 711.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 712.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

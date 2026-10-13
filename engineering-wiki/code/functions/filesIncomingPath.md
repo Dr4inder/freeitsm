@@ -6,7 +6,7 @@ Where pieces of an in-progress upload collect.
 function filesIncomingPath(PDO $conn, string $token): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 85.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

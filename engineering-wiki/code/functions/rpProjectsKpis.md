@@ -1,10 +1,12 @@
 # rpProjectsKpis()
 
+Projects block: KPI tiles - live projects, how many are green, amber and red now, and stages ending in the period.
+
 ```php
 function rpProjectsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 74.
+Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +22,7 @@ Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 81 | `rpProjectsKpis` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
+| 85 | `rpProjectsKpis` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

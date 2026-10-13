@@ -37,7 +37,7 @@
 | [api/files/properties.php](/code/files/api/files/properties.php.md) | L25 |  |
 | [api/files/search.php](/code/files/api/files/search.php.md) | L36 |  |
 | [api/files/settings.php](/code/files/api/files/settings.php.md) | L66 |  |
-| [api/files/transfer.php](/code/files/api/files/transfer.php.md) | filesCopyFolderTree L156 |  |
+| [api/files/transfer.php](/code/files/api/files/transfer.php.md) | filesCopyFolderTree L175 |  |
 | [api/files/upload.php](/code/files/api/files/upload.php.md) | L41 |  |
-| [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md) | filesItem L82, filesNameTaken L121 |  |
+| [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md) | filesItem L88, filesNameTaken L127 |  |
 

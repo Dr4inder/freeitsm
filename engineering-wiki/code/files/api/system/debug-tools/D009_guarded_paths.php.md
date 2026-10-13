@@ -1,6 +1,6 @@
 # api/system/debug-tools/D009_guarded_paths.php
 
-> API endpoint - 347 lines
+> API endpoint - 352 lines
 
 Debug Tool D009 — are the guarded paths actually guarded?
 
@@ -48,9 +48,9 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 63 |  |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 66 |  |
-| [d009Fetch()](/code/functions/d009Fetch.md) | 85 | Fetch a URL from this server. Returns [httpCode, transportError]. A transport error yields code 0, and every caller must treat that as "unknown", never as "blocked". |
+| [addSection()](/code/functions/addSection.md) | 64 | Adds one titled section ("=== TITLE ===" and its lines) to the report. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 71 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [d009Fetch()](/code/functions/d009Fetch.md) | 90 | Fetch a URL from this server. Returns [httpCode, transportError]. A transport error yields code 0, and every caller must treat that as "unknown", never as "blocked". |
 
 ## How it hangs together
 

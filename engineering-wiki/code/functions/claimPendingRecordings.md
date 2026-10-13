@@ -15,7 +15,7 @@ function claimPendingRecordings(
 ): int
 ```
 
-Defined in [includes/ticket_recordings.php](/code/files/includes/ticket_recordings.php.md), line 40.
+Defined in [includes/ticket_recordings.php](/code/files/includes/ticket_recordings.php.md), line 42.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -31,8 +31,8 @@ Defined in [includes/ticket_recordings.php](/code/files/includes/ticket_recordin
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 58 | `claimPendingRecordings` | read [ticket_recordings](/code/tables/ticket_recordings.md) |  |
-| 65 | `claimPendingRecordings` | **update** [ticket_recordings](/code/tables/ticket_recordings.md) (`ticket_id`, `email_id`, `file_path`) |  |
+| 60 | `claimPendingRecordings` | read [ticket_recordings](/code/tables/ticket_recordings.md) |  |
+| 67 | `claimPendingRecordings` | **update** [ticket_recordings](/code/tables/ticket_recordings.md) (`ticket_id`, `email_id`, `file_path`) |  |
 
 ## Called from
 

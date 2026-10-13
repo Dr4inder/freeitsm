@@ -738,6 +738,7 @@ class ChangesService
         return $row;
     }
 
+    /** Records one action or field change in the change's audit trail. */
     private static function auditWrite(PDO $conn, int $changeId, int $analystId, string $actionType, ?string $field, ?string $old, ?string $new): void
     {
         $conn->prepare(

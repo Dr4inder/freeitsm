@@ -6,7 +6,7 @@ Drain OpenSSL's error queue into one line.
 function dockerTlsOpensslError(): string
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 385.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 386.
 
 **Returns:** `string`
 

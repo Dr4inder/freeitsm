@@ -15,11 +15,11 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md):48 | `domainAlertClaim` | insert | `domain_id`, `alert_kind`, `fingerprint`, `sent_datetime` |  |
-| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md):55 | `domainAlertRelease` | delete |  |  |
+| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md):59 | `domainAlertRelease` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertAlreadySent L60 |  |
+| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertAlreadySent L65 |  |
 

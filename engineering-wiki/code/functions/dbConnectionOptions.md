@@ -1,10 +1,12 @@
 # dbConnectionOptions()
 
+Returns the PDO options every connection uses - the session time zone set to UTC.
+
 ```php
 function dbConnectionOptions(): array
 ```
 
-Defined in [includes/db.php](/code/files/includes/db.php.md), line 63.
+Defined in [includes/db.php](/code/files/includes/db.php.md), line 64.
 
 **Returns:** `array`
 

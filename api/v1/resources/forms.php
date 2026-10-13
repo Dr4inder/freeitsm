@@ -53,6 +53,10 @@ require_once dirname(__DIR__, 3) . '/includes/services/forms.php';
 // Serializers + loaders
 // ---------------------------------------------------------------------------
 
+/**
+ * The SELECT for forms, with creator and editor names and counts of child versions,
+ * fields and submissions - child_count 0 marks the current version.
+ */
 function apiFormSelect(): string {
     return "SELECT f.*, ca.full_name AS created_by_name, ma.full_name AS modified_by_name,
                    (SELECT COUNT(*) FROM forms ch WHERE ch.parent_form_id = f.id)       AS child_count,
@@ -63,6 +67,10 @@ function apiFormSelect(): string {
             LEFT JOIN analysts ma ON ma.id = f.modified_by";
 }
 
+/**
+ * Shapes a form field row for the API - type, label, decoded options, required flag,
+ * order and its conditional-visibility config.
+ */
 function apiSerializeFormField(array $r): array {
     $options = null;
     if ($r['options'] !== null && $r['options'] !== '') {
@@ -88,6 +96,10 @@ function apiSerializeFormField(array $r): array {
     ];
 }
 
+/**
+ * Shapes a form row for the API - title, version (is_current marks the editable one),
+ * counts and people, plus its live fields unless $withFields is false.
+ */
 function apiSerializeForm(PDO $conn, array $r, bool $withFields = true): array {
     $form = [
         'id'          => (int)$r['id'],
@@ -117,6 +129,7 @@ function apiSerializeForm(PDO $conn, array $r, bool $withFields = true): array {
     return $form;
 }
 
+/** Loads one form row (apiFormSelect), or answers 404 and stops. */
 function apiLoadForm(PDO $conn, int $formId): array {
     $stmt = $conn->prepare(apiFormSelect() . " WHERE f.id = ?");
     $stmt->execute([$formId]);
@@ -127,6 +140,11 @@ function apiLoadForm(PDO $conn, int $formId): array {
     return $row;
 }
 
+/**
+ * Shapes a submission for the API with every answer beside its field - checkbox answers
+ * decoded to lists, and a table's answer decoded to rows with its column definitions
+ * (retired columns included and marked).
+ */
 function apiSerializeFormSubmission(PDO $conn, array $r): array {
     // Answers joined to their field definitions; checkboxes values are
     // stored as JSON array strings — decode them for machine consumers.
@@ -185,6 +203,7 @@ function apiSerializeFormSubmission(PDO $conn, array $r): array {
     ];
 }
 
+/** Loads one submission that belongs to the given form, or answers 404 and stops. */
 function apiLoadFormSubmission(PDO $conn, int $formId, int $submissionId): array {
     $stmt = $conn->prepare(
         "SELECT s.*, f.title AS form_title, a.full_name AS submitted_by_name
@@ -226,6 +245,7 @@ function apiFormsList(PDO $conn, array $apiKey, array $params, array $body): voi
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/** GET /forms/{id} - one form with its fields. */
 function apiFormsGet(PDO $conn, array $apiKey, array $params, array $body): void {
     apiRespond(apiSerializeForm($conn, apiLoadForm($conn, $params[0])));
 }
@@ -306,6 +326,7 @@ function apiFormVersionsCreate(PDO $conn, array $apiKey, array $params, array $b
 // Submissions
 // ---------------------------------------------------------------------------
 
+/** The SELECT for form submissions, with the form's title and the submitter's name. */
 function apiFormSubmissionsSelect(): string {
     return "SELECT s.*, f.title AS form_title, a.full_name AS submitted_by_name
             FROM form_submissions s
@@ -347,6 +368,7 @@ function apiFormSubmissionsList(PDO $conn, array $apiKey, array $params, array $
     ]);
 }
 
+/** GET /forms/{id}/submissions/{submissionId} - one submission with its answers. */
 function apiFormSubmissionsGet(PDO $conn, array $apiKey, array $params, array $body): void {
     apiRespond(apiSerializeFormSubmission($conn, apiLoadFormSubmission($conn, $params[0], $params[1])));
 }

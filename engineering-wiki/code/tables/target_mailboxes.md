@@ -65,7 +65,7 @@
 | [includes/gmail.php](/code/files/includes/gmail.php.md):64 | `gmailRefreshAccessToken` | update | `token_data` |  |
 | [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md):66 | `mailboxAppOnlyToken` | update | `token_data` |  |
 | [includes/mailbox_graph.php](/code/files/includes/mailbox_graph.php.md):219 | `mailboxBackfillIdentity` | update | `authenticated_as`, `authenticated_addresses` |  |
-| [includes/template_email.php](/code/files/includes/template_email.php.md):516 | `templateGetValidAccessToken` | update | `token_data` |  |
+| [includes/template_email.php](/code/files/includes/template_email.php.md):521 | `templateGetValidAccessToken` | update | `token_data` |  |
 
 ## Read by
 
@@ -87,14 +87,14 @@
 | [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md) | getMailboxForTicket L209 |  |
 | [api/tickets/set_mailbox_health_dismissed.php](/code/files/api/tickets/set_mailbox_health_dismissed.php.md) | L49 |  |
 | [api/tickets/verify_mailbox_folder.php](/code/files/api/tickets/verify_mailbox_folder.php.md) | L38 |  |
-| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncLoadConnection L131 |  |
+| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncLoadConnection L132 |  |
 | [includes/feature_bingo/cards/tickets-channels.php](/code/files/includes/feature_bingo/cards/tickets-channels.php.md) | L1017 |  |
 | [includes/self_service_email.php](/code/files/includes/self_service_email.php.md) | ssGetSendingMailbox L17 |  |
-| [includes/self_service_mailboxes.php](/code/files/includes/self_service_mailboxes.php.md) | selfServiceMailboxes L33 |  |
+| [includes/self_service_mailboxes.php](/code/files/includes/self_service_mailboxes.php.md) | selfServiceMailboxes L36 |  |
 | [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::createTicket L167 |  |
-| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_get_first_active_mailbox L378 |  |
-| [includes/template_email.php](/code/files/includes/template_email.php.md) | templateGetMailboxForTicket L456, internalTicketEmail L641 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | resolveTicketTenantForEmail L1062 |  |
-| [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md) | ticketSensitivityReady L52, ticketSensitivityApplyDefaults L119 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_send_email L2252 |  |
+| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_get_first_active_mailbox L380 |  |
+| [includes/template_email.php](/code/files/includes/template_email.php.md) | templateGetMailboxForTicket L461, internalTicketEmail L646 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | resolveTicketTenantForEmail L1068 |  |
+| [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md) | ticketSensitivityReady L54, ticketSensitivityApplyDefaults L121 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_send_email L2317 |  |
 

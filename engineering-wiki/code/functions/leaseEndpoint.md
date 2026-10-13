@@ -1,15 +1,20 @@
 # leaseEndpoint()
 
+Runs one Leases endpoint: checks sign-in, Assets module access, the HTTP method and that the lease tables exist, then calls `$fn` and echoes its result as JSON.
+
+A ServiceError is shown to the caller as its message; any other exception is logged
+and reported as a generic error.
+
 ```php
 function leaseEndpoint(string $method, callable $fn): void
 ```
 
-Defined in [api/assets/leases/_boot.php](/code/files/api/assets/leases/_boot.php.md), line 20.
+Defined in [api/assets/leases/_boot.php](/code/files/api/assets/leases/_boot.php.md), line 30.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
-| `$method` | `string` |  |  |
-| `$fn` | `callable` |  |  |
+| `$method` | `string` |  | 'GET' or 'POST' - anything else is refused with HTTP 405 |
+| `$fn` | `callable` |  | function (PDO `$conn`, ActorContext `$ctx`, array `$in`): ?array - its array is merged into {success: true} |
 
 **Returns:** `void`
 

@@ -25,7 +25,7 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/external/device-manager/submit/index.php](/code/files/api/external/device-manager/submit/index.php.md) | L48, L52 |  |
-| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md) | L45, L49 |  |
+| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md) | L60, L64 |  |
 | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md) | L51, L55 |  |
 | [api/software/get_apikeys.php](/code/files/api/software/get_apikeys.php.md) | L21 |  |
 | [api/software/toggle_apikey.php](/code/files/api/software/toggle_apikey.php.md) | L35 |  |

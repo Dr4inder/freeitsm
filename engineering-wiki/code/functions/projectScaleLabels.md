@@ -6,7 +6,7 @@ The words to show for a scale: the saved ones, or the translated defaults.
 function projectScaleLabels(PDO $conn, string $scale): array
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 376.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 378.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,10 +1,12 @@
 # apiSerializeTask()
 
+Shapes a task row for the API, with its tags and subtask progress (total and done) read alongside.
+
 ```php
 function apiSerializeTask(PDO $conn, array $r): array
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 61.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 66.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,8 +19,8 @@ Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 67 | `apiSerializeTask` | read [task_tag_map](/code/tables/task_tag_map.md), read [task_tags](/code/tables/task_tags.md) |  |
-| 73 | `apiSerializeTask` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 72 | `apiSerializeTask` | read [task_tag_map](/code/tables/task_tag_map.md), read [task_tags](/code/tables/task_tags.md) |  |
+| 78 | `apiSerializeTask` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
 
 ## Calls
 

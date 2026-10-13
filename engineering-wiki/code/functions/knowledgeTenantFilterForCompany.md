@@ -29,7 +29,7 @@ does not exist and every article is shared by definition.
 function knowledgeTenantFilterForCompany(PDO $conn, ?int $tenantId, string $alias = 'a'): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 918.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 924.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -59,6 +59,7 @@ function leaseListSql(PDO $conn, int $analystId, string $l = 'l'): array
     return activeTenantReadFilter($conn, $analystId, $l);
 }
 
+/** True when the lease is in a company the analyst may read. */
 function leaseCanView(PDO $conn, int $analystId, int $leaseId): bool
 {
     [$sql, $p] = leaseVisibilitySql($conn, $analystId, 'l');
@@ -134,6 +135,10 @@ function leaseDefaultOutcomeId(PDO $conn): ?int
     return $id ? (int)$id : null;
 }
 
+/**
+ * Validates an optional YYYY-MM-DD date; blank gives null, anything else invalid throws a
+ * validation error naming $label.
+ */
 function leaseDate($v, string $label): ?string
 {
     if ($v === null || $v === '') return null;
@@ -145,6 +150,7 @@ function leaseDate($v, string $label): ?string
     return $v;
 }
 
+/** Trims optional text and cuts it to $max characters; blank gives null. */
 function leaseText($v, int $max): ?string
 {
     $v = trim((string)($v ?? ''));
@@ -732,6 +738,16 @@ function leaseSyncAllCalendar(PDO $conn): void
     } catch (Throwable $e) { /* the calendar is never worth failing a lease edit over */ }
 }
 
+/**
+ * Rebuilds the "Lease notice" calendar entries - the last day to give notice on each
+ * schedule that still has kit out.
+ *
+ * Deletes every entry from source 'asset_lease_notice' and, when the lease alert surface
+ * includes the calendar, adds one all-day event per schedule. Never throws, so a calendar
+ * problem cannot fail a lease save.
+ *
+ * @writes calendar_events - one all-day entry per schedule, on end date minus notice days
+ */
 function leaseSyncCalendar(PDO $conn): void
 {
     try {

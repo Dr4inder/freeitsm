@@ -1,24 +1,28 @@
 # purgeExpired()
 
+Permanently deletes articles that have been in the recycle bin longer than the retention period, with their versions and tags, then removes tags no article uses any more. A retention of 0 keeps them forever.
+
 ```php
 function purgeExpired($conn)
 ```
 
-Defined in [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md), line 98.
+Defined in [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md), line 113.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` |  |  |  |
 
+**Writes:** knowledge_article_versions, knowledge_article_tags, knowledge_articles, knowledge_tags - children first, since the versions foreign key has no cascade
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 105 | `purgeExpired` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 114 | `purgeExpired` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
-| 115 | `purgeExpired` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 116 | `purgeExpired` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 119 | `purgeExpired` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 120 | `purgeExpired` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 129 | `purgeExpired` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
+| 130 | `purgeExpired` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 131 | `purgeExpired` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 134 | `purgeExpired` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
 
 ## Calls
 

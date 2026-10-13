@@ -34,6 +34,11 @@ require_once dirname(__DIR__, 3) . '/includes/timezone.php';   // naive_today_sq
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * The SELECT for assets, with type, status, location, company and supplier names, how
+ * many people it is assigned to and, once Database Verification has added the column,
+ * its cost centre.
+ */
 function apiAssetSelect(): string {
     // The cost centre it is charged to (GH #160) - joined only once Database
     // Verification has added the column, so an older install's reads still work.
@@ -71,6 +76,7 @@ function apiAssetLocations(PDO $conn): array {
     return $cache;
 }
 
+/** The full path of a location, top level first, or null when there is no location. */
 function apiAssetLocationPath(PDO $conn, ?int $locationId): ?string {
     if ($locationId === null) {
         return null;
@@ -86,6 +92,10 @@ function apiAssetLocationPath(PDO $conn, ?int $locationId): ?string {
     return $parts ? implode(' › ', $parts) : null;
 }
 
+/**
+ * Shapes an asset row for the API - identity, company, type, status, location with its
+ * path, hardware, operating system and the rest of the record.
+ */
 function apiSerializeAsset(PDO $conn, array $r): array {
     $rel = function ($id, $name) {
         return $id === null ? null : ['id' => (int)$id, 'name' => $name];
@@ -416,6 +426,7 @@ function apiAssetAssignmentsList(PDO $conn, array $apiKey, array $params, array 
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/** POST /assets/{id}/assignments - assigns a person to the asset through AssetsService. */
 function apiAssetAssignmentsCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         $res = AssetsService::assignUser($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $body);
@@ -423,6 +434,7 @@ function apiAssetAssignmentsCreate(PDO $conn, array $apiKey, array $params, arra
     apiRespond($res, 201);
 }
 
+/** DELETE /assets/{id}/assignments/{userId} - removes a person from the asset through AssetsService. */
 function apiAssetAssignmentsDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         AssetsService::unassignUser($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], (int)$params[1]);
@@ -454,6 +466,7 @@ function apiAssetHistoryList(PDO $conn, array $apiKey, array $params, array $bod
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/** GET /assets/{id}/custody - the asset's check-out and check-in history, newest first. */
 function apiAssetCustodyList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadAsset($conn, $apiKey, $params[0]);
     $stmt = $conn->prepare(
@@ -537,6 +550,10 @@ function apiAssetPhysicalDisksList(PDO $conn, array $apiKey, array $params, arra
     }, $rows));
 }
 
+/**
+ * GET /assets/{id}/network-adapters - the network adapters the inventory agent reported
+ * for the asset.
+ */
 function apiAssetNetworkAdaptersList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadAsset($conn, $apiKey, $params[0]);
     $stmt = $conn->prepare(
@@ -557,6 +574,10 @@ function apiAssetNetworkAdaptersList(PDO $conn, array $apiKey, array $params, ar
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/**
+ * GET /assets/{id}/devices - the hardware devices and drivers the inventory agent
+ * reported for the asset.
+ */
 function apiAssetDevicesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadAsset($conn, $apiKey, $params[0]);
     $stmt = $conn->prepare(
@@ -577,6 +598,10 @@ function apiAssetDevicesList(PDO $conn, array $apiKey, array $params, array $bod
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/**
+ * GET /assets/{id}/software - the software installed on the asset, by name. System
+ * components are left out unless ?include_components=true.
+ */
 function apiAssetSoftwareList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiLoadAsset($conn, $apiKey, $params[0]);
     // software_inventory_detail keys the asset as host_id.
@@ -618,6 +643,7 @@ function apiAssetTypesList(PDO $conn, array $apiKey, array $params, array $body)
     }, $rows));
 }
 
+/** GET /asset-statuses - the asset statuses for the key's default company. */
 function apiAssetStatusesList(PDO $conn, array $apiKey, array $params, array $body): void {
     $rows = getTenantConfigRows($conn, 'asset_status_types', 'asset_status_type', apiKeyDefaultTenantId($conn, $apiKey),
         'id, name, description, is_active, display_order', '', 'display_order, name');
@@ -626,6 +652,10 @@ function apiAssetStatusesList(PDO $conn, array $apiKey, array $params, array $bo
     }, $rows));
 }
 
+/**
+ * GET /asset-locations - the asset locations for the key's default company, top level
+ * first, each with its full path.
+ */
 function apiAssetLocationsList(PDO $conn, array $apiKey, array $params, array $body): void {
     $rows = getTenantConfigRows($conn, 'asset_locations', 'asset_location', apiKeyDefaultTenantId($conn, $apiKey),
         'id, name, parent_id, display_order', '', '(parent_id IS NULL) DESC, parent_id, display_order, name');
@@ -640,6 +670,10 @@ function apiAssetLocationsList(PDO $conn, array $apiKey, array $params, array $b
     }, $rows));
 }
 
+/**
+ * GET /suppliers - every supplier's id, display name (trading name, else legal name) and
+ * whether it supplies assets.
+ */
 function apiSuppliersList(PDO $conn, array $apiKey, array $params, array $body): void {
     $rows = $conn->query(
         "SELECT id, COALESCE(NULLIF(TRIM(trading_name), ''), legal_name) AS name, supplies_assets

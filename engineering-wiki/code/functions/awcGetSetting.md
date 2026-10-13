@@ -1,10 +1,12 @@
 # awcGetSetting()
 
+Reads one system_settings value, returning `$default` when it is missing, empty or unreadable.
+
 ```php
 function awcGetSetting(PDO $conn, string $key, string $default): string
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 261.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 269.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_war
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 264 | `awcGetSetting` | read [system_settings](/code/tables/system_settings.md) |  |
+| 272 | `awcGetSetting` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

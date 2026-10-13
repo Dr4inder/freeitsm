@@ -1,10 +1,12 @@
 # defaultImpactLevel()
 
+The impact level a service shows when nothing is wrong with it.
+
 ```php
 function defaultImpactLevel(PDO $conn): array
 ```
 
-Defined in [includes/service_impact_levels.php](/code/files/includes/service_impact_levels.php.md), line 27.
+Defined in [includes/service_impact_levels.php](/code/files/includes/service_impact_levels.php.md), line 29.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,8 +18,8 @@ Defined in [includes/service_impact_levels.php](/code/files/includes/service_imp
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 35 | `defaultImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 42 | `defaultImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 37 | `defaultImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 44 | `defaultImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## Called from
 

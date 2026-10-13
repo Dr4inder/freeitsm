@@ -1,10 +1,12 @@
 # handleAdd()
 
+Adds an analyst, team, portal user or user group to a folder's or article's access list, and audits it. Adding someone already listed is treated as success.
+
 ```php
 function handleAdd(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 262.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 268.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -14,11 +16,13 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 **Returns:** `void`
 
+**Writes:** knowledge_acl - one entry for the object
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 273 | `handleAdd` | **insert** [knowledge_acl](/code/tables/knowledge_acl.md) (`object_type`, `object_id`, `principal_type`, `principal_id`, `created_by_id`, `created_datetime`) |  |
+| 279 | `handleAdd` | **insert** [knowledge_acl](/code/tables/knowledge_acl.md) (`object_type`, `object_id`, `principal_type`, `principal_id`, `created_by_id`, `created_datetime`) |  |
 
 ## Calls
 

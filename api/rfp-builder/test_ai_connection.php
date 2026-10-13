@@ -70,6 +70,12 @@ try {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 
+/**
+ * Sends a tiny prompt to the Anthropic Messages API to prove the key and model work, and
+ * returns the reply text with the token counts.
+ *
+ * Throws with the provider's own error message (or the HTTP code) when the call fails.
+ */
 function rfpTestAnthropic(string $apiKey, string $model, bool $verifySsl): array {
     $body = json_encode([
         'model'      => $model,
@@ -119,6 +125,12 @@ function rfpTestAnthropic(string $apiKey, string $model, bool $verifySsl): array
     ];
 }
 
+/**
+ * Sends a tiny prompt to the OpenAI Chat Completions API to prove the key and model
+ * work, and returns the reply text with the token counts.
+ *
+ * Throws with the provider's own error message (or the HTTP code) when the call fails.
+ */
 function rfpTestOpenAI(string $apiKey, string $model, bool $verifySsl): array {
     $body = json_encode([
         'model'      => $model,

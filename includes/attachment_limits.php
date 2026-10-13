@@ -185,6 +185,9 @@ function oversizePlan(array $atts, array $rules): array
     return ['over' => $over, 'reject' => $over && $rules['mode'] === 'reject', 'strip' => $rules['mode'] === 'reject' ? [] : $strip, 'total' => $total, 'reasons' => $strip];
 }
 
+/**
+ * Formats a byte count as megabytes for messages - whole numbers without a decimal ("10 MB"), otherwise one place ("2.5 MB").
+ */
 function oversizeMbWords(int $bytes): string
 {
     $mb = $bytes / 1048576;

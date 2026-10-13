@@ -10,7 +10,7 @@ function pplHead(
 ): void
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 245.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 258.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ For the rare GET that changes something and is called by the app itself (an Even
 function csrfRequireToken(): void
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 244.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 246.
 
 **Returns:** `void`
 

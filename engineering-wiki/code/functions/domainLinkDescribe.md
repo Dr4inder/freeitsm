@@ -6,7 +6,7 @@ One linked record, shaped for display: id, label, sub-line, link, and kind-speci
 function domainLinkDescribe(PDO $conn, string $kind, array $ids): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 129.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 132.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,10 +20,10 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 135 | `domainLinkDescribe` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 140 | `domainLinkDescribe` | read [status_services](/code/tables/status_services.md) |  |
-| 146 | `domainLinkDescribe` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 154 | `domainLinkDescribe` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 138 | `domainLinkDescribe` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 143 | `domainLinkDescribe` | read [status_services](/code/tables/status_services.md) |  |
+| 149 | `domainLinkDescribe` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 157 | `domainLinkDescribe` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

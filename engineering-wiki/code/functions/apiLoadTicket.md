@@ -6,7 +6,7 @@ Load one ticket (with joins) enforcing the key's company scope; 404s if not visi
 function apiLoadTicket(PDO $conn, array $apiKey, int $ticketId): array
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 99.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -13,7 +13,7 @@ than blank or "Unknown" so the reader can tell WHICH case it is.
 function warRoomMessages(PDO $conn, int $channelId, int $sinceId = 0, int $limit = 200): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 449.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 450.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,10 +28,10 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 449
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 468 | `warRoomMessages` | read [analysts](/code/tables/analysts.md) |  |
-| 472 | `warRoomMessages` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
-| 480 | `warRoomMessages` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
-| 526 | `warRoomMessages` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 469 | `warRoomMessages` | read [analysts](/code/tables/analysts.md) |  |
+| 473 | `warRoomMessages` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 481 | `warRoomMessages` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 527 | `warRoomMessages` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
 
 ## Calls
 

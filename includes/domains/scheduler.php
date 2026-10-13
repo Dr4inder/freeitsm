@@ -24,6 +24,12 @@ require_once __DIR__ . '/alerts.php';
 require_once __DIR__ . '/watch.php';
 require_once __DIR__ . '/calendar.php';
 
+/**
+ * The Domains scheduled job, within a time budget - registry lookups that are due, daily health checks, the weekly certificate and look-alike watches, then alerts, the expiry calendar and Service Status.
+ *
+ * Stops starting new work when the budget runs low and says so in out_of_time.
+ * @return array  counts for each stage, the alerts and calendar results, and the seconds taken
+ */
 function domainScheduledRun(PDO $conn, float $budgetSeconds = 240, bool $includeWatches = true): array
 {
     $t0 = microtime(true);
@@ -123,6 +129,10 @@ function domainWatchDue(PDO $conn, string $marker, int $days, string $where): ar
     return $st->fetchAll(PDO::FETCH_ASSOC);
 }
 
+/**
+ * Records that a weekly watch ran for a domain today, keeping only the latest marker row.
+ * @writes domain_audit - the marker row domainWatchDue() reads
+ */
 function domainWatchMark(PDO $conn, int $id, string $marker): void
 {
     // Keep only the latest marker row per domain, so the history is not a

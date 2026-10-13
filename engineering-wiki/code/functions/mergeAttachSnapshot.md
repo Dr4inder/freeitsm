@@ -13,7 +13,7 @@ insert, downloadable through the same endpoint as every other attachment.
 function mergeAttachSnapshot(PDO $conn, int $targetId, array $source, string $html): int
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 735.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 742.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,8 +28,8 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 739 | `mergeAttachSnapshot` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction`, `channel`, `is_initial`) |  |
-| 790 | `mergeAttachSnapshot` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime`) |  |
+| 746 | `mergeAttachSnapshot` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction`, `channel`, `is_initial`) |  |
+| 797 | `mergeAttachSnapshot` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime`) |  |
 
 ## Calls
 

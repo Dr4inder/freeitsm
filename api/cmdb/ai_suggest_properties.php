@@ -24,6 +24,10 @@ if (!isset($_SESSION['analyst_id'])) {
 requireModuleAccessJson('cmdb');
 requireCapabilityJson(Cap::CMDB_CLASSES);   // settings tab — see docs/design/rbac.md
 
+/**
+ * Turns a property name into a lower-case key of letters, digits and underscores,
+ * falling back to 'property' when nothing is left.
+ */
 function slugifyProp($name) {
     $slug = strtolower(trim($name));
     $slug = preg_replace('/[^a-z0-9]+/', '_', $slug);

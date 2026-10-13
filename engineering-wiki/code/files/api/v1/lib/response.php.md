@@ -2,6 +2,14 @@
 
 > API endpoint - 91 lines
 
+FreeITSM REST API v1 — response + input helpers.
+
+Every success body is  { "data": ..., "meta": {...}? }
+Every error body is    { "error": { "code": "...", "message": "..." } }
+with a real HTTP status code (unlike the internal session AJAX endpoints,
+which always return 200 — the v1 surface is for machines, so status codes
+carry the outcome).
+
 ## The endpoint
 
 | | |

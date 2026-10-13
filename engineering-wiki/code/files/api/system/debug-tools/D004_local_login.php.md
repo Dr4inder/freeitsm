@@ -1,6 +1,6 @@
 # api/system/debug-tools/D004_local_login.php
 
-> API endpoint - 365 lines
+> API endpoint - 375 lines
 
 Debug Tool D004 — Local login check (analyst or self-service user)
 
@@ -34,21 +34,21 @@ Output: plain text, section-delimited with === HEADERS ===.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 32 |  |
-| [yn()](/code/functions/yn.md) | 36 |  |
-| [okbad()](/code/functions/okbad.md) | 37 |  |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 38 |  |
-| [classifyHash()](/code/functions/classifyHash.md) | 51 | Classify a stored password hash. Returns: ['label','php_native'(bool can password_verify check it),'note','raw_algo'(for foreign match test)] |
+| [addSection()](/code/functions/addSection.md) | 36 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 41 | Formats a boolean as YES or NO for the report. |
+| [okbad()](/code/functions/okbad.md) | 43 | Formats a boolean as one of two words - OK or MISSING unless others are given. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 48 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [classifyHash()](/code/functions/classifyHash.md) | 61 | Classify a stored password hash. Returns: ['label','php_native'(bool can password_verify check it),'note','raw_algo'(for foreign match test)] |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 137 |  | read [system_settings](/code/tables/system_settings.md) |  |
-| 176 |  | read [analysts](/code/tables/analysts.md) |  |
-| 178 |  | read [users](/code/tables/users.md) |  |
-| 262 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 302 |  | read [ip_login_bans](/code/tables/ip_login_bans.md) |  |
+| 147 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 186 |  | read [analysts](/code/tables/analysts.md) |  |
+| 188 |  | read [users](/code/tables/users.md) |  |
+| 272 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 312 |  | read [ip_login_bans](/code/tables/ip_login_bans.md) |  |
 
 ## How it hangs together
 

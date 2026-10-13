@@ -6,7 +6,7 @@ Internal: UTC string -> DateTime in the display zone, or null if unparseable.
 function _fmt_dt(?string $utc): ?DateTime
 ```
 
-Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 402.
+Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 408.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

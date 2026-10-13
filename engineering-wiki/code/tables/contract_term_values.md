@@ -27,6 +27,6 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/contracts/get_contract_terms.php](/code/files/api/contracts/get_contract_terms.php.md) | L24 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractTermsGet L371 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractTermsGet L392 |  |
 | [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::saveTerms L138 |  |
 

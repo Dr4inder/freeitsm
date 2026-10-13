@@ -155,6 +155,10 @@ class MorningChecksService
         return $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Adds or updates a morning check group, including the team or analyst it routes to,
+     * and returns its id.
+     */
     public static function saveGroup(PDO $conn, ActorContext $ctx, array $in): int
     {
         $name = trim((string)($in['name'] ?? ''));
@@ -268,6 +272,7 @@ class MorningChecksService
         WorkflowEngine::emitCrud('morning_check', 'deleted', $id, $row['CheckName'] ?? null);
     }
 
+    /** Loads one morning check; throws not found when it does not exist. */
     private static function loadCheckRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare("SELECT * FROM morningChecks_Checks WHERE CheckID = ?");

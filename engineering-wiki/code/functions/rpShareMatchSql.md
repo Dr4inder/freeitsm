@@ -6,7 +6,7 @@ SQL that matches the shares reaching this viewer, for `report_pack_shares s`.
 function rpShareMatchSql(array $viewer): array
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 65.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 66.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

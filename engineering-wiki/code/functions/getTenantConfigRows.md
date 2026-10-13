@@ -26,7 +26,7 @@ function getTenantConfigRows(
 ): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1324.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1330.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -44,7 +44,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 132
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1340 | `getTenantConfigRows` | read [tenant_config_hidden](/code/tables/tenant_config_hidden.md) |  |
+| 1346 | `getTenantConfigRows` | read [tenant_config_hidden](/code/tables/tenant_config_hidden.md) |  |
 
 ## Calls
 

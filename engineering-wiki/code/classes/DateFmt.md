@@ -1,6 +1,6 @@
 # DateFmt
 
-> Class in [includes/timezone.php](/code/files/includes/timezone.php.md), line 150
+> Class in [includes/timezone.php](/code/files/includes/timezone.php.md), line 152
 
 Per-user date & time FORMAT (GH #105).
 
@@ -36,13 +36,13 @@ Both renderers consume the SAME token template below, so they cannot drift.
 | [timeKey()](#timekey) | The effective time-format key. Lazily resolves - see `dateKey()`. |
 | [months()](#months) | Ordered month names. `$short` picks the abbreviated set. |
 | [weekdays()](#weekdays) | Ordered weekday names, MONDAY FIRST (index 0 = Monday). |
-| [names()](#names) |  |
+| [names()](#names) | The translated names in one calendar group (common.calendar.<group>, or <group>_short), in the order of `$keys` - a missing string falls back to the capitalised English key rather than a dotted key path. |
 | [render()](#render) | Render a DateTime through a token template. The single PHP-side renderer. |
 | [jsPayload()](#jspayload) | Everything the browser needs to render dates itself, published by Tz::scriptTag(). Kept here so the PHP and JS renderers read one source. |
 
 ### init
 
-*public static* - line 199
+*public static* - line 201
 
 Resolve both formats for this request. Safe without a DB - falls back to the defaults. Normally reached via Tz::init(), which passes its own connection; call it directly only in a context that has no Tz.
 
@@ -58,14 +58,14 @@ function init(?PDO $existing = null)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 213 | `DateFmt::init` | read [system_settings](/code/tables/system_settings.md) |  |
-| 223 | `DateFmt::init` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 215 | `DateFmt::init` | read [system_settings](/code/tables/system_settings.md) |  |
+| 225 | `DateFmt::init` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 **Called from:** [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), [includes/timezone.php](/code/files/includes/timezone.php.md)
 
 ### apply
 
-*private static* - line 239
+*private static* - line 241
 
 Accept a candidate value for one of the two keys, ignoring blanks and unknown values.
 
@@ -80,7 +80,7 @@ function apply($key, $value)
 
 ### dateKey
 
-*public static* - line 256
+*public static* - line 258
 
 The effective date-format key.
 
@@ -100,7 +100,7 @@ function dateKey()
 
 ### timeKey
 
-*public static* - line 262
+*public static* - line 264
 
 The effective time-format key. Lazily resolves - see `dateKey()`.
 
@@ -112,7 +112,7 @@ function timeKey()
 
 ### months
 
-*public static* - line 281
+*public static* - line 283
 
 Ordered month names. `$short` picks the abbreviated set.
 
@@ -137,7 +137,7 @@ function months($short = false, $inDate = false)
 
 ### weekdays
 
-*public static* - line 294
+*public static* - line 296
 
 Ordered weekday names, MONDAY FIRST (index 0 = Monday).
 
@@ -153,7 +153,9 @@ function weekdays($short = false)
 
 ### names
 
-*private static* - line 305
+*private static* - line 311
+
+The translated names in one calendar group (common.calendar.<group>, or <group>_short), in the order of `$keys` - a missing string falls back to the capitalised English key rather than a dotted key path.
 
 ```php
 function names($group, $short, array $keys, $optional = false)
@@ -168,7 +170,7 @@ function names($group, $short, array $keys, $optional = false)
 
 ### render
 
-*public static* - line 344
+*public static* - line 350
 
 Render a DateTime through a token template. The single PHP-side renderer.
 
@@ -185,7 +187,7 @@ function render(DateTime $dt, $template)
 
 ### jsPayload
 
-*public static* - line 376
+*public static* - line 382
 
 Everything the browser needs to render dates itself, published by Tz::scriptTag(). Kept here so the PHP and JS renderers read one source.
 

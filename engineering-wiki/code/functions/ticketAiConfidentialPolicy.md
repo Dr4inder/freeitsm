@@ -6,7 +6,7 @@ Tickets -> Settings -> "Confidential tickets and AI": 'block' (the default - nev
 function ticketAiConfidentialPolicy(PDO $conn): string
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 175.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 177.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensiti
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 178 | `ticketAiConfidentialPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
+| 180 | `ticketAiConfidentialPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

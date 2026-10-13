@@ -420,6 +420,11 @@ function resolveMergeCodes(string $template, array $mergeData): string {
  * Build the full HTML body with reply marker for threading.
  */
 /**
+ * Wraps a template email body in the house HTML, the "Please reply above this
+ * line" marker and the hidden SDREF tag that threads a reply back to the ticket.
+ *
+ * Plain-text bodies are escaped and their newlines turned into <br>.
+ *
  * @param ?bool $isHtml Whether the TEMPLATE was HTML, decided before merge codes
  *                      were substituted. Pass it whenever you know: sniffing the
  *                      merged body means a data value containing a tag decides

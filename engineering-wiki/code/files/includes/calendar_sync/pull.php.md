@@ -1,6 +1,6 @@
 # includes/calendar_sync/pull.php
 
-> PHP - 500 lines
+> PHP - 508 lines
 
 Reading changes back OUT of an analyst's calendar (GH #75, bi-directional).
 
@@ -51,9 +51,9 @@ picked up rather than suppressed.
 | [calendarSyncPullAll()](/code/functions/calendarSyncPullAll.md) | 329 | Every enrolled analyst. Returns one report per person. |
 | [calendarNotifyUrl()](/code/functions/calendarNotifyUrl.md) | 359 | The configured notification endpoint, or '' when notifications are off. |
 | [calendarSyncEnsureSubscription()](/code/functions/calendarSyncEnsureSubscription.md) | 382 | Bring one analyst's subscription into line: create, renew or remove. |
-| [calendarStoreSubscription()](/code/functions/calendarStoreSubscription.md) | 460 |  |
-| [calendarClearSubscription()](/code/functions/calendarClearSubscription.md) | 476 |  |
-| [calendarSyncEnsureAllSubscriptions()](/code/functions/calendarSyncEnsureAllSubscriptions.md) | 489 | Every enrolled analyst's subscription, plus any left behind by someone who has since opted out. |
+| [calendarStoreSubscription()](/code/functions/calendarStoreSubscription.md) | 464 | Records an analyst's change-notification subscription (id, expiry, secret) and clears any stored error, since subscribing succeeded. |
+| [calendarClearSubscription()](/code/functions/calendarClearSubscription.md) | 484 | Forgets an analyst's change-notification subscription. |
+| [calendarSyncEnsureAllSubscriptions()](/code/functions/calendarSyncEnsureAllSubscriptions.md) | 497 | Every enrolled analyst's subscription, plus any left behind by someone who has since opted out. |
 
 ## Database
 
@@ -76,9 +76,9 @@ picked up rather than suppressed.
 | 318 | `calendarPullTaskAudit` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
 | 332 | `calendarSyncPullAll` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
 | 362 | `calendarNotifyUrl` | read [system_settings](/code/tables/system_settings.md) |  |
-| 469 | `calendarStoreSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`) |  |
-| 479 | `calendarClearSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`) |  |
-| 493 | `calendarSyncEnsureAllSubscriptions` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
+| 473 | `calendarStoreSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`) |  |
+| 487 | `calendarClearSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`) |  |
+| 501 | `calendarSyncEnsureAllSubscriptions` | read [calendar_enrolments](/code/tables/calendar_enrolments.md) |  |
 
 ## How it hangs together
 

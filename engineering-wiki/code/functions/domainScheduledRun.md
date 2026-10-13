@@ -1,5 +1,9 @@
 # domainScheduledRun()
 
+The Domains scheduled job, within a time budget - registry lookups that are due, daily health checks, the weekly certificate and look-alike watches, then alerts, the expiry calendar and Service Status.
+
+Stops starting new work when the budget runs low and says so in out_of_time.
+
 ```php
 function domainScheduledRun(
     PDO $conn,
@@ -8,7 +12,7 @@ function domainScheduledRun(
 ): array
 ```
 
-Defined in [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md), line 27.
+Defined in [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md), line 33.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,14 +20,14 @@ Defined in [includes/domains/scheduler.php](/code/files/includes/domains/schedul
 | `$budgetSeconds` | `float` | `240` |  |
 | `$includeWatches` | `bool` | `true` |  |
 
-**Returns:** `array`
+**Returns:** array  counts for each stage, the alerts and calendar results, and the seconds taken
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 40 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
-| 61 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
+| 46 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
+| 67 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
 
 ## Calls
 

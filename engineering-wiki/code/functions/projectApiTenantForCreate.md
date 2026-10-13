@@ -6,7 +6,7 @@ The company a NEW project belongs to: the one the request names (checked against
 function projectApiTenantForCreate(PDO $conn, int $analystId, $requested): int
 ```
 
-Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 65.
+Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 67.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

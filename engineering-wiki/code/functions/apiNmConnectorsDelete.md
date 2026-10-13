@@ -6,7 +6,7 @@ DELETE /network-diagrams/{id}/connectors/{connector_id}
 function apiNmConnectorsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 887.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 921.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 892 | `apiNmConnectorsDelete` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
-| 893 | `apiNmConnectorsDelete` | **update** [network_diagrams](/code/tables/network_diagrams.md) (`updated_datetime`) |  |
+| 926 | `apiNmConnectorsDelete` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
+| 927 | `apiNmConnectorsDelete` | **update** [network_diagrams](/code/tables/network_diagrams.md) (`updated_datetime`) |  |
 
 ## Calls
 

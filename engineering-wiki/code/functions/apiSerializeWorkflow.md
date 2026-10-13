@@ -1,10 +1,12 @@
 # apiSerializeWorkflow()
 
+Shapes a workflow row for the API - trigger, active flag, people, dates, last run and run count, plus the full conditions and actions when `$full` (only their counts otherwise).
+
 ```php
 function apiSerializeWorkflow(array $r, bool $full): array
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 45.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 51.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

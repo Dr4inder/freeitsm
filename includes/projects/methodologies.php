@@ -97,6 +97,7 @@ function projectEnabledTools(array $project): array
     return array_keys(array_filter($on));
 }
 
+/** Every status a project can have. */
 function projectStatuses(): array
 {
     return ['proposed', 'active', 'on_hold', 'closed', 'cancelled'];
@@ -109,21 +110,25 @@ function projectPriorities(): array
     return ['low', 'medium', 'high', 'critical'];
 }
 
+/** The project statuses that count as finished: closed and cancelled. */
 function projectFinishedStatuses(): array
 {
     return ['closed', 'cancelled'];
 }
 
+/** The health values a project can be set to; 'auto' means work it out. */
 function projectHealthValues(): array
 {
     return ['auto', 'green', 'amber', 'red'];
 }
 
+/** The kinds of stage a project plan can have: phase, stage or sprint. */
 function projectStageKinds(): array
 {
     return ['phase', 'stage', 'sprint'];
 }
 
+/** The statuses a stage can have: planned, active or closed. */
 function projectStageStatuses(): array
 {
     return ['planned', 'active', 'closed'];

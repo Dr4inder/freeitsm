@@ -31,15 +31,15 @@ Service Status module
 | [api/service-status/get_incident_updates.php](/code/files/api/service-status/get_incident_updates.php.md) | L60 |  |
 | [api/service-status/get_service_history.php](/code/files/api/service-status/get_service_history.php.md) | L41 |  |
 | [api/service-status/get_services.php](/code/files/api/service-status/get_services.php.md) | L21 |  |
-| [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | apiLoadService L90, apiSerializeIncident L111, apiStatusServicesList L182 |  |
-| [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkTargetOk L107, domainLinkDescribe L140, domainLinkSearch L237 |  |
-| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusServiceIds L93 |  |
-| [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md) | rpOptionSource L376 |  |
-| [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) | rpStatusServices L21, rpStatusIncidentLog L123, rpStatusIncidentSummary L185 |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedList L159 |  |
+| [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md) | apiLoadService L96, apiSerializeIncident L125, apiStatusServicesList L197 |  |
+| [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkTargetOk L110, domainLinkDescribe L143, domainLinkSearch L244 |  |
+| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusServiceIds L96 |  |
+| [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md) | rpOptionSource L380 |  |
+| [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md) | rpStatusServices L21, rpStatusIncidentLog L131, rpStatusIncidentSummary L193 |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedList L160 |  |
 | [includes/service_status_portal.php](/code/files/includes/service_status_portal.php.md) | ssPortalIncidents L133 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::announcements L1779 |  |
-| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md) | ServiceStatusService::loadServiceRow L87, ServiceStatusService::validateIncidentServices L293 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolServiceStatus L427, warbotToolServiceStatus L434 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::announcements L1841 |  |
+| [includes/services/service_status.php](/code/files/includes/services/service_status.php.md) | ServiceStatusService::loadServiceRow L88, ServiceStatusService::validateIncidentServices L305 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolServiceStatus L438, warbotToolServiceStatus L445 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L432, getWatchtowerData L641 |  |
 

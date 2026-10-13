@@ -15,7 +15,7 @@ missing from its page, so a renamed or deleted heading cannot leave a dead link.
 function systemAreaSettings(): array
 ```
 
-Defined in [system/includes/areas.php](/code/files/system/includes/areas.php.md), line 367.
+Defined in [system/includes/areas.php](/code/files/system/includes/areas.php.md), line 374.
 
 **Returns:** `array`
 

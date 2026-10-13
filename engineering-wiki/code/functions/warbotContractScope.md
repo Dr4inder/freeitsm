@@ -6,7 +6,7 @@
 function warbotContractScope(PDO $conn, int $analystId, string $alias): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 699.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 724.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

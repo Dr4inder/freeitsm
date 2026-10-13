@@ -1,8 +1,28 @@
 # includes/uploads.php
 
-> PHP - 963 lines
+> PHP - 964 lines
 
-⚠️ application/CDFV2 appears on doc/xls/ppt deliberately. Modern libmagic reports that for any OLE2 compound file it cannot classify further, so a genuine .doc or .xls can arrive claiming it — gate 2 then refused a perfectly ordinary Word document and the sender saw "its contents do not match its doc extension". CDFV2 is the container, not a type: it is equally the shape of .msi and .msg, which is why it is listed only against extensions that are already on the allow-list rather than accepted globally.
+Safe file uploads — the ONE place the rules live.
+
+⚠️ WHY THIS EXISTS. Change management accepted an upload with no validation
+at all, kept the caller's filename, and wrote it into a web-reachable folder.
+A file called `probe.php` could be uploaded and then fetched over HTTP, and it
+EXECUTED. That is remote code execution by anyone who could attach a file to a
+change. It was found while building form file uploads, where the same pattern
+would have handed the hole to self-service customers rather than analysts.
+
+Three defences, and the point is that NO ONE of them is trusted alone:
+
+  1. an extension AND mime whitelist — a renamed `.php` fails the mime check,
+     and a file whose bytes look like a PNG still fails if it is named .php;
+  2. a RANDOM stored filename with an extension drawn from our own whitelist,
+     never from the caller's string. The original name is kept in the database
+     for display only, so nothing user-controlled reaches the filesystem;
+  3. an .htaccess that disables execution in the upload directory, so even a
+     future endpoint that forgets 1 and 2 does not become an RCE.
+
+🔑 Files are still served through an authorising PHP endpoint. The directory
+protection is the net under the tightrope, not the tightrope.
 
 ## Functions
 
@@ -18,21 +38,21 @@
 | [uploadCleanName()](/code/functions/uploadCleanName.md) | 594 | The original filename, reduced to something safe to STORE AND DISPLAY. |
 | [uploadDetectMime()](/code/functions/uploadDetectMime.md) | 608 | The file's real mime type, or null if this server cannot tell us. |
 | [uploadErrorMessage()](/code/functions/uploadErrorMessage.md) | 623 | PHP's upload error codes as something a person can act on. |
-| [uploadFormatBytes()](/code/functions/uploadFormatBytes.md) | 637 |  |
-| [attachmentServeRules()](/code/functions/attachmentServeRules.md) | 711 | Decide how to serve a stored attachment, from its filename alone. |
-| [attachmentSendHeaders()](/code/functions/attachmentSendHeaders.md) | 728 | Emit the Content-Type / Content-Disposition / nosniff headers for an attachment. Callers still do their own authorisation and file-existence checks first. |
-| [uploadStoreBytes()](/code/functions/uploadStoreBytes.md) | 785 | Store ingested bytes safely, applying the install's policy for types we do not accept. |
-| [uploadDetectMimeFromBytes()](/code/functions/uploadDetectMimeFromBytes.md) | 865 | The real mime type of bytes held in memory, or null if this server cannot tell. |
-| [attachmentRejectPolicy()](/code/functions/attachmentRejectPolicy.md) | 884 | The install's policy for an attachment whose type we do not accept. |
-| [attachmentAllowedTypes()](/code/functions/attachmentAllowedTypes.md) | 914 | Which attachment types this install actually accepts. |
-| [attachmentIngestNotice()](/code/functions/attachmentIngestNotice.md) | 944 | The block appended to a message body when attachments were not accepted, so the outcome is visible on the ticket instead of a file quietly vanishing. Returns '' when there is nothing to say. |
+| [uploadFormatBytes()](/code/functions/uploadFormatBytes.md) | 638 | A byte count as readable text - "1.5 MB", "300 KB" or "512 bytes". |
+| [attachmentServeRules()](/code/functions/attachmentServeRules.md) | 712 | Decide how to serve a stored attachment, from its filename alone. |
+| [attachmentSendHeaders()](/code/functions/attachmentSendHeaders.md) | 729 | Emit the Content-Type / Content-Disposition / nosniff headers for an attachment. Callers still do their own authorisation and file-existence checks first. |
+| [uploadStoreBytes()](/code/functions/uploadStoreBytes.md) | 786 | Store ingested bytes safely, applying the install's policy for types we do not accept. |
+| [uploadDetectMimeFromBytes()](/code/functions/uploadDetectMimeFromBytes.md) | 866 | The real mime type of bytes held in memory, or null if this server cannot tell. |
+| [attachmentRejectPolicy()](/code/functions/attachmentRejectPolicy.md) | 885 | The install's policy for an attachment whose type we do not accept. |
+| [attachmentAllowedTypes()](/code/functions/attachmentAllowedTypes.md) | 915 | Which attachment types this install actually accepts. |
+| [attachmentIngestNotice()](/code/functions/attachmentIngestNotice.md) | 945 | The block appended to a message body when attachments were not accepted, so the outcome is visible on the ticket instead of a file quietly vanishing. Returns '' when there is nothing to say. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 889 | `attachmentRejectPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
-| 920 | `attachmentAllowedTypes` | read [system_settings](/code/tables/system_settings.md) |  |
+| 890 | `attachmentRejectPolicy` | read [system_settings](/code/tables/system_settings.md) |  |
+| 921 | `attachmentAllowedTypes` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

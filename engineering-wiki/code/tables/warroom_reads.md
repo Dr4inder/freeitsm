@@ -16,11 +16,11 @@ How far each analyst has read in each channel, so the list can show what is new.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md):1118 | `warRoomMarkRead` | insert | `analyst_id`, `channel_id`, `last_read_message_id`, `updated_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):1119 | `warRoomMarkRead` | insert | `analyst_id`, `channel_id`, `last_read_message_id`, `updated_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L131, warRoomMyMentions L798, warRoomMentionCounts L854 |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L131, warRoomMyMentions L799, warRoomMentionCounts L855 |  |
 

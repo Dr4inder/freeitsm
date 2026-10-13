@@ -42,6 +42,6 @@
 | [api/knowledge/gap_clusters.php](/code/files/api/knowledge/gap_clusters.php.md) | L60, gapStatusCounts L138 |  |
 | [api/knowledge/gap_dismiss.php](/code/files/api/knowledge/gap_dismiss.php.md) | L54 |  |
 | [api/knowledge/writeup_save.php](/code/files/api/knowledge/writeup_save.php.md) | L81 |  |
-| [api/knowledge/writeup_stream.php](/code/files/api/knowledge/writeup_stream.php.md) | L102 |  |
+| [api/knowledge/writeup_stream.php](/code/files/api/knowledge/writeup_stream.php.md) | L106 |  |
 | [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapPersistClusters L408 |  |
 

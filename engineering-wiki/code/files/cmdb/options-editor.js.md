@@ -1,6 +1,6 @@
 # cmdb/options-editor.js
 
-> JavaScript - 234 lines
+> JavaScript - 243 lines
 
 CMDB shared dropdown-options editor.
 
@@ -27,13 +27,13 @@ No external dependencies.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `escapeHtmlAttr(s)` | 25 |  |
-| `normalizeInitial(opts)` | 29 |  |
-| `renderRow(value, colour, index)` | 40 |  |
-| `injectStylesOnce()` | 57 |  |
-| `wireRowHandlers(container)` | 147 |  |
-| `renderOptionsEditor(containerId, initialOptions)` | 195 |  |
-| `collectOptionsFromEditor(containerId)` | 219 |  |
+| `escapeHtmlAttr(s)` | 26 | Escapes text for safe use in HTML and attributes. |
+| `normalizeInitial(opts)` | 31 | Turns the stored options (plain strings or {value, colour}) into {value, colour} objects, colour '' when unset. |
+| `renderRow(value, colour, index)` | 43 | Returns one option row - value box, colour swatch, clear-colour, up, down and delete buttons. |
+| `injectStylesOnce()` | 61 | Adds the editor's stylesheet to the page the first time an editor is rendered. |
+| `wireRowHandlers(container)` | 152 | Wires every row's delete, move up, move down, colour pick and clear-colour buttons. |
+| `renderOptionsEditor(containerId, initialOptions)` | 201 | Renders the options editor into a container from the stored options, with an Add button that appends an empty row. |
+| `collectOptionsFromEditor(containerId)` | 228 | Reads the rows back in their current order as [{value, colour}], dropping empty values; colour is '' when none was picked. |
 
 ## Loaded by
 

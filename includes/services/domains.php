@@ -111,6 +111,12 @@ class DomainsService
         return ['id' => self::createDomain($conn, $ctx, $in, $tenantId), 'created' => true];
     }
 
+    /**
+     * Adds a domain to the register for a company and returns its id.
+     *
+     * Validates every field, starts it in the first active status, encrypts any auth code,
+     * records it in the history and fires the domain.created workflow event.
+     */
     public static function createDomain(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId, string $source = 'app'): int
     {
         $n = domainNormalise((string)($in['domain_name'] ?? ''));
@@ -162,6 +168,12 @@ class DomainsService
         return $id;
     }
 
+    /**
+     * Changes a domain's fields, records each change in its history and fires
+     * domain.updated when anything changed.
+     *
+     * A new domain name clears the change-watch baseline.
+     */
     public static function updateDomain(PDO $conn, ActorContext $ctx, int $id, array $in, string $source = ''): int
     {
         $cur = self::loadForActor($conn, $ctx, $id);
@@ -391,6 +403,7 @@ class DomainsService
         return $changes;
     }
 
+    /** Records that the last registration lookup for a domain failed, and why. */
     public static function recordLookupError(PDO $conn, int $id, string $error): void
     {
         $conn->prepare("UPDATE domains SET last_lookup_datetime = UTC_TIMESTAMP(), last_lookup_error = ? WHERE id = ?")
@@ -489,6 +502,10 @@ class DomainsService
     //  Statuses (a settings list)
     // ======================================================================
 
+    /**
+     * Adds or updates a domain status (name, colour, alerts on or off, active, order);
+     * names must be unique.
+     */
     public static function saveStatus(PDO $conn, array $in): array
     {
         $name = trim((string)($in['name'] ?? ''));
@@ -513,6 +530,7 @@ class DomainsService
         return ['id' => (int)$conn->lastInsertId(), 'created' => true];
     }
 
+    /** Deletes a domain status; refuses while any domain uses it. */
     public static function deleteStatus(PDO $conn, int $id): void
     {
         $inUse = $conn->prepare("SELECT COUNT(*) FROM domains WHERE status_id = ?");
@@ -527,6 +545,7 @@ class DomainsService
     //  Registrar accounts
     // ======================================================================
 
+    /** Adds or updates a registrar account (the login at a registrar) for a company. */
     public static function saveRegistrarAccount(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId): array
     {
         $name = trim((string)($in['account_name'] ?? ''));
@@ -557,6 +576,7 @@ class DomainsService
         return ['id' => (int)$conn->lastInsertId(), 'created' => true];
     }
 
+    /** Deletes a registrar account, unlinking it from its domains first. */
     public static function deleteRegistrarAccount(PDO $conn, ActorContext $ctx, int $id): void
     {
         self::loadAccountForActor($conn, $ctx, $id);
@@ -568,6 +588,7 @@ class DomainsService
     //  Loading + scope
     // ======================================================================
 
+    /** Loads one domain; throws not found when it does not exist. */
     public static function loadRow(PDO $conn, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM domains WHERE id = ?");
@@ -585,6 +606,7 @@ class DomainsService
         return $row;
     }
 
+    /** Loads a registrar account the actor's companies can reach; throws not found otherwise. */
     private static function loadAccountForActor(PDO $conn, ActorContext $ctx, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM domain_registrar_accounts WHERE id = ?");
@@ -595,6 +617,7 @@ class DomainsService
         return $row;
     }
 
+    /** Throws not found when the row's company is outside the actor's companies. */
     private static function assertScope(PDO $conn, ActorContext $ctx, array $row): void
     {
         if ($ctx->companyScope === null || !isMultiTenant($conn)) return;
@@ -615,6 +638,10 @@ class DomainsService
     //  Validation
     // ======================================================================
 
+    /**
+     * Validates and cleans one domain field according to its type in fieldMap(), and
+     * returns the value to store.
+     */
     private static function validateField(PDO $conn, string $field, $v, array $def, array $row, string $domainName)
     {
         $blank = $v === null || (is_string($v) && trim($v) === '');
@@ -769,6 +796,7 @@ class DomainsService
         return $in;
     }
 
+    /** A validated id from a lookup table, or null for none; throws for an unknown id. */
     private static function lookup(PDO $conn, string $table, $value, string $label): ?int
     {
         if ($value === null || $value === '' || $value === 0 || $value === '0') return null;
@@ -779,6 +807,7 @@ class DomainsService
         return $id;
     }
 
+    /** Throws unless the id is an active analyst. */
     private static function requireAnalyst(PDO $conn, int $id): void
     {
         $st = $conn->prepare("SELECT id FROM analysts WHERE id = ? AND is_active = 1");
@@ -786,12 +815,14 @@ class DomainsService
         if (!$st->fetchColumn()) throw new ServiceError('validation', 'invalid_field', "Unknown or inactive analyst id: {$id}");
     }
 
+    /** Trimmed text cut to $max characters, or null when blank. */
     private static function str($v, int $max): ?string
     {
         $s = trim((string)$v);
         return $s === '' ? null : mb_substr($s, 0, $max);
     }
 
+    /** True when two values are equal, treating null and '' as the same. */
     private static function same($a, $b): bool
     {
         if (($a === null || $a === '') && ($b === null || $b === '')) return true;
@@ -819,6 +850,11 @@ class DomainsService
     //  History, events, side effects
     // ======================================================================
 
+    /**
+     * Records one change in a domain's history; a failure is logged, never thrown.
+     *
+     * @writes domain_audit - the domain's change history
+     */
     public static function audit(PDO $conn, int $domainId, ?int $analystId, string $field, $old, $new, string $source = 'app'): void
     {
         try {
@@ -898,6 +934,7 @@ class DomainsService
         ];
     }
 
+    /** Fires the domain.<verb> workflow event for a domain; a failure is logged, never thrown. */
     private static function dispatchCrud(PDO $conn, string $verb, int $id): void
     {
         try {

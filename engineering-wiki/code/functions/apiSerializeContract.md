@@ -1,10 +1,12 @@
 # apiSerializeContract()
 
+Shapes a contract row for the API - number, title, company, supplier or customer (company and person), owner, status, dates, value and the rest of the record.
+
 ```php
 function apiSerializeContract(array $r): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 79.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

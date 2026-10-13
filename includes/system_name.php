@@ -15,6 +15,7 @@
  */
 
 if (!function_exists('systemName')) {
+    /** The system's name from System -> Branding, or "Service Desk" when it is not set. Cached per request. */
     function systemName(): string
     {
         static $name = null;

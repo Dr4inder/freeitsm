@@ -6,7 +6,7 @@ Deleting is never "anyone": the project manager, its creator, or Manage Projects
 function projectCanDelete(PDO $conn, int $analystId, array $project): bool
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 430.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 440.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

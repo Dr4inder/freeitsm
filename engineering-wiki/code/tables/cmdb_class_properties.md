@@ -21,25 +21,25 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/cmdb/delete_class_property.php](/code/files/api/cmdb/delete_class_property.php.md):36 |  | delete |  |  |
-| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):78 |  | insert | `class_id`, `property_key`, `label`, `property_type`, `target_class_id`, `is_required`, `spreads_impact`, `display_order`, `created_datetime` |  |
-| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):93 |  | update | `property_key`, `label`, `property_type`, `target_class_id`, `is_required`, `spreads_impact`, `display_order` |  |
+| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):82 |  | insert | `class_id`, `property_key`, `label`, `property_type`, `target_class_id`, `is_required`, `spreads_impact`, `display_order`, `created_datetime` |  |
+| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md):97 |  | update | `property_key`, `label`, `property_type`, `target_class_id`, `is_required`, `spreads_impact`, `display_order` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/cmdb/ai_suggest_properties.php](/code/files/api/cmdb/ai_suggest_properties.php.md) | L49 |  |
+| [api/cmdb/ai_suggest_properties.php](/code/files/api/cmdb/ai_suggest_properties.php.md) | L53 |  |
 | [api/cmdb/ai_suggest_questions.php](/code/files/api/cmdb/ai_suggest_questions.php.md) | L39 |  |
 | [api/cmdb/delete_class_property.php](/code/files/api/cmdb/delete_class_property.php.md) | L35 |  |
 | [api/cmdb/generate_object_summary.php](/code/files/api/cmdb/generate_object_summary.php.md) | L65, L131 |  |
 | [api/cmdb/get_class_properties.php](/code/files/api/cmdb/get_class_properties.php.md) | L28, L42 |  |
 | [api/cmdb/get_classes.php](/code/files/api/cmdb/get_classes.php.md) | L33 |  |
 | [api/cmdb/get_object.php](/code/files/api/cmdb/get_object.php.md) | L96, L127 |  |
-| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md) | L69, L86 |  |
+| [api/cmdb/save_class_property.php](/code/files/api/cmdb/save_class_property.php.md) | L73, L90 |  |
 | [api/network-mapper/get_related_objects.php](/code/files/api/network-mapper/get_related_objects.php.md) | L125 |  |
-| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbClassesGet L90, apiCmdbClassesGet L100, apiCmdbClassDefs L178 |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmSuggestionsList L628 |  |
+| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbClassesGet L97, apiCmdbClassesGet L107, apiCmdbClassDefs L186 |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmSuggestionsList L662 |  |
 | [includes/cmdb_audit.php](/code/files/includes/cmdb_audit.php.md) | cmdbAuditRequiredMissing L84, cmdbAuditBrokenReferences L113, cmdbAuditDependencyBlank L141, cmdbAuditDisconnected L172 |  |
 | [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md) | cmdbHasImpactEdgesConfigured L95, cmdbDirectImpact L153, cmdbImpactEdgesFrom L317 |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::classDefs L457, CmdbService::normaliseProperties L520 |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::classDefs L466, CmdbService::normaliseProperties L529 |  |
 

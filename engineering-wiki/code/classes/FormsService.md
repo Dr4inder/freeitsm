@@ -21,13 +21,13 @@
 | [setCollectionForms()](#setcollectionforms) | Set exactly which forms belong to a collection, from the collection's side. Ed asked for this as well as the per-form control on the forms list; both write through the same column, so they cannot disagree. |
 | [formsForPicker()](#formsforpicker) | Every leaf form, with the collection it is in — the picker's whole list, so somebody choosing can see what a tick would take away from where. |
 | [collectionSubmissions()](#collectionsubmissions) | Every submission stamped into a collection, across all its forms, newest first — plus the field definitions of each form involved, because a collection's rows do not share a set of questions and both the detail panel and the PDF need the right ones. |
-| [requireCollections()](#requirecollections) |  |
+| [requireCollections()](#requirecollections) | Throws until Database Verification has added the form collections schema. |
 | [saveCollection()](#savecollection) | Create or rename. Returns the id. |
 | [setCollectionClosed()](#setcollectionclosed) | Close or reopen. |
 | [deleteCollection()](#deletecollection) | Delete, but only while nothing is stamped into it. |
 | [submissionsBlockedBy()](#submissionsblockedby) | Is this form's collection closed in a way that stops new submissions? Returns the collection name when it is, null when it is not. |
 | [portalCatalogueFilter()](#portalcataloguefilter) | A SQL fragment for the portal catalogue: forms whose collection is closed are not offered, but only when the operator chose 'stop_and_hide'. Returns '' when nothing should be filtered, so callers can concatenate. |
-| [saveForm()](#saveform) |  |
+| [saveForm()](#saveform) | Creates a form, or updates the current version of one, with its fields. |
 | [deleteForm()](#deleteform) | Delete one version (leaf only) or the whole chain. Returns ['id','versions_deleted']. |
 | [encodeActionLists()](#encodeactionlists) | Validate and encode the three action lists for storage. |
 | [actionLists()](#actionlists) | A form's three action lists (#95): what to do when it is submitted, approved or rejected. |
@@ -38,11 +38,11 @@
 | [requireLeaf()](#requireleaf) | 409 unless the form is the chain leaf (the current editable version). |
 | [validateFields()](#validatefields) | Validate an incoming fields array — 422s where the raw UI silently drops or blindly stores. Returns rows ready for the id-based sync. |
 | [parseOptionList()](#parseoptionlist) | An option list, from whatever shape it is stored in. |
-| [gridColumns()](#gridcolumns) |  |
+| [gridColumns()](#gridcolumns) | A grid field's column definitions from its config, keyed by column id. |
 | [gridLiveColumns()](#gridlivecolumns) | The columns a NEW row may be filled in against — retired ones excluded. |
 | [gridToText()](#gridtotext) | A grid's answer as readable text — one line per row, each cell prefixed with its column's label. |
-| [gridRows()](#gridrows) |  |
-| [audiencesAvailable()](#audiencesavailable) |  |
+| [gridRows()](#gridrows) | A grid answer's rows, from JSON or an array, as {"rows": [...]} or a bare list. |
+| [audiencesAvailable()](#audiencesavailable) | True when the form_audiences table exists. Cached per request. |
 | [formAudiences()](#formaudiences) | The people groups a form is restricted to. Empty means everyone. |
 | [setFormAudiences()](#setformaudiences) | Replace a form's audience. An empty list means everyone. |
 | [portalAudienceSql()](#portalaudiencesql) | 🔴 THE ONE PLACE THAT DECIDES. Every portal entry point asks this — the catalogue list, opening a form by id, saving a draft, fetching an image, and submitting. A restriction enforced in four places is a restriction that will be enforced in three of them by the end of the year. |
@@ -60,7 +60,7 @@
 | [normaliseCell()](#normalisecell) | One cell, with every value forced into range. |
 | [remapLayoutFields()](#remaplayoutfields) | Rewrite a stored layout's field references through an id map. |
 | [layoutFieldOrder()](#layoutfieldorder) | Every field id a layout places, in the order it places them. |
-| [validateFieldConfig()](#validatefieldconfig) |  |
+| [validateFieldConfig()](#validatefieldconfig) | Validates and cleans one field's config JSON - width, label position, the settings of notes, images, date fields and grids, and its visible_if rule - and returns it, or null when empty. |
 | [syncFields()](#syncfields) | Sync a form's fields BY ID. |
 
 ### isAnswerable
@@ -426,7 +426,9 @@ function collectionSubmissions(PDO $conn, int $collectionId): array
 
 ### requireCollections
 
-*private static* - line 776
+*private static* - line 777
+
+Throws until Database Verification has added the form collections schema.
 
 ```php
 function requireCollections(PDO $conn): void
@@ -438,7 +440,7 @@ function requireCollections(PDO $conn): void
 
 ### saveCollection
 
-*public static* - line 785
+*public static* - line 786
 
 Create or rename. Returns the id.
 
@@ -456,16 +458,16 @@ function saveCollection(PDO $conn, ActorContext $ctx, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 803 | `FormsService::saveCollection` | read [form_collections](/code/tables/form_collections.md) |  |
-| 810 | `FormsService::saveCollection` | **update** [form_collections](/code/tables/form_collections.md) (`name`, `description`, `modified_date`) |  |
-| 813 | `FormsService::saveCollection` | read [form_collections](/code/tables/form_collections.md) |  |
-| 821 | `FormsService::saveCollection` | **insert** [form_collections](/code/tables/form_collections.md) (`name`, `description`, `created_by`, `created_date`, `modified_date`) |  |
+| 804 | `FormsService::saveCollection` | read [form_collections](/code/tables/form_collections.md) |  |
+| 811 | `FormsService::saveCollection` | **update** [form_collections](/code/tables/form_collections.md) (`name`, `description`, `modified_date`) |  |
+| 814 | `FormsService::saveCollection` | read [form_collections](/code/tables/form_collections.md) |  |
+| 822 | `FormsService::saveCollection` | **insert** [form_collections](/code/tables/form_collections.md) (`name`, `description`, `created_by`, `created_date`, `modified_date`) |  |
 
 **Called from:** [api/forms/save_collection.php](/code/files/api/forms/save_collection.php.md)
 
 ### setCollectionClosed
 
-*public static* - line 836
+*public static* - line 837
 
 Close or reopen.
 
@@ -490,15 +492,15 @@ function setCollectionClosed(PDO $conn, ActorContext $ctx, int $id, bool $closed
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 841 | `FormsService::setCollectionClosed` | **update** [form_collections](/code/tables/form_collections.md) (`closed_datetime`, `closed_by`, `modified_date`) |  |
 | 842 | `FormsService::setCollectionClosed` | **update** [form_collections](/code/tables/form_collections.md) (`closed_datetime`, `closed_by`, `modified_date`) |  |
-| 847 | `FormsService::setCollectionClosed` | read [form_collections](/code/tables/form_collections.md) |  |
+| 843 | `FormsService::setCollectionClosed` | **update** [form_collections](/code/tables/form_collections.md) (`closed_datetime`, `closed_by`, `modified_date`) |  |
+| 848 | `FormsService::setCollectionClosed` | read [form_collections](/code/tables/form_collections.md) |  |
 
 **Called from:** [api/forms/set_collection_closed.php](/code/files/api/forms/set_collection_closed.php.md)
 
 ### deleteCollection
 
-*public static* - line 862
+*public static* - line 863
 
 Delete, but only while nothing is stamped into it.
 
@@ -520,14 +522,14 @@ function deleteCollection(PDO $conn, ActorContext $ctx, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 865 | `FormsService::deleteCollection` | read [form_submissions](/code/tables/form_submissions.md) |  |
-| 872 | `FormsService::deleteCollection` | **delete** [form_collections](/code/tables/form_collections.md) |  |
+| 866 | `FormsService::deleteCollection` | read [form_submissions](/code/tables/form_submissions.md) |  |
+| 873 | `FormsService::deleteCollection` | **delete** [form_collections](/code/tables/form_collections.md) |  |
 
 **Called from:** [api/forms/delete_collection.php](/code/files/api/forms/delete_collection.php.md)
 
 ### submissionsBlockedBy
 
-*public static* - line 885
+*public static* - line 886
 
 Is this form's collection closed in a way that stops new submissions? Returns the collection name when it is, null when it is not.
 
@@ -548,11 +550,11 @@ function submissionsBlockedBy(PDO $conn, int $formId): ?string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 891 | `FormsService::submissionsBlockedBy` | read [forms](/code/tables/forms.md), read [form_collections](/code/tables/form_collections.md) |  |
+| 892 | `FormsService::submissionsBlockedBy` | read [forms](/code/tables/forms.md), read [form_collections](/code/tables/form_collections.md) |  |
 
 ### portalCatalogueFilter
 
-*public static* - line 912
+*public static* - line 913
 
 A SQL fragment for the portal catalogue: forms whose collection is closed are not offered, but only when the operator chose 'stop_and_hide'. Returns '' when nothing should be filtered, so callers can concatenate.
 
@@ -572,13 +574,17 @@ function portalCatalogueFilter(PDO $conn, string $formsAlias = 'f'): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 916 | `FormsService::portalCatalogueFilter` | read [form_collections](/code/tables/form_collections.md) |  |
+| 917 | `FormsService::portalCatalogueFilter` | read [form_collections](/code/tables/form_collections.md) |  |
 
 **Called from:** [api/self-service/get_catalogue.php](/code/files/api/self-service/get_catalogue.php.md)
 
 ### saveForm
 
-*public static* - line 921
+*public static* - line 927
+
+Creates a form, or updates the current version of one, with its fields.
+
+Historical versions cannot be edited.
 
 ```php
 function saveForm(PDO $conn, ActorContext $ctx, array $in): array
@@ -594,14 +600,14 @@ function saveForm(PDO $conn, ActorContext $ctx, array $in): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 954 | `FormsService::saveForm` | **update** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `modified_by`) |  |
-| 1007 | `FormsService::saveForm` | **insert** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `created_by`, `modified_by`, `version_number`, `created_date`, `modified_date`) |  |
+| 960 | `FormsService::saveForm` | **update** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `modified_by`) |  |
+| 1013 | `FormsService::saveForm` | **insert** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `created_by`, `modified_by`, `version_number`, `created_date`, `modified_date`) |  |
 
 **Called from:** [api/forms/save_form.php](/code/files/api/forms/save_form.php.md), [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md)
 
 ### deleteForm
 
-*public static* - line 1038
+*public static* - line 1044
 
 Delete one version (leaf only) or the whole chain. Returns ['id','versions_deleted'].
 
@@ -620,18 +626,18 @@ function deleteForm(PDO $conn, ActorContext $ctx, int $id, bool $chain = false):
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1046 | `FormsService::deleteForm` | read [forms](/code/tables/forms.md) |  |
-| 1057 | `FormsService::deleteForm` | read [forms](/code/tables/forms.md) |  |
-| 1075 | `FormsService::deleteForm` | **delete** [form_submission_data](/code/tables/form_submission_data.md), read [form_submissions](/code/tables/form_submissions.md) |  |
-| 1079 | `FormsService::deleteForm` | **delete** [form_submissions](/code/tables/form_submissions.md) |  |
-| 1080 | `FormsService::deleteForm` | **delete** [form_fields](/code/tables/form_fields.md) |  |
-| 1083 | `FormsService::deleteForm` | **delete** [forms](/code/tables/forms.md) |  |
+| 1052 | `FormsService::deleteForm` | read [forms](/code/tables/forms.md) |  |
+| 1063 | `FormsService::deleteForm` | read [forms](/code/tables/forms.md) |  |
+| 1081 | `FormsService::deleteForm` | **delete** [form_submission_data](/code/tables/form_submission_data.md), read [form_submissions](/code/tables/form_submissions.md) |  |
+| 1085 | `FormsService::deleteForm` | **delete** [form_submissions](/code/tables/form_submissions.md) |  |
+| 1086 | `FormsService::deleteForm` | **delete** [form_fields](/code/tables/form_fields.md) |  |
+| 1089 | `FormsService::deleteForm` | **delete** [forms](/code/tables/forms.md) |  |
 
 **Called from:** [api/forms/delete_form.php](/code/files/api/forms/delete_form.php.md), [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md)
 
 ### encodeActionLists
 
-*private static* - line 1106
+*private static* - line 1112
 
 Validate and encode the three action lists for storage.
 
@@ -651,7 +657,7 @@ function encodeActionLists($value): ?string
 
 ### actionLists
 
-*public static* - line 1153
+*public static* - line 1159
 
 A form's three action lists (#95): what to do when it is submitted, approved or rejected.
 
@@ -680,13 +686,13 @@ function actionLists(PDO $conn, int $formId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1157 | `FormsService::actionLists` | read [forms](/code/tables/forms.md) |  |
+| 1163 | `FormsService::actionLists` | read [forms](/code/tables/forms.md) |  |
 
 **Called from:** [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md)
 
 ### createVersion
 
-*public static* - line 1174
+*public static* - line 1180
 
 Fork the leaf into a new version. Returns ['id','version_number'].
 
@@ -704,18 +710,18 @@ function createVersion(PDO $conn, ActorContext $ctx, int $parentId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1201 | `FormsService::createVersion` | **insert** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `created_by`, `modified_by`, `parent_form_id`, `version_number{$colSql}`, `created_date`) |  |
-| 1272 | `FormsService::createVersion` | read [form_fields](/code/tables/form_fields.md) |  |
-| 1281 | `FormsService::createVersion` | **insert** [form_fields](/code/tables/form_fields.md) (`form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`, `config`) |  |
-| 1290 | `FormsService::createVersion` | **update** [form_fields](/code/tables/form_fields.md) (`config`) |  |
-| 1311 | `FormsService::createVersion` | **update** [forms](/code/tables/forms.md) (`layout`) |  |
-| 1327 | `FormsService::createVersion` | **insert** [form_audiences](/code/tables/form_audiences.md) (`form_id`, `principal_type`, `principal_id`) |  |
+| 1207 | `FormsService::createVersion` | **insert** [forms](/code/tables/forms.md) (`title`, `description`, `is_active`, `is_portal_visible`, `requires_approval`, `approver_id`, `submission_actions`, `created_by`, `modified_by`, `parent_form_id`, `version_number{$colSql}`, `created_date`) |  |
+| 1278 | `FormsService::createVersion` | read [form_fields](/code/tables/form_fields.md) |  |
+| 1287 | `FormsService::createVersion` | **insert** [form_fields](/code/tables/form_fields.md) (`form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`, `config`) |  |
+| 1296 | `FormsService::createVersion` | **update** [form_fields](/code/tables/form_fields.md) (`config`) |  |
+| 1317 | `FormsService::createVersion` | **update** [forms](/code/tables/forms.md) (`layout`) |  |
+| 1333 | `FormsService::createVersion` | **insert** [form_audiences](/code/tables/form_audiences.md) (`form_id`, `principal_type`, `principal_id`) |  |
 
 **Called from:** [api/forms/create_version.php](/code/files/api/forms/create_version.php.md), [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md)
 
 ### submitForm
 
-*public static* - line 1357
+*public static* - line 1363
 
 Validate + record a submission, then dispatch form.submitted. `$data` is a field_id => value map. Returns the submission id.
 
@@ -741,15 +747,15 @@ function submitForm(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1400 | `FormsService::submitForm` | read [form_fields](/code/tables/form_fields.md) |  |
-| 1671 | `FormsService::submitForm` | **insert** [form_submissions](/code/tables/form_submissions.md) (`$cols`) |  |
-| 1674 | `FormsService::submitForm` | **insert** [form_submission_data](/code/tables/form_submission_data.md) (`submission_id`, `field_id`, `field_value`) |  |
+| 1406 | `FormsService::submitForm` | read [form_fields](/code/tables/form_fields.md) |  |
+| 1677 | `FormsService::submitForm` | **insert** [form_submissions](/code/tables/form_submissions.md) (`$cols`) |  |
+| 1680 | `FormsService::submitForm` | **insert** [form_submission_data](/code/tables/form_submission_data.md) (`submission_id`, `field_id`, `field_value`) |  |
 
 **Called from:** [api/forms/submit_form.php](/code/files/api/forms/submit_form.php.md), [api/self-service/submit_catalogue_form.php](/code/files/api/self-service/submit_catalogue_form.php.md), [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md)
 
 ### deleteSubmission
 
-*public static* - line 1766
+*public static* - line 1772
 
 Delete a submission (+ its data). `$formId` scopes the 404 when supplied. Returns the id.
 
@@ -768,16 +774,16 @@ function deleteSubmission(PDO $conn, ActorContext $ctx, int $submissionId, ?int 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1769 | `FormsService::deleteSubmission` | read [form_submissions](/code/tables/form_submissions.md) |  |
 | 1775 | `FormsService::deleteSubmission` | read [form_submissions](/code/tables/form_submissions.md) |  |
-| 1783 | `FormsService::deleteSubmission` | **delete** [form_submission_data](/code/tables/form_submission_data.md) |  |
-| 1784 | `FormsService::deleteSubmission` | **delete** [form_submissions](/code/tables/form_submissions.md) |  |
+| 1781 | `FormsService::deleteSubmission` | read [form_submissions](/code/tables/form_submissions.md) |  |
+| 1789 | `FormsService::deleteSubmission` | **delete** [form_submission_data](/code/tables/form_submission_data.md) |  |
+| 1790 | `FormsService::deleteSubmission` | **delete** [form_submissions](/code/tables/form_submissions.md) |  |
 
 **Called from:** [api/forms/delete_submission.php](/code/files/api/forms/delete_submission.php.md), [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md)
 
 ### loadFormRow
 
-*private static* - line 1798
+*private static* - line 1804
 
 Load a form row (with child_count for the leaf check), or throw 404.
 
@@ -794,11 +800,11 @@ function loadFormRow(PDO $conn, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1801 | `FormsService::loadFormRow` | read [forms](/code/tables/forms.md) |  |
+| 1807 | `FormsService::loadFormRow` | read [forms](/code/tables/forms.md) |  |
 
 ### requireLeaf
 
-*private static* - line 1813
+*private static* - line 1819
 
 409 unless the form is the chain leaf (the current editable version).
 
@@ -812,7 +818,7 @@ function requireLeaf(array $formRow): void
 
 ### validateFields
 
-*private static* - line 1833
+*private static* - line 1839
 
 Validate an incoming fields array — 422s where the raw UI silently drops or blindly stores. Returns rows ready for the id-based sync.
 
@@ -835,7 +841,7 @@ function validateFields(array $fields): array
 
 ### parseOptionList
 
-*private static* - line 1917
+*private static* - line 1923
 
 An option list, from whatever shape it is stored in.
 
@@ -855,7 +861,9 @@ function parseOptionList($raw): array
 
 ### gridColumns
 
-*public static* - line 1933
+*public static* - line 1940
+
+A grid field's column definitions from its config, keyed by column id.
 
 ```php
 function gridColumns(array $field): array
@@ -869,7 +877,7 @@ function gridColumns(array $field): array
 
 ### gridLiveColumns
 
-*public static* - line 1948
+*public static* - line 1955
 
 The columns a NEW row may be filled in against — retired ones excluded.
 
@@ -883,7 +891,7 @@ function gridLiveColumns(array $field): array
 
 ### gridToText
 
-*public static* - line 1972
+*public static* - line 1979
 
 A grid's answer as readable text — one line per row, each cell prefixed with its column's label.
 
@@ -909,7 +917,9 @@ function gridToText(array $field, $raw): string
 
 ### gridRows
 
-*public static* - line 1988
+*public static* - line 1996
+
+A grid answer's rows, from JSON or an array, as {"rows": [...]} or a bare list.
 
 ```php
 function gridRows($raw): array
@@ -923,7 +933,9 @@ function gridRows($raw): array
 
 ### audiencesAvailable
 
-*public static* - line 2018
+*public static* - line 2027
+
+True when the form_audiences table exists. Cached per request.
 
 ```php
 function audiencesAvailable(PDO $conn): bool
@@ -937,7 +949,7 @@ function audiencesAvailable(PDO $conn): bool
 
 ### formAudiences
 
-*public static* - line 2036
+*public static* - line 2045
 
 The people groups a form is restricted to. Empty means everyone.
 
@@ -954,13 +966,13 @@ function formAudiences(PDO $conn, int $formId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2040 | `FormsService::formAudiences` | read [form_audiences](/code/tables/form_audiences.md) |  |
+| 2049 | `FormsService::formAudiences` | read [form_audiences](/code/tables/form_audiences.md) |  |
 
 **Called from:** [api/forms/audience.php](/code/files/api/forms/audience.php.md)
 
 ### setFormAudiences
 
-*public static* - line 2055
+*public static* - line 2064
 
 Replace a form's audience. An empty list means everyone.
 
@@ -983,15 +995,15 @@ function setFormAudiences(PDO $conn, int $formId, array $groupIds): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2066 | `FormsService::setFormAudiences` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 2079 | `FormsService::setFormAudiences` | **delete** [form_audiences](/code/tables/form_audiences.md) |  |
-| 2083 | `FormsService::setFormAudiences` | **insert** [form_audiences](/code/tables/form_audiences.md) (`form_id`, `principal_type`, `principal_id`) |  |
+| 2075 | `FormsService::setFormAudiences` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 2088 | `FormsService::setFormAudiences` | **delete** [form_audiences](/code/tables/form_audiences.md) |  |
+| 2092 | `FormsService::setFormAudiences` | **insert** [form_audiences](/code/tables/form_audiences.md) (`form_id`, `principal_type`, `principal_id`) |  |
 
 **Called from:** [api/forms/audience.php](/code/files/api/forms/audience.php.md)
 
 ### portalAudienceSql
 
-*public static* - line 2107
+*public static* - line 2116
 
 🔴 THE ONE PLACE THAT DECIDES. Every portal entry point asks this — the catalogue list, opening a form by id, saving a draft, fetching an image, and submitting. A restriction enforced in four places is a restriction that will be enforced in three of them by the end of the year.
 
@@ -1015,13 +1027,13 @@ function portalAudienceSql(PDO $conn, string $formAlias = 'f'): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2110 | `FormsService::portalAudienceSql` | read [form_audiences](/code/tables/form_audiences.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 2119 | `FormsService::portalAudienceSql` | read [form_audiences](/code/tables/form_audiences.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
 
 **Called from:** [api/forms/image.php](/code/files/api/forms/image.php.md), [api/self-service/draft.php](/code/files/api/self-service/draft.php.md), [api/self-service/get_catalogue.php](/code/files/api/self-service/get_catalogue.php.md), [api/self-service/get_catalogue_form.php](/code/files/api/self-service/get_catalogue_form.php.md)
 
 ### portalCanUseForm
 
-*public static* - line 2126
+*public static* - line 2135
 
 The same decision as a yes/no, for an endpoint that already has one form.
 
@@ -1039,11 +1051,11 @@ function portalCanUseForm(PDO $conn, int $formId, int $userId): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2129 | `FormsService::portalCanUseForm` | read [forms](/code/tables/forms.md) |  |
+| 2138 | `FormsService::portalCanUseForm` | read [forms](/code/tables/forms.md) |  |
 
 ### draftsAvailable
 
-*public static* - line 2144
+*public static* - line 2153
 
 Does this database have the drafts table yet?
 
@@ -1057,7 +1069,7 @@ function draftsAvailable(PDO $conn): bool
 
 ### saveDraft
 
-*public static* - line 2171
+*public static* - line 2180
 
 Save (or overwrite) somebody's draft of a form.
 
@@ -1084,14 +1096,14 @@ function saveDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId, arra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2188 | `FormsService::saveDraft` | read [form_fields](/code/tables/form_fields.md) |  |
-| 2215 | `FormsService::saveDraft` | **insert** [form_drafts](/code/tables/form_drafts.md) (`form_id`, `owner_kind`, `owner_id`, `answers`, `created_date`, `modified_date`) |  |
+| 2197 | `FormsService::saveDraft` | read [form_fields](/code/tables/form_fields.md) |  |
+| 2224 | `FormsService::saveDraft` | **insert** [form_drafts](/code/tables/form_drafts.md) (`form_id`, `owner_kind`, `owner_id`, `answers`, `created_date`, `modified_date`) |  |
 
 **Called from:** [api/forms/draft.php](/code/files/api/forms/draft.php.md), [api/self-service/draft.php](/code/files/api/self-service/draft.php.md)
 
 ### loadDraft
 
-*public static* - line 2236
+*public static* - line 2245
 
 Somebody's draft of a form, or null.
 
@@ -1117,14 +1129,14 @@ function loadDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId): ?ar
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2242 | `FormsService::loadDraft` | read [form_drafts](/code/tables/form_drafts.md) |  |
-| 2254 | `FormsService::loadDraft` | read [forms](/code/tables/forms.md) |  |
+| 2251 | `FormsService::loadDraft` | read [form_drafts](/code/tables/form_drafts.md) |  |
+| 2263 | `FormsService::loadDraft` | read [forms](/code/tables/forms.md) |  |
 
 **Called from:** [api/forms/draft.php](/code/files/api/forms/draft.php.md), [api/self-service/draft.php](/code/files/api/self-service/draft.php.md)
 
 ### deleteDraft
 
-*public static* - line 2267
+*public static* - line 2276
 
 Throw a draft away. Idempotent — deleting one that is gone is not an error.
 
@@ -1143,13 +1155,13 @@ function deleteDraft(PDO $conn, int $formId, string $ownerKind, int $ownerId): v
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2271 | `FormsService::deleteDraft` | **delete** [form_drafts](/code/tables/form_drafts.md) |  |
+| 2280 | `FormsService::deleteDraft` | **delete** [form_drafts](/code/tables/form_drafts.md) |  |
 
 **Called from:** [api/forms/draft.php](/code/files/api/forms/draft.php.md), [api/self-service/draft.php](/code/files/api/self-service/draft.php.md)
 
 ### draftsForOwner
 
-*public static* - line 2276
+*public static* - line 2285
 
 Which of these forms this person has a draft of, as form_id => modified_date.
 
@@ -1167,11 +1179,11 @@ function draftsForOwner(PDO $conn, string $ownerKind, int $ownerId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2281 | `FormsService::draftsForOwner` | read [form_drafts](/code/tables/form_drafts.md) |  |
+| 2290 | `FormsService::draftsForOwner` | read [form_drafts](/code/tables/form_drafts.md) |  |
 
 ### layoutAvailable
 
-*public static* - line 2301
+*public static* - line 2310
 
 Does this database have the layout column yet?
 
@@ -1192,7 +1204,7 @@ function layoutAvailable(PDO $conn): bool
 
 ### deriveLayout
 
-*public static* - line 2327
+*public static* - line 2336
 
 The flow layout a form has implicitly always had: its fields in sort_order, packed into rows of twelve by their widths.
 
@@ -1211,7 +1223,7 @@ function deriveLayout(array $fields): array
 
 ### fieldWidthOf
 
-*public static* - line 2352
+*public static* - line 2361
 
 A field's width in twelfths, defaulting to full. Absent is every old field.
 
@@ -1225,7 +1237,7 @@ function fieldWidthOf(array $field): int
 
 ### layoutFor
 
-*public static* - line 2371
+*public static* - line 2380
 
 The layout to render a form with: the stored one if it has one, otherwise the derived flow.
 
@@ -1248,7 +1260,7 @@ function layoutFor($stored, array $fields): array
 
 ### reconcileLayout
 
-*private static* - line 2393
+*private static* - line 2402
 
 Make a stored layout agree with the fields that actually exist.
 
@@ -1269,7 +1281,7 @@ function reconcileLayout(array $layout, array $fields): array
 
 ### normaliseCell
 
-*private static* - line 2432
+*private static* - line 2441
 
 One cell, with every value forced into range.
 
@@ -1284,7 +1296,7 @@ function normaliseCell(array $cell, ?array $field): array
 
 ### remapLayoutFields
 
-*public static* - line 2459
+*public static* - line 2468
 
 Rewrite a stored layout's field references through an id map.
 
@@ -1304,7 +1316,7 @@ function remapLayoutFields(string $json, array $idMap): string
 
 ### layoutFieldOrder
 
-*public static* - line 2476
+*public static* - line 2485
 
 Every field id a layout places, in the order it places them.
 
@@ -1318,7 +1330,9 @@ function layoutFieldOrder(array $layout): array
 
 ### validateFieldConfig
 
-*private static* - line 2487
+*private static* - line 2501
+
+Validates and cleans one field's config JSON - width, label position, the settings of notes, images, date fields and grids, and its visible_if rule - and returns it, or null when empty.
 
 ```php
 function validateFieldConfig(
@@ -1340,7 +1354,7 @@ function validateFieldConfig(
 
 ### syncFields
 
-*private static* - line 2782
+*private static* - line 2796
 
 Sync a form's fields BY ID.
 
@@ -1368,10 +1382,10 @@ function syncFields(PDO $conn, int $formId, array $fields): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2787 | `FormsService::syncFields` | read [form_fields](/code/tables/form_fields.md) |  |
-| 2793 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`field_type`, `label`, `options`, `is_required`, `sort_order`, `is_deleted`) |  |
-| 2798 | `FormsService::syncFields` | **insert** [form_fields](/code/tables/form_fields.md) (`form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`) |  |
-| 2820 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`is_deleted`) |  |
-| 2823 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`is_deleted`) |  |
-| 2827 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`config`) |  |
+| 2801 | `FormsService::syncFields` | read [form_fields](/code/tables/form_fields.md) |  |
+| 2807 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`field_type`, `label`, `options`, `is_required`, `sort_order`, `is_deleted`) |  |
+| 2812 | `FormsService::syncFields` | **insert** [form_fields](/code/tables/form_fields.md) (`form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`) |  |
+| 2834 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`is_deleted`) |  |
+| 2837 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`is_deleted`) |  |
+| 2841 | `FormsService::syncFields` | **update** [form_fields](/code/tables/form_fields.md) (`config`) |  |
 

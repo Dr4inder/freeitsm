@@ -14,10 +14,10 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):730 | `AssetFieldsService::saveOptions` | delete |  |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):733 | `AssetFieldsService::saveOptions` | delete |  |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):735 | `AssetFieldsService::saveOptions` | insert | `field_id`, `option_value`, `colour`, `display_order` |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):716 | `AssetImportService::resolveOption` | insert | `field_id`, `option_value`, `display_order` |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):737 | `AssetFieldsService::saveOptions` | delete |  |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):740 | `AssetFieldsService::saveOptions` | delete |  |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):742 | `AssetFieldsService::saveOptions` | insert | `field_id`, `option_value`, `colour`, `display_order` |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):729 | `AssetImportService::resolveOption` | insert | `field_id`, `option_value`, `display_order` |  |
 
 ## Read by
 
@@ -26,5 +26,5 @@
 | [api/assets/get_asset_custom_fields.php](/code/files/api/assets/get_asset_custom_fields.php.md) | assetFieldOptions L35 |  |
 | [api/assets/get_asset_fields.php](/code/files/api/assets/get_asset_fields.php.md) | L48 |  |
 | [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::valueSchema L69 |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::resolveOption L707 |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::resolveOption L720 |  |
 

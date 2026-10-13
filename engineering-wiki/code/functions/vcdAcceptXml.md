@@ -1,10 +1,12 @@
 # vcdAcceptXml()
 
+The Accept header for a legacy /api (XML) call at the connection's API version.
+
 ```php
 function vcdAcceptXml(string $version): array
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 72.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 80.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

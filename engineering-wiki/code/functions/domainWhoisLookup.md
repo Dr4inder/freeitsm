@@ -1,10 +1,14 @@
 # domainWhoisLookup()
 
+Looks a domain up over WHOIS, for registries without RDAP, and reads the dates, statuses, registrar, name servers and DNSSEC from the text reply.
+
+An answer saying the name is not registered comes back with not_found set.
+
 ```php
 function domainWhoisLookup(PDO $conn, string $name): array
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 355.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 369.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

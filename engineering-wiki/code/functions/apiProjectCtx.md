@@ -1,10 +1,12 @@
 # apiProjectCtx()
 
+The ActorContext an API key acts as, for the Projects services.
+
 ```php
 function apiProjectCtx(array $apiKey): ActorContext
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 119.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 128.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

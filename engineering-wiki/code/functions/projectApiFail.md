@@ -1,10 +1,12 @@
 # projectApiFail()
 
+Sends a failure JSON reply ({success: false, error}) with an optional HTTP status, and ends the request.
+
 ```php
 function projectApiFail(string $message, int $status = 200): void
 ```
 
-Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 48.
+Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 50.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

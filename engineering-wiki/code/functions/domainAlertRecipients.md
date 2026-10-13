@@ -6,7 +6,7 @@ email => display name, for one due item.
 function domainAlertRecipients(array $a, array $s): array
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 201.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 206.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

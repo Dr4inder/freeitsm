@@ -19,7 +19,12 @@ require_once '../../includes/lms/competency_tests.php';
 header('Content-Type: application/json');
 header('Cache-Control: no-store');
 
+/** Echoes {success: true} merged with $a as JSON, then stops. */
 function ctpOut(array $a): void { echo json_encode(['success' => true] + $a); exit; }
+/**
+ * Sends an HTTP status and {success: false, error: $code} - a short code such as
+ * 'finished' that the candidate page acts on - then stops.
+ */
 function ctpFail(string $code, int $http = 400): void { http_response_code($http); echo json_encode(['success' => false, 'error' => $code]); exit; }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') ctpFail('method', 405);

@@ -125,6 +125,7 @@ function brandingScopes(): array
     ];
 }
 
+/** Returns the scope when it is one of the branded screens (login, portal, home), otherwise 'login'. */
 function brandingScopeValid(string $scope): string
 {
     return isset(brandingScopes()[$scope]) ? $scope : 'login';

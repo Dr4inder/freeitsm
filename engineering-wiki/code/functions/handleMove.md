@@ -12,7 +12,7 @@ than tolerated later.
 function handleMove(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 208.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,7 +26,7 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 230 | `handleMove` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `modified_datetime`) |  |
+| 237 | `handleMove` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `modified_datetime`) |  |
 
 ## Calls
 

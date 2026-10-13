@@ -1,10 +1,12 @@
 # vcdLoadConnection()
 
+One vCloud Director connection row with its password decrypted into 'password'. Throws when the id does not exist.
+
 ```php
 function vcdLoadConnection(PDO $conn, int $connectionId): array
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 33.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 39.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -13,11 +15,13 @@ Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), 
 
 **Returns:** `array`
 
+**Reads:** vcloud_connections - host, org, credentials and API version for the calls
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 35 | `vcdLoadConnection` | read [vcloud_connections](/code/tables/vcloud_connections.md) |  |
+| 41 | `vcdLoadConnection` | read [vcloud_connections](/code/tables/vcloud_connections.md) |  |
 
 ## Calls
 

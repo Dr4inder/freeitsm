@@ -6,7 +6,7 @@ Record the mentions for a message. Idempotent via the UNIQUE on (message, analys
 function warRoomStoreMentions(PDO $conn, int $messageId, array $analystIds): void
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 774.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 775.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 774
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 778 | `warRoomStoreMentions` | **insert** [warroom_mentions](/code/tables/warroom_mentions.md) (`message_id`, `analyst_id`, `created_datetime`) |  |
+| 779 | `warRoomStoreMentions` | **insert** [warroom_mentions](/code/tables/warroom_mentions.md) (`message_id`, `analyst_id`, `created_datetime`) |  |
 
 ## Called from
 

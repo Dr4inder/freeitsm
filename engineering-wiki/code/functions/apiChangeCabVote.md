@@ -6,7 +6,7 @@ POST /changes/{id}/cab/vote — the key's acts-as analyst votes; mirrors submit_
 function apiChangeCabVote(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 468.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 479.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

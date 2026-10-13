@@ -1,10 +1,12 @@
 # projectBudgetReady()
 
+True when the budget tables and the projects.currency column exist (after Database Verification). Cached per request.
+
 ```php
 function projectBudgetReady(PDO $conn): bool
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 53.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 57.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,9 +18,9 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 57 | `projectBudgetReady` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
-| 57 | `projectBudgetReady` | read [project_labour_rates](/code/tables/project_labour_rates.md) |  |
-| 57 | `projectBudgetReady` | read [projects](/code/tables/projects.md) |  |
+| 61 | `projectBudgetReady` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 61 | `projectBudgetReady` | read [project_labour_rates](/code/tables/project_labour_rates.md) |  |
+| 61 | `projectBudgetReady` | read [projects](/code/tables/projects.md) |  |
 
 ## Called from
 

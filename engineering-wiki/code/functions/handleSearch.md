@@ -12,7 +12,7 @@ NAME of who you want, not which of four tables they live in.
 function handleSearch(PDO $conn, array $src): void
 ```
 
-Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 323.
+Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), line 333.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,10 +25,10 @@ Defined in [api/knowledge/permissions.php](/code/files/api/knowledge/permissions
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 340 | `handleSearch` | read [analysts](/code/tables/analysts.md) |  |
-| 341 | `handleSearch` | read [teams](/code/tables/teams.md) |  |
-| 342 | `handleSearch` | read [users](/code/tables/users.md) |  |
-| 343 | `handleSearch` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 350 | `handleSearch` | read [analysts](/code/tables/analysts.md) |  |
+| 351 | `handleSearch` | read [teams](/code/tables/teams.md) |  |
+| 352 | `handleSearch` | read [users](/code/tables/users.md) |  |
+| 353 | `handleSearch` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
 
 ## Called from
 

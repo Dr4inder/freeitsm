@@ -6,7 +6,7 @@ A schedule and its lease, both visible to the analyst. `@return` array{0:array,1
 function leaseLoadSchedule(PDO $conn, int $analystId, int $scheduleId): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 88.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 88.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 90 | `leaseLoadSchedule` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
+| 91 | `leaseLoadSchedule` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
 
 ## Calls
 

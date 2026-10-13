@@ -12,7 +12,7 @@ function domainSpfLookupCount(
 ): int
 ```
 
-Defined in [includes/domains/checks.php](/code/files/includes/domains/checks.php.md), line 310.
+Defined in [includes/domains/checks.php](/code/files/includes/domains/checks.php.md), line 316.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

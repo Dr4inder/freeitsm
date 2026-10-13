@@ -40,25 +40,25 @@
 | [api/tasks/toggle_subtask.php](/code/files/api/tasks/toggle_subtask.php.md) | L41, L69, L72 |  |
 | [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md) | enrolReconcileTasks L94 |  |
 | [api/tickets/get_ticket_tasks.php](/code/files/api/tickets/get_ticket_tasks.php.md) | L44 |  |
-| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L115 |  |
+| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L119 |  |
 | [api/tickets/search_linkable_tasks.php](/code/files/api/tickets/search_linkable_tasks.php.md) | L50 |  |
-| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectStages L288, apiProjectTasks L567 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L41, apiSerializeTask L73, apiTasksList L266, apiTasksGet L308, apiTaskStatusesList L445 |  |
+| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectStages L301, apiProjectTasks L621 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiSerializeTask L78, apiTasksList L275, apiTasksGet L317, apiTaskStatusesList L455 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTask L184 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleContractorTasks L729 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleContractorTasks L732 |  |
 | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L153, projectAiFacts L248 |  |
-| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistTasks L231 |  |
+| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistTasks L236 |  |
 | [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMaturity L116, projectChatRead L232 |  |
-| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectLabourToCome L257, projectEarnedValue L346 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L121 |  |
+| [includes/projects/budget.php](/code/files/includes/projects/budget.php.md) | projectLabourToCome L261, projectEarnedValue L350 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L124 |  |
 | [includes/projects/flow.php](/code/files/includes/projects/flow.php.md) | projectFlow L57 |  |
 | [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md) | projectAlertsOverdueDigest L39 |  |
 | [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectTaskStats L35, projectDetail L356, projectDetail L369 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewTask L173 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::raid L745 |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::defaultOpenStatusId L758 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::loadTaskRow L883 |  |
-| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractorReminders L190 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::raid L779 |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::defaultOpenStatusId L762 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::loadTaskRow L898 |  |
+| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md) | tasksContractorReminders L192 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L783, getWatchtowerData L793, getWatchtowerData L810 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_create_task L2372, WorkflowEngine::action_create_task L2373 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_create_task L2444, WorkflowEngine::action_create_task L2445 |  |
 

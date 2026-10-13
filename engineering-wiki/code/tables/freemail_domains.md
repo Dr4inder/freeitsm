@@ -21,7 +21,7 @@ Admin-added public/free-email domains (gmail.com etc. are built into the code; t
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L252 |  |
+| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L270 |  |
 | [api/system/get_freemail_domains.php](/code/files/api/system/get_freemail_domains.php.md) | L25 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getCustomFreemailDomains L1228 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getCustomFreemailDomains L1234 |  |
 

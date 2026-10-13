@@ -79,6 +79,10 @@ function tikaTimeoutOverride(?int $seconds = null): ?int {
     return $override;
 }
 
+/**
+ * How many seconds to wait for Tika, from the override or the system setting, kept within
+ * the allowed range.
+ */
 function tikaTimeout(PDO $conn): int {
     $forced = tikaTimeoutOverride();
     if ($forced !== null) return max(TIKA_TIMEOUT_MIN, min(TIKA_TIMEOUT_MAX, $forced));

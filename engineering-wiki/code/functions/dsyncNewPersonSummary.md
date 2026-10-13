@@ -11,7 +11,7 @@ is itself worth seeing before an import.
 function dsyncNewPersonSummary(array $p): string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 678.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 685.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

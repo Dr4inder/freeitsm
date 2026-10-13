@@ -3,18 +3,29 @@
  * delete, test, sync now, and the VMs a sync found. Talks to api/assets/proxmox_*.php.
  * Passwords are never read back: the form shows a placeholder and a blank field
  * keeps the stored password.
+ *
+ * @wiki Proxmox-and-Cloud-Director-Developer-Guide
  */
 (function () {
     'use strict';
     const API = '../../api/assets/';
+    /**
+     * Translates a key under asset-management.proxmox.*, or returns the key when the i18n helper is
+     * not loaded.
+     */
     const T = (k, p) => window.t ? window.t('asset-management.proxmox.' + k, p) : k;
     let servers = [];
 
+    /** Fetches an api/assets/ endpoint with the session cookie and returns the parsed JSON reply. */
     async function call(path, opts) {
         const res = await fetch(API + path, Object.assign({ credentials: 'same-origin' }, opts || {}));
         return res.json();
     }
 
+    /**
+     * Returns a coloured badge for a sync status (ok, warning, error), or "never" when there has been
+     * no sync.
+     */
     function statusBadge(s) {
         const map = { ok: ['var(--success-bg)', 'var(--success-text)'], warning: ['var(--warning-bg)', 'var(--warning-text)'], error: ['var(--danger-bg)', 'var(--danger-text)'] };
         const c = map[s] || ['var(--surface-2)', 'var(--text-muted)'];
@@ -22,6 +33,10 @@
         return `<span class="status-badge" style="background:${c[0]};color:${c[1]};">${escapeHtml(label)}</span>`;
     }
 
+    /**
+     * Loads the Proxmox servers from proxmox_connections.php and renders the settings table, with
+     * Test, Sync, VMs, Edit and Delete buttons per row.
+     */
     window.proxmoxLoad = async function () {
         const body = document.getElementById('proxmoxList');
         if (!body) return;
@@ -52,6 +67,10 @@
         }
     };
 
+    /**
+     * Opens the add / edit server dialog, filled from the cached server when id is given; the password
+     * field always starts blank.
+     */
     window.proxmoxOpenForm = function (id) {
         const s = id ? servers.find(x => x.id === id) : null;
         document.getElementById('proxmoxModalTitle').textContent = s ? T('edit_title') : T('add');
@@ -66,10 +85,15 @@
         document.getElementById('proxmoxActive').checked = s ? s.is_active : true;
         document.getElementById('proxmoxModal').classList.add('active');
     };
+    /** Closes the add / edit server dialog. */
     window.proxmoxCloseForm = function () {
         document.getElementById('proxmoxModal').classList.remove('active');
     };
 
+    /**
+     * Saves the server dialog to proxmox_connections.php (action save), then closes it and reloads the
+     * list; a blank password keeps the stored one.
+     */
     window.proxmoxSave = async function (e) {
         e.preventDefault();
         const payload = {
@@ -93,6 +117,7 @@
         }
     };
 
+    /** Asks for confirmation, then deletes a server through proxmox_connections.php and reloads the list. */
     window.proxmoxDelete = async function (id) {
         const s = servers.find(x => x.id === id);
         if (!confirm(T('confirm_delete', { name: s ? s.name : '' }))) return;
@@ -101,6 +126,10 @@
         else window.showToast(data.error || T('save_failed'), 'error');
     };
 
+    /**
+     * Runs a test or sync for one server through proxmox_sync.php, disabling the button meanwhile,
+     * toasting the result and reloading the list.
+     */
     async function run(id, btn, action) {
         const original = btn ? btn.innerHTML : '';
         if (btn) { btn.disabled = true; btn.innerHTML = `<span>${escapeHtml(T('working'))}</span>`; }
@@ -120,9 +149,12 @@
             proxmoxLoad();
         }
     }
+    /** Tests the connection to one server. */
     window.proxmoxTest = (id, btn) => run(id, btn, 'test');
+    /** Syncs one server's VMs now. */
     window.proxmoxSync = (id, btn) => run(id, btn, 'sync');
 
+    /** Shows the panel of VMs the last sync found for one server, from proxmox_vms.php. */
     window.proxmoxShowVms = async function (id) {
         const s = servers.find(x => x.id === id);
         const panel = document.getElementById('proxmoxVmsPanel');

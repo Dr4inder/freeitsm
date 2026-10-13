@@ -6,7 +6,7 @@ Load whitelist entries for a mailbox
 function loadWhitelist($conn, $mailboxId)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1449.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1453.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +17,7 @@ Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1450 | `loadWhitelist` | read [mailbox_email_whitelist](/code/tables/mailbox_email_whitelist.md) |  |
+| 1454 | `loadWhitelist` | read [mailbox_email_whitelist](/code/tables/mailbox_email_whitelist.md) |  |
 
 ## Called from
 

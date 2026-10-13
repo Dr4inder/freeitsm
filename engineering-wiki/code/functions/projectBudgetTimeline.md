@@ -14,7 +14,7 @@ function projectBudgetTimeline(
 ): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 295.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 299.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ A LOCAL Y-m-d (already in the viewer's zone) in their date format.
 function rpFmtDate(string $ymd): string
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 253.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 271.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

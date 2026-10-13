@@ -8,22 +8,22 @@
 |---|---|
 | [saveService()](#saveservice) | Create (no id) or update (id present) a service. Returns the id. |
 | [deleteService()](#deleteservice) | Delete a service + its incident links, atomically. |
-| [loadServiceRow()](#loadservicerow) |  |
+| [loadServiceRow()](#loadservicerow) | Loads one service; throws not found when it does not exist. |
 | [saveIncident()](#saveincident) | Create (no id) or update (id present) an incident. Returns the id. |
-| [updateIncident()](#updateincident) |  |
+| [updateIncident()](#updateincident) | Changes an incident's title, status, comment and affected services, logging an update when the status, comment or services changed, and fires service_status.incident_updated (and incident_resolved). |
 | [deleteIncident()](#deleteincident) | Delete an incident + its service links, atomically. |
-| [loadIncidentRow()](#loadincidentrow) |  |
+| [loadIncidentRow()](#loadincidentrow) | Loads one incident with whether its status counts as resolved; throws not found when it does not exist. |
 | [resolveIncidentStatus()](#resolveincidentstatus) | Resolve an incident status by id or name — strict on unknown/inactive. |
 | [validateIncidentServices()](#validateincidentservices) | Validate [{service_id, impact_level\|impact_level_id}] → [[service_id, impact_id]]. Strict: 422 on unknown service or impact (the old UI silently skipped these). |
 | [incidentServicesDiffer()](#incidentservicesdiffer) | Do the services (and their impacts) about to be written differ from what is stored? Used to decide whether a save has anything new to say. |
 | [editIncidentUpdate()](#editincidentupdate) | Correct an update that has already been posted (Ed, on top of #99). |
 | [deleteIncidentUpdate()](#deleteincidentupdate) | Remove one update from the timeline. |
-| [replaceIncidentServices()](#replaceincidentservices) |  |
+| [replaceIncidentServices()](#replaceincidentservices) | Replaces the services an incident affects, each with its impact level. |
 | [recordIncidentUpdate()](#recordincidentupdate) | Record a moment in an incident's life (discussion #59, phase 2). |
-| [saveIncidentStatus()](#saveincidentstatus) |  |
-| [deleteIncidentStatus()](#deleteincidentstatus) |  |
-| [saveImpactLevel()](#saveimpactlevel) |  |
-| [deleteImpactLevel()](#deleteimpactlevel) |  |
+| [saveIncidentStatus()](#saveincidentstatus) | Adds or updates an incident status; making one the default clears the flag on the others. |
+| [deleteIncidentStatus()](#deleteincidentstatus) | Deletes an incident status; refuses the default status and any status still used by an incident. |
+| [saveImpactLevel()](#saveimpactlevel) | Adds or updates an impact level, including whether it counts as downtime; making one the default clears the flag on the others. |
+| [deleteImpactLevel()](#deleteimpactlevel) | Deletes an impact level; refuses the default level and any level still used on an incident. |
 
 ### saveService
 
@@ -77,7 +77,9 @@ function deleteService(PDO $conn, ActorContext $ctx, int $id): void
 
 ### loadServiceRow
 
-*private static* - line 85
+*private static* - line 86
+
+Loads one service; throws not found when it does not exist.
 
 ```php
 function loadServiceRow(PDO $conn, int $id): array
@@ -92,11 +94,11 @@ function loadServiceRow(PDO $conn, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 87 | `ServiceStatusService::loadServiceRow` | read [status_services](/code/tables/status_services.md) |  |
+| 88 | `ServiceStatusService::loadServiceRow` | read [status_services](/code/tables/status_services.md) |  |
 
 ### saveIncident
 
-*public static* - line 99
+*public static* - line 100
 
 Create (no id) or update (id present) an incident. Returns the id.
 
@@ -114,13 +116,17 @@ function saveIncident(PDO $conn, ActorContext $ctx, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 122 | `ServiceStatusService::saveIncident` | **insert** [status_incidents](/code/tables/status_incidents.md) (`title`, `status_id`, `comment`, `created_by_id`, `created_datetime`, `updated_datetime`, `resolved_datetime`) |  |
+| 123 | `ServiceStatusService::saveIncident` | **insert** [status_incidents](/code/tables/status_incidents.md) (`title`, `status_id`, `comment`, `created_by_id`, `created_datetime`, `updated_datetime`, `resolved_datetime`) |  |
 
 **Called from:** [api/service-status/save_incident.php](/code/files/api/service-status/save_incident.php.md), [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md)
 
 ### updateIncident
 
-*private static* - line 142
+*private static* - line 150
+
+Changes an incident's title, status, comment and affected services, logging an update when the status, comment or services changed, and fires service_status.incident_updated (and incident_resolved).
+
+An update is internal unless is_internal is sent as false.
 
 ```php
 function updateIncident(PDO $conn, ActorContext $ctx, int $id, array $in): int
@@ -137,12 +143,12 @@ function updateIncident(PDO $conn, ActorContext $ctx, int $id, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 178 | `ServiceStatusService::updateIncident` | **update** [status_incidents](/code/tables/status_incidents.md) (`title`, `status_id`, `comment`, `resolved_datetime`, `updated_datetime`) |  |
-| 184 | `ServiceStatusService::updateIncident` | **update** [status_incidents](/code/tables/status_incidents.md) (`title`, `status_id`, `comment`, `resolved_datetime`, `updated_datetime`) |  |
+| 186 | `ServiceStatusService::updateIncident` | **update** [status_incidents](/code/tables/status_incidents.md) (`title`, `status_id`, `comment`, `resolved_datetime`, `updated_datetime`) |  |
+| 192 | `ServiceStatusService::updateIncident` | **update** [status_incidents](/code/tables/status_incidents.md) (`title`, `status_id`, `comment`, `resolved_datetime`, `updated_datetime`) |  |
 
 ### deleteIncident
 
-*public static* - line 233
+*public static* - line 241
 
 Delete an incident + its service links, atomically.
 
@@ -160,14 +166,16 @@ function deleteIncident(PDO $conn, ActorContext $ctx, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 238 | `ServiceStatusService::deleteIncident` | **delete** [status_incident_services](/code/tables/status_incident_services.md) |  |
-| 239 | `ServiceStatusService::deleteIncident` | **delete** [status_incidents](/code/tables/status_incidents.md) |  |
+| 246 | `ServiceStatusService::deleteIncident` | **delete** [status_incident_services](/code/tables/status_incident_services.md) |  |
+| 247 | `ServiceStatusService::deleteIncident` | **delete** [status_incidents](/code/tables/status_incidents.md) |  |
 
 **Called from:** [api/service-status/delete_incident.php](/code/files/api/service-status/delete_incident.php.md), [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md)
 
 ### loadIncidentRow
 
-*private static* - line 248
+*private static* - line 260
+
+Loads one incident with whether its status counts as resolved; throws not found when it does not exist.
 
 ```php
 function loadIncidentRow(PDO $conn, int $id): array
@@ -182,11 +190,11 @@ function loadIncidentRow(PDO $conn, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 251 | `ServiceStatusService::loadIncidentRow` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 263 | `ServiceStatusService::loadIncidentRow` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
 
 ### resolveIncidentStatus
 
-*private static* - line 263
+*private static* - line 275
 
 Resolve an incident status by id or name — strict on unknown/inactive.
 
@@ -203,12 +211,12 @@ function resolveIncidentStatus(PDO $conn, array $in): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 266 | `ServiceStatusService::resolveIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 269 | `ServiceStatusService::resolveIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 278 | `ServiceStatusService::resolveIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 281 | `ServiceStatusService::resolveIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
 
 ### validateIncidentServices
 
-*public static* - line 285
+*public static* - line 297
 
 Validate [{service_id, impact_level|impact_level_id}] → [[service_id, impact_id]]. Strict: 422 on unknown service or impact (the old UI silently skipped these).
 
@@ -225,15 +233,15 @@ function validateIncidentServices(PDO $conn, array $services): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 293 | `ServiceStatusService::validateIncidentServices` | read [status_services](/code/tables/status_services.md) |  |
-| 299 | `ServiceStatusService::validateIncidentServices` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 308 | `ServiceStatusService::validateIncidentServices` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 305 | `ServiceStatusService::validateIncidentServices` | read [status_services](/code/tables/status_services.md) |  |
+| 311 | `ServiceStatusService::validateIncidentServices` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 320 | `ServiceStatusService::validateIncidentServices` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 **Called from:** [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md)
 
 ### incidentServicesDiffer
 
-*private static* - line 329
+*private static* - line 341
 
 Do the services (and their impacts) about to be written differ from what is stored? Used to decide whether a save has anything new to say.
 
@@ -256,11 +264,11 @@ function incidentServicesDiffer(PDO $conn, int $incidentId, array $links): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 331 | `ServiceStatusService::incidentServicesDiffer` | read [status_incident_services](/code/tables/status_incident_services.md) |  |
+| 343 | `ServiceStatusService::incidentServicesDiffer` | read [status_incident_services](/code/tables/status_incident_services.md) |  |
 
 ### editIncidentUpdate
 
-*public static* - line 361
+*public static* - line 373
 
 Correct an update that has already been posted (Ed, on top of #99).
 
@@ -288,16 +296,16 @@ function editIncidentUpdate(PDO $conn, ActorContext $ctx, int $updateId, array $
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 363 | `ServiceStatusService::editIncidentUpdate` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 377 | `ServiceStatusService::editIncidentUpdate` | **update** [status_incident_updates](/code/tables/status_incident_updates.md) (`comment`, `is_internal`) |  |
-| 383 | `ServiceStatusService::editIncidentUpdate` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 386 | `ServiceStatusService::editIncidentUpdate` | **update** [status_incidents](/code/tables/status_incidents.md) (`comment`) |  |
+| 375 | `ServiceStatusService::editIncidentUpdate` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 389 | `ServiceStatusService::editIncidentUpdate` | **update** [status_incident_updates](/code/tables/status_incident_updates.md) (`comment`, `is_internal`) |  |
+| 395 | `ServiceStatusService::editIncidentUpdate` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 398 | `ServiceStatusService::editIncidentUpdate` | **update** [status_incidents](/code/tables/status_incidents.md) (`comment`) |  |
 
 **Called from:** [api/service-status/save_incident_update.php](/code/files/api/service-status/save_incident_update.php.md)
 
 ### deleteIncidentUpdate
 
-*public static* - line 399
+*public static* - line 411
 
 Remove one update from the timeline.
 
@@ -318,16 +326,18 @@ function deleteIncidentUpdate(PDO $conn, ActorContext $ctx, int $updateId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 401 | `ServiceStatusService::deleteIncidentUpdate` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 409 | `ServiceStatusService::deleteIncidentUpdate` | **delete** [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 412 | `ServiceStatusService::deleteIncidentUpdate` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
-| 417 | `ServiceStatusService::deleteIncidentUpdate` | **update** [status_incidents](/code/tables/status_incidents.md) (`comment`) |  |
+| 413 | `ServiceStatusService::deleteIncidentUpdate` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 421 | `ServiceStatusService::deleteIncidentUpdate` | **delete** [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 424 | `ServiceStatusService::deleteIncidentUpdate` | read [status_incident_updates](/code/tables/status_incident_updates.md) |  |
+| 429 | `ServiceStatusService::deleteIncidentUpdate` | **update** [status_incidents](/code/tables/status_incidents.md) (`comment`) |  |
 
 **Called from:** [api/service-status/delete_incident_update.php](/code/files/api/service-status/delete_incident_update.php.md)
 
 ### replaceIncidentServices
 
-*private static* - line 421
+*private static* - line 434
+
+Replaces the services an incident affects, each with its impact level.
 
 ```php
 function replaceIncidentServices(PDO $conn, int $incidentId, array $links): void
@@ -343,12 +353,12 @@ function replaceIncidentServices(PDO $conn, int $incidentId, array $links): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 423 | `ServiceStatusService::replaceIncidentServices` | **delete** [status_incident_services](/code/tables/status_incident_services.md) |  |
-| 425 | `ServiceStatusService::replaceIncidentServices` | **insert** [status_incident_services](/code/tables/status_incident_services.md) (`incident_id`, `service_id`, `impact_level_id`) |  |
+| 436 | `ServiceStatusService::replaceIncidentServices` | **delete** [status_incident_services](/code/tables/status_incident_services.md) |  |
+| 438 | `ServiceStatusService::replaceIncidentServices` | **insert** [status_incident_services](/code/tables/status_incident_services.md) (`incident_id`, `service_id`, `impact_level_id`) |  |
 
 ### recordIncidentUpdate
 
-*private static* - line 457
+*private static* - line 470
 
 Record a moment in an incident's life (discussion #59, phase 2).
 
@@ -398,13 +408,15 @@ function recordIncidentUpdate(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 461 | `ServiceStatusService::recordIncidentUpdate` | read [status_incident_services](/code/tables/status_incident_services.md) |  |
-| 470 | `ServiceStatusService::recordIncidentUpdate` | **insert** [status_incident_updates](/code/tables/status_incident_updates.md) (`incident_id`, `status_id`, `comment`, `is_internal`, `created_by_id`, `created_datetime`) |  |
-| 476 | `ServiceStatusService::recordIncidentUpdate` | **insert** [status_incident_update_services](/code/tables/status_incident_update_services.md) (`update_id`, `service_id`, `impact_level_id`) |  |
+| 474 | `ServiceStatusService::recordIncidentUpdate` | read [status_incident_services](/code/tables/status_incident_services.md) |  |
+| 483 | `ServiceStatusService::recordIncidentUpdate` | **insert** [status_incident_updates](/code/tables/status_incident_updates.md) (`incident_id`, `status_id`, `comment`, `is_internal`, `created_by_id`, `created_datetime`) |  |
+| 489 | `ServiceStatusService::recordIncidentUpdate` | **insert** [status_incident_update_services](/code/tables/status_incident_update_services.md) (`update_id`, `service_id`, `impact_level_id`) |  |
 
 ### saveIncidentStatus
 
-*public static* - line 491
+*public static* - line 505
+
+Adds or updates an incident status; making one the default clears the flag on the others.
 
 ```php
 function saveIncidentStatus(PDO $conn, ActorContext $ctx, array $in): int
@@ -420,17 +432,19 @@ function saveIncidentStatus(PDO $conn, ActorContext $ctx, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 509 | `ServiceStatusService::saveIncidentStatus` | **update** [service_incident_statuses](/code/tables/service_incident_statuses.md) (`is_default`) |  |
-| 515 | `ServiceStatusService::saveIncidentStatus` | **update** [service_incident_statuses](/code/tables/service_incident_statuses.md) (`name`, `colour`, `is_resolved`, `is_default`, `display_order`, `is_active`) |  |
-| 519 | `ServiceStatusService::saveIncidentStatus` | **insert** [service_incident_statuses](/code/tables/service_incident_statuses.md) (`name`, `colour`, `is_resolved`, `is_default`, `display_order`, `is_active`) |  |
-| 523 | `ServiceStatusService::saveIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 525 | `ServiceStatusService::saveIncidentStatus` | **update** [service_incident_statuses](/code/tables/service_incident_statuses.md) (`is_default`) |  |
+| 523 | `ServiceStatusService::saveIncidentStatus` | **update** [service_incident_statuses](/code/tables/service_incident_statuses.md) (`is_default`) |  |
+| 529 | `ServiceStatusService::saveIncidentStatus` | **update** [service_incident_statuses](/code/tables/service_incident_statuses.md) (`name`, `colour`, `is_resolved`, `is_default`, `display_order`, `is_active`) |  |
+| 533 | `ServiceStatusService::saveIncidentStatus` | **insert** [service_incident_statuses](/code/tables/service_incident_statuses.md) (`name`, `colour`, `is_resolved`, `is_default`, `display_order`, `is_active`) |  |
+| 537 | `ServiceStatusService::saveIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 539 | `ServiceStatusService::saveIncidentStatus` | **update** [service_incident_statuses](/code/tables/service_incident_statuses.md) (`is_default`) |  |
 
 **Called from:** [api/service-status/save_incident_status.php](/code/files/api/service-status/save_incident_status.php.md)
 
 ### deleteIncidentStatus
 
-*public static* - line 536
+*public static* - line 551
+
+Deletes an incident status; refuses the default status and any status still used by an incident.
 
 ```php
 function deleteIncidentStatus(PDO $conn, ActorContext $ctx, int $id): void
@@ -446,16 +460,18 @@ function deleteIncidentStatus(PDO $conn, ActorContext $ctx, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 540 | `ServiceStatusService::deleteIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 544 | `ServiceStatusService::deleteIncidentStatus` | read [status_incidents](/code/tables/status_incidents.md) |  |
-| 550 | `ServiceStatusService::deleteIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 551 | `ServiceStatusService::deleteIncidentStatus` | **delete** [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 555 | `ServiceStatusService::deleteIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 559 | `ServiceStatusService::deleteIncidentStatus` | read [status_incidents](/code/tables/status_incidents.md) |  |
+| 565 | `ServiceStatusService::deleteIncidentStatus` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 566 | `ServiceStatusService::deleteIncidentStatus` | **delete** [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
 
 **Called from:** [api/service-status/delete_incident_status.php](/code/files/api/service-status/delete_incident_status.php.md)
 
 ### saveImpactLevel
 
-*public static* - line 559
+*public static* - line 578
+
+Adds or updates an impact level, including whether it counts as downtime; making one the default clears the flag on the others.
 
 ```php
 function saveImpactLevel(PDO $conn, ActorContext $ctx, array $in): int
@@ -471,17 +487,19 @@ function saveImpactLevel(PDO $conn, ActorContext $ctx, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 584 | `ServiceStatusService::saveImpactLevel` | **update** [service_impact_levels](/code/tables/service_impact_levels.md) (`is_default`) |  |
-| 590 | `ServiceStatusService::saveImpactLevel` | **update** [service_impact_levels](/code/tables/service_impact_levels.md) (`name`, `colour`, `is_default`, `severity_order`, `display_order`, `is_active`, `counts_as_downtime`) |  |
-| 594 | `ServiceStatusService::saveImpactLevel` | **insert** [service_impact_levels](/code/tables/service_impact_levels.md) (`name`, `colour`, `is_default`, `severity_order`, `display_order`, `is_active`, `counts_as_downtime`) |  |
-| 598 | `ServiceStatusService::saveImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 600 | `ServiceStatusService::saveImpactLevel` | **update** [service_impact_levels](/code/tables/service_impact_levels.md) (`is_default`) |  |
+| 603 | `ServiceStatusService::saveImpactLevel` | **update** [service_impact_levels](/code/tables/service_impact_levels.md) (`is_default`) |  |
+| 609 | `ServiceStatusService::saveImpactLevel` | **update** [service_impact_levels](/code/tables/service_impact_levels.md) (`name`, `colour`, `is_default`, `severity_order`, `display_order`, `is_active`, `counts_as_downtime`) |  |
+| 613 | `ServiceStatusService::saveImpactLevel` | **insert** [service_impact_levels](/code/tables/service_impact_levels.md) (`name`, `colour`, `is_default`, `severity_order`, `display_order`, `is_active`, `counts_as_downtime`) |  |
+| 617 | `ServiceStatusService::saveImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 619 | `ServiceStatusService::saveImpactLevel` | **update** [service_impact_levels](/code/tables/service_impact_levels.md) (`is_default`) |  |
 
 **Called from:** [api/service-status/save_impact_level.php](/code/files/api/service-status/save_impact_level.php.md)
 
 ### deleteImpactLevel
 
-*public static* - line 611
+*public static* - line 631
+
+Deletes an impact level; refuses the default level and any level still used on an incident.
 
 ```php
 function deleteImpactLevel(PDO $conn, ActorContext $ctx, int $id): void
@@ -497,10 +515,10 @@ function deleteImpactLevel(PDO $conn, ActorContext $ctx, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 615 | `ServiceStatusService::deleteImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 619 | `ServiceStatusService::deleteImpactLevel` | read [status_incident_services](/code/tables/status_incident_services.md) |  |
-| 625 | `ServiceStatusService::deleteImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 626 | `ServiceStatusService::deleteImpactLevel` | **delete** [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 635 | `ServiceStatusService::deleteImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 639 | `ServiceStatusService::deleteImpactLevel` | read [status_incident_services](/code/tables/status_incident_services.md) |  |
+| 645 | `ServiceStatusService::deleteImpactLevel` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 646 | `ServiceStatusService::deleteImpactLevel` | **delete** [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 **Called from:** [api/service-status/delete_impact_level.php](/code/files/api/service-status/delete_impact_level.php.md)
 

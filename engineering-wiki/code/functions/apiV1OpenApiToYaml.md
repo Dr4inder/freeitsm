@@ -1,10 +1,12 @@
 # apiV1OpenApiToYaml()
 
+Renders the OpenAPI document as YAML, with a generated-file header line.
+
 ```php
 function apiV1OpenApiToYaml(array $data): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 379.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 380.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

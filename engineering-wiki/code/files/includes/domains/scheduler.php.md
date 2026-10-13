@@ -1,6 +1,6 @@
 # includes/domains/scheduler.php
 
-> PHP - 151 lines
+> PHP - 161 lines
 
 Domains — the scheduled run: keep every domain's facts fresh, then alert.
 
@@ -23,20 +23,20 @@ read what lookups wrote), alerts last (they read both).
 
 | Function | Line | What it does |
 |---|--:|---|
-| [domainScheduledRun()](/code/functions/domainScheduledRun.md) | 27 |  |
-| [domainWatchDue()](/code/functions/domainWatchDue.md) | 113 | The weekly watches keep their "last scanned" in the domain's audit trail rather than two more columns: one row per scan, source 'check'. A domain with no such row in `$days` days is due. |
-| [domainWatchMark()](/code/functions/domainWatchMark.md) | 126 |  |
-| [domainOpportunisticRun()](/code/functions/domainOpportunisticRun.md) | 138 | The page-load run. Throttled to once an hour, short, and silent: it runs inside a request somebody may be waiting on. |
+| [domainScheduledRun()](/code/functions/domainScheduledRun.md) | 33 | The Domains scheduled job, within a time budget - registry lookups that are due, daily health checks, the weekly certificate and look-alike watches, then alerts, the expiry calendar and Service Status. |
+| [domainWatchDue()](/code/functions/domainWatchDue.md) | 119 | The weekly watches keep their "last scanned" in the domain's audit trail rather than two more columns: one row per scan, source 'check'. A domain with no such row in `$days` days is due. |
+| [domainWatchMark()](/code/functions/domainWatchMark.md) | 136 | Records that a weekly watch ran for a domain today, keeping only the latest marker row. |
+| [domainOpportunisticRun()](/code/functions/domainOpportunisticRun.md) | 148 | The page-load run. Throttled to once an hour, short, and silent: it runs inside a request somebody may be waiting on. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 40 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
-| 61 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
-| 116 | `domainWatchDue` | read [domains](/code/tables/domains.md), read [domain_audit](/code/tables/domain_audit.md) |  |
-| 130 | `domainWatchMark` | **delete** [domain_audit](/code/tables/domain_audit.md) |  |
-| 142 | `domainOpportunisticRun` | read [system_settings](/code/tables/system_settings.md) |  |
+| 46 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
+| 67 | `domainScheduledRun` | read [domains](/code/tables/domains.md) |  |
+| 122 | `domainWatchDue` | read [domains](/code/tables/domains.md), read [domain_audit](/code/tables/domain_audit.md) |  |
+| 140 | `domainWatchMark` | **delete** [domain_audit](/code/tables/domain_audit.md) |  |
+| 152 | `domainOpportunisticRun` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

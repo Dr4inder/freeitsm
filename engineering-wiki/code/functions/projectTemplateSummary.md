@@ -13,7 +13,7 @@ function projectTemplateSummary(
 ): array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 325.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 326.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

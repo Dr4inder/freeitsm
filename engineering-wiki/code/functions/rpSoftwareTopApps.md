@@ -1,10 +1,12 @@
 # rpSoftwareTopApps()
 
+Software block: a chart of the most installed applications, by number of machines. A snapshot of today.
+
 ```php
 function rpSoftwareTopApps(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md), line 37.
+Defined in [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md), line 39.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +22,7 @@ Defined in [includes/report_packs/blocks_software.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 40 | `rpSoftwareTopApps` | read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 42 | `rpSoftwareTopApps` | read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
 
 ## Calls
 

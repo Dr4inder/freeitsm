@@ -6,7 +6,7 @@ Distinct non-system-component hosts for an app — the compliance install count.
 function apiSoftwareInstallCount(PDO $conn, int $appId): int
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 121.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 123 | `apiSoftwareInstallCount` | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 132 | `apiSoftwareInstallCount` | read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
 
 ## Called from
 

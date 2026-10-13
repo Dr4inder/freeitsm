@@ -148,6 +148,10 @@ function aiProviderChat(array $cfg, array $opts): array
     return $result;
 }
 
+/**
+ * Sends one system + user prompt to the Anthropic Messages API and returns the joined text blocks with token counts and the stop reason.
+ * @return array  {content, tokens_in, tokens_out, finish_reason, reasoning_tokens (always null here)}
+ */
 function aiProviderCallAnthropic(string $model, string $apiKey, bool $verify, array $opts): array
 {
     $body = json_encode([

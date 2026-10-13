@@ -160,6 +160,12 @@ function requireFolderAccess(PDO $conn, int $analystId, ?int $folderId): void
     }
 }
 
+/**
+ * Creates a knowledge folder under the given parent (or at the top level) and audits it.
+ *
+ * A new folder always inherits and restricts nothing, so creating one never changes who
+ * can see what is already there. The caller must be able to read the parent.
+ */
 function handleCreate(PDO $conn, int $analystId, array $in): void
 {
     $name = trim((string)($in['name'] ?? ''));
@@ -183,6 +189,7 @@ function handleCreate(PDO $conn, int $analystId, array $in): void
     echo json_encode(['success' => true, 'id' => $id]);
 }
 
+/** Renames a knowledge folder the caller can read, and audits the change. */
 function handleRename(PDO $conn, int $analystId, array $in): void
 {
     $id   = (int)($in['id'] ?? 0);

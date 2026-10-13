@@ -6,7 +6,7 @@ Where a sitting stands: cancelled | submitted | expired (never started, link out
 function lmsCtState(array $s, ?int $now = null): string
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 294.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 297.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

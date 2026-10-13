@@ -6,7 +6,7 @@ For the domain's page: the mode, the trouble, the linked services at risk, an op
 function domainStatusState(PDO $conn, int $analystId, int $domainId): array
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 117.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 120.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

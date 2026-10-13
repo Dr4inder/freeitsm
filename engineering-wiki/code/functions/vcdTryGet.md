@@ -6,7 +6,7 @@ A GET that returns the body on success, or null on any failure (per-item problem
 function vcdTryGet(array $c, string $token, string $path, array $headers): ?string
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 108.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

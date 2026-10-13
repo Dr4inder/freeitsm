@@ -6,7 +6,7 @@ The project dates coming up across every project in `$scope` - stage ends, miles
 function projectAssistDates(PDO $conn, array $scope, array $args): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 257.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 262.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,10 +20,10 @@ Defined in [includes/projects/assistant.php](/code/files/includes/projects/assis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 264 | `projectAssistDates` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
-| 266 | `projectAssistDates` | read [projects](/code/tables/projects.md) |  |
-| 270 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
-| 272 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
+| 269 | `projectAssistDates` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
+| 271 | `projectAssistDates` | read [projects](/code/tables/projects.md) |  |
+| 275 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
+| 277 | `projectAssistDates` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

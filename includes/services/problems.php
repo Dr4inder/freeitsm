@@ -432,6 +432,7 @@ class ProblemsService
         return in_array($tid, $ctx->companyScope, true);
     }
 
+    /** Records one action or field change in the problem's audit trail. */
     private static function auditWrite(PDO $conn, int $problemId, int $analystId, string $actionType, ?string $field, ?string $old, ?string $new): void
     {
         $conn->prepare(
@@ -444,6 +445,7 @@ class ProblemsService
         ]);
     }
 
+    /** Sets the problem's updated time to now. */
     private static function touch(PDO $conn, int $problemId): void
     {
         $conn->prepare("UPDATE problems SET updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$problemId]);

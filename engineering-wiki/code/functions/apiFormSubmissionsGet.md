@@ -1,10 +1,12 @@
 # apiFormSubmissionsGet()
 
+GET /forms/{id}/submissions/{submissionId} - one submission with its answers.
+
 ```php
 function apiFormSubmissionsGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 350.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 372.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

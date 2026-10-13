@@ -1,10 +1,12 @@
 # apiSerializeProblem()
 
+Shapes a problem row for the API - number, title, status (with is_closed), priority, analyst, known-error flag, root cause, workaround, company and the rest of the record.
+
 ```php
 function apiSerializeProblem(array $r): array
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 52.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 60.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

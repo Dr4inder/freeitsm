@@ -98,11 +98,15 @@ function aiSettingsRegistry(): array
     ];
 }
 
+/** True when $ns is a namespace registered in aiSettingsRegistry(). */
 function aiSettingsIsValidNs(string $ns): bool
 {
     return array_key_exists($ns, aiSettingsRegistry());
 }
 
+/**
+ * Returns a namespace's registry entry (label, default provider and model); throws RuntimeException for an unknown namespace.
+ */
 function aiSettingsEntry(string $ns): array
 {
     $reg = aiSettingsRegistry();

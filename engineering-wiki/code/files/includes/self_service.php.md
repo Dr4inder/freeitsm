@@ -2,6 +2,8 @@
 
 > PHP - 17 lines
 
+Shared self-service portal helpers.
+
 ## Functions
 
 | Function | Line | What it does |

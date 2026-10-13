@@ -62,14 +62,14 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):151 | `DomainsService::createDomain` | insert |  |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):156 | `DomainsService::createDomain` | update | `auth_code` |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):210 | `DomainsService::updateDomain` | update |  |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):237 | `DomainsService::deleteDomain` | delete |  |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):385 | `DomainsService::applyLookup` | update |  |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):396 | `DomainsService::recordLookupError` | update | `last_lookup_datetime`, `last_lookup_error` |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):421 | `DomainsService::runChecks` | update | `check_results`, `security_score`, `security_grade`, `ssl_expiry_date`, `ssl_issuer`, `watch_baseline`, `last_check_datetime` |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):563 | `DomainsService::deleteRegistrarAccount` | update | `registrar_account_id` |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):157 | `DomainsService::createDomain` | insert |  |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):162 | `DomainsService::createDomain` | update | `auth_code` |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):222 | `DomainsService::updateDomain` | update |  |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):249 | `DomainsService::deleteDomain` | delete |  |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):397 | `DomainsService::applyLookup` | update |  |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):409 | `DomainsService::recordLookupError` | update | `last_lookup_datetime`, `last_lookup_error` |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):434 | `DomainsService::runChecks` | update | `check_results`, `security_score`, `security_grade`, `ssl_expiry_date`, `ssl_issuer`, `watch_baseline`, `last_check_datetime` |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):583 | `DomainsService::deleteRegistrarAccount` | update | `registrar_account_id` |  |
 
 ## Read by
 
@@ -82,20 +82,20 @@
 | [api/domains/settings.php](/code/files/api/domains/settings.php.md) | L45 |  |
 | [api/domains/statuses.php](/code/files/api/domains/statuses.php.md) | L13 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L401 |  |
-| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L44, apiDomainsList L222, apiDomainAccountsList L395 |  |
+| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L48, apiDomainsList L235, apiDomainAccountsList L412 |  |
 | [domains/view.php](/code/files/domains/view.php.md) | L26 |  |
-| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L80, domainRenewalActionsRun L349 |  |
+| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L85, domainRenewalActionsRun L359 |  |
 | [includes/domains/calendar.php](/code/files/includes/domains/calendar.php.md) | domainSyncCalendarKind L78 |  |
 | [includes/domains/customer.php](/code/files/includes/domains/customer.php.md) | domainCustomerReady L28, domainPartiesReady L38 |  |
-| [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkPickDomains L286, domainLinkDomainRows L307, domainsForContract L333 |  |
+| [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkPickDomains L293, domainLinkDomainRows L314, domainsForContract L340 |  |
 | [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L39, domainDetail L150 |  |
-| [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md) | domainScheduledRun L40, domainScheduledRun L61, domainWatchDue L116 |  |
-| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusRow L83 |  |
+| [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md) | domainScheduledRun L46, domainScheduledRun L67, domainWatchDue L122 |  |
+| [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md) | domainStatusRow L86 |  |
 | [includes/feature_bingo/cards/domains.php](/code/files/includes/feature_bingo/cards/domains.php.md) | L34, L112, L124 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleDomains L423, peopleSupplierDomains L829 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleDomains L424, peopleSupplierDomains L832 |  |
 | [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L468 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewDomain L387 |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::createDomain L127, DomainsService::updateDomain L178, DomainsService::deleteStatus L518, DomainsService::loadRow L573 |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::createDomain L133, DomainsService::updateDomain L190, DomainsService::deleteStatus L536, DomainsService::loadRow L594 |  |
 | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessDomain L510 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L607, getWatchtowerData L641 |  |
 

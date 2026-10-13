@@ -42,18 +42,22 @@ function rpOptSelect(string $label, array $values, string $default): array
 {
     return ['type' => 'select', 'label' => $label, 'values' => $values, 'default' => $default];
 }
+/** A whole-number block option, between $min and $max. */
 function rpOptInt(string $label, int $min, int $max, int $default): array
 {
     return ['type' => 'int', 'label' => $label, 'min' => $min, 'max' => $max, 'default' => $default];
 }
+/** A yes/no block option. */
 function rpOptBool(string $label, bool $default): array
 {
     return ['type' => 'bool', 'label' => $label, 'default' => $default];
 }
+/** A multi-select block option whose choices come from the named source. */
 function rpOptMulti(string $label, string $source): array
 {
     return ['type' => 'multi', 'label' => $label, 'source' => $source, 'default' => []];
 }
+/** The chart-type option for a block, offering every chart type with $default selected. */
 function rpChartOpt(string $default): array
 {
     $v = [];

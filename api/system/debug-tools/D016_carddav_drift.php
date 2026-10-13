@@ -52,10 +52,18 @@ require_once __DIR__ . '/../../../includes/carddav_write.php';
 require_once __DIR__ . '/../../../includes/users.php';
 
 $sections = [];
+/**
+ * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
+ * string or an array of lines.
+ */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
     $sections[] = "=== {$title} ===\n" . rtrim($body, "\n");
 }
+/**
+ * Prints every section, separated by blank lines, and stops - the end of the report, and
+ * the early exit when a check cannot go on.
+ */
 function emit_and_exit($sections) {
     echo implode("\n\n", $sections) . "\n";
     exit;

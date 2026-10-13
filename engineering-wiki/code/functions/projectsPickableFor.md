@@ -12,7 +12,7 @@ function projectsPickableFor(
 ): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 390.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 407.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,7 +28,7 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 398 | `projectsPickableFor` | read [projects](/code/tables/projects.md) |  |
+| 415 | `projectsPickableFor` | read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

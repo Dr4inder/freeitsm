@@ -6,7 +6,7 @@ Success-rate cell: delivered vs terminal (delivered + dead); in-flight ignored.
 function whRate($delivered, $dead)
 ```
 
-Defined in [system/webhooks/index.php](/code/files/system/webhooks/index.php.md), line 161.
+Defined in [system/webhooks/index.php](/code/files/system/webhooks/index.php.md), line 162.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

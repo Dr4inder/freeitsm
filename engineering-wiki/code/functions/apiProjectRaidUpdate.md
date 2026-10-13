@@ -1,10 +1,12 @@
 # apiProjectRaidUpdate()
 
+PATCH /projects/{id}/raid/{entryId} - updates the RAID entry fields sent through ProjectToolsService and returns the entry.
+
 ```php
 function apiProjectRaidUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 455.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 497.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

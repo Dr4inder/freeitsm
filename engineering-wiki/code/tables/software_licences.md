@@ -38,9 +38,9 @@
 | [api/software/delete_app.php](/code/files/api/software/delete_app.php.md) | L47 |  |
 | [api/software/get_apps.php](/code/files/api/software/get_apps.php.md) | L46 |  |
 | [api/software/get_licences.php](/code/files/api/software/get_licences.php.md) | L21 |  |
-| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareAppsList L80, apiSoftwareAppsGet L136, apiSoftwareLicenceSelect L208, apiSoftwareLicencesList L316 |  |
-| [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md) | rpSoftwareKpis L64, rpSoftwareLicences L83 |  |
+| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareAppsList L88, apiSoftwareAppsGet L145, apiSoftwareLicenceSelect L221, apiSoftwareLicencesList L335 |  |
+| [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md) | rpSoftwareKpis L70, rpSoftwareLicences L89 |  |
 | [includes/services/software.php](/code/files/includes/services/software.php.md) | SoftwareService::loadLicenceRow L121 |  |
-| [includes/software_licence_calendar.php](/code/files/includes/software_licence_calendar.php.md) | syncSoftwareLicenceCalendar L66 |  |
+| [includes/software_licence_calendar.php](/code/files/includes/software_licence_calendar.php.md) | syncSoftwareLicenceCalendar L72 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L534, getWatchtowerData L538, getWatchtowerData L544, getWatchtowerData L556 |  |
 

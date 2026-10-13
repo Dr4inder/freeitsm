@@ -6,7 +6,7 @@ Reference lookups The reference lists resolve for the key's default company (glo
 function apiAssetTypesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 613.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 638.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

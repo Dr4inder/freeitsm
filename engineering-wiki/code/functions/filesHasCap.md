@@ -1,10 +1,12 @@
 # filesHasCap()
 
+True when the analyst holds the capability; a failed lookup counts as no.
+
 ```php
 function filesHasCap(PDO $conn, int $analystId, string $cap): bool
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 57.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 63.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,10 +1,12 @@
 # rpOut()
 
+Sends a JSON reply with the given HTTP status and ends the request.
+
 ```php
 function rpOut(array $payload, int $code = 200): void
 ```
 
-Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 17.
+Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 18.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

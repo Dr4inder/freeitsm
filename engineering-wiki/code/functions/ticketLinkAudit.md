@@ -1,5 +1,7 @@
 # ticketLinkAudit()
 
+Writes one ticket_audit row for a link change, with no old value and the new value cut to 500 characters.
+
 ```php
 function ticketLinkAudit(
     PDO $conn,
@@ -10,7 +12,7 @@ function ticketLinkAudit(
 ): void
 ```
 
-Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 35.
+Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 42.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,11 +24,13 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 **Returns:** `void`
 
+**Writes:** ticket_audit - the link or unlink shows in the ticket's history
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 38 | `ticketLinkAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 45 | `ticketLinkAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ## Called from
 

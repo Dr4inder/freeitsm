@@ -1,10 +1,12 @@
 # apiMorningChecksGet()
 
+GET /morning-checks/checks/{id} - one morning check.
+
 ```php
 function apiMorningChecksGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 135.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 143.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

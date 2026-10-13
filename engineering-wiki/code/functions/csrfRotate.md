@@ -6,7 +6,7 @@ A new token - at sign-in, so a token seen before login is worthless after it.
 function csrfRotate(): void
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 126.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 128.
 
 **Returns:** `void`
 

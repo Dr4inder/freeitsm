@@ -6,7 +6,7 @@ Subject and HTML for one recipient's digest.
 function domainAlertDigest(PDO $conn, string $name, array $items): array
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 236.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 242.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

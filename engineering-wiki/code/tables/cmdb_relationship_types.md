@@ -34,9 +34,9 @@
 | [api/cmdb/save_relationship_type.php](/code/files/api/cmdb/save_relationship_type.php.md) | L49 |  |
 | [api/network-mapper/get_related_objects.php](/code/files/api/network-mapper/get_related_objects.php.md) | L64, L94 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3826 |  |
-| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbObjectsGet L367, apiCmdbObjectsGet L377, apiCmdbRelationshipTypesList L562 |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmConnectorsForDiagram L203, apiNmSuggestionsList L628 |  |
+| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbObjectsGet L375, apiCmdbObjectsGet L385, apiCmdbRelationshipTypesList L581 |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmConnectorsForDiagram L219, apiNmSuggestionsList L662 |  |
 | [includes/cmdb_impact.php](/code/files/includes/cmdb_impact.php.md) | cmdbHasImpactEdgesConfigured L89, cmdbDirectImpact L169, cmdbImpactEdgesFrom L286, cmdbImpactEdgesFrom L302 |  |
-| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::createRelationship L320, CmdbService::createRelationship L323 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolImpactOf L576 |  |
+| [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md) | CmdbService::createRelationship L328, CmdbService::createRelationship L331 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolImpactOf L595 |  |
 

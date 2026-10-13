@@ -1,4 +1,19 @@
 <?php
+/**
+ * External API: the software inventory agent posts one machine's installed software
+ * here.
+ *
+ * Authenticated by an API key in the Authorization header (apikeys); the key's company
+ * owns the machine. The machine is matched or created through AssetsService (the same
+ * reconcile rules as every inventory source), then software_inventory_apps and
+ * software_inventory_detail are brought in line with the list - apps no longer reported
+ * are removed from this machine. Every outcome is logged to software_inventory_log.
+ *
+ * @input  Hostname  the machine's name (JSON body)
+ * @input  Software  the installed applications - each with Display Name, Publisher, Display Version, Install Date and so on
+ * @output {status, hostname, counts of apps and detail rows inserted, updated and deleted}, or {error}
+ * @wiki Asset-Reconciliation-Developer-Guide
+ */
 header('Content-Type: application/json');
 
 // --------------------------------------------------

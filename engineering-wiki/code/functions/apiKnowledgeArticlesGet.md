@@ -6,7 +6,7 @@ GET /knowledge/articles/{id}
 function apiKnowledgeArticlesGet(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 279.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 281.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowled
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 285 | `apiKnowledgeArticlesGet` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`view_count`) |  |
+| 287 | `apiKnowledgeArticlesGet` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`view_count`) |  |
 
 ## Calls
 

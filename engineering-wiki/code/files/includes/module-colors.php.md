@@ -1,6 +1,6 @@
 # includes/module-colors.php
 
-> PHP - 83 lines
+> PHP - 89 lines
 
 Module Colours - shared helper Provides default and database-overridden module colours for dynamic CSS generation. Included by waffle-menu.php and index.php.
 
@@ -8,13 +8,13 @@ Module Colours - shared helper Provides default and database-overridden module c
 
 | Function | Line | What it does |
 |---|--:|---|
-| [getModuleColors()](/code/functions/getModuleColors.md) | 51 |  |
+| [getModuleColors()](/code/functions/getModuleColors.md) | 57 | Every module's colour pair, the built-in defaults overridden by any module_color_* system setting. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 65 | `getModuleColors` | read [system_settings](/code/tables/system_settings.md) |  |
+| 71 | `getModuleColors` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

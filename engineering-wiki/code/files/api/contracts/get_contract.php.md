@@ -1,6 +1,14 @@
 # api/contracts/get_contract.php
 
-> API endpoint - 67 lines
+> API endpoint - 78 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Customer Contracts Developer Guide](https://github.com/edmozley/freeitsm/wiki/Customer-Contracts-Developer-Guide)
+
+API: one contract, with its supplier or customer, owner, status, payment schedule and cost centre.
+
+A customer contract for a company the analyst cannot see is answered as "not found",
+like one that does not exist (contractVisibilitySql).
 
 ## The endpoint
 
@@ -9,12 +17,14 @@
 | URL | `api/contracts/get_contract.php` |
 | Protected by | Module access: contracts (requireModuleAccessJson) |
 | Reads | `GET id` |
+| Input | id  the contract |
+| Output | {success, contract} - contract carries party_label and multi_company (show the company only when there is a choice) |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 28 |  | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [payment_schedules](/code/tables/payment_schedules.md) |  |
+| 39 |  | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [payment_schedules](/code/tables/payment_schedules.md) |  |
 
 ## How it hangs together
 

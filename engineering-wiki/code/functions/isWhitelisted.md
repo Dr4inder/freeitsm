@@ -6,7 +6,7 @@ Check if a sender address is whitelisted
 function isWhitelisted($fromAddress, $whitelist)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1472.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1476.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

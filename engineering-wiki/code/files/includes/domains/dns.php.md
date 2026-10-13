@@ -1,6 +1,6 @@
 # includes/domains/dns.php
 
-> PHP - 138 lines
+> PHP - 154 lines
 
 Domains — DNS questions, answered one way whatever the resolver.
 
@@ -23,11 +23,11 @@ trailing dot or a chunk boundary must never read as a difference.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [domainDns()](/code/functions/domainDns.md) | 28 |  |
-| [domainDnsSystem()](/code/functions/domainDnsSystem.md) | 54 |  |
-| [domainDnsDoh()](/code/functions/domainDnsDoh.md) | 78 |  |
-| [domainDnsSort()](/code/functions/domainDnsSort.md) | 120 |  |
-| [domainTxtStartingWith()](/code/functions/domainTxtStartingWith.md) | 133 | The TXT records at `$name` that start with `$prefix` (case-insensitive), e.g. "v=spf1". |
+| [domainDns()](/code/functions/domainDns.md) | 35 | Asks one DNS question through the chosen resolver and returns the normalised answer, cached for the request. |
+| [domainDnsSystem()](/code/functions/domainDnsSystem.md) | 64 | Answers a DNS question with PHP's `dns_get_record()` (A, AAAA, MX, TXT, NS, CNAME and CAA where PHP has it), normalised and sorted. |
+| [domainDnsDoh()](/code/functions/domainDnsDoh.md) | 91 | Answers a DNS question over DNS-over-HTTPS JSON from Google or Cloudflare, normalised and sorted; NXDOMAIN comes back as ok with nxdomain true. |
+| [domainDnsSort()](/code/functions/domainDnsSort.md) | 136 | Puts records in a stable order so answers compare equal - MX by priority then host, CAA as given, everything else de-duplicated and sorted. |
+| [domainTxtStartingWith()](/code/functions/domainTxtStartingWith.md) | 149 | The TXT records at `$name` that start with `$prefix` (case-insensitive), e.g. "v=spf1". |
 
 ## How it hangs together
 

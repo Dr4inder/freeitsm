@@ -14,7 +14,7 @@ function aiToolsResult(
 ): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 657.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 661.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

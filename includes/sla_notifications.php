@@ -369,11 +369,13 @@ function sla_notification_already_sent(PDO $conn, int $ticketId, string $targetT
     return (bool)$stmt->fetchColumn();
 }
 
+/** Records that an SLA notification went out for a ticket, so it is not sent twice. */
 function sla_mark_notification_sent(PDO $conn, int $ticketId, string $targetType, string $trigger, array $recipients): void {
     $stmt = $conn->prepare("INSERT IGNORE INTO sla_notifications_sent (ticket_id, target_type, trigger_type, recipients) VALUES (?, ?, ?, ?)");
     $stmt->execute([$ticketId, $targetType, $trigger, implode(',', $recipients)]);
 }
 
+/** The active mailbox with the lowest id, decrypted; null when there is none. */
 function sla_get_first_active_mailbox(PDO $conn): ?array {
     $stmt = $conn->query("SELECT * FROM target_mailboxes WHERE is_active = 1 ORDER BY id ASC LIMIT 1");
     $mailbox = $stmt->fetch(PDO::FETCH_ASSOC);

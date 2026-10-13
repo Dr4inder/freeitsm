@@ -1,10 +1,12 @@
 # domainApiOk()
 
+Sends {success: true} merged with `$data` as JSON and ends the request.
+
 ```php
 function domainApiOk(array $data = []): void
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 43.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

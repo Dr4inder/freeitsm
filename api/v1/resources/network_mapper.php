@@ -67,6 +67,10 @@ require_once dirname(__DIR__, 3) . '/includes/services/network_mapper.php';
 // Loaders + guards
 // ---------------------------------------------------------------------------
 
+/**
+ * The SELECT for diagrams, with the author's name and counts of child versions, nodes
+ * and connectors - child_count 0 marks the current version.
+ */
 function apiNmDiagramSelect(): string {
     return "SELECT d.*, a.full_name AS author_name,
                    (SELECT COUNT(*) FROM network_diagrams c WHERE c.parent_diagram_id = d.id) AS child_count,
@@ -76,6 +80,7 @@ function apiNmDiagramSelect(): string {
             LEFT JOIN analysts a ON a.id = d.created_by_analyst_id";
 }
 
+/** Loads one diagram row (apiNmDiagramSelect), or answers 404 and stops. */
 function apiNmLoadDiagram(PDO $conn, int $diagramId): array {
     $stmt = $conn->prepare(apiNmDiagramSelect() . " WHERE d.id = ?");
     $stmt->execute([$diagramId]);
@@ -93,6 +98,7 @@ function apiNmRequireLeaf(array $diagram): void {
     }
 }
 
+/** Loads one node row that belongs to the given diagram, or answers 404 and stops. */
 function apiNmLoadNode(PDO $conn, int $diagramId, int $nodeId): array {
     $stmt = $conn->prepare("SELECT * FROM network_diagram_nodes WHERE id = ? AND diagram_id = ?");
     $stmt->execute([$nodeId, $diagramId]);
@@ -103,6 +109,7 @@ function apiNmLoadNode(PDO $conn, int $diagramId, int $nodeId): array {
     return $row;
 }
 
+/** Loads one connector row that belongs to the given diagram, or answers 404 and stops. */
 function apiNmLoadConnector(PDO $conn, int $diagramId, int $connectorId): array {
     $stmt = $conn->prepare("SELECT * FROM network_diagram_connectors WHERE id = ? AND diagram_id = ?");
     $stmt->execute([$connectorId, $diagramId]);
@@ -141,6 +148,10 @@ function apiNmChainIds(PDO $conn, int $diagramId): array {
 // Serializers
 // ---------------------------------------------------------------------------
 
+/**
+ * Shapes a diagram row for the API - ids, title, version, is_current, author, dates and
+ * counts, plus paper and header/footer branding when $full.
+ */
 function apiSerializeNmDiagram(array $r, bool $full): array {
     $out = [
         'id'                => (int)$r['id'],
@@ -170,6 +181,7 @@ function apiSerializeNmDiagram(array $r, bool $full): array {
     return $out;
 }
 
+/** The SELECT for diagram nodes, joined to their CMDB object, its class and the class icon. */
 function apiNmNodeSelect(): string {
     return "SELECT n.*, o.name AS object_name, o.is_planned, c.id AS class_id, c.name AS class_name,
                    i.icon_key AS class_icon
@@ -179,6 +191,10 @@ function apiNmNodeSelect(): string {
             LEFT JOIN cmdb_icons i ON i.id = c.icon_id";
 }
 
+/**
+ * Shapes a node row for the API - position, size (and its pixel size), the icon that
+ * actually renders, and its CMDB object with class.
+ */
 function apiSerializeNmNode(array $n): array {
     return [
         'id'            => (int)$n['id'],
@@ -217,6 +233,10 @@ function apiNmConnectorsForDiagram(PDO $conn, int $diagramId): array {
     return array_map('apiSerializeNmConnector', $stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 
+/**
+ * Shapes a connector row for the API - both endpoints (node and object), the CMDB
+ * relationship and its verbs when bound to one, label and line style.
+ */
 function apiSerializeNmConnector(array $k): array {
     return [
         'id'           => (int)$k['id'],
@@ -252,6 +272,11 @@ function apiNmConnectorHydrated(PDO $conn, int $diagramId, int $connectorId): ar
 // Validation
 // ---------------------------------------------------------------------------
 
+/**
+ * Answers 422 and stops unless the CMDB object exists and, when a key is given, belongs
+ * to a company the key can reach - the same message either way, so another company's
+ * object is never revealed.
+ */
 function apiNmValidateObjectExists(PDO $conn, int $objectId, ?array $apiKey = null): void {
     $stmt = $conn->prepare("SELECT 1 FROM cmdb_objects WHERE id = ?");
     $stmt->execute([$objectId]);
@@ -268,6 +293,10 @@ function apiNmValidateObjectExists(PDO $conn, int $objectId, ?array $apiKey = nu
     }
 }
 
+/**
+ * Returns the node size when it is a known size class, otherwise answers 422 listing the
+ * valid ones.
+ */
 function apiNmValidateSize(string $size): string {
     if (!isset(API_NM_NODE_SIZES_PX[$size])) {
         apiError(422, 'invalid_field', "Unknown size '{$size}'. Valid: " . implode(', ', array_keys(API_NM_NODE_SIZES_PX)) . '.');
@@ -275,6 +304,10 @@ function apiNmValidateSize(string $size): string {
     return $size;
 }
 
+/**
+ * Returns the connector line style when it is a known one, otherwise answers 422 listing
+ * the valid ones.
+ */
 function apiNmValidateLineStyle(string $style): string {
     if (!in_array($style, API_NM_LINE_STYLES, true)) {
         apiError(422, 'invalid_field', "Unknown line_style '{$style}'. Valid: " . implode(', ', API_NM_LINE_STYLES) . '.');
@@ -282,6 +315,7 @@ function apiNmValidateLineStyle(string $style): string {
     return $style;
 }
 
+/** Returns the icon key when it is in cmdb_icons, otherwise answers 422 pointing at GET /cmdb-icons. */
 function apiNmValidateIcon(PDO $conn, string $iconKey): string {
     $stmt = $conn->prepare("SELECT 1 FROM cmdb_icons WHERE icon_key = ?");
     $stmt->execute([$iconKey]);
@@ -898,6 +932,10 @@ function apiNmConnectorsDelete(PDO $conn, array $apiKey, array $params, array $b
 // Reference — the icon catalogue (valid icon_override values)
 // ---------------------------------------------------------------------------
 
+/**
+ * GET /cmdb-icons - the icon catalogue (key, label, active), the valid values for a
+ * node's icon_override.
+ */
 function apiCmdbIconsList(PDO $conn, array $apiKey, array $params, array $body): void {
     $rows = $conn->query(
         "SELECT icon_key, label, is_active FROM cmdb_icons ORDER BY display_order, label"

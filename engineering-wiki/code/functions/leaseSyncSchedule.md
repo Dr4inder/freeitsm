@@ -6,7 +6,7 @@ Every active asset on a schedule, after its dates change.
 function leaseSyncSchedule(PDO $conn, ActorContext $ctx, int $scheduleId): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 617.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 623.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 617.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 620 | `leaseSyncSchedule` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 626 | `leaseSyncSchedule` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
 
 ## Calls
 

@@ -30,7 +30,7 @@ than wrong by being a syntax error on somebody's dashboard.
 function naive_today_sql(): string
 ```
 
-Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 516.
+Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 522.
 
 **Returns:** string A quoted SQL date literal, e.g. `'2026-09-01'`.
 

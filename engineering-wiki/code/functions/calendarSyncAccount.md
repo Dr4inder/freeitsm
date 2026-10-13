@@ -6,7 +6,7 @@ An analyst's own calendar sign-in, decrypted: ['username' => …, 'password' => 
 function calendarSyncAccount(array $enrolment): array
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 247.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 248.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

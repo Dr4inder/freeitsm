@@ -17,12 +17,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md):438 | `ProblemsService::auditWrite` | insert | `problem_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md):439 | `ProblemsService::auditWrite` | insert | `problem_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/problem-management/get.php](/code/files/api/problem-management/get.php.md) | L64 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemAuditList L337 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemAuditList L346 |  |
 

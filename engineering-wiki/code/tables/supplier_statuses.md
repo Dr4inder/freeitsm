@@ -26,10 +26,10 @@
 |---|---|---|
 | [api/contracts/delete_supplier_status.php](/code/files/api/contracts/delete_supplier_status.php.md) | L33 |  |
 | [api/contracts/get_supplier_statuses.php](/code/files/api/contracts/get_supplier_statuses.php.md) | L20 |  |
-| [api/contracts/get_suppliers.php](/code/files/api/contracts/get_suppliers.php.md) | L17 |  |
+| [api/contracts/get_suppliers.php](/code/files/api/contracts/get_suppliers.php.md) | L22 |  |
 | [api/rfp-builder/create_prospective_supplier.php](/code/files/api/rfp-builder/create_prospective_supplier.php.md) | L55 |  |
 | [api/rfp-builder/get_available_suppliers.php](/code/files/api/rfp-builder/get_available_suppliers.php.md) | L31 |  |
 | [api/rfp-builder/get_invited_suppliers.php](/code/files/api/rfp-builder/get_invited_suppliers.php.md) | L32 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiSupplierSelect L140 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleSupplierRows L619, supplierDetail L647 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiSupplierSelect L151 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleSupplierRows L622, supplierDetail L650 |  |
 

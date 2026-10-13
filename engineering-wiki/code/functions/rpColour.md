@@ -1,10 +1,12 @@
 # rpColour()
 
+A #rrggbb colour in lower case, or `$default` when the value is not one.
+
 ```php
 function rpColour($v, ?string $default): ?string
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 82.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

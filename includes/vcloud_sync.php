@@ -30,6 +30,12 @@ const VCD_MIN_VMS_FOR_GUARD = 5;
 const VCD_MIN_SEEN_RATIO    = 0.5;
 const VCD_PAGE_SIZE         = 128;
 
+/**
+ * One vCloud Director connection row with its password decrypted into
+ * 'password'. Throws when the id does not exist.
+ *
+ * @reads vcloud_connections - host, org, credentials and API version for the calls
+ */
 function vcdLoadConnection(PDO $conn, int $connectionId): array
 {
     $stmt = $conn->prepare("SELECT * FROM vcloud_connections WHERE id = ?");
@@ -64,11 +70,13 @@ function vcdHttp(array $c, string $method, string $path, array $headers, ?string
     return [$code, (string)$body, (string)($respHeaders['x-vmware-vcloud-access-token'] ?? '')];
 }
 
+/** The Accept header for a cloudapi (JSON) call at the connection's API version. */
 function vcdAcceptJson(string $version): array
 {
     return ['Accept: application/json;version=' . $version];
 }
 
+/** The Accept header for a legacy /api (XML) call at the connection's API version. */
 function vcdAcceptXml(string $version): array
 {
     return ['Accept: application/*+xml;version=' . $version];
@@ -115,6 +123,7 @@ function vcdTryGet(array $c, string $token, string $path, array $headers): ?stri
     }
 }
 
+/** Parses an XML response body quietly; null for an empty or unparseable body. */
 function vcdXml(?string $body): ?SimpleXMLElement
 {
     if ($body === null || $body === '') {
@@ -132,6 +141,11 @@ function vcdFind(SimpleXMLElement $node, string $localName): array
     return is_array($found) ? $found : [];
 }
 
+/**
+ * The Test button: logs in, reads one VM record and one edge gateway, logs out
+ * and returns a one-line result. Throws when the login fails or the VM inventory
+ * cannot be read; unreadable edge gateways are only mentioned in the message.
+ */
 function vcdTest(array $c): string
 {
     $token = vcdLogin($c);

@@ -6,7 +6,7 @@ DELETE /cost-centres/{id}
 function apiCostCentresDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 181.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

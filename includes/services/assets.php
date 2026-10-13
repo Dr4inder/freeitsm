@@ -704,6 +704,10 @@ class AssetsService
         return $row;
     }
 
+    /**
+     * Records one field change in the asset's history; analyst 0 (an inventory source or
+     * Intune) is stored as NULL.
+     */
     private static function auditWrite(PDO $conn, int $assetId, int $analystId, string $fieldKey, ?string $old, ?string $new): void
     {
         // No analyst (0): an inventory source or Intune made the change. NULL,

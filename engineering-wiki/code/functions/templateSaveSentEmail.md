@@ -13,7 +13,7 @@ function templateSaveSentEmail(
 ): void
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 705.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 710.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -30,8 +30,8 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 707 | `templateSaveSentEmail` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction`, `mailbox_id`) |  |
-| 724 | `templateSaveSentEmail` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
+| 712 | `templateSaveSentEmail` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_content`, `body_type`, `ticket_id`, `is_initial`, `direction`, `mailbox_id`) |  |
+| 729 | `templateSaveSentEmail` | **update** [tickets](/code/tables/tickets.md) (`updated_datetime`) |  |
 
 ## Called from
 

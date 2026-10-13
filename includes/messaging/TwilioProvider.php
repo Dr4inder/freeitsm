@@ -20,6 +20,10 @@ require_once __DIR__ . '/MessagingProvider.php';
 
 class TwilioProvider extends MessagingProvider
 {
+    /**
+     * Checks the X-Twilio-Signature header: an HMAC-SHA1 of the URL and the sorted POST
+     * fields, keyed with the auth token.
+     */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
         $signature = $headers['x-twilio-signature'] ?? '';
@@ -38,6 +42,10 @@ class TwilioProvider extends MessagingProvider
         return hash_equals($expected, $signature);
     }
 
+    /**
+     * Turns a Twilio WhatsApp webhook into an inbound message with its media URLs; status
+     * callbacks give nothing.
+     */
     public function parseInbound(string $rawBody, array $params): array
     {
         // A status callback (delivered/read) has MessageStatus but no Body/From pair
@@ -70,6 +78,7 @@ class TwilioProvider extends MessagingProvider
         ]];
     }
 
+    /** Sends a WhatsApp text message through Twilio and returns the message SID. */
     public function sendMessage(string $to, string $body): string
     {
         $sid   = $this->channel['credentials']['account_sid'] ?? '';
@@ -146,6 +155,10 @@ class TwilioProvider extends MessagingProvider
         return $json['sid'] ?? '';
     }
 
+    /**
+     * Sends an approved WhatsApp template by its Content SID, with $vars as numbered
+     * content variables, and returns the message SID.
+     */
     public function sendTemplate(string $to, array $template, array $vars): string
     {
         $sid   = $this->channel['credentials']['account_sid'] ?? '';
@@ -190,6 +203,7 @@ class TwilioProvider extends MessagingProvider
         return $json['sid'] ?? '';
     }
 
+    /** Downloads an inbound media item with account authentication, naming the file after its Media SID. */
     public function downloadMedia(array $item): array
     {
         $sid   = $this->channel['credentials']['account_sid'] ?? '';
@@ -221,6 +235,10 @@ class TwilioProvider extends MessagingProvider
         ];
     }
 
+    /**
+     * Checks the Account SID and Auth Token by reading the account, sending nothing; notes
+     * when no WhatsApp number is set.
+     */
     public function testConnection(): string
     {
         $sid   = $this->channel['credentials']['account_sid'] ?? '';
@@ -264,6 +282,7 @@ class TwilioProvider extends MessagingProvider
         return trim($addr);
     }
 
+    /** Puts a single leading + on a phone number. */
     private function ensurePlus(string $number): string
     {
         $number = ltrim(trim($number), '+');

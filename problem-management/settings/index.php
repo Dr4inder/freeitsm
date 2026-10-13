@@ -1,4 +1,12 @@
 <?php
+/**
+ * Problem Management -> Settings: the Statuses, Priorities and Problem AI tabs.
+ *
+ * Needs the problems module; each tab is shown only to analysts with its
+ * capability (settings_manifest.php). Statuses and priorities are listed, added,
+ * edited and deleted through api/problem-management/; the AI tab is the shared
+ * AI provider panel for "Draft root cause" and "Detect problems".
+ */
 session_start();
 require_once __DIR__ . '/../../config.php';
 require_once __DIR__ . '/../../includes/functions.php';

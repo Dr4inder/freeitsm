@@ -1,10 +1,12 @@
 # apiSerializeIncident()
 
+Shapes an incident row for the API, with every service it affects and the impact on each, worst first.
+
 ```php
 function apiSerializeIncident(PDO $conn, array $r): array
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 109.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 123.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +19,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 111 | `apiSerializeIncident` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 125 | `apiSerializeIncident` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## Calls
 

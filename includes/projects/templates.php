@@ -54,6 +54,7 @@ function projectGateKindReady(PDO $conn): bool
     return $ready;
 }
 
+/** True when the project_templates table exists (after Database Verification). Cached per request. */
 function projectTemplatesReady(PDO $conn): bool
 {
     static $ready = null;

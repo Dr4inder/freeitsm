@@ -52,6 +52,7 @@ const TASK_CAL_WORK = 'work';   // the scheduled work window, as a timed appoint
 const TASK_CAL_DUE  = 'due';    // the due date, as an all-day event
 const TASK_CAL_BOTH = 'both';
 
+/** True when $mode is one of the task calendar modes - off, work, due or both. */
 function taskCalendarModeIsValid(string $mode): bool
 {
     return in_array($mode, [TASK_CAL_OFF, TASK_CAL_WORK, TASK_CAL_DUE, TASK_CAL_BOTH], true);

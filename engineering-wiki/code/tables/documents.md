@@ -28,7 +28,7 @@ A document is either a file we hold or a link to somewhere else (an external DMS
 |---|---|---|---|---|
 | [api/documents/save.php](/code/files/api/documents/save.php.md):125 |  | insert | `kind`, `title`, `description`, `storage_key`, `original_name`, `mime_type`, `size_bytes`, `content_hash`, `external_url`, `tenant_id` |  |
 | [api/documents/unlink.php](/code/files/api/documents/unlink.php.md):77 |  | update | `deleted_datetime` |  |
-| [includes/documents.php](/code/files/includes/documents.php.md):668 | `documentsCollectOrphans` | update | `deleted_datetime` |  |
+| [includes/documents.php](/code/files/includes/documents.php.md):673 | `documentsCollectOrphans` | update | `deleted_datetime` |  |
 
 ## Read by
 
@@ -41,10 +41,10 @@ A document is either a file we hold or a link to somewhere else (an external DMS
 | [api/documents/unlink.php](/code/files/api/documents/unlink.php.md) | L73, L92 |  |
 | [api/self-service/get_document.php](/code/files/api/self-service/get_document.php.md) | L64 |  |
 | [api/self-service/get_ticket_detail.php](/code/files/api/self-service/get_ticket_detail.php.md) | L222 |  |
-| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L475, L919, L961 |  |
+| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L484, L928, L970 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L468, L677 |  |
 | [api/tickets/get_notes.php](/code/files/api/tickets/get_notes.php.md) | L98 |  |
-| [includes/documents.php](/code/files/includes/documents.php.md) | documentsCollectOrphans L658, documentsCollectOrphans L679 |  |
-| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateDocuments L44 |  |
+| [includes/documents.php](/code/files/includes/documents.php.md) | documentsCollectOrphans L663, documentsCollectOrphans L684 |  |
+| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateDocuments L45 |  |
 | [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md) | searchIndexDocument L104, documentTextDrain L171, documentSearchVisibilityClause L276 |  |
 

@@ -1430,6 +1430,10 @@ function oversizeSummary(array $atts, array $plan): string
     return implode(', ', $out);
 }
 
+/**
+ * Writes one email_import row to system_logs with the mailbox id added to the details. A
+ * logging failure goes to the PHP error log and never stops the import.
+ */
 function logEmailImport($conn, $mailboxId, $details) {
     try {
         $details['mailbox_id'] = $mailboxId;

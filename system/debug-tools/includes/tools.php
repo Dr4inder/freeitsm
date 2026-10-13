@@ -13,9 +13,15 @@
  *   2. Add an entry below (id, slug, file, title, category, desc, keywords, icon,
  *      when, checks, duration, persists, optional input).
  *   3. Create system/debug-tools/<slug>/index.php (two lines — see d001/index.php).
+ *
+ * @wiki System
  */
 
-/** @return array<int,array<string,mixed>> Ordered list of debug tools. */
+/**
+ * Every Debug Tool with its card and page metadata - id, slug, backend file,
+ * title, category, description, search keywords, when to run it, what it checks.
+ *
+ * @return array<int,array<string,mixed>> Ordered list of debug tools. */
 function getDebugTools() {
     return [
         [

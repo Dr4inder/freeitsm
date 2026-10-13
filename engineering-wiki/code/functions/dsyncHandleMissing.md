@@ -16,7 +16,7 @@ function dsyncHandleMissing(
 ): int
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 815.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 828.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -32,9 +32,9 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 820 | `dsyncHandleMissing` | read [users](/code/tables/users.md) |  |
-| 843 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`is_active`, `deactivated_datetime`, `sync_missed_count`) |  |
-| 852 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`sync_missed_count`) |  |
+| 833 | `dsyncHandleMissing` | read [users](/code/tables/users.md) |  |
+| 856 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`is_active`, `deactivated_datetime`, `sync_missed_count`) |  |
+| 865 | `dsyncHandleMissing` | **update** [users](/code/tables/users.md) (`sync_missed_count`) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ The lease's company as a real id (NULL read as Default).
 function leaseTenant(PDO $conn, array $lease): int
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 82.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 83.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

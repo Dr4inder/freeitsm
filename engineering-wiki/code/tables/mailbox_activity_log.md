@@ -19,12 +19,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md):1497 | `logMailboxActivity` | insert | `mailbox_id`, `action`, `from_address`, `from_name`, `subject`, `reason`, `ticket_id`, `processing_log`, `created_datetime` |  |
+| [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md):1501 | `logMailboxActivity` | insert | `mailbox_id`, `action`, `from_address`, `from_name`, `subject`, `reason`, `ticket_id`, `processing_log`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/tickets/get_mailbox_activity.php](/code/files/api/tickets/get_mailbox_activity.php.md) | L44, L49 |  |
-| [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md) | oversizeReplySkipReason L297 |  |
+| [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md) | oversizeReplySkipReason L300 |  |
 

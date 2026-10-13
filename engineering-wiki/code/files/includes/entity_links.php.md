@@ -2,6 +2,36 @@
 
 > PHP - 123 lines
 
+Where does a record live? Answered ONCE.
+
+⚠️ WHY THIS EXISTS. Three separate places already knew how to build a deep
+link to a record, and they did not agree:
+
+  - NotificationsService::linkFor()  — knew `ticket` and `task`, and returned
+    NULL for everything else, so a notification about a change or a problem
+    rendered as href="#" and went nowhere.
+  - api/system/global_search.php     — knew seven types, with its own URLs.
+  - anchors written inline across the module JS — whatever that file needed
+    on the day.
+
+The disagreement was not cosmetic. Change Management alone was linked to as
+`?change_id=`, `?id=`, `?change=` and `?open=`; problems as `?problem_id=` in
+one map and `?id=` in another. Most of that survived only because the modules
+are permissive and accept several names.
+
+⚠️ TWO MODULES ARE NOT PERMISSIVE, and both dead links found while sweeping
+for GH #91 pointed at exactly those two:
+
+  - the ticket inbox reads ONLY `ticket_id` (assets/js/inbox.js)
+  - the tasks board reads ONLY `task`   (assets/js/tasks.js)
+
+Get one of those wrong and the browser opens the right module and does
+nothing at all — a link that looks like it worked, which is why neither was
+ever reported. Tolerance elsewhere is what hid the drift; these two had none.
+
+Every path returned here is relative to BASE_URL — the caller prefixes it.
+That is the contract both previous maps already used.
+
 ## Functions
 
 | Function | Line | What it does |

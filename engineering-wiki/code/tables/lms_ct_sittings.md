@@ -29,22 +29,22 @@ One candidate's attempt. snapshot_json freezes exactly what they were shown (que
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):372 |  | insert | `test_id`, `candidate_name`, `candidate_email`, `token_hash`, `snapshot_json`, `time_limit_minutes`, `expires_datetime`, `created_by_analyst_id`, `created_datetime` |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):402 |  | update | `token_hash`, `expires_datetime` |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):409 |  | update | `is_cancelled` |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):414 |  | delete |  |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):421 |  | update | `notes` |  |
-| [api/lms/test_public.php](/code/files/api/lms/test_public.php.md):44 |  | update | `started_datetime` |  |
-| [api/lms/test_public.php](/code/files/api/lms/test_public.php.md):58 |  | update | `responses_json` |  |
-| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md):339 | `lmsCtFinalise` | update | `submitted_datetime`, `finish_reason`, `score_percent`, `skills_json` |  |
-| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md):369 | `lmsCtPurge` | delete |  |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):378 |  | insert | `test_id`, `candidate_name`, `candidate_email`, `token_hash`, `snapshot_json`, `time_limit_minutes`, `expires_datetime`, `created_by_analyst_id`, `created_datetime` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):408 |  | update | `token_hash`, `expires_datetime` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):415 |  | update | `is_cancelled` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):420 |  | delete |  |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):427 |  | update | `notes` |  |
+| [api/lms/test_public.php](/code/files/api/lms/test_public.php.md):49 |  | update | `started_datetime` |  |
+| [api/lms/test_public.php](/code/files/api/lms/test_public.php.md):63 |  | update | `responses_json` |  |
+| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md):342 | `lmsCtFinalise` | update | `submitted_datetime`, `finish_reason`, `score_percent`, `skills_json` |  |
+| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md):372 | `lmsCtPurge` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/lms/test_public.php](/code/files/api/lms/test_public.php.md) | L66 |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md) | ctLoadSitting L58, L73, L91, L131, L228 |  |
-| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md) | lmsCtFindSitting L276, lmsCtFinaliseOverdue L349 |  |
+| [api/lms/test_public.php](/code/files/api/lms/test_public.php.md) | L71 |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md) | ctLoadSitting L64, L79, L97, L137, L234 |  |
+| [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md) | lmsCtFindSitting L279, lmsCtFinaliseOverdue L352 |  |
 | [lms/test.php](/code/files/lms/test.php.md) | L34 |  |
 

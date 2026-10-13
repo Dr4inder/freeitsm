@@ -6,7 +6,7 @@ Scope items (deliverables, with MoSCoW)
 function apiSerializeProjectItem(array $i): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 347.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 371.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

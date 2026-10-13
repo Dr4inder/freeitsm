@@ -23,7 +23,7 @@ the first person to add a target type would have found out that they don't.
 function lmsAssignmentReachSql(PDO $conn, LmsLearner $learner): array
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 206.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 212.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -36,8 +36,8 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 212 | `lmsAssignmentReachSql` | read [lms_learning_groups](/code/tables/lms_learning_groups.md), read [lms_learning_group_members](/code/tables/lms_learning_group_members.md) |  |
-| 230 | `lmsAssignmentReachSql` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
+| 218 | `lmsAssignmentReachSql` | read [lms_learning_groups](/code/tables/lms_learning_groups.md), read [lms_learning_group_members](/code/tables/lms_learning_group_members.md) |  |
+| 236 | `lmsAssignmentReachSql` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
 
 ## Calls
 

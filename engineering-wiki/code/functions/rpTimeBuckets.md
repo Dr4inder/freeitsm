@@ -6,7 +6,7 @@ Buckets for a time series over the range: day, week (Monday) or month, chosen fr
 function rpTimeBuckets(array $range, string $grouping): array
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 106.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

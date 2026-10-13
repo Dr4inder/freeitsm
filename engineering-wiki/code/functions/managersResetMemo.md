@@ -1,10 +1,12 @@
 # managersResetMemo()
 
+Clears the per-request managers cache, so settings saved mid-request are read again.
+
 ```php
 function managersResetMemo(): void
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 58.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 59.
 
 **Returns:** `void`
 

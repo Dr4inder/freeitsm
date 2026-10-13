@@ -1,10 +1,12 @@
 # projectCapacity()
 
+The capacity view: each analyst's project hours and rota desk hours, week by week for the next `$weeks` weeks, plus open tickets and work given to contractors.
+
 ```php
 function projectCapacity(PDO $conn, int $viewerId, int $weeks = 4): array
 ```
 
-Defined in [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md), line 68.
+Defined in [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md), line 71.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,14 +20,14 @@ Defined in [includes/projects/capacity.php](/code/files/includes/projects/capaci
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 98 | `projectCapacity` | read [projects](/code/tables/projects.md) |  |
-| 107 | `projectCapacity` | read [projects](/code/tables/projects.md) |  |
-| 121 | `projectCapacity` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 125 | `projectCapacity` | read [suppliers](/code/tables/suppliers.md) |  |
-| 140 | `projectCapacity` | read [project_members](/code/tables/project_members.md) |  |
-| 198 | `projectCapacity` | read [analysts](/code/tables/analysts.md) |  |
-| 206 | `projectCapacity` | read [ticket_rota_entries](/code/tables/ticket_rota_entries.md), read [ticket_rota_shifts](/code/tables/ticket_rota_shifts.md) |  |
-| 216 | `projectCapacity` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 101 | `projectCapacity` | read [projects](/code/tables/projects.md) |  |
+| 110 | `projectCapacity` | read [projects](/code/tables/projects.md) |  |
+| 124 | `projectCapacity` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 128 | `projectCapacity` | read [suppliers](/code/tables/suppliers.md) |  |
+| 143 | `projectCapacity` | read [project_members](/code/tables/project_members.md) |  |
+| 201 | `projectCapacity` | read [analysts](/code/tables/analysts.md) |  |
+| 209 | `projectCapacity` | read [ticket_rota_entries](/code/tables/ticket_rota_entries.md), read [ticket_rota_shifts](/code/tables/ticket_rota_shifts.md) |  |
+| 219 | `projectCapacity` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Calls
 

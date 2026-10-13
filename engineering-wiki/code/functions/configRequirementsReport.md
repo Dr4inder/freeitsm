@@ -6,7 +6,7 @@ Compare the running state and the operator's config.php with the list. Each row:
 function configRequirementsReport(string $configPath): array
 ```
 
-Defined in [includes/config_requirements.php](/code/files/includes/config_requirements.php.md), line 118.
+Defined in [includes/config_requirements.php](/code/files/includes/config_requirements.php.md), line 121.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -98,6 +98,15 @@ function filesCopyItemRow(PDO $conn, int $analystId, array $it, int $target, str
     return $newId;
 }
 
+/**
+ * Moves or copies one folder to the target folder (0 = the top level). RuntimeException
+ * = a refusal to report for this one entry.
+ *
+ * Move needs Modify and copy needs Download on the folder, and a folder can never go
+ * inside itself. A move keeps the folder's own permission entries; a copy is built by
+ * filesCopyFolderTree(). Anything that lands at the top level gives the person doing it
+ * Full control. Both are audited.
+ */
 function filesTransferFolder(PDO $conn, int $analystId, string $mode, int $id, int $target): void
 {
     $tree = FilesAcl::tree($conn);
@@ -143,6 +152,16 @@ function filesTransferFolder(PDO $conn, int $analystId, string $mode, int $id, i
     filesAudit($conn, $analystId, 'copy', ['folder_id' => $newId], ['from' => $fromPath, 'source_folder_id' => $id]);
 }
 
+/**
+ * Copies a folder and, recursively, every file and subfolder under it that the copier
+ * can at least Download, and returns the new folder's id.
+ *
+ * The new folders inherit their permissions and carry no entries of their own. A
+ * subfolder that shuts the copier out is skipped, so copying never becomes a way to read
+ * what they cannot read.
+ *
+ * @writes files_folders, files_items, files_versions - the copied tree; file copies share the source's stored bytes
+ */
 function filesCopyFolderTree(PDO $conn, int $analystId, int $srcId, ?int $parentId, string $name): int
 {
     $conn->prepare("INSERT INTO files_folders (parent_id, name, inherit_permissions, created_by, created_datetime)
@@ -167,6 +186,12 @@ function filesCopyFolderTree(PDO $conn, int $analystId, int $srcId, ?int $parent
     return $newId;
 }
 
+/**
+ * Gives an analyst Full control on a folder, upgrading an existing entry - used when a
+ * folder lands at the top level, as when creating one there.
+ *
+ * @writes files_permissions(level) - an analyst entry for the folder
+ */
 function filesGrantCreatorFull(PDO $conn, int $analystId, int $folderId): void
 {
     $conn->prepare("INSERT INTO files_permissions (folder_id, principal_type, principal_id, level, granted_by, granted_datetime)

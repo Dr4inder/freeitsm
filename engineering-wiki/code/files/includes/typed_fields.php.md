@@ -1,6 +1,6 @@
 # includes/typed_fields.php
 
-> PHP - 508 lines
+> PHP - 511 lines
 
 TypedFields — the shared engine for user-defined, strongly-typed fields.
 
@@ -60,12 +60,12 @@ SHAPE OF A SCHEMA (where the values live)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 446 |  | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 453 |  | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 471 |  | read [users](/code/tables/users.md) |  |
-| 478 |  | read [users](/code/tables/users.md) |  |
-| 494 |  | read [assets](/code/tables/assets.md) |  |
-| 502 |  | read [assets](/code/tables/assets.md) |  |
+| 449 |  | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 456 |  | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 474 |  | read [users](/code/tables/users.md) |  |
+| 481 |  | read [users](/code/tables/users.md) |  |
+| 497 |  | read [assets](/code/tables/assets.md) |  |
+| 505 |  | read [assets](/code/tables/assets.md) |  |
 
 ## How it hangs together
 

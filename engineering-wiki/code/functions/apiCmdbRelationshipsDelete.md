@@ -1,10 +1,12 @@
 # apiCmdbRelationshipsDelete()
 
+DELETE /cmdb/objects/{id}/relationships/{relId} - deletes a relationship through CmdbService.
+
 ```php
 function apiCmdbRelationshipsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 480.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 489.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

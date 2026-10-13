@@ -1,6 +1,6 @@
 # api/v1/dev/openapi_fix.php
 
-> API endpoint - 112 lines
+> API endpoint - 131 lines
 
 Auto-fix the typed OpenAPI schemas against LIVE responses: add fields the serializers return but the schema omits (type inferred from the live value), mark `nullable` where live data is null, and relax over-strict `required`. Patches the shared component schemas in lib/openapi_schemas.php so a fix propagates to every user. Idempotent — run until openapi_verify.php is clean.
 
@@ -22,10 +22,10 @@ then openapi_check.php + `spectral lint` for full validation.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [oaf_get()](/code/functions/oaf_get.md) | 28 |  |
-| [oaf_infer()](/code/functions/oaf_infer.md) | 34 |  |
-| [oaf_patch()](/code/functions/oaf_patch.md) | 49 |  |
-| [oaf_resolvePath()](/code/functions/oaf_resolvePath.md) | 85 |  |
+| [oaf_get()](/code/functions/oaf_get.md) | 29 | GETs one API URL with the bearer key and returns [HTTP code, decoded JSON]. |
+| [oaf_infer()](/code/functions/oaf_infer.md) | 39 | Builds an OpenAPI schema from a live value - its type, nested properties or list items, and nullable for nulls, strings and objects, which can be empty in other rows. |
+| [oaf_patch()](/code/functions/oaf_patch.md) | 63 | Brings a schema node into line with one live value, in place: follows `$ref` into the shared component schemas, marks nullable where the value is null, types a typeless node, adds missing object properties and drops required fields the response does not have. |
+| [oaf_resolvePath()](/code/functions/oaf_resolvePath.md) | 104 | Turns a path template into a real path by replacing each {id} with the first id its parent collection returns - null when there is no row to use. Ids are cached per collection. |
 
 ## How it hangs together
 

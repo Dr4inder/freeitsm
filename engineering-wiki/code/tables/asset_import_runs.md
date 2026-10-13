@@ -27,8 +27,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):847 | `AssetImportService::startRun` | insert | `profile_id`, `mode`, `status`, `source_name`, `stored_file`, `triggered_by_analyst_id`, `tenant_id`, `started_datetime` |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):865 | `AssetImportService::finishRun` | update | `status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `unchanged_count`, `conflict_count`, `skipped_count`, `error_count` |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):865 | `AssetImportService::startRun` | insert | `profile_id`, `mode`, `status`, `source_name`, `stored_file`, `triggered_by_analyst_id`, `tenant_id`, `started_datetime` |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):884 | `AssetImportService::finishRun` | update | `status`, `finished_datetime`, `seen_count`, `created_count`, `updated_count`, `unchanged_count`, `conflict_count`, `skipped_count`, `error_count` |  |
 
 ## Read by
 
@@ -36,5 +36,5 @@
 |---|---|---|
 | [api/assets/get_assets.php](/code/files/api/assets/get_assets.php.md) | L309 |  |
 | [api/assets/import_history.php](/code/files/api/assets/import_history.php.md) | L50, L60 |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::schemaReady L109, AssetImportService::handleMissing L745, AssetImportService::unresolved L806, AssetImportService::loadRun L880 |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::schemaReady L110, AssetImportService::handleMissing L758, AssetImportService::unresolved L823, AssetImportService::loadRun L900 |  |
 

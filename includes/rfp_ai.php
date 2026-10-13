@@ -136,6 +136,13 @@ function rfpAiCall(PDO $conn, array $opts): array
     return $result;
 }
 
+/**
+ * Sends one prompt to the Anthropic Messages API and returns the reply text with token and
+ * cache counts.
+ *
+ * The system prompt is marked for caching, so several documents extracted in a row reuse
+ * it.
+ */
 function rfpAiCallAnthropic(array $settings, array $opts): array
 {
     // Wrap the system prompt as a single text block with a cache_control
@@ -182,6 +189,7 @@ function rfpAiCallAnthropic(array $settings, array $opts): array
     ];
 }
 
+/** Sends one prompt to the OpenAI chat completions API and returns the reply text with token counts. */
 function rfpAiCallOpenAI(array $settings, array $opts): array
 {
     $body = json_encode([

@@ -35,6 +35,6 @@ Custom asset fields (docs/design/flexible-asset-fields.md) The catalogue, the se
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L134 |  |
 | [asset-management/labels.php](/code/files/asset-management/labels.php.md) | L129 |  |
 | [includes/asset_labels.php](/code/files/includes/asset_labels.php.md) | assetLabelCustomFields L198 |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::fieldsForSets L177, AssetFieldsService::assertKeyFree L695, AssetFieldsService::assertKeyFree L699, AssetFieldsService::loadField L758 |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::fieldsForSets L177, AssetFieldsService::assertKeyFree L696, AssetFieldsService::assertKeyFree L700, AssetFieldsService::loadField L767 |  |
 | [includes/services/handover_templates.php](/code/files/includes/services/handover_templates.php.md) | HandoverTemplates::customColumns L115 |  |
 

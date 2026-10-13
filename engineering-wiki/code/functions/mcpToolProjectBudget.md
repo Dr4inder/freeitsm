@@ -6,7 +6,7 @@ The budget stays MCP-only: Warbot answers in a channel everyone in it can read.
 function mcpToolProjectBudget(PDO $conn, array $args, int $analystId, array $apiKey): string
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 266.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 277.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

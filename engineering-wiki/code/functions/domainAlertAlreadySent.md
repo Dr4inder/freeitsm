@@ -1,10 +1,12 @@
 # domainAlertAlreadySent()
 
+True when this alert (domain, kind, fingerprint) has already been claimed or sent.
+
 ```php
 function domainAlertAlreadySent(PDO $conn, int $domainId, string $kind, string $fingerprint): bool
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 58.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 63.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 60 | `domainAlertAlreadySent` | read [domain_alerts_sent](/code/tables/domain_alerts_sent.md) |  |
+| 65 | `domainAlertAlreadySent` | read [domain_alerts_sent](/code/tables/domain_alerts_sent.md) |  |
 
 ## Called from
 

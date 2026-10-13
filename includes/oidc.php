@@ -203,6 +203,10 @@ function oidcValidateIdToken(string $idToken, array $disco, array $provider, str
 // Small curl wrappers (respect the SSL_VERIFY_PEER config constant).
 // --------------------------------------------------------------------------
 
+/**
+ * GETs a JSON document (discovery, keys) and returns the body; throws on a network error or
+ * any status but 200.
+ */
 function oidcHttpGet(string $url): string {
     $ch = curl_init();
     curl_setopt_array($ch, [
@@ -222,6 +226,12 @@ function oidcHttpGet(string $url): string {
     return $body;
 }
 
+/**
+ * POSTs form fields to an OIDC endpoint and returns the body whatever the status, so the
+ * caller can read an error reply.
+ *
+ * Throws only on a network error.
+ */
 function oidcHttpPost(string $url, array $fields): string {
     $ch = curl_init();
     curl_setopt_array($ch, [

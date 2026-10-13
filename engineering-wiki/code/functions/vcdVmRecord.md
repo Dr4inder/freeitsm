@@ -6,7 +6,7 @@ One VM record from the inventory, with its NICs and disks. Null if it has no usa
 function vcdVmRecord(array $c, string $token, SimpleXMLElement $rec): ?array
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 302.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 316.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

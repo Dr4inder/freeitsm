@@ -1,6 +1,6 @@
 # KnowledgeAclCache
 
-> Class in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 711
+> Class in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 719
 
 Per-request memo for the four things the access list needs to look up: the permission model, whether any rules exist at all, the rules themselves, and the folder tree. Read once per request rather than once per query — a page that lists articles and then fetches one would otherwise ask four times over.
 
@@ -14,13 +14,15 @@ a cache that will eventually answer with yesterday's permissions.
 
 | Method | What it does |
 |---|---|
-| [get()](#get) |  |
+| [get()](#get) | The cached value for `$key`, or null when nothing is cached. |
 | [set()](#set) | Stores and returns the value, so callers can `return set(...)`. |
-| [clear()](#clear) |  |
+| [clear()](#clear) | Empties the per-request cache. |
 
 ### get
 
-*public static* - line 716
+*public static* - line 728
+
+The cached value for `$key`, or null when nothing is cached.
 
 ```php
 function get(string $key)
@@ -36,7 +38,7 @@ function get(string $key)
 
 ### set
 
-*public static* - line 722
+*public static* - line 734
 
 Stores and returns the value, so callers can `return set(...)`.
 
@@ -53,7 +55,9 @@ function set(string $key, $value)
 
 ### clear
 
-*public static* - line 728
+*public static* - line 741
+
+Empties the per-request cache.
 
 ```php
 function clear(): void

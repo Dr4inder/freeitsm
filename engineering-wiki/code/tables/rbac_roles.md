@@ -23,8 +23,8 @@ RBAC Layer 2 — per-module settings permissions (see docs/design/rbac.md). Deny
 | [api/system/role.php](/code/files/api/system/role.php.md):64 |  | delete |  |  |
 | [api/system/role.php](/code/files/api/system/role.php.md):88 |  | update | `name`, `description`, `is_active`, `updated_datetime` |  |
 | [api/system/roles.php](/code/files/api/system/roles.php.md):43 |  | insert | `name`, `description`, `is_active`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):263 | `AnalystsService::writeManagedRole` | insert | `name`, `description`, `is_active`, `created_by_id`, `managed_for_analyst_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):278 | `AnalystsService::writeManagedRole` | update | `updated_datetime` |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):270 | `AnalystsService::writeManagedRole` | insert | `name`, `description`, `is_active`, `created_by_id`, `managed_for_analyst_id`, `created_datetime`, `updated_datetime` |  |
+| [includes/services/analysts.php](/code/files/includes/services/analysts.php.md):285 | `AnalystsService::writeManagedRole` | update | `updated_datetime` |  |
 
 ## Read by
 

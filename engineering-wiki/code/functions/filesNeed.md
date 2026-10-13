@@ -6,7 +6,7 @@ Refuse unless the caller holds `$need` on the folder. Below View the folder does
 function filesNeed(PDO $conn, int $analystId, int $folderId, int $need, string $what = ''): int
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 67.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 73.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

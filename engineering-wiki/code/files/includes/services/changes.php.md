@@ -1,6 +1,6 @@
 # includes/services/changes.php
 
-> PHP - 857 lines
+> PHP - 858 lines
 
 ChangesService — the shared write rules for Change Management: create/update a change (with the per-field audit trail + the change.approved workflow event), delete, comments (append/remove), and the CAB roster + voting (with the auto-transition into Approved / back to Draft).
 
@@ -71,8 +71,8 @@ All no-ops at N=1 (isMultiTenant() false).
 | 662 | `ChangesService::unlinkTicket` | **delete** [change_tickets](/code/tables/change_tickets.md) |  |
 | 668 | `ChangesService::unlinkTicket` | **update** [changes](/code/tables/changes.md) (`modified_datetime`) |  |
 | 707 | `ChangesService::loadJoined` | read [changes](/code/tables/changes.md), read [change_types](/code/tables/change_types.md), read [change_statuses](/code/tables/change_statuses.md), read [change_priorities](/code/tables/change_priorities.md), read [change_impacts](/code/tables/change_impacts.md), read [change_categories](/code/tables/change_categories.md), read [analysts](/code/tables/analysts.md) |  |
-| 744 | `ChangesService::auditWrite` | **insert** [change_audit](/code/tables/change_audit.md) (`change_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 823 | `ChangesService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 745 | `ChangesService::auditWrite` | **insert** [change_audit](/code/tables/change_audit.md) (`change_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 824 | `ChangesService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

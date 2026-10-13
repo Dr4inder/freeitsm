@@ -60,6 +60,10 @@ class TasksService
         return ['id' => self::createTask($conn, $ctx, $in), 'created' => true];
     }
 
+    /**
+     * Creates a task with its status, priority, assignee, team or contractor, links, dates
+     * and tags, and fires task.created. Returns the new id.
+     */
     private static function createTask(PDO $conn, ActorContext $ctx, array $in): int
     {
         $title = trim((string)($in['title'] ?? ''));
@@ -179,6 +183,13 @@ class TasksService
         return $taskId;
     }
 
+    /**
+     * Changes the fields sent for a task and fires the workflow and notification events the
+     * changes call for.
+     *
+     * Closing a task stamps its completed time and lets a recurring task schedule its next
+     * occurrence.
+     */
     private static function updateTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
     {
         $current = self::loadTaskRow($conn, $ctx, $taskId);           // 404 if gone
@@ -486,6 +497,10 @@ class TasksService
         }
     }
 
+    /**
+     * Tells the recurrence engine a task was closed, so it can create the next occurrence;
+     * a failure is logged, never thrown.
+     */
     private static function recurrenceOnClosed(PDO $conn, int $taskId): void
     {
         try {
@@ -1367,6 +1382,7 @@ class TasksService
         return array_keys($ids);
     }
 
+    /** Replaces a task's tags with $tagIds. */
     private static function syncTags(PDO $conn, int $taskId, array $tagIds): void
     {
         $conn->prepare("DELETE FROM task_tag_map WHERE task_id = ?")->execute([$taskId]);
@@ -1580,6 +1596,7 @@ class TasksService
         }
     }
 
+    /** Throws unless the id is an active analyst. */
     private static function resolveAnalyst(PDO $conn, int $analystId): void
     {
         $stmt = $conn->prepare("SELECT full_name FROM analysts WHERE id = ? AND is_active = 1");
@@ -1602,6 +1619,7 @@ class TasksService
         return round((float)$v, 2);
     }
 
+    /** Validates an optional YYYY-MM-DD date for $field; blank gives null. */
     private static function parseDateOnly($value, string $field): ?string
     {
         if ($value === null || $value === '') {

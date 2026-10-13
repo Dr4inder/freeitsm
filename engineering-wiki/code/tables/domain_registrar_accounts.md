@@ -21,16 +21,16 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):546 | `DomainsService::saveRegistrarAccount` | update | `supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes` |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):554 | `DomainsService::saveRegistrarAccount` | insert | `supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`, `tenant_id`, `created_by`, `created_datetime` |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md):564 | `DomainsService::deleteRegistrarAccount` | delete |  |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):565 | `DomainsService::saveRegistrarAccount` | update | `supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes` |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):573 | `DomainsService::saveRegistrarAccount` | insert | `supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`, `tenant_id`, `created_by`, `created_datetime` |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md):584 | `DomainsService::deleteRegistrarAccount` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/domains/accounts.php](/code/files/api/domains/accounts.php.md) | L20 |  |
-| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L44, apiDomainAccountsList L395 |  |
+| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L48, apiDomainAccountsList L412 |  |
 | [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L39, domainApiLookups L185 |  |
-| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::loadAccountForActor L590, DomainsService::validateField L634, DomainsService::auditDisplay L865 |  |
+| [includes/services/domains.php](/code/files/includes/services/domains.php.md) | DomainsService::loadAccountForActor L612, DomainsService::validateField L661, DomainsService::auditDisplay L901 |  |
 

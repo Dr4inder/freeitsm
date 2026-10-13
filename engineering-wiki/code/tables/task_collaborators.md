@@ -19,16 +19,16 @@ The other people on a task (GH #89) — shown as "Involved". Modelled on change_
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):723 | `TasksService::addCollaborator` | insert | `task_id`, `analyst_id`, `added_by_id`, `added_datetime` |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):736 | `TasksService::removeCollaborator` | delete |  |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):768 | `TasksService::setCollaboratorDone` | update | `is_completed`, `completed_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):738 | `TasksService::addCollaborator` | insert | `task_id`, `analyst_id`, `added_by_id`, `added_datetime` |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):751 | `TasksService::removeCollaborator` | delete |  |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md):783 | `TasksService::setCollaboratorDone` | update | `is_completed`, `completed_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/tasks/list.php](/code/files/api/tasks/list.php.md) | L79 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksList L201, apiTasksList L205 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksList L210, apiTasksList L214 |  |
 | [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsAudienceFor L160 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::collaboratorsForMany L674, TasksService::addCollaborator L716, TasksService::setCollaboratorDone L776, TasksService::collaboratorsOutstanding L790 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::collaboratorsForMany L689, TasksService::addCollaborator L731, TasksService::setCollaboratorDone L791, TasksService::collaboratorsOutstanding L805 |  |
 

@@ -12,7 +12,7 @@ function managerGrantMembers(
 ): array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 172.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 173.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,11 +28,11 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 1
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 181 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 183 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 188 | `managerGrantMembers` | read [users](/code/tables/users.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 198 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 209 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 182 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 184 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 189 | `managerGrantMembers` | read [users](/code/tables/users.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 199 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 210 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

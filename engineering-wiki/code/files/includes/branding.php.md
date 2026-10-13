@@ -1,6 +1,6 @@
 # includes/branding.php
 
-> PHP - 402 lines
+> PHP - 403 lines
 
 Branding — the organisation's logo, and the login screen designer.
 
@@ -59,21 +59,21 @@ only, and is documented next to the settings.
 | [brandingLogoUrl()](/code/functions/brandingLogoUrl.md) | 69 | The organisation's logo as a web URL, with the bundled one as the fallback. |
 | [brandingPathIsSafe()](/code/functions/brandingPathIsSafe.md) | 95 | A stored upload pointer is only ever a file inside the branding directory. |
 | [brandingScopes()](/code/functions/brandingScopes.md) | 114 | THE THREE SCREENS, and what each one has to style. |
-| [brandingScopeValid()](/code/functions/brandingScopeValid.md) | 128 |  |
-| [brandingLoginFields()](/code/functions/brandingLoginFields.md) | 147 | THE VALIDATION TABLE — the single source of truth for the login designer. |
-| [brandingLoginKey()](/code/functions/brandingLoginKey.md) | 223 | `form_position` → the settings key it is stored under, for this screen. |
-| [brandingLoginValidate()](/code/functions/brandingLoginValidate.md) | 232 | One value, validated against its declared type. Anything that does not fit becomes the default — never an error, because this runs on the login page. |
-| [brandingLoginDesign()](/code/functions/brandingLoginDesign.md) | 270 | The whole design, validated. Safe to call on the login page: it swallows any database failure and returns the defaults. |
-| [brandingLoginCss()](/code/functions/brandingLoginCss.md) | 306 | The design as CSS custom properties. |
-| [brandingLoginPresets()](/code/functions/brandingLoginPresets.md) | 369 | One-click starting points. |
-| [brandingContrastRatio()](/code/functions/brandingContrastRatio.md) | 388 | Is this pair of colours legible together? WCAG relative-luminance contrast. |
+| [brandingScopeValid()](/code/functions/brandingScopeValid.md) | 129 | Returns the scope when it is one of the branded screens (login, portal, home), otherwise 'login'. |
+| [brandingLoginFields()](/code/functions/brandingLoginFields.md) | 148 | THE VALIDATION TABLE — the single source of truth for the login designer. |
+| [brandingLoginKey()](/code/functions/brandingLoginKey.md) | 224 | `form_position` → the settings key it is stored under, for this screen. |
+| [brandingLoginValidate()](/code/functions/brandingLoginValidate.md) | 233 | One value, validated against its declared type. Anything that does not fit becomes the default — never an error, because this runs on the login page. |
+| [brandingLoginDesign()](/code/functions/brandingLoginDesign.md) | 271 | The whole design, validated. Safe to call on the login page: it swallows any database failure and returns the defaults. |
+| [brandingLoginCss()](/code/functions/brandingLoginCss.md) | 307 | The design as CSS custom properties. |
+| [brandingLoginPresets()](/code/functions/brandingLoginPresets.md) | 370 | One-click starting points. |
+| [brandingContrastRatio()](/code/functions/brandingContrastRatio.md) | 389 | Is this pair of colours legible together? WCAG relative-luminance contrast. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 79 | `brandingLogoUrl` | read [system_settings](/code/tables/system_settings.md) |  |
-| 284 | `brandingLoginDesign` | read [system_settings](/code/tables/system_settings.md) |  |
+| 285 | `brandingLoginDesign` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

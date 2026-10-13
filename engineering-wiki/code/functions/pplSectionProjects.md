@@ -6,7 +6,7 @@ Projects (3.2.0): a person's memberships with their role and RACI duties, or a c
 function pplSectionProjects(array $s, bool $person): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 192.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 205.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

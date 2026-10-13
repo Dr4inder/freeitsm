@@ -1,6 +1,6 @@
 # Audience
 
-> Class in [includes/knowledge/audience.php](/code/files/includes/knowledge/audience.php.md), line 35
+> Class in [includes/knowledge/audience.php](/code/files/includes/knowledge/audience.php.md), line 44
 
 Who is allowed to read a Knowledge article.
 
@@ -39,14 +39,14 @@ bug and a disclosure.
 | Method | What it does |
 |---|---|
 | [all()](#all) | All valid values, most restrictive first. |
-| [isValid()](#isvalid) |  |
+| [isValid()](#isvalid) | True when the value is exactly one of the audience constants. |
 | [normalise()](#normalise) | Normalise anything user-supplied to a valid level. Anything unrecognised becomes INTERNAL — the safe end of the ladder. |
 | [visibleTo()](#visibleto) | The audiences a reader at `$viewerLevel` may see: their own rung and every more open one. An unrecognised level yields PUBLIC only (fail closed). |
 | [sqlFilter()](#sqlfilter) | SQL predicate + params restricting a query to what `$viewerLevel` may read. Returns ['', []] for an analyst — they see every rung, so no filter is needed and the SQL stays byte-identical to before this existed. |
 
 ### all
 
-*public static* - line 61
+*public static* - line 70
 
 All valid values, most restrictive first.
 
@@ -58,7 +58,9 @@ function all(): array
 
 ### isValid
 
-*public static* - line 66
+*public static* - line 76
+
+True when the value is exactly one of the audience constants.
 
 ```php
 function isValid($value): bool
@@ -72,7 +74,7 @@ function isValid($value): bool
 
 ### normalise
 
-*public static* - line 75
+*public static* - line 85
 
 Normalise anything user-supplied to a valid level. Anything unrecognised becomes INTERNAL — the safe end of the ladder.
 
@@ -88,7 +90,7 @@ function normalise($value): string
 
 ### visibleTo
 
-*public static* - line 84
+*public static* - line 94
 
 The audiences a reader at `$viewerLevel` may see: their own rung and every more open one. An unrecognised level yields PUBLIC only (fail closed).
 
@@ -102,7 +104,7 @@ function visibleTo(string $viewerLevel): array
 
 ### sqlFilter
 
-*public static* - line 98
+*public static* - line 108
 
 SQL predicate + params restricting a query to what `$viewerLevel` may read. Returns ['', []] for an analyst — they see every rung, so no filter is needed and the SQL stays byte-identical to before this existed.
 

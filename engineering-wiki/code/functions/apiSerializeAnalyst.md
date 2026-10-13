@@ -1,10 +1,12 @@
 # apiSerializeAnalyst()
 
+Shapes an analyst row for the API - id, username, name, email, active and admin flags, sign-in provider and dates. Never the password hash or MFA secret.
+
 ```php
 function apiSerializeAnalyst(array $a): array
 ```
 
-Defined in [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), line 35.
+Defined in [api/v1/resources/analysts.php](/code/files/api/v1/resources/analysts.php.md), line 39.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

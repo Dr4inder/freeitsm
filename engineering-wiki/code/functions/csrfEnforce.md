@@ -6,7 +6,7 @@ The central check. Runs on include of request_guard.php (so on every request tha
 function csrfEnforce(): void
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 226.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 228.
 
 **Returns:** `void`
 

@@ -6,7 +6,7 @@ A live file row, or null.
 function filesItem(PDO $conn, int $itemId): ?array
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 80.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 86.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_boo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 82 | `filesItem` | read [files_items](/code/tables/files_items.md) |  |
+| 88 | `filesItem` | read [files_items](/code/tables/files_items.md) |  |
 
 ## Called from
 

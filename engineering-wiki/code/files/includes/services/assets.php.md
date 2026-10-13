@@ -1,6 +1,6 @@
 # includes/services/assets.php
 
-> PHP - 1378 lines
+> PHP - 1382 lines
 
 AssetsService — the shared write rules for assets: create, per-field update (with audit trail + warranty-calendar sync), and user assignment / removal (with the custody trail).
 
@@ -67,25 +67,25 @@ Assets are install-wide (no tenant_id), so companyScope is not consulted.
 | 655 | `AssetsService::moveToCompany` | read [asset_locations](/code/tables/asset_locations.md) |  |
 | 675 | `AssetsService::moveToCompany` | **update** [assets](/code/tables/assets.md) |  |
 | 698 | `AssetsService::loadRow` | read [assets](/code/tables/assets.md) |  |
-| 713 | `AssetsService::auditWrite` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 746 | `AssetsService::validateField` | read [suppliers](/code/tables/suppliers.md) |  |
-| 808 | `AssetsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
-| 858 | `AssetsService::usersHoldingAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [assets](/code/tables/assets.md) |  |
-| 940 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md) |  |
-| 948 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 1019 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 1057 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md) |  |
-| 1073 | `AssetsService::assetsForUser` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md), read [analysts](/code/tables/analysts.md) |  |
-| 1113 | `AssetsService::assetsForUser` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
-| 1172 | `AssetsService::getIgnoredServiceTags` | read [system_settings](/code/tables/system_settings.md) |  |
-| 1231 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1242 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1248 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1258 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1285 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
-| 1292 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
-| 1296 | `AssetsService::updateAssetHostname` | **update** [assets](/code/tables/assets.md) (`hostname`) |  |
-| 1356 | `AssetsService::createDiscoveredAsset` | **insert** [assets](/code/tables/assets.md) |  |
+| 717 | `AssetsService::auditWrite` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 750 | `AssetsService::validateField` | read [suppliers](/code/tables/suppliers.md) |  |
+| 812 | `AssetsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
+| 862 | `AssetsService::usersHoldingAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [assets](/code/tables/assets.md) |  |
+| 944 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md) |  |
+| 952 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1023 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1061 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md) |  |
+| 1077 | `AssetsService::assetsForUser` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md), read [analysts](/code/tables/analysts.md) |  |
+| 1117 | `AssetsService::assetsForUser` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 1176 | `AssetsService::getIgnoredServiceTags` | read [system_settings](/code/tables/system_settings.md) |  |
+| 1235 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1246 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1252 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1262 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1289 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
+| 1296 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
+| 1300 | `AssetsService::updateAssetHostname` | **update** [assets](/code/tables/assets.md) (`hostname`) |  |
+| 1360 | `AssetsService::createDiscoveredAsset` | **insert** [assets](/code/tables/assets.md) |  |
 
 ## How it hangs together
 

@@ -6,7 +6,7 @@ Write a file by renaming a temp copy over it, so a reader never sees half of one
 function dockerTlsWriteFile(string $path, string $contents, int $mode): void
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 276.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 277.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

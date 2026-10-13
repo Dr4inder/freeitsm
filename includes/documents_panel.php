@@ -37,6 +37,11 @@ function documentsPanelAssets(string $pathPrefix = '../'): void
 }
 
 /**
+ * Renders the attached-documents panel for one record, loading its CSS and JS once.
+ *
+ * Renders nothing for an unknown record type, or for an unsaved record (id 0)
+ * unless $jsVar is given so the page can point it at a record later.
+ *
  * @param string $parentType  a key from documentEntityRegistry()
  * @param int    $parentId    the record's id. 0 mounts an EMPTY panel, for a page
  *                            that will call panel.setParent() once the user picks

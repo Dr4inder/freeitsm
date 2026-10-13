@@ -62,6 +62,9 @@ function projectCapacityShiftHours(string $start, string $end): float
 }
 
 /**
+ * The capacity view: each analyst's project hours and rota desk hours, week by week for the
+ * next $weeks weeks, plus open tickets and work given to contractors.
+ *
  * @param int $weeks 1-12
  * @return array{weeks:array, hours_per_week:float, amber:int, several:int, can_tickets:bool, rows:array, team_hours:float, team_tasks:int}
  */

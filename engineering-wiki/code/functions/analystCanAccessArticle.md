@@ -9,7 +9,7 @@ single-company or un-migrated install behaves exactly as before.
 function analystCanAccessArticle(PDO $conn, int $analystId, $articleId): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 954.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 960.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 954
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 958 | `analystCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 964 | `analystCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

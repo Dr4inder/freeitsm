@@ -6,7 +6,7 @@ The run: events, e-mail digests and renewal actions.
 function domainAlertsRun(PDO $conn, bool $dryRun = false): array
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 121.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 126.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

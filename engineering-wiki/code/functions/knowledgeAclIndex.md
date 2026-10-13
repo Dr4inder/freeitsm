@@ -6,7 +6,7 @@ All access rows as [type][object_id]['principal:id' => true]. One query.
 function knowledgeAclIndex(PDO $conn): array
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 790.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 803.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 796 | `knowledgeAclIndex` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 809 | `knowledgeAclIndex` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
 
 ## Called from
 

@@ -6,10 +6,10 @@
 
 | Method | What it does |
 |---|---|
-| [ready()](#ready) |  |
+| [ready()](#ready) | True when the project_reports table exists (after Database Verification). |
 | [listFor()](#listfor) | Reports (not briefings), newest first, with who wrote and approved them. |
-| [latestBriefing()](#latestbriefing) |  |
-| [shape()](#shape) |  |
+| [latestBriefing()](#latestbriefing) | The project's most recent AI briefing, or null. |
+| [shape()](#shape) | A project_reports row as the API returns it. |
 | [briefing()](#briefing) | The Overview's briefing: the latest, or a fresh one if it is older than the cooldown. |
 | [draftWithAi()](#draftwithai) | Draft a report with the AI. Saved as a draft for a person to edit and approve. |
 | [save()](#save) | Write a report by hand (no id) or edit a draft (id). |
@@ -25,11 +25,13 @@
 | [runSchedules()](#runschedules) | Scheduled drafts (3.3.0), from `projectAlertsScan()`: each ACTIVE project with a schedule gets one draft per period - weekly (ISO week), fortnightly (each even-numbered ISO week's pair) or monthly - drafted by the AI when it is set up, otherwise a draft holding the facts to write from. Never approved by itself: the project manager is told (project.report_drafted) and approves, edits or deletes it. One per period on the ledger, however often the scan runs. |
 | [periodKey()](#periodkey) | This period's ledger fingerprint, or null when this is not a drafting period (fortnightly, odd weeks). |
 | [draftScheduled()](#draftscheduled) | One scheduled draft: the AI's when it is set up and answers, otherwise the facts. |
-| [load()](#load) |  |
+| [load()](#load) | Loads one report (not a briefing) of the project; throws not found otherwise. |
 
 ### ready
 
-*public static* - line 35
+*public static* - line 36
+
+True when the project_reports table exists (after Database Verification).
 
 ```php
 function ready(PDO $conn): bool
@@ -43,13 +45,13 @@ function ready(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 37 | `ProjectReportsService::ready` | read [project_reports](/code/tables/project_reports.md) |  |
+| 38 | `ProjectReportsService::ready` | read [project_reports](/code/tables/project_reports.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### listFor
 
-*public static* - line 41
+*public static* - line 42
 
 Reports (not briefings), newest first, with who wrote and approved them.
 
@@ -66,13 +68,15 @@ function listFor(PDO $conn, int $projectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 45 | `ProjectReportsService::listFor` | read [project_reports](/code/tables/project_reports.md), read [analysts](/code/tables/analysts.md) |  |
+| 46 | `ProjectReportsService::listFor` | read [project_reports](/code/tables/project_reports.md), read [analysts](/code/tables/analysts.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### latestBriefing
 
-*public static* - line 58
+*public static* - line 60
+
+The project's most recent AI briefing, or null.
 
 ```php
 function latestBriefing(PDO $conn, int $projectId): ?array
@@ -87,13 +91,15 @@ function latestBriefing(PDO $conn, int $projectId): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 61 | `ProjectReportsService::latestBriefing` | read [project_reports](/code/tables/project_reports.md), read [analysts](/code/tables/analysts.md) |  |
+| 63 | `ProjectReportsService::latestBriefing` | read [project_reports](/code/tables/project_reports.md), read [analysts](/code/tables/analysts.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### shape
 
-*private static* - line 70
+*private static* - line 73
+
+A project_reports row as the API returns it.
 
 ```php
 function shape(array $r): array
@@ -105,7 +111,7 @@ function shape(array $r): array
 
 ### briefing
 
-*public static* - line 84
+*public static* - line 87
 
 The Overview's briefing: the latest, or a fresh one if it is older than the cooldown.
 
@@ -124,14 +130,14 @@ function briefing(PDO $conn, ActorContext $ctx, int $projectId, bool $refresh): 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 93 | `ProjectReportsService::briefing` | **delete** [project_reports](/code/tables/project_reports.md) |  |
-| 94 | `ProjectReportsService::briefing` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 96 | `ProjectReportsService::briefing` | **delete** [project_reports](/code/tables/project_reports.md) |  |
+| 97 | `ProjectReportsService::briefing` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### draftWithAi
 
-*public static* - line 101
+*public static* - line 104
 
 Draft a report with the AI. Saved as a draft for a person to edit and approve.
 
@@ -157,13 +163,13 @@ function draftWithAi(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 110 | `ProjectReportsService::draftWithAi` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 113 | `ProjectReportsService::draftWithAi` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### save
 
-*public static* - line 119
+*public static* - line 122
 
 Write a report by hand (no id) or edit a draft (id).
 
@@ -182,14 +188,14 @@ function save(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 133 | `ProjectReportsService::save` | **update** [project_reports](/code/tables/project_reports.md) (`title`, `body`, `ai_edited`, `updated_by_id`, `updated_datetime`) |  |
-| 139 | `ProjectReportsService::save` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 136 | `ProjectReportsService::save` | **update** [project_reports](/code/tables/project_reports.md) (`title`, `body`, `ai_edited`, `updated_by_id`, `updated_datetime`) |  |
+| 142 | `ProjectReportsService::save` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### approve
 
-*public static* - line 148
+*public static* - line 151
 
 Approve a draft. The project manager's, the creator's or a Projects manager's.
 
@@ -208,13 +214,13 @@ function approve(PDO $conn, ActorContext $ctx, int $projectId, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 157 | `ProjectReportsService::approve` | **update** [project_reports](/code/tables/project_reports.md) (`status`, `approved_by_id`, `approved_datetime`) |  |
+| 160 | `ProjectReportsService::approve` | **update** [project_reports](/code/tables/project_reports.md) (`status`, `approved_by_id`, `approved_datetime`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### delete
 
-*public static* - line 163
+*public static* - line 166
 
 Delete a draft (anyone who may change the project) or an approved report (those who may approve).
 
@@ -233,13 +239,13 @@ function delete(PDO $conn, ActorContext $ctx, int $projectId, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 174 | `ProjectReportsService::delete` | **delete** [project_reports](/code/tables/project_reports.md) |  |
+| 177 | `ProjectReportsService::delete` | **delete** [project_reports](/code/tables/project_reports.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### scheduleReady
 
-*public static* - line 186
+*public static* - line 189
 
 Have the 3.3.0 columns arrived (projects.report_schedule, project_reports.sent_*)?
 
@@ -255,12 +261,12 @@ function scheduleReady(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 190 | `ProjectReportsService::scheduleReady` | read [projects](/code/tables/projects.md) |  |
-| 190 | `ProjectReportsService::scheduleReady` | read [project_reports](/code/tables/project_reports.md) |  |
+| 193 | `ProjectReportsService::scheduleReady` | read [projects](/code/tables/projects.md) |  |
+| 193 | `ProjectReportsService::scheduleReady` | read [project_reports](/code/tables/project_reports.md) |  |
 
 ### schedule
 
-*public static* - line 197
+*public static* - line 200
 
 The project's schedule: {schedule: off|weekly|fortnightly|monthly, kind}.
 
@@ -277,13 +283,13 @@ function schedule(PDO $conn, int $projectId): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 200 | `ProjectReportsService::schedule` | read [projects](/code/tables/projects.md) |  |
+| 203 | `ProjectReportsService::schedule` | read [projects](/code/tables/projects.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### setSchedule
 
-*public static* - line 207
+*public static* - line 210
 
 Set it - anyone who may change the project.
 
@@ -309,13 +315,13 @@ function setSchedule(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 216 | `ProjectReportsService::setSchedule` | **update** [projects](/code/tables/projects.md) (`report_schedule`, `report_schedule_kind`) |  |
+| 219 | `ProjectReportsService::setSchedule` | **update** [projects](/code/tables/projects.md) (`report_schedule`, `report_schedule_kind`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### recipients
 
-*public static* - line 225
+*public static* - line 228
 
 Who a report can be sent to from the project itself: its members with an email address - analysts, the analysts in a member team, and People - and the project manager. Each once, by address.
 
@@ -332,14 +338,14 @@ function recipients(PDO $conn, int $projectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 234 | `ProjectReportsService::recipients` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 239 | `ProjectReportsService::recipients` | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 237 | `ProjectReportsService::recipients` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 242 | `ProjectReportsService::recipients` | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### send
 
-*public static* - line 256
+*public static* - line 259
 
 Email an APPROVED report (3.3.0) - the people who may approve it may send it, to any addresses (the page offers the project's members). Sent one by one through the system mailbox (ssSendSystemEmail, logged as "Project report"). Returns ['sent' => [...], 'failed' => [...]]; what was sent is recorded on the report and in the history.
 
@@ -367,13 +373,13 @@ function send(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 290 | `ProjectReportsService::send` | **update** [project_reports](/code/tables/project_reports.md) (`sent_datetime`, `sent_by_id`, `sent_to`) |  |
+| 293 | `ProjectReportsService::send` | **update** [project_reports](/code/tables/project_reports.md) (`sent_datetime`, `sent_by_id`, `sent_to`) |  |
 
 **Called from:** [api/projects/reports.php](/code/files/api/projects/reports.php.md)
 
 ### emailHtml
 
-*public static* - line 298
+*public static* - line 301
 
 The email: the report as the page shows it (the same three marks), in plain inline styles.
 
@@ -390,7 +396,7 @@ function emailHtml(array $project, array $report, string $sender, string $note):
 
 ### markdownHtml
 
-*public static* - line 312
+*public static* - line 315
 
 Escape, then headings, bullets and **bold** - the marks the AI is told to use (projects-reports.js `md()`).
 
@@ -404,7 +410,7 @@ function markdownHtml(string $text): string
 
 ### runSchedules
 
-*public static* - line 337
+*public static* - line 340
 
 Scheduled drafts (3.3.0), from `projectAlertsScan()`: each ACTIVE project with a schedule gets one draft per period - weekly (ISO week), fortnightly (each even-numbered ISO week's pair) or monthly - drafted by the AI when it is set up, otherwise a draft holding the facts to write from. Never approved by itself: the project manager is told (project.report_drafted) and approves, edits or deletes it. One per period on the ledger, however often the scan runs.
 
@@ -421,14 +427,14 @@ function runSchedules(PDO $conn, ?int $projectId = null): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 340 | `ProjectReportsService::runSchedules` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 346 | `ProjectReportsService::runSchedules` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 343 | `ProjectReportsService::runSchedules` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 349 | `ProjectReportsService::runSchedules` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
 
 **Called from:** [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md)
 
 ### periodKey
 
-*public static* - line 374
+*public static* - line 377
 
 This period's ledger fingerprint, or null when this is not a drafting period (fortnightly, odd weeks).
 
@@ -443,7 +449,7 @@ function periodKey(string $schedule, ?int $now = null): ?string
 
 ### draftScheduled
 
-*private static* - line 387
+*private static* - line 390
 
 One scheduled draft: the AI's when it is set up and answers, otherwise the facts.
 
@@ -460,11 +466,13 @@ function draftScheduled(PDO $conn, array $p): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 408 | `ProjectReportsService::draftScheduled` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 411 | `ProjectReportsService::draftScheduled` | **insert** [project_reports](/code/tables/project_reports.md) (`project_id`, `kind`, `title`, `body`, `status`, `ai_drafted`, `ai_model`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 ### load
 
-*private static* - line 416
+*private static* - line 420
+
+Loads one report (not a briefing) of the project; throws not found otherwise.
 
 ```php
 function load(PDO $conn, int $projectId, int $id): array
@@ -480,5 +488,5 @@ function load(PDO $conn, int $projectId, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 418 | `ProjectReportsService::load` | read [project_reports](/code/tables/project_reports.md) |  |
+| 422 | `ProjectReportsService::load` | read [project_reports](/code/tables/project_reports.md) |  |
 

@@ -1,10 +1,12 @@
 # rpStr()
 
+A string cut to `$max` characters, with control and zero-width characters removed.
+
 ```php
 function rpStr($v, int $max): string
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 90.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

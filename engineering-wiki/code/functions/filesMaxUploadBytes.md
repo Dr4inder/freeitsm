@@ -1,10 +1,12 @@
 # filesMaxUploadBytes()
 
+The largest file an analyst may upload, in bytes, from the files_max_upload_mb setting.
+
 ```php
 function filesMaxUploadBytes(PDO $conn): int
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 55.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

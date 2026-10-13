@@ -1,10 +1,12 @@
 # handleRemoveMember()
 
+Removes one analyst or portal user from a user group.
+
 ```php
 function handleRemoveMember(PDO $conn, array $input): void
 ```
 
-Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 389.
+Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 400.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +19,7 @@ Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 400 | `handleRemoveMember` | **delete** [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
+| 411 | `handleRemoveMember` | **delete** [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) |  |
 
 ## Called from
 

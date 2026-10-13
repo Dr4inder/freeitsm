@@ -1,10 +1,12 @@
 # domainLinkKind()
 
+Returns the definition (table, column, module...) of one link kind; throws a validation ServiceError for an unknown kind.
+
 ```php
 function domainLinkKind(string $kind): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 62.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 65.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

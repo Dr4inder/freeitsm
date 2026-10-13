@@ -1,10 +1,12 @@
 # apiContractSelect()
 
+The SELECT for contracts, with supplier, owner, status and payment schedule names, the customer and company columns and, once Database Verification has added it, the cost centre.
+
 ```php
 function apiContractSelect(PDO $conn): string
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 49.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 54.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,8 +18,8 @@ Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contrac
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 58 | `apiContractSelect` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 60 | `apiContractSelect` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [payment_schedules](/code/tables/payment_schedules.md) |  |
+| 63 | `apiContractSelect` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 65 | `apiContractSelect` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [payment_schedules](/code/tables/payment_schedules.md) |  |
 
 ## Calls
 

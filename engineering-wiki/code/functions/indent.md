@@ -1,10 +1,12 @@
 # indent()
 
+Indents every line of a block of text by `$pad`.
+
 ```php
 function indent(string $s, string $pad = ' '): string
 ```
 
-Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 80.
+Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 89.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

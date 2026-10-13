@@ -1,6 +1,6 @@
 # includes/services/notifications.php
 
-> PHP - 532 lines
+> PHP - 538 lines
 
 In-app notifications (discussion #55).
 
@@ -45,7 +45,7 @@ preferences (rule 4) are analyst-only, because a portal user has none.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 243 | `NotificationsService::preferences` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 244 | `NotificationsService::preferences` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## How it hangs together
 

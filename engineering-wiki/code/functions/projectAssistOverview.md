@@ -12,7 +12,7 @@ function projectAssistOverview(
 ): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 134.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 139.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,8 +28,8 @@ Defined in [includes/projects/assistant.php](/code/files/includes/projects/assis
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 146 | `projectAssistOverview` | read [project_stages](/code/tables/project_stages.md) |  |
-| 178 | `projectAssistOverview` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 151 | `projectAssistOverview` | read [project_stages](/code/tables/project_stages.md) |  |
+| 183 | `projectAssistOverview` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

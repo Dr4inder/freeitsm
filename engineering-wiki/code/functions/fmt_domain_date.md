@@ -6,7 +6,7 @@
 function fmt_domain_date(?string $ymd): string
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 287.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 294.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

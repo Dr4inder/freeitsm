@@ -6,7 +6,7 @@ The connection this analyst's calendar work goes through, or null.
 function calendarSyncConnectionFor(PDO $conn, array $enrolment): ?array
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 184.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 185.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

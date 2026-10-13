@@ -16,7 +16,7 @@ what to deal with first.
 function demoBlockingModules(PDO $conn, string $table, string $exceptModule): array
 ```
 
-Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 129.
+Defined in [includes/demo_data.php](/code/files/includes/demo_data.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Change linking — POST /problems/{id}/changes, DELETE .../{change_id} (shared c
 function apiProblemChangesLink(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 377.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 390.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

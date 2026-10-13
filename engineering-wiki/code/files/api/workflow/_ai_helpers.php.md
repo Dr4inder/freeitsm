@@ -1,6 +1,6 @@
 # api/workflow/_ai_helpers.php
 
-> API endpoint - 210 lines
+> API endpoint - 230 lines
 
 Workflows AI helpers — Stage 3 + Settings (#343).
 
@@ -37,9 +37,9 @@ Lower-level provider drivers:
 | [workflowEffectiveSslVerify()](/code/functions/workflowEffectiveSslVerify.md) | 70 | Resolve the effective SSL_VERIFYPEER flag for an outbound curl call. |
 | [loadWorkflowAiConfig()](/code/functions/loadWorkflowAiConfig.md) | 81 | Load the workflow-specific AI settings from `system_settings`. Throws if no key is configured so the caller can surface "configure your AI provider under Workflow → Settings → AI Integration first" to the user. |
 | [callWorkflowAi()](/code/functions/callWorkflowAi.md) | 96 | Provider-agnostic one-shot call via the shared client (Anthropic / OpenAI / OpenRouter). Returns the assistant's response text (a plain string). |
-| [wfCallAnthropic()](/code/functions/wfCallAnthropic.md) | 110 |  |
-| [wfCallOpenAI()](/code/functions/wfCallOpenAI.md) | 152 |  |
-| [parseClaudeJson()](/code/functions/parseClaudeJson.md) | 195 |  |
+| [wfCallAnthropic()](/code/functions/wfCallAnthropic.md) | 117 | Sends a system prompt and one user message to the Anthropic Messages API and returns the reply text, trimmed. |
+| [wfCallOpenAI()](/code/functions/wfCallOpenAI.md) | 166 | Sends a system prompt and one user message to the OpenAI Chat Completions API and returns the reply text, trimmed. |
+| [parseClaudeJson()](/code/functions/parseClaudeJson.md) | 215 | Pulls the JSON out of an AI reply - strips Markdown code fences and any text before the first { or [ - and decodes it. |
 
 ## How it hangs together
 

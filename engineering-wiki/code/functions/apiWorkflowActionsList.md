@@ -6,7 +6,7 @@ GET /workflow-actions — every action type with its args spec (labels, required
 function apiWorkflowActionsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 413.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 428.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -97,6 +97,7 @@ class AssetTagsService
         return $cfg;
     }
 
+    /** True when asset tags are generated automatically for the company. */
     public static function isAutogenEnabled(PDO $conn, ?int $tenantId): bool
     {
         return (self::config($conn, $tenantId)['asset_tag_autogen_enabled'] ?? '0') === '1';
@@ -188,6 +189,7 @@ class AssetTagsService
         self::windCounterTo($conn, self::counterKey($conn, $cfg, $tenantId), max(1, $next) - 1);
     }
 
+    /** Moves the tag counter forward to $lastIssued, never back. */
     private static function windCounterTo(PDO $conn, string $key, int $lastIssued): void
     {
         $conn->prepare(

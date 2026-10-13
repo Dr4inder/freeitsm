@@ -6,7 +6,7 @@ Retention in days from settings. 0 (the default) means keep forever.
 function warRoomRetentionDays(PDO $conn): int
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1132.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1133.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 113
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1135 | `warRoomRetentionDays` | read [system_settings](/code/tables/system_settings.md) |  |
+| 1136 | `warRoomRetentionDays` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

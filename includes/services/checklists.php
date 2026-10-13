@@ -309,6 +309,7 @@ class ChecklistsService
         'role'     => ['table' => 'checklist_roles',      'label' => 'Role'],
     ];
 
+    /** The table and label of a checklist settings list; throws for an unknown list. */
     private static function lookup(string $kind): array
     {
         if (!isset(self::LOOKUPS[$kind])) {
@@ -583,6 +584,7 @@ class ChecklistsService
         $st->execute([$itemId]);
         return (int)($st->fetchColumn() ?: 0);
     }
+    /** The task a checklist is attached to, or 0. */
     public static function taskIdForChecklist(PDO $conn, int $checklistId): int
     {
         $st = $conn->prepare("SELECT task_id FROM task_checklists WHERE id = ?");

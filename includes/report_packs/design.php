@@ -79,14 +79,17 @@ function rpDefaultDesign(string $name): array
     ];
 }
 
+/** A #rrggbb colour in lower case, or $default when the value is not one. */
 function rpColour($v, ?string $default): ?string
 {
     return (is_string($v) && preg_match('/^#[0-9a-fA-F]{6}$/', $v)) ? strtolower($v) : $default;
 }
+/** A number clamped between $min and $max, or $default when the value is not numeric. */
 function rpNum($v, float $min, float $max, float $default): float
 {
     return is_numeric($v) ? max($min, min($max, (float)$v)) : $default;
 }
+/** A string cut to $max characters, with control and zero-width characters removed. */
 function rpStr($v, int $max): string
 {
     $s = is_string($v) ? $v : (is_numeric($v) ? (string)$v : '');
@@ -96,6 +99,7 @@ function rpStr($v, int $max): string
     $s = preg_replace('/[\x{200B}\x{FEFF}]/u', '', $s) ?? '';
     return mb_substr($s, 0, $max);
 }
+/** The value when it is one of $allowed, else $default. */
 function rpPick($v, array $allowed, string $default): string
 {
     return (is_string($v) && in_array($v, $allowed, true)) ? $v : $default;

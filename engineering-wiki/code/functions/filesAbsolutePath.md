@@ -6,7 +6,7 @@ The absolute path of a stored version, or null if the row's path is not one we c
 function filesAbsolutePath(PDO $conn, string $rel): ?string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 78.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

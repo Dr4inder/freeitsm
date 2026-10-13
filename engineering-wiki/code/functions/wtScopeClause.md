@@ -10,7 +10,7 @@ that is the only safe way to use this.
 function wtScopeClause(PDO $conn, int $analystId, string $scope, string $column): array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 232.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 235.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ A module's display name, for "You do not have access to X".
 function rpModuleName(string $key): string
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 362.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 366.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

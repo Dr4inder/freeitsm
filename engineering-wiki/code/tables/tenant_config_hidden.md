@@ -37,5 +37,5 @@ Multi-tenancy: the per-company "hide" layer for global config (the add+hide over
 | [api/tickets/get_ticket_types.php](/code/files/api/tickets/get_ticket_types.php.md) | L82 |  |
 | [api/tickets/save_ticket_origin.php](/code/files/api/tickets/save_ticket_origin.php.md) | L56 |  |
 | [api/tickets/save_ticket_type.php](/code/files/api/tickets/save_ticket_type.php.md) | L59 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getTenantConfigRows L1340 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getTenantConfigRows L1346 |  |
 

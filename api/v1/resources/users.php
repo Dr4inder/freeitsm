@@ -37,6 +37,10 @@ function apiUserCostCentre(PDO $conn, array $body, ?int $tenantId, ?int $current
     }
 }
 
+/**
+ * Shapes a requester (users row) for the API - email (null for a directory user with no
+ * mailbox), names, company, active flag, cost centre and created date.
+ */
 function apiSerializeUser(array $u): array {
     return [
         'id'             => (int)$u['id'],

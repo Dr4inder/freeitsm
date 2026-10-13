@@ -15,6 +15,6 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateChanges L55 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectUnapprovedChanges L444 |  |
+| [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateChanges L56 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectUnapprovedChanges L461 |  |
 

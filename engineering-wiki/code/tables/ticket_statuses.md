@@ -53,39 +53,39 @@
 | [api/tickets/get_scheduled_tickets.php](/code/files/api/tickets/get_scheduled_tickets.php.md) | L45 |  |
 | [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L117, L132, L171, L186, L239, L254 ... |  |
 | [api/tickets/get_ticket_statuses.php](/code/files/api/tickets/get_ticket_statuses.php.md) | L20 |  |
-| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L241, getCategoricalWithSeries L309, getTimeData L376, getTimeWithSeries L404, getCreatedVsClosedData L476 |  |
+| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L277, getCategoricalWithSeries L351, getTimeData L424, getTimeWithSeries L458, getCreatedVsClosedData L536 |  |
 | [api/tickets/get_user_tickets.php](/code/files/api/tickets/get_user_tickets.php.md) | L31 |  |
 | [api/tickets/save_ticket_status.php](/code/files/api/tickets/save_ticket_status.php.md) | L73 |  |
-| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L76 |  |
+| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L80 |  |
 | [api/tickets/search_content.php](/code/files/api/tickets/search_content.php.md) | L85 |  |
 | [api/tickets/search_tickets.php](/code/files/api/tickets/search_tickets.php.md) | L67, L89 |  |
-| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbObjectTicketsList L498 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L204 |  |
+| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbObjectTicketsList L507 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L212 |  |
 | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | apiStatusesList L55 |  |
-| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L34, apiTicketsList L218 |  |
-| [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | apiUsersGet L127 |  |
+| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L38, apiTicketsList L226 |  |
+| [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | apiUsersGet L131 |  |
 | [api/webchat/poll.php](/code/files/api/webchat/poll.php.md) | L75 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTicket L51 |  |
-| [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkDescribe L146 |  |
+| [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkDescribe L149 |  |
 | [includes/inbox_view_filter.php](/code/files/includes/inbox_view_filter.php.md) | inboxViewFilterSql L50 |  |
 | [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapWindowSql L56 |  |
 | [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) | ingestInboundMessage L157 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleCompanyCards L157, peopleTickets L312, peopleTickets L321 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L216 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L181 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleCompanyCards L158, peopleTickets L313, peopleTickets L322 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L219 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L185 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewTicket L127 |  |
 | [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L35 |  |
 | [includes/search/search.php](/code/files/includes/search/search.php.md) | searchCorpusQuery L278 |  |
-| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::createTicket L112, TicketsService::loadTicket L1061, TicketsService::resolveStatus L1136, TicketsService::resolveStatus L1139 |  |
+| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::createTicket L112, TicketsService::loadTicket L1061, TicketsService::resolveStatus L1137, TicketsService::resolveStatus L1140 |  |
 | [includes/sla.php](/code/files/includes/sla.php.md) | sla_get_state L47, sla_get_state L113, sla_get_state L125 |  |
 | [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_run_breach_check L38 |  |
 | [includes/template_email.php](/code/files/includes/template_email.php.md) | buildTicketMergeData L334 |  |
-| [includes/ticket_links.php](/code/files/includes/ticket_links.php.md) | ticketLinksFor L189, ticketLinkableList L246 |  |
+| [includes/ticket_links.php](/code/files/includes/ticket_links.php.md) | ticketLinksFor L196, ticketLinkableList L253 |  |
 | [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md) | mergeFirstClosedStatusId L605 |  |
 | [includes/ticket_reply.php](/code/files/includes/ticket_reply.php.md) | reopenTicketForCustomerReply L77, reopenTicketForCustomerReply L92 |  |
 | [includes/ticket_split.php](/code/files/includes/ticket_split.php.md) | splitCreateTicket L268 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOpenIncidents L393, warbotToolOpenIncidents L405, warbotToolRelatedTickets L846 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOpenIncidents L403, warbotToolOpenIncidents L415, warbotToolRelatedTickets L879 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L166, getWatchtowerData L198, getWatchtowerData L226, getWatchtowerData L246 |  |
 | [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatOpenTicket L201 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_set_ticket_status L2087, WorkflowEngine::action_set_ticket_status L2098, WorkflowEngine::action_create_ticket L2491 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_set_ticket_status L2134, WorkflowEngine::action_set_ticket_status L2145, WorkflowEngine::action_create_ticket L2575 |  |
 

@@ -34,6 +34,14 @@ require_once dirname(__DIR__, 3) . '/includes/timezone.php';   // naive_today_sq
 // Apps (read-only inventory catalogue)
 // ---------------------------------------------------------------------------
 
+/**
+ * GET /software/apps - the discovered applications with install and licence counts,
+ * paginated.
+ *
+ * ?q= matches name or publisher, ?filter= is apps, components or all (the Software
+ * screen's tabs), and ?sort= takes name, publisher, install_count or id, with a leading
+ * - for descending.
+ */
 function apiSoftwareAppsList(PDO $conn, array $apiKey, array $params, array $body): void {
     $where  = ['1=1'];
     $args   = [];
@@ -107,6 +115,7 @@ function apiSoftwareAppsList(PDO $conn, array $apiKey, array $params, array $bod
     ]);
 }
 
+/** Loads one discovered application row, or answers 404 and stops. */
 function apiSoftwareLoadApp(PDO $conn, int $appId): array {
     $stmt = $conn->prepare("SELECT id, display_name, publisher, first_detected FROM software_inventory_apps WHERE id = ?");
     $stmt->execute([$appId]);
@@ -204,6 +213,10 @@ function apiSoftwareAppMachinesList(PDO $conn, array $apiKey, array $params, arr
 // Licences
 // ---------------------------------------------------------------------------
 
+/**
+ * The SELECT for software licences, with the application's name and publisher, the
+ * creator's name and how many machines have the application installed.
+ */
 function apiSoftwareLicenceSelect(): string {
     return "SELECT l.*, a.display_name AS app_name, a.publisher AS app_publisher,
                    an.full_name AS created_by_name,
@@ -214,6 +227,11 @@ function apiSoftwareLicenceSelect(): string {
             LEFT JOIN analysts an ON an.id = l.created_by";
 }
 
+/**
+ * Shapes a licence row for the API, adding renewal_status - overdue, due_soon (inside
+ * the notice period, 30 days by default) or ok - computed the way the licence screen
+ * colours it.
+ */
 function apiSerializeLicence(array $r): array {
     // The licence screen's client-side colour logic, computed server-side:
     // overdue = renewal passed; due_soon = within notice period (default 30).
@@ -253,6 +271,7 @@ function apiSerializeLicence(array $r): array {
     ];
 }
 
+/** Loads one licence row (apiSoftwareLicenceSelect), or answers 404 and stops. */
 function apiLoadLicence(PDO $conn, int $licenceId): array {
     $stmt = $conn->prepare(apiSoftwareLicenceSelect() . " WHERE l.id = ?");
     $stmt->execute([$licenceId]);
@@ -328,6 +347,7 @@ function apiSoftwareLicencesList(PDO $conn, array $apiKey, array $params, array 
     ]);
 }
 
+/** GET /software/licences/{id} - one licence. */
 function apiSoftwareLicencesGet(PDO $conn, array $apiKey, array $params, array $body): void {
     apiRespond(apiSerializeLicence(apiLoadLicence($conn, $params[0])));
 }

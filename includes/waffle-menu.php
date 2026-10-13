@@ -669,6 +669,11 @@ function renderWaffleMenuButton() {
     <?php
 }
 
+/**
+ * Renders the waffle drawer: the module launcher (System for administrators
+ * only, every other module filtered by the analyst's allowed modules) and the
+ * Recent tab, whose trail ships empty and is fetched the first time it opens.
+ */
 function renderWaffleMenuPanel($modules, $current_module, $path_prefix) {
     $allowed = $_SESSION['allowed_modules'] ?? null;
     ?>
@@ -734,6 +739,14 @@ function renderWaffleMenuPanel($modules, $current_module, $path_prefix) {
     <?php
 }
 
+/**
+ * Outputs the scripts every analyst page shares: the analyst's toast, chime,
+ * search-panel and desktop-notification preferences as window globals (one
+ * user_preferences query), toast/confirm/clipboard, the command palette with
+ * the modules this analyst may see, and the waffle drawer's own JS.
+ *
+ * @reads user_preferences - so the bell and toasts need not ask on every page
+ */
 function renderWaffleMenuJS() {
     // Pre-fetch the analyst's toast notification preferences so toast.js
     // doesn't have to AJAX for them on every page. Keys mirror the
@@ -1230,6 +1243,12 @@ function renderNotificationBell($path_prefix) {
     ]);
 }
 
+/**
+ * Renders the header's War Room alert button and panel, which poll
+ * api/war-room/alerts.php every minute and stay hidden until something is
+ * waiting. Not polled on the War Room page itself; desktop popups only when the
+ * analyst's warroom_desktop_alerts preference is on.
+ */
 function renderWarRoomAlerts($path_prefix) {
     if (!isset($_SESSION['analyst_id'])) return;
 
@@ -1433,6 +1452,13 @@ function renderWarRoomAlerts($path_prefix) {
     <?php
 }
 
+/**
+ * Renders the right-hand side of the analyst header: the "Back to" link, the
+ * company switcher, the notification bell, War Room alerts, the mail-check
+ * button, the initials avatar and its account menu (preferences, password, MFA, the portal
+ * link when the analyst could sign in there, appearance, log out), plus the
+ * password and MFA dialogs and their script.
+ */
 function renderHeaderRight($analyst_name, $path_prefix) {
     // Extract initials from analyst name
     $parts = explode(' ', trim($analyst_name));

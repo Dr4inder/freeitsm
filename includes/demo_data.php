@@ -57,6 +57,7 @@ function demoAfterImport(PDO $conn, string $module): void {
     }
 }
 
+/** Returns the path of a module's demo data file, database/demo-data/{module}.json. */
 function demoDataPath(string $module): string {
     return __DIR__ . "/../database/demo-data/{$module}.json";
 }

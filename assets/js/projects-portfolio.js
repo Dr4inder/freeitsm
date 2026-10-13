@@ -6,6 +6,8 @@
  * what needs attention), and the search narrows whichever view is open. The
  * list is already company-scoped by the server, so nothing here decides who
  * may see what.
+ *
+ * @wiki Projects-Internals-1-Architecture
  */
 (function () {
     'use strict';
@@ -23,6 +25,7 @@
     // Remember the chosen view per browser - a convenience, never state that matters.
     try { view = localStorage.getItem('freeitsm.projects.view') || 'live'; } catch (e) { /* private mode */ }
 
+    /** True when a project belongs in view v - live, mine, at risk, proposed, waiting for approval, on hold, finished or all. */
     function inView(p, v) {
         switch (v) {
             case 'live':     return LIVE.includes(p.status);
@@ -39,7 +42,9 @@
     // ---- Order (3.3.0) --------------------------------------------------------------
     const PRIO = { critical: 0, high: 1, medium: 2, low: 3 };
     const HEALTH = { red: 0, amber: 1, green: 2 };
+    /** Sort order by target finish (projects with none last), then by name. */
     const byTarget = (a, b) => (a.target_end_date || '9999').localeCompare(b.target_end_date || '9999') || a.name.localeCompare(b.name);
+    /** The rows in the chosen order - priority, health or name, each then by target; 'target' keeps the server's order. */
     function sorted(rows) {
         const r = rows.slice();
         if (sort === 'priority') r.sort((a, b) => (PRIO[a.priority || 'medium'] - PRIO[b.priority || 'medium']) || byTarget(a, b));
@@ -83,6 +88,7 @@
      */
     function roadmap(rows) {
         const box = document.getElementById('prjRoadmap');
+        /** A Y-m-d date as a whole day number (days since 1970, UTC). */
         const dn = s => Math.floor(Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000);
         const today = dn(P.todayStr());
         const spans = rows.map(p => {
@@ -97,6 +103,7 @@
         const LW = window.matchMedia && window.matchMedia('(max-width: 768px)').matches ? 140 : 280;
         const avail = Math.max(300, box.parentNode.clientWidth - LW - 20);
         const dayW = Math.max(2, avail / (last - start + 1));
+        /** The x position of a day number on the roadmap track. */
         const x = n => (n - start) * dayW;
         const trackW = Math.ceil((last - start + 1) * dayW);
         const fmt = new Intl.DateTimeFormat(document.documentElement.lang || undefined, { month: 'short', year: 'numeric', timeZone: 'UTC' });
@@ -132,12 +139,14 @@
         sc.scrollLeft = Math.max(0, x(today) - (sc.clientWidth - LW) / 3);
     }
 
+    /** True when a project matches the search text - name, goal, summary, code, owner or company. */
     function matches(p) {
         if (!q) return true;
         const hay = ((p.name || '') + ' ' + (p.goal || '') + ' ' + (p.summary || '') + ' ' + (p.code || '') + ' ' + (p.owner_name || '') + ' ' + (p.company_name || '')).toLowerCase();
         return hay.indexOf(q) !== -1;
     }
 
+    /** One project's card on the portfolio - colour band, code, priority, status, name, goal, progress ring, current stage, next milestone, owner, target, and chips for what needs attention. */
     function card(p, i) {
         const tp = P.targetPhrase(p);
         const done = p.task_total > 0
@@ -183,6 +192,7 @@
             + '</a>';
     }
 
+    /** Redraws the portfolio for the current view, search, sort and layout - view counts, the summary tiles, the health strip and the cards, roadmap or charts. */
     function render() {
         const grid = document.getElementById('prjGrid');
         const rows = all.filter(p => inView(p, view) && matches(p));
@@ -194,6 +204,7 @@
         });
 
         const live = all.filter(p => LIVE.includes(p.status));
+        /** Writes a value into the summary tile with this key. */
         const set = (k, v) => { const el = document.querySelector('[data-tile="' + k + '"]'); if (el) el.textContent = v; };
         set('live', live.length);
         set('at_risk', live.filter(p => p.shown_health === 'red' || p.shown_health === 'amber').length);
@@ -222,8 +233,10 @@
     // a risk heat map of every open risk, and every milestone on one calendar.
     // Their data beyond list.php comes once from portfolio_charts.php.
     let chartData = null, heatCell = null;
+    /** A name cut to 28 characters with an ellipsis, for chart labels. */
     const short = s => s.length > 28 ? s.slice(0, 27) + '…' : s;
 
+    /** The Charts layout - progress per project, budget against actual (one chart per currency), a risk heat map whose cells list their risks, and every milestone on one calendar; the extra data is fetched once from portfolio_charts.php. */
     async function charts(ordered) {
         const box = document.getElementById('prjCharts');
         if (!chartData) {
@@ -232,6 +245,7 @@
         }
         const L = await P.lookups();
         const inView = new Set(ordered.map(p => p.id));
+        /** A project's short name for chart labels, or #id when it is not in the view. */
         const name = id => { const p = ordered.find(x => x.id === id); return p ? short(p.name) : '#' + id; };
         box.innerHTML = '<div class="prj-panel prj-pc"><h3>' + esc(T('portfolio.chart_progress')) + '</h3><div class="prj-pc-progress"></div></div>'
             + '<div class="prj-panel prj-pc"><h3>' + esc(T('portfolio.chart_budget')) + '</h3><p class="prj-muted sm prj-pc-budgetnote"></p><div class="prj-pc-budget"></div></div>'
@@ -254,6 +268,7 @@
         box.querySelector('.prj-pc-budgetnote').textContent = bud.length ? T('portfolio.chart_budget_note') : '';
         if (!bud.length) bbox.innerHTML = '<p class="prj-muted">' + esc(T('portfolio.no_budgets')) + '</p>';
         curs.forEach(cur => {
+            /** An amount in this chart's currency, whole units, for the viewer's locale. */
             const money = v => { try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(v); } catch (e) { return cur + ' ' + Math.round(v); } };
             const host = document.createElement('div');
             if (curs.length > 1) { const h = document.createElement('h4'); h.className = 'prj-pc-cur'; h.textContent = cur; bbox.appendChild(h); }
@@ -269,6 +284,7 @@
         });
         // Risk heat map of every open risk in view; a cell lists its risks.
         const risks = (chartData.risks || []).filter(r => inView.has(r.project_id));
+        /** The heat map colour class for a probability x impact score - high from 15, medium from 8. */
         const score = s => s >= 15 ? 'sc-high' : (s >= 8 ? 'sc-mid' : 'sc-low');
         let h = '<div class="prj-heat-wrap"><div class="prj-heat-y">' + esc(T('raid.probability')) + '</div><div class="prj-heat">';
         for (let p = 5; p >= 1; p--) {
@@ -296,6 +312,7 @@
         }); else mbox.innerHTML = '<p class="prj-muted">' + esc(T('portfolio.no_milestones')) + '</p>';
     }
 
+    /** Loads every project the analyst may see, shows New project only to those who may create, applies the colour palette, priority labels and default sort, and draws the page. */
     async function load() {
         try {
             const d = await P.api('list.php');
@@ -314,6 +331,7 @@
         }
     }
 
+    /** Opens the new project form and goes to the new project's page once it is saved. */
     function newProject() {
         P.openProjectForm(null, id => { window.location.href = window.PRJ_BASE + 'projects/view.php?id=' + id + '&new=1'; });
     }

@@ -28,6 +28,6 @@
 | [api/change-management/delete_attachment.php](/code/files/api/change-management/delete_attachment.php.md) | L30 |  |
 | [api/change-management/get.php](/code/files/api/change-management/get.php.md) | L68 |  |
 | [api/change-management/get_attachment.php](/code/files/api/change-management/get_attachment.php.md) | L28 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L283 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L292 |  |
 | [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::deleteChange L378 |  |
 

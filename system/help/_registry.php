@@ -25,9 +25,15 @@
  * ADDING A HELP PAGE: add the entry here, then create <slug>.php which sets
  * $helpSlug and requires _top.php / _bottom.php. Nothing else to wire up — the
  * card, the search index and the sidebar all follow from this entry.
+ *
+ * @wiki Help-Page-House-Style
  */
 
-/** @return array<string,array<string,mixed>> Help topics, keyed by slug. */
+/**
+ * Every System help page, keyed by the slug of its System area, with its hero,
+ * standfirst, sections (sidebar and search deep links) and extra search terms.
+ *
+ * @return array<string,array<string,mixed>> Help topics, keyed by slug. */
 function getHelpTopics() {
     return [
         'encryption' => [

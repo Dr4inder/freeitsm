@@ -255,6 +255,12 @@ function handleSearch(PDO $conn, int $analystId, string $q): void
     echo json_encode(['success' => true, 'results' => $out]);
 }
 
+/**
+ * Creates a user group with a name and optional description.
+ *
+ * Refused, in words, when the name is taken - including by a deleted group, which is not
+ * revived silently because its old members are still attached.
+ */
 function handleCreate(PDO $conn, int $analystId, array $input): void
 {
     $name = trim((string)($input['name'] ?? ''));
@@ -284,6 +290,10 @@ function handleCreate(PDO $conn, int $analystId, array $input): void
     echo json_encode(['success' => true, 'id' => (int)$conn->lastInsertId()]);
 }
 
+/**
+ * Renames an active user group and updates its description, refusing a name another
+ * group already has.
+ */
 function handleUpdate(PDO $conn, array $input): void
 {
     $id   = (int)($input['id'] ?? 0);
@@ -386,6 +396,7 @@ function handleAddMember(PDO $conn, int $analystId, array $input): void
     echo json_encode(['success' => true]);
 }
 
+/** Removes one analyst or portal user from a user group. */
 function handleRemoveMember(PDO $conn, array $input): void
 {
     $groupId = (int)($input['id'] ?? 0);

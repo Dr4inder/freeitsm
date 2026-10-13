@@ -18,12 +18,12 @@
 | [rowAfterUpdates()](#rowafterupdates) | The ticket row as it will be once an UPDATE built by `updateTicket()` lands. |
 | [loadTicket()](#loadticket) | Load the joined ticket row, enforcing the actor's company scope; 404 otherwise. |
 | [canAccessTicket()](#canaccessticket) | May the actor access this ticket (by its company)? Mirror of apiKeyCanAccessTenantRow. |
-| [auditWrite()](#auditwrite) |  |
+| [auditWrite()](#auditwrite) | Records one field change in the ticket's audit trail. |
 | [resolveStatus()](#resolvestatus) | Resolve a status by name or id. Returns [id, name, is_closed] or null. |
 | [resolvePriority()](#resolvepriority) | Resolve a priority by name or id. Empty string/null id = clear. |
 | [teamName()](#teamname) | A team's name for the audit trail, or null. Never throws — this is a label. |
-| [categoryEffectiveTypeId()](#categoryeffectivetypeid) |  |
-| [validateLookupId()](#validatelookupid) |  |
+| [categoryEffectiveTypeId()](#categoryeffectivetypeid) | The ticket type a category is bound to, taken from its top-level category; null when unbound or it cannot be worked out. |
+| [validateLookupId()](#validatelookupid) | The name of a row in a lookup table, or null for no id; throws for an unknown id. |
 | [parseDate()](#parsedate) | Parse a date to UTC 'Y-m-d H:i:s' (mirrors apiParseDate; 400 on garbage). |
 
 ### createTicket
@@ -356,7 +356,9 @@ function canAccessTicket(PDO $conn, ActorContext $ctx, int $ticketId): bool
 
 ### auditWrite
 
-*private static* - line 1112
+*private static* - line 1113
+
+Records one field change in the ticket's audit trail.
 
 ```php
 function auditWrite(
@@ -382,11 +384,11 @@ function auditWrite(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1115 | `TicketsService::auditWrite` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 1116 | `TicketsService::auditWrite` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### resolveStatus
 
-*private static* - line 1133
+*private static* - line 1134
 
 Resolve a status by name or id. Returns [id, name, is_closed] or null.
 
@@ -403,12 +405,12 @@ function resolveStatus(PDO $conn, array $in): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1136 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 1139 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 1137 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 1140 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ### resolvePriority
 
-*private static* - line 1152
+*private static* - line 1153
 
 Resolve a priority by name or id. Empty string/null id = clear.
 
@@ -425,12 +427,12 @@ function resolvePriority(PDO $conn, array $in): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1158 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 1161 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 1159 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 1162 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
 
 ### teamName
 
-*private static* - line 1182
+*private static* - line 1183
 
 A team's name for the audit trail, or null. Never throws — this is a label.
 
@@ -447,11 +449,13 @@ function teamName(PDO $conn, ?int $teamId): ?string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1186 | `TicketsService::teamName` | read [teams](/code/tables/teams.md) |  |
+| 1187 | `TicketsService::teamName` | read [teams](/code/tables/teams.md) |  |
 
 ### categoryEffectiveTypeId
 
-*private static* - line 1195
+*private static* - line 1200
+
+The ticket type a category is bound to, taken from its top-level category; null when unbound or it cannot be worked out.
 
 ```php
 function categoryEffectiveTypeId(PDO $conn, int $categoryId): ?int
@@ -466,11 +470,13 @@ function categoryEffectiveTypeId(PDO $conn, int $categoryId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1200 | `TicketsService::categoryEffectiveTypeId` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 1205 | `TicketsService::categoryEffectiveTypeId` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
 
 ### validateLookupId
 
-*private static* - line 1219
+*private static* - line 1225
+
+The name of a row in a lookup table, or null for no id; throws for an unknown id.
 
 ```php
 function validateLookupId(PDO $conn, string $table, $id, string $label): ?string
@@ -485,7 +491,7 @@ function validateLookupId(PDO $conn, string $table, $id, string $label): ?string
 
 ### parseDate
 
-*private static* - line 1234
+*private static* - line 1240
 
 Parse a date to UTC 'Y-m-d H:i:s' (mirrors apiParseDate; 400 on garbage).
 

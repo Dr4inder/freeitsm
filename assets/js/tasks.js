@@ -1,5 +1,7 @@
 /**
  * FreeITSM Tasks Module — Board, List, Detail Panel, Drag & Drop
+ *
+ * @wiki Task-Board-and-Subtasks-Developer-Guide
  */
 
 // ── State ──────────────────────────────────────────────────────────
@@ -110,6 +112,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+/**
+ * Loads the Tasks settings and takes the card fields, tag settings and time scope from them, keeping
+ * the built-in defaults for anything missing.
+ */
 async function loadCardSettings() {
     try {
         const data = await fetch(API_BASE + 'get_settings.php').then(r => r.json());
@@ -149,6 +155,7 @@ function formatMinutes(mins) {
 
 // ── Data Loading ───────────────────────────────────────────────────
 
+/** Fetches the analysts and teams and fills the sidebar's analyst and team filter dropdowns with them. */
 async function loadDropdowns() {
     try {
         const [aRes, tRes] = await Promise.all([
@@ -170,6 +177,10 @@ async function loadDropdowns() {
     } catch (e) { console.error('Failed to load dropdowns:', e); }
 }
 
+/**
+ * Fetches the tasks for the current filter (my, all, a team or an analyst), builds each one's search
+ * text, refreshes the Project and Contractor filters and redraws the board or list.
+ */
 async function loadTasks() {
     let url = API_BASE + 'list.php?filter=' + currentFilter;
     if (currentFilter === 'team' && currentFilterTeamId) url += '&team_id=' + currentFilterTeamId;
@@ -190,6 +201,12 @@ async function loadTasks() {
 
 // ── Filters ────────────────────────────────────────────────────────
 
+/**
+ * Switches to one of the filter buttons (my, all, ...), clears the team and analyst dropdowns and
+ * reloads the tasks.
+ *
+ * Only the "my" and "all" choices are saved as the analyst's preference.
+ */
 function setFilter(filter) {
     currentFilter = filter;
     currentFilterTeamId = null;
@@ -208,6 +225,10 @@ function setFilter(filter) {
     if (filter === 'my' || filter === 'all') saveTaskPreference('tasks_filter', filter);
 }
 
+/**
+ * Shows one team's tasks, or falls back to "my" when the team dropdown is cleared while it was the
+ * active filter.
+ */
 function setTeamFilter(teamId) {
     if (!teamId) { setFilter(currentFilter === 'team' ? 'my' : currentFilter); return; }
     currentFilter = 'team';
@@ -217,6 +238,10 @@ function setTeamFilter(teamId) {
     loadTasks();
 }
 
+/**
+ * Shows one analyst's tasks, or falls back to "my" when the analyst dropdown is cleared while it was
+ * the active filter.
+ */
 function setAnalystFilter(analystId) {
     if (!analystId) { setFilter(currentFilter === 'analyst' ? 'my' : currentFilter); return; }
     currentFilter = 'analyst';
@@ -242,6 +267,7 @@ function buildSearchText(t) {
     return text.toLowerCase();
 }
 
+/** True when every search term appears in the task's pre-built search text (always true with no search). */
 function taskMatchesSearch(t) {
     if (searchTerms.length === 0) return true;
     const hay = t._search || '';
@@ -257,6 +283,7 @@ function setSearch(value) {
     else renderList();
 }
 
+/** Empties the search box and redraws without a search. */
 function clearSearch() {
     document.getElementById('taskSearch').value = '';
     setSearch('');
@@ -264,11 +291,13 @@ function clearSearch() {
 
 // ── Tag filter ─────────────────────────────────────────────────────
 
+/** True when the task carries the tag chosen in the sidebar Tag filter (always true with no tag chosen). */
 function taskMatchesTag(t) {
     if (!currentTagFilter) return true;
     return (t.tags || []).some(tg => String(tg.id) === String(currentTagFilter));
 }
 
+/** Sets the sidebar Tag filter and redraws the board or list. */
 function setTagFilter(tagId) {
     currentTagFilter = tagId;
     if (currentView === 'board') renderBoard();
@@ -277,12 +306,17 @@ function setTagFilter(tagId) {
 
 // ── Project filter (3.2.0) ───────────────────────────────────────────
 
+/**
+ * True when the task matches the sidebar Project filter - any project, "none" (no project), or one
+ * project id.
+ */
 function taskMatchesProject(t) {
     if (!currentProjectFilter) return true;
     if (currentProjectFilter === 'none') return !t.project_id;
     return String(t.project_id || '') === String(currentProjectFilter);
 }
 
+/** Sets the sidebar Project filter and redraws the board or list. */
 function setProjectFilter(v) {
     currentProjectFilter = v;
     if (currentView === 'board') renderBoard();
@@ -314,6 +348,10 @@ function refreshProjectFilter() {
 // ── Contractor filter (3.3.0) ─────────────────────────────────────
 // The same shape as the Project filter: built from the loaded tasks, hidden when none has a contractor.
 
+/**
+ * True when the task matches the sidebar Contractor filter - all, "any" (has a contractor), "none", or
+ * one supplier id.
+ */
 function taskMatchesContractor(t) {
     if (!currentContractorFilter) return true;
     if (currentContractorFilter === 'none') return !t.supplier_id;
@@ -321,12 +359,17 @@ function taskMatchesContractor(t) {
     return String(t.supplier_id || '') === String(currentContractorFilter);
 }
 
+/** Sets the sidebar Contractor filter and redraws the board or list. */
 function setContractorFilter(v) {
     currentContractorFilter = v;
     if (currentView === 'board') renderBoard();
     else renderList();
 }
 
+/**
+ * Rebuilds the Contractor filter from the suppliers on the loaded tasks, keeping the current choice,
+ * and hides the section when no task has a contractor.
+ */
 function refreshContractorFilter() {
     const section = document.getElementById('contractorFilterSection');
     const sel = document.getElementById('contractorFilter');
@@ -378,6 +421,10 @@ function saveTaskPreference(key, value) {
     }).catch(() => {});
 }
 
+/**
+ * Switches between the board and the list, shows the board-grouping toggle only on the board, redraws
+ * and saves the choice as the analyst's preference.
+ */
 function switchView(view) {
     currentView = view;
     document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
@@ -433,6 +480,10 @@ function buildBoardColumns() {
 
 // ── Column drag-to-reorder ─────────────────────────────────────────
 
+/**
+ * Starts dragging a status column by its header to reorder the board. Ignores right clicks and the +
+ * button, and only counts as a drag once the mouse has moved 5px.
+ */
 function startColumnDrag(e, column) {
     // Left-button only; the + button is not a drag handle
     if (e.button !== 0 || e.target.closest('.column-add-btn')) return;
@@ -440,6 +491,10 @@ function startColumnDrag(e, column) {
     const startX = e.clientX;
     let dragging = false;
 
+    /**
+     * Once the mouse has moved 5px, marks the column as dragging and slots it before the first column
+     * whose middle the cursor is left of.
+     */
     const onMove = (e2) => {
         if (!dragging) {
             if (Math.abs(e2.clientX - startX) < 5) return;
@@ -460,6 +515,7 @@ function startColumnDrag(e, column) {
         if (!placed) board.appendChild(column);
     };
 
+    /** Removes the drag listeners and, if the column was actually dragged, saves the new column order. */
     const onUp = () => {
         document.removeEventListener('mousemove', onMove);
         document.removeEventListener('mouseup', onUp);
@@ -474,6 +530,10 @@ function startColumnDrag(e, column) {
     e.preventDefault();
 }
 
+/**
+ * Saves the board's column order as the task status order, after re-sorting the local status list to
+ * match so menus and dropdowns follow.
+ */
 function persistColumnOrder() {
     const order = [...document.querySelectorAll('#boardView .board-column')]
         .map(col => {
@@ -505,6 +565,10 @@ function persistColumnOrder() {
 // applies here too.
 let boardGroup = window.TASK_BOARD_GROUP === 'analyst' ? 'analyst' : 'status';
 
+/**
+ * Switches the board between columns by status and columns by analyst, saves the choice as the
+ * analyst's preference and redraws.
+ */
 function switchBoardGroup(group) {
     boardGroup = group === 'analyst' ? 'analyst' : 'status';
     document.querySelectorAll('#boardGroupToggle .view-btn')
@@ -514,6 +578,12 @@ function switchBoardGroup(group) {
     renderBoard();
 }
 
+/**
+ * Draws the board as one column per analyst with a task in view - the viewer's own column first and
+ * always present, then by name, with Unassigned last.
+ *
+ * Cards within a column are sorted by status order and then board position.
+ */
 function renderBoardByAnalyst() {
     const board = document.getElementById('boardView');
     const visible = tasks.filter(t => taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t));
@@ -586,6 +656,10 @@ async function dropOnAnalystColumn(taskId, targetColumn) {
     return true;
 }
 
+/**
+ * Draws the board: hands over to renderBoardByAnalyst() when grouped by analyst, otherwise fills each
+ * status column with its filtered cards and count.
+ */
 function renderBoard() {
     if (boardGroup === 'analyst') { renderBoardByAnalyst(); return; }
     document.querySelectorAll('#boardView .board-column').forEach(col => {
@@ -608,6 +682,10 @@ function renderBoard() {
     });
 }
 
+/**
+ * Returns the HTML for one board card - status, project and contractor chips, title, optional
+ * description excerpt, the meta row chosen in Settings -> Card, tags and subtasks.
+ */
 function renderCard(t) {
     const cf = cardFields;
     const initials = t.analyst_name ? t.analyst_name.split(' ').map(w => w[0]).join('').substring(0, 2) : '';
@@ -741,6 +819,7 @@ function descExcerpt(html) {
     return text;
 }
 
+/** Returns a due-date badge: "Overdue" or "Due today" with a matching class, otherwise the day and month. */
 function formatDueBadge(dateStr) {
     if (!dateStr) return '';
     const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -757,6 +836,7 @@ function formatDueBadge(dateStr) {
 
 // ── Quick Add ──────────────────────────────────────────────────────
 
+/** Opens a column's quick-add box and focuses it, hiding it again on blur if nothing was typed. */
 function showQuickAdd(col) {
     const container = col.querySelector('.quick-add-container');
     container.style.display = 'block';
@@ -772,6 +852,10 @@ function showQuickAdd(col) {
     };
 }
 
+/**
+ * Quick-add key handler: Escape closes the box, Enter creates a task with that title in the column's
+ * status, assigned to the current analyst, and reloads the board.
+ */
 async function handleQuickAdd(event, status, col) {
     if (event.key === 'Escape') {
         event.target.value = '';
@@ -809,6 +893,10 @@ async function handleQuickAdd(event, status, col) {
 
 let dragState = null;
 
+/**
+ * Mouse-down on a board card. Starts a card drag only once the mouse has moved more than 5px, so a
+ * plain click still opens the task.
+ */
 function startDrag(e, card) {
     if (e.button !== 0) return;
     // Don't start drag on click (for opening detail panel)
@@ -816,6 +904,7 @@ function startDrag(e, card) {
     const startY = e.clientY;
     let moved = false;
 
+    /** Starts the drag on the first move beyond 5px, then moves the ghost card with the mouse. */
     const onMove = (e2) => {
         const dx = Math.abs(e2.clientX - startX);
         const dy = Math.abs(e2.clientY - startY);
@@ -826,6 +915,7 @@ function startDrag(e, card) {
         if (moved) moveDrag(e2);
     };
 
+    /** Removes the drag listeners and finishes the drop if a drag actually started. */
     const onUp = (e2) => {
         document.removeEventListener('mousemove', onMove);
         document.removeEventListener('mouseup', onUp);
@@ -837,6 +927,10 @@ function startDrag(e, card) {
     e.preventDefault();
 }
 
+/**
+ * Marks the card as dragging and creates the floating ghost copy, recording where in the card it was
+ * grabbed and the column it came from.
+ */
 function initDrag(card, e) {
     card.classList.add('dragging');
     const rect = card.getBoundingClientRect();
@@ -859,6 +953,10 @@ function initDrag(card, e) {
     moveDrag(e);
 }
 
+/**
+ * Moves the ghost card with the mouse and shows the drop indicator in the column under the cursor,
+ * before the first card whose middle is below it.
+ */
 function moveDrag(e) {
     if (!dragState) return;
     dragState.ghost.style.left = (e.clientX - dragState.offsetX) + 'px';
@@ -897,6 +995,12 @@ function moveDrag(e) {
     else container.appendChild(indicator);
 }
 
+/**
+ * Earlier version of the card drop handler.
+ *
+ * TRAP: the second endDrag declared below replaces this one when the script loads, so this version
+ * never runs - change that one instead.
+ */
 async function endDrag(e) {
     if (!dragState) return;
 
@@ -1068,6 +1172,10 @@ async function endDrag(e) {
 
 // ── List Rendering ─────────────────────────────────────────────────
 
+/**
+ * Draws the list view: the filtered tasks sorted by the chosen column, one table row each, and marks
+ * the sorted column header.
+ */
 function renderList() {
     const sorted = tasks.filter(t => taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t)).sort((a, b) => {
         let va = a[sortField] || '';
@@ -1117,6 +1225,7 @@ function renderList() {
     if (sortedTh) sortedTh.classList.add('sorted');
 }
 
+/** Sorts the list by a column - the same column again flips the direction, a new one starts ascending. */
 function sortList(field) {
     if (sortField === field) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
     else { sortField = field; sortDir = 'asc'; }
@@ -1199,6 +1308,7 @@ function applyModalLayout(body) {
 // hide things — somebody who never scrolled past the fold will now never see the
 // subtasks either unless the tab tells them the count.
 
+/** True when this analyst has chosen tabs rather than columns for the large task window. */
 function modalLayoutIsTabs() {
     return window.TASK_MODAL_LAYOUT === 'tabs';
 }
@@ -1221,6 +1331,10 @@ const TASK_MODAL_TABS = [
     { key: 'documents',match: '#taskDocuments' },
 ];
 
+/**
+ * Rearranges the task window's existing sections into tabs, filing each block by TASK_MODAL_TABS,
+ * dropping empty tabs, adding counts, and opening the first tab that remains.
+ */
 function applyModalTabs(body) {
     const strip  = document.createElement('div');
     strip.className = 'tdm-tabs';
@@ -1292,6 +1406,7 @@ function applyModalTabs(body) {
     if (first) showModalTab(first.dataset.tab);
 }
 
+/** Sets the count badge on a task-window tab, removing the badge when the count is zero. */
 function setModalTabCount(btn, n) {
     let badge = btn.querySelector('.tdm-tab-count');
     if (!n) { if (badge) badge.remove(); return; }
@@ -1303,6 +1418,7 @@ function setModalTabCount(btn, n) {
     badge.textContent = n;
 }
 
+/** Shows one tab of the task window and hides the others, keeping aria-selected in step. */
 function showModalTab(key) {
     document.querySelectorAll('.tdm-tab').forEach(b => {
         const on = b.dataset.tab === key;
@@ -1406,6 +1522,12 @@ async function toggleTaskView() {
     }
 }
 
+/**
+ * Fetches a task and opens it in the side panel or the large window, along with its checklists and the
+ * people involved.
+ *
+ * Does nothing while a card is being dragged, and scrolls back to the top on every open.
+ */
 async function openDetailPanel(taskId) {
     // Prevent opening from drag
     if (dragState) return;
@@ -1447,6 +1569,7 @@ async function openDetailPanel(taskId) {
     } catch (e) { console.error(e); }
 }
 
+/** Closes the task panel, destroys the description editor and reloads the board. */
 function closeDetailPanel() {
     document.getElementById('detailPanel').classList.remove('open');
     document.getElementById('detailOverlay').classList.remove('open');
@@ -1455,6 +1578,12 @@ function closeDetailPanel() {
     loadTasks();
 }
 
+/**
+ * Builds the whole task panel for one task - fields, company, project, contractor, involved, dates,
+ * time, checklists, tags, description, repeats, links, subtasks, comments and documents.
+ *
+ * Also starts the TinyMCE description editor, which saves a second after typing stops.
+ */
 function renderDetailPanel(task) {
     const body = document.getElementById('detailPanelBody');
     // What is currently linked, kept so linkItem() can warn before REPLACING it
@@ -1789,6 +1918,10 @@ async function loadInvolved(taskId) {
     }
 }
 
+/**
+ * Draws the Involved chips (with a done tick when that setting is on) and the add picker, built from
+ * the server's candidate list.
+ */
 function renderInvolved() {
     const host = document.getElementById('involvedList');
     if (!host) return;
@@ -1829,6 +1962,10 @@ function renderInvolved() {
         </select>` : ''}`;
 }
 
+/**
+ * Sends an Involved change (add, remove, done, undone) for the open task, then reloads the section and
+ * the board; shows the server's error on a refusal.
+ */
 async function postInvolved(action, analystId) {
     if (!involvedState.taskId) return;
     try {
@@ -1851,8 +1988,11 @@ async function postInvolved(action, analystId) {
     }
 }
 
+/** Adds an analyst to the open task's Involved list. */
 function addInvolved(analystId)    { if (analystId) postInvolved('add', analystId); }
+/** Removes an analyst from the open task's Involved list. */
 function removeInvolved(analystId) { postInvolved('remove', analystId); }
+/** Ticks or unticks an involved analyst's part as done. */
 function setInvolvedDone(analystId, done) { postInvolved(done ? 'done' : 'undone', analystId); }
 
 // ── Field Save ─────────────────────────────────────────────────────
@@ -1903,6 +2043,10 @@ async function postTaskChange(payload, failedKey) {
 let moveCompanies = [];
 let defaultTenantId = null;
 
+/**
+ * Fetches the companies this analyst can reach for the panel's Company picker, and works out the
+ * Default company's id for tasks with no company.
+ */
 async function loadMoveCompanies() {
     try {
         const res = await fetch('../api/system/get_tenants.php?accessible=1');
@@ -1955,6 +2099,10 @@ async function moveToCompanyFromPanel(sel) {
         sel.disabled = false;
     }
 }
+/**
+ * Saves one field of the open task. A status change first asks about outstanding Involved ticks and
+ * checklist steps, and redraws the panel if declined.
+ */
 async function saveField(field, value) {
     if (!selectedTaskId) return;
     if (field === 'status' && !(await confirmCloseWithInvolved(value))) return;
@@ -1979,6 +2127,7 @@ let checklistState = { taskId: null, enabled: false, checklists: [], templates: 
 
 const ICON_LOCK = '<svg class="chk-lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
 
+/** Fetches the open task's checklists and templates, hiding the section when checklists are switched off. */
 async function loadTaskChecklists(taskId) {
     const host = document.getElementById('taskChecklistSection');
     if (!host) return;
@@ -1990,10 +2139,15 @@ async function loadTaskChecklists(taskId) {
     } catch (e) { console.error(e); host.innerHTML = ''; host.style.display = 'none'; }
 }
 
+/**
+ * Draws the task's checklists - steps with ticks, values and who did them, progress bars - and the
+ * template picker for attaching another.
+ */
 function renderTaskChecklists() {
     const host = document.getElementById('taskChecklistSection');
     if (!host || checklistState.taskId !== selectedTaskId) return;
     host.style.display = '';
+    /** Shorthand for a tasks.detail translation. */
     const T = (k, p) => window.t('tasks.detail.' + k, p);
 
     const lists = checklistState.checklists.map(c => {
@@ -2059,6 +2213,10 @@ function renderTaskChecklists() {
 // checklist, nor a checklist among steps.
 let chkDragRow = null;
 
+/**
+ * Starts dragging a checklist or step, but only when the drag began on its own handle and not on a
+ * step inside it.
+ */
 function chkDragStart(e) {
     const row = e.currentTarget;
     if (e.target !== row) return;                    // a step inside this card
@@ -2069,6 +2227,7 @@ function chkDragStart(e) {
     try { e.dataTransfer.setData('text/plain', row.dataset.sortId); } catch (err) {}
 }
 
+/** Moves the dragged checklist or step to its new place as it passes over, only within its own container. */
 function chkDragOver(e) {
     const box = e.currentTarget;
     if (!chkDragRow || chkDragRow.parentElement !== box) return;
@@ -2083,6 +2242,7 @@ function chkDragOver(e) {
     else box.appendChild(chkDragRow);
 }
 
+/** Ends a checklist or step drag and saves the new order of the lists or of the steps in that checklist. */
 function chkDragEnd(e) {
     const row = e.currentTarget;
     if (e.target !== row) return;
@@ -2099,6 +2259,10 @@ function chkDragEnd(e) {
     }
 }
 
+/**
+ * Sends a checklist action to the server and redraws from the checklists it returns; on a refusal
+ * shows the error and redraws to put the boxes back.
+ */
 async function postTaskChecklist(payload) {
     try {
         const data = await fetch(API_BASE + 'checklists.php', {
@@ -2120,12 +2284,14 @@ async function postTaskChecklist(payload) {
     }
 }
 
+/** Attaches the checklist template chosen in the picker to the open task. */
 function attachTaskChecklist() {
     const pick = document.getElementById('chkTemplatePick');
     if (!pick || !pick.value) return;
     postTaskChecklist({ action: 'attach', task_id: selectedTaskId, template_id: Number(pick.value) });
 }
 
+/** Ticks or unticks a checklist step, refusing to tick a step that needs a value while its box is empty. */
 function toggleTaskChecklistItem(itemId, box) {
     const valueBox = document.getElementById('chkValue' + itemId);
     const value = valueBox ? valueBox.value.trim() : null;
@@ -2140,6 +2306,7 @@ function toggleTaskChecklistItem(itemId, box) {
     postTaskChecklist({ action: 'toggle', item_id: itemId, completed: box.checked ? 1 : 0, response_value: value });
 }
 
+/** Asks for confirmation, then removes a checklist from the open task. */
 async function removeTaskChecklist(checklistId) {
     const c = checklistState.checklists.find(x => x.id == checklistId);
     if (!(await showConfirm({
@@ -2162,11 +2329,18 @@ async function removeTaskChecklist(checklistId) {
  * Returns true to go ahead. Anything that is not a completion goes ahead.
  */
 async function confirmChecklistCompletion(taskId, newStatusName, currentStatusName) {
+    /** True when the named status is a closed one. */
     const isClosed = name => !!((statusList || []).find(s => s.name === name) || {}).is_closed;
     if (!isClosed(newStatusName) || (currentStatusName && isClosed(currentStatusName))) return true;
     return confirmChecklistCompletionById(taskId);
 }
 
+/**
+ * Asks the server what completing the task would run into: blocks with an alert for Critical steps
+ * outstanding, asks to continue for Standard ones.
+ *
+ * Returns true to go ahead, including when the check cannot be reached or checklists are off.
+ */
 async function confirmChecklistCompletionById(taskId) {
     let data;
     try {
@@ -2174,6 +2348,7 @@ async function confirmChecklistCompletionById(taskId) {
     } catch (e) { return true; }            // the server still enforces Critical
     if (!data || !data.success || !data.enabled) return true;
 
+    /** Formats checklist groups as bullet lines - the checklist name, then its outstanding steps. */
     const fmt = groups => Object.entries(groups || {})
         .map(([name, steps]) => '• ' + name + ': ' + steps.join(', ')).join('\n');
     if (data.blocking && Object.keys(data.blocking).length) {
@@ -2229,6 +2404,10 @@ function workPayload(value) {
     return value.length === 10 ? value + ' 00:00' : value.replace('T', ' ');
 }
 
+/**
+ * Saves the scheduled work start as typed, and reopens the panel when it was cleared because that
+ * clears the whole slot.
+ */
 async function saveWorkStart(value) {
     if (!selectedTaskId) return;
     // Clearing the start clears the whole slot, server-side. Reopen so the end
@@ -2237,6 +2416,10 @@ async function saveWorkStart(value) {
     if (ok && !value) openDetailPanel(selectedTaskId);
 }
 
+/**
+ * Saves the scheduled work end as typed, and reopens the panel if the server refuses it so the stored
+ * value shows again.
+ */
 async function saveWorkEnd(value) {
     if (!selectedTaskId) return;
     // The server refuses an end before the start, or an end with no start. When
@@ -2291,6 +2474,7 @@ async function deleteTaskById(taskId, task) {
     }
 }
 
+/** Fetches the task's time entries and totals and draws the Time section. */
 async function loadTaskTime(taskId) {
     const el = document.getElementById('taskTimeSection');
     if (!el) return;
@@ -2302,6 +2486,10 @@ async function loadTaskTime(taskId) {
     renderTaskTime(taskId, d);
 }
 
+/**
+ * Draws the Time section - the total (plus the total including subtasks when they have time), the add
+ * form, and each entry with delete on the viewer's own.
+ */
 function renderTaskTime(taskId, d) {
     const el = document.getElementById('taskTimeSection');
     if (!el) return;
@@ -2365,6 +2553,7 @@ function renderTaskTime(taskId, d) {
         <div class="time-entry-list">${rows}</div>`;
 }
 
+/** Logs minutes and optional notes against the task and redraws the Time section. */
 async function addTaskTime(taskId) {
     const minutes = parseInt(document.getElementById('taskTimeMinutes').value, 10);
     const notes   = document.getElementById('taskTimeNotes').value.trim();
@@ -2389,6 +2578,7 @@ async function addTaskTime(taskId) {
     }
 }
 
+/** Asks for confirmation, deletes a time entry and redraws the open task's Time section. */
 async function deleteTaskTime(entryId) {
     if (!(await showConfirm({
         title: window.t('tasks.time.delete'),
@@ -2426,6 +2616,7 @@ function tagChipHtml(tag, removable) {
         `color:${escAttr(colour)};border-color:${escAttr(colour)}55">${esc(tag.name)}${x}</span>`;
 }
 
+/** Draws the open task's tag chips and the tag picker box. */
 function renderTagSection() {
     const el = document.getElementById('detailTagSection');
     if (!el) return;
@@ -2440,11 +2631,16 @@ function renderTagSection() {
         </div>`;
 }
 
+/** Closes the tag picker's results list. */
 function closeTagPicker() {
     const r = document.getElementById('tagPickerResults');
     if (r) r.classList.remove('open');
 }
 
+/**
+ * Lists the tags matching what is typed that the task does not already have, plus a create option for
+ * a new name when tag creation is allowed.
+ */
 function filterTagPicker() {
     const input = document.getElementById('tagPickerInput');
     const results = document.getElementById('tagPickerResults');
@@ -2476,6 +2672,7 @@ function tagPickerKey(e) {
     if (first) first.click();
 }
 
+/** Adds an existing tag to the open task and saves the tag list. */
 function addDetailTag(tagId) {
     const tag = tagList.find(t => t.id === tagId);
     if (tag && !detailTags.some(t => t.id === tagId)) {
@@ -2487,12 +2684,17 @@ function addDetailTag(tagId) {
     if (input) input.focus();
 }
 
+/** Removes a tag from the open task and saves the tag list. */
 function removeDetailTag(tagId) {
     detailTags = detailTags.filter(t => t.id !== tagId);
     saveDetailTags();
     renderTagSection();
 }
 
+/**
+ * Creates a new tag from the typed name with the next palette colour, adds it to the open task and
+ * refreshes the sidebar Tag filter.
+ */
 async function createAndAddTag() {
     const input = document.getElementById('tagPickerInput');
     if (!input) return;
@@ -2520,12 +2722,17 @@ async function createAndAddTag() {
     } catch (e) { showToast(window.t('tasks.toast.tag_create_failed'), 'error'); }
 }
 
+/** Saves the open task's tag ids. */
 function saveDetailTags() {
     saveField('tags', detailTags.map(t => t.id));
 }
 
 // ── Subtasks ───────────────────────────────────────────────────────
 
+/**
+ * Ticks or unticks a subtask; completing one first runs the checklist check. Reopens the panel
+ * afterwards and shows any refusal.
+ */
 async function toggleSubtask(id, completing) {
     // Ticking a subtask done is completing it, and a subtask can carry its own
     // checklist (discussion #138). Unticking is never gated.
@@ -2572,6 +2779,10 @@ const RECUR_WEEKDAYS = [1, 2, 3, 4, 5, 6, 7];
 // wherever it appears - a reader should not have to learn two.
 const ICON_RECUR = '<svg class="recur-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>';
 
+/**
+ * Returns the Repeats section for a top-level task - the rule summary, its place in the series, a link
+ * back to the first task and the hidden editor.
+ */
 function renderRecurrenceSection(task) {
     if (task.parent_task_id) return '';
     const r  = task.recurrence;
@@ -2614,6 +2825,7 @@ function renderRecurrenceSection(task) {
 function describeRecurrence(r) {
     if (!r) return window.t('tasks.recur.none');
     const n = Number(r.interval_n) || 1;
+    /** Shorthand for a tasks.recur translation. */
     const T = (k, p) => window.t('tasks.recur.' + k, p);
 
     let what;
@@ -2651,6 +2863,7 @@ function describeRecurrence(r) {
     return what + ends + mode;
 }
 
+/** Shows or hides the Repeats editor, applying the frequency rows on opening. */
 function toggleRecurrenceEditor() {
     const el = document.getElementById('recurEditor');
     if (!el) return;
@@ -2664,6 +2877,7 @@ function toggleRecurrenceEditor() {
 
 /** The editor. Only the rows that apply to the chosen frequency are shown. */
 function renderRecurrenceEditor(r) {
+    /** Shorthand for an escaped tasks.recur translation. */
     const T = k => esc(window.t('tasks.recur.' + k));
     const v = Object.assign({
         mode: 'completion', freq: 'weekly', interval_n: 1, weekdays: '',
@@ -2672,9 +2886,12 @@ function renderRecurrenceEditor(r) {
         copy_description: 1, copy_subtasks: 1, copy_assignee: 1, copy_tags: 1,
         copy_links: 0, copy_attachments: 0,
     }, r || {});
+    /** Returns "selected" when the two values match. */
     const sel = (a, b) => String(a) === String(b) ? 'selected' : '';
+    /** Returns "checked" when the value is truthy as a number. */
     const chk = x => Number(x) ? 'checked' : '';
     const days = String(v.weekdays || '').split(',').filter(Boolean).map(Number);
+    /** Short weekday name for 1 (Monday) to 7 (Sunday). */
     const wdName = i => window.t('common.calendar.weekdays_short.' + ['', 'monday','tuesday','wednesday','thursday','friday','saturday','sunday'][i]);
 
     return `
@@ -2768,6 +2985,7 @@ function recurEditorRefresh() {
     const freq = (document.getElementById('recFreq') || {}).value || 'weekly';
     const mm   = (document.getElementById('recMonthMode') || {}).value || 'dom';
     const ends = (document.getElementById('recEnds') || {}).value || 'never';
+    /** Shows or hides every editor element matching a selector. */
     const show = (sel, on) => root.querySelectorAll(sel).forEach(el => el.style.display = on ? '' : 'none');
 
     show('.recur-weekly',  freq === 'weekly');
@@ -2787,7 +3005,9 @@ function recurEditorRefresh() {
  * is how a preview quietly stops describing the thing it is previewing.
  */
 function recurrenceFormPayload() {
+    /** The value of an editor field by id. */
     const val = id => (document.getElementById(id) || {}).value;
+    /** Whether an editor checkbox is ticked, by id. */
     const on  = id => !!(document.getElementById(id) || {}).checked;
     return {
         task_id: selectedTaskId,
@@ -2826,7 +3046,12 @@ async function previewRecurrence() {
     } catch (e) { showToast(window.t('tasks.toast.save_failed'), 'error'); }
 }
 
+/**
+ * Opens the preview dialog listing the dates the repeat would produce, or explains that a
+ * repeat-on-completion has no dates to list.
+ */
 function showRecurrencePreview(d) {
+    /** Shorthand for a tasks.recur translation. */
     const T = (k, p) => window.t('tasks.recur.' + k, p);
     closeRecurrencePreview();
 
@@ -2881,14 +3106,17 @@ function showRecurrencePreview(d) {
     document.addEventListener('keydown', recurPreviewEsc);
 }
 
+/** Closes the repeat preview on Escape. */
 function recurPreviewEsc(e) { if (e.key === 'Escape') closeRecurrencePreview(); }
 
+/** Removes the repeat preview dialog and its Escape listener. */
 function closeRecurrencePreview() {
     const el = document.getElementById('recurPreviewOverlay');
     if (el) el.remove();
     document.removeEventListener('keydown', recurPreviewEsc);
 }
 
+/** Saves the Repeats editor's settings for the open task and reopens the panel. */
 async function saveRecurrence() {
     if (!selectedTaskId) return;
     const payload = recurrenceFormPayload();
@@ -2903,6 +3131,7 @@ async function saveRecurrence() {
     } catch (e) { showToast(window.t('tasks.toast.save_failed'), 'error'); }
 }
 
+/** Asks for confirmation, then switches the open task's repeat off and reopens the panel. */
 async function stopRecurrence() {
     if (!selectedTaskId) return;
     // Says plainly what it does and does not do. "Stop" next to a list of tasks
@@ -2952,6 +3181,10 @@ function subtaskRowHtml(s) {
     // way inside a task.
     const priorityHtml   = TasksPriority.markup(s.priority, s.priority_colour, cardFields.priority);
     const priorityAccent = TasksPriority.accentAttrs(s.priority, s.priority_colour, cardFields.priority);
+    /**
+     * Returns a date box for a subtask's start or due date that saves on change without opening the
+     * subtask.
+     */
     const dateInput = (field, value, label) =>
         `<input type="date" class="subtask-date${value ? '' : ' is-empty'}" value="${escAttr(value || '')}"
                 onclick="event.stopPropagation()"
@@ -2987,6 +3220,7 @@ function subtaskHeadHtml() {
     </div>`;
 }
 
+/** Saves a subtask's start or due date from its row and refreshes the board in the background. */
 async function setSubtaskDate(subtaskId, field, input) {
     input.classList.toggle('is-empty', !input.value);
     const ok = await postTaskChange({ id: subtaskId, [field]: input.value || null }, 'tasks.toast.save_failed');
@@ -3000,6 +3234,7 @@ async function setSubtaskDate(subtaskId, field, input) {
 // saved as each subtask's board_position, which get.php already sorts by.
 let subtaskDragRow = null;
 
+/** Starts dragging a subtask row, but only when the drag began on its handle. */
 function subtaskDragStart(e) {
     const row = e.currentTarget;
     if (row.dataset.grab !== '1') { e.preventDefault(); return; }
@@ -3009,6 +3244,7 @@ function subtaskDragStart(e) {
     try { e.dataTransfer.setData('text/plain', row.dataset.id); } catch (err) {}
 }
 
+/** Moves the dragged subtask row to its new place as it passes over the list. */
 function subtaskDragOver(e) {
     if (!subtaskDragRow) return;
     e.preventDefault();
@@ -3022,6 +3258,10 @@ function subtaskDragOver(e) {
     else list.appendChild(subtaskDragRow);
 }
 
+/**
+ * Ends a subtask drag and saves the new subtask order; on a refusal reopens the panel to show the
+ * stored order.
+ */
 async function subtaskDragEnd(e) {
     const row = e.currentTarget;
     delete row.dataset.grab;
@@ -3146,6 +3386,7 @@ async function addSubtask() {
 
 // ── Comments ───────────────────────────────────────────────────────
 
+/** Posts a comment on the open task and appends it to the comment list. */
 async function addComment() {
     const input = document.getElementById('newCommentInput');
     const comment = input.value.trim();
@@ -3178,6 +3419,10 @@ async function addComment() {
 
 let searchTimer = null;
 
+/**
+ * Searches tickets or changes to link, 300ms after typing stops and from 2 characters, and lists the
+ * results to pick from.
+ */
 async function searchLink(query, type) {
     clearTimeout(searchTimer);
     const resultsEl = document.getElementById(type + 'SearchResults');
@@ -3239,6 +3484,7 @@ async function linkItem(field, id) {
     openDetailPanel(selectedTaskId);
 }
 
+/** Clears the open task's linked ticket or change and reopens the panel. */
 async function removeLink(field) {
     await saveField(field, null);
     openDetailPanel(selectedTaskId);
@@ -3246,6 +3492,7 @@ async function removeLink(field) {
 
 // ── Delete ─────────────────────────────────────────────────────────
 
+/** Asks for confirmation, deletes the open task and closes the panel. */
 async function deleteCurrentTask() {
     if (!selectedTaskId) return;
     if (!(await showConfirm({ title: 'Confirm', message: window.t('tasks.detail.delete_confirm'), okLabel: 'OK', okClass: 'primary' }))) return;
@@ -3315,6 +3562,10 @@ function projectFieldHtml(task) {
 
 // ── Contractor (3.3.0) - includes/task_contractors.php ──────────────────────────
 
+/**
+ * Fetches the suppliers and their contacts once per page; false when this analyst may not choose a
+ * contractor.
+ */
 async function loadContractorChoices() {
     if (contractorChoices !== null) return;
     try {
@@ -3349,6 +3600,7 @@ function contractorFieldHtml(task) {
     </div>`;
 }
 
+/** Saves a task's contractor and contact, then reloads the board and reopens the task. */
 async function setTaskContractor(taskId, supplierId, contactId) {
     try {
         const r = await fetch(API_BASE + 'save.php', {
@@ -3365,6 +3617,10 @@ async function setTaskContractor(taskId, supplierId, contactId) {
     }
 }
 
+/**
+ * Files a task under a project (or none), then reloads the board and reopens the task; on a refusal
+ * puts the dropdown back.
+ */
 async function setTaskProject(taskId, sel) {
     const value = sel.value;
     try {
@@ -3383,6 +3639,7 @@ async function setTaskProject(taskId, sel) {
     }
 }
 
+/** Fetches the task statuses, priorities and tags, keeping only the active statuses and priorities. */
 async function loadLookups() {
     try {
         const [sRes, pRes, tRes] = await Promise.all([
@@ -3425,12 +3682,14 @@ function taskPreviewBadge(type, id) {
     return window.FreeITSMPreview ? window.FreeITSMPreview.badge(type, id) : '';
 }
 
+/** Returns a link to another record when the server gave a URL, or plain escaped text when it did not. */
 function linkedRecord(url, label) {
     if (!url) return esc(label);
     const base = window.APP_BASE || '';
     return `<a class="linked-record" href="${escAttr(base + url)}">${esc(label)}</a>`;
 }
 
+/** Escapes text for safe use in HTML. */
 function esc(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -3438,6 +3697,10 @@ function esc(text) {
     return div.innerHTML;
 }
 
+/**
+ * Formats a stored UTC datetime in the analyst's display timezone, returning the raw value if it
+ * cannot be parsed.
+ */
 function formatDateTime(dt) {
     if (!dt) return '';
     // Stored UTC → render in the analyst's chosen display zone (parseUTCDate /

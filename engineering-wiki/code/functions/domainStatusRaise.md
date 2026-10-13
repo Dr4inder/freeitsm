@@ -6,7 +6,7 @@ Raise one incident for a domain's trouble on its linked services, and record it 
 function domainStatusRaise(PDO $conn, ActorContext $ctx, int $domainId): int
 ```
 
-Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 154.
+Defined in [includes/domains/status_link.php](/code/files/includes/domains/status_link.php.md), line 157.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/domains/status_link.php](/code/files/includes/domains/statu
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 175 | `domainStatusRaise` | **insert** [domain_status_incidents](/code/tables/domain_status_incidents.md) (`domain_id`, `incident_id`, `trigger_kind`, `fingerprint`) |  |
+| 178 | `domainStatusRaise` | **insert** [domain_status_incidents](/code/tables/domain_status_incidents.md) (`domain_id`, `incident_id`, `trigger_kind`, `fingerprint`) |  |
 
 ## Calls
 

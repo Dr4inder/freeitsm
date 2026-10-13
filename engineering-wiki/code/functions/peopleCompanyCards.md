@@ -13,7 +13,7 @@ the Default company, as `peopleCompanyMatch()` does.
 function peopleCompanyCards(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 139.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 140.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,11 +26,11 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 139.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 157 | `peopleCompanyCards` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 164 | `peopleCompanyCards` | read [assets](/code/tables/assets.md) |  |
-| 169 | `peopleCompanyCards` | read [users](/code/tables/users.md) |  |
-| 172 | `peopleCompanyCards` | read [tenants](/code/tables/tenants.md) |  |
-| 175 | `peopleCompanyCards` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 158 | `peopleCompanyCards` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 165 | `peopleCompanyCards` | read [assets](/code/tables/assets.md) |  |
+| 170 | `peopleCompanyCards` | read [users](/code/tables/users.md) |  |
+| 173 | `peopleCompanyCards` | read [tenants](/code/tables/tenants.md) |  |
+| 176 | `peopleCompanyCards` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
 
 ## Calls
 

@@ -1,10 +1,12 @@
 # apiTicketTimeEntriesCreate()
 
+POST /tickets/{id}/time-entries - logs time on the ticket through TicketsService, returning the minutes and time as stored.
+
 ```php
 function apiTicketTimeEntriesCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 462.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 483.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 468 | `apiTicketTimeEntriesCreate` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 489 | `apiTicketTimeEntriesCreate` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
 
 ## Calls
 

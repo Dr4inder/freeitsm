@@ -12,11 +12,16 @@
  * Accessible without the picture: every box is a button, and the panel beside
  * the map lists in words what the chosen part feeds and is fed by (each a
  * button too). Lines are decoration, redrawn on resize.
+ *
+ * @wiki Projects-Developer-Guide
  */
 (function () {
     'use strict';
+    /** Translates a key under projects.tour.*, or returns the key when the i18n helper is not loaded. */
     const T = (k, p) => (window.t ? window.t('projects.tour.' + k, p) : k);
+    /** Translates a tool's name under projects.tools.*. */
     const TT = k => (window.t ? window.t('projects.tools.' + k) : k);
+    /** Escapes a value for safe use in HTML. */
     const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
     // id, group, the tool that switches it on (null = every project has it)
@@ -49,8 +54,10 @@
     ];
 
     let root, map, svg, panel, sel = null, mode = 'explore', step = 0, method = 'all';
+    /** The methods and their tools from window.PRJ_TOUR, or empty when the page sent none. */
     const cfg = () => window.PRJ_TOUR || { methods: {}, labels: {} };
 
+    /** Builds the map into el - the explore / walk switch, the method filter, a column of part buttons per group and the side panel - and wires its clicks, arrow keys and resize. */
     function mount(el) {
         root = el;
         const methods = Object.keys(cfg().methods);
@@ -77,6 +84,7 @@
         draw();
     }
 
+    /** Handles clicks on the map - a part selects it (leaving the walk), the mode switch changes mode, and the walk's Back / Next / Restart step it. */
     function onClick(e) {
         const n = e.target.closest('[data-node]');
         if (n) { if (mode === 'walk') { mode = 'explore'; syncMode(); } sel = sel === n.dataset.node ? null : n.dataset.node; draw(); return; }
@@ -85,11 +93,15 @@
         const s = e.target.closest('[data-tstep]');
         if (s) { const v = s.dataset.tstep; step = v === 'next' ? Math.min(STEPS.length - 1, step + 1) : v === 'back' ? Math.max(0, step - 1) : 0; draw(); }
     }
+    /** Highlights the button of the current mode, explore or walk. */
     function syncMode() { root.querySelectorAll('[data-tmode]').forEach(b => b.classList.toggle('active', b.dataset.tmode === mode)); }
 
+    /** True when the chosen method does not switch on the tool behind a part. */
     function isOff(tool) { return method !== 'all' && tool !== null && !(cfg().methods[method] || []).includes(tool); }
+    /** What a part feeds and what feeds it. */
     const related = id => ({ feeds: EDGES.filter(e => e[0] === id).map(e => e[1]), fed: EDGES.filter(e => e[1] === id).map(e => e[0]) });
 
+    /** Redraws the map's state - lit, related, dimmed and switched-off parts - the side panel and the lines. */
     function draw() {
         const lit = mode === 'walk' ? STEPS[step] : (sel ? [sel] : []);
         root.classList.toggle('is-walk', mode === 'walk');   // a phone puts the step text above the map
@@ -106,10 +118,12 @@
         lines();
     }
 
+    /** The side panel for a chosen part - what it is, where to find it, which methods switch it on, and buttons for what it feeds and is fed by. */
     function nodePanel(id) {
         const tool = NODES.find(n => n[0] === id)[2];
         const r = related(id);
         const inMethods = tool ? Object.keys(cfg().methods).filter(m => cfg().methods[m].includes(tool)).map(m => cfg().labels[m] || m) : [];
+        /** A button per related part. */
         const chips = list => list.map(x => '<button type="button" class="prj-tour-chip" data-node="' + x + '">' + esc(T('n_' + x)) + '</button>').join('');
         return '<h4>' + esc(T('n_' + id)) + '</h4><p>' + esc(T('d_' + id)) + '</p>'
             + '<p class="prj-muted"><strong>' + esc(T('where')) + ':</strong> ' + esc(T('w_' + id)) + '</p>'
@@ -119,6 +133,7 @@
             + (r.fed.length ? '<div class="prj-tour-rel"><span>' + esc(T('fed_by')) + '</span>' + chips(r.fed) + '</div>' : '');
     }
 
+    /** The side panel for the current walk step - step count and dots, its title and text, and Back / Next (Restart on the last). */
     function walkPanel() {
         const n = step + 1, last = n === STEPS.length;
         return '<div class="prj-tour-step">' + esc(T('step', { n: n, total: STEPS.length })) + '</div>'
@@ -135,6 +150,7 @@
         const box = map.getBoundingClientRect();
         svg.setAttribute('width', box.width); svg.setAttribute('height', box.height);
         svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
+        /** A part's box on the map, relative to the map's corner. */
         const rect = id => { const r = root.querySelector('[data-node="' + id + '"]').getBoundingClientRect(); return { l: r.left - box.left, r: r.right - box.left, t: r.top - box.top, b: r.bottom - box.top, cx: r.left - box.left + r.width / 2, cy: r.top - box.top + r.height / 2 }; };
         // From edge to edge, so the arrowhead is never under a box: side by side across columns, else top/bottom.
         const ends = (a, b) => {

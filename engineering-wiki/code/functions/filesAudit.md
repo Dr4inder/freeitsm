@@ -1,5 +1,9 @@
 # filesAudit()
 
+Writes one row to the Files audit log, with the analyst's name, the target's path, IP address and user agent.
+
+An unknown action is logged to the PHP error log and skipped.
+
 ```php
 function filesAudit(
     PDO $conn,
@@ -10,7 +14,7 @@ function filesAudit(
 ): void
 ```
 
-Defined in [includes/files/audit.php](/code/files/includes/files/audit.php.md), line 32.
+Defined in [includes/files/audit.php](/code/files/includes/files/audit.php.md), line 39.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,12 +26,14 @@ Defined in [includes/files/audit.php](/code/files/includes/files/audit.php.md), 
 
 **Returns:** `void`
 
+**Writes:** files_audit - the record of who did what to which folder or file
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 46 | `filesAudit` | read [analysts](/code/tables/analysts.md) |  |
-| 51 | `filesAudit` | **insert** [files_audit](/code/tables/files_audit.md) (`analyst_id`, `analyst_name`, `action`, `folder_id`, `item_id`, `version_id`, `target_path`, `detail`, `ip_address`, `user_agent`, `created_datetime`) |  |
+| 53 | `filesAudit` | read [analysts](/code/tables/analysts.md) |  |
+| 58 | `filesAudit` | **insert** [files_audit](/code/tables/files_audit.md) (`analyst_id`, `analyst_name`, `action`, `folder_id`, `item_id`, `version_id`, `target_path`, `detail`, `ip_address`, `user_agent`, `created_datetime`) |  |
 
 ## Called from
 

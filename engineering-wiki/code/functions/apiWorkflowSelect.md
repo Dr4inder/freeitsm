@@ -1,10 +1,12 @@
 # apiWorkflowSelect()
 
+The SELECT for workflows, with the creator's name.
+
 ```php
 function apiWorkflowSelect(): string
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 39.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 40.
 
 **Returns:** `string`
 
@@ -12,7 +14,7 @@ Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 40 | `apiWorkflowSelect` | read [workflows](/code/tables/workflows.md), read [analysts](/code/tables/analysts.md) |  |
+| 41 | `apiWorkflowSelect` | read [workflows](/code/tables/workflows.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Called from
 

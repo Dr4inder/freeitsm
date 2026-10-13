@@ -54,6 +54,7 @@ function helpSection(string $id, string $heading, string $lead = ''): void
        . ($lead !== '' ? '<p>' . $lead . '</p>' : '')
        . '</div>';
 }
+/** Closes a section opened by helpSection(). */
 function helpSectionEnd(): void { echo '</div>'; }
 
 $current_page = 'help';

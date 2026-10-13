@@ -43,8 +43,8 @@ Messaging channel "inbox" — the channel twin of target_mailboxes. One row per 
 | [api/messaging/test_channel.php](/code/files/api/messaging/test_channel.php.md) | testSimulation L164 |  |
 | [api/tickets/get_ticket_thread.php](/code/files/api/tickets/get_ticket_thread.php.md) | L150 |  |
 | [api/webchat/get_widgets.php](/code/files/api/webchat/get_widgets.php.md) | L30 |  |
-| [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md) | loadMessagingChannel L68, messagingAdminMayAdministerChannel L454 |  |
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessChannel L463, resolveTicketTenantForChannel L1138 |  |
+| [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md) | loadMessagingChannel L68, messagingAdminMayAdministerChannel L463 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessChannel L463, resolveTicketTenantForChannel L1144 |  |
 | [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatLoadByChannel L80, webchatLoadByKey L98 |  |
 | [system/integrations/index.php](/code/files/system/integrations/index.php.md) | L58 |  |
 | [system/integrations/slack.php](/code/files/system/integrations/slack.php.md) | L45 |  |

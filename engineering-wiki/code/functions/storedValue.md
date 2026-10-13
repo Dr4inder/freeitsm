@@ -6,7 +6,7 @@ Describe what is actually stored, keeping the three "blank" cases apart: the col
 function storedValue(array $row, string $col, array $apCols, bool $maskIt = false)
 ```
 
-Defined in [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md), line 266.
+Defined in [api/system/debug-tools/D011_directory_sync_readiness.php](/code/files/api/system/debug-tools/D011_directory_sync_readiness.php.md), line 288.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

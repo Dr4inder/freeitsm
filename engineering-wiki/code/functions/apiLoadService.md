@@ -1,10 +1,12 @@
 # apiLoadService()
 
+Loads one service row with its current status, or answers 404 and stops.
+
 ```php
 function apiLoadService(PDO $conn, int $serviceId): array
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 88.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 94.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +19,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 90 | `apiLoadService` | read [status_services](/code/tables/status_services.md) |  |
+| 96 | `apiLoadService` | read [status_services](/code/tables/status_services.md) |  |
 
 ## Calls
 

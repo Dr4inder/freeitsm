@@ -6,7 +6,7 @@ Start what is due and finish what has ended. `$onlyId` = one plan (just saved).
 function statusPlannedRun(PDO $conn, ?int $onlyId = null): array
 ```
 
-Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 200.
+Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 201.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,12 +19,12 @@ Defined in [includes/service_status_planned.php](/code/files/includes/service_st
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 206 | `statusPlannedRun` | read [status_planned](/code/tables/status_planned.md) |  |
-| 209 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
-| 217 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`) |  |
-| 222 | `statusPlannedRun` | read [status_planned](/code/tables/status_planned.md) |  |
-| 224 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
-| 231 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`) |  |
+| 207 | `statusPlannedRun` | read [status_planned](/code/tables/status_planned.md) |  |
+| 210 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
+| 218 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`) |  |
+| 223 | `statusPlannedRun` | read [status_planned](/code/tables/status_planned.md) |  |
+| 225 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
+| 232 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`) |  |
 
 ## Calls
 

@@ -1,6 +1,6 @@
 # api/system/debug-tools/D010_signin_methods.php
 
-> API endpoint - 444 lines
+> API endpoint - 465 lines
 
 Debug Tool D010 — Sign-in methods, and how you are actually signed in
 
@@ -35,35 +35,35 @@ Output: plain text, section-delimited with === HEADERS ===.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 50 |  |
-| [yn()](/code/functions/yn.md) | 54 |  |
-| [mask()](/code/functions/mask.md) | 61 |  |
-| [maskEmail()](/code/functions/maskEmail.md) | 70 | Local part masked, domain kept — the domain is the diagnostic half. |
-| [maskDn()](/code/functions/maskDn.md) | 85 | A DN carries a person's name in its leading component and the directory's shape in the rest. The shape is what you need to diagnose, the name is not — so mask every attribute VALUE and keep every attribute NAME and the commas. "CN=svc_freeitsm,OU=Service Accounts,DC=cnss,DC=local" -> "CN=sv******m,OU=Se******s,DC=cn***,DC=lo***" |
-| [maskGuids()](/code/functions/maskGuids.md) | 102 | A tenant GUID in an issuer URL names the ORGANISATION, which is more than this report needs to be useful — and D003 already masks them for the same reason. The rest of the URL (which IdP, which realm shape) is the diagnostic half. |
-| [maskHost()](/code/functions/maskHost.md) | 109 | A hostname is infrastructure, not a person — but strip any user@ prefix. |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 116 |  |
-| [colExists()](/code/functions/colExists.md) | 146 |  |
-| [tableExists()](/code/functions/tableExists.md) | 154 |  |
+| [addSection()](/code/functions/addSection.md) | 54 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 59 | Formats a boolean as YES or NO for the report. |
+| [mask()](/code/functions/mask.md) | 70 | Masks a value for a report that will be sent on - all stars when very short, otherwise the first one or two characters (and the last, for a long value) with stars between. |
+| [maskEmail()](/code/functions/maskEmail.md) | 79 | Local part masked, domain kept — the domain is the diagnostic half. |
+| [maskDn()](/code/functions/maskDn.md) | 94 | A DN carries a person's name in its leading component and the directory's shape in the rest. The shape is what you need to diagnose, the name is not — so mask every attribute VALUE and keep every attribute NAME and the commas. "CN=svc_freeitsm,OU=Service Accounts,DC=cnss,DC=local" -> "CN=sv******m,OU=Se******s,DC=cn***,DC=lo***" |
+| [maskGuids()](/code/functions/maskGuids.md) | 111 | A tenant GUID in an issuer URL names the ORGANISATION, which is more than this report needs to be useful — and D003 already masks them for the same reason. The rest of the URL (which IdP, which realm shape) is the diagnostic half. |
+| [maskHost()](/code/functions/maskHost.md) | 118 | A hostname is infrastructure, not a person — but strip any user@ prefix. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 129 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
+| [colExists()](/code/functions/colExists.md) | 163 | Whether a column exists in this database - false on any error, so an older install reads as not ready rather than breaking the report. |
+| [tableExists()](/code/functions/tableExists.md) | 175 | Whether a table exists in this database - false on any error, so an older install reads as not ready rather than breaking the report. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 211 |  | read [analysts](/code/tables/analysts.md) |  |
-| 246 |  | read [system_settings](/code/tables/system_settings.md) |  |
-| 259 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 295 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 389 |  | read [analysts](/code/tables/analysts.md) |  |
-| 390 |  | read [analysts](/code/tables/analysts.md) |  |
-| 391 |  | read [analysts](/code/tables/analysts.md) |  |
-| 392 |  | read [analysts](/code/tables/analysts.md) |  |
-| 394 |  | read [analysts](/code/tables/analysts.md) |  |
-| 401 |  | read [users](/code/tables/users.md) |  |
-| 402 |  | read [users](/code/tables/users.md) |  |
-| 403 |  | read [users](/code/tables/users.md) |  |
-| 405 |  | read [users](/code/tables/users.md) |  |
-| 408 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
+| 232 |  | read [analysts](/code/tables/analysts.md) |  |
+| 267 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 280 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 316 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 410 |  | read [analysts](/code/tables/analysts.md) |  |
+| 411 |  | read [analysts](/code/tables/analysts.md) |  |
+| 412 |  | read [analysts](/code/tables/analysts.md) |  |
+| 413 |  | read [analysts](/code/tables/analysts.md) |  |
+| 415 |  | read [analysts](/code/tables/analysts.md) |  |
+| 422 |  | read [users](/code/tables/users.md) |  |
+| 423 |  | read [users](/code/tables/users.md) |  |
+| 424 |  | read [users](/code/tables/users.md) |  |
+| 426 |  | read [users](/code/tables/users.md) |  |
+| 429 |  | read [user_sso_identities](/code/tables/user_sso_identities.md) |  |
 
 ## How it hangs together
 

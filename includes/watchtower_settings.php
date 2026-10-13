@@ -25,6 +25,8 @@
  * is_customised is what makes that work: it separates "not configured" from
  * "configured to show nothing". Without it an empty selection is
  * indistinguishable from an untouched one, and would silently mean "all".
+ *
+ * @wiki Watchtower-Settings-Developer-Guide
  */
 
 /** analyst_id 0 = the installation's setting. Per-analyst overrides are future work. */
@@ -54,6 +56,7 @@ const WT_SCOPE_MINE = 'mine';
 const WT_SCOPE_TEAM = 'team';
 const WT_SCOPE_ALL  = 'all';
 
+/** True when $scope is one of the three Watchtower scopes: mine, team or all. */
 function wtScopeIsValid(string $scope): bool
 {
     return in_array($scope, [WT_SCOPE_MINE, WT_SCOPE_TEAM, WT_SCOPE_ALL], true);

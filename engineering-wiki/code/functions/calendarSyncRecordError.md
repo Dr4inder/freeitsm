@@ -1,10 +1,12 @@
 # calendarSyncRecordError()
 
+Stores a sync error (cut to 500 characters) on the analyst's enrolment, creating an 'off' enrolment row when there is none; never throws.
+
 ```php
 function calendarSyncRecordError(PDO $conn, int $analystId, string $message): void
 ```
 
-Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md), line 469.
+Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md), line 473.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -14,11 +16,13 @@ Defined in [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/
 
 **Returns:** `void`
 
+**Writes:** calendar_enrolments(last_error) - shown on the analyst's calendar settings
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 473 | `calendarSyncRecordError` | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `mode`, `last_error`) |  |
+| 477 | `calendarSyncRecordError` | **insert** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`analyst_id`, `mode`, `last_error`) |  |
 
 ## Called from
 

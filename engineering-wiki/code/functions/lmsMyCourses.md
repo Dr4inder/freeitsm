@@ -12,7 +12,7 @@ it, which the old GROUP BY was quietly there to mop up.
 function lmsMyCourses(PDO $conn, LmsLearner $learner): array
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 304.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 310.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,7 +25,7 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 307 | `lmsMyCourses` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
+| 313 | `lmsMyCourses` | read [lms_course_assignments](/code/tables/lms_course_assignments.md), read [lms_courses](/code/tables/lms_courses.md), read [lms_progress](/code/tables/lms_progress.md) |  |
 
 ## Calls
 

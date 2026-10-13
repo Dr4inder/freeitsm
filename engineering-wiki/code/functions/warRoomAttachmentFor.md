@@ -11,7 +11,7 @@ nothing rather than a file.
 function warRoomAttachmentFor(PDO $conn, int $analystId, int $attachmentId): ?array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 922.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 923.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,7 +25,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 922
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 925 | `warRoomAttachmentFor` | read [warroom_attachments](/code/tables/warroom_attachments.md), read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 926 | `warRoomAttachmentFor` | read [warroom_attachments](/code/tables/warroom_attachments.md), read [warroom_messages](/code/tables/warroom_messages.md) |  |
 
 ## Calls
 

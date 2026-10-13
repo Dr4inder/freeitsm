@@ -21,7 +21,7 @@ Bounded so it can run opportunistically without becoming the cost of a page load
 function documentsCollectOrphans(PDO $conn, int $limit = 200): array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 625.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 630.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -34,10 +34,10 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 638 | `documentsCollectOrphans` | **delete** [document_links](/code/tables/document_links.md) |  |
-| 658 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
-| 668 | `documentsCollectOrphans` | **update** [documents](/code/tables/documents.md) (`deleted_datetime`) |  |
-| 679 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md) |  |
+| 643 | `documentsCollectOrphans` | **delete** [document_links](/code/tables/document_links.md) |  |
+| 663 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
+| 673 | `documentsCollectOrphans` | **update** [documents](/code/tables/documents.md) (`deleted_datetime`) |  |
+| 684 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md) |  |
 
 ## Calls
 

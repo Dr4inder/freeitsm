@@ -1,6 +1,6 @@
 # includes/services/project_templates.php
 
-> PHP - 256 lines
+> PHP - 261 lines
 
 ProjectTemplatesService - start a project from a template, save a project as one, and look after the list (3.2.0).
 
@@ -40,9 +40,9 @@ are removed again (cleanup()), so a failure never leaves a stray project.
 | 161 | `ProjectTemplatesService::cleanup` | **delete** [projects](/code/tables/projects.md) |  |
 | 188 | `ProjectTemplatesService::saveFromProject` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `content`, `updated_datetime`) |  |
 | 192 | `ProjectTemplatesService::saveFromProject` | **insert** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `content`, `is_active`, `created_by_analyst_id`, `created_datetime`, `updated_datetime`) |  |
-| 206 | `ProjectTemplatesService::update` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `is_active`, `updated_datetime`) |  |
-| 215 | `ProjectTemplatesService::delete` | **delete** [project_templates](/code/tables/project_templates.md) |  |
-| 249 | `ProjectTemplatesService::row` | read [project_templates](/code/tables/project_templates.md) |  |
+| 207 | `ProjectTemplatesService::update` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `is_active`, `updated_datetime`) |  |
+| 217 | `ProjectTemplatesService::delete` | **delete** [project_templates](/code/tables/project_templates.md) |  |
+| 254 | `ProjectTemplatesService::row` | read [project_templates](/code/tables/project_templates.md) |  |
 
 ## How it hangs together
 

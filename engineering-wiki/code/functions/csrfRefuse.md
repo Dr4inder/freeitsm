@@ -6,7 +6,7 @@ Refuse, in the shape the caller expects: JSON for the API, a short page for a fo
 function csrfRefuse(string $why): void
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 201.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 203.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

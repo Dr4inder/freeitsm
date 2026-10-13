@@ -20,16 +20,29 @@ $DIAG_NAME = 'Demo Core Data Import';
 // ---- helpers -----------------------------------------------------------
 
 $sections = [];
+/**
+ * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
+ * string or an array of lines.
+ */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
     $sections[] = "=== {$title} ===\n" . rtrim($body, "\n");
 }
+/** Formats a boolean as YES or NO for the report. */
 function bool_str($v) { return $v ? 'YES' : 'NO'; }
+/**
+ * Returns a file's size in bytes for the report - 'n/a' when it does not exist,
+ * 'unknown' when it cannot be read.
+ */
 function safe_size($path) {
     if (!file_exists($path)) return 'n/a';
     $sz = @filesize($path);
     return $sz === false ? 'unknown' : ($sz . ' bytes');
 }
+/**
+ * Replaces the personal values in a row (names, email, username, password hash, MFA
+ * secret) with "[redacted N chars]", so the report can be shared.
+ */
 function redact_row($row, $redactCols = ['password_hash', 'totp_secret', 'username', 'email', 'full_name', 'display_name', 'preferred_name']) {
     if (!is_array($row)) return $row;
     foreach ($redactCols as $c) {

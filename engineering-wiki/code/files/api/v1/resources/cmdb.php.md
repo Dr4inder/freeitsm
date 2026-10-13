@@ -1,6 +1,6 @@
 # api/v1/resources/cmdb.php
 
-> API endpoint - 575 lines
+> API endpoint - 594 lines
 
 FreeITSM REST API v1 — CMDB resource (configuration items).
 
@@ -52,46 +52,46 @@ the (API-only) ticket-link endpoints stay here.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiCmdbClassesList()](/code/functions/apiCmdbClassesList.md) | 50 |  |
-| [apiCmdbClassesGet()](/code/functions/apiCmdbClassesGet.md) | 78 |  |
-| [apiCmdbLoadObject()](/code/functions/apiCmdbLoadObject.md) | 142 | Load one CI; 404 if unknown OR outside the key's companies (multi-tenancy — the key's company scope gates every by-id read/write; a NULL tenant_id normalises to the Default company; no-op at N=1 / all-access key). |
-| [apiCmdbSerializeObject()](/code/functions/apiCmdbSerializeObject.md) | 161 |  |
-| [apiCmdbClassDefs()](/code/functions/apiCmdbClassDefs.md) | 176 | Property definitions for a class, keyed by property_key. |
-| [apiCmdbObjectsList()](/code/functions/apiCmdbObjectsList.md) | 192 | GET /cmdb/objects |
-| [apiCmdbObjectsGet()](/code/functions/apiCmdbObjectsGet.md) | 277 | GET /cmdb/objects/{id} — fully hydrated |
-| [apiCmdbObjectsCreate()](/code/functions/apiCmdbObjectsCreate.md) | 397 | POST /cmdb/objects |
-| [apiCmdbObjectsUpdate()](/code/functions/apiCmdbObjectsUpdate.md) | 418 | PATCH /cmdb/objects/{id} |
-| [apiCmdbObjectsDelete()](/code/functions/apiCmdbObjectsDelete.md) | 429 | DELETE /cmdb/objects/{id} — explicit descendant-tree removal (grown installs have no CMDB FK cascades; see the db_verify FK group added alongside this) |
-| [apiCmdbObjectImpact()](/code/functions/apiCmdbObjectImpact.md) | 439 | GET /cmdb/objects/{id}/impact — blast radius (mirrors get_object_impact.php) |
-| [apiCmdbRelationshipsCreate()](/code/functions/apiCmdbRelationshipsCreate.md) | 468 | Relationships — POST /cmdb/objects/{id}/relationships, DELETE .../{rel_id} |
-| [apiCmdbRelationshipsDelete()](/code/functions/apiCmdbRelationshipsDelete.md) | 480 |  |
-| [apiCmdbObjectTicketsList()](/code/functions/apiCmdbObjectTicketsList.md) | 490 | Ticket links — company-scoped on both the CI and the tickets |
-| [apiCmdbObjectTicketsLink()](/code/functions/apiCmdbObjectTicketsLink.md) | 518 |  |
-| [apiCmdbObjectTicketsUnlink()](/code/functions/apiCmdbObjectTicketsUnlink.md) | 543 |  |
-| [apiCmdbRelationshipTypesList()](/code/functions/apiCmdbRelationshipTypesList.md) | 560 | Reference: relationship types |
+| [apiCmdbClassesList()](/code/functions/apiCmdbClassesList.md) | 56 | GET /cmdb/classes - every CMDB class with its icon and how many objects it holds. |
+| [apiCmdbClassesGet()](/code/functions/apiCmdbClassesGet.md) | 85 | GET /cmdb/classes/{id} - one CMDB class with its property definitions and their options. |
+| [apiCmdbLoadObject()](/code/functions/apiCmdbLoadObject.md) | 149 | Load one CI; 404 if unknown OR outside the key's companies (multi-tenancy — the key's company scope gates every by-id read/write; a NULL tenant_id normalises to the Default company; no-op at N=1 / all-access key). |
+| [apiCmdbSerializeObject()](/code/functions/apiCmdbSerializeObject.md) | 169 | Shapes a CMDB object row for the API - name, company, class, parent, planned flag and dates. |
+| [apiCmdbClassDefs()](/code/functions/apiCmdbClassDefs.md) | 184 | Property definitions for a class, keyed by property_key. |
+| [apiCmdbObjectsList()](/code/functions/apiCmdbObjectsList.md) | 200 | GET /cmdb/objects |
+| [apiCmdbObjectsGet()](/code/functions/apiCmdbObjectsGet.md) | 285 | GET /cmdb/objects/{id} — fully hydrated |
+| [apiCmdbObjectsCreate()](/code/functions/apiCmdbObjectsCreate.md) | 405 | POST /cmdb/objects |
+| [apiCmdbObjectsUpdate()](/code/functions/apiCmdbObjectsUpdate.md) | 426 | PATCH /cmdb/objects/{id} |
+| [apiCmdbObjectsDelete()](/code/functions/apiCmdbObjectsDelete.md) | 437 | DELETE /cmdb/objects/{id} — explicit descendant-tree removal (grown installs have no CMDB FK cascades; see the db_verify FK group added alongside this) |
+| [apiCmdbObjectImpact()](/code/functions/apiCmdbObjectImpact.md) | 447 | GET /cmdb/objects/{id}/impact — blast radius (mirrors get_object_impact.php) |
+| [apiCmdbRelationshipsCreate()](/code/functions/apiCmdbRelationshipsCreate.md) | 476 | Relationships — POST /cmdb/objects/{id}/relationships, DELETE .../{rel_id} |
+| [apiCmdbRelationshipsDelete()](/code/functions/apiCmdbRelationshipsDelete.md) | 489 | DELETE /cmdb/objects/{id}/relationships/{relId} - deletes a relationship through CmdbService. |
+| [apiCmdbObjectTicketsList()](/code/functions/apiCmdbObjectTicketsList.md) | 499 | Ticket links — company-scoped on both the CI and the tickets |
+| [apiCmdbObjectTicketsLink()](/code/functions/apiCmdbObjectTicketsLink.md) | 533 | POST /cmdb/objects/{id}/tickets - links a ticket to the object. Both must be in the key's companies; a link that already exists answers 409. |
+| [apiCmdbObjectTicketsUnlink()](/code/functions/apiCmdbObjectTicketsUnlink.md) | 562 | DELETE /cmdb/objects/{id}/tickets/{ticketId} - removes the link between the object and a ticket, or answers 404 when there is none. |
+| [apiCmdbRelationshipTypesList()](/code/functions/apiCmdbRelationshipTypesList.md) | 579 | Reference: relationship types |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 56 | `apiCmdbClassesList` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
-| 80 | `apiCmdbClassesGet` | read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
-| 90 | `apiCmdbClassesGet` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 100 | `apiCmdbClassesGet` | read [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
-| 144 | `apiCmdbLoadObject` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [tenants](/code/tables/tenants.md) |  |
-| 178 | `apiCmdbClassDefs` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
-| 253 | `apiCmdbObjectsList` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 259 | `apiCmdbObjectsList` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [tenants](/code/tables/tenants.md) |  |
-| 292 | `apiCmdbObjectsGet` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 294 | `apiCmdbObjectsGet` | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 339 | `apiCmdbObjectsGet` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 346 | `apiCmdbObjectsGet` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 367 | `apiCmdbObjectsGet` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 377 | `apiCmdbObjectsGet` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 498 | `apiCmdbObjectTicketsList` | read [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 531 | `apiCmdbObjectTicketsLink` | **insert** [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) (`ticket_id`, `cmdb_object_id`, `created_datetime`, `created_by_analyst_id`) |  |
-| 549 | `apiCmdbObjectTicketsUnlink` | **delete** [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) |  |
-| 562 | `apiCmdbRelationshipTypesList` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
+| 62 | `apiCmdbClassesList` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
+| 87 | `apiCmdbClassesGet` | read [cmdb_classes](/code/tables/cmdb_classes.md), read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
+| 97 | `apiCmdbClassesGet` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 107 | `apiCmdbClassesGet` | read [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md), read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 151 | `apiCmdbLoadObject` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [tenants](/code/tables/tenants.md) |  |
+| 186 | `apiCmdbClassDefs` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 261 | `apiCmdbObjectsList` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 267 | `apiCmdbObjectsList` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md), read [tenants](/code/tables/tenants.md) |  |
+| 300 | `apiCmdbObjectsGet` | read [cmdb_object_properties](/code/tables/cmdb_object_properties.md), read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 302 | `apiCmdbObjectsGet` | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 347 | `apiCmdbObjectsGet` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 354 | `apiCmdbObjectsGet` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 375 | `apiCmdbObjectsGet` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 385 | `apiCmdbObjectsGet` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md), read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 507 | `apiCmdbObjectTicketsList` | read [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 546 | `apiCmdbObjectTicketsLink` | **insert** [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) (`ticket_id`, `cmdb_object_id`, `created_datetime`, `created_by_analyst_id`) |  |
+| 568 | `apiCmdbObjectTicketsUnlink` | **delete** [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) |  |
+| 581 | `apiCmdbRelationshipTypesList` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
 
 ## How it hangs together
 

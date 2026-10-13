@@ -1,10 +1,12 @@
 # apiLoadLicence()
 
+Loads one licence row (apiSoftwareLicenceSelect), or answers 404 and stops.
+
 ```php
 function apiLoadLicence(PDO $conn, int $licenceId): array
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 256.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 275.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

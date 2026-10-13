@@ -67,6 +67,10 @@ if (!defined('PROJECT_LINKS_LOADED')) {
         return in_array(true, $ready, true);
     }
 
+    /**
+     * The definition (table, column, module) of one link kind; throws a validation error
+     * for an unknown kind.
+     */
     function projectLinkKind(string $kind): array
     {
         $kinds = projectLinkKinds();
@@ -240,6 +244,13 @@ if (!defined('PROJECT_LINKS_LOADED')) {
         return $out;
     }
 
+    /**
+     * Links a record (asset, ticket, contract...) to a project and records it in the
+     * project's history.
+     *
+     * Both ends must be visible to the actor and the actor must be able to change the
+     * project. Returns false when the link already existed.
+     */
     function projectLinkAdd(PDO $conn, ActorContext $ctx, int $projectId, string $kind, int $targetId): bool
     {
         $k = projectLinkKind($kind);
@@ -259,6 +270,12 @@ if (!defined('PROJECT_LINKS_LOADED')) {
         return $added;
     }
 
+    /**
+     * Removes a link between a project and a record and records it in the project's
+     * history.
+     *
+     * Needs the same rights as adding it. Returns false when there was no such link.
+     */
     function projectLinkRemove(PDO $conn, ActorContext $ctx, int $projectId, string $kind, int $targetId): bool
     {
         $k = projectLinkKind($kind);

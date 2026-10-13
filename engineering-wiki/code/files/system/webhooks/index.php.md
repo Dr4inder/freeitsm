@@ -1,6 +1,6 @@
 # system/webhooks/index.php
 
-> PHP - 753 lines
+> PHP - 755 lines
 
 System — Webhooks.
 
@@ -24,9 +24,9 @@ Read/replay data comes from api/workflow/deliveries.php + deliveries_replay.php
 
 | Function | Line | What it does |
 |---|--:|---|
-| [whLatency()](/code/functions/whLatency.md) | 152 |  |
-| [whRate()](/code/functions/whRate.md) | 161 | Success-rate cell: delivered vs terminal (delivered + dead); in-flight ignored. |
-| [whAgo()](/code/functions/whAgo.md) | 177 |  |
+| [whLatency()](/code/functions/whLatency.md) | 153 | A delivery latency in seconds as translated text (under a second, seconds, minutes or hours); a dash when there is none. |
+| [whRate()](/code/functions/whRate.md) | 162 | Success-rate cell: delivered vs terminal (delivered + dead); in-flight ignored. |
+| [whAgo()](/code/functions/whAgo.md) | 179 | An age in seconds as translated "n seconds/minutes/hours/days ago" text; empty when there is none. |
 
 ## Database
 

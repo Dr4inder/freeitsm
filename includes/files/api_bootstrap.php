@@ -41,12 +41,17 @@ function filesApiBody(): array
     return $b;
 }
 
+/** Sends a success JSON reply ({success: true} plus $data) and ends the request. */
 function filesApiOk(array $data = []): void
 {
     echo json_encode(['success' => true] + $data);
     exit;
 }
 
+/**
+ * Sends a failure JSON reply ({success: false, error}) with an optional HTTP status and
+ * extra keys, and ends the request.
+ */
 function filesApiFail(string $message, int $status = 200, array $extra = []): void
 {
     if ($status !== 200) http_response_code($status);
@@ -54,6 +59,7 @@ function filesApiFail(string $message, int $status = 200, array $extra = []): vo
     exit;
 }
 
+/** True when the analyst holds the capability; a failed lookup counts as no. */
 function filesHasCap(PDO $conn, int $analystId, string $cap): bool
 {
     try { return analystHasCapability($conn, $analystId, $cap); } catch (Throwable $e) { return false; }

@@ -51,23 +51,23 @@
 | [api/tickets/get_scheduled_tickets.php](/code/files/api/tickets/get_scheduled_tickets.php.md) | L45 |  |
 | [api/tickets/get_sla_settings.php](/code/files/api/tickets/get_sla_settings.php.md) | L44 |  |
 | [api/tickets/get_ticket_priorities.php](/code/files/api/tickets/get_ticket_priorities.php.md) | L20 |  |
-| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L241, getCategoricalWithSeries L309, getTimeData L376, getTimeWithSeries L404, getCreatedVsClosedData L476 |  |
+| [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L277, getCategoricalWithSeries L351, getTimeData L424, getTimeWithSeries L458, getCreatedVsClosedData L536 |  |
 | [api/tickets/get_user_tickets.php](/code/files/api/tickets/get_user_tickets.php.md) | L31 |  |
 | [api/tickets/save_ticket_priority.php](/code/files/api/tickets/save_ticket_priority.php.md) | L58 |  |
-| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L76 |  |
+| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L80 |  |
 | [api/v1/resources/reference.php](/code/files/api/v1/resources/reference.php.md) | apiPrioritiesList L72 |  |
-| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L34, apiTicketsList L218 |  |
+| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L38, apiTicketsList L226 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTicket L51 |  |
 | [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md) | ingestInboundMessage L157 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleTickets L321 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleTickets L322 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewTicket L127 |  |
 | [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L35 |  |
-| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::createTicket L117, TicketsService::loadTicket L1061, TicketsService::resolvePriority L1158, TicketsService::resolvePriority L1161 |  |
+| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::createTicket L117, TicketsService::loadTicket L1061, TicketsService::resolvePriority L1159, TicketsService::resolvePriority L1162 |  |
 | [includes/sla.php](/code/files/includes/sla.php.md) | sla_get_state L77 |  |
 | [includes/template_email.php](/code/files/includes/template_email.php.md) | buildTicketMergeData L334 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOpenIncidents L393, warbotToolOpenIncidents L405 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOpenIncidents L403, warbotToolOpenIncidents L415 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L193, getWatchtowerData L198, getWatchtowerData L211, getWatchtowerData L213 |  |
 | [includes/webchat/webchat.php](/code/files/includes/webchat/webchat.php.md) | webchatOpenTicket L201 |  |
 | [self-service/new-ticket.php](/code/files/self-service/new-ticket.php.md) | L1081 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_set_ticket_priority L2148 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_set_ticket_priority L2196 |  |
 

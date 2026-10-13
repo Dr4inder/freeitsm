@@ -15,11 +15,11 @@ Membership, for private custom channels and for DMs. Public custom channels also
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md):322 | `warRoomAddMembers` | insert | `channel_id`, `analyst_id`, `created_datetime` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):323 | `warRoomAddMembers` | insert | `channel_id`, `analyst_id`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L131, warRoomChannelList L153, warRoomChannel L213, warRoomIsMember L260, warRoomAddMembers L322, warRoomChannelAudience L761 ... |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L131, warRoomChannelList L153, warRoomChannel L213, warRoomIsMember L261, warRoomAddMembers L323, warRoomChannelAudience L762 ... |  |
 

@@ -1,10 +1,12 @@
 # apiSerializeProject()
 
+Shapes a decorated project row for the API - code, names, company, status, health, dates, tools, progress, active stage, exceptions and budget totals.
+
 ```php
 function apiSerializeProject(PDO $conn, array $p): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 55.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 63.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

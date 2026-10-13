@@ -30,6 +30,6 @@
 |---|---|---|
 | [api/change-management/get.php](/code/files/api/change-management/get.php.md) | L103 |  |
 | [api/change-management/get_approvals.php](/code/files/api/change-management/get_approvals.php.md) | L32, L95, L119 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeCabGet L430 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeCabGet L441 |  |
 | [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::saveCab L468, ChangesService::voteCab L521, ChangesService::voteCab L565 |  |
 

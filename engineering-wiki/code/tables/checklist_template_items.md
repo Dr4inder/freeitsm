@@ -21,19 +21,19 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [checklists/api.php](/code/files/checklists/api.php.md):78 |  | delete |  |  |
-| [checklists/api.php](/code/files/checklists/api.php.md):81 |  | insert | `template_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`, `is_demo` |  |
-| [checklists/api.php](/code/files/checklists/api.php.md):105 |  | delete |  |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):360 | `ChecklistsService::saveLookup` | update | `suggested_role` |  |
+| [checklists/api.php](/code/files/checklists/api.php.md):91 |  | delete |  |  |
+| [checklists/api.php](/code/files/checklists/api.php.md):94 |  | insert | `template_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`, `is_demo` |  |
+| [checklists/api.php](/code/files/checklists/api.php.md):118 |  | delete |  |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):361 | `ChecklistsService::saveLookup` | update | `suggested_role` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md) | L243 |  |
-| [checklists/api.php](/code/files/checklists/api.php.md) | L28 |  |
-| [checklists/index.php](/code/files/checklists/index.php.md) | L23 |  |
-| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md) | L68 |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::copyTemplateToTask L529 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_attach_checklist L2046 |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md) | L251 |  |
+| [checklists/api.php](/code/files/checklists/api.php.md) | L41 |  |
+| [checklists/index.php](/code/files/checklists/index.php.md) | L30 |  |
+| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md) | L76 |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::copyTemplateToTask L530 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_attach_checklist L2083 |  |
 

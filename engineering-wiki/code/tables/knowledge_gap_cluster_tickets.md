@@ -20,6 +20,6 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/knowledge/gap_clusters.php](/code/files/api/knowledge/gap_clusters.php.md) | L78 |  |
-| [api/knowledge/writeup_stream.php](/code/files/api/knowledge/writeup_stream.php.md) | L126 |  |
+| [api/knowledge/writeup_stream.php](/code/files/api/knowledge/writeup_stream.php.md) | L130 |  |
 | [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapPersistClusters L408 |  |
 

@@ -1,10 +1,12 @@
 # warbotToolSearchKnowledge()
 
+search_knowledge: up to eight live Knowledge article titles matching the query that the asking analyst may see - titles only, most viewed first.
+
 ```php
 function warbotToolSearchKnowledge(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 866.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 900.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 889 | `warbotToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 923 | `warbotToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

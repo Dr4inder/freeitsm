@@ -35,7 +35,7 @@
 | [api/change-management/list.php](/code/files/api/change-management/list.php.md) | L40 |  |
 | [api/change-management/save_change_impact.php](/code/files/api/change-management/save_change_impact.php.md) | L58 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2611 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L48, apiChangesList L239 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53, apiChangesList L248 |  |
 | [includes/feature_bingo/cards/changes.php](/code/files/includes/feature_bingo/cards/changes.php.md) | L73 |  |
 | [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::loadJoined L707 |  |
 

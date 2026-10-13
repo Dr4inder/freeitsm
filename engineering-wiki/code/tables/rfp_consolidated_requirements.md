@@ -35,22 +35,22 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/rfp-builder/delete_consolidated.php](/code/files/api/rfp-builder/delete_consolidated.php.md) | L32 |  |
-| [api/rfp-builder/generate_framing.php](/code/files/api/rfp-builder/generate_framing.php.md) | L79 |  |
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L91, L142 |  |
+| [api/rfp-builder/generate_framing.php](/code/files/api/rfp-builder/generate_framing.php.md) | L83 |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L95, L146 |  |
 | [api/rfp-builder/get_compare_data.php](/code/files/api/rfp-builder/get_compare_data.php.md) | L52 |  |
 | [api/rfp-builder/get_consolidated.php](/code/files/api/rfp-builder/get_consolidated.php.md) | L46, L87 |  |
 | [api/rfp-builder/get_coverage.php](/code/files/api/rfp-builder/get_coverage.php.md) | L63, L92, L109, L136 |  |
-| [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L28 |  |
-| [api/rfp-builder/get_rfps.php](/code/files/api/rfp-builder/get_rfps.php.md) | L27 |  |
+| [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L38 |  |
+| [api/rfp-builder/get_rfps.php](/code/files/api/rfp-builder/get_rfps.php.md) | L35 |  |
 | [api/rfp-builder/get_scores.php](/code/files/api/rfp-builder/get_scores.php.md) | L59 |  |
 | [api/rfp-builder/get_sections.php](/code/files/api/rfp-builder/get_sections.php.md) | L37, L71 |  |
 | [api/rfp-builder/lock_consolidation.php](/code/files/api/rfp-builder/lock_consolidation.php.md) | L44 |  |
 | [api/rfp-builder/merge_consolidated.php](/code/files/api/rfp-builder/merge_consolidated.php.md) | L63 |  |
-| [api/rfp-builder/restyle_framing.php](/code/files/api/rfp-builder/restyle_framing.php.md) | L71 |  |
-| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md) | L76 |  |
+| [api/rfp-builder/restyle_framing.php](/code/files/api/rfp-builder/restyle_framing.php.md) | L75 |  |
+| [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md) | L80 |  |
 | [api/rfp-builder/save_score.php](/code/files/api/rfp-builder/save_score.php.md) | L55 |  |
 | [api/rfp-builder/split_consolidated.php](/code/files/api/rfp-builder/split_consolidated.php.md) | L52 |  |
 | [api/rfp-builder/update_consolidated.php](/code/files/api/rfp-builder/update_consolidated.php.md) | L50 |  |
-| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L967, rfpAiGenerateFramingStreaming L1198 |  |
+| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L975, rfpAiGenerateFramingStreaming L1206 |  |
 | [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L78 |  |
 

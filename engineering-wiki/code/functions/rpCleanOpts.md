@@ -6,7 +6,7 @@ Validate a block's options against its handler's schema. Unknown keys are droppe
 function rpCleanOpts(string $handler, $opts): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 326.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 330.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

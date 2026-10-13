@@ -25,7 +25,7 @@ function rfpAiGenerateFramingStreaming(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1182.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1190.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -40,9 +40,9 @@ Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 1182.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1189 | `rfpAiGenerateFramingStreaming` | read [rfps](/code/tables/rfps.md) |  |
-| 1198 | `rfpAiGenerateFramingStreaming` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md), read [rfp_categories](/code/tables/rfp_categories.md) |  |
-| 1214 | `rfpAiGenerateFramingStreaming` | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
+| 1197 | `rfpAiGenerateFramingStreaming` | read [rfps](/code/tables/rfps.md) |  |
+| 1206 | `rfpAiGenerateFramingStreaming` | read [rfp_consolidated_requirements](/code/tables/rfp_consolidated_requirements.md), read [rfp_categories](/code/tables/rfp_categories.md) |  |
+| 1222 | `rfpAiGenerateFramingStreaming` | read [rfp_extracted_requirements](/code/tables/rfp_extracted_requirements.md), read [rfp_documents](/code/tables/rfp_documents.md), read [rfp_departments](/code/tables/rfp_departments.md) |  |
 
 ## Calls
 

@@ -1,10 +1,12 @@
 # rpStatusUptimeTable()
 
+Service status block: a table of each chosen service's uptime, downtime and incident count over the period.
+
 ```php
 function rpStatusUptimeTable(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 76.
+Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 84.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -24,17 +24,17 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/tickets/permanently_delete_ticket.php](/code/files/api/tickets/permanently_delete_ticket.php.md):98 |  | delete |  |  |
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):247 |  | insert | `ticket_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order` |  |
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):276 |  | update | `is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime` |  |
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):285 |  | update | `is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime` |  |
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):325 |  | delete |  |  |
-| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):361 | `ChecklistsService::saveLookup` | update | `suggested_role` |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2050 | `WorkflowEngine::action_attach_checklist` | insert | `ticket_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order` |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):255 |  | insert | `ticket_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order` |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):284 |  | update | `is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime` |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):293 |  | update | `is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime` |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):333 |  | delete |  |  |
+| [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):362 | `ChecklistsService::saveLookup` | update | `suggested_role` |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2087 | `WorkflowEngine::action_attach_checklist` | insert | `ticket_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md) | checklistTicketForItem L46, L105, L297 |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md) | checklistTicketForItem L50, L113, L305 |  |
 | [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::outstandingMandatorySteps L80 |  |
 

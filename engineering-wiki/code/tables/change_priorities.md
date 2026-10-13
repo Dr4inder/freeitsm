@@ -36,7 +36,7 @@
 | [api/change-management/save_change_priority.php](/code/files/api/change-management/save_change_priority.php.md) | L58 |  |
 | [api/problem-management/list_linkable_changes.php](/code/files/api/problem-management/list_linkable_changes.php.md) | L32 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2466 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L48, apiChangesList L239 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53, apiChangesList L248 |  |
 | [includes/feature_bingo/cards/changes.php](/code/files/includes/feature_bingo/cards/changes.php.md) | L58 |  |
 | [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::loadJoined L707 |  |
 

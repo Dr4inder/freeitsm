@@ -1,10 +1,12 @@
 # rpHumanDuration()
 
+A number of seconds as a short duration: 45s, 12m, 3h 5m, 2d 4h.
+
 ```php
 function rpHumanDuration(int $seconds): string
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 260.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 279.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

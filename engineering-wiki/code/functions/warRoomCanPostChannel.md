@@ -10,7 +10,7 @@ said during the incident.
 function warRoomCanPostChannel(PDO $conn, int $analystId, int $channelId): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 272.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 273.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

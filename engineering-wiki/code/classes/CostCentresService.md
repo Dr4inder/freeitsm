@@ -8,7 +8,7 @@
 |---|---|
 | [ready()](#ready) | Has Database Verification created the table yet? |
 | [companiesFor()](#companiesfor) | The companies this caller may manage cost centres for: [[id, name, is_default], ...]. |
-| [canReach()](#canreach) |  |
+| [canReach()](#canreach) | True when the actor may reach the company. |
 | [assertCompany()](#assertcompany) | The company exists and this caller may use it - or a ServiceError. |
 | [listForCompany()](#listforcompany) | Every cost centre of one company, active and inactive, ordered by code, each with its parent's code and how many children it has. |
 | [load()](#load) | One cost centre, or not_found (also when it is in a company the caller cannot reach). |
@@ -17,11 +17,11 @@
 | [delete()](#delete) | Delete one - refused while anything sits below it. Make it inactive instead. |
 | [sync()](#sync) | Bring a company's list into line with an incoming one, matched on CODE. |
 | [cleanCode()](#cleancode) | Trimmed, never otherwise changed: "0010" stays "0010". |
-| [cleanName()](#cleanname) |  |
-| [cleanDescription()](#cleandescription) |  |
+| [cleanName()](#cleanname) | A cost centre name with control characters removed; throws when blank or too long. |
+| [cleanDescription()](#cleandescription) | A cost centre description with control characters removed, or null when blank; throws when too long. |
 | [cleanBool()](#cleanbool) | true/false, 1/0, yes/no, y/n, active/inactive - what a spreadsheet or an ERP export says. |
-| [codeTaken()](#codetaken) |  |
-| [assertCodeFree()](#assertcodefree) |  |
+| [codeTaken()](#codetaken) | Throws the "code already used" conflict. |
+| [assertCodeFree()](#assertcodefree) | Throws when another cost centre in the company has the same code, ignoring case. |
 | [resolveParentInput()](#resolveparentinput) | parent_id or parent_code from the input -> a parent id or null, checked: same company, not itself, not below itself. |
 
 ### ready
@@ -65,7 +65,9 @@ function companiesFor(PDO $conn, ActorContext $actor): array
 
 ### canReach
 
-*private static* - line 73
+*private static* - line 74
+
+True when the actor may reach the company.
 
 ```php
 function canReach(ActorContext $actor, int $tenantId): bool
@@ -78,7 +80,7 @@ function canReach(ActorContext $actor, int $tenantId): bool
 
 ### assertCompany
 
-*public static* - line 79
+*public static* - line 80
 
 The company exists and this caller may use it - or a ServiceError.
 
@@ -94,7 +96,7 @@ function assertCompany(PDO $conn, ActorContext $actor, int $tenantId): void
 
 ### listForCompany
 
-*public static* - line 94
+*public static* - line 95
 
 Every cost centre of one company, active and inactive, ordered by code, each with its parent's code and how many children it has.
 
@@ -112,13 +114,13 @@ function listForCompany(PDO $conn, ActorContext $actor, int $tenantId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 98 | `CostCentresService::listForCompany` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 99 | `CostCentresService::listForCompany` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 **Called from:** [api/system/cost_centres.php](/code/files/api/system/cost_centres.php.md)
 
 ### load
 
-*public static* - line 110
+*public static* - line 111
 
 One cost centre, or not_found (also when it is in a company the caller cannot reach).
 
@@ -136,11 +138,11 @@ function load(PDO $conn, ActorContext $actor, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `CostCentresService::load` | read [cost_centres](/code/tables/cost_centres.md), read [tenants](/code/tables/tenants.md) |  |
+| 114 | `CostCentresService::load` | read [cost_centres](/code/tables/cost_centres.md), read [tenants](/code/tables/tenants.md) |  |
 
 ### create
 
-*public static* - line 136
+*public static* - line 137
 
 Add one. `$in`: code, name (required); description, parent_id OR parent_code, is_active (optional).
 
@@ -159,13 +161,13 @@ function create(PDO $conn, ActorContext $actor, int $tenantId, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 146 | `CostCentresService::create` | **insert** [cost_centres](/code/tables/cost_centres.md) (`tenant_id`, `code`, `name`, `description`, `parent_id`, `is_active`) |  |
+| 147 | `CostCentresService::create` | **insert** [cost_centres](/code/tables/cost_centres.md) (`tenant_id`, `code`, `name`, `description`, `parent_id`, `is_active`) |  |
 
 **Called from:** [api/system/cost_centres.php](/code/files/api/system/cost_centres.php.md), [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md)
 
 ### update
 
-*public static* - line 157
+*public static* - line 158
 
 Change one. Only the keys present in `$in` are touched (PATCH semantics).
 
@@ -184,13 +186,13 @@ function update(PDO $conn, ActorContext $actor, int $id, array $in): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 176 | `CostCentresService::update` | **update** [cost_centres](/code/tables/cost_centres.md) |  |
+| 177 | `CostCentresService::update` | **update** [cost_centres](/code/tables/cost_centres.md) |  |
 
 **Called from:** [api/system/cost_centres.php](/code/files/api/system/cost_centres.php.md), [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md)
 
 ### delete
 
-*public static* - line 186
+*public static* - line 187
 
 Delete one - refused while anything sits below it. Make it inactive instead.
 
@@ -208,13 +210,13 @@ function delete(PDO $conn, ActorContext $actor, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 203 | `CostCentresService::delete` | **delete** [cost_centres](/code/tables/cost_centres.md) |  |
+| 204 | `CostCentresService::delete` | **delete** [cost_centres](/code/tables/cost_centres.md) |  |
 
 **Called from:** [api/system/cost_centres.php](/code/files/api/system/cost_centres.php.md), [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md)
 
 ### sync
 
-*public static* - line 230
+*public static* - line 231
 
 Bring a company's list into line with an incoming one, matched on CODE.
 
@@ -251,16 +253,16 @@ function sync(PDO $conn, ActorContext $actor, int $tenantId, array $rows, array 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 362 | `CostCentresService::sync` | **insert** [cost_centres](/code/tables/cost_centres.md) (`tenant_id`, `code`, `name`, `description`, `is_active`) |  |
-| 370 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) |  |
-| 377 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) (`parent_id`) |  |
-| 384 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) (`is_active`) |  |
+| 363 | `CostCentresService::sync` | **insert** [cost_centres](/code/tables/cost_centres.md) (`tenant_id`, `code`, `name`, `description`, `is_active`) |  |
+| 371 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) |  |
+| 378 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) (`parent_id`) |  |
+| 385 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) (`is_active`) |  |
 
 **Called from:** [api/system/cost_centres.php](/code/files/api/system/cost_centres.php.md), [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md)
 
 ### cleanCode
 
-*public static* - line 401
+*public static* - line 402
 
 Trimmed, never otherwise changed: "0010" stays "0010".
 
@@ -274,7 +276,9 @@ function cleanCode($v): string
 
 ### cleanName
 
-*private static* - line 410
+*private static* - line 412
+
+A cost centre name with control characters removed; throws when blank or too long.
 
 ```php
 function cleanName($v): string
@@ -286,7 +290,9 @@ function cleanName($v): string
 
 ### cleanDescription
 
-*private static* - line 418
+*private static* - line 421
+
+A cost centre description with control characters removed, or null when blank; throws when too long.
 
 ```php
 function cleanDescription($v): ?string
@@ -298,7 +304,7 @@ function cleanDescription($v): ?string
 
 ### cleanBool
 
-*public static* - line 427
+*public static* - line 430
 
 true/false, 1/0, yes/no, y/n, active/inactive - what a spreadsheet or an ERP export says.
 
@@ -313,7 +319,9 @@ function cleanBool($v, string $field): int
 
 ### codeTaken
 
-*private static* - line 438
+*private static* - line 442
+
+Throws the "code already used" conflict.
 
 ```php
 function codeTaken(string $code): void
@@ -325,7 +333,9 @@ function codeTaken(string $code): void
 
 ### assertCodeFree
 
-*private static* - line 443
+*private static* - line 448
+
+Throws when another cost centre in the company has the same code, ignoring case.
 
 ```php
 function assertCodeFree(PDO $conn, int $tenantId, string $code, ?int $exceptId): void
@@ -342,11 +352,11 @@ function assertCodeFree(PDO $conn, int $tenantId, string $code, ?int $exceptId):
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 446 | `CostCentresService::assertCodeFree` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 451 | `CostCentresService::assertCodeFree` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ### resolveParentInput
 
-*private static* - line 455
+*private static* - line 460
 
 parent_id or parent_code from the input -> a parent id or null, checked: same company, not itself, not below itself.
 
@@ -365,7 +375,7 @@ function resolveParentInput(PDO $conn, int $tenantId, array $in, ?int $selfId): 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 461 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
 | 466 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 479 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 471 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 484 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
 

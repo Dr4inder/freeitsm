@@ -6,7 +6,7 @@ A sitting row as the analyst pages see it - never the token hash.
 function ctSittingRow(array $s): array
 ```
 
-Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 36.
+Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 38.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

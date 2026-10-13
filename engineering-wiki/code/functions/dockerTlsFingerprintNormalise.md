@@ -6,7 +6,7 @@ Lower-case hex with no separators, so PHP's and the openssl CLI's agree.
 function dockerTlsFingerprintNormalise(string $fp): string
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 123.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 124.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

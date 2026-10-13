@@ -6,7 +6,7 @@ A lease row the analyst may see, or a not_found ServiceError (never reveals anot
 function leaseLoad(PDO $conn, int $analystId, int $leaseId): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 71.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 72.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 71.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 74 | `leaseLoad` | read [leases](/code/tables/leases.md) |  |
+| 75 | `leaseLoad` | read [leases](/code/tables/leases.md) |  |
 
 ## Calls
 

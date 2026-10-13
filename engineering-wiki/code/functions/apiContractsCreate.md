@@ -1,10 +1,12 @@
 # apiContractsCreate()
 
+POST /contracts - creates a contract through ContractsService in the company named (or the key's default) and returns it.
+
 ```php
 function apiContractsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 336.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 357.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

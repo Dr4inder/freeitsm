@@ -81,6 +81,7 @@ function rpResolveRange(array $range, ?string $tz = null): array
     ];
 }
 
+/** Parses a YYYY-MM-DD string as midnight in the given timezone; null when it is not a valid date. */
 function rpParseDate($s, DateTimeZone $zone): ?DateTimeImmutable
 {
     if (!is_string($s) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $s)) return null;

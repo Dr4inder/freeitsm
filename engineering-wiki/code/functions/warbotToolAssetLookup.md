@@ -1,10 +1,12 @@
 # warbotToolAssetLookup()
 
+asset_lookup: up to eight assets whose hostname, asset tag or service tag contains the query, with type, status, OS, location, last user and last seen.
+
 ```php
 function warbotToolAssetLookup(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 525.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 539.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 532 | `warbotToolAssetLookup` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md) |  |
+| 546 | `warbotToolAssetLookup` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md) |  |
 
 *Nothing calls this function by name.*
 

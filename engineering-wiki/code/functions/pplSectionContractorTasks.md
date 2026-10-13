@@ -6,7 +6,7 @@ Contractors (3.3.0): the tasks given to a supplier, or to one person there.
 function pplSectionContractorTasks(array $s, bool $byContact): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 213.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 226.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

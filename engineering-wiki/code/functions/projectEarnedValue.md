@@ -6,7 +6,7 @@ Earned value (3.3.0), from what the budget already holds: BAC budget at completi
 function projectEarnedValue(PDO $conn, int $projectId, array $timeline, float $bac): ?array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 342.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 346.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 346 | `projectEarnedValue` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 350 | `projectEarnedValue` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
 
 ## Called from
 
@@ -30,5 +30,5 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 ## Traps
 
 > [!WARNING]
-> **Line 359, in `projectEarnedValue`:** the share is measured against TODAY's whole scope, never the scope as it stood on that date. Measuring against "tasks that existed by then" made earned value FALL whenever work was added (6 of 10 done = 60%, add 10 tasks = 30%), and earned value never falls - the work done is still done. Today's figures are the same either way; only the history changes, and now it can only rise.
+> **Line 363, in `projectEarnedValue`:** the share is measured against TODAY's whole scope, never the scope as it stood on that date. Measuring against "tasks that existed by then" made earned value FALL whenever work was added (6 of 10 done = 60%, add 10 tasks = 30%), and earned value never falls - the work done is still done. Today's figures are the same either way; only the history changes, and now it can only rise.
 

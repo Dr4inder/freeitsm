@@ -10,34 +10,34 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 ## assets/js/engineering-wiki.js
 
-- **Line 70:** `renderAll()` rebuilds EVERY pane's DOM, so every pane is redrawn (from
-- **Line 207:** not "target" - a var here is hoisted over the whole callback and
+- **Line 86:** `renderAll()` rebuilds EVERY pane's DOM, so every pane is redrawn (from
+- **Line 250:** not "target" - a var here is hoisted over the whole callback and
 
 [Open engineering-wiki.js](/code/files/assets/js/engineering-wiki.js.md)
 
 ## assets/js/files-desktop.js
 
-- **Line 1777:** a file from the computer dropped where nothing accepts it (a
+- **Line 1908:** a file from the computer dropped where nothing accepts it (a
 
 [Open files-desktop.js](/code/files/assets/js/files-desktop.js.md)
 
 ## assets/js/files-viewer.js
 
-- **Line 113:** elements inside <svg>/<math> report LOWER-case tag names, so
-- **Line 281:** "fit" must be MEASURED when it is asked for. It was worked out once
-- **Line 509:** SheetJS's reader adds a marker entry "\u0001Sh33tJ5"; no real
+- **Line 134:** elements inside <svg>/<math> report LOWER-case tag names, so
+- **Line 312:** "fit" must be MEASURED when it is asked for. It was worked out once
+- **Line 560:** SheetJS's reader adds a marker entry "\u0001Sh33tJ5"; no real
 
 [Open files-viewer.js](/code/files/assets/js/files-viewer.js.md)
 
 ## assets/js/files-wm.js
 
-- **Line 280:** a button released where we never hear about it (over the Help
+- **Line 302:** a button released where we never hear about it (over the Help
 
 [Open files-wm.js](/code/files/assets/js/files-wm.js.md)
 
 ## assets/js/inbox.js
 
-- **Line 10747:** on a phone the strip picker opens inside the Links sheet, which
+- **Line 11234:** on a phone the strip picker opens inside the Links sheet, which
 
 [Open inbox.js](/code/files/assets/js/inbox.js.md)
 
@@ -57,11 +57,13 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 [Open csat.php](/code/files/includes/csat.php.md)
 
-## includes/engineering_wiki/markdown.php
+## includes/engineering_wiki/scanner.php
 
-- **Line 2:** raw HTML in a page is NEVER passed through - every character of text is escaped. The pages are files a developer edits, and a generated page quotes code comments, so treating any of it as HTML would let a comment run script in an administrator's browser. Anything that needs markup gets a Markdown form.
+- **Line 235, `EwScanner::parsePhp`:** the first doc block in a file is ALWAYS the file's description. It used to go to the next function/class instead whenever one came next, so files with a proper header showed no summary. It ALSO describes that declaration when nothing else sits between them (the common "one header, then the class" shape) - but not when another comment follows, because that comment is the declaration's own.
+- **Line 616:** comment down to its text - comment markers stripped, from "TRAP:" to the end of its paragraph, on one line.
+- **Line 1258:** comment, file by file.
 
-[Open markdown.php](/code/files/includes/engineering_wiki/markdown.php.md)
+[Open scanner.php](/code/files/includes/engineering_wiki/scanner.php.md)
 
 ## includes/hypervisor_http.php
 
@@ -71,7 +73,7 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 ## includes/leases.php
 
-- **Line 103:** a returned asset keeps lease_expiry as the record of what happened (see the header), so anything that alerts on lease_expiry must skip these, or a machine handed back in March is "due back" for ever. Call only when `leaseReady()`.
+- **Line 104:** a returned asset keeps lease_expiry as the record of what happened (see the header), so anything that alerts on lease_expiry must skip these, or a machine handed back in March is "due back" for ever. Call only when `leaseReady()`.
 
 [Open leases.php](/code/files/includes/leases.php.md)
 
@@ -85,22 +87,22 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 ## includes/messaging/MattermostProvider.php
 
-- **Line 52, `MattermostProvider::verifyWebhook`:** compare secrets with `hash_equals()`, never === (timing).
-- **Line 99, `MattermostProvider::parseInbound`:** drop the bot's own posts. Our replies are posted in the same channel, so the webhook hands them straight back; without this every analyst reply would arrive as a new message from "the customer".
-- **Line 213:** Mattermost refuses a root_id that is itself a reply, and the outgoing webhook never says which a post is - so ask, rather than threading under whatever post came in last.
-- **Line 279:** the email is returned ONLY when Mattermost says it is verified. A server can allow sign-up without proving the address, and an unverified email is just text anyone typed: someone registering as ceo@yourcompany.com would have their chats filed under the real CEO. An empty email (the server hides addresses from this bot) is normal - the person simply gets a named contact instead.
+- **Line 58, `MattermostProvider::verifyWebhook`:** compare secrets with `hash_equals()`, never === (timing).
+- **Line 106, `MattermostProvider::parseInbound`:** drop the bot's own posts. Our replies are posted in the same channel, so the webhook hands them straight back; without this every analyst reply would arrive as a new message from "the customer".
+- **Line 222:** Mattermost refuses a root_id that is itself a reply, and the outgoing webhook never says which a post is - so ask, rather than threading under whatever post came in last.
+- **Line 294:** the email is returned ONLY when Mattermost says it is verified. A server can allow sign-up without proving the address, and an unverified email is just text anyone typed: someone registering as ceo@yourcompany.com would have their chats filed under the real CEO. An empty email (the server hides addresses from this bot) is normal - the person simply gets a named contact instead.
 
 [Open MattermostProvider.php](/code/files/includes/messaging/MattermostProvider.php.md)
 
 ## includes/messaging/SlackProvider.php
 
-- **Line 280, `SlackProvider::downloadMedia`:** trap: HTML back means the token wasn't accepted.
+- **Line 285, `SlackProvider::downloadMedia`:** trap: HTML back means the token wasn't accepted.
 
 [Open SlackProvider.php](/code/files/includes/messaging/SlackProvider.php.md)
 
 ## includes/messaging/TelegramProvider.php
 
-- **Line 459, `TelegramProvider::setWebhook`:** this list is everything `parseInbound()` reads. Leave one out and Telegram never sends it - no error anywhere. A rating button press is a callback_query; without it the button just shimmers on the customer's phone. Telegram keeps the list a bot was registered with, so a bot connected before a type was added needs Connect pressed again - `testConnection()` checks for that (TELEGRAM_UPDATE_TYPES).
+- **Line 466, `TelegramProvider::setWebhook`:** this list is everything `parseInbound()` reads. Leave one out and Telegram never sends it - no error anywhere. A rating button press is a callback_query; without it the button just shimmers on the customer's phone. Telegram keeps the list a bot was registered with, so a bot connected before a type was added needs Connect pressed again - `testConnection()` checks for that (TELEGRAM_UPDATE_TYPES).
 
 [Open TelegramProvider.php](/code/files/includes/messaging/TelegramProvider.php.md)
 
@@ -118,7 +120,7 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 ## includes/projects/budget.php
 
-- **Line 359, `projectEarnedValue`:** the share is measured against TODAY's whole scope, never the scope as it stood on that date. Measuring against "tasks that existed by then" made earned value FALL whenever work was added (6 of 10 done = 60%, add 10 tasks = 30%), and earned value never falls - the work done is still done. Today's figures are the same either way; only the history changes, and now it can only rise.
+- **Line 363, `projectEarnedValue`:** the share is measured against TODAY's whole scope, never the scope as it stood on that date. Measuring against "tasks that existed by then" made earned value FALL whenever work was added (6 of 10 done = 60%, add 10 tasks = 30%), and earned value never falls - the work done is still done. Today's figures are the same either way; only the history changes, and now it can only rise.
 
 [Open budget.php](/code/files/includes/projects/budget.php.md)
 
@@ -162,15 +164,15 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 ## includes/vcloud_sync.php
 
-- **Line 179, `vcdSyncConnection`:** count what ARRIVED, never page x the size we asked for. The PR stopped when page * 128 >= total, but Director caps a page at its own maximum (restapi.queryservice.maxPageSize, which an admin can lower). On such a system page 1 came back short, the loop stopped, the list counted as complete - and every VM after the first page was deleted.
-- **Line 231, `vcdSyncConnection`:** every page, and remove only after all of them came back. The PR read one page of 128 and then deleted every gateway not on it, so an install with more than 128 lost the rest on every sync.
-- **Line 381:** the password is stored only through `encryptValue()`, never returned to the browser (vcdConnectionOut() says has_password and nothing more), and a blank or all-asterisks value on edit keeps the stored one.
+- **Line 193, `vcdSyncConnection`:** count what ARRIVED, never page x the size we asked for. The PR stopped when page * 128 >= total, but Director caps a page at its own maximum (restapi.queryservice.maxPageSize, which an admin can lower). On such a system page 1 came back short, the loop stopped, the list counted as complete - and every VM after the first page was deleted.
+- **Line 245, `vcdSyncConnection`:** every page, and remove only after all of them came back. The PR read one page of 128 and then deleted every gateway not on it, so an install with more than 128 lost the rest on every sync.
+- **Line 395:** the password is stored only through `encryptValue()`, never returned to the browser (vcdConnectionOut() says has_password and nothing more), and a blank or all-asterisks value on edit keeps the stored one.
 
 [Open vcloud_sync.php](/code/files/includes/vcloud_sync.php.md)
 
 ## workflow/includes/engine.php
 
-- **Line 2494, `WorkflowEngine::action_create_ticket`:** the install's numbering, never a number made here - see `messagingGenerateTicketNumber()` for what went wrong when it was. No company is stored on this ticket, which means the default one.
+- **Line 2578, `WorkflowEngine::action_create_ticket`:** the install's numbering, never a number made here - see `messagingGenerateTicketNumber()` for what went wrong when it was. No company is stored on this ticket, which means the default one.
 
 [Open engine.php](/code/files/workflow/includes/engine.php.md)
 

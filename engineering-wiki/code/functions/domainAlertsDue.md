@@ -6,7 +6,7 @@ Everything due today for expiry and certificates.
 function domainAlertsDue(PDO $conn, array $s): array
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 70.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 80 | `domainAlertsDue` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 85 | `domainAlertsDue` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

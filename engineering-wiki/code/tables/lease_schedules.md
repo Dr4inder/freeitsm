@@ -24,16 +24,16 @@ A group of kit on one agreement with its own dates and cost.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/leases.php](/code/files/includes/leases.php.md):248 | `leaseSave` | insert | `lease_id`, `name`, `display_order` |  |
-| [includes/leases.php](/code/files/includes/leases.php.md):430 | `leaseScheduleSave` | update | `name`, `reference`, `start_date`, `end_date`, `cost`, `cost_period`, `currency`, `order_number`, `notes` |  |
-| [includes/leases.php](/code/files/includes/leases.php.md):445 | `leaseScheduleSave` | insert | `lease_id`, `name`, `reference`, `start_date`, `end_date`, `cost`, `cost_period`, `currency`, `order_number`, `notes` |  |
-| [includes/leases.php](/code/files/includes/leases.php.md):462 | `leaseScheduleDelete` | delete |  |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):254 | `leaseSave` | insert | `lease_id`, `name`, `display_order` |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):436 | `leaseScheduleSave` | update | `name`, `reference`, `start_date`, `end_date`, `cost`, `cost_period`, `currency`, `order_number`, `notes` |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):451 | `leaseScheduleSave` | insert | `lease_id`, `name`, `reference`, `start_date`, `end_date`, `cost`, `cost_period`, `currency`, `order_number`, `notes` |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):468 | `leaseScheduleDelete` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/leases/asset_search.php](/code/files/api/assets/leases/asset_search.php.md) | L22 |  |
-| [includes/leases.php](/code/files/includes/leases.php.md) | leaseLoadSchedule L90, leaseSave L179, leaseList L280, leaseGet L342, leaseScheduleSave L438, leaseScheduleSave L441 ... |  |
+| [includes/leases.php](/code/files/includes/leases.php.md) | leaseLoadSchedule L91, leaseSave L185, leaseList L286, leaseGet L348, leaseScheduleSave L444, leaseScheduleSave L447 ... |  |
 | [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::moveToCompany L642 |  |
 

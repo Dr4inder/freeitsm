@@ -6,7 +6,7 @@ The page-load run. Throttled to once an hour, short, and silent: it runs inside 
 function domainOpportunisticRun(PDO $conn): ?array
 ```
 
-Defined in [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md), line 138.
+Defined in [includes/domains/scheduler.php](/code/files/includes/domains/scheduler.php.md), line 148.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/domains/scheduler.php](/code/files/includes/domains/schedul
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 142 | `domainOpportunisticRun` | read [system_settings](/code/tables/system_settings.md) |  |
+| 152 | `domainOpportunisticRun` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

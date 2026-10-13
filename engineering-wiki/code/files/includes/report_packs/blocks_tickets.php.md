@@ -1,23 +1,37 @@
 # includes/report_packs/blocks_tickets.php
 
-> PHP - 270 lines
+> PHP - 289 lines
+
+Report Packs: Tickets blocks.
+
+Same rules as the ticket dashboard (api/tickets/get_ticket_widget_data.php) so a
+pack and the dashboard agree: trashed tickets never count, categories roll up to
+their ROOT, and the empty buckets are named the same ("Unassigned", "Not
+categorised"). What differs is the period: a dashboard says "last 30 days from
+now", a pack says "1 to 30 September" and means it.
+
+Three ways to pick tickets for a period (the `basis` option):
+  created  created inside the range
+  closed   closed inside the range
+  open     still open at the END of the range - a snapshot, which is what
+           "how big was the backlog on 30 September?" means
 
 ## Functions
 
 | Function | Line | What it does |
 |---|--:|---|
 | [rpTicketWhere()](/code/functions/rpTicketWhere.md) | 41 | WHERE for "tickets in this period, for this company, not trashed". |
-| [rpTicketsBreakdown()](/code/functions/rpTicketsBreakdown.md) | 59 |  |
-| [rpChartFromRows()](/code/functions/rpChartFromRows.md) | 78 | Turn [label, value, colour?] rows into chart data, folding everything past `limit` into one "Other" slice so a pie never has fifty slivers. |
-| [rpTimeBuckets()](/code/functions/rpTimeBuckets.md) | 106 | Buckets for a time series over the range: day, week (Monday) or month, chosen from the range's length when 'auto'. Returned as local-date keys with labels. |
-| [rpBucketKey()](/code/functions/rpBucketKey.md) | 125 |  |
-| [rpBucketCount()](/code/functions/rpBucketCount.md) | 133 | Count UTC timestamps into local buckets. |
-| [rpTicketsTrend()](/code/functions/rpTicketsTrend.md) | 145 |  |
-| [rpTicketsKpis()](/code/functions/rpTicketsKpis.md) | 165 |  |
-| [rpTicketsList()](/code/functions/rpTicketsList.md) | 195 |  |
-| [rpFmtDateTime()](/code/functions/rpFmtDateTime.md) | 247 |  |
-| [rpFmtDate()](/code/functions/rpFmtDate.md) | 253 | A LOCAL Y-m-d (already in the viewer's zone) in their date format. |
-| [rpHumanDuration()](/code/functions/rpHumanDuration.md) | 260 |  |
+| [rpTicketsBreakdown()](/code/functions/rpTicketsBreakdown.md) | 60 | Tickets block: a chart of tickets grouped by the chosen dimension (status, priority, category...). |
+| [rpChartFromRows()](/code/functions/rpChartFromRows.md) | 79 | Turn [label, value, colour?] rows into chart data, folding everything past `limit` into one "Other" slice so a pie never has fifty slivers. |
+| [rpTimeBuckets()](/code/functions/rpTimeBuckets.md) | 107 | Buckets for a time series over the range: day, week (Monday) or month, chosen from the range's length when 'auto'. Returned as local-date keys with labels. |
+| [rpBucketKey()](/code/functions/rpBucketKey.md) | 127 | The bucket a date falls in: the Monday of its week, its month (Y-m) or its day. |
+| [rpBucketCount()](/code/functions/rpBucketCount.md) | 135 | Count UTC timestamps into local buckets. |
+| [rpTicketsTrend()](/code/functions/rpTicketsTrend.md) | 154 | Tickets block: a chart of tickets created and/or closed per day, week or month across the period. |
+| [rpTicketsKpis()](/code/functions/rpTicketsKpis.md) | 178 | Tickets block: KPI tiles - created, closed, open at the end of the period, average time to close and first-time-fix rate. |
+| [rpTicketsList()](/code/functions/rpTicketsList.md) | 212 | Tickets block: a table of the tickets in the period, with the columns the block asks for, up to its limit. |
+| [rpFmtDateTime()](/code/functions/rpFmtDateTime.md) | 265 | Formats a UTC date and time in the viewer's own format and timezone; '' for none. |
+| [rpFmtDate()](/code/functions/rpFmtDate.md) | 271 | A LOCAL Y-m-d (already in the viewer's zone) in their date format. |
+| [rpHumanDuration()](/code/functions/rpHumanDuration.md) | 279 | A number of seconds as a short duration: 45s, 12m, 3h 5m, 2d 4h. |
 
 ## Database
 
@@ -31,12 +45,12 @@
 | 30 |  | read [ticket_origins](/code/tables/ticket_origins.md) |  |
 | 31 |  | read [ticket_resolution_codes](/code/tables/ticket_resolution_codes.md) |  |
 | 35 |  | read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 64 | `rpTicketsBreakdown` | read [tickets](/code/tables/tickets.md) |  |
-| 155 | `rpTicketsTrend` | read [tickets](/code/tables/tickets.md) |  |
-| 169 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
-| 178 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
-| 198 | `rpTicketsList` | read [tickets](/code/tables/tickets.md) |  |
-| 202 | `rpTicketsList` | read [analysts](/code/tables/analysts.md), read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 65 | `rpTicketsBreakdown` | read [tickets](/code/tables/tickets.md) |  |
+| 164 | `rpTicketsTrend` | read [tickets](/code/tables/tickets.md) |  |
+| 182 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
+| 191 | `rpTicketsKpis` | read [tickets](/code/tables/tickets.md) |  |
+| 215 | `rpTicketsList` | read [tickets](/code/tables/tickets.md) |  |
+| 219 | `rpTicketsList` | read [analysts](/code/tables/analysts.md), read [ticket_categories](/code/tables/ticket_categories.md) |  |
 
 ## How it hangs together
 

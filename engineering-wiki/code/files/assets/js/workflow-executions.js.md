@@ -1,6 +1,6 @@
 # assets/js/workflow-executions.js
 
-> JavaScript - 316 lines
+> JavaScript - 335 lines
 
 Workflows — execution log.
 
@@ -13,20 +13,20 @@ unfiltered list and leaving you to find them.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `esc(s)` | 12 |  |
-| `fmtWhen(s)` | 32 | started_datetime is a server-stamped UTC instant → show in the analyst's zone. |
-| `fmtTook(a, b)` | 39 | How long the run took. Both timestamps are UTC, so the difference is safe. |
-| `statusPill(status, dry)` | 48 |  |
-| `readUrlIntoControls()` | 62 |  |
-| `currentParams()` | 71 |  |
-| `pushUrl()` | 81 |  |
-| `load()` | 88 |  |
-| `fillFacets(f)` | 131 |  |
-| `renderTally(tally)` | 149 | Status counts across the whole log — and one-click filters into it. |
-| `renderPager(d)` | 161 |  |
-| `open(id)` | 179 |  |
-| `renderDetail(d)` | 194 |  |
-| `renderStep(s)` | 240 |  |
+| `esc(s)` | 13 | Escapes text for safe use in HTML. |
+| `fmtWhen(s)` | 33 | started_datetime is a server-stamped UTC instant → show in the analyst's zone. |
+| `fmtTook(a, b)` | 40 | How long the run took. Both timestamps are UTC, so the difference is safe. |
+| `statusPill(status, dry)` | 50 | Returns the coloured status badge for a run, plus the dry-run pill when it was one. |
+| `readUrlIntoControls()` | 65 | Copies the filter values and page number from the URL query string into the filter controls. |
+| `currentParams()` | 75 | Builds the query string from the filled filter controls and the current page. |
+| `pushUrl()` | 86 | Replaces the page URL with the current filters, so the view can be bookmarked or shared. |
+| `load()` | 96 | Fetches the filtered page of runs from executions.php and draws the rows, the status tallies and the pager (filling the drop-downs on the first load). |
+| `fillFacets(f)` | 142 | Fills the workflow and trigger drop-downs from the log's facets, then re-applies the URL's filters now the options exist. |
+| `renderTally(tally)` | 160 | Status counts across the whole log — and one-click filters into it. |
+| `renderPager(d)` | 173 | Draws the pager - just a count on a single page, otherwise previous/next with the range shown. |
+| `open(id)` | 192 | Opens the run detail modal and loads one run from execution_detail.php. |
+| `renderDetail(d)` | 210 | Returns the run detail HTML - header, error, each step, the webhook deliveries it queued, and the payload snapshot. |
+| `renderStep(s)` | 259 | Returns the HTML for one logged step - a condition with what it compared and the actual value, an action with its status and result, or an engine error. |
 
 ## API endpoints it calls
 

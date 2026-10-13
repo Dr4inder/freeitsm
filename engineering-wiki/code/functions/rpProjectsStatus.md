@@ -1,10 +1,12 @@
 # rpProjectsStatus()
 
+Projects block: a table of projects with health, progress, current stage, target date and, optionally, manager and the reason for the health.
+
 ```php
 function rpProjectsStatus(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 109.
+Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 118.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ The ticket's subject as an AI may see it: 'Confidential ticket' in place of a co
 function ticketAiSubjectSql(PDO $conn, string $alias = 't'): string
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 212.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 214.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ PATCH /knowledge/articles/{id}
 function apiKnowledgeArticlesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 305.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 307.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

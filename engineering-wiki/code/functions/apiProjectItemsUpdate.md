@@ -1,10 +1,12 @@
 # apiProjectItemsUpdate()
 
+PATCH /projects/{id}/items/{itemId} - updates the scope item fields sent through ProjectToolsService and returns the item.
+
 ```php
 function apiProjectItemsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 383.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 414.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

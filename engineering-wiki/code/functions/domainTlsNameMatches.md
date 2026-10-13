@@ -6,7 +6,7 @@ Does `$host` appear in the certificate's names (with one-label wildcards)?
 function domainTlsNameMatches(string $host, array $sans): bool
 ```
 
-Defined in [includes/domains/tls.php](/code/files/includes/domains/tls.php.md), line 82.
+Defined in [includes/domains/tls.php](/code/files/includes/domains/tls.php.md), line 86.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

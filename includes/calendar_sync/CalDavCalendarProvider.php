@@ -56,6 +56,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
      */
     const OWNED = ['DTSTART', 'DTEND', 'DURATION', 'SUMMARY', 'DESCRIPTION', 'URL', 'DTSTAMP', 'LAST-MODIFIED'];
 
+    /** CalDAV supports all-day events, checking a target calendar, and per-analyst accounts. */
     public function supports(string $capability): bool
     {
         return in_array($capability, [
@@ -74,6 +75,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
         return $u === '' ? '' : rtrim($u, '/') . '/';
     }
 
+    /** Returns the configured HTTP auth mode - 'auto', 'digest' or 'basic' (anything else reads as 'auto'). */
     private function authMode(): string
     {
         $a = (string)($this->connection['credentials']['auth'] ?? 'auto');
@@ -160,6 +162,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
         return $xp;
     }
 
+    /** Returns the trimmed text of the first node an XPath query matches (optionally inside $ctx), or ''. */
     private static function text(DOMXPath $xp, string $query, ?DOMNode $ctx = null): string
     {
         $n = $ctx ? $xp->query($query, $ctx) : $xp->query($query);
@@ -258,6 +261,10 @@ class CalDavCalendarProvider extends CalendarSyncProvider
 
     // ------------------------------------------------------------ outbound
 
+    /**
+     * PUTs a new event under a random 'freeitsm-...' name with If-None-Match, so nothing existing is overwritten; retries once on a name clash.
+     * @return string  the event's uid, kept as the remote id
+     */
     public function createEvent(string $calendarAddress, array $event): string
     {
         $calendar = $this->calendarUrl($calendarAddress);
@@ -278,6 +285,11 @@ class CalDavCalendarProvider extends CalendarSyncProvider
         throw new Exception('Could not create the calendar event: the server kept reporting that the name was taken.');
     }
 
+    /**
+     * Reads the event, replaces only the properties FreeITSM owns and PUTs it back with If-Match, rereading once if it changed meanwhile.
+     *
+     * Throws CalendarEventMissing when the event was deleted from the calendar, so the caller can create a fresh one.
+     */
     public function updateEvent(string $calendarAddress, string $remoteEventId, array $event): void
     {
         $url = $this->eventUrl($calendarAddress, $remoteEventId);
@@ -318,6 +330,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
         throw new Exception('Could not update the calendar event: it kept changing on the server while FreeITSM was writing it.');
     }
 
+    /** Deletes the event; one already gone counts as success. */
     public function deleteEvent(string $calendarAddress, string $remoteEventId): void
     {
         $url = $this->eventUrl($calendarAddress, $remoteEventId);
@@ -360,7 +373,13 @@ class CalDavCalendarProvider extends CalendarSyncProvider
         return $xp ? self::text($xp, '//d:sync-token') : '';
     }
 
-    /** @param bool $retried true on the second look after a suspicious "no changes" */
+    /**
+     * One pass of pollChanges() - sync-collection when the server supports it,
+     * otherwise a comparison of our events' ETags - returning token, baseline,
+     * changed and removed.
+     *
+     * @param bool $retried true on the second look after a suspicious "no changes"
+     */
     private function pollChangesOnce(string $calendarAddress, ?string $token, bool $retried): array
     {
         $calendar = $this->calendarUrl($calendarAddress);
@@ -655,6 +674,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
             : 'The server answered, but not like a calendar server (HTTP ' . $res['status'] . '). Check the address - for Baikal it ends in /dav.php/.');
     }
 
+    /** True when the signed-in analyst can write events into this calendar (see checkCalendar()). */
     public function verifyTarget(string $calendarAddress): bool
     {
         try {
@@ -753,6 +773,7 @@ class CalDavCalendarProvider extends CalendarSyncProvider
         return $out;
     }
 
+    /** The PROPFIND body asking a collection for its name, type, supported components and the analyst's privileges. */
     private static function calendarPropfind(): string
     {
         return '<?xml version="1.0" encoding="utf-8"?>'

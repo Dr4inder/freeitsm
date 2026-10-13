@@ -1,10 +1,12 @@
 # handleUpdate()
 
+Renames an active user group and updates its description, refusing a name another group already has.
+
 ```php
 function handleUpdate(PDO $conn, array $input): void
 ```
 
-Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 287.
+Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 297.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,8 +19,8 @@ Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 295 | `handleUpdate` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 303 | `handleUpdate` | **update** [knowledge_user_groups](/code/tables/knowledge_user_groups.md) (`name`, `description`, `updated_datetime`) |  |
+| 305 | `handleUpdate` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 313 | `handleUpdate` | **update** [knowledge_user_groups](/code/tables/knowledge_user_groups.md) (`name`, `description`, `updated_datetime`) |  |
 
 ## Called from
 

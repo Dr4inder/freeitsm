@@ -36,12 +36,18 @@ require_once dirname(__DIR__, 3) . '/workflow/includes/engine.php';
 // Serializers + loaders
 // ---------------------------------------------------------------------------
 
+/** The SELECT for workflows, with the creator's name. */
 function apiWorkflowSelect(): string {
     return "SELECT w.*, a.full_name AS created_by_name
             FROM workflows w
             LEFT JOIN analysts a ON a.id = w.created_by";
 }
 
+/**
+ * Shapes a workflow row for the API - trigger, active flag, people, dates, last run and
+ * run count, plus the full conditions and actions when $full (only their counts
+ * otherwise).
+ */
 function apiSerializeWorkflow(array $r, bool $full): array {
     $conditions = json_decode($r['conditions'] ?: '[]', true) ?: [];
     $actions    = json_decode($r['actions']    ?: '[]', true) ?: [];
@@ -72,6 +78,7 @@ function apiSerializeWorkflow(array $r, bool $full): array {
     return $out;
 }
 
+/** Loads one workflow row, or answers 404 and stops. */
 function apiLoadWorkflow(PDO $conn, int $workflowId): array {
     $stmt = $conn->prepare(apiWorkflowSelect() . " WHERE w.id = ?");
     $stmt->execute([$workflowId]);
@@ -82,6 +89,10 @@ function apiLoadWorkflow(PDO $conn, int $workflowId): array {
     return $row;
 }
 
+/**
+ * The SELECT for workflow executions, keeping the workflow's name from the snapshot when
+ * the workflow has since been deleted.
+ */
 function apiWorkflowExecutionSelect(): string {
     // COALESCE keeps orphaned executions attributed via the name snapshot
     // after their parent workflow is deleted.
@@ -90,6 +101,10 @@ function apiWorkflowExecutionSelect(): string {
             LEFT JOIN workflows w ON w.id = we.workflow_id";
 }
 
+/**
+ * Shapes a workflow execution for the API - workflow, trigger, status, times and error,
+ * plus the trigger payload and step log when $full.
+ */
 function apiSerializeWorkflowExecution(array $r, bool $full): array {
     $out = [
         'id'            => (int)$r['id'],

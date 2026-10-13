@@ -404,6 +404,10 @@ function messagingBuildTranscript(PDO $conn, int $ticketId): string
  */
 const MESSAGING_THREADED_CHANNELS = ['slack', 'teams', 'mattermost'];
 
+/**
+ * The address to reply to on a conversation row - to_recipients on threaded channels
+ * (Slack, Teams, Mattermost), from_address elsewhere.
+ */
 function messagingReplyAddress(string $channelType, array $row): string
 {
     return in_array($channelType, MESSAGING_THREADED_CHANNELS, true)
@@ -411,11 +415,16 @@ function messagingReplyAddress(string $channelType, array $row): string
         : (string)($row['from_address'] ?? '');
 }
 
+/**
+ * True for channels with a reply window (WhatsApp); web chat, Slack, Telegram, Teams and
+ * Mattermost have none.
+ */
 function channelHasServiceWindow(string $channelType): bool
 {
     return !in_array($channelType, ['webchat', 'slack', 'telegram', 'teams', 'mattermost'], true);
 }
 
+/** True when the last inbound message (UTC) was under 24 hours ago, so a free-form reply is still allowed. */
 function channelWindowOpen(?string $lastInboundAt): bool
 {
     if (!$lastInboundAt) {

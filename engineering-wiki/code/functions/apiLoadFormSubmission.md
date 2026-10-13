@@ -1,10 +1,12 @@
 # apiLoadFormSubmission()
 
+Loads one submission that belongs to the given form, or answers 404 and stops.
+
 ```php
 function apiLoadFormSubmission(PDO $conn, int $formId, int $submissionId): array
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 188.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 207.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 190 | `apiLoadFormSubmission` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [analysts](/code/tables/analysts.md) |  |
+| 209 | `apiLoadFormSubmission` | read [form_submissions](/code/tables/form_submissions.md), read [forms](/code/tables/forms.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

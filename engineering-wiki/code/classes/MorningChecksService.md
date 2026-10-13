@@ -10,11 +10,11 @@
 | [nullableId()](#nullableid) | "" and 0 and "0" all mean "no assignment"; anything else is an id. |
 | [assertExists()](#assertexists) | Reject an id that points at nothing. |
 | [listGroups()](#listgroups) | Groups with their routing, plus how many active checks each holds. |
-| [saveGroup()](#savegroup) |  |
+| [saveGroup()](#savegroup) | Adds or updates a morning check group, including the team or analyst it routes to, and returns its id. |
 | [deleteGroup()](#deletegroup) | Delete a group. Its checks are NOT deleted — they fall back to ungrouped. |
 | [resolveAssignment()](#resolveassignment) | Who is a check routed to? Returns [analystId, label, source] — all null when nobody in particular, which is the default. |
 | [deleteCheck()](#deletecheck) | Delete a check + its results, atomically. |
-| [loadCheckRow()](#loadcheckrow) |  |
+| [loadCheckRow()](#loadcheckrow) | Loads one morning check; throws not found when it does not exist. |
 | [recordResult()](#recordresult) | Record (upsert) a result. Returns ['id' => int, 'created' => bool] (created = a new row for that check+date; false = overwrite). |
 | [clearResult()](#clearresult) | Put a check back to "not checked" for a date (discussion #64). |
 | [recordedDispatch()](#recordeddispatch) | Fire morning_check.recorded (best-effort). |
@@ -110,7 +110,9 @@ function listGroups(PDO $conn, bool $activeOnly = false): array
 
 ### saveGroup
 
-*public static* - line 158
+*public static* - line 162
+
+Adds or updates a morning check group, including the team or analyst it routes to, and returns its id.
 
 ```php
 function saveGroup(PDO $conn, ActorContext $ctx, array $in): int
@@ -126,7 +128,7 @@ function saveGroup(PDO $conn, ActorContext $ctx, array $in): int
 
 ### deleteGroup
 
-*public static* - line 217
+*public static* - line 221
 
 Delete a group. Its checks are NOT deleted — they fall back to ungrouped.
 
@@ -148,7 +150,7 @@ function deleteGroup(PDO $conn, ActorContext $ctx, int $id): int
 
 ### resolveAssignment
 
-*public static* - line 241
+*public static* - line 245
 
 Who is a check routed to? Returns [analystId, label, source] — all null when nobody in particular, which is the default.
 
@@ -173,7 +175,7 @@ function resolveAssignment(array $checkRow): array
 
 ### deleteCheck
 
-*public static* - line 256
+*public static* - line 260
 
 Delete a check + its results, atomically.
 
@@ -191,7 +193,9 @@ function deleteCheck(PDO $conn, ActorContext $ctx, int $id): void
 
 ### loadCheckRow
 
-*private static* - line 271
+*private static* - line 276
+
+Loads one morning check; throws not found when it does not exist.
 
 ```php
 function loadCheckRow(PDO $conn, int $id): array
@@ -204,7 +208,7 @@ function loadCheckRow(PDO $conn, int $id): array
 
 ### recordResult
 
-*public static* - line 288
+*public static* - line 293
 
 Record (upsert) a result. Returns ['id' => int, 'created' => bool] (created = a new row for that check+date; false = overwrite).
 
@@ -222,7 +226,7 @@ function recordResult(PDO $conn, ActorContext $ctx, array $in): array
 
 ### clearResult
 
-*public static* - line 374
+*public static* - line 379
 
 Put a check back to "not checked" for a date (discussion #64).
 
@@ -256,7 +260,7 @@ function clearResult(PDO $conn, ActorContext $ctx, int $checkId, ?string $date =
 
 ### recordedDispatch
 
-*private static* - line 384
+*private static* - line 389
 
 Fire morning_check.recorded (best-effort).
 
@@ -280,7 +284,7 @@ function recordedDispatch(
 
 ### validateDate
 
-*private static* - line 393
+*private static* - line 398
 
 Strict YYYY-MM-DD — 422 on garbage (the old UI silently substituted today).
 
@@ -295,7 +299,7 @@ function validateDate(string $value, string $field): string
 
 ### saveStatus
 
-*public static* - line 408
+*public static* - line 413
 
 Create (id null) or update (id present) a status. Returns the id.
 
@@ -313,7 +317,7 @@ function saveStatus(PDO $conn, ActorContext $ctx, array $in): int
 
 ### deleteStatus
 
-*public static* - line 454
+*public static* - line 459
 
 Delete a status; snapshot its label onto affected results (turning them into orphans) first. Returns ['deleted' => int, 'orphaned' => int].
 
@@ -331,7 +335,7 @@ function deleteStatus(PDO $conn, ActorContext $ctx, int $id): array
 
 ### reorderChecks
 
-*public static* - line 489
+*public static* - line 494
 
 Reorder checks: SortOrder becomes the array index (matches reorder_checks.php).
 
@@ -349,7 +353,7 @@ function reorderChecks(PDO $conn, ActorContext $ctx, array $order): void
 
 ### reorderStatuses
 
-*public static* - line 498
+*public static* - line 503
 
 Reorder statuses: positions become 10, 20, 30, … (matches reorder_statuses.php), transactional.
 
@@ -367,7 +371,7 @@ function reorderStatuses(PDO $conn, ActorContext $ctx, array $order): void
 
 ### normaliseStatuses
 
-*public static* - line 517
+*public static* - line 522
 
 Map orphan label strings to target StatusIDs. `$mappings` = [{label, statusId}, …]. Returns the total rows updated. Transactional; every target must be active.
 

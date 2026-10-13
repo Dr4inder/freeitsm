@@ -17,7 +17,7 @@ would be quietly wrong forever and nothing would say so.
 function tikaExtract(PDO $conn, string $path, string $filename): array
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 120.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 124.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

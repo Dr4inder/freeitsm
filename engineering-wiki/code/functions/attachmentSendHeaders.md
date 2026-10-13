@@ -6,7 +6,7 @@ Emit the Content-Type / Content-Disposition / nosniff headers for an attachment.
 function attachmentSendHeaders(string $filename, int $size): void
 ```
 
-Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 728.
+Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 729.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Projects (3.2.0): for a person, the projects they are a member of (People tab of
 function peopleProjects(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 444.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 445.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,9 +20,9 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 444.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 456 | `peopleProjects` | read [project_members](/code/tables/project_members.md), read [projects](/code/tables/projects.md), read [project_roles](/code/tables/project_roles.md), read [analysts](/code/tables/analysts.md) |  |
-| 464 | `peopleProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 477 | `peopleProjects` | read [project_raci](/code/tables/project_raci.md), read [project_members](/code/tables/project_members.md), read [project_items](/code/tables/project_items.md) |  |
+| 457 | `peopleProjects` | read [project_members](/code/tables/project_members.md), read [projects](/code/tables/projects.md), read [project_roles](/code/tables/project_roles.md), read [analysts](/code/tables/analysts.md) |  |
+| 465 | `peopleProjects` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 478 | `peopleProjects` | read [project_raci](/code/tables/project_raci.md), read [project_members](/code/tables/project_members.md), read [project_items](/code/tables/project_items.md) |  |
 
 ## Calls
 

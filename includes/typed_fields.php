@@ -91,11 +91,13 @@ final class TypedFields
 
     // ---------------------------------------------------------------- types --
 
+    /** The storage class a field type is kept in (text, number, date, boolean or ref), or '' for an unknown type. */
     public static function storageClass(string $type): string
     {
         return self::STORAGE[$type] ?? '';
     }
 
+    /** True when $type is one of the field types in TYPES. */
     public static function isKnownType(string $type): bool
     {
         return in_array($type, self::TYPES, true);
@@ -127,6 +129,7 @@ final class TypedFields
         self::$refKinds[$kind] = $handler;
     }
 
+    /** The handler registered for a ref kind by registerRefKind(), or null when none is. */
     public static function refKind(string $kind): ?array
     {
         return self::$refKinds[$kind] ?? null;

@@ -48,6 +48,9 @@ final class EwMarkdown
 
     // ------------------------------------------------------------------ blocks
 
+    /**
+     * Renders a run of lines as block HTML - fenced code, headings, rules, quotes and alerts, tables, lists and paragraphs.
+     */
     private function blocks(array $lines): string
     {
         $out = '';
@@ -128,6 +131,9 @@ final class EwMarkdown
             || $this->listMarker($line) !== null;
     }
 
+    /**
+     * Renders a heading with its GitHub-style anchor; the first h1 becomes the page title and h2/h3 go into the table of contents.
+     */
     private function heading(int $level, string $text): string
     {
         $inner = $this->inline($text);
@@ -151,6 +157,9 @@ final class EwMarkdown
         return $s;
     }
 
+    /**
+     * Renders a block quote, or a GitHub alert box when the first line is [!NOTE], [!TIP], [!IMPORTANT], [!WARNING] or [!CAUTION].
+     */
     private function quote(array $lines): string
     {
         // GitHub alerts: > [!NOTE] on the first line.
@@ -164,12 +173,14 @@ final class EwMarkdown
         return "<blockquote>\n" . $this->blocks($lines) . "</blockquote>\n";
     }
 
+    /** True when a line is a table's header separator (| --- | :---: |). */
     private function isTableRule(string $line): bool
     {
         return (bool)preg_match('/^\s*\|?\s*:?-{1,}:?\s*(\|\s*:?-{1,}:?\s*)+\|?\s*$/', $line)
             || (bool)preg_match('/^\s*\|\s*:?-{1,}:?\s*\|\s*$/', $line);
     }
 
+    /** Splits a table row into trimmed cells, ignoring the outer pipes and any | inside `code` or escaped as \|. */
     private function cells(string $row): array
     {
         $row = trim($row);
@@ -188,6 +199,7 @@ final class EwMarkdown
         return $cells;
     }
 
+    /** Renders a table from its header, separator and body rows, applying the column alignment. */
     private function table(array $rows): string
     {
         $head = $this->cells($rows[0]);
@@ -209,7 +221,12 @@ final class EwMarkdown
         return $h . "</tbody></table></div>\n";
     }
 
-    /** @return ?array{indent:int, ordered:bool, start:int, width:int} */
+    /**
+     * Reads a list item marker (- * + or 1. 1)) at the start of a line; null when
+     * the line is not a list item, including a --- rule.
+     *
+     * @return ?array{indent:int, ordered:bool, start:int, width:int}
+     */
     private function listMarker(string $line): ?array
     {
         if (!preg_match('/^( *)([-*+]|(\d{1,9})[.)])( +|$)/', $line, $m)) return null;
@@ -279,6 +296,7 @@ final class EwMarkdown
 
     // ------------------------------------------------------------------ code
 
+    /** Renders a fenced code block with its language label, highlighted when the language is one it knows. */
     private function codeBlock(string $code, string $lang): string
     {
         $alias = ['php' => 'php', 'sql' => 'sql', 'mysql' => 'sql', 'js' => 'js', 'javascript' => 'js', 'json' => 'js',
@@ -327,6 +345,7 @@ final class EwMarkdown
 
     // ------------------------------------------------------------------ inline
 
+    /** Renders a paragraph's lines as inline HTML, turning two trailing spaces or a trailing backslash into a line break. */
     private function inlineLines(array $lines): string
     {
         // Two trailing spaces or a trailing backslash is a hard line break.
@@ -340,12 +359,16 @@ final class EwMarkdown
         return implode("\n", $parts);
     }
 
+    /** Parks finished HTML (code, links, escapes) behind a placeholder so later inline passes cannot touch it. */
     private function hold(string $html): string
     {
         $this->holds[] = $html;
         return "\x1A" . (count($this->holds) - 1) . "\x1A";
     }
 
+    /**
+     * Renders inline Markdown - escapes, code, images, links, wiki links and autolinks, then bold, italic and strike - with all other text escaped.
+     */
     private function inline(string $t): string
     {
         $base = count($this->holds);
@@ -376,6 +399,9 @@ final class EwMarkdown
         return $t;
     }
 
+    /**
+     * Builds a link - external ones open in a new window, #anchors stay on the page, and wiki paths go through the resolver (a page it cannot find is shown as a broken link).
+     */
     private function link(string $href, string $label, bool $wiki = false): string
     {
         if (preg_match('#^(https?:|mailto:)#i', $href)) {
@@ -398,6 +424,7 @@ final class EwMarkdown
         return '<a href="?page=' . $this->e($page) . '" data-ew-page="' . $this->e($page) . '">' . $label . '</a>';
     }
 
+    /** Escapes text for HTML. */
     private function e(string $s): string
     {
         return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');

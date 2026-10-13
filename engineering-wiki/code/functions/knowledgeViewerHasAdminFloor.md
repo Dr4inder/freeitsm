@@ -14,7 +14,7 @@ whatever else is true of them.
 function knowledgeViewerHasAdminFloor(PDO $conn, KnowledgeViewer $viewer): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 449.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 457.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Decorate rows (health, progress, exceptions, budget) the way the portfolio does.
 function apiProjectDecorate(PDO $conn, array $rows): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 48.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 52.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

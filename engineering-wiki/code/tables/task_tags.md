@@ -28,6 +28,6 @@
 | [api/tasks/get.php](/code/files/api/tasks/get.php.md) | L136 |  |
 | [api/tasks/get_task_tags.php](/code/files/api/tasks/get_task_tags.php.md) | L19 |  |
 | [api/tasks/list.php](/code/files/api/tasks/list.php.md) | L247 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiSerializeTask L67, apiTasksList L220, apiTaskTagsList L478 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::resolveTags L1355, TasksService::resolveTags L1358 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiSerializeTask L72, apiTasksList L229, apiTaskTagsList L490 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::resolveTags L1370, TasksService::resolveTags L1373 |  |
 

@@ -1,10 +1,12 @@
 # rpOptMulti()
 
+A multi-select block option whose choices come from the named source.
+
 ```php
 function rpOptMulti(string $label, string $source): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 53.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 56.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

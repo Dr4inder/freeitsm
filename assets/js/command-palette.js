@@ -14,6 +14,8 @@
  *
  * Entity search goes to api/system/global_search.php, which applies the same
  * module + company scoping server-side.
+ *
+ * @wiki Command-Palette-Developer-Guide
  */
 (function () {
     'use strict';
@@ -89,6 +91,7 @@
         {
             get label() { return cp('cmd_theme', 'Toggle dark mode'); },
             keywords: 'theme light dark appearance',
+            /** Flips between the dark and default themes through setTheme(), which saves the choice and reloads. */
             run: function () {
                 var cur = document.documentElement.getAttribute('data-theme');
                 var next = cur === 'dark' ? 'default' : 'dark';
@@ -99,6 +102,7 @@
         {
             get label() { return cp('cmd_signout', 'Sign out'); },
             keywords: 'logout log out leave',
+            /** Signs the analyst out. */
             run: function () { window.location.href = BASE + 'analyst_logout.php'; }
         }
     ];
@@ -109,12 +113,14 @@
     var searchTimer = null;
     var searchSeq = 0;     // guards against out-of-order async responses
 
+    /** HTML-escapes a value for building the palette's markup. */
     function esc(s) {
         return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
         });
     }
 
+    /** Creates the palette overlay (search box, results list, key hints) on first open and wires its events. */
     function build() {
         overlay = document.createElement('div');
         overlay.className = 'cmdp-overlay';
@@ -145,6 +151,7 @@
         input.addEventListener('keydown', onKeydown);
     }
 
+    /** Shows the palette with an empty query (modules and actions) and focuses the search box. */
     function open() {
         if (!overlay) build();
         overlay.classList.add('active');
@@ -154,6 +161,7 @@
         requestAnimationFrame(function () { input.focus(); });
     }
 
+    /** Hides the palette and cancels any search still waiting to run. */
     function close() {
         if (!overlay) return;
         overlay.classList.remove('active');
@@ -161,6 +169,7 @@
         if (searchTimer) { clearTimeout(searchTimer); searchTimer = null; }
     }
 
+    /** Whether the palette is currently showing. */
     function isOpen() { return overlay && overlay.classList.contains('active'); }
 
     // Substring match with a light prefix boost, so "tas" ranks "Tasks" above a
@@ -172,6 +181,7 @@
         return i === 0 ? 2 : 1;
     }
 
+    /** The modules whose name matches the query, prefix matches first; every module when the query is empty. */
     function matchedModules(q) {
         if (!q) return MODULES.slice();
         return MODULES
@@ -181,6 +191,7 @@
             .map(function (x) { return x.m; });
     }
 
+    /** The quick actions whose label or keywords match the query; all of them when the query is empty. */
     function matchedCommands(q) {
         if (!q) return COMMANDS.slice();
         return COMMANDS.filter(function (c) {
@@ -291,6 +302,7 @@
         paintActive();
     }
 
+    /** The group heading for a search result type, e.g. 'Tickets' or 'Found inside tickets'. */
     function pluralType(type) {
         return {
             ticket: cp('group_ticket', 'Tickets'),
@@ -317,6 +329,11 @@
         }[type] || type;
     }
 
+    /**
+     * Builds the markup for one result row - icon, title, optional subtitle, extra button and type tag.
+     *
+     * Title, subtitle and tag must already be escaped by the caller.
+     */
     function row(idx, iconSvg, title, sub, tag, extra) {
         return '<div class="cmdp-item" data-ix="' + idx + '">' +
             '<div class="cmdp-item-icon">' + iconSvg + '</div>' +
@@ -329,11 +346,13 @@
         '</div>';
     }
 
+    /** Makes the row at this index the highlighted one. */
     function setActive(ix) {
         activeIx = ix;
         paintActive();
     }
 
+    /** Highlights the active row and scrolls it into view. */
     function paintActive() {
         items.forEach(function (it, i) {
             if (i === activeIx) {
@@ -345,12 +364,14 @@
         });
     }
 
+    /** Moves the highlight up or down by delta rows, wrapping round at either end. */
     function move(delta) {
         if (!items.length) return;
         activeIx = (activeIx + delta + items.length) % items.length;
         paintActive();
     }
 
+    /** Arrow keys move the highlight, Enter opens the highlighted row and Escape closes the palette. */
     function onKeydown(e) {
         if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
         else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
@@ -364,6 +385,9 @@
         }
     }
 
+    /**
+     * Redraws the module and action matches at once, then runs the server search 180ms after typing stops (two characters or more).
+     */
     function onInput() {
         var q = input.value.trim();
         render();                     // instant client-side view (modules + actions)
@@ -376,6 +400,11 @@
         searchTimer = setTimeout(function () { doSearch(q); }, 180);
     }
 
+    /**
+     * Asks api/system/global_search.php for matches and redraws with them.
+     *
+     * A response is dropped if a newer search has started or the query has changed since it was sent.
+     */
     function doSearch(q) {
         var seq = ++searchSeq;
         fetch(BASE + 'api/system/global_search.php?q=' + encodeURIComponent(q), {

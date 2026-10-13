@@ -6,7 +6,7 @@ Everything linked to one project, per kind, for this analyst: a kind they cannot
 function projectLinks(PDO $conn, ActorContext $ctx, int $projectId): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 227.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 231.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

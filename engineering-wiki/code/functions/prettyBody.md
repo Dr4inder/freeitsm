@@ -6,7 +6,7 @@ JSON pretty-printed for reading; anything else as it came, trimmed to a length.
 function prettyBody(?string $s, int $max = 4000): string
 ```
 
-Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 74.
+Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,10 +1,12 @@
 # apiLoadWorkflow()
 
+Loads one workflow row, or answers 404 and stops.
+
 ```php
 function apiLoadWorkflow(PDO $conn, int $workflowId): array
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 75.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

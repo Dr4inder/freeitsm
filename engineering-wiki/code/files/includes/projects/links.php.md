@@ -1,6 +1,6 @@
 # includes/projects/links.php
 
-> PHP - 466 lines
+> PHP - 483 lines
 
 Projects, joined to the rest of FreeITSM (3.2.0) - the ONE place that decides who may see a link and who may make one. Modelled on includes/domains/links.php.
 
@@ -31,44 +31,44 @@ model), so they are judged by their own permissions only.
 |---|--:|---|
 | [projectLinkKinds()](/code/functions/projectLinkKinds.md) | 36 | kind => table, the column naming the other record, the module it belongs to, and its company table (null = not a company record). |
 | [projectLinksReady()](/code/functions/projectLinksReady.md) | 54 | Before Database Verification the tables are not there: no links, never an error. With `$kind`, that one kind's table (3.3.0) - so an upgrade that adds a kind (problem) hides only that kind until Verification, not every link. |
-| [projectLinkKind()](/code/functions/projectLinkKind.md) | 70 |  |
-| [projectLinkKindAllowed()](/code/functions/projectLinkKindAllowed.md) | 78 | May this analyst use links of this kind at all? (Projects AND the other module.) |
-| [projectLinkTenantOf()](/code/functions/projectLinkTenantOf.md) | 87 | A record's company with NULL read as the Default company. |
-| [projectLinkProjectTenant()](/code/functions/projectLinkProjectTenant.md) | 97 | The project's company (Default for NULL), or not-found for a project out of reach. |
-| [projectLinkTargetOk()](/code/functions/projectLinkTargetOk.md) | 108 | Is the OTHER end of a link one this analyst may see, and (for company records) in the project's company? |
-| [projectLinkDescribe()](/code/functions/projectLinkDescribe.md) | 156 | Linked records, shaped for display: id, label, a sub-line, a status and a link. |
-| [projectLinks()](/code/functions/projectLinks.md) | 227 | Everything linked to one project, per kind, for this analyst: a kind they cannot use is left out entirely; within a kind, rows they cannot see are dropped. |
-| [projectLinkAdd()](/code/functions/projectLinkAdd.md) | 243 |  |
-| [projectLinkRemove()](/code/functions/projectLinkRemove.md) | 262 |  |
-| [projectLinkSearch()](/code/functions/projectLinkSearch.md) | 285 | Records of one kind that could be linked: matching `$q`, in the project's company where that applies, visible to the analyst, not already linked. At most 20. |
-| [projectLinkProjectRows()](/code/functions/projectLinkProjectRows.md) | 345 | Projects by id, shaped for a list on another module's page. |
-| [projectsLinkedTo()](/code/functions/projectsLinkedTo.md) | 371 | The projects one record (asset, change, ticket, contract, CI, article) is linked to that this analyst may see. Empty - never an error - when they cannot open Projects, the other module, or the record, so a page can call it unconditionally. |
-| [projectsPickableFor()](/code/functions/projectsPickableFor.md) | 390 | The picker on the record's page: live projects this analyst may CHANGE, in the record's company (for company records), not already linked, matching `$q`. At most 20. |
-| [projectLinksDeleteAll()](/code/functions/projectLinksDeleteAll.md) | 419 | Remove every link a project holds - called when the project is deleted. |
-| [projectUnapprovedChanges()](/code/functions/projectUnapprovedChanges.md) | 440 | The project's linked changes that are still open and NOT approved - what a stage gate warns about (3.2.0, "going live safely"). |
+| [projectLinkKind()](/code/functions/projectLinkKind.md) | 74 | The definition (table, column, module) of one link kind; throws a validation error for an unknown kind. |
+| [projectLinkKindAllowed()](/code/functions/projectLinkKindAllowed.md) | 82 | May this analyst use links of this kind at all? (Projects AND the other module.) |
+| [projectLinkTenantOf()](/code/functions/projectLinkTenantOf.md) | 91 | A record's company with NULL read as the Default company. |
+| [projectLinkProjectTenant()](/code/functions/projectLinkProjectTenant.md) | 101 | The project's company (Default for NULL), or not-found for a project out of reach. |
+| [projectLinkTargetOk()](/code/functions/projectLinkTargetOk.md) | 112 | Is the OTHER end of a link one this analyst may see, and (for company records) in the project's company? |
+| [projectLinkDescribe()](/code/functions/projectLinkDescribe.md) | 160 | Linked records, shaped for display: id, label, a sub-line, a status and a link. |
+| [projectLinks()](/code/functions/projectLinks.md) | 231 | Everything linked to one project, per kind, for this analyst: a kind they cannot use is left out entirely; within a kind, rows they cannot see are dropped. |
+| [projectLinkAdd()](/code/functions/projectLinkAdd.md) | 254 | Links a record (asset, ticket, contract...) to a project and records it in the project's history. |
+| [projectLinkRemove()](/code/functions/projectLinkRemove.md) | 279 | Removes a link between a project and a record and records it in the project's history. |
+| [projectLinkSearch()](/code/functions/projectLinkSearch.md) | 302 | Records of one kind that could be linked: matching `$q`, in the project's company where that applies, visible to the analyst, not already linked. At most 20. |
+| [projectLinkProjectRows()](/code/functions/projectLinkProjectRows.md) | 362 | Projects by id, shaped for a list on another module's page. |
+| [projectsLinkedTo()](/code/functions/projectsLinkedTo.md) | 388 | The projects one record (asset, change, ticket, contract, CI, article) is linked to that this analyst may see. Empty - never an error - when they cannot open Projects, the other module, or the record, so a page can call it unconditionally. |
+| [projectsPickableFor()](/code/functions/projectsPickableFor.md) | 407 | The picker on the record's page: live projects this analyst may CHANGE, in the record's company (for company records), not already linked, matching `$q`. At most 20. |
+| [projectLinksDeleteAll()](/code/functions/projectLinksDeleteAll.md) | 436 | Remove every link a project holds - called when the project is deleted. |
+| [projectUnapprovedChanges()](/code/functions/projectUnapprovedChanges.md) | 457 | The project's linked changes that are still open and NOT approved - what a stage gate warns about (3.2.0, "going live safely"). |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 123 | `projectLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
-| 163 | `projectLinkDescribe` | read [assets](/code/tables/assets.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 172 | `projectLinkDescribe` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
-| 181 | `projectLinkDescribe` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 190 | `projectLinkDescribe` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [suppliers](/code/tables/suppliers.md) |  |
-| 201 | `projectLinkDescribe` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 207 | `projectLinkDescribe` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 215 | `projectLinkDescribe` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 298 | `projectLinkSearch` | read [assets](/code/tables/assets.md) |  |
-| 302 | `projectLinkSearch` | read [changes](/code/tables/changes.md) |  |
-| 306 | `projectLinkSearch` | read [tickets](/code/tables/tickets.md) |  |
-| 310 | `projectLinkSearch` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 314 | `projectLinkSearch` | read [problems](/code/tables/problems.md) |  |
-| 318 | `projectLinkSearch` | read [contracts](/code/tables/contracts.md) |  |
-| 324 | `projectLinkSearch` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 350 | `projectLinkProjectRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 398 | `projectsPickableFor` | read [projects](/code/tables/projects.md) |  |
-| 444 | `projectUnapprovedChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 127 | `projectLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
+| 167 | `projectLinkDescribe` | read [assets](/code/tables/assets.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 176 | `projectLinkDescribe` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 185 | `projectLinkDescribe` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 194 | `projectLinkDescribe` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md), read [suppliers](/code/tables/suppliers.md) |  |
+| 205 | `projectLinkDescribe` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 211 | `projectLinkDescribe` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 219 | `projectLinkDescribe` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 315 | `projectLinkSearch` | read [assets](/code/tables/assets.md) |  |
+| 319 | `projectLinkSearch` | read [changes](/code/tables/changes.md) |  |
+| 323 | `projectLinkSearch` | read [tickets](/code/tables/tickets.md) |  |
+| 327 | `projectLinkSearch` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 331 | `projectLinkSearch` | read [problems](/code/tables/problems.md) |  |
+| 335 | `projectLinkSearch` | read [contracts](/code/tables/contracts.md) |  |
+| 341 | `projectLinkSearch` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 367 | `projectLinkProjectRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 415 | `projectsPickableFor` | read [projects](/code/tables/projects.md) |  |
+| 461 | `projectUnapprovedChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
 
 ## How it hangs together
 

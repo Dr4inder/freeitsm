@@ -51,6 +51,7 @@ function peopleCompanyMatch(PDO $conn, int $tenantId, string $qualified): array
     return [" AND $qualified = ?", [$tenantId]];
 }
 
+/** The name to show for a person: preferred name, then display name, email, username, or #id. */
 function peopleName(array $r): string
 {
     foreach (['preferred_name', 'display_name', 'email', 'username'] as $k) {
@@ -585,12 +586,14 @@ function peopleCanSeeSuppliers(PDO $conn, int $analystId): bool
     return analystCanAccessModule($conn, $analystId, 'people') && analystCanAccessModule($conn, $analystId, 'contracts');
 }
 
+/** The name to show for a supplier: trading name, else legal name, else #id. */
 function peopleSupplierName(array $r): string
 {
     $t = trim((string)($r['trading_name'] ?? ''));
     return $t !== '' ? $t : (string)($r['legal_name'] ?? ('#' . (int)($r['id'] ?? 0)));
 }
 
+/** The name to show for a supplier contact: first name and surname, else email, else #id. */
 function peopleContactName(array $r): string
 {
     $n = trim(($r['first_name'] ?? '') . ' ' . ($r['surname'] ?? ''));

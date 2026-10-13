@@ -21,7 +21,7 @@ several calls (tool calling) learns the fix once rather than per round.
 function aiOpenAICompatPost(string $url, array $headers, array &$payload, bool $verify): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 344.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 348.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

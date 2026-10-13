@@ -12,7 +12,7 @@ habit as `tenancyColumnExists()` and the try/catch in knowledge/visibility.php.
 function lmsUserGroupsAvailable(PDO $conn): bool
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 173.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 179.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,7 +24,7 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 177 | `lmsUserGroupsAvailable` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 183 | `lmsUserGroupsAvailable` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
 
 ## Called from
 

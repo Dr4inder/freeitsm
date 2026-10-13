@@ -18,7 +18,7 @@ function warRoomDeleteMessage(
 ): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 588.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 589.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -33,10 +33,10 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 588
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 597 | `warRoomDeleteMessage` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
-| 603 | `warRoomDeleteMessage` | **delete** [warroom_attachments](/code/tables/warroom_attachments.md) |  |
-| 604 | `warRoomDeleteMessage` | **delete** [warroom_mentions](/code/tables/warroom_mentions.md) |  |
-| 607 | `warRoomDeleteMessage` | **update** [warroom_messages](/code/tables/warroom_messages.md) (`body`, `deleted_datetime`, `deleted_by`) |  |
+| 598 | `warRoomDeleteMessage` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 604 | `warRoomDeleteMessage` | **delete** [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 605 | `warRoomDeleteMessage` | **delete** [warroom_mentions](/code/tables/warroom_mentions.md) |  |
+| 608 | `warRoomDeleteMessage` | **update** [warroom_messages](/code/tables/warroom_messages.md) (`body`, `deleted_datetime`, `deleted_by`) |  |
 
 ## Calls
 

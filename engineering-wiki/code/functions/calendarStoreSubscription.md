@@ -1,5 +1,7 @@
 # calendarStoreSubscription()
 
+Records an analyst's change-notification subscription (id, expiry, secret) and clears any stored error, since subscribing succeeded.
+
 ```php
 function calendarStoreSubscription(
     PDO $conn,
@@ -10,7 +12,7 @@ function calendarStoreSubscription(
 ): void
 ```
 
-Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 460.
+Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/pull.php.md), line 464.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,11 +24,13 @@ Defined in [includes/calendar_sync/pull.php](/code/files/includes/calendar_sync/
 
 **Returns:** `void`
 
+**Writes:** calendar_enrolments(subscription_id, subscription_expires, subscription_secret, last_error)
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 469 | `calendarStoreSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`) |  |
+| 473 | `calendarStoreSubscription` | **update** [calendar_enrolments](/code/tables/calendar_enrolments.md) (`subscription_id`, `subscription_expires`, `subscription_secret`, `last_error`) |  |
 
 ## Called from
 

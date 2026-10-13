@@ -70,6 +70,7 @@ class CostCentresService
         return $out;
     }
 
+    /** True when the actor may reach the company. */
     private static function canReach(ActorContext $actor, int $tenantId): bool
     {
         return $actor->companyScope === null || in_array($tenantId, array_map('intval', $actor->companyScope), true);
@@ -407,6 +408,7 @@ class CostCentresService
         return $v;
     }
 
+    /** A cost centre name with control characters removed; throws when blank or too long. */
     private static function cleanName($v): string
     {
         $v = trim(preg_replace('/[\x00-\x1F\x7F]+/', ' ', (string)$v));
@@ -415,6 +417,7 @@ class CostCentresService
         return $v;
     }
 
+    /** A cost centre description with control characters removed, or null when blank; throws when too long. */
     private static function cleanDescription($v): ?string
     {
         $v = trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/', ' ', (string)$v));
@@ -435,11 +438,13 @@ class CostCentresService
         throw new ServiceError('validation', 'invalid_field', "'{$v}' is not a valid value for {$field} - use Yes or No.");
     }
 
+    /** Throws the "code already used" conflict. */
     private static function codeTaken(string $code): void
     {
         throw new ServiceError('conflict', 'conflict', "Code {$code} is already used by another cost centre in this company. Codes are matched ignoring capitals.");
     }
 
+    /** Throws when another cost centre in the company has the same code, ignoring case. */
     private static function assertCodeFree(PDO $conn, int $tenantId, string $code, ?int $exceptId): void
     {
         // The column's _ci collation makes = ignore case, matching the unique key.

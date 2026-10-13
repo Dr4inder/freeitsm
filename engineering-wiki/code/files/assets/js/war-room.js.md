@@ -1,6 +1,6 @@
 # assets/js/war-room.js
 
-> JavaScript - 1139 lines
+> JavaScript - 1195 lines
 
 War room — the client half.
 
@@ -24,48 +24,47 @@ a poll and not an EventSource.
 | Function | Line | What it does |
 |---|--:|---|
 | `insertedForm(person)` | 53 | What the picker actually types into the box for this person. |
-| `t(key, vars)` | 73 |  |
-| `el(tag, className, text)` | 80 | ── small DOM helpers ──────────────────────────────────────────────────── `el()` takes TEXT, not markup, which is what keeps the XSS rule above from depending on anybody remembering it at each call site. |
-| `clear(node)` | 86 |  |
-| `localTime(utc)` | 89 | Local time from the server's UTC string, via the app's shared tz helper. |
-| `bytes(n)` | 95 |  |
-| `renderChannels()` | 109 |  |
-| `addChannelButton(c)` | 121 |  |
-| `currentChannel()` | 143 |  |
-| `applyChannelHeader()` | 148 |  |
-| `switchChannel(id)` | 164 |  |
-| `renderMessage(m)` | 184 |  |
-| `renderBodyWithMentions(node, text)` | 271 | Write a message body into `node`, marking the `@names` inside it. |
-| `nameKnown(name)` | 303 |  |
-| `mentionsMe(name)` | 310 |  |
-| `guessKind(name)` | 316 | Only used to decide thumbnail vs link; the server decides what is served. |
-| `appendMessages(list)` | 321 |  |
-| `renderPresence(p)` | 356 |  |
-| `poll()` | 379 |  |
-| `startPolling()` | 402 |  |
-| `renderPending()` | 409 |  |
-| `acContext()` | 453 | The `@word` being typed at the caret, or null. |
-| `acRender()` | 467 |  |
-| `acHide()` | 498 |  |
-| `acAccept(i)` | 500 |  |
-| `mentionBeforeCaret()` | 526 | The mention immediately before the caret, if there is one. |
-| `openEdit(m)` | 617 |  |
-| `openDelete(m)` | 641 |  |
-| `messageAction(action, payload)` | 660 |  |
-| `send()` | 683 |  |
-| `done()` | 688 |  |
-| `addressesWarbot(text)` | 738 |  |
-| `askWarbot(messageId)` | 742 |  |
-| `openPanel(title)` | 771 |  |
-| `closePanel()` | 777 |  |
-| `run()` | 800 |  |
-| `openModal(title)` | 919 |  |
-| `closeModal()` | 925 |  |
-| `field(parent, labelText, node)` | 932 |  |
-| `post(action, payload, onOk, failKey)` | 938 |  |
-| `draw(filter)` | 1028 |  |
-| `post('dm', { analyst_id: p.id }, function (d)` | 1038 |  |
-| `save(value)` | 1097 |  |
+| `t(key, vars)` | 74 | Translates a key through window.t, or returns the key when no translator is loaded. |
+| `el(tag, className, text)` | 81 | ── small DOM helpers ──────────────────────────────────────────────────── `el()` takes TEXT, not markup, which is what keeps the XSS rule above from depending on anybody remembering it at each call site. |
+| `clear(node)` | 88 | Removes every child of a DOM node. |
+| `localTime(utc)` | 91 | Local time from the server's UTC string, via the app's shared tz helper. |
+| `bytes(n)` | 98 | Formats a byte count as B, KB or MB for an attachment chip. |
+| `renderChannels()` | 113 | Redraws the channel list - the all-hands channel first, then the Teams, Channels and Direct groups. |
+| `addChannelButton(c)` | 128 | Appends one channel button with its private marker and its mention or unread badge (neither shows for the open channel). |
+| `currentChannel()` | 151 | Returns the channel object for the open channel, or null. |
+| `applyChannelHeader()` | 159 | Fills the title and topic for the open channel, swaps the composer for the archived note when archived, and shows Manage only for custom channels. |
+| `switchChannel(id)` | 176 | Opens another channel - clears the message list, resets the since_id watermark and polls at once. |
+| `renderMessage(m)` | 199 | Builds one message row - author, Warbot tag, time, edited flag, body with `@mentions`, edit/delete buttons and attachments - all as text nodes. |
+| `renderBodyWithMentions(node, text)` | 286 | Write a message body into `node`, marking the `@names` inside it. |
+| `nameKnown(name)` | 319 | True when a name (full or first) belongs to someone in the directory, the current analyst, or Warbot. |
+| `mentionsMe(name)` | 327 | True when a mentioned name is the current analyst's full or first name. |
+| `guessKind(name)` | 333 | Only used to decide thumbnail vs link; the server decides what is served. |
+| `appendMessages(list)` | 341 | Adds polled messages to the list, replacing any already shown with the same id, and scrolls down only for new ones when the reader was at the bottom. |
+| `renderPresence(p)` | 377 | Draws the presence panel - who is in this channel, who is elsewhere in the war room, or an offline warning. |
+| `poll()` | 403 | The heartbeat - fetches poll.php for new messages, channel list with counts and presence, and flags the page offline when it fails. |
+| `startPolling()` | 427 | Starts (or restarts) the poll every POLL_MS milliseconds. |
+| `renderPending()` | 435 | Draws a removable chip for each file chosen but not yet sent. |
+| `acContext()` | 479 | The `@word` being typed at the caret, or null. |
+| `acRender()` | 496 | Shows the @ autocomplete for the word at the caret - up to six directory matches, plus `@everyone` and Warbot when they fit. |
+| `acHide()` | 528 | Hides the @ autocomplete and forgets its matches. |
+| `acAccept(i)` | 531 | Replaces the typed `@word` with the chosen name in the analyst's mention style, then closes the picker. |
+| `mentionBeforeCaret()` | 557 | The mention immediately before the caret, if there is one. |
+| `openEdit(m)` | 649 | Opens the edit modal for one of the analyst's own messages; Save sends the new body through messageAction. |
+| `openDelete(m)` | 674 | Opens the delete confirmation for a message; confirming sends the delete through messageAction. |
+| `messageAction(action, payload)` | 696 | Posts an edit or delete to message.php, then reloads the whole channel because the changed message is behind the poll watermark. |
+| `send()` | 722 | Sends the composer text and any pending files to send.php (multipart when files are attached), reports refused files, and asks Warbot when addressed. |
+| `done()` | 728 | Re-enables the Send button when the request settles. |
+| `addressesWarbot(text)` | 779 | True when the text mentions `@warbot` or starts with a Warbot slash command. |
+| `askWarbot(messageId)` | 784 | Shows a "thinking" placeholder and asks warbot.php to answer a message; the next poll brings in the reply. |
+| `openPanel(title)` | 814 | Opens the side panel (search or situation report) with a title and returns its empty body. |
+| `closePanel()` | 821 | Hides the side panel. |
+| `run()` | 847 | Runs the message search through search.php (all channels, or this one when ticked) and lists the hits, each one switching to its channel. |
+| `openModal(title)` | 967 | Opens the shared dialog with a title and returns its empty body. |
+| `closeModal()` | 974 | Hides the shared dialog. |
+| `field(parent, labelText, node)` | 982 | Appends a label and a control to a dialog body and returns the control. |
+| `post(action, payload, onOk, failKey)` | 991 | Posts a channel action (create, dm, update, archive, restore) to channels.php; calls onOk on success, alerts with failKey on failure. |
+| `draw(filter)` | 1082 | Lists the directory people matching the filter, each a button that opens a direct message with them. |
+| `save(value)` | 1153 | Saves the analyst's desktop-alerts preference (warroom_desktop_alerts) through WR_PREF_URL. |
 
 ## Loaded by
 

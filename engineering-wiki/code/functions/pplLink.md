@@ -1,10 +1,12 @@
 # pplLink()
 
+A link to an app-relative URL, or just the escaped text when the reader has nowhere to go.
+
 ```php
 function pplLink(?string $url, string $text): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 59.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

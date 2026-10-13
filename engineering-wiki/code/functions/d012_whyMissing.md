@@ -26,7 +26,7 @@ and exactly what makes it look like the software is lying to them.
 function d012_whyMissing($abs, $baseDir, $storedKey)
 ```
 
-Defined in [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md), line 125.
+Defined in [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md), line 134.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

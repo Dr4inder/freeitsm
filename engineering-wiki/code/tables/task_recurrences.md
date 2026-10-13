@@ -37,14 +37,14 @@
 | [api/tasks/save_recurrence.php](/code/files/api/tasks/save_recurrence.php.md):59 |  | update | `is_active`, `updated_datetime` |  |
 | [api/tasks/save_recurrence.php](/code/files/api/tasks/save_recurrence.php.md):96 |  | update |  |  |
 | [api/tasks/save_recurrence.php](/code/files/api/tasks/save_recurrence.php.md):101 |  | insert |  |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):353 | `TaskRecurrence::runDue` | update | `next_due_date` |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):440 | `TaskRecurrence::deactivate` | update | `is_active`, `updated_datetime` |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):737 | `TaskRecurrence::createOccurrence` | update | `occurrences_created`, `updated_datetime` |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):354 | `TaskRecurrence::runDue` | update | `next_due_date` |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):442 | `TaskRecurrence::deactivate` | update | `is_active`, `updated_datetime` |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):741 | `TaskRecurrence::createOccurrence` | update | `occurrences_created`, `updated_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/tasks/get.php](/code/files/api/tasks/get.php.md) | L155 |  |
-| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::ruleForTask L223, TaskRecurrence::runDue L301, TaskRecurrence::project L384 |  |
+| [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::ruleForTask L224, TaskRecurrence::runDue L302, TaskRecurrence::project L385 |  |
 

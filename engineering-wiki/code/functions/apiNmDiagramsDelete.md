@@ -6,7 +6,7 @@ DELETE /network-diagrams/{id} — leaf-only (parent resurfaces as current); ?cha
 function apiNmDiagramsDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 566.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 600.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

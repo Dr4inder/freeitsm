@@ -1,6 +1,9 @@
 # assets/js/schedule.js
 
-> JavaScript - 88 lines
+> JavaScript - 91 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Ticket Calendar Sync Developer Guide](https://github.com/edmozley/freeitsm/wiki/Ticket-Calendar-Sync-Developer-Guide)
 
 Scheduling maths, shared by every screen that can schedule a ticket.
 
@@ -20,11 +23,11 @@ ticket to the previous DAY for anyone east of UTC (#1161).
 
 | Function | Line | What it does |
 |---|--:|---|
-| `parseNaive(value)` | 27 | Pull a naive "YYYY-MM-DD HH:MM:SS" apart without letting Date touch it. |
-| `formatNaive(d)` | 38 | A naive stamp from local date parts — never via `toISOString()`. |
-| `p(n)` | 39 |  |
-| `toStoredRange(date, time, minutes, allDay)` | 56 | Turn what the form holds into what the server stores. |
-| `durationMinutes(start, end)` | 71 | Recover the duration from a stored start/end pair. |
+| `parseNaive(value)` | 29 | Pull a naive "YYYY-MM-DD HH:MM:SS" apart without letting Date touch it. |
+| `formatNaive(d)` | 40 | A naive stamp from local date parts — never via `toISOString()`. |
+| `p(n)` | 42 | Pads a number to two digits. |
+| `toStoredRange(date, time, minutes, allDay)` | 59 | Turn what the form holds into what the server stores. |
+| `durationMinutes(start, end)` | 74 | Recover the duration from a stored start/end pair. |
 
 ## Loaded by
 

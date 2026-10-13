@@ -6,7 +6,7 @@ This viewer's role on a pack: 'owner', 'edit', 'view', or null (no access, or no
 function rpRole(PDO $conn, int $analystId, int $packId): ?string
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 84.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 85.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 86 | `rpRole` | read [report_packs](/code/tables/report_packs.md) |  |
-| 97 | `rpRole` | read [report_pack_shares](/code/tables/report_pack_shares.md) |  |
+| 87 | `rpRole` | read [report_packs](/code/tables/report_packs.md) |  |
+| 98 | `rpRole` | read [report_pack_shares](/code/tables/report_pack_shares.md) |  |
 
 ## Calls
 

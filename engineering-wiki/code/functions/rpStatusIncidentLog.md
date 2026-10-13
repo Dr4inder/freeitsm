@@ -6,7 +6,7 @@ Every incident UPDATE in the range, oldest first, with the services it named and
 function rpStatusIncidentLog(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 101.
+Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report_packs/blocks_status.php.md), line 109.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,8 +22,8 @@ Defined in [includes/report_packs/blocks_status.php](/code/files/includes/report
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 105 | `rpStatusIncidentLog` | read [status_incident_updates](/code/tables/status_incident_updates.md), read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md), read [analysts](/code/tables/analysts.md) |  |
-| 123 | `rpStatusIncidentLog` | read [status_incident_update_services](/code/tables/status_incident_update_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 113 | `rpStatusIncidentLog` | read [status_incident_updates](/code/tables/status_incident_updates.md), read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md), read [analysts](/code/tables/analysts.md) |  |
+| 131 | `rpStatusIncidentLog` | read [status_incident_update_services](/code/tables/status_incident_update_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## Calls
 

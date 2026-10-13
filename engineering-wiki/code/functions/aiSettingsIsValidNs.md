@@ -1,10 +1,12 @@
 # aiSettingsIsValidNs()
 
+True when `$ns` is a namespace registered in `aiSettingsRegistry()`.
+
 ```php
 function aiSettingsIsValidNs(string $ns): bool
 ```
 
-Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 101.
+Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 102.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

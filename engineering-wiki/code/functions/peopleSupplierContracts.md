@@ -6,7 +6,7 @@ Contracts with the supplier - the ordinary, "we buy from them" kind.
 function peopleSupplierContracts(PDO $conn, int $analystId, int $supplierId): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 750.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 753.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 750.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 755 | `peopleSupplierContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 758 | `peopleSupplierContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
 
 ## Calls
 

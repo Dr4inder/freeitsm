@@ -18,12 +18,12 @@ Who else may open a pack. target_type is 'analyst' / 'team' (target_id) or 'depa
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md):215 | `rpSaveShares` | delete |  |  |
-| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md):216 | `rpSaveShares` | insert | `pack_id`, `target_type`, `target_id`, `target_value`, `can_edit` |  |
+| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md):216 | `rpSaveShares` | delete |  |  |
+| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md):217 | `rpSaveShares` | insert | `pack_id`, `target_type`, `target_id`, `target_value`, `can_edit` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpRole L97, rpListPacks L120, rpListShares L160 |  |
+| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpRole L98, rpListPacks L121, rpListShares L161 |  |
 

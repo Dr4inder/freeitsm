@@ -1,6 +1,6 @@
 # includes/tenancy.php
 
-> PHP - 1361 lines
+> PHP - 1367 lines
 
 Multi-tenancy helper — the single choke-point for tenant logic.
 
@@ -52,27 +52,27 @@ concluded these guards were inert.)
 | [isActiveTenantAll()](/code/functions/isActiveTenantAll.md) | 643 | Is the analyst looking at every company they may see, rather than just one? |
 | [setActiveTenantAll()](/code/functions/setActiveTenantAll.md) | 651 | Turn the consolidated view on or off. Needs a writable session. |
 | [getTenantConfigRowsByCompany()](/code/functions/getTenantConfigRowsByCompany.md) | 679 | The same config list resolved SEPARATELY FOR EVERY COMPANY the analyst may see. |
-| [ticketTenantFilter()](/code/functions/ticketTenantFilter.md) | 710 |  |
-| [activeTenantFilter()](/code/functions/activeTenantFilter.md) | 744 | Generic active-company list filter for any tenant-scoped table (Change Management onward). Same semantics as ticketTenantFilter but the table alias and column are parameterised so each Phase-3 module can reuse it: scopes to the analyst's ACTIVE company, and the Default company also owns NULL-tenant rows (so nothing is hidden at N=1 or from Default). Returns ['', []] at N=1. |
-| [allAccessibleTenantsFilter()](/code/functions/allAccessibleTenantsFilter.md) | 767 | The consolidated-view predicate: every company this analyst may see. The ONE copy of it, shared by `ticketTenantFilter()` and `activeTenantReadFilter()`. |
-| [activeTenantReadFilter()](/code/functions/activeTenantReadFilter.md) | 801 | `activeTenantFilter()` for a LIST READ that should widen in the "All companies" view — the opt-in the note above `isActiveTenantAll()` describes. |
-| [analystHasAllTenantAccess()](/code/functions/analystHasAllTenantAccess.md) | 817 | Can this analyst reach EVERY company on the install? |
-| [requestedTenantId()](/code/functions/requestedTenantId.md) | 839 | The company a request is FOR: `?for_tenant=` when it names a company this analyst may reach, otherwise the active company. |
-| [tenantScopeSqlFor()](/code/functions/tenantScopeSqlFor.md) | 853 | `activeTenantFilter()`'s clause for ONE NAMED company instead of the active one. Same Default-owns-NULL rule. ['', []] on a single-company install. |
-| [tenancyColumnExists()](/code/functions/tenancyColumnExists.md) | 872 | Does `$table` have `$column`? Cached per request; false if the table is missing. |
-| [knowledgeTenantFilterForCompany()](/code/functions/knowledgeTenantFilterForCompany.md) | 918 | Scope a Knowledge query to the articles a given COMPANY may see. |
-| [knowledgeTenantFilter()](/code/functions/knowledgeTenantFilter.md) | 941 | Scope a Knowledge query to what an ANALYST should see right now: the company they have switched to, plus everything shared. |
-| [analystCanAccessArticle()](/code/functions/analystCanAccessArticle.md) | 954 | May this analyst act on this article? Mirrors `analystCanAccessAsset()`, except a SHARED article (tenant_id IS NULL) belongs to everybody, so everybody may reach it — that is what "shared" means. |
-| [resolveTenantForNewUser()](/code/functions/resolveTenantForNewUser.md) | 996 | Suggest the company for a NEW portal/requester account from its email address. |
-| [resolveTicketTenantForEmail()](/code/functions/resolveTicketTenantForEmail.md) | 1053 | Decide which company (tenant) a NEW inbound-email ticket belongs to. |
-| [resolveTicketTenantForChannel()](/code/functions/resolveTicketTenantForChannel.md) | 1130 | Decide which company a NEW inbound messaging-channel ticket (WhatsApp etc.) belongs to. The channel twin of `resolveTicketTenantForEmail()`: |
-| [resolveTenantIdForAddress()](/code/functions/resolveTenantIdForAddress.md) | 1176 | Resolve an email address to the tenant that owns it, for LOGIN routing (which IdP should this person be sent to). Mirrors the email-routing rule (exact sender address → registered domain), but without the mailbox step. |
-| [freemailBuiltinDomains()](/code/functions/freemailBuiltinDomains.md) | 1208 | The built-in list of public free-email / consumer domains. These are ALWAYS treated as freemail; an admin can ADD to the list (the freemail_domains table, see getCustomFreemailDomains) but never remove a built-in — so gmail.com and friends can't be accidentally un-protected. |
-| [getCustomFreemailDomains()](/code/functions/getCustomFreemailDomains.md) | 1223 | Admin-added custom freemail domains (the freemail_domains table), lower-cased. Cached per request; degrades to [] if the table doesn't exist yet — so the file is safe on a part-migrated install. |
-| [isFreemailDomain()](/code/functions/isFreemailDomain.md) | 1251 | Is this a public free-email / consumer domain (gmail.com, outlook.com, …)? |
-| [normaliseEmailDomain()](/code/functions/normaliseEmailDomain.md) | 1263 | Normalise a user-entered email domain for storage/matching: lower-cased, trimmed, with any leading "@", scheme or "www." stripped. Returns '' if what remains isn't a plausible domain. |
-| [normaliseEmailAddress()](/code/functions/normaliseEmailAddress.md) | 1288 | Normalise a user-entered email address for storage/matching: lower-cased, trimmed, with any "mailto:" prefix or surrounding angle brackets stripped. Returns '' if what remains isn't a valid email address. |
-| [getTenantConfigRows()](/code/functions/getTenantConfigRows.md) | 1324 | Resolve a per-company config list under the "add + hide" override model (design §7) — the single primitive every overridable list-setting routes through (ticket types, ticket origins, departments, …). |
+| [ticketTenantFilter()](/code/functions/ticketTenantFilter.md) | 716 | Builds the SQL fragment that scopes ticket rows to the analyst's active company, or to every company they may see when the consolidated view is on. |
+| [activeTenantFilter()](/code/functions/activeTenantFilter.md) | 750 | Generic active-company list filter for any tenant-scoped table (Change Management onward). Same semantics as ticketTenantFilter but the table alias and column are parameterised so each Phase-3 module can reuse it: scopes to the analyst's ACTIVE company, and the Default company also owns NULL-tenant rows (so nothing is hidden at N=1 or from Default). Returns ['', []] at N=1. |
+| [allAccessibleTenantsFilter()](/code/functions/allAccessibleTenantsFilter.md) | 773 | The consolidated-view predicate: every company this analyst may see. The ONE copy of it, shared by `ticketTenantFilter()` and `activeTenantReadFilter()`. |
+| [activeTenantReadFilter()](/code/functions/activeTenantReadFilter.md) | 807 | `activeTenantFilter()` for a LIST READ that should widen in the "All companies" view — the opt-in the note above `isActiveTenantAll()` describes. |
+| [analystHasAllTenantAccess()](/code/functions/analystHasAllTenantAccess.md) | 823 | Can this analyst reach EVERY company on the install? |
+| [requestedTenantId()](/code/functions/requestedTenantId.md) | 845 | The company a request is FOR: `?for_tenant=` when it names a company this analyst may reach, otherwise the active company. |
+| [tenantScopeSqlFor()](/code/functions/tenantScopeSqlFor.md) | 859 | `activeTenantFilter()`'s clause for ONE NAMED company instead of the active one. Same Default-owns-NULL rule. ['', []] on a single-company install. |
+| [tenancyColumnExists()](/code/functions/tenancyColumnExists.md) | 878 | Does `$table` have `$column`? Cached per request; false if the table is missing. |
+| [knowledgeTenantFilterForCompany()](/code/functions/knowledgeTenantFilterForCompany.md) | 924 | Scope a Knowledge query to the articles a given COMPANY may see. |
+| [knowledgeTenantFilter()](/code/functions/knowledgeTenantFilter.md) | 947 | Scope a Knowledge query to what an ANALYST should see right now: the company they have switched to, plus everything shared. |
+| [analystCanAccessArticle()](/code/functions/analystCanAccessArticle.md) | 960 | May this analyst act on this article? Mirrors `analystCanAccessAsset()`, except a SHARED article (tenant_id IS NULL) belongs to everybody, so everybody may reach it — that is what "shared" means. |
+| [resolveTenantForNewUser()](/code/functions/resolveTenantForNewUser.md) | 1002 | Suggest the company for a NEW portal/requester account from its email address. |
+| [resolveTicketTenantForEmail()](/code/functions/resolveTicketTenantForEmail.md) | 1059 | Decide which company (tenant) a NEW inbound-email ticket belongs to. |
+| [resolveTicketTenantForChannel()](/code/functions/resolveTicketTenantForChannel.md) | 1136 | Decide which company a NEW inbound messaging-channel ticket (WhatsApp etc.) belongs to. The channel twin of `resolveTicketTenantForEmail()`: |
+| [resolveTenantIdForAddress()](/code/functions/resolveTenantIdForAddress.md) | 1182 | Resolve an email address to the tenant that owns it, for LOGIN routing (which IdP should this person be sent to). Mirrors the email-routing rule (exact sender address → registered domain), but without the mailbox step. |
+| [freemailBuiltinDomains()](/code/functions/freemailBuiltinDomains.md) | 1214 | The built-in list of public free-email / consumer domains. These are ALWAYS treated as freemail; an admin can ADD to the list (the freemail_domains table, see getCustomFreemailDomains) but never remove a built-in — so gmail.com and friends can't be accidentally un-protected. |
+| [getCustomFreemailDomains()](/code/functions/getCustomFreemailDomains.md) | 1229 | Admin-added custom freemail domains (the freemail_domains table), lower-cased. Cached per request; degrades to [] if the table doesn't exist yet — so the file is safe on a part-migrated install. |
+| [isFreemailDomain()](/code/functions/isFreemailDomain.md) | 1257 | Is this a public free-email / consumer domain (gmail.com, outlook.com, …)? |
+| [normaliseEmailDomain()](/code/functions/normaliseEmailDomain.md) | 1269 | Normalise a user-entered email domain for storage/matching: lower-cased, trimmed, with any leading "@", scheme or "www." stripped. Returns '' if what remains isn't a plausible domain. |
+| [normaliseEmailAddress()](/code/functions/normaliseEmailAddress.md) | 1294 | Normalise a user-entered email address for storage/matching: lower-cased, trimmed, with any "mailto:" prefix or surrounding angle brackets stripped. Returns '' if what remains isn't a valid email address. |
+| [getTenantConfigRows()](/code/functions/getTenantConfigRows.md) | 1330 | Resolve a per-company config list under the "add + hide" override model (design §7) — the single primitive every overridable list-setting routes through (ticket types, ticket origins, departments, …). |
 
 ## Database
 
@@ -99,17 +99,17 @@ concluded these guards were inert.)
 | 510 | `analystCanAccessDomain` | read [domains](/code/tables/domains.md) |  |
 | 538 | `analystCanAccessAsset` | read [assets](/code/tables/assets.md) |  |
 | 572 | `analystCanAccessTask` | read [tasks](/code/tables/tasks.md) |  |
-| 958 | `analystCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 1015 | `resolveTenantForNewUser` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 1062 | `resolveTicketTenantForEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
-| 1079 | `resolveTicketTenantForEmail` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
-| 1097 | `resolveTicketTenantForEmail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 1138 | `resolveTicketTenantForChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
-| 1153 | `resolveTicketTenantForChannel` | read [tenant_channel_senders](/code/tables/tenant_channel_senders.md) |  |
-| 1182 | `resolveTenantIdForAddress` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
-| 1192 | `resolveTenantIdForAddress` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 1228 | `getCustomFreemailDomains` | read [freemail_domains](/code/tables/freemail_domains.md) |  |
-| 1340 | `getTenantConfigRows` | read [tenant_config_hidden](/code/tables/tenant_config_hidden.md) |  |
+| 964 | `analystCanAccessArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 1021 | `resolveTenantForNewUser` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1068 | `resolveTicketTenantForEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 1085 | `resolveTicketTenantForEmail` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
+| 1103 | `resolveTicketTenantForEmail` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1144 | `resolveTicketTenantForChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 1159 | `resolveTicketTenantForChannel` | read [tenant_channel_senders](/code/tables/tenant_channel_senders.md) |  |
+| 1188 | `resolveTenantIdForAddress` | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
+| 1198 | `resolveTenantIdForAddress` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1234 | `getCustomFreemailDomains` | read [freemail_domains](/code/tables/freemail_domains.md) |  |
+| 1346 | `getTenantConfigRows` | read [tenant_config_hidden](/code/tables/tenant_config_hidden.md) |  |
 
 ## How it hangs together
 

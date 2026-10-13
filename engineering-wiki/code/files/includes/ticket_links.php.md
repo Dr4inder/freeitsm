@@ -1,6 +1,6 @@
 # includes/ticket_links.php
 
-> PHP - 253 lines
+> PHP - 260 lines
 
 Ticket-to-ticket linking (issue #38). Self-referential, typed links stored in `ticket_links`. Three stored relation types: 'related' — symmetric (order irrelevant; reciprocal duplicates blocked) 'duplicate' — source is a DUPLICATE OF target (target is the master) 'parent' — source is the PARENT OF target (target is the child)
 
@@ -16,30 +16,30 @@ ticket state automatically. Multi-tenancy: links are same-company only.
 | Function | Line | What it does |
 |---|--:|---|
 | [ticketLinkLoad()](/code/functions/ticketLinkLoad.md) | 20 | Load the minimal ticket row we need (or null if missing/deleted). |
-| [ticketLinkNum()](/code/functions/ticketLinkNum.md) | 28 |  |
-| [ticketLinkAudit()](/code/functions/ticketLinkAudit.md) | 35 |  |
-| [ticketLinkCreate()](/code/functions/ticketLinkCreate.md) | 47 | Create a link. `$uiRelation` is one of related\|duplicate_of\|parent_of\|child_of, expressed from `$sourceId`'s perspective. Returns ['success'=>bool, 'error'=>?]. |
-| [ticketLinkRemove()](/code/functions/ticketLinkRemove.md) | 159 | Remove a link by id. |
-| [ticketLinksFor()](/code/functions/ticketLinksFor.md) | 186 | All of a ticket's links, grouped for display from THIS ticket's perspective. Returns parent (0/1), children[], duplicate_of (0/1), duplicates[], related[]. |
-| [ticketLinkableList()](/code/functions/ticketLinkableList.md) | 225 | Ticket search for the link picker — scoped to the source ticket's company. |
+| [ticketLinkNum()](/code/functions/ticketLinkNum.md) | 29 | A ticket's number for audit text, falling back to "#id" when it has none (deleted tickets included). |
+| [ticketLinkAudit()](/code/functions/ticketLinkAudit.md) | 42 | Writes one ticket_audit row for a link change, with no old value and the new value cut to 500 characters. |
+| [ticketLinkCreate()](/code/functions/ticketLinkCreate.md) | 54 | Create a link. `$uiRelation` is one of related\|duplicate_of\|parent_of\|child_of, expressed from `$sourceId`'s perspective. Returns ['success'=>bool, 'error'=>?]. |
+| [ticketLinkRemove()](/code/functions/ticketLinkRemove.md) | 166 | Remove a link by id. |
+| [ticketLinksFor()](/code/functions/ticketLinksFor.md) | 193 | All of a ticket's links, grouped for display from THIS ticket's perspective. Returns parent (0/1), children[], duplicate_of (0/1), duplicates[], related[]. |
+| [ticketLinkableList()](/code/functions/ticketLinkableList.md) | 232 | Ticket search for the link picker — scoped to the source ticket's company. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 22 | `ticketLinkLoad` | read [tickets](/code/tables/tickets.md) |  |
-| 30 | `ticketLinkNum` | read [tickets](/code/tables/tickets.md) |  |
-| 38 | `ticketLinkAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 94 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 103 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 31 | `ticketLinkNum` | read [tickets](/code/tables/tickets.md) |  |
+| 45 | `ticketLinkAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 101 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
 | 110 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 120 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 130 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 137 | `ticketLinkCreate` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
-| 161 | `ticketLinkRemove` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 174 | `ticketLinkRemove` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
-| 189 | `ticketLinksFor` | read [ticket_links](/code/tables/ticket_links.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 246 | `ticketLinkableList` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 117 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 127 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 137 | `ticketLinkCreate` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 144 | `ticketLinkCreate` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
+| 168 | `ticketLinkRemove` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 181 | `ticketLinkRemove` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 196 | `ticketLinksFor` | read [ticket_links](/code/tables/ticket_links.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 253 | `ticketLinkableList` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## How it hangs together
 

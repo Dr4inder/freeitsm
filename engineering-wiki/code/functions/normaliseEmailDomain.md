@@ -6,7 +6,7 @@ Normalise a user-entered email domain for storage/matching: lower-cased, trimmed
 function normaliseEmailDomain(string $raw): string
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1263.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1269.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

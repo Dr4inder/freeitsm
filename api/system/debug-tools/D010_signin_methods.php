@@ -47,10 +47,15 @@ if (!$__dbgAdmin) {
 if (!headers_sent()) header('Content-Type: text/plain; charset=utf-8');
 
 $sections = [];
+/**
+ * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
+ * string or an array of lines.
+ */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
     $sections[] = "=== {$title} ===\n" . rtrim($body, "\n");
 }
+/** Formats a boolean as YES or NO for the report. */
 function yn($v) { return $v ? 'YES' : 'NO'; }
 
 // ---- masking ------------------------------------------------------------
@@ -58,6 +63,10 @@ function yn($v) { return $v ? 'YES' : 'NO'; }
 // human survives into the output. Kept just legible enough that the person who
 // generated it can recognise their own row.
 
+/**
+ * Masks a value for a report that will be sent on - all stars when very short, otherwise
+ * the first one or two characters (and the last, for a long value) with stars between.
+ */
 function mask($s) {
     $s = (string)$s;
     if ($s === '') return '(empty)';
@@ -113,6 +122,10 @@ function maskHost($s) {
     return $at === false ? $s : mask(substr($s, 0, $at)) . '@' . substr($s, $at + 1);
 }
 
+/**
+ * Prints every section, separated by blank lines, and stops - the end of the report, and
+ * the early exit when a check cannot go on.
+ */
 function emit_and_exit($sections) {
     echo implode("\n\n", $sections) . "\n";
     exit;
@@ -143,6 +156,10 @@ try {
 // An installation older than a feature has no column for it, and every question
 // below then answers "no" for a reason that has nothing to do with configuration.
 
+/**
+ * Whether a column exists in this database - false on any error, so an older install
+ * reads as not ready rather than breaking the report.
+ */
 function colExists(PDO $c, $table, $col) {
     try {
         $s = $c->prepare("SELECT COUNT(*) FROM information_schema.COLUMNS
@@ -151,6 +168,10 @@ function colExists(PDO $c, $table, $col) {
         return (int)$s->fetchColumn() > 0;
     } catch (Throwable $e) { return false; }
 }
+/**
+ * Whether a table exists in this database - false on any error, so an older install
+ * reads as not ready rather than breaking the report.
+ */
 function tableExists(PDO $c, $table) {
     try {
         $s = $c->prepare("SELECT COUNT(*) FROM information_schema.TABLES

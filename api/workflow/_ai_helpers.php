@@ -107,6 +107,13 @@ function callWorkflowAi(array $cfg, string $systemPrompt, string $userMessage, i
 //  Provider drivers
 // ---------------------------------------------------------------------
 
+/**
+ * Sends a system prompt and one user message to the Anthropic Messages API and returns
+ * the reply text, trimmed.
+ *
+ * Throws on a network error or a non-200 answer, with the provider's own message where
+ * it gave one.
+ */
 function wfCallAnthropic(array $cfg, string $systemPrompt, string $userMessage, int $maxTokens): string
 {
     $body = json_encode([
@@ -149,6 +156,13 @@ function wfCallAnthropic(array $cfg, string $systemPrompt, string $userMessage, 
     return trim($text);
 }
 
+/**
+ * Sends a system prompt and one user message to the OpenAI Chat Completions API and
+ * returns the reply text, trimmed.
+ *
+ * Throws on a network error or a non-200 answer, with the provider's own message where
+ * it gave one.
+ */
 function wfCallOpenAI(array $cfg, string $systemPrompt, string $userMessage, int $maxTokens): string
 {
     $body = json_encode([
@@ -192,6 +206,12 @@ function wfCallOpenAI(array $cfg, string $systemPrompt, string $userMessage, int
 //  Robust JSON extractor — strips ```json fences, finds first { or [
 // ---------------------------------------------------------------------
 
+/**
+ * Pulls the JSON out of an AI reply - strips Markdown code fences and any text before
+ * the first { or [ - and decodes it.
+ *
+ * Throws when there is no JSON or it cannot be decoded.
+ */
 function parseClaudeJson(string $text): array
 {
     $text = preg_replace('/^```(?:json)?\s*|\s*```$/m', '', $text);

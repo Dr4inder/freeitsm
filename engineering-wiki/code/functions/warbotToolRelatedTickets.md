@@ -1,10 +1,12 @@
 # warbotToolRelatedTickets()
 
+related_tickets: the tickets linked to a ticket number, with the link type, direction and each one's status.
+
 ```php
 function warbotToolRelatedTickets(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 832.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 865.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,8 +20,8 @@ Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 838 | `warbotToolRelatedTickets` | read [tickets](/code/tables/tickets.md) |  |
-| 846 | `warbotToolRelatedTickets` | read [ticket_links](/code/tables/ticket_links.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 871 | `warbotToolRelatedTickets` | read [tickets](/code/tables/tickets.md) |  |
+| 879 | `warbotToolRelatedTickets` | read [ticket_links](/code/tables/ticket_links.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## Calls
 

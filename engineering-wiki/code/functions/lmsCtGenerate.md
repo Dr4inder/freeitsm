@@ -15,7 +15,7 @@ function lmsCtGenerate(
 ): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 383.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 386.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

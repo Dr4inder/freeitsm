@@ -6,7 +6,7 @@ Assignments — POST/GET /assets/{id}/assignments, DELETE .../{user_id}
 function apiAssetAssignmentsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 395.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 405.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 398 | `apiAssetAssignmentsList` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md) |  |
+| 408 | `apiAssetAssignmentsList` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

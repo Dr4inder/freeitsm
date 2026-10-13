@@ -6,7 +6,7 @@ Replace the key wherever it appears with its hint.
 function redactKey(string $s, string $key): string
 ```
 
-Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 70.
+Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Create or update a lease. `$in`: id?, name, reference, supplier_id, cost_centre_
 function leaseSave(PDO $conn, ActorContext $ctx, array $in): int
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 162.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 168.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,11 +20,11 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 162.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 179 | `leaseSave` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md) |  |
-| 193 | `leaseSave` | read [suppliers](/code/tables/suppliers.md) |  |
-| 237 | `leaseSave` | **update** [leases](/code/tables/leases.md) (`tenant_id`, `name`, `reference`, `supplier_id`, `cost_centre_id`, `contract_id`, `notice_days`, `notes`, `updated_datetime`) |  |
-| 243 | `leaseSave` | **insert** [leases](/code/tables/leases.md) (`tenant_id`, `name`, `reference`, `supplier_id`, `cost_centre_id`, `contract_id`, `notice_days`, `notes`, `created_by`, `created_datetime`, `updated_datetime`) |  |
-| 248 | `leaseSave` | **insert** [lease_schedules](/code/tables/lease_schedules.md) (`lease_id`, `name`, `display_order`) |  |
+| 185 | `leaseSave` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md) |  |
+| 199 | `leaseSave` | read [suppliers](/code/tables/suppliers.md) |  |
+| 243 | `leaseSave` | **update** [leases](/code/tables/leases.md) (`tenant_id`, `name`, `reference`, `supplier_id`, `cost_centre_id`, `contract_id`, `notice_days`, `notes`, `updated_datetime`) |  |
+| 249 | `leaseSave` | **insert** [leases](/code/tables/leases.md) (`tenant_id`, `name`, `reference`, `supplier_id`, `cost_centre_id`, `contract_id`, `notice_days`, `notes`, `created_by`, `created_datetime`, `updated_datetime`) |  |
+| 254 | `leaseSave` | **insert** [lease_schedules](/code/tables/lease_schedules.md) (`lease_id`, `name`, `display_order`) |  |
 
 ## Calls
 

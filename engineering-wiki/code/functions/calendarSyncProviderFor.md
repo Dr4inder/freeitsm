@@ -10,7 +10,7 @@ silently to nowhere is the worst possible response to it.
 function calendarSyncProviderFor(array $connection, ?array $enrolment = null): CalendarSyncProvider
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 225.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 226.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,10 +1,12 @@
 # projectAiBriefingTask()
 
+The instruction given to the AI for a project's Monday briefing - a few short bullets, most important first.
+
 ```php
 function projectAiBriefingTask(): string
 ```
 
-Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 361.
+Defined in [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), line 365.
 
 **Returns:** `string`
 

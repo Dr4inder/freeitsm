@@ -6,7 +6,7 @@ Post a message. Returns the new id, or 0 if the body was empty.
 function warRoomSend(PDO $conn, int $analystId, int $channelId, string $body): int
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 625.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 626.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 625
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 632 | `warRoomSend` | **insert** [warroom_messages](/code/tables/warroom_messages.md) (`channel_id`, `analyst_id`, `body`, `created_datetime`) |  |
+| 633 | `warRoomSend` | **insert** [warroom_messages](/code/tables/warroom_messages.md) (`channel_id`, `analyst_id`, `body`, `created_datetime`) |  |
 
 ## Calls
 

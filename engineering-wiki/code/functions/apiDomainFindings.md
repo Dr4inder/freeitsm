@@ -6,7 +6,7 @@ Findings with their English title and advice filled in — a machine consumer ha
 function apiDomainFindings(array $findings): array
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 339.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 352.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

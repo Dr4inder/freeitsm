@@ -6,7 +6,7 @@ Domains under one contract (domains.contract_id) that this analyst can see.
 function domainsForContract(PDO $conn, int $analystId, int $contractId): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 330.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 337.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 333 | `domainsForContract` | read [domains](/code/tables/domains.md) |  |
+| 340 | `domainsForContract` | read [domains](/code/tables/domains.md) |  |
 
 ## Calls
 

@@ -1,5 +1,10 @@
 # projectLinkAdd()
 
+Links a record (asset, ticket, contract...) to a project and records it in the project's history.
+
+Both ends must be visible to the actor and the actor must be able to change the
+project. Returns false when the link already existed.
+
 ```php
 function projectLinkAdd(
     PDO $conn,
@@ -10,7 +15,7 @@ function projectLinkAdd(
 ): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 243.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 254.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

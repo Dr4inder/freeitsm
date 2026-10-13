@@ -6,7 +6,7 @@ GET /projects/{id}/budget - totals, labour and lines, in the project's currency.
 function apiProjectBudget(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 499.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 542.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

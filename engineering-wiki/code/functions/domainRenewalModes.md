@@ -6,7 +6,7 @@ auto | manual | do_not_renew | unknown
 function domainRenewalModes(): array
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 153.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 157.
 
 **Returns:** `array`
 

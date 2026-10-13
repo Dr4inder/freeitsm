@@ -23,7 +23,7 @@ misleading "failed to get access token".
 function templateGraphContext(PDO $conn, array $mailbox): ?array
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 546.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 551.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

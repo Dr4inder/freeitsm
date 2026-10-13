@@ -13,7 +13,7 @@ that needs a scheduled task set up before it cleans up after itself is not.
 function warRoomSweepOrphanFiles(PDO $conn): void
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1214.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,9 +25,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 121
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1218 | `warRoomSweepOrphanFiles` | read [system_settings](/code/tables/system_settings.md) |  |
-| 1224 | `warRoomSweepOrphanFiles` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
-| 1232 | `warRoomSweepOrphanFiles` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 1219 | `warRoomSweepOrphanFiles` | read [system_settings](/code/tables/system_settings.md) |  |
+| 1225 | `warRoomSweepOrphanFiles` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 1233 | `warRoomSweepOrphanFiles` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
 
 ## Called from
 

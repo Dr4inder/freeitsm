@@ -46,7 +46,7 @@
 |---|---|---|---|---|
 | [api/assets/delete_asset_status_type.php](/code/files/api/assets/delete_asset_status_type.php.md):53 |  | update | `asset_status_id` |  |
 | [api/assets/delete_asset_type.php](/code/files/api/assets/delete_asset_type.php.md):55 |  | update | `asset_type_id` |  |
-| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):132 |  | update | `last_seen` |  |
+| [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md):147 |  | update | `last_seen` |  |
 | [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md):170 |  | update | `manufacturer`, `model`, `memory`, `service_tag`, `operating_system`, `feature_release`, `build_number`, `cpu_name`, `speed`, `bios_version` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):1044 |  | update | `last_seen` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3541 |  | update | `supplier_id` |  |
@@ -54,10 +54,10 @@
 | [includes/services/assets.php](/code/files/includes/services/assets.php.md):186 | `AssetsService::createAsset` | insert |  |  |
 | [includes/services/assets.php](/code/files/includes/services/assets.php.md):279 | `AssetsService::updateFields` | update |  |  |
 | [includes/services/assets.php](/code/files/includes/services/assets.php.md):675 | `AssetsService::moveToCompany` | update |  |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md):1296 | `AssetsService::updateAssetHostname` | update | `hostname` |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md):1356 | `AssetsService::createDiscoveredAsset` | insert |  |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):767 | `AssetImportService::handleMissing` | update | `asset_status_id` |  |
-| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md):385 | `AssetTagsService::assign` | update | `asset_tag` |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md):1300 | `AssetsService::updateAssetHostname` | update | `hostname` |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md):1360 | `AssetsService::createDiscoveredAsset` | insert |  |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md):780 | `AssetImportService::handleMissing` | update | `asset_status_id` |  |
+| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md):387 | `AssetTagsService::assign` | update | `asset_tag` |  |
 | [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):225 | `ContractsService::deleteSupplier` | update | `supplier_id` |  |
 
 ## Read by
@@ -88,33 +88,33 @@
 | [api/tickets/get_ticket_assets.php](/code/files/api/tickets/get_ticket_assets.php.md) | L39 |  |
 | [api/tickets/save_ticket_asset.php](/code/files/api/tickets/save_ticket_asset.php.md) | L47, L63 |  |
 | [api/tickets/search_linkable_assets.php](/code/files/api/tickets/search_linkable_assets.php.md) | L49 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L47, apiAssetsList L302 |  |
-| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareAppMachinesList L185 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52, apiAssetsList L312 |  |
+| [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md) | apiSoftwareAppMachinesList L194 |  |
 | [asset-management/labels.php](/code/files/asset-management/labels.php.md) | L73, L104 |  |
 | [asset-management/scan.php](/code/files/asset-management/scan.php.md) | L65 |  |
 | [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md) | assetDiskMatchCount L104 |  |
 | [includes/asset_labels.php](/code/files/includes/asset_labels.php.md) | assetLabelsSchemaReady L54, assetEnsureToken L72, assetIdForToken L109, assetTagAvailable L132 |  |
-| [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md) | awcSyncKind L135 |  |
+| [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md) | awcSyncKind L142 |  |
 | [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractAssetCanReach L50, contractAssetSelect L64, contractAssetLink L161, contractAssetSearch L250 |  |
 | [includes/cost_centre_assign.php](/code/files/includes/cost_centre_assign.php.md) | costCentreUsage L132 |  |
 | [includes/db_verify_preview.php](/code/files/includes/db_verify_preview.php.md) | dbPreviewRepairs L130 |  |
 | [includes/intune.php](/code/files/includes/intune.php.md) | intuneLinkDevicesToAssets L303, intuneGetAppSyncCandidates L604, intuneRunAppSyncJob L800 |  |
-| [includes/leases.php](/code/files/includes/leases.php.md) | leaseGet L356, leaseAssetsAdd L488, leaseAssetDatesEdited L635, leaseDueBack L684, leaseSyncCalendar L760 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleCompanyCards L164, peopleAssets L350, peopleAssets L355, peopleSupplierAssets L778 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L163, projectLinkSearch L298 |  |
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectBuiltinTemplates L106 |  |
+| [includes/leases.php](/code/files/includes/leases.php.md) | leaseGet L362, leaseAssetsAdd L494, leaseAssetDatesEdited L641, leaseDueBack L690, leaseSyncCalendar L776 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleCompanyCards L165, peopleAssets L351, peopleAssets L356, peopleSupplierAssets L781 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L167, projectLinkSearch L315 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectBuiltinTemplates L107 |  |
 | [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L454 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewAsset L288, recordPreviewAsset L320 |  |
-| [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | rpAssetsBreakdown L35, rpAssetsKpis L46, rpAssetsExpiring L68 |  |
+| [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | rpAssetsBreakdown L39, rpAssetsKpis L54, rpAssetsExpiring L76 |  |
 | [includes/report_packs/blocks_software.php](/code/files/includes/report_packs/blocks_software.php.md) | rpSoftwareScope L20 |  |
-| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::assertUnique L343, AssetFieldsService::loadAsset L815, AssetFieldsService::tenantOfAsset L837 |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::availableMatchKeys L92, AssetImportService::findMatch L563, AssetImportService::loadCore L940 |  |
-| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md) | AssetTagsService::clashMessage L303, AssetTagsService::assign L371 |  |
+| [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md) | AssetFieldsService::assertUnique L343, AssetFieldsService::loadAsset L826, AssetFieldsService::tenantOfAsset L850 |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::availableMatchKeys L92, AssetImportService::findMatch L564, AssetImportService::loadCore L962 |  |
+| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md) | AssetTagsService::clashMessage L305, AssetTagsService::assign L373 |  |
 | [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::createAsset L128, AssetsService::updateFields L241, AssetsService::dispatch L542, AssetsService::moveToCompany L612, AssetsService::moveToCompany L619, AssetsService::loadRow L698 ... |  |
 | [includes/services/contracts.php](/code/files/includes/services/contracts.php.md) | ContractsService::assertMovable L310 |  |
 | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | analystCanAccessAsset L538 |  |
-| [includes/typed_fields.php](/code/files/includes/typed_fields.php.md) | L494, L502 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L532 |  |
+| [includes/typed_fields.php](/code/files/includes/typed_fields.php.md) | L497, L505 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L546 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L710, getWatchtowerData L713, getWatchtowerData L732, getWatchtowerData L761 |  |
 | [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md) | workflowEmitWarrantyExpiries L192 |  |
 | [self-service/includes/header.php](/code/files/self-service/includes/header.php.md) | L137 |  |

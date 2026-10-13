@@ -6,7 +6,7 @@ Validate an actions array against the engine's action catalogue.
 function apiValidateWorkflowActions($actions): array
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 142.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 157.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

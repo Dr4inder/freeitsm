@@ -1,6 +1,6 @@
 # includes/services/analysts.php
 
-> PHP - 377 lines
+> PHP - 395 lines
 
 AnalystsService — creating analysts and setting what they may do (3.5.0).
 
@@ -50,14 +50,14 @@ are the ones that hold whoever calls:
 | 215 | `AnalystsService::setAccess` | **insert** [analyst_tenant_access](/code/tables/analyst_tenant_access.md) (`analyst_id`, `tenant_id`) |  |
 | 232 | `AnalystsService::managedRoleId` | read [rbac_roles](/code/tables/rbac_roles.md) |  |
 | 247 | `AnalystsService::assertNotLastAdmin` | read [analysts](/code/tables/analysts.md) |  |
-| 263 | `AnalystsService::writeManagedRole` | **insert** [rbac_roles](/code/tables/rbac_roles.md) (`name`, `description`, `is_active`, `created_by_id`, `managed_for_analyst_id`, `created_datetime`, `updated_datetime`) |  |
-| 273 | `AnalystsService::writeManagedRole` | **delete** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) |  |
-| 274 | `AnalystsService::writeManagedRole` | **insert** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) (`role_id`, `capability_key`) |  |
-| 276 | `AnalystsService::writeManagedRole` | **insert** [rbac_analyst_roles](/code/tables/rbac_analyst_roles.md) (`analyst_id`, `role_id`, `created_datetime`) |  |
-| 278 | `AnalystsService::writeManagedRole` | **update** [rbac_roles](/code/tables/rbac_roles.md) (`updated_datetime`) |  |
-| 346 | `AnalystsService::assertEmailFree` | read [analysts](/code/tables/analysts.md) |  |
-| 357 | `AnalystsService::providerId` | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 370 | `AnalystsService::uniqueUsername` | read [analysts](/code/tables/analysts.md) |  |
+| 270 | `AnalystsService::writeManagedRole` | **insert** [rbac_roles](/code/tables/rbac_roles.md) (`name`, `description`, `is_active`, `created_by_id`, `managed_for_analyst_id`, `created_datetime`, `updated_datetime`) |  |
+| 280 | `AnalystsService::writeManagedRole` | **delete** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) |  |
+| 281 | `AnalystsService::writeManagedRole` | **insert** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) (`role_id`, `capability_key`) |  |
+| 283 | `AnalystsService::writeManagedRole` | **insert** [rbac_analyst_roles](/code/tables/rbac_analyst_roles.md) (`analyst_id`, `role_id`, `created_datetime`) |  |
+| 285 | `AnalystsService::writeManagedRole` | **update** [rbac_roles](/code/tables/rbac_roles.md) (`updated_datetime`) |  |
+| 363 | `AnalystsService::assertEmailFree` | read [analysts](/code/tables/analysts.md) |  |
+| 375 | `AnalystsService::providerId` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 388 | `AnalystsService::uniqueUsername` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

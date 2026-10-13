@@ -11,7 +11,7 @@ personal address even when its domain can't be mapped).
 function normaliseEmailAddress(string $raw): string
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1288.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1294.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

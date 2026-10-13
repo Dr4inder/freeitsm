@@ -1,6 +1,27 @@
 # includes/spreadsheet.php
 
-> PHP - 398 lines
+> PHP - 402 lines
+
+Spreadsheets in and out - CSV and Excel (.xlsx), in plain PHP.
+
+First used by System -> Cost Centres (GH #160); written to be reused by any
+list that wants an import/export.
+
+🔑 WHY .xlsx AND NOT JUST CSV: LEADING ZEROS. A cost centre "0010" written to
+a CSV comes back as 10 the moment somebody double-clicks the file, because
+Excel decides it is a number - and saving it again writes 10. An .xlsx can say
+"this cell is text", so every cell this file WRITES is text, and Excel shows
+0010. CSV stays for systems that only speak CSV.
+
+🔑 WHY NO ZipArchive: an .xlsx is a zip of XML files, but the Docker image
+has no zip extension (docker-php-ext-install only adds pdo/pdo_mysql) and
+plenty of shared hosts lack it too. Zip is simple enough to read and write
+here with zlib, which every PHP has. The writer stores (no compression); the
+reader handles stored and deflated entries, which is all Excel, LibreOffice
+and Google Sheets produce.
+
+The reader is guarded like includes/search/extract.php - an uploaded zip is
+untrusted: a cap on entries, on each entry's unzipped size and on the total.
 
 ## Functions
 
@@ -15,9 +36,9 @@
 | [spreadsheetReadXlsx()](/code/functions/spreadsheetReadXlsx.md) | 237 | The first worksheet of an .xlsx as rows of display strings. |
 | [spreadsheetColIndex()](/code/functions/spreadsheetColIndex.md) | 319 | "BC12" -> 54 (zero-based column). |
 | [spreadsheetInlineText()](/code/functions/spreadsheetInlineText.md) | 328 | The text of an <si> or <is>: plain <t>, or rich-text runs <r><t>. Phonetic runs are skipped. |
-| [spreadsheetXml()](/code/functions/spreadsheetXml.md) | 337 |  |
-| [spreadsheetZipOpen()](/code/functions/spreadsheetZipOpen.md) | 352 | Read a zip's central directory. Returns [bytes, [name => entry]]. |
-| [spreadsheetZipGet()](/code/functions/spreadsheetZipGet.md) | 375 | One entry's bytes, or null when it is not there. |
+| [spreadsheetXml()](/code/functions/spreadsheetXml.md) | 341 | Parses one XML part of an .xlsx file safely (no network, no entity expansion); null when empty or not valid XML. |
+| [spreadsheetZipOpen()](/code/functions/spreadsheetZipOpen.md) | 356 | Read a zip's central directory. Returns [bytes, [name => entry]]. |
+| [spreadsheetZipGet()](/code/functions/spreadsheetZipGet.md) | 379 | One entry's bytes, or null when it is not there. |
 
 ## How it hangs together
 

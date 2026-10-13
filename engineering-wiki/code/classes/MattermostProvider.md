@@ -6,21 +6,21 @@
 
 | Method | What it does |
 |---|---|
-| [verifyWebhook()](#verifywebhook) |  |
-| [parseInbound()](#parseinbound) |  |
-| [sendMessage()](#sendmessage) |  |
+| [verifyWebhook()](#verifywebhook) | Checks an inbound webhook: a CSAT button press must carry a valid signature, anything else the channel's webhook token. |
+| [parseInbound()](#parseinbound) | Turns a Mattermost webhook into inbound messages - a CSAT rating press, or a post in the channel. |
+| [sendMessage()](#sendmessage) | Posts a text reply in the conversation's thread and returns the post id. |
 | [sendRatingRequest()](#sendratingrequest) | The rating question with five buttons, in the customer's thread. Each button calls this install's webhook with its context, signed with the webhook token, so a press cannot be forged. |
 | [csatSignature()](#csatsignature) | HMAC over the response id and rating, keyed by the webhook token. |
 | [buttonCallbackUrl()](#buttoncallbackurl) | This channel's webhook URL, the one Mattermost calls back for button presses. |
 | [sendMedia()](#sendmedia) | Upload the file to the support channel, then post it in the customer's thread. |
-| [testConnection()](#testconnection) |  |
+| [testConnection()](#testconnection) | Checks the bot token by reading the bot user, and returns a "Connected as `@name`" message. |
 | [splitAddress()](#splitaddress) | "<channelId>:<postId>" -> [channelId, postId]. |
 | [postInThread()](#postinthread) | Post into the thread the address names, under that thread's root. |
 | [rootOf()](#rootof) | The root of the thread a post is in. TRAP: Mattermost refuses a root_id that is itself a reply, and the outgoing webhook never says which a post is - so ask, rather than threading under whatever post came in last. |
 | [webhookField()](#webhookfield) | A field from the webhook body: form-encoded (Mattermost's default) or JSON. |
-| [serverUrl()](#serverurl) |  |
-| [apiUrl()](#apiurl) |  |
-| [authHeader()](#authheader) |  |
+| [serverUrl()](#serverurl) | The channel's Mattermost server address without a trailing slash; throws when it is missing or not http(s). |
+| [apiUrl()](#apiurl) | A Mattermost API v4 address for `$path`. |
+| [authHeader()](#authheader) | The bearer Authorization header for the bot token; throws when there is no token. |
 | [api()](#api) | A JSON REST call. Throws with Mattermost's own message on failure. |
 | [lookupUser()](#lookupuser) | Who a Mattermost user is: ['name' => …, 'email' => …], either may be ''. Used to file their tickets under the person FreeITSM already knows - see `messagingResolveRequesterByEmail()` in ingest.php. Never throws. |
 | [botIdOrEmpty()](#botidorempty) | The bot's own user id, or '' if Mattermost cannot be asked right now (then nothing is dropped). |
@@ -28,7 +28,11 @@
 
 ### verifyWebhook
 
-*public* - line 42
+*public* - line 48
+
+Checks an inbound webhook: a CSAT button press must carry a valid signature, anything else the channel's webhook token.
+
+Refuses everything when the channel has no token yet.
 
 ```php
 function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
@@ -43,7 +47,9 @@ function verifyWebhook(string $rawBody, array $headers, array $params, string $u
 
 ### parseInbound
 
-*public* - line 59
+*public* - line 66
+
+Turns a Mattermost webhook into inbound messages - a CSAT rating press, or a post in the channel.
 
 ```php
 function parseInbound(string $rawBody, array $params): array
@@ -56,7 +62,9 @@ function parseInbound(string $rawBody, array $params): array
 
 ### sendMessage
 
-*public* - line 118
+*public* - line 126
+
+Posts a text reply in the conversation's thread and returns the post id.
 
 ```php
 function sendMessage(string $to, string $body): string
@@ -69,7 +77,7 @@ function sendMessage(string $to, string $body): string
 
 ### sendRatingRequest
 
-*public* - line 128
+*public* - line 136
 
 The rating question with five buttons, in the customer's thread. Each button calls this install's webhook with its context, signed with the webhook token, so a press cannot be forged.
 
@@ -85,7 +93,7 @@ function sendRatingRequest(string $to, string $text, int $responseId): string
 
 ### csatSignature
 
-*private* - line 148
+*private* - line 156
 
 HMAC over the response id and rating, keyed by the webhook token.
 
@@ -99,7 +107,7 @@ function csatSignature(array $context): string
 
 ### buttonCallbackUrl
 
-*private* - line 155
+*private* - line 163
 
 This channel's webhook URL, the one Mattermost calls back for button presses.
 
@@ -109,7 +117,7 @@ function buttonCallbackUrl(): string
 
 ### sendMedia
 
-*public* - line 162
+*public* - line 170
 
 Upload the file to the support channel, then post it in the customer's thread.
 
@@ -135,7 +143,9 @@ function sendMedia(
 
 ### testConnection
 
-*public* - line 181
+*public* - line 190
+
+Checks the bot token by reading the bot user, and returns a "Connected as `@name`" message.
 
 ```php
 function testConnection(): string
@@ -143,7 +153,7 @@ function testConnection(): string
 
 ### splitAddress
 
-*private* - line 194
+*private* - line 203
 
 "<channelId>:<postId>" -> [channelId, postId].
 
@@ -157,7 +167,7 @@ function splitAddress(string $to): array
 
 ### postInThread
 
-*private* - line 206
+*private* - line 215
 
 Post into the thread the address names, under that thread's root.
 
@@ -172,7 +182,7 @@ function postInThread(string $to, array $fields): string
 
 ### rootOf
 
-*private* - line 218
+*private* - line 227
 
 The root of the thread a post is in. TRAP: Mattermost refuses a root_id that is itself a reply, and the outgoing webhook never says which a post is - so ask, rather than threading under whatever post came in last.
 
@@ -186,7 +196,7 @@ function rootOf(string $postId): string
 
 ### webhookField
 
-*private* - line 229
+*private* - line 238
 
 A field from the webhook body: form-encoded (Mattermost's default) or JSON.
 
@@ -202,7 +212,9 @@ function webhookField(string $rawBody, array $params, string $key): string
 
 ### serverUrl
 
-*private* - line 238
+*private* - line 251
+
+The channel's Mattermost server address without a trailing slash; throws when it is missing or not http(s).
 
 ```php
 function serverUrl(): string
@@ -210,7 +222,9 @@ function serverUrl(): string
 
 ### apiUrl
 
-*private* - line 247
+*private* - line 261
+
+A Mattermost API v4 address for `$path`.
 
 ```php
 function apiUrl(string $path): string
@@ -222,7 +236,9 @@ function apiUrl(string $path): string
 
 ### authHeader
 
-*private* - line 252
+*private* - line 267
+
+The bearer Authorization header for the bot token; throws when there is no token.
 
 ```php
 function authHeader(): string
@@ -230,7 +246,7 @@ function authHeader(): string
 
 ### api
 
-*private* - line 262
+*private* - line 277
 
 A JSON REST call. Throws with Mattermost's own message on failure.
 
@@ -246,7 +262,7 @@ function api(string $method, string $path, $body = null): array
 
 ### lookupUser
 
-*public* - line 291
+*public* - line 306
 
 Who a Mattermost user is: ['name' => …, 'email' => …], either may be ''. Used to file their tickets under the person FreeITSM already knows - see `messagingResolveRequesterByEmail()` in ingest.php. Never throws.
 
@@ -267,7 +283,7 @@ function lookupUser(string $userId): array
 
 ### botIdOrEmpty
 
-*private* - line 308
+*private* - line 323
 
 The bot's own user id, or '' if Mattermost cannot be asked right now (then nothing is dropped).
 
@@ -277,7 +293,7 @@ function botIdOrEmpty(): string
 
 ### setBotIdForTest
 
-*public static* - line 322
+*public static* - line 337
 
 Test hook: set the bot id without asking a server.
 

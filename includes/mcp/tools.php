@@ -221,6 +221,12 @@ function mcpProjectScopeSql(PDO $conn, array $apiKey): array
     return [$sql . $vSql, array_merge($args, $vArgs)];
 }
 
+/**
+ * The company part of the MCP project filter - limits projects to the API key's companies.
+ *
+ * Returns ['', []] when multi-tenancy is off or the key covers every company; a key with no
+ * companies sees nothing. Projects with no company count as the Default company's.
+ */
 function mcpProjectCompanySql(PDO $conn, array $apiKey): array
 {
     if (!isMultiTenant($conn) || $apiKey['company_scope'] === null) return ['', []];
@@ -232,30 +238,35 @@ function mcpProjectCompanySql(PDO $conn, array $apiKey): array
         : [" AND p.tenant_id IN ($ph)", $ids];
 }
 
+/** MCP tool: lists the projects the API key may see. */
 function mcpToolListProjects(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistList($conn, mcpProjectScopeSql($conn, $apiKey), $args);
 }
 
+/** MCP tool: one project's overview. */
 function mcpToolProjectOverview(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistOverview($conn, mcpProjectScopeSql($conn, $apiKey), $analystId, $args, true);
 }
 
+/** MCP tool: a project's RAID log - risks, assumptions, issues and dependencies. */
 function mcpToolProjectRaid(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistRaid($conn, mcpProjectScopeSql($conn, $apiKey), $args);
 }
 
+/** MCP tool: a project's tasks. */
 function mcpToolProjectTasks(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';
     return projectAssistTasks($conn, mcpProjectScopeSql($conn, $apiKey), $args);
 }
 
+/** MCP tool: a project's key dates. */
 function mcpToolProjectDates(PDO $conn, array $args, int $analystId, array $apiKey): string
 {
     require_once __DIR__ . '/../projects/assistant.php';

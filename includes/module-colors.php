@@ -48,6 +48,12 @@ $defaultModuleColors = [
     'checklists'    => ['#0d9488', '#0f766e'],
 ];
 
+/**
+ * Every module's colour pair, the built-in defaults overridden by any module_color_* system
+ * setting.
+ *
+ * Cached per request; if the database cannot be read the defaults are returned.
+ */
 function getModuleColors() {
     static $cached = null;
     if ($cached !== null) {

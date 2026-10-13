@@ -6,7 +6,7 @@ The TXT records at `$name` that start with `$prefix` (case-insensitive), e.g. "v
 function domainTxtStartingWith(string $name, string $prefix, string $resolver): array
 ```
 
-Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 133.
+Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 149.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

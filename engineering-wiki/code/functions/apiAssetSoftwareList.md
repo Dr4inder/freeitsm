@@ -1,10 +1,12 @@
 # apiAssetSoftwareList()
 
+GET /assets/{id}/software - the software installed on the asset, by name. System components are left out unless ?include_components=true.
+
 ```php
 function apiAssetSoftwareList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 580.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 605.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 583 | `apiAssetSoftwareList` | read [software_inventory_detail](/code/tables/software_inventory_detail.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 608 | `apiAssetSoftwareList` | read [software_inventory_detail](/code/tables/software_inventory_detail.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
 
 ## Calls
 

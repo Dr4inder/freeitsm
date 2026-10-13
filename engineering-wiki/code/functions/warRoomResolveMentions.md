@@ -25,7 +25,7 @@ snippet of it into their notifications panel.
 function warRoomResolveMentions(PDO $conn, int $channelId, int $authorId, string $body): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 680.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 681.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,18 +1,20 @@
 # dbVerifyPreview()
 
+Works out, without changing anything, what a Database Verification run would do - tables to create, columns to add, drops whose target is present, and data repairs with rows to rewrite.
+
 ```php
 function dbVerifyPreview(PDO $conn, array $schema, string $dbName): array
 ```
 
-Defined in [includes/db_verify_preview.php](/code/files/includes/db_verify_preview.php.md), line 152.
+Defined in [includes/db_verify_preview.php](/code/files/includes/db_verify_preview.php.md), line 157.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
 | `$conn` | `PDO` |  |  |
-| `$schema` | `array` |  |  |
+| `$schema` | `array` |  | the db_verify table => [column => definition] map |
 | `$dbName` | `string` |  |  |
 
-**Returns:** `array`
+**Returns:** array  the four lists plus a summary of counts, and read_only => true
 
 ## Calls
 

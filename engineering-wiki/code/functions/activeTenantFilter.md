@@ -11,7 +11,7 @@ function activeTenantFilter(
 ): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 744.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 750.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

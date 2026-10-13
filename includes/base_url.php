@@ -23,6 +23,7 @@
  */
 
 if (!function_exists('appBaseUrlDetect')) {
+    /** Works out the app's URL path from where it sits under DOCUMENT_ROOT ('/freeitsm-app/', or '/' at the root). */
     function appBaseUrlDetect(): string
     {
         $appRoot = str_replace('\\', '/', (string)realpath(dirname(__DIR__)));

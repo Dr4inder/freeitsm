@@ -1,10 +1,12 @@
 # apiSerializeNmDiagram()
 
+Shapes a diagram row for the API - ids, title, version, is_current, author, dates and counts, plus paper and header/footer branding when `$full`.
+
 ```php
 function apiSerializeNmDiagram(array $r, bool $full): array
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 144.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 155.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

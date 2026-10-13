@@ -6,7 +6,7 @@ Has Database Verification added the two columns? Before it, there are no contrac
 function tasksContractorReady(PDO $conn): bool
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 29.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 31.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 33 | `tasksContractorReady` | read [tasks](/code/tables/tasks.md) |  |
+| 35 | `tasksContractorReady` | read [tasks](/code/tables/tasks.md) |  |
 
 ## Called from
 

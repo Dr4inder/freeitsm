@@ -16,22 +16,22 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/problem-management/delete_problem_priority.php](/code/files/api/problem-management/delete_problem_priority.php.md):19 |  | delete |  |  |
-| [api/problem-management/save_problem_priority.php](/code/files/api/problem-management/save_problem_priority.php.md):20 |  | update | `is_default` |  |
-| [api/problem-management/save_problem_priority.php](/code/files/api/problem-management/save_problem_priority.php.md):22 |  | update | `name`, `colour`, `is_default`, `display_order`, `is_active` |  |
-| [api/problem-management/save_problem_priority.php](/code/files/api/problem-management/save_problem_priority.php.md):27 |  | insert | `name`, `colour`, `is_default`, `display_order`, `is_active` |  |
+| [api/problem-management/delete_problem_priority.php](/code/files/api/problem-management/delete_problem_priority.php.md):28 |  | delete |  |  |
+| [api/problem-management/save_problem_priority.php](/code/files/api/problem-management/save_problem_priority.php.md):34 |  | update | `is_default` |  |
+| [api/problem-management/save_problem_priority.php](/code/files/api/problem-management/save_problem_priority.php.md):36 |  | update | `name`, `colour`, `is_default`, `display_order`, `is_active` |  |
+| [api/problem-management/save_problem_priority.php](/code/files/api/problem-management/save_problem_priority.php.md):41 |  | insert | `name`, `colour`, `is_default`, `display_order`, `is_active` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):2494 |  | insert | `name`, `colour`, `is_default`, `display_order` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/problem-management/delete_problem_priority.php](/code/files/api/problem-management/delete_problem_priority.php.md) | L18 |  |
+| [api/problem-management/delete_problem_priority.php](/code/files/api/problem-management/delete_problem_priority.php.md) | L27 |  |
 | [api/problem-management/get.php](/code/files/api/problem-management/get.php.md) | L22 |  |
-| [api/problem-management/get_problem_priorities.php](/code/files/api/problem-management/get_problem_priorities.php.md) | L10 |  |
+| [api/problem-management/get_problem_priorities.php](/code/files/api/problem-management/get_problem_priorities.php.md) | L16 |  |
 | [api/problem-management/list.php](/code/files/api/problem-management/list.php.md) | L28 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2493 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L37, apiProblemsList L176, apiProblemPrioritiesList L412 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L184, apiProblemPrioritiesList L430 |  |
 | [includes/feature_bingo/cards/problems.php](/code/files/includes/feature_bingo/cards/problems.php.md) | L127 |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L388, ProblemsService::resolvePriority L478, ProblemsService::resolvePriority L481 |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::loadProblem L388, ProblemsService::resolvePriority L480, ProblemsService::resolvePriority L483 |  |
 

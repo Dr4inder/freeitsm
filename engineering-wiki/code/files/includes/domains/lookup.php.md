@@ -1,6 +1,6 @@
 # includes/domains/lookup.php
 
-> PHP - 428 lines
+> PHP - 442 lines
 
 Domains — asking the registry about a domain.
 
@@ -36,18 +36,18 @@ scheduled run) space requests out per server — see `domainLookupPace()`.
 | [domainHttpGet()](/code/functions/domainHttpGet.md) | 41 | One outbound GET. Never throws. |
 | [domainRdapBootstrap()](/code/functions/domainRdapBootstrap.md) | 79 | TLD → RDAP base URL, from IANA's bootstrap file, cached for seven days. A failed refresh keeps using the stale copy — a week-old map of registries is far better than none, and they rarely move. |
 | [domainLookup()](/code/functions/domainLookup.md) | 139 | Look a domain up at its registry. |
-| [domainRdapLookup()](/code/functions/domainRdapLookup.md) | 155 |  |
-| [domainBlankResult()](/code/functions/domainBlankResult.md) | 210 | The result shape every source fills in. |
-| [domainNormaliseStatuses()](/code/functions/domainNormaliseStatuses.md) | 226 | "client transfer prohibited" (RDAP) and "clientTransferProhibited https://icann.org/epp#…" (WHOIS) → "client transfer prohibited". |
-| [domainDeriveFlags()](/code/functions/domainDeriveFlags.md) | 247 | Locks and states the statuses imply. |
-| [domainVcardField()](/code/functions/domainVcardField.md) | 279 |  |
-| [domainLooksRedacted()](/code/functions/domainLooksRedacted.md) | 291 |  |
-| [domainDateOnly()](/code/functions/domainDateOnly.md) | 297 | Any date string → Y-m-d, or null. |
-| [domainWhoisServer()](/code/functions/domainWhoisServer.md) | 313 | The WHOIS server for a TLD, from IANA's referral, cached with the bootstrap. |
-| [domainWhoisQuery()](/code/functions/domainWhoisQuery.md) | 338 | One port-43 query. null when the server could not be reached. |
-| [domainWhoisLookup()](/code/functions/domainWhoisLookup.md) | 355 |  |
-| [domainLookupPace()](/code/functions/domainLookupPace.md) | 407 | Space out requests to one registry. Called between lookups in a batch: the same RDAP/WHOIS host is not asked again within `$gapSeconds`. |
-| [domainTransferLockNotApplicable()](/code/functions/domainTransferLockNotApplicable.md) | 424 | Registries where a registrar "transfer lock" is not how transfers are controlled, so its absence is not a weakness. .uk: Nominet registrar tags. |
+| [domainRdapLookup()](/code/functions/domainRdapLookup.md) | 160 | Looks a domain up at its registry's RDAP server and reads the dates, statuses, locks, registrar, name servers, DNSSEC and registrant into the standard result shape. |
+| [domainBlankResult()](/code/functions/domainBlankResult.md) | 215 | The result shape every source fills in. |
+| [domainNormaliseStatuses()](/code/functions/domainNormaliseStatuses.md) | 231 | "client transfer prohibited" (RDAP) and "clientTransferProhibited https://icann.org/epp#…" (WHOIS) → "client transfer prohibited". |
+| [domainDeriveFlags()](/code/functions/domainDeriveFlags.md) | 252 | Locks and states the statuses imply. |
+| [domainVcardField()](/code/functions/domainVcardField.md) | 285 | Returns one field's value (for example 'fn' or 'org') from an RDAP jCard, or null when absent or empty. |
+| [domainLooksRedacted()](/code/functions/domainLooksRedacted.md) | 300 | True when a registrant value is a privacy placeholder ("REDACTED", "Domains By Proxy", GDPR wording) rather than a real name. |
+| [domainDateOnly()](/code/functions/domainDateOnly.md) | 306 | Any date string → Y-m-d, or null. |
+| [domainWhoisServer()](/code/functions/domainWhoisServer.md) | 322 | The WHOIS server for a TLD, from IANA's referral, cached with the bootstrap. |
+| [domainWhoisQuery()](/code/functions/domainWhoisQuery.md) | 347 | One port-43 query. null when the server could not be reached. |
+| [domainWhoisLookup()](/code/functions/domainWhoisLookup.md) | 369 | Looks a domain up over WHOIS, for registries without RDAP, and reads the dates, statuses, registrar, name servers and DNSSEC from the text reply. |
+| [domainLookupPace()](/code/functions/domainLookupPace.md) | 421 | Space out requests to one registry. Called between lookups in a batch: the same RDAP/WHOIS host is not asked again within `$gapSeconds`. |
+| [domainTransferLockNotApplicable()](/code/functions/domainTransferLockNotApplicable.md) | 438 | Registries where a registrar "transfer lock" is not how transfers are controlled, so its absence is not a weakness. .uk: Nominet registrar tags. |
 
 ## Database
 
@@ -55,8 +55,8 @@ scheduled run) space requests out per server — see `domainLookupPace()`.
 |--:|---|---|---|
 | 86 | `domainRdapBootstrap` | read [system_settings](/code/tables/system_settings.md) |  |
 | 112 | `domainRdapBootstrap` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
-| 320 | `domainWhoisServer` | read [system_settings](/code/tables/system_settings.md) |  |
-| 330 | `domainWhoisServer` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 329 | `domainWhoisServer` | read [system_settings](/code/tables/system_settings.md) |  |
+| 339 | `domainWhoisServer` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## How it hangs together
 

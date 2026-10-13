@@ -1,6 +1,6 @@
 # assets/js/tasks-quick-panel.js
 
-> JavaScript - 177 lines
+> JavaScript - 198 lines
 
 FreeITSM Tasks — Shared right-side quick-look detail panel
 
@@ -26,15 +26,15 @@ only need to load the script, not include duplicate HTML).
 
 | Function | Line | What it does |
 |---|--:|---|
-| `init(config)` | 30 |  |
-| `ensureMarkup()` | 46 |  |
-| `T(k)` | 48 |  |
-| `open(id)` | 63 |  |
-| `close()` | 76 |  |
-| `saveField(field, value)` | 85 |  |
-| `render(task)` | 96 |  |
-| `T(k)` | 98 |  |
-| `esc(text)` | 168 |  |
+| `init(config)` | 34 | Sets the page's panel configuration, injects the panel markup if needed, and wires Escape to close it once. |
+| `ensureMarkup()` | 51 | Adds the quick-look panel and its overlay to the page, unless they are already there. |
+| `T(k)` | 54 | Translates a key under tasks.detail.*. |
+| `open(id)` | 70 | Opens the quick-look panel on a task, showing a loading line until get.php returns it. |
+| `close()` | 87 | Closes the panel and, if a task was open, calls onUpdate so the calendar or timeline shows any edits. |
+| `saveField(field, value)` | 100 | Saves one field of the open task through save.php straight away; a failure is only logged to the console. |
+| `render(task)` | 115 | Fills the panel with the task's editable title, status, priority, assignee, team and dates, plus its tags and a description preview. |
+| `T(k)` | 118 | Translates a key under tasks.detail.*. |
+| `esc(text)` | 189 | HTML-escapes a value through a text node; null and undefined become an empty string. |
 
 ## Loaded by
 

@@ -6,7 +6,7 @@ POST /projects/{id}/stages/{sid}/gate {decision: go|go_with_conditions|stop, not
 function apiProjectStagesGate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 336.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 360.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -28,6 +28,6 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_disks.php](/code/files/api/assets/get_asset_disks.php.md) | L42 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetDisksList L486 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetDisksList L499 |  |
 | [includes/intune.php](/code/files/includes/intune.php.md) | intuneSyncDisks L381 |  |
 

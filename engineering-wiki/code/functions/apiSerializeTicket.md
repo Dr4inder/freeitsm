@@ -1,10 +1,12 @@
 # apiSerializeTicket()
 
+Shapes a ticket row for the API - number, subject, status (with is_closed), priority, type, origin, department, analyst, requester and the rest of the record.
+
 ```php
 function apiSerializeTicket(array $r): array
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 54.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

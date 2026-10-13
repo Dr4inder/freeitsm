@@ -1,10 +1,12 @@
 # awcColumnExists()
 
+True when the table has the column (information_schema), so the sync can wait for Database Verification instead of failing.
+
 ```php
 function awcColumnExists(PDO $conn, string $table, string $col): bool
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 273.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 284.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

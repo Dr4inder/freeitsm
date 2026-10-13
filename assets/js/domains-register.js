@@ -6,6 +6,8 @@
  * instant and the counts beside each view are always the counts of what you
  * would see. The server already removed anything outside the analyst's
  * companies — nothing here hides rows for security, only for convenience.
+ *
+ * @wiki Domains-Developer-Guide
  */
 (function () {
     'use strict';
@@ -56,6 +58,10 @@
 
     document.addEventListener('DOMContentLoaded', init);
 
+    /**
+     * Starts the register: applies ?view=, ?q= and ?account= from the address, loads the domains,
+     * opens Add when ?add=1 is set and fires the no-cron scheduled tick.
+     */
     async function init() {
         const p = new URLSearchParams(location.search);
         if (p.get('view') && VIEWS.some(v => v[0] === p.get('view'))) view = p.get('view');
@@ -67,6 +73,10 @@
         window.Dom.tick();
     }
 
+    /**
+     * Reloads the whole register (with the lookups on the first call), drops selected ids that no longer
+     * exist, and redraws.
+     */
     async function load(withLookups) {
         try {
             const d = await api('list.php' + (withLookups || !L.statuses ? '?with_lookups=1' : ''));
@@ -81,6 +91,10 @@
         }
     }
 
+    /**
+     * Fills every filter and form drop-down from the lookups - the sidebar filters, Add, Add many, Import
+     * and Bulk edit - and shows the company pickers only when the analyst works across several companies.
+     */
     function fillLookups() {
         const F = window.Dom.fillSelect;
         const purposes = (L.purposes || []).map(p => ({ id: p, name: purpose(p) }));
@@ -112,8 +126,10 @@
     }
 
     // ---- filtering + rendering --------------------------------------------------
+    /** Returns the rows that pass the current view, account filter, search box and sidebar filters. */
     function filtered() {
         const q = document.getElementById('domSearch').value.trim().toLowerCase();
+        /** Reads the value of a filter control by id. */
         const v = (id) => document.getElementById(id).value;
         const fn = VIEWS.find(x => x[0] === view)[1];
         return rows.filter(r => {
@@ -132,11 +148,13 @@
             return true;
         });
     }
+    /** Returns the id of the Default company, which a domain with no company belongs to for the company filter. */
     function defaultCompanyId() {
         const d = (L.companies || []).find(c => c.is_default);
         return d ? d.id : '';
     }
 
+    /** Redraws the views, stats, table head and sorted body, the row count and the select-all box. */
     function render() {
         renderViews();
         renderStats();
@@ -167,6 +185,7 @@
         renderSelBar();
     }
 
+    /** Draws the sidebar view buttons with their counts, flagging alert views that have anything in them. */
     function renderViews() {
         document.getElementById('domViews').innerHTML = VIEWS.map(([k, fn]) => {
             const n = rows.filter(fn).length;
@@ -176,7 +195,12 @@
         }).join('');
     }
 
+    /**
+     * Draws the clickable stat tiles (total, attention, expiring, expired, unlocked) and the annual cost
+     * when any domain has one.
+     */
     function renderStats() {
+        /** Counts the rows that match a test. */
         const c = fn => rows.filter(fn).length;
         const cost = rows.reduce((s, r) => s + (r.annual_cost || 0), 0);
         const cur = (rows.find(r => r.currency) || {}).currency || null;
@@ -192,6 +216,7 @@
         document.getElementById('domStats').innerHTML = html;
     }
 
+    /** Shows or hides the selection bar and updates its count. */
     function renderSelBar() {
         const bar = document.getElementById('domSelBar');
         bar.classList.toggle('show', selected.size > 0);
@@ -199,6 +224,10 @@
     }
 
     // ---- events -----------------------------------------------------------------
+    /**
+     * Wires the register's controls once: search, filters, views, stats, sorting, row selection and clicks,
+     * the right-click menu, and the Add, Add many, Import and bulk buttons.
+     */
     function wire() {
         document.getElementById('domSearch').addEventListener('input', render);
         ['fStatus', 'fPurpose', 'fOwner', 'fRegistrar', 'fTag', 'fCompany'].forEach(id => document.getElementById(id).addEventListener('change', render));
@@ -253,6 +282,7 @@
     }
 
     // ---- add one ------------------------------------------------------------------
+    /** Clears and opens the Add domain dialog, focusing the name box. */
     function openAdd() {
         document.getElementById('aName').value = '';
         document.getElementById('aTags').value = '';
@@ -260,6 +290,9 @@
         setTimeout(() => document.getElementById('aName').focus(), 80);
     }
 
+    /**
+     * Saves one new domain (the server looks it up as it saves) and opens its page, warning when the lookup failed.
+     */
     async function saveAdd() {
         const btn = document.getElementById('aSave');
         const name = document.getElementById('aName').value.trim();
@@ -286,6 +319,7 @@
     }
 
     // ---- add many -----------------------------------------------------------------
+    /** Resets and opens the Add many dialog. */
     function openMany() {
         document.getElementById('mText').value = '';
         document.getElementById('manyForm').style.display = '';
@@ -295,6 +329,10 @@
         setTimeout(() => document.getElementById('mText').focus(), 80);
     }
 
+    /**
+     * Sends the pasted list to bulk_add.php with the chosen defaults, then shows what was added and skipped
+     * and looks the new domains up in batches.
+     */
     async function saveMany() {
         const text = document.getElementById('mText').value;
         if (!text.trim()) { showToast(T('many.need_text'), 'error'); return; }
@@ -348,6 +386,7 @@
             holder = toast;
         }
         let done = 0, failed = 0;
+        /** Redraws the progress line and bar. */
         const draw = () => {
             holder.innerHTML = '<div style="font-size:13px">' + esc(label) + ' ' + done + ' / ' + ids.length + (failed ? ' · ' + esc(T('progress.failed', { n: failed })) : '') + '</div>'
                 + '<div class="dom-progress"><div style="width:' + Math.round(done / ids.length * 100) + '%"></div></div>';
@@ -387,6 +426,7 @@
     ];
     let csv = { head: [], rows: [] };
 
+    /** Resets the CSV import dialog to its first step and opens it. */
     function openImport() {
         document.getElementById('impFile').value = '';
         document.getElementById('impStep1').style.display = '';
@@ -422,6 +462,7 @@
         return out;
     }
 
+    /** Reads the chosen CSV file, splits it into a header and rows, and moves on to column mapping. */
     function readCsv() {
         const f = document.getElementById('impFile').files[0];
         if (!f) return;
@@ -435,6 +476,10 @@
         reader.readAsText(f);
     }
 
+    /**
+     * Draws a column picker for each import field, pre-choosing a column whose header matches a known name,
+     * and a preview of the first five rows.
+     */
     function drawMapping() {
         const opts = '<option value="">' + esc(T('import.ignore')) + '</option>' + csv.head.map((h, i) => '<option value="' + i + '">' + esc(h || ('#' + (i + 1))) + '</option>').join('');
         document.getElementById('impMap').innerHTML = IMPORT_FIELDS.map(([key, guesses]) => {
@@ -451,6 +496,10 @@
         document.getElementById('impGo').style.display = '';
     }
 
+    /**
+     * Builds one object per CSV row from the chosen mapping, sends them to bulk_add.php, then shows the result
+     * and looks the new domains up. Needs the domain column mapped.
+     */
     async function runImport() {
         const map = {};
         document.querySelectorAll('#impMap select').forEach(s => { if (s.value !== '') map[s.dataset.field] = parseInt(s.value, 10); });
@@ -475,8 +524,14 @@
     }
 
     // ---- bulk edit + delete ---------------------------------------------------------
+    /**
+     * Applies the Bulk edit fields that were changed to every selected domain through bulk_update.php.
+     *
+     * Owner "0" clears the owner; a blank field is left as it is.
+     */
     async function saveBulk() {
         const fields = {};
+        /** Adds a field to the update when its control is not blank. */
         const put = (id, key) => { const v = document.getElementById(id).value; if (v !== '') fields[key] = v; };
         put('bStatus', 'status_id'); put('bPurpose', 'purpose'); put('bRenewal', 'renewal_mode'); put('bRegistrar', 'registrar_supplier_id'); put('bMonitoring', 'monitoring_enabled');
         const o = document.getElementById('bOwner').value;
@@ -491,6 +546,7 @@
         } catch (e) { showToast(e.message, 'error'); }
     }
 
+    /** Deletes every selected domain after a confirm, then clears the selection and reloads. */
     async function bulkDelete() {
         const ok = await showConfirm({ title: T('bulk.delete_title'), message: T('bulk.delete_body', { n: selected.size }), okLabel: T('bulk.delete_ok'), okClass: 'danger' });
         if (!ok) return;
@@ -521,8 +577,10 @@
         copy: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
         trash: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/>',
     };
+    /** Wraps one of the menu's icon paths in an SVG. */
     const svg = k => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICON[k] + '</svg>';
 
+    /** Returns the right-click menu element, creating it and its click handler the first time. */
     function ctxMenu() {
         let m = document.getElementById('domCtx');
         if (m) return m;
@@ -536,21 +594,28 @@
         return m;
     }
 
+    /** Builds one right-click menu item for an action. */
     function item(action, icon, label, extra) {
         return '<button type="button" class="dom-ctx-item' + (extra || '') + '" role="menuitem" data-ctx="' + action + '">' + svg(icon) + '<span class="dom-ctx-label">' + esc(label) + '</span></button>';
     }
 
+    /** Builds a menu row that flies out a submenu of options. */
     function sub(label, icon, opts) {
         return '<div class="dom-ctx-parent" role="none"><button type="button" class="dom-ctx-item" role="menuitem" aria-haspopup="true">' + svg(icon)
             + '<span class="dom-ctx-label">' + esc(label) + '</span><span class="dom-ctx-arrow">&rsaquo;</span></button><div class="dom-ctx-sub" role="menu">' + opts + '</div></div>';
     }
 
+    /** Builds one submenu choice that sets a field to a value, ticked when it is the current value. */
     function opt(field, value, label, current, swatch) {
         return '<button type="button" class="dom-ctx-item' + (current ? ' current' : '') + '" role="menuitemradio" aria-checked="' + (current ? 'true' : 'false') + '" data-field="' + field + '" data-value="' + esc(value) + '">'
             + (swatch ? '<span class="dom-ctx-swatch" style="background:' + esc(swatch) + '"></span>' : '') + '<span class="dom-ctx-label">' + esc(label) + '</span>'
             + (current ? '<span class="dom-ctx-check">✓</span>' : '') + '</button>';
     }
 
+    /**
+     * Opens the right-click menu for a domain at the pointer, kept on screen, with submenus flipped near
+     * the right or bottom edge.
+     */
     function openCtx(e, id) {
         const r = rows.find(x => x.id === id);
         if (!r) return;
@@ -582,12 +647,17 @@
         if (first) first.focus({ preventScroll: true });
     }
 
+    /** Hides the right-click menu and forgets which domain it was for. */
     function closeCtx() {
         const m = document.getElementById('domCtx');
         if (m) m.hidden = true;
         ctxId = null;
     }
 
+    /**
+     * Carries out the right-click menu choice: a status or owner change, open, edit, connections, visit,
+     * copy, assign to me, refresh, check or delete - through the same endpoints the domain's page uses.
+     */
     async function onCtxClick(e) {
         const b = e.target.closest('.dom-ctx-item');
         if (!b || ctxId === null) return;
@@ -641,6 +711,10 @@
         } catch (err) { showToast(err.message, 'error'); }
     }
 
+    /**
+     * Wires the right-click menu: opening it on a row, closing it on an outside click, Escape, scroll or
+     * resize, and arrow-key movement in and out of submenus.
+     */
     function wireCtx() {
         document.getElementById('domBody').addEventListener('contextmenu', e => {
             const tr = e.target.closest('tr[data-id]');

@@ -1,6 +1,6 @@
 # includes/report_packs/criteria.php
 
-> PHP - 139 lines
+> PHP - 140 lines
 
 Report Packs: what a pack is ABOUT - its date range and its company.
 
@@ -19,9 +19,9 @@ day near midnight lands in the month the reader would expect.
 | Function | Line | What it does |
 |---|--:|---|
 | [rpResolveRange()](/code/functions/rpResolveRange.md) | 33 | Resolve a pack's range into local dates (for display) and UTC bounds (for SQL). The end is EXCLUSIVE: [from, to). A custom range is inclusive of both days the reader picked, so its end is the day after. |
-| [rpParseDate()](/code/functions/rpParseDate.md) | 84 |  |
-| [rpTenantClause()](/code/functions/rpTenantClause.md) | 105 | The company a pack reports on, as a WHERE fragment for `$qualified`. |
-| [rpTenantLabel()](/code/functions/rpTenantLabel.md) | 129 | The company's name for the header field {{company}}. |
+| [rpParseDate()](/code/functions/rpParseDate.md) | 85 | Parses a YYYY-MM-DD string as midnight in the given timezone; null when it is not a valid date. |
+| [rpTenantClause()](/code/functions/rpTenantClause.md) | 106 | The company a pack reports on, as a WHERE fragment for `$qualified`. |
+| [rpTenantLabel()](/code/functions/rpTenantLabel.md) | 130 | The company's name for the header field {{company}}. |
 
 ## How it hangs together
 

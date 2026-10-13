@@ -39,12 +39,12 @@
 | [api/problem-management/list_linkable_changes.php](/code/files/api/problem-management/list_linkable_changes.php.md) | L32 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2447 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L220 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L48, apiChangesList L239 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L227 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53, apiChangesList L248 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L235 |  |
 | [includes/feature_bingo/cards/changes.php](/code/files/includes/feature_bingo/cards/changes.php.md) | L43 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L172, projectUnapprovedChanges L444 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L176, projectUnapprovedChanges L461 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewChange L215 |  |
 | [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::voteCab L551, ChangesService::voteCab L558, ChangesService::loadJoined L707 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolRecentChanges L467 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolRecentChanges L479 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L288, getWatchtowerData L312, getWatchtowerData L325, getWatchtowerData L346, getWatchtowerData L373 |  |
 

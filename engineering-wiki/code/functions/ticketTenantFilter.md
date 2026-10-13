@@ -1,5 +1,10 @@
 # ticketTenantFilter()
 
+Builds the SQL fragment that scopes ticket rows to the analyst's active company, or to every company they may see when the consolidated view is on.
+
+Returns ['', []] when multi-tenancy is dormant; the Default company also owns
+tickets with a NULL tenant_id.
+
 ```php
 function ticketTenantFilter(
     PDO $conn,
@@ -9,7 +14,7 @@ function ticketTenantFilter(
 ): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 710.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 716.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

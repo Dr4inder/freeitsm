@@ -6,7 +6,7 @@ The five default words for a scale ('probability' or 'impact') in the viewer's l
 function projectScaleDefaults(string $scale): array
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 342.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 344.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

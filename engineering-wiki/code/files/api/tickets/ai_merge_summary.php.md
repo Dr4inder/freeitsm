@@ -1,6 +1,6 @@
 # api/tickets/ai_merge_summary.php
 
-> API endpoint - 218 lines
+> API endpoint - 222 lines
 
 API: Tickets — AI merge summary (streaming).
 
@@ -41,15 +41,15 @@ a fourth provider block to configure — one AI key for the Tickets module.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sse_send()](/code/functions/sse_send.md) | 53 |  |
+| [sse_send()](/code/functions/sse_send.md) | 57 | Sends one server-sent event (an event name and a JSON data line) and flushes it to the browser straight away. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 99 |  | read [emails](/code/tables/emails.md) |  |
-| 110 |  | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
-| 126 |  | read [ticket_merges](/code/tables/ticket_merges.md) |  |
+| 103 |  | read [emails](/code/tables/emails.md) |  |
+| 114 |  | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
+| 130 |  | read [ticket_merges](/code/tables/ticket_merges.md) |  |
 
 ## How it hangs together
 

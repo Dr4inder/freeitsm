@@ -1,10 +1,12 @@
 # apiKnowledgeArticlesPurge()
 
+DELETE /knowledge/articles/{id}/permanent - permanently deletes an archived article through KnowledgeService.
+
 ```php
 function apiKnowledgeArticlesPurge(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 329.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 339.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

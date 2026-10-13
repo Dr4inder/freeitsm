@@ -1,10 +1,12 @@
 # rpNum()
 
+A number clamped between `$min` and `$max`, or `$default` when the value is not numeric.
+
 ```php
 function rpNum($v, float $min, float $max, float $default): float
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 86.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

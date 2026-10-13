@@ -20,7 +20,7 @@ function activeTenantReadFilter(
 ): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 801.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 807.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

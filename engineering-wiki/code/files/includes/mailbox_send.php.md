@@ -1,6 +1,6 @@
 # includes/mailbox_send.php
 
-> PHP - 52 lines
+> PHP - 58 lines
 
 Send one email FROM a ticket mailbox, through whatever that mailbox uses (Microsoft Graph, Gmail, or IMAP/SMTP), and record it in the send log.
 
@@ -16,7 +16,7 @@ Never throws. Returns null on success, or the reason it could not send.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [mailboxSendSimple()](/code/functions/mailboxSendSimple.md) | 17 |  |
+| [mailboxSendSimple()](/code/functions/mailboxSendSimple.md) | 23 | Sends one HTML email from a mailbox through its own provider (IMAP/SMTP, Gmail or Microsoft Graph) and logs it. |
 
 ## How it hangs together
 

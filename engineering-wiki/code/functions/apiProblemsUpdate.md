@@ -6,7 +6,7 @@ PATCH /problems/{id}
 function apiProblemsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 281.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 289.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

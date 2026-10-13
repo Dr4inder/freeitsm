@@ -1,10 +1,12 @@
 # domainHasCap()
 
+True when the analyst holds the capability; false on any error.
+
 ```php
 function domainHasCap(PDO $conn, int $analystId, string $cap): bool
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 61.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 65.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

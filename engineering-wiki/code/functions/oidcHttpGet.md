@@ -1,10 +1,12 @@
 # oidcHttpGet()
 
+GETs a JSON document (discovery, keys) and returns the body; throws on a network error or any status but 200.
+
 ```php
 function oidcHttpGet(string $url): string
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 206.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 210.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

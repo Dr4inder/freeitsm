@@ -1,10 +1,12 @@
 # filesSetting()
 
+Reads a Files setting from system_settings, cached per request; blank or missing gives `$default`.
+
 ```php
 function filesSetting(PDO $conn, string $key, string $default = ''): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 24.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 25.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 28 | `filesSetting` | read [system_settings](/code/tables/system_settings.md) |  |
+| 29 | `filesSetting` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

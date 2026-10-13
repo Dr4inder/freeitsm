@@ -21,13 +21,13 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [cron/sla_breach_check.php](/code/files/cron/sla_breach_check.php.md):48 | `sla_cron_log_start` | insert | `started_at`, `invocation`, `client_ip`, `outcome` |  |
-| [cron/sla_breach_check.php](/code/files/cron/sla_breach_check.php.md):59 | `sla_cron_log_finish` | update | `ended_at`, `duration_ms`, `outcome`, `sent_count`, `skipped_count`, `error_count`, `notes` |  |
-| [cron/sla_breach_check.php](/code/files/cron/sla_breach_check.php.md):175 |  | delete |  |  |
+| [cron/sla_breach_check.php](/code/files/cron/sla_breach_check.php.md):63 | `sla_cron_log_finish` | update | `ended_at`, `duration_ms`, `outcome`, `sent_count`, `skipped_count`, `error_count`, `notes` |  |
+| [cron/sla_breach_check.php](/code/files/cron/sla_breach_check.php.md):179 |  | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/tickets/get_sla_cron_runs.php](/code/files/api/tickets/get_sla_cron_runs.php.md) | L27 |  |
-| [cron/sla_breach_check.php](/code/files/cron/sla_breach_check.php.md) | L100, L137 |  |
+| [cron/sla_breach_check.php](/code/files/cron/sla_breach_check.php.md) | L104, L141 |  |
 

@@ -1,6 +1,6 @@
 # includes/catalogue_approvals.php
 
-> PHP - 606 lines
+> PHP - 607 lines
 
 Catalogue-request approvals (#928).
 
@@ -39,7 +39,7 @@ person who was told "your manager will approve this" stays the one who can.
 | [catalogueSubmissionBodyHtml()](/code/functions/catalogueSubmissionBodyHtml.md) | 501 | The submitted answers as a safe (fully-escaped) HTML summary for the ticket body. |
 | [catalogueApprovalsList()](/code/functions/catalogueApprovalsList.md) | 538 | The approver's inbox list. |
 | [catalogueSubmissionAnswers()](/code/functions/catalogueSubmissionAnswers.md) | 585 | label + value pairs for one submission (checkboxes flattened). |
-| [catalogueScalar()](/code/functions/catalogueScalar.md) | 601 |  |
+| [catalogueScalar()](/code/functions/catalogueScalar.md) | 602 | Runs a prepared query and returns its first column of the first row (false when there is no row). |
 
 ## Database
 

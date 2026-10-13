@@ -26,19 +26,19 @@
 | [deleteSet()](#deleteset) | Retire a set. Soft delete, and its attachments go with it. |
 | [setSetFields()](#setsetfields) | Replace the field list of a set. |
 | [setTypeSets()](#settypesets) | Replace which sets are attached to an asset type. |
-| [assertType()](#asserttype) |  |
+| [assertType()](#asserttype) | Validates a custom field type; a link field must also name a valid ref_kind. |
 | [makeKey()](#makekey) | A stable machine key from a label: lowercase, underscores, no leading digit. |
 | [assertKeyFree()](#assertkeyfree) | ⚠️ Application-level uniqueness, because the UNIQUE index cannot do it: MySQL treats NULLs as distinct, so two GLOBAL fields could both claim `serial_number` while the index looked like it was guarding them. Exactly the trap documented on assets.asset_tag. |
 | [configTenantForCreate()](#configtenantforcreate) | Which company a new catalogue row belongs to. NULL = a global default. |
-| [saveOptions()](#saveoptions) |  |
-| [fieldHasValues()](#fieldhasvalues) |  |
-| [loadField()](#loadfield) |  |
-| [nullIfBlank()](#nullifblank) |  |
+| [saveOptions()](#saveoptions) | Replaces a dropdown field's option list, skipping blanks and duplicates; a field that is not a dropdown loses its options. |
+| [fieldHasValues()](#fieldhasvalues) | True when any asset has a value stored for the field. |
+| [loadField()](#loadfield) | Loads one custom field that has not been deleted; throws not found otherwise. |
+| [nullIfBlank()](#nullifblank) | Trimmed text, or null when blank. |
 | [catalogue()](#catalogue) | Every field in the catalogue visible to this company (global + own). |
 | [sets()](#sets) | Every field set visible to this company (global + own). |
-| [loadAsset()](#loadasset) |  |
-| [loadSet()](#loadset) |  |
-| [tenantOfAsset()](#tenantofasset) |  |
+| [loadAsset()](#loadasset) | Loads an asset's id, type and company; throws not found when it does not exist. |
+| [loadSet()](#loadset) | Loads one field set that has not been deleted; throws not found otherwise. |
+| [tenantOfAsset()](#tenantofasset) | The company id of an asset, or null. |
 
 ### valueSchema
 
@@ -548,7 +548,9 @@ function setTypeSets(PDO $conn, int $assetTypeId, array $setIds): void
 
 ### assertType
 
-*private static* - line 658
+*private static* - line 659
+
+Validates a custom field type; a link field must also name a valid ref_kind.
 
 ```php
 function assertType(string $type, array $config): string
@@ -561,7 +563,7 @@ function assertType(string $type, array $config): string
 
 ### makeKey
 
-*private static* - line 675
+*private static* - line 676
 
 A stable machine key from a label: lowercase, underscores, no leading digit.
 
@@ -576,7 +578,7 @@ function makeKey(PDO $conn, string $seed): string
 
 ### assertKeyFree
 
-*private static* - line 692
+*private static* - line 693
 
 ⚠️ Application-level uniqueness, because the UNIQUE index cannot do it: MySQL treats NULLs as distinct, so two GLOBAL fields could both claim `serial_number` while the index looked like it was guarding them. Exactly the trap documented on assets.asset_tag.
 
@@ -594,12 +596,12 @@ function assertKeyFree(PDO $conn, string $key, ?int $tenantId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 695 | `AssetFieldsService::assertKeyFree` | read [asset_fields](/code/tables/asset_fields.md) |  |
-| 699 | `AssetFieldsService::assertKeyFree` | read [asset_fields](/code/tables/asset_fields.md) |  |
+| 696 | `AssetFieldsService::assertKeyFree` | read [asset_fields](/code/tables/asset_fields.md) |  |
+| 700 | `AssetFieldsService::assertKeyFree` | read [asset_fields](/code/tables/asset_fields.md) |  |
 
 ### configTenantForCreate
 
-*private static* - line 710
+*private static* - line 711
 
 Which company a new catalogue row belongs to. NULL = a global default.
 
@@ -614,7 +616,11 @@ function configTenantForCreate(PDO $conn, ActorContext $ctx): ?int
 
 ### saveOptions
 
-*private static* - line 722
+*private static* - line 729
+
+Replaces a dropdown field's option list, skipping blanks and duplicates; a field that is not a dropdown loses its options.
+
+Leaves the list alone when no options were sent.
 
 ```php
 function saveOptions(PDO $conn, int $fieldId, string $type, $options): void
@@ -631,13 +637,15 @@ function saveOptions(PDO $conn, int $fieldId, string $type, $options): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 730 | `AssetFieldsService::saveOptions` | **delete** [asset_field_options](/code/tables/asset_field_options.md) |  |
-| 733 | `AssetFieldsService::saveOptions` | **delete** [asset_field_options](/code/tables/asset_field_options.md) |  |
-| 735 | `AssetFieldsService::saveOptions` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `colour`, `display_order`) |  |
+| 737 | `AssetFieldsService::saveOptions` | **delete** [asset_field_options](/code/tables/asset_field_options.md) |  |
+| 740 | `AssetFieldsService::saveOptions` | **delete** [asset_field_options](/code/tables/asset_field_options.md) |  |
+| 742 | `AssetFieldsService::saveOptions` | **insert** [asset_field_options](/code/tables/asset_field_options.md) (`field_id`, `option_value`, `colour`, `display_order`) |  |
 
 ### fieldHasValues
 
-*private static* - line 749
+*private static* - line 757
+
+True when any asset has a value stored for the field.
 
 ```php
 function fieldHasValues(PDO $conn, int $fieldId): bool
@@ -652,11 +660,13 @@ function fieldHasValues(PDO $conn, int $fieldId): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 751 | `AssetFieldsService::fieldHasValues` | read [asset_field_values](/code/tables/asset_field_values.md) |  |
+| 759 | `AssetFieldsService::fieldHasValues` | read [asset_field_values](/code/tables/asset_field_values.md) |  |
 
 ### loadField
 
-*private static* - line 756
+*private static* - line 765
+
+Loads one custom field that has not been deleted; throws not found otherwise.
 
 ```php
 function loadField(PDO $conn, int $id): array
@@ -671,11 +681,13 @@ function loadField(PDO $conn, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 758 | `AssetFieldsService::loadField` | read [asset_fields](/code/tables/asset_fields.md) |  |
+| 767 | `AssetFieldsService::loadField` | read [asset_fields](/code/tables/asset_fields.md) |  |
 
 ### nullIfBlank
 
-*private static* - line 767
+*private static* - line 777
+
+Trimmed text, or null when blank.
 
 ```php
 function nullIfBlank($v): ?string
@@ -687,7 +699,7 @@ function nullIfBlank($v): ?string
 
 ### catalogue
 
-*public static* - line 778
+*public static* - line 788
 
 Every field in the catalogue visible to this company (global + own).
 
@@ -704,7 +716,7 @@ function catalogue(PDO $conn, int $analystId): array
 
 ### sets
 
-*public static* - line 796
+*public static* - line 806
 
 Every field set visible to this company (global + own).
 
@@ -721,7 +733,9 @@ function sets(PDO $conn, int $analystId): array
 
 ### loadAsset
 
-*private static* - line 813
+*private static* - line 824
+
+Loads an asset's id, type and company; throws not found when it does not exist.
 
 ```php
 function loadAsset(PDO $conn, int $assetId): array
@@ -736,11 +750,13 @@ function loadAsset(PDO $conn, int $assetId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 815 | `AssetFieldsService::loadAsset` | read [assets](/code/tables/assets.md) |  |
+| 826 | `AssetFieldsService::loadAsset` | read [assets](/code/tables/assets.md) |  |
 
 ### loadSet
 
-*private static* - line 824
+*private static* - line 836
+
+Loads one field set that has not been deleted; throws not found otherwise.
 
 ```php
 function loadSet(PDO $conn, int $setId): array
@@ -755,11 +771,13 @@ function loadSet(PDO $conn, int $setId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 826 | `AssetFieldsService::loadSet` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 838 | `AssetFieldsService::loadSet` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
 
 ### tenantOfAsset
 
-*private static* - line 835
+*private static* - line 848
+
+The company id of an asset, or null.
 
 ```php
 function tenantOfAsset(PDO $conn, int $assetId): ?int
@@ -774,5 +792,5 @@ function tenantOfAsset(PDO $conn, int $assetId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 837 | `AssetFieldsService::tenantOfAsset` | read [assets](/code/tables/assets.md) |  |
+| 850 | `AssetFieldsService::tenantOfAsset` | read [assets](/code/tables/assets.md) |  |
 

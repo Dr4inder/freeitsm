@@ -1,5 +1,7 @@
 # redact_row()
 
+Replaces the personal values in a row (names, email, username, password hash, MFA secret) with "[redacted N chars]", so the report can be shared.
+
 ```php
 function redact_row(
     $row,
@@ -7,7 +9,7 @@ function redact_row(
 )
 ```
 
-Defined in [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md), line 33.
+Defined in [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md), line 46.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

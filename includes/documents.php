@@ -333,11 +333,16 @@ function documentEntityRegistry(): array {
     return $reg;
 }
 
-/** @return string[] Entity types this build knows about. */
+/**
+ * Returns the keys of every record type documents can be attached to.
+ *
+ * @return string[] Entity types this build knows about.
+ */
 function documentEntityTypes(): array {
     return array_keys(documentEntityRegistry());
 }
 
+/** Returns one record type's registry entry (label, URL, title column, access checks), or null when unknown. */
 function documentEntityDef(string $type): ?array {
     $reg = documentEntityRegistry();
     return $reg[$type] ?? null;

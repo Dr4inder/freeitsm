@@ -26,7 +26,7 @@
 |---|---|---|
 | [api/problem-management/get.php](/code/files/api/problem-management/get.php.md) | L51 |  |
 | [api/problem-management/list_linkable_changes.php](/code/files/api/problem-management/list_linkable_changes.php.md) | L24 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L301 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L227 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangesGet L310 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L235 |  |
 | [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::linkChange L344 |  |
 

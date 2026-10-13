@@ -6,7 +6,7 @@ Contracts where the person / the company is the CUSTOMER (#153 step 1).
 function peopleContracts(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 375.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 376.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 375.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 390 | `peopleContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
+| 391 | `peopleContracts` | read [contracts](/code/tables/contracts.md), read [contract_statuses](/code/tables/contract_statuses.md) |  |
 
 ## Calls
 

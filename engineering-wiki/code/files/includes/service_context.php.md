@@ -1,23 +1,35 @@
 # includes/service_context.php
 
-> PHP - 152 lines
+> PHP - 161 lines
+
+Service-layer shared primitives.
+
+The service layer holds a module's business rules ONCE; the UI and the REST
+API are thin adapters over it (see docs/design/service-layer.md). Auth differs
+between them (session vs API key) but the rules must not — so each adapter
+distils its caller into a normalised ActorContext and hands that to the
+service. The service never sees a session, an API key, or any superglobal.
+
+Services report failure by throwing ServiceError (never by emitting HTTP);
+the adapter maps it to its own response — the API to an HTTP status + code,
+the UI to {success:false,error}.
 
 ## Functions
 
 | Function | Line | What it does |
 |---|--:|---|
-| [serviceErrorHttpStatus()](/code/functions/serviceErrorHttpStatus.md) | 141 | Map a ServiceError kind to the HTTP status the API adapter should return. |
+| [serviceErrorHttpStatus()](/code/functions/serviceErrorHttpStatus.md) | 150 | Map a ServiceError kind to the HTTP status the API adapter should return. |
 
 ## Classes
 
 - [ActorContext](/code/classes/ActorContext.md) (class, line 20) - Who is acting, and what they may see — the only auth-derived facts a service needs. Both adapters produce the same shape from their own transport.
-- [ServiceError](/code/classes/ServiceError.md) (class, line 125) - A business-rule failure raised by a service. `$kind` drives the HTTP status the API adapter emits; `$code` + the message are passed through verbatim so the API's existing error bodies stay byte-identical.
+- [ServiceError](/code/classes/ServiceError.md) (class, line 130) - A business-rule failure raised by a service. `$kind` drives the HTTP status the API adapter emits; `$code` + the message are passed through verbatim so the API's existing error bodies stay byte-identical.
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 110 | `ActorContext::sessionCompanyScope` | read [analysts](/code/tables/analysts.md) |  |
+| 115 | `ActorContext::sessionCompanyScope` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

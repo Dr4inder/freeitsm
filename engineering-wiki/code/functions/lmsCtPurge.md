@@ -6,7 +6,7 @@ Retention: candidates' details are personal data. A sitting that is over - submi
 function lmsCtPurge(PDO $conn, array $settings, bool $force = false): int
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 363.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 366.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 369 | `lmsCtPurge` | **delete** [lms_ct_sittings](/code/tables/lms_ct_sittings.md) |  |
+| 372 | `lmsCtPurge` | **delete** [lms_ct_sittings](/code/tables/lms_ct_sittings.md) |  |
 
 ## Calls
 

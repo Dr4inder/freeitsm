@@ -1,6 +1,6 @@
 # includes/service_status_planned.php
 
-> PHP - 307 lines
+> PHP - 321 lines
 
 Service Status - planned maintenance (3.2.0).
 
@@ -51,14 +51,14 @@ history says who planned the work rather than "System".
 | [statusPlannedUtc()](/code/functions/statusPlannedUtc.md) | 62 | 'Y-m-d H:i:s' UTC from anything `strtotime()` reads as UTC (the page sends ISO from `inputToUTC()`). |
 | [statusPlannedSave()](/code/functions/statusPlannedSave.md) | 76 | Schedule (no id) or change (id, while still scheduled) planned maintenance. `$in`: title, comment, start, end?, services [{service_id, impact_level_id}], project_id?. A start that has already passed starts it at once. Returns the id. |
 | [statusPlannedCancel()](/code/functions/statusPlannedCancel.md) | 120 | Cancel planned maintenance that has not started. |
-| [statusPlannedLoad()](/code/functions/statusPlannedLoad.md) | 127 |  |
-| [statusPlannedList()](/code/functions/statusPlannedList.md) | 140 | Planned maintenance for a list: scheduled and in progress by default, soonest first, each with its services. `$opts`: project_id, states, limit. |
-| [statusPlannedDue()](/code/functions/statusPlannedDue.md) | 182 | Is anything due to start or end? One indexed query - cheap enough for every page load. |
-| [statusPlannedRun()](/code/functions/statusPlannedRun.md) | 200 | Start what is due and finish what has ended. `$onlyId` = one plan (just saved). |
-| [statusPlannedActor()](/code/functions/statusPlannedActor.md) | 239 | The person who scheduled it, as the actor of the incident's history. |
-| [statusPlannedStatusId()](/code/functions/statusPlannedStatusId.md) | 256 | The status a started maintenance incident takes: the first open status that is not the starting one ("Identified" on a stock install). "Investigating" would say nobody knows what is happening - the opposite of planned work. |
-| [statusPlannedStart()](/code/functions/statusPlannedStart.md) | 263 |  |
-| [statusPlannedFinish()](/code/functions/statusPlannedFinish.md) | 284 |  |
+| [statusPlannedLoad()](/code/functions/statusPlannedLoad.md) | 128 | Loads one planned maintenance row; throws not found when it does not exist. |
+| [statusPlannedList()](/code/functions/statusPlannedList.md) | 141 | Planned maintenance for a list: scheduled and in progress by default, soonest first, each with its services. `$opts`: project_id, states, limit. |
+| [statusPlannedDue()](/code/functions/statusPlannedDue.md) | 183 | Is anything due to start or end? One indexed query - cheap enough for every page load. |
+| [statusPlannedRun()](/code/functions/statusPlannedRun.md) | 201 | Start what is due and finish what has ended. `$onlyId` = one plan (just saved). |
+| [statusPlannedActor()](/code/functions/statusPlannedActor.md) | 240 | The person who scheduled it, as the actor of the incident's history. |
+| [statusPlannedStatusId()](/code/functions/statusPlannedStatusId.md) | 257 | The status a started maintenance incident takes: the first open status that is not the starting one ("Identified" on a stock install). "Investigating" would say nobody knows what is happening - the opposite of planned work. |
+| [statusPlannedStart()](/code/functions/statusPlannedStart.md) | 271 | Starts a planned maintenance: opens an external incident on its services and backdates it to the planned start. |
+| [statusPlannedFinish()](/code/functions/statusPlannedFinish.md) | 298 | Finishes a planned maintenance: resolves its incident with the first resolved status and backdates the end to the planned end. |
 
 ## Database
 
@@ -71,27 +71,27 @@ history says who planned the work rather than "System".
 | 102 | `statusPlannedSave` | **insert** [status_planned](/code/tables/status_planned.md) (`title`, `comment`, `planned_start_datetime`, `planned_end_datetime`, `state`, `project_id`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 | 107 | `statusPlannedSave` | **insert** [status_planned_services](/code/tables/status_planned_services.md) (`planned_id`, `service_id`, `impact_level_id`) |  |
 | 124 | `statusPlannedCancel` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
-| 129 | `statusPlannedLoad` | read [status_planned](/code/tables/status_planned.md) |  |
-| 148 | `statusPlannedList` | read [status_planned](/code/tables/status_planned.md), read [analysts](/code/tables/analysts.md), read [projects](/code/tables/projects.md) |  |
-| 159 | `statusPlannedList` | read [status_planned_services](/code/tables/status_planned_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 186 | `statusPlannedDue` | read [status_planned](/code/tables/status_planned.md) |  |
-| 206 | `statusPlannedRun` | read [status_planned](/code/tables/status_planned.md) |  |
-| 209 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
-| 217 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`) |  |
-| 222 | `statusPlannedRun` | read [status_planned](/code/tables/status_planned.md) |  |
-| 224 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
-| 231 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`) |  |
-| 244 | `statusPlannedActor` | read [analysts](/code/tables/analysts.md) |  |
-| 258 | `statusPlannedStatusId` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 130 | `statusPlannedLoad` | read [status_planned](/code/tables/status_planned.md) |  |
+| 149 | `statusPlannedList` | read [status_planned](/code/tables/status_planned.md), read [analysts](/code/tables/analysts.md), read [projects](/code/tables/projects.md) |  |
+| 160 | `statusPlannedList` | read [status_planned_services](/code/tables/status_planned_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 187 | `statusPlannedDue` | read [status_planned](/code/tables/status_planned.md) |  |
+| 207 | `statusPlannedRun` | read [status_planned](/code/tables/status_planned.md) |  |
+| 210 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
+| 218 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`) |  |
+| 223 | `statusPlannedRun` | read [status_planned](/code/tables/status_planned.md) |  |
+| 225 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`, `updated_datetime`) |  |
+| 232 | `statusPlannedRun` | **update** [status_planned](/code/tables/status_planned.md) (`state`) |  |
+| 245 | `statusPlannedActor` | read [analysts](/code/tables/analysts.md) |  |
 | 259 | `statusPlannedStatusId` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 265 | `statusPlannedStart` | read [status_planned_services](/code/tables/status_planned_services.md) |  |
-| 278 | `statusPlannedStart` | **update** [status_incidents](/code/tables/status_incidents.md) (`created_datetime`) |  |
-| 279 | `statusPlannedStart` | **update** [status_incident_updates](/code/tables/status_incident_updates.md) (`created_datetime`) |  |
-| 281 | `statusPlannedStart` | **update** [status_planned](/code/tables/status_planned.md) (`incident_id`) |  |
-| 288 | `statusPlannedFinish` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 293 | `statusPlannedFinish` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 301 | `statusPlannedFinish` | **update** [status_incidents](/code/tables/status_incidents.md) (`resolved_datetime`) |  |
-| 303 | `statusPlannedFinish` | **update** [status_incident_updates](/code/tables/status_incident_updates.md) (`created_datetime`) |  |
+| 260 | `statusPlannedStatusId` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 273 | `statusPlannedStart` | read [status_planned_services](/code/tables/status_planned_services.md) |  |
+| 286 | `statusPlannedStart` | **update** [status_incidents](/code/tables/status_incidents.md) (`created_datetime`) |  |
+| 287 | `statusPlannedStart` | **update** [status_incident_updates](/code/tables/status_incident_updates.md) (`created_datetime`) |  |
+| 289 | `statusPlannedStart` | **update** [status_planned](/code/tables/status_planned.md) (`incident_id`) |  |
+| 302 | `statusPlannedFinish` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 307 | `statusPlannedFinish` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 315 | `statusPlannedFinish` | **update** [status_incidents](/code/tables/status_incidents.md) (`resolved_datetime`) |  |
+| 317 | `statusPlannedFinish` | **update** [status_incident_updates](/code/tables/status_incident_updates.md) (`created_datetime`) |  |
 
 ## How it hangs together
 

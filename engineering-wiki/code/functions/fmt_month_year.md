@@ -6,7 +6,7 @@
 function fmt_month_year(?string $utc): string
 ```
 
-Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 447.
+Defined in [includes/timezone.php](/code/files/includes/timezone.php.md), line 453.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

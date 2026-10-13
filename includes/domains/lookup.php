@@ -152,6 +152,11 @@ function domainLookup(PDO $conn, string $name): array
     return domainWhoisLookup($conn, $name);
 }
 
+/**
+ * Looks a domain up at its registry's RDAP server and reads the dates, statuses, locks, registrar, name servers, DNSSEC and registrant into the standard result shape.
+ *
+ * A 404 comes back with not_found set, which callers treat as an answer rather than a failure.
+ */
 function domainRdapLookup(string $base, string $name): array
 {
     [$code, $body, $err] = domainHttpGet($base . 'domain/' . rawurlencode($name), 'application/rdap+json, application/json');
@@ -276,6 +281,7 @@ function domainDeriveFlags(array &$r, string $name = ''): void
     $r['pending_delete'] = in_array('pending delete', $s, true);
 }
 
+/** Returns one field's value (for example 'fn' or 'org') from an RDAP jCard, or null when absent or empty. */
 function domainVcardField(array $vcard, string $field): ?string
 {
     foreach ($vcard[1] ?? [] as $v) {
@@ -288,6 +294,9 @@ function domainVcardField(array $vcard, string $field): ?string
     return null;
 }
 
+/**
+ * True when a registrant value is a privacy placeholder ("REDACTED", "Domains By Proxy", GDPR wording) rather than a real name.
+ */
 function domainLooksRedacted(string $v): bool
 {
     return (bool)preg_match('/redacted|privacy|withheld|not disclosed|data protected|gdpr|contact privacy|whoisguard|domains by proxy/i', $v);
@@ -352,6 +361,11 @@ function domainWhoisQuery(string $server, string $query): ?string
     return $out;
 }
 
+/**
+ * Looks a domain up over WHOIS, for registries without RDAP, and reads the dates, statuses, registrar, name servers and DNSSEC from the text reply.
+ *
+ * An answer saying the name is not registered comes back with not_found set.
+ */
 function domainWhoisLookup(PDO $conn, string $name): array
 {
     $tld = domainTld($name);

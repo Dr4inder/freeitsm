@@ -14,9 +14,16 @@
  * page evaluates: 'multitenant' (hidden until a 2nd company exists) and
  * 'container' (only inside the Docker image), keeping the registry itself free
  * of DB lookups.
+ *
+ * @wiki System
  */
 
-/** @return array<int,array<string,string>> The ordered list of system areas. */
+/**
+ * Every card on the System landing page, in display order: icon key, url, the
+ * i18n keys for title, description and search keywords, and an optional
+ * 'requires' gate.
+ *
+ * @return array<int,array<string,string>> The ordered list of system areas. */
 function getSystemAreas() {
     return [
         // Feature Bingo: every feature, a star for each one set up. First,

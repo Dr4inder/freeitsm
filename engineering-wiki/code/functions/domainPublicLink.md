@@ -6,7 +6,7 @@ Absolute link to a domain, for mail sent by a cron with no request host.
 function domainPublicLink(PDO $conn, int $id): string
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 229.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 235.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

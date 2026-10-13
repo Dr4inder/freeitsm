@@ -25,7 +25,7 @@ function awcSyncKind(
 ): int
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 100.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -45,9 +45,9 @@ Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_war
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 116 | `awcSyncKind` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
-| 135 | `awcSyncKind` | read [assets](/code/tables/assets.md) |  |
-| 145 | `awcSyncKind` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
+| 123 | `awcSyncKind` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
+| 142 | `awcSyncKind` | read [assets](/code/tables/assets.md) |  |
+| 152 | `awcSyncKind` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
 
 ## Calls
 

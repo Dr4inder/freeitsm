@@ -1,10 +1,12 @@
 # apiSerializeForm()
 
+Shapes a form row for the API - title, version (is_current marks the editable one), counts and people, plus its live fields unless `$withFields` is false.
+
 ```php
 function apiSerializeForm(PDO $conn, array $r, bool $withFields = true): array
 ```
 
-Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 91.
+Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md), line 103.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `apiSerializeForm` | read [form_fields](/code/tables/form_fields.md) |  |
+| 125 | `apiSerializeForm` | read [form_fields](/code/tables/form_fields.md) |  |
 
 ## Calls
 

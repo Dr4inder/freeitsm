@@ -19,14 +19,14 @@ Task dependencies (3.3.0) - includes/projects/dependencies.php.
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):92 | `ProjectTemplatesService::createFromTemplate` | insert | `task_id`, `depends_on_id`, `lag_days`, `created_by_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1049 | `ProjectToolsService::addTaskDependency` | insert | `task_id`, `depends_on_id`, `lag_days`, `created_by_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1065 | `ProjectToolsService::removeTaskDependency` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1092 | `ProjectToolsService::addTaskDependency` | insert | `task_id`, `depends_on_id`, `lag_days`, `created_by_id`, `created_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):1109 | `ProjectToolsService::removeTaskDependency` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [includes/projects/dependencies.php](/code/files/includes/projects/dependencies.php.md) | projectDependenciesReady L26, projectDependencies L36 |  |
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L442 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addTaskDependency L1052 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L443 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addTaskDependency L1095 |  |
 

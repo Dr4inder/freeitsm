@@ -1,6 +1,6 @@
 # api/v1/lib/openapi.php
 
-> API endpoint - 441 lines
+> API endpoint - 456 lines
 
 FreeITSM REST API v1 — OpenAPI 3.0.3 document generator.
 
@@ -43,11 +43,11 @@ or YAML (same document, human-readable).
 | [apiV1ParamDescription()](/code/functions/apiV1ParamDescription.md) | 305 | Pull a parameter description from the docs params for a given name/in. |
 | [apiV1MapEndpointsToHandlers()](/code/functions/apiV1MapEndpointsToHandlers.md) | 319 | Match every docs endpoint (method + path template) to its handler function by testing the template against the route regexes. Returns ['M /path' => handler]. |
 | [apiV1HandlerSuccessCodes()](/code/functions/apiV1HandlerSuccessCodes.md) | 342 | Scan the resource files for each handler's `apiRespond()` status codes, so an operation declares the success code(s) it genuinely returns (201 on create, 200 otherwise, both where a handler upserts). Returns [handler => [codes]]. |
-| [apiV1OpenApiToYaml()](/code/functions/apiV1OpenApiToYaml.md) | 379 |  |
-| [apiV1YamlNode()](/code/functions/apiV1YamlNode.md) | 383 |  |
-| [apiV1YamlKey()](/code/functions/apiV1YamlKey.md) | 419 |  |
-| [apiV1YamlScalar()](/code/functions/apiV1YamlScalar.md) | 423 |  |
-| [apiV1YamlQuote()](/code/functions/apiV1YamlQuote.md) | 437 |  |
+| [apiV1OpenApiToYaml()](/code/functions/apiV1OpenApiToYaml.md) | 380 | Renders the OpenAPI document as YAML, with a generated-file header line. |
+| [apiV1YamlNode()](/code/functions/apiV1YamlNode.md) | 388 | Renders one value as YAML at the given indent - lists as "- " items with the first key of a mapping hung on the dash, mappings as "key: value", empty arrays as [] or {}. |
+| [apiV1YamlKey()](/code/functions/apiV1YamlKey.md) | 425 | A mapping key as YAML - plain when it is a simple identifier or path, double-quoted otherwise. |
+| [apiV1YamlScalar()](/code/functions/apiV1YamlScalar.md) | 434 | A scalar as YAML - null, true, false and numbers as they are, a string plain only when it is unambiguous text and double-quoted otherwise, so nothing is read back as another type. |
+| [apiV1YamlQuote()](/code/functions/apiV1YamlQuote.md) | 452 | Double-quotes a string for YAML, escaping backslashes, quotes, newlines, tabs and carriage returns. |
 
 ## How it hangs together
 

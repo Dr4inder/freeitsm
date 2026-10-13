@@ -12,23 +12,38 @@
     var API = CFG.api;
     var BASE = CFG.base;
 
+    /** Translates a key from the asset-management.leases language section. */
     function t(k, p) { return window.t('asset-management.leases.' + k, p); }
+    /** Translates a key from the shared asset-management.common language section (Save, Cancel, Edit...). */
     function tc(k, p) { return window.t('asset-management.common.' + k, p); }
+    /** Escapes a value for safe use in HTML; null and undefined become an empty string. */
     function esc(s) {
         return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) {
             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
         });
     }
+    /** Formats a plain date for display, escaped, or a dimmed dash when there is none. */
     function d(v) { return v ? esc(window.fmtNaiveDate ? window.fmtNaiveDate(v) : v) : '<span class="ls-dim">-</span>'; }
+    /** Shows a toast message (success unless a type is given). */
     function toast(msg, type) { if (window.showToast) window.showToast(msg, type || 'success'); }
+    /** Today's date as YYYY-MM-DD in the user's time zone. */
     function today() { return window.ymdInZone ? window.ymdInZone(new Date()) : new Date().toISOString().slice(0, 10); }
+    /** Adds n days to a YYYY-MM-DD date and returns the new YYYY-MM-DD. */
     function addDays(ymd, n) { var x = new Date(ymd + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); }
+    /**
+     * Formats an amount in the given currency for the page language, or as a plain two-decimal number when
+     * there is no valid currency.
+     */
     function money(v, cur) {
         if (v === null || v === undefined || v === '') return '';
         try { if (cur) return new Intl.NumberFormat(document.documentElement.lang || 'en', { style: 'currency', currency: cur }).format(v); } catch (e) {}
         return Number(v).toLocaleString(document.documentElement.lang || 'en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + (cur ? ' ' + esc(cur) : '');
     }
 
+    /**
+     * GETs a Leases API endpoint with optional query parameters and returns the JSON, throwing when
+     * success is false.
+     */
     async function get(path, params) {
         var q = params ? '?' + new URLSearchParams(params).toString() : '';
         var r = await fetch(API + path + q, { credentials: 'same-origin' });
@@ -36,12 +51,14 @@
         if (!j.success) throw new Error(j.error || 'Error');
         return j;
     }
+    /** POSTs a JSON body to a Leases API endpoint and returns the JSON, throwing when success is false. */
     async function post(path, body) {
         var r = await fetch(API + path, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
         var j = await r.json();
         if (!j.success) throw new Error(j.error || 'Error');
         return j;
     }
+    /** Shows an error as an error toast. */
     function fail(e) { toast(e.message || String(e), 'error'); }
 
     // "Ends" with how near it is: overdue / within 90 days.
@@ -64,6 +81,7 @@
             + '<div class="modal-actions"><button type="button" class="btn btn-secondary" data-x>' + esc(tc('cancel')) + '</button>'
             + '<button type="submit" class="btn btn-primary">' + esc(saveLabel || tc('save')) + '</button></div></form></div>';
         document.body.appendChild(wrap);
+        /** Removes the modal from the page. */
         var close = function () { wrap.remove(); };
         wrap.querySelector('[data-x]').onclick = close;
         wrap.addEventListener('mousedown', function (e) { if (e.target === wrap) close(); });
@@ -79,20 +97,29 @@
         if (first) setTimeout(function () { first.focus(); }, 50);
         return wrap;
     }
+    /** HTML for one labelled form group, with an optional hint line under it. */
     function field(label, inner, hint) {
         return '<div class="form-group"><label>' + esc(label) + '</label>' + inner + (hint ? '<div class="form-hint">' + esc(hint) + '</div>' : '') + '</div>';
     }
+    /** HTML option list from {id, name} rows, marking the selected id and adding an optional blank first option. */
     function opts(list, sel, blank) {
         var h = blank !== undefined ? '<option value="">' + esc(blank) + '</option>' : '';
         return h + list.map(function (o) { return '<option value="' + o.id + '"' + (String(o.id) === String(sel) ? ' selected' : '') + '>' + esc(o.name) + '</option>'; }).join('');
     }
+    /** The trimmed value of the named field inside a modal, or an empty string when the field is missing. */
     function val(w, name) { var el = w.querySelector('[name="' + name + '"]'); return el ? el.value.trim() : ''; }
 
     // ---- Lease (add / edit) ----
+    /**
+     * Opens the Add / Edit lease modal and saves it through save.php. Loads the options (companies,
+     * suppliers, cost centres, contracts) first; changing the company reloads that company's cost centres
+     * and contracts. A new lease opens its own page once saved.
+     */
     async function leaseForm(lease) {
         var o;
         try { o = await get('options.php', { company_id: lease ? lease.company_id : '', keep_cost_centre: lease && lease.cost_centre_id ? lease.cost_centre_id : '' }); }
         catch (e) { fail(e); return; }
+        /** Turns cost centre rows into {id, name} options labelled "code - name", marking inactive ones. */
         var ccList = function (list) { return list.map(function (c) { return { id: c.id, name: c.code + ' - ' + c.name + (c.is_active ? '' : ' (' + t('inactive') + ')') }; }); };
         var body = field(t('f_name'), '<input type="text" name="name" required maxlength="200" value="' + esc(lease ? lease.name : '') + '">', t('f_name_hint'))
             + field(t('f_reference'), '<input type="text" name="reference" maxlength="100" value="' + esc(lease ? lease.reference || '' : '') + '">')
@@ -127,6 +154,10 @@
     }
 
     // ---- Schedule (add / edit) ----
+    /**
+     * Opens the Add / Edit schedule modal (dates, cost and period, currency, order number) and saves it
+     * through schedule_save.php.
+     */
     function scheduleForm(leaseId, s) {
         var periods = ['month', 'quarter', 'year', 'total'].map(function (p) { return { id: p, name: t('per_' + p) }; });
         var body = '<div class="ls-grid2">'
@@ -152,6 +183,10 @@
     }
 
     // ---- One asset's own dates / outcome ----
+    /**
+     * Opens the modal for one asset on a schedule - its outcome, its own start and end dates and the
+     * outcome date - and saves it through asset_update.php.
+     */
     function assetForm(row, sched) {
         var outcomes = (STATE.outcomes || []).filter(function (o) { return o.is_active || o.id === row.outcome_id; });
         var body = field(t('outcome'), '<select name="outcome_id">' + opts(outcomes, row.outcome_id) + '</select>')
@@ -170,6 +205,11 @@
     }
 
     // ---- Put assets on a schedule ----
+    /**
+     * Opens the modal that searches assets and puts the ticked ones on a schedule through assets_add.php.
+     * Assets already on another lease are shown but cannot be ticked; the toast reports any the server
+     * refused.
+     */
     function addAssetsForm(sched) {
         var picked = {};
         var body = '<div class="form-group"><input type="search" name="q" placeholder="' + esc(t('search_assets_ph')) + '" autocomplete="off"></div>'
@@ -185,6 +225,7 @@
         }, tc('add'));
         var q = w.querySelector('[name=q]'), res = w.querySelector('[data-results]'), cnt = w.querySelector('[data-count]');
         var timer = null;
+        /** Shows how many assets are ticked in the Add assets modal. */
         function count() { var n = Object.keys(picked).length; cnt.textContent = n ? t('picked_n', { n: n }) : ''; }
         q.addEventListener('input', function () {
             clearTimeout(timer);
@@ -211,8 +252,13 @@
     // ===================================================================
     var STATE = { lease: null, outcomes: [] };
 
+    /**
+     * Sets up the list page - the Leases / Due back tabs, Add, the search box and the days filter - and
+     * opens the tab named in the URL hash.
+     */
     function initList() {
         var tabs = document.querySelectorAll('[data-ls-tab]');
+        /** Switches the list page to the Leases or Due back tab, updates the URL hash and loads that tab's data. */
         function show(which) {
             tabs.forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-ls-tab') === which); });
             document.getElementById('lsListView').hidden = which !== 'leases';
@@ -229,6 +275,10 @@
         show(location.hash === '#due' ? 'due' : 'leases');
     }
 
+    /**
+     * Loads the leases matching the search box from list.php and renders the table, or the empty state
+     * when there are none.
+     */
     async function loadList() {
         var box = document.getElementById('lsListBody');
         try {
@@ -255,6 +305,10 @@
         } catch (e) { box.innerHTML = '<div class="ls-empty">' + esc(e.message) + '</div>'; }
     }
 
+    /**
+     * HTML table of assets due back (asset, holder, location, end, notice-by date, outcome), with a lease
+     * column when asked for; overdue rows are flagged.
+     */
     function dueTable(rows, withLease) {
         if (!rows.length) return '<div class="ls-empty"><p>' + esc(t('due_none')) + '</p></div>';
         return '<table class="ls-table"><thead><tr><th>' + esc(t('col_asset')) + '</th><th>' + esc(t('held_by')) + '</th><th>' + esc(t('location')) + '</th>'
@@ -270,6 +324,10 @@
             }).join('') + '</tbody></table>';
     }
 
+    /**
+     * Loads the assets due back within the chosen number of days from due_back.php, renders them and
+     * points the Export link at the CSV of the same list.
+     */
     async function loadDue() {
         var box = document.getElementById('lsDueBody');
         var days = document.getElementById('lsDays').value;
@@ -294,6 +352,10 @@
         } catch (e) { box.innerHTML = '<div class="ls-card"><div class="ls-empty">' + esc(e.message) + '</div></div>'; }
     }
 
+    /**
+     * Renders one lease page - the header card with its facts, then a card per schedule with its assets,
+     * outcomes and actions - and wires up its buttons.
+     */
     function renderLease(l) {
         var all = [];
         l.schedules.forEach(function (s) { all = all.concat(s.assets); });
@@ -354,8 +416,15 @@
         wireLease(box, l);
     }
 
+    /**
+     * Wires the buttons and outcome drop-downs on a lease page (edit / delete lease, add / edit / delete
+     * schedule, add / edit / remove assets, change outcome), all through one click and one change
+     * listener.
+     */
     function wireLease(box, l) {
+        /** The schedule whose card holds the clicked element. */
         var sched = function (el) { var c = el.closest('[data-sid]'); return c ? l.schedules.find(function (s) { return s.id === +c.getAttribute('data-sid'); }) : null; };
+        /** The asset row of the schedule that holds the clicked element. */
         var row = function (el, s) { var tr = el.closest('[data-rid]'); return tr ? s.assets.find(function (a) { return a.id === +tr.getAttribute('data-rid'); }) : null; };
         box.addEventListener('click', async function (e) {
             var b = e.target.closest('[data-act]');

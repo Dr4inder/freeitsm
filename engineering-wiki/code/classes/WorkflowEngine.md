@@ -1,6 +1,9 @@
 # WorkflowEngine
 
-> Class in [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md), line 36
+> Class in [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md), line 38
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Workflows](https://github.com/edmozley/freeitsm/wiki/Workflows)
 
 Workflow Engine ----------------------------------------------------------------------
 
@@ -53,8 +56,8 @@ workflow can't take down the host module's request.
 | [availableVariables()](#availablevariables) | The merge codes (`{{variables}}`) a workflow on `$trigger` can actually resolve — the catalogue behind the editor's variable picker. |
 | [variablePrefixes()](#variableprefixes) | Merge-code prefixes that are open-ended for this trigger — anything beneath them is valid even though it can't be listed up front. |
 | [humaniseFieldPath()](#humanisefieldpath) | 'ticket.requester_email' → 'Ticket · Requester email'. Derived rather than hand-mapped so it stays correct as the trigger catalogue grows — a hand-written label map would rot immediately. |
-| [humaniseSegment()](#humanisesegment) |  |
-| [availableOperators()](#availableoperators) |  |
+| [humaniseSegment()](#humanisesegment) | One dot-path segment as a label: underscores to spaces, a trailing " id" dropped, first letter capitalised ("id" alone becomes "ID"). |
+| [availableOperators()](#availableoperators) | The condition operators the editor offers, as operator key => label; `evaluateOperator()` implements each one. |
 | [fieldType()](#fieldtype) | Resolve the type of a field path. Lookup fields always win; explicit entries in FIELD_TYPES take the next precedence; the default is a mild convention — anything ending in `.id` is treated as numeric, everything else as text. New fields added to `availableFields()` get a sensible default without needing an explicit FIELD_TYPES entry, but it's the explicit entry that's authoritative. |
 | [operatorsForFieldType()](#operatorsforfieldtype) | Operator slugs valid for a given field type. The full catalogue lives in `availableOperators()`; this is the per-type subset. Drives which operators the editor shows once the user picks a field. Lookup fields are handled by the editor with their own friendly relabelling (is / is not / is empty / is not empty mapping to in / not_in / is_empty / is_not_empty), so we just return the underlying slugs here. |
 | [availableValuesForField()](#availablevaluesforfield) | For a normalised id field, return the list of selectable {id, label} pairs from the joined table. Returns null for free-text fields (the editor falls back to a plain text input in that case). Returns null defensively if the lookup table doesn't exist (older installs that haven't migrated yet) so the editor still works. |
@@ -64,32 +67,32 @@ workflow can't take down the host module's request.
 | [manualFire()](#manualfire) | Fire a single workflow with a synthetic payload — used by the editor's "Test fire" button so the user can verify a rule without waiting for a real event. |
 | [run()](#run) | Loop-protection wrapper around `runInner()`. Refuses re-entrant / runaway runs (see the class-level notes), recording a blocked attempt as an 'aborted' execution row, and otherwise manages the request-scoped counters around the real run. |
 | [recordAbortedRun()](#recordabortedrun) | Record a run that loop-protection refused to execute. Writes a single 'aborted' execution row (status / step_log / error_message) so the block is visible in the execution audit, and stamps the parent workflow's last-run state for non-manual runs. Never throws. |
-| [runInner()](#runinner) |  |
+| [runInner()](#runinner) | Runs one workflow against one event: adds {{event}} and the readable lookup names to the payload, records a running execution, checks the conditions, runs the actions (or previews them on a dry run) and stores the outcome and step log. |
 | [describeAction()](#describeaction) | The catalogue label for an action type — what a dry run reports it "would have" done. Falls back to the raw type for an action the catalogue no longer knows about. |
 | [previewArgs()](#previewargs) | Render an action's args for a dry run: every {{variable}} substituted against the real payload, so what you read in the log is exactly the value the handler would have been handed. |
-| [evaluateConditions()](#evaluateconditions) |  |
-| [evaluateOperator()](#evaluateoperator) |  |
+| [evaluateConditions()](#evaluateconditions) | True when every condition matches the payload (AND), or there are none. Each condition checked is added to the step log, and checking stops at the first that fails. |
+| [evaluateOperator()](#evaluateoperator) | Applies one condition operator to the payload value and the configured value; numeric operators need both sides numeric. |
 | [value_in_list()](#value_in_list) | True if `$actual` matches any value in `$list`. `$list` can be an array, a comma-separated string, or a single scalar. Comparison uses loose-equal (string cast both sides) so ids stored as numbers in the payload match the strings the form serialises. |
-| [loose_equal()](#loose_equal) |  |
-| [executeAction()](#executeaction) |  |
+| [loose_equal()](#loose_equal) | Compares two values as strings, so a typed-in "4" equals a numeric id 4; null also equals an empty string. |
+| [executeAction()](#executeaction) | Hands one action to its action_* handler by type and returns the handler's result; an unknown type throws. |
 | [executeActionList()](#executeactionlist) | Run an ordered list of actions against a payload. |
 | [runActionList()](#runactionlist) | Run a list of actions that belongs to something OTHER than a stored workflow — today, a form's own "when submitted / approved / rejected" list (#95). |
 | [mergeStepResult()](#mergestepresult) | Make a completed action's result addressable by the actions after it. |
-| [renderTemplate()](#rendertemplate) |  |
+| [renderTemplate()](#rendertemplate) | Replaces each {{path.to.field}} in a string with the payload value at that dot path - empty when missing, JSON when the value is an array. |
 | [argString()](#argstring) | Resolve a single arg to a (rendered) string and trim it. Returns '' if the arg is missing — handlers decide whether that's fatal. |
 | [argInt()](#argint) | Resolve a single arg to an int, or null if blank / non-numeric. (Handler enforces required-ness if the arg matters.) |
 | [argBool()](#argbool) | Resolve a checkbox arg (`'type' => 'bool'`). |
-| [action_attach_checklist()](#action_attach_checklist) |  |
-| [action_log_message()](#action_log_message) |  |
-| [action_set_ticket_status()](#action_set_ticket_status) |  |
-| [action_set_ticket_priority()](#action_set_ticket_priority) |  |
-| [action_assign_ticket()](#action_assign_ticket) |  |
-| [action_add_ticket_note()](#action_add_ticket_note) |  |
-| [action_send_email()](#action_send_email) |  |
+| [action_attach_checklist()](#action_attach_checklist) | attach_checklist: copies each chosen checklist template, with its items, onto the ticket, skipping templates already attached. No templates chosen is a skip, not an error. |
+| [action_log_message()](#action_log_message) | log_message: puts the rendered message into the run's step log and changes nothing else. |
+| [action_set_ticket_status()](#action_set_ticket_status) | set_ticket_status: writes the ticket's status directly, stamping or clearing closed_datetime. |
+| [action_set_ticket_priority()](#action_set_ticket_priority) | set_ticket_priority: sets the ticket's priority after checking the priority id exists. |
+| [action_assign_ticket()](#action_assign_ticket) | assign_ticket: sets both the assigned analyst and the owner of the ticket to one analyst, so the two stay in step. |
+| [action_add_ticket_note()](#action_add_ticket_note) | add_ticket_note: adds the rendered note to the ticket's audit trail as a "Workflow Note" with no analyst. |
+| [action_send_email()](#action_send_email) | send_email: sends an email from the ticket's mailbox or a chosen one, through Microsoft Graph, Gmail or SMTP depending on the mailbox. |
 | [plainEmailBody()](#plainemailbody) | The house email styling, without the reply marker. |
-| [action_create_task()](#action_create_task) |  |
+| [action_create_task()](#action_create_task) | create_task: creates a task, optionally linked to a ticket, using the default status and priority when none is chosen and placing it at the end of its board column. |
 | [action_create_project()](#action_create_project) | A project proposal (3.3.0) - the rules are includes/projects/intake.php's. |
-| [action_create_ticket()](#action_create_ticket) |  |
+| [action_create_ticket()](#action_create_ticket) | create_ticket: raises a new ticket. |
 | [action_send_webhook()](#action_send_webhook) | POST a payload to an external URL — the outbound-webhook action. |
 | [action_escalate_to_tracker()](#action_escalate_to_tracker) | Raise an issue in an external tracker from this ticket. |
 | [action_send_note_to_tracker()](#action_send_note_to_tracker) | Post a comment onto the issue this ticket is already linked to. |
@@ -97,11 +100,11 @@ workflow can't take down the host module's request.
 | [enrichWithFullObjects()](#enrichwithfullobjects) | Enrich a trigger payload with the FULL, API-shaped version of its primary object, reusing the REST API serialisers so a webhook can emit exactly the JSON that GET /<resource>/{id} returns — rich, consistent and already typed in the OpenAPI spec. The full object is attached under <key>.full, so a Custom body can embed the whole record with {{ticket.full}} (the template engine json_encodes arrays), and the "Full record" preset sends it wholesale. |
 | [fullObjectLoaders()](#fullobjectloaders) | The registry of full-object loaders, keyed by payload key. Each loader takes an id and returns the API-shaped record (or null if gone). Built per-call (not a static, so it can hold closures) — cheap, since it only runs when a webhook actually needs a full object. One entry per resource whose GET /{id} is a clean select+serialise; add a resource here to light up its `.full`. |
 | [dotGet()](#dotget) | Dotted-path getter — `dotGet(['ticket' => ['id' => 5]], 'ticket.id')` → 5. |
-| [decodeJsonField()](#decodejsonfield) |  |
+| [decodeJsonField()](#decodejsonfield) | A JSON column (a workflow's conditions or actions) decoded to an array; [] when empty or not valid JSON. |
 
 ### availableTriggers
 
-*public static* - line 90
+*public static* - line 92
 
 Events the engine knows about. Display labels are i18n-ready strings but kept plain English here for simplicity in v1 — the editor UI shows them as-is. Adding a trigger = one entry here + a single `dispatch()` call from the corresponding module's save flow.
 
@@ -120,7 +123,7 @@ function availableTriggers(): array
 
 ### crudEntities
 
-*private static* - line 226
+*private static* - line 228
 
 CRUD + settings entities that each get explicit .created/.updated/.deleted triggers. `[label, [condition field paths]]`. Domain entities carry a few useful fields; settings/lookups carry just id + name (their own id isn't a useful filter, but name is, and the .id/.name convention keeps the editor's type inference happy).
 
@@ -130,7 +133,7 @@ function crudEntities(): array
 
 ### emitCrud
 
-*public static* - line 281
+*public static* - line 283
 
 Fire a CRUD / settings event: <entityKey>.<action> with a {entityKey: {id, name}} payload matching the entity's condition fields. `$action` is 'created' | 'updated' | 'deleted'. `dispatch()` is self-safe, so call sites need no try/catch — a workflow hiccup can't affect the write.
 
@@ -149,7 +152,7 @@ function emitCrud(string $entityKey, string $action, int $id, ?string $name = nu
 
 ### availableFields
 
-*public static* - line 291
+*public static* - line 293
 
 Per-trigger field hints — the dotted paths into the payload that are valid for `condition.field`. Used to populate the editor's field dropdown so users aren't guessing.
 
@@ -165,7 +168,7 @@ function availableFields(string $trigger): array
 
 ### webhookFormats
 
-*public static* - line 563
+*public static* - line 565
 
 Every message-wrapping format available on this install: the built-ins plus whatever the admin has added. Cached per request.
 
@@ -180,13 +183,13 @@ function webhookFormats(): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 572 | `WorkflowEngine::webhookFormats` | read [webhook_message_formats](/code/tables/webhook_message_formats.md) |  |
+| 574 | `WorkflowEngine::webhookFormats` | read [webhook_message_formats](/code/tables/webhook_message_formats.md) |  |
 
 **Called from:** [workflow/editor.php](/code/files/workflow/editor.php.md)
 
 ### renderFormatBody
 
-*private static* - line 604
+*private static* - line 606
 
 Render a format's JSON body template.
 
@@ -209,7 +212,7 @@ function renderFormatBody(string $template, string $message, array $payload): st
 
 ### enrichWithReferences
 
-*public static* - line 652
+*public static* - line 654
 
 Add `{{<object>.number}}` beside `{{<object>.id}}` wherever the record has a human-facing reference. Cached; never clobbers a value the host module already supplied (problem.* triggers ship `problem.problem_number` themselves, and that stays authoritative).
 
@@ -224,7 +227,7 @@ function enrichWithReferences(PDO $conn, array $payload): array
 
 ### enrichPayloadForTemplates
 
-*public static* - line 686
+*public static* - line 688
 
 Everything a merge code might need that the raw event payload doesn't carry: readable lookup names, and human-facing record references.
 
@@ -245,7 +248,7 @@ function enrichPayloadForTemplates(PDO $conn, array $payload): array
 
 ### lookupNamePath
 
-*private static* - line 701
+*private static* - line 703
 
 The `_name` merge code that pairs with a lookup id field.
 
@@ -265,7 +268,7 @@ function lookupNamePath(string $idPath): ?string
 
 ### lookupLabel
 
-*private static* - line 714
+*private static* - line 716
 
 Resolve one lookup id to its human label (cached per request — a ticket payload touches ~6 of these and the same status/priority recurs across a fan-out, so the cache earns its keep).
 
@@ -281,7 +284,7 @@ function lookupLabel(PDO $conn, array $spec, int $id): ?string
 
 ### enrichWithLookupNames
 
-*public static* - line 747
+*public static* - line 749
 
 Add a human-readable `_name` beside every lookup id the payload carries.
 
@@ -307,7 +310,7 @@ function enrichWithLookupNames(PDO $conn, array $payload): array
 
 ### dotSet
 
-*private static* - line 766
+*private static* - line 768
 
 Dotted-path setter — the write twin of `dotGet()`.
 
@@ -323,7 +326,7 @@ function dotSet(array &$haystack, string $path, $value): void
 
 ### availableVariables
 
-*public static* - line 794
+*public static* - line 796
 
 The merge codes (`{{variables}}`) a workflow on `$trigger` can actually resolve — the catalogue behind the editor's variable picker.
 
@@ -352,7 +355,7 @@ function availableVariables(string $trigger): array
 
 ### variablePrefixes
 
-*public static* - line 888
+*public static* - line 890
 
 Merge-code prefixes that are open-ended for this trigger — anything beneath them is valid even though it can't be listed up front.
 
@@ -371,7 +374,7 @@ function variablePrefixes(string $trigger): array
 
 ### humaniseFieldPath
 
-*private static* - line 921
+*private static* - line 923
 
 'ticket.requester_email' → 'Ticket · Requester email'. Derived rather than hand-mapped so it stays correct as the trigger catalogue grows — a hand-written label map would rot immediately.
 
@@ -385,7 +388,9 @@ function humaniseFieldPath(string $path): string
 
 ### humaniseSegment
 
-*private static* - line 927
+*private static* - line 930
+
+One dot-path segment as a label: underscores to spaces, a trailing " id" dropped, first letter capitalised ("id" alone becomes "ID").
 
 ```php
 function humaniseSegment(string $seg): string
@@ -397,7 +402,9 @@ function humaniseSegment(string $seg): string
 
 ### availableOperators
 
-*public static* - line 937
+*public static* - line 941
+
+The condition operators the editor offers, as operator key => label; `evaluateOperator()` implements each one.
 
 ```php
 function availableOperators(): array
@@ -407,7 +414,7 @@ function availableOperators(): array
 
 ### fieldType
 
-*public static* - line 1080
+*public static* - line 1084
 
 Resolve the type of a field path. Lookup fields always win; explicit entries in FIELD_TYPES take the next precedence; the default is a mild convention — anything ending in `.id` is treated as numeric, everything else as text. New fields added to `availableFields()` get a sensible default without needing an explicit FIELD_TYPES entry, but it's the explicit entry that's authoritative.
 
@@ -423,7 +430,7 @@ function fieldType(string $fieldPath): string
 
 ### operatorsForFieldType
 
-*public static* - line 1097
+*public static* - line 1101
 
 Operator slugs valid for a given field type. The full catalogue lives in `availableOperators()`; this is the per-type subset. Drives which operators the editor shows once the user picks a field. Lookup fields are handled by the editor with their own friendly relabelling (is / is not / is empty / is not empty mapping to in / not_in / is_empty / is_not_empty), so we just return the underlying slugs here.
 
@@ -439,7 +446,7 @@ function operatorsForFieldType(string $type): array
 
 ### availableValuesForField
 
-*public static* - line 1117
+*public static* - line 1121
 
 For a normalised id field, return the list of selectable {id, label} pairs from the joined table. Returns null for free-text fields (the editor falls back to a plain text input in that case). Returns null defensively if the lookup table doesn't exist (older installs that haven't migrated yet) so the editor still works.
 
@@ -455,7 +462,7 @@ function availableValuesForField(string $fieldPath): ?array
 
 ### availableActions
 
-*public static* - line 1165
+*public static* - line 1169
 
 Action handlers available to the engine. Each entry's `args` is the editor UI spec, NOT just a name → type map — it drives the per-action form the user sees when they pick an action from the dropdown, so the editor never has to know about specific action types.
 
@@ -481,7 +488,7 @@ function availableActions(): array
 
 ### availableActionLookup
 
-*public static* - line 1404
+*public static* - line 1408
 
 Resolve a named action-arg lookup to its {id, label} pairs. Returns null for unknown keys — the editor falls back to a text input in that case so the workflow editor never breaks on a stale spec.
 
@@ -497,7 +504,7 @@ function availableActionLookup(string $key): ?array
 
 ### dispatch
 
-*public static* - line 1423
+*public static* - line 1427
 
 Fire all active workflows matching `$event` with the supplied payload. Called from host modules' save flows. Safe to call even if no workflows exist — does nothing in that case.
 
@@ -518,13 +525,13 @@ function dispatch(string $event, array $payload): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1453 | `WorkflowEngine::dispatch` | read [workflows](/code/tables/workflows.md) |  |
+| 1457 | `WorkflowEngine::dispatch` | read [workflows](/code/tables/workflows.md) |  |
 
 **Called from:** [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md), [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md), [api/self-service/reply_ticket.php](/code/files/api/self-service/reply_ticket.php.md), [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), [includes/integrations/integrations.php](/code/files/includes/integrations/integrations.php.md), [includes/intune.php](/code/files/includes/intune.php.md), [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md), [includes/services/assets.php](/code/files/includes/services/assets.php.md), [includes/services/calendar.php](/code/files/includes/services/calendar.php.md), [includes/services/changes.php](/code/files/includes/services/changes.php.md), [includes/services/cmdb.php](/code/files/includes/services/cmdb.php.md), [includes/services/contracts.php](/code/files/includes/services/contracts.php.md), [includes/services/domains.php](/code/files/includes/services/domains.php.md), [includes/services/forms.php](/code/files/includes/services/forms.php.md), [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md), [includes/services/morning_checks.php](/code/files/includes/services/morning_checks.php.md), [includes/services/problems.php](/code/files/includes/services/problems.php.md), [includes/services/service_status.php](/code/files/includes/services/service_status.php.md), [includes/services/tasks.php](/code/files/includes/services/tasks.php.md), [includes/services/tickets.php](/code/files/includes/services/tickets.php.md), [includes/ticket_events.php](/code/files/includes/ticket_events.php.md), [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md)
 
 ### manualFire
 
-*public static* - line 1474
+*public static* - line 1478
 
 Fire a single workflow with a synthetic payload — used by the editor's "Test fire" button so the user can verify a rule without waiting for a real event.
 
@@ -545,13 +552,13 @@ function manualFire(int $workflowId, array $samplePayload = [], bool $dryRun = f
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1477 | `WorkflowEngine::manualFire` | read [workflows](/code/tables/workflows.md) |  |
+| 1481 | `WorkflowEngine::manualFire` | read [workflows](/code/tables/workflows.md) |  |
 
 **Called from:** [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), [api/workflow/fire.php](/code/files/api/workflow/fire.php.md)
 
 ### run
 
-*private static* - line 1496
+*private static* - line 1500
 
 Loop-protection wrapper around `runInner()`. Refuses re-entrant / runaway runs (see the class-level notes), recording a blocked attempt as an 'aborted' execution row, and otherwise manages the request-scoped counters around the real run.
 
@@ -569,7 +576,7 @@ function run(array $wf, string $event, array $payload, bool $isManual, bool $dry
 
 ### recordAbortedRun
 
-*private static* - line 1533
+*private static* - line 1537
 
 Record a run that loop-protection refused to execute. Writes a single 'aborted' execution row (status / step_log / error_message) so the block is visible in the execution audit, and stamps the parent workflow's last-run state for non-manual runs. Never throws.
 
@@ -597,12 +604,18 @@ function recordAbortedRun(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1541 | `WorkflowEngine::recordAbortedRun` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`, `finished_datetime`, `step_log`, `error_message`) |  |
-| 1553 | `WorkflowEngine::recordAbortedRun` | **update** [workflows](/code/tables/workflows.md) (`last_run_datetime`, `last_run_status`) |  |
+| 1545 | `WorkflowEngine::recordAbortedRun` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`, `finished_datetime`, `step_log`, `error_message`) |  |
+| 1557 | `WorkflowEngine::recordAbortedRun` | **update** [workflows](/code/tables/workflows.md) (`last_run_datetime`, `last_run_status`) |  |
 
 ### runInner
 
-*private static* - line 1569
+*private static* - line 1587
+
+Runs one workflow against one event: adds {{event}} and the readable lookup names to the payload, records a running execution, checks the conditions, runs the actions (or previews them on a dry run) and stores the outcome and step log.
+
+Conditions that fail make the run "skipped"; an exception makes it
+"failed". Last-run stats on the workflow are updated only for real,
+non-manual runs.
 
 ```php
 function runInner(
@@ -622,17 +635,23 @@ function runInner(
 | `$isManual` | `bool` |  |  |
 | `$dryRun` | `bool` | `false` |  |
 
+**Writes:** workflow_executions - one row per run, with the payload and step log
+
+**Writes:** workflows(last_run_datetime, last_run_status, run_count)
+
+**Returns:** array execution_id, workflow_id, status, is_dry_run, step_log, error_message
+
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1596 | `WorkflowEngine::runInner` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`) |  |
-| 1630 | `WorkflowEngine::runInner` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`status`, `finished_datetime`, `step_log`, `error_message`) |  |
-| 1640 | `WorkflowEngine::runInner` | **update** [workflows](/code/tables/workflows.md) (`last_run_datetime`, `last_run_status`, `run_count`) |  |
+| 1614 | `WorkflowEngine::runInner` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`) |  |
+| 1648 | `WorkflowEngine::runInner` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`status`, `finished_datetime`, `step_log`, `error_message`) |  |
+| 1658 | `WorkflowEngine::runInner` | **update** [workflows](/code/tables/workflows.md) (`last_run_datetime`, `last_run_status`, `run_count`) |  |
 
 ### describeAction
 
-*private static* - line 1664
+*private static* - line 1682
 
 The catalogue label for an action type — what a dry run reports it "would have" done. Falls back to the raw type for an action the catalogue no longer knows about.
 
@@ -646,7 +665,7 @@ function describeAction(string $type): string
 
 ### previewArgs
 
-*private static* - line 1677
+*private static* - line 1695
 
 Render an action's args for a dry run: every {{variable}} substituted against the real payload, so what you read in the log is exactly the value the handler would have been handed.
 
@@ -664,7 +683,9 @@ function previewArgs(array $args, array $payload): array
 
 ### evaluateConditions
 
-*private static* - line 1694
+*private static* - line 1717
+
+True when every condition matches the payload (AND), or there are none. Each condition checked is added to the step log, and checking stops at the first that fails.
 
 ```php
 function evaluateConditions(array $conditions, array $payload, array &$stepLog): bool
@@ -678,7 +699,9 @@ function evaluateConditions(array $conditions, array $payload, array &$stepLog):
 
 ### evaluateOperator
 
-*private static* - line 1719
+*private static* - line 1743
+
+Applies one condition operator to the payload value and the configured value; numeric operators need both sides numeric.
 
 ```php
 function evaluateOperator(string $op, $actual, $value): bool
@@ -692,7 +715,7 @@ function evaluateOperator(string $op, $actual, $value): bool
 
 ### value_in_list
 
-*private static* - line 1746
+*private static* - line 1770
 
 True if `$actual` matches any value in `$list`. `$list` can be an array, a comma-separated string, or a single scalar. Comparison uses loose-equal (string cast both sides) so ids stored as numbers in the payload match the strings the form serialises.
 
@@ -707,7 +730,9 @@ function value_in_list($actual, $list): bool
 
 ### loose_equal
 
-*private static* - line 1761
+*private static* - line 1786
+
+Compares two values as strings, so a typed-in "4" equals a numeric id 4; null also equals an empty string.
 
 ```php
 function loose_equal($a, $b): bool
@@ -720,7 +745,9 @@ function loose_equal($a, $b): bool
 
 ### executeAction
 
-*private static* - line 1773
+*private static* - line 1799
+
+Hands one action to its action_* handler by type and returns the handler's result; an unknown type throws.
 
 ```php
 function executeAction(string $type, array $args, array $payload)
@@ -734,7 +761,7 @@ function executeAction(string $type, array $args, array $payload)
 
 ### executeActionList
 
-*private static* - line 1818
+*private static* - line 1844
 
 Run an ordered list of actions against a payload.
 
@@ -767,7 +794,7 @@ function executeActionList(
 
 ### runActionList
 
-*public static* - line 1888
+*public static* - line 1914
 
 Run a list of actions that belongs to something OTHER than a stored workflow — today, a form's own "when submitted / approved / rejected" list (#95).
 
@@ -798,14 +825,14 @@ function runActionList(string $label, string $event, array $actions, array $payl
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1903 | `WorkflowEngine::runActionList` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`) |  |
-| 1914 | `WorkflowEngine::runActionList` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`status`, `finished_datetime`, `step_log`, `error_message`) |  |
+| 1929 | `WorkflowEngine::runActionList` | **insert** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_id`, `workflow_name`, `trigger_event`, `trigger_payload`, `status`, `is_dry_run`, `started_datetime`) |  |
+| 1940 | `WorkflowEngine::runActionList` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`status`, `finished_datetime`, `step_log`, `error_message`) |  |
 
 **Called from:** [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md), [includes/services/forms.php](/code/files/includes/services/forms.php.md)
 
 ### mergeStepResult
 
-*private static* - line 1948
+*private static* - line 1974
 
 Make a completed action's result addressable by the actions after it.
 
@@ -836,7 +863,9 @@ function mergeStepResult(array &$payload, int $index, $result): void
 
 ### renderTemplate
 
-*private static* - line 1955
+*private static* - line 1985
+
+Replaces each {{path.to.field}} in a string with the payload value at that dot path - empty when missing, JSON when the value is an array.
 
 ```php
 function renderTemplate(string $tmpl, array $payload): string
@@ -849,7 +878,7 @@ function renderTemplate(string $tmpl, array $payload): string
 
 ### argString
 
-*private static* - line 1968
+*private static* - line 1998
 
 Resolve a single arg to a (rendered) string and trim it. Returns '' if the arg is missing — handlers decide whether that's fatal.
 
@@ -865,7 +894,7 @@ function argString(array $args, string $key, array $payload): string
 
 ### argInt
 
-*private static* - line 1980
+*private static* - line 2010
 
 Resolve a single arg to an int, or null if blank / non-numeric. (Handler enforces required-ness if the arg matters.)
 
@@ -881,7 +910,7 @@ function argInt(array $args, string $key, array $payload): ?int
 
 ### argBool
 
-*private static* - line 1996
+*private static* - line 2026
 
 Resolve a checkbox arg (`'type' => 'bool'`).
 
@@ -904,7 +933,9 @@ function argBool(array $args, string $key, array $payload, bool $default = false
 
 ### action_attach_checklist
 
-*private static* - line 2006
+*private static* - line 2043
+
+attach_checklist: copies each chosen checklist template, with its items, onto the ticket, skipping templates already attached. No templates chosen is a skip, not an error.
 
 ```php
 function action_attach_checklist(array $args, array $payload): array
@@ -915,19 +946,23 @@ function action_attach_checklist(array $args, array $payload): array
 | `$args` | `array` |  |  |
 | `$payload` | `array` |  |  |
 
+**Writes:** ticket_checklists, ticket_checklist_items - the attached copies
+
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2027 | `WorkflowEngine::action_attach_checklist` | read [ticket_checklists](/code/tables/ticket_checklists.md) |  |
-| 2034 | `WorkflowEngine::action_attach_checklist` | read [checklist_templates](/code/tables/checklist_templates.md) |  |
-| 2041 | `WorkflowEngine::action_attach_checklist` | **insert** [ticket_checklists](/code/tables/ticket_checklists.md) (`ticket_id`, `template_id`, `title`, `closure_mode`, `created_by_id`, `created_datetime`) |  |
-| 2046 | `WorkflowEngine::action_attach_checklist` | read [checklist_template_items](/code/tables/checklist_template_items.md) |  |
-| 2050 | `WorkflowEngine::action_attach_checklist` | **insert** [ticket_checklist_items](/code/tables/ticket_checklist_items.md) (`ticket_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`) |  |
+| 2064 | `WorkflowEngine::action_attach_checklist` | read [ticket_checklists](/code/tables/ticket_checklists.md) |  |
+| 2071 | `WorkflowEngine::action_attach_checklist` | read [checklist_templates](/code/tables/checklist_templates.md) |  |
+| 2078 | `WorkflowEngine::action_attach_checklist` | **insert** [ticket_checklists](/code/tables/ticket_checklists.md) (`ticket_id`, `template_id`, `title`, `closure_mode`, `created_by_id`, `created_datetime`) |  |
+| 2083 | `WorkflowEngine::action_attach_checklist` | read [checklist_template_items](/code/tables/checklist_template_items.md) |  |
+| 2087 | `WorkflowEngine::action_attach_checklist` | **insert** [ticket_checklist_items](/code/tables/ticket_checklist_items.md) (`ticket_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`) |  |
 
 ### action_log_message
 
-*private static* - line 2073
+*private static* - line 2111
+
+log_message: puts the rendered message into the run's step log and changes nothing else.
 
 ```php
 function action_log_message(array $args, array $payload): array
@@ -940,7 +975,12 @@ function action_log_message(array $args, array $payload): array
 
 ### action_set_ticket_status
 
-*private static* - line 2080
+*private static* - line 2127
+
+set_ticket_status: writes the ticket's status directly, stamping or clearing closed_datetime.
+
+Closing applies the same gates as an analyst closing it - mandatory SOP
+steps and mandatory fields - and the action fails when they block.
 
 ```php
 function action_set_ticket_status(array $args, array $payload): array
@@ -951,17 +991,21 @@ function action_set_ticket_status(array $args, array $payload): array
 | `$args` | `array` |  |  |
 | `$payload` | `array` |  |  |
 
+**Writes:** tickets(status_id, closed_datetime, updated_datetime)
+
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2087 | `WorkflowEngine::action_set_ticket_status` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 2098 | `WorkflowEngine::action_set_ticket_status` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 2129 | `WorkflowEngine::action_set_ticket_status` | **update** [tickets](/code/tables/tickets.md) |  |
+| 2134 | `WorkflowEngine::action_set_ticket_status` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 2145 | `WorkflowEngine::action_set_ticket_status` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 2176 | `WorkflowEngine::action_set_ticket_status` | **update** [tickets](/code/tables/tickets.md) |  |
 
 ### action_set_ticket_priority
 
-*private static* - line 2141
+*private static* - line 2189
+
+set_ticket_priority: sets the ticket's priority after checking the priority id exists.
 
 ```php
 function action_set_ticket_priority(array $args, array $payload): array
@@ -976,12 +1020,14 @@ function action_set_ticket_priority(array $args, array $payload): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2148 | `WorkflowEngine::action_set_ticket_priority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 2152 | `WorkflowEngine::action_set_ticket_priority` | **update** [tickets](/code/tables/tickets.md) (`priority_id`, `updated_datetime`) |  |
+| 2196 | `WorkflowEngine::action_set_ticket_priority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 2200 | `WorkflowEngine::action_set_ticket_priority` | **update** [tickets](/code/tables/tickets.md) (`priority_id`, `updated_datetime`) |  |
 
 ### action_assign_ticket
 
-*private static* - line 2157
+*private static* - line 2206
+
+assign_ticket: sets both the assigned analyst and the owner of the ticket to one analyst, so the two stay in step.
 
 ```php
 function action_assign_ticket(array $args, array $payload): array
@@ -996,12 +1042,14 @@ function action_assign_ticket(array $args, array $payload): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2164 | `WorkflowEngine::action_assign_ticket` | read [analysts](/code/tables/analysts.md) |  |
-| 2171 | `WorkflowEngine::action_assign_ticket` | **update** [tickets](/code/tables/tickets.md) (`assigned_analyst_id`, `owner_id`, `updated_datetime`) |  |
+| 2213 | `WorkflowEngine::action_assign_ticket` | read [analysts](/code/tables/analysts.md) |  |
+| 2220 | `WorkflowEngine::action_assign_ticket` | **update** [tickets](/code/tables/tickets.md) (`assigned_analyst_id`, `owner_id`, `updated_datetime`) |  |
 
 ### action_add_ticket_note
 
-*private static* - line 2176
+*private static* - line 2231
+
+add_ticket_note: adds the rendered note to the ticket's audit trail as a "Workflow Note" with no analyst.
 
 ```php
 function action_add_ticket_note(array $args, array $payload): array
@@ -1012,15 +1060,25 @@ function action_add_ticket_note(array $args, array $payload): array
 | `$args` | `array` |  |  |
 | `$payload` | `array` |  |  |
 
+**Writes:** ticket_audit
+
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2188 | `WorkflowEngine::action_add_ticket_note` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 2243 | `WorkflowEngine::action_add_ticket_note` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### action_send_email
 
-*private static* - line 2194
+*private static* - line 2259
+
+send_email: sends an email from the ticket's mailbox or a chosen one, through Microsoft Graph, Gmail or SMTP depending on the mailbox.
+
+The recipient defaults to the ticket's requester. With a ticket the
+subject carries the SDREF tag and the body the reply marker, and the sent
+copy is filed on the ticket; without one it is a plain styled email. A
+confidential ticket's email to anyone but its requester or an analyst is
+skipped. Every send, or failed send, is written to the email log.
 
 ```php
 function action_send_email(array $args, array $payload): array
@@ -1035,11 +1093,11 @@ function action_send_email(array $args, array $payload): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2252 | `WorkflowEngine::action_send_email` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 2317 | `WorkflowEngine::action_send_email` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ### plainEmailBody
 
-*private static* - line 2348
+*private static* - line 2413
 
 The house email styling, without the reply marker.
 
@@ -1057,7 +1115,9 @@ function plainEmailBody(string $bodyContent): string
 
 ### action_create_task
 
-*private static* - line 2358
+*private static* - line 2430
+
+create_task: creates a task, optionally linked to a ticket, using the default status and priority when none is chosen and placing it at the end of its board column.
 
 ```php
 function action_create_task(array $args, array $payload): array
@@ -1068,19 +1128,21 @@ function action_create_task(array $args, array $payload): array
 | `$args` | `array` |  |  |
 | `$payload` | `array` |  |  |
 
+**Writes:** tasks
+
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2372 | `WorkflowEngine::action_create_task` | read [task_statuses](/code/tables/task_statuses.md) |  |
-| 2373 | `WorkflowEngine::action_create_task` | read [task_statuses](/code/tables/task_statuses.md) |  |
-| 2377 | `WorkflowEngine::action_create_task` | read [task_priorities](/code/tables/task_priorities.md) |  |
-| 2384 | `WorkflowEngine::action_create_task` | read [tasks](/code/tables/tasks.md) |  |
-| 2389 | `WorkflowEngine::action_create_task` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `ticket_id`, `board_position`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 2444 | `WorkflowEngine::action_create_task` | read [task_statuses](/code/tables/task_statuses.md) |  |
+| 2445 | `WorkflowEngine::action_create_task` | read [task_statuses](/code/tables/task_statuses.md) |  |
+| 2449 | `WorkflowEngine::action_create_task` | read [task_priorities](/code/tables/task_priorities.md) |  |
+| 2456 | `WorkflowEngine::action_create_task` | read [tasks](/code/tables/tasks.md) |  |
+| 2461 | `WorkflowEngine::action_create_task` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `assigned_analyst_id`, `ticket_id`, `board_position`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 ### action_create_project
 
-*private static* - line 2414
+*private static* - line 2486
 
 A project proposal (3.3.0) - the rules are includes/projects/intake.php's.
 
@@ -1095,7 +1157,16 @@ function action_create_project(array $args, array $payload): array
 
 ### action_create_ticket
 
-*private static* - line 2424
+*private static* - line 2508
+
+create_ticket: raises a new ticket.
+
+When the event carries a form submission the job goes to the shared
+form-to-ticket path (catalogueRaiseTicketFromSubmissionId), with the
+configured args as overrides. Otherwise it finds or creates the requester
+by email, numbers the ticket with TicketNumbering, applies the
+confidential defaults and adds the opening message and a "Ticket Created"
+audit row, all in one transaction.
 
 ```php
 function action_create_ticket(array $args, array $payload): array
@@ -1106,20 +1177,22 @@ function action_create_ticket(array $args, array $payload): array
 | `$args` | `array` |  |  |
 | `$payload` | `array` |  |  |
 
+**Writes:** tickets, emails, ticket_audit, users - a requester row for a new email address
+
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 2477 | `WorkflowEngine::action_create_ticket` | read [users](/code/tables/users.md) |  |
-| 2481 | `WorkflowEngine::action_create_ticket` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
-| 2491 | `WorkflowEngine::action_create_ticket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 2501 | `WorkflowEngine::action_create_ticket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_team_id`, `assigned_analyst_id`, `user_id`, `created_datetime`, `updated_datetime`) |  |
-| 2523 | `WorkflowEngine::action_create_ticket` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance`, `is_read`, `ticket_id`) |  |
-| 2537 | `WorkflowEngine::action_create_ticket` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 2561 | `WorkflowEngine::action_create_ticket` | read [users](/code/tables/users.md) |  |
+| 2565 | `WorkflowEngine::action_create_ticket` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
+| 2575 | `WorkflowEngine::action_create_ticket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 2585 | `WorkflowEngine::action_create_ticket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_team_id`, `assigned_analyst_id`, `user_id`, `created_datetime`, `updated_datetime`) |  |
+| 2607 | `WorkflowEngine::action_create_ticket` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `to_recipients`, `received_datetime`, `body_preview`, `body_content`, `body_type`, `has_attachments`, `importance`, `is_read`, `ticket_id`) |  |
+| 2621 | `WorkflowEngine::action_create_ticket` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### action_send_webhook
 
-*private static* - line 2570
+*private static* - line 2654
 
 POST a payload to an external URL — the outbound-webhook action.
 
@@ -1148,7 +1221,7 @@ function action_send_webhook(array $args, array $payload): array
 
 ### action_escalate_to_tracker
 
-*private static* - line 2641
+*private static* - line 2725
 
 Raise an issue in an external tracker from this ticket.
 
@@ -1173,7 +1246,7 @@ function action_escalate_to_tracker(array $args, array $payload): array
 
 ### action_send_note_to_tracker
 
-*private static* - line 2724
+*private static* - line 2808
 
 Post a comment onto the issue this ticket is already linked to.
 
@@ -1192,7 +1265,7 @@ function action_send_note_to_tracker(array $args, array $payload): array
 
 ### buildWebhookRequest
 
-*public static* - line 2782
+*public static* - line 2866
 
 Build the outbound-webhook HTTP request (url, headers incl. any HMAC signature, and the rendered/validated JSON body) from the action's args and the trigger payload. Shared by the live action (action_send_webhook, which then enqueues the result) and the editor's "Send test" preview endpoint (which sends it synchronously) — so the test can never drift from a real send. Throws on any validation failure (bad url, empty message, invalid JSON).
 
@@ -1215,7 +1288,7 @@ function buildWebhookRequest(array $args, array $payload): array
 
 ### enrichWithFullObjects
 
-*public static* - line 2848
+*public static* - line 2932
 
 Enrich a trigger payload with the FULL, API-shaped version of its primary object, reusing the REST API serialisers so a webhook can emit exactly the JSON that GET /<resource>/{id} returns — rich, consistent and already typed in the OpenAPI spec. The full object is attached under <key>.full, so a Custom body can embed the whole record with {{ticket.full}} (the template engine json_encodes arrays), and the "Full record" preset sends it wholesale.
 
@@ -1234,7 +1307,7 @@ function enrichWithFullObjects(PDO $conn, array $payload): array
 
 ### fullObjectLoaders
 
-*private static* - line 2878
+*private static* - line 2962
 
 The registry of full-object loaders, keyed by payload key. Each loader takes an id and returns the API-shaped record (or null if gone). Built per-call (not a static, so it can hold closures) — cheap, since it only runs when a webhook actually needs a full object. One entry per resource whose GET /{id} is a clean select+serialise; add a resource here to light up its `.full`.
 
@@ -1248,7 +1321,7 @@ function fullObjectLoaders(PDO $conn): array
 
 ### dotGet
 
-*private static* - line 2913
+*private static* - line 2997
 
 Dotted-path getter — `dotGet(['ticket' => ['id' => 5]], 'ticket.id')` → 5.
 
@@ -1263,7 +1336,9 @@ function dotGet(array $haystack, string $path)
 
 ### decodeJsonField
 
-*private static* - line 2928
+*private static* - line 3013
+
+A JSON column (a workflow's conditions or actions) decoded to an array; [] when empty or not valid JSON.
 
 ```php
 function decodeJsonField($raw): array

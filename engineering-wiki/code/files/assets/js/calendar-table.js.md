@@ -1,6 +1,6 @@
 # assets/js/calendar-table.js
 
-> JavaScript - 98 lines
+> JavaScript - 101 lines
 
 FreeITSM Calendar — table view config
 
@@ -16,9 +16,9 @@ cell save posts the full in-memory event with the one changed field applied.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `T(k)` | 18 |  |
-| `fmt(raw)` | 20 |  |
-| `loadCategories()` | 44 |  |
+| `T(k)` | 19 | Translates a key, returning the key itself when translations are not loaded. |
+| `fmt(raw)` | 22 | Shows a stored date-time as "YYYY-MM-DD HH:MM" - blank when there is none. |
+| `loadCategories()` | 47 | Loads the calendar categories for the category column and its inline editor. |
 
 ## API endpoints it calls
 

@@ -6,7 +6,7 @@ Everything the screen needs to know, in one place.
 function dockerTlsState(string $dir = DOCKER_TLS_DIR): array
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 149.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 150.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

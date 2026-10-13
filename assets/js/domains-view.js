@@ -1,5 +1,7 @@
 /**
  * Domains — one domain's page (domains/view.php).
+ *
+ * @wiki Domains-Developer-Guide
  */
 (function () {
     'use strict';
@@ -16,6 +18,10 @@
         if (new URLSearchParams(location.search).get('edit') === '1' && D) openEdit();
     });
 
+    /**
+     * Fetches the domain and redraws every tab, then loads its connections; on failure shows the error in
+     * the hero.
+     */
     async function load() {
         try {
             data = await api('get.php?id=' + ID);
@@ -26,6 +32,7 @@
             document.getElementById('hero').innerHTML = '<div class="dom-empty">' + esc(e.message) + '</div>';
         }
     }
+    /** Fetches the drop-down lists the Edit dialog needs; leaves them null when that fails. */
     async function loadLookups() {
         try { L = (await api('lookups.php')).lookups; } catch (e) { L = null; }
     }
@@ -65,8 +72,13 @@
         if (v === null || v === undefined || v === '') v = '<span class="dom-sub">—</span>';
         return '<div class="k">' + esc(T(k)) + '</div><div class="v' + (mono ? ' mono' : '') + '">' + v + '</div>';
     }
+    /** Draws a lock or DNSSEC flag as a green on pill, a red off pill, or grey unknown. */
     function yn(v) { return v === true ? '<span class="dom-pill green">' + esc(T('lock.on')) + '</span>' : (v === false ? '<span class="dom-pill red">' + esc(T('lock.off')) + '</span>' : '<span class="dom-sub">' + esc(T('lock.unknown')) + '</span>'); }
 
+    /**
+     * Draws the Overview tab: the top three checks worth fixing, then the registration, DNS and web, and
+     * people and money cards.
+     */
     function renderOverview() {
         const reg = '<div class="dom-card"><div class="dom-card-h"><h3>' + esc(T('page.registration')) + '</h3>'
             + '<span class="dom-sub">' + esc(D.lookup_source ? T('source.' + D.lookup_source) : T('source.manual'))
@@ -118,6 +130,10 @@
         document.getElementById('overview').innerHTML = fix + reg + dns + people;
     }
 
+    /**
+     * Draws the auth code field: hidden with Reveal and Change links for analysts allowed auth codes,
+     * otherwise just whether one is set.
+     */
     function authCodeCell() {
         if (!data.can_auth_codes) return D.auth_code_set ? '<span class="dom-sub">' + esc(T('code.set_hidden')) + '</span>' : '';
         return (D.auth_code_set ? '<span id="codeVal" style="font-family:monospace">••••••••</span> <a href="#" id="codeReveal">' + esc(T('code.reveal')) + '</a> · ' : '')
@@ -126,6 +142,7 @@
 
     // ---------------------------------------------------------------- security
     const AREAS = ['registration', 'dns', 'email', 'web'];
+    /** Draws the Security tab - the grade and score, then the findings grouped by area, worst first. */
     function renderSecurity() {
         const f = D.findings || [];
         if (!f.length) {
@@ -224,16 +241,22 @@
     ];
     let C = null;
 
+    /** Fetches what the domain is linked to and redraws the Connections tab. */
     async function loadConnections() {
         try { C = await api('links.php?domain_id=' + ID); }
         catch (e) { C = { error: e.message }; }
         renderConnections();
     }
 
+    /** Wraps icon paths in an SVG for a connections card heading. */
     function connIcon(paths) {
         return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
     }
 
+    /**
+     * Draws the banner warning that linked services are at risk from an expired domain or certificate,
+     * with the open incident, the Service Status mode, or a Raise incident button.
+     */
     function riskHtml() {
         const s = C.status || {};
         if (!s.ready || !(s.problems || []).length || !s.at_risk || s.mode === undefined) return '';
@@ -255,6 +278,7 @@
             + ' ' + esc(T('links.risk_body', { n: s.at_risk })) + act + '</div>';
     }
 
+    /** Draws the Contract card - the linked contract or none, and a button that opens Edit to set it. */
     function contractHtml() {
         const has = D && D.contract_id;
         const label = (data && data.domain && data.domain.contract_label) || '';
@@ -265,6 +289,7 @@
             + ' <button type="button" class="dom-btn" data-goto-edit="1">' + esc(T('links.contract_set')) + '</button></div></div>';
     }
 
+    /** Draws one linked record with its link, a status or inactive pill, and an unlink button. */
     function rowHtml(kind, r) {
         const extra = kind === 'ticket' && r.status
             ? ' <span class="dom-pill" style="background:' + esc(r.status_colour || '#888') + '22;color:' + esc(r.status_colour || '#666') + '">' + esc(r.status) + '</span>'
@@ -274,6 +299,10 @@
             + '<button type="button" class="dom-conn-x" data-unlink="' + kind + '" data-id="' + r.id + '" title="' + esc(T('links.remove')) + '" aria-label="' + esc(T('links.remove')) + ': ' + esc(r.label) + '">&times;</button></li>';
     }
 
+    /**
+     * Draws the Connections tab: the risk banner, the contract card and one card per kind the analyst may
+     * open, and sets the tab badge (red when services are at risk with no incident).
+     */
     function renderConnections() {
         const host = document.getElementById('connections');
         if (!host) return;
@@ -302,6 +331,7 @@
     }
 
     let connTimer = null;
+    /** Searches records of one kind that can be linked to this domain and shows the results under the box. */
     async function connSearch(input) {
         const kind = input.dataset.search;
         const ul = document.querySelector('[data-results="' + kind + '"]');
@@ -315,6 +345,10 @@
         } catch (e) { showToast(e.message, 'error'); }
     }
 
+    /**
+     * Wires the Connections tab once: search as you type, link on pick, unlink, Edit for the contract,
+     * Raise incident, and keyboard movement through the results.
+     */
     function wireConnections() {
         const host = document.getElementById('connections');
         if (!host) return;
@@ -376,11 +410,19 @@
         document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
     }
 
+    /**
+     * Runs an action with its button disabled and showing "Working", then puts the button back.
+     * Errors become a toast.
+     */
     async function busy(btn, fn) {
         const was = btn.innerHTML; btn.disabled = true; btn.innerHTML = esc(T('page.working'));
         try { await fn(); } catch (e) { showToast(e.message, 'error'); } finally { btn.disabled = false; btn.innerHTML = was; }
     }
 
+    /**
+     * Wires the page once: tabs, Refresh, Check, Edit, Delete, the auth code links and dialog,
+     * certificate and look-alike scans, and dismissing look-alikes.
+     */
     function wire() {
         wireConnections();
         document.getElementById('domTabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) switchTab(b.dataset.tab); });
@@ -435,11 +477,16 @@
         const ok = page === 'person.php' ? window.DOM_PEOPLE : (window.DOM_PEOPLE && window.DOM_PEOPLE_SUPPLIERS);
         return ok ? '<a href="' + esc(window.DOM_PEOPLE + page + '?id=' + id) + '">' + label + '</a>' : label;
     }
+    /** Draws the technical contact - an analyst, or a supplier contact linked to People. */
     function techCell() {
         if (D.tech_analyst_id) return esc(D.tech_analyst_name || ('#' + D.tech_analyst_id)) + '<div class="dom-sub">' + esc(T('field.tech_is_analyst')) + '</div>';
         if (D.tech_contact_id) return peopleLink('contact.php', D.tech_contact_id, D.tech_contact_name);
         return '';
     }
+    /**
+     * Draws the customer - a person, a supplier with or without one of its contacts, or a contact -
+     * linked to People where the analyst can open it.
+     */
     function customerCell() {
         if (D.customer_user_id) {
             return peopleLink('person.php', D.customer_user_id, D.customer_user_name)
@@ -453,6 +500,7 @@
         if (D.customer_contact_id) return peopleLink('contact.php', D.customer_contact_id, D.customer_contact_name);
         return '';
     }
+    /** Returns the customer as plain text for the Edit dialog's search box. */
     function customerLabel() {
         if (D.customer_user_id) return D.customer_user_name || '';
         if (D.customer_contact_id) return (D.customer_contact_name || '') + (D.customer_supplier_name ? ' (' + D.customer_supplier_name + ')' : '');
@@ -462,9 +510,15 @@
 
     // ---------------------------------------------------------------- edit
     let techAtOpen = '', custAtOpen = '';
+    /**
+     * Fills the technical contact drop-down with analysts and supplier contacts, keeping the current one
+     * even when it is no longer in either list, and remembers the value it opened with.
+     */
     function fillTech() {
         const sel = document.getElementById('eTech');
+        /** Creates one option element. */
         const opt = (v, label) => { const o = document.createElement('option'); o.value = v; o.textContent = label; return o; };
+        /** Creates an option group holding the given options. */
         const group = (label, items) => { const g = document.createElement('optgroup'); g.label = label; g.append(...items); return g; };
         sel.replaceChildren(opt('', '—'));
         if (L.parties_ready) {
@@ -483,6 +537,12 @@
         techAtOpen = sel.value;
     }
 
+    /**
+     * Fills the Edit dialog from the domain - drop-downs, every data-f field, the technical contact and
+     * the customer - and opens it.
+     *
+     * A linked contract the analyst cannot see is kept as an option, so saving does not unlink it.
+     */
     function openEdit() {
         if (!L) { showToast(T('err.generic'), 'error'); return; }
         const F = window.Dom.fillSelect;
@@ -524,8 +584,13 @@
         document.getElementById('eCustomerClear').hidden = !key;
         hideCustomers();
     }
+    /** Hides and empties the customer search results. */
     function hideCustomers() { const ul = document.getElementById('eCustomerResults'); ul.hidden = true; ul.replaceChildren(); }
     let custTimer = null, custSeq = 0;
+    /**
+     * Searches people and suppliers for the customer box after a short pause and lists them, grouped
+     * when both kinds match. Typing clears the chosen customer; a reply to an older search is ignored.
+     */
     function searchCustomers() {
         document.getElementById('eCustomerId').value = '';   // typing again means choosing again
         document.getElementById('eCustomerClear').hidden = true;
@@ -545,6 +610,7 @@
                 const li = document.createElement('li'); li.textContent = T('field.customer_none'); li.setAttribute('aria-disabled', 'true');
                 ul.replaceChildren(li); ul.hidden = false; return;
             }
+            /** Builds one customer result that sets the customer when picked. */
             const item = (key, label, sub) => {
                 const li = document.createElement('li');
                 li.setAttribute('role', 'option'); li.dataset.id = key; li.dataset.label = label;
@@ -553,6 +619,7 @@
                 li.addEventListener('mousedown', e => { e.preventDefault(); setCustomer(key, label); });
                 return li;
             };
+            /** Builds a non-selectable group heading for the customer results. */
             const heading = text => { const li = document.createElement('li'); li.className = 'dom-person-group'; li.setAttribute('role', 'presentation'); li.textContent = text; return li; };
             const out = [];
             // Headings only when both kinds are there - one list needs no label.
@@ -566,6 +633,7 @@
             ul.hidden = false;
         }, 220);
     }
+    /** Arrow keys move through the customer results, Enter picks one and Escape closes the list. */
     function customerKeys(e) {
         const ul = document.getElementById('eCustomerResults');
         const items = Array.from(ul.querySelectorAll('li[role=option]'));
@@ -588,6 +656,12 @@
         document.addEventListener('click', e => { if (!e.target.closest('.dom-person')) hideCustomers(); });
     });
 
+    /**
+     * Saves the Edit dialog through save.php and reloads the page.
+     *
+     * The technical contact and customer are sent only when changed, so one set by somebody else that this
+     * analyst's lists cannot show is left alone.
+     */
     async function saveEdit() {
         const body = { id: ID };
         document.querySelectorAll('#editForm [data-f]').forEach(el => {

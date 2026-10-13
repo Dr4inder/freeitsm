@@ -6,7 +6,7 @@ Run one tool. NEVER throws — a failure is returned as words, because "the CMDB
 function warbotRunTool(PDO $conn, int $analystId, string $name, array $args): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 361.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 366.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

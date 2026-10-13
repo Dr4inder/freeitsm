@@ -21,7 +21,7 @@ function internalTicketEmail(
 ): void
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 638.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 643.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -38,7 +38,7 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 641 | `internalTicketEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 646 | `internalTicketEmail` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## Calls
 

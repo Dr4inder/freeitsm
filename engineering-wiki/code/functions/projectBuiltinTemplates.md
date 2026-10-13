@@ -6,7 +6,7 @@ The templates that ship with FreeITSM. English, like the seeded roles.
 function projectBuiltinTemplates(): array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 67.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 68.
 
 **Returns:** `array`
 
@@ -14,7 +14,7 @@ Defined in [includes/projects/templates.php](/code/files/includes/projects/templ
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 106 | `projectBuiltinTemplates` | read [assets](/code/tables/assets.md) |  |
+| 107 | `projectBuiltinTemplates` | read [assets](/code/tables/assets.md) |  |
 
 ## Called from
 

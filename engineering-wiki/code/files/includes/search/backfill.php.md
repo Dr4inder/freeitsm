@@ -1,6 +1,6 @@
 # includes/search/backfill.php
 
-> PHP - 163 lines
+> PHP - 166 lines
 
 Rebuild the search corpus from ticket content already in the database.
 
@@ -31,18 +31,18 @@ hold a huge transaction open for no benefit.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [searchBackfillRun()](/code/functions/searchBackfillRun.md) | 36 |  |
-| [searchBackfillPrune()](/code/functions/searchBackfillPrune.md) | 155 | Remove every corpus row whose ticket has since been deleted or trashed. The foreign key handles a hard DELETE; this covers the soft-delete case. |
+| [searchBackfillRun()](/code/functions/searchBackfillRun.md) | 39 | Fills the search corpus from existing tickets, emails, notes, attachments and Knowledge articles, in resumable batches. |
+| [searchBackfillPrune()](/code/functions/searchBackfillPrune.md) | 158 | Remove every corpus row whose ticket has since been deleted or trashed. The foreign key handles a hard DELETE; this covers the soft-delete case. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 62 | `searchBackfillRun` | read [tickets](/code/tables/tickets.md) |  |
-| 66 | `searchBackfillRun` | read [tickets](/code/tables/tickets.md) |  |
-| 101 | `searchBackfillRun` | read [tickets](/code/tables/tickets.md) |  |
-| 122 | `searchBackfillRun` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 156 | `searchBackfillPrune` | **delete** [search_documents](/code/tables/search_documents.md), read [tickets](/code/tables/tickets.md) |  |
+| 65 | `searchBackfillRun` | read [tickets](/code/tables/tickets.md) |  |
+| 69 | `searchBackfillRun` | read [tickets](/code/tables/tickets.md) |  |
+| 104 | `searchBackfillRun` | read [tickets](/code/tables/tickets.md) |  |
+| 125 | `searchBackfillRun` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 159 | `searchBackfillPrune` | **delete** [search_documents](/code/tables/search_documents.md), read [tickets](/code/tables/tickets.md) |  |
 
 ## How it hangs together
 

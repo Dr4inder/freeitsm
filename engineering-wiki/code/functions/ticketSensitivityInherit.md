@@ -6,7 +6,7 @@ A ticket made from, or combined with, others is confidential if any of them was.
 function ticketSensitivityInherit(PDO $conn, int $ticketId, array $sourceIds, string $reason): bool
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 135.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 137.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensiti
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 142 | `ticketSensitivityInherit` | read [tickets](/code/tables/tickets.md) |  |
+| 144 | `ticketSensitivityInherit` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ Everything linked to one domain, per kind, for this analyst: a kind they cannot 
 function domainLinks(PDO $conn, int $analystId, int $domainId): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 167.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 170.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -11,7 +11,7 @@ the row is there on the screen, and nothing ever happens because of it.
 function lmsAssignmentTargetProblem(PDO $conn, string $targetType, int $groupId): ?string
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 544.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 550.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,10 +25,10 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 549 | `lmsAssignmentTargetProblem` | read [lms_learning_groups](/code/tables/lms_learning_groups.md) |  |
-| 556 | `lmsAssignmentTargetProblem` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 562 | `lmsAssignmentTargetProblem` | read [analysts](/code/tables/analysts.md) |  |
-| 568 | `lmsAssignmentTargetProblem` | read [users](/code/tables/users.md) |  |
+| 555 | `lmsAssignmentTargetProblem` | read [lms_learning_groups](/code/tables/lms_learning_groups.md) |  |
+| 562 | `lmsAssignmentTargetProblem` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 568 | `lmsAssignmentTargetProblem` | read [analysts](/code/tables/analysts.md) |  |
+| 574 | `lmsAssignmentTargetProblem` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

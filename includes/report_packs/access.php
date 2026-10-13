@@ -53,6 +53,7 @@ function rpViewer(PDO $conn, int $analystId): array
     ];
 }
 
+/** A department name normalised for matching: spaces collapsed, trimmed and lower case. */
 function rpNormDept($s): string
 {
     return mb_strtolower(trim(preg_replace('/\s+/u', ' ', (string)$s)));

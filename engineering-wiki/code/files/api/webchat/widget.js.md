@@ -1,6 +1,6 @@
 # api/webchat/widget.js
 
-> JavaScript - 406 lines
+> JavaScript - 465 lines
 
 FreeITSM web chat widget loader.
 
@@ -19,26 +19,26 @@ Vanilla JS, no dependencies, no cookies.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `api(path)` | 41 |  |
-| `esc(s)` | 43 |  |
-| `styles()` | 57 |  |
-| `build()` | 118 |  |
-| `el(sel)` | 133 |  |
-| `scrollDown()` | 135 |  |
-| `showTyping()` | 140 |  |
-| `hideTyping()` | 153 |  |
-| `escBarHtml()` | 159 |  |
-| `renderChatShell()` | 167 |  |
-| `hideEscBar()` | 193 |  |
-| `renderIntro()` | 198 |  |
-| `addMessage(m, scroll)` | 210 |  |
-| `onEscalate(mode)` | 229 |  |
-| `loadConfig()` | 251 |  |
-| `onStart(e)` | 262 |  |
-| `onSend(e)` | 289 |  |
-| `poll()` | 330 |  |
-| `startPolling()` | 364 |  |
-| `stopPolling()` | 369 |  |
-| `openPanel()` | 372 |  |
-| `closePanel()` | 389 |  |
+| `api(path)` | 42 | The full address of one of the web chat endpoints, next to this script. |
+| `esc(s)` | 45 | Escapes text for safe use inside HTML. |
+| `styles()` | 60 | The widget's CSS, injected into its Shadow DOM so the host page's styles cannot reach it. |
+| `build()` | 122 | Adds the styles, the launcher button and the (closed) chat panel to the Shadow DOM. |
+| `el(sel)` | 138 | Finds the first element inside the widget's Shadow DOM that matches a selector. |
+| `scrollDown()` | 141 | Scrolls the message list to the newest message. |
+| `showTyping()` | 150 | Shows the three-dot typing indicator while a reply is expected, removing it by itself after 30 seconds if none arrives. |
+| `hideTyping()` | 164 | Removes the typing indicator. |
+| `escBarHtml()` | 174 | The "Talk to a person" / "Email me back" buttons, when the AI assistant is on and the widget offers them - empty otherwise. |
+| `renderChatShell()` | 187 | Draws the chat view - message list, escalation buttons and the message box (Enter sends, Shift+Enter is a new line) - then shows the greeting and, out of hours, the offline message. |
+| `hideEscBar()` | 214 | Removes the escalation buttons once the visitor has chosen one. |
+| `renderIntro()` | 220 | Draws the start form that asks for the visitor's name and email before the chat begins. |
+| `addMessage(m, scroll)` | 236 | Adds one message to the list - a centred system notice, or a bubble from the agent (with their name) or the visitor - and scrolls down unless scroll is false. |
+| `onEscalate(mode)` | 259 | Asks for a person ('agent') or an email reply ('email') through escalate.php, then removes the buttons and polls for the confirmation note. |
+| `loadConfig()` | 282 | Fetches the widget's settings (name, colour, greeting, hours, AI options) from config.php. |
+| `onStart(e)` | 298 | Starts a conversation through start.php with the name and email given, keeps its token in sessionStorage so the chat survives page navigation, then shows the chat and starts polling. |
+| `onSend(e)` | 332 | Sends the visitor's message through send.php, showing it at once and a typing indicator while an AI reply is expected. |
+| `poll()` | 381 | Fetches any messages newer than the last one seen from poll.php and adds them; when the conversation has been closed it says so, disables the message box and stops polling. |
+| `startPolling()` | 416 | Polls once straight away, then every 3 seconds. |
+| `stopPolling()` | 422 | Stops the 3-second poll. |
+| `openPanel()` | 430 | Opens the chat panel - straight back into the conversation when there is a token, to the start form when an email is required, otherwise starting a conversation at once. |
+| `closePanel()` | 448 | Closes the chat panel, shows the launcher again and stops polling. |
 

@@ -1,6 +1,6 @@
 # includes/services/morning_checks.php
 
-> PHP - 548 lines
+> PHP - 553 lines
 
 MorningChecksService — the single home for the morning-checks module's write rules (checks, daily results, and the UI-only statuses / reorder / normalise).
 

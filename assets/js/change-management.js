@@ -97,6 +97,10 @@ const DETAIL_FIELD_MAP = {
     outage_start: 'outage_start_datetime', outage_end: 'outage_end_datetime'
 };
 
+/**
+ * Loads the change form layout (sections, fields and where each is placed) set in Change
+ * Management settings.
+ */
 async function loadFormLayout() {
     try {
         const res = await fetch(API_BASE + 'get_field_layout.php');
@@ -117,6 +121,10 @@ async function loadFormLayout() {
     }
 }
 
+/**
+ * Whether a change field is shown, by the form layout. A field the layout does not know
+ * about is shown.
+ */
 function isFieldVisible(fieldKey) {
     const f = fieldByKey[fieldKey];
     // Unknown fields default to visible. Keeps newly-added catalogue keys
@@ -351,6 +359,7 @@ function sortLookup(rows) {
     });
 }
 
+/** Loads the active change priorities, in order. */
 async function loadChangePriorities() {
     try {
         const res = await fetch(API_BASE + 'get_change_priorities.php');
@@ -361,6 +370,7 @@ async function loadChangePriorities() {
     }
 }
 
+/** Loads the active change types, in order. */
 async function loadChangeTypes() {
     try {
         const res = await fetch(API_BASE + 'get_change_types.php');
@@ -371,6 +381,7 @@ async function loadChangeTypes() {
     }
 }
 
+/** Loads the active change impact levels, in order. */
 async function loadChangeImpacts() {
     try {
         const res = await fetch(API_BASE + 'get_change_impacts.php');
@@ -398,6 +409,10 @@ async function loadMoveCompanies() {
     }
 }
 
+/**
+ * Draws one filter row per change status (with its colour and a count) under the
+ * always-present All row.
+ */
 function renderStatusFilters() {
     const container = document.getElementById('statusFilterList');
     if (!container) return;
@@ -418,6 +433,7 @@ function renderStatusFilters() {
     });
 }
 
+/** Fills the editor's status dropdown, keeping the current choice when it still exists. */
 function populateStatusDropdown() {
     const sel = document.getElementById('changeStatus');
     if (!sel) return;
@@ -430,6 +446,7 @@ function populateStatusDropdown() {
     if (currentValue) sel.value = currentValue;
 }
 
+/** Loads the analysts and fills every analyst dropdown. */
 async function loadAnalysts() {
     try {
         const response = await fetch(API_BASE + 'list.php?analysts=1');
@@ -443,6 +460,7 @@ async function loadAnalysts() {
     }
 }
 
+/** Fills the requester, assigned-to, approver and CAB member dropdowns with the analysts. */
 function populateAnalystDropdowns() {
     const dropdowns = ['changeRequester', 'changeAssignedTo', 'changeApprover', 'cabMemberSelect'];
     dropdowns.forEach(id => {
@@ -459,6 +477,7 @@ function populateAnalystDropdowns() {
     });
 }
 
+/** Loads the change list for the current status filter and search, and updates the counts. */
 async function loadChanges() {
     try {
         let url = API_BASE + 'list.php?';
@@ -486,6 +505,10 @@ async function loadChanges() {
 // Last counts payload from list.php — cached so loadStatuses() can re-apply
 // them if the status list lands after the first counts response.
 let latestCounts = null;
+/**
+ * Writes the total and per-status counts into the filter rows, and keeps them so they
+ * can be reapplied when the status list arrives later.
+ */
 function updateCounts(counts) {
     if (!counts) return;
     latestCounts = counts;
@@ -502,6 +525,10 @@ function updateCounts(counts) {
 
 // ============ Rendering ============
 
+/**
+ * Draws the change cards - reference, title, assignee, work start and risk, type,
+ * priority and status badges.
+ */
 function renderChangeList() {
     const container = document.getElementById('changeList');
     const countEl = document.getElementById('changeCount');
@@ -547,6 +574,7 @@ function renderChangeList() {
 
 // ============ View Change Detail ============
 
+/** Loads one change, records it in the recent trail and shows its detail view. */
 async function viewChange(id) {
     try {
         const response = await fetch(API_BASE + 'get.php?id=' + id);
@@ -568,6 +596,11 @@ async function viewChange(id) {
     }
 }
 
+/**
+ * Draws the detail view of the current change - header, badges and the fields the form
+ * layout shows, CAB review, rich-text sections, risk matrix, review results,
+ * attachments, linked incidents and activity.
+ */
 function renderChangeDetail() {
     const c = currentChange;
     const ref = 'CHG-' + String(c.id).padStart(4, '0');
@@ -755,6 +788,10 @@ function cmPreviewBadge(type, id) {
     return window.FreeITSMPreview ? window.FreeITSMPreview.badge(type, id) : '';
 }
 
+/**
+ * The linked incidents table for a change - each with a link, a preview badge and Unlink
+ * - and the button to link another.
+ */
 function renderLinkedIncidents(c) {
     const incidents = c.incidents || [];
     const rows = incidents.map(i => `
@@ -783,6 +820,7 @@ function renderLinkedIncidents(c) {
 }
 
 let cmLinkIncidentSearchTimer = null;
+/** Opens the dialog for linking an incident to the current change. */
 function openLinkIncidentModal() {
     if (!currentChange) return;
     const search = document.getElementById('linkIncidentSearch');
@@ -790,13 +828,16 @@ function openLinkIncidentModal() {
     document.getElementById('linkIncidentModal').classList.add('active');
     loadLinkableIncidents();
 }
+/** Closes the link-an-incident dialog. */
 function closeLinkIncidentModal() {
     document.getElementById('linkIncidentModal').classList.remove('active');
 }
+/** Re-runs the incident search 250 ms after the last keystroke. */
 function linkIncidentSearchDebounced() {
     clearTimeout(cmLinkIncidentSearchTimer);
     cmLinkIncidentSearchTimer = setTimeout(loadLinkableIncidents, 250);
 }
+/** Lists the tickets that can be linked to the current change, matching the search box. */
 async function loadLinkableIncidents() {
     if (!currentChange) return;
     const list = document.getElementById('linkIncidentList');
@@ -816,6 +857,7 @@ async function loadLinkableIncidents() {
         list.innerHTML = `<div class="link-incident-empty">${window.t('change-management.toast.load_incidents_failed')}</div>`;
     }
 }
+/** Links a ticket to the current change and reloads it. */
 async function linkChangeIncident(ticketId) {
     if (!currentChange) return;
     try {
@@ -827,6 +869,7 @@ async function linkChangeIncident(ticketId) {
         viewChange(currentChange.id);
     } catch (e) { showToast(window.t('change-management.toast.link_failed'), 'error'); }
 }
+/** Asks for confirmation, then unlinks a ticket from the current change and reloads it. */
 async function unlinkChangeIncident(ticketId) {
     if (!currentChange) return;
     const ok = window.showConfirm
@@ -842,6 +885,10 @@ async function unlinkChangeIncident(ticketId) {
     } catch (e) { showToast(window.t('change-management.toast.unlink_failed'), 'error'); }
 }
 
+/**
+ * One titled rich-text section of the detail view, or a "not provided" placeholder when
+ * it is empty. The content is the editor's HTML, inserted as it is.
+ */
 function renderDetailSection(title, content) {
     if (!content || content.trim() === '') {
         return `
@@ -861,6 +908,7 @@ function renderDetailSection(title, content) {
 
 // ============ Risk Matrix ============
 
+/** The 5 by 5 likelihood-by-impact risk matrix with the change's cell highlighted. */
 function renderRiskMatrix(likelihood, impact, score, level) {
     const riskClass = level ? level.toLowerCase().replace(/\s+/g, '-') : '';
 
@@ -924,6 +972,10 @@ function renderRiskMatrix(likelihood, impact, score, level) {
 
 // ============ PIR Detail ============
 
+/**
+ * The post-implementation review block - whether it succeeded, actual start and end,
+ * lessons learned and follow-up.
+ */
 function renderPirDetail(c) {
     let html = `<div class="pir-detail-section"><h3>${window.t('change-management.pir.heading')}</h3><div class="pir-detail-grid">`;
 
@@ -953,6 +1005,7 @@ function renderPirDetail(c) {
 
 // ============ Activity Timeline ============
 
+/** Loads a change's audit trail and comments together and shows them as one timeline, newest first. */
 async function loadActivityTimeline(changeId) {
     const container = document.getElementById('activityTimeline');
     if (!container) return;
@@ -996,6 +1049,10 @@ async function loadActivityTimeline(changeId) {
     }
 }
 
+/**
+ * Draws the activity timeline - comments, status changes, CAB votes, incident links and
+ * field edits.
+ */
 function renderActivityTimeline(timeline, container) {
     if (!timeline.length) {
         container.innerHTML = `<div class="timeline-empty">${window.t('change-management.detail.no_activity')}</div>`;
@@ -1063,6 +1120,7 @@ function renderActivityTimeline(timeline, container) {
     }).join('');
 }
 
+/** Adds the typed comment to the current change and reloads the timeline. */
 async function postComment() {
     if (!currentChange) return;
 
@@ -1095,6 +1153,7 @@ async function postComment() {
 
 // ============ Filtering & Search ============
 
+/** Filters the change list to one status (or all) and highlights its filter row. */
 function filterByStatus(status) {
     currentFilter = status;
     document.querySelectorAll('.status-filter').forEach(el => {
@@ -1108,6 +1167,7 @@ function filterByStatus(status) {
 let searchModalOffsetX = 0;
 let searchModalOffsetY = 0;
 
+/** Opens the search panel next to the search button and focuses the change number box. */
 function openSearchModal() {
     const modal = document.getElementById('searchModal');
     modal.classList.add('active');
@@ -1129,6 +1189,7 @@ function openSearchModal() {
     document.getElementById('searchChangeNumber').focus();
 }
 
+/** Closes the search panel. */
 function closeSearchModal() {
     document.getElementById('searchModal').classList.remove('active');
 }
@@ -1143,10 +1204,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+/** Lets the search panel be dragged by its header. */
 function initSearchModalDrag() {
     const header = document.getElementById('searchModalHeader');
     const modal = document.getElementById('searchModal');
 
+    /** Starts dragging the panel from where the header was pressed (not on a button). */
     header.onmousedown = function(e) {
         if (e.target.tagName === 'BUTTON') return;
         e.preventDefault();
@@ -1154,11 +1217,13 @@ function initSearchModalDrag() {
         searchModalOffsetX = e.clientX - rect.left;
         searchModalOffsetY = e.clientY - rect.top;
 
+        /** Moves the panel with the mouse. */
         function onMouseMove(e) {
             modal.style.left = (e.clientX - searchModalOffsetX) + 'px';
             modal.style.top = (e.clientY - searchModalOffsetY) + 'px';
             modal.style.transform = 'none';
         }
+        /** Ends the drag. */
         function onMouseUp() {
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
@@ -1168,6 +1233,7 @@ function initSearchModalDrag() {
     };
 }
 
+/** Searches changes by number (CHG-0001 or plain digits) or title and shows the results. */
 async function performSearch() {
     const changeNumber = document.getElementById('searchChangeNumber').value.trim();
     const title = document.getElementById('searchChangeTitle').value.trim();
@@ -1213,6 +1279,7 @@ async function performSearch() {
     }
 }
 
+/** Draws the search results with their count. */
 function renderSearchResults(results) {
     const container = document.getElementById('searchResults');
 
@@ -1243,11 +1310,13 @@ function renderSearchResults(results) {
     container.innerHTML = html;
 }
 
+/** Closes the search panel and opens the chosen change. */
 function selectSearchResult(changeId) {
     closeSearchModal();
     viewChange(changeId);
 }
 
+/** Empties the search boxes and results. */
 function clearSearch() {
     document.getElementById('searchChangeNumber').value = '';
     document.getElementById('searchChangeTitle').value = '';
@@ -1256,6 +1325,7 @@ function clearSearch() {
 
 // ============ Create / Edit ============
 
+/** Opens a blank change editor with the default status and empty risk, review and CAB fields. */
 function openCreateChange() {
     document.getElementById('editChangeId').value = '';
     document.getElementById('editorTitle').textContent = window.t('change-management.editor.new');
@@ -1310,6 +1380,10 @@ function openCreateChange() {
     updatePirVisibility();
 }
 
+/**
+ * Opens the editor filled with the current change - fields, attachments, risk, review,
+ * CAB members and the rich-text sections.
+ */
 function editCurrentChange() {
     if (!currentChange) return;
     const c = currentChange;
@@ -1372,6 +1446,10 @@ function editCurrentChange() {
     updatePirVisibility();
 }
 
+/**
+ * Leaves the editor without saving, back to the change (or the list), and tidies the
+ * address if it was the new-change route.
+ */
 function cancelEdit() {
     destroyEditors();
     if (currentChange) {
@@ -1396,6 +1474,10 @@ function restoreUrlFromNewRoute() {
 
 // ============ Save ============
 
+/**
+ * Saves the change from the editor, then its CAB members when CAB approval is on, and
+ * opens the saved change.
+ */
 async function saveChange() {
     const title = document.getElementById('changeTitle').value.trim();
     if (!title) {
@@ -1481,6 +1563,7 @@ async function saveChange() {
 
 // ============ Delete ============
 
+/** Shows the confirmation dialog for deleting the current change. */
 function deleteCurrentChange() {
     if (!currentChange) return;
     const ref = 'CHG-' + String(currentChange.id).padStart(4, '0');
@@ -1499,10 +1582,12 @@ function deleteCurrentChange() {
     `;
 }
 
+/** Closes the delete confirmation dialog. */
 function closeDeleteModal() {
     document.getElementById('deleteModal').innerHTML = '';
 }
 
+/** Deletes the change and goes back to the list. */
 async function confirmDelete(id) {
     try {
         const response = await fetch(API_BASE + 'delete.php', {
@@ -1528,6 +1613,7 @@ async function confirmDelete(id) {
 
 // ============ Attachments ============
 
+/** Wires the attachment area - click to choose files, or drag and drop them. */
 function setupFileUpload() {
     const area = document.getElementById('fileUploadArea');
     const input = document.getElementById('fileInput');
@@ -1559,6 +1645,10 @@ function setupFileUpload() {
     });
 }
 
+/**
+ * Uploads files to the change being edited one at a time, refreshing its attachment list
+ * after each. A new change has to be saved first.
+ */
 async function uploadFiles(files) {
     const changeId = document.getElementById('editChangeId').value;
     if (!changeId) {
@@ -1596,6 +1686,7 @@ async function uploadFiles(files) {
     }
 }
 
+/** Lists the change's attachments in the editor with download and delete buttons. */
 function renderEditorAttachments(attachments) {
     const container = document.getElementById('editorAttachmentList');
     if (!attachments.length) {
@@ -1618,10 +1709,12 @@ function renderEditorAttachments(attachments) {
     `).join('');
 }
 
+/** Opens an attachment in a new tab. */
 function downloadAttachment(id) {
     window.open(API_BASE + 'get_attachment.php?id=' + id, '_blank');
 }
 
+/** Asks for confirmation, deletes an attachment and refreshes the list. */
 async function deleteAttachment(id) {
     if (!(await showConfirm({ title: window.t('change-management.delete.delete'), message: window.t('change-management.delete.attachment_confirm'), okLabel: window.t('change-management.delete.delete'), okClass: 'danger' }))) return;
 
@@ -1655,6 +1748,10 @@ async function deleteAttachment(id) {
 
 // ============ TinyMCE ============
 
+/**
+ * Starts a TinyMCE editor for each rich-text field, matching the light or dark theme,
+ * and calls callback once they are all ready.
+ */
 function initEditors(callback) {
     // Destroy existing instances first
     destroyEditors();
@@ -1680,6 +1777,10 @@ function initEditors(callback) {
             plugins: ['advlist', 'autolink', 'lists', 'link', 'table', 'wordcount'],
             toolbar: 'undo redo | blocks | bold italic underline | bullist numlist | link table | removeformat',
             content_style: 'body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; } @media (pointer: coarse) { body { font-size: 16px; } }',
+            /**
+             * Counts each editor as it finishes starting, and runs the callback when the
+             * last one is ready.
+             */
             setup: function(editor) {
                 editor.on('init', function() {
                     initialized++;
@@ -1693,6 +1794,7 @@ function initEditors(callback) {
     });
 }
 
+/** Removes every TinyMCE editor. */
 function destroyEditors() {
     editorsReady = false;
     editorIds.forEach(id => {
@@ -1701,11 +1803,13 @@ function destroyEditors() {
     });
 }
 
+/** The HTML in one rich-text editor - empty when it is not running. */
 function getEditorContent(id) {
     const editor = tinymce.get(id);
     return editor ? editor.getContent() : '';
 }
 
+/** Puts HTML into one rich-text editor. */
 function setEditorContent(id, content) {
     const editor = tinymce.get(id);
     if (editor) {
@@ -1715,6 +1819,7 @@ function setEditorContent(id, content) {
 
 // ============ Rich Text Tabs ============
 
+/** Shows one rich-text tab and its panel. */
 function switchTab(tab) {
     // Update tab buttons
     document.querySelectorAll('.rich-text-tab').forEach(btn => btn.classList.remove('active'));
@@ -1727,6 +1832,7 @@ function switchTab(tab) {
 
 // ============ Risk Scoring & PIR Visibility ============
 
+/** Works out likelihood times impact and shows the score with its level (Low to Critical). */
 function updateRiskScore() {
     const likelihood = parseInt(document.getElementById('riskLikelihood').value) || 0;
     const impact = parseInt(document.getElementById('riskImpactScore').value) || 0;
@@ -1748,6 +1854,7 @@ function updateRiskScore() {
     }
 }
 
+/** Shows the post-implementation review fields only when the status is Completed or Failed. */
 function updatePirVisibility() {
     const status = document.getElementById('changeStatus').value;
     const pirSection = document.getElementById('pirStructuredFields');
@@ -1758,11 +1865,13 @@ function updatePirVisibility() {
 
 // ============ CAB Editor Functions ============
 
+/** Shows or hides the CAB settings with the CAB required tick. */
 function toggleCabConfig() {
     const checked = document.getElementById('cabRequired').checked;
     document.getElementById('cabConfigSection').style.display = checked ? '' : 'none';
 }
 
+/** Adds the analyst chosen in the dropdown to the CAB members, as required. */
 function addCabMember() {
     const select = document.getElementById('cabMemberSelect');
     const analystId = parseInt(select.value);
@@ -1780,11 +1889,13 @@ function addCabMember() {
     renderCabMemberChips();
 }
 
+/** Removes an analyst from the CAB members. */
 function removeCabMember(analystId) {
     cabEditorMembers = cabEditorMembers.filter(m => m.analyst_id !== analystId);
     renderCabMemberChips();
 }
 
+/** Switches a CAB member between required and optional. */
 function toggleCabMemberRequired(analystId) {
     const member = cabEditorMembers.find(m => m.analyst_id === analystId);
     if (member) {
@@ -1793,6 +1904,7 @@ function toggleCabMemberRequired(analystId) {
     }
 }
 
+/** Draws the CAB members as chips with their required switch and a remove button. */
 function renderCabMemberChips() {
     const container = document.getElementById('cabMembersList');
     if (!container) return;
@@ -1815,6 +1927,11 @@ function renderCabMemberChips() {
 
 // ============ CAB Review Panel (Detail View) ============
 
+/**
+ * The CAB review panel on the detail view - each member's vote and, for a member who has
+ * not voted on a change pending approval, the voting form. Empty when CAB is not
+ * required.
+ */
 function renderCabReviewPanel(c) {
     if (!parseInt(c.cab_required) || !c.cab_members) return '';
 
@@ -1878,6 +1995,7 @@ function renderCabReviewPanel(c) {
     return html;
 }
 
+/** Records the signed-in analyst's CAB vote with an optional comment and reloads the change. */
 async function submitCabVote(vote) {
     if (!currentChange) return;
 
@@ -1912,6 +2030,7 @@ async function submitCabVote(vote) {
 
 // ============ View Management ============
 
+/** Shows the list, detail or editor view and hides the others. */
 function showView(view) {
     document.getElementById('changeListView').style.display = view === 'list' ? '' : 'none';
     document.getElementById('changeDetailView').style.display = view === 'detail' ? '' : 'none';
@@ -1927,6 +2046,7 @@ function showView(view) {
     }
 }
 
+/** Goes back to the change list and reloads it. */
 function backToList() {
     currentChange = null;
     showView('list');
@@ -1935,6 +2055,7 @@ function backToList() {
 
 // ============ Utility Functions ============
 
+/** Escapes text for safe use inside HTML. */
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -1967,6 +2088,10 @@ function formatNaiveDateTime(dateStr) {
     return fmtNaiveDateTime(d);
 }
 
+/**
+ * A stored date-time in the YYYY-MM-DDTHH:MM form a datetime-local input expects - blank
+ * when it cannot be read.
+ */
 function toDatetimeLocal(dateStr) {
     if (!dateStr) return '';
     const d = new Date(dateStr);
@@ -1977,6 +2102,7 @@ function toDatetimeLocal(dateStr) {
            'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
 }
 
+/** A byte count as B, KB or MB. */
 function formatFileSize(bytes) {
     if (!bytes) return '';
     if (bytes < 1024) return bytes + ' B';
@@ -1987,11 +2113,13 @@ function formatFileSize(bytes) {
 
 // ============ Share Functions ============
 
+/** Opens or closes the Share menu. */
 function toggleShareDropdown() {
     const menu = document.getElementById('shareDropdownMenu');
     menu.classList.toggle('active');
 }
 
+/** Closes the Share menu. */
 function closeShareDropdown() {
     const menu = document.getElementById('shareDropdownMenu');
     if (menu) menu.classList.remove('active');
@@ -2005,15 +2133,18 @@ document.addEventListener('click', function(e) {
     }
 });
 
+/** The current change's reference, such as CHG-0042. */
 function getChangeRef() {
     if (!currentChange) return '';
     return 'CHG-' + String(currentChange.id).padStart(4, '0');
 }
 
+/** A link straight to the current change. */
 function getChangeUrl() {
     return window.location.origin + window.location.pathname + '?change_id=' + currentChange.id;
 }
 
+/** Copies the link to the current change to the clipboard. */
 function shareChangeLink() {
     closeShareDropdown();
     if (!currentChange) return;
@@ -2027,6 +2158,7 @@ function shareChangeLink() {
     });
 }
 
+/** Downloads the current change as a PDF. */
 function shareChangePdf() {
     closeShareDropdown();
     if (!currentChange) return;
@@ -2045,6 +2177,7 @@ function shareChangePdf() {
     html2pdf().set(opt).from(pdfContent).save();
 }
 
+/** Opens the email dialog for sharing the current change as a link, a PDF or both. */
 function shareChangeBoth() {
     closeShareDropdown();
     if (!currentChange) return;
@@ -2059,10 +2192,15 @@ function shareChangeBoth() {
     document.getElementById('shareEmailModal').classList.add('active');
 }
 
+/** Closes the share-by-email dialog. */
 function closeShareEmailModal() {
     document.getElementById('shareEmailModal').classList.remove('active');
 }
 
+/**
+ * Emails the current change to the address given, with the link, the PDF or both, and an
+ * optional message.
+ */
 async function sendShareEmail() {
     const toEmail = document.getElementById('shareEmailTo').value.trim();
     const message = document.getElementById('shareEmailMessage').value.trim();
@@ -2134,6 +2272,7 @@ async function sendShareEmail() {
     }
 }
 
+/** Reads a Blob as base64, without the data: prefix. */
 function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -2146,6 +2285,10 @@ function blobToBase64(blob) {
     });
 }
 
+/**
+ * Builds the HTML the change's PDF is made from - header, details and each rich-text
+ * section that has content.
+ */
 function buildPdfContent() {
     const c = currentChange;
     const ref = getChangeRef();
@@ -2242,6 +2385,10 @@ function buildPdfContent() {
  */
 let ctxTargetChangeId = null;
 
+/**
+ * Opens the right-click menu for a change card at the cursor, rebuilding its submenus
+ * and keeping it on screen.
+ */
 function openChangeContextMenu(event, changeId) {
     event.preventDefault();
     ctxTargetChangeId = changeId;
@@ -2274,6 +2421,7 @@ function openChangeContextMenu(event, changeId) {
     menu.classList.toggle('flip-sub', x + rect.width + SUBMENU_W > window.innerWidth);
 }
 
+/** Closes the change right-click menu. */
 function closeChangeContextMenu() {
     const menu = document.getElementById('changeContextMenu');
     if (menu) menu.classList.remove('active');
@@ -2304,21 +2452,25 @@ function renderCtxLookupSubmenu(sub, rows, currentName, emptyKey, onclickFn) {
     }).join('');
 }
 
+/** Fills the right-click Status submenu, ticking the change's current status. */
 function populateContextChangeStatusSubmenu() {
     const c = ctxTargetChange();
     renderCtxLookupSubmenu(document.getElementById('ctxChangeStatusSubmenu'), changeStatuses, c ? c.status : '', 'no_statuses', 'setChangeStatusFromContext');
 }
 
+/** Fills the right-click Priority submenu, ticking the change's current priority. */
 function populateContextChangePrioritySubmenu() {
     const c = ctxTargetChange();
     renderCtxLookupSubmenu(document.getElementById('ctxChangePrioritySubmenu'), changePriorities, c ? c.priority : '', 'no_priorities', 'setChangePriorityFromContext');
 }
 
+/** Fills the right-click Type submenu, ticking the change's current type. */
 function populateContextChangeTypeSubmenu() {
     const c = ctxTargetChange();
     renderCtxLookupSubmenu(document.getElementById('ctxChangeTypeSubmenu'), changeTypes, c ? c.change_type : '', 'no_types', 'setChangeTypeFromContext');
 }
 
+/** Fills the right-click Impact submenu, ticking the change's current impact. */
 function populateContextChangeImpactSubmenu() {
     const c = ctxTargetChange();
     renderCtxLookupSubmenu(document.getElementById('ctxChangeImpactSubmenu'), changeImpacts, c ? c.impact : '', 'no_impacts', 'setChangeImpactFromContext');
@@ -2368,9 +2520,13 @@ async function saveChangeFieldFromContext(field, value, toastKey) {
     }
 }
 
+/** Sets the right-clicked change's status. */
 function setChangeStatusFromContext(name)   { saveChangeFieldFromContext('status', name, 'status_set'); }
+/** Sets the right-clicked change's priority. */
 function setChangePriorityFromContext(name) { saveChangeFieldFromContext('priority', name, 'priority_set'); }
+/** Sets the right-clicked change's type. */
 function setChangeTypeFromContext(name)     { saveChangeFieldFromContext('change_type', name, 'type_set'); }
+/** Sets the right-clicked change's impact. */
 function setChangeImpactFromContext(name)   { saveChangeFieldFromContext('impact', name, 'impact_set'); }
 
 // Move a change to another company. The endpoint enforces access + writes the

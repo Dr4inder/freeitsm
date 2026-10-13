@@ -466,6 +466,10 @@ function calendarSyncEventFromTicket(array $t): array
     ];
 }
 
+/**
+ * Stores a sync error (cut to 500 characters) on the analyst's enrolment, creating an 'off' enrolment row when there is none; never throws.
+ * @writes calendar_enrolments(last_error) - shown on the analyst's calendar settings
+ */
 function calendarSyncRecordError(PDO $conn, int $analystId, string $message): void
 {
     try {
@@ -478,6 +482,10 @@ function calendarSyncRecordError(PDO $conn, int $analystId, string $message): vo
     }
 }
 
+/**
+ * Clears the analyst's sync error and stamps the time of the last good sync; never throws.
+ * @writes calendar_enrolments(last_error, last_sync_datetime)
+ */
 function calendarSyncClearError(PDO $conn, int $analystId): void
 {
     try {

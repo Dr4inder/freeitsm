@@ -2,6 +2,23 @@
 
 > PHP - 95 lines
 
+Per-person settings for SELF-SERVICE PORTAL users.
+
+🔑 WHY THIS EXISTS RATHER THAN REUSING user_preferences.
+
+`user_preferences` is keyed by `analyst_id`, so it cannot hold anything for a
+portal user — they have no analyst row. That gap has been patched once
+already, when the portal's colour palette was given its own column on the
+`users` table. A second one-off column is where that stops being a patch and
+starts being a habit, so this is the generic twin: same shape, same idea,
+keyed by the portal user instead.
+
+🔴 EVERY FUNCTION HERE WORKS BEFORE DATABASE VERIFICATION HAS RUN. An upgrade
+ships the code before the operator runs the schema check, so on that install
+the table does not exist yet. A read returns the default and a write is
+quietly dropped; nothing throws, and the portal renders. Proved by dropping
+the table and loading the page.
+
 ## Functions
 
 | Function | Line | What it does |

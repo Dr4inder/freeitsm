@@ -6,7 +6,7 @@ The reminders, from the hourly scan (projectAlertsScan): two days before a contr
 function tasksContractorReminders(PDO $conn): int
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 187.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 189.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,8 +18,8 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 190 | `tasksContractorReminders` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
-| 196 | `tasksContractorReminders` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
+| 192 | `tasksContractorReminders` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 198 | `tasksContractorReminders` | **insert** [workflow_scheduled_emissions](/code/tables/workflow_scheduled_emissions.md) (`trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime`) |  |
 
 ## Calls
 

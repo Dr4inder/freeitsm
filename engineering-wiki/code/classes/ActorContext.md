@@ -8,7 +8,7 @@ Who is acting, and what they may see — the only auth-derived facts a service n
 
 | Method | What it does |
 |---|---|
-| [__construct()](#__construct) |  |
+| [__construct()](#__construct) | Who is acting, which companies they may reach, where the call came from (ui or api), their locale and display name. |
 | [fromSession()](#fromsession) | Build from the logged-in analyst session (UI adapters). |
 | [fromPortalUser()](#fromportaluser) | Build from a signed-in SELF-SERVICE PORTAL user. |
 | [system()](#system) | Build for something no person did: an inventory agent, Intune, a cron job (PR #164). actorId 0 is recorded as "no analyst" (NULL) in history, and companyScope null means the caller has already decided the company - an agent's key carries it, Intune's setting names it. |
@@ -17,7 +17,9 @@ Who is acting, and what they may see — the only auth-derived facts a service n
 
 ### __construct
 
-*public* - line 23
+*public* - line 28
+
+Who is acting, which companies they may reach, where the call came from (ui or api), their locale and display name.
 
 ```php
 function __construct(
@@ -39,7 +41,7 @@ function __construct(
 
 ### fromSession
 
-*public static* - line 32
+*public static* - line 37
 
 Build from the logged-in analyst session (UI adapters).
 
@@ -55,7 +57,7 @@ function fromSession(PDO $conn): self
 
 ### fromPortalUser
 
-*public static* - line 58
+*public static* - line 63
 
 Build from a signed-in SELF-SERVICE PORTAL user.
 
@@ -80,7 +82,7 @@ function fromPortalUser(string $name = ''): self
 
 ### system
 
-*public static* - line 75
+*public static* - line 80
 
 Build for something no person did: an inventory agent, Intune, a cron job (PR #164). actorId 0 is recorded as "no analyst" (NULL) in history, and companyScope null means the caller has already decided the company - an agent's key carries it, Intune's setting names it.
 
@@ -96,7 +98,7 @@ function system(string $name = 'System'): self
 
 ### fromApiKey
 
-*public static* - line 87
+*public static* - line 92
 
 Build from an authenticated API key row (API adapters).
 
@@ -112,7 +114,7 @@ function fromApiKey(array $apiKey): self
 
 ### sessionCompanyScope
 
-*private static* - line 104
+*private static* - line 109
 
 The analyst's company scope in the API's null-means-all convention: single-company install or an all-tenant analyst → null; otherwise the explicit accessible tenant id list. (Unused by install-wide modules; the first tenant-scoped module to migrate exercises it.)
 
@@ -129,5 +131,5 @@ function sessionCompanyScope(PDO $conn, int $analystId): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 110 | `ActorContext::sessionCompanyScope` | read [analysts](/code/tables/analysts.md) |  |
+| 115 | `ActorContext::sessionCompanyScope` | read [analysts](/code/tables/analysts.md) |  |
 

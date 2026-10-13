@@ -1,10 +1,12 @@
 # rpTicketsBreakdown()
 
+Tickets block: a chart of tickets grouped by the chosen dimension (status, priority, category...).
+
 ```php
 function rpTicketsBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 59.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 60.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +22,7 @@ Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/repor
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 64 | `rpTicketsBreakdown` | read [tickets](/code/tables/tickets.md) |  |
+| 65 | `rpTicketsBreakdown` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

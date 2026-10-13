@@ -6,7 +6,7 @@ The install's currency (Projects -> Settings -> Budget).
 function projectInstallCurrency(PDO $conn): string
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 64.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

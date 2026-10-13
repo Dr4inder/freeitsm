@@ -6,7 +6,7 @@ Domains a supplier or a contact is involved in, and how: registrar, customer, te
 function peopleSupplierDomains(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 807.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 810.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 807.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 817 | `peopleSupplierDomains` | read [contacts](/code/tables/contacts.md) |  |
-| 829 | `peopleSupplierDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 820 | `peopleSupplierDomains` | read [contacts](/code/tables/contacts.md) |  |
+| 832 | `peopleSupplierDomains` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 ## Calls
 

@@ -39,6 +39,6 @@
 | [api/tickets/delete_rota_shift.php](/code/files/api/tickets/delete_rota_shift.php.md) | L31 |  |
 | [api/tickets/get_rota.php](/code/files/api/tickets/get_rota.php.md) | L65 |  |
 | [api/tickets/paste_rota_cells.php](/code/files/api/tickets/paste_rota_cells.php.md) | L135 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L206 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOnCall L500 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L209 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOnCall L513 |  |
 

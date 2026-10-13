@@ -23,19 +23,19 @@ Planned maintenance (3.2.0) - not an incident until it starts; see includes/serv
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):258 | `ProjectsService::deleteProject` | update | `project_id` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):272 | `ProjectsService::deleteProject` | update | `project_id` |  |
 | [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):98 | `statusPlannedSave` | update | `title`, `comment`, `planned_start_datetime`, `planned_end_datetime`, `updated_datetime` |  |
 | [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):102 | `statusPlannedSave` | insert | `title`, `comment`, `planned_start_datetime`, `planned_end_datetime`, `state`, `project_id`, `created_by_id`, `created_datetime`, `updated_datetime` |  |
 | [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):124 | `statusPlannedCancel` | update | `state`, `updated_datetime` |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):209 | `statusPlannedRun` | update | `state`, `updated_datetime` |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):217 | `statusPlannedRun` | update | `state` |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):224 | `statusPlannedRun` | update | `state`, `updated_datetime` |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):231 | `statusPlannedRun` | update | `state` |  |
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):281 | `statusPlannedStart` | update | `incident_id` |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):210 | `statusPlannedRun` | update | `state`, `updated_datetime` |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):218 | `statusPlannedRun` | update | `state` |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):225 | `statusPlannedRun` | update | `state`, `updated_datetime` |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):232 | `statusPlannedRun` | update | `state` |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md):289 | `statusPlannedStart` | update | `incident_id` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedReady L55, statusPlannedLoad L129, statusPlannedList L148, statusPlannedDue L186, statusPlannedRun L206, statusPlannedRun L222 |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedReady L55, statusPlannedLoad L130, statusPlannedList L149, statusPlannedDue L187, statusPlannedRun L207, statusPlannedRun L223 |  |
 

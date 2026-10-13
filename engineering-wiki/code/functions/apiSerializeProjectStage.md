@@ -6,7 +6,7 @@ Stages (phases / stages / sprints)
 function apiSerializeProjectStage(array $s): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 266.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 275.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

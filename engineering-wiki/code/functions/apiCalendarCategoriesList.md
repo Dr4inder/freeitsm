@@ -6,7 +6,7 @@ GET /calendar-categories (reference)
 function apiCalendarCategoriesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 215.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 223.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 217 | `apiCalendarCategoriesList` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 225 | `apiCalendarCategoriesList` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md) |  |
 
 ## Calls
 

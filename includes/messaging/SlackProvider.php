@@ -234,6 +234,11 @@ class SlackProvider extends MessagingProvider
         return (string) ($json['ts'] ?? '');
     }
 
+    /**
+     * Checks the bot token with auth.test and returns the workspace and bot name.
+     *
+     * Warns when the token lacks the chat:write scope, since replies would then fail.
+     */
     public function testConnection(): string
     {
         $json = $this->call('auth.test');

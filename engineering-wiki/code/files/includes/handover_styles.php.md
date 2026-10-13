@@ -1,13 +1,22 @@
 # includes/handover_styles.php
 
-> PHP - 78 lines
+> PHP - 88 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Asset Handover Developer Guide](https://github.com/edmozley/freeitsm/wiki/Asset-Handover-Developer-Guide)
+
+The asset handover document's stylesheets, kept as PHP strings.
+
+`handoverDocumentCss()` styles the document itself and is shared by the printable page, the
+designer's live preview and the emailed copy; `handoverPrintCss()` adds the print-only
+rules.
 
 ## Functions
 
 | Function | Line | What it does |
 |---|--:|---|
-| [handoverDocumentCss()](/code/functions/handoverDocumentCss.md) | 15 | The handover document's stylesheet, in one place (discussion #56). |
-| [handoverPrintCss()](/code/functions/handoverPrintCss.md) | 64 | Print rules — only the printable page needs these. |
+| [handoverDocumentCss()](/code/functions/handoverDocumentCss.md) | 25 | The handover document's stylesheet, in one place (discussion #56). |
+| [handoverPrintCss()](/code/functions/handoverPrintCss.md) | 74 | Print rules — only the printable page needs these. |
 
 ## How it hangs together
 

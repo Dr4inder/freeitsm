@@ -56,6 +56,7 @@ function rpTicketWhere(PDO $conn, int $analystId, string $basis, array $range, $
     return [$w, $p];
 }
 
+/** Tickets block: a chart of tickets grouped by the chosen dimension (status, priority, category...). */
 function rpTicketsBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$label, $join, $colour] = RP_TICKET_DIMENSIONS[$o['by']];
@@ -122,6 +123,7 @@ function rpTimeBuckets(array $range, string $grouping): array
     return [$grouping, $out];
 }
 
+/** The bucket a date falls in: the Monday of its week, its month (Y-m) or its day. */
 function rpBucketKey(DateTimeImmutable $d, string $grouping): string
 {
     if ($grouping === 'week')  return $d->modify('monday this week')->format('Y-m-d');
@@ -142,6 +144,13 @@ function rpBucketCount(array $stamps, array $range, string $grouping, array $key
     return array_values($counts);
 }
 
+/**
+ * Tickets block: a chart of tickets created and/or closed per day, week or month across the
+ * period.
+ *
+ * Bucketed in PHP from the timestamps, since the buckets are local days and the database
+ * only knows UTC.
+ */
 function rpTicketsTrend(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$grouping, $keys] = rpTimeBuckets($range, $o['grouping']);
@@ -162,6 +171,10 @@ function rpTicketsTrend(PDO $conn, int $analystId, array $o, array $range, $tena
     return ['kind' => 'chart', 'chart' => $o['chart'], 'labels' => array_values($keys), 'series' => $series, 'grouping' => $grouping];
 }
 
+/**
+ * Tickets block: KPI tiles - created, closed, open at the end of the period, average time
+ * to close and first-time-fix rate.
+ */
 function rpTicketsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $count = function (string $basis) use ($conn, $analystId, $range, $tenant) {
@@ -192,6 +205,10 @@ function rpTicketsKpis(PDO $conn, int $analystId, array $o, array $range, $tenan
     ]];
 }
 
+/**
+ * Tickets block: a table of the tickets in the period, with the columns the block asks for,
+ * up to its limit.
+ */
 function rpTicketsList(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     [$where, $params] = rpTicketWhere($conn, $analystId, $o['basis'], $range, $tenant);
@@ -244,6 +261,7 @@ function rpTicketsList(PDO $conn, int $analystId, array $o, array $range, $tenan
 
 // ── Shared formatting (the viewer's own date format and timezone) ────────
 
+/** Formats a UTC date and time in the viewer's own format and timezone; '' for none. */
 function rpFmtDateTime(?string $utc): string
 {
     return $utc ? (function_exists('fmt_datetime') ? fmt_datetime($utc) : $utc) : '';
@@ -257,6 +275,7 @@ function rpFmtDate(string $ymd): string
     return $d ? DateFmt::render($d, DateFmt::DATE_TEMPLATES[DateFmt::dateKey()]) : $ymd;
 }
 
+/** A number of seconds as a short duration: 45s, 12m, 3h 5m, 2d 4h. */
 function rpHumanDuration(int $seconds): string
 {
     if ($seconds < 60) return $seconds . 's';

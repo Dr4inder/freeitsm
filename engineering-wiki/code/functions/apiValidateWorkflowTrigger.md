@@ -6,7 +6,7 @@ Validate a trigger event name against the engine's catalogue.
 function apiValidateWorkflowTrigger(string $trigger): string
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 166.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 181.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

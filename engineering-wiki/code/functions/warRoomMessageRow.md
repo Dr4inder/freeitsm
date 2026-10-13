@@ -6,7 +6,7 @@ One message row, raw. Callers do their own access checks.
 function warRoomMessageRow(PDO $conn, int $messageId): ?array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 616.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 617.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 616
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 618 | `warRoomMessageRow` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 619 | `warRoomMessageRow` | read [warroom_messages](/code/tables/warroom_messages.md) |  |
 
 ## Called from
 

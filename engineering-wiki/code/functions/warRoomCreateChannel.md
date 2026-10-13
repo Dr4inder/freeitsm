@@ -13,7 +13,7 @@ function warRoomCreateChannel(
 ): int
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 287.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 288.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -30,7 +30,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 287
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 298 | `warRoomCreateChannel` | **insert** [warroom_channels](/code/tables/warroom_channels.md) (`kind`, `name`, `topic`, `is_private`, `created_by`, `created_datetime`) |  |
+| 299 | `warRoomCreateChannel` | **insert** [warroom_channels](/code/tables/warroom_channels.md) (`kind`, `name`, `topic`, `is_private`, `created_by`, `created_datetime`) |  |
 
 ## Calls
 

@@ -34,6 +34,10 @@ require_once dirname(__DIR__, 3) . '/includes/projects/budget.php';
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+/**
+ * The SELECT for projects, with owner and company names, the first active stage and the
+ * columns the exceptions are read from.
+ */
 function apiProjectSelect(PDO $conn): string {
     return "SELECT p.*, a.full_name AS owner_name, tn.name AS company_name,
                    (SELECT s.id FROM project_stages s WHERE s.project_id = p.id AND s.status = 'active' ORDER BY s.position, s.id LIMIT 1) AS active_stage_id,
@@ -52,6 +56,10 @@ function apiProjectDecorate(PDO $conn, array $rows): array {
     return array_map(fn($r) => projectDecorate($r, $stats[(int)$r['id']] ?? [], $cfg) + ['_budget' => $stats[(int)$r['id']]['budget'] ?? null], $rows);
 }
 
+/**
+ * Shapes a decorated project row for the API - code, names, company, status, health,
+ * dates, tools, progress, active stage, exceptions and budget totals.
+ */
 function apiSerializeProject(PDO $conn, array $p): array {
     $rel = fn($id, $name) => $id === null ? null : ['id' => (int)$id, 'name' => $name];
     $b = $p['_budget'] ?? null;
@@ -116,6 +124,7 @@ function apiLoadProject(PDO $conn, array $apiKey, int $id): array {
     return apiProjectDecorate($conn, [$row])[0];
 }
 
+/** The ActorContext an API key acts as, for the Projects services. */
 function apiProjectCtx(array $apiKey): ActorContext {
     return ActorContext::fromApiKey($apiKey);
 }
@@ -284,6 +293,10 @@ function apiSerializeProjectStage(array $s): array {
     ];
 }
 
+/**
+ * Every stage of a project in order, each with its count of top-level tasks and how many
+ * of those are closed.
+ */
 function apiProjectStages(PDO $conn, int $projectId): array {
     $s = $conn->prepare("SELECT s.*,
                                 (SELECT COUNT(*) FROM tasks t WHERE t.project_stage_id = s.id AND t.parent_task_id IS NULL) AS task_total,
@@ -294,18 +307,24 @@ function apiProjectStages(PDO $conn, int $projectId): array {
     return $s->fetchAll(PDO::FETCH_ASSOC);
 }
 
+/** One stage of a project (apiProjectStages), or answers 404 and stops. */
 function apiProjectStage(PDO $conn, int $projectId, int $stageId): array {
     foreach (apiProjectStages($conn, $projectId) as $s) if ((int)$s['id'] === $stageId) return $s;
     apiError(404, 'not_found', 'Stage not found.');
     return [];
 }
 
+/** GET /projects/{id}/stages - the project's stages in order. */
 function apiProjectStagesList(PDO $conn, array $apiKey, array $params, array $body): void {
     $pid = (int)$params[0];
     apiLoadProject($conn, $apiKey, $pid);
     apiRespond(array_map('apiSerializeProjectStage', apiProjectStages($conn, $pid)));
 }
 
+/**
+ * POST /projects/{id}/stages - adds a stage (name, goal, dates, status) through
+ * ProjectsService and returns it.
+ */
 function apiProjectStagesCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     $pid = (int)$params[0];
     apiLoadProject($conn, $apiKey, $pid);
@@ -314,6 +333,10 @@ function apiProjectStagesCreate(PDO $conn, array $apiKey, array $params, array $
     apiRespond(apiSerializeProjectStage(apiProjectStage($conn, $pid, (int)$id)), 201);
 }
 
+/**
+ * PATCH /projects/{id}/stages/{stageId} - updates the stage fields sent through
+ * ProjectsService and returns the stage.
+ */
 function apiProjectStagesUpdate(PDO $conn, array $apiKey, array $params, array $body): void {
     [$pid, $sid] = [(int)$params[0], (int)$params[1]];
     apiLoadProject($conn, $apiKey, $pid);
@@ -324,6 +347,7 @@ function apiProjectStagesUpdate(PDO $conn, array $apiKey, array $params, array $
     apiRespond(apiSerializeProjectStage(apiProjectStage($conn, $pid, $sid)));
 }
 
+/** DELETE /projects/{id}/stages/{stageId} - deletes a stage through ProjectsService. */
 function apiProjectStagesDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     [$pid, $sid] = [(int)$params[0], (int)$params[1]];
     apiLoadProject($conn, $apiKey, $pid);
@@ -359,6 +383,7 @@ function apiSerializeProjectItem(array $i): array {
     ];
 }
 
+/** One scope item of a project, or answers 404 and stops. */
 function apiProjectItem(PDO $conn, int $pid, int $itemId): array {
     foreach (ProjectToolsService::items($conn, $pid) as $i) if ((int)$i['id'] === $itemId) return $i;
     apiError(404, 'not_found', 'Scope item not found.');
@@ -367,12 +392,14 @@ function apiProjectItem(PDO $conn, int $pid, int $itemId): array {
 
 const API_PROJECT_ITEM_FIELDS = ['title', 'description', 'acceptance_criteria', 'moscow', 'status', 'stage_id'];
 
+/** GET /projects/{id}/items - the project's scope items. */
 function apiProjectItemsList(PDO $conn, array $apiKey, array $params, array $body): void {
     $pid = (int)$params[0];
     apiLoadProject($conn, $apiKey, $pid);
     apiRespond(array_map('apiSerializeProjectItem', ProjectToolsService::items($conn, $pid)));
 }
 
+/** POST /projects/{id}/items - adds a scope item through ProjectToolsService and returns it. */
 function apiProjectItemsCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     $pid = (int)$params[0];
     apiLoadProject($conn, $apiKey, $pid);
@@ -380,6 +407,10 @@ function apiProjectItemsCreate(PDO $conn, array $apiKey, array $params, array $b
     apiRespond(apiSerializeProjectItem(apiProjectItem($conn, $pid, (int)$id)), 201);
 }
 
+/**
+ * PATCH /projects/{id}/items/{itemId} - updates the scope item fields sent through
+ * ProjectToolsService and returns the item.
+ */
 function apiProjectItemsUpdate(PDO $conn, array $apiKey, array $params, array $body): void {
     [$pid, $iid] = [(int)$params[0], (int)$params[1]];
     apiLoadProject($conn, $apiKey, $pid);
@@ -390,6 +421,7 @@ function apiProjectItemsUpdate(PDO $conn, array $apiKey, array $params, array $b
     apiRespond(apiSerializeProjectItem(apiProjectItem($conn, $pid, $iid)));
 }
 
+/** DELETE /projects/{id}/items/{itemId} - deletes a scope item through ProjectToolsService. */
 function apiProjectItemsDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     [$pid, $iid] = [(int)$params[0], (int)$params[1]];
     apiLoadProject($conn, $apiKey, $pid);
@@ -428,6 +460,7 @@ function apiSerializeProjectRaid(array $r): array {
     ];
 }
 
+/** One RAID entry of a project, or answers 404 and stops. */
 function apiProjectRaidRow(PDO $conn, int $pid, int $rid): array {
     foreach (ProjectToolsService::raid($conn, $pid) as $r) if ((int)$r['id'] === $rid) return $r;
     apiError(404, 'not_found', 'RAID entry not found.');
@@ -436,6 +469,10 @@ function apiProjectRaidRow(PDO $conn, int $pid, int $rid): array {
 
 const API_PROJECT_RAID_FIELDS = ['type', 'title', 'description', 'status', 'probability', 'impact', 'response', 'response_plan', 'owner_analyst_id', 'due_date', 'ticket_id', 'decided_by', 'decided_date', 'rationale'];
 
+/**
+ * GET /projects/{id}/raid - the project's RAID log (risks, assumptions, issues,
+ * dependencies, decisions and lessons), optionally filtered by ?type= and ?status=.
+ */
 function apiProjectRaidList(PDO $conn, array $apiKey, array $params, array $body): void {
     $pid = (int)$params[0];
     apiLoadProject($conn, $apiKey, $pid);
@@ -445,6 +482,7 @@ function apiProjectRaidList(PDO $conn, array $apiKey, array $params, array $body
     apiRespond(array_values(array_map('apiSerializeProjectRaid', $rows)));
 }
 
+/** POST /projects/{id}/raid - adds a RAID entry through ProjectToolsService and returns it. */
 function apiProjectRaidCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     $pid = (int)$params[0];
     apiLoadProject($conn, $apiKey, $pid);
@@ -452,6 +490,10 @@ function apiProjectRaidCreate(PDO $conn, array $apiKey, array $params, array $bo
     apiRespond(apiSerializeProjectRaid(apiProjectRaidRow($conn, $pid, (int)$id)), 201);
 }
 
+/**
+ * PATCH /projects/{id}/raid/{entryId} - updates the RAID entry fields sent through
+ * ProjectToolsService and returns the entry.
+ */
 function apiProjectRaidUpdate(PDO $conn, array $apiKey, array $params, array $body): void {
     [$pid, $rid] = [(int)$params[0], (int)$params[1]];
     apiLoadProject($conn, $apiKey, $pid);
@@ -462,6 +504,7 @@ function apiProjectRaidUpdate(PDO $conn, array $apiKey, array $params, array $bo
     apiRespond(apiSerializeProjectRaid(apiProjectRaidRow($conn, $pid, $rid)));
 }
 
+/** DELETE /projects/{id}/raid/{entryId} - deletes a RAID entry through ProjectToolsService. */
 function apiProjectRaidDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     [$pid, $rid] = [(int)$params[0], (int)$params[1]];
     apiLoadProject($conn, $apiKey, $pid);
@@ -519,12 +562,17 @@ function apiProjectBudget(PDO $conn, array $apiKey, array $params, array $body):
     ]);
 }
 
+/**
+ * One budget line of a project as the analyst sees it in the budget detail, or answers
+ * 404 and stops.
+ */
 function apiProjectBudgetLine(PDO $conn, array $p, int $lineId, int $analystId): array {
     foreach (projectBudgetDetail($conn, $p, $analystId)['lines'] as $l) if ($l['id'] === $lineId) return $l;
     apiError(404, 'not_found', 'Budget line not found.');
     return [];
 }
 
+/** POST /projects/{id}/budget-lines - adds a budget line through ProjectToolsService and returns it. */
 function apiProjectBudgetLinesCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     $pid = (int)$params[0];
     $p = apiLoadProject($conn, $apiKey, $pid);
@@ -533,6 +581,11 @@ function apiProjectBudgetLinesCreate(PDO $conn, array $apiKey, array $params, ar
     apiRespond(apiSerializeBudgetLine(apiProjectBudgetLine($conn, $p, (int)$id, (int)$apiKey['analyst_id'])), 201);
 }
 
+/**
+ * PATCH /projects/{id}/budget-lines/{lineId} - updates a budget line through
+ * ProjectToolsService and returns it. Fields the body leaves out keep their stored
+ * values.
+ */
 function apiProjectBudgetLinesUpdate(PDO $conn, array $apiKey, array $params, array $body): void {
     [$pid, $lid] = [(int)$params[0], (int)$params[1]];
     $p = apiLoadProject($conn, $apiKey, $pid);
@@ -549,6 +602,7 @@ function apiProjectBudgetLinesUpdate(PDO $conn, array $apiKey, array $params, ar
     apiRespond(apiSerializeBudgetLine(apiProjectBudgetLine($conn, $p, $lid, (int)$apiKey['analyst_id'])));
 }
 
+/** DELETE /projects/{id}/budget-lines/{lineId} - deletes a budget line through ProjectToolsService. */
 function apiProjectBudgetLinesDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     [$pid, $lid] = [(int)$params[0], (int)$params[1]];
     $p = apiLoadProject($conn, $apiKey, $pid);

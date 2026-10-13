@@ -11,7 +11,7 @@ sync can never make the log throw.
 function dsyncFieldLabel(string $col): string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 655.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 662.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

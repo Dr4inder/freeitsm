@@ -6,7 +6,7 @@ The project's attached documents as {id, title} - what a document item may point
 function projectGateDocuments(PDO $conn, int $projectId): array
 ```
 
-Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 41.
+Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 42.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatec
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 44 | `projectGateDocuments` | read [document_links](/code/tables/document_links.md), read [documents](/code/tables/documents.md) |  |
+| 45 | `projectGateDocuments` | read [document_links](/code/tables/document_links.md), read [documents](/code/tables/documents.md) |  |
 
 ## Called from
 

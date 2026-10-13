@@ -1,6 +1,6 @@
 # includes/calendar_sync/MicrosoftCalendarProvider.php
 
-> PHP - 423 lines
+> PHP - 436 lines
 
 MicrosoftCalendarProvider — scheduled work into an analyst's Exchange calendar via Microsoft Graph (GH discussion #75).
 
@@ -29,7 +29,7 @@ write to is covered by the permission we already require.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 100 | `MicrosoftCalendarProvider::token` | **update** [calendar_connections](/code/tables/calendar_connections.md) (`token_data`) |  |
+| 101 | `MicrosoftCalendarProvider::token` | **update** [calendar_connections](/code/tables/calendar_connections.md) (`token_data`) |  |
 
 ## How it hangs together
 

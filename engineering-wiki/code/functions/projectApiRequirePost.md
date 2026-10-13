@@ -6,7 +6,7 @@ Writes are POST only, so a link or an image tag can never change a project.
 function projectApiRequirePost(): void
 ```
 
-Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 56.
+Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 58.
 
 **Returns:** `void`
 

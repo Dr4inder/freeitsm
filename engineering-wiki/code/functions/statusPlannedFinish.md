@@ -1,10 +1,14 @@
 # statusPlannedFinish()
 
+Finishes a planned maintenance: resolves its incident with the first resolved status and backdates the end to the planned end.
+
+Does nothing if the incident is gone, already resolved, or no resolved status exists.
+
 ```php
 function statusPlannedFinish(PDO $conn, array $p): void
 ```
 
-Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 284.
+Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 298.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,10 +21,10 @@ Defined in [includes/service_status_planned.php](/code/files/includes/service_st
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 288 | `statusPlannedFinish` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 293 | `statusPlannedFinish` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 301 | `statusPlannedFinish` | **update** [status_incidents](/code/tables/status_incidents.md) (`resolved_datetime`) |  |
-| 303 | `statusPlannedFinish` | **update** [status_incident_updates](/code/tables/status_incident_updates.md) (`created_datetime`) |  |
+| 302 | `statusPlannedFinish` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 307 | `statusPlannedFinish` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 315 | `statusPlannedFinish` | **update** [status_incidents](/code/tables/status_incidents.md) (`resolved_datetime`) |  |
+| 317 | `statusPlannedFinish` | **update** [status_incident_updates](/code/tables/status_incident_updates.md) (`created_datetime`) |  |
 
 ## Calls
 

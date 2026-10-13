@@ -6,7 +6,7 @@ Have the columns been added yet? New code reaches an install before System -> Da
 function ticketSensitivityReady(PDO $conn): bool
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 45.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,9 +18,9 @@ Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensiti
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 50 | `ticketSensitivityReady` | read [tickets](/code/tables/tickets.md) |  |
-| 51 | `ticketSensitivityReady` | read [departments](/code/tables/departments.md) |  |
-| 52 | `ticketSensitivityReady` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 52 | `ticketSensitivityReady` | read [tickets](/code/tables/tickets.md) |  |
+| 53 | `ticketSensitivityReady` | read [departments](/code/tables/departments.md) |  |
+| 54 | `ticketSensitivityReady` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## Called from
 

@@ -81,10 +81,12 @@ class I18n {
         self::$locale = array_key_exists($locale, self::SUPPORTED_LOCALES) ? $locale : self::DEFAULT_LOCALE;
     }
 
+    /** The locale this request is translating into. */
     public static function getLocale() {
         return self::$locale;
     }
 
+    /** Every supported locale code mapped to its native display name. */
     public static function getSupportedLocales() {
         return self::SUPPORTED_LOCALES;
     }
@@ -210,6 +212,7 @@ class I18n {
     // Internals
     // -----------------------------------------------------------------------
 
+    /** Looks up one dotted key in a namespace for a locale; null when it is missing or not a string. */
     private static function resolve($namespace, $path, $locale) {
         $translations = self::loadNamespace($namespace, $locale);
         $cursor = $translations;
@@ -220,6 +223,12 @@ class I18n {
         return is_string($cursor) ? $cursor : null;
     }
 
+    /**
+     * Loads lang/<locale>/<namespace>.php once per request and caches it.
+     *
+     * An unknown namespace or locale, a missing file, or a file that does not return an
+     * array gives an empty list.
+     */
     private static function loadNamespace($namespace, $locale) {
         if (!self::isValidNamespace($namespace)) return [];
         if (!array_key_exists($locale, self::SUPPORTED_LOCALES)) return [];

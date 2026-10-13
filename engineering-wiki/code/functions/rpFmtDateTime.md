@@ -1,10 +1,12 @@
 # rpFmtDateTime()
 
+Formats a UTC date and time in the viewer's own format and timezone; '' for none.
+
 ```php
 function rpFmtDateTime(?string $utc): string
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 247.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 265.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

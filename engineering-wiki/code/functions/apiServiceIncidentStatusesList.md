@@ -6,7 +6,7 @@ Reference lookups
 function apiServiceIncidentStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 317.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 344.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 319 | `apiServiceIncidentStatusesList` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 346 | `apiServiceIncidentStatusesList` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
 
 ## Calls
 

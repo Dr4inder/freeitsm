@@ -16,14 +16,14 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):206 |  | update | `skill`, `difficulty`, `format`, `question_count`, `sort_order` |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):207 |  | insert | `test_id`, `skill`, `difficulty`, `format`, `question_count`, `sort_order` |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):217 |  | delete |  |  |
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md):235 |  | delete |  |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):212 |  | update | `skill`, `difficulty`, `format`, `question_count`, `sort_order` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):213 |  | insert | `test_id`, `skill`, `difficulty`, `format`, `question_count`, `sort_order` |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):223 |  | delete |  |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md):241 |  | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/lms/tests.php](/code/files/api/lms/tests.php.md) | L73, L89, L245 |  |
+| [api/lms/tests.php](/code/files/api/lms/tests.php.md) | L79, L95, L251 |  |
 

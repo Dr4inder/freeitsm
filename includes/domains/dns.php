@@ -21,6 +21,13 @@
 require_once __DIR__ . '/lookup.php';   // domainHttpGet()
 
 /**
+ * Asks one DNS question through the chosen resolver and returns the normalised
+ * answer, cached for the request.
+ *
+ * 'auto' means DNS-over-HTTPS (Google) on Windows and the system resolver
+ * elsewhere; DS, DNSKEY and an unsupported CAA always go over DoH, and a failed
+ * system lookup is retried over DoH.
+ *
  * @return array{ok:bool, nxdomain:bool, records:array, error:?string}
  *   records: A/AAAA → list of IPs; NS/CNAME → host names; MX → [[pri, host]];
  *   TXT → strings; CAA → [[flags, tag, value]]; DS → [string] (presence is what matters)
@@ -51,6 +58,9 @@ function domainDns(string $name, string $type, string $resolver = 'system'): arr
     return $cache[$key] = $res;
 }
 
+/**
+ * Answers a DNS question with PHP's dns_get_record() (A, AAAA, MX, TXT, NS, CNAME and CAA where PHP has it), normalised and sorted.
+ */
 function domainDnsSystem(string $name, string $type): array
 {
     $map = ['A' => DNS_A, 'AAAA' => DNS_AAAA, 'MX' => DNS_MX, 'TXT' => DNS_TXT, 'NS' => DNS_NS, 'CNAME' => DNS_CNAME];
@@ -75,6 +85,9 @@ function domainDnsSystem(string $name, string $type): array
     return ['ok' => true, 'nxdomain' => false, 'records' => domainDnsSort($type, $out), 'error' => null];
 }
 
+/**
+ * Answers a DNS question over DNS-over-HTTPS JSON from Google or Cloudflare, normalised and sorted; NXDOMAIN comes back as ok with nxdomain true.
+ */
 function domainDnsDoh(string $name, string $type, string $provider): array
 {
     $url = $provider === 'cloudflare'
@@ -117,6 +130,9 @@ function domainDnsDoh(string $name, string $type, string $provider): array
     return ['ok' => true, 'nxdomain' => false, 'records' => domainDnsSort($type, $out), 'error' => null];
 }
 
+/**
+ * Puts records in a stable order so answers compare equal - MX by priority then host, CAA as given, everything else de-duplicated and sorted.
+ */
 function domainDnsSort(string $type, array $recs): array
 {
     if ($type === 'MX') {

@@ -2,6 +2,31 @@
 
 > PHP - 141 lines
 
+Analyst email signatures (discussion #80, request 3).
+
+WHY THE MERGE CODES ARE NOT THE ONES YOU ALREADY KNOW
+----------------------------------------------------
+⚠️ `[analyst_name]` is NOT the person typing. `buildTicketMergeData()` resolves it
+from the ticket:
+
+     COALESCE(o.full_name, a.full_name)     -- o = owner, a = assigned analyst
+
+which is the right answer for an automatic email about a ticket, and the wrong
+answer for a signature. Sam answering a ticket owned by Jo would sign it *Jo* —
+every time, to the customer, without either of them noticing.
+
+So signatures get their own vocabulary, tied to whoever is signed in: `[my_name]`,
+`[my_email]`, `[my_job_title]` and so on. The `my_` prefix is not decoration; it is
+the whole distinction, and it reads correctly next to the My Account screen these
+are edited on. The ticket codes keep meaning exactly what they always meant.
+
+ESCAPING
+--------
+Same rule as canned responses: the BODY is trusted (the analyst wrote it, and it is
+HTML on purpose so a signature can have a link or bold text), the VALUES substituted
+into it are not. An analyst's own job title is hardly hostile, but it is typed into
+a box and ends up in somebody else's inbox, so it is escaped like anything else.
+
 ## Functions
 
 | Function | Line | What it does |

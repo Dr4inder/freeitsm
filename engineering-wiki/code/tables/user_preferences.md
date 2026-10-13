@@ -22,33 +22,33 @@
 | [api/tickets/get_schedule_feed_url.php](/code/files/api/tickets/get_schedule_feed_url.php.md):73 |  | insert | `analyst_id`, `preference_key`, `preference_value`, `updated_datetime` |  |
 | [api/tickets/save_inbox_display.php](/code/files/api/tickets/save_inbox_display.php.md):44 |  | delete |  |  |
 | [api/tickets/save_inbox_display.php](/code/files/api/tickets/save_inbox_display.php.md):81 |  | insert | `analyst_id`, `preference_key`, `preference_value`, `updated_datetime` |  |
-| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md):36 |  | insert | `analyst_id`, `preference_key`, `preference_value` |  |
-| [includes/files/storage.php](/code/files/includes/files/storage.php.md):128 | `filesSavePref` | insert | `analyst_id`, `preference_key`, `preference_value`, `updated_datetime` |  |
+| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md):44 |  | insert | `analyst_id`, `preference_key`, `preference_value` |  |
+| [includes/files/storage.php](/code/files/includes/files/storage.php.md):137 | `filesSavePref` | insert | `analyst_id`, `preference_key`, `preference_value`, `updated_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/calendar/feed.php](/code/files/api/calendar/feed.php.md) | L35 |  |
+| [api/calendar/feed.php](/code/files/api/calendar/feed.php.md) | L39 |  |
 | [api/calendar/get_feed_url.php](/code/files/api/calendar/get_feed_url.php.md) | L35 |  |
 | [api/system/get_user_preference.php](/code/files/api/system/get_user_preference.php.md) | L27 |  |
 | [api/table-views/list.php](/code/files/api/table-views/list.php.md) | L58 |  |
 | [api/tickets/get_schedule_feed_url.php](/code/files/api/tickets/get_schedule_feed_url.php.md) | L61 |  |
-| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L56 |  |
-| [checklists/includes/header.php](/code/files/checklists/includes/header.php.md) | L17 |  |
-| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md) | L46 |  |
+| [api/tickets/schedule_feed.php](/code/files/api/tickets/schedule_feed.php.md) | L60 |  |
+| [checklists/includes/header.php](/code/files/checklists/includes/header.php.md) | L25 |  |
+| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md) | L54 |  |
 | [contracts/includes/header.php](/code/files/contracts/includes/header.php.md) | L31 |  |
-| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | scheduleFeedDetail L390 |  |
-| [includes/files/storage.php](/code/files/includes/files/storage.php.md) | filesGetPrefs L113 |  |
-| [includes/i18n.php](/code/files/includes/i18n.php.md) | I18n::initFromSession L115 |  |
+| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | scheduleFeedDetail L391 |  |
+| [includes/files/storage.php](/code/files/includes/files/storage.php.md) | filesGetPrefs L117 |  |
+| [includes/i18n.php](/code/files/includes/i18n.php.md) | I18n::initFromSession L117 |  |
 | [includes/inbox_display.php](/code/files/includes/inbox_display.php.md) | inboxDisplayForAnalyst L162, inboxDisplayIsPersonal L194 |  |
 | [includes/landing.php](/code/files/includes/landing.php.md) | landingRefreshCookieFromPreference L145 |  |
 | [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsTaskAssignedEmail L409 |  |
-| [includes/services/notifications.php](/code/files/includes/services/notifications.php.md) | NotificationsService::preferences L243 |  |
-| [includes/theme.php](/code/files/includes/theme.php.md) | Theme::active L110 |  |
-| [includes/timezone.php](/code/files/includes/timezone.php.md) | Tz::init L47, DateFmt::init L223 |  |
-| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderWaffleMenuJS L758, renderWarRoomAlerts L1243 |  |
-| [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtImpersonalOnMine L123, wtScopeFor L140 |  |
+| [includes/services/notifications.php](/code/files/includes/services/notifications.php.md) | NotificationsService::preferences L244 |  |
+| [includes/theme.php](/code/files/includes/theme.php.md) | Theme::active L114 |  |
+| [includes/timezone.php](/code/files/includes/timezone.php.md) | Tz::init L49, DateFmt::init L225 |  |
+| [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderWaffleMenuJS L771, renderWarRoomAlerts L1262 |  |
+| [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtImpersonalOnMine L126, wtScopeFor L143 |  |
 | [knowledge/index.php](/code/files/knowledge/index.php.md) | L32 |  |
 | [morning-checks/index.php](/code/files/morning-checks/index.php.md) | L51 |  |
 | [system/preferences/index.php](/code/files/system/preferences/index.php.md) | L106 |  |

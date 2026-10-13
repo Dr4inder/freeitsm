@@ -2,6 +2,50 @@
 
 > PHP - 621 lines
 
+RBAC Layer 2 — the capability registry.
+
+A capability is an administrative permission: "may this analyst configure X?"
+See docs/design/rbac.md. This file owns WHAT capabilities exist. includes/rbac.php
+owns WHO holds them and enforces it.
+
+---------------------------------------------------------------------------
+WHY CONSTANTS AND NOT STRINGS
+---------------------------------------------------------------------------
+Phase 3 gives every settings TAB its own capability — around 70 of them, guarded
+at a couple of hundred call sites. At that scale a bare string key is dangerous,
+because of how it fails:
+
+    requireCapabilityJson('lms.mange');    // <- typo
+
+That does not error. It fails CLOSED, exactly as designed: a permanent, polite
+403 that reads like a policy decision. Worse, `analystHasCapability()` short-circuits
+true for is_admin BEFORE it looks at the string — so every test the maintainer runs
+passes, and the only people who see it are users, who assume they simply aren't
+allowed and ask to be made an admin. A typo quietly becomes a privilege escalation.
+
+    requireCapabilityJson(Cap::LMS_MANGE); // <- Fatal error: Undefined constant
+
+Same typo, opposite failure: loud, immediate, at the call site, on the first request
+that touches the line — and it fires for the admin too, because the fatal happens
+before the is_admin bypass can hide it. That asymmetry is the whole reason this
+class exists. ALWAYS pass a Cap:: constant. Never write the string.
+
+---------------------------------------------------------------------------
+THE ENUM BRIDGE
+---------------------------------------------------------------------------
+PHP 8.1 enums are the right tool here; the project's floor is 7.4, so we can't use
+them (see the wiki: "Raising the PHP floor to 8.1"). Every helper below is therefore
+named after the enum method it will become, so the swap stays a find-and-replace:
+
+    `capAll()`              -> Capability::cases()
+    capFromKey(`$s`)        -> Capability::tryFrom(`$s`)
+    capLabel(`$c`)          -> `$c`->label()
+    capModule(`$c`)         -> `$c`->module()
+    capIsSensitive(`$c`)    -> `$c`->isSensitive()
+    capsForModule(`$m`)     -> Capability::forModule(`$m`)
+
+If you add a helper, name it after the method it would be on the enum.
+
 ## Functions
 
 | Function | Line | What it does |

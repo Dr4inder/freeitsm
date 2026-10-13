@@ -149,6 +149,11 @@ function dbPreviewRepairs(PDO $conn, string $dbName): array
     return $out;
 }
 
+/**
+ * Works out, without changing anything, what a Database Verification run would do - tables to create, columns to add, drops whose target is present, and data repairs with rows to rewrite.
+ * @param array $schema  the db_verify table => [column => definition] map
+ * @return array  the four lists plus a summary of counts, and read_only => true
+ */
 function dbVerifyPreview(PDO $conn, array $schema, string $dbName): array
 {
     $tablesToCreate = [];

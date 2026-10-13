@@ -6,7 +6,7 @@ The person who scheduled it, as the actor of the incident's history.
 function statusPlannedActor(PDO $conn, array $p): ActorContext
 ```
 
-Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 239.
+Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 240.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/service_status_planned.php](/code/files/includes/service_st
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 244 | `statusPlannedActor` | read [analysts](/code/tables/analysts.md) |  |
+| 245 | `statusPlannedActor` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Called from
 

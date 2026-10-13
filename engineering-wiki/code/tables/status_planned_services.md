@@ -21,5 +21,5 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedReady L55, statusPlannedList L159, statusPlannedStart L265 |  |
+| [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md) | statusPlannedReady L55, statusPlannedList L160, statusPlannedStart L273 |  |
 

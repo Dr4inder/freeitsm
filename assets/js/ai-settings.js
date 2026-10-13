@@ -17,6 +17,10 @@
 (function () {
     'use strict';
 
+    /**
+     * Translates a key under common.ai, falling back to the given English when there is
+     * no translation.
+     */
     function tr(key, fallback) {
         try {
             if (window.t) {
@@ -27,16 +31,22 @@
         return fallback;
     }
 
+    /** Shows a toast when the page has the shared toast helper. */
     function toast(msg, type) {
         if (typeof showToast === 'function') showToast(msg, type || 'info');
     }
 
+    /** Escapes text for safe use inside HTML. */
     function esc(s) {
         return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
             return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
         });
     }
 
+    /**
+     * Turns an OpenRouter per-token price into dollars per million tokens, such as
+     * "$3.00" - null when there is no price.
+     */
     function fmtPrice(perToken) {
         if (perToken === null || perToken === undefined || perToken === '') return null;
         var perM = parseFloat(perToken) * 1000000;
@@ -44,6 +54,10 @@
         return '$' + (perM >= 1 ? perM.toFixed(2) : perM.toPrecision(2));
     }
 
+    /**
+     * Wires one AI settings panel: the provider switch, the model dropdown, the Azure
+     * fields, Save and Test, then fills it from the saved settings for its namespace.
+     */
     function initPanel(panel) {
         var ns      = panel.getAttribute('data-ns');
         var apiBase = panel.getAttribute('data-api-base');
@@ -72,12 +86,17 @@
         var MODELS = [];   // [{ id, price? }]  current suggestion set
         var menuOpen = false;
 
+        /** Shows a result line under the panel's buttons, styled by cls (for example 'err'). */
         function setResult(text, cls) {
             resultEl.textContent = text || '';
             resultEl.className = 'ai-result' + (cls ? ' ' + cls : '');
         }
 
         // ---- custom model dropdown ----
+        /**
+         * Fills the model dropdown with up to 50 suggestions matching what has been
+         * typed, with prices for OpenRouter models.
+         */
         function renderMenu() {
             var q = (modelEl.value || '').trim().toLowerCase();
             var matches = MODELS.filter(function (m) {
@@ -94,7 +113,9 @@
                        '<span class="ai-model-id">' + esc(m.id) + '</span>' + px + '</div>';
             }).join('');
         }
+        /** Opens the model dropdown. */
         function showMenu() { renderMenu(); menuEl.hidden = false; menuOpen = true; }
+        /** Closes the model dropdown. */
         function hideMenu() { menuEl.hidden = true; menuOpen = false; }
 
         modelEl.addEventListener('focus', showMenu);
@@ -110,11 +131,16 @@
             hideMenu();
         });
 
+        /** Uses the built-in model list for a provider as the dropdown's suggestions. */
         function setCuratedModels(provider) {
             MODELS = (curated[provider] || []).map(function (id) { return { id: id }; });
             modelHint.textContent = '';
         }
 
+        /**
+         * Fetches the live OpenRouter model catalogue with prices and uses it as the
+         * dropdown's suggestions.
+         */
         function loadOpenRouterModels() {
             modelHint.textContent = tr('loading_models', 'Loading model list…');
             fetch(apiBase + 'openrouter_models.php', { credentials: 'same-origin' })
@@ -133,6 +159,11 @@
                 .catch(function () { modelHint.textContent = 'Could not load models'; });
         }
 
+        /**
+         * Shows the fields a provider needs - the Azure boxes instead of the model for
+         * Azure OpenAI, the OpenRouter note and live catalogue for OpenRouter - and
+         * resets the model to that provider's default unless opts.keepModel.
+         */
         function applyProviderUi(provider, opts) {
             opts = opts || {};
             noteEl.classList.toggle('show', provider === 'openrouter');

@@ -6,7 +6,7 @@ The contracts linked to the project on Connections - what a line may name.
 function projectBudgetContracts(PDO $conn, int $projectId): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 478.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 482.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 481 | `projectBudgetContracts` | read [project_contracts](/code/tables/project_contracts.md), read [contracts](/code/tables/contracts.md) |  |
+| 485 | `projectBudgetContracts` | read [project_contracts](/code/tables/project_contracts.md), read [contracts](/code/tables/contracts.md) |  |
 
 ## Called from
 

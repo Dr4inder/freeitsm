@@ -634,6 +634,7 @@ function uploadErrorMessage(int $code): string
     }
 }
 
+/** A byte count as readable text - "1.5 MB", "300 KB" or "512 bytes". */
 function uploadFormatBytes(int $bytes): string
 {
     if ($bytes >= 1048576) return round($bytes / 1048576, 1) . ' MB';

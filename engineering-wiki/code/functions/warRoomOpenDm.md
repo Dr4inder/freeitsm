@@ -11,7 +11,7 @@ you would hit during an incident, when both are trying to reach the other.
 function warRoomOpenDm(PDO $conn, int $analystId, int $otherId): int
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 375.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 376.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,9 +25,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 375
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 379 | `warRoomOpenDm` | read [analysts](/code/tables/analysts.md) |  |
-| 385 | `warRoomOpenDm` | read [warroom_channels](/code/tables/warroom_channels.md) |  |
-| 392 | `warRoomOpenDm` | **insert** [warroom_channels](/code/tables/warroom_channels.md) (`kind`, `dm_key`, `is_private`, `created_by`, `created_datetime`) |  |
+| 380 | `warRoomOpenDm` | read [analysts](/code/tables/analysts.md) |  |
+| 386 | `warRoomOpenDm` | read [warroom_channels](/code/tables/warroom_channels.md) |  |
+| 393 | `warRoomOpenDm` | **insert** [warroom_channels](/code/tables/warroom_channels.md) (`kind`, `dm_key`, `is_private`, `created_by`, `created_datetime`) |  |
 
 ## Calls
 

@@ -15,7 +15,7 @@ Three things are worth saying about each, and only the first was ever said:
 function endpointLine(string $key, array $doc, string $issuerUrl, string $what): string
 ```
 
-Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 49.
+Defined in [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

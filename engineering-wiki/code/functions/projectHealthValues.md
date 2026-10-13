@@ -1,10 +1,12 @@
 # projectHealthValues()
 
+The health values a project can be set to; 'auto' means work it out.
+
 ```php
 function projectHealthValues(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 117.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 120.
 
 **Returns:** `array`
 

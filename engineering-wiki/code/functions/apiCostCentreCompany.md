@@ -6,7 +6,7 @@ company_id from the body/query, checked against the key - or the key's default c
 function apiCostCentreCompany(PDO $conn, array $apiKey, $raw): int
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 63.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 71.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

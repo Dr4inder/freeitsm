@@ -1,6 +1,6 @@
 # includes/domains/checks.php
 
-> PHP - 330 lines
+> PHP - 336 lines
 
 Domains — the health and security checks, and the grade they add up to.
 
@@ -37,9 +37,9 @@ it gets right — nothing else matters if the name is about to be lost.
 | Function | Line | What it does |
 |---|--:|---|
 | [domainRunChecks()](/code/functions/domainRunChecks.md) | 46 | Run every check for one domain row. |
-| [domainGrade()](/code/functions/domainGrade.md) | 273 |  |
-| [domainParseTags()](/code/functions/domainParseTags.md) | 293 | "v=DMARC1; p=reject; rua=mailto:x" → ['v'=>'DMARC1','p'=>'reject','rua'=>'mailto:x'] |
-| [domainSpfLookupCount()](/code/functions/domainSpfLookupCount.md) | 310 | How many DNS lookups evaluating this SPF record costs (RFC 7208 §4.6.4 caps it at 10; past that, receivers treat the record as a permanent error — i.e. SPF silently stops protecting the domain). Follows include: and redirect=. |
+| [domainGrade()](/code/functions/domainGrade.md) | 279 | Scores a domain's health findings out of 100 (each takes off its weight) and turns the score into a grade, A+ to F; an expired, redemption or NXDOMAIN finding is always F. |
+| [domainParseTags()](/code/functions/domainParseTags.md) | 299 | "v=DMARC1; p=reject; rua=mailto:x" → ['v'=>'DMARC1','p'=>'reject','rua'=>'mailto:x'] |
+| [domainSpfLookupCount()](/code/functions/domainSpfLookupCount.md) | 316 | How many DNS lookups evaluating this SPF record costs (RFC 7208 §4.6.4 caps it at 10; past that, receivers treat the record as a permanent error — i.e. SPF silently stops protecting the domain). Follows include: and redirect=. |
 
 ## How it hangs together
 

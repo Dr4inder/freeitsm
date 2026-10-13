@@ -15,8 +15,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md):380 | `handleAddMember` | insert | `group_id`, `member_type`, `member_id`, `expires_at`, `created_datetime` |  |
-| [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md):400 | `handleRemoveMember` | delete |  |  |
+| [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md):390 | `handleAddMember` | insert | `group_id`, `member_type`, `member_id`, `expires_at`, `created_datetime` |  |
+| [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md):411 | `handleRemoveMember` | delete |  |  |
 
 ## Read by
 
@@ -26,8 +26,8 @@
 | [api/lms/assignment_targets.php](/code/files/api/lms/assignment_targets.php.md) | L95 |  |
 | [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md) | L263 |  |
 | [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md) | handleList L99, handleGet L145, handleGet L157, handleGet L171 |  |
-| [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeViewerPrincipals L687 |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAssignmentReachSql L230, lmsAssignedLearnersSql L487 |  |
-| [includes/managers.php](/code/files/includes/managers.php.md) | managerGrantMembers L188 |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md) | FormsService::portalAudienceSql L2110 |  |
+| [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeViewerPrincipals L695 |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAssignmentReachSql L236, lmsAssignedLearnersSql L493 |  |
+| [includes/managers.php](/code/files/includes/managers.php.md) | managerGrantMembers L189 |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md) | FormsService::portalAudienceSql L2119 |  |
 

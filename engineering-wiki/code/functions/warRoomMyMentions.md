@@ -14,7 +14,7 @@ being visible to them, not linger in their panel with a snippet attached.
 function warRoomMyMentions(PDO $conn, int $analystId, int $limit = 20): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 795.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 796.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,9 +28,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 795
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 798 | `warRoomMyMentions` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_mentions](/code/tables/warroom_mentions.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md), read [warroom_reads](/code/tables/warroom_reads.md) |  |
-| 815 | `warRoomMyMentions` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 819 | `warRoomMyMentions` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+| 799 | `warRoomMyMentions` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_mentions](/code/tables/warroom_mentions.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md), read [warroom_reads](/code/tables/warroom_reads.md) |  |
+| 816 | `warRoomMyMentions` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 820 | `warRoomMyMentions` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
 
 ## Calls
 

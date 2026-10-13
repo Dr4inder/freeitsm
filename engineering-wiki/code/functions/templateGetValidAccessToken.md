@@ -6,7 +6,7 @@ Get a valid access token, refreshing if expired.
 function templateGetValidAccessToken(PDO $conn, array $mailbox, array $tokenData): ?string
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 476.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 481.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 516 | `templateGetValidAccessToken` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
+| 521 | `templateGetValidAccessToken` | **update** [target_mailboxes](/code/tables/target_mailboxes.md) (`token_data`) |  |
 
 ## Calls
 

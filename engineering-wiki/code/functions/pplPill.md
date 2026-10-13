@@ -1,10 +1,12 @@
 # pplPill()
 
+A status pill, optionally in a colour (passed as the --pill CSS variable); '' for empty text.
+
 ```php
 function pplPill(?string $text, ?string $colour = null, string $class = ''): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 64.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 70.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

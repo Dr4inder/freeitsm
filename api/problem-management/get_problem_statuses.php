@@ -1,4 +1,10 @@
 <?php
+/**
+ * API: the problem statuses, in display order.
+ *
+ * @input  manage  optional - when set, inactive statuses are included too (the settings screen)
+ * @output {success, statuses: [...]}
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

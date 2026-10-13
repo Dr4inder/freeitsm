@@ -6,7 +6,7 @@ A normalised policy in the shape stored on a mailbox (MB, not bytes) and read ba
 function oversizePolicyForStorage(array $p): array
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 307.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 310.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

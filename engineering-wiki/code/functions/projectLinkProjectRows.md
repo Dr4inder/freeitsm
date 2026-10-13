@@ -6,7 +6,7 @@ Projects by id, shaped for a list on another module's page.
 function projectLinkProjectRows(PDO $conn, array $ids): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 345.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 362.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 350 | `projectLinkProjectRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 367 | `projectLinkProjectRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

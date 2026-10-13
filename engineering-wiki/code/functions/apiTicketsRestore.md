@@ -1,10 +1,12 @@
 # apiTicketsRestore()
 
+POST /tickets/{id}/restore - restores a deleted ticket through TicketsService and returns it.
+
 ```php
 function apiTicketsRestore(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 311.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 320.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

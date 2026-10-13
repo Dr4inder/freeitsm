@@ -8,7 +8,7 @@ English, like the portal's other system emails (includes/self_service_email.php)
 function managersEmailNewTicket(PDO $conn, int $managerId, array $t): bool
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 438.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 439.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,7 +22,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 4
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 440 | `managersEmailNewTicket` | read [users](/code/tables/users.md) |  |
+| 441 | `managersEmailNewTicket` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

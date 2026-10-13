@@ -1,10 +1,12 @@
 # warbotToolProjectRaid()
 
+project_raid: one project's RAID log via `projectAssistRaid()`, scoped to the projects the asker may see.
+
 ```php
 function warbotToolProjectRaid(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 943.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 980.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

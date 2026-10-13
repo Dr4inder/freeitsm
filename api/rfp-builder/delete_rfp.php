@@ -1,4 +1,15 @@
 <?php
+/**
+ * API: delete an RFP and everything under it.
+ *
+ * Child rows go by ON DELETE CASCADE; the uploaded document files are deleted from disk
+ * afterwards. rfpGate() answers "not found" for an RFP in a company the analyst cannot
+ * reach.
+ *
+ * @input  id  the RFP (JSON body)
+ * @output {success}
+ * @wiki Contracts
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

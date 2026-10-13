@@ -28,7 +28,11 @@
  * Newest first.
  */
 
-/** @return array<int,array{name:string,github:?string,date:string,what:string}> */
+/**
+ * Returns the people credited for substantial contributions, newest first.
+ *
+ * @return array<int,array{name:string,github:?string,date:string,what:string}>
+ */
 function getContributors(): array
 {
     return [

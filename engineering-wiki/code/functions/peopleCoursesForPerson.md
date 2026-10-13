@@ -6,7 +6,7 @@ The person's courses - exactly what their own My courses page shows.
 function peopleCoursesForPerson(PDO $conn, int $userId): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 497.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 498.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

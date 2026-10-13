@@ -6,7 +6,7 @@ The result shape every source fills in.
 function domainBlankResult(string $source): array
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 210.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

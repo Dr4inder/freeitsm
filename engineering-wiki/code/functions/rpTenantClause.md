@@ -14,7 +14,7 @@ chose a company the viewer cannot see, the viewer gets an error, never the data.
 function rpTenantClause(PDO $conn, int $analystId, $tenant, string $qualified): array
 ```
 
-Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 105.
+Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 106.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

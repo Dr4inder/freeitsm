@@ -6,7 +6,7 @@ The extra certificate hosts, cleaned: one per entry, only ones that belong to th
 function domainParseSslHosts(?string $raw, string $domain): array
 ```
 
-Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 101.
+Defined in [includes/domains/names.php](/code/files/includes/domains/names.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

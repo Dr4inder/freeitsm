@@ -1,6 +1,6 @@
 # includes/services/cost_centres.php
 
-> PHP - 490 lines
+> PHP - 495 lines
 
 CostCentresService - the rules for cost centres (GH #160, stage 1), ONCE.
 
@@ -46,19 +46,19 @@ below it (that would be a loop, and a loop has no top).
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 52 | `CostCentresService::ready` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 98 | `CostCentresService::listForCompany` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 113 | `CostCentresService::load` | read [cost_centres](/code/tables/cost_centres.md), read [tenants](/code/tables/tenants.md) |  |
-| 146 | `CostCentresService::create` | **insert** [cost_centres](/code/tables/cost_centres.md) (`tenant_id`, `code`, `name`, `description`, `parent_id`, `is_active`) |  |
-| 176 | `CostCentresService::update` | **update** [cost_centres](/code/tables/cost_centres.md) |  |
-| 203 | `CostCentresService::delete` | **delete** [cost_centres](/code/tables/cost_centres.md) |  |
-| 362 | `CostCentresService::sync` | **insert** [cost_centres](/code/tables/cost_centres.md) (`tenant_id`, `code`, `name`, `description`, `is_active`) |  |
-| 370 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) |  |
-| 377 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) (`parent_id`) |  |
-| 384 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) (`is_active`) |  |
-| 446 | `CostCentresService::assertCodeFree` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 461 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 99 | `CostCentresService::listForCompany` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 114 | `CostCentresService::load` | read [cost_centres](/code/tables/cost_centres.md), read [tenants](/code/tables/tenants.md) |  |
+| 147 | `CostCentresService::create` | **insert** [cost_centres](/code/tables/cost_centres.md) (`tenant_id`, `code`, `name`, `description`, `parent_id`, `is_active`) |  |
+| 177 | `CostCentresService::update` | **update** [cost_centres](/code/tables/cost_centres.md) |  |
+| 204 | `CostCentresService::delete` | **delete** [cost_centres](/code/tables/cost_centres.md) |  |
+| 363 | `CostCentresService::sync` | **insert** [cost_centres](/code/tables/cost_centres.md) (`tenant_id`, `code`, `name`, `description`, `is_active`) |  |
+| 371 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) |  |
+| 378 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) (`parent_id`) |  |
+| 385 | `CostCentresService::sync` | **update** [cost_centres](/code/tables/cost_centres.md) (`is_active`) |  |
+| 451 | `CostCentresService::assertCodeFree` | read [cost_centres](/code/tables/cost_centres.md) |  |
 | 466 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
-| 479 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 471 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 484 | `CostCentresService::resolveParentInput` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## How it hangs together
 

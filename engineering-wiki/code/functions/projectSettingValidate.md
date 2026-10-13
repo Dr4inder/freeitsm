@@ -6,7 +6,7 @@ Validate one incoming value; throws InvalidArgumentException with a message fit 
 function projectSettingValidate(string $key, $raw): string
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 186.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 188.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

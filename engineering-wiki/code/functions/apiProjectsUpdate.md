@@ -6,7 +6,7 @@ PATCH /projects/{id}
 function apiProjectsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 243.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 252.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

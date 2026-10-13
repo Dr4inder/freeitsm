@@ -6,7 +6,7 @@ PATCH /assets/{id}
 function apiAssetsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 385.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 395.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

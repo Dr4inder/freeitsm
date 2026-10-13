@@ -1,6 +1,6 @@
 # includes/services/projects.php
 
-> PHP - 907 lines
+> PHP - 942 lines
 
 ProjectsService - the write rules for the Projects module (3.2.0), ONCE.
 
@@ -42,39 +42,39 @@ written to the project's history.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 130 | `ProjectsService::createProject` | **insert** [projects](/code/tables/projects.md) |  |
-| 193 | `ProjectsService::updateProject` | **update** [projects](/code/tables/projects.md) |  |
-| 231 | `ProjectsService::deleteProject` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`) |  |
-| 238 | `ProjectsService::deleteProject` | **delete** [project_benefit_measures](/code/tables/project_benefit_measures.md), read [project_benefits](/code/tables/project_benefits.md) |  |
-| 240 | `ProjectsService::deleteProject` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md), read [project_raid](/code/tables/project_raid.md) |  |
-| 254 | `ProjectsService::deleteProject` | **delete** [project_labour_rates](/code/tables/project_labour_rates.md) |  |
-| 258 | `ProjectsService::deleteProject` | **update** [status_planned](/code/tables/status_planned.md) (`project_id`) |  |
-| 259 | `ProjectsService::deleteProject` | **delete** [projects](/code/tables/projects.md) |  |
-| 281 | `ProjectsService::applyMethodology` | **update** [project_stages](/code/tables/project_stages.md) (`kind`, `updated_datetime`) |  |
-| 287 | `ProjectsService::applyMethodology` | read [project_stages](/code/tables/project_stages.md) |  |
-| 293 | `ProjectsService::applyMethodology` | **update** [project_stages](/code/tables/project_stages.md) (`status`) |  |
-| 326 | `ProjectsService::saveStage` | read [project_stages](/code/tables/project_stages.md) |  |
-| 334 | `ProjectsService::saveStage` | **update** [project_stages](/code/tables/project_stages.md) (`name`, `goal`, `start_date`, `end_date`, `status`, `updated_datetime`) |  |
-| 347 | `ProjectsService::saveStage` | read [project_stages](/code/tables/project_stages.md) |  |
-| 348 | `ProjectsService::saveStage` | **insert** [project_stages](/code/tables/project_stages.md) (`project_id`, `kind`, `name`, `goal`, `start_date`, `end_date`, `position`, `status`, `created_datetime`, `updated_datetime`) |  |
-| 368 | `ProjectsService::deleteStage` | **update** [tasks](/code/tables/tasks.md) (`project_stage_id`) |  |
-| 370 | `ProjectsService::deleteStage` | **update** [project_milestones](/code/tables/project_milestones.md) (`stage_id`) |  |
-| 372 | `ProjectsService::deleteStage` | **delete** [project_gate_items](/code/tables/project_gate_items.md) |  |
-| 373 | `ProjectsService::deleteStage` | **delete** [project_stages](/code/tables/project_stages.md) |  |
-| 389 | `ProjectsService::reorderStages` | **update** [project_stages](/code/tables/project_stages.md) (`position`) |  |
-| 408 | `ProjectsService::assignTask` | read [tasks](/code/tables/tasks.md) |  |
-| 424 | `ProjectsService::assignTask` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`, `updated_datetime`) |  |
-| 439 | `ProjectsService::assignTask` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`, `updated_datetime`) |  |
-| 478 | `ProjectsService::createTaskInProject` | **update** [tasks](/code/tables/tasks.md) (`tenant_id`, `project_id`, `project_stage_id`) |  |
-| 491 | `ProjectsService::loadRow` | read [projects](/code/tables/projects.md) |  |
-| 511 | `ProjectsService::loadStage` | read [project_stages](/code/tables/project_stages.md) |  |
-| 600 | `ProjectsService::validateField` | read [analysts](/code/tables/analysts.md) |  |
-| 720 | `ProjectsService::signoffEvent` | read [project_gate_items](/code/tables/project_gate_items.md), read [project_stages](/code/tables/project_stages.md) |  |
-| 753 | `ProjectsService::decideProposal` | **update** [projects](/code/tables/projects.md) (`approval_status`, `approval_by_id`, `approval_datetime`, `approval_notes`, `status`, `closed_datetime`) |  |
-| 780 | `ProjectsService::proposalEvent` | read [projects](/code/tables/projects.md) |  |
-| 877 | `ProjectsService::touch` | **update** [projects](/code/tables/projects.md) (`updated_datetime`) |  |
-| 883 | `ProjectsService::audit` | **insert** [project_audit](/code/tables/project_audit.md) (`project_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
-| 898 | `ProjectsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
+| 137 | `ProjectsService::createProject` | **insert** [projects](/code/tables/projects.md) |  |
+| 207 | `ProjectsService::updateProject` | **update** [projects](/code/tables/projects.md) |  |
+| 245 | `ProjectsService::deleteProject` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`) |  |
+| 252 | `ProjectsService::deleteProject` | **delete** [project_benefit_measures](/code/tables/project_benefit_measures.md), read [project_benefits](/code/tables/project_benefits.md) |  |
+| 254 | `ProjectsService::deleteProject` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md), read [project_raid](/code/tables/project_raid.md) |  |
+| 268 | `ProjectsService::deleteProject` | **delete** [project_labour_rates](/code/tables/project_labour_rates.md) |  |
+| 272 | `ProjectsService::deleteProject` | **update** [status_planned](/code/tables/status_planned.md) (`project_id`) |  |
+| 273 | `ProjectsService::deleteProject` | **delete** [projects](/code/tables/projects.md) |  |
+| 295 | `ProjectsService::applyMethodology` | **update** [project_stages](/code/tables/project_stages.md) (`kind`, `updated_datetime`) |  |
+| 301 | `ProjectsService::applyMethodology` | read [project_stages](/code/tables/project_stages.md) |  |
+| 307 | `ProjectsService::applyMethodology` | **update** [project_stages](/code/tables/project_stages.md) (`status`) |  |
+| 340 | `ProjectsService::saveStage` | read [project_stages](/code/tables/project_stages.md) |  |
+| 348 | `ProjectsService::saveStage` | **update** [project_stages](/code/tables/project_stages.md) (`name`, `goal`, `start_date`, `end_date`, `status`, `updated_datetime`) |  |
+| 361 | `ProjectsService::saveStage` | read [project_stages](/code/tables/project_stages.md) |  |
+| 362 | `ProjectsService::saveStage` | **insert** [project_stages](/code/tables/project_stages.md) (`project_id`, `kind`, `name`, `goal`, `start_date`, `end_date`, `position`, `status`, `created_datetime`, `updated_datetime`) |  |
+| 382 | `ProjectsService::deleteStage` | **update** [tasks](/code/tables/tasks.md) (`project_stage_id`) |  |
+| 384 | `ProjectsService::deleteStage` | **update** [project_milestones](/code/tables/project_milestones.md) (`stage_id`) |  |
+| 386 | `ProjectsService::deleteStage` | **delete** [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 387 | `ProjectsService::deleteStage` | **delete** [project_stages](/code/tables/project_stages.md) |  |
+| 403 | `ProjectsService::reorderStages` | **update** [project_stages](/code/tables/project_stages.md) (`position`) |  |
+| 422 | `ProjectsService::assignTask` | read [tasks](/code/tables/tasks.md) |  |
+| 438 | `ProjectsService::assignTask` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`, `updated_datetime`) |  |
+| 453 | `ProjectsService::assignTask` | **update** [tasks](/code/tables/tasks.md) (`project_id`, `project_stage_id`, `updated_datetime`) |  |
+| 492 | `ProjectsService::createTaskInProject` | **update** [tasks](/code/tables/tasks.md) (`tenant_id`, `project_id`, `project_stage_id`) |  |
+| 506 | `ProjectsService::loadRow` | read [projects](/code/tables/projects.md) |  |
+| 527 | `ProjectsService::loadStage` | read [project_stages](/code/tables/project_stages.md) |  |
+| 622 | `ProjectsService::validateField` | read [analysts](/code/tables/analysts.md) |  |
+| 747 | `ProjectsService::signoffEvent` | read [project_gate_items](/code/tables/project_gate_items.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 780 | `ProjectsService::decideProposal` | **update** [projects](/code/tables/projects.md) (`approval_status`, `approval_by_id`, `approval_datetime`, `approval_notes`, `status`, `closed_datetime`) |  |
+| 807 | `ProjectsService::proposalEvent` | read [projects](/code/tables/projects.md) |  |
+| 907 | `ProjectsService::touch` | **update** [projects](/code/tables/projects.md) (`updated_datetime`) |  |
+| 918 | `ProjectsService::audit` | **insert** [project_audit](/code/tables/project_audit.md) (`project_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
+| 933 | `ProjectsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

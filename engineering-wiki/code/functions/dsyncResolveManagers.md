@@ -21,7 +21,7 @@ function dsyncResolveManagers(
 ): void
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 875.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 888.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -37,7 +37,7 @@ Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 901 | `dsyncResolveManagers` | **update** [users](/code/tables/users.md) (`manager_id`) |  |
+| 914 | `dsyncResolveManagers` | **update** [users](/code/tables/users.md) (`manager_id`) |  |
 
 ## Calls
 

@@ -10,7 +10,7 @@ before the new server certificate does.
 function dockerTlsNeedsNewCa(string $host, ?string $ip, string $dir = DOCKER_TLS_DIR): bool
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 214.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 215.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

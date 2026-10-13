@@ -1,10 +1,12 @@
 # apiSupplierContactsList()
 
+GET /suppliers/{id}/contacts - the supplier's contacts, by surname.
+
 ```php
 function apiSupplierContactsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 447.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 475.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contrac
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 450 | `apiSupplierContactsList` | read [contacts](/code/tables/contacts.md) |  |
+| 478 | `apiSupplierContactsList` | read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

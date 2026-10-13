@@ -26,9 +26,9 @@ VMware Cloud Director servers (several per install). Passwords are encrypted at 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/assets/vcloud_connections.php](/code/files/api/assets/vcloud_connections.php.md):48 |  | delete |  |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):295 | `vcdSyncConnection` | update | `last_sync_datetime`, `last_sync_status`, `last_sync_message` |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):433 | `vcdSaveConnection` | update | `name`, `host`, `org`, `username`, `password_enc`, `api_version`, `verify_ssl`, `is_active`, `sync_interval_minutes` |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):439 | `vcdSaveConnection` | insert | `name`, `host`, `org`, `username`, `password_enc`, `api_version`, `verify_ssl`, `is_active`, `sync_interval_minutes` |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):309 | `vcdSyncConnection` | update | `last_sync_datetime`, `last_sync_status`, `last_sync_message` |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):447 | `vcdSaveConnection` | update | `name`, `host`, `org`, `username`, `password_enc`, `api_version`, `verify_ssl`, `is_active`, `sync_interval_minutes` |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md):453 | `vcdSaveConnection` | insert | `name`, `host`, `org`, `username`, `password_enc`, `api_version`, `verify_ssl`, `is_active`, `sync_interval_minutes` |  |
 
 ## Read by
 
@@ -37,5 +37,5 @@ VMware Cloud Director servers (several per install). Passwords are encrypted at 
 | [api/assets/get_servers.php](/code/files/api/assets/get_servers.php.md) | L62 |  |
 | [api/assets/vcloud_connections.php](/code/files/api/assets/vcloud_connections.php.md) | L27 |  |
 | [cron/vcloud_sync.php](/code/files/cron/vcloud_sync.php.md) | L21 |  |
-| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md) | vcdLoadConnection L35, vcdSaveConnection L418 |  |
+| [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md) | vcdLoadConnection L41, vcdSaveConnection L432 |  |
 

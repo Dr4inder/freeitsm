@@ -15,12 +15,12 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md):373 | `sla_mark_notification_sent` | insert | `ticket_id`, `target_type`, `trigger_type`, `recipients` |  |
+| [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md):374 | `sla_mark_notification_sent` | insert | `ticket_id`, `target_type`, `trigger_type`, `recipients` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L326 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L335 |  |
 | [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_notification_already_sent L367 |  |
 

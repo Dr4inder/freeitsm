@@ -44,6 +44,9 @@ function mimeMessageId(string $from): string {
 }
 
 /**
+ * Builds a complete raw MIME message - headers, the HTML body, inline images and
+ * attachments - ready for SMTP or the Gmail API.
+ *
  * @param array $m from, fromName, to (list), cc (list), subject, html, parts (list),
  *                 envelope (bool: add Date + Message-ID - SMTP only, see below)
  */

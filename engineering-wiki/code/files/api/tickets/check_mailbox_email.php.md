@@ -1,6 +1,6 @@
 # api/tickets/check_mailbox_email.php
 
-> API endpoint - 1518 lines
+> API endpoint - 1522 lines
 
 API Endpoint: Check emails for a specific mailbox
 
@@ -43,10 +43,10 @@ This uses the mailbox settings from the database instead of config constants.
 | [oversizeMeasure()](/code/functions/oversizeMeasure.md) | 1386 | Fetch (or take the pre-loaded) attachments of one email and measure them. Returns [the attachment list to hand on, [['name','size'], ...] for the file attachments in order]. Sizes are the DECODED bytes where the content is here, else the size the provider reports. |
 | [oversizeLogStep()](/code/functions/oversizeLogStep.md) | 1411 | The processing-log step describing the size check. |
 | [oversizeSummary()](/code/functions/oversizeSummary.md) | 1426 | "big.zip (40 MB), video.mp4 (30 MB)" - what broke the limits, for the log's reason column. |
-| [logEmailImport()](/code/functions/logEmailImport.md) | 1433 |  |
-| [loadWhitelist()](/code/functions/loadWhitelist.md) | 1449 | Load whitelist entries for a mailbox |
-| [isWhitelisted()](/code/functions/isWhitelisted.md) | 1472 | Check if a sender address is whitelisted |
-| [logMailboxActivity()](/code/functions/logMailboxActivity.md) | 1495 | Log mailbox activity (imports and rejections) |
+| [logEmailImport()](/code/functions/logEmailImport.md) | 1437 | Writes one email_import row to system_logs with the mailbox id added to the details. A logging failure goes to the PHP error log and never stops the import. |
+| [loadWhitelist()](/code/functions/loadWhitelist.md) | 1453 | Load whitelist entries for a mailbox |
+| [isWhitelisted()](/code/functions/isWhitelisted.md) | 1476 | Check if a sender address is whitelisted |
+| [logMailboxActivity()](/code/functions/logMailboxActivity.md) | 1499 | Log mailbox activity (imports and rejections) |
 
 ## Database
 
@@ -67,9 +67,9 @@ This uses the mailbox settings from the database instead of config constants.
 | 1204 | `saveEmailToDatabase` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
 | 1287 | `saveEmailToDatabase` | **update** [emails](/code/tables/emails.md) (`body_content`, `has_attachments`) |  |
 | 1390 | `oversizeMeasure` | read [emails](/code/tables/emails.md) |  |
-| 1436 | `logEmailImport` | **insert** [system_logs](/code/tables/system_logs.md) (`log_type`, `analyst_id`, `details`, `created_datetime`) |  |
-| 1450 | `loadWhitelist` | read [mailbox_email_whitelist](/code/tables/mailbox_email_whitelist.md) |  |
-| 1497 | `logMailboxActivity` | **insert** [mailbox_activity_log](/code/tables/mailbox_activity_log.md) (`mailbox_id`, `action`, `from_address`, `from_name`, `subject`, `reason`, `ticket_id`, `processing_log`, `created_datetime`) |  |
+| 1440 | `logEmailImport` | **insert** [system_logs](/code/tables/system_logs.md) (`log_type`, `analyst_id`, `details`, `created_datetime`) |  |
+| 1454 | `loadWhitelist` | read [mailbox_email_whitelist](/code/tables/mailbox_email_whitelist.md) |  |
+| 1501 | `logMailboxActivity` | **insert** [mailbox_activity_log](/code/tables/mailbox_activity_log.md) (`mailbox_id`, `action`, `from_address`, `from_name`, `subject`, `reason`, `ticket_id`, `processing_log`, `created_datetime`) |  |
 
 ## How it hangs together
 

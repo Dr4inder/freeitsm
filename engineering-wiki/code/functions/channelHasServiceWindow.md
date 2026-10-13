@@ -1,10 +1,12 @@
 # channelHasServiceWindow()
 
+True for channels with a reply window (WhatsApp); web chat, Slack, Telegram, Teams and Mattermost have none.
+
 ```php
 function channelHasServiceWindow(string $channelType): bool
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 414.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 422.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

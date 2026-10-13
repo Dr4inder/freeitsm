@@ -1,6 +1,6 @@
 # api/system/debug-tools/D005_endpoint_permissions.php
 
-> API endpoint - 440 lines
+> API endpoint - 444 lines
 
 Debug Tool D005 — Endpoint permission coverage
 
@@ -45,11 +45,11 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 46 |  |
-| [d005IsPublicByDesign()](/code/functions/d005IsPublicByDesign.md) | 64 | Endpoints that are PUBLIC BY DESIGN — they must work before anyone is logged in, or they belong to the self-service portal, which authenticates its own way. Being unguarded is the point, so they are excluded from the findings rather than shouted about. Listed explicitly so the exclusion is a decision, not an accident. |
-| [d005ByDesign()](/code/functions/d005ByDesign.md) | 88 | Endpoints that are CORRECTLY reachable by any logged-in analyst, with the reason. |
-| [d005IsWriteShaped()](/code/functions/d005IsWriteShaped.md) | 102 | Does this endpoint change anything? Writes are what make a missing guard dangerous. |
-| [d005Classify()](/code/functions/d005Classify.md) | 124 | What guards it? Returns [level, detail]. Strongest match wins. |
+| [addSection()](/code/functions/addSection.md) | 50 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [d005IsPublicByDesign()](/code/functions/d005IsPublicByDesign.md) | 68 | Endpoints that are PUBLIC BY DESIGN — they must work before anyone is logged in, or they belong to the self-service portal, which authenticates its own way. Being unguarded is the point, so they are excluded from the findings rather than shouted about. Listed explicitly so the exclusion is a decision, not an accident. |
+| [d005ByDesign()](/code/functions/d005ByDesign.md) | 92 | Endpoints that are CORRECTLY reachable by any logged-in analyst, with the reason. |
+| [d005IsWriteShaped()](/code/functions/d005IsWriteShaped.md) | 106 | Does this endpoint change anything? Writes are what make a missing guard dangerous. |
+| [d005Classify()](/code/functions/d005Classify.md) | 128 | What guards it? Returns [level, detail]. Strongest match wins. |
 
 ## How it hangs together
 

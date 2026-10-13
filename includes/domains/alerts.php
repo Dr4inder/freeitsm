@@ -50,11 +50,16 @@ function domainAlertClaim(PDO $conn, int $domainId, string $kind, string $finger
     return $st->rowCount() === 1;
 }
 
+/**
+ * Gives back a claimed alert, so the next run tries it again - used when every e-mail for it failed.
+ * @writes domain_alerts_sent - removes the claim row
+ */
 function domainAlertRelease(PDO $conn, int $domainId, string $kind, string $fingerprint): void
 {
     $conn->prepare("DELETE FROM domain_alerts_sent WHERE domain_id = ? AND alert_kind = ? AND fingerprint = ?")->execute([$domainId, $kind, $fingerprint]);
 }
 
+/** True when this alert (domain, kind, fingerprint) has already been claimed or sent. */
 function domainAlertAlreadySent(PDO $conn, int $domainId, string $kind, string $fingerprint): bool
 {
     $st = $conn->prepare("SELECT 1 FROM domain_alerts_sent WHERE domain_id = ? AND alert_kind = ? AND fingerprint = ?");
@@ -214,6 +219,7 @@ function domainAlertRecipients(array $a, array $s): array
     return $to;
 }
 
+/** Shapes a due domain row into the 'domain' payload the domain.expiring and domain.ssl_expiring workflow events carry. */
 function domainAlertPayload(array $a): array
 {
     return [
@@ -275,6 +281,7 @@ function domainAlertDigest(PDO $conn, string $name, array $items): array
     return ['subject' => $subject, 'body' => $body];
 }
 
+/** Says when in words - "expired 3 days ago", "today", "tomorrow", "in 30 days". */
 function domainAlertWhen(int $days): string
 {
     if ($days < 0)  return 'expired ' . (-$days) . ' day' . ($days === -1 ? '' : 's') . ' ago';
@@ -328,6 +335,9 @@ function domainAlertOnChange(PDO $conn, array $row, array $serious): void
     if (!$anyOk) domainAlertRelease($conn, (int)$row['id'], 'mail_changed', $fp);
 }
 
+/**
+ * The plain-English name of a watched field for the change e-mail (registrar, locks, DNSSEC, name servers, MX, SPF, DMARC).
+ */
 function domainWatchLabel(string $field): string
 {
     return [

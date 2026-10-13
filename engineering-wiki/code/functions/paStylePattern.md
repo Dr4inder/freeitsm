@@ -6,7 +6,7 @@ Every character of a style's art must be one that style can produce.
 function paStylePattern(string $style): string
 ```
 
-Defined in [api/system/photo_album.php](/code/files/api/system/photo_album.php.md), line 43.
+Defined in [api/system/photo_album.php](/code/files/api/system/photo_album.php.md), line 44.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

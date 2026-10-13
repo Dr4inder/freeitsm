@@ -1,5 +1,12 @@
 <?php
 /**
+ * Plain-text extraction from Word (.docx) files for the RFP builder.
+ *
+ * Used when an RFP document is uploaded or extracted, so its text can be sent to the AI for
+ * requirement extraction.
+ */
+
+/**
  * Extract plain text from a .docx file using ZipArchive + DOMDocument.
  * No external dependencies required.
  *

@@ -1,10 +1,12 @@
 # apiLoadCalendarEvent()
 
+Loads one calendar event row (apiCalendarEventSelect), or answers 404 and stops.
+
 ```php
 function apiLoadCalendarEvent(PDO $conn, int $eventId): array
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 98.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

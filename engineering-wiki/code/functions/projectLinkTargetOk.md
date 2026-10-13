@@ -12,7 +12,7 @@ function projectLinkTargetOk(
 ): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 108.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,7 +28,7 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 123 | `projectLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
+| 127 | `projectLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Checklists settings - categories, suggested roles and the left-panel preference.
+ *
+ * Categories and roles are changed through api/checklists/save_lookup.php and
+ * delete_lookup.php; only the sidebar mode posts back to this page (saved as
+ * user_preferences.checklists_sidebar_mode).
+ * @wiki Checklists-and-SOPs-Developer-Guide
+ */
 ini_set('display_errors', 0);
 session_start();
 

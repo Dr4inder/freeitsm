@@ -6,7 +6,7 @@ Which permission model this install runs. Default 'containers' — the safe end.
 function knowledgeFolderPermissionModel(PDO $conn): string
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 745.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 758.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 750 | `knowledgeFolderPermissionModel` | read [system_settings](/code/tables/system_settings.md) |  |
+| 763 | `knowledgeFolderPermissionModel` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Called from
 

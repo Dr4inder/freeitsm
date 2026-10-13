@@ -15,19 +15,24 @@
  *    bar on the bars), the same on keyboard focus, and a table view - the
  *    tooltip never holds a value nobody can reach otherwise.
  *  - Names go in with textContent (they are users' words).
+ *
+ * @wiki Projects-Internals-5-Health-and-Charts
  */
 (function () {
     'use strict';
     const NS = 'http://www.w3.org/2000/svg';
     const lang = document.documentElement.lang || undefined;
+    /** A number rounded to one decimal place in the page's language. */
     const num = v => (Math.round(v * 10) / 10).toLocaleString(lang);
 
+    /** Creates an SVG element with the given attributes, appended to parent when one is given. */
     function el(name, attrs, parent) {
         const e = document.createElementNS(NS, name);
         Object.entries(attrs || {}).forEach(([k, v]) => e.setAttribute(k, v));
         if (parent) parent.appendChild(e);
         return e;
     }
+    /** Creates an HTML element with an optional class and text (set as text, never as markup). */
     function html(tag, cls, text) {
         const e = document.createElement(tag);
         if (cls) e.className = cls;
@@ -41,6 +46,7 @@
         const step = [1, 2, 2.5, 5, 10].map(m => m * pow).find(s => s >= raw) || 10 * pow;
         return { max: Math.ceil(max / step) * step, step: step };
     }
+    /** The legend - a swatch and name per series. */
     function legend(series) {
         const box = html('div', 'prj-viz-legend');
         series.forEach(s => {
@@ -51,6 +57,7 @@
         });
         return box;
     }
+    /** The table shown in place of a chart - a header row and one row per data point, numbers right-aligned. */
     function tableView(head, rows) {
         const wrap = html('div', 'prj-viz-table');
         const t = html('table');
@@ -81,12 +88,14 @@
         });
         return { tools: tools, plot: plot };
     }
+    /** Adds a hidden tooltip box to the plot area and returns it. */
     function tooltip(plot) {
         const tip = html('div', 'prj-viz-tip');
         tip.hidden = true;
         plot.appendChild(tip);
         return tip;
     }
+    /** Adds one line to a tooltip - series swatch, value and name. */
     function tipRow(tip, value, name, cls) {
         const row = html('div', 'prj-viz-tip-row');
         row.appendChild(html('i', 'prj-viz-swatch line ' + cls));
@@ -111,11 +120,14 @@
         const W = Math.max(280, f.plot.clientWidth || container.clientWidth || 600), H = 230;
         const m = { l: 44, r: 64, t: 14, b: 28 };
         const pw = W - m.l - m.r, ph = H - m.t - m.b;
+        /** A Y-m-d date as a whole day number (days since 1970, UTC). */
         const dn = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000;
         const x0 = dn(pts[0].d), xLast = dn(pts[pts.length - 1].d);
         const x1 = Math.max(xLast, opts.target ? dn(opts.target) : xLast, x0 + 1);
         const ny = nice(Math.max(...pts.map(p => p.scope), 1));
+        /** The x position of a date on the burn-up. */
         const X = d => m.l + (dn(d) - x0) / (x1 - x0) * pw;
+        /** The y position of a value on the burn-up. */
         const Y = v => m.t + ph - (v / ny.max) * ph;
 
         const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', class: 'prj-viz-svg', tabindex: '0', 'aria-label': L.aria });
@@ -135,6 +147,7 @@
             el('line', { x1: tx, x2: tx, y1: m.t, y2: m.t + ph, class: 'viz-ref' }, svg);
             el('text', { x: tx - 4, y: m.t + 10, 'text-anchor': 'end', class: 'viz-tick' }, svg).textContent = L.target;
         }
+        /** The SVG path through every point for one series (scope or done). */
         const path = key => pts.map((p, i) => (i ? 'L' : 'M') + X(p.d).toFixed(1) + ' ' + Y(p[key]).toFixed(1)).join(' ');
         el('path', { d: path('done') + ' L' + X(pts[pts.length - 1].d).toFixed(1) + ' ' + Y(0) + ' L' + X(pts[0].d).toFixed(1) + ' ' + Y(0) + ' Z', class: 'viz-area viz-s1' }, svg);
         el('path', { d: path('scope'), class: 'viz-line viz-s2' }, svg);
@@ -151,6 +164,7 @@
         const tip = tooltip(f.plot);
 
         let at = pts.length - 1;
+        /** Moves the burn-up's crosshair to point i and shows its date, done and scope in the tooltip. */
         function show(i) {
             at = Math.max(0, Math.min(pts.length - 1, i));
             const p = pts[at], cx = X(p.d);
@@ -164,6 +178,7 @@
             tip.style.left = Math.min(Math.max(0, left + 12), f.plot.clientWidth - tip.offsetWidth - 4) + 'px';
             tip.style.top = '8px';
         }
+        /** Hides the crosshair and the tooltip. */
         function hide() { cross.setAttribute('visibility', 'hidden'); tip.hidden = true; }
         hit.addEventListener('pointermove', e => {
             const r = svg.getBoundingClientRect();
@@ -216,6 +231,7 @@
                 el('path', { d: 'M' + labelW + ' ' + by + ' h' + (w - rad) + ' a' + rad + ' ' + rad + ' 0 0 1 ' + rad + ' ' + rad + ' v' + (BAR - 2 * rad) + ' a' + rad + ' ' + rad + ' 0 0 1 -' + rad + ' ' + rad + ' h-' + (w - rad) + ' Z', class: 'viz-bar ' + cls }, svg);
                 el('text', { x: labelW + w + 6, y: by + BAR - 2, class: 'viz-end' }, svg).textContent = opts.fmt(v) + (j === 1 && r.note ? '  ' + r.note : '');
                 const hit = el('rect', { x: labelW, y: by - 1, width: Math.max(w + 70, 24), height: BAR + 2, fill: 'transparent', tabindex: '0', class: 'viz-hit' }, svg);
+                /** Shows the tooltip for this bar - its category, value and series. */
                 const on = () => {
                     tip.textContent = '';
                     tip.appendChild(html('div', 'prj-viz-tip-head', r.label));
@@ -256,12 +272,15 @@
         const W = Math.max(280, f.plot.clientWidth || container.clientWidth || 600), H = 250;
         const m = { l: 62, r: 16, t: 16, b: 28 };
         const pw = W - m.l - m.r, ph = H - m.t - m.b;
+        /** A Y-m-d date as a whole day number (days since 1970, UTC). */
         const dn = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000;
         const x0 = dn(pts[0].d);
         const x1 = Math.max(dn(pts[pts.length - 1].d), fc ? dn(fc.to) : 0, opts.target ? dn(opts.target) : 0, x0 + 1);
         const top = Math.max(...pts.map(p => Math.max(p.planned, p.actual || 0)), fc ? fc.end : 0, ...(opts.refs || []).map(r => r.v), 1);
         const ny = nice(top);
+        /** The x position of a date on the spend chart. */
         const X = d => m.l + (dn(d) - x0) / (x1 - x0) * pw;
+        /** The y position of an amount on the spend chart. */
         const Y = v => m.t + ph - (v / ny.max) * ph;
 
         const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', class: 'prj-viz-svg', tabindex: '0', 'aria-label': L.aria });
@@ -314,8 +333,10 @@
         const stops = pts.map(p => ({ d: p.d, p: p }));
         if (fc && !stops.some(s => s.d === fc.to)) stops.push({ d: fc.to, fc: true });
         stops.sort((a, b) => a.d.localeCompare(b.d));
+        /** The latest data point on or before a date - what planned and actual stood at then. */
         const valueAt = d => { let v = pts[0]; pts.forEach(p => { if (p.d <= d) v = p; }); return v; };
         let at = stops.length - 1;
+        /** Moves the spend chart's crosshair to stop i and shows actual, forecast and planned at that date in the tooltip. */
         function show(i) {
             at = Math.max(0, Math.min(stops.length - 1, i));
             const s = stops[at], cx = X(s.d), p = s.p || valueAt(s.d);
@@ -330,6 +351,7 @@
             tip.style.left = Math.min(Math.max(0, left + 12), f.plot.clientWidth - tip.offsetWidth - 4) + 'px';
             tip.style.top = '8px';
         }
+        /** Hides the crosshair and the tooltip. */
         function hide() { cross.setAttribute('visibility', 'hidden'); tip.hidden = true; }
         hit.addEventListener('pointermove', e => {
             const r = svg.getBoundingClientRect();
@@ -379,6 +401,7 @@
                 const w = v / max * pw;
                 const x0 = x;
                 const seg = el('rect', { x: x, y: y, width: Math.max(1, w - 2), height: BAR, rx: 2, class: 'viz-bar ' + slot(S[j].slot), tabindex: '0' }, svg);
+                /** Shows the tooltip for this segment - its row, value and series. */
                 const on = () => {
                     tip.textContent = '';
                     tip.appendChild(html('div', 'prj-viz-tip-head', r.label));
@@ -409,11 +432,14 @@
         const W = Math.max(280, f.plot.clientWidth || container.clientWidth || 600), H = 240;
         const m = { l: 40, r: 14, t: 14, b: 28 };
         const pw = W - m.l - m.r, ph = H - m.t - m.b;
+        /** A Y-m-d date as a whole day number (days since 1970, UTC). */
         const dn = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000;
         const x0 = dn(pts[0].d), x1 = Math.max(dn(pts[pts.length - 1].d), x0 + 1);
         const tot = pts.map(p => p.values.reduce((a, b) => a + (b || 0), 0));
         const ny = nice(Math.max(1, ...tot));
+        /** The x position of a date on the flow chart. */
         const X = d => m.l + (dn(d) - x0) / (x1 - x0) * pw;
+        /** The y position of a stacked total on the flow chart. */
         const Y = v => m.t + ph - v / ny.max * ph;
         const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', class: 'prj-viz-svg', tabindex: '0', 'aria-label': L.aria });
         for (let v = 0; v <= ny.max + 1e-9; v += ny.step) {
@@ -447,6 +473,7 @@
         f.plot.appendChild(svg);
         const tip = tooltip(f.plot);
         let at = pts.length - 1;
+        /** Moves the flow chart's crosshair to point i and lists every non-empty band at that date in the tooltip, top band first. */
         function show(i) {
             at = Math.max(0, Math.min(pts.length - 1, i));
             const p = pts[at], cx = X(p.d);
@@ -459,6 +486,7 @@
             tip.style.left = Math.min(Math.max(0, left + 12), f.plot.clientWidth - tip.offsetWidth - 4) + 'px';
             tip.style.top = '8px';
         }
+        /** Hides the crosshair and the tooltip. */
         const hide = () => { cross.setAttribute('visibility', 'hidden'); tip.hidden = true; };
         hit.addEventListener('pointermove', e => {
             const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * W / r.width;
@@ -483,12 +511,14 @@
      */
     function burndown(container, opts) {
         const pts = opts.points, L = opts.labels;
+        /** A Y-m-d date as a whole day number (days since 1970, UTC). */
         const dn = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000;
         const x0 = dn(pts[0].d), xLast = dn(pts[pts.length - 1].d);
         const x1 = Math.max(xLast, opts.target ? dn(opts.target) : xLast, x0 + 1);
         const r0 = pts[0].remaining;
         // The ideal at day n: straight from r0 on the first day to 0 at the target (or the last day).
         const xEnd = opts.target ? dn(opts.target) : xLast;
+        /** The ideal work remaining on a date - a straight line from the first day's figure down to nothing at the target (or the last day). */
         const ideal = d => xEnd <= x0 ? 0 : Math.max(0, r0 * (1 - (dn(d) - x0) / (xEnd - x0)));
         const f = frame(container, L.table, L.chart, () => tableView([L.date, L.remaining, L.ideal],
             pts.map(p => [opts.fmtDate(p.d), num(p.remaining) + opts.unit, num(ideal(p.d)) + opts.unit])));
@@ -497,8 +527,11 @@
         const m = { l: 44, r: 64, t: 14, b: 28 };
         const pw = W - m.l - m.r, ph = H - m.t - m.b;
         const ny = nice(Math.max(1, ...pts.map(p => p.remaining), r0));
+        /** The x position of a date on the burndown. */
         const X = d => m.l + (dn(d) - x0) / (x1 - x0) * pw;
+        /** The x position of a day number on the burndown. */
         const Xn = n => m.l + (n - x0) / (x1 - x0) * pw;
+        /** The y position of a value on the burndown. */
         const Y = v => m.t + ph - (v / ny.max) * ph;
         const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', class: 'prj-viz-svg', tabindex: '0', 'aria-label': L.aria });
         for (let v = 0; v <= ny.max + 1e-9; v += ny.step) {
@@ -526,6 +559,7 @@
         f.plot.appendChild(svg);
         const tip = tooltip(f.plot);
         let at = pts.length - 1;
+        /** Moves the burndown's crosshair to point i and shows the remaining and ideal figures in the tooltip. */
         function show(i) {
             at = Math.max(0, Math.min(pts.length - 1, i));
             const p = pts[at], cx = X(p.d);
@@ -539,6 +573,7 @@
             tip.style.left = Math.min(Math.max(0, left + 12), f.plot.clientWidth - tip.offsetWidth - 4) + 'px';
             tip.style.top = '8px';
         }
+        /** Hides the crosshair and the tooltip. */
         const hide = () => { cross.setAttribute('visibility', 'hidden'); tip.hidden = true; };
         hit.addEventListener('pointermove', e => {
             const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * W / r.width;
@@ -572,9 +607,11 @@
         const W = Math.max(280, f.plot.clientWidth || container.clientWidth || 600);
         const labelW = Math.min(170, W * 0.3), ROW = 30, m = { t: 8, b: 26, r: 14 };
         const H = rows.length * ROW + m.t + m.b, pw = W - labelW - m.r;
+        /** A Y-m-d date as a whole day number (days since 1970, UTC). */
         const dn = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000;
         const all = [].concat(...rows.map(r => r.items.map(i => dn(i.d)))).concat([dn(opts.today)]);
         const x0 = Math.min(...all) - 3, x1 = Math.max(...all) + 3;
+        /** The x position of a date on the milestones chart. */
         const X = d => labelW + (dn(d) - x0) / (x1 - x0) * pw;
         const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', class: 'prj-viz-svg', 'aria-label': L.aria });
         const ticks = Math.max(1, Math.min(5, Math.floor(pw / 110)));
@@ -594,6 +631,7 @@
             r.items.forEach(i => {
                 const cx = X(i.d), s = 6;
                 const g = el('path', { d: 'M' + cx + ' ' + (y - s) + ' L' + (cx + s) + ' ' + y + ' L' + cx + ' ' + (y + s) + ' L' + (cx - s) + ' ' + y + ' Z', class: 'viz-ms ms-' + i.state, tabindex: '0' }, svg);
+                /** Shows the tooltip for this milestone - project, name, date and state in words. */
                 const on = () => {
                     tip.textContent = '';
                     tip.appendChild(html('div', 'prj-viz-tip-head', r.label));
@@ -627,11 +665,14 @@
         const W = Math.max(280, f.plot.clientWidth || container.clientWidth || 600), H = 250;
         const m = { l: 62, r: 16, t: 16, b: 28 };
         const pw = W - m.l - m.r, ph = H - m.t - m.b;
+        /** A Y-m-d date as a whole day number (days since 1970, UTC). */
         const dn = s => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000;
         const x0 = dn(pts[0].d), x1 = Math.max(dn(pts[pts.length - 1].d), x0 + 1);
         const vals = [].concat(...pts.map(p => p.values.filter(v => v !== null && v !== undefined)));
         const ny = nice(Math.max(1, ...vals, ...(opts.refs || []).map(r => r.v)));
+        /** The x position of a date on the lines chart. */
         const X = d => m.l + (dn(d) - x0) / (x1 - x0) * pw;
+        /** The y position of an amount on the lines chart. */
         const Y = v => m.t + ph - (v / ny.max) * ph;
         const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', class: 'prj-viz-svg', tabindex: '0', 'aria-label': L.aria });
         for (let v = 0; v <= ny.max + 1e-9; v += ny.step) {
@@ -668,6 +709,7 @@
         f.plot.appendChild(svg);
         const tip = tooltip(f.plot);
         let at = pts.length - 1;
+        /** Moves the lines chart's crosshair to point i and lists each series' value at that date in the tooltip. */
         function show(i) {
             at = Math.max(0, Math.min(pts.length - 1, i));
             const p = pts[at], cx = X(p.d);
@@ -680,6 +722,7 @@
             tip.style.left = Math.min(Math.max(0, left + 12), f.plot.clientWidth - tip.offsetWidth - 4) + 'px';
             tip.style.top = '8px';
         }
+        /** Hides the crosshair and the tooltip. */
         const hide = () => { cross.setAttribute('visibility', 'hidden'); tip.hidden = true; };
         hit.addEventListener('pointermove', e => {
             const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * W / r.width;

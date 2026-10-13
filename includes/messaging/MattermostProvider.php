@@ -39,6 +39,12 @@ class MattermostProvider extends MessagingProvider
     private static $botIdCache = [];
     private static $rootCache  = [];
 
+    /**
+     * Checks an inbound webhook: a CSAT button press must carry a valid signature, anything
+     * else the channel's webhook token.
+     *
+     * Refuses everything when the channel has no token yet.
+     */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
         $expected = (string)($this->channel['verify_token'] ?? '');
@@ -56,6 +62,7 @@ class MattermostProvider extends MessagingProvider
         return $presented !== '' && hash_equals($expected, $presented);
     }
 
+    /** Turns a Mattermost webhook into inbound messages - a CSAT rating press, or a post in the channel. */
     public function parseInbound(string $rawBody, array $params): array
     {
         // A CSAT button press: the context we attached to the button, sent back by Mattermost.
@@ -115,6 +122,7 @@ class MattermostProvider extends MessagingProvider
         ]];
     }
 
+    /** Posts a text reply in the conversation's thread and returns the post id. */
     public function sendMessage(string $to, string $body): string
     {
         return $this->postInThread($to, ['message' => $body]);
@@ -178,6 +186,7 @@ class MattermostProvider extends MessagingProvider
         return $this->postInThread($to, ['message' => $caption, 'file_ids' => [$fileId]]);
     }
 
+    /** Checks the bot token by reading the bot user, and returns a "Connected as @name" message. */
     public function testConnection(): string
     {
         $me = $this->api('GET', 'users/me');
@@ -235,6 +244,10 @@ class MattermostProvider extends MessagingProvider
         return is_array($json) && isset($json[$key]) ? trim((string)$json[$key]) : '';
     }
 
+    /**
+     * The channel's Mattermost server address without a trailing slash; throws when it is
+     * missing or not http(s).
+     */
     private function serverUrl(): string
     {
         $url = rtrim(trim((string)($this->channel['credentials']['server_url'] ?? '')), '/');
@@ -244,11 +257,13 @@ class MattermostProvider extends MessagingProvider
         return $url;
     }
 
+    /** A Mattermost API v4 address for $path. */
     private function apiUrl(string $path): string
     {
         return $this->serverUrl() . '/api/v4/' . ltrim($path, '/');
     }
 
+    /** The bearer Authorization header for the bot token; throws when there is no token. */
     private function authHeader(): string
     {
         $token = (string)($this->channel['credentials']['bot_token'] ?? '');

@@ -22,7 +22,7 @@ scatter a conversation permanently.
 function undoSplit(PDO $conn, int $actorId, int $splitId): array
 ```
 
-Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 371.
+Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md), line 377.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -36,13 +36,13 @@ Defined in [includes/ticket_split.php](/code/files/includes/ticket_split.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 374 | `undoSplit` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
-| 399 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
+| 380 | `undoSplit` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
 | 405 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
-| 424 | `undoSplit` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
-| 428 | `undoSplit` | **delete** [emails](/code/tables/emails.md) |  |
-| 433 | `undoSplit` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
-| 442 | `undoSplit` | **update** [ticket_splits](/code/tables/ticket_splits.md) (`undone_datetime`, `undone_by_id`) |  |
+| 411 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
+| 430 | `undoSplit` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
+| 434 | `undoSplit` | **delete** [emails](/code/tables/emails.md) |  |
+| 439 | `undoSplit` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 448 | `undoSplit` | **update** [ticket_splits](/code/tables/ticket_splits.md) (`undone_datetime`, `undone_by_id`) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ The domain's company (Default for NULL), or a not-found for a domain out of reac
 function domainLinkDomainTenant(PDO $conn, int $analystId, int $domainId): int
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 118.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 121.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

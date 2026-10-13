@@ -1,10 +1,12 @@
 # warbotToolTicketSpike()
 
+ticket_spike: tickets raised in the last N minutes against the average for the same time window over the previous seven days, calling three times the usual rate a spike, plus the newest subjects.
+
 ```php
 function warbotToolTicketSpike(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 641.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 666.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,9 +20,9 @@ Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 646 | `warbotToolTicketSpike` | read [tickets](/code/tables/tickets.md) |  |
-| 659 | `warbotToolTicketSpike` | read [tickets](/code/tables/tickets.md) |  |
-| 682 | `warbotToolTicketSpike` | read [tickets](/code/tables/tickets.md) |  |
+| 671 | `warbotToolTicketSpike` | read [tickets](/code/tables/tickets.md) |  |
+| 684 | `warbotToolTicketSpike` | read [tickets](/code/tables/tickets.md) |  |
+| 707 | `warbotToolTicketSpike` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

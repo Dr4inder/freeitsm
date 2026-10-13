@@ -1,10 +1,16 @@
 # domainDns()
 
+Asks one DNS question through the chosen resolver and returns the normalised answer, cached for the request.
+
+'auto' means DNS-over-HTTPS (Google) on Windows and the system resolver
+elsewhere; DS, DNSKEY and an unsupported CAA always go over DoH, and a failed
+system lookup is retried over DoH.
+
 ```php
 function domainDns(string $name, string $type, string $resolver = 'system'): array
 ```
 
-Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 28.
+Defined in [includes/domains/dns.php](/code/files/includes/domains/dns.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

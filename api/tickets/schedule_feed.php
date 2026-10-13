@@ -36,6 +36,10 @@ require_once '../../includes/services/tickets.php';
 require_once '../../includes/calendar_sync/calendar_sync.php';
 require_once '../../includes/timezone.php';   // naive_now(), for the work-window cutoffs (GH #126)
 
+/**
+ * Sends an HTTP status and a plain-text message, then stops - the feed's only error
+ * path, since a calendar app shows nothing richer.
+ */
 function feed_deny($code, $msg) {
     header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code);
     header('Content-Type: text/plain; charset=utf-8');

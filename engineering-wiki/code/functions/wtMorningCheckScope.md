@@ -19,7 +19,7 @@ Expects the query to expose `c` (checks) and `g` (groups, LEFT JOINed).
 function wtMorningCheckScope(PDO $conn, int $analystId, string $scope): array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 194.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 197.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -33,7 +33,7 @@ Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 203 | `wtMorningCheckScope` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 206 | `wtMorningCheckScope` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Calls
 

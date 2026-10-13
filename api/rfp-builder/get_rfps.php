@@ -1,4 +1,12 @@
 <?php
+/**
+ * API: the RFP list - the active company's RFPs, or every company the analyst can see
+ * under "All companies" (rfpListSql). Most recently updated first.
+ *
+ * @input  search  optional text to match against the RFP name
+ * @output {success, rfps: [...]}
+ * @wiki Contracts
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

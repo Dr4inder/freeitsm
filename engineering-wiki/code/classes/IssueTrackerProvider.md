@@ -50,28 +50,30 @@ tickets.merged_into_id for the last time that bit us.
 
 | Method | What it does |
 |---|---|
-| [__construct()](#__construct) |  |
-| [getProvider()](#getprovider) |  |
+| [__construct()](#__construct) | Keeps the decrypted integration_connections row the connector works with. |
+| [getProvider()](#getprovider) | The provider key from the connection row ('jira' or 'azuredevops'). |
 | [createIssue()](#createissue) | Create an issue and return the bits we store on the link. |
 | [fetchIssue()](#fetchissue) | Read one issue's current state. Same return shape as `createIssue()`. Throws if the issue is gone — the caller decides whether that orphans the link. |
 | [fetchIssues()](#fetchissues) | Read several issues at once. The default loops `fetchIssue()`, which is always correct; providers that can do it in one call (Jira via JQL) should override, because the poll cron is the hot path. |
 | [addComment()](#addcomment) | Post a comment. Returns the provider's comment id (recorded for echo suppression). |
-| [addAttachment()](#addattachment) |  |
-| [updateFields()](#updatefields) |  |
+| [addAttachment()](#addattachment) | Attaches a file to an external issue. The default throws; connectors that declare CAP_ATTACHMENTS override it. |
+| [updateFields()](#updatefields) | Updates fields on an external issue. The default throws; a connector that supports it overrides it. |
 | [verifyWebhook()](#verifywebhook) | Verify an inbound webhook really came from the provider. Return false to reject — the endpoint 403s. |
 | [normaliseEvent()](#normaliseevent) | Raw webhook payload → zero or more canonical events (see the file header). |
 | [pollChanges()](#pollchanges) | The firewalled-install path: ask the provider what changed since `$since` and return the SAME canonical events a webhook would have produced. |
 | [testConnection()](#testconnection) | Verify the connection with a lightweight read-only call and return BOTH a human-readable detail for the settings screen and the authenticated account's identity. |
-| [listProjects()](#listprojects) |  |
-| [listIssueTypes()](#listissuetypes) |  |
+| [listProjects()](#listprojects) | Lists the tracker's projects for the mapping dropdowns. The default throws; connectors override it. |
+| [listIssueTypes()](#listissuetypes) | Lists the issue types available in a project. The default throws; connectors that declare CAP_ISSUE_TYPES override it. |
 | [renderDoc()](#renderdoc) | Render a body into whatever this provider's API wants. Usually one line delegating to IssueDoc — `$doc`->toAdf(), ->toMarkdown(), ->toHtml(), ->toWikiMarkup() — which is why adding a provider rarely means writing a renderer. |
 | [supports()](#supports) | Does this provider have `$capability`? Default: no. |
-| [capabilities()](#capabilities) |  |
+| [capabilities()](#capabilities) | The optional features this connector supports. The base class declares none. |
 | [httpRequest()](#httprequest) | Shared cURL. Returns [httpCode, bodyString]; an HTTP error code is NOT an exception, because the caller knows what a 404 means for the call it made. |
 
 ### __construct
 
-*public* - line 67
+*public* - line 68
+
+Keeps the decrypted integration_connections row the connector works with.
 
 ```php
 function __construct(array $connection)
@@ -83,7 +85,9 @@ function __construct(array $connection)
 
 ### getProvider
 
-*public* - line 72
+*public* - line 74
+
+The provider key from the connection row ('jira' or 'azuredevops').
 
 ```php
 function getProvider(): string
@@ -91,7 +95,7 @@ function getProvider(): string
 
 ### createIssue
 
-*public* - line 92
+*public* - line 94
 
 Create an issue and return the bits we store on the link.
 
@@ -110,7 +114,7 @@ function createIssue(array $target, string $summary, IssueDoc $body, array $fiel
 
 ### fetchIssue
 
-*public* - line 98
+*public* - line 100
 
 Read one issue's current state. Same return shape as `createIssue()`. Throws if the issue is gone — the caller decides whether that orphans the link.
 
@@ -124,7 +128,7 @@ function fetchIssue(string $externalId): array
 
 ### fetchIssues
 
-*public* - line 111
+*public* - line 113
 
 Read several issues at once. The default loops `fetchIssue()`, which is always correct; providers that can do it in one call (Jira via JQL) should override, because the poll cron is the hot path.
 
@@ -143,7 +147,7 @@ function fetchIssues(array $externalIds): array
 
 ### addComment
 
-*public* - line 125
+*public* - line 127
 
 Post a comment. Returns the provider's comment id (recorded for echo suppression).
 
@@ -158,7 +162,9 @@ function addComment(string $externalId, IssueDoc $body): string
 
 ### addAttachment
 
-*public* - line 131
+*public* - line 138
+
+Attaches a file to an external issue. The default throws; connectors that declare CAP_ATTACHMENTS override it.
 
 ```php
 function addAttachment(string $externalId, array $file): void
@@ -171,7 +177,9 @@ function addAttachment(string $externalId, array $file): void
 
 ### updateFields
 
-*public* - line 136
+*public* - line 144
+
+Updates fields on an external issue. The default throws; a connector that supports it overrides it.
 
 ```php
 function updateFields(string $externalId, array $fields): void
@@ -184,7 +192,7 @@ function updateFields(string $externalId, array $fields): void
 
 ### verifyWebhook
 
-*public* - line 150
+*public* - line 158
 
 Verify an inbound webhook really came from the provider. Return false to reject — the endpoint 403s.
 
@@ -202,7 +210,7 @@ function verifyWebhook(string $rawBody, array $headers): bool
 
 ### normaliseEvent
 
-*public* - line 156
+*public* - line 164
 
 Raw webhook payload → zero or more canonical events (see the file header).
 
@@ -216,7 +224,7 @@ function normaliseEvent(array $raw): array
 
 ### pollChanges
 
-*public* - line 178
+*public* - line 186
 
 The firewalled-install path: ask the provider what changed since `$since` and return the SAME canonical events a webhook would have produced.
 
@@ -241,7 +249,7 @@ function pollChanges(?string $since, array $externalIds = []): array
 
 ### testConnection
 
-*public* - line 199
+*public* - line 207
 
 Verify the connection with a lightweight read-only call and return BOTH a human-readable detail for the settings screen and the authenticated account's identity.
 
@@ -259,7 +267,9 @@ function testConnection(): array
 
 ### listProjects
 
-*public* - line 202
+*public* - line 215
+
+Lists the tracker's projects for the mapping dropdowns. The default throws; connectors override it.
 
 ```php
 function listProjects(): array
@@ -269,7 +279,9 @@ function listProjects(): array
 
 ### listIssueTypes
 
-*public* - line 208
+*public* - line 226
+
+Lists the issue types available in a project. The default throws; connectors that declare CAP_ISSUE_TYPES override it.
 
 ```php
 function listIssueTypes(string $project): array
@@ -283,7 +295,7 @@ function listIssueTypes(string $project): array
 
 ### renderDoc
 
-*public* - line 223
+*public* - line 241
 
 Render a body into whatever this provider's API wants. Usually one line delegating to IssueDoc — `$doc`->toAdf(), ->toMarkdown(), ->toHtml(), ->toWikiMarkup() — which is why adding a provider rarely means writing a renderer.
 
@@ -299,7 +311,7 @@ function renderDoc(IssueDoc $doc)
 
 ### supports
 
-*public* - line 228
+*public* - line 246
 
 Does this provider have `$capability`? Default: no.
 
@@ -313,7 +325,9 @@ function supports(string $capability): bool
 
 ### capabilities
 
-*protected* - line 234
+*protected* - line 256
+
+The optional features this connector supports. The base class declares none.
 
 ```php
 function capabilities(): array
@@ -323,7 +337,7 @@ function capabilities(): array
 
 ### httpRequest
 
-*protected* - line 257
+*protected* - line 279
 
 Shared cURL. Returns [httpCode, bodyString]; an HTTP error code is NOT an exception, because the caller knows what a 404 means for the call it made.
 

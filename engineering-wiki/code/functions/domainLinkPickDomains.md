@@ -12,7 +12,7 @@ function domainLinkPickDomains(
 ): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 280.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 287.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,7 +28,7 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 286 | `domainLinkPickDomains` | read [domains](/code/tables/domains.md) |  |
+| 293 | `domainLinkPickDomains` | read [domains](/code/tables/domains.md) |  |
 
 ## Calls
 

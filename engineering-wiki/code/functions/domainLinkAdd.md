@@ -1,10 +1,12 @@
 # domainLinkAdd()
 
+Links a record of one kind to a domain, when the analyst can reach both modules and both records in the domain's company; returns false when the link already existed.
+
 ```php
 function domainLinkAdd(PDO $conn, int $analystId, int $domainId, string $kind, int $targetId): bool
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 183.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 189.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

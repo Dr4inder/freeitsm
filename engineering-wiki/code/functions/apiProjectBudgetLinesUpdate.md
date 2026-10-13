@@ -1,10 +1,12 @@
 # apiProjectBudgetLinesUpdate()
 
+PATCH /projects/{id}/budget-lines/{lineId} - updates a budget line through ProjectToolsService and returns it. Fields the body leaves out keep their stored values.
+
 ```php
 function apiProjectBudgetLinesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 536.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 589.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

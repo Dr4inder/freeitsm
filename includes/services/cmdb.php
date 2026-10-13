@@ -127,6 +127,10 @@ class CmdbService
         return ['id' => self::createObject($conn, $ctx, $in), 'created' => true];
     }
 
+    /**
+     * Creates a CI: validates the name, class, parent, company and properties, inserts it
+     * with its property values and fires the cmdb.object.created workflow event.
+     */
     private static function createObject(PDO $conn, ActorContext $ctx, array $in): int
     {
         $name = trim((string)($in['name'] ?? ''));
@@ -202,6 +206,10 @@ class CmdbService
         return $objectId;
     }
 
+    /**
+     * Updates a CI's name, parent, planned flag and properties; the class never changes.
+     * Fires the cmdb.object.updated workflow event.
+     */
     private static function updateObject(PDO $conn, ActorContext $ctx, int $objectId, array $in): int
     {
         $current = self::loadObjectRow($conn, $objectId);       // 404 if gone
@@ -425,6 +433,7 @@ class CmdbService
         }
     }
 
+    /** Loads one CI with its class name and key; throws not found when it does not exist. */
     private static function loadObjectRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare(

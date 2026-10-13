@@ -6,7 +6,7 @@ The SELECT expression for a ticket's sensitivity that is safe before Database Ve
 function ticketSensitivitySelectSql(PDO $conn, string $alias = 't'): string
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 306.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 308.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

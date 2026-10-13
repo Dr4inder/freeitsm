@@ -10,7 +10,7 @@ analyst_id is what stops the table growing — one row per person, forever.
 function warRoomTouchPresence(PDO $conn, int $analystId, int $channelId): void
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1068.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1069.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -24,7 +24,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 106
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1071 | `warRoomTouchPresence` | **insert** [warroom_presence](/code/tables/warroom_presence.md) (`analyst_id`, `channel_id`, `last_seen`) |  |
+| 1072 | `warRoomTouchPresence` | **insert** [warroom_presence](/code/tables/warroom_presence.md) (`analyst_id`, `channel_id`, `last_seen`) |  |
 
 ## Called from
 

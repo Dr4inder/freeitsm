@@ -1,6 +1,6 @@
 # api/v1/resources/projects.php
 
-> API endpoint - 617 lines
+> API endpoint - 671 lines
 
 FreeITSM REST API v1 — projects resource (3.2.0).
 
@@ -37,59 +37,59 @@ tickets and tolerances), with `health_mode` saying which.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiProjectSelect()](/code/functions/apiProjectSelect.md) | 37 |  |
-| [apiProjectDecorate()](/code/functions/apiProjectDecorate.md) | 48 | Decorate rows (health, progress, exceptions, budget) the way the portfolio does. |
-| [apiSerializeProject()](/code/functions/apiSerializeProject.md) | 55 |  |
-| [apiLoadProject()](/code/functions/apiLoadProject.md) | 108 | The by-id gate: existence + company scope, both failing as 404. |
-| [apiProjectCtx()](/code/functions/apiProjectCtx.md) | 119 |  |
-| [apiProjectTry()](/code/functions/apiProjectTry.md) | 124 | Run a service call; a ServiceError becomes the API's error body. |
-| [apiProjectFields()](/code/functions/apiProjectFields.md) | 134 | Only the fields the service accepts, so a body cannot reach a column it should not. |
-| [apiProjectsList()](/code/functions/apiProjectsList.md) | 141 | GET /projects |
-| [apiProjectsGet()](/code/functions/apiProjectsGet.md) | 212 | GET /projects/{id} |
-| [apiProjectsCreate()](/code/functions/apiProjectsCreate.md) | 219 | POST /projects (optionally {template: "builtin:office_move" \| "saved:12"}) |
-| [apiProjectsUpdate()](/code/functions/apiProjectsUpdate.md) | 243 | PATCH /projects/{id} |
-| [apiProjectsDelete()](/code/functions/apiProjectsDelete.md) | 256 | DELETE /projects/{id} - its tasks are detached, never deleted |
-| [apiSerializeProjectStage()](/code/functions/apiSerializeProjectStage.md) | 266 | Stages (phases / stages / sprints) |
-| [apiProjectStages()](/code/functions/apiProjectStages.md) | 287 |  |
-| [apiProjectStage()](/code/functions/apiProjectStage.md) | 297 |  |
-| [apiProjectStagesList()](/code/functions/apiProjectStagesList.md) | 303 |  |
-| [apiProjectStagesCreate()](/code/functions/apiProjectStagesCreate.md) | 309 |  |
-| [apiProjectStagesUpdate()](/code/functions/apiProjectStagesUpdate.md) | 317 |  |
-| [apiProjectStagesDelete()](/code/functions/apiProjectStagesDelete.md) | 327 |  |
-| [apiProjectStagesGate()](/code/functions/apiProjectStagesGate.md) | 336 | POST /projects/{id}/stages/{sid}/gate {decision: go\|go_with_conditions\|stop, notes?} |
-| [apiSerializeProjectItem()](/code/functions/apiSerializeProjectItem.md) | 347 | Scope items (deliverables, with MoSCoW) |
-| [apiProjectItem()](/code/functions/apiProjectItem.md) | 362 |  |
-| [apiProjectItemsList()](/code/functions/apiProjectItemsList.md) | 370 |  |
-| [apiProjectItemsCreate()](/code/functions/apiProjectItemsCreate.md) | 376 |  |
-| [apiProjectItemsUpdate()](/code/functions/apiProjectItemsUpdate.md) | 383 |  |
-| [apiProjectItemsDelete()](/code/functions/apiProjectItemsDelete.md) | 393 |  |
-| [apiSerializeProjectRaid()](/code/functions/apiSerializeProjectRaid.md) | 404 | RAID log |
-| [apiProjectRaidRow()](/code/functions/apiProjectRaidRow.md) | 431 |  |
-| [apiProjectRaidList()](/code/functions/apiProjectRaidList.md) | 439 |  |
-| [apiProjectRaidCreate()](/code/functions/apiProjectRaidCreate.md) | 448 |  |
-| [apiProjectRaidUpdate()](/code/functions/apiProjectRaidUpdate.md) | 455 |  |
-| [apiProjectRaidDelete()](/code/functions/apiProjectRaidDelete.md) | 465 |  |
-| [apiSerializeBudgetLine()](/code/functions/apiSerializeBudgetLine.md) | 476 | Budget |
-| [apiProjectBudget()](/code/functions/apiProjectBudget.md) | 499 | GET /projects/{id}/budget - totals, labour and lines, in the project's currency. Never one person's rate. |
-| [apiProjectBudgetLine()](/code/functions/apiProjectBudgetLine.md) | 522 |  |
-| [apiProjectBudgetLinesCreate()](/code/functions/apiProjectBudgetLinesCreate.md) | 528 |  |
-| [apiProjectBudgetLinesUpdate()](/code/functions/apiProjectBudgetLinesUpdate.md) | 536 |  |
-| [apiProjectBudgetLinesDelete()](/code/functions/apiProjectBudgetLinesDelete.md) | 552 |  |
-| [apiProjectTasks()](/code/functions/apiProjectTasks.md) | 564 | GET /projects/{id}/tasks - its top-level tasks. Change them through /tasks. |
-| [apiProjectLinks()](/code/functions/apiProjectLinks.md) | 587 | GET /projects/{id}/links - what it is connected to, only the kinds the key's analyst may open. |
-| [apiProjectHistory()](/code/functions/apiProjectHistory.md) | 600 | GET /projects/{id}/history - newest first, paged. |
+| [apiProjectSelect()](/code/functions/apiProjectSelect.md) | 41 | The SELECT for projects, with owner and company names, the first active stage and the columns the exceptions are read from. |
+| [apiProjectDecorate()](/code/functions/apiProjectDecorate.md) | 52 | Decorate rows (health, progress, exceptions, budget) the way the portfolio does. |
+| [apiSerializeProject()](/code/functions/apiSerializeProject.md) | 63 | Shapes a decorated project row for the API - code, names, company, status, health, dates, tools, progress, active stage, exceptions and budget totals. |
+| [apiLoadProject()](/code/functions/apiLoadProject.md) | 116 | The by-id gate: existence + company scope, both failing as 404. |
+| [apiProjectCtx()](/code/functions/apiProjectCtx.md) | 128 | The ActorContext an API key acts as, for the Projects services. |
+| [apiProjectTry()](/code/functions/apiProjectTry.md) | 133 | Run a service call; a ServiceError becomes the API's error body. |
+| [apiProjectFields()](/code/functions/apiProjectFields.md) | 143 | Only the fields the service accepts, so a body cannot reach a column it should not. |
+| [apiProjectsList()](/code/functions/apiProjectsList.md) | 150 | GET /projects |
+| [apiProjectsGet()](/code/functions/apiProjectsGet.md) | 221 | GET /projects/{id} |
+| [apiProjectsCreate()](/code/functions/apiProjectsCreate.md) | 228 | POST /projects (optionally {template: "builtin:office_move" \| "saved:12"}) |
+| [apiProjectsUpdate()](/code/functions/apiProjectsUpdate.md) | 252 | PATCH /projects/{id} |
+| [apiProjectsDelete()](/code/functions/apiProjectsDelete.md) | 265 | DELETE /projects/{id} - its tasks are detached, never deleted |
+| [apiSerializeProjectStage()](/code/functions/apiSerializeProjectStage.md) | 275 | Stages (phases / stages / sprints) |
+| [apiProjectStages()](/code/functions/apiProjectStages.md) | 300 | Every stage of a project in order, each with its count of top-level tasks and how many of those are closed. |
+| [apiProjectStage()](/code/functions/apiProjectStage.md) | 311 | One stage of a project (apiProjectStages), or answers 404 and stops. |
+| [apiProjectStagesList()](/code/functions/apiProjectStagesList.md) | 318 | GET /projects/{id}/stages - the project's stages in order. |
+| [apiProjectStagesCreate()](/code/functions/apiProjectStagesCreate.md) | 328 | POST /projects/{id}/stages - adds a stage (name, goal, dates, status) through ProjectsService and returns it. |
+| [apiProjectStagesUpdate()](/code/functions/apiProjectStagesUpdate.md) | 340 | PATCH /projects/{id}/stages/{stageId} - updates the stage fields sent through ProjectsService and returns the stage. |
+| [apiProjectStagesDelete()](/code/functions/apiProjectStagesDelete.md) | 351 | DELETE /projects/{id}/stages/{stageId} - deletes a stage through ProjectsService. |
+| [apiProjectStagesGate()](/code/functions/apiProjectStagesGate.md) | 360 | POST /projects/{id}/stages/{sid}/gate {decision: go\|go_with_conditions\|stop, notes?} |
+| [apiSerializeProjectItem()](/code/functions/apiSerializeProjectItem.md) | 371 | Scope items (deliverables, with MoSCoW) |
+| [apiProjectItem()](/code/functions/apiProjectItem.md) | 387 | One scope item of a project, or answers 404 and stops. |
+| [apiProjectItemsList()](/code/functions/apiProjectItemsList.md) | 396 | GET /projects/{id}/items - the project's scope items. |
+| [apiProjectItemsCreate()](/code/functions/apiProjectItemsCreate.md) | 403 | POST /projects/{id}/items - adds a scope item through ProjectToolsService and returns it. |
+| [apiProjectItemsUpdate()](/code/functions/apiProjectItemsUpdate.md) | 414 | PATCH /projects/{id}/items/{itemId} - updates the scope item fields sent through ProjectToolsService and returns the item. |
+| [apiProjectItemsDelete()](/code/functions/apiProjectItemsDelete.md) | 425 | DELETE /projects/{id}/items/{itemId} - deletes a scope item through ProjectToolsService. |
+| [apiSerializeProjectRaid()](/code/functions/apiSerializeProjectRaid.md) | 436 | RAID log |
+| [apiProjectRaidRow()](/code/functions/apiProjectRaidRow.md) | 464 | One RAID entry of a project, or answers 404 and stops. |
+| [apiProjectRaidList()](/code/functions/apiProjectRaidList.md) | 476 | GET /projects/{id}/raid - the project's RAID log (risks, assumptions, issues, dependencies, decisions and lessons), optionally filtered by ?type= and ?status=. |
+| [apiProjectRaidCreate()](/code/functions/apiProjectRaidCreate.md) | 486 | POST /projects/{id}/raid - adds a RAID entry through ProjectToolsService and returns it. |
+| [apiProjectRaidUpdate()](/code/functions/apiProjectRaidUpdate.md) | 497 | PATCH /projects/{id}/raid/{entryId} - updates the RAID entry fields sent through ProjectToolsService and returns the entry. |
+| [apiProjectRaidDelete()](/code/functions/apiProjectRaidDelete.md) | 508 | DELETE /projects/{id}/raid/{entryId} - deletes a RAID entry through ProjectToolsService. |
+| [apiSerializeBudgetLine()](/code/functions/apiSerializeBudgetLine.md) | 519 | Budget |
+| [apiProjectBudget()](/code/functions/apiProjectBudget.md) | 542 | GET /projects/{id}/budget - totals, labour and lines, in the project's currency. Never one person's rate. |
+| [apiProjectBudgetLine()](/code/functions/apiProjectBudgetLine.md) | 569 | One budget line of a project as the analyst sees it in the budget detail, or answers 404 and stops. |
+| [apiProjectBudgetLinesCreate()](/code/functions/apiProjectBudgetLinesCreate.md) | 576 | POST /projects/{id}/budget-lines - adds a budget line through ProjectToolsService and returns it. |
+| [apiProjectBudgetLinesUpdate()](/code/functions/apiProjectBudgetLinesUpdate.md) | 589 | PATCH /projects/{id}/budget-lines/{lineId} - updates a budget line through ProjectToolsService and returns it. Fields the body leaves out keep their stored values. |
+| [apiProjectBudgetLinesDelete()](/code/functions/apiProjectBudgetLinesDelete.md) | 606 | DELETE /projects/{id}/budget-lines/{lineId} - deletes a budget line through ProjectToolsService. |
+| [apiProjectTasks()](/code/functions/apiProjectTasks.md) | 618 | GET /projects/{id}/tasks - its top-level tasks. Change them through /tasks. |
+| [apiProjectLinks()](/code/functions/apiProjectLinks.md) | 641 | GET /projects/{id}/links - what it is connected to, only the kinds the key's analyst may open. |
+| [apiProjectHistory()](/code/functions/apiProjectHistory.md) | 654 | GET /projects/{id}/history - newest first, paged. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 38 | `apiProjectSelect` | read [project_stages](/code/tables/project_stages.md) |  |
-| 41 | `apiProjectSelect` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
-| 190 | `apiProjectsList` | read [projects](/code/tables/projects.md) |  |
-| 288 | `apiProjectStages` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [project_stages](/code/tables/project_stages.md) |  |
-| 567 | `apiProjectTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md) |  |
-| 604 | `apiProjectHistory` | read [project_audit](/code/tables/project_audit.md) |  |
-| 607 | `apiProjectHistory` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 42 | `apiProjectSelect` | read [project_stages](/code/tables/project_stages.md) |  |
+| 45 | `apiProjectSelect` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 199 | `apiProjectsList` | read [projects](/code/tables/projects.md) |  |
+| 301 | `apiProjectStages` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 621 | `apiProjectTasks` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md) |  |
+| 658 | `apiProjectHistory` | read [project_audit](/code/tables/project_audit.md) |  |
+| 661 | `apiProjectHistory` | read [project_audit](/code/tables/project_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

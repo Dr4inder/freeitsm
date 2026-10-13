@@ -6,7 +6,7 @@ Everyone a line could ever reach for this manager, as an SQL condition on `users
 function managerReachSql(PDO $conn, array $m): array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 230.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 231.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

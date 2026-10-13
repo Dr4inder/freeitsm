@@ -10,7 +10,7 @@ because an edit can add or remove a name.
 function warRoomEditMessage(PDO $conn, int $analystId, int $messageId, string $body): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 554.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 555.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,8 +25,8 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 554
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 566 | `warRoomEditMessage` | **update** [warroom_messages](/code/tables/warroom_messages.md) (`body`, `edited_datetime`) |  |
-| 573 | `warRoomEditMessage` | **delete** [warroom_mentions](/code/tables/warroom_mentions.md) |  |
+| 567 | `warRoomEditMessage` | **update** [warroom_messages](/code/tables/warroom_messages.md) (`body`, `edited_datetime`) |  |
+| 574 | `warRoomEditMessage` | **delete** [warroom_mentions](/code/tables/warroom_mentions.md) |  |
 
 ## Calls
 

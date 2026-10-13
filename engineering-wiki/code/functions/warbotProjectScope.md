@@ -6,7 +6,7 @@ The asking analyst's projects: their active company, or every company they can s
 function warbotProjectScope(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 910.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 944.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

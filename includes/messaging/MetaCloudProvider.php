@@ -25,6 +25,10 @@ class MetaCloudProvider extends MessagingProvider
     // without a code change by adding "graph_version" to the credentials JSON.
     private const GRAPH_VERSION = 'v21.0';
 
+    /**
+     * Answers Meta's webhook subscription check: returns the challenge when the verify
+     * token matches, else null.
+     */
     public function verifyChallenge(array $get): ?string
     {
         $mode      = $get['hub_mode']         ?? ($get['hub.mode'] ?? '');
@@ -37,6 +41,7 @@ class MetaCloudProvider extends MessagingProvider
         return null;
     }
 
+    /** Checks the X-Hub-Signature-256 HMAC of the raw body against the app secret. */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
         $sig = $headers['x-hub-signature-256'] ?? '';
@@ -48,6 +53,10 @@ class MetaCloudProvider extends MessagingProvider
         return hash_equals($expected, $sig);
     }
 
+    /**
+     * Turns a WhatsApp Cloud API webhook into inbound messages - text, or media to download
+     * later with the caption as the body.
+     */
     public function parseInbound(string $rawBody, array $params): array
     {
         $payload = json_decode($rawBody, true);
@@ -96,6 +105,7 @@ class MetaCloudProvider extends MessagingProvider
         return $out;
     }
 
+    /** Sends a WhatsApp text message through the Graph API and returns Meta's message id. */
     public function sendMessage(string $to, string $body): string
     {
         $phoneId = $this->channel['credentials']['phone_number_id'] ?? '';
@@ -195,6 +205,12 @@ class MetaCloudProvider extends MessagingProvider
         return $json2['messages'][0]['id'] ?? '';
     }
 
+    /**
+     * Sends an approved WhatsApp template, with $vars as the body parameters, and returns
+     * Meta's message id.
+     *
+     * Needed to message someone outside the 24-hour service window.
+     */
     public function sendTemplate(string $to, array $template, array $vars): string
     {
         $phoneId = $this->channel['credentials']['phone_number_id'] ?? '';
@@ -242,6 +258,10 @@ class MetaCloudProvider extends MessagingProvider
         return $json['messages'][0]['id'] ?? '';
     }
 
+    /**
+     * Downloads an inbound media item: resolves its id to a URL, then fetches the bytes
+     * with the access token.
+     */
     public function downloadMedia(array $item): array
     {
         $token = $this->channel['credentials']['access_token'] ?? '';
@@ -279,6 +299,10 @@ class MetaCloudProvider extends MessagingProvider
         return ['data' => $body, 'content_type' => $mime, 'filename' => $filename];
     }
 
+    /**
+     * Checks the phone number id and access token by reading the number from the Graph API,
+     * sending nothing.
+     */
     public function testConnection(): string
     {
         $phoneId = $this->channel['credentials']['phone_number_id'] ?? '';
@@ -305,6 +329,7 @@ class MetaCloudProvider extends MessagingProvider
         return 'Connected to Meta WhatsApp number ' . ($name !== '' ? "\"$name\" ($number)." : "$number.");
     }
 
+    /** Puts a single leading + on a phone number; blank stays blank. */
     private function ensurePlus(string $number): string
     {
         $number = ltrim(trim($number), '+');

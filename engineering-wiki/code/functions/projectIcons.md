@@ -6,7 +6,7 @@ The icons a project can pick. Keys only - the SVG lives in assets/js/projects.js
 function projectIcons(): array
 ```
 
-Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 158.
+Defined in [includes/projects/methodologies.php](/code/files/includes/projects/methodologies.php.md), line 163.
 
 **Returns:** `array`
 

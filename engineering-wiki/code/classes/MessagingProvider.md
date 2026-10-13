@@ -22,7 +22,7 @@ A "normalised inbound message" (the shape parseInbound returns) is:
 
 | Method | What it does |
 |---|---|
-| [__construct()](#__construct) |  |
+| [__construct()](#__construct) | Keeps the decrypted messaging_channels row the provider works with. |
 | [getType()](#gettype) | Channel type this instance serves, e.g. 'whatsapp'. |
 | [verifyWebhook()](#verifywebhook) | Verify an inbound webhook is genuinely from the provider (signature / shared-secret check). Return false to reject — the endpoint will 403. |
 | [verifyChallenge()](#verifychallenge) | Meta-style GET verification handshake (hub.challenge). Return the challenge string to echo, or null if this provider/request doesn't use it (Twilio). |
@@ -39,7 +39,9 @@ A "normalised inbound message" (the shape parseInbound returns) is:
 
 ### __construct
 
-*public* - line 28
+*public* - line 29
+
+Keeps the decrypted messaging_channels row the provider works with.
 
 ```php
 function __construct(array $channel)
@@ -51,7 +53,7 @@ function __construct(array $channel)
 
 ### getType
 
-*public* - line 34
+*public* - line 35
 
 Channel type this instance serves, e.g. 'whatsapp'.
 
@@ -61,7 +63,7 @@ function getType(): string
 
 ### verifyWebhook
 
-*public* - line 48
+*public* - line 49
 
 Verify an inbound webhook is genuinely from the provider (signature / shared-secret check). Return false to reject — the endpoint will 403.
 
@@ -78,7 +80,7 @@ function verifyWebhook(string $rawBody, array $headers, array $params, string $u
 
 ### verifyChallenge
 
-*public* - line 54
+*public* - line 55
 
 Meta-style GET verification handshake (hub.challenge). Return the challenge string to echo, or null if this provider/request doesn't use it (Twilio).
 
@@ -92,7 +94,7 @@ function verifyChallenge(array $get): ?string
 
 ### parseInbound
 
-*public* - line 64
+*public* - line 65
 
 Parse an inbound webhook into zero or more normalised messages (see the file header for the shape). Returns [] for non-message events (status callbacks, etc.) so the caller can simply skip them.
 
@@ -107,7 +109,7 @@ function parseInbound(string $rawBody, array $params): array
 
 ### sendMessage
 
-*public* - line 70
+*public* - line 71
 
 Send a free-text message to a recipient (within the 24h service window). Returns the provider's message id. Throws on failure.
 
@@ -122,7 +124,7 @@ function sendMessage(string $to, string $body): string
 
 ### sendTemplate
 
-*public* - line 80
+*public* - line 81
 
 Send a pre-approved template message (the 24h-window escape hatch).
 
@@ -140,7 +142,7 @@ function sendTemplate(string $to, array $template, array $vars): string
 
 ### sendRatingRequest
 
-*public* - line 91
+*public* - line 92
 
 Ask the customer to rate the service 1–5 (CSAT). Default: a plain message saying to reply with one digit, which the webhook then records (see `csatPendingRequestForChat()`). A channel with real buttons overrides this to show them; `$responseId` ties a button press back to its csat row.
 
@@ -156,7 +158,7 @@ function sendRatingRequest(string $to, string $text, int $responseId): string
 
 ### sendMedia
 
-*public* - line 119
+*public* - line 120
 
 Send a single local file (image, document, …) to a recipient — the outbound twin of `downloadMedia()`. Returns the provider's message id. Throws on failure, and by default for any provider that doesn't support this yet.
 
@@ -199,7 +201,7 @@ function sendMedia(
 
 ### testConnection
 
-*public* - line 130
+*public* - line 131
 
 Verify the channel's credentials against the provider with a lightweight, read-only API call (no message is sent). Returns a short human-readable success detail (e.g. the account/number it reached). Throws on failure with a message suitable for showing the analyst.
 
@@ -209,7 +211,7 @@ function testConnection(): string
 
 ### downloadMedia
 
-*public* - line 140
+*public* - line 141
 
 Download one inbound media item (an entry from parseInbound's 'media' array). Returns ['data' => binary, 'content_type' => string, 'filename' => string]. Throws on failure.
 
@@ -223,7 +225,7 @@ function downloadMedia(array $item): array
 
 ### httpRequest
 
-*protected* - line 154
+*protected* - line 155
 
 Shared cURL helper. Returns [httpCode, bodyString]. No exceptions on HTTP error codes — the caller decides what a bad status means.
 
@@ -238,7 +240,7 @@ function httpRequest(string $url, array $opts = []): array
 
 ### httpMultipart
 
-*protected* - line 210
+*protected* - line 211
 
 POST multipart/form-data — for uploading a file to a provider. Returns [httpCode, bodyString], like `httpRequest()`.
 
@@ -263,7 +265,7 @@ function httpMultipart(string $url, array $fields, array $headers = []): array
 
 ### outboundFilename
 
-*protected* - line 233
+*protected* - line 234
 
 The name a recipient sees for an outbound file: the given one, else the stored one.
 

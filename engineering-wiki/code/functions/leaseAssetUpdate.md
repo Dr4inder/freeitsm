@@ -6,7 +6,7 @@ Change one asset on a schedule: outcome_id, outcome_date, start_date / end_date 
 function leaseAssetUpdate(PDO $conn, ActorContext $ctx, int $id, array $in): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 533.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 539.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,10 +21,10 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 533.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 542 | `leaseAssetUpdate` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 563 | `leaseAssetUpdate` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 566 | `leaseAssetUpdate` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 571 | `leaseAssetUpdate` | **update** [lease_assets](/code/tables/lease_assets.md) (`outcome_id`, `start_date`, `end_date`, `outcome_date`, `notes`, `updated_datetime`) |  |
+| 548 | `leaseAssetUpdate` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 569 | `leaseAssetUpdate` | read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 572 | `leaseAssetUpdate` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 577 | `leaseAssetUpdate` | **update** [lease_assets](/code/tables/lease_assets.md) (`outcome_id`, `start_date`, `end_date`, `outcome_date`, `notes`, `updated_datetime`) |  |
 
 ## Calls
 

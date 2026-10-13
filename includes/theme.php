@@ -13,6 +13,8 @@
  *   per-module preference  (theme_<module>)  →  global preference (theme)  →  default
  * so a user can run one palette everywhere, or pick a different one per module
  * (e.g. "English Summer" on Tickets, "Dark" on Problem Management).
+ *
+ * @wiki Theming-and-Dark-Mode
  */
 class Theme
 {
@@ -31,8 +33,10 @@ class Theme
     /** All registered palettes: id => ['label' => …]. Used to build the picker. */
     public static function all() { return self::THEMES; }
 
+    /** True when $id is a registered palette id - used to reject a saved preference that is not one. */
     public static function isValid($id) { return is_string($id) && array_key_exists($id, self::THEMES); }
 
+    /** The display name of a palette, or the id itself when it is not registered. */
     public static function label($id) { return self::THEMES[$id]['label'] ?? $id; }
 
     /** The light/dark base of the active palette for $module. Drives the TinyMCE skin. */

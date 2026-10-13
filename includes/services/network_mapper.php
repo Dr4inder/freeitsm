@@ -233,6 +233,7 @@ class NetworkMapperService
     //  Internals
     // ======================================================================
 
+    /** Loads one diagram with a count of its newer versions; throws not found when it does not exist. */
     private static function loadDiagram(PDO $conn, int $diagramId): array
     {
         $stmt = $conn->prepare(
@@ -248,6 +249,7 @@ class NetworkMapperService
         return $row;
     }
 
+    /** Throws when the diagram is a historical version, which is read-only. */
     private static function requireLeaf(array $diagram): void
     {
         if ((int)$diagram['child_count'] > 0) {
@@ -411,6 +413,10 @@ class NetworkMapperService
         ];
     }
 
+    /**
+     * A function that hands out positions for new nodes, in columns of eight to the right
+     * of what is already on the diagram.
+     */
     private static function autoPlacer(PDO $conn, int $diagramId): callable
     {
         $stmt = $conn->prepare("SELECT COALESCE(MAX(x), -60) AS max_x, COALESCE(MIN(y), 80) AS min_y FROM network_diagram_nodes WHERE diagram_id = ?");
@@ -426,6 +432,10 @@ class NetworkMapperService
         };
     }
 
+    /**
+     * The CMDB relationship a connector stands for: null, 'auto' (any relationship between
+     * the two nodes' CIs) or a validated id.
+     */
     private static function resolveRelationshipId(PDO $conn, $raw, int $fromNodeId, int $toNodeId): ?int
     {
         if ($raw === null || $raw === '') {
@@ -454,6 +464,7 @@ class NetworkMapperService
         return $relId;
     }
 
+    /** Throws unless the CI exists and is in a company the actor can reach. */
     private static function validateObjectExists(PDO $conn, ActorContext $ctx, int $objectId): void
     {
         $stmt = $conn->prepare("SELECT tenant_id FROM cmdb_objects WHERE id = ?");
@@ -475,6 +486,7 @@ class NetworkMapperService
         }
     }
 
+    /** Validates a node size against NODE_SIZES. */
     private static function validateSize(string $size): string
     {
         if (!isset(self::NODE_SIZES[$size])) {
@@ -483,6 +495,7 @@ class NetworkMapperService
         return $size;
     }
 
+    /** Validates a connector line style against LINE_STYLES. */
     private static function validateLineStyle(string $style): string
     {
         if (!in_array($style, self::LINE_STYLES, true)) {
@@ -491,6 +504,7 @@ class NetworkMapperService
         return $style;
     }
 
+    /** Validates an icon key against cmdb_icons. */
     private static function validateIcon(PDO $conn, string $iconKey): string
     {
         $stmt = $conn->prepare("SELECT 1 FROM cmdb_icons WHERE icon_key = ?");

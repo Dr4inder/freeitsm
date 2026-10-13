@@ -6,7 +6,7 @@ Read a zip's central directory. Returns [bytes, [name => entry]].
 function spreadsheetZipOpen(string $path): array
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 352.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 356.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

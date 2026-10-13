@@ -6,7 +6,7 @@ PATCH /tickets/{id}
 function apiTicketsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 294.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 302.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

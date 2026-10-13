@@ -9,22 +9,22 @@
 | [addMember()](#addmember) | Add a member: exactly one of analyst_id / team_id / user_id / supplier_id (+ contact_id). Returns its id. |
 | [addContractorMember()](#addcontractormember) | A contractor on the team (3.3.0): a supplier, or one person there (which brings its supplier). Suppliers live in Contracts, so adding one needs it. |
 | [contractorMemberSql()](#contractormembersql) | The member columns for a contractor (3.3.0), or NULLs before Database Verification. |
-| [updateMember()](#updatemember) |  |
+| [updateMember()](#updatemember) | Changes a project member's role, notes and stakeholder map details (power, interest, stance, how they are kept informed), and records the change in the project's history. |
 | [stakeReady()](#stakeready) | Has Database Verification added the stakeholder columns (3.3.0)? |
-| [stakeColumns()](#stakecolumns) |  |
+| [stakeColumns()](#stakecolumns) | The stakeholder columns for a member query, or NULL placeholders before Database Verification has added them. |
 | [removeMember()](#removemember) | Remove a member. Their RACI letters go with them (FK cascade, and by hand). |
-| [saveItem()](#saveitem) |  |
-| [deleteItem()](#deleteitem) |  |
+| [saveItem()](#saveitem) | Adds or updates a deliverable or requirement (title, description, acceptance criteria, MoSCoW priority, stage, status) and returns its id. |
+| [deleteItem()](#deleteitem) | Deletes a deliverable with its RACI rows; any child items lose their parent. Recorded in the project's history. |
 | [moveItem()](#moveitem) | Move an item to a MoSCoW column, in the given order within it (the drag on the board). |
 | [setRaci()](#setraci) | Set one cell: R, A, C, I or '' to clear. Returns the row's letters after the change ({member_id: letter}), so the screen can redraw a demoted A. |
 | [saveRaid()](#saveraid) | Create or update a RAID entry. Probability is for risks only and impact for risks and issues (both 1-5); a risk's score is probability x impact (1-25), which is what the heat map and the risk tolerance read. |
-| [deleteRaid()](#deleteraid) |  |
+| [deleteRaid()](#deleteraid) | Deletes a RAID log entry; its follow-up tasks are unlinked but kept. Recorded in the project's history. |
 | [raidLogReady()](#raidlogready) | Has Database Verification added the 3.3.0 RAID columns (escalation, decision log)? |
 | [escalateRaid()](#escalateraid) | Escalate an open entry (3.3.0): it needs somebody above the project manager - a sponsor, the board - to act. Stamped with who and when and a note saying what is needed; shown on the Overview until it is de-escalated or the entry is closed; fires project.raid_escalated, so the project manager's bell rings (unless they escalated it) and a workflow can email the sponsor. Escalating again replaces the note and fires again. |
-| [deescalateRaid()](#deescalateraid) |  |
+| [deescalateRaid()](#deescalateraid) | Clears a RAID entry's escalation; does nothing when it is not escalated. Recorded in the project's history. |
 | [addRaidAction()](#addraidaction) | A follow-up action on a RAID entry (3.3.0): a NEW project task, made by `createTaskInProject()` (TasksService - so the assigned email, the bell and task events happen as for any task), then joined to the entry. It is put in no stage - where it sits in the plan is the Plan's job. Returns the task id. |
 | [removeRaidAction()](#removeraidaction) | Unlink an action. The task itself stays - it is somebody's work. |
-| [raidActionsReady()](#raidactionsready) |  |
+| [raidActionsReady()](#raidactionsready) | True when the project_raid_tasks table exists (after Database Verification). Cached per request. |
 | [lessonToKnowledge()](#lessontoknowledge) | A lesson becomes a Knowledge article, in one click (3.2.0). |
 | [issueToTicket()](#issuetoticket) | Raise a NEW ticket from an issue (3.2.0) - before, an issue could only be linked to a ticket that already existed. |
 | [raidRow()](#raidrow) | One RAID entry of this project, or not found. |
@@ -32,51 +32,51 @@
 | [saveTolerances()](#savetolerances) | The project's tolerances - how far it may drift before it is an exception (PRINCE2's "manage by exception", in our own words). time = days past the target finish (or the active stage's end) with work still open; risk = the highest open risk score allowed (1-25). null removes one. |
 | [tolerances()](#tolerances) | {time: int\|null, risk: int\|null} |
 | [decideGate()](#decidegate) | Record the gate at the end of a stage. Go (or go with conditions) closes the stage and starts the next planned one, so the decision IS the hand-over; Stop records the decision and leaves the plan alone - what to do next is the board's call, not the software's. |
-| [raid()](#raid) |  |
+| [raid()](#raid) | The project's RAID log - each entry with its owner, ticket, risk score, escalation, lesson article and follow-up tasks. |
 | [saveTarget()](#savetarget) | Add or change an asset target. Needs the project to be changeable AND Assets access: the rule names asset types, statuses and models, and the dialog's live count would otherwise tell somebody without Assets what is in the estate. Returns its id. |
-| [deleteTarget()](#deletetarget) |  |
+| [deleteTarget()](#deletetarget) | Deletes an asset target from a project and records it; health and tolerances are checked again. |
 | [assertAssets()](#assertassets) | Assets access, for anything that reads the estate through a target. |
-| [target()](#target) |  |
-| [date()](#date) |  |
+| [target()](#target) | Loads one asset target of the project; throws not found otherwise. |
+| [date()](#date) | Validates an optional YYYY-MM-DD date; blank gives null. |
 | [saveMilestone()](#savemilestone) | Add or change a milestone: {id?, name, due_date, stage_id?, notes?, done?, done_date?}. Any field left out keeps its value, so the Timeline can move just the date. done = true stamps today (or done_date) and who; done = false clears both. Reaching one fires project.milestone_reached. Returns its id. |
-| [deleteMilestone()](#deletemilestone) |  |
-| [milestone()](#milestone) |  |
+| [deleteMilestone()](#deletemilestone) | Deletes a milestone from a project, records it, and refreshes the calendar, health and tolerances. |
+| [milestone()](#milestone) | Loads one milestone of the project; throws not found otherwise. |
 | [setTaskDates()](#settaskdates) | Move a project task's dates from the Timeline: {start_date?, due_date?}. |
 | [setTaskEstimate()](#settaskestimate) | Set a project task's estimate from the Plan (3.3.0): {estimate_hours} (empty = not estimated). Through TasksService, like `setTaskDates()` - the task window and the REST API write the same column the same way. |
 | [members()](#members) | Members with display names, roles and kinds, in order. |
-| [items()](#items) |  |
+| [items()](#items) | The project's deliverables and requirements, in order, with their stage names; empty before the table exists. |
 | [raci()](#raci) | {item_id: {member_id: letter}} |
 | [addTaskDependency()](#addtaskdependency) | `$taskId` waits for `$dependsOnId` to finish (+ lag days). Both in this project; no loops. Returns its id. |
-| [removeTaskDependency()](#removetaskdependency) |  |
+| [removeTaskDependency()](#removetaskdependency) | Removes a dependency between two of the project's tasks and records it in the project's history. |
 | [saveGateItem()](#savegateitem) | Add (no id) or change a gate item. Returns its id. |
-| [deleteGateItem()](#deletegateitem) |  |
+| [deleteGateItem()](#deletegateitem) | Deletes a stage gate item and records it in the project's history. |
 | [tickGateItem()](#tickgateitem) | Tick or untick an item. A check: anybody who may change the project. A sign-off: ONLY its named analyst. A document: choose one of the project's documents (document_id; empty unticks). A change cannot be ticked - it is done when the change is approved. |
 | [setGateKind()](#setgatekind) | standard \| golive. Making a gate go-live adds the starter items it does not already have. |
-| [gateItem()](#gateitem) |  |
+| [gateItem()](#gateitem) | Loads one stage gate item of the project; throws not found otherwise. |
 | [saveBenefit()](#savebenefit) | Create (no id) or update a benefit. Returns its id. |
-| [deleteBenefit()](#deletebenefit) |  |
+| [deleteBenefit()](#deletebenefit) | Deletes a benefit with its measurements and records it in the project's history. |
 | [addBenefitMeasure()](#addbenefitmeasure) | Record a measurement. One on or after (review date - 14 days) is the review: the next one moves on by the benefit's review_months (none when 0). Returns the measurement's id. |
-| [deleteBenefitMeasure()](#deletebenefitmeasure) |  |
-| [benefit()](#benefit) |  |
+| [deleteBenefitMeasure()](#deletebenefitmeasure) | Deletes one measurement of a benefit; throws not found when it is not that benefit's. |
+| [benefit()](#benefit) | Loads one benefit of the project; throws not found otherwise. |
 | [takeBaseline()](#takebaseline) | Take a baseline of the plan as it is now, by hand. Returns its id. |
 | [saveChangeRequest()](#savechangerequest) | Raise a change request (no id), or edit one still waiting for a decision - by whoever raised it, or anybody who may change the project. Returns its id. |
 | [decideChangeRequest()](#decidechangerequest) | Approve or reject a change request. Approving takes a new baseline - the changed plan becomes the agreed one - and, when project_change_apply is "plan", first moves the target finish by the days and adds the cost as a budget line, recording both in `applied`. Rejecting changes nothing. |
 | [withdrawChangeRequest()](#withdrawchangerequest) | Withdraw a request still waiting for a decision: whoever raised it, or the project's team. |
-| [changeRequest()](#changerequest) |  |
-| [changeable()](#changeable) |  |
-| [member()](#member) |  |
-| [item()](#item) |  |
-| [moscow()](#moscow) |  |
-| [stageOf()](#stageof) |  |
-| [roleId()](#roleid) |  |
-| [roleName()](#rolename) |  |
-| [memberName()](#membername) |  |
-| [mustExist()](#mustexist) |  |
-| [str()](#str) |  |
-| [src()](#src) |  |
+| [changeRequest()](#changerequest) | Loads one change request of the project; throws not found otherwise. |
+| [changeable()](#changeable) | Loads the project for the actor and checks they may change it; throws otherwise. |
+| [member()](#member) | Loads one member row of the project; throws not found otherwise. |
+| [item()](#item) | Loads one deliverable of the project; throws not found otherwise. |
+| [moscow()](#moscow) | A validated MoSCoW value in lower case, or null for none. |
+| [stageOf()](#stageof) | A validated stage id of this project, or null for none. |
+| [roleId()](#roleid) | A validated project role id, or null for none. |
+| [roleName()](#rolename) | The name of a project role, or null. |
+| [memberName()](#membername) | The name of a project member - analyst, team, portal user or contractor - or #id. |
+| [mustExist()](#mustexist) | Runs a one-id lookup query and throws a validation error with `$msg` when it finds nothing. |
+| [str()](#str) | Trimmed text cut to `$max` characters, or null when blank. |
+| [src()](#src) | The history source for the actor: 'api' or 'app'. |
 | [saveBudgetLine()](#savebudgetline) | Create (no id) or update a budget line. Returns its id. |
 | [budgetLineWhen()](#budgetlinewhen) | The 3.3.0 columns, on their own: before Database Verification adds them the rest of the line still saves. |
-| [deleteBudgetLine()](#deletebudgetline) |  |
+| [deleteBudgetLine()](#deletebudgetline) | Deletes a budget line, records it in the project's history, and checks health and tolerances again. |
 | [addProjectRate()](#addprojectrate) | The project's own hourly rate from a date (labour mode "rate"), in the project's currency. Each rate is a new row: the old one still prices the time logged before the new one's date. |
 | [deleteProjectRate()](#deleteprojectrate) | Remove one of the project's own rates (entered by mistake). |
 | [setCurrency()](#setcurrency) | Change the project's currency - a RELABEL: amounts are not converted, and the page says so before anyone presses Save. Only when Projects -> Settings -> Budget lets projects choose. |
@@ -164,7 +164,9 @@ function contractorMemberSql(PDO $conn): array
 
 ### updateMember
 
-*public static* - line 114
+*public static* - line 118
+
+Changes a project member's role, notes and stakeholder map details (power, interest, stance, how they are kept informed), and records the change in the project's history.
 
 ```php
 function updateMember(PDO $conn, ActorContext $ctx, int $projectId, int $memberId, array $in): void
@@ -182,13 +184,13 @@ function updateMember(PDO $conn, ActorContext $ctx, int $projectId, int $memberI
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 139 | `ProjectToolsService::updateMember` | **update** [project_members](/code/tables/project_members.md) |  |
+| 143 | `ProjectToolsService::updateMember` | **update** [project_members](/code/tables/project_members.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### stakeReady
 
-*public static* - line 149
+*public static* - line 153
 
 Has Database Verification added the stakeholder columns (3.3.0)?
 
@@ -204,13 +206,15 @@ function stakeReady(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 153 | `ProjectToolsService::stakeReady` | read [project_members](/code/tables/project_members.md) |  |
+| 157 | `ProjectToolsService::stakeReady` | read [project_members](/code/tables/project_members.md) |  |
 
 **Called from:** [api/projects/lookups.php](/code/files/api/projects/lookups.php.md)
 
 ### stakeColumns
 
-*private static* - line 159
+*private static* - line 167
+
+The stakeholder columns for a member query, or NULL placeholders before Database Verification has added them.
 
 ```php
 function stakeColumns(PDO $conn): string
@@ -222,7 +226,7 @@ function stakeColumns(PDO $conn): string
 
 ### removeMember
 
-*public static* - line 165
+*public static* - line 173
 
 Remove a member. Their RACI letters go with them (FK cascade, and by hand).
 
@@ -241,14 +245,19 @@ function removeMember(PDO $conn, ActorContext $ctx, int $projectId, int $memberI
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 170 | `ProjectToolsService::removeMember` | **delete** [project_raci](/code/tables/project_raci.md) |  |
-| 171 | `ProjectToolsService::removeMember` | **delete** [project_members](/code/tables/project_members.md) |  |
+| 178 | `ProjectToolsService::removeMember` | **delete** [project_raci](/code/tables/project_raci.md) |  |
+| 179 | `ProjectToolsService::removeMember` | **delete** [project_members](/code/tables/project_members.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### saveItem
 
-*public static* - line 179
+*public static* - line 194
+
+Adds or updates a deliverable or requirement (title, description, acceptance criteria, MoSCoW priority, stage, status) and returns its id.
+
+A new item goes to the end of the list; adding one, or changing its MoSCoW priority,
+is recorded in the project's history.
 
 ```php
 function saveItem(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
@@ -265,15 +274,17 @@ function saveItem(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 194 | `ProjectToolsService::saveItem` | **update** [project_items](/code/tables/project_items.md) (`title`, `description`, `acceptance_criteria`, `moscow`, `stage_id`, `status`, `updated_datetime`) |  |
-| 201 | `ProjectToolsService::saveItem` | read [project_items](/code/tables/project_items.md) |  |
-| 202 | `ProjectToolsService::saveItem` | **insert** [project_items](/code/tables/project_items.md) (`project_id`, `title`, `description`, `acceptance_criteria`, `moscow`, `stage_id`, `status`, `position`, `created_datetime`, `updated_datetime`) |  |
+| 209 | `ProjectToolsService::saveItem` | **update** [project_items](/code/tables/project_items.md) (`title`, `description`, `acceptance_criteria`, `moscow`, `stage_id`, `status`, `updated_datetime`) |  |
+| 216 | `ProjectToolsService::saveItem` | read [project_items](/code/tables/project_items.md) |  |
+| 217 | `ProjectToolsService::saveItem` | **insert** [project_items](/code/tables/project_items.md) (`project_id`, `title`, `description`, `acceptance_criteria`, `moscow`, `stage_id`, `status`, `position`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### deleteItem
 
-*public static* - line 210
+*public static* - line 229
+
+Deletes a deliverable with its RACI rows; any child items lose their parent. Recorded in the project's history.
 
 ```php
 function deleteItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId): void
@@ -290,15 +301,15 @@ function deleteItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId): 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 214 | `ProjectToolsService::deleteItem` | **delete** [project_raci](/code/tables/project_raci.md) |  |
-| 215 | `ProjectToolsService::deleteItem` | **update** [project_items](/code/tables/project_items.md) (`parent_id`) |  |
-| 216 | `ProjectToolsService::deleteItem` | **delete** [project_items](/code/tables/project_items.md) |  |
+| 233 | `ProjectToolsService::deleteItem` | **delete** [project_raci](/code/tables/project_raci.md) |  |
+| 234 | `ProjectToolsService::deleteItem` | **update** [project_items](/code/tables/project_items.md) (`parent_id`) |  |
+| 235 | `ProjectToolsService::deleteItem` | **delete** [project_items](/code/tables/project_items.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md)
 
 ### moveItem
 
-*public static* - line 221
+*public static* - line 240
 
 Move an item to a MoSCoW column, in the given order within it (the drag on the board).
 
@@ -326,14 +337,14 @@ function moveItem(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 226 | `ProjectToolsService::moveItem` | **update** [project_items](/code/tables/project_items.md) (`moscow`, `updated_datetime`) |  |
-| 227 | `ProjectToolsService::moveItem` | **update** [project_items](/code/tables/project_items.md) (`position`) |  |
+| 245 | `ProjectToolsService::moveItem` | **update** [project_items](/code/tables/project_items.md) (`moscow`, `updated_datetime`) |  |
+| 246 | `ProjectToolsService::moveItem` | **update** [project_items](/code/tables/project_items.md) (`position`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### setRaci
 
-*public static* - line 243
+*public static* - line 262
 
 Set one cell: R, A, C, I or '' to clear. Returns the row's letters after the change ({member_id: letter}), so the screen can redraw a demoted A.
 
@@ -361,16 +372,16 @@ function setRaci(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 251 | `ProjectToolsService::setRaci` | **delete** [project_raci](/code/tables/project_raci.md) |  |
-| 255 | `ProjectToolsService::setRaci` | **update** [project_raci](/code/tables/project_raci.md) (`letter`) |  |
-| 257 | `ProjectToolsService::setRaci` | **insert** [project_raci](/code/tables/project_raci.md) (`project_id`, `item_id`, `member_id`, `letter`) |  |
-| 261 | `ProjectToolsService::setRaci` | read [project_raci](/code/tables/project_raci.md) |  |
+| 270 | `ProjectToolsService::setRaci` | **delete** [project_raci](/code/tables/project_raci.md) |  |
+| 274 | `ProjectToolsService::setRaci` | **update** [project_raci](/code/tables/project_raci.md) (`letter`) |  |
+| 276 | `ProjectToolsService::setRaci` | **insert** [project_raci](/code/tables/project_raci.md) (`project_id`, `item_id`, `member_id`, `letter`) |  |
+| 280 | `ProjectToolsService::setRaci` | read [project_raci](/code/tables/project_raci.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### saveRaid
 
-*public static* - line 290
+*public static* - line 309
 
 Create or update a RAID entry. Probability is for risks only and impact for risks and issues (both 1-5); a risk's score is probability x impact (1-25), which is what the heat map and the risk tolerance read.
 
@@ -396,17 +407,19 @@ function saveRaid(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 296 | `ProjectToolsService::saveRaid` | read [project_raid](/code/tables/project_raid.md) |  |
-| 314 | `ProjectToolsService::saveRaid` | read [analysts](/code/tables/analysts.md) |  |
-| 343 | `ProjectToolsService::saveRaid` | **update** [project_raid](/code/tables/project_raid.md) (`type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `owner_analyst_id`, `status`, `due_date`, `ticket_id`, `updated_datetime`) |  |
-| 354 | `ProjectToolsService::saveRaid` | **insert** [project_raid](/code/tables/project_raid.md) (`type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `owner_analyst_id`, `status`, `due_date`, `ticket_id`, `project_id`) |  |
-| 359 | `ProjectToolsService::saveRaid` | **update** [project_raid](/code/tables/project_raid.md) (`decided_by`, `decided_date`, `rationale`) |  |
+| 315 | `ProjectToolsService::saveRaid` | read [project_raid](/code/tables/project_raid.md) |  |
+| 333 | `ProjectToolsService::saveRaid` | read [analysts](/code/tables/analysts.md) |  |
+| 362 | `ProjectToolsService::saveRaid` | **update** [project_raid](/code/tables/project_raid.md) (`type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `owner_analyst_id`, `status`, `due_date`, `ticket_id`, `updated_datetime`) |  |
+| 373 | `ProjectToolsService::saveRaid` | **insert** [project_raid](/code/tables/project_raid.md) (`type`, `title`, `description`, `probability`, `impact`, `response`, `response_plan`, `owner_analyst_id`, `status`, `due_date`, `ticket_id`, `project_id`) |  |
+| 378 | `ProjectToolsService::saveRaid` | **update** [project_raid](/code/tables/project_raid.md) (`decided_by`, `decided_date`, `rationale`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### deleteRaid
 
-*public static* - line 366
+*public static* - line 389
+
+Deletes a RAID log entry; its follow-up tasks are unlinked but kept. Recorded in the project's history.
 
 ```php
 function deleteRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): void
@@ -423,15 +436,15 @@ function deleteRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 369 | `ProjectToolsService::deleteRaid` | read [project_raid](/code/tables/project_raid.md) |  |
-| 374 | `ProjectToolsService::deleteRaid` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md) |  |
-| 375 | `ProjectToolsService::deleteRaid` | **delete** [project_raid](/code/tables/project_raid.md) |  |
+| 392 | `ProjectToolsService::deleteRaid` | read [project_raid](/code/tables/project_raid.md) |  |
+| 397 | `ProjectToolsService::deleteRaid` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md) |  |
+| 398 | `ProjectToolsService::deleteRaid` | **delete** [project_raid](/code/tables/project_raid.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md)
 
 ### raidLogReady
 
-*public static* - line 381
+*public static* - line 404
 
 Has Database Verification added the 3.3.0 RAID columns (escalation, decision log)?
 
@@ -447,11 +460,11 @@ function raidLogReady(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 385 | `ProjectToolsService::raidLogReady` | read [project_raid](/code/tables/project_raid.md) |  |
+| 408 | `ProjectToolsService::raidLogReady` | read [project_raid](/code/tables/project_raid.md) |  |
 
 ### escalateRaid
 
-*public static* - line 399
+*public static* - line 422
 
 Escalate an open entry (3.3.0): it needs somebody above the project manager - a sponsor, the board - to act. Stamped with who and when and a note saying what is needed; shown on the Overview until it is de-escalated or the entry is closed; fires project.raid_escalated, so the project manager's bell rings (unless they escalated it) and a workflow can email the sponsor. Escalating again replaces the note and fires again.
 
@@ -477,13 +490,15 @@ function escalateRaid(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 407 | `ProjectToolsService::escalateRaid` | **update** [project_raid](/code/tables/project_raid.md) (`escalated_datetime`, `escalated_by_id`, `escalation_note`, `updated_datetime`) |  |
+| 430 | `ProjectToolsService::escalateRaid` | **update** [project_raid](/code/tables/project_raid.md) (`escalated_datetime`, `escalated_by_id`, `escalation_note`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### deescalateRaid
 
-*public static* - line 414
+*public static* - line 441
+
+Clears a RAID entry's escalation; does nothing when it is not escalated. Recorded in the project's history.
 
 ```php
 function deescalateRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): void
@@ -500,13 +515,13 @@ function deescalateRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidI
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 420 | `ProjectToolsService::deescalateRaid` | **update** [project_raid](/code/tables/project_raid.md) (`escalated_datetime`, `escalated_by_id`, `escalation_note`, `updated_datetime`) |  |
+| 447 | `ProjectToolsService::deescalateRaid` | **update** [project_raid](/code/tables/project_raid.md) (`escalated_datetime`, `escalated_by_id`, `escalation_note`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### addRaidAction
 
-*public static* - line 431
+*public static* - line 458
 
 A follow-up action on a RAID entry (3.3.0): a NEW project task, made by `createTaskInProject()` (TasksService - so the assigned email, the bell and task events happen as for any task), then joined to the entry. It is put in no stage - where it sits in the plan is the Plan's job. Returns the task id.
 
@@ -526,13 +541,13 @@ function addRaidAction(PDO $conn, ActorContext $ctx, int $projectId, int $raidId
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 444 | `ProjectToolsService::addRaidAction` | **insert** [project_raid_tasks](/code/tables/project_raid_tasks.md) (`raid_id`, `task_id`, `created_datetime`) |  |
+| 471 | `ProjectToolsService::addRaidAction` | **insert** [project_raid_tasks](/code/tables/project_raid_tasks.md) (`raid_id`, `task_id`, `created_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### removeRaidAction
 
-*public static* - line 450
+*public static* - line 477
 
 Unlink an action. The task itself stays - it is somebody's work.
 
@@ -558,13 +573,15 @@ function removeRaidAction(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 455 | `ProjectToolsService::removeRaidAction` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md) |  |
+| 482 | `ProjectToolsService::removeRaidAction` | **delete** [project_raid_tasks](/code/tables/project_raid_tasks.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### raidActionsReady
 
-*public static* - line 458
+*public static* - line 486
+
+True when the project_raid_tasks table exists (after Database Verification). Cached per request.
 
 ```php
 function raidActionsReady(PDO $conn): bool
@@ -578,11 +595,11 @@ function raidActionsReady(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 462 | `ProjectToolsService::raidActionsReady` | read [project_raid_tasks](/code/tables/project_raid_tasks.md) |  |
+| 490 | `ProjectToolsService::raidActionsReady` | read [project_raid_tasks](/code/tables/project_raid_tasks.md) |  |
 
 ### lessonToKnowledge
 
-*public static* - line 479
+*public static* - line 507
 
 A lesson becomes a Knowledge article, in one click (3.2.0).
 
@@ -609,13 +626,13 @@ function lessonToKnowledge(PDO $conn, ActorContext $ctx, int $projectId, int $ra
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 508 | `ProjectToolsService::lessonToKnowledge` | **update** [project_raid](/code/tables/project_raid.md) (`knowledge_article_id`, `updated_datetime`) |  |
+| 536 | `ProjectToolsService::lessonToKnowledge` | **update** [project_raid](/code/tables/project_raid.md) (`knowledge_article_id`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### issueToTicket
 
-*public static* - line 527
+*public static* - line 555
 
 Raise a NEW ticket from an issue (3.2.0) - before, an issue could only be linked to a ticket that already existed.
 
@@ -642,15 +659,15 @@ function issueToTicket(PDO $conn, ActorContext $ctx, int $projectId, int $raidId
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 536 | `ProjectToolsService::issueToTicket` | read [analysts](/code/tables/analysts.md) |  |
-| 561 | `ProjectToolsService::issueToTicket` | **update** [project_raid](/code/tables/project_raid.md) (`ticket_id`, `updated_datetime`) |  |
-| 563 | `ProjectToolsService::issueToTicket` | read [tickets](/code/tables/tickets.md) |  |
+| 564 | `ProjectToolsService::issueToTicket` | read [analysts](/code/tables/analysts.md) |  |
+| 589 | `ProjectToolsService::issueToTicket` | **update** [project_raid](/code/tables/project_raid.md) (`ticket_id`, `updated_datetime`) |  |
+| 591 | `ProjectToolsService::issueToTicket` | read [tickets](/code/tables/tickets.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### raidRow
 
-*private static* - line 572
+*private static* - line 600
 
 One RAID entry of this project, or not found.
 
@@ -668,11 +685,11 @@ function raidRow(PDO $conn, int $projectId, int $raidId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 574 | `ProjectToolsService::raidRow` | read [project_raid](/code/tables/project_raid.md) |  |
+| 602 | `ProjectToolsService::raidRow` | read [project_raid](/code/tables/project_raid.md) |  |
 
 ### linkQuietly
 
-*private static* - line 586
+*private static* - line 614
 
 Link the new record on the Connections tab too. The record is already made and remembered on the entry, so a link that cannot be added (the tables not verified yet) must not undo it.
 
@@ -690,7 +707,7 @@ function linkQuietly(PDO $conn, ActorContext $ctx, int $projectId, string $kind,
 
 ### saveTolerances
 
-*public static* - line 608
+*public static* - line 636
 
 The project's tolerances - how far it may drift before it is an exception (PRINCE2's "manage by exception", in our own words). time = days past the target finish (or the active stage's end) with work still open; risk = the highest open risk score allowed (1-25). null removes one.
 
@@ -709,16 +726,16 @@ function saveTolerances(PDO $conn, ActorContext $ctx, int $projectId, array $in)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 616 | `ProjectToolsService::saveTolerances` | **delete** [project_tolerances](/code/tables/project_tolerances.md) |  |
-| 622 | `ProjectToolsService::saveTolerances` | read [project_tolerances](/code/tables/project_tolerances.md) |  |
-| 625 | `ProjectToolsService::saveTolerances` | **update** [project_tolerances](/code/tables/project_tolerances.md) (`value`) |  |
-| 627 | `ProjectToolsService::saveTolerances` | **insert** [project_tolerances](/code/tables/project_tolerances.md) (`project_id`, `stage_id`, `dimension`, `value`) |  |
+| 644 | `ProjectToolsService::saveTolerances` | **delete** [project_tolerances](/code/tables/project_tolerances.md) |  |
+| 650 | `ProjectToolsService::saveTolerances` | read [project_tolerances](/code/tables/project_tolerances.md) |  |
+| 653 | `ProjectToolsService::saveTolerances` | **update** [project_tolerances](/code/tables/project_tolerances.md) (`value`) |  |
+| 655 | `ProjectToolsService::saveTolerances` | **insert** [project_tolerances](/code/tables/project_tolerances.md) (`project_id`, `stage_id`, `dimension`, `value`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### tolerances
 
-*public static* - line 636
+*public static* - line 664
 
 {time: int|null, risk: int|null}
 
@@ -735,13 +752,13 @@ function tolerances(PDO $conn, int $projectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 640 | `ProjectToolsService::tolerances` | read [project_tolerances](/code/tables/project_tolerances.md) |  |
+| 668 | `ProjectToolsService::tolerances` | read [project_tolerances](/code/tables/project_tolerances.md) |  |
 
 **Called from:** [api/projects/get.php](/code/files/api/projects/get.php.md), [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), [includes/projects/templates.php](/code/files/includes/projects/templates.php.md)
 
 ### decideGate
 
-*public static* - line 655
+*public static* - line 683
 
 Record the gate at the end of a stage. Go (or go with conditions) closes the stage and starts the next planned one, so the decision IS the hand-over; Stop records the decision and leaves the plan alone - what to do next is the board's call, not the software's.
 
@@ -771,17 +788,21 @@ function decideGate(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 659 | `ProjectToolsService::decideGate` | read [project_stages](/code/tables/project_stages.md) |  |
-| 682 | `ProjectToolsService::decideGate` | **update** [project_stages](/code/tables/project_stages.md) (`gate_decision`, `gate_notes`, `gate_decided_by`, `gate_decided_datetime`, `updated_datetime`) |  |
-| 689 | `ProjectToolsService::decideGate` | **update** [project_stages](/code/tables/project_stages.md) (`status`) |  |
-| 691 | `ProjectToolsService::decideGate` | read [project_stages](/code/tables/project_stages.md) |  |
-| 694 | `ProjectToolsService::decideGate` | **update** [project_stages](/code/tables/project_stages.md) (`status`, `updated_datetime`) |  |
+| 687 | `ProjectToolsService::decideGate` | read [project_stages](/code/tables/project_stages.md) |  |
+| 710 | `ProjectToolsService::decideGate` | **update** [project_stages](/code/tables/project_stages.md) (`gate_decision`, `gate_notes`, `gate_decided_by`, `gate_decided_datetime`, `updated_datetime`) |  |
+| 717 | `ProjectToolsService::decideGate` | **update** [project_stages](/code/tables/project_stages.md) (`status`) |  |
+| 719 | `ProjectToolsService::decideGate` | read [project_stages](/code/tables/project_stages.md) |  |
+| 722 | `ProjectToolsService::decideGate` | **update** [project_stages](/code/tables/project_stages.md) (`status`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md)
 
 ### raid
 
-*public static* - line 717
+*public static* - line 751
+
+The project's RAID log - each entry with its owner, ticket, risk score, escalation, lesson article and follow-up tasks.
+
+Highest risk score first, closed entries last. Empty when the tables are not there.
 
 ```php
 function raid(PDO $conn, int $projectId): array
@@ -796,17 +817,17 @@ function raid(PDO $conn, int $projectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 723 | `ProjectToolsService::raid` | read [project_raid](/code/tables/project_raid.md), read [analysts](/code/tables/analysts.md) |  |
-| 726 | `ProjectToolsService::raid` | read [analysts](/code/tables/analysts.md) |  |
-| 726 | `ProjectToolsService::raid` | read [tickets](/code/tables/tickets.md) |  |
-| 739 | `ProjectToolsService::raid` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 745 | `ProjectToolsService::raid` | read [project_raid_tasks](/code/tables/project_raid_tasks.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md) |  |
+| 757 | `ProjectToolsService::raid` | read [project_raid](/code/tables/project_raid.md), read [analysts](/code/tables/analysts.md) |  |
+| 760 | `ProjectToolsService::raid` | read [analysts](/code/tables/analysts.md) |  |
+| 760 | `ProjectToolsService::raid` | read [tickets](/code/tables/tickets.md) |  |
+| 773 | `ProjectToolsService::raid` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 779 | `ProjectToolsService::raid` | read [project_raid_tasks](/code/tables/project_raid_tasks.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md) |  |
 
 **Called from:** [api/projects/export.php](/code/files/api/projects/export.php.md), [api/projects/get.php](/code/files/api/projects/get.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/ai.php](/code/files/includes/projects/ai.php.md), [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md)
 
 ### saveTarget
 
-*public static* - line 779
+*public static* - line 813
 
 Add or change an asset target. Needs the project to be changeable AND Assets access: the rule names asset types, statuses and models, and the dialog's live count would otherwise tell somebody without Assets what is in the estate. Returns its id.
 
@@ -825,16 +846,18 @@ function saveTarget(PDO $conn, ActorContext $ctx, int $projectId, array $in): in
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 793 | `ProjectToolsService::saveTarget` | **update** [project_asset_targets](/code/tables/project_asset_targets.md) (`name`, `scope`, `scope_type_id`, `scope_field`, `scope_value`, `done_field`, `done_op`, `done_value`, `target_date`, `updated_datetime`) |  |
-| 797 | `ProjectToolsService::saveTarget` | **delete** [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) |  |
-| 799 | `ProjectToolsService::saveTarget` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
-| 801 | `ProjectToolsService::saveTarget` | **insert** [project_asset_targets](/code/tables/project_asset_targets.md) (`project_id`, `name`, `scope`, `scope_type_id`, `scope_field`, `scope_value`, `done_field`, `done_op`, `done_value`, `target_date`, `position`, `created_by_analyst_id`) |  |
+| 827 | `ProjectToolsService::saveTarget` | **update** [project_asset_targets](/code/tables/project_asset_targets.md) (`name`, `scope`, `scope_type_id`, `scope_field`, `scope_value`, `done_field`, `done_op`, `done_value`, `target_date`, `updated_datetime`) |  |
+| 831 | `ProjectToolsService::saveTarget` | **delete** [project_asset_target_snapshots](/code/tables/project_asset_target_snapshots.md) |  |
+| 833 | `ProjectToolsService::saveTarget` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
+| 835 | `ProjectToolsService::saveTarget` | **insert** [project_asset_targets](/code/tables/project_asset_targets.md) (`project_id`, `name`, `scope`, `scope_type_id`, `scope_field`, `scope_value`, `done_field`, `done_op`, `done_value`, `target_date`, `position`, `created_by_analyst_id`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### deleteTarget
 
-*public static* - line 812
+*public static* - line 847
+
+Deletes an asset target from a project and records it; health and tolerances are checked again.
 
 ```php
 function deleteTarget(PDO $conn, ActorContext $ctx, int $projectId, int $targetId): void
@@ -851,13 +874,13 @@ function deleteTarget(PDO $conn, ActorContext $ctx, int $projectId, int $targetI
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 816 | `ProjectToolsService::deleteTarget` | **delete** [project_asset_targets](/code/tables/project_asset_targets.md) |  |
+| 851 | `ProjectToolsService::deleteTarget` | **delete** [project_asset_targets](/code/tables/project_asset_targets.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### assertAssets
 
-*public static* - line 823
+*public static* - line 858
 
 Assets access, for anything that reads the estate through a target.
 
@@ -874,7 +897,9 @@ function assertAssets(PDO $conn, ActorContext $ctx): void
 
 ### target
 
-*public static* - line 830
+*public static* - line 866
+
+Loads one asset target of the project; throws not found otherwise.
 
 ```php
 function target(PDO $conn, int $projectId, int $targetId): array
@@ -890,13 +915,15 @@ function target(PDO $conn, int $projectId, int $targetId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 832 | `ProjectToolsService::target` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
+| 868 | `ProjectToolsService::target` | read [project_asset_targets](/code/tables/project_asset_targets.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### date
 
-*private static* - line 840
+*private static* - line 877
+
+Validates an optional YYYY-MM-DD date; blank gives null.
 
 ```php
 function date($v): ?string
@@ -908,7 +935,7 @@ function date($v): ?string
 
 ### saveMilestone
 
-*public static* - line 860
+*public static* - line 897
 
 Add or change a milestone: {id?, name, due_date, stage_id?, notes?, done?, done_date?}. Any field left out keeps its value, so the Timeline can move just the date. done = true stamps today (or done_date) and who; done = false clears both. Reaching one fires project.milestone_reached. Returns its id.
 
@@ -927,15 +954,17 @@ function saveMilestone(PDO $conn, ActorContext $ctx, int $projectId, array $in):
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 889 | `ProjectToolsService::saveMilestone` | **update** [project_milestones](/code/tables/project_milestones.md) (`name`, `due_date`, `stage_id`, `notes`, `done_date`, `done_by_analyst_id`, `updated_datetime`) |  |
-| 895 | `ProjectToolsService::saveMilestone` | read [project_milestones](/code/tables/project_milestones.md) |  |
-| 897 | `ProjectToolsService::saveMilestone` | **insert** [project_milestones](/code/tables/project_milestones.md) (`project_id`, `stage_id`, `name`, `due_date`, `done_date`, `done_by_analyst_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime`, `updated_datetime`) |  |
+| 926 | `ProjectToolsService::saveMilestone` | **update** [project_milestones](/code/tables/project_milestones.md) (`name`, `due_date`, `stage_id`, `notes`, `done_date`, `done_by_analyst_id`, `updated_datetime`) |  |
+| 932 | `ProjectToolsService::saveMilestone` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 934 | `ProjectToolsService::saveMilestone` | **insert** [project_milestones](/code/tables/project_milestones.md) (`project_id`, `stage_id`, `name`, `due_date`, `done_date`, `done_by_analyst_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### deleteMilestone
 
-*public static* - line 912
+*public static* - line 950
+
+Deletes a milestone from a project, records it, and refreshes the calendar, health and tolerances.
 
 ```php
 function deleteMilestone(PDO $conn, ActorContext $ctx, int $projectId, int $milestoneId): void
@@ -952,13 +981,15 @@ function deleteMilestone(PDO $conn, ActorContext $ctx, int $projectId, int $mile
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 917 | `ProjectToolsService::deleteMilestone` | **delete** [project_milestones](/code/tables/project_milestones.md) |  |
+| 955 | `ProjectToolsService::deleteMilestone` | **delete** [project_milestones](/code/tables/project_milestones.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### milestone
 
-*private static* - line 924
+*private static* - line 963
+
+Loads one milestone of the project; throws not found otherwise.
 
 ```php
 function milestone(PDO $conn, int $projectId, int $milestoneId): array
@@ -974,11 +1005,11 @@ function milestone(PDO $conn, int $projectId, int $milestoneId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 927 | `ProjectToolsService::milestone` | read [project_milestones](/code/tables/project_milestones.md) |  |
+| 966 | `ProjectToolsService::milestone` | read [project_milestones](/code/tables/project_milestones.md) |  |
 
 ### setTaskDates
 
-*public static* - line 943
+*public static* - line 982
 
 Move a project task's dates from the Timeline: {start_date?, due_date?}.
 
@@ -1004,13 +1035,13 @@ function setTaskDates(PDO $conn, ActorContext $ctx, int $projectId, int $taskId,
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 946 | `ProjectToolsService::setTaskDates` | read [tasks](/code/tables/tasks.md) |  |
+| 985 | `ProjectToolsService::setTaskDates` | read [tasks](/code/tables/tasks.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### setTaskEstimate
 
-*public static* - line 965
+*public static* - line 1004
 
 Set a project task's estimate from the Plan (3.3.0): {estimate_hours} (empty = not estimated). Through TasksService, like `setTaskDates()` - the task window and the REST API write the same column the same way.
 
@@ -1030,13 +1061,13 @@ function setTaskEstimate(PDO $conn, ActorContext $ctx, int $projectId, int $task
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 968 | `ProjectToolsService::setTaskEstimate` | read [tasks](/code/tables/tasks.md) |  |
+| 1007 | `ProjectToolsService::setTaskEstimate` | read [tasks](/code/tables/tasks.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### members
 
-*public static* - line 981
+*public static* - line 1020
 
 Members with display names, roles and kinds, in order.
 
@@ -1053,13 +1084,15 @@ function members(PDO $conn, int $projectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 990 | `ProjectToolsService::members` | read [project_members](/code/tables/project_members.md), read [project_roles](/code/tables/project_roles.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md), read [users](/code/tables/users.md) |  |
+| 1029 | `ProjectToolsService::members` | read [project_members](/code/tables/project_members.md), read [project_roles](/code/tables/project_roles.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md), read [users](/code/tables/users.md) |  |
 
 **Called from:** [api/projects/get.php](/code/files/api/projects/get.php.md), [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md)
 
 ### items
 
-*public static* - line 1004
+*public static* - line 1047
+
+The project's deliverables and requirements, in order, with their stage names; empty before the table exists.
 
 ```php
 function items(PDO $conn, int $projectId): array
@@ -1074,13 +1107,13 @@ function items(PDO $conn, int $projectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1007 | `ProjectToolsService::items` | read [project_items](/code/tables/project_items.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 1050 | `ProjectToolsService::items` | read [project_items](/code/tables/project_items.md), read [project_stages](/code/tables/project_stages.md) |  |
 
 **Called from:** [api/projects/get.php](/code/files/api/projects/get.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/ai.php](/code/files/includes/projects/ai.php.md)
 
 ### raci
 
-*public static* - line 1017
+*public static* - line 1060
 
 {item_id: {member_id: letter}}
 
@@ -1097,13 +1130,13 @@ function raci(PDO $conn, int $projectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1021 | `ProjectToolsService::raci` | read [project_raci](/code/tables/project_raci.md) |  |
+| 1064 | `ProjectToolsService::raci` | read [project_raci](/code/tables/project_raci.md) |  |
 
 **Called from:** [api/projects/get.php](/code/files/api/projects/get.php.md)
 
 ### addTaskDependency
 
-*public static* - line 1033
+*public static* - line 1076
 
 `$taskId` waits for `$dependsOnId` to finish (+ lag days). Both in this project; no loops. Returns its id.
 
@@ -1131,15 +1164,17 @@ function addTaskDependency(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1040 | `ProjectToolsService::addTaskDependency` | read [tasks](/code/tables/tasks.md) |  |
-| 1049 | `ProjectToolsService::addTaskDependency` | **insert** [task_dependencies](/code/tables/task_dependencies.md) (`task_id`, `depends_on_id`, `lag_days`, `created_by_id`, `created_datetime`) |  |
-| 1052 | `ProjectToolsService::addTaskDependency` | read [task_dependencies](/code/tables/task_dependencies.md) |  |
+| 1083 | `ProjectToolsService::addTaskDependency` | read [tasks](/code/tables/tasks.md) |  |
+| 1092 | `ProjectToolsService::addTaskDependency` | **insert** [task_dependencies](/code/tables/task_dependencies.md) (`task_id`, `depends_on_id`, `lag_days`, `created_by_id`, `created_datetime`) |  |
+| 1095 | `ProjectToolsService::addTaskDependency` | read [task_dependencies](/code/tables/task_dependencies.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### removeTaskDependency
 
-*public static* - line 1059
+*public static* - line 1103
+
+Removes a dependency between two of the project's tasks and records it in the project's history.
 
 ```php
 function removeTaskDependency(PDO $conn, ActorContext $ctx, int $projectId, int $depId): void
@@ -1156,13 +1191,13 @@ function removeTaskDependency(PDO $conn, ActorContext $ctx, int $projectId, int 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1065 | `ProjectToolsService::removeTaskDependency` | **delete** [task_dependencies](/code/tables/task_dependencies.md) |  |
+| 1109 | `ProjectToolsService::removeTaskDependency` | **delete** [task_dependencies](/code/tables/task_dependencies.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### saveGateItem
 
-*public static* - line 1075
+*public static* - line 1119
 
 Add (no id) or change a gate item. Returns its id.
 
@@ -1181,16 +1216,18 @@ function saveGateItem(PDO $conn, ActorContext $ctx, int $projectId, array $in): 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1090 | `ProjectToolsService::saveGateItem` | read [analysts](/code/tables/analysts.md) |  |
-| 1099 | `ProjectToolsService::saveGateItem` | **update** [project_gate_items](/code/tables/project_gate_items.md) (`title`, `analyst_id`, `change_id`, `notes`) |  |
-| 1103 | `ProjectToolsService::saveGateItem` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
-| 1104 | `ProjectToolsService::saveGateItem` | **insert** [project_gate_items](/code/tables/project_gate_items.md) (`project_id`, `stage_id`, `kind`, `title`, `analyst_id`, `change_id`, `notes`, `position`, `created_by_id`, `created_datetime`) |  |
+| 1134 | `ProjectToolsService::saveGateItem` | read [analysts](/code/tables/analysts.md) |  |
+| 1143 | `ProjectToolsService::saveGateItem` | **update** [project_gate_items](/code/tables/project_gate_items.md) (`title`, `analyst_id`, `change_id`, `notes`) |  |
+| 1147 | `ProjectToolsService::saveGateItem` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 1148 | `ProjectToolsService::saveGateItem` | **insert** [project_gate_items](/code/tables/project_gate_items.md) (`project_id`, `stage_id`, `kind`, `title`, `analyst_id`, `change_id`, `notes`, `position`, `created_by_id`, `created_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### deleteGateItem
 
-*public static* - line 1115
+*public static* - line 1160
+
+Deletes a stage gate item and records it in the project's history.
 
 ```php
 function deleteGateItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId): void
@@ -1207,13 +1244,13 @@ function deleteGateItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemI
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1119 | `ProjectToolsService::deleteGateItem` | **delete** [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 1164 | `ProjectToolsService::deleteGateItem` | **delete** [project_gate_items](/code/tables/project_gate_items.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### tickGateItem
 
-*public static* - line 1130
+*public static* - line 1175
 
 Tick or untick an item. A check: anybody who may change the project. A sign-off: ONLY its named analyst. A document: choose one of the project's documents (document_id; empty unticks). A change cannot be ticked - it is done when the change is approved.
 
@@ -1233,15 +1270,15 @@ function tickGateItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId,
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1142 | `ProjectToolsService::tickGateItem` | **update** [project_gate_items](/code/tables/project_gate_items.md) (`done_by_id`, `done_datetime`) |  |
-| 1151 | `ProjectToolsService::tickGateItem` | **update** [project_gate_items](/code/tables/project_gate_items.md) (`document_id`, `done_by_id`, `done_datetime`) |  |
-| 1157 | `ProjectToolsService::tickGateItem` | **update** [project_gate_items](/code/tables/project_gate_items.md) (`done_by_id`, `done_datetime`) |  |
+| 1187 | `ProjectToolsService::tickGateItem` | **update** [project_gate_items](/code/tables/project_gate_items.md) (`done_by_id`, `done_datetime`) |  |
+| 1196 | `ProjectToolsService::tickGateItem` | **update** [project_gate_items](/code/tables/project_gate_items.md) (`document_id`, `done_by_id`, `done_datetime`) |  |
+| 1202 | `ProjectToolsService::tickGateItem` | **update** [project_gate_items](/code/tables/project_gate_items.md) (`done_by_id`, `done_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### setGateKind
 
-*public static* - line 1165
+*public static* - line 1210
 
 standard | golive. Making a gate go-live adds the starter items it does not already have.
 
@@ -1261,14 +1298,16 @@ function setGateKind(PDO $conn, ActorContext $ctx, int $projectId, int $stageId,
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1172 | `ProjectToolsService::setGateKind` | **update** [project_stages](/code/tables/project_stages.md) (`gate_kind`, `updated_datetime`) |  |
-| 1175 | `ProjectToolsService::setGateKind` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 1217 | `ProjectToolsService::setGateKind` | **update** [project_stages](/code/tables/project_stages.md) (`gate_kind`, `updated_datetime`) |  |
+| 1220 | `ProjectToolsService::setGateKind` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### gateItem
 
-*private static* - line 1191
+*private static* - line 1237
+
+Loads one stage gate item of the project; throws not found otherwise.
 
 ```php
 function gateItem(PDO $conn, int $projectId, int $itemId): array
@@ -1284,11 +1323,11 @@ function gateItem(PDO $conn, int $projectId, int $itemId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1194 | `ProjectToolsService::gateItem` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 1240 | `ProjectToolsService::gateItem` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
 
 ### saveBenefit
 
-*public static* - line 1209
+*public static* - line 1255
 
 Create (no id) or update a benefit. Returns its id.
 
@@ -1307,16 +1346,18 @@ function saveBenefit(PDO $conn, ActorContext $ctx, int $projectId, array $in): i
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1229 | `ProjectToolsService::saveBenefit` | read [analysts](/code/tables/analysts.md) |  |
-| 1238 | `ProjectToolsService::saveBenefit` | **update** [project_benefits](/code/tables/project_benefits.md) (`title`, `measure`, `unit`, `direction`, `baseline_value`, `target_value`, `target_date`, `owner_analyst_id`, `review_date`, `review_months`, `status`, `notes`) |  |
-| 1245 | `ProjectToolsService::saveBenefit` | read [project_benefits](/code/tables/project_benefits.md) |  |
-| 1246 | `ProjectToolsService::saveBenefit` | **insert** [project_benefits](/code/tables/project_benefits.md) (`title`, `measure`, `unit`, `direction`, `baseline_value`, `target_value`, `target_date`, `owner_analyst_id`, `review_date`, `review_months`, `status`, `notes`) |  |
+| 1275 | `ProjectToolsService::saveBenefit` | read [analysts](/code/tables/analysts.md) |  |
+| 1284 | `ProjectToolsService::saveBenefit` | **update** [project_benefits](/code/tables/project_benefits.md) (`title`, `measure`, `unit`, `direction`, `baseline_value`, `target_value`, `target_date`, `owner_analyst_id`, `review_date`, `review_months`, `status`, `notes`) |  |
+| 1291 | `ProjectToolsService::saveBenefit` | read [project_benefits](/code/tables/project_benefits.md) |  |
+| 1292 | `ProjectToolsService::saveBenefit` | **insert** [project_benefits](/code/tables/project_benefits.md) (`title`, `measure`, `unit`, `direction`, `baseline_value`, `target_value`, `target_date`, `owner_analyst_id`, `review_date`, `review_months`, `status`, `notes`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### deleteBenefit
 
-*public static* - line 1257
+*public static* - line 1304
+
+Deletes a benefit with its measurements and records it in the project's history.
 
 ```php
 function deleteBenefit(PDO $conn, ActorContext $ctx, int $projectId, int $benefitId): void
@@ -1333,14 +1374,14 @@ function deleteBenefit(PDO $conn, ActorContext $ctx, int $projectId, int $benefi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1261 | `ProjectToolsService::deleteBenefit` | **delete** [project_benefit_measures](/code/tables/project_benefit_measures.md) |  |
-| 1262 | `ProjectToolsService::deleteBenefit` | **delete** [project_benefits](/code/tables/project_benefits.md) |  |
+| 1308 | `ProjectToolsService::deleteBenefit` | **delete** [project_benefit_measures](/code/tables/project_benefit_measures.md) |  |
+| 1309 | `ProjectToolsService::deleteBenefit` | **delete** [project_benefits](/code/tables/project_benefits.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### addBenefitMeasure
 
-*public static* - line 1272
+*public static* - line 1319
 
 Record a measurement. One on or after (review date - 14 days) is the review: the next one moves on by the benefit's review_months (none when 0). Returns the measurement's id.
 
@@ -1366,14 +1407,16 @@ function addBenefitMeasure(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1281 | `ProjectToolsService::addBenefitMeasure` | **insert** [project_benefit_measures](/code/tables/project_benefit_measures.md) (`benefit_id`, `value`, `measured_date`, `note`, `recorded_by_id`, `created_datetime`) |  |
-| 1287 | `ProjectToolsService::addBenefitMeasure` | **update** [project_benefits](/code/tables/project_benefits.md) (`review_date`, `updated_datetime`) |  |
+| 1328 | `ProjectToolsService::addBenefitMeasure` | **insert** [project_benefit_measures](/code/tables/project_benefit_measures.md) (`benefit_id`, `value`, `measured_date`, `note`, `recorded_by_id`, `created_datetime`) |  |
+| 1334 | `ProjectToolsService::addBenefitMeasure` | **update** [project_benefits](/code/tables/project_benefits.md) (`review_date`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### deleteBenefitMeasure
 
-*public static* - line 1294
+*public static* - line 1342
+
+Deletes one measurement of a benefit; throws not found when it is not that benefit's.
 
 ```php
 function deleteBenefitMeasure(
@@ -1397,13 +1440,15 @@ function deleteBenefitMeasure(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1298 | `ProjectToolsService::deleteBenefitMeasure` | **delete** [project_benefit_measures](/code/tables/project_benefit_measures.md) |  |
+| 1346 | `ProjectToolsService::deleteBenefitMeasure` | **delete** [project_benefit_measures](/code/tables/project_benefit_measures.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### benefit
 
-*private static* - line 1304
+*private static* - line 1353
+
+Loads one benefit of the project; throws not found otherwise.
 
 ```php
 function benefit(PDO $conn, int $projectId, int $benefitId): array
@@ -1419,11 +1464,11 @@ function benefit(PDO $conn, int $projectId, int $benefitId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1307 | `ProjectToolsService::benefit` | read [project_benefits](/code/tables/project_benefits.md) |  |
+| 1356 | `ProjectToolsService::benefit` | read [project_benefits](/code/tables/project_benefits.md) |  |
 
 ### takeBaseline
 
-*public static* - line 1324
+*public static* - line 1373
 
 Take a baseline of the plan as it is now, by hand. Returns its id.
 
@@ -1442,13 +1487,13 @@ function takeBaseline(PDO $conn, ActorContext $ctx, int $projectId, $label): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1331 | `ProjectToolsService::takeBaseline` | read [project_baselines](/code/tables/project_baselines.md) |  |
+| 1380 | `ProjectToolsService::takeBaseline` | read [project_baselines](/code/tables/project_baselines.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### saveChangeRequest
 
-*public static* - line 1341
+*public static* - line 1390
 
 Raise a change request (no id), or edit one still waiting for a decision - by whoever raised it, or anybody who may change the project. Returns its id.
 
@@ -1467,15 +1512,15 @@ function saveChangeRequest(PDO $conn, ActorContext $ctx, int $projectId, array $
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1369 | `ProjectToolsService::saveChangeRequest` | **update** [project_change_requests](/code/tables/project_change_requests.md) (`title`, `description`, `reason`, `impact_days`, `impact_cost`, `impact_scope`, `updated_datetime`) |  |
-| 1375 | `ProjectToolsService::saveChangeRequest` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
-| 1376 | `ProjectToolsService::saveChangeRequest` | **insert** [project_change_requests](/code/tables/project_change_requests.md) (`project_id`, `number`, `title`, `description`, `reason`, `impact_days`, `impact_cost`, `impact_scope`, `status`, `raised_by_id`, `raised_datetime`, `updated_datetime`) |  |
+| 1418 | `ProjectToolsService::saveChangeRequest` | **update** [project_change_requests](/code/tables/project_change_requests.md) (`title`, `description`, `reason`, `impact_days`, `impact_cost`, `impact_scope`, `updated_datetime`) |  |
+| 1424 | `ProjectToolsService::saveChangeRequest` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
+| 1425 | `ProjectToolsService::saveChangeRequest` | **insert** [project_change_requests](/code/tables/project_change_requests.md) (`project_id`, `number`, `title`, `description`, `reason`, `impact_days`, `impact_cost`, `impact_scope`, `status`, `raised_by_id`, `raised_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### decideChangeRequest
 
-*public static* - line 1394
+*public static* - line 1443
 
 Approve or reject a change request. Approving takes a new baseline - the changed plan becomes the agreed one - and, when project_change_apply is "plan", first moves the target finish by the days and adds the cost as a budget line, recording both in `applied`. Rejecting changes nothing.
 
@@ -1505,17 +1550,17 @@ function decideChangeRequest(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1411 | `ProjectToolsService::decideChangeRequest` | **update** [project_change_requests](/code/tables/project_change_requests.md) (`status`, `decided_by_id`, `decided_datetime`, `decision_notes`, `updated_datetime`) |  |
-| 1421 | `ProjectToolsService::decideChangeRequest` | **update** [projects](/code/tables/projects.md) (`target_end_date`) |  |
-| 1430 | `ProjectToolsService::decideChangeRequest` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
-| 1431 | `ProjectToolsService::decideChangeRequest` | **insert** [project_budget_lines](/code/tables/project_budget_lines.md) (`project_id`, `title`, `category`, `planned_amount`, `notes`, `position`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
-| 1440 | `ProjectToolsService::decideChangeRequest` | **update** [project_change_requests](/code/tables/project_change_requests.md) (`baseline_id`, `applied`) |  |
+| 1460 | `ProjectToolsService::decideChangeRequest` | **update** [project_change_requests](/code/tables/project_change_requests.md) (`status`, `decided_by_id`, `decided_datetime`, `decision_notes`, `updated_datetime`) |  |
+| 1470 | `ProjectToolsService::decideChangeRequest` | **update** [projects](/code/tables/projects.md) (`target_end_date`) |  |
+| 1479 | `ProjectToolsService::decideChangeRequest` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 1480 | `ProjectToolsService::decideChangeRequest` | **insert** [project_budget_lines](/code/tables/project_budget_lines.md) (`project_id`, `title`, `category`, `planned_amount`, `notes`, `position`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 1489 | `ProjectToolsService::decideChangeRequest` | **update** [project_change_requests](/code/tables/project_change_requests.md) (`baseline_id`, `applied`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### withdrawChangeRequest
 
-*public static* - line 1457
+*public static* - line 1506
 
 Withdraw a request still waiting for a decision: whoever raised it, or the project's team.
 
@@ -1534,13 +1579,15 @@ function withdrawChangeRequest(PDO $conn, ActorContext $ctx, int $projectId, int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1463 | `ProjectToolsService::withdrawChangeRequest` | **update** [project_change_requests](/code/tables/project_change_requests.md) (`status`, `updated_datetime`) |  |
+| 1512 | `ProjectToolsService::withdrawChangeRequest` | **update** [project_change_requests](/code/tables/project_change_requests.md) (`status`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### changeRequest
 
-*private static* - line 1468
+*private static* - line 1518
+
+Loads one change request of the project; throws not found otherwise.
 
 ```php
 function changeRequest(PDO $conn, int $projectId, int $crId): array
@@ -1556,11 +1603,13 @@ function changeRequest(PDO $conn, int $projectId, int $crId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1471 | `ProjectToolsService::changeRequest` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
+| 1521 | `ProjectToolsService::changeRequest` | read [project_change_requests](/code/tables/project_change_requests.md) |  |
 
 ### changeable
 
-*private static* - line 1485
+*private static* - line 1536
+
+Loads the project for the actor and checks they may change it; throws otherwise.
 
 ```php
 function changeable(PDO $conn, ActorContext $ctx, int $projectId): array
@@ -1574,7 +1623,9 @@ function changeable(PDO $conn, ActorContext $ctx, int $projectId): array
 
 ### member
 
-*private static* - line 1492
+*private static* - line 1544
+
+Loads one member row of the project; throws not found otherwise.
 
 ```php
 function member(PDO $conn, int $projectId, int $memberId): array
@@ -1590,11 +1641,13 @@ function member(PDO $conn, int $projectId, int $memberId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1494 | `ProjectToolsService::member` | read [project_members](/code/tables/project_members.md) |  |
+| 1546 | `ProjectToolsService::member` | read [project_members](/code/tables/project_members.md) |  |
 
 ### item
 
-*private static* - line 1501
+*private static* - line 1554
+
+Loads one deliverable of the project; throws not found otherwise.
 
 ```php
 function item(PDO $conn, int $projectId, int $itemId): array
@@ -1610,11 +1663,13 @@ function item(PDO $conn, int $projectId, int $itemId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1503 | `ProjectToolsService::item` | read [project_items](/code/tables/project_items.md) |  |
+| 1556 | `ProjectToolsService::item` | read [project_items](/code/tables/project_items.md) |  |
 
 ### moscow
 
-*private static* - line 1510
+*private static* - line 1564
+
+A validated MoSCoW value in lower case, or null for none.
 
 ```php
 function moscow($v): ?string
@@ -1626,7 +1681,9 @@ function moscow($v): ?string
 
 ### stageOf
 
-*private static* - line 1518
+*private static* - line 1573
+
+A validated stage id of this project, or null for none.
 
 ```php
 function stageOf(PDO $conn, int $projectId, $stageId): ?int
@@ -1642,11 +1699,13 @@ function stageOf(PDO $conn, int $projectId, $stageId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1521 | `ProjectToolsService::stageOf` | read [project_stages](/code/tables/project_stages.md) |  |
+| 1576 | `ProjectToolsService::stageOf` | read [project_stages](/code/tables/project_stages.md) |  |
 
 ### roleId
 
-*private static* - line 1527
+*private static* - line 1583
+
+A validated project role id, or null for none.
 
 ```php
 function roleId(PDO $conn, $v): ?int
@@ -1661,11 +1720,13 @@ function roleId(PDO $conn, $v): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1530 | `ProjectToolsService::roleId` | read [project_roles](/code/tables/project_roles.md) |  |
+| 1586 | `ProjectToolsService::roleId` | read [project_roles](/code/tables/project_roles.md) |  |
 
 ### roleName
 
-*private static* - line 1536
+*private static* - line 1593
+
+The name of a project role, or null.
 
 ```php
 function roleName(PDO $conn, ?int $id): ?string
@@ -1680,11 +1741,13 @@ function roleName(PDO $conn, ?int $id): ?string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1539 | `ProjectToolsService::roleName` | read [project_roles](/code/tables/project_roles.md) |  |
+| 1596 | `ProjectToolsService::roleName` | read [project_roles](/code/tables/project_roles.md) |  |
 
 ### memberName
 
-*private static* - line 1544
+*private static* - line 1602
+
+The name of a project member - analyst, team, portal user or contractor - or #id.
 
 ```php
 function memberName(PDO $conn, int $memberId): string
@@ -1699,11 +1762,13 @@ function memberName(PDO $conn, int $memberId): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1547 | `ProjectToolsService::memberName` | read [project_members](/code/tables/project_members.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md), read [users](/code/tables/users.md) |  |
+| 1605 | `ProjectToolsService::memberName` | read [project_members](/code/tables/project_members.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md), read [users](/code/tables/users.md) |  |
 
 ### mustExist
 
-*private static* - line 1554
+*private static* - line 1613
+
+Runs a one-id lookup query and throws a validation error with `$msg` when it finds nothing.
 
 ```php
 function mustExist(PDO $conn, string $sql, int $id, string $msg): void
@@ -1718,7 +1783,9 @@ function mustExist(PDO $conn, string $sql, int $id, string $msg): void
 
 ### str
 
-*private static* - line 1561
+*private static* - line 1621
+
+Trimmed text cut to `$max` characters, or null when blank.
 
 ```php
 function str($v, int $max): ?string
@@ -1731,7 +1798,9 @@ function str($v, int $max): ?string
 
 ### src
 
-*private static* - line 1568
+*private static* - line 1629
+
+The history source for the actor: 'api' or 'app'.
 
 ```php
 function src(ActorContext $ctx): string
@@ -1743,7 +1812,7 @@ function src(ActorContext $ctx): string
 
 ### saveBudgetLine
 
-*public static* - line 1578
+*public static* - line 1639
 
 Create (no id) or update a budget line. Returns its id.
 
@@ -1762,17 +1831,17 @@ function saveBudgetLine(PDO $conn, ActorContext $ctx, int $projectId, array $in)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1611 | `ProjectToolsService::saveBudgetLine` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
-| 1617 | `ProjectToolsService::saveBudgetLine` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
-| 1620 | `ProjectToolsService::saveBudgetLine` | **update** [project_budget_lines](/code/tables/project_budget_lines.md) (`title`, `category`, `planned_amount`, `actual_amount`, `contract_id`, `cost_centre_id`, `notes`, `updated_datetime`) |  |
-| 1625 | `ProjectToolsService::saveBudgetLine` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
-| 1626 | `ProjectToolsService::saveBudgetLine` | **insert** [project_budget_lines](/code/tables/project_budget_lines.md) (`project_id`, `title`, `category`, `planned_amount`, `actual_amount`, `contract_id`, `cost_centre_id`, `notes`, `position`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
+| 1672 | `ProjectToolsService::saveBudgetLine` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 1678 | `ProjectToolsService::saveBudgetLine` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 1681 | `ProjectToolsService::saveBudgetLine` | **update** [project_budget_lines](/code/tables/project_budget_lines.md) (`title`, `category`, `planned_amount`, `actual_amount`, `contract_id`, `cost_centre_id`, `notes`, `updated_datetime`) |  |
+| 1686 | `ProjectToolsService::saveBudgetLine` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 1687 | `ProjectToolsService::saveBudgetLine` | **insert** [project_budget_lines](/code/tables/project_budget_lines.md) (`project_id`, `title`, `category`, `planned_amount`, `actual_amount`, `contract_id`, `cost_centre_id`, `notes`, `position`, `created_by_id`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### budgetLineWhen
 
-*private static* - line 1639
+*private static* - line 1700
 
 The 3.3.0 columns, on their own: before Database Verification adds them the rest of the line still saves.
 
@@ -1798,11 +1867,13 @@ function budgetLineWhen(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1642 | `ProjectToolsService::budgetLineWhen` | **update** [project_budget_lines](/code/tables/project_budget_lines.md) (`planned_date`, `spent_date`, `forecast_amount`) |  |
+| 1703 | `ProjectToolsService::budgetLineWhen` | **update** [project_budget_lines](/code/tables/project_budget_lines.md) (`planned_date`, `spent_date`, `forecast_amount`) |  |
 
 ### deleteBudgetLine
 
-*public static* - line 1648
+*public static* - line 1710
+
+Deletes a budget line, records it in the project's history, and checks health and tolerances again.
 
 ```php
 function deleteBudgetLine(PDO $conn, ActorContext $ctx, int $projectId, int $lineId): void
@@ -1819,14 +1890,14 @@ function deleteBudgetLine(PDO $conn, ActorContext $ctx, int $projectId, int $lin
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1651 | `ProjectToolsService::deleteBudgetLine` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
-| 1655 | `ProjectToolsService::deleteBudgetLine` | **delete** [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 1713 | `ProjectToolsService::deleteBudgetLine` | read [project_budget_lines](/code/tables/project_budget_lines.md) |  |
+| 1717 | `ProjectToolsService::deleteBudgetLine` | **delete** [project_budget_lines](/code/tables/project_budget_lines.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md), [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md)
 
 ### addProjectRate
 
-*public static* - line 1666
+*public static* - line 1728
 
 The project's own hourly rate from a date (labour mode "rate"), in the project's currency. Each rate is a new row: the old one still prices the time logged before the new one's date.
 
@@ -1846,13 +1917,13 @@ function addProjectRate(PDO $conn, ActorContext $ctx, int $projectId, $rate, ?st
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1676 | `ProjectToolsService::addProjectRate` | **insert** [project_labour_rates](/code/tables/project_labour_rates.md) (`scope`, `ref_id`, `hourly_rate`, `effective_from`, `created_by_id`, `created_datetime`) |  |
+| 1738 | `ProjectToolsService::addProjectRate` | **insert** [project_labour_rates](/code/tables/project_labour_rates.md) (`scope`, `ref_id`, `hourly_rate`, `effective_from`, `created_by_id`, `created_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### deleteProjectRate
 
-*public static* - line 1684
+*public static* - line 1746
 
 Remove one of the project's own rates (entered by mistake).
 
@@ -1871,13 +1942,13 @@ function deleteProjectRate(PDO $conn, ActorContext $ctx, int $projectId, string 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1688 | `ProjectToolsService::deleteProjectRate` | **delete** [project_labour_rates](/code/tables/project_labour_rates.md) |  |
+| 1750 | `ProjectToolsService::deleteProjectRate` | **delete** [project_labour_rates](/code/tables/project_labour_rates.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### setCurrency
 
-*public static* - line 1699
+*public static* - line 1761
 
 Change the project's currency - a RELABEL: amounts are not converted, and the page says so before anyone presses Save. Only when Projects -> Settings -> Budget lets projects choose.
 
@@ -1896,13 +1967,13 @@ function setCurrency(PDO $conn, ActorContext $ctx, int $projectId, string $code)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1708 | `ProjectToolsService::setCurrency` | **update** [projects](/code/tables/projects.md) (`currency`, `updated_datetime`) |  |
+| 1770 | `ProjectToolsService::setCurrency` | **update** [projects](/code/tables/projects.md) (`currency`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### announce
 
-*public static* - line 1727
+*public static* - line 1789
 
 Announce planned disruption from a project - "Move day: phones down Saturday". How depends on Projects -> Settings -> General: planned planned maintenance: upcoming until its start, then an incident now the same, starting now - an incident straight away off refused (the button is not shown) Needs Service Status as well as being allowed to change the project. Service Status is install-wide, like contracts: no company check on the services. Returns the planned maintenance id.
 
@@ -1921,13 +1992,13 @@ function announce(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1731 | `ProjectToolsService::announce` | read [projects](/code/tables/projects.md) |  |
+| 1793 | `ProjectToolsService::announce` | read [projects](/code/tables/projects.md) |  |
 
 **Called from:** [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 
 ### withdrawAnnouncement
 
-*public static* - line 1752
+*public static* - line 1814
 
 Withdraw an announcement that has not started. It must belong to this project.
 
@@ -1946,7 +2017,7 @@ function withdrawAnnouncement(PDO $conn, ActorContext $ctx, int $projectId, int 
 
 ### announcements
 
-*public static* - line 1770
+*public static* - line 1832
 
 What the Connections tab needs: the mode, this project's announcements, and the services and impact levels for the dialog. null when the analyst cannot open Service Status - then the panel is not drawn at all.
 
@@ -1964,8 +2035,8 @@ function announcements(PDO $conn, int $analystId, int $projectId): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1779 | `ProjectToolsService::announcements` | read [status_services](/code/tables/status_services.md) |  |
-| 1780 | `ProjectToolsService::announcements` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 1841 | `ProjectToolsService::announcements` | read [status_services](/code/tables/status_services.md) |  |
+| 1842 | `ProjectToolsService::announcements` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 **Called from:** [api/projects/get.php](/code/files/api/projects/get.php.md), [api/projects/tools.php](/code/files/api/projects/tools.php.md)
 

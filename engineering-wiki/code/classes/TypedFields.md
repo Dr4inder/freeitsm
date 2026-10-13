@@ -6,10 +6,10 @@
 
 | Method | What it does |
 |---|---|
-| [storageClass()](#storageclass) |  |
-| [isKnownType()](#isknowntype) |  |
+| [storageClass()](#storageclass) | The storage class a field type is kept in (text, number, date, boolean or ref), or '' for an unknown type. |
+| [isKnownType()](#isknowntype) | True when `$type` is one of the field types in TYPES. |
 | [registerRefKind()](#registerrefkind) | Register a kind of thing a `ref` field may point at. |
-| [refKind()](#refkind) |  |
+| [refKind()](#refkind) | The handler registered for a ref kind by `registerRefKind()`, or null when none is. |
 | [checkRequired()](#checkrequired) | Required-field enforcement, with the create/update asymmetry the CMDB settled on: required is checked on create, and on update only for fields actually being written. |
 | [writeValues()](#writevalues) | Validate and store values for one owner. |
 | [coerce()](#coerce) | Turn one raw input into [storage class => value], or null to clear. |
@@ -21,7 +21,9 @@
 
 ### storageClass
 
-*public static* - line 94
+*public static* - line 95
+
+The storage class a field type is kept in (text, number, date, boolean or ref), or '' for an unknown type.
 
 ```php
 function storageClass(string $type): string
@@ -35,7 +37,9 @@ function storageClass(string $type): string
 
 ### isKnownType
 
-*public static* - line 99
+*public static* - line 101
+
+True when `$type` is one of the field types in TYPES.
 
 ```php
 function isKnownType(string $type): bool
@@ -47,7 +51,7 @@ function isKnownType(string $type): bool
 
 ### registerRefKind
 
-*public static* - line 125
+*public static* - line 127
 
 Register a kind of thing a `ref` field may point at.
 
@@ -80,7 +84,9 @@ function registerRefKind(string $kind, array $handler): void
 
 ### refKind
 
-*public static* - line 130
+*public static* - line 133
+
+The handler registered for a ref kind by `registerRefKind()`, or null when none is.
 
 ```php
 function refKind(string $kind): ?array
@@ -92,7 +98,7 @@ function refKind(string $kind): ?array
 
 ### checkRequired
 
-*public static* - line 148
+*public static* - line 151
 
 Required-field enforcement, with the create/update asymmetry the CMDB settled on: required is checked on create, and on update only for fields actually being written.
 
@@ -114,7 +120,7 @@ function checkRequired(array $defs, array $values, bool $isCreate): void
 
 ### writeValues
 
-*public static* - line 177
+*public static* - line 180
 
 Validate and store values for one owner.
 
@@ -138,7 +144,7 @@ function writeValues(PDO $conn, array $schema, int $ownerId, array $defs, array 
 
 ### coerce
 
-*public static* - line 227
+*public static* - line 230
 
 Turn one raw input into [storage class => value], or null to clear.
 
@@ -159,7 +165,7 @@ function coerce(PDO $conn, array $schema, array $def, $rawValue, int $ownerId): 
 
 ### validateRef
 
-*private static* - line 290
+*private static* - line 293
 
 Existence + target check for a `ref` value, via the registry.
 
@@ -175,7 +181,7 @@ function validateRef(PDO $conn, array $def, int $refId): void
 
 ### readValues
 
-*public static* - line 334
+*public static* - line 337
 
 Values for MANY owners in ONE query, pivoted to [ownerId => [key => value]].
 
@@ -209,7 +215,7 @@ function readValues(PDO $conn, array $schema, array $defs, array $ownerIds): arr
 
 ### castOut
 
-*private static* - line 377
+*private static* - line 380
 
 Stored string -> the PHP type a caller expects.
 
@@ -224,7 +230,7 @@ function castOut(string $type, $raw)
 
 ### refLabels
 
-*public static* - line 397
+*public static* - line 400
 
 Display labels for reference values, by kind.
 
@@ -249,7 +255,7 @@ function refLabels(PDO $conn, string $kind, array $ids): array
 
 ### parseDate
 
-*public static* - line 413
+*public static* - line 416
 
 Parse a date/time to 'Y-m-d H:i:s' UTC (throwing twin of apiParseDate; 400 on bad input).
 

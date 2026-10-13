@@ -13,7 +13,7 @@ function knowledgeAudit(
 ): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 436.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 443.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

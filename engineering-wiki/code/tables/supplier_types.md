@@ -28,7 +28,7 @@ Contracts module
 |---|---|---|
 | [api/contracts/delete_supplier_type.php](/code/files/api/contracts/delete_supplier_type.php.md) | L33 |  |
 | [api/contracts/get_supplier_types.php](/code/files/api/contracts/get_supplier_types.php.md) | L20 |  |
-| [api/contracts/get_suppliers.php](/code/files/api/contracts/get_suppliers.php.md) | L17 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiSupplierSelect L140 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleSupplierRows L619, supplierDetail L647 |  |
+| [api/contracts/get_suppliers.php](/code/files/api/contracts/get_suppliers.php.md) | L22 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiSupplierSelect L151 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleSupplierRows L622, supplierDetail L650 |  |
 

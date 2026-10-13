@@ -6,7 +6,7 @@ Choices for a 'multi' option's source (the Properties pane's checkboxes).
 function rpOptionSource(PDO $conn, string $source, int $analystId = 0): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 369.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 373.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 376 | `rpOptionSource` | read [status_services](/code/tables/status_services.md) |  |
+| 380 | `rpOptionSource` | read [status_services](/code/tables/status_services.md) |  |
 
 ## Calls
 

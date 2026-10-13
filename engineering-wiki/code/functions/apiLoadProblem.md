@@ -6,7 +6,7 @@ Load one problem (with joins) enforcing the key's company scope; 404 if not visi
 function apiLoadProblem(PDO $conn, array $apiKey, int $problemId): array
 ```
 
-Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 77.
+Defined in [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), line 85.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

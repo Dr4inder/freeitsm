@@ -14,7 +14,7 @@ deliberately, rather than a side effect of tidying the tree.
 function handleDelete(PDO $conn, int $analystId, array $in): void
 ```
 
-Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 245.
+Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), line 252.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,10 +28,10 @@ Defined in [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 251 | `handleDelete` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 257 | `handleDelete` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 266 | `handleDelete` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 267 | `handleDelete` | **delete** [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 258 | `handleDelete` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 264 | `handleDelete` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 273 | `handleDelete` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 274 | `handleDelete` | **delete** [knowledge_folders](/code/tables/knowledge_folders.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ A file the caller holds `$need` on, or "not found".
 function filesNeedItem(PDO $conn, int $analystId, int $itemId, int $need, string $what = ''): array
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 92.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 98.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

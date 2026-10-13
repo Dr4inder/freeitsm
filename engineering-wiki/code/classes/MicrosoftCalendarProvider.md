@@ -6,27 +6,29 @@
 
 | Method | What it does |
 |---|---|
-| [supports()](#supports) |  |
+| [supports()](#supports) | Microsoft Graph supports all-day events, HTML bodies, checking a mailbox exists, and change notifications. |
 | [token()](#token) | An app-only access token, cached on the connection until it expires. |
 | [verifyConnection()](#verifyconnection) | Mint a token. If that succeeds the credentials are right and Calendars.ReadWrite was granted and consented; nothing else can be true and this fail. |
 | [call()](#call) | One Graph call. Returns [httpCode, decodedBody]. |
 | [toGraphEvent()](#tographevent) | Translate our canonical event into Graph's shape. |
-| [createEvent()](#createevent) |  |
-| [updateEvent()](#updateevent) |  |
-| [deleteEvent()](#deleteevent) |  |
+| [createEvent()](#createevent) | Creates the event in the mailbox's calendar through Graph and returns Graph's event id. |
+| [updateEvent()](#updateevent) | PATCHes the event through Graph; throws CalendarEventMissing on a 404 so the caller can create a fresh one. |
+| [deleteEvent()](#deleteevent) | Deletes the event through Graph; a 404 counts as success. |
 | [pollChanges()](#pollchanges) | Read changes back out of the mailbox with a Graph delta query. |
 | [toLocal()](#tolocal) | Graph's {dateTime,timeZone} to a naive wall clock in `$tz`. |
 | [callAbsolute()](#callabsolute) | A GET against a URL Graph gave us (nextLink / deltaLink are absolute). |
-| [createSubscription()](#createsubscription) |  |
-| [renewSubscription()](#renewsubscription) |  |
-| [deleteSubscription()](#deletesubscription) |  |
+| [createSubscription()](#createsubscription) | Subscribes to updates and deletions in the mailbox's calendar, posting to `$notifyUrl` with `$secret` as clientState, for SUBSCRIPTION_MINUTES. |
+| [renewSubscription()](#renewsubscription) | Extends a Graph subscription by SUBSCRIPTION_MINUTES; throws CalendarSubscriptionMissing when it has already lapsed. |
+| [deleteSubscription()](#deletesubscription) | Removes a Graph subscription; one already gone counts as success. |
 | [expiryToLocal()](#expirytolocal) | Graph's UTC expiry to the naive local datetime the column stores. |
-| [verifyTarget()](#verifytarget) |  |
+| [verifyTarget()](#verifytarget) | True when Graph can read the mailbox's calendar - i.e. the address exists and the app can reach it. |
 | [briefly()](#briefly) | Graph error bodies are long and carry request ids. Keep enough to diagnose without putting a wall of JSON in last_error, which is 500 characters and is shown to a human. |
 
 ### supports
 
-*public* - line 35
+*public* - line 36
+
+Microsoft Graph supports all-day events, HTML bodies, checking a mailbox exists, and change notifications.
 
 ```php
 function supports(string $capability): bool
@@ -38,7 +40,7 @@ function supports(string $capability): bool
 
 ### token
 
-*private* - line 54
+*private* - line 55
 
 An app-only access token, cached on the connection until it expires.
 
@@ -54,11 +56,11 @@ function token(): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 100 | `MicrosoftCalendarProvider::token` | **update** [calendar_connections](/code/tables/calendar_connections.md) (`token_data`) |  |
+| 101 | `MicrosoftCalendarProvider::token` | **update** [calendar_connections](/code/tables/calendar_connections.md) (`token_data`) |  |
 
 ### verifyConnection
 
-*public* - line 119
+*public* - line 120
 
 Mint a token. If that succeeds the credentials are right and Calendars.ReadWrite was granted and consented; nothing else can be true and this fail.
 
@@ -68,7 +70,7 @@ function verifyConnection(): void
 
 ### call
 
-*private* - line 127
+*private* - line 128
 
 One Graph call. Returns [httpCode, decodedBody].
 
@@ -84,7 +86,7 @@ function call(string $method, string $path, ?array $body = null): array
 
 ### toGraphEvent
 
-*private* - line 161
+*private* - line 162
 
 Translate our canonical event into Graph's shape.
 
@@ -110,7 +112,9 @@ function toGraphEvent(array $event): array
 
 ### createEvent
 
-*public* - line 194
+*public* - line 196
+
+Creates the event in the mailbox's calendar through Graph and returns Graph's event id.
 
 ```php
 function createEvent(string $calendarAddress, array $event): string
@@ -123,7 +127,9 @@ function createEvent(string $calendarAddress, array $event): string
 
 ### updateEvent
 
-*public* - line 205
+*public* - line 208
+
+PATCHes the event through Graph; throws CalendarEventMissing on a 404 so the caller can create a fresh one.
 
 ```php
 function updateEvent(string $calendarAddress, string $remoteEventId, array $event): void
@@ -137,7 +143,9 @@ function updateEvent(string $calendarAddress, string $remoteEventId, array $even
 
 ### deleteEvent
 
-*public* - line 223
+*public* - line 227
+
+Deletes the event through Graph; a 404 counts as success.
 
 ```php
 function deleteEvent(string $calendarAddress, string $remoteEventId): void
@@ -150,7 +158,7 @@ function deleteEvent(string $calendarAddress, string $remoteEventId): void
 
 ### pollChanges
 
-*public* - line 254
+*public* - line 258
 
 Read changes back out of the mailbox with a Graph delta query.
 
@@ -176,7 +184,7 @@ function pollChanges(string $calendarAddress, ?string $token): array
 
 ### toLocal
 
-*private* - line 314
+*private* - line 318
 
 Graph's {dateTime,timeZone} to a naive wall clock in `$tz`.
 
@@ -191,7 +199,7 @@ function toLocal(array $slot, string $tz): string
 
 ### callAbsolute
 
-*private* - line 323
+*private* - line 327
 
 A GET against a URL Graph gave us (nextLink / deltaLink are absolute).
 
@@ -205,7 +213,9 @@ function callAbsolute(string $url): array
 
 ### createSubscription
 
-*public* - line 349
+*public* - line 357
+
+Subscribes to updates and deletions in the mailbox's calendar, posting to `$notifyUrl` with `$secret` as clientState, for SUBSCRIPTION_MINUTES.
 
 ```php
 function createSubscription(string $calendarAddress, string $notifyUrl, string $secret): array
@@ -217,9 +227,13 @@ function createSubscription(string $calendarAddress, string $notifyUrl, string $
 | `$notifyUrl` | `string` |  |  |
 | `$secret` | `string` |  |  |
 
+**Returns:** array  ['id' => subscription id, 'expires' => naive local datetime]
+
 ### renewSubscription
 
-*public* - line 368
+*public* - line 379
+
+Extends a Graph subscription by SUBSCRIPTION_MINUTES; throws CalendarSubscriptionMissing when it has already lapsed.
 
 ```php
 function renewSubscription(string $subscriptionId): array
@@ -231,7 +245,9 @@ function renewSubscription(string $subscriptionId): array
 
 ### deleteSubscription
 
-*public* - line 384
+*public* - line 396
+
+Removes a Graph subscription; one already gone counts as success.
 
 ```php
 function deleteSubscription(string $subscriptionId): void
@@ -243,7 +259,7 @@ function deleteSubscription(string $subscriptionId): void
 
 ### expiryToLocal
 
-*private* - line 392
+*private* - line 404
 
 Graph's UTC expiry to the naive local datetime the column stores.
 
@@ -257,7 +273,9 @@ function expiryToLocal(?string $utc): string
 
 ### verifyTarget
 
-*public* - line 400
+*public* - line 413
+
+True when Graph can read the mailbox's calendar - i.e. the address exists and the app can reach it.
 
 ```php
 function verifyTarget(string $calendarAddress): bool
@@ -269,7 +287,7 @@ function verifyTarget(string $calendarAddress): bool
 
 ### briefly
 
-*private* - line 415
+*private* - line 428
 
 Graph error bodies are long and carry request ids. Keep enough to diagnose without putting a wall of JSON in last_error, which is 500 characters and is shown to a human.
 

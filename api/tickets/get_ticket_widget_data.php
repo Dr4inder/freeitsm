@@ -133,19 +133,34 @@ try {
 
 // --- Helper functions ---
 
+/**
+ * Whether a widget property is plotted over time ('created' or 'closed') rather than
+ * counted by category.
+ */
 function isTimeBased($prop) {
     return in_array($prop, ['created', 'closed']);
 }
 
+/** Whether a widget property is the two-series created-versus-closed chart. */
 function isCreatedVsClosed($prop) {
     return $prop === 'created_vs_closed';
 }
 
+/**
+ * The tickets date column a time-based property counts by - closed_datetime for
+ * 'closed', created_datetime otherwise.
+ */
 function getDateField($prop) {
     if ($prop === 'closed') return 'closed_datetime';
     return 'created_datetime';
 }
 
+/**
+ * Turns a widget's date range ('7d', '30d', 'this_month', '3m', '6m', '12m',
+ * 'this_year') into a condition on the date column and its start date.
+ *
+ * @return array  [sql, param] - ['', null] for 'all', empty or an unknown range
+ */
 function buildDateRangeWhere($dateRange, $dateField) {
     if (empty($dateRange) || $dateRange === 'all') {
         return ['', null];
@@ -166,6 +181,10 @@ function buildDateRangeWhere($dateRange, $dateField) {
     return ["t.{$dateField} >= ?", $start];
 }
 
+/**
+ * Turns a widget's department filter into a t.department_id IN (...) condition with its
+ * integer parameters - ['', []] when there is no filter.
+ */
 function buildDepartmentWhere($deptFilter) {
     if (empty($deptFilter) || !is_array($deptFilter)) {
         return ['', []];
@@ -174,6 +193,7 @@ function buildDepartmentWhere($deptFilter) {
     return ["t.department_id IN ({$placeholders})", array_map('intval', $deptFilter)];
 }
 
+/** The SQL expression that buckets a ticket date by day, month or year for GROUP BY. */
 function getDateExpr($timeGrouping, $dateField) {
     switch ($timeGrouping) {
         case 'day':   return "DATE(t.{$dateField})";
@@ -183,6 +203,11 @@ function getDateExpr($timeGrouping, $dateField) {
     return "DATE(t.{$dateField})";
 }
 
+/**
+ * Every bucket key (day, month or year) from the start of the date range to today, so a
+ * time chart shows empty periods as zero instead of leaving them out. An unknown range
+ * means the last 12 months.
+ */
 function getTimeLabels($dateRange, $timeGrouping) {
     $now = new DateTime('now', new DateTimeZone('UTC'));
 
@@ -225,6 +250,10 @@ function getTimeLabels($dateRange, $timeGrouping) {
     return $labels;
 }
 
+/**
+ * Turns a bucket key into the axis label in the analyst's date format - day and month
+ * buckets are rendered without a time-zone shift, years as they are.
+ */
 function formatLabel($raw, $timeGrouping) {
     switch ($timeGrouping) {
         // Axis labels. These are bucket dates carrying no zone, so they render
@@ -237,6 +266,13 @@ function formatLabel($raw, $timeGrouping) {
     return $raw;
 }
 
+/**
+ * Counts tickets by one property (status, priority, department, type, category, closure
+ * category, resolution code, analyst, owner, origin, first-time fix, training provided),
+ * largest first.
+ *
+ * @return array  {labels, values} - empty for a property it does not know
+ */
 function getCategoricalData($conn, $prop, $where, $params) {
     $lookupJoin = "LEFT JOIN ticket_statuses ts ON ts.id = t.status_id LEFT JOIN ticket_priorities tp ON tp.id = t.priority_id";
     if ($prop === 'status') {
@@ -303,6 +339,12 @@ function getCategoricalData($conn, $prop, $where, $params) {
     ];
 }
 
+/**
+ * Counts tickets by one property, split into a series per status or priority - the
+ * stacked or grouped bar chart.
+ *
+ * @return array  {labels, series} from pivotToSeries()
+ */
 function getCategoricalWithSeries($conn, $prop, $seriesProp, $where, $params) {
     $labelExpr = '';
     $extraJoin = '';
@@ -353,6 +395,12 @@ function getCategoricalWithSeries($conn, $prop, $seriesProp, $where, $params) {
     return pivotToSeries($data);
 }
 
+/**
+ * Counts tickets created or closed per day, month or year across the date range, with
+ * every empty period filled in as zero.
+ *
+ * @return array  {labels, values}
+ */
 function getTimeData($conn, $prop, $timeGrouping, $dateRange, $where, $params) {
     $dateField = getDateField($prop);
     $dateExpr = getDateExpr($timeGrouping, $dateField);
@@ -397,6 +445,12 @@ function getTimeData($conn, $prop, $timeGrouping, $dateRange, $where, $params) {
     return ['labels' => $labels, 'values' => $values];
 }
 
+/**
+ * Counts tickets created or closed per period across the date range, split into a series
+ * per status or priority, with empty periods filled in as zero.
+ *
+ * @return array  {labels, series}
+ */
 function getTimeWithSeries($conn, $prop, $seriesProp, $timeGrouping, $dateRange, $where, $params) {
     $dateField = getDateField($prop);
     $dateExpr = getDateExpr($timeGrouping, $dateField);
@@ -459,6 +513,12 @@ function getTimeWithSeries($conn, $prop, $seriesProp, $timeGrouping, $dateRange,
     return ['labels' => $labels, 'series' => $series];
 }
 
+/**
+ * Counts tickets created and tickets closed in each period of the date range, as two
+ * series on the same time labels.
+ *
+ * @return array  {labels, series: [Created, Closed]}
+ */
 function getCreatedVsClosedData($conn, $timeGrouping, $dateRange, $where, $params) {
     $createdDateExpr = getDateExpr($timeGrouping, 'created_datetime');
     $closedDateExpr = getDateExpr($timeGrouping, 'closed_datetime');
@@ -520,6 +580,12 @@ function getCreatedVsClosedData($conn, $timeGrouping, $dateRange, $where, $param
     ];
 }
 
+/**
+ * Pivots label / series_val / value rows into chart series - one series per distinct
+ * series value, with a count (0 when missing) for every label.
+ *
+ * @return array  {labels, series: [{label, values}]}
+ */
 function pivotToSeries($data) {
     $labelsSet = [];
     $seriesNames = [];

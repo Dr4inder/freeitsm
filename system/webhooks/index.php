@@ -149,6 +149,7 @@ $byWorkflow = $conn->query(
       GROUP BY d.workflow_id, w.name ORDER BY total DESC LIMIT 8"
 )->fetchAll(PDO::FETCH_ASSOC);
 
+/** A delivery latency in seconds as translated text (under a second, seconds, minutes or hours); a dash when there is none. */
 function whLatency($s) {
     if ($s === null) return '—';
     $s = (float)$s;
@@ -174,6 +175,7 @@ $httpUrl    = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_UR
             . 'cron/webhook_deliveries.php?token=' . urlencode($cronToken);
 $cliCmd     = 'php ' . $scriptPath;
 
+/** An age in seconds as translated "n seconds/minutes/hours/days ago" text; empty when there is none. */
 function whAgo($s) {
     if ($s === null) return '';
     if ($s < 90)    return t('system.webhooks.ago_seconds', ['n' => $s]);

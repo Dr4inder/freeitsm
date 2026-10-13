@@ -6,7 +6,7 @@
 function domainParseDays(string $raw): array
 ```
 
-Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 238.
+Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 239.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

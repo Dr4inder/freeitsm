@@ -12,7 +12,7 @@ function lmsCtParseDrafts(
 ): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 426.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 429.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

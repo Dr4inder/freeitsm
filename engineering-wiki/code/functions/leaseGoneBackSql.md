@@ -10,7 +10,7 @@ machine handed back in March is "due back" for ever. Call only when `leaseReady(
 function leaseGoneBackSql(string $a = 'a'): string
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 111.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 112.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,7 +22,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 111.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `leaseGoneBackSql` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 114 | `leaseGoneBackSql` | read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
 
 ## Calls
 

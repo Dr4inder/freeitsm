@@ -29,6 +29,6 @@
 | [api/tickets/paste_rota_cells.php](/code/files/api/tickets/paste_rota_cells.php.md) | L75 |  |
 | [api/tickets/paste_rota_line.php](/code/files/api/tickets/paste_rota_line.php.md) | L87 |  |
 | [api/tickets/paste_rota_week.php](/code/files/api/tickets/paste_rota_week.php.md) | L84 |  |
-| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L206 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOnCall L500 |  |
+| [includes/projects/capacity.php](/code/files/includes/projects/capacity.php.md) | projectCapacity L209 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolOnCall L513 |  |
 

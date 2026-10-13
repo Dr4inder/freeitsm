@@ -6,7 +6,7 @@ Check a supplier / contact pair: the supplier exists; the contact (if any) works
 function tasksContractorValidate(PDO $conn, $supplierId, $contactId): array
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 83.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 85.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 88 | `tasksContractorValidate` | read [contacts](/code/tables/contacts.md) |  |
-| 97 | `tasksContractorValidate` | read [suppliers](/code/tables/suppliers.md) |  |
+| 90 | `tasksContractorValidate` | read [contacts](/code/tables/contacts.md) |  |
+| 99 | `tasksContractorValidate` | read [suppliers](/code/tables/suppliers.md) |  |
 
 ## Called from
 

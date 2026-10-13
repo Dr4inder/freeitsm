@@ -6,24 +6,26 @@
 
 | Method | What it does |
 |---|---|
-| [verifyWebhook()](#verifywebhook) |  |
-| [parseInbound()](#parseinbound) |  |
+| [verifyWebhook()](#verifywebhook) | Checks the secret token Telegram sends in the X-Telegram-Bot-Api-Secret-Token header; no secret configured means refuse. |
+| [parseInbound()](#parseinbound) | Turns a Telegram update into inbound messages - a CSAT rating press, or a new or edited message. |
 | [extractMedia()](#extractmedia) | Pull the largest/only file out of whichever media field is present. |
-| [sendMessage()](#sendmessage) |  |
+| [sendMessage()](#sendmessage) | Sends a text message to a chat and returns Telegram's message id. |
 | [parseRatingPress()](#parseratingpress) | A rating press (PR #166): one normalised entry carrying 'csat' for ingest.php. |
 | [sendRatingRequest()](#sendratingrequest) | Show the 1–5 buttons under the rating question. |
 | [closeRatingRequest()](#closeratingrequest) | Swap the rating buttons for the answer: the question stays, a line saying what they chose goes under it, and the keyboard goes (editMessageText without reply_markup removes it). The toast from `answerCallbackQuery()` fades in seconds; this is the record the customer keeps, and it leaves no buttons that would silently do nothing if tapped again. |
 | [answerCallbackQuery()](#answercallbackquery) | Stop the button's loading spinner and show a short toast. Best-effort: a failure here must never undo a rating that has already been saved. |
 | [requestContact()](#requestcontact) | Ask the chat to share their phone number, via Telegram's native "Share phone number" button (a reply keyboard with request_contact, not an inline button — that's what makes Telegram hand back a verified contact object rather than free-typed, unverifiable text). |
 | [sendTemplate()](#sendtemplate) | Telegram has no provider-hosted, pre-approved template system (there is no 24h window to work around), so a "template" here is just this app's own stored body with {{n}} placeholders rendered and sent as a normal message. |
-| [downloadMedia()](#downloadmedia) |  |
+| [downloadMedia()](#downloadmedia) | Downloads an inbound file: resolves its file id to a path, then fetches the bytes. |
 | [sendMedia()](#sendmedia) | Send a local file to a chat. Photos go through sendPhoto (Telegram renders them inline, recompressing — exactly what an analyst expects "attach a picture" to look like in the chat); everything else goes through sendDocument (sent byte-for-byte, no recompression, no dimension limits beyond the flat 50MB bot API cap). |
 | [setWebhook()](#setwebhook) | Tell Telegram where to deliver this bot's messages, and the secret it must send back with each one (verifyWebhook() checks it). |
-| [testConnection()](#testconnection) |  |
+| [testConnection()](#testconnection) | Checks the bot token with getMe and returns the bot's name. |
 
 ### verifyWebhook
 
-*public* - line 37
+*public* - line 41
+
+Checks the secret token Telegram sends in the X-Telegram-Bot-Api-Secret-Token header; no secret configured means refuse.
 
 ```php
 function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
@@ -38,7 +40,9 @@ function verifyWebhook(string $rawBody, array $headers, array $params, string $u
 
 ### parseInbound
 
-*public* - line 50
+*public* - line 55
+
+Turns a Telegram update into inbound messages - a CSAT rating press, or a new or edited message.
 
 ```php
 function parseInbound(string $rawBody, array $params): array
@@ -51,7 +55,7 @@ function parseInbound(string $rawBody, array $params): array
 
 ### extractMedia
 
-*private* - line 133
+*private* - line 138
 
 Pull the largest/only file out of whichever media field is present.
 
@@ -65,7 +69,9 @@ function extractMedia(array $message): array
 
 ### sendMessage
 
-*public* - line 159
+*public* - line 165
+
+Sends a text message to a chat and returns Telegram's message id.
 
 ```php
 function sendMessage(string $to, string $body): string
@@ -78,7 +84,7 @@ function sendMessage(string $to, string $body): string
 
 ### parseRatingPress
 
-*private* - line 189
+*private* - line 195
 
 A rating press (PR #166): one normalised entry carrying 'csat' for ingest.php.
 
@@ -92,7 +98,7 @@ function parseRatingPress(array $cb): array
 
 ### sendRatingRequest
 
-*public* - line 222
+*public* - line 228
 
 Show the 1–5 buttons under the rating question.
 
@@ -108,7 +114,7 @@ function sendRatingRequest(string $to, string $text, int $responseId): string
 
 ### closeRatingRequest
 
-*public* - line 258
+*public* - line 264
 
 Swap the rating buttons for the answer: the question stays, a line saying what they chose goes under it, and the keyboard goes (editMessageText without reply_markup removes it). The toast from `answerCallbackQuery()` fades in seconds; this is the record the customer keeps, and it leaves no buttons that would silently do nothing if tapped again.
 
@@ -132,7 +138,7 @@ function closeRatingRequest(
 
 ### answerCallbackQuery
 
-*public* - line 280
+*public* - line 286
 
 Stop the button's loading spinner and show a short toast. Best-effort: a failure here must never undo a rating that has already been saved.
 
@@ -147,7 +153,7 @@ function answerCallbackQuery(string $callbackQueryId, string $text): void
 
 ### requestContact
 
-*public* - line 306
+*public* - line 312
 
 Ask the chat to share their phone number, via Telegram's native "Share phone number" button (a reply keyboard with request_contact, not an inline button — that's what makes Telegram hand back a verified contact object rather than free-typed, unverifiable text).
 
@@ -170,7 +176,7 @@ function requestContact(
 
 ### sendTemplate
 
-*public* - line 344
+*public* - line 350
 
 Telegram has no provider-hosted, pre-approved template system (there is no 24h window to work around), so a "template" here is just this app's own stored body with {{n}} placeholders rendered and sent as a normal message.
 
@@ -186,7 +192,9 @@ function sendTemplate(string $to, array $template, array $vars): string
 
 ### downloadMedia
 
-*public* - line 353
+*public* - line 360
+
+Downloads an inbound file: resolves its file id to a path, then fetches the bytes.
 
 ```php
 function downloadMedia(array $item): array
@@ -198,7 +206,7 @@ function downloadMedia(array $item): array
 
 ### sendMedia
 
-*public* - line 397
+*public* - line 404
 
 Send a local file to a chat. Photos go through sendPhoto (Telegram renders them inline, recompressing — exactly what an analyst expects "attach a picture" to look like in the chat); everything else goes through sendDocument (sent byte-for-byte, no recompression, no dimension limits beyond the flat 50MB bot API cap).
 
@@ -226,7 +234,7 @@ function sendMedia(
 
 ### setWebhook
 
-*public* - line 444
+*public* - line 451
 
 Tell Telegram where to deliver this bot's messages, and the secret it must send back with each one (verifyWebhook() checks it).
 
@@ -251,7 +259,12 @@ function setWebhook(string $url, string $secret): string
 
 ### testConnection
 
-*public* - line 479
+*public* - line 492
+
+Checks the bot token with getMe and returns the bot's name.
+
+Also reads the webhook info and warns when the webhook is not connected or does not
+receive every update type it needs.
 
 ```php
 function testConnection(): string

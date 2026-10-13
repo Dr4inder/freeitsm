@@ -6,7 +6,7 @@ Respond with the full hydrated diagram (shared by create/update/version).
 function apiNmRespondFull(PDO $conn, int $diagramId, int $status = 200): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 548.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 582.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

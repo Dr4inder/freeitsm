@@ -6,7 +6,7 @@ Turn [label, value, colour?] rows into chart data, folding everything past `limi
 function rpChartFromRows(array $rows, int $limit, string $chart, string $seriesName): array
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 78.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 79.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -14,6 +14,7 @@ require_once __DIR__ . '/design.php';
 
 header('Content-Type: application/json');
 
+/** Sends a JSON reply with the given HTTP status and ends the request. */
 function rpOut(array $payload, int $code = 200): void
 {
     http_response_code($code);
@@ -21,6 +22,7 @@ function rpOut(array $payload, int $code = 200): void
     exit;
 }
 
+/** Sends a failure JSON reply ({success: false, error}) with an HTTP status, 400 by default. */
 function rpFail(string $message, int $code = 400): void
 {
     rpOut(['success' => false, 'error' => $message], $code);

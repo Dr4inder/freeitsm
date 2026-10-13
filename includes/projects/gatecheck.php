@@ -27,6 +27,7 @@ require_once __DIR__ . '/settings.php';
 
 const PROJECT_GATE_ITEM_KINDS = ['check', 'document', 'signoff', 'change'];
 
+/** True when the project_gate_items table exists (after Database Verification). Cached per request. */
 function projectGateItemsReady(PDO $conn): bool
 {
     static $ready = null;

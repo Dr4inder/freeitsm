@@ -6,7 +6,7 @@ Card visibility. Missing row = visible.
 function wtVisibleCards(PDO $conn): array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 299.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 302.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 304 | `wtVisibleCards` | read [watchtower_items](/code/tables/watchtower_items.md) |  |
+| 307 | `wtVisibleCards` | read [watchtower_items](/code/tables/watchtower_items.md) |  |
 
 ## Calls
 

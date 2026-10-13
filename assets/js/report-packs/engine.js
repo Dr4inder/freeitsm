@@ -21,6 +21,8 @@
  * silently turn into question marks.
  *
  * Units: millimetres throughout. Font sizes are points; PT converts.
+ *
+ * @wiki Report-Packs-Internals-2-The-Layout-Engine
  */
 (function () {
     'use strict';
@@ -40,8 +42,15 @@
     let M = null;                         // a jsPDF used only for its font metrics
     const widthCache = new Map();         // "font|style" -> Map(char -> units)
 
+    /** Returns the jsPDF font style name for bold / italic flags - normal, bold, italic or bolditalic. */
     function styleKey(b, i) { return b && i ? 'bolditalic' : b ? 'bold' : i ? 'italic' : 'normal'; }
 
+    /**
+     * Returns a character's width in font units from jsPDF's metrics, cached per font and style.
+     *
+     * A character the font has no glyph for is given the width of an "n" so it does not collapse on
+     * screen.
+     */
     function charUnits(font, style, ch) {
         const key = font + '|' + style;
         let m = widthCache.get(key);
@@ -69,6 +78,7 @@
     }
 
     const WINANSI_EXTRA = '€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ';
+    /** Whether a string holds a character outside WinAnsi, which the PDF standard fonts cannot print. */
     function hasUnsupported(str) {
         for (const ch of String(str)) {
             const c = ch.codePointAt(0);
@@ -197,6 +207,7 @@
         return out;
     }
 
+    /** Returns a field's value (page, pages, title...) as a string, or empty when it is not set. */
     function fieldValue(name, fields) {
         const v = fields && fields[name];
         return v === undefined || v === null ? '' : String(v);
@@ -206,6 +217,10 @@
     function breakLines(tokens, avail) {
         const lines = [];
         let cur = { items: [], width: 0 };
+        /**
+         * Ends the current line (dropping trailing spaces), records whether a hard break ended it, and
+         * starts a new one.
+         */
         const push = (hard) => {
             while (cur.items.length && cur.items[cur.items.length - 1].space) {
                 cur.width -= cur.items.pop().w;           // no trailing space
@@ -252,6 +267,7 @@
         }
         return out.filter(i => i.text.trim() !== '' || i.st.u || i.st.s || i.st.hl);
     }
+    /** Whether two run styles match in font, size, bold, italic, underline, strike, colour and highlight. */
     function sameStyle(a, b) {
         return a.font === b.font && a.size === b.size && a.b === b.b && a.i === b.i && a.u === b.u
             && a.s === b.s && a.color === b.color && a.hl === b.hl;
@@ -277,6 +293,10 @@
     // where a SPLITTABLE block also returns `units` (the y at which it may be cut)
     // so the paginator can carry the rest onto the next page.
 
+    /**
+     * Returns a text style from the theme's font and size in dark grey, with any extra properties laid
+     * over it.
+     */
     function themeStyle(theme, extra) {
         return Object.assign({ font: theme.font, size: theme.size, color: '#222222', b: false, i: false, u: false, s: false, hl: null }, extra || {});
     }
@@ -285,9 +305,15 @@
     function txt(x, baseline, text, st, w) {
         return { k: 'text', x, y: baseline, text, st, w: w === undefined ? textWidth(text, st) : w };
     }
+    /** Returns a rectangle draw primitive, with any extra properties (stroke, radius, dash) merged in. */
     function rect(x, y, w, h, fill, extra) { return Object.assign({ k: 'rect', x, y, w, h, fill }, extra || {}); }
+    /**
+     * Returns a horizontal line draw primitive; a null x2 means the full block width, filled in by
+     * offset().
+     */
     function hline(x1, x2, y, color, width) { return { k: 'line', x1, y1: y, x2, y2: y, color, width: width || 0.25 }; }
 
+    /** Returns the text baseline for a line of the given point size whose top is at top (mm). */
     function baselineFor(top, size) { return top + (size * PT * LINE - size * PT) / 2 + size * PT * 0.8; }
 
     /** Contrast text for a coloured pill. */
@@ -298,6 +324,7 @@
         return (0.299 * r + 0.587 * g + 0.114 * b) > 160 ? '#1a1a1a' : '#ffffff';
     }
 
+    /** Measures and draws a rounded coloured pill with bold contrasting text; returns {w, h, draw}. */
     function pill(x, top, text, colour, size, theme) {
         const st = themeStyle(theme, { size, b: true, color: onColour(colour) });
         const w = textWidth(text, st) + 4;
@@ -308,6 +335,10 @@
         ] };
     }
 
+    /**
+     * Measures a heading block - its text at the level's size in the heading colour, with a rule under
+     * level 1.
+     */
     function measureHeading(b, theme) {
         const size = { 1: 15, 2: 12.5, 3: 11 }[b.level] || 15;
         const st = themeStyle(theme, { size, b: true, color: theme.heading });
@@ -318,6 +349,11 @@
         return { h: h + 1.5, draw, fullWidth: true };
     }
 
+    /**
+     * Measures a text block by laying out its rich text (inside a shaded box when box is set).
+     *
+     * Returns each line's bottom as units so the block can be split across pages.
+     */
     function measureText(b, width, theme, ctx) {
         const L = layoutDoc(b.doc, width - (b.box ? 6 : 0), {
             font: theme.font, size: theme.size, color: '#222222', headingColor: theme.heading,
@@ -350,6 +386,10 @@
         return out;
     }
 
+    /**
+     * Measures a KPI block - tiles of value, label and optional hint, as many to a row as fit at about
+     * 33mm each.
+     */
     function measureKpi(data, width, theme, top) {
         const tiles = data.tiles || [];
         const per = Math.max(1, Math.min(tiles.length || 1, Math.floor((width + 3) / 33)));
@@ -477,6 +517,7 @@
         return { draw, h: y };
     }
 
+    /** Returns a copy of a draw primitive moved down by dy. */
     function shift(d, dy) {
         const o = Object.assign({}, d);
         if (o.k === 'line') { o.y1 += dy; o.y2 += dy; } else o.y += dy;
@@ -545,6 +586,10 @@
 
     // ── Pagination ───────────────────────────────────────────────────────
 
+    /**
+     * Returns the page width and height for the design's size and orientation, its margins, and the
+     * content width.
+     */
     function pageGeometry(design) {
         const [w0, h0] = PAGE_SIZES[design.page.size] || PAGE_SIZES.A4;
         const land = design.page.orient === 'landscape';
@@ -574,6 +619,7 @@
     function paginate(design, dataMap, ctx) {
         const G = pageGeometry(design);
         const theme = design.theme;
+        /** Returns the field values for a given page number and page total, plus the pack title. */
         const fieldsAt = (n, total) => Object.assign({}, ctx.fields, { page: n, pages: total, title: ctx.title });
 
         // Header and footer heights, measured with wide page numbers so they never grow later.
@@ -583,6 +629,7 @@
         const footerH = ftrProbe ? ftrProbe.height + (design.footer.rule ? 2.5 : 0) + 4 : 0;
 
         const colW = (G.cw - GUTTER * 11) / 12;
+        /** Returns the width in mm of a block spanning that many of the 12 grid columns. */
         const spanW = span => span * colW + (span - 1) * GUTTER;
 
         // 1. Measure every block at its width.
@@ -606,9 +653,15 @@
 
         // 3. Place rows on pages.
         const pages = [];
+        /** Returns where the body starts on a page - below the header when the page has one. */
         const bodyTop = (p) => G.m.t + (p.header ? headerH : 0);
+        /** Returns where the body ends - above the footer. */
         const bodyBottom = () => G.ph - G.m.b - footerH;
         let page = null, y = 0;
+        /**
+         * Starts a new body page and moves y to its top; the header shows unless it is turned off for
+         * the first page.
+         */
         const newPage = () => {
             const showHeader = !!design.header.on && (design.header.first !== false || pages.filter(p => p.type === 'body').length > 0);
             page = { type: 'body', items: [], header: showHeader, footer: !!design.footer.on };
@@ -660,6 +713,10 @@
             }
         });
 
+        /**
+         * Places every block of a row side by side at its column on the current page, then moves y
+         * past the tallest.
+         */
         function placeRow(r) {
             const rowH = Math.max(...r.items.map(it => it.m.h));
             r.items.forEach(it => {
@@ -727,6 +784,10 @@
         return { pages: all, geometry: G, headings, headerH, footerH, colW, gutter: GUTTER, spanW };
     }
 
+    /**
+     * Draws one contents page - the title on the first part, then its share of the headings with dot
+     * leaders and page numbers.
+     */
     function tocDraw(design, theme, headings, offset, part, G, headerH, footerH) {
         const draw = [];
         let y = G.m.t + headerH;
@@ -754,6 +815,10 @@
         return draw;
     }
 
+    /**
+     * Returns how many of the 12 columns a block spans - data, text and spacer blocks keep their own
+     * span, the rest are full width.
+     */
     function blockSpan(b) {
         return (b.type === 'data' || b.type === 'text' || b.type === 'spacer') ? Math.max(1, Math.min(12, b.span || 12)) : 12;
     }
@@ -825,6 +890,7 @@
         return { h: t.h + 10, draw: t.draw };
     }
 
+    /** Draws the box a data block shows while it loads, or in red when its data failed. */
     function placeholder(width, top, h, text, theme, isError) {
         const st = themeStyle(theme, { size: theme.size - 1, i: !isError, color: isError ? '#b42318' : '#8a8f98' });
         return [
@@ -837,6 +903,10 @@
     function tableSplitter(T, title) {
         return {
             start: () => ({ from: 0, first: true }),
+            /**
+             * Takes as many table rows as fit in room (at least one when forced), with the header
+             * repeated; returns the drawn part and the rest.
+             */
             take(s, room, force) {
                 let h = (s.first ? title.h : 0) + T.headH, i = s.from;
                 const top0 = s.first ? title.h : 0;
@@ -851,9 +921,17 @@
         };
     }
 
+    /**
+     * Returns a splitter that breaks a list of units (one per uptime service) across pages, the title
+     * only on the first part.
+     */
     function unitSplitter(units, title) {
         return {
             start: () => ({ from: 0, first: true }),
+            /**
+             * Takes as many units as fit in room (at least one when forced) and returns the drawn part
+             * and the rest.
+             */
             take(s, room, force) {
                 let h = s.first ? title.h : 0, i = s.from;
                 const draw = s.first ? title.draw.slice() : [];
@@ -868,10 +946,15 @@
         };
     }
 
+    /** Returns a splitter that breaks a text block's laid-out lines across pages. */
     function textSplitter(m) {
         const L = m.rich;
         return {
             start: () => ({ from: 0 }),
+            /**
+             * Takes as many lines as fit in room (at least one when forced), with their images,
+             * rebased to the top of the part.
+             */
             take(s, room, force) {
                 const top = s.from ? L.lines[s.from].y : 0;
                 let i = s.from;

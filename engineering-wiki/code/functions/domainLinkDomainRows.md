@@ -6,7 +6,7 @@ Domains by id, shaped for a list on another module's page.
 function domainLinkDomainRows(PDO $conn, array $ids): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 302.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 309.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 307 | `domainLinkDomainRows` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 314 | `domainLinkDomainRows` | read [domains](/code/tables/domains.md), read [domain_statuses](/code/tables/domain_statuses.md) |  |
 
 ## Calls
 

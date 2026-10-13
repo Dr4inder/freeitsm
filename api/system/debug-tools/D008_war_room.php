@@ -54,11 +54,20 @@ require_once __DIR__ . '/../../../includes/ai_settings.php';
 
 $sections = [];
 $problems = [];
+/**
+ * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
+ * string or an array of lines.
+ */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
     $sections[] = "=== {$title} ===\n" . rtrim($body, "\n");
 }
+/** Formats a boolean as YES or NO for the report. */
 function yn($v) { return $v ? 'YES' : 'NO'; }
+/**
+ * Adds the VERDICT section - the numbered problems found, or an all-clear - then prints
+ * every section as plain text and stops.
+ */
 function emit_and_exit($sections, $problems) {
     if ($problems) {
         $n = 1;
@@ -336,6 +345,7 @@ addSection($sections, 'TRANSLATIONS', $lines);
 
 emit_and_exit($sections, $problems);
 
+/** Formats a byte count as B, KB or MB for the report. */
 function warroomD008Bytes(int $n): string
 {
     if ($n < 1024) return $n . ' B';

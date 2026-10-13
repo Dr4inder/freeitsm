@@ -1,5 +1,9 @@
 # projectLinkRemove()
 
+Removes a link between a project and a record and records it in the project's history.
+
+Needs the same rights as adding it. Returns false when there was no such link.
+
 ```php
 function projectLinkRemove(
     PDO $conn,
@@ -10,7 +14,7 @@ function projectLinkRemove(
 ): bool
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 262.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 279.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

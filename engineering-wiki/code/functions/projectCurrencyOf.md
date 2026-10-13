@@ -6,7 +6,7 @@ A project's currency: its own, or - not yet stamped - the install's.
 function projectCurrencyOf(PDO $conn, array $p): string
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 70.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

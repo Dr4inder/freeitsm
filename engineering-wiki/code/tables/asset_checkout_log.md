@@ -30,6 +30,6 @@ Check-in / check-out custody trail. FK + index in post-schema section.
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_checkout_log.php](/code/files/api/assets/get_asset_checkout_log.php.md) | L44 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetCustodyList L460 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetCustodyList L473 |  |
 | [asset-management/scan.php](/code/files/asset-management/scan.php.md) | L88 |  |
 

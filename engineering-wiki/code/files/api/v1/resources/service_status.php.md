@@ -1,6 +1,6 @@
 # api/v1/resources/service_status.php
 
-> API endpoint - 350 lines
+> API endpoint - 378 lines
 
 FreeITSM REST API v1 — service-status resource (services + incidents).
 
@@ -40,40 +40,40 @@ status feed in the product (yet). Install-wide; no audit trail exists.
 |---|--:|---|
 | [apiServiceStatusFail()](/code/functions/apiServiceStatusFail.md) | 33 | Map a ServiceError raised by the shared service to the API's error response. |
 | [apiServiceStatusSubquery()](/code/functions/apiServiceStatusSubquery.md) | 48 | get_dashboard.php's exact worst-open-impact subquery, as a SQL fragment. |
-| [apiServiceStatusImpactMeta()](/code/functions/apiServiceStatusImpactMeta.md) | 60 |  |
-| [apiSerializeService()](/code/functions/apiSerializeService.md) | 71 |  |
-| [apiLoadService()](/code/functions/apiLoadService.md) | 88 |  |
-| [apiServiceIncidentSelect()](/code/functions/apiServiceIncidentSelect.md) | 101 |  |
-| [apiSerializeIncident()](/code/functions/apiSerializeIncident.md) | 109 |  |
-| [apiLoadIncident()](/code/functions/apiLoadIncident.md) | 148 |  |
-| [apiStatusServicesList()](/code/functions/apiStatusServicesList.md) | 166 | GET /service-status/services — the health board (derived current_status inline) |
-| [apiStatusServicesGet()](/code/functions/apiStatusServicesGet.md) | 192 |  |
-| [apiStatusServicesCreate()](/code/functions/apiStatusServicesCreate.md) | 211 |  |
-| [apiStatusServicesUpdate()](/code/functions/apiStatusServicesUpdate.md) | 218 |  |
-| [apiStatusServicesDelete()](/code/functions/apiStatusServicesDelete.md) | 225 |  |
-| [apiStatusIncidentsList()](/code/functions/apiStatusIncidentsList.md) | 237 | GET /service-status/incidents |
-| [apiStatusIncidentsGet()](/code/functions/apiStatusIncidentsGet.md) | 287 |  |
-| [apiStatusIncidentsCreate()](/code/functions/apiStatusIncidentsCreate.md) | 292 | POST /service-status/incidents |
-| [apiStatusIncidentsUpdate()](/code/functions/apiStatusIncidentsUpdate.md) | 300 | PATCH /service-status/incidents/{id} |
-| [apiStatusIncidentsDelete()](/code/functions/apiStatusIncidentsDelete.md) | 307 |  |
-| [apiServiceIncidentStatusesList()](/code/functions/apiServiceIncidentStatusesList.md) | 317 | Reference lookups |
-| [apiServiceImpactLevelsList()](/code/functions/apiServiceImpactLevelsList.md) | 334 |  |
+| [apiServiceStatusImpactMeta()](/code/functions/apiServiceStatusImpactMeta.md) | 61 | Every impact level's colour and severity order, keyed by name - read once per request and cached. |
+| [apiSerializeService()](/code/functions/apiSerializeService.md) | 76 | Shapes a service row for the API, with its current status (the default impact level when nothing is affecting it) and that status's colour and severity. |
+| [apiLoadService()](/code/functions/apiLoadService.md) | 94 | Loads one service row with its current status, or answers 404 and stops. |
+| [apiServiceIncidentSelect()](/code/functions/apiServiceIncidentSelect.md) | 111 | The SELECT for service incidents, with the status's name, colour and resolved flag and the creator's name. |
+| [apiSerializeIncident()](/code/functions/apiSerializeIncident.md) | 123 | Shapes an incident row for the API, with every service it affects and the impact on each, worst first. |
+| [apiLoadIncident()](/code/functions/apiLoadIncident.md) | 163 | Loads one incident row (apiServiceIncidentSelect), or answers 404 and stops. |
+| [apiStatusServicesList()](/code/functions/apiStatusServicesList.md) | 181 | GET /service-status/services — the health board (derived current_status inline) |
+| [apiStatusServicesGet()](/code/functions/apiStatusServicesGet.md) | 211 | GET /service-status/services/{id} - one service with its open (unresolved) incidents, most recently updated first. |
+| [apiStatusServicesCreate()](/code/functions/apiStatusServicesCreate.md) | 231 | POST /service-status/services - creates a service through ServiceStatusService and returns it. |
+| [apiStatusServicesUpdate()](/code/functions/apiStatusServicesUpdate.md) | 242 | PATCH /service-status/services/{id} - updates a service through ServiceStatusService and returns it. |
+| [apiStatusServicesDelete()](/code/functions/apiStatusServicesDelete.md) | 250 | DELETE /service-status/services/{id} - deletes a service through ServiceStatusService. |
+| [apiStatusIncidentsList()](/code/functions/apiStatusIncidentsList.md) | 262 | GET /service-status/incidents |
+| [apiStatusIncidentsGet()](/code/functions/apiStatusIncidentsGet.md) | 313 | GET /service-status/incidents/{id} - one incident with the services it affects. |
+| [apiStatusIncidentsCreate()](/code/functions/apiStatusIncidentsCreate.md) | 318 | POST /service-status/incidents |
+| [apiStatusIncidentsUpdate()](/code/functions/apiStatusIncidentsUpdate.md) | 326 | PATCH /service-status/incidents/{id} |
+| [apiStatusIncidentsDelete()](/code/functions/apiStatusIncidentsDelete.md) | 334 | DELETE /service-status/incidents/{id} - deletes an incident through ServiceStatusService. |
+| [apiServiceIncidentStatusesList()](/code/functions/apiServiceIncidentStatusesList.md) | 344 | Reference lookups |
+| [apiServiceImpactLevelsList()](/code/functions/apiServiceImpactLevelsList.md) | 362 | GET /service-impact-levels - the impact levels, in severity order. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 50 | `apiServiceStatusSubquery` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_incidents](/code/tables/status_incidents.md), read [service_impact_levels](/code/tables/service_impact_levels.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 64 | `apiServiceStatusImpactMeta` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 90 | `apiLoadService` | read [status_services](/code/tables/status_services.md) |  |
-| 102 | `apiServiceIncidentSelect` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md), read [analysts](/code/tables/analysts.md) |  |
-| 111 | `apiSerializeIncident` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
-| 182 | `apiStatusServicesList` | read [status_services](/code/tables/status_services.md) |  |
-| 197 | `apiStatusServicesGet` | read [status_incident_services](/code/tables/status_incident_services.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 246 | `apiStatusIncidentsList` | read [status_incident_services](/code/tables/status_incident_services.md) |  |
-| 264 | `apiStatusIncidentsList` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 319 | `apiServiceIncidentStatusesList` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
-| 336 | `apiServiceImpactLevelsList` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 65 | `apiServiceStatusImpactMeta` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 96 | `apiLoadService` | read [status_services](/code/tables/status_services.md) |  |
+| 112 | `apiServiceIncidentSelect` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md), read [analysts](/code/tables/analysts.md) |  |
+| 125 | `apiSerializeIncident` | read [status_incident_services](/code/tables/status_incident_services.md), read [status_services](/code/tables/status_services.md), read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
+| 197 | `apiStatusServicesList` | read [status_services](/code/tables/status_services.md) |  |
+| 216 | `apiStatusServicesGet` | read [status_incident_services](/code/tables/status_incident_services.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 271 | `apiStatusIncidentsList` | read [status_incident_services](/code/tables/status_incident_services.md) |  |
+| 289 | `apiStatusIncidentsList` | read [status_incidents](/code/tables/status_incidents.md), read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 346 | `apiServiceIncidentStatusesList` | read [service_incident_statuses](/code/tables/service_incident_statuses.md) |  |
+| 364 | `apiServiceImpactLevelsList` | read [service_impact_levels](/code/tables/service_impact_levels.md) |  |
 
 ## How it hangs together
 

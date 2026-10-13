@@ -1,10 +1,12 @@
 # projectCanChange()
 
+True when the analyst may change the project - anyone, if the change policy says so, else its team and project managers.
+
 ```php
 function projectCanChange(PDO $conn, int $analystId, array $project): bool
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 423.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 433.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

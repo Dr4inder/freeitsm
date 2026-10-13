@@ -30,7 +30,7 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L323 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L332 |  |
 | [includes/csat.php](/code/files/includes/csat.php.md) | csatPendingRequestForChat L211, csatResponseBelongsToChat L233, csatStoredRating L244, sendCsatSurvey L284 |  |
 | [tickets/csat/index.php](/code/files/tickets/csat/index.php.md) | L100, L121, L135, L155, L166, L184 ... |  |
 | [tickets/csat/survey.php](/code/files/tickets/csat/survey.php.md) | L32 |  |

@@ -12,7 +12,7 @@ Resolving that here means providers never have to know about it.
 function calendarSyncLoadConnection(PDO $conn, int $connectionId): ?array
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 121.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 122.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,8 +25,8 @@ Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 123 | `calendarSyncLoadConnection` | read [calendar_connections](/code/tables/calendar_connections.md) |  |
-| 131 | `calendarSyncLoadConnection` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 124 | `calendarSyncLoadConnection` | read [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 132 | `calendarSyncLoadConnection` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## Calls
 

@@ -23,5 +23,5 @@ Free-text journal notes on a problem (who / when / the note). Distinct from prob
 | File | Where | Purpose |
 |---|---|---|
 | [api/problem-management/get.php](/code/files/api/problem-management/get.php.md) | L75 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemNotesList L305 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemNotesList L313 |  |
 

@@ -41,9 +41,9 @@
 | [api/lms/learner_data.php](/code/files/api/lms/learner_data.php.md) | L42 |  |
 | [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md) | L82 |  |
 | [api/lms/progress.php](/code/files/api/lms/progress.php.md) | L62 |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsMyCourses L307 |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsMyCourses L313 |  |
 | [includes/lms_reminders.php](/code/files/includes/lms_reminders.php.md) | lmsRemindersDue L149 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleCoursesForCompany L518 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleCoursesForCompany L519 |  |
 | [lms/editor.php](/code/files/lms/editor.php.md) | L26 |  |
 | [lms/player.php](/code/files/lms/player.php.md) | L28 |  |
 | [self-service/course.php](/code/files/self-service/course.php.md) | L44 |  |

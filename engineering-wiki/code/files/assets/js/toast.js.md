@@ -1,6 +1,6 @@
 # assets/js/toast.js
 
-> JavaScript - 128 lines
+> JavaScript - 136 lines
 
 Global Toast Notification System
 
@@ -17,14 +17,11 @@ Usage: showToast('Message text', 'success') — types: success, error, warning, 
 
 | Function | Line | What it does |
 |---|--:|---|
-| `getPosition()` | 65 |  |
-| `getAnimation()` | 69 |  |
-| `getContainer()` | 73 |  |
-| `showToast(message, type, ms)` | 92 | `ms` is optional and defaults to the usual 4 seconds, so every existing two-argument call behaves exactly as before. It exists because some messages are not acknowledgements but instructions — "the address book has a different number, import again to see theirs" cannot be read, understood and acted on inside four seconds, and a toast that vanishes mid-sentence is the same as not having shown it. |
-| `onclick()` | 111 |  |
-| `requestAnimationFrame(function()` | 116 |  |
-| `requestAnimationFrame(function()` | 117 |  |
-| `setTimeout(function()` | 122 |  |
+| `getPosition()` | 66 | Returns the toast corner - window.TOAST_POSITION, then the saved localStorage choice, then 'bottom-right'. |
+| `getAnimation()` | 71 | Returns the toast animation style - window.TOAST_ANIMATION, then the saved localStorage choice, then 'slide'. |
+| `getContainer()` | 76 | Returns the toast container, rebuilding it when the position or animation setting has changed since it was made. |
+| `showToast(message, type, ms)` | 95 | `ms` is optional and defaults to the usual 4 seconds, so every existing two-argument call behaves exactly as before. It exists because some messages are not acknowledgements but instructions — "the address book has a different number, import again to see theirs" cannot be read, understood and acted on inside four seconds, and a toast that vanishes mid-sentence is the same as not having shown it. |
+| `onclick()` | 115 | Removes the toast at once when its close button is clicked. |
 
 ## Loaded by
 

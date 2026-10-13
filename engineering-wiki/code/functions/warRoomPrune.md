@@ -16,7 +16,7 @@ the two. So the paths are read BEFORE the delete and unlinked after it.
 function warRoomPrune(PDO $conn): void
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1157.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1158.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,9 +28,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 115
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1172 | `warRoomPrune` | read [warroom_attachments](/code/tables/warroom_attachments.md), read [warroom_messages](/code/tables/warroom_messages.md) |  |
-| 1183 | `warRoomPrune` | **delete** [warroom_messages](/code/tables/warroom_messages.md) |  |
-| 1193 | `warRoomPrune` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 1173 | `warRoomPrune` | read [warroom_attachments](/code/tables/warroom_attachments.md), read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 1184 | `warRoomPrune` | **delete** [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 1194 | `warRoomPrune` | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
 
 ## Calls
 

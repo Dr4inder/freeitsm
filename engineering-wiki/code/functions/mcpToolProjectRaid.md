@@ -1,10 +1,12 @@
 # mcpToolProjectRaid()
 
+MCP tool: a project's RAID log - risks, assumptions, issues and dependencies.
+
 ```php
 function mcpToolProjectRaid(PDO $conn, array $args, int $analystId, array $apiKey): string
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 247.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 256.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

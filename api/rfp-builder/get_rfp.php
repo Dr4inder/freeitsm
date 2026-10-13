@@ -1,4 +1,14 @@
 <?php
+/**
+ * API: one RFP with its contract, chosen supplier, creator and the counts behind each
+ * stage (documents, requirements, conflicts, categories, sections, invited suppliers).
+ *
+ * Also returns its company, shown only when the install has more than one.
+ *
+ * @input  id  the RFP
+ * @output {success, rfp}
+ * @wiki Contracts
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

@@ -1,6 +1,6 @@
 # api/knowledge/folders.php
 
-> API endpoint - 440 lines
+> API endpoint - 447 lines
 
 API Endpoint: Knowledge folders Actions: list, create, rename, move, delete
 
@@ -29,15 +29,15 @@ disagree about what exists.
 | [handleList()](/code/functions/handleList.md) | 71 | The folders this analyst may see, each with the number of articles they may see inside it. |
 | [knowledgeFolderIsReadable()](/code/functions/knowledgeFolderIsReadable.md) | 136 | May this viewer reach this folder? Delegates; never re-implements the rule. |
 | [requireFolderAccess()](/code/functions/requireFolderAccess.md) | 151 | Refuse anything the caller may not reach, in the same words as "not found". |
-| [handleCreate()](/code/functions/handleCreate.md) | 163 |  |
-| [handleRename()](/code/functions/handleRename.md) | 186 |  |
-| [handleMove()](/code/functions/handleMove.md) | 208 | Re-parent a folder. |
-| [handleDelete()](/code/functions/handleDelete.md) | 245 | Delete a folder. |
-| [handleMoveArticle()](/code/functions/handleMoveArticle.md) | 288 | File an article into a folder — what a drag-and-drop actually does. |
-| [handleAddShortcut()](/code/functions/handleAddShortcut.md) | 324 | Make an article appear in a second folder. |
-| [handleRemoveShortcut()](/code/functions/handleRemoveShortcut.md) | 364 | Remove a shortcut. The article itself is untouched — that is the whole point. |
-| [handleExceptions()](/code/functions/handleExceptions.md) | 388 | Everything on this install carrying its OWN permissions rather than its parent's — the report from §9 of the design page. |
-| [knowledgeAudit()](/code/functions/knowledgeAudit.md) | 436 | Thin alias onto includes/knowledge/audit.php, the one writer. |
+| [handleCreate()](/code/functions/handleCreate.md) | 169 | Creates a knowledge folder under the given parent (or at the top level) and audits it. |
+| [handleRename()](/code/functions/handleRename.md) | 193 | Renames a knowledge folder the caller can read, and audits the change. |
+| [handleMove()](/code/functions/handleMove.md) | 215 | Re-parent a folder. |
+| [handleDelete()](/code/functions/handleDelete.md) | 252 | Delete a folder. |
+| [handleMoveArticle()](/code/functions/handleMoveArticle.md) | 295 | File an article into a folder — what a drag-and-drop actually does. |
+| [handleAddShortcut()](/code/functions/handleAddShortcut.md) | 331 | Make an article appear in a second folder. |
+| [handleRemoveShortcut()](/code/functions/handleRemoveShortcut.md) | 371 | Remove a shortcut. The article itself is untouched — that is the whole point. |
+| [handleExceptions()](/code/functions/handleExceptions.md) | 395 | Everything on this install carrying its OWN permissions rather than its parent's — the report from §9 of the design page. |
+| [knowledgeAudit()](/code/functions/knowledgeAudit.md) | 443 | Thin alias onto includes/knowledge/audit.php, the one writer. |
 
 ## Database
 
@@ -47,19 +47,19 @@ disagree about what exists.
 | 87 | `handleList` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 | 94 | `handleList` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 | 155 | `requireFolderAccess` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 176 | `handleCreate` | **insert** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `name`, `is_restricted`, `inherit_permissions`, `created_by_id`, `owner_id`, `created_datetime`, `modified_datetime`) |  |
-| 193 | `handleRename` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`name`, `modified_datetime`) |  |
-| 230 | `handleMove` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `modified_datetime`) |  |
-| 251 | `handleDelete` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 257 | `handleDelete` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 266 | `handleDelete` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 267 | `handleDelete` | **delete** [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 303 | `handleMoveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`folder_id`, `modified_datetime`) |  |
-| 343 | `handleAddShortcut` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 352 | `handleAddShortcut` | **insert** [knowledge_shortcuts](/code/tables/knowledge_shortcuts.md) (`folder_id`, `article_id`, `created_by_id`, `created_datetime`) |  |
-| 371 | `handleRemoveShortcut` | **delete** [knowledge_shortcuts](/code/tables/knowledge_shortcuts.md) |  |
-| 399 | `handleExceptions` | read [knowledge_acl](/code/tables/knowledge_acl.md), read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 416 | `handleExceptions` | read [knowledge_acl](/code/tables/knowledge_acl.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 182 | `handleCreate` | **insert** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `name`, `is_restricted`, `inherit_permissions`, `created_by_id`, `owner_id`, `created_datetime`, `modified_datetime`) |  |
+| 200 | `handleRename` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`name`, `modified_datetime`) |  |
+| 237 | `handleMove` | **update** [knowledge_folders](/code/tables/knowledge_folders.md) (`parent_id`, `modified_datetime`) |  |
+| 258 | `handleDelete` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 264 | `handleDelete` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 273 | `handleDelete` | **delete** [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 274 | `handleDelete` | **delete** [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 310 | `handleMoveArticle` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`folder_id`, `modified_datetime`) |  |
+| 350 | `handleAddShortcut` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 359 | `handleAddShortcut` | **insert** [knowledge_shortcuts](/code/tables/knowledge_shortcuts.md) (`folder_id`, `article_id`, `created_by_id`, `created_datetime`) |  |
+| 378 | `handleRemoveShortcut` | **delete** [knowledge_shortcuts](/code/tables/knowledge_shortcuts.md) |  |
+| 406 | `handleExceptions` | read [knowledge_acl](/code/tables/knowledge_acl.md), read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 423 | `handleExceptions` | read [knowledge_acl](/code/tables/knowledge_acl.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

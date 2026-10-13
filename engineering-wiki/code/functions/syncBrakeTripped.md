@@ -13,7 +13,7 @@ and refusing to import anybody the first time would make the feature unusable.
 function syncBrakeTripped(array $provider, int $seen, ?array $words = null): ?string
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 427.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 434.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ The by-id gate: existence + company scope, both failing as 404.
 function apiLoadCostCentre(PDO $conn, array $apiKey, int $id): array
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 52.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 60.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

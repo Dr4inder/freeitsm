@@ -1,10 +1,12 @@
 # rpTicketsList()
 
+Tickets block: a table of the tickets in the period, with the columns the block asks for, up to its limit.
+
 ```php
 function rpTicketsList(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 195.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 212.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +22,8 @@ Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/repor
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 198 | `rpTicketsList` | read [tickets](/code/tables/tickets.md) |  |
-| 202 | `rpTicketsList` | read [analysts](/code/tables/analysts.md), read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 215 | `rpTicketsList` | read [tickets](/code/tables/tickets.md) |  |
+| 219 | `rpTicketsList` | read [analysts](/code/tables/analysts.md), read [ticket_categories](/code/tables/ticket_categories.md) |  |
 
 ## Calls
 

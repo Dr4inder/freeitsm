@@ -16,7 +16,7 @@ function documentCanViewParent(
 ): bool
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 370.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 375.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

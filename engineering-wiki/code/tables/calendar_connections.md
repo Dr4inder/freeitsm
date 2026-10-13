@@ -28,12 +28,12 @@
 | [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):368 |  | update | `last_error`, `last_error_datetime` |  |
 | [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):373 |  | update | `last_error`, `last_error_datetime` |  |
 | [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md):522 |  | delete |  |  |
-| [includes/calendar_sync/MicrosoftCalendarProvider.php](/code/files/includes/calendar_sync/MicrosoftCalendarProvider.php.md):100 | `MicrosoftCalendarProvider::token` | update | `token_data` |  |
+| [includes/calendar_sync/MicrosoftCalendarProvider.php](/code/files/includes/calendar_sync/MicrosoftCalendarProvider.php.md):101 | `MicrosoftCalendarProvider::token` | update | `token_data` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/system/calendar_sync.php](/code/files/api/system/calendar_sync.php.md) | L146, L208, L256, L508 |  |
-| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncLoadConnection L123, calendarSyncConnectionIds L162, calendarSyncConnectionProvider L202 |  |
+| [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncLoadConnection L124, calendarSyncConnectionIds L163, calendarSyncConnectionProvider L203 |  |
 

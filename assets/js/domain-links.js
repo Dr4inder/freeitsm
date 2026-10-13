@@ -19,13 +19,18 @@
  *
  * Labels come from the 'domains' translation namespace, which the host page
  * exports alongside its own.
+ *
+ * @wiki Domains-Developer-Guide
  */
 (function () {
     'use strict';
     if (window.DomainLinks) return;
 
+    /** Translates a key from the 'domains' namespace, or returns the key when no translator is loaded. */
     const T = (k, p) => (window.t ? window.t('domains.' + k, p) : k);
+    /** HTML-escapes a value; null and undefined become an empty string. */
     const esc = v => (v === null || v === undefined) ? '' : String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    /** Formats a stored date as a calendar date in the analyst's format, or an empty string. */
     const fmt = d => {
         if (!d) return '';
         // A calendar date, not an instant: fmtNaiveDate, never fmtDate - which would
@@ -33,6 +38,11 @@
         try { return window.fmtNaiveDate ? window.fmtNaiveDate(String(d).slice(0, 10) + 'T00:00:00') : String(d).slice(0, 10); } catch (e) { return String(d).slice(0, 10); }
     };
 
+    /**
+     * Calls an api/domains/ endpoint - a GET, or a JSON POST when a body is given - and throws on failure.
+     *
+     * @return the decoded reply when success is true
+     */
     async function call(base, path, body) {
         const opts = body === undefined ? {} : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
         const r = await fetch(base + 'api/domains/' + path, Object.assign({ credentials: 'same-origin' }, opts));
@@ -40,8 +50,10 @@
         if (!d.success) throw new Error(d.error || 'Error');
         return d;
     }
+    /** Shows a toast through the host page's showToast, when it has one. */
     const toast = (m, k) => { if (window.showToast) window.showToast(m, k); };
 
+    /** Draws the expiry countdown pill - red once expired, amber within 30 days, green after that. */
     function pill(days) {
         if (days === null || days === undefined) return '';
         const cls = days < 0 ? 'bad' : (days <= 30 ? 'warn' : 'ok');
@@ -49,15 +61,28 @@
         return '<span class="dl-pill ' + cls + '">' + esc(txt) + '</span>';
     }
 
+    /**
+     * Formats an amount in a currency (GBP when none is given), falling back to plain digits for an unknown code.
+     */
     function money(amount, cur) {
         try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur || 'GBP' }).format(amount); }
         catch (e) { return (cur ? cur + ' ' : '') + Number(amount).toFixed(2); }
     }
 
+    /**
+     * Draws the Domains panel into a host element and wires its search, link and unlink controls.
+     *
+     * @param host  the element the panel is drawn into
+     * @param o     the options described at the top of this file
+     */
     function mount(host, o) {
         if (!host) return;
         const editable = o.editable !== false;
         const listUrl = o.kind === 'contract' ? 'links.php?contract_id=' + o.id : 'links.php?for=' + o.kind + '&id=' + o.id;
+        /**
+         * Fetches the linked domains and redraws the panel - nothing at all when the analyst cannot use Domains,
+         * or when nothing is linked and hideEmpty is set. A contract also gets a yearly cost total per currency.
+         */
         async function load() {
             let rows = [];
             try { rows = (await call(o.base, listUrl)).domains || []; }
@@ -92,6 +117,11 @@
                 + '</div></div>';
         }
 
+        /**
+         * Fills the results list with domains matching the search box that can be linked here.
+         *
+         * For a contract only domains under no contract are offered, so picking one never moves it from another.
+         */
         async function search(input) {
             const ul = host.querySelector('.dl-results');
             try {
@@ -110,6 +140,11 @@
             } catch (e) { toast(e.message, 'error'); }
         }
 
+        /**
+         * Links or unlinks one domain, then reloads the panel and calls onChange.
+         *
+         * For a contract it sets or clears the domain's contract; for anything else it adds or removes a link row.
+         */
         async function link(domainId, add) {
             try {
                 if (o.kind === 'contract') {

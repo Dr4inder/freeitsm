@@ -14,7 +14,7 @@ name.
 function warRoomSitrepPrompt(array $lines, string $sinceLabel): string
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1330.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1331.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

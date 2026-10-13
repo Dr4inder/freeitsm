@@ -34,6 +34,10 @@ class TelegramProvider extends MessagingProvider
     public const TELEGRAM_UPDATE_TYPES = ['message', 'edited_message', 'callback_query'];
     private const FILE_BASE = 'https://api.telegram.org/file/bot';
 
+    /**
+     * Checks the secret token Telegram sends in the X-Telegram-Bot-Api-Secret-Token header;
+     * no secret configured means refuse.
+     */
     public function verifyWebhook(string $rawBody, array $headers, array $params, string $url): bool
     {
         $presented = $headers['x-telegram-bot-api-secret-token'] ?? '';
@@ -47,6 +51,7 @@ class TelegramProvider extends MessagingProvider
         return hash_equals($expected, $presented);
     }
 
+    /** Turns a Telegram update into inbound messages - a CSAT rating press, or a new or edited message. */
     public function parseInbound(string $rawBody, array $params): array
     {
         $payload = json_decode($rawBody, true);
@@ -156,6 +161,7 @@ class TelegramProvider extends MessagingProvider
         return [];
     }
 
+    /** Sends a text message to a chat and returns Telegram's message id. */
     public function sendMessage(string $to, string $body): string
     {
         $token = $this->channel['credentials']['bot_token'] ?? '';
@@ -350,6 +356,7 @@ class TelegramProvider extends MessagingProvider
         return $this->sendMessage($to, $body);
     }
 
+    /** Downloads an inbound file: resolves its file id to a path, then fetches the bytes. */
     public function downloadMedia(array $item): array
     {
         $token = $this->channel['credentials']['bot_token'] ?? '';
@@ -476,6 +483,12 @@ class TelegramProvider extends MessagingProvider
         return (string) ($json['description'] ?? 'Webhook was set');
     }
 
+    /**
+     * Checks the bot token with getMe and returns the bot's name.
+     *
+     * Also reads the webhook info and warns when the webhook is not connected or does not
+     * receive every update type it needs.
+     */
     public function testConnection(): string
     {
         $token = $this->channel['credentials']['bot_token'] ?? '';

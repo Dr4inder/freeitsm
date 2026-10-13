@@ -1,10 +1,12 @@
 # csrfIsStateChanging()
 
+True for any request method other than GET, HEAD and OPTIONS.
+
 ```php
 function csrfIsStateChanging(): bool
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 81.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 83.
 
 **Returns:** `bool`
 

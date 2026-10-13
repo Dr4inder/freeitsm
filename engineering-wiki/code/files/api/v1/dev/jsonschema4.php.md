@@ -1,6 +1,6 @@
 # api/v1/dev/jsonschema4.php
 
-> API endpoint - 186 lines
+> API endpoint - 220 lines
 
 Minimal JSON Schema draft-04 validator — dev tool for checking a generated OpenAPI 3.0 document against the official OAS meta-schema without needing Node/Python. Handles the constructs the OAS 3.0 schema actually uses.
 

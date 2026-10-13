@@ -2,6 +2,8 @@
 
 > API endpoint - 128 lines
 
+FreeITSM REST API v1 — reference data: the lookups an integration needs to build valid ticket writes (statuses, priorities, ticket types, origins, departments), plus analysts and companies.
+
 ## The endpoint
 
 | | |
@@ -14,7 +16,7 @@
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiAnalystsList()](/code/functions/apiAnalystsList.md) | 12 | FreeITSM REST API v1 — reference data: the lookups an integration needs to build valid ticket writes (statuses, priorities, ticket types, origins, departments), plus analysts and companies. |
+| [apiAnalystsList()](/code/functions/apiAnalystsList.md) | 12 | GET /analysts — active analysts (assignment targets). 3.5.0 (PR #174): ?email= finds one by address (case-insensitive) and ?include_inactive=1 adds deactivated ones, so a provisioning client can find someone it deactivated and switch them back on. is_active is in every row. |
 | [apiCompaniesList()](/code/functions/apiCompaniesList.md) | 36 | GET /companies — the companies (tenants) this key can see. |
 | [apiStatusesList()](/code/functions/apiStatusesList.md) | 53 | GET /statuses |
 | [apiPrioritiesList()](/code/functions/apiPrioritiesList.md) | 70 | GET /priorities |

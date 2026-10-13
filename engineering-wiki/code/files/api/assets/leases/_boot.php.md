@@ -1,6 +1,6 @@
 # api/assets/leases/_boot.php
 
-> API endpoint - 49 lines
+> API endpoint - 59 lines
 
 Shared start for the Assets -> Leases endpoints (3.5.0): signed in, has the Assets module, JSON out. The rules - who may see which lease, what may go on one - are all in includes/leases.php; these files only adapt requests to it.
 
@@ -20,7 +20,7 @@ leaseEndpoint('GET'|'POST', function (PDO `$conn`, ActorContext `$ctx`, array `$
 
 | Function | Line | What it does |
 |---|--:|---|
-| [leaseEndpoint()](/code/functions/leaseEndpoint.md) | 20 |  |
+| [leaseEndpoint()](/code/functions/leaseEndpoint.md) | 30 | Runs one Leases endpoint: checks sign-in, Assets module access, the HTTP method and that the lease tables exist, then calls `$fn` and echoes its result as JSON. |
 
 ## How it hangs together
 

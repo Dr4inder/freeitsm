@@ -1,10 +1,12 @@
 # domainAlertWhen()
 
+Says when in words - "expired 3 days ago", "today", "tomorrow", "in 30 days".
+
 ```php
 function domainAlertWhen(int $days): string
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 278.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 285.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

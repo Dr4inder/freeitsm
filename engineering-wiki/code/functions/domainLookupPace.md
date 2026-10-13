@@ -6,7 +6,7 @@ Space out requests to one registry. Called between lookups in a batch: the same 
 function domainLookupPace(PDO $conn, string $name, float $gapSeconds = 1.5): void
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 407.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 421.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

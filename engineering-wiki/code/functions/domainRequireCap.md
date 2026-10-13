@@ -1,10 +1,12 @@
 # domainRequireCap()
 
+Stops the request with a JSON refusal unless the signed-in analyst holds the capability.
+
 ```php
 function domainRequireCap(PDO $conn, string $cap): void
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 56.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 59.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

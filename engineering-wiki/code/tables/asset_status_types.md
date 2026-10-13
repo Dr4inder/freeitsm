@@ -33,13 +33,13 @@
 | [api/assets/resolve_scan.php](/code/files/api/assets/resolve_scan.php.md) | L59 |  |
 | [api/assets/save_asset_status_type.php](/code/files/api/assets/save_asset_status_type.php.md) | L50, L51, L66 |  |
 | [api/assets/set_asset_status_type_hidden.php](/code/files/api/assets/set_asset_status_type_hidden.php.md) | L45 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L47 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52 |  |
 | [asset-management/scan.php](/code/files/asset-management/scan.php.md) | L65 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleAssets L348, peopleSupplierAssets L778 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L163 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleAssets L349, peopleSupplierAssets L781 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L167 |  |
 | [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetAssets L265, projectTargetOptions L282 |  |
 | [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | L15 |  |
-| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::inactiveStatusId L786 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1073 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L532 |  |
+| [includes/services/asset_import.php](/code/files/includes/services/asset_import.php.md) | AssetImportService::inactiveStatusId L803 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1077 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L546 |  |
 

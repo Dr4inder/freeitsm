@@ -6,7 +6,7 @@ Every supplier, with how many contacts and contracts each has.
 function peopleSupplierRows(PDO $conn, int $analystId, array $f = []): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 604.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 607.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 604.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 613 | `peopleSupplierRows` | read [contacts](/code/tables/contacts.md) |  |
-| 619 | `peopleSupplierRows` | read [contacts](/code/tables/contacts.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
+| 616 | `peopleSupplierRows` | read [contacts](/code/tables/contacts.md) |  |
+| 622 | `peopleSupplierRows` | read [contacts](/code/tables/contacts.md), read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [supplier_types](/code/tables/supplier_types.md), read [supplier_statuses](/code/tables/supplier_statuses.md) |  |
 
 ## Calls
 

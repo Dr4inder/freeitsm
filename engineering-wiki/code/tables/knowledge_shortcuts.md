@@ -16,8 +16,8 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):352 | `handleAddShortcut` | insert | `folder_id`, `article_id`, `created_by_id`, `created_datetime` |  |
-| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):371 | `handleRemoveShortcut` | delete |  |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):359 | `handleAddShortcut` | insert | `folder_id`, `article_id`, `created_by_id`, `created_datetime` |  |
+| [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md):378 | `handleRemoveShortcut` | delete |  |  |
 
 ## Read by
 

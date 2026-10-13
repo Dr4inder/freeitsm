@@ -27,6 +27,8 @@
  *
  * TRAP: libraries load on first use (pdf.js alone is ~1.7 MB) - never add them
  * to files/index.php's <script> tags.
+ *
+ * @wiki Files-Developer-Guide
  */
 (function () {
     'use strict';
@@ -40,18 +42,22 @@
     var MAX_PARSE_BYTES = 60 * 1024 * 1024;   // docx / spreadsheets are parsed in the browser
     var MAX_TEXT_BYTES  = 5 * 1024 * 1024;
 
+    /** POSTs an action to api/files/view.php and rejects when the reply says success: false. */
     function api(body) {
         return fetch(B.api + 'view.php', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
             .then(function (r) { return r.json(); })
             .then(function (j) { if (!j.success) throw new Error(j.error || 'Error'); return j; });
     }
+    /** Creates an element with an optional class and inner HTML. */
     function h(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+    /** Formats a byte count as B, KB, MB, GB or TB. */
     function fmtSize(n) {
         if (n < 1024) return n + ' B';
         var u = ['KB', 'MB', 'GB', 'TB'], i = -1;
         do { n /= 1024; i++; } while (n >= 1024 && i < u.length - 1);
         return n.toFixed(n >= 10 ? 1 : 2) + ' ' + u[i];
     }
+    /** Wraps SVG path markup in a 16px stroked toolbar icon. */
     function icon(path) { return '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg>'; }
     var IC = {
         zoomIn: icon('<circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5M11 8v6M8 11h6"/>'),
@@ -64,12 +70,14 @@
 
     // ── Loading the libraries, once each, on first use ─────────────────────
     var loaded = {};
+    /** Loads a library script once, on first use, and returns the same promise to every later caller. */
     function loadScript(src) {
         if (!loaded[src]) {
             loaded[src] = new Promise(function (res, rej) {
                 var s = document.createElement('script');
                 s.src = src;
                 s.onload = res;
+                /** Rejects the load with the script's address when it fails to load. */
                 s.onerror = function () { rej(new Error('Could not load ' + src)); };
                 document.head.appendChild(s);
             });
@@ -77,6 +85,7 @@
         return loaded[src];
     }
     var pdfjsPromise = null;
+    /** Imports pdf.js (an ES module) once and points it at its worker script. */
     function loadPdfjs() {
         if (!pdfjsPromise) {
             // pdf.js is an ES module; the files are renamed .js so every web server
@@ -88,6 +97,11 @@
         }
         return pdfjsPromise;
     }
+    /**
+     * Fetches a file's bytes as an ArrayBuffer, refusing early when Content-Length is over the cap.
+     *
+     * A failed request throws the server's own text, so its message reaches the viewer.
+     */
     function fetchBytes(url, cap) {
         return fetch(url, { credentials: 'same-origin' }).then(function (r) {
             if (!r.ok) return r.text().then(function (t) { throw new Error(t || ('HTTP ' + r.status)); });
@@ -103,6 +117,13 @@
     // An ALLOWLIST - anything not named here is unwrapped (its text kept).
     var ALLOWED_TAGS = { P: 1, H1: 1, H2: 1, H3: 1, H4: 1, H5: 1, H6: 1, STRONG: 1, B: 1, EM: 1, I: 1, U: 1, S: 1, SUB: 1, SUP: 1, BR: 1,
         UL: 1, OL: 1, LI: 1, TABLE: 1, THEAD: 1, TBODY: 1, TR: 1, TD: 1, TH: 1, IMG: 1, A: 1, SPAN: 1, DIV: 1, BLOCKQUOTE: 1, PRE: 1, CODE: 1, HR: 1 };
+    /**
+     * Cleans mammoth's HTML against an allowlist before it is shown.
+     *
+     * Tags not on the list are unwrapped (their text kept); script-like and form tags are removed
+     * outright. Only safe attributes survive: http/mailto/# links (opened in a new tab), data: images
+     * of raster types, alt, and small colspan/rowspan numbers.
+     */
     function sanitise(html) {
         var doc = new DOMParser().parseFromString('<div>' + html + '</div>', 'text/html');
         var root = doc.body.firstChild;
@@ -150,7 +171,9 @@
         mp4: 'video/mp4', m4v: 'video/mp4', webm: 'video/webm', mov: 'video/quicktime', ogv: 'video/ogg',
         mp3: 'audio/mpeg', m4a: 'audio/mp4', aac: 'audio/aac', wav: 'audio/wav', ogg: 'audio/ogg', flac: 'audio/flac'
     };
+    /** Returns a file name's extension in lower case, or an empty string. */
     function extOf(name) { var m = /\.([A-Za-z0-9]{1,8})$/.exec(name || ''); return m ? m[1].toLowerCase() : ''; }
+    /** Returns which viewer handles a file name (pdf, docx, sheet, image, video, audio, zip, text) or 'none'. */
     function kindOf(name) {
         var e = extOf(name);
         for (var k in KINDS) if (KINDS[k].indexOf(e) >= 0) return k;
@@ -240,11 +263,14 @@
         if (viewOnly) stage.addEventListener('contextmenu', function (ev) { ev.preventDefault(); });
 
         var ctl = { destroy: function () {} };
+        /** Frees every blob: URL this viewer made for zip entries. */
         var baseDestroy = function () { blobUrls.forEach(function (u) { URL.revokeObjectURL(u); }); };
+        /** Replaces the stage with an error message, dropping the kind's stage styling so the text is visible. */
         function error(e) {
             stage.className = 'fdv-stage';   // drop the kind's stage (a black video stage made the message invisible)
             stage.innerHTML = '<div class="fdv-msg">' + esc(e && e.message ? e.message : String(e)) + '</div>';
         }
+        /** Shows a large file icon, the name, the size and a Download button for a kind the viewer cannot show. */
         function noPreview() {
             stage.innerHTML = '<div class="fdv-none">' + FI.file(info.name, 96) + '<div class="fdv-none-name"></div><div class="fdv-muted">' +
                 esc(fmtSize(info.size)) + '</div><p>' + esc(L('viewer.no_preview', 'There is no preview for this kind of file.')) + '</p>' +
@@ -253,6 +279,11 @@
             var b = stage.querySelector('[data-act="download"]');
             if (b) b.addEventListener('click', function () { host.querySelector('.fdv-bar [data-act="download"]').click(); });
         }
+        /**
+         * Puts zoom out, zoom in and fit buttons in the bar and calls onZoom('out' | 'in' | 'fit') when one is clicked.
+         *
+         * @return function  sets the percentage shown between the buttons
+         */
         function zoomTools(onZoom) {
             tools.innerHTML = '<button type="button" class="fdv-btn" data-z="out" title="' + esc(L('viewer.zoom_out', 'Zoom out')) + '">' + IC.zoomOut + '</button>' +
                 '<span class="fdv-zoom">100%</span>' +
@@ -283,6 +314,7 @@
             // and the button looked dead (Ed, 2026-10-10). While fitting, the page also
             // follows the window as it is resized; zooming by hand stops that.
             var fitting = true;
+            /** Works out the scale that makes the first page fill the stage's current width (0.25 to 3). */
             function fitScale() { return base ? Math.max(0.25, Math.min(3, (stage.clientWidth - 48) / base.width)) : 1; }
             var showZoom = zoomTools(function (z) {
                 fitting = z === 'fit';
@@ -312,6 +344,7 @@
                     wasmUrl: V + 'pdfjs/wasm/', iccUrl: V + 'pdfjs/iccs/',
                     enableXfa: false, enableScripting: false
                 });
+                /** Stops the PDF viewer - observers disconnected and the pdf.js loading task destroyed. */
                 ctl.destroy = function () { destroyed = true; if (observer) observer.disconnect(); if (ro) ro.disconnect(); task.destroy(); };
                 return task.promise;
             }).then(function (doc) {
@@ -338,6 +371,7 @@
                 updatePage();
             }).catch(error);
 
+            /** Sizes every page box for the current scale and redraws the pages on or near the screen. */
             function layout() {
                 if (!base) return;
                 showZoom(scale * 100);
@@ -352,6 +386,11 @@
                     if (r.bottom > s.top - 600 && r.top < s.bottom + 600) draw(pg);
                 });
             }
+            /**
+             * Renders one PDF page to a canvas at the current scale (sharp on high-density screens).
+             *
+             * A draw that is overtaken by a newer scale is dropped, and a failed one is retried next time.
+             */
             function draw(pg) {
                 if (!pdf || pg.rendered === scale) return;
                 var want = scale;
@@ -377,6 +416,7 @@
                     });
                 }).catch(function (e) { if (e && e.name !== 'RenderingCancelledException') pg.rendered = 0; });
             }
+            /** Updates the "n of total" label from the page that sits a third of the way down the stage. */
             function updatePage() {
                 if (!pdf) return;
                 var s = stage.getBoundingClientRect(), mid = s.top + s.height / 3, cur = 1;
@@ -417,6 +457,11 @@
                 stage.innerHTML = '';
                 stage.classList.add('fdv-sheetstage');
                 var tabs = h('div', 'fdv-sheettabs');
+                /**
+                 * Draws one sheet as a grid with column letters and row numbers, cells as escaped text.
+                 *
+                 * Capped at 5,000 rows and 200 columns, with a note in the footer when the sheet is cut.
+                 */
                 function show(name) {
                     var ws = wb.Sheets[name];
                     var rows = window.XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, defval: '', blankrows: true });
@@ -467,9 +512,13 @@
                 zoom = z === 'fit' ? fit : Math.max(0.05, Math.min(8, (zoom || fit) * (z === 'in' ? 1.25 : 0.8)));
                 apply();
             });
+            /** Returns the zoom that fits the whole image in the stage, never above 100%. */
             function fitZoom() { return Math.min(1, (stage.clientWidth - 32) / img.naturalWidth, (stage.clientHeight - 32) / img.naturalHeight); }
+            /** Sets the image's width for the current zoom and updates the percentage. */
             function apply() { img.style.width = Math.round(img.naturalWidth * zoom) + 'px'; showZoom(zoom * 100); }
+            /** Puts the loaded image on the stage, fitted to it. */
             img.onload = function () { stage.innerHTML = ''; stage.classList.add('fdv-imgstage'); stage.appendChild(img); zoom = fitZoom(); apply(); };
+            /** Shows "The file could not be shown" when the image fails to load. */
             img.onerror = function () { error(new Error(L('viewer.load_failed', 'The file could not be shown.'))); };
             img.src = mediaUrl();
         }
@@ -484,11 +533,13 @@
                 m.setAttribute('controlsList', 'nodownload noplaybackrate');
                 m.disablePictureInPicture = true;
             }
+            /** Shows that the browser cannot play the file when the video or audio fails. */
             m.onerror = function () { error(new Error(L('viewer.media_failed', 'This browser cannot play this file.'))); };
             m.src = mediaUrl();
             stage.innerHTML = '';
             stage.classList.add('fdv-mediastage');
             stage.appendChild(m);
+            /** Stops the media and drops its source so the browser lets go of the stream. */
             ctl.destroy = function () { try { m.pause(); m.removeAttribute('src'); m.load(); } catch (e) { /* gone */ } };
         }
 
@@ -521,6 +572,10 @@
                 host.querySelector('.fdv-stagewrap').appendChild(entryHost);
                 var sub = null;
 
+                /**
+                 * Lists the zip folder currently open - subfolders first, then files in natural order -
+                 * with breadcrumbs back up.
+                 */
                 function showList() {
                     var here = {}, rows = [];
                     files.forEach(function (f) {
@@ -549,6 +604,12 @@
                     });
                 }
 
+                /**
+                 * Opens a file inside the zip in a nested viewer, from the bytes already in memory, with a Back bar.
+                 *
+                 * The entry inherits the archive's download right and watermark, and the view is reported to
+                 * view.php for the audit trail.
+                 */
                 function openEntry(f) {
                     var name = f.parts[f.parts.length - 1];
                     var c = f.content;
@@ -577,6 +638,7 @@
                         host.classList.remove('fdv-in-entry');
                     });
                 }
+                /** Tears down the zip entry viewer that is open, if any. */
                 ctl.destroy = function () { if (sub) sub.destroy(); };
                 showList();
             }).catch(error);
@@ -603,6 +665,7 @@
                 kind: 'viewer', key: 'v' + info.version_id, single: true,
                 title: info.name + (info.is_current ? '' : ' - ' + L('viewer.version', 'Version {n}', { n: info.version_no })),
                 icon: FI.file(info.name, 16), width: 920, height: 680, geometry: opts.geometry || null,
+                /** Tears down the viewer (PDF tasks, media, blob URLs) when its window closes. */
                 onClose: function () { if (w.viewer) w.viewer.destroy(); }
             });
             if (w.viewer) return w;   // already open: just focused

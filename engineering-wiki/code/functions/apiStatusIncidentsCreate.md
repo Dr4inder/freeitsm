@@ -6,7 +6,7 @@ POST /service-status/incidents
 function apiStatusIncidentsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 292.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 318.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

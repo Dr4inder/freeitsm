@@ -1,6 +1,6 @@
 # includes/services/calendar.php
 
-> PHP - 264 lines
+> PHP - 265 lines
 
 CalendarService — the single home for the calendar module's write rules (events, shared by the UI + REST API; plus the UI-only categories).
 
@@ -39,9 +39,9 @@ start_datetime/end_datetime to start_at/end_at.
 | 142 | `CalendarService::deleteCategory` | read [calendar_events](/code/tables/calendar_events.md) |  |
 | 148 | `CalendarService::deleteCategory` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
 | 149 | `CalendarService::deleteCategory` | **delete** [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 164 | `CalendarService::loadEventRow` | read [calendar_events](/code/tables/calendar_events.md) |  |
-| 212 | `CalendarService::collectEventFields` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 225 | `CalendarService::collectEventFields` | read [contracts](/code/tables/contracts.md) |  |
+| 165 | `CalendarService::loadEventRow` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 213 | `CalendarService::collectEventFields` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 226 | `CalendarService::collectEventFields` | read [contracts](/code/tables/contracts.md) |  |
 
 ## How it hangs together
 

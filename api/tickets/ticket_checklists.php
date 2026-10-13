@@ -41,12 +41,20 @@ function checklistTicketGate(PDO $conn, int $ticketId): void
         throw new Exception("Ticket not found");
     }
 }
+/**
+ * Returns the ticket a checklist item belongs to, or 0 when the item does not exist - so
+ * the caller can run the ticket access gate.
+ */
 function checklistTicketForItem(PDO $conn, int $itemId): int
 {
     $st = $conn->prepare("SELECT c.ticket_id FROM ticket_checklist_items i JOIN ticket_checklists c ON c.id = i.ticket_checklist_id WHERE i.id = ?");
     $st->execute([$itemId]);
     return (int) ($st->fetchColumn() ?: 0);
 }
+/**
+ * Returns the ticket a checklist belongs to, or 0 when it does not exist - so the caller
+ * can run the ticket access gate.
+ */
 function checklistTicketForChecklist(PDO $conn, int $checklistId): int
 {
     $st = $conn->prepare("SELECT ticket_id FROM ticket_checklists WHERE id = ?");

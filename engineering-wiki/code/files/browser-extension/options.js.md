@@ -1,6 +1,6 @@
 # browser-extension/options.js
 
-> JavaScript - 101 lines
+> JavaScript - 102 lines
 
 FreeITSM Watchtower — Options Page
 
@@ -8,7 +8,7 @@ FreeITSM Watchtower — Options Page
 
 | Function | Line | What it does |
 |---|--:|---|
-| `showStatus(msg, type)` | 96 |  |
+| `showStatus(msg, type)` | 97 | Shows a success or error message under the settings form. |
 
 ## API endpoints it calls
 

@@ -6,7 +6,7 @@ UI-safe view of the config — never returns the plaintext key, only a mask and 
 function aiSettingsForUi(PDO $conn, string $ns): array
 ```
 
-Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 204.
+Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 208.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

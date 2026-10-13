@@ -1,10 +1,12 @@
 # sslApplyCurl()
 
+Applies the install's TLS verification setting, and the CA bundle, to a cURL handle.
+
 ```php
 function sslApplyCurl($ch, bool $alwaysVerify = false): void
 ```
 
-Defined in [includes/ssl.php](/code/files/includes/ssl.php.md), line 79.
+Defined in [includes/ssl.php](/code/files/includes/ssl.php.md), line 84.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Assets bought from the supplier, in companies the analyst can access.
 function peopleSupplierAssets(PDO $conn, int $analystId, int $supplierId): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 775.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 778.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 775.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 778 | `peopleSupplierAssets` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 785 | `peopleSupplierAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 781 | `peopleSupplierAssets` | read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 788 | `peopleSupplierAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ GET /changes/{id}/audit
 function apiChangeAuditList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 402.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 413.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 405 | `apiChangeAuditList` | read [change_audit](/code/tables/change_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 416 | `apiChangeAuditList` | read [change_audit](/code/tables/change_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

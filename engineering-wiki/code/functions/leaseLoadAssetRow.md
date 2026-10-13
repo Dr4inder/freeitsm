@@ -6,7 +6,7 @@ Load a lease_assets row the actor may touch. `@return` array{0:array,1:array,2:a
 function leaseLoadAssetRow(PDO $conn, int $analystId, int $id): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 518.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 524.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 518.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 520 | `leaseLoadAssetRow` | read [lease_assets](/code/tables/lease_assets.md) |  |
+| 526 | `leaseLoadAssetRow` | read [lease_assets](/code/tables/lease_assets.md) |  |
 
 ## Calls
 

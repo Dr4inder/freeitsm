@@ -1,6 +1,6 @@
 # includes/base_url.php
 
-> PHP - 42 lines
+> PHP - 43 lines
 
 BASE_URL - the app's web path, e.g. '/freeitsm-app/' or '/'.
 
@@ -27,7 +27,7 @@ Auto-detected from where the app sits under the web server's DOCUMENT_ROOT:
 
 | Function | Line | What it does |
 |---|--:|---|
-| [appBaseUrlDetect()](/code/functions/appBaseUrlDetect.md) | 26 |  |
+| [appBaseUrlDetect()](/code/functions/appBaseUrlDetect.md) | 27 | Works out the app's URL path from where it sits under DOCUMENT_ROOT ('/freeitsm-app/', or '/' at the root). |
 
 ## How it hangs together
 

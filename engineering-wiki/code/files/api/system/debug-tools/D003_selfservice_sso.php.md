@@ -1,6 +1,6 @@
 # api/system/debug-tools/D003_selfservice_sso.php
 
-> API endpoint - 477 lines
+> API endpoint - 495 lines
 
 Debug Tool D003 — Self-Service SSO check (by email)
 
@@ -32,43 +32,43 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 30 |  |
-| [yn()](/code/functions/yn.md) | 34 |  |
-| [okbad()](/code/functions/okbad.md) | 35 |  |
-| [endpointLine()](/code/functions/endpointLine.md) | 49 | One discovery-endpoint line, printing the ADDRESS the provider published. |
-| [maskMiddle()](/code/functions/maskMiddle.md) | 72 |  |
-| [maskGuids()](/code/functions/maskGuids.md) | 82 | Identifiers (client IDs, tenant GUIDs) aren't secrets, but this report is made to be shared with support — so partially mask them: enough to eyeball- verify, not the full value. Diagnostic signals (match/reachability) are computed on the real values and shown as YES/NO, so nothing is lost. |
-| [maskId()](/code/functions/maskId.md) | 87 |  |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 95 |  |
+| [addSection()](/code/functions/addSection.md) | 34 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 39 | Formats a boolean as YES or NO for the report. |
+| [okbad()](/code/functions/okbad.md) | 41 | Formats a boolean as one of two words - OK or MISSING unless others are given. |
+| [endpointLine()](/code/functions/endpointLine.md) | 55 | One discovery-endpoint line, printing the ADDRESS the provider published. |
+| [maskMiddle()](/code/functions/maskMiddle.md) | 82 | Shortens a value to its first and last four characters (the first two for a short one), so a shared report shows enough to recognise it but not the whole value. |
+| [maskGuids()](/code/functions/maskGuids.md) | 92 | Identifiers (client IDs, tenant GUIDs) aren't secrets, but this report is made to be shared with support — so partially mask them: enough to eyeball- verify, not the full value. Diagnostic signals (match/reachability) are computed on the real values and shown as YES/NO, so nothing is lost. |
+| [maskId()](/code/functions/maskId.md) | 101 | Partially masks a client or tenant id - GUIDs and long opaque ids through `maskMiddle()`, short readable names shown as they are. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 113 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 226 |  | read [system_settings](/code/tables/system_settings.md) |  |
-| 227 |  | read [system_settings](/code/tables/system_settings.md) |  |
-| 228 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 229 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 230 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 231 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 242 |  | read [tenants](/code/tables/tenants.md) |  |
-| 252 |  | read [freemail_domains](/code/tables/freemail_domains.md) |  |
-| 255 |  | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
-| 256 |  | read [tenant_domains](/code/tables/tenant_domains.md) |  |
-| 259 |  | read [tenants](/code/tables/tenants.md) |  |
-| 271 |  | read [users](/code/tables/users.md) |  |
-| 279 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 280 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 281 |  | read [user_sso_identities](/code/tables/user_sso_identities.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 308 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 310 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 313 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 342 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 344 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 368 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 371 |  | read [tenants](/code/tables/tenants.md) |  |
-| 442 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
-| 446 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 244 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 245 |  | read [system_settings](/code/tables/system_settings.md) |  |
+| 246 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 247 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 248 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 249 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 260 |  | read [tenants](/code/tables/tenants.md) |  |
+| 270 |  | read [freemail_domains](/code/tables/freemail_domains.md) |  |
+| 273 |  | read [tenant_sender_addresses](/code/tables/tenant_sender_addresses.md) |  |
+| 274 |  | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 277 |  | read [tenants](/code/tables/tenants.md) |  |
+| 289 |  | read [users](/code/tables/users.md) |  |
+| 297 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 298 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 299 |  | read [user_sso_identities](/code/tables/user_sso_identities.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 326 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 328 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 331 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 360 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 362 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 386 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 389 |  | read [tenants](/code/tables/tenants.md) |  |
+| 460 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 464 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## How it hangs together
 

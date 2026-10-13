@@ -6,7 +6,7 @@ Strict YYYY-MM-DD — 422 on garbage (the UI silently substitutes today).
 function apiMorningCheckDate(string $value, string $field): string
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 102.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 109.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

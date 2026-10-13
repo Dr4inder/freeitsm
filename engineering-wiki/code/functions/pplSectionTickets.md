@@ -1,10 +1,12 @@
 # pplSectionTickets()
 
+The Tickets card: number, subject, status, priority, then the analyst (person page) or requester (company page), and the open/total count.
+
 ```php
 function pplSectionTickets(array $s, bool $person): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 71.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 78.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

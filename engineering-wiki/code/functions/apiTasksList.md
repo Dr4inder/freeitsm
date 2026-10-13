@@ -6,7 +6,7 @@ GET /tasks
 function apiTasksList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 149.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 158.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,10 +21,10 @@ Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 201 | `apiTasksList` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 205 | `apiTasksList` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 220 | `apiTasksList` | read [task_tag_map](/code/tables/task_tag_map.md), read [task_tags](/code/tables/task_tags.md) |  |
-| 266 | `apiTasksList` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [task_priorities](/code/tables/task_priorities.md) |  |
+| 210 | `apiTasksList` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 214 | `apiTasksList` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 229 | `apiTasksList` | read [task_tag_map](/code/tables/task_tag_map.md), read [task_tags](/code/tables/task_tags.md) |  |
+| 275 | `apiTasksList` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [task_priorities](/code/tables/task_priorities.md) |  |
 
 ## Calls
 

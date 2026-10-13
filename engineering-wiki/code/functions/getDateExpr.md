@@ -1,10 +1,12 @@
 # getDateExpr()
 
+The SQL expression that buckets a ticket date by day, month or year for GROUP BY.
+
 ```php
 function getDateExpr($timeGrouping, $dateField)
 ```
 
-Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 177.
+Defined in [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md), line 197.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

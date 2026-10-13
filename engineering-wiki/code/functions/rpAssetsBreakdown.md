@@ -1,10 +1,12 @@
 # rpAssetsBreakdown()
 
+Assets block: a chart of how many assets there are, grouped by the chosen dimension. A snapshot of today, not the period.
+
 ```php
 function rpAssetsBreakdown(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md), line 31.
+Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md), line 35.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +22,7 @@ Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 35 | `rpAssetsBreakdown` | read [assets](/code/tables/assets.md) |  |
+| 39 | `rpAssetsBreakdown` | read [assets](/code/tables/assets.md) |  |
 
 ## Calls
 

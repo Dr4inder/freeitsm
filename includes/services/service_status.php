@@ -82,6 +82,7 @@ class ServiceStatusService
         WorkflowEngine::emitCrud('status_service', 'deleted', $id, $row['name'] ?? null);
     }
 
+    /** Loads one service; throws not found when it does not exist. */
     private static function loadServiceRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare("SELECT * FROM status_services WHERE id = ?");
@@ -139,6 +140,13 @@ class ServiceStatusService
         return $incidentId;
     }
 
+    /**
+     * Changes an incident's title, status, comment and affected services, logging an update
+     * when the status, comment or services changed, and fires
+     * service_status.incident_updated (and incident_resolved).
+     *
+     * An update is internal unless is_internal is sent as false.
+     */
     private static function updateIncident(PDO $conn, ActorContext $ctx, int $id, array $in): int
     {
         $current = self::loadIncidentRow($conn, $id);              // 404 if gone (checked before empty-body, as the API did)
@@ -245,6 +253,10 @@ class ServiceStatusService
         WorkflowEngine::dispatch('service_status.incident_deleted', ['incident' => ['id' => $id, 'title' => $row['title'] ?? null]]);
     }
 
+    /**
+     * Loads one incident with whether its status counts as resolved; throws not found when
+     * it does not exist.
+     */
     private static function loadIncidentRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare(
@@ -418,6 +430,7 @@ class ServiceStatusService
              ->execute([$comment === false ? null : $comment, $incidentId]);
     }
 
+    /** Replaces the services an incident affects, each with its impact level. */
     private static function replaceIncidentServices(PDO $conn, int $incidentId, array $links): void
     {
         $conn->prepare("DELETE FROM status_incident_services WHERE incident_id = ?")->execute([$incidentId]);
@@ -488,6 +501,7 @@ class ServiceStatusService
     //  Incident statuses (UI-only — no API twin)
     // ======================================================================
 
+    /** Adds or updates an incident status; making one the default clears the flag on the others. */
     public static function saveIncidentStatus(PDO $conn, ActorContext $ctx, array $in): int
     {
         $name          = trim((string)($in['name'] ?? ''));
@@ -533,6 +547,7 @@ class ServiceStatusService
         return (int)$id;
     }
 
+    /** Deletes an incident status; refuses the default status and any status still used by an incident. */
     public static function deleteIncidentStatus(PDO $conn, ActorContext $ctx, int $id): void
     {
         if (!$id) throw new ServiceError('validation', 'missing_field', 'Status ID is required');
@@ -556,6 +571,10 @@ class ServiceStatusService
     //  Impact levels (UI-only — no API twin)
     // ======================================================================
 
+    /**
+     * Adds or updates an impact level, including whether it counts as downtime; making one
+     * the default clears the flag on the others.
+     */
     public static function saveImpactLevel(PDO $conn, ActorContext $ctx, array $in): int
     {
         $name           = trim((string)($in['name'] ?? ''));
@@ -608,6 +627,7 @@ class ServiceStatusService
         return (int)$id;
     }
 
+    /** Deletes an impact level; refuses the default level and any level still used on an incident. */
     public static function deleteImpactLevel(PDO $conn, ActorContext $ctx, int $id): void
     {
         if (!$id) throw new ServiceError('validation', 'missing_field', 'Impact level ID is required');

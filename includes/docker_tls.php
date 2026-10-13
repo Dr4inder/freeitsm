@@ -114,6 +114,7 @@ function dockerTlsBrowserAddress(): array
     ];
 }
 
+/** True when this request arrived over HTTPS, as PHP reports it in $_SERVER['HTTPS']. */
 function dockerTlsRequestIsHttps(): bool
 {
     return !empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off';

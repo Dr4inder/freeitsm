@@ -1,10 +1,12 @@
 # contractReportCss()
 
+Returns the contract equipment report's stylesheet as a string, so it can be inlined into the printable page and the emailed copy.
+
 ```php
 function contractReportCss(): string
 ```
 
-Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 17.
+Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 20.
 
 **Returns:** `string`
 

@@ -1,6 +1,6 @@
 # api/v1/resources/changes.php
 
-> API endpoint - 519 lines
+> API endpoint - 535 lines
 
 FreeITSM REST API v1 — changes resource (Change Management).
 
@@ -46,41 +46,41 @@ here. (ChangesService requires the workflow engine for change.approved.)
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiChangeNumber()](/code/functions/apiChangeNumber.md) | 43 |  |
-| [apiChangeSelect()](/code/functions/apiChangeSelect.md) | 47 |  |
-| [apiSerializeChange()](/code/functions/apiSerializeChange.md) | 73 | Summary shape (lists). Detail adds the longtext bodies, PIR, attachments, links. |
-| [apiLoadChange()](/code/functions/apiLoadChange.md) | 119 |  |
-| [apiChangesList()](/code/functions/apiChangesList.md) | 141 | GET /changes |
-| [apiChangesGet()](/code/functions/apiChangesGet.md) | 264 | GET /changes/{id} — detail incl. bodies, PIR, attachments, linked problems |
-| [apiChangesCreate()](/code/functions/apiChangesCreate.md) | 324 | POST /changes |
-| [apiChangesUpdate()](/code/functions/apiChangesUpdate.md) | 347 | PATCH /changes/{id} |
-| [apiChangesDelete()](/code/functions/apiChangesDelete.md) | 357 | DELETE /changes/{id} — permanent; removes attachment files, cascades children |
-| [apiChangeCommentsList()](/code/functions/apiChangeCommentsList.md) | 367 | Comments — append + delete (no edit), always internal, like the UI |
-| [apiChangeCommentsCreate()](/code/functions/apiChangeCommentsCreate.md) | 385 |  |
-| [apiChangeCommentsDelete()](/code/functions/apiChangeCommentsDelete.md) | 392 |  |
-| [apiChangeAuditList()](/code/functions/apiChangeAuditList.md) | 402 | GET /changes/{id}/audit |
-| [apiChangeCabGet()](/code/functions/apiChangeCabGet.md) | 427 | CAB — roster + votes |
-| [apiChangeCabSave()](/code/functions/apiChangeCabSave.md) | 460 | POST /changes/{id}/cab — replace the roster (diff-sync + audit, like save_cab_members.php). |
-| [apiChangeCabVote()](/code/functions/apiChangeCabVote.md) | 468 | POST /changes/{id}/cab/vote — the key's acts-as analyst votes; mirrors submit_cab_vote.php. |
-| [apiChangeLookupList()](/code/functions/apiChangeLookupList.md) | 478 | Reference lookups |
-| [apiChangeStatusesList()](/code/functions/apiChangeStatusesList.md) | 496 |  |
-| [apiChangeTypesList()](/code/functions/apiChangeTypesList.md) | 499 |  |
-| [apiChangePrioritiesList()](/code/functions/apiChangePrioritiesList.md) | 502 |  |
-| [apiChangeImpactsList()](/code/functions/apiChangeImpactsList.md) | 505 |  |
-| [apiChangeCategoriesList()](/code/functions/apiChangeCategoriesList.md) | 508 |  |
+| [apiChangeNumber()](/code/functions/apiChangeNumber.md) | 44 | The display reference of a change, such as CHG-0042. |
+| [apiChangeSelect()](/code/functions/apiChangeSelect.md) | 52 | The SELECT for changes, with the names of the type, status, priority, impact, category, the people involved and the company. |
+| [apiSerializeChange()](/code/functions/apiSerializeChange.md) | 78 | Summary shape (lists). Detail adds the longtext bodies, PIR, attachments, links. |
+| [apiLoadChange()](/code/functions/apiLoadChange.md) | 128 | Loads one change row (apiChangeSelect), or answers 404 and stops - including for a change in a company the key cannot reach. |
+| [apiChangesList()](/code/functions/apiChangesList.md) | 150 | GET /changes |
+| [apiChangesGet()](/code/functions/apiChangesGet.md) | 273 | GET /changes/{id} — detail incl. bodies, PIR, attachments, linked problems |
+| [apiChangesCreate()](/code/functions/apiChangesCreate.md) | 333 | POST /changes |
+| [apiChangesUpdate()](/code/functions/apiChangesUpdate.md) | 356 | PATCH /changes/{id} |
+| [apiChangesDelete()](/code/functions/apiChangesDelete.md) | 366 | DELETE /changes/{id} — permanent; removes attachment files, cascades children |
+| [apiChangeCommentsList()](/code/functions/apiChangeCommentsList.md) | 376 | Comments — append + delete (no edit), always internal, like the UI |
+| [apiChangeCommentsCreate()](/code/functions/apiChangeCommentsCreate.md) | 395 | POST /changes/{id}/comments - adds a comment to the change through ChangesService. |
+| [apiChangeCommentsDelete()](/code/functions/apiChangeCommentsDelete.md) | 403 | DELETE /changes/{id}/comments/{commentId} - deletes a comment through ChangesService. |
+| [apiChangeAuditList()](/code/functions/apiChangeAuditList.md) | 413 | GET /changes/{id}/audit |
+| [apiChangeCabGet()](/code/functions/apiChangeCabGet.md) | 438 | CAB — roster + votes |
+| [apiChangeCabSave()](/code/functions/apiChangeCabSave.md) | 471 | POST /changes/{id}/cab — replace the roster (diff-sync + audit, like save_cab_members.php). |
+| [apiChangeCabVote()](/code/functions/apiChangeCabVote.md) | 479 | POST /changes/{id}/cab/vote — the key's acts-as analyst votes; mirrors submit_cab_vote.php. |
+| [apiChangeLookupList()](/code/functions/apiChangeLookupList.md) | 489 | Reference lookups |
+| [apiChangeStatusesList()](/code/functions/apiChangeStatusesList.md) | 508 | GET /change-statuses - the change statuses, with is_closed. |
+| [apiChangeTypesList()](/code/functions/apiChangeTypesList.md) | 512 | GET /change-types - the change types. |
+| [apiChangePrioritiesList()](/code/functions/apiChangePrioritiesList.md) | 516 | GET /change-priorities - the change priorities. |
+| [apiChangeImpactsList()](/code/functions/apiChangeImpactsList.md) | 520 | GET /change-impacts - the change impact levels. |
+| [apiChangeCategoriesList()](/code/functions/apiChangeCategoriesList.md) | 524 | GET /change-categories - the change categories, in display order. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 48 | `apiChangeSelect` | read [changes](/code/tables/changes.md), read [change_types](/code/tables/change_types.md), read [change_statuses](/code/tables/change_statuses.md), read [change_priorities](/code/tables/change_priorities.md), read [change_impacts](/code/tables/change_impacts.md), read [change_categories](/code/tables/change_categories.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
-| 239 | `apiChangesList` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md), read [change_types](/code/tables/change_types.md), read [change_priorities](/code/tables/change_priorities.md), read [change_impacts](/code/tables/change_impacts.md) |  |
-| 283 | `apiChangesGet` | read [change_attachments](/code/tables/change_attachments.md) |  |
-| 301 | `apiChangesGet` | read [change_relations](/code/tables/change_relations.md), read [problems](/code/tables/problems.md) |  |
-| 370 | `apiChangeCommentsList` | read [change_comments](/code/tables/change_comments.md), read [analysts](/code/tables/analysts.md) |  |
-| 405 | `apiChangeAuditList` | read [change_audit](/code/tables/change_audit.md), read [analysts](/code/tables/analysts.md) |  |
-| 430 | `apiChangeCabGet` | read [change_cab_members](/code/tables/change_cab_members.md), read [analysts](/code/tables/analysts.md) |  |
-| 509 | `apiChangeCategoriesList` | read [change_categories](/code/tables/change_categories.md) |  |
+| 53 | `apiChangeSelect` | read [changes](/code/tables/changes.md), read [change_types](/code/tables/change_types.md), read [change_statuses](/code/tables/change_statuses.md), read [change_priorities](/code/tables/change_priorities.md), read [change_impacts](/code/tables/change_impacts.md), read [change_categories](/code/tables/change_categories.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 248 | `apiChangesList` | read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md), read [change_types](/code/tables/change_types.md), read [change_priorities](/code/tables/change_priorities.md), read [change_impacts](/code/tables/change_impacts.md) |  |
+| 292 | `apiChangesGet` | read [change_attachments](/code/tables/change_attachments.md) |  |
+| 310 | `apiChangesGet` | read [change_relations](/code/tables/change_relations.md), read [problems](/code/tables/problems.md) |  |
+| 379 | `apiChangeCommentsList` | read [change_comments](/code/tables/change_comments.md), read [analysts](/code/tables/analysts.md) |  |
+| 416 | `apiChangeAuditList` | read [change_audit](/code/tables/change_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 441 | `apiChangeCabGet` | read [change_cab_members](/code/tables/change_cab_members.md), read [analysts](/code/tables/analysts.md) |  |
+| 525 | `apiChangeCategoriesList` | read [change_categories](/code/tables/change_categories.md) |  |
 
 ## How it hangs together
 

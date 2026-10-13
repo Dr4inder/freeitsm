@@ -10,7 +10,7 @@ storage; a key is a change to this one function.
 function documentStoragePath(string $storageKey): string
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 702.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 707.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

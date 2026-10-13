@@ -41,6 +41,11 @@ require_once __DIR__ . '/../rbac.php';
 require_once __DIR__ . '/../knowledge/visibility.php';
 
 /**
+ * The tool registry: every read-only tool Warbot and the MCP server can call,
+ * keyed by name, each with the description the model reads, its JSON schema,
+ * the capability needed to run it (null = War Room access is enough) and the
+ * handler that answers it.
+ *
  * @return array<string,array{description:string,schema:array,capability:?string,handler:callable}>
  */
 function warbotTools(): array
@@ -377,6 +382,11 @@ function warbotRunTool(PDO $conn, int $analystId, string $name, array $args): st
    HANDLERS — plain SQL, no network. Each returns text for the model to read.
    ══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * open_incidents: the count of open tickets (optionally at one priority by
+ * name) and the newest few, by number, priority, status, subject and assignee.
+ * A confidential ticket's subject is withheld by ticketAiSubjectSql().
+ */
 function warbotToolOpenIncidents(PDO $conn, array $args, int $analystId): string
 {
     $limit    = max(1, min(25, (int)($args['limit'] ?? 10)));
@@ -421,6 +431,7 @@ function warbotToolOpenIncidents(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/** service_status: the active Service Status services and up to ten open service-status incidents, with the services each affects and its latest note. */
 function warbotToolServiceStatus(PDO $conn, array $args, int $analystId): string
 {
     $svc = $conn->query(
@@ -457,6 +468,7 @@ function warbotToolServiceStatus(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/** recent_changes: up to 20 changes whose work or outage window started in the last N days (default 2, max 30), with state and owner. */
 function warbotToolRecentChanges(PDO $conn, array $args, int $analystId): string
 {
     $days = max(1, min(30, (int)($args['days'] ?? 2)));
@@ -491,6 +503,7 @@ function warbotToolRecentChanges(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/** on_call: who is on call on a date (today in UTC by default) and everyone rostered that day with their shift times, from the ticket rota. */
 function warbotToolOnCall(PDO $conn, array $args, int $analystId): string
 {
     $date = (string)($args['date'] ?? '');
@@ -522,6 +535,7 @@ function warbotToolOnCall(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/** asset_lookup: up to eight assets whose hostname, asset tag or service tag contains the query, with type, status, OS, location, last user and last seen. */
 function warbotToolAssetLookup(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -554,6 +568,11 @@ function warbotToolAssetLookup(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/**
+ * impact_of: the first CMDB object whose name matches, and everything related to
+ * it one hop away in either direction, worded with the relationship's verb.
+ * Not the full blast radius - that walk stays in the CMDB module.
+ */
 function warbotToolImpactOf(PDO $conn, array $args, int $analystId): string
 {
     $name = trim((string)($args['name'] ?? ''));
@@ -602,6 +621,7 @@ function warbotLike(string $s): string
     return '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], trim($s)) . '%';
 }
 
+/** known_errors: up to six problem records matching the query in title, description, root cause or workaround - known errors first, workaround quoted. */
 function warbotToolKnownErrors(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -638,6 +658,11 @@ function warbotToolKnownErrors(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/**
+ * ticket_spike: tickets raised in the last N minutes against the average for the
+ * same time window over the previous seven days, calling three times the usual
+ * rate a spike, plus the newest subjects.
+ */
 function warbotToolTicketSpike(PDO $conn, array $args, int $analystId): string
 {
     $mins = max(5, min(720, (int)($args['minutes'] ?? 60)));
@@ -706,6 +731,11 @@ function warbotContractScope(PDO $conn, int $analystId, string $alias): string
     return $sql;
 }
 
+/**
+ * supplier_contact: up to three suppliers matching by name or contract title,
+ * each with its latest contracts (only in companies the analyst can reach) and
+ * its active contacts' phone numbers and email.
+ */
 function warbotToolSupplierContact(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -772,6 +802,7 @@ function warbotToolSupplierContact(PDO $conn, array $args, int $analystId): stri
     return implode("\n", $lines);
 }
 
+/** morning_checks: the morning check results for a date (today in UTC by default), listing the ones that are not clear, or the first few when all are. */
 function warbotToolMorningChecks(PDO $conn, array $args, int $analystId): string
 {
     $date = (string)($args['date'] ?? '');
@@ -810,6 +841,7 @@ function warbotToolMorningChecks(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/** search_chat: up to eight War Room messages matching the query, through warRoomSearch() so only channels the asker can read are searched. */
 function warbotToolSearchChat(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -829,6 +861,7 @@ function warbotToolSearchChat(PDO $conn, array $args, int $analystId): string
     return implode("\n", $lines);
 }
 
+/** related_tickets: the tickets linked to a ticket number, with the link type, direction and each one's status. */
 function warbotToolRelatedTickets(PDO $conn, array $args, int $analystId): string
 {
     $ref = trim((string)($args['ticket'] ?? ''));
@@ -863,6 +896,7 @@ function warbotToolRelatedTickets(PDO $conn, array $args, int $analystId): strin
     return implode("\n", $lines);
 }
 
+/** search_knowledge: up to eight live Knowledge article titles matching the query that the asking analyst may see - titles only, most viewed first. */
 function warbotToolSearchKnowledge(PDO $conn, array $args, int $analystId): string
 {
     $q = trim((string)($args['query'] ?? ''));
@@ -927,6 +961,7 @@ function warbotProjectAnswer(callable $fn): string
     }
 }
 
+/** list_projects: the projects the asker may see, ten by default, via projectAssistList(). */
 function warbotToolListProjects(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);
@@ -934,24 +969,28 @@ function warbotToolListProjects(PDO $conn, array $args, int $analystId): string
     return warbotProjectAnswer(fn() => projectAssistList($conn, $scope, ['limit' => 10] + $args));
 }
 
+/** project_overview: one project's overview via projectAssistOverview(), scoped to the projects the asker may see. */
 function warbotToolProjectOverview(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);
     return warbotProjectAnswer(fn() => projectAssistOverview($conn, $scope, $analystId, $args, false));
 }
 
+/** project_raid: one project's RAID log via projectAssistRaid(), scoped to the projects the asker may see. */
 function warbotToolProjectRaid(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);
     return warbotProjectAnswer(fn() => projectAssistRaid($conn, $scope, $args));
 }
 
+/** project_tasks: one project's tasks via projectAssistTasks(), scoped to the projects the asker may see. */
 function warbotToolProjectTasks(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);
     return warbotProjectAnswer(fn() => projectAssistTasks($conn, $scope, $args));
 }
 
+/** project_dates: one project's key dates via projectAssistDates(), scoped to the projects the asker may see. */
 function warbotToolProjectDates(PDO $conn, array $args, int $analystId): string
 {
     $scope = warbotProjectScope($conn, $analystId);

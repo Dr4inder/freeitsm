@@ -24,11 +24,11 @@ Milestones (3.3.0): the dates a project promises - includes/projects/milestones.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):370 | `ProjectsService::deleteStage` | update | `stage_id` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):384 | `ProjectsService::deleteStage` | update | `stage_id` |  |
 | [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):83 | `ProjectTemplatesService::createFromTemplate` | insert | `project_id`, `stage_id`, `name`, `due_date`, `position`, `created_by_analyst_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):889 | `ProjectToolsService::saveMilestone` | update | `name`, `due_date`, `stage_id`, `notes`, `done_date`, `done_by_analyst_id`, `updated_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):897 | `ProjectToolsService::saveMilestone` | insert | `project_id`, `stage_id`, `name`, `due_date`, `done_date`, `done_by_analyst_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime` |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):917 | `ProjectToolsService::deleteMilestone` | delete |  |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):926 | `ProjectToolsService::saveMilestone` | update | `name`, `due_date`, `stage_id`, `notes`, `done_date`, `done_by_analyst_id`, `updated_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):934 | `ProjectToolsService::saveMilestone` | insert | `project_id`, `stage_id`, `name`, `due_date`, `done_date`, `done_by_analyst_id`, `notes`, `position`, `created_by_analyst_id`, `created_datetime` |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md):955 | `ProjectToolsService::deleteMilestone` | delete |  |  |
 
 ## Read by
 
@@ -36,13 +36,13 @@ Milestones (3.3.0): the dates a project promises - includes/projects/milestones.
 |---|---|---|
 | [api/projects/portfolio_charts.php](/code/files/api/projects/portfolio_charts.php.md) | L43 |  |
 | [includes/projects/alerts.php](/code/files/includes/projects/alerts.php.md) | projectAlertsMilestones L319 |  |
-| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistDates L270, projectAssistDates L272 |  |
+| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistDates L275, projectAssistDates L277 |  |
 | [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatMaturity L123, projectChatMaturity L124, projectChatRead L255 |  |
 | [includes/projects/calendar.php](/code/files/includes/projects/calendar.php.md) | projectSyncCalendar L81 |  |
 | [includes/projects/control.php](/code/files/includes/projects/control.php.md) | projectPlanSnapshot L73 |  |
 | [includes/projects/milestones.php](/code/files/includes/projects/milestones.php.md) | projectMilestonesReady L26, projectMilestones L43, projectMilestoneStats L70, projectMilestoneStats L75 |  |
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L449 |  |
-| [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md) | rpProjectsMilestones L159 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::saveMilestone L895, ProjectToolsService::milestone L927 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplateCapture L450 |  |
+| [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md) | rpProjectsMilestones L168 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::saveMilestone L932, ProjectToolsService::milestone L966 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L886 |  |
 

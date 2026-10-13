@@ -1,10 +1,12 @@
 # leaseCanView()
 
+True when the lease is in a company the analyst may read.
+
 ```php
 function leaseCanView(PDO $conn, int $analystId, int $leaseId): bool
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 62.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 63.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 62.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 65 | `leaseCanView` | read [leases](/code/tables/leases.md) |  |
+| 66 | `leaseCanView` | read [leases](/code/tables/leases.md) |  |
 
 ## Calls
 

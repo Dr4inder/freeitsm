@@ -1,6 +1,6 @@
 # includes/system_name.php
 
-> PHP - 84 lines
+> PHP - 85 lines
 
 The system's name - System -> Branding -> "System name" (Tickets -> Settings -> General until 3.5.0).
 
@@ -19,14 +19,14 @@ page with a title already loads.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [systemName()](/code/functions/systemName.md) | 18 |  |
-| [pageTitle()](/code/functions/pageTitle.md) | 57 | A browser tab title, the same shape on every page (GH #173): |
+| [systemName()](/code/functions/systemName.md) | 19 | The system's name from System -> Branding, or "Service Desk" when it is not set. Cached per request. |
+| [pageTitle()](/code/functions/pageTitle.md) | 58 | A browser tab title, the same shape on every page (GH #173): |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 25 | `systemName` | read [system_settings](/code/tables/system_settings.md) |  |
+| 26 | `systemName` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## How it hangs together
 

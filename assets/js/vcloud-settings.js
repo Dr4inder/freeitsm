@@ -7,14 +7,17 @@
 (function () {
     'use strict';
     const API = '../../api/assets/';
+    /** Translates a key under asset-management.vcloud, or returns the key when no translator is loaded. */
     const T = (k, p) => window.t ? window.t('asset-management.vcloud.' + k, p) : k;
     let servers = [];
 
+    /** Fetches a JSON endpoint under api/assets/ with the session cookie and returns the parsed body. */
     async function call(path, opts) {
         const res = await fetch(API + path, Object.assign({ credentials: 'same-origin' }, opts || {}));
         return res.json();
     }
 
+    /** Returns the coloured badge HTML for a last-sync status (ok, warning, error, or never synced). */
     function statusBadge(s) {
         const map = { ok: ['var(--success-bg)', 'var(--success-text)'], warning: ['var(--warning-bg)', 'var(--warning-text)'], error: ['var(--danger-bg)', 'var(--danger-text)'] };
         const c = map[s] || ['var(--surface-2)', 'var(--text-muted)'];
@@ -22,6 +25,7 @@
         return `<span class="status-badge" style="background:${c[0]};color:${c[1]};">${escapeHtml(label)}</span>`;
     }
 
+    /** Loads the Cloud Director servers from vcloud_connections.php and draws the settings table with each row's buttons. */
     window.vcloudLoad = async function () {
         const body = document.getElementById('vcloudList');
         if (!body) return;
@@ -52,6 +56,9 @@
         }
     };
 
+    /**
+     * Opens the add/edit modal, filled from the server with this id or with defaults for a new one; the password field is always left blank.
+     */
     window.vcloudOpenForm = function (id) {
         const s = id ? servers.find(x => x.id === id) : null;
         document.getElementById('vcloudModalTitle').textContent = s ? T('edit_title') : T('add');
@@ -68,10 +75,12 @@
         document.getElementById('vcloudActive').checked = s ? s.is_active : true;
         document.getElementById('vcloudModal').classList.add('active');
     };
+    /** Closes the add/edit server modal. */
     window.vcloudCloseForm = function () {
         document.getElementById('vcloudModal').classList.remove('active');
     };
 
+    /** Saves the modal's server through vcloud_connections.php; a blank password keeps the stored one. */
     window.vcloudSave = async function (e) {
         e.preventDefault();
         const payload = {
@@ -97,6 +106,7 @@
         }
     };
 
+    /** Asks for confirmation, then deletes the server through vcloud_connections.php and reloads the table. */
     window.vcloudDelete = async function (id) {
         const s = servers.find(x => x.id === id);
         if (!confirm(T('confirm_delete', { name: s ? s.name : '' }))) return;
@@ -105,6 +115,9 @@
         else window.showToast(data.error || T('save_failed'), 'error');
     };
 
+    /**
+     * Runs a test or a sync for one server through vcloud_sync.php, disabling its button meanwhile, toasting the result and reloading the table.
+     */
     async function run(id, btn, action) {
         const original = btn ? btn.innerHTML : '';
         if (btn) { btn.disabled = true; btn.innerHTML = `<span>${escapeHtml(T('working'))}</span>`; }
@@ -124,9 +137,12 @@
             vcloudLoad();
         }
     }
+    /** Tests the connection to one server. */
     window.vcloudTest = (id, btn) => run(id, btn, 'test');
+    /** Syncs one server now. */
     window.vcloudSync = (id, btn) => run(id, btn, 'sync');
 
+    /** Shows the VMs (and edge gateways) the last sync of one server found, from vcloud_vms.php. */
     window.vcloudShowVms = async function (id) {
         const s = servers.find(x => x.id === id);
         const panel = document.getElementById('vcloudVmsPanel');

@@ -6,7 +6,7 @@ GET /users?q=&email=
 function apiUsersList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 63.
+Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md), line 67.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 90 | `apiUsersList` | read [users](/code/tables/users.md) |  |
-| 97 | `apiUsersList` | read [users](/code/tables/users.md) |  |
+| 94 | `apiUsersList` | read [users](/code/tables/users.md) |  |
+| 101 | `apiUsersList` | read [users](/code/tables/users.md) |  |
 
 ## Calls
 

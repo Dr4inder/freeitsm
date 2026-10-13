@@ -14,6 +14,9 @@
 
 require_once __DIR__ . '/contract_assets.php';
 
+/**
+ * Returns the contract equipment report's stylesheet as a string, so it can be inlined into the printable page and the emailed copy.
+ */
 function contractReportCss(): string
 {
     // Deliberately plain and self-contained: no custom properties, no theme.

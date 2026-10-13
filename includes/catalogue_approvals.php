@@ -598,6 +598,7 @@ function catalogueSubmissionAnswers(PDO $conn, int $submissionId): array {
     return $out;
 }
 
+/** Runs a prepared query and returns its first column of the first row (false when there is no row). */
 function catalogueScalar(PDO $conn, string $sql, array $params) {
     $stmt = $conn->prepare($sql);
     $stmt->execute($params);

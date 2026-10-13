@@ -1,10 +1,12 @@
 # apiSerializeCalendarEvent()
 
+Shapes a calendar event row for the API - times stay naive server-local, source says whether it was generated (null = typed in), and created_by is null for generated events.
+
 ```php
 function apiSerializeCalendarEvent(array $r): array
 ```
 
-Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 74.
+Defined in [api/v1/resources/calendar.php](/code/files/api/v1/resources/calendar.php.md), line 80.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

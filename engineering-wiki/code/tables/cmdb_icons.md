@@ -27,8 +27,8 @@ CMDB ----------------------------------------------------------
 | [api/network-mapper/get_diagram.php](/code/files/api/network-mapper/get_diagram.php.md) | L72 |  |
 | [api/network-mapper/get_related_objects.php](/code/files/api/network-mapper/get_related_objects.php.md) | L64, L94, L125 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3812, L3815 |  |
-| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbClassesList L56, apiCmdbClassesGet L80 |  |
-| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmNodeSelect L174, apiNmValidateIcon L286, apiNmSuggestionsList L670, apiCmdbIconsList L903 |  |
+| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbClassesList L62, apiCmdbClassesGet L87 |  |
+| [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md) | apiNmNodeSelect L186, apiNmValidateIcon L320, apiNmSuggestionsList L704, apiCmdbIconsList L941 |  |
 | [asset-management/settings/index.php](/code/files/asset-management/settings/index.php.md) | L45 |  |
-| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::validateIcon L496 |  |
+| [includes/services/network_mapper.php](/code/files/includes/services/network_mapper.php.md) | NetworkMapperService::validateIcon L510 |  |
 

@@ -6,7 +6,7 @@ Run a service call and turn any failure into the UI's {success:false} shape.
 function domainApiRun(callable $fn): void
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 83.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 87.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

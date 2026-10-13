@@ -15,7 +15,7 @@
 | [archiveArticle()](#archivearticle) | Soft-archive an article (move to recycle bin). 404 if gone, 409 if already archived. |
 | [restoreArticle()](#restorearticle) | Restore an archived article. 404 if gone, 409 if not archived. |
 | [purgeArticle()](#purgearticle) | Permanently delete an archived article (+ versions/tags, orphan-tag cleanup). 404/409 guards. |
-| [loadArticleRow()](#loadarticlerow) |  |
+| [loadArticleRow()](#loadarticlerow) | Loads one Knowledge article; throws not found when it does not exist. |
 | [setTags()](#settags) | Replace the article's tag set: get-or-create each name, relink (mirrors knowledge_save.php). |
 | [updateEmbedding()](#updateembedding) | Regenerate the article's OpenAI embedding — best-effort, after commit, silent on failure. Returns true only if an embedding was stored. No-ops unless `decryptValue()` is loaded and a key is configured (see class header). |
 | [resolveAnalyst()](#resolveanalyst) | Validate an analyst id exists + is active (throwing twin of apiResolveAnalyst). |
@@ -245,7 +245,9 @@ function purgeArticle(PDO $conn, ActorContext $ctx, int $id): int
 
 ### loadArticleRow
 
-*private static* - line 413
+*private static* - line 414
+
+Loads one Knowledge article; throws not found when it does not exist.
 
 ```php
 function loadArticleRow(PDO $conn, int $id): array
@@ -260,11 +262,11 @@ function loadArticleRow(PDO $conn, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 415 | `KnowledgeService::loadArticleRow` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 416 | `KnowledgeService::loadArticleRow` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ### setTags
 
-*private static* - line 425
+*private static* - line 426
 
 Replace the article's tag set: get-or-create each name, relink (mirrors knowledge_save.php).
 
@@ -282,14 +284,14 @@ function setTags(PDO $conn, int $articleId, array $tags): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 427 | `KnowledgeService::setTags` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 433 | `KnowledgeService::setTags` | read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
-| 437 | `KnowledgeService::setTags` | **insert** [knowledge_tags](/code/tables/knowledge_tags.md) (`name`, `created_datetime`) |  |
-| 440 | `KnowledgeService::setTags` | **insert** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) (`article_id`, `tag_id`) |  |
+| 428 | `KnowledgeService::setTags` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 434 | `KnowledgeService::setTags` | read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
+| 438 | `KnowledgeService::setTags` | **insert** [knowledge_tags](/code/tables/knowledge_tags.md) (`name`, `created_datetime`) |  |
+| 441 | `KnowledgeService::setTags` | **insert** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) (`article_id`, `tag_id`) |  |
 
 ### updateEmbedding
 
-*private static* - line 450
+*private static* - line 451
 
 Regenerate the article's OpenAI embedding — best-effort, after commit, silent on failure. Returns true only if an embedding was stored. No-ops unless `decryptValue()` is loaded and a key is configured (see class header).
 
@@ -308,12 +310,12 @@ function updateEmbedding(PDO $conn, int $articleId, string $title, string $body)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 453 | `KnowledgeService::updateEmbedding` | read [system_settings](/code/tables/system_settings.md) |  |
-| 485 | `KnowledgeService::updateEmbedding` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`embedding`, `embedding_updated`) |  |
+| 454 | `KnowledgeService::updateEmbedding` | read [system_settings](/code/tables/system_settings.md) |  |
+| 486 | `KnowledgeService::updateEmbedding` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`embedding`, `embedding_updated`) |  |
 
 ### resolveAnalyst
 
-*private static* - line 497
+*private static* - line 498
 
 Validate an analyst id exists + is active (throwing twin of apiResolveAnalyst).
 
@@ -330,11 +332,11 @@ function resolveAnalyst(PDO $conn, int $analystId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 499 | `KnowledgeService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 500 | `KnowledgeService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ### parseDateOnly
 
-*private static* - line 507
+*private static* - line 508
 
 Validate an optional YYYY-MM-DD date (throwing twin of apiParseDateOnly).
 

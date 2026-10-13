@@ -17,7 +17,7 @@
 | [dispatch()](#dispatch) | Fire an asset.* workflow event (best-effort; the engine swallows its own errors). |
 | [moveToCompany()](#movetocompany) | Move an asset to another company (2.6.0, from a customer's request list). |
 | [loadRow()](#loadrow) | Load the base asset row for write guards + change detection; 404 if unknown. |
-| [auditWrite()](#auditwrite) |  |
+| [auditWrite()](#auditwrite) | Records one field change in the asset's history; analyst 0 (an inventory source or Intune) is stored as NULL. |
 | [parseDate()](#parsedate) | Validate a DATE field (YYYY-MM-DD); 422 naming the field. Null/'' clears. |
 | [validateField()](#validatefield) | Validate one incoming field value per its map entry. Returns the DB-ready value. |
 | [assertLeaseOrder()](#assertleaseorder) | A lease cannot end before it starts. Checked on the dates as they will be after the write (what was sent, else what is stored), so changing either one alone is held to the other. |
@@ -363,7 +363,9 @@ function loadRow(PDO $conn, int $assetId): array
 
 ### auditWrite
 
-*private static* - line 707
+*private static* - line 711
+
+Records one field change in the asset's history; analyst 0 (an inventory source or Intune) is stored as NULL.
 
 ```php
 function auditWrite(
@@ -389,11 +391,11 @@ function auditWrite(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 713 | `AssetsService::auditWrite` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 717 | `AssetsService::auditWrite` | **insert** [asset_history](/code/tables/asset_history.md) (`asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 
 ### parseDate
 
-*private static* - line 719
+*private static* - line 723
 
 Validate a DATE field (YYYY-MM-DD); 422 naming the field. Null/'' clears.
 
@@ -408,7 +410,7 @@ function parseDate($value, string $field): ?string
 
 ### validateField
 
-*private static* - line 732
+*private static* - line 736
 
 Validate one incoming field value per its map entry. Returns the DB-ready value.
 
@@ -427,11 +429,11 @@ function validateField(PDO $conn, string $field, $value, array $def)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 746 | `AssetsService::validateField` | read [suppliers](/code/tables/suppliers.md) |  |
+| 750 | `AssetsService::validateField` | read [suppliers](/code/tables/suppliers.md) |  |
 
 ### assertLeaseOrder
 
-*private static* - line 778
+*private static* - line 782
 
 A lease cannot end before it starts. Checked on the dates as they will be after the write (what was sent, else what is stored), so changing either one alone is held to the other.
 
@@ -446,7 +448,7 @@ function assertLeaseOrder(array $in, array $current): void
 
 ### auditDisplay
 
-*private static* - line 792
+*private static* - line 796
 
 Resolve a lookup id to its display name for the audit trail.
 
@@ -465,11 +467,11 @@ function auditDisplay(PDO $conn, string $field, $value, array $def): ?string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 808 | `AssetsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
+| 812 | `AssetsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
 
 ### syncWarranty
 
-*private static* - line 821
+*private static* - line 825
 
 Re-sync the asset expiry calendar (best-effort; same hook the UI + API used). One pass writes BOTH warranty and lease entries, which is why there is no lease equivalent of this method.
 
@@ -483,7 +485,7 @@ function syncWarranty(PDO $conn): void
 
 ### usersHoldingAssets
 
-*public static* - line 844
+*public static* - line 848
 
 Everyone who currently holds at least one asset, with how many.
 
@@ -517,13 +519,13 @@ function usersHoldingAssets(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 858 | `AssetsService::usersHoldingAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [assets](/code/tables/assets.md) |  |
+| 862 | `AssetsService::usersHoldingAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [assets](/code/tables/assets.md) |  |
 
 **Called from:** [api/assets/get_users_with_assets.php](/code/files/api/assets/get_users_with_assets.php.md)
 
 ### people
 
-*public static* - line 908
+*public static* - line 912
 
 Everyone, whether or not they hold anything.
 
@@ -575,14 +577,14 @@ function people(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 940 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md) |  |
-| 948 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 944 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md) |  |
+| 952 | `AssetsService::people` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
 
 **Called from:** [api/assets/get_people.php](/code/files/api/assets/get_people.php.md)
 
 ### assetsForUser
 
-*public static* - line 999
+*public static* - line 1003
 
 One person, and everything currently assigned to them.
 
@@ -605,16 +607,16 @@ function assetsForUser(PDO $conn, ActorContext $ctx, int $userId): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1019 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
-| 1057 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md) |  |
-| 1073 | `AssetsService::assetsForUser` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md), read [analysts](/code/tables/analysts.md) |  |
-| 1113 | `AssetsService::assetsForUser` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
+| 1023 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md), read [auth_providers](/code/tables/auth_providers.md) |  |
+| 1061 | `AssetsService::assetsForUser` | read [users](/code/tables/users.md) |  |
+| 1077 | `AssetsService::assetsForUser` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md), read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md), read [asset_locations](/code/tables/asset_locations.md), read [analysts](/code/tables/analysts.md) |  |
+| 1117 | `AssetsService::assetsForUser` | read [asset_field_sets](/code/tables/asset_field_sets.md) |  |
 
 **Called from:** [api/assets/email_handover.php](/code/files/api/assets/email_handover.php.md), [api/assets/get_user_assets.php](/code/files/api/assets/get_user_assets.php.md), [api/assets/handover_templates.php](/code/files/api/assets/handover_templates.php.md), [asset-management/handover.php](/code/files/asset-management/handover.php.md)
 
 ### personName
 
-*private static* - line 1131
+*private static* - line 1135
 
 Best available human name for a requester row, falling back to the email.
 
@@ -628,7 +630,7 @@ function personName(array $row): string
 
 ### getIgnoredServiceTags
 
-*public static* - line 1165
+*public static* - line 1169
 
 The placeholder list as a lookup map [lowercased => true]. The stored setting, one per line, replaces the defaults when it has anything in it.
 
@@ -644,13 +646,13 @@ function getIgnoredServiceTags(PDO $conn): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1172 | `AssetsService::getIgnoredServiceTags` | read [system_settings](/code/tables/system_settings.md) |  |
+| 1176 | `AssetsService::getIgnoredServiceTags` | read [system_settings](/code/tables/system_settings.md) |  |
 
 **Called from:** [includes/intune.php](/code/files/includes/intune.php.md)
 
 ### isUsableServiceTag
 
-*public static* - line 1187
+*public static* - line 1191
 
 Is this serial worth matching on - not blank, not a placeholder?
 
@@ -665,7 +667,7 @@ function isUsableServiceTag(?string $tag, ?array $ignoredMap = null): bool
 
 ### resolveAssetIdentity
 
-*public static* - line 1218
+*public static* - line 1222
 
 Which existing asset, if any, an incoming device is. Reads only.
 
@@ -709,14 +711,14 @@ function resolveAssetIdentity(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1231 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1242 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1248 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
-| 1258 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1235 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1246 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1252 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
+| 1262 | `AssetsService::resolveAssetIdentity` | read [assets](/code/tables/assets.md) |  |
 
 ### updateAssetHostname
 
-*public static* - line 1280
+*public static* - line 1284
 
 Apply a rename an inventory source reported for an asset it has matched by something stronger than its name. Skipped, and reported as a conflict, if another asset in the SAME company (the asset's own, wherever a person may have moved it) already has the name - hostname is unique per company.
 
@@ -744,15 +746,15 @@ function updateAssetHostname(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1285 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
-| 1292 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
-| 1296 | `AssetsService::updateAssetHostname` | **update** [assets](/code/tables/assets.md) (`hostname`) |  |
+| 1289 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
+| 1296 | `AssetsService::updateAssetHostname` | read [assets](/code/tables/assets.md) |  |
+| 1300 | `AssetsService::updateAssetHostname` | **update** [assets](/code/tables/assets.md) (`hostname`) |  |
 
 **Called from:** [includes/intune.php](/code/files/includes/intune.php.md)
 
 ### reconcileAsset
 
-*public static* - line 1314
+*public static* - line 1318
 
 Resolve, then - for a match made by link or serial - apply a reported rename. The single entry point every inventory source uses.
 
@@ -786,7 +788,7 @@ function reconcileAsset(
 
 ### createDiscoveredAsset
 
-*public static* - line 1338
+*public static* - line 1342
 
 Create an asset an inventory source has found - the inventory agents and Intune. The one place such an asset is written, so the tag, the transaction and the history row are the same whichever source found it (the three used to INSERT for themselves).
 
@@ -814,7 +816,7 @@ function createDiscoveredAsset(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1356 | `AssetsService::createDiscoveredAsset` | **insert** [assets](/code/tables/assets.md) |  |
+| 1360 | `AssetsService::createDiscoveredAsset` | **insert** [assets](/code/tables/assets.md) |  |
 
 **Called from:** [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md), [api/external/system-info/submit/index.php](/code/files/api/external/system-info/submit/index.php.md), [includes/intune.php](/code/files/includes/intune.php.md)
 

@@ -15,7 +15,7 @@ cases below are the ones that DID produce false alarms on the first run:
 function d005Classify(string $src, string $rel): array
 ```
 
-Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 124.
+Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 128.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Records of one kind that could be linked to a domain: matching `$q`, in the doma
 function domainLinkSearch(PDO $conn, int $analystId, int $domainId, string $kind, string $q): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 215.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 222.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,10 +22,10 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 227 | `domainLinkSearch` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 232 | `domainLinkSearch` | read [tickets](/code/tables/tickets.md) |  |
-| 237 | `domainLinkSearch` | read [status_services](/code/tables/status_services.md) |  |
-| 243 | `domainLinkSearch` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 234 | `domainLinkSearch` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 239 | `domainLinkSearch` | read [tickets](/code/tables/tickets.md) |  |
+| 244 | `domainLinkSearch` | read [status_services](/code/tables/status_services.md) |  |
+| 250 | `domainLinkSearch` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

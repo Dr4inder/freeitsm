@@ -6,7 +6,7 @@ Pull the five profile fields out of OIDC claims. Each IdP names them its own way
 function oidcExtractProfileAttributes(array $claims): array
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 391.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 393.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

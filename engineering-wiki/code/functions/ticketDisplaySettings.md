@@ -11,7 +11,7 @@ enough that ordinary human replies are never touched.
 function ticketDisplaySettings(?PDO $conn = null): array
 ```
 
-Defined in [includes/ticket_display.php](/code/files/includes/ticket_display.php.md), line 44.
+Defined in [includes/ticket_display.php](/code/files/includes/ticket_display.php.md), line 46.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -23,7 +23,7 @@ Defined in [includes/ticket_display.php](/code/files/includes/ticket_display.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 74 | `ticketDisplaySettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 76 | `ticketDisplaySettings` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

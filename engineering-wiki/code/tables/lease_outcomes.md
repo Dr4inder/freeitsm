@@ -31,6 +31,6 @@ Leases (3.5.0) - Assets -> Leases; see includes/leases.php What became of a leas
 | [api/assets/leases/asset_search.php](/code/files/api/assets/leases/asset_search.php.md) | L22 |  |
 | [api/assets/save_lease_outcome.php](/code/files/api/assets/save_lease_outcome.php.md) | L38, L42 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L676 |  |
-| [includes/leases.php](/code/files/includes/leases.php.md) | leaseReady L44, leaseGoneBackSql L113, leaseOutcomes L123, leaseDefaultOutcomeId L132, leaseList L280, leaseGet L356 ... |  |
+| [includes/leases.php](/code/files/includes/leases.php.md) | leaseReady L44, leaseGoneBackSql L114, leaseOutcomes L124, leaseDefaultOutcomeId L133, leaseList L286, leaseGet L362 ... |  |
 | [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::moveToCompany L642 |  |
 

@@ -1,10 +1,12 @@
 # vcdTest()
 
+The Test button: logs in, reads one VM record and one edge gateway, logs out and returns a one-line result. Throws when the login fails or the VM inventory cannot be read; unreadable edge gateways are only mentioned in the message.
+
 ```php
 function vcdTest(array $c): string
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 135.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 149.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Endpoints that are PUBLIC BY DESIGN — they must work before anyone is logged i
 function d005IsPublicByDesign(string $rel): bool
 ```
 
-Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 64.
+Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

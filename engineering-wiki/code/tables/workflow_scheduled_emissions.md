@@ -19,8 +19,8 @@
 | [includes/projects/benefits.php](/code/files/includes/projects/benefits.php.md):159 | `projectAlertsBenefits` | insert | `trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime` |  |
 | [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md):54 | `projectAlertsOverdueDigest` | insert | `trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime` |  |
 | [includes/projects/nudges.php](/code/files/includes/projects/nudges.php.md):139 | `projectAlertsStalled` | insert | `trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime` |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):346 | `ProjectReportsService::runSchedules` | insert | `trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime` |  |
-| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md):196 | `tasksContractorReminders` | insert | `trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime` |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md):349 | `ProjectReportsService::runSchedules` | insert | `trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime` |  |
+| [includes/task_contractors.php](/code/files/includes/task_contractors.php.md):198 | `tasksContractorReminders` | insert | `trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime` |  |
 | [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md):74 | `workflowEmitOnce` | insert | `trigger_event`, `entity_key`, `fingerprint`, `emitted_datetime` |  |
 | [includes/workflow_scheduled.php](/code/files/includes/workflow_scheduled.php.md):271 | `workflowPruneEmissions` | delete |  |  |
 

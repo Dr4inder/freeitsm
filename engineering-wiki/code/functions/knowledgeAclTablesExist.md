@@ -11,7 +11,7 @@ you least want it dropped.
 function knowledgeAclTablesExist(PDO $conn): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 831.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 844.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

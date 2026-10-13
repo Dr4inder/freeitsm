@@ -1,10 +1,12 @@
 # apiProjectRaidDelete()
 
+DELETE /projects/{id}/raid/{entryId} - deletes a RAID entry through ProjectToolsService.
+
 ```php
 function apiProjectRaidDelete(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 465.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 508.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

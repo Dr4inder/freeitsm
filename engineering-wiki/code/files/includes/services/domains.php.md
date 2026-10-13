@@ -1,6 +1,6 @@
 # includes/services/domains.php
 
-> PHP - 922 lines
+> PHP - 959 lines
 
 DomainsService — the write rules for the Domains module (#154), ONCE.
 
@@ -37,44 +37,44 @@ exception that proves the rule: its CHANGE is recorded, its value never is.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 127 | `DomainsService::createDomain` | read [domains](/code/tables/domains.md) |  |
-| 147 | `DomainsService::createDomain` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 151 | `DomainsService::createDomain` | **insert** [domains](/code/tables/domains.md) |  |
-| 156 | `DomainsService::createDomain` | **update** [domains](/code/tables/domains.md) (`auth_code`) |  |
-| 178 | `DomainsService::updateDomain` | read [domains](/code/tables/domains.md) |  |
-| 210 | `DomainsService::updateDomain` | **update** [domains](/code/tables/domains.md) |  |
-| 237 | `DomainsService::deleteDomain` | **delete** [domains](/code/tables/domains.md) |  |
-| 385 | `DomainsService::applyLookup` | **update** [domains](/code/tables/domains.md) |  |
-| 396 | `DomainsService::recordLookupError` | **update** [domains](/code/tables/domains.md) (`last_lookup_datetime`, `last_lookup_error`) |  |
-| 421 | `DomainsService::runChecks` | **update** [domains](/code/tables/domains.md) (`check_results`, `security_score`, `security_grade`, `ssl_expiry_date`, `ssl_issuer`, `watch_baseline`, `last_check_datetime`) |  |
-| 502 | `DomainsService::saveStatus` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 507 | `DomainsService::saveStatus` | **update** [domain_statuses](/code/tables/domain_statuses.md) (`name`, `colour`, `alerts_enabled`, `is_active`, `display_order`) |  |
-| 511 | `DomainsService::saveStatus` | **insert** [domain_statuses](/code/tables/domain_statuses.md) (`name`, `colour`, `alerts_enabled`, `is_active`, `display_order`, `created_datetime`) |  |
-| 518 | `DomainsService::deleteStatus` | read [domains](/code/tables/domains.md) |  |
-| 523 | `DomainsService::deleteStatus` | **delete** [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 546 | `DomainsService::saveRegistrarAccount` | **update** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) (`supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`) |  |
-| 554 | `DomainsService::saveRegistrarAccount` | **insert** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) (`supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`, `tenant_id`, `created_by`, `created_datetime`) |  |
-| 563 | `DomainsService::deleteRegistrarAccount` | **update** [domains](/code/tables/domains.md) (`registrar_account_id`) |  |
-| 564 | `DomainsService::deleteRegistrarAccount` | **delete** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
-| 573 | `DomainsService::loadRow` | read [domains](/code/tables/domains.md) |  |
-| 590 | `DomainsService::loadAccountForActor` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
-| 634 | `DomainsService::validateField` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
-| 747 | `DomainsService::normaliseParties` | read [contacts](/code/tables/contacts.md) |  |
-| 762 | `DomainsService::normaliseParties` | read [contacts](/code/tables/contacts.md) |  |
-| 784 | `DomainsService::requireAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 808 | `DomainsService::matchSupplier` | read [suppliers](/code/tables/suppliers.md) |  |
-| 825 | `DomainsService::audit` | **insert** [domain_audit](/code/tables/domain_audit.md) (`domain_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
-| 846 | `DomainsService::assertContractVisible` | read [contracts](/code/tables/contracts.md) |  |
-| 863 | `DomainsService::auditDisplay` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
-| 864 | `DomainsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
-| 865 | `DomainsService::auditDisplay` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
-| 866 | `DomainsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
-| 867 | `DomainsService::auditDisplay` | read [contacts](/code/tables/contacts.md) |  |
-| 868 | `DomainsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
-| 869 | `DomainsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
-| 870 | `DomainsService::auditDisplay` | read [contacts](/code/tables/contacts.md) |  |
-| 871 | `DomainsService::auditDisplay` | read [contracts](/code/tables/contracts.md) |  |
-| 872 | `DomainsService::auditDisplay` | read [users](/code/tables/users.md) |  |
+| 133 | `DomainsService::createDomain` | read [domains](/code/tables/domains.md) |  |
+| 153 | `DomainsService::createDomain` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 157 | `DomainsService::createDomain` | **insert** [domains](/code/tables/domains.md) |  |
+| 162 | `DomainsService::createDomain` | **update** [domains](/code/tables/domains.md) (`auth_code`) |  |
+| 190 | `DomainsService::updateDomain` | read [domains](/code/tables/domains.md) |  |
+| 222 | `DomainsService::updateDomain` | **update** [domains](/code/tables/domains.md) |  |
+| 249 | `DomainsService::deleteDomain` | **delete** [domains](/code/tables/domains.md) |  |
+| 397 | `DomainsService::applyLookup` | **update** [domains](/code/tables/domains.md) |  |
+| 409 | `DomainsService::recordLookupError` | **update** [domains](/code/tables/domains.md) (`last_lookup_datetime`, `last_lookup_error`) |  |
+| 434 | `DomainsService::runChecks` | **update** [domains](/code/tables/domains.md) (`check_results`, `security_score`, `security_grade`, `ssl_expiry_date`, `ssl_issuer`, `watch_baseline`, `last_check_datetime`) |  |
+| 519 | `DomainsService::saveStatus` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 524 | `DomainsService::saveStatus` | **update** [domain_statuses](/code/tables/domain_statuses.md) (`name`, `colour`, `alerts_enabled`, `is_active`, `display_order`) |  |
+| 528 | `DomainsService::saveStatus` | **insert** [domain_statuses](/code/tables/domain_statuses.md) (`name`, `colour`, `alerts_enabled`, `is_active`, `display_order`, `created_datetime`) |  |
+| 536 | `DomainsService::deleteStatus` | read [domains](/code/tables/domains.md) |  |
+| 541 | `DomainsService::deleteStatus` | **delete** [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 565 | `DomainsService::saveRegistrarAccount` | **update** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) (`supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`) |  |
+| 573 | `DomainsService::saveRegistrarAccount` | **insert** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) (`supplier_id`, `account_name`, `account_reference`, `login_url`, `owner_analyst_id`, `two_factor_holder`, `notes`, `tenant_id`, `created_by`, `created_datetime`) |  |
+| 583 | `DomainsService::deleteRegistrarAccount` | **update** [domains](/code/tables/domains.md) (`registrar_account_id`) |  |
+| 584 | `DomainsService::deleteRegistrarAccount` | **delete** [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 594 | `DomainsService::loadRow` | read [domains](/code/tables/domains.md) |  |
+| 612 | `DomainsService::loadAccountForActor` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 661 | `DomainsService::validateField` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 774 | `DomainsService::normaliseParties` | read [contacts](/code/tables/contacts.md) |  |
+| 789 | `DomainsService::normaliseParties` | read [contacts](/code/tables/contacts.md) |  |
+| 813 | `DomainsService::requireAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 839 | `DomainsService::matchSupplier` | read [suppliers](/code/tables/suppliers.md) |  |
+| 861 | `DomainsService::audit` | **insert** [domain_audit](/code/tables/domain_audit.md) (`domain_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
+| 882 | `DomainsService::assertContractVisible` | read [contracts](/code/tables/contracts.md) |  |
+| 899 | `DomainsService::auditDisplay` | read [domain_statuses](/code/tables/domain_statuses.md) |  |
+| 900 | `DomainsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
+| 901 | `DomainsService::auditDisplay` | read [domain_registrar_accounts](/code/tables/domain_registrar_accounts.md) |  |
+| 902 | `DomainsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
+| 903 | `DomainsService::auditDisplay` | read [contacts](/code/tables/contacts.md) |  |
+| 904 | `DomainsService::auditDisplay` | read [analysts](/code/tables/analysts.md) |  |
+| 905 | `DomainsService::auditDisplay` | read [suppliers](/code/tables/suppliers.md) |  |
+| 906 | `DomainsService::auditDisplay` | read [contacts](/code/tables/contacts.md) |  |
+| 907 | `DomainsService::auditDisplay` | read [contracts](/code/tables/contracts.md) |  |
+| 908 | `DomainsService::auditDisplay` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

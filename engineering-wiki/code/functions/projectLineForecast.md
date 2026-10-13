@@ -6,7 +6,7 @@ A line's forecast: what was typed, else the larger of planned and actual; null w
 function projectLineForecast(array $r, ?float $actual): ?float
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 221.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 225.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

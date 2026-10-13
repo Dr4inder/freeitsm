@@ -6,7 +6,7 @@ Rename / re-topic a custom channel. Team and DM names are derived, never stored.
 function warRoomUpdateChannel(PDO $conn, int $channelId, string $name, string $topic): bool
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 351.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 352.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 351
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 356 | `warRoomUpdateChannel` | **update** [warroom_channels](/code/tables/warroom_channels.md) (`name`, `topic`) |  |
+| 357 | `warRoomUpdateChannel` | **update** [warroom_channels](/code/tables/warroom_channels.md) (`name`, `topic`) |  |
 
 ## Called from
 

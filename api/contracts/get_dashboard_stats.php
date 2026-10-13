@@ -1,4 +1,15 @@
 <?php
+/**
+ * API: the counts on the Contracts dashboard - contracts, active, customer, expiring
+ * within 90 days, suppliers and contacts.
+ *
+ * The contract counts cover the same contracts as the list beside them
+ * (contractListSql): the active company, or all the analyst can see. Supplier and
+ * contact counts are install-wide.
+ *
+ * @output {success, stats: {contracts, active_contracts, customer_contracts, suppliers, contacts, expiring_soon}}
+ * @wiki Customer-Contracts-Developer-Guide
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

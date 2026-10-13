@@ -1,4 +1,17 @@
 <?php
+/**
+ * API: checklist templates - get one, save one, delete one, chosen by ?action=.
+ *
+ * get returns a template with its steps; save writes the template and replaces all its
+ * steps (they inherit the template's is_demo flag so demo removal takes both); delete
+ * (POST only) removes the steps and then the template in one transaction.
+ *
+ * @input action  get, save or delete
+ * @input id  the template id (get from the query string, save in the JSON body, delete as POST)
+ * @input title, category, scope, closure_mode, description, keywords, items  the template fields for save (JSON body or form post)
+ * @output JSON {success, template} for get, {success, id} for save, {success} for delete
+ * @wiki Checklists-and-SOPs-Developer-Guide
+ */
 session_start(['read_and_close' => false]);
 require_once '../config.php';
 require_once '../includes/functions.php';

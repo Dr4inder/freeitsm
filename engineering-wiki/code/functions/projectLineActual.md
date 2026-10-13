@@ -6,7 +6,7 @@ One line's actual and where it came from: [amount|null, 'typed'|'contract'|null,
 function projectLineActual(array $r, string $currency): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 209.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 213.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

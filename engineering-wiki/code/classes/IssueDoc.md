@@ -41,20 +41,20 @@ Never pass HTML in and expect it to survive — pass the text, use the blocks.
 | Method | What it does |
 |---|---|
 | [link()](#link) | A link, for use inside `para()`. Returns the inline marker `para()` understands. |
-| [heading()](#heading) |  |
+| [heading()](#heading) | Adds a heading block; blank text is ignored. |
 | [para()](#para) | A paragraph of inline parts. Each part is either a plain string or the array returned by self::link(). Empty parts are dropped; a paragraph that ends up with nothing in it is not added at all (an empty paragraph is invalid in ADF, and pointless everywhere else). |
-| [bullets()](#bullets) |  |
-| [code()](#code) |  |
-| [rule()](#rule) |  |
-| [isEmpty()](#isempty) |  |
+| [bullets()](#bullets) | Adds a bullet list, dropping blank items; nothing is added if every item is blank. |
+| [code()](#code) | Adds a code block; an empty string is ignored. |
+| [rule()](#rule) | Adds a horizontal rule, unless the document is empty or already ends with one. |
+| [isEmpty()](#isempty) | True when no block has been added. |
 | [blocks()](#blocks) | The raw block list. For tests and for a connector that needs its own renderer. |
 | [toAdf()](#toadf) | Atlassian Document Format (Jira Cloud v3). Returns the PHP array — the caller JSON-encodes it, because it is usually one field inside a bigger request body. |
-| [adfInlines()](#adfinlines) |  |
+| [adfInlines()](#adfinlines) | Converts a paragraph's parts to ADF text nodes, giving links a link mark. |
 | [toMarkdown()](#tomarkdown) | GitHub, GitLab. |
 | [toWikiMarkup()](#towikimarkup) | Jira Data Center / Server (v2 API). |
 | [toHtml()](#tohtml) | Azure DevOps (System.Description is HTML). |
 | [toPlainText()](#toplaintext) | Plain text — for the escalate preview, and for logs. |
-| [h()](#h) |  |
+| [h()](#h) | HTML-escapes text for `toHtml()`. |
 | [mdEscape()](#mdescape) | Markdown: neutralise the characters that would otherwise turn a ticket's text into formatting. A requester writing "use the * wildcard" must not produce italics, and "[see notes]" must not look like a broken link. |
 | [wikiEscape()](#wikiescape) | Jira wiki markup: the same idea, different character set. |
 
@@ -77,7 +77,9 @@ function link(string $href, string $text): array
 
 ### heading
 
-*public* - line 57
+*public* - line 58
+
+Adds a heading block; blank text is ignored.
 
 ```php
 function heading(string $text): self
@@ -89,7 +91,7 @@ function heading(string $text): self
 
 ### para
 
-*public* - line 71
+*public* - line 72
 
 A paragraph of inline parts. Each part is either a plain string or the array returned by self::link(). Empty parts are dropped; a paragraph that ends up with nothing in it is not added at all (an empty paragraph is invalid in ADF, and pointless everywhere else).
 
@@ -103,7 +105,9 @@ function para(...$parts): self
 
 ### bullets
 
-*public* - line 93
+*public* - line 98
+
+Adds a bullet list, dropping blank items; nothing is added if every item is blank.
 
 ```php
 function bullets(array $items): self
@@ -115,7 +119,9 @@ function bullets(array $items): self
 
 ### code
 
-*public* - line 106
+*public* - line 112
+
+Adds a code block; an empty string is ignored.
 
 ```php
 function code(string $text): self
@@ -127,7 +133,9 @@ function code(string $text): self
 
 ### rule
 
-*public* - line 114
+*public* - line 121
+
+Adds a horizontal rule, unless the document is empty or already ends with one.
 
 ```php
 function rule(): self
@@ -135,7 +143,9 @@ function rule(): self
 
 ### isEmpty
 
-*public* - line 124
+*public* - line 132
+
+True when no block has been added.
 
 ```php
 function isEmpty(): bool
@@ -143,7 +153,7 @@ function isEmpty(): bool
 
 ### blocks
 
-*public* - line 130
+*public* - line 138
 
 The raw block list. For tests and for a connector that needs its own renderer.
 
@@ -153,7 +163,7 @@ function blocks(): array
 
 ### toAdf
 
-*public* - line 145
+*public* - line 153
 
 Atlassian Document Format (Jira Cloud v3). Returns the PHP array — the caller JSON-encodes it, because it is usually one field inside a bigger request body.
 
@@ -166,7 +176,9 @@ function toAdf(): array
 
 ### adfInlines
 
-*private* - line 186
+*private* - line 195
+
+Converts a paragraph's parts to ADF text nodes, giving links a link mark.
 
 ```php
 function adfInlines(array $inlines): array
@@ -178,7 +190,7 @@ function adfInlines(array $inlines): array
 
 ### toMarkdown
 
-*public* - line 204
+*public* - line 213
 
 GitHub, GitLab.
 
@@ -188,7 +200,7 @@ function toMarkdown(): string
 
 ### toWikiMarkup
 
-*public* - line 239
+*public* - line 248
 
 Jira Data Center / Server (v2 API).
 
@@ -198,7 +210,7 @@ function toWikiMarkup(): string
 
 ### toHtml
 
-*public* - line 274
+*public* - line 283
 
 Azure DevOps (System.Description is HTML).
 
@@ -208,7 +220,7 @@ function toHtml(): string
 
 ### toPlainText
 
-*public* - line 309
+*public* - line 318
 
 Plain text — for the escalate preview, and for logs.
 
@@ -218,7 +230,9 @@ function toPlainText(): string
 
 ### h
 
-*private* - line 343
+*private* - line 353
+
+HTML-escapes text for `toHtml()`.
 
 ```php
 function h(string $s): string
@@ -230,7 +244,7 @@ function h(string $s): string
 
 ### mdEscape
 
-*private* - line 353
+*private* - line 363
 
 Markdown: neutralise the characters that would otherwise turn a ticket's text into formatting. A requester writing "use the * wildcard" must not produce italics, and "[see notes]" must not look like a broken link.
 
@@ -244,7 +258,7 @@ function mdEscape(string $s): string
 
 ### wikiEscape
 
-*private* - line 359
+*private* - line 369
 
 Jira wiki markup: the same idea, different character set.
 

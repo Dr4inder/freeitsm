@@ -958,7 +958,11 @@ function messagingGenerateTicketNumber(PDO $conn, ?int $tenantId = null): string
  * convention as email attachments (tickets/attachments/{floor(id/1000)}/{emailId}/…),
  * so get_ticket_attachments.php and the reading-pane attachment bar pick it up.
  */
-/** @return array{stored:bool, reason:?string} — reason is set when the file was rejected or quarantined. */
+/**
+ * Stores one downloaded media file as an attachment on the channel message's email row.
+ *
+ * @return array{stored:bool, reason:?string} — reason is set when the file was rejected or quarantined.
+ */
 function saveChannelMediaAttachment(PDO $conn, int $emailId, string $filename, string $contentType, string $data): array
 {
     $attachmentsDir = dirname(dirname(__DIR__)) . '/tickets/attachments';

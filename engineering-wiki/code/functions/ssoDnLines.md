@@ -21,7 +21,7 @@ errors. Neither leaks anything the bind account could not already read.
 function ssoDnLines($value): ?string
 ```
 
-Defined in [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md), line 62.
+Defined in [api/system/save_sso_provider.php](/code/files/api/system/save_sso_provider.php.md), line 63.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

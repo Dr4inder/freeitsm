@@ -1,10 +1,12 @@
 # filesDefaultStorageRoot()
 
+The storage folder used when none is set: uploads/files under the application root.
+
 ```php
 function filesDefaultStorageRoot(): string
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 42.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 45.
 
 **Returns:** `string`
 

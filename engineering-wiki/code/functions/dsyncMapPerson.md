@@ -6,7 +6,7 @@ Turn a raw directory entry into the fields FreeITSM stores. Returns null when th
 function dsyncMapPerson(array $entry, array $provider): ?array
 ```
 
-Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 335.
+Defined in [includes/directory_sync.php](/code/files/includes/directory_sync.php.md), line 342.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

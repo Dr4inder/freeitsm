@@ -19,7 +19,12 @@
  */
 final class ActorContext
 {
-    /** @param ?array<int> $companyScope null = all companies, else the allowed tenant ids */
+    /**
+     * Who is acting, which companies they may reach, where the call came from (ui or api),
+     * their locale and display name.
+     *
+     * @param ?array<int> $companyScope null = all companies, else the allowed tenant ids
+     */
     public function __construct(
         public int $actorId,
         public ?array $companyScope = null,
@@ -129,6 +134,10 @@ class ServiceError extends Exception
     /** @var string machine slug, e.g. 'missing_field', 'invalid_field', 'not_found' (named errorCode to avoid Exception::$code) */
     public string $errorCode;
 
+    /**
+     * A service failure with a kind (validation, not_found, conflict, forbidden...) that
+     * adapters turn into an HTTP status, a machine code and a message.
+     */
     public function __construct(string $kind, string $code, string $message)
     {
         parent::__construct($message);

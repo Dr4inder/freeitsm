@@ -6,7 +6,7 @@ Every template. `$all` = false: only what the new-project picker offers (built-i
 function projectTemplateList(PDO $conn, bool $all = false): array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 343.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 344.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/templates.php](/code/files/includes/projects/templ
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 353 | `projectTemplateList` | read [project_templates](/code/tables/project_templates.md), read [analysts](/code/tables/analysts.md) |  |
+| 354 | `projectTemplateList` | read [project_templates](/code/tables/project_templates.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

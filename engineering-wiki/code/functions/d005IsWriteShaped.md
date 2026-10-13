@@ -6,7 +6,7 @@ Does this endpoint change anything? Writes are what make a missing guard dangero
 function d005IsWriteShaped(string $src): bool
 ```
 
-Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 102.
+Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 106.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

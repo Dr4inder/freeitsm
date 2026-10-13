@@ -16,7 +16,7 @@ each one's planned start so the board can see what falls in the next stage.
 function projectUnapprovedChanges(PDO $conn, int $projectId): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 440.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 457.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -29,7 +29,7 @@ Defined in [includes/projects/links.php](/code/files/includes/projects/links.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 444 | `projectUnapprovedChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
+| 461 | `projectUnapprovedChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md), read [change_statuses](/code/tables/change_statuses.md) |  |
 
 ## Calls
 

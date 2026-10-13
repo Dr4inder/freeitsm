@@ -6,7 +6,7 @@
 function lmsCtParseMarks(string $raw): ?array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 83.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 84.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,6 +1,9 @@
 # assets/js/projects-milestones.js
 
-> JavaScript - 202 lines
+> JavaScript - 213 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Projects Internals 4 Plan and Timeline](https://github.com/edmozley/freeitsm/wiki/Projects-Internals-4-Plan-and-Timeline)
 
 Projects - milestones on a project's page (3.3.0).
 
@@ -19,22 +22,22 @@ bell always agree.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `canChange()` | 23 |  |
-| `list()` | 26 |  |
-| `diamond(m, size)` | 31 | The diamond, coloured by state. |
-| `daysFromToday(d)` | 35 |  |
-| `phrase(m)` | 38 | "Reached on time" / "Missed" / "In 5 days" - a phrase for the state. |
-| `chip(m)` | 49 | A clickable chip: diamond, name, date. |
-| `chips(stageId)` | 55 | The diamonds in one lane's head (stageId) - '' when it has none. |
-| `projectStrip()` | 61 | The whole project's milestones, above the lanes on the Plan. |
-| `renderOverview()` | 68 |  |
-| `item(m)` | 78 |  |
-| `stageOptions(selected)` | 94 |  |
-| `open(m, defaults)` | 100 | Open the dialog for milestone m, or a new one (defaults: {stage_id, due_date}). |
-| `save(body)` | 121 | Write a milestone (a partial body is fine) and redraw. Returns the server's reply. |
-| `saveDialog()` | 133 |  |
-| `remove()` | 157 |  |
-| `render(c)` | 192 |  |
+| `canChange()` | 26 | True when the viewer may change this project. |
+| `list()` | 30 | The project's milestones, or an empty list before the page has loaded. |
+| `diamond(m, size)` | 35 | The diamond, coloured by state. |
+| `daysFromToday(d)` | 40 | Days from today to a date - negative when it has passed. |
+| `phrase(m)` | 43 | "Reached on time" / "Missed" / "In 5 days" - a phrase for the state. |
+| `chip(m)` | 54 | A clickable chip: diamond, name, date. |
+| `chips(stageId)` | 60 | The diamonds in one lane's head (stageId) - '' when it has none. |
+| `projectStrip()` | 66 | The whole project's milestones, above the lanes on the Plan. |
+| `renderOverview()` | 74 | Draws the Overview's milestones panel - missed first, then up to four coming up, then the last two reached, each with Done when it can still be marked; hidden when there are none and nobody can add one. |
+| `item(m)` | 85 | One milestone row on the Overview - diamond, name, date, stage, state phrase and the Done button. |
+| `stageOptions(selected)` | 102 | The stage drop-down options for the dialog, with "Whole project" first and the given stage selected. |
+| `open(m, defaults)` | 108 | Open the dialog for milestone m, or a new one (defaults: {stage_id, due_date}). |
+| `save(body)` | 129 | Write a milestone (a partial body is fine) and redraw. Returns the server's reply. |
+| `saveDialog()` | 142 | Saves the milestone dialog and redraws the project; reopens the dialog with the error when the save fails. |
+| `remove()` | 167 | Asks, then deletes the milestone open in the dialog. |
+| `render(c)` | 203 | Keeps the page's data and draws the Overview's milestones panel. |
 
 ## Loaded by
 

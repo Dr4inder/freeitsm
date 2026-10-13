@@ -39,17 +39,20 @@ final class LmsLearner
     /** @var int analysts.id or users.id, per $type */
     private $id;
 
+    /** Private: learners are built with analyst() or user(). */
     private function __construct(string $type, int $id)
     {
         $this->type = $type;
         $this->id   = $id;
     }
 
+    /** A learner for an analyst id, or null when the id is not positive. */
     public static function analyst(int $id): ?self
     {
         return $id > 0 ? new self(self::ANALYST, $id) : null;
     }
 
+    /** A learner for a self-service user id, or null when the id is not positive. */
     public static function user(int $id): ?self
     {
         return $id > 0 ? new self(self::USER, $id) : null;
@@ -115,8 +118,11 @@ final class LmsLearner
         return isset($_GET['as']) && $_GET['as'] === 'portal';
     }
 
+    /** Whether the learner is an analyst or a self-service user. */
     public function type(): string { return $this->type; }
+    /** The analysts.id or users.id of the learner, depending on type(). */
     public function id(): int      { return $this->id; }
+    /** True when the learner is an analyst. */
     public function isAnalyst(): bool { return $this->type === self::ANALYST; }
 
     /** 'analyst:12' — for logs and array keys, never for storage. */

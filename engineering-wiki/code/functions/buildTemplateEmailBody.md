@@ -1,5 +1,9 @@
 # buildTemplateEmailBody()
 
+Wraps a template email body in the house HTML, the "Please reply above this line" marker and the hidden SDREF tag that threads a reply back to the ticket.
+
+Plain-text bodies are escaped and their newlines turned into <br>.
+
 ```php
 function buildTemplateEmailBody(
     string $bodyContent,
@@ -8,7 +12,7 @@ function buildTemplateEmailBody(
 ): string
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 429.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 434.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

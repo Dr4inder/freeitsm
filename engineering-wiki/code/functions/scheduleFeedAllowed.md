@@ -6,7 +6,7 @@ May anyone subscribe on this install?
 function scheduleFeedAllowed(PDO $conn): bool
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 371.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 372.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

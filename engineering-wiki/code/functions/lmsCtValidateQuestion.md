@@ -6,7 +6,7 @@ Check a question from the editor or the AI. Returns [`$clean`, null] or [null, '
 function lmsCtValidateQuestion(array $in): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 106.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 108.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

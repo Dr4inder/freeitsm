@@ -6,7 +6,7 @@ A Knowledge article as a shortcut target, or null when this person may not read 
 function filesArticleTarget(PDO $conn, int $analystId, int $id): ?array
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 166.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 172.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_boo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 181 | `filesArticleTarget` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 187 | `filesArticleTarget` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

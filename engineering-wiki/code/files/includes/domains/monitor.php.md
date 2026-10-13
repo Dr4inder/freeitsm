@@ -2,6 +2,22 @@
 
 > PHP - 97 lines
 
+Domains — change detection: noticing that something important moved.
+
+The classic domain hijack is quiet: somebody who has phished the registrar
+login changes the name servers, and from then on they control the website and
+the mail. Nobody at the organisation changed anything, so nobody is looking.
+The first sign is usually customers reporting a strange page.
+
+So after every check the fields that only change on purpose are compared with
+the last run, and anything that moved is (1) written to the domain's history
+and (2) announced as a `domain.changed` event — which the notification bell,
+workflows and the alert e-mail all pick up.
+
+⚠️ DELIBERATELY NOT WATCHED: A / AAAA records. Sites behind a CDN or a cloud
+load balancer change address constantly and legitimately; watching them would
+bury the one alert that matters under hundreds that do not.
+
 ## Functions
 
 | Function | Line | What it does |

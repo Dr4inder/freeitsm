@@ -773,6 +773,7 @@ class FormsService
         return ['submissions' => $subs, 'forms' => array_values($forms)];
     }
 
+    /** Throws until Database Verification has added the form collections schema. */
     private static function requireCollections(PDO $conn): void
     {
         if (!self::collectionsAvailable($conn)) {
@@ -918,6 +919,11 @@ class FormsService
                                     AND fc.closed_datetime IS NOT NULL)";
     }
 
+    /**
+     * Creates a form, or updates the current version of one, with its fields.
+     *
+     * Historical versions cannot be edited.
+     */
     public static function saveForm(PDO $conn, ActorContext $ctx, array $in): array
     {
         if (!empty($in['id'])) {
@@ -1930,6 +1936,7 @@ class FormsService
             $parsed
         ), fn($v) => $v !== ''));
     }
+    /** A grid field's column definitions from its config, keyed by column id. */
     public static function gridColumns(array $field): array
     {
         $cfg = $field['config'] ?? null;
@@ -1985,6 +1992,7 @@ class FormsService
         }
         return implode("\n", $lines);
     }
+    /** A grid answer's rows, from JSON or an array, as {"rows": [...]} or a bare list. */
     public static function gridRows($raw): array
     {
         if (is_string($raw)) $raw = json_decode($raw, true);
@@ -2015,6 +2023,7 @@ class FormsService
      *  ⚠️ Adding 'user' later needs no schema change, only this list and a UI. */
     const AUDIENCE_TYPES = ['user_group'];
 
+    /** True when the form_audiences table exists. Cached per request. */
     public static function audiencesAvailable(PDO $conn): bool
     {
         static $known = null;
@@ -2484,6 +2493,11 @@ class FormsService
         return $out;
     }
 
+    /**
+     * Validates and cleans one field's config JSON - width, label position, the settings of
+     * notes, images, date fields and grids, and its visible_if rule - and returns it, or
+     * null when empty.
+     */
     private static function validateFieldConfig($config, int $i, array $fields, array $indexById, string $type = 'text'): ?array
     {
         if ($config === null || $config === '') {

@@ -159,6 +159,7 @@ class CalendarService
     //  Internals
     // ======================================================================
 
+    /** Loads one calendar event; throws not found when it does not exist. */
     private static function loadEventRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare("SELECT * FROM calendar_events WHERE id = ?");

@@ -24,6 +24,9 @@
  */
 
 if (!function_exists('configRequirements')) {
+    /**
+     * Returns every constant config.php is expected to define, keyed by name, with its kind, where it lives, any fallback, what happens without it and the line to add.
+     */
     function configRequirements(): array
     {
         $db = [

@@ -19,7 +19,7 @@ function rfpAiConsolidateStreaming(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 802.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 810.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

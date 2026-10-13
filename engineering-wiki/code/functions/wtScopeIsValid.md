@@ -1,10 +1,12 @@
 # wtScopeIsValid()
 
+True when `$scope` is one of the three Watchtower scopes: mine, team or all.
+
 ```php
 function wtScopeIsValid(string $scope): bool
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 57.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 60.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

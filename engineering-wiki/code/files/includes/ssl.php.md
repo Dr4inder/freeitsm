@@ -1,6 +1,6 @@
 # includes/ssl.php
 
-> PHP - 100 lines
+> PHP - 105 lines
 
 Central SSL/TLS policy for outbound HTTPS.
 
@@ -37,8 +37,8 @@ tests/config-not-load-bearing.php enforces that structurally.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [sslResolveCaBundle()](/code/functions/sslResolveCaBundle.md) | 46 |  |
-| [sslApplyCurl()](/code/functions/sslApplyCurl.md) | 79 |  |
+| [sslResolveCaBundle()](/code/functions/sslResolveCaBundle.md) | 50 | The CA bundle file to verify TLS with: PHP's configured one, else the bundled cacert.pem on Windows, else '' for the system store. |
+| [sslApplyCurl()](/code/functions/sslApplyCurl.md) | 84 | Applies the install's TLS verification setting, and the CA bundle, to a cURL handle. |
 
 ## How it hangs together
 

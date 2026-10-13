@@ -1,10 +1,12 @@
 # rpIntuneKpis()
 
+Intune block: KPI tiles - device count, percentage compliant and encrypted, and devices not synced for 30 days.
+
 ```php
 function rpIntuneKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 ```
 
-Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md), line 103.
+Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +22,7 @@ Defined in [includes/report_packs/blocks_assets.php](/code/files/includes/report
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 105 | `rpIntuneKpis` | read [intune_devices](/code/tables/intune_devices.md) |  |
+| 118 | `rpIntuneKpis` | read [intune_devices](/code/tables/intune_devices.md) |  |
 
 ## Calls
 

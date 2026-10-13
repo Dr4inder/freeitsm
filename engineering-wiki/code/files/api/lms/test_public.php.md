@@ -1,6 +1,6 @@
 # api/lms/test_public.php
 
-> API endpoint - 77 lines
+> API endpoint - 82 lines
 
 LMS API: the CANDIDATE's side of a competency test. No session - the link's token (sent in the body, never in a URL this endpoint logs) is the credential, and it is matched by its SHA-256 hash.
 
@@ -23,16 +23,16 @@ web chat is: it carries its own credential and no session.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [ctpOut()](/code/functions/ctpOut.md) | 22 |  |
-| [ctpFail()](/code/functions/ctpFail.md) | 23 |  |
+| [ctpOut()](/code/functions/ctpOut.md) | 23 | Echoes {success: true} merged with `$a` as JSON, then stops. |
+| [ctpFail()](/code/functions/ctpFail.md) | 28 | Sends an HTTP status and {success: false, error: `$code`} - a short code such as 'finished' that the candidate page acts on - then stops. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 44 |  | **update** [lms_ct_sittings](/code/tables/lms_ct_sittings.md) (`started_datetime`) |  |
-| 58 |  | **update** [lms_ct_sittings](/code/tables/lms_ct_sittings.md) (`responses_json`) |  |
-| 66 |  | read [lms_ct_sittings](/code/tables/lms_ct_sittings.md) |  |
+| 49 |  | **update** [lms_ct_sittings](/code/tables/lms_ct_sittings.md) (`started_datetime`) |  |
+| 63 |  | **update** [lms_ct_sittings](/code/tables/lms_ct_sittings.md) (`responses_json`) |  |
+| 71 |  | read [lms_ct_sittings](/code/tables/lms_ct_sittings.md) |  |
 
 ## How it hangs together
 

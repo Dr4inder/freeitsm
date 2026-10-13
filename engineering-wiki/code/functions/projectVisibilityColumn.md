@@ -6,7 +6,7 @@ p.visibility, or 'everyone' before Verification - for a SELECT list.
 function projectVisibilityColumn(PDO $conn, string $alias = 'p'): string
 ```
 
-Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 50.
+Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 51.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

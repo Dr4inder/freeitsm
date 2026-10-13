@@ -11,7 +11,7 @@ honoured, so the worst a crafted request gets is the active company's lists.
 function requestedTenantId(PDO $conn, int $analystId, string $param = 'for_tenant'): int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 839.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 845.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

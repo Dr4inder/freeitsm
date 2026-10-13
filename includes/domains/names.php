@@ -14,6 +14,10 @@
  */
 
 /**
+ * Turns a typed or pasted URL, e-mail address or name into the one stored
+ * domain name - lower case, no scheme, path, port, root dot or leading www.,
+ * internationalised names as punycode with the Unicode form as the display name.
+ *
  * @return array{ok:bool, name?:string, display?:?string, error?:string}
  */
 function domainNormalise(string $raw): array

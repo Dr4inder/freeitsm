@@ -2,6 +2,24 @@
 
 > PHP - 374 lines
 
+SLA Engine — Service Level Agreement computation.
+
+Design: see docs/sla.md. The principle is **compute on read** — no stored
+counters on the ticket, no background jobs, no drift. Each call walks the
+ticket's status-change audit history, splits the lifetime into "running"
+vs. "paused" intervals based on which statuses are flagged `pauses_sla`,
+intersects each running interval with the priority's business calendar
+(week pattern + holidays + timezone), and sums to get elapsed business
+minutes.
+
+Two public functions:
+  sla_get_state(`$conn`, `$ticket_id`)   — returns the full SLA state of a ticket
+  sla_business_minutes(`$start`, `$end`, `$calendar`)
+                                      — pure function, the intersection helper
+
+Both treat all DateTimes as UTC unless explicitly converted via the
+calendar's timezone for day-walking. The DB stores everything in UTC.
+
 ## Functions
 
 | Function | Line | What it does |

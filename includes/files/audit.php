@@ -26,6 +26,13 @@ const FILES_AUDIT_ACTIONS = [
 ];
 
 /**
+ * Writes one row to the Files audit log, with the analyst's name, the target's path, IP
+ * address and user agent.
+ *
+ * An unknown action is logged to the PHP error log and skipped.
+ *
+ * @writes files_audit - the record of who did what to which folder or file
+ *
  * @param array $t ['folder_id'=>?, 'item_id'=>?, 'version_id'=>?, 'path'=>?] -
  *                 path is worked out from folder_id (+ item name) when omitted.
  */

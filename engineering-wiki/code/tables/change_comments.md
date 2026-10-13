@@ -25,6 +25,6 @@
 |---|---|---|
 | [api/change-management/get.php](/code/files/api/change-management/get.php.md) | L77 |  |
 | [api/change-management/get_comments.php](/code/files/api/change-management/get_comments.php.md) | L33 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeCommentsList L370 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeCommentsList L379 |  |
 | [includes/services/changes.php](/code/files/includes/services/changes.php.md) | ChangesService::deleteComment L429 |  |
 

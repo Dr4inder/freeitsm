@@ -1,10 +1,12 @@
 # messagingReplyAddress()
 
+The address to reply to on a conversation row - to_recipients on threaded channels (Slack, Teams, Mattermost), from_address elsewhere.
+
 ```php
 function messagingReplyAddress(string $channelType, array $row): string
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 407.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 411.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,6 +1,6 @@
 # includes/sla_notifications.php
 
-> PHP - 383 lines
+> PHP - 385 lines
 
 SLA Breach Notification Engine
 
@@ -26,8 +26,8 @@ Public entry: sla_run_breach_check(PDO `$conn`): array
 | [sla_send_breach_email()](/code/functions/sla_send_breach_email.md) | 286 | Send a breach / warning email via the ticket's originating mailbox. Falls back to the first active mailbox if the ticket has none (e.g. manually-created ticket). |
 | [sla_build_breach_email_body()](/code/functions/sla_build_breach_email_body.md) | 319 | Render the HTML body for a breach / warning email. |
 | [sla_notification_already_sent()](/code/functions/sla_notification_already_sent.md) | 366 | Check if we've already fired this notification for (ticket, target, trigger). |
-| [sla_mark_notification_sent()](/code/functions/sla_mark_notification_sent.md) | 372 |  |
-| [sla_get_first_active_mailbox()](/code/functions/sla_get_first_active_mailbox.md) | 377 |  |
+| [sla_mark_notification_sent()](/code/functions/sla_mark_notification_sent.md) | 373 | Records that an SLA notification went out for a ticket, so it is not sent twice. |
+| [sla_get_first_active_mailbox()](/code/functions/sla_get_first_active_mailbox.md) | 379 | The active mailbox with the lowest id, decrypted; null when there is none. |
 
 ## Database
 
@@ -42,8 +42,8 @@ Public entry: sla_run_breach_check(PDO `$conn`): array
 | 248 | `sla_resolve_recipients` | read [tickets](/code/tables/tickets.md), read [department_teams](/code/tables/department_teams.md), read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
 | 263 | `sla_resolve_recipients` | read [analysts](/code/tables/analysts.md) |  |
 | 367 | `sla_notification_already_sent` | read [sla_notifications_sent](/code/tables/sla_notifications_sent.md) |  |
-| 373 | `sla_mark_notification_sent` | **insert** [sla_notifications_sent](/code/tables/sla_notifications_sent.md) (`ticket_id`, `target_type`, `trigger_type`, `recipients`) |  |
-| 378 | `sla_get_first_active_mailbox` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 374 | `sla_mark_notification_sent` | **insert** [sla_notifications_sent](/code/tables/sla_notifications_sent.md) (`ticket_id`, `target_type`, `trigger_type`, `recipients`) |  |
+| 380 | `sla_get_first_active_mailbox` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## How it hangs together
 

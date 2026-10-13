@@ -10,14 +10,14 @@
 | [resolveTenantForCreate()](#resolvetenantforcreate) | Resolve the company a new CI should belong to, and refuse one the actor can't reach. Callers may pass an explicit company; otherwise it's the actor's current company context. |
 | [assertSameCompany()](#assertsamecompany) | The same-company invariant. A CI belongs to exactly one company, so every link between two CIs — parent/child, a relationship, an object_ref property — must have both ends in the same company. Without this a link becomes a side channel: you can't read the other CI, but you can still discover it exists and bind your own records to it. |
 | [saveObject()](#saveobject) | Create (no id) or update (id present) an object. Returns ['id','created']. |
-| [createObject()](#createobject) |  |
-| [updateObject()](#updateobject) |  |
+| [createObject()](#createobject) | Creates a CI: validates the name, class, parent, company and properties, inserts it with its property values and fires the cmdb.object.created workflow event. |
+| [updateObject()](#updateobject) | Updates a CI's name, parent, planned flag and properties; the class never changes. Fires the cmdb.object.updated workflow event. |
 | [deleteObject()](#deleteobject) | Delete an object + its whole descendant tree (explicit, not FK cascade). Returns ['id','deleted_descendants']. |
 | [createRelationship()](#createrelationship) | Create a relationship from `$fromId`. Returns ['id','to_object_id','verb']. |
 | [deleteRelationship()](#deleterelationship) | Delete a relationship by row id. If `$objectId` is given (API), the relationship must involve that object and a miss is a 404; if null (UI), it's an unscoped delete that succeeds regardless. Returns the relationship id. |
 | [tenantOf()](#tenantof) | The company id a CI effectively belongs to (NULL stored = Default's). |
 | [assertObjectRefsInCompany()](#assertobjectrefsincompany) | object_ref properties point at another CI, so they're a third way to link across companies — alongside parent/child and relationships. Every object_ref value being written must resolve to a CI in the same company as the CI being written. |
-| [loadObjectRow()](#loadobjectrow) |  |
+| [loadObjectRow()](#loadobjectrow) | Loads one CI with its class name and key; throws not found when it does not exist. |
 | [classDefs()](#classdefs) | Property definitions for a class, keyed by property_key, in the canonical TypedFields shape. |
 | [valueSchema()](#valueschema) | Where CMDB property values live, for TypedFields. |
 | [normaliseProperties()](#normaliseproperties) | Normalise the two accepted property shapes to a { property_key: value } map. The API's `properties` map passes through (unknown keys -> 422 later); the UI's `property_values` id-list is translated, dropping ids not in the class. |
@@ -106,7 +106,9 @@ function saveObject(PDO $conn, ActorContext $ctx, array $in): array
 
 ### createObject
 
-*private static* - line 130
+*private static* - line 134
+
+Creates a CI: validates the name, class, parent, company and properties, inserts it with its property values and fires the cmdb.object.created workflow event.
 
 ```php
 function createObject(PDO $conn, ActorContext $ctx, array $in): int
@@ -122,13 +124,15 @@ function createObject(PDO $conn, ActorContext $ctx, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 142 | `CmdbService::createObject` | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 145 | `CmdbService::createObject` | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
-| 183 | `CmdbService::createObject` | **insert** [cmdb_objects](/code/tables/cmdb_objects.md) (`class_id`, `name`, `parent_id`, `is_planned`, `tenant_id`, `created_datetime`, `updated_datetime`) |  |
+| 146 | `CmdbService::createObject` | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 149 | `CmdbService::createObject` | read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 187 | `CmdbService::createObject` | **insert** [cmdb_objects](/code/tables/cmdb_objects.md) (`class_id`, `name`, `parent_id`, `is_planned`, `tenant_id`, `created_datetime`, `updated_datetime`) |  |
 
 ### updateObject
 
-*private static* - line 205
+*private static* - line 213
+
+Updates a CI's name, parent, planned flag and properties; the class never changes. Fires the cmdb.object.updated workflow event.
 
 ```php
 function updateObject(PDO $conn, ActorContext $ctx, int $objectId, array $in): int
@@ -145,12 +149,12 @@ function updateObject(PDO $conn, ActorContext $ctx, int $objectId, array $in): i
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 242 | `CmdbService::updateObject` | **update** [cmdb_objects](/code/tables/cmdb_objects.md) (`name`, `parent_id`, `is_planned`, `updated_datetime`) |  |
-| 245 | `CmdbService::updateObject` | **update** [cmdb_objects](/code/tables/cmdb_objects.md) (`name`, `parent_id`, `updated_datetime`) |  |
+| 250 | `CmdbService::updateObject` | **update** [cmdb_objects](/code/tables/cmdb_objects.md) (`name`, `parent_id`, `is_planned`, `updated_datetime`) |  |
+| 253 | `CmdbService::updateObject` | **update** [cmdb_objects](/code/tables/cmdb_objects.md) (`name`, `parent_id`, `updated_datetime`) |  |
 
 ### deleteObject
 
-*public static* - line 261
+*public static* - line 269
 
 Delete an object + its whole descendant tree (explicit, not FK cascade). Returns ['id','deleted_descendants'].
 
@@ -168,20 +172,20 @@ function deleteObject(PDO $conn, ActorContext $ctx, int $objectId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 272 | `CmdbService::deleteObject` | **update** [cmdb_object_properties](/code/tables/cmdb_object_properties.md) (`value_object_id`) |  |
-| 273 | `CmdbService::deleteObject` | **delete** [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
-| 275 | `CmdbService::deleteObject` | **update** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`cmdb_relationship_id`), read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
-| 278 | `CmdbService::deleteObject` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md), read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 281 | `CmdbService::deleteObject` | **delete** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 282 | `CmdbService::deleteObject` | **delete** [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
-| 283 | `CmdbService::deleteObject` | **delete** [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) |  |
-| 285 | `CmdbService::deleteObject` | **delete** [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 280 | `CmdbService::deleteObject` | **update** [cmdb_object_properties](/code/tables/cmdb_object_properties.md) (`value_object_id`) |  |
+| 281 | `CmdbService::deleteObject` | **delete** [cmdb_object_properties](/code/tables/cmdb_object_properties.md) |  |
+| 283 | `CmdbService::deleteObject` | **update** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`cmdb_relationship_id`), read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
+| 286 | `CmdbService::deleteObject` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md), read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 289 | `CmdbService::deleteObject` | **delete** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 290 | `CmdbService::deleteObject` | **delete** [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
+| 291 | `CmdbService::deleteObject` | **delete** [ticket_cmdb_objects](/code/tables/ticket_cmdb_objects.md) |  |
+| 293 | `CmdbService::deleteObject` | **delete** [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 **Called from:** [api/cmdb/delete_object.php](/code/files/api/cmdb/delete_object.php.md), [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 ### createRelationship
 
-*public static* - line 301
+*public static* - line 309
 
 Create a relationship from `$fromId`. Returns ['id','to_object_id','verb'].
 
@@ -200,15 +204,15 @@ function createRelationship(PDO $conn, ActorContext $ctx, int $fromId, array $in
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 320 | `CmdbService::createRelationship` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
-| 323 | `CmdbService::createRelationship` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
-| 335 | `CmdbService::createRelationship` | **insert** [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) (`from_object_id`, `to_object_id`, `relationship_type_id`, `created_datetime`) |  |
+| 328 | `CmdbService::createRelationship` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
+| 331 | `CmdbService::createRelationship` | read [cmdb_relationship_types](/code/tables/cmdb_relationship_types.md) |  |
+| 343 | `CmdbService::createRelationship` | **insert** [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) (`from_object_id`, `to_object_id`, `relationship_type_id`, `created_datetime`) |  |
 
 **Called from:** [api/cmdb/save_object_relationship.php](/code/files/api/cmdb/save_object_relationship.php.md), [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 ### deleteRelationship
 
-*public static* - line 352
+*public static* - line 360
 
 Delete a relationship by row id. If `$objectId` is given (API), the relationship must involve that object and a miss is a 404; if null (UI), it's an unscoped delete that succeeds regardless. Returns the relationship id.
 
@@ -227,15 +231,15 @@ function deleteRelationship(PDO $conn, ActorContext $ctx, int $relId, ?int $obje
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 356 | `CmdbService::deleteRelationship` | **delete** [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
-| 364 | `CmdbService::deleteRelationship` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
-| 371 | `CmdbService::deleteRelationship` | **delete** [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
+| 364 | `CmdbService::deleteRelationship` | **delete** [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
+| 372 | `CmdbService::deleteRelationship` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
+| 379 | `CmdbService::deleteRelationship` | **delete** [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
 
 **Called from:** [api/cmdb/delete_object_relationship.php](/code/files/api/cmdb/delete_object_relationship.php.md), [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md)
 
 ### tenantOf
 
-*private static* - line 381
+*private static* - line 389
 
 The company id a CI effectively belongs to (NULL stored = Default's).
 
@@ -252,11 +256,11 @@ function tenantOf(PDO $conn, int $id): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 383 | `CmdbService::tenantOf` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 391 | `CmdbService::tenantOf` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ### assertObjectRefsInCompany
 
-*private static* - line 397
+*private static* - line 405
 
 object_ref properties point at another CI, so they're a third way to link across companies — alongside parent/child and relationships. Every object_ref value being written must resolve to a CI in the same company as the CI being written.
 
@@ -282,7 +286,9 @@ function assertObjectRefsInCompany(
 
 ### loadObjectRow
 
-*private static* - line 428
+*private static* - line 437
+
+Loads one CI with its class name and key; throws not found when it does not exist.
 
 ```php
 function loadObjectRow(PDO $conn, int $id): array
@@ -297,11 +303,11 @@ function loadObjectRow(PDO $conn, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 431 | `CmdbService::loadObjectRow` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
+| 440 | `CmdbService::loadObjectRow` | read [cmdb_objects](/code/tables/cmdb_objects.md), read [cmdb_classes](/code/tables/cmdb_classes.md) |  |
 
 ### classDefs
 
-*private static* - line 454
+*private static* - line 463
 
 Property definitions for a class, keyed by property_key, in the canonical TypedFields shape.
 
@@ -326,11 +332,11 @@ function classDefs(PDO $conn, int $classId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 457 | `CmdbService::classDefs` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 466 | `CmdbService::classDefs` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
 
 ### valueSchema
 
-*private static* - line 485
+*private static* - line 494
 
 Where CMDB property values live, for TypedFields.
 
@@ -348,7 +354,7 @@ function valueSchema(int $classId): array
 
 ### normaliseProperties
 
-*private static* - line 513
+*private static* - line 522
 
 Normalise the two accepted property shapes to a { property_key: value } map. The API's `properties` map passes through (unknown keys -> 422 later); the UI's `property_values` id-list is translated, dropping ids not in the class.
 
@@ -366,11 +372,11 @@ function normaliseProperties(PDO $conn, int $classId, array $in): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 520 | `CmdbService::normaliseProperties` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
+| 529 | `CmdbService::normaliseProperties` | read [cmdb_class_properties](/code/tables/cmdb_class_properties.md) |  |
 
 ### propertyOptionValues
 
-*private static* - line 538
+*private static* - line 547
 
 Dropdown option values for one property.
 
@@ -387,11 +393,11 @@ function propertyOptionValues(PDO $conn, int $propertyId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 540 | `CmdbService::propertyOptionValues` | read [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md) |  |
+| 549 | `CmdbService::propertyOptionValues` | read [cmdb_class_property_options](/code/tables/cmdb_class_property_options.md) |  |
 
 ### writeProperties
 
-*private static* - line 552
+*private static* - line 561
 
 Validate + write property values (keyed by property_key). Unknown keys -> 422.
 
@@ -412,7 +418,7 @@ function writeProperties(PDO $conn, int $objectId, int $classId, array $values):
 
 ### checkRequired
 
-*private static* - line 564
+*private static* - line 573
 
 Required-property enforcement — create/update asymmetry.
 
@@ -429,7 +435,7 @@ function checkRequired(PDO $conn, int $classId, array $values, bool $isCreate): 
 
 ### validateParent
 
-*private static* - line 570
+*private static* - line 579
 
 Parent validation incl. the cycle walk.
 
@@ -447,12 +453,12 @@ function validateParent(PDO $conn, ?int $objectId, ?int $parentId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 578 | `CmdbService::validateParent` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
-| 590 | `CmdbService::validateParent` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 587 | `CmdbService::validateParent` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 599 | `CmdbService::validateParent` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ### descendantIds
 
-*private static* - line 600
+*private static* - line 609
 
 All descendant ids of an object (excluding itself), cycle-safe.
 
@@ -469,5 +475,5 @@ function descendantIds(PDO $conn, int $rootId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 606 | `CmdbService::descendantIds` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 615 | `CmdbService::descendantIds` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 

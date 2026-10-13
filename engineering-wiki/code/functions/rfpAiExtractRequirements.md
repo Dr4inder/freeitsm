@@ -20,7 +20,7 @@ function rfpAiExtractRequirements(
 ): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 516.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 524.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

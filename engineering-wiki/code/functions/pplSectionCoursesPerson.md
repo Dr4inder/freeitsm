@@ -1,10 +1,12 @@
 # pplSectionCoursesPerson()
 
+A person's Courses card: each course with its status pill, progress (or completion date) and deadline, overdue ones marked.
+
 ```php
 function pplSectionCoursesPerson(array $s): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 134.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 145.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ GET /assets
 function apiAssetsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 223.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 233.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,9 +21,9 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 253 | `apiAssetsList` | read [users_assets](/code/tables/users_assets.md) |  |
-| 257 | `apiAssetsList` | read [users_assets](/code/tables/users_assets.md) |  |
-| 302 | `apiAssetsList` | read [assets](/code/tables/assets.md) |  |
+| 263 | `apiAssetsList` | read [users_assets](/code/tables/users_assets.md) |  |
+| 267 | `apiAssetsList` | read [users_assets](/code/tables/users_assets.md) |  |
+| 312 | `apiAssetsList` | read [assets](/code/tables/assets.md) |  |
 
 ## Calls
 

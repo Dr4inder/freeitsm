@@ -12,7 +12,7 @@ denies. Uncached in that case, so a blip does not pin the answer.
 function tenancyColumnExists(PDO $conn, string $table, string $column): bool
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 872.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 878.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ For the asset panel: every lease this asset has been on, newest first.
 function leaseHistoryForAsset(PDO $conn, int $analystId, int $assetId): array
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 649.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 655.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 649.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 656 | `leaseHistoryForAsset` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 662 | `leaseHistoryForAsset` | read [lease_assets](/code/tables/lease_assets.md), read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
 
 ## Calls
 

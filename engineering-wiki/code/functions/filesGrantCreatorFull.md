@@ -1,10 +1,12 @@
 # filesGrantCreatorFull()
 
+Gives an analyst Full control on a folder, upgrading an existing entry - used when a folder lands at the top level, as when creating one there.
+
 ```php
 function filesGrantCreatorFull(PDO $conn, int $analystId, int $folderId): void
 ```
 
-Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line 170.
+Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line 195.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -14,11 +16,13 @@ Defined in [api/files/transfer.php](/code/files/api/files/transfer.php.md), line
 
 **Returns:** `void`
 
+**Writes:** files_permissions(level) - an analyst entry for the folder
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 172 | `filesGrantCreatorFull` | **insert** [files_permissions](/code/tables/files_permissions.md) (`folder_id`, `principal_type`, `principal_id`, `level`, `granted_by`, `granted_datetime`) |  |
+| 197 | `filesGrantCreatorFull` | **insert** [files_permissions](/code/tables/files_permissions.md) (`folder_id`, `principal_type`, `principal_id`, `level`, `granted_by`, `granted_datetime`) |  |
 
 ## Called from
 

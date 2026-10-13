@@ -1,10 +1,16 @@
 # syncAssetWarrantyCalendar()
 
+Rebuilds the auto-generated warranty-expiry and lease-end calendar entries from the asset dates, then the lease "give notice" entries.
+
+Each kind follows its own setting (asset_warranty_surface, asset_lease_surface)
+and is skipped quietly while its column has not been added by Database
+Verification yet.
+
 ```php
 function syncAssetWarrantyCalendar(PDO $conn): array
 ```
 
-Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 30.
+Defined in [includes/asset_warranty_calendar.php](/code/files/includes/asset_warranty_calendar.php.md), line 37.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

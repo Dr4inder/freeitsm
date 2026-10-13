@@ -9,7 +9,7 @@ name that resolves here but fails there would post a mention nobody can open.
 function warRoomChannelAudience(PDO $conn, int $channelId): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 732.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 733.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,10 +22,10 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 732
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 742 | `warRoomChannelAudience` | read [analysts](/code/tables/analysts.md) |  |
-| 747 | `warRoomChannelAudience` | read [analysts](/code/tables/analysts.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 755 | `warRoomChannelAudience` | read [analysts](/code/tables/analysts.md) |  |
-| 761 | `warRoomChannelAudience` | read [analysts](/code/tables/analysts.md), read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+| 743 | `warRoomChannelAudience` | read [analysts](/code/tables/analysts.md) |  |
+| 748 | `warRoomChannelAudience` | read [analysts](/code/tables/analysts.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 756 | `warRoomChannelAudience` | read [analysts](/code/tables/analysts.md) |  |
+| 762 | `warRoomChannelAudience` | read [analysts](/code/tables/analysts.md), read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
 
 ## Calls
 

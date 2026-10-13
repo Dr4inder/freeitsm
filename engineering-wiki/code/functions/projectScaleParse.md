@@ -6,7 +6,7 @@ Read a stored scale. A JSON array is the format; a comma-separated string is wha
 function projectScaleParse(string $stored): array
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 358.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 360.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

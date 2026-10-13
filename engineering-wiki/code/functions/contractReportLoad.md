@@ -6,7 +6,7 @@ The contract, with the supplier and owner names the report shows. Returns null w
 function contractReportLoad(PDO $conn, int $contractId, ?int $analystId = null): ?array
 ```
 
-Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 140.
+Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 143.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/contract_report.php](/code/files/includes/contract_report.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 147 | `contractReportLoad` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md) |  |
+| 150 | `contractReportLoad` | read [contracts](/code/tables/contracts.md), read [suppliers](/code/tables/suppliers.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

@@ -9,7 +9,7 @@ renewing the server certificate never means visiting the PCs again.
 function dockerTlsGenerate(string $host, ?string $ip, string $dir = DOCKER_TLS_DIR): array
 ```
 
-Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 297.
+Defined in [includes/docker_tls.php](/code/files/includes/docker_tls.php.md), line 298.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

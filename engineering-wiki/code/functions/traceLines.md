@@ -6,7 +6,7 @@ Print one recorded HTTP exchange.
 function traceLines(array $t, string $key, int $n): array
 ```
 
-Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 84.
+Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 93.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

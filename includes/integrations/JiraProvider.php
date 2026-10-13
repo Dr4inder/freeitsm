@@ -42,6 +42,7 @@ class JiraProvider extends IssueTrackerProvider
     const FLAVOUR_CLOUD  = 'cloud';
     const FLAVOUR_SERVER = 'server';
 
+    /** The optional features the Jira connector supports, priorities included. */
     protected function capabilities(): array
     {
         return [
@@ -71,6 +72,7 @@ class JiraProvider extends IssueTrackerProvider
             : self::FLAVOUR_SERVER;
     }
 
+    /** True when the connection is Jira Cloud rather than Server / Data Center. */
     protected function isCloud(): bool
     {
         return $this->flavour() === self::FLAVOUR_CLOUD;
@@ -82,11 +84,13 @@ class JiraProvider extends IssueTrackerProvider
         return $this->isCloud() ? 3 : 2;
     }
 
+    /** The connection's Jira address without a trailing slash. */
     protected function baseUrl(): string
     {
         return rtrim((string)($this->connection['base_url'] ?? ''), '/');
     }
 
+    /** A REST API address for $path, on API version 3 (Cloud) or 2 (Server / Data Center). */
     protected function apiUrl(string $path): string
     {
         return $this->baseUrl() . '/rest/api/' . $this->apiVersion() . '/' . ltrim($path, '/');
@@ -176,6 +180,11 @@ class JiraProvider extends IssueTrackerProvider
     // -------------------------------------------------------------- create
 
     /**
+     * Builds the JSON body for creating an issue - project, issue type, a one-line summary
+     * of up to 255 characters, the rendered description and any mapped fields.
+     *
+     * Throws when no project or issue type was given or mapped.
+     *
      * @param array $target ['project' => 'OPS', 'issue_type' => 'Bug']
      */
     protected function buildCreatePayload(array $target, string $summary, IssueDoc $body, array $fields = []): array
@@ -210,6 +219,12 @@ class JiraProvider extends IssueTrackerProvider
         return $payload;
     }
 
+    /**
+     * Creates an issue and returns it as the escalation panel needs it.
+     *
+     * Reads the new issue back to get its status; if that read fails the creation still
+     * stands and the status is left empty.
+     */
     public function createIssue(array $target, string $summary, IssueDoc $body, array $fields = []): array
     {
         $created = $this->jiraRequest('POST', $this->apiUrl('issue'), $this->buildCreatePayload($target, $summary, $body, $fields));
@@ -278,6 +293,7 @@ class JiraProvider extends IssueTrackerProvider
         }
     }
 
+    /** Reads one issue's summary, status and assignee and returns it parsed. */
     public function fetchIssue(string $externalId): array
     {
         $url = $this->apiUrl('issue/' . rawurlencode($externalId))
@@ -366,6 +382,7 @@ class JiraProvider extends IssueTrackerProvider
      */
     const COMMENT_LOOKBACK_CAP_MINUTES = 1440;   // 24 hours
 
+    /** Posts a comment on an issue, rendered for this Jira flavour, and returns the new comment's id. */
     public function addComment(string $externalId, IssueDoc $body): string
     {
         $res = $this->jiraRequest(
@@ -738,7 +755,12 @@ class JiraProvider extends IssueTrackerProvider
         throw ($lastError ?: new Exception('Could not reach Jira.'));
     }
 
-    /** @return array [['key'=>'OPS','name'=>'Operations'], …] */
+    /**
+     * Lists the Jira projects for the mapping dropdowns - paged on Cloud (up to 1,000), one
+     * call on Server / Data Center.
+     *
+     * @return array [['key'=>'OPS','name'=>'Operations'], …]
+     */
     public function listProjects(): array
     {
         $out = [];

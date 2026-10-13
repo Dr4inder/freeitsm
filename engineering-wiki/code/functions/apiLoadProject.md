@@ -6,7 +6,7 @@ The by-id gate: existence + company scope, both failing as 404.
 function apiLoadProject(PDO $conn, array $apiKey, int $id): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 108.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

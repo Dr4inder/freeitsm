@@ -1,6 +1,6 @@
 # includes/oidc.php
 
-> PHP - 277 lines
+> PHP - 287 lines
 
 OIDC (OpenID Connect) helper.
 
@@ -28,9 +28,9 @@ and `nonce` (replay) validation, issuer + audience + expiry checks.
 | [oidcBuildAuthUrl()](/code/functions/oidcBuildAuthUrl.md) | 126 | Build the authorization URL to redirect the user's browser to. |
 | [oidcExchangeCode()](/code/functions/oidcExchangeCode.md) | 145 | Exchange the authorization code for tokens at the token endpoint (server-to-server back-channel). Returns the decoded token response. Throws on HTTP / provider error. |
 | [oidcValidateIdToken()](/code/functions/oidcValidateIdToken.md) | 175 | Validate an ID token: signature (JWKS), issuer, audience, nonce, expiry. Returns the validated claims as an associative array. Throws on any failure. |
-| [oidcHttpGet()](/code/functions/oidcHttpGet.md) | 206 |  |
-| [oidcHttpPost()](/code/functions/oidcHttpPost.md) | 225 |  |
-| [oidcFetchUserInfo()](/code/functions/oidcFetchUserInfo.md) | 251 | Fetch claims from the provider userinfo_endpoint using the access_token. Returns decoded JSON claims array or empty array on failure. |
+| [oidcHttpGet()](/code/functions/oidcHttpGet.md) | 210 | GETs a JSON document (discovery, keys) and returns the body; throws on a network error or any status but 200. |
+| [oidcHttpPost()](/code/functions/oidcHttpPost.md) | 235 | POSTs form fields to an OIDC endpoint and returns the body whatever the status, so the caller can read an error reply. |
+| [oidcFetchUserInfo()](/code/functions/oidcFetchUserInfo.md) | 261 | Fetch claims from the provider userinfo_endpoint using the access_token. Returns decoded JSON claims array or empty array on failure. |
 
 ## Database
 

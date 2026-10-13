@@ -39,12 +39,14 @@ function projectApiBody(): array
     return $b;
 }
 
+/** Sends a success JSON reply ({success: true} plus $data) and ends the request. */
 function projectApiOk(array $data = []): void
 {
     echo json_encode(['success' => true] + $data);
     exit;
 }
 
+/** Sends a failure JSON reply ({success: false, error}) with an optional HTTP status, and ends the request. */
 function projectApiFail(string $message, int $status = 200): void
 {
     if ($status !== 200) http_response_code($status);

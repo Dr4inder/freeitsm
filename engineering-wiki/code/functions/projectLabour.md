@@ -6,7 +6,7 @@ Labour for projects: time logged on their tasks, and what it cost.
 function projectLabour(PDO $conn, array $projects, bool $byDay = false): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 116.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 120.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 126 | `projectLabour` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
+| 130 | `projectLabour` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
 
 ## Calls
 

@@ -16,7 +16,7 @@ away a day early — on the morning of the day they were told they still had.
 function groupExpiryToUtc(string $date): ?string
 ```
 
-Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 422.
+Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 433.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

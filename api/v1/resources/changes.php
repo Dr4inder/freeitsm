@@ -40,10 +40,15 @@ require_once dirname(__DIR__, 3) . '/includes/services/changes.php';
 // Shared helpers
 // ---------------------------------------------------------------------------
 
+/** The display reference of a change, such as CHG-0042. */
 function apiChangeNumber(int $id): string {
     return 'CHG-' . str_pad((string)$id, 4, '0', STR_PAD_LEFT);
 }
 
+/**
+ * The SELECT for changes, with the names of the type, status, priority, impact,
+ * category, the people involved and the company.
+ */
 function apiChangeSelect(): string {
     return "SELECT c.*,
                    ct.name AS type_name,
@@ -116,6 +121,10 @@ function apiSerializeChange(array $r): array {
     ];
 }
 
+/**
+ * Loads one change row (apiChangeSelect), or answers 404 and stops - including for a
+ * change in a company the key cannot reach.
+ */
 function apiLoadChange(PDO $conn, array $apiKey, int $changeId): array {
     // Company isolation: a change outside the key's scope is "not found".
     if (!apiKeyCanAccessTenantRow($conn, $apiKey, 'changes', $changeId)) {
@@ -382,6 +391,7 @@ function apiChangeCommentsList(PDO $conn, array $apiKey, array $params, array $b
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/** POST /changes/{id}/comments - adds a comment to the change through ChangesService. */
 function apiChangeCommentsCreate(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         $commentId = ChangesService::createComment($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $body);
@@ -389,6 +399,7 @@ function apiChangeCommentsCreate(PDO $conn, array $apiKey, array $params, array 
     apiRespond(['id' => $commentId, 'change_id' => $params[0], 'text' => trim((string)($body['text'] ?? ''))], 201);
 }
 
+/** DELETE /changes/{id}/comments/{commentId} - deletes a comment through ChangesService. */
 function apiChangeCommentsDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         ChangesService::deleteComment($conn, ActorContext::fromApiKey($apiKey), (int)$params[1], (int)$params[0]);
@@ -493,18 +504,23 @@ function apiChangeLookupList(PDO $conn, string $table, bool $hasIsClosed = false
     }, $rows));
 }
 
+/** GET /change-statuses - the change statuses, with is_closed. */
 function apiChangeStatusesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiChangeLookupList($conn, 'change_statuses', true);
 }
+/** GET /change-types - the change types. */
 function apiChangeTypesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiChangeLookupList($conn, 'change_types');
 }
+/** GET /change-priorities - the change priorities. */
 function apiChangePrioritiesList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiChangeLookupList($conn, 'change_priorities');
 }
+/** GET /change-impacts - the change impact levels. */
 function apiChangeImpactsList(PDO $conn, array $apiKey, array $params, array $body): void {
     apiChangeLookupList($conn, 'change_impacts');
 }
+/** GET /change-categories - the change categories, in display order. */
 function apiChangeCategoriesList(PDO $conn, array $apiKey, array $params, array $body): void {
     $rows = $conn->query("SELECT id, name, description, is_active FROM change_categories ORDER BY display_order, name")->fetchAll(PDO::FETCH_ASSOC);
     apiRespond(array_map(function ($r) {

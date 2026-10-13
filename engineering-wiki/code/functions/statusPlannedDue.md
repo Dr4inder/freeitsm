@@ -6,7 +6,7 @@ Is anything due to start or end? One indexed query - cheap enough for every page
 function statusPlannedDue(PDO $conn): void
 ```
 
-Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 182.
+Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 183.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/service_status_planned.php](/code/files/includes/service_st
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 186 | `statusPlannedDue` | read [status_planned](/code/tables/status_planned.md) |  |
+| 187 | `statusPlannedDue` | read [status_planned](/code/tables/status_planned.md) |  |
 
 ## Calls
 

@@ -1,10 +1,12 @@
 # apiAssetDevicesList()
 
+GET /assets/{id}/devices - the hardware devices and drivers the inventory agent reported for the asset.
+
 ```php
 function apiAssetDevicesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 560.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 581.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 563 | `apiAssetDevicesList` | read [asset_devices](/code/tables/asset_devices.md) |  |
+| 584 | `apiAssetDevicesList` | read [asset_devices](/code/tables/asset_devices.md) |  |
 
 ## Calls
 

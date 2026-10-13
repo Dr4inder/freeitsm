@@ -1,10 +1,12 @@
 # csrfIsExempt()
 
+True when the path is on CSRF_EXEMPT_PATHS - an exact file, or anything under an entry ending in '/'.
+
 ```php
 function csrfIsExempt(string $path): bool
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 73.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

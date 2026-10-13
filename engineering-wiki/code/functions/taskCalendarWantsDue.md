@@ -6,7 +6,7 @@ Does this analyst want a task's due date in their calendar?
 function taskCalendarWantsDue(string $mode): bool
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 67.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

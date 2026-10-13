@@ -1,10 +1,12 @@
 # ctLoadSitting()
 
+Loads one candidate sitting with its test's title, or answers 404 "Candidate not found" and stops.
+
 ```php
 function ctLoadSitting(PDO $conn, int $id): array
 ```
 
-Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 56.
+Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 62.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +19,7 @@ Defined in [api/lms/tests.php](/code/files/api/lms/tests.php.md), line 56.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 58 | `ctLoadSitting` | read [lms_ct_sittings](/code/tables/lms_ct_sittings.md), read [lms_ct_tests](/code/tables/lms_ct_tests.md) |  |
+| 64 | `ctLoadSitting` | read [lms_ct_sittings](/code/tables/lms_ct_sittings.md), read [lms_ct_tests](/code/tables/lms_ct_tests.md) |  |
 
 ## Calls
 

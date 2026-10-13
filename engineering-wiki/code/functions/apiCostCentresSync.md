@@ -6,7 +6,7 @@ POST /cost-centres/sync — bring a company's list into line, matched on code
 function apiCostCentresSync(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 196.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 208.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

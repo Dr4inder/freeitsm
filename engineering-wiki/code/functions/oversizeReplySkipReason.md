@@ -11,7 +11,7 @@ function oversizeReplySkipReason(
 ): ?string
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 287.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 290.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,7 +26,7 @@ Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 297 | `oversizeReplySkipReason` | read [mailbox_activity_log](/code/tables/mailbox_activity_log.md) |  |
+| 300 | `oversizeReplySkipReason` | read [mailbox_activity_log](/code/tables/mailbox_activity_log.md) |  |
 
 ## Called from
 

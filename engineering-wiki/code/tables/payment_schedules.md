@@ -25,8 +25,8 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/contracts/delete_payment_schedule.php](/code/files/api/contracts/delete_payment_schedule.php.md) | L33 |  |
-| [api/contracts/get_contract.php](/code/files/api/contracts/get_contract.php.md) | L28 |  |
-| [api/contracts/get_contracts.php](/code/files/api/contracts/get_contracts.php.md) | L24 |  |
+| [api/contracts/get_contract.php](/code/files/api/contracts/get_contract.php.md) | L39 |  |
+| [api/contracts/get_contracts.php](/code/files/api/contracts/get_contracts.php.md) | L37 |  |
 | [api/contracts/get_payment_schedules.php](/code/files/api/contracts/get_payment_schedules.php.md) | L19 |  |
-| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractSelect L60 |  |
+| [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md) | apiContractSelect L65 |  |
 

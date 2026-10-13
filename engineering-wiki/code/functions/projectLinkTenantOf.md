@@ -6,7 +6,7 @@ A record's company with NULL read as the Default company.
 function projectLinkTenantOf(PDO $conn, string $table, int $id): ?int
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 87.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 91.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

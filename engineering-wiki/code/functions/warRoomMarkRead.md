@@ -6,7 +6,7 @@ Remember how far this analyst has read, so the channel list can show what is new
 function warRoomMarkRead(PDO $conn, int $analystId, int $channelId, int $messageId): void
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1114.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1115.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 111
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1118 | `warRoomMarkRead` | **insert** [warroom_reads](/code/tables/warroom_reads.md) (`analyst_id`, `channel_id`, `last_read_message_id`, `updated_datetime`) |  |
+| 1119 | `warRoomMarkRead` | **insert** [warroom_reads](/code/tables/warroom_reads.md) (`analyst_id`, `channel_id`, `last_read_message_id`, `updated_datetime`) |  |
 
 ## Called from
 

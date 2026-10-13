@@ -22,13 +22,13 @@ Project templates saved from a project (3.2.0); built-ins live in code.
 |---|---|---|---|---|
 | [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):188 | `ProjectTemplatesService::saveFromProject` | update | `name`, `description`, `content`, `updated_datetime` |  |
 | [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):192 | `ProjectTemplatesService::saveFromProject` | insert | `name`, `description`, `content`, `is_active`, `created_by_analyst_id`, `created_datetime`, `updated_datetime` |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):206 | `ProjectTemplatesService::update` | update | `name`, `description`, `is_active`, `updated_datetime` |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):215 | `ProjectTemplatesService::delete` | delete |  |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):207 | `ProjectTemplatesService::update` | update | `name`, `description`, `is_active`, `updated_datetime` |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md):217 | `ProjectTemplatesService::delete` | delete |  |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplatesReady L61, projectTemplateList L353, projectTemplateLoad L376 |  |
-| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md) | ProjectTemplatesService::row L249 |  |
+| [includes/projects/templates.php](/code/files/includes/projects/templates.php.md) | projectTemplatesReady L62, projectTemplateList L354, projectTemplateLoad L377 |  |
+| [includes/services/project_templates.php](/code/files/includes/services/project_templates.php.md) | ProjectTemplatesService::row L254 |  |
 

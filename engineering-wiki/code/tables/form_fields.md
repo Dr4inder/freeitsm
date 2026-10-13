@@ -20,14 +20,14 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):3130 |  | delete |  |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):1080 | `FormsService::deleteForm` | delete |  |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):1281 | `FormsService::createVersion` | insert | `form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`, `config` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):1290 | `FormsService::createVersion` | update | `config` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2793 | `FormsService::syncFields` | update | `field_type`, `label`, `options`, `is_required`, `sort_order`, `is_deleted` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2798 | `FormsService::syncFields` | insert | `form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2820 | `FormsService::syncFields` | update | `is_deleted` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2823 | `FormsService::syncFields` | update | `is_deleted` |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2827 | `FormsService::syncFields` | update | `config` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):1086 | `FormsService::deleteForm` | delete |  |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):1287 | `FormsService::createVersion` | insert | `form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order`, `config` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):1296 | `FormsService::createVersion` | update | `config` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2807 | `FormsService::syncFields` | update | `field_type`, `label`, `options`, `is_required`, `sort_order`, `is_deleted` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2812 | `FormsService::syncFields` | insert | `form_id`, `field_type`, `label`, `options`, `is_required`, `sort_order` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2834 | `FormsService::syncFields` | update | `is_deleted` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2837 | `FormsService::syncFields` | update | `is_deleted` |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md):2841 | `FormsService::syncFields` | update | `config` |  |
 
 ## Read by
 
@@ -40,7 +40,7 @@
 | [api/forms/lookup_search.php](/code/files/api/forms/lookup_search.php.md) | L47 |  |
 | [api/self-service/get_catalogue_form.php](/code/files/api/self-service/get_catalogue_form.php.md) | L60 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3134 |  |
-| [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | apiFormSelect L57, apiSerializeForm L113, apiSerializeFormSubmission L134 |  |
+| [api/v1/resources/forms.php](/code/files/api/v1/resources/forms.php.md) | apiFormSelect L61, apiSerializeForm L125, apiSerializeFormSubmission L152 |  |
 | [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md) | catalogueSubmissionAnswerMap L479, catalogueSubmissionBodyHtml L503, catalogueSubmissionAnswers L587 |  |
-| [includes/services/forms.php](/code/files/includes/services/forms.php.md) | FormsService::collectionSubmissions L759, FormsService::createVersion L1272, FormsService::submitForm L1400, FormsService::saveDraft L2188, FormsService::syncFields L2787 |  |
+| [includes/services/forms.php](/code/files/includes/services/forms.php.md) | FormsService::collectionSubmissions L759, FormsService::createVersion L1278, FormsService::submitForm L1406, FormsService::saveDraft L2197, FormsService::syncFields L2801 |  |
 

@@ -6,7 +6,7 @@ POST /tickets
 function apiTicketsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 260.
+Defined in [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), line 268.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

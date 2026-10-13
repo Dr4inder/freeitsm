@@ -14,7 +14,7 @@ are adding something because "it's probably fine", it isn't — guard it instead
 function d005ByDesign(string $rel): ?string
 ```
 
-Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 88.
+Defined in [api/system/debug-tools/D005_endpoint_permissions.php](/code/files/api/system/debug-tools/D005_endpoint_permissions.php.md), line 92.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -99,6 +99,7 @@ class NotificationsService
         }
     }
 
+    /** True while a duringBulk() call is running. */
     public static function inBulk(): bool
     {
         return self::$bulkMode;
@@ -458,6 +459,10 @@ class NotificationsService
         return $stmt->rowCount();
     }
 
+    /**
+     * Marks every unread notification for the recipient (an analyst, or a portal user) as
+     * read and returns how many.
+     */
     public static function markAllRead(PDO $conn, $recipient): int
     {
         [$table, $col, $analystId] = self::who($recipient);
@@ -517,6 +522,7 @@ class NotificationsService
         return $stmt->rowCount();
     }
 
+    /** Trimmed text cut to $max characters, or null when blank. */
     private static function clip($value, int $max): ?string
     {
         if ($value === null) {

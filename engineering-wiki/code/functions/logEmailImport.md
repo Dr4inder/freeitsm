@@ -1,10 +1,12 @@
 # logEmailImport()
 
+Writes one email_import row to system_logs with the mailbox id added to the details. A logging failure goes to the PHP error log and never stops the import.
+
 ```php
 function logEmailImport($conn, $mailboxId, $details)
 ```
 
-Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1433.
+Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md), line 1437.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,7 +18,7 @@ Defined in [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1436 | `logEmailImport` | **insert** [system_logs](/code/tables/system_logs.md) (`log_type`, `analyst_id`, `details`, `created_datetime`) |  |
+| 1440 | `logEmailImport` | **insert** [system_logs](/code/tables/system_logs.md) (`log_type`, `analyst_id`, `details`, `created_datetime`) |  |
 
 ## Called from
 

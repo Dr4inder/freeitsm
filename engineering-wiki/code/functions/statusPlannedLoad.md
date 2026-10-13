@@ -1,10 +1,12 @@
 # statusPlannedLoad()
 
+Loads one planned maintenance row; throws not found when it does not exist.
+
 ```php
 function statusPlannedLoad(PDO $conn, int $id): array
 ```
 
-Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 127.
+Defined in [includes/service_status_planned.php](/code/files/includes/service_status_planned.php.md), line 128.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +19,7 @@ Defined in [includes/service_status_planned.php](/code/files/includes/service_st
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 129 | `statusPlannedLoad` | read [status_planned](/code/tables/status_planned.md) |  |
+| 130 | `statusPlannedLoad` | read [status_planned](/code/tables/status_planned.md) |  |
 
 ## Called from
 

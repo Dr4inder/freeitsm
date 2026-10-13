@@ -1,10 +1,12 @@
 # projectApiOk()
 
+Sends a success JSON reply ({success: true} plus `$data`) and ends the request.
+
 ```php
 function projectApiOk(array $data = []): void
 ```
 
-Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 42.
+Defined in [includes/projects/api_bootstrap.php](/code/files/includes/projects/api_bootstrap.php.md), line 43.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

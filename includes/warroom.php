@@ -255,6 +255,7 @@ function warRoomCanAccessChannel(PDO $conn, int $analystId, int $channelId): boo
     }
 }
 
+/** True when the analyst is a listed member of the channel - what decides access to a private channel or a DM. */
 function warRoomIsMember(PDO $conn, int $analystId, int $channelId): bool
 {
     $s = $conn->prepare("SELECT 1 FROM warroom_channel_members WHERE channel_id = :c AND analyst_id = :a LIMIT 1");

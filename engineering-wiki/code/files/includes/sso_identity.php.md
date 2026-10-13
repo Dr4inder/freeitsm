@@ -2,6 +2,15 @@
 
 > PHP - 227 lines
 
+Sign-in identity links — the one home for the (provider, subject) → account mapping that both sign-in paths share.
+
+`analyst_sso_identities` and `user_sso_identities` record which directory or
+identity-provider identity belongs to which FreeITSM account. OIDC writes and
+reads them (api/auth/oidc_callback.php) and so does LDAP/AD (includes/ldap.php),
+and both resolve a person the same way: existing link → email match →
+just-in-time create. The link lookup runs FIRST in all four branches, which is
+why the dangling-link case below had to be fixed in one place rather than four.
+
 ## Functions
 
 | Function | Line | What it does |

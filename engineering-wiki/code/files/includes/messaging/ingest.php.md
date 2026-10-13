@@ -1,6 +1,6 @@
 # includes/messaging/ingest.php
 
-> PHP - 990 lines
+> PHP - 994 lines
 
 Channel message ingest — the bridge from a normalised inbound message onto the existing ticket "membrane". This is the channel twin of `saveEmailToDatabase()` in api/tickets/check_mailbox_email.php: find-or-create a ticket, store the message in the shared `emails` table (so the reading-pane thread works for free), route the company, and keep the 24h window state current.
 
@@ -31,7 +31,7 @@ so it is safe to include from the webhook with just functions.php + tenancy.php
 | [getChannelOriginId()](/code/functions/getChannelOriginId.md) | 911 | The origin id for a channel type (e.g. the seeded 'WhatsApp' origin), or null. |
 | [buildChannelSubject()](/code/functions/buildChannelSubject.md) | 925 | A short, human ticket subject from the first line of the first message. |
 | [messagingGenerateTicketNumber()](/code/functions/messagingGenerateTicketNumber.md) | 951 | The number for a ticket opened by a chat (WhatsApp, Telegram, Slack, Teams, Mattermost, web chat). |
-| [saveChannelMediaAttachment()](/code/functions/saveChannelMediaAttachment.md) | 962 |  |
+| [saveChannelMediaAttachment()](/code/functions/saveChannelMediaAttachment.md) | 966 | Stores one downloaded media file as an attachment on the channel message's email row. |
 
 ## Database
 
@@ -68,7 +68,7 @@ so it is safe to include from the webhook with just functions.php + tenancy.php
 | 895 | `getOrCreateChannelUser` | read [users](/code/tables/users.md) |  |
 | 901 | `getOrCreateChannelUser` | **insert** [users](/code/tables/users.md) (`email`, `display_name`, `created_at`) |  |
 | 915 | `getChannelOriginId` | read [ticket_origins](/code/tables/ticket_origins.md) |  |
-| 984 | `saveChannelMediaAttachment` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline`) |  |
+| 988 | `saveChannelMediaAttachment` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline`) |  |
 
 ## How it hangs together
 

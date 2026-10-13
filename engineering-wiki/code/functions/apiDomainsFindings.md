@@ -6,7 +6,7 @@ GET /domains/{id}/findings — the last check's findings, with English text
 function apiDomainsFindings(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 332.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 345.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

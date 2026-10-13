@@ -6,7 +6,7 @@ A record's company with NULL read as the Default company.
 function domainLinkTenantOf(PDO $conn, string $table, int $id): ?int
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 79.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 82.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

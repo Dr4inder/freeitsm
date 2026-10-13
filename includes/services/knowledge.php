@@ -410,6 +410,7 @@ class KnowledgeService
     //  Internals
     // ======================================================================
 
+    /** Loads one Knowledge article; throws not found when it does not exist. */
     private static function loadArticleRow(PDO $conn, int $id): array
     {
         $stmt = $conn->prepare("SELECT * FROM knowledge_articles WHERE id = ?");

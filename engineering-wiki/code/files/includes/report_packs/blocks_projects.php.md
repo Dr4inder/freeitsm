@@ -1,6 +1,6 @@
 # includes/report_packs/blocks_projects.php
 
-> PHP - 244 lines
+> PHP - 253 lines
 
 Report Packs: Projects blocks (3.2.0) - so the monthly board pack includes the projects without anybody copying figures out of the portfolio.
 
@@ -27,12 +27,12 @@ chosen projects; empty means all of them.
 | [rpProjectRows()](/code/functions/rpProjectRows.md) | 28 | Projects in the pack's company, decorated with health and progress. |
 | [rpProjectClause()](/code/functions/rpProjectClause.md) | 59 | The company clause plus members-only (3.3.0): a pack carries a members-only project only when the person it is built for may see it - never for nobody. |
 | [rpProjectHealthPill()](/code/functions/rpProjectHealthPill.md) | 68 | A health pill: the words the Projects module uses, in its colours. |
-| [rpProjectsKpis()](/code/functions/rpProjectsKpis.md) | 74 |  |
-| [rpProjectsHealth()](/code/functions/rpProjectsHealth.md) | 94 |  |
-| [rpProjectsStatus()](/code/functions/rpProjectsStatus.md) | 109 |  |
-| [rpProjectsMilestones()](/code/functions/rpProjectsMilestones.md) | 143 | Stage ends and target finishes inside the range, and whether each was met. |
-| [rpProjectsRisks()](/code/functions/rpProjectsRisks.md) | 190 | The open risks that matter most, across the chosen projects. |
-| [rpProjectChoices()](/code/functions/rpProjectChoices.md) | 233 | The projects offered by a block's "Projects" option: those the viewer can see, live first. |
+| [rpProjectsKpis()](/code/functions/rpProjectsKpis.md) | 78 | Projects block: KPI tiles - live projects, how many are green, amber and red now, and stages ending in the period. |
+| [rpProjectsHealth()](/code/functions/rpProjectsHealth.md) | 99 | Projects block: a chart of live projects by health (green, amber, red). A snapshot of today. |
+| [rpProjectsStatus()](/code/functions/rpProjectsStatus.md) | 118 | Projects block: a table of projects with health, progress, current stage, target date and, optionally, manager and the reason for the health. |
+| [rpProjectsMilestones()](/code/functions/rpProjectsMilestones.md) | 152 | Stage ends and target finishes inside the range, and whether each was met. |
+| [rpProjectsRisks()](/code/functions/rpProjectsRisks.md) | 199 | The open risks that matter most, across the chosen projects. |
+| [rpProjectChoices()](/code/functions/rpProjectChoices.md) | 242 | The projects offered by a block's "Projects" option: those the viewer can see, live first. |
 
 ## Database
 
@@ -40,11 +40,11 @@ chosen projects; empty means all of them.
 |--:|---|---|---|
 | 38 | `rpProjectRows` | read [project_stages](/code/tables/project_stages.md) |  |
 | 41 | `rpProjectRows` | read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 81 | `rpProjectsKpis` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
-| 151 | `rpProjectsMilestones` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
-| 159 | `rpProjectsMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
-| 196 | `rpProjectsRisks` | read [project_raid](/code/tables/project_raid.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
-| 239 | `rpProjectChoices` | read [projects](/code/tables/projects.md) |  |
+| 85 | `rpProjectsKpis` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
+| 160 | `rpProjectsMilestones` | read [project_stages](/code/tables/project_stages.md), read [projects](/code/tables/projects.md) |  |
+| 168 | `rpProjectsMilestones` | read [project_milestones](/code/tables/project_milestones.md), read [projects](/code/tables/projects.md) |  |
+| 205 | `rpProjectsRisks` | read [project_raid](/code/tables/project_raid.md), read [projects](/code/tables/projects.md), read [analysts](/code/tables/analysts.md) |  |
+| 248 | `rpProjectChoices` | read [projects](/code/tables/projects.md) |  |
 
 ## How it hangs together
 

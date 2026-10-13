@@ -1,4 +1,17 @@
 <?php
+/**
+ * API: the contracts list - the active company's contracts, or every company the analyst
+ * can see under "All companies".
+ *
+ * Newest first. The search matches contract number, title, supplier names and, once
+ * customer contracts exist, the customer company or person.
+ *
+ * @input  search  optional text to match
+ * @input  limit   optional maximum number of rows
+ * @input  party   optional 'supplier' or 'customer' - only that kind of contract
+ * @output {success, contracts: [...]} - each with party_label
+ * @wiki Customer-Contracts-Developer-Guide
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

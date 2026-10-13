@@ -22,7 +22,7 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/self-service/upload_recording.php](/code/files/api/self-service/upload_recording.php.md):90 |  | insert | `ticket_id`, `recorded_by_user_id`, `filename`, `original_filename`, `content_type`, `file_path`, `file_size`, `duration_seconds`, `has_audio`, `created_at` |  |
-| [includes/ticket_recordings.php](/code/files/includes/ticket_recordings.php.md):65 | `claimPendingRecordings` | update | `ticket_id`, `email_id`, `file_path` |  |
+| [includes/ticket_recordings.php](/code/files/includes/ticket_recordings.php.md):67 | `claimPendingRecordings` | update | `ticket_id`, `email_id`, `file_path` |  |
 
 ## Read by
 
@@ -30,8 +30,8 @@
 |---|---|---|
 | [api/self-service/get_recording.php](/code/files/api/self-service/get_recording.php.md) | L31 |  |
 | [api/self-service/get_ticket_detail.php](/code/files/api/self-service/get_ticket_detail.php.md) | L255 |  |
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L322 |  |
-| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L544 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L331 |  |
+| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L553 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L306 |  |
-| [includes/ticket_recordings.php](/code/files/includes/ticket_recordings.php.md) | claimPendingRecordings L58 |  |
+| [includes/ticket_recordings.php](/code/files/includes/ticket_recordings.php.md) | claimPendingRecordings L60 |  |
 

@@ -21,6 +21,6 @@
 |---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L3453 |  |
 | [checklists/edit/index.php](/code/files/checklists/edit/index.php.md) | L47 |  |
-| [checklists/index.php](/code/files/checklists/index.php.md) | L45 |  |
-| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md) | L68 |  |
+| [checklists/index.php](/code/files/checklists/index.php.md) | L52 |  |
+| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md) | L76 |  |
 

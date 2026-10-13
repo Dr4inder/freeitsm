@@ -33,7 +33,7 @@ function warRoomSearch(
 ): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 967.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 968.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -49,9 +49,9 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 967
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 991 | `warRoomSearch` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
-| 1005 | `warRoomSearch` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 1009 | `warRoomSearch` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
+| 992 | `warRoomSearch` | read [warroom_channel_members](/code/tables/warroom_channel_members.md), read [analysts](/code/tables/analysts.md), read [warroom_messages](/code/tables/warroom_messages.md), read [warroom_channels](/code/tables/warroom_channels.md), read [teams](/code/tables/teams.md) |  |
+| 1006 | `warRoomSearch` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 1010 | `warRoomSearch` | read [warroom_channel_members](/code/tables/warroom_channel_members.md) |  |
 
 ## Calls
 

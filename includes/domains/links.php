@@ -59,6 +59,9 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         return $ready;
     }
 
+    /**
+     * Returns the definition (table, column, module...) of one link kind; throws a validation ServiceError for an unknown kind.
+     */
     function domainLinkKind(string $kind): array
     {
         $kinds = domainLinkKinds();
@@ -180,6 +183,9 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         return $out;
     }
 
+    /**
+     * Links a record of one kind to a domain, when the analyst can reach both modules and both records in the domain's company; returns false when the link already existed.
+     */
     function domainLinkAdd(PDO $conn, int $analystId, int $domainId, string $kind, int $targetId): bool
     {
         $k = domainLinkKind($kind);
@@ -193,6 +199,7 @@ if (!defined('DOMAIN_LINKS_LOADED')) {
         return $st->rowCount() > 0;
     }
 
+    /** Removes a domain link, under the same access rules as adding one; returns false when there was nothing to remove. */
     function domainLinkRemove(PDO $conn, int $analystId, int $domainId, string $kind, int $targetId): bool
     {
         $k = domainLinkKind($kind);

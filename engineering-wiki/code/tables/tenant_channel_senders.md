@@ -15,5 +15,5 @@ Specific sender phone numbers mapped to a company (shared-intake channel routing
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | resolveTicketTenantForChannel L1153 |  |
+| [includes/tenancy.php](/code/files/includes/tenancy.php.md) | resolveTicketTenantForChannel L1159 |  |
 

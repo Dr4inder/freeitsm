@@ -6,7 +6,7 @@ Did this request arrive with a session cookie at all? Without one there is nothi
 function csrfHasSessionCookie(): bool
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 88.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 90.
 
 **Returns:** `bool`
 

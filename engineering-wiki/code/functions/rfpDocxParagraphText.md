@@ -6,7 +6,7 @@ Concatenate all text runs in a single <w:p>, preserving tab characters where <w:
 function rfpDocxParagraphText(DOMElement $p, string $ns): string
 ```
 
-Defined in [includes/rfp_docx_parser.php](/code/files/includes/rfp_docx_parser.php.md), line 98.
+Defined in [includes/rfp_docx_parser.php](/code/files/includes/rfp_docx_parser.php.md), line 105.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

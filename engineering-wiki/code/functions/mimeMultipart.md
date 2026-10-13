@@ -6,7 +6,7 @@ Wrap [headers, content] entities in a multipart/<subtype> entity.
 function mimeMultipart(string $subtype, array $entities, string $extraParams = ''): array
 ```
 
-Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 144.
+Defined in [includes/mime_message.php](/code/files/includes/mime_message.php.md), line 147.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

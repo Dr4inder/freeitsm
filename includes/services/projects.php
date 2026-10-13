@@ -81,6 +81,13 @@ class ProjectsService
         return ['id' => self::createProject($conn, $ctx, $in, $tenantId), 'created' => true];
     }
 
+    /**
+     * Creates a project for a company and returns its id.
+     *
+     * Fills in the default method, visibility and project manager from Projects -> Settings
+     * and the creator, starts it as proposed when proposals need approval, records it in
+     * the history and fires project.created.
+     */
     public static function createProject(PDO $conn, ActorContext $ctx, array $in, ?int $tenantId): int
     {
         $store = self::storeTenant($conn, $tenantId);
@@ -142,6 +149,13 @@ class ProjectsService
         return $id;
     }
 
+    /**
+     * Changes a project's fields, records each change in its history, refreshes the
+     * calendar, fires project.updated and checks health and tolerances.
+     *
+     * Only the team or a project manager may change who can see it; a proposal waiting for
+     * approval cannot be started.
+     */
     public static function updateProject(PDO $conn, ActorContext $ctx, int $id, array $in): int
     {
         $cur = self::loadForActor($conn, $ctx, $id);
@@ -486,6 +500,7 @@ class ProjectsService
     //  Loading and scope
     // ======================================================================
 
+    /** Loads one project; throws not found when it does not exist. */
     public static function loadRow(PDO $conn, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM projects WHERE id = ?");
@@ -506,6 +521,7 @@ class ProjectsService
         return $row;
     }
 
+    /** Loads one project stage; throws not found when it does not exist. */
     public static function loadStage(PDO $conn, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM project_stages WHERE id = ?");
@@ -529,6 +545,7 @@ class ProjectsService
         }
     }
 
+    /** Throws not found with $notFound when the row's company is outside the actor's companies. */
     private static function assertScope(PDO $conn, ActorContext $ctx, array $row, string $notFound): void
     {
         if ($ctx->companyScope === null || !isMultiTenant($conn)) return;
@@ -538,6 +555,7 @@ class ProjectsService
         }
     }
 
+    /** True when two company ids are the same company, treating NULL as the Default company. */
     private static function sameTenant(PDO $conn, $a, $b): bool
     {
         if (!isMultiTenant($conn)) return true;
@@ -558,6 +576,10 @@ class ProjectsService
     //  Validation and history
     // ======================================================================
 
+    /**
+     * Validates and cleans one project field according to its type in fieldMap(), and
+     * returns the value to store.
+     */
     private static function validateField(PDO $conn, string $field, $v, array $def)
     {
         $blank = $v === null || (is_string($v) && trim($v) === '');
@@ -605,6 +627,7 @@ class ProjectsService
         return $v;
     }
 
+    /** Validates an optional YYYY-MM-DD date; blank gives null. */
     private static function date($v): ?string
     {
         if ($v === null || trim((string)$v) === '') return null;
@@ -614,6 +637,7 @@ class ProjectsService
         return $s;
     }
 
+    /** Throws when the end date is before the start date. */
     private static function assertDates(?string $start, ?string $end): void
     {
         if ($start && $end && $end < $start) {
@@ -621,6 +645,7 @@ class ProjectsService
         }
     }
 
+    /** Trimmed text cut to $max characters, or null when blank. */
     private static function str($v, int $max): ?string
     {
         if ($v === null) return null;
@@ -629,12 +654,14 @@ class ProjectsService
         return mb_substr($s, 0, $max);
     }
 
+    /** True when two values are equal as strings; null only equals null. */
     private static function same($a, $b): bool
     {
         if ($a === null || $b === null) return $a === $b;
         return (string)$a === (string)$b;
     }
 
+    /** The history source for the actor: 'api' or 'app'. */
     private static function source(ActorContext $ctx): string
     {
         return $ctx->source === 'api' ? 'api' : 'app';
@@ -861,22 +888,30 @@ class ProjectsService
         }
     }
 
+    /** Fires a project workflow event with the project's details. */
     private static function dispatch(PDO $conn, string $event, int $id, array $extra = []): void
     {
         $p = self::eventFor($conn, $id);
         if ($p) projectDispatch($event, ['project' => $p] + $extra);
     }
 
+    /** Sets the project's updated time to now, for the other project services. */
     public static function touchProject(PDO $conn, int $projectId): void
     {
         self::touch($conn, $projectId);
     }
 
+    /** Sets the project's updated time to now. */
     private static function touch(PDO $conn, int $projectId): void
     {
         $conn->prepare("UPDATE projects SET updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$projectId]);
     }
 
+    /**
+     * Records one change in a project's history; a failure is logged, never thrown.
+     *
+     * @writes project_audit - the project's history
+     */
     public static function audit(PDO $conn, int $projectId, ?int $analystId, string $field, $old, $new, string $source = 'app'): void
     {
         try {

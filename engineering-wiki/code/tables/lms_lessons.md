@@ -32,5 +32,5 @@ Native course content. Lesson bodies are TinyMCE HTML (as knowledge articles are
 | [api/lms/course_content.php](/code/files/api/lms/course_content.php.md) | L46 |  |
 | [api/lms/lessons.php](/code/files/api/lms/lessons.php.md) | L31, L110 |  |
 | [api/lms/native_progress.php](/code/files/api/lms/native_progress.php.md) | L109 |  |
-| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAttachLessonProgress L377 |  |
+| [includes/lms_access.php](/code/files/includes/lms_access.php.md) | lmsAttachLessonProgress L383 |  |
 

@@ -1,10 +1,12 @@
 # peopleSupplierName()
 
+The name to show for a supplier: trading name, else legal name, else #id.
+
 ```php
 function peopleSupplierName(array $r): string
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 588.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 590.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

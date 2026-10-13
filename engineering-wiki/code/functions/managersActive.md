@@ -6,7 +6,7 @@ Can managers work at all on this install? Needs the switch on AND every table th
 function managersActive(PDO $conn): bool
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 93.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 94.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 9
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 100 | `managersActive` | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 101 | `managersActive` | read [manager_grants](/code/tables/manager_grants.md) |  |
 
 ## Calls
 

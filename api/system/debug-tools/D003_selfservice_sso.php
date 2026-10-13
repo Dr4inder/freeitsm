@@ -27,11 +27,17 @@ $DIAG_NAME = 'Self-Service SSO check (by email)';
 // ---- helpers -----------------------------------------------------------
 
 $sections = [];
+/**
+ * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
+ * string or an array of lines.
+ */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
     $sections[] = "=== {$title} ===\n" . rtrim($body, "\n");
 }
+/** Formats a boolean as YES or NO for the report. */
 function yn($v) { return $v ? 'YES' : 'NO'; }
+/** Formats a boolean as one of two words - OK or MISSING unless others are given. */
 function okbad($v, $ok = 'OK', $bad = 'MISSING') { return $v ? $ok : $bad; }
 
 /**
@@ -69,6 +75,10 @@ function endpointLine(string $key, array $doc, string $issuerUrl, string $what):
     }
     return $line . "\n      ({$what})";
 }
+/**
+ * Shortens a value to its first and last four characters (the first two for a short
+ * one), so a shared report shows enough to recognise it but not the whole value.
+ */
 function maskMiddle($s) {
     $s = (string)$s;
     if ($s === '') return '(empty)';
@@ -84,6 +94,10 @@ function maskGuids($s) {
         return substr($m[0], 0, 8) . '…' . substr($m[0], -4);
     }, (string)$s);
 }
+/**
+ * Partially masks a client or tenant id - GUIDs and long opaque ids through
+ * maskMiddle(), short readable names shown as they are.
+ */
 function maskId($s) {
     $s = (string)$s;
     if ($s === '') return '(empty!)';
@@ -92,6 +106,10 @@ function maskId($s) {
     if (preg_match('/^[0-9a-fA-F-]{20,}$/', $s) || strlen($s) > 24) return maskMiddle($s);
     return $s;
 }
+/**
+ * Prints every section, separated by blank lines, and stops - the end of the report, and
+ * the early exit when a check cannot go on.
+ */
 function emit_and_exit($sections) {
     if (!headers_sent()) {
         header('Content-Type: text/plain; charset=utf-8');

@@ -35,11 +35,11 @@
 |---|---|---|
 | [api/files/permissions.php](/code/files/api/files/permissions.php.md) | L69, L107 |  |
 | [api/files/principals.php](/code/files/api/files/principals.php.md) | L13 |  |
-| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | handleSearch L341 |  |
+| [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) | handleSearch L351 |  |
 | [api/morning-checks/get_todays_checks.php](/code/files/api/morning-checks/get_todays_checks.php.md) | L39 |  |
 | [api/projects/lookups.php](/code/files/api/projects/lookups.php.md) | L27 |  |
 | [api/reporting/packs/shares.php](/code/files/api/reporting/packs/shares.php.md) | L34 |  |
-| [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L174 |  |
+| [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L183 |  |
 | [api/system/get_effective_module_access.php](/code/files/api/system/get_effective_module_access.php.md) | L35 |  |
 | [api/system/get_module_access.php](/code/files/api/system/get_module_access.php.md) | L36 |  |
 | [api/system/save_module_grants.php](/code/files/api/system/save_module_grants.php.md) | L36 |  |
@@ -52,25 +52,25 @@
 | [api/tickets/get_team_companies.php](/code/files/api/tickets/get_team_companies.php.md) | L28 |  |
 | [api/tickets/get_teams.php](/code/files/api/tickets/get_teams.php.md) | L21, L40 |  |
 | [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L453 |  |
-| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L41 |  |
+| [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42 |  |
 | [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | analystSignInReady L54, analystSignInTeamMethods L73 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTask L184 |  |
-| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::teamIds L112, FilesAcl::entries L198 |  |
+| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::teamIds L113, FilesAcl::entries L201 |  |
 | [includes/functions.php](/code/files/includes/functions.php.md) | getAnalystAllowedModules L153 |  |
 | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L283 |  |
 | [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectDetail L369 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewTask L173 |  |
-| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpListShares L160 |  |
+| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpListShares L161 |  |
 | [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md) | L29 |  |
 | [includes/services/mandatory_fields.php](/code/files/includes/services/mandatory_fields.php.md) | MandatoryFieldsService::fieldAvailable L159 |  |
 | [includes/services/morning_checks.php](/code/files/includes/services/morning_checks.php.md) | MorningChecksService::listGroups L142 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addMember L40, ProjectToolsService::members L990, ProjectToolsService::memberName L1547 |  |
-| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::validateTeam L1264 |  |
-| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::updateTicket L461, TicketsService::teamName L1186 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::addMember L40, ProjectToolsService::members L1029, ProjectToolsService::memberName L1605 |  |
+| [includes/services/tasks.php](/code/files/includes/services/tasks.php.md) | TasksService::validateTeam L1279 |  |
+| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::updateTicket L461, TicketsService::teamName L1187 |  |
 | [includes/sso_claims.php](/code/files/includes/sso_claims.php.md) | ssoTeamMappings L110, ssoSaveTeamMappings L125 |  |
 | [includes/table_views.php](/code/files/includes/table_views.php.md) | tableViewSelect L60 |  |
 | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getAccessibleTenantIds L214 |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomEnsureChannels L96, warRoomChannelList L131, warRoomChannel L213, warRoomMyMentions L798, warRoomSearch L991, warRoomTranscriptSince L1276 |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomEnsureChannels L96, warRoomChannelList L131, warRoomChannel L213, warRoomMyMentions L799, warRoomSearch L992, warRoomTranscriptSince L1277 |  |
 | [system/roles/index.php](/code/files/system/roles/index.php.md) | L36 |  |
 | [system/sso/index.php](/code/files/system/sso/index.php.md) | L34 |  |
 

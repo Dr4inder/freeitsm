@@ -55,6 +55,7 @@ const MANAGER_EXCLUSION_TYPES = ['user', 'group', 'department'];
  * any screen that saves settings and then reads the result back.
  */
 $GLOBALS['managers_memo'] = $GLOBALS['managers_memo'] ?? [];
+/** Clears the per-request managers cache, so settings saved mid-request are read again. */
 function managersResetMemo(): void { $GLOBALS['managers_memo'] = []; }
 
 /** The settings, with their defaults. */

@@ -6,7 +6,7 @@ The projects offered by a block's "Projects" option: those the viewer can see, l
 function rpProjectChoices(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 233.
+Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/report_packs/blocks_projects.php.md), line 242.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/report_packs/blocks_projects.php](/code/files/includes/repo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 239 | `rpProjectChoices` | read [projects](/code/tables/projects.md) |  |
+| 248 | `rpProjectChoices` | read [projects](/code/tables/projects.md) |  |
 
 ## Calls
 

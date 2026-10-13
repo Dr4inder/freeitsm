@@ -22,10 +22,10 @@ An asset on a schedule; its own start/end when they differ from the schedule's.
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/leases.php](/code/files/includes/leases.php.md):505 | `leaseAssetsAdd` | insert | `schedule_id`, `asset_id`, `outcome_id`, `created_by`, `created_datetime`, `updated_datetime` |  |
-| [includes/leases.php](/code/files/includes/leases.php.md):571 | `leaseAssetUpdate` | update | `outcome_id`, `start_date`, `end_date`, `outcome_date`, `notes`, `updated_datetime` |  |
-| [includes/leases.php](/code/files/includes/leases.php.md):582 | `leaseAssetRemove` | delete |  |  |
-| [includes/leases.php](/code/files/includes/leases.php.md):642 | `leaseAssetDatesEdited` | update | `start_date`, `end_date`, `updated_datetime` |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):511 | `leaseAssetsAdd` | insert | `schedule_id`, `asset_id`, `outcome_id`, `created_by`, `created_datetime`, `updated_datetime` |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):577 | `leaseAssetUpdate` | update | `outcome_id`, `start_date`, `end_date`, `outcome_date`, `notes`, `updated_datetime` |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):588 | `leaseAssetRemove` | delete |  |  |
+| [includes/leases.php](/code/files/includes/leases.php.md):648 | `leaseAssetDatesEdited` | update | `start_date`, `end_date`, `updated_datetime` |  |
 
 ## Read by
 
@@ -33,6 +33,6 @@ An asset on a schedule; its own start/end when they differ from the schedule's.
 |---|---|---|
 | [api/assets/delete_lease_outcome.php](/code/files/api/assets/delete_lease_outcome.php.md) | L32 |  |
 | [api/assets/leases/asset_search.php](/code/files/api/assets/leases/asset_search.php.md) | L22 |  |
-| [includes/leases.php](/code/files/includes/leases.php.md) | leaseReady L44, leaseGoneBackSql L113, leaseSave L179, leaseList L280, leaseGet L356, leaseScheduleSave L420 ... |  |
+| [includes/leases.php](/code/files/includes/leases.php.md) | leaseReady L44, leaseGoneBackSql L114, leaseSave L185, leaseList L286, leaseGet L362, leaseScheduleSave L426 ... |  |
 | [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::moveToCompany L642 |  |
 

@@ -6,7 +6,7 @@ GET /workflows
 function apiWorkflowsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 178.
+Defined in [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md), line 193.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -10,19 +10,19 @@
 | [saveDiagram()](#savediagram) | Save a diagram: partial metadata; sending nodes/connectors replaces BOTH sets. Returns the id. |
 | [deleteDiagram()](#deletediagram) | Delete a diagram version (leaf-only) or the whole chain. Returns ['id','versions_deleted']. |
 | [createVersion()](#createversion) | Fork the leaf into a new version (clones nodes + connectors forward). Returns the new id. |
-| [loadDiagram()](#loaddiagram) |  |
-| [requireLeaf()](#requireleaf) |  |
+| [loadDiagram()](#loaddiagram) | Loads one diagram with a count of its newer versions; throws not found when it does not exist. |
+| [requireLeaf()](#requireleaf) | Throws when the diagram is a historical version, which is read-only. |
 | [chainIds()](#chainids) | The whole version chain containing `$diagramId`: root first. |
 | [validatePaper()](#validatepaper) | paper_size / paper_orientation whitelists. |
 | [brandingSlot()](#brandingslot) | Read a branding slot from in.branding.{band}.{slot}. NULL = inherit, '' = explicit blank. |
 | [replaceContents()](#replacecontents) | Full contents replace (delete + reinsert; ref-based connector wiring, strict validation). |
 | [validateNodeInput()](#validatenodeinput) | Validate one node input row. Returns [objectId, x\|null, y\|null, size, icon, ref]. |
-| [autoPlacer()](#autoplacer) |  |
-| [resolveRelationshipId()](#resolverelationshipid) |  |
-| [validateObjectExists()](#validateobjectexists) |  |
-| [validateSize()](#validatesize) |  |
-| [validateLineStyle()](#validatelinestyle) |  |
-| [validateIcon()](#validateicon) |  |
+| [autoPlacer()](#autoplacer) | A function that hands out positions for new nodes, in columns of eight to the right of what is already on the diagram. |
+| [resolveRelationshipId()](#resolverelationshipid) | The CMDB relationship a connector stands for: null, 'auto' (any relationship between the two nodes' CIs) or a validated id. |
+| [validateObjectExists()](#validateobjectexists) | Throws unless the CI exists and is in a company the actor can reach. |
+| [validateSize()](#validatesize) | Validates a node size against NODE_SIZES. |
+| [validateLineStyle()](#validatelinestyle) | Validates a connector line style against LINE_STYLES. |
+| [validateIcon()](#validateicon) | Validates an icon key against cmdb_icons. |
 
 ### createDiagram
 
@@ -131,7 +131,9 @@ function createVersion(PDO $conn, ActorContext $ctx, int $parentId, array $in): 
 
 ### loadDiagram
 
-*private static* - line 236
+*private static* - line 237
+
+Loads one diagram with a count of its newer versions; throws not found when it does not exist.
 
 ```php
 function loadDiagram(PDO $conn, int $diagramId): array
@@ -146,11 +148,13 @@ function loadDiagram(PDO $conn, int $diagramId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 239 | `NetworkMapperService::loadDiagram` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 240 | `NetworkMapperService::loadDiagram` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
 
 ### requireLeaf
 
-*private static* - line 251
+*private static* - line 253
+
+Throws when the diagram is a historical version, which is read-only.
 
 ```php
 function requireLeaf(array $diagram): void
@@ -162,7 +166,7 @@ function requireLeaf(array $diagram): void
 
 ### chainIds
 
-*private static* - line 259
+*private static* - line 261
 
 The whole version chain containing `$diagramId`: root first.
 
@@ -179,12 +183,12 @@ function chainIds(PDO $conn, int $diagramId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 263 | `NetworkMapperService::chainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
-| 274 | `NetworkMapperService::chainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 265 | `NetworkMapperService::chainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 276 | `NetworkMapperService::chainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
 
 ### validatePaper
 
-*private static* - line 284
+*private static* - line 286
 
 paper_size / paper_orientation whitelists.
 
@@ -199,7 +203,7 @@ function validatePaper(array $in, ?array $current): array
 
 ### brandingSlot
 
-*private static* - line 303
+*private static* - line 305
 
 Read a branding slot from in.branding.{band}.{slot}. NULL = inherit, '' = explicit blank.
 
@@ -216,7 +220,7 @@ function brandingSlot(array $in, string $band, string $slot, ?string $current): 
 
 ### replaceContents
 
-*private static* - line 315
+*private static* - line 317
 
 Full contents replace (delete + reinsert; ref-based connector wiring, strict validation).
 
@@ -242,14 +246,14 @@ function replaceContents(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 317 | `NetworkMapperService::replaceContents` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
-| 318 | `NetworkMapperService::replaceContents` | **delete** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 324 | `NetworkMapperService::replaceContents` | **insert** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) (`diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override`) |  |
-| 348 | `NetworkMapperService::replaceContents` | **insert** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`diagram_id`, `from_node_id`, `to_node_id`, `cmdb_relationship_id`, `label`, `line_style`) |  |
+| 319 | `NetworkMapperService::replaceContents` | **delete** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) |  |
+| 320 | `NetworkMapperService::replaceContents` | **delete** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 326 | `NetworkMapperService::replaceContents` | **insert** [network_diagram_nodes](/code/tables/network_diagram_nodes.md) (`diagram_id`, `cmdb_object_id`, `x`, `y`, `size`, `icon_override`) |  |
+| 350 | `NetworkMapperService::replaceContents` | **insert** [network_diagram_connectors](/code/tables/network_diagram_connectors.md) (`diagram_id`, `from_node_id`, `to_node_id`, `cmdb_relationship_id`, `label`, `line_style`) |  |
 
 ### validateNodeInput
 
-*private static* - line 390
+*private static* - line 392
 
 Validate one node input row. Returns [objectId, x|null, y|null, size, icon, ref].
 
@@ -266,7 +270,9 @@ function validateNodeInput(PDO $conn, ActorContext $ctx, array $n, int $index): 
 
 ### autoPlacer
 
-*private static* - line 414
+*private static* - line 420
+
+A function that hands out positions for new nodes, in columns of eight to the right of what is already on the diagram.
 
 ```php
 function autoPlacer(PDO $conn, int $diagramId): callable
@@ -281,11 +287,13 @@ function autoPlacer(PDO $conn, int $diagramId): callable
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 416 | `NetworkMapperService::autoPlacer` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 422 | `NetworkMapperService::autoPlacer` | read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
 
 ### resolveRelationshipId
 
-*private static* - line 429
+*private static* - line 439
+
+The CMDB relationship a connector stands for: null, 'auto' (any relationship between the two nodes' CIs) or a validated id.
 
 ```php
 function resolveRelationshipId(PDO $conn, $raw, int $fromNodeId, int $toNodeId): ?int
@@ -302,12 +310,14 @@ function resolveRelationshipId(PDO $conn, $raw, int $fromNodeId, int $toNodeId):
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 436 | `NetworkMapperService::resolveRelationshipId` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
-| 449 | `NetworkMapperService::resolveRelationshipId` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
+| 446 | `NetworkMapperService::resolveRelationshipId` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md), read [network_diagram_nodes](/code/tables/network_diagram_nodes.md) |  |
+| 459 | `NetworkMapperService::resolveRelationshipId` | read [cmdb_object_relationships](/code/tables/cmdb_object_relationships.md) |  |
 
 ### validateObjectExists
 
-*private static* - line 457
+*private static* - line 468
+
+Throws unless the CI exists and is in a company the actor can reach.
 
 ```php
 function validateObjectExists(PDO $conn, ActorContext $ctx, int $objectId): void
@@ -323,11 +333,13 @@ function validateObjectExists(PDO $conn, ActorContext $ctx, int $objectId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 459 | `NetworkMapperService::validateObjectExists` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
+| 470 | `NetworkMapperService::validateObjectExists` | read [cmdb_objects](/code/tables/cmdb_objects.md) |  |
 
 ### validateSize
 
-*private static* - line 478
+*private static* - line 490
+
+Validates a node size against NODE_SIZES.
 
 ```php
 function validateSize(string $size): string
@@ -339,7 +351,9 @@ function validateSize(string $size): string
 
 ### validateLineStyle
 
-*private static* - line 486
+*private static* - line 499
+
+Validates a connector line style against LINE_STYLES.
 
 ```php
 function validateLineStyle(string $style): string
@@ -351,7 +365,9 @@ function validateLineStyle(string $style): string
 
 ### validateIcon
 
-*private static* - line 494
+*private static* - line 508
+
+Validates an icon key against cmdb_icons.
 
 ```php
 function validateIcon(PDO $conn, string $iconKey): string
@@ -366,5 +382,5 @@ function validateIcon(PDO $conn, string $iconKey): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 496 | `NetworkMapperService::validateIcon` | read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
+| 510 | `NetworkMapperService::validateIcon` | read [cmdb_icons](/code/tables/cmdb_icons.md) |  |
 

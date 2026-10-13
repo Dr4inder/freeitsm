@@ -6,7 +6,7 @@ Writes are leaf-only — a version with children is frozen history.
 function apiNmRequireLeaf(array $diagram): void
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 90.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 95.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

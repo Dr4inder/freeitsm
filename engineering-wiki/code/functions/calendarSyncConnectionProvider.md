@@ -6,7 +6,7 @@ A connection's provider name, or '' when it does not exist. Cached per request, 
 function calendarSyncConnectionProvider(PDO $conn, ?int $connectionId): string
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 196.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 197.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 202 | `calendarSyncConnectionProvider` | read [calendar_connections](/code/tables/calendar_connections.md) |  |
+| 203 | `calendarSyncConnectionProvider` | read [calendar_connections](/code/tables/calendar_connections.md) |  |
 
 ## Called from
 

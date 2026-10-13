@@ -6,7 +6,7 @@ The look-alike candidates for a name, keyed by candidate => technique. Deliberat
 function domainLookalikeCandidates(string $name): array
 ```
 
-Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 114.
+Defined in [includes/domains/watch.php](/code/files/includes/domains/watch.php.md), line 120.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -15,11 +15,11 @@ Who is currently in the war room. One row per analyst, upserted by the same poll
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md):1071 | `warRoomTouchPresence` | insert | `analyst_id`, `channel_id`, `last_seen` |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md):1072 | `warRoomTouchPresence` | insert | `analyst_id`, `channel_id`, `last_seen` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomDirectory L416, warRoomPresent L1091 |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomDirectory L417, warRoomPresent L1092 |  |
 

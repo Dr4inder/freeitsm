@@ -7,11 +7,11 @@
 | Method | What it does |
 |---|---|
 | [saveTask()](#savetask) | Create (no id) or update (id present) a task. Returns ['id','created']. |
-| [createTask()](#createtask) |  |
-| [updateTask()](#updatetask) |  |
+| [createTask()](#createtask) | Creates a task with its status, priority, assignee, team or contractor, links, dates and tags, and fires task.created. Returns the new id. |
+| [updateTask()](#updatetask) | Changes the fields sent for a task and fires the workflow and notification events the changes call for. |
 | [moveTask()](#movetask) | Kanban move: change status (+ completed mechanics) and re-pack the target column. No workflow event. Returns the id. |
 | [calendarOnTaskChanged()](#calendarontaskchanged) | Put this task into (or take it out of) its assignee's calendar (#75). |
-| [recurrenceOnClosed()](#recurrenceonclosed) |  |
+| [recurrenceOnClosed()](#recurrenceonclosed) | Tells the recurrence engine a task was closed, so it can create the next occurrence; a failure is logged, never thrown. |
 | [deleteTask()](#deletetask) | Hard-delete a task + its whole subtask tree (comments/tags too). Returns ['id','subtasks_deleted']. |
 | [createComment()](#createcomment) | Add a comment to a task (create-only). Returns the comment id. |
 | [taskEventDispatch()](#taskeventdispatch) | One dispatch helper for the task events that describe a CHANGE TO THE TASK rather than to one person's place on it. |
@@ -40,7 +40,7 @@
 | [validateLink()](#validatelink) | Validate a link column + parent task. Ticket links are checked against the actor's company scope (tickets are tenant-scoped; tasks aren't). |
 | [ticketAccessible()](#ticketaccessible) | Can the actor's company scope reach this ticket? Mirrors apiKeyCanAccessTicket via ActorContext. |
 | [resolveTags()](#resolvetags) | Resolve a tags array (names or ids) to ids — strict 422 on unknown (curated list). |
-| [syncTags()](#synctags) |  |
+| [syncTags()](#synctags) | Replaces a task's tags with `$tagIds`. |
 | [timeScope()](#timescope) | The administrator's choice of where time appears, from Tasks → Settings. |
 | [timeAllowedFor()](#timeallowedfor) | May THIS task carry scheduled work and time entries? |
 | [createTimeEntry()](#createtimeentry) | Log time against a task. Returns the entry id. |
@@ -49,9 +49,9 @@
 | [assertTimeAllowed()](#asserttimeallowed) | Refuse the WRITE too, not only the display — a stale tab must not slip past a setting. |
 | [assignedDispatch()](#assigneddispatch) | task.assigned — fired whenever a task comes to rest with a NEW assignee, from creation and from reassignment alike (GH #110). |
 | [completedDispatch()](#completeddispatch) | save.php's exact task.completed dispatch (open -> closed via PATCH only). |
-| [resolveAnalyst()](#resolveanalyst) |  |
+| [resolveAnalyst()](#resolveanalyst) | Throws unless the id is an active analyst. |
 | [parseEstimate()](#parseestimate) | An estimate in hours (3.3.0): empty = not estimated; otherwise more than 0 and at most 9999, to two decimals ("1.5" = an hour and a half). |
-| [parseDateOnly()](#parsedateonly) |  |
+| [parseDateOnly()](#parsedateonly) | Validates an optional YYYY-MM-DD date for `$field`; blank gives null. |
 | [parseNaiveDateTime()](#parsenaivedatetime) | A NAIVE wall clock — scheduled work, stored and shown exactly as typed. |
 | [parseInstant()](#parseinstant) | An absolute INSTANT — when a piece of work actually happened. |
 
@@ -75,7 +75,9 @@ function saveTask(PDO $conn, ActorContext $ctx, array $in): array
 
 ### createTask
 
-*private static* - line 63
+*private static* - line 67
+
+Creates a task with its status, priority, assignee, team or contractor, links, dates and tags, and fires task.created. Returns the new id.
 
 ```php
 function createTask(PDO $conn, ActorContext $ctx, array $in): int
@@ -91,15 +93,20 @@ function createTask(PDO $conn, ActorContext $ctx, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 107 | `TasksService::createTask` | read [tasks](/code/tables/tasks.md) |  |
-| 113 | `TasksService::createTask` | read [tasks](/code/tables/tasks.md) |  |
-| 126 | `TasksService::createTask` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `ticket_id`, `change_id`, `contract_id`) |  |
-| 141 | `TasksService::createTask` | **update** [tasks](/code/tables/tasks.md) (`estimate_hours`) |  |
-| 144 | `TasksService::createTask` | **update** [tasks](/code/tables/tasks.md) (`assigned_supplier_id`, `assigned_contact_id`) |  |
+| 111 | `TasksService::createTask` | read [tasks](/code/tables/tasks.md) |  |
+| 117 | `TasksService::createTask` | read [tasks](/code/tables/tasks.md) |  |
+| 130 | `TasksService::createTask` | **insert** [tasks](/code/tables/tasks.md) (`title`, `description`, `status_id`, `priority_id`, `start_date`, `due_date`, `assigned_analyst_id`, `assigned_team_id`, `parent_task_id`, `ticket_id`, `change_id`, `contract_id`) |  |
+| 145 | `TasksService::createTask` | **update** [tasks](/code/tables/tasks.md) (`estimate_hours`) |  |
+| 148 | `TasksService::createTask` | **update** [tasks](/code/tables/tasks.md) (`assigned_supplier_id`, `assigned_contact_id`) |  |
 
 ### updateTask
 
-*private static* - line 182
+*private static* - line 193
+
+Changes the fields sent for a task and fires the workflow and notification events the changes call for.
+
+Closing a task stamps its completed time and lets a recurring task schedule its next
+occurrence.
 
 ```php
 function updateTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
@@ -116,12 +123,12 @@ function updateTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 359 | `TasksService::updateTask` | **update** [tasks](/code/tables/tasks.md) |  |
-| 363 | `TasksService::updateTask` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 370 | `TasksService::updateTask` | **update** [tasks](/code/tables/tasks.md) |  |
+| 374 | `TasksService::updateTask` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
 
 ### moveTask
 
-*public static* - line 397
+*public static* - line 408
 
 Kanban move: change status (+ completed mechanics) and re-pack the target column. No workflow event. Returns the id.
 
@@ -140,15 +147,15 @@ function moveTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 418 | `TasksService::moveTask` | **update** [tasks](/code/tables/tasks.md) (`status_id`, `completed_datetime`) |  |
-| 425 | `TasksService::moveTask` | read [tasks](/code/tables/tasks.md) |  |
-| 435 | `TasksService::moveTask` | **update** [tasks](/code/tables/tasks.md) (`board_position`) |  |
+| 429 | `TasksService::moveTask` | **update** [tasks](/code/tables/tasks.md) (`status_id`, `completed_datetime`) |  |
+| 436 | `TasksService::moveTask` | read [tasks](/code/tables/tasks.md) |  |
+| 446 | `TasksService::moveTask` | **update** [tasks](/code/tables/tasks.md) (`board_position`) |  |
 
 **Called from:** [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md)
 
 ### calendarOnTaskChanged
 
-*private static* - line 479
+*private static* - line 490
 
 Put this task into (or take it out of) its assignee's calendar (#75).
 
@@ -172,7 +179,9 @@ function calendarOnTaskChanged(PDO $conn, int $taskId, bool $gone = false): void
 
 ### recurrenceOnClosed
 
-*private static* - line 489
+*private static* - line 504
+
+Tells the recurrence engine a task was closed, so it can create the next occurrence; a failure is logged, never thrown.
 
 ```php
 function recurrenceOnClosed(PDO $conn, int $taskId): void
@@ -185,7 +194,7 @@ function recurrenceOnClosed(PDO $conn, int $taskId): void
 
 ### deleteTask
 
-*public static* - line 500
+*public static* - line 515
 
 Hard-delete a task + its whole subtask tree (comments/tags too). Returns ['id','subtasks_deleted'].
 
@@ -203,16 +212,16 @@ function deleteTask(PDO $conn, ActorContext $ctx, int $taskId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 508 | `TasksService::deleteTask` | read [tasks](/code/tables/tasks.md) |  |
-| 527 | `TasksService::deleteTask` | **delete** [task_comments](/code/tables/task_comments.md) |  |
-| 528 | `TasksService::deleteTask` | **delete** [task_tag_map](/code/tables/task_tag_map.md) |  |
-| 533 | `TasksService::deleteTask` | **delete** [tasks](/code/tables/tasks.md) |  |
+| 523 | `TasksService::deleteTask` | read [tasks](/code/tables/tasks.md) |  |
+| 542 | `TasksService::deleteTask` | **delete** [task_comments](/code/tables/task_comments.md) |  |
+| 543 | `TasksService::deleteTask` | **delete** [task_tag_map](/code/tables/task_tag_map.md) |  |
+| 548 | `TasksService::deleteTask` | **delete** [tasks](/code/tables/tasks.md) |  |
 
 **Called from:** [api/tasks/delete.php](/code/files/api/tasks/delete.php.md), [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md)
 
 ### createComment
 
-*public static* - line 545
+*public static* - line 560
 
 Add a comment to a task (create-only). Returns the comment id.
 
@@ -231,14 +240,14 @@ function createComment(PDO $conn, ActorContext $ctx, int $taskId, string $text):
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 552 | `TasksService::createComment` | **insert** [task_comments](/code/tables/task_comments.md) (`task_id`, `analyst_id`, `comment`, `created_datetime`) |  |
-| 555 | `TasksService::createComment` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 567 | `TasksService::createComment` | **insert** [task_comments](/code/tables/task_comments.md) (`task_id`, `analyst_id`, `comment`, `created_datetime`) |  |
+| 570 | `TasksService::createComment` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
 
 **Called from:** [api/tasks/save_comment.php](/code/files/api/tasks/save_comment.php.md), [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md)
 
 ### taskEventDispatch
 
-*private static* - line 572
+*private static* - line 587
 
 One dispatch helper for the task events that describe a CHANGE TO THE TASK rather than to one person's place on it.
 
@@ -262,11 +271,11 @@ function taskEventDispatch(PDO $conn, string $event, int $taskId, array $extra =
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 575 | `TasksService::taskEventDispatch` | read [tasks](/code/tables/tasks.md) |  |
+| 590 | `TasksService::taskEventDispatch` | read [tasks](/code/tables/tasks.md) |  |
 
 ### collaboratorCompletionEnabled
 
-*public static* - line 618
+*public static* - line 633
 
 Is per-person completion switched on? (Tasks → Settings)
 
@@ -286,13 +295,13 @@ function collaboratorCompletionEnabled(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 621 | `TasksService::collaboratorCompletionEnabled` | read [system_settings](/code/tables/system_settings.md) |  |
+| 636 | `TasksService::collaboratorCompletionEnabled` | read [system_settings](/code/tables/system_settings.md) |  |
 
 **Called from:** [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md), [api/tasks/get.php](/code/files/api/tasks/get.php.md)
 
 ### taskForCollaborators
 
-*public static* - line 639
+*public static* - line 654
 
 The task row, scoped — for a caller that needs the owner and company before it can decide what to offer.
 
@@ -315,7 +324,7 @@ function taskForCollaborators(PDO $conn, ActorContext $ctx, int $taskId): array
 
 ### collaboratorsFor
 
-*public static* - line 652
+*public static* - line 667
 
 The collaborators on one task, in the order they were added.
 
@@ -337,7 +346,7 @@ function collaboratorsFor(PDO $conn, int $taskId): array
 
 ### collaboratorsForMany
 
-*public static* - line 665
+*public static* - line 680
 
 Collaborators for many tasks at once, as [task_id => [rows]].
 
@@ -358,13 +367,13 @@ function collaboratorsForMany(PDO $conn, array $taskIds): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 674 | `TasksService::collaboratorsForMany` | read [task_collaborators](/code/tables/task_collaborators.md), read [analysts](/code/tables/analysts.md) |  |
+| 689 | `TasksService::collaboratorsForMany` | read [task_collaborators](/code/tables/task_collaborators.md), read [analysts](/code/tables/analysts.md) |  |
 
 **Called from:** [api/tasks/list.php](/code/files/api/tasks/list.php.md), [api/tickets/get_ticket_tasks.php](/code/files/api/tickets/get_ticket_tasks.php.md)
 
 ### addCollaborator
 
-*public static* - line 702
+*public static* - line 717
 
 Put somebody on a task. Idempotent — adding twice is not a second fact.
 
@@ -383,15 +392,15 @@ function addCollaborator(PDO $conn, ActorContext $ctx, int $taskId, int $analyst
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 716 | `TasksService::addCollaborator` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 723 | `TasksService::addCollaborator` | **insert** [task_collaborators](/code/tables/task_collaborators.md) (`task_id`, `analyst_id`, `added_by_id`, `added_datetime`) |  |
-| 726 | `TasksService::addCollaborator` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 731 | `TasksService::addCollaborator` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 738 | `TasksService::addCollaborator` | **insert** [task_collaborators](/code/tables/task_collaborators.md) (`task_id`, `analyst_id`, `added_by_id`, `added_datetime`) |  |
+| 741 | `TasksService::addCollaborator` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
 
 **Called from:** [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md)
 
 ### removeCollaborator
 
-*public static* - line 733
+*public static* - line 748
 
 Take somebody off a task.
 
@@ -410,14 +419,14 @@ function removeCollaborator(PDO $conn, ActorContext $ctx, int $taskId, int $anal
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 736 | `TasksService::removeCollaborator` | **delete** [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 741 | `TasksService::removeCollaborator` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 751 | `TasksService::removeCollaborator` | **delete** [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 756 | `TasksService::removeCollaborator` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
 
 **Called from:** [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md)
 
 ### setCollaboratorDone
 
-*public static* - line 758
+*public static* - line 773
 
 Tick or untick one person's part of the task.
 
@@ -452,15 +461,15 @@ function setCollaboratorDone(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 768 | `TasksService::setCollaboratorDone` | **update** [task_collaborators](/code/tables/task_collaborators.md) (`is_completed`, `completed_datetime`) |  |
-| 776 | `TasksService::setCollaboratorDone` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
-| 782 | `TasksService::setCollaboratorDone` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
+| 783 | `TasksService::setCollaboratorDone` | **update** [task_collaborators](/code/tables/task_collaborators.md) (`is_completed`, `completed_datetime`) |  |
+| 791 | `TasksService::setCollaboratorDone` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 797 | `TasksService::setCollaboratorDone` | **update** [tasks](/code/tables/tasks.md) (`updated_datetime`) |  |
 
 **Called from:** [api/tasks/collaborators.php](/code/files/api/tasks/collaborators.php.md)
 
 ### collaboratorsOutstanding
 
-*public static* - line 787
+*public static* - line 802
 
 How many collaborators have yet to tick — for the closing warning.
 
@@ -477,11 +486,11 @@ function collaboratorsOutstanding(PDO $conn, int $taskId): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 790 | `TasksService::collaboratorsOutstanding` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
+| 805 | `TasksService::collaboratorsOutstanding` | read [task_collaborators](/code/tables/task_collaborators.md) |  |
 
 ### assertCollaboratorsAllowed
 
-*private static* - line 805
+*private static* - line 820
 
 Collaborators are for TOP-LEVEL tasks only — Ed's call, and a sound one. A subtask already takes an assignee of its own, so people on a subtask is how you say "these four are each doing a piece"; collaborators on top of that would give two overlapping ways to express the same thing and no rule for which wins.
 
@@ -495,7 +504,7 @@ function assertCollaboratorsAllowed(array $taskRow): void
 
 ### assertAnalystInTaskCompany
 
-*private static* - line 823
+*private static* - line 838
 
 🔒 The analyst being added must be able to reach the task's company.
 
@@ -518,7 +527,7 @@ function assertAnalystInTaskCompany(PDO $conn, array $taskRow, int $analystId): 
 
 ### collaboratorDispatch
 
-*private static* - line 851
+*private static* - line 866
 
 A NEW workflow event, never a widened `task.assigned`.
 
@@ -545,11 +554,11 @@ function collaboratorDispatch(PDO $conn, string $event, int $taskId, int $analys
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 854 | `TasksService::collaboratorDispatch` | read [tasks](/code/tables/tasks.md) |  |
+| 869 | `TasksService::collaboratorDispatch` | read [tasks](/code/tables/tasks.md) |  |
 
 ### loadTaskRow
 
-*private static* - line 880
+*private static* - line 895
 
 Load a task with its status is_closed flag, or throw 404.
 
@@ -567,11 +576,11 @@ function loadTaskRow(PDO $conn, ActorContext $ctx, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 883 | `TasksService::loadTaskRow` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
+| 898 | `TasksService::loadTaskRow` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md) |  |
 
 ### moveTaskToCompany
 
-*public static* - line 936
+*public static* - line 951
 
 Move a task to another company.
 
@@ -618,14 +627,14 @@ function moveTaskToCompany(PDO $conn, ActorContext $ctx, int $taskId, int $targe
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1029 | `TasksService::moveTaskToCompany` | **update** [tasks](/code/tables/tasks.md) (`tenant_id`, `updated_datetime`) |  |
-| 1036 | `TasksService::moveTaskToCompany` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
+| 1044 | `TasksService::moveTaskToCompany` | **update** [tasks](/code/tables/tasks.md) (`tenant_id`, `updated_datetime`) |  |
+| 1051 | `TasksService::moveTaskToCompany` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
 
 **Called from:** [api/tasks/move_to_company.php](/code/files/api/tasks/move_to_company.php.md)
 
 ### tableHasTenantColumn
 
-*private static* - line 1060
+*private static* - line 1075
 
 Does this table carry a `tenant_id` column?
 
@@ -645,7 +654,7 @@ function tableHasTenantColumn(PDO $conn, string $table): bool
 
 ### taskAndDescendantIds
 
-*private static* - line 1086
+*private static* - line 1101
 
 A task and every task beneath it, however deep.
 
@@ -667,11 +676,11 @@ function taskAndDescendantIds(PDO $conn, int $rootId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1094 | `TasksService::taskAndDescendantIds` | read [tasks](/code/tables/tasks.md) |  |
+| 1109 | `TasksService::taskAndDescendantIds` | read [tasks](/code/tables/tasks.md) |  |
 
 ### parentTaskTenant
 
-*private static* - line 1110
+*private static* - line 1125
 
 A subtask inherits its parent's company, always.
 
@@ -688,11 +697,11 @@ function parentTaskTenant(PDO $conn, int $parentId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1112 | `TasksService::parentTaskTenant` | read [tasks](/code/tables/tasks.md) |  |
+| 1127 | `TasksService::parentTaskTenant` | read [tasks](/code/tables/tasks.md) |  |
 
 ### taskAccessible
 
-*private static* - line 1119
+*private static* - line 1134
 
 Is an already-loaded task row inside the actor's company scope?
 
@@ -708,7 +717,7 @@ function taskAccessible(PDO $conn, ActorContext $ctx, array $row): bool
 
 ### resolveNewTaskTenant
 
-*private static* - line 1156
+*private static* - line 1171
 
 Which company should a NEW task belong to?
 
@@ -738,11 +747,11 @@ function resolveNewTaskTenant(PDO $conn, ActorContext $ctx, array $in, ?int $tic
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1163 | `TasksService::resolveNewTaskTenant` | read [tickets](/code/tables/tickets.md) |  |
+| 1178 | `TasksService::resolveNewTaskTenant` | read [tickets](/code/tables/tickets.md) |  |
 
 ### resolveLookup
 
-*private static* - line 1189
+*private static* - line 1204
 
 Resolve a status/priority lookup by name or id — strict 422 on unknown. Returns [id, name(, is_closed)] or null.
 
@@ -766,7 +775,7 @@ function resolveLookup(
 
 ### lookupDefault
 
-*private static* - line 1229
+*private static* - line 1244
 
 The default row of a lookup table — the CONFIGURED default, never a name.
 
@@ -796,7 +805,7 @@ function lookupDefault(PDO $conn, string $table, bool $withClosed = false): arra
 
 ### contractorAllowed
 
-*private static* - line 1250
+*private static* - line 1265
 
 Contractors (3.3.0): suppliers live in Contracts, so CHOOSING one needs it - from the board, the REST API or Ask AI alike. The system (actorId 0) may.
 
@@ -811,7 +820,7 @@ function contractorAllowed(PDO $conn, ActorContext $ctx): void
 
 ### validateTeam
 
-*private static* - line 1258
+*private static* - line 1273
 
 Validate an optional team id (422 on unknown).
 
@@ -828,11 +837,11 @@ function validateTeam(PDO $conn, $value): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1264 | `TasksService::validateTeam` | read [teams](/code/tables/teams.md) |  |
+| 1279 | `TasksService::validateTeam` | read [teams](/code/tables/teams.md) |  |
 
 ### validateLink
 
-*private static* - line 1276
+*private static* - line 1291
 
 Validate a link column + parent task. Ticket links are checked against the actor's company scope (tickets are tenant-scoped; tasks aren't).
 
@@ -851,13 +860,13 @@ function validateLink(PDO $conn, ActorContext $ctx, string $field, $value): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1289 | `TasksService::validateLink` | read [changes](/code/tables/changes.md) |  |
-| 1295 | `TasksService::validateLink` | read [contracts](/code/tables/contracts.md) |  |
-| 1298 | `TasksService::validateLink` | read [tasks](/code/tables/tasks.md) |  |
+| 1304 | `TasksService::validateLink` | read [changes](/code/tables/changes.md) |  |
+| 1310 | `TasksService::validateLink` | read [contracts](/code/tables/contracts.md) |  |
+| 1313 | `TasksService::validateLink` | read [tasks](/code/tables/tasks.md) |  |
 
 ### ticketAccessible
 
-*private static* - line 1315
+*private static* - line 1330
 
 Can the actor's company scope reach this ticket? Mirrors apiKeyCanAccessTicket via ActorContext.
 
@@ -875,11 +884,11 @@ function ticketAccessible(PDO $conn, ActorContext $ctx, int $ticketId): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1321 | `TasksService::ticketAccessible` | read [tickets](/code/tables/tickets.md) |  |
+| 1336 | `TasksService::ticketAccessible` | read [tickets](/code/tables/tickets.md) |  |
 
 ### resolveTags
 
-*private static* - line 1350
+*private static* - line 1365
 
 Resolve a tags array (names or ids) to ids — strict 422 on unknown (curated list).
 
@@ -896,12 +905,14 @@ function resolveTags(PDO $conn, array $tags): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1355 | `TasksService::resolveTags` | read [task_tags](/code/tables/task_tags.md) |  |
-| 1358 | `TasksService::resolveTags` | read [task_tags](/code/tables/task_tags.md) |  |
+| 1370 | `TasksService::resolveTags` | read [task_tags](/code/tables/task_tags.md) |  |
+| 1373 | `TasksService::resolveTags` | read [task_tags](/code/tables/task_tags.md) |  |
 
 ### syncTags
 
-*private static* - line 1370
+*private static* - line 1386
+
+Replaces a task's tags with `$tagIds`.
 
 ```php
 function syncTags(PDO $conn, int $taskId, array $tagIds): void
@@ -917,12 +928,12 @@ function syncTags(PDO $conn, int $taskId, array $tagIds): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1372 | `TasksService::syncTags` | **delete** [task_tag_map](/code/tables/task_tag_map.md) |  |
-| 1373 | `TasksService::syncTags` | **insert** [task_tag_map](/code/tables/task_tag_map.md) (`task_id`, `tag_id`) |  |
+| 1388 | `TasksService::syncTags` | **delete** [task_tag_map](/code/tables/task_tag_map.md) |  |
+| 1389 | `TasksService::syncTags` | **insert** [task_tag_map](/code/tables/task_tag_map.md) (`task_id`, `tag_id`) |  |
 
 ### timeScope
 
-*public static* - line 1394
+*public static* - line 1410
 
 The administrator's choice of where time appears, from Tasks → Settings.
 
@@ -943,11 +954,11 @@ function timeScope(PDO $conn): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1397 | `TasksService::timeScope` | read [system_settings](/code/tables/system_settings.md) |  |
+| 1413 | `TasksService::timeScope` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ### timeAllowedFor
 
-*public static* - line 1416
+*public static* - line 1432
 
 May THIS task carry scheduled work and time entries?
 
@@ -970,7 +981,7 @@ function timeAllowedFor(PDO $conn, ?int $parentTaskId): bool
 
 ### createTimeEntry
 
-*public static* - line 1426
+*public static* - line 1442
 
 Log time against a task. Returns the entry id.
 
@@ -989,13 +1000,13 @@ function createTimeEntry(PDO $conn, ActorContext $ctx, int $taskId, array $in): 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1442 | `TasksService::createTimeEntry` | **insert** [task_time_entries](/code/tables/task_time_entries.md) (`task_id`, `analyst_id`, `notes`, `time_spent_minutes`, `entry_datetime`) |  |
+| 1458 | `TasksService::createTimeEntry` | **insert** [task_time_entries](/code/tables/task_time_entries.md) (`task_id`, `analyst_id`, `notes`, `time_spent_minutes`, `entry_datetime`) |  |
 
 **Called from:** [api/tasks/save_time_entry.php](/code/files/api/tasks/save_time_entry.php.md)
 
 ### deleteTimeEntry
 
-*public static* - line 1449
+*public static* - line 1465
 
 Soft-delete a time entry. Only the analyst who logged it may remove it.
 
@@ -1013,14 +1024,14 @@ function deleteTimeEntry(PDO $conn, ActorContext $ctx, int $entryId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1451 | `TasksService::deleteTimeEntry` | read [task_time_entries](/code/tables/task_time_entries.md) |  |
-| 1461 | `TasksService::deleteTimeEntry` | **update** [task_time_entries](/code/tables/task_time_entries.md) (`is_active`) |  |
+| 1467 | `TasksService::deleteTimeEntry` | read [task_time_entries](/code/tables/task_time_entries.md) |  |
+| 1477 | `TasksService::deleteTimeEntry` | **update** [task_time_entries](/code/tables/task_time_entries.md) (`is_active`) |  |
 
 **Called from:** [api/tasks/delete_time_entry.php](/code/files/api/tasks/delete_time_entry.php.md)
 
 ### timeEntriesFor
 
-*public static* - line 1475
+*public static* - line 1491
 
 The entries on a task, plus two totals.
 
@@ -1046,14 +1057,14 @@ function timeEntriesFor(PDO $conn, ActorContext $ctx, int $taskId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1480 | `TasksService::timeEntriesFor` | read [task_time_entries](/code/tables/task_time_entries.md), read [analysts](/code/tables/analysts.md) |  |
-| 1496 | `TasksService::timeEntriesFor` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
+| 1496 | `TasksService::timeEntriesFor` | read [task_time_entries](/code/tables/task_time_entries.md), read [analysts](/code/tables/analysts.md) |  |
+| 1512 | `TasksService::timeEntriesFor` | read [task_time_entries](/code/tables/task_time_entries.md), read [tasks](/code/tables/tasks.md) |  |
 
 **Called from:** [api/tasks/get_time_entries.php](/code/files/api/tasks/get_time_entries.php.md)
 
 ### assertTimeAllowed
 
-*private static* - line 1513
+*private static* - line 1529
 
 Refuse the WRITE too, not only the display — a stale tab must not slip past a setting.
 
@@ -1068,7 +1079,7 @@ function assertTimeAllowed(PDO $conn, array $taskRow): void
 
 ### assignedDispatch
 
-*private static* - line 1541
+*private static* - line 1557
 
 task.assigned — fired whenever a task comes to rest with a NEW assignee, from creation and from reassignment alike (GH #110).
 
@@ -1100,11 +1111,11 @@ function assignedDispatch(PDO $conn, int $taskId, int $assigneeId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1544 | `TasksService::assignedDispatch` | read [tasks](/code/tables/tasks.md) |  |
+| 1560 | `TasksService::assignedDispatch` | read [tasks](/code/tables/tasks.md) |  |
 
 ### completedDispatch
 
-*private static* - line 1564
+*private static* - line 1580
 
 save.php's exact task.completed dispatch (open -> closed via PATCH only).
 
@@ -1121,11 +1132,13 @@ function completedDispatch(PDO $conn, int $taskId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1567 | `TasksService::completedDispatch` | read [tasks](/code/tables/tasks.md) |  |
+| 1583 | `TasksService::completedDispatch` | read [tasks](/code/tables/tasks.md) |  |
 
 ### resolveAnalyst
 
-*private static* - line 1583
+*private static* - line 1600
+
+Throws unless the id is an active analyst.
 
 ```php
 function resolveAnalyst(PDO $conn, int $analystId): void
@@ -1140,11 +1153,11 @@ function resolveAnalyst(PDO $conn, int $analystId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1585 | `TasksService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 1602 | `TasksService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ### parseEstimate
 
-*private static* - line 1596
+*private static* - line 1613
 
 An estimate in hours (3.3.0): empty = not estimated; otherwise more than 0 and at most 9999, to two decimals ("1.5" = an hour and a half).
 
@@ -1158,7 +1171,9 @@ function parseEstimate($v): ?float
 
 ### parseDateOnly
 
-*private static* - line 1605
+*private static* - line 1623
+
+Validates an optional YYYY-MM-DD date for `$field`; blank gives null.
 
 ```php
 function parseDateOnly($value, string $field): ?string
@@ -1171,7 +1186,7 @@ function parseDateOnly($value, string $field): ?string
 
 ### parseNaiveDateTime
 
-*private static* - line 1625
+*private static* - line 1643
 
 A NAIVE wall clock — scheduled work, stored and shown exactly as typed.
 
@@ -1191,7 +1206,7 @@ function parseNaiveDateTime($value, string $field): ?string
 
 ### parseInstant
 
-*private static* - line 1653
+*private static* - line 1671
 
 An absolute INSTANT — when a piece of work actually happened.
 

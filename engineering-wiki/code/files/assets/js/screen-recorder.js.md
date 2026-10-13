@@ -1,6 +1,9 @@
 # assets/js/screen-recorder.js
 
-> JavaScript - 311 lines
+> JavaScript - 341 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Self Service Developer Guide](https://github.com/edmozley/freeitsm/wiki/Self-Service-Developer-Guide)
 
 Screen recording for the self-service portal — the ONE implementation.
 
@@ -28,24 +31,24 @@ ONE modal per page — it binds by element id, matching the single partial.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `onClaimed()` | 30 |  |
-| `el(id)` | 44 |  |
-| `t(key, params)` | 46 |  |
-| `escapeHtml(text)` | 50 |  |
-| `formatDuration(seconds)` | 56 |  |
-| `notifyError(message)` | 62 |  |
-| `isSupported()` | 77 | iOS Safari has no getDisplayMedia at all. Callers hide their Record button rather than letting someone press it and meet a confusing failure. |
-| `hasUnclaimed()` | 82 | A captured-but-unclaimed recording — what the submit guard asks about. |
-| `isRecording()` | 86 |  |
-| `open()` | 90 |  |
-| `close()` | 106 | Closing DISCARDS an unclaimed recording — cancelling should not silently leave something attached. That is the opposite of the submit guard, which blocks: there they were heading onward and might lose work; here they have explicitly said no. |
-| `pickRecorderMime()` | 115 |  |
-| `start()` | 134 |  |
-| `ondataavailable(e)` | 167 |  |
-| `onstop()` | 170 |  |
-| `stop()` | 205 |  |
-| `showPreview()` | 209 |  |
-| `discard()` | 224 |  |
-| `use()` | 249 | Upload and hand the result to the page. |
-| `init(options)` | 290 |  |
+| `onClaimed()` | 33 | Default claim handler - does nothing until the page passes its own to `init()`. |
+| `el(id)` | 48 | Shorthand for document.getElementById. |
+| `t(key, params)` | 51 | Translates a key through the shared i18n helper, or returns the key when it is not loaded. |
+| `escapeHtml(text)` | 56 | HTML-escapes text through a text node. |
+| `formatDuration(seconds)` | 63 | Formats seconds as m:ss. |
+| `notifyError(message)` | 70 | Shows an error as a toast, or an alert when the toast helper is not loaded. |
+| `isSupported()` | 85 | iOS Safari has no getDisplayMedia at all. Callers hide their Record button rather than letting someone press it and meet a confusing failure. |
+| `hasUnclaimed()` | 90 | A captured-but-unclaimed recording — what the submit guard asks about. |
+| `isRecording()` | 95 | Whether the screen is being captured right now. |
+| `open()` | 100 | Opens the recording modal. |
+| `close()` | 116 | Closing DISCARDS an unclaimed recording — cancelling should not silently leave something attached. That is the opposite of the submit guard, which blocks: there they were heading onward and might lose work; here they have explicitly said no. |
+| `pickRecorderMime()` | 129 | Returns the first video format the browser can record - MP4 / H.264 preferred, then WebM - or empty to use its default. |
+| `start()` | 155 | Asks the browser to share a screen (plus the microphone when ticked, carrying on without it if refused) and starts recording. |
+| `ondataavailable(e)` | 189 | Keeps each non-empty chunk the recorder hands over. |
+| `onstop()` | 196 | Builds the recording from its chunks, releases the screen and microphone, stops the timer and shows the preview. |
+| `stop()` | 232 | Stops the recording, if one is running. |
+| `showPreview()` | 237 | Shows the recorded video with its length and the Use / Discard buttons. |
+| `discard()` | 253 | Throws away the captured recording and puts the modal back to ready. |
+| `use()` | 278 | Upload and hand the result to the page. |
+| `init(options)` | 320 | Sets the upload URL, maximum length in seconds and claim callback for this page. |
 

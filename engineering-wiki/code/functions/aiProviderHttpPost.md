@@ -6,7 +6,7 @@ POST with retry/backoff on 429 / 5xx / network errors. Ported from rfpAiHttpPost
 function aiProviderHttpPost(string $url, array $headers, string $body, bool $verifySsl): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 674.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 678.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

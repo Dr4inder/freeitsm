@@ -6,7 +6,7 @@ Count UTC timestamps into local buckets.
 function rpBucketCount(array $stamps, array $range, string $grouping, array $keys): array
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 133.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 135.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

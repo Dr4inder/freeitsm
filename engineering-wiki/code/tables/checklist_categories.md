@@ -13,13 +13,13 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [checklists/api.php](/code/files/checklists/api.php.md):64 |  | insert | `name` |  |
+| [checklists/api.php](/code/files/checklists/api.php.md):77 |  | insert | `name` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [checklists/edit/index.php](/code/files/checklists/edit/index.php.md) | L48 |  |
-| [checklists/index.php](/code/files/checklists/index.php.md) | L33 |  |
-| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md) | L58 |  |
+| [checklists/index.php](/code/files/checklists/index.php.md) | L40 |  |
+| [checklists/settings/index.php](/code/files/checklists/settings/index.php.md) | L66 |  |
 

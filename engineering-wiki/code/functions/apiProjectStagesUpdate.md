@@ -1,10 +1,12 @@
 # apiProjectStagesUpdate()
 
+PATCH /projects/{id}/stages/{stageId} - updates the stage fields sent through ProjectsService and returns the stage.
+
 ```php
 function apiProjectStagesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 317.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 340.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

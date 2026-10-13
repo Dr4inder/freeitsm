@@ -6,7 +6,7 @@ A safe `IN (…)` fragment from a list of ints. '(0)' when empty, so it matches 
 function wtIdListSql(array $ids): string
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 351.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 354.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

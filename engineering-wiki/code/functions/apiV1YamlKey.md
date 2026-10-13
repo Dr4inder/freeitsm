@@ -1,10 +1,12 @@
 # apiV1YamlKey()
 
+A mapping key as YAML - plain when it is a simple identifier or path, double-quoted otherwise.
+
 ```php
 function apiV1YamlKey(string $k): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 419.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 425.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -24,25 +24,25 @@
 | [api/self-service/create_ticket.php](/code/files/api/self-service/create_ticket.php.md):236 |  | insert | `email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime` |  |
 | [api/self-service/reply_ticket.php](/code/files/api/self-service/reply_ticket.php.md):195 |  | insert | `email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):2078 |  | update | `file_path` |  |
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md):356 |  | delete |  |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md):365 |  | delete |  |  |
 | [api/tickets/check_mailbox_email.php](/code/files/api/tickets/check_mailbox_email.php.md):952 | `saveAttachment` | insert | `email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline` |  |
 | [api/tickets/empty_trash.php](/code/files/api/tickets/empty_trash.php.md):73 |  | delete |  |  |
 | [api/tickets/permanently_delete_ticket.php](/code/files/api/tickets/permanently_delete_ticket.php.md):79 |  | delete |  |  |
 | [api/tickets/send_email.php](/code/files/api/tickets/send_email.php.md):835 | `saveSentAttachments` | insert | `email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime` |  |
-| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):984 | `saveChannelMediaAttachment` | insert | `email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline` |  |
+| [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):988 | `saveChannelMediaAttachment` | insert | `email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline` |  |
 | [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):232 | `unmergeTicket` | delete |  |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):790 | `mergeAttachSnapshot` | insert | `email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime` |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):797 | `mergeAttachSnapshot` | insert | `email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/messaging/media.php](/code/files/api/messaging/media.php.md) | L69 |  |
+| [api/messaging/media.php](/code/files/api/messaging/media.php.md) | L73 |  |
 | [api/self-service/get_attachment.php](/code/files/api/self-service/get_attachment.php.md) | L42 |  |
 | [api/self-service/get_ticket_detail.php](/code/files/api/self-service/get_ticket_detail.php.md) | L172 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2074 |  |
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L246, L291, L317, L347, L401 |  |
-| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L441 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L255, L300, L326, L356, L410 |  |
+| [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L450 |  |
 | [api/system/search_status.php](/code/files/api/system/search_status.php.md) | L102 |  |
 | [api/system/tika_settings.php](/code/files/api/system/tika_settings.php.md) | L92 |  |
 | [api/tickets/empty_trash.php](/code/files/api/tickets/empty_trash.php.md) | L48 |  |

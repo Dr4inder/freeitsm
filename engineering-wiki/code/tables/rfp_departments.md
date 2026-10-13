@@ -24,7 +24,7 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/rfp-builder/extract_requirements.php](/code/files/api/rfp-builder/extract_requirements.php.md) | L44 |  |
-| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L157 |  |
+| [api/rfp-builder/generate_section.php](/code/files/api/rfp-builder/generate_section.php.md) | L161 |  |
 | [api/rfp-builder/get_consolidated.php](/code/files/api/rfp-builder/get_consolidated.php.md) | L63 |  |
 | [api/rfp-builder/get_coverage.php](/code/files/api/rfp-builder/get_coverage.php.md) | L49, L63, L92, L109 |  |
 | [api/rfp-builder/get_documents.php](/code/files/api/rfp-builder/get_documents.php.md) | L33 |  |
@@ -32,5 +32,5 @@
 | [api/rfp-builder/get_rfp_departments.php](/code/files/api/rfp-builder/get_rfp_departments.php.md) | L23 |  |
 | [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md) | L87 |  |
 | [api/rfp-builder/upload_document.php](/code/files/api/rfp-builder/upload_document.php.md) | L73 |  |
-| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L983, rfpAiGenerateFramingStreaming L1214 |  |
+| [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md) | rfpAiGenerateSectionStreaming L991, rfpAiGenerateFramingStreaming L1222 |  |
 

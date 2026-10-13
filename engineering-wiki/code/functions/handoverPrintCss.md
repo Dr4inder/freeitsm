@@ -6,7 +6,7 @@ Print rules — only the printable page needs these.
 function handoverPrintCss(): string
 ```
 
-Defined in [includes/handover_styles.php](/code/files/includes/handover_styles.php.md), line 64.
+Defined in [includes/handover_styles.php](/code/files/includes/handover_styles.php.md), line 74.
 
 **Returns:** `string`
 

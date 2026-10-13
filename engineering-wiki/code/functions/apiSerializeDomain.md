@@ -1,10 +1,12 @@
 # apiSerializeDomain()
 
+Shapes a domain row for the API - names, company, status, registrar and account, dates with days to expiry, and the rest of the record. The auth code itself is never included - only auth_code_set.
+
 ```php
 function apiSerializeDomain(array $r): array
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 60.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 69.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Supplier contacts
 function apiSerializeContact(array $c): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 433.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 460.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

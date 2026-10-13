@@ -15,7 +15,7 @@ end. Both are the same intention and neither should be a support question.
 function aiAzureChatUrl(array $cfg): string
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 202.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 206.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

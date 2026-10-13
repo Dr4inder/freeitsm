@@ -15,7 +15,7 @@ function oidcCreateAnalyst(
 ): int
 ```
 
-Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 560.
+Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md), line 562.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -34,9 +34,9 @@ Defined in [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 566 | `oidcCreateAnalyst` | read [analysts](/code/tables/analysts.md) |  |
-| 587 | `oidcCreateAnalyst` | **insert** [analysts](/code/tables/analysts.md) (`username`, `password_hash`, `full_name`, `email`, `job_title`, `department`, `phone`, `mobile`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules`) |  |
-| 598 | `oidcCreateAnalyst` | **insert** [analyst_modules](/code/tables/analyst_modules.md) (`analyst_id`, `module_key`) |  |
+| 568 | `oidcCreateAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 589 | `oidcCreateAnalyst` | **insert** [analysts](/code/tables/analysts.md) (`username`, `password_hash`, `full_name`, `email`, `job_title`, `department`, `phone`, `mobile`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules`) |  |
+| 600 | `oidcCreateAnalyst` | **insert** [analyst_modules](/code/tables/analyst_modules.md) (`analyst_id`, `module_key`) |  |
 
 ## Calls
 

@@ -1,6 +1,6 @@
 # assets/js/tz.js
 
-> JavaScript - 377 lines
+> JavaScript - 396 lines
 
 Shared per-analyst timezone helpers (Phase 2 of the per-user timezone rollout).
 
@@ -26,32 +26,32 @@ formatters become timezone-aware by:
 | `parseNaiveDate(str)` | 49 | Parse a NAIVE wall-clock datetime (a user-entered scheduling value stored WITHOUT a zone — change plan windows, ticket work-start, calendar events, PIR actuals) into a Date built from its literal components, with NO zone interpretation. Format the result WITHOUT tzOpts, so "2pm" reads 2pm for every analyst. These values are NOT UTC instants — never run them through parseUTCDate/tzOpts. See the "Timezones and Time Handling" design note. |
 | `zoneOffsetMs(date, tz)` | 80 | Milliseconds to ADD to a UTC instant to get the wall clock in `tz`. Derived by formatting the instant in that zone and reading the parts back as if they were UTC — the only way to get a named zone's offset, DST and all, without shipping a timezone library. |
 | `nowForInput()` | 95 | 'YYYY-MM-DDTHH:MM' for NOW in the analyst's display zone — the value to prefill a datetime-local input with. |
-| `pad(n)` | 98 |  |
-| `inputToUTC(value)` | 116 | A datetime-local value ('YYYY-MM-DDTHH:MM'), read as a wall clock in the analyst's display zone, converted to an ISO-8601 UTC string ending in Z — which is what the server expects. Sending the raw input value instead hands the server a zone-less string it can only read as UTC, so the entry lands offset by the analyst's whole UTC offset (GH #116). |
-| `utcToInput(dbStr)` | 131 | The inverse: a stored UTC datetime -> 'YYYY-MM-DDTHH:MM' in the analyst's display zone, for prefilling a picker when EDITING an existing value. |
-| `pad(n)` | 135 |  |
-| `cfg()` | 182 |  |
-| `toDate(value)` | 189 | Coerce a call-site argument (DB string, Date, or null) to a Date. |
-| `partsInZone(d)` | 201 |  |
-| `partsNaive(d)` | 224 | Components of a NAIVE wall-clock Date exactly as parseNaiveDate built it — no zone interpretation, so "2pm" reads 2pm for every analyst. |
-| `isoWeekday(p)` | 234 | ISO weekday for a y/m/d triple: 1 = Monday .. 7 = Sunday, matching the index order of DateFmt::weekdays(). Computed from the components rather than the Date so it agrees with whichever zone produced them. |
-| `pad2(n)` | 239 |  |
-| `render(p, template)` | 245 |  |
-| `fmtDate(value)` | 274 |  |
-| `fmtTime(value)` | 279 |  |
-| `fmtDateTime(value)` | 284 |  |
-| `fmtDayMonth(value)` | 291 | '25 Aug' — compact chips and list rows where the year is implied. |
-| `fmtMonthYear(value)` | 297 | 'August 2026' — calendar headers. Always the full month name. |
-| `fmtWeekday(value, short)` | 303 | 'Tuesday' / 'Tue' |
-| `naive(value)` | 314 |  |
-| `fmtNaiveDate(value)` | 320 |  |
-| `fmtNaiveTime(value)` | 325 |  |
-| `fmtNaiveDateTime(value)` | 330 |  |
-| `fmtNaiveDayMonth(value)` | 336 |  |
-| `fmtNaiveWeekday(value, short)` | 342 | 'Tuesday' / 'Tue' for a naive wall-clock value. |
-| `fmtNaiveMonthYear(value)` | 349 | 'August 2026' for a naive wall-clock value — calendar headers. |
-| `fmtTemplate(value, template)` | 367 | A few places need a shape none of the functions above produce - a calendar week title that compresses "5 - 11 May 2026", say. Before #105 those wrote their own toLocale* call with a hardcoded locale, which is exactly the drift this work removes. These render an arbitrary TOKEN TEMPLATE (see the token list in includes/timezone.php) through the same renderer and the same localised month and weekday names, so a bespoke label still follows the analyst's language. |
-| `fmtNaiveTemplate(value, template)` | 372 |  |
+| `pad(n)` | 99 | Pads a number to two digits with a leading zero. |
+| `inputToUTC(value)` | 117 | A datetime-local value ('YYYY-MM-DDTHH:MM'), read as a wall clock in the analyst's display zone, converted to an ISO-8601 UTC string ending in Z — which is what the server expects. Sending the raw input value instead hands the server a zone-less string it can only read as UTC, so the entry lands offset by the analyst's whole UTC offset (GH #116). |
+| `utcToInput(dbStr)` | 132 | The inverse: a stored UTC datetime -> 'YYYY-MM-DDTHH:MM' in the analyst's display zone, for prefilling a picker when EDITING an existing value. |
+| `pad(n)` | 137 | Pads a number to two digits with a leading zero. |
+| `cfg()` | 185 | Returns window.DATE_FORMAT, or the built-in FALLBACK when the page did not publish one. |
+| `toDate(value)` | 192 | Coerce a call-site argument (DB string, Date, or null) to a Date. |
+| `partsInZone(d)` | 205 | Returns {year, month, day, hour, minute} for a Date as seen in the analyst's display zone (window.USER_TIMEZONE). |
+| `partsNaive(d)` | 228 | Components of a NAIVE wall-clock Date exactly as parseNaiveDate built it — no zone interpretation, so "2pm" reads 2pm for every analyst. |
+| `isoWeekday(p)` | 238 | ISO weekday for a y/m/d triple: 1 = Monday .. 7 = Sunday, matching the index order of DateFmt::weekdays(). Computed from the components rather than the Date so it agrees with whichever zone produced them. |
+| `pad2(n)` | 244 | Pads a number to two digits with a leading zero. |
+| `render(p, template)` | 253 | Renders date parts through a token template (DD, MON, YYYY, HH, mi...) using the analyst's localised month and weekday names. |
+| `fmtDate(value)` | 285 | Formats a UTC timestamp (DB string or Date) as a date in the analyst's zone and chosen date format; '' for empty input. |
+| `fmtTime(value)` | 291 | Formats a UTC timestamp as a time in the analyst's zone and chosen time format; '' for empty input. |
+| `fmtDateTime(value)` | 297 | Formats a UTC timestamp as date then time in the analyst's zone and chosen formats; '' for empty input. |
+| `fmtDayMonth(value)` | 304 | '25 Aug' — compact chips and list rows where the year is implied. |
+| `fmtMonthYear(value)` | 310 | 'August 2026' — calendar headers. Always the full month name. |
+| `fmtWeekday(value, short)` | 316 | 'Tuesday' / 'Tue' |
+| `naive(value)` | 328 | Coerces a naive wall-clock value (DB string or Date) to a Date via parseNaiveDate, or null when empty or invalid. |
+| `fmtNaiveDate(value)` | 335 | Formats a naive wall-clock value as a date in the chosen date format, with no zone conversion. |
+| `fmtNaiveTime(value)` | 341 | Formats a naive wall-clock value as a time in the chosen time format, with no zone conversion. |
+| `fmtNaiveDateTime(value)` | 347 | Formats a naive wall-clock value as date then time in the chosen formats, with no zone conversion. |
+| `fmtNaiveDayMonth(value)` | 354 | Formats a naive wall-clock value as a compact day and month ('25 Aug'), with no zone conversion. |
+| `fmtNaiveWeekday(value, short)` | 360 | 'Tuesday' / 'Tue' for a naive wall-clock value. |
+| `fmtNaiveMonthYear(value)` | 367 | 'August 2026' for a naive wall-clock value — calendar headers. |
+| `fmtTemplate(value, template)` | 385 | A few places need a shape none of the functions above produce - a calendar week title that compresses "5 - 11 May 2026", say. Before #105 those wrote their own toLocale* call with a hardcoded locale, which is exactly the drift this work removes. These render an arbitrary TOKEN TEMPLATE (see the token list in includes/timezone.php) through the same renderer and the same localised month and weekday names, so a bespoke label still follows the analyst's language. |
+| `fmtNaiveTemplate(value, template)` | 391 | Renders a naive wall-clock value through a caller-chosen token template - the naive twin of fmtTemplate. |
 
 ## Loaded by
 

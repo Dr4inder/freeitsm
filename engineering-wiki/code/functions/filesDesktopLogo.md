@@ -6,7 +6,7 @@ The logo for the desktop corner, per System -> Branding: files_logo_mode 'compan
 function filesDesktopLogo(PDO $conn, int $analystId): array
 ```
 
-Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 140.
+Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.md), line 149.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/files/storage.php](/code/files/includes/files/storage.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 151 | `filesDesktopLogo` | read [tenants](/code/tables/tenants.md) |  |
+| 160 | `filesDesktopLogo` | read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

@@ -1,6 +1,6 @@
 # includes/ticket_merge.php
 
-> PHP - 796 lines
+> PHP - 803 lines
 
 Merging tickets.
 
@@ -72,10 +72,10 @@ THIS TICKET?" The first kind moves; the second kind would be falsified by moving
 | [mergeCreateTargetTicket()](/code/functions/mergeCreateTargetTicket.md) | 436 | Create the brand-new ticket that everything folds into ('new' reference mode). |
 | [mergeOneTicket()](/code/functions/mergeOneTicket.md) | 474 | Fold a single source into the target. Assumes the caller holds a transaction. |
 | [mergeFirstClosedStatusId()](/code/functions/mergeFirstClosedStatusId.md) | 603 | The install's first closed status id, or null if none is flagged. |
-| [mergeTicketNumber()](/code/functions/mergeTicketNumber.md) | 612 |  |
-| [mergeAudit()](/code/functions/mergeAudit.md) | 622 |  |
-| [mergeBuildSnapshotHtml()](/code/functions/mergeBuildSnapshotHtml.md) | 648 | Render a source ticket's whole conversation as a self-contained HTML document. |
-| [mergeAttachSnapshot()](/code/functions/mergeAttachSnapshot.md) | 735 | Attach a snapshot to the target ticket. |
+| [mergeTicketNumber()](/code/functions/mergeTicketNumber.md) | 613 | A ticket's number for audit and note text; "#id" if the lookup fails. |
+| [mergeAudit()](/code/functions/mergeAudit.md) | 629 | Writes one ticket_audit row for a merge step, best-effort - a failed audit write never stops the merge. An actor id of 0 is stored as NULL. |
+| [mergeBuildSnapshotHtml()](/code/functions/mergeBuildSnapshotHtml.md) | 655 | Render a source ticket's whole conversation as a self-contained HTML document. |
+| [mergeAttachSnapshot()](/code/functions/mergeAttachSnapshot.md) | 742 | Attach a snapshot to the target ticket. |
 
 ## Database
 
@@ -106,12 +106,12 @@ THIS TICKET?" The first kind moves; the second kind would be falsified by moving
 | 577 | `mergeOneTicket` | **insert** [ticket_merges](/code/tables/ticket_merges.md) (`source_ticket_id`, `source_ticket_number`, `target_ticket_id`, `reference_mode`, `originals_mode`, `moved_email_ids`, `moved_related`, `snapshot_email_id`, `source_prev_status_id`, `source_prev_closed_datetime`, `merged_by_id`, `merged_datetime`) |  |
 | 596 | `mergeOneTicket` | **insert** [ticket_links](/code/tables/ticket_links.md) (`source_ticket_id`, `target_ticket_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
 | 605 | `mergeFirstClosedStatusId` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 614 | `mergeTicketNumber` | read [tickets](/code/tables/tickets.md) |  |
-| 625 | `mergeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 655 | `mergeBuildSnapshotHtml` | read [emails](/code/tables/emails.md) |  |
-| 665 | `mergeBuildSnapshotHtml` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
-| 739 | `mergeAttachSnapshot` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction`, `channel`, `is_initial`) |  |
-| 790 | `mergeAttachSnapshot` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime`) |  |
+| 615 | `mergeTicketNumber` | read [tickets](/code/tables/tickets.md) |  |
+| 632 | `mergeAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 662 | `mergeBuildSnapshotHtml` | read [emails](/code/tables/emails.md) |  |
+| 672 | `mergeBuildSnapshotHtml` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
+| 746 | `mergeAttachSnapshot` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction`, `channel`, `is_initial`) |  |
+| 797 | `mergeAttachSnapshot` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `filename`, `content_type`, `file_path`, `file_size`, `is_inline`, `created_datetime`) |  |
 
 ## How it hangs together
 

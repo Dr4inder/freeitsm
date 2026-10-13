@@ -6,11 +6,15 @@
  * section in it has already been through its module's access and company
  * checks. A section the reader may not see is simply not in $sections, so
  * nothing here has to know about permissions.
+ *
+ * @wiki People-Developer-Guide
  */
 
 const PPL_VISIBLE_ROWS = 10;
 
+/** HTML-escapes any value for output. */
 function pplE($s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
+/** An app-relative path made absolute with BASE_URL; '#' when there is none. */
 function pplUrl(?string $rel): string { return $rel === null ? '#' : BASE_URL . $rel; }
 
 /** The coloured strip of counts across the top of a page. */
@@ -56,11 +60,13 @@ function pplCard(string $key, string $title, int $count, array $head, array $row
     return $h . '</section>';
 }
 
+/** A link to an app-relative URL, or just the escaped text when the reader has nowhere to go. */
 function pplLink(?string $url, string $text): string
 {
     return $url === null ? pplE($text) : '<a href="' . pplE(pplUrl($url)) . '">' . pplE($text) . '</a>';
 }
 
+/** A status pill, optionally in a colour (passed as the --pill CSS variable); '' for empty text. */
 function pplPill(?string $text, ?string $colour = null, string $class = ''): string
 {
     if ($text === null || $text === '') return '';
@@ -68,6 +74,7 @@ function pplPill(?string $text, ?string $colour = null, string $class = ''): str
     return '<span class="ppl-pill ' . $class . ($colour ? ' coloured' : '') . '"' . $style . '>' . pplE($text) . '</span>';
 }
 
+/** The Tickets card: number, subject, status, priority, then the analyst (person page) or requester (company page), and the open/total count. */
 function pplSectionTickets(array $s, bool $person): string
 {
     $head = [t('people.section.col_number'), t('people.section.col_subject'), t('people.section.col_status'), t('people.section.col_priority')];
@@ -85,6 +92,7 @@ function pplSectionTickets(array $s, bool $person): string
     return pplCard('tickets', t('people.section.tickets'), $s['total'], $head, $rows, $s['total'] > count($s['rows']), $extra);
 }
 
+/** The Assets card: asset, type, model, status, then the date assigned (person page) or who holds it (company page). */
 function pplSectionAssets(array $s, bool $person, ?string $title = null): string
 {
     $head = [t('people.section.col_asset'), t('people.section.col_type'), t('people.section.col_model'), t('people.section.col_status')];
@@ -99,6 +107,7 @@ function pplSectionAssets(array $s, bool $person, ?string $title = null): string
     return pplCard('assets', $title ?? t($person ? 'people.section.assets_person' : 'people.section.assets'), $s['total'], $head, $rows, $s['total'] > count($s['rows']));
 }
 
+/** The Contracts card: contract, the other party (unless $withParty is false), status and end date, with inactive contracts marked. */
 function pplSectionContracts(array $s, bool $withParty = true, ?string $title = null): string
 {
     // A supplier's own page leaves out "With" - every row would name the supplier.
@@ -115,6 +124,7 @@ function pplSectionContracts(array $s, bool $withParty = true, ?string $title = 
     return pplCard('contracts', $title ?? t('people.section.contracts'), $s['total'], $head, $rows);
 }
 
+/** The Domains card: domain, the roles it plays when the rows carry them, status, expiry and grade. */
 function pplSectionDomains(array $s, bool $person, ?string $title = null): string
 {
     // Supplier and contact pages say HOW each domain involves them (#162).
@@ -131,6 +141,7 @@ function pplSectionDomains(array $s, bool $person, ?string $title = null): strin
     return pplCard('domains', $title ?? t($person ? 'people.section.domains_person' : 'people.section.domains'), $s['total'], $head, $rows);
 }
 
+/** A person's Courses card: each course with its status pill, progress (or completion date) and deadline, overdue ones marked. */
 function pplSectionCoursesPerson(array $s): string
 {
     $head = [t('people.section.col_course'), t('people.section.col_status'), t('people.section.col_progress'), t('people.section.col_deadline')];
@@ -149,6 +160,7 @@ function pplSectionCoursesPerson(array $s): string
     return pplCard('courses', t('people.section.courses'), $s['total'], $head, $rows);
 }
 
+/** A company's Courses card: each course with how many of its people have finished it and how many are part-way. */
 function pplSectionCoursesCompany(array $s): string
 {
     $head = [t('people.section.col_course'), t('people.section.col_finished'), t('people.section.col_in_progress')];
@@ -156,6 +168,7 @@ function pplSectionCoursesCompany(array $s): string
     return pplCard('courses', t('people.section.courses'), $s['total'], $head, $rows);
 }
 
+/** The Forms card: form, when submitted, who by (company page), approval state and the ticket it raised. */
 function pplSectionForms(array $s, bool $person): string
 {
     $head = [t('people.section.col_form'), t('people.section.col_submitted')];

@@ -18,14 +18,14 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [includes/services/projects.php](/code/files/includes/services/projects.php.md):883 | `ProjectsService::audit` | insert | `project_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime` |  |
+| [includes/services/projects.php](/code/files/includes/services/projects.php.md):918 | `ProjectsService::audit` | insert | `project_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectHistory L604, apiProjectHistory L607 |  |
+| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectHistory L658, apiProjectHistory L661 |  |
 | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L306 |  |
-| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistOverview L178 |  |
+| [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md) | projectAssistOverview L183 |  |
 | [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectDetail L386 |  |
 

@@ -20,7 +20,7 @@ escalation.
 
 | Method | What it does |
 |---|---|
-| [__construct()](#__construct) |  |
+| [__construct()](#__construct) | Private: viewers are built through the named constructors, so every caller states who is reading. |
 | [scopeForOneCompany()](#scopeforonecompany) | One company id in the set form, honouring the two conditions under which Knowledge does no company filtering at all: multi-tenancy dormant, or the column absent on an install that has not run Database Verify. |
 | [forAnalyst()](#foranalyst) | A signed-in analyst, reading from whichever company they have switched to. |
 | [scopeForAllAccessible()](#scopeforallaccessible) | Every company this analyst may see, in the same set form as `scopeForOneCompany()`. Honours the same two "no filtering at all" cases. |
@@ -29,17 +29,19 @@ escalation.
 | [forWebChat()](#forwebchat) | An anonymous web-chat visitor. They typed a name and an email and neither was verified, which is the whole reason PUBLIC is the bottom rung. |
 | [fromLegacyAudienceString()](#fromlegacyaudiencestring) | ⚠️ COMPATIBILITY ONLY — do not use in new code. |
 | [forSystem()](#forsystem) | No filtering whatsoever — for internal machinery that must process every article regardless of who could read it (the search indexer building rows it will later filter at query time; the embedding backfill). |
-| [level()](#level) |  |
-| [analystId()](#analystid) |  |
-| [userId()](#userid) |  |
-| [companyScope()](#companyscope) |  |
-| [isUnrestricted()](#isunrestricted) |  |
-| [unrestrictedReason()](#unrestrictedreason) |  |
-| [isAnalyst()](#isanalyst) |  |
+| [level()](#level) | The audience rung this viewer reads at. |
+| [analystId()](#analystid) | The analyst reading, or null for a portal user, a visitor or a system reader. |
+| [userId()](#userid) | The self-service user reading, or null when the reader is not a portal user. |
+| [companyScope()](#companyscope) | The company ids the viewer may read from, or null for no company limit. |
+| [isUnrestricted()](#isunrestricted) | True for a `forSystem()` reader, which skips all filtering. |
+| [unrestrictedReason()](#unrestrictedreason) | The reason given to `forSystem()` for skipping all filtering; empty for every other viewer. |
+| [isAnalyst()](#isanalyst) | True for an analyst reading (internal level and not an unrestricted system reader). |
 
 ### __construct
 
-*private* - line 115
+*private* - line 116
+
+Private: viewers are built through the named constructors, so every caller states who is reading.
 
 ```php
 function __construct(
@@ -63,7 +65,7 @@ function __construct(
 
 ### scopeForOneCompany
 
-*private static* - line 139
+*private static* - line 140
 
 One company id in the set form, honouring the two conditions under which Knowledge does no company filtering at all: multi-tenancy dormant, or the column absent on an install that has not run Database Verify.
 
@@ -81,7 +83,7 @@ function scopeForOneCompany(PDO $conn, ?int $tenantId): ?array
 
 ### forAnalyst
 
-*public static* - line 153
+*public static* - line 154
 
 A signed-in analyst, reading from whichever company they have switched to.
 
@@ -102,7 +104,7 @@ function forAnalyst(PDO $conn, int $analystId): self
 
 ### scopeForAllAccessible
 
-*private static* - line 187
+*private static* - line 188
 
 Every company this analyst may see, in the same set form as `scopeForOneCompany()`. Honours the same two "no filtering at all" cases.
 
@@ -117,7 +119,7 @@ function scopeForAllAccessible(PDO $conn, int $analystId): ?array
 
 ### forApiKey
 
-*public static* - line 205
+*public static* - line 206
 
 An authenticated REST API key.
 
@@ -139,7 +141,7 @@ function forApiKey(PDO $conn, array $apiKey): self
 
 ### forPortalUser
 
-*public static* - line 226
+*public static* - line 227
 
 A signed-in self-service portal user.
 
@@ -157,7 +159,7 @@ function forPortalUser(PDO $conn, ?int $userId, ?int $tenantId): self
 
 ### forWebChat
 
-*public static* - line 235
+*public static* - line 236
 
 An anonymous web-chat visitor. They typed a name and an email and neither was verified, which is the whole reason PUBLIC is the bottom rung.
 
@@ -174,7 +176,7 @@ function forWebChat(PDO $conn, ?int $tenantId): self
 
 ### fromLegacyAudienceString
 
-*public static* - line 254
+*public static* - line 255
 
 ⚠️ COMPATIBILITY ONLY — do not use in new code.
 
@@ -203,7 +205,7 @@ function fromLegacyAudienceString(PDO $conn, ?int $tenantId, string $level): sel
 
 ### forSystem
 
-*public static* - line 268
+*public static* - line 269
 
 No filtering whatsoever — for internal machinery that must process every article regardless of who could read it (the search indexer building rows it will later filter at query time; the embedding backfill).
 
@@ -223,7 +225,9 @@ function forSystem(string $reason): self
 
 ### level
 
-*public* - line 276
+*public* - line 278
+
+The audience rung this viewer reads at.
 
 ```php
 function level(): string
@@ -231,7 +235,9 @@ function level(): string
 
 ### analystId
 
-*public* - line 277
+*public* - line 280
+
+The analyst reading, or null for a portal user, a visitor or a system reader.
 
 ```php
 function analystId(): ?int
@@ -239,7 +245,9 @@ function analystId(): ?int
 
 ### userId
 
-*public* - line 278
+*public* - line 282
+
+The self-service user reading, or null when the reader is not a portal user.
 
 ```php
 function userId(): ?int
@@ -247,7 +255,9 @@ function userId(): ?int
 
 ### companyScope
 
-*public* - line 279
+*public* - line 284
+
+The company ids the viewer may read from, or null for no company limit.
 
 ```php
 function companyScope(): ?array
@@ -255,7 +265,9 @@ function companyScope(): ?array
 
 ### isUnrestricted
 
-*public* - line 280
+*public* - line 286
+
+True for a `forSystem()` reader, which skips all filtering.
 
 ```php
 function isUnrestricted(): bool
@@ -263,7 +275,9 @@ function isUnrestricted(): bool
 
 ### unrestrictedReason
 
-*public* - line 281
+*public* - line 288
+
+The reason given to `forSystem()` for skipping all filtering; empty for every other viewer.
 
 ```php
 function unrestrictedReason(): string
@@ -271,7 +285,9 @@ function unrestrictedReason(): string
 
 ### isAnalyst
 
-*public* - line 282
+*public* - line 290
+
+True for an analyst reading (internal level and not an unrestricted system reader).
 
 ```php
 function isAnalyst(): bool

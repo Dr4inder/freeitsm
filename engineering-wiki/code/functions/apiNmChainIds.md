@@ -6,7 +6,7 @@ The whole version chain containing `$diagramId`: root first. Caps mirror the UI 
 function apiNmChainIds(PDO $conn, int $diagramId): array
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 117.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 124.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/ne
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 120 | `apiNmChainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
-| 131 | `apiNmChainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 127 | `apiNmChainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
+| 138 | `apiNmChainIds` | read [network_diagrams](/code/tables/network_diagrams.md) |  |
 
 ## Called from
 

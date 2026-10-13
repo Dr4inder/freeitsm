@@ -14,7 +14,7 @@ indistinguishable to a legitimate reader, who gets not-found either way.
 function knowledgeCanRead(PDO $conn, KnowledgeViewer $viewer, $articleId, array $opts = []): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 401.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 409.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -29,7 +29,7 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 408 | `knowledgeCanRead` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 416 | `knowledgeCanRead` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

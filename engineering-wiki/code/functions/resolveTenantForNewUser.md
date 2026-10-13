@@ -23,7 +23,7 @@ address being on it doesn't establish that the person belongs to the company.
 function resolveTenantForNewUser(PDO $conn, string $email): ?int
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 996.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1002.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -36,7 +36,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 996
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1015 | `resolveTenantForNewUser` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
+| 1021 | `resolveTenantForNewUser` | read [tenant_domains](/code/tables/tenant_domains.md) |  |
 
 ## Calls
 

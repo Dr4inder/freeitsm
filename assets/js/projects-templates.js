@@ -10,6 +10,8 @@
  * it, save it back). Built-ins cannot be replaced, only copied.
  * Starting a project FROM a template is the picker in the project form
  * (assets/js/projects.js).
+ *
+ * @wiki Projects-Internals-8-Connections-and-Templates
  */
 (function () {
     'use strict';
@@ -26,10 +28,13 @@
             btn.hidden = !L.can_manage_templates;
         } catch (e) { return; }
 
+        /** Shorthand for document.getElementById. */
         const $ = id => document.getElementById(id);
         const esc = P.esc;
         let saved = [];
+        /** Which way the dialog saves - 'new' for a new template, or 'replace' to overwrite one of the analyst's own. */
         const mode = () => (document.querySelector('input[name="tpsMode"]:checked') || {}).value || 'new';
+        /** The project's name as shown on the page. */
         const projectName = () => (document.getElementById('pvName') || {}).textContent || '';
         // New: the project's name. Replace: the chosen template's name and description.
         function fillFromMode() {

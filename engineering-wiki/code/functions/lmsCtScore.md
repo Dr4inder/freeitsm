@@ -6,7 +6,7 @@ Score a snapshot against the candidate's answers ({question index: answer index}
 function lmsCtScore(array $snapshot, array $responses): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 310.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 313.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

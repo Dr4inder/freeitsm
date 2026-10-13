@@ -1,17 +1,34 @@
 # includes/theme.php
 
-> PHP - 131 lines
+> PHP - 135 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Theming and Dark Mode](https://github.com/edmozley/freeitsm/wiki/Theming-and-Dark-Mode)
+
+Theme / palette registry + resolver.
+
+A palette is a set of CSS colour *tokens* applied via <html data-theme="<id>">.
+Adding a palette is two small steps:
+  1. add an entry to self::THEMES below
+  2. add a [data-theme="<id>"] block to assets/css/theme.css
+Modules opt in by consuming the tokens (var(--…)) in their own CSS, so the
+rollout is one module at a time — unconverted modules simply stay default.
+
+Resolution order for a given page/module:
+  per-module preference  (theme_<module>)  →  global preference (theme)  →  default
+so a user can run one palette everywhere, or pick a different one per module
+(e.g. "English Summer" on Tickets, "Dark" on Problem Management).
 
 ## Classes
 
-- [Theme](/code/classes/Theme.md) (class, line 17) - Theme / palette registry + resolver.
+- [Theme](/code/classes/Theme.md) (class, line 19) - Theme / palette registry + resolver.
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 87 | `Theme::active` | read [users](/code/tables/users.md) |  |
-| 110 | `Theme::active` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 91 | `Theme::active` | read [users](/code/tables/users.md) |  |
+| 114 | `Theme::active` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## How it hangs together
 

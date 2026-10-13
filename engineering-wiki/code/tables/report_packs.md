@@ -31,5 +31,5 @@ Report Packs: a multi-page report designed in Reporting and exported as a PDF. T
 | [api/reporting/packs/get.php](/code/files/api/reporting/packs/get.php.md) | L18 |  |
 | [api/reporting/packs/save.php](/code/files/api/reporting/packs/save.php.md) | L31 |  |
 | [api/reporting/packs/shares.php](/code/files/api/reporting/packs/shares.php.md) | L25 |  |
-| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpRole L86, rpListPacks L120 |  |
+| [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpRole L87, rpListPacks L121 |  |
 

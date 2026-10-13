@@ -26,6 +26,8 @@
  * plan clashes (it starts before the other finishes). Critical path picks out
  * the tasks with no slack. The link button on a task's row opens its
  * dependencies (prjDepModal); the server refuses loops.
+ *
+ * @wiki Projects-Internals-4-Plan-and-Timeline
  */
 (function () {
     'use strict';
@@ -46,18 +48,23 @@
     if (!ZOOMS[zoom]) zoom = 'weeks';
 
     // ---- Day arithmetic (UTC whole days) -----------------------------------------------
+    /** A Y-m-d date as a whole day number counted in UTC, so a bar never shifts by a day with the browser's time zone. */
     const dayNum = s => Math.floor(Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)) / 86400000);
+    /** A day number back to a Y-m-d date. */
     const ymd = n => new Date(n * 86400000).toISOString().slice(0, 10);
     const locale = document.documentElement.lang || undefined;
     const monthFmt = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric', timeZone: 'UTC' });
     const dayFmt = new Intl.DateTimeFormat(locale, { day: 'numeric', timeZone: 'UTC' });
 
+    /** The width of the name column - narrower on a phone. */
     function labelWidth() {
         return window.matchMedia && window.matchMedia('(max-width: 768px)').matches ? 124 : 230;
     }
+    /** True when the viewer may change this project. */
     function canChange() {
         return !!(ctx && ctx.data.permissions && ctx.data.permissions.can_change);
     }
+    /** What the project's way of running calls its time boxes - phase, stage or sprint. */
     function timeboxKind() {
         const m = (ctx.L && ctx.L.methodologies || []).find(x => x.key === ctx.data.project.methodology);
         return m ? m.timebox : 'phase';
@@ -70,11 +77,13 @@
         if (s > e) [s, e] = [e, s];
         return [s, e];
     }
+    /** A stage's [start, end] as day numbers, or null unless it has both dates. */
     function stageSpan(s) {
         return s.start_date && s.end_date ? [dayNum(s.start_date), dayNum(s.end_date)] : null;
     }
 
     // ---- Drawing ------------------------------------------------------------------------
+    /** Marks the timeline as needing a redraw and draws it now if the tab is showing (it needs a width). */
     function render(c) {
         if (c) ctx = c;
         dirty = true;
@@ -83,6 +92,7 @@
         draw(box);
     }
 
+    /** Draws the whole timeline - toolbar, month and day/week header, grid, the project milestones row, a band per stage with its tasks' bars, unassigned tasks, today and target lines and the dependency arrows - keeping the scroll position across redraws. */
     function draw(box) {
         dirty = false;
         const d = ctx.data, p = d.project;
@@ -114,6 +124,7 @@
         const avail = Math.max(200, box.clientWidth - LW - 18);
         dayW = Math.max(z.minW, avail / span);
         const trackW = Math.ceil(span * dayW);
+        /** The x position of a day number on the track. */
         const x = n => (n - originDay) * dayW;
 
         // Toolbar
@@ -160,6 +171,7 @@
 
         // Rows
         const rows = [];
+        /** The milestone diamonds for a row, each placed on its due date. */
         const diamonds = list => list.map(m => '<span class="prj-tl-ms ' + 'ms-' + m.state + (canChange() ? ' can' : '') + '" data-tl-ms="' + m.id + '" style="left:' + (x(dayNum(m.due_date)) + dayW / 2) + 'px"'
             + ' title="' + esc(m.name + ' - ' + P.fmtDate(m.due_date) + ' - ' + window.PrjMilestones.phrase(m)) + '"><span class="prj-tl-ms-dia"></span><span class="prj-tl-ms-name">' + esc(m.name) + '</span></span>').join('');
         const projectMs = ms.filter(m => !m.stage_id);
@@ -170,6 +182,7 @@
         }
         const byStage = {};
         d.tasks.forEach(t => { const k = t.project_stage_id || ''; (byStage[k] = byStage[k] || []).push(t); });
+        /** One task's row - name linking to the task, the dependencies button, and its bar (late, done, critical or dimmed) with drag handles for those who may change it. */
         const taskRow = t => {
             const sp = taskSpan(t);
             const closed = !!Number(t.is_closed);
@@ -248,6 +261,7 @@
         svg.setAttribute('aria-hidden', 'true');
         svg.innerHTML = '<defs><marker id="prjArrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" class="prj-tl-arrowhead"/></marker>'
             + '<marker id="prjArrowBad" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" class="prj-tl-arrowhead bad"/></marker></defs>';
+        /** Where a task's bar sits in the body - left and right edges and the row's middle - or null when it has no bar. */
         const pos = id => {
             const bar = body.querySelector('[data-tl-task="' + id + '"]');
             if (!bar) return null;
@@ -277,11 +291,13 @@
 
     // ---- Dependencies dialog (3.3.0) ------------------------------------------------------
     let depTask = null;
+    /** Opens the dependencies dialog for a task - what it waits for (with lag), a picker to add one, what waits for it, and a warning when the dates clash. */
     function openDeps(taskId) {
         const tasks = ctx.data.tasks || [];
         const t = tasks.find(x => x.id === taskId);
         if (!t) return;
         depTask = t;
+        /** A task's title by id, or #id when it is not on the project. */
         const name = id => (tasks.find(x => x.id === id) || {}).title || ('#' + id);
         const deps = ctx.data.dependencies || [];
         const mine = deps.filter(d => d.task_id === t.id);
@@ -305,11 +321,13 @@
         document.getElementById('pdpBody').innerHTML = html;
         P.openModal('prjDepModal');
     }
+    /** Sends a dependency action to tools.php, redraws the project and reopens the dialog; errors show in the dialog. */
     async function depCall(body) {
         try { await P.api('tools.php', Object.assign({ project_id: ctx.projectId }, body)); await ctx.refresh(); openDeps(depTask.id); }
         catch (e) { const er = document.getElementById('pdpError'); er.textContent = e.message; er.hidden = false; }
     }
 
+    /** Scrolls the timeline so today sits about a third of the way across. */
     function scrollToToday(sc) {
         sc = sc || document.querySelector('#pvTimeline .prj-tl-scroll');
         if (!sc) return;
@@ -318,6 +336,7 @@
     }
 
     // ---- Dragging (mouse only) --------------------------------------------------------------
+    /** Starts a mouse drag on a task bar, stage band or milestone - moving it, or resizing from an end handle; touch never drags. */
     function onDown(e) {
         if (e.pointerType !== 'mouse' || e.button !== 0 || !canChange()) return;
         const el = e.target.closest('[data-tl-task], [data-tl-stage], [data-tl-ms]');
@@ -333,6 +352,7 @@
         e.preventDefault();
     }
 
+    /** Moves or resizes the dragged item in whole days once the mouse has moved more than 3px. */
     function onMove(e) {
         if (!drag) return;
         const dx = e.clientX - drag.startX;
@@ -346,6 +366,7 @@
         else if (drag.mode === 'resize-r') st.width = Math.max(dayW, drag.width + snap) + 'px';
     }
 
+    /** Ends a drag - an unmoved press opens the item; otherwise saves the new dates (task_dates, stage_save.php or the milestone) and redraws, or puts it back on failure. */
     async function onUp() {
         if (!drag) return;
         const g = drag; drag = null;

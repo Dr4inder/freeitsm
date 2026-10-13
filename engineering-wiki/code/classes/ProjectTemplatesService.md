@@ -9,12 +9,12 @@
 | [createFromTemplate()](#createfromtemplate) | Create a project from template `$key`. `$in` is the new-project form (name, start_date, ...): anything it sets wins over the template. Returns the id. |
 | [cleanup()](#cleanup) | Remove a half-built project and the tasks made for it. |
 | [saveFromProject()](#savefromproject) | Save a project as a template. `$parts`: plan, scope, raid, benefits (3.3.0), tolerances, targets. Needs the Templates capability - templates are shared by every company on the install. |
-| [update()](#update) |  |
-| [delete()](#delete) |  |
+| [update()](#update) | Changes a project template's name, description and active flag. |
+| [delete()](#delete) | Deletes a project template; projects made from it are untouched. |
 | [setBuiltinHidden()](#setbuiltinhidden) | Hide or show a built-in template in the new-project picker. |
-| [assertManage()](#assertmanage) |  |
-| [nameDesc()](#namedesc) |  |
-| [row()](#row) |  |
+| [assertManage()](#assertmanage) | Throws unless the actor holds the Projects templates capability; system callers (actor 0) pass. |
+| [nameDesc()](#namedesc) | A validated template name and optional description. |
+| [row()](#row) | Loads one project template; throws not found when it does not exist. |
 
 ### createFromTemplate
 
@@ -115,7 +115,9 @@ function saveFromProject(PDO $conn, ActorContext $ctx, int $projectId, array $in
 
 ### update
 
-*public static* - line 201
+*public static* - line 202
+
+Changes a project template's name, description and active flag.
 
 ```php
 function update(PDO $conn, ActorContext $ctx, int $id, array $in): void
@@ -132,13 +134,15 @@ function update(PDO $conn, ActorContext $ctx, int $id, array $in): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 206 | `ProjectTemplatesService::update` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `is_active`, `updated_datetime`) |  |
+| 207 | `ProjectTemplatesService::update` | **update** [project_templates](/code/tables/project_templates.md) (`name`, `description`, `is_active`, `updated_datetime`) |  |
 
 **Called from:** [api/projects/templates.php](/code/files/api/projects/templates.php.md)
 
 ### delete
 
-*public static* - line 210
+*public static* - line 212
+
+Deletes a project template; projects made from it are untouched.
 
 ```php
 function delete(PDO $conn, ActorContext $ctx, int $id): void
@@ -154,13 +158,13 @@ function delete(PDO $conn, ActorContext $ctx, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 215 | `ProjectTemplatesService::delete` | **delete** [project_templates](/code/tables/project_templates.md) |  |
+| 217 | `ProjectTemplatesService::delete` | **delete** [project_templates](/code/tables/project_templates.md) |  |
 
 **Called from:** [api/projects/templates.php](/code/files/api/projects/templates.php.md)
 
 ### setBuiltinHidden
 
-*public static* - line 219
+*public static* - line 221
 
 Hide or show a built-in template in the new-project picker.
 
@@ -179,7 +183,9 @@ function setBuiltinHidden(PDO $conn, ActorContext $ctx, string $key, bool $hidde
 
 ### assertManage
 
-*private static* - line 229
+*private static* - line 232
+
+Throws unless the actor holds the Projects templates capability; system callers (actor 0) pass.
 
 ```php
 function assertManage(PDO $conn, ActorContext $ctx): void
@@ -192,7 +198,9 @@ function assertManage(PDO $conn, ActorContext $ctx): void
 
 ### nameDesc
 
-*private static* - line 237
+*private static* - line 241
+
+A validated template name and optional description.
 
 ```php
 function nameDesc(array $in): array
@@ -204,7 +212,9 @@ function nameDesc(array $in): array
 
 ### row
 
-*private static* - line 246
+*private static* - line 251
+
+Loads one project template; throws not found when it does not exist.
 
 ```php
 function row(PDO $conn, int $id): array
@@ -219,5 +229,5 @@ function row(PDO $conn, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 249 | `ProjectTemplatesService::row` | read [project_templates](/code/tables/project_templates.md) |  |
+| 254 | `ProjectTemplatesService::row` | read [project_templates](/code/tables/project_templates.md) |  |
 

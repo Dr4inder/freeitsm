@@ -6,6 +6,8 @@
  * amber or red. A row opens to show the project tasks behind the numbers.
  * Everything is worked out by the server (includes/projects/capacity.php);
  * this file only draws it.
+ *
+ * @wiki Projects-Internals-4-Plan-and-Timeline
  */
 (function () {
     'use strict';
@@ -16,14 +18,17 @@
     const open = new Set();   // analyst ids whose detail is showing
     try { const w = parseInt(localStorage.getItem('prjCapacityWeeks'), 10); if ([4, 8, 12].includes(w)) weeks = w; } catch (e) { /* private window */ }
 
+    /** Hours rounded to one decimal place in the page's language, such as "7.5h". */
     const hrs = h => (Math.round(h * 10) / 10).toLocaleString(document.documentElement.lang || undefined) + 'h';
 
+    /** The summary tiles for this week - people over capacity, stretched, on several projects, and tasks with no estimate (plus team tasks). */
     function tiles(c) {
         const now = c.rows.map(r => r.weeks[0]);
         const red = now.filter(w => w.state === 'red').length;
         const amber = now.filter(w => w.state === 'amber').length;
         const several = c.rows.filter(r => r.several).length;
         const noEst = c.rows.reduce((n, r) => n + r.no_estimate, 0);
+        /** One summary tile with its number, label and colour class. */
         const tile = (n, label, cls) => '<div class="prj-tile ' + cls + '"><span class="prj-tile-num">' + esc(n) + '</span><span class="prj-tile-label">' + esc(label) + '</span></div>';
         return tile(red, T('capacity.tile_over'), red ? 'bad' : '')
             + tile(amber, T('capacity.tile_stretched'), amber ? 'warn' : '')
@@ -31,6 +36,7 @@
             + tile(noEst + (c.team_tasks ? ' / ' + c.team_tasks : ''), c.team_tasks ? T('capacity.tile_noest_team') : T('capacity.tile_noest'), noEst || c.team_tasks ? 'warn' : '');
     }
 
+    /** One person-week cell - a load bar with the service-desk share, the percentage, and a tooltip splitting project and desk hours. */
     function cell(w, c) {
         const width = Math.min(100, w.load_pct);
         const tip = T('capacity.cell_tip', { project: hrs(w.project), desk: hrs(w.desk), hours: hrs(c.hours_per_week), pct: w.load_pct });
@@ -40,6 +46,7 @@
             + '<span class="prj-cap-pct">' + esc(w.load_pct) + '%</span></td>';
     }
 
+    /** The opened row's detail - each project task with hours left, due date and hours per week, plus notes on unscheduled, later and late work. */
     function detail(r, c) {
         if (!r.tasks.length) return '<p class="prj-muted">' + esc(T('capacity.no_tasks')) + '</p>';
         const head = '<tr><th>' + esc(T('capacity.col_task')) + '</th><th>' + esc(T('capacity.col_project')) + '</th><th>' + esc(T('capacity.col_left')) + '</th><th>' + esc(T('capacity.col_due')) + '</th>'
@@ -61,6 +68,7 @@
             + (notes.length ? '<p class="prj-hint">' + esc(notes.join(' ')) + '</p>' : '');
     }
 
+    /** Draws the Capacity page - intro, tiles, the person-by-week table with any opened rows, the legend, team and contractor notes. */
     function render() {
         const c = data;
         const body = document.getElementById('capBody');
@@ -105,6 +113,7 @@
         body.innerHTML = html;
     }
 
+    /** Loads capacity for the chosen number of weeks from capacity.php and draws it. */
     async function load() {
         try {
             const d = await P.api('capacity.php?weeks=' + weeks);

@@ -1,10 +1,12 @@
 # apiNmLoadDiagram()
 
+Loads one diagram row (apiNmDiagramSelect), or answers 404 and stops.
+
 ```php
 function apiNmLoadDiagram(PDO $conn, int $diagramId): array
 ```
 
-Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 79.
+Defined in [api/v1/resources/network_mapper.php](/code/files/api/v1/resources/network_mapper.php.md), line 84.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

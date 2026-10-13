@@ -6,7 +6,7 @@ The items still open at one stage's gate: [{id, kind, title}].
 function projectGateOpenItems(PDO $conn, int $projectId, int $stageId): array
 ```
 
-Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 101.
+Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 102.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

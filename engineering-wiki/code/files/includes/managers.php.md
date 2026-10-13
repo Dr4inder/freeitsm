@@ -1,6 +1,6 @@
 # includes/managers.php
 
-> PHP - 464 lines
+> PHP - 465 lines
 
 Managers in the self-service portal (discussion #62, step 3).
 
@@ -47,39 +47,39 @@ THE RULES (agreed with Ed)
 
 | Function | Line | What it does |
 |---|--:|---|
-| [managersResetMemo()](/code/functions/managersResetMemo.md) | 58 |  |
-| [managersSettings()](/code/functions/managersSettings.md) | 61 | The settings, with their defaults. |
-| [managersActive()](/code/functions/managersActive.md) | 93 | Can managers work at all on this install? Needs the switch on AND every table the rules depend on - fail closed otherwise. |
-| [managerRow()](/code/functions/managerRow.md) | 108 | The manager's own row, or null if they cannot be a manager (missing, or left). |
-| [managerTeamUserIds()](/code/functions/managerTeamUserIds.md) | 126 | The people a manager may see the tickets of, as user ids. Memoised per request. Empty when managers are off, the manager has left, or - on a multi-company install - the manager belongs to no company. |
-| [managerGrantMembers()](/code/functions/managerGrantMembers.md) | 172 | The people one line refers to, within the base (company, not-self, leavers). Used for both grants and exclusions. |
-| [managerReachSql()](/code/functions/managerReachSql.md) | 230 | Everyone a line could ever reach for this manager, as an SQL condition on `users u`: same company (no company = Default), not the manager themselves, and - unless the setting keeps them - not people who have left. The ONE definition; the team, and System -> Managers' warnings, both use it. |
-| [managerCompany()](/code/functions/managerCompany.md) | 251 | The company a row belongs to, where NO company (NULL) means the Default company - the convention every company-owned row follows. A ticket nobody has routed and a person nobody has filed are both Default's. |
-| [managerHasTeam()](/code/functions/managerHasTeam.md) | 257 | Does this portal user manage anybody? Decides whether "Team tickets" is shown. |
-| [managerTeamPreviewIds()](/code/functions/managerTeamPreviewIds.md) | 270 | The team as it WOULD be with managers switched on - for the admin screens, so an admin can check who sees what before turning the portal over. Only the master switch is pretended; a missing table still gives nobody. The memo is put back afterwards, so nothing else in the request sees the pretence. |
-| [managerLinesEditable()](/code/functions/managerLinesEditable.md) | 289 | May the signed-in analyst add or remove management lines? System -> Managers decides: administrators only (the default), or anyone who can edit people - the caller has already required Tickets or Assets. Being able to reach the manager (analystCanAccessUser) is checked by the caller as well. |
-| [portalTicketAccess()](/code/functions/portalTicketAccess.md) | 306 | THE question every portal endpoint asks: may this portal user see this ticket, and as whom? |
-| [managersNotifyNewTicket()](/code/functions/managersNotifyNewTicket.md) | 367 | Tell the requester's managers that a new ticket has been raised, as System -> Managers says: 'none' (the default), 'email', or 'bell' - the self-service portal's own notification bell. |
-| [managersEmailNewTicket()](/code/functions/managersEmailNewTicket.md) | 438 | The email version. Sent through the portal's own sender (the ticket mailbox, as account emails are), to the manager's address - none, nothing sent. The link is built on the configured public address, because a ticket that arrives by email is created from cron, where there is no request to take a host from. |
+| [managersResetMemo()](/code/functions/managersResetMemo.md) | 59 | Clears the per-request managers cache, so settings saved mid-request are read again. |
+| [managersSettings()](/code/functions/managersSettings.md) | 62 | The settings, with their defaults. |
+| [managersActive()](/code/functions/managersActive.md) | 94 | Can managers work at all on this install? Needs the switch on AND every table the rules depend on - fail closed otherwise. |
+| [managerRow()](/code/functions/managerRow.md) | 109 | The manager's own row, or null if they cannot be a manager (missing, or left). |
+| [managerTeamUserIds()](/code/functions/managerTeamUserIds.md) | 127 | The people a manager may see the tickets of, as user ids. Memoised per request. Empty when managers are off, the manager has left, or - on a multi-company install - the manager belongs to no company. |
+| [managerGrantMembers()](/code/functions/managerGrantMembers.md) | 173 | The people one line refers to, within the base (company, not-self, leavers). Used for both grants and exclusions. |
+| [managerReachSql()](/code/functions/managerReachSql.md) | 231 | Everyone a line could ever reach for this manager, as an SQL condition on `users u`: same company (no company = Default), not the manager themselves, and - unless the setting keeps them - not people who have left. The ONE definition; the team, and System -> Managers' warnings, both use it. |
+| [managerCompany()](/code/functions/managerCompany.md) | 252 | The company a row belongs to, where NO company (NULL) means the Default company - the convention every company-owned row follows. A ticket nobody has routed and a person nobody has filed are both Default's. |
+| [managerHasTeam()](/code/functions/managerHasTeam.md) | 258 | Does this portal user manage anybody? Decides whether "Team tickets" is shown. |
+| [managerTeamPreviewIds()](/code/functions/managerTeamPreviewIds.md) | 271 | The team as it WOULD be with managers switched on - for the admin screens, so an admin can check who sees what before turning the portal over. Only the master switch is pretended; a missing table still gives nobody. The memo is put back afterwards, so nothing else in the request sees the pretence. |
+| [managerLinesEditable()](/code/functions/managerLinesEditable.md) | 290 | May the signed-in analyst add or remove management lines? System -> Managers decides: administrators only (the default), or anyone who can edit people - the caller has already required Tickets or Assets. Being able to reach the manager (analystCanAccessUser) is checked by the caller as well. |
+| [portalTicketAccess()](/code/functions/portalTicketAccess.md) | 307 | THE question every portal endpoint asks: may this portal user see this ticket, and as whom? |
+| [managersNotifyNewTicket()](/code/functions/managersNotifyNewTicket.md) | 368 | Tell the requester's managers that a new ticket has been raised, as System -> Managers says: 'none' (the default), 'email', or 'bell' - the self-service portal's own notification bell. |
+| [managersEmailNewTicket()](/code/functions/managersEmailNewTicket.md) | 439 | The email version. Sent through the portal's own sender (the ticket mailbox, as account emails are), to the manager's address - none, nothing sent. The link is built on the configured public address, because a ticket that arrives by email is created from cron, where there is no request to take a host from. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 77 | `managersSettings` | read [system_settings](/code/tables/system_settings.md) |  |
-| 100 | `managersActive` | read [manager_grants](/code/tables/manager_grants.md) |  |
-| 110 | `managerRow` | read [users](/code/tables/users.md) |  |
-| 137 | `managerTeamUserIds` | read [manager_grants](/code/tables/manager_grants.md) |  |
-| 181 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 183 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 188 | `managerGrantMembers` | read [users](/code/tables/users.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 198 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 209 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
-| 310 | `portalTicketAccess` | read [tickets](/code/tables/tickets.md) |  |
-| 375 | `managersNotifyNewTicket` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
-| 387 | `managersNotifyNewTicket` | read [users](/code/tables/users.md) |  |
-| 397 | `managersNotifyNewTicket` | read [manager_grants](/code/tables/manager_grants.md) |  |
-| 440 | `managersEmailNewTicket` | read [users](/code/tables/users.md) |  |
+| 78 | `managersSettings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 101 | `managersActive` | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 111 | `managerRow` | read [users](/code/tables/users.md) |  |
+| 138 | `managerTeamUserIds` | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 182 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 184 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 189 | `managerGrantMembers` | read [users](/code/tables/users.md), read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 199 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 210 | `managerGrantMembers` | read [users](/code/tables/users.md) |  |
+| 311 | `portalTicketAccess` | read [tickets](/code/tables/tickets.md) |  |
+| 376 | `managersNotifyNewTicket` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
+| 388 | `managersNotifyNewTicket` | read [users](/code/tables/users.md) |  |
+| 398 | `managersNotifyNewTicket` | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 441 | `managersEmailNewTicket` | read [users](/code/tables/users.md) |  |
 
 ## How it hangs together
 

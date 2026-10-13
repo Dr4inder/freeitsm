@@ -4,22 +4,30 @@
  * Each benefit: where it started, where it is now (the latest measurement) and
  * where it should get to, with which way is better, its owner and its next
  * review. State and progress come from the server; this file only draws.
+ *
+ * @wiki Projects-Internals-6-Governance
  */
 (function () {
     'use strict';
     const P = window.Prj;
+    /** Translates a key under projects.benefits.*. */
     const T = (k, p) => P.T('benefits.' + k, p);
     const esc = P.esc;
+    /** Shorthand for document.getElementById. */
     const $ = id => document.getElementById(id);
     let ctx = null;
     let wired = false;
     let open = {};          // benefit id -> its measurement history is showing
     let measuring = null;   // the benefit a measurement is being recorded for
 
+    /** Posts a benefits action to tools.php for the current project. */
     const call = body => P.api('tools.php', Object.assign({ project_id: ctx.projectId }, body));
+    /** True when the viewer may change this project. */
     const canChange = () => !!(ctx.data.permissions && ctx.data.permissions.can_change);
+    /** A figure formatted for the viewer's locale with its unit, or "-" when there is none. */
     const val = (v, unit) => v === null || v === undefined ? '-' : Number(v).toLocaleString() + (unit ? ' ' + unit : '');
 
+    /** One benefit's card - state pill, measure, baseline / now / target figures, progress bar, owner and review dates, actions and, when opened, its measurement history. */
     function card(b) {
         const due = b.review_due;
         let html = '<li class="prj-ben st-' + esc(b.state) + '">'
@@ -55,6 +63,7 @@
         return html + '</li>';
     }
 
+    /** Draws the Benefits tab - the intro, an Add button for those who can change the project, and a card per benefit. */
     function render() {
         const box = $('pvBenefits');
         if (!box) return;
@@ -67,6 +76,7 @@
     }
 
     // ---- Boxes ---------------------------------------------------------------------------
+    /** Opens the benefit dialog filled from b, or empty for a new one; the owner list is the project's analyst members plus the project manager. */
     function openBenefit(b) {
         $('pbnTitle').textContent = b ? b.title : T('add_title');
         $('pbnId').value = b ? b.id : '';
@@ -94,6 +104,7 @@
         setTimeout(() => $('pbnName').focus(), 60);
     }
 
+    /** Saves the benefit dialog through tools.php and redraws the project. */
     async function saveBenefit() {
         try {
             await call({ action: 'benefit_save', id: $('pbnId').value || undefined, title: $('pbnName').value.trim(), measure: $('pbnMeasure').value, unit: $('pbnUnit').value,
@@ -104,6 +115,7 @@
         } catch (e) { $('pbnError').textContent = e.message; $('pbnError').hidden = false; }
     }
 
+    /** Asks, then deletes the benefit open in the dialog. */
     async function deleteBenefit() {
         const ok = await window.showConfirm({ title: T('delete_title'), message: T('delete_body'), okLabel: P.TC('delete'), okClass: 'danger' });
         if (!ok) return;
@@ -111,6 +123,7 @@
         catch (e) { P.toast(e.message, 'error'); }
     }
 
+    /** Opens the record-a-measurement dialog for a benefit, dated today. */
     function openMeasure(b) {
         measuring = b;
         $('pbmTitle').textContent = T('record_title', { name: b.title });
@@ -124,6 +137,7 @@
         setTimeout(() => $('pbmValue').focus(), 60);
     }
 
+    /** Records the measurement through tools.php and redraws the project. */
     async function saveMeasure() {
         try {
             await call({ action: 'benefit_measure_add', id: measuring.id, value: $('pbmValue').value, measured_date: $('pbmDate').value, note: $('pbmNote').value });
@@ -131,9 +145,11 @@
         } catch (e) { $('pbmError').textContent = e.message; $('pbmError').hidden = false; }
     }
 
+    /** Wires the tab's buttons (add, edit, record, history toggle, delete a measurement) and the dialogs' save and delete, once. */
     function wire() {
         if (wired) return;
         wired = true;
+        /** The benefit with this id. */
         const find = id => (ctx.data.benefits || []).find(b => b.id === Number(id));
         $('pvBenefits').addEventListener('click', async e => {
             if (e.target.closest('[data-ben-add]')) { openBenefit(null); return; }

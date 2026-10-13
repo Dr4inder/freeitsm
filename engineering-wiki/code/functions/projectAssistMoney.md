@@ -1,10 +1,12 @@
 # projectAssistMoney()
 
+Formats an amount with its currency to two decimals; null shows as "-".
+
 ```php
 function projectAssistMoney(?float $v, string $cur): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 70.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 71.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

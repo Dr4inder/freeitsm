@@ -6,13 +6,17 @@
  * Inline edits post just the one changed field to api/domains/save.php — the
  * service updates only the keys it is sent, and records the change in the
  * domain's history exactly as the edit form would.
+ *
+ * @wiki Domains-Developer-Guide
  */
 (function () {
     'use strict';
     const { T, api, fmtDate, purpose, renewal } = window.Dom;
     let L = { statuses: [], analysts: [], suppliers: [], purposes: [], renewal_modes: [] };
 
+    /** Shows a lock or DNSSEC flag as on, off, or blank when unknown. */
     const yn = v => v === true ? T('lock.on') : (v === false ? T('lock.off') : '');
+    /** Shows a days-left number as text, blank when unknown. */
     const days = n => n === null || n === undefined ? '' : String(n);
 
     const COLUMNS = [
@@ -76,6 +80,7 @@
         onSaveCell: async (row, col, value) => {
             await api('save.php', { id: row.id, [col.key]: value === null ? '' : value });
             row[col.key] = value;
+            /** Returns the name of the lookup item with the given id, so the edited cell shows its new label. */
             const pick = (list, v) => (list.find(x => String(x.id) === String(v)) || {}).name || null;
             if (col.key === 'status_id') row.status_name = pick(L.statuses, value);
             if (col.key === 'owner_analyst_id') row.owner_name = pick(L.analysts, value);

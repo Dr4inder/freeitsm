@@ -1,6 +1,6 @@
 # api/v1/resources/knowledge.php
 
-> API endpoint - 400 lines
+> API endpoint - 414 lines
 
 FreeITSM REST API v1 — knowledge resource (Knowledge Base).
 
@@ -50,40 +50,40 @@ serializers + the bin's retention auto-purge stay here.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiKnowledgeSelect()](/code/functions/apiKnowledgeSelect.md) | 49 |  |
-| [apiKnowledgeTags()](/code/functions/apiKnowledgeTags.md) | 62 |  |
-| [apiSerializeArticle()](/code/functions/apiSerializeArticle.md) | 73 | Summary shape (lists) — preview instead of the full body. Detail adds body_html. |
-| [apiLoadArticle()](/code/functions/apiLoadArticle.md) | 115 | Load an article by id, 404ing if it's gone. |
-| [apiKnowledgePurgeExpired()](/code/functions/apiKnowledgePurgeExpired.md) | 134 | The recycle bin's retention auto-purge (mirrors knowledge_archive.php). |
-| [apiKnowledgeArticlesList()](/code/functions/apiKnowledgeArticlesList.md) | 161 | GET /knowledge/articles |
-| [apiKnowledgeArticlesGet()](/code/functions/apiKnowledgeArticlesGet.md) | 279 | GET /knowledge/articles/{id} |
-| [apiKnowledgeArticlesCreate()](/code/functions/apiKnowledgeArticlesCreate.md) | 295 | POST /knowledge/articles |
-| [apiKnowledgeArticlesUpdate()](/code/functions/apiKnowledgeArticlesUpdate.md) | 305 | PATCH /knowledge/articles/{id} |
-| [apiKnowledgeArticlesDelete()](/code/functions/apiKnowledgeArticlesDelete.md) | 315 | DELETE (archive) / restore / permanent purge — the recycle-bin semantics |
-| [apiKnowledgeArticlesRestore()](/code/functions/apiKnowledgeArticlesRestore.md) | 322 |  |
-| [apiKnowledgeArticlesPurge()](/code/functions/apiKnowledgeArticlesPurge.md) | 329 |  |
-| [apiKnowledgeVersionsList()](/code/functions/apiKnowledgeVersionsList.md) | 339 | Versions |
-| [apiKnowledgeVersionsGet()](/code/functions/apiKnowledgeVersionsGet.md) | 357 |  |
-| [apiKnowledgeTagsList()](/code/functions/apiKnowledgeTagsList.md) | 381 | GET /knowledge/tags — tag list with published article counts |
+| [apiKnowledgeSelect()](/code/functions/apiKnowledgeSelect.md) | 50 | The SELECT for knowledge articles, with author, owner, archiver and company names. |
+| [apiKnowledgeTags()](/code/functions/apiKnowledgeTags.md) | 64 | The names of an article's tags, alphabetically. |
+| [apiSerializeArticle()](/code/functions/apiSerializeArticle.md) | 75 | Summary shape (lists) — preview instead of the full body. Detail adds body_html. |
+| [apiLoadArticle()](/code/functions/apiLoadArticle.md) | 117 | Load an article by id, 404ing if it's gone. |
+| [apiKnowledgePurgeExpired()](/code/functions/apiKnowledgePurgeExpired.md) | 136 | The recycle bin's retention auto-purge (mirrors knowledge_archive.php). |
+| [apiKnowledgeArticlesList()](/code/functions/apiKnowledgeArticlesList.md) | 163 | GET /knowledge/articles |
+| [apiKnowledgeArticlesGet()](/code/functions/apiKnowledgeArticlesGet.md) | 281 | GET /knowledge/articles/{id} |
+| [apiKnowledgeArticlesCreate()](/code/functions/apiKnowledgeArticlesCreate.md) | 297 | POST /knowledge/articles |
+| [apiKnowledgeArticlesUpdate()](/code/functions/apiKnowledgeArticlesUpdate.md) | 307 | PATCH /knowledge/articles/{id} |
+| [apiKnowledgeArticlesDelete()](/code/functions/apiKnowledgeArticlesDelete.md) | 317 | DELETE (archive) / restore / permanent purge — the recycle-bin semantics |
+| [apiKnowledgeArticlesRestore()](/code/functions/apiKnowledgeArticlesRestore.md) | 328 | POST /knowledge/articles/{id}/restore - brings an article back from the recycle bin through KnowledgeService and returns it. |
+| [apiKnowledgeArticlesPurge()](/code/functions/apiKnowledgeArticlesPurge.md) | 339 | DELETE /knowledge/articles/{id}/permanent - permanently deletes an archived article through KnowledgeService. |
+| [apiKnowledgeVersionsList()](/code/functions/apiKnowledgeVersionsList.md) | 349 | Versions |
+| [apiKnowledgeVersionsGet()](/code/functions/apiKnowledgeVersionsGet.md) | 371 | GET /knowledge/articles/{id}/versions/{version} - one saved version of an article: title, body HTML, who saved it and when. |
+| [apiKnowledgeTagsList()](/code/functions/apiKnowledgeTagsList.md) | 395 | GET /knowledge/tags — tag list with published article counts |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 50 | `apiKnowledgeSelect` | read [knowledge_articles](/code/tables/knowledge_articles.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
-| 64 | `apiKnowledgeTags` | read [knowledge_article_tags](/code/tables/knowledge_article_tags.md), read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
-| 136 | `apiKnowledgePurgeExpired` | read [system_settings](/code/tables/system_settings.md) |  |
-| 144 | `apiKnowledgePurgeExpired` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 150 | `apiKnowledgePurgeExpired` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
-| 151 | `apiKnowledgePurgeExpired` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 152 | `apiKnowledgePurgeExpired` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 153 | `apiKnowledgePurgeExpired` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
-| 178 | `apiKnowledgeArticlesList` | read [knowledge_article_tags](/code/tables/knowledge_article_tags.md), read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
-| 258 | `apiKnowledgeArticlesList` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
-| 285 | `apiKnowledgeArticlesGet` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`view_count`) |  |
-| 342 | `apiKnowledgeVersionsList` | read [knowledge_article_versions](/code/tables/knowledge_article_versions.md), read [analysts](/code/tables/analysts.md) |  |
-| 360 | `apiKnowledgeVersionsGet` | read [knowledge_article_versions](/code/tables/knowledge_article_versions.md), read [analysts](/code/tables/analysts.md) |  |
-| 383 | `apiKnowledgeTagsList` | read [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 51 | `apiKnowledgeSelect` | read [knowledge_articles](/code/tables/knowledge_articles.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
+| 66 | `apiKnowledgeTags` | read [knowledge_article_tags](/code/tables/knowledge_article_tags.md), read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
+| 138 | `apiKnowledgePurgeExpired` | read [system_settings](/code/tables/system_settings.md) |  |
+| 146 | `apiKnowledgePurgeExpired` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 152 | `apiKnowledgePurgeExpired` | **delete** [knowledge_article_versions](/code/tables/knowledge_article_versions.md) |  |
+| 153 | `apiKnowledgePurgeExpired` | **delete** [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 154 | `apiKnowledgePurgeExpired` | **delete** [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 155 | `apiKnowledgePurgeExpired` | **delete** [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md) |  |
+| 180 | `apiKnowledgeArticlesList` | read [knowledge_article_tags](/code/tables/knowledge_article_tags.md), read [knowledge_tags](/code/tables/knowledge_tags.md) |  |
+| 260 | `apiKnowledgeArticlesList` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 287 | `apiKnowledgeArticlesGet` | **update** [knowledge_articles](/code/tables/knowledge_articles.md) (`view_count`) |  |
+| 352 | `apiKnowledgeVersionsList` | read [knowledge_article_versions](/code/tables/knowledge_article_versions.md), read [analysts](/code/tables/analysts.md) |  |
+| 374 | `apiKnowledgeVersionsGet` | read [knowledge_article_versions](/code/tables/knowledge_article_versions.md), read [analysts](/code/tables/analysts.md) |  |
+| 397 | `apiKnowledgeTagsList` | read [knowledge_tags](/code/tables/knowledge_tags.md), read [knowledge_article_tags](/code/tables/knowledge_article_tags.md), read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 

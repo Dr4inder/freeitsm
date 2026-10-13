@@ -1,10 +1,12 @@
 # oversizeMbWords()
 
+Formats a byte count as megabytes for messages - whole numbers without a decimal ("10 MB"), otherwise one place ("2.5 MB").
+
 ```php
 function oversizeMbWords(int $bytes): string
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 188.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 191.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

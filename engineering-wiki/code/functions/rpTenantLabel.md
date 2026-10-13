@@ -6,7 +6,7 @@ The company's name for the header field {{company}}.
 function rpTenantLabel(PDO $conn, int $analystId, $tenant): string
 ```
 
-Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 129.
+Defined in [includes/report_packs/criteria.php](/code/files/includes/report_packs/criteria.php.md), line 130.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -1,5 +1,9 @@
 # mailboxSendSimple()
 
+Sends one HTML email from a mailbox through its own provider (IMAP/SMTP, Gmail or Microsoft Graph) and logs it.
+
+Returns null on success, or the error message when sending failed.
+
 ```php
 function mailboxSendSimple(
     PDO $conn,
@@ -12,7 +16,7 @@ function mailboxSendSimple(
 ): ?string
 ```
 
-Defined in [includes/mailbox_send.php](/code/files/includes/mailbox_send.php.md), line 17.
+Defined in [includes/mailbox_send.php](/code/files/includes/mailbox_send.php.md), line 23.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

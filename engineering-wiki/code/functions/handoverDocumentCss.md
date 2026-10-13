@@ -16,7 +16,7 @@ the analyst's theme is not the document's business.
 function handoverDocumentCss(): string
 ```
 
-Defined in [includes/handover_styles.php](/code/files/includes/handover_styles.php.md), line 15.
+Defined in [includes/handover_styles.php](/code/files/includes/handover_styles.php.md), line 25.
 
 **Returns:** `string`
 

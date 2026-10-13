@@ -1,4 +1,11 @@
 <?php
+/**
+ * Checklists - the template library page: cards, filters, search, and the template editor.
+ *
+ * Loads every template, its steps and the categories for the page; deletes go through
+ * checklists/api.php.
+ * @wiki Checklists-and-SOPs-Developer-Guide
+ */
 session_start();
 require_once '../config.php';
 require_once '../includes/functions.php';

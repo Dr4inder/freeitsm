@@ -1,10 +1,12 @@
 # projectTemplatesReady()
 
+True when the project_templates table exists (after Database Verification). Cached per request.
+
 ```php
 function projectTemplatesReady(PDO $conn): bool
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 57.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 58.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,7 +18,7 @@ Defined in [includes/projects/templates.php](/code/files/includes/projects/templ
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 61 | `projectTemplatesReady` | read [project_templates](/code/tables/project_templates.md) |  |
+| 62 | `projectTemplatesReady` | read [project_templates](/code/tables/project_templates.md) |  |
 
 ## Called from
 

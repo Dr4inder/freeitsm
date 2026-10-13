@@ -6,7 +6,7 @@ This app's own host[:port], as the browser addresses it: the Host header, and - 
 function csrfOwnHosts(bool $withConfigured = false): array
 ```
 
-Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 147.
+Defined in [includes/csrf.php](/code/files/includes/csrf.php.md), line 149.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -69,6 +69,12 @@ class TicketNumbering
     /** @var array|null cached settings; a class property so forget() can clear it */
     private static $cache = null;
 
+    /**
+     * The saved numbering settings over the built-in defaults, read once and
+     * cached for the request. Without a settings table the defaults are returned.
+     *
+     * @reads system_settings - the numbering keys named in DEFAULTS
+     */
     public static function settings(PDO $conn): array
     {
         if (self::$cache !== null) {
@@ -108,6 +114,7 @@ class TicketNumbering
         self::$override = $settings;
     }
 
+    /** The settings to number with: a withSettings() override over the defaults when one is set, otherwise settings(). */
     private static function config(PDO $conn): array
     {
         return self::$override !== null

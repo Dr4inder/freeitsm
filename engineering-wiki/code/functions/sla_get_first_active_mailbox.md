@@ -1,10 +1,12 @@
 # sla_get_first_active_mailbox()
 
+The active mailbox with the lowest id, decrypted; null when there is none.
+
 ```php
 function sla_get_first_active_mailbox(PDO $conn): ?array
 ```
 
-Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 377.
+Defined in [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md), line 379.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,7 +18,7 @@ Defined in [includes/sla_notifications.php](/code/files/includes/sla_notificatio
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 378 | `sla_get_first_active_mailbox` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 380 | `sla_get_first_active_mailbox` | read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## Calls
 

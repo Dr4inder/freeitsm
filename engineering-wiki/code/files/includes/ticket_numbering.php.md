@@ -1,6 +1,6 @@
 # includes/ticket_numbering.php
 
-> PHP - 791 lines
+> PHP - 798 lines
 
 Ticket numbering — the ONE place a ticket number is made or recognised.
 
@@ -33,22 +33,22 @@ on working.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 81 | `TicketNumbering::settings` | read [system_settings](/code/tables/system_settings.md) |  |
-| 179 | `TicketNumbering::windCounterTo` | **insert** [ticket_number_counters](/code/tables/ticket_number_counters.md) (`counter_key`, `next_value`) |  |
-| 244 | `TicketNumbering::typeCode` | read [ticket_types](/code/tables/ticket_types.md) |  |
-| 281 | `TicketNumbering::resolveTenant` | read [tenants](/code/tables/tenants.md) |  |
-| 309 | `TicketNumbering::companyCode` | read [tenants](/code/tables/tenants.md) |  |
+| 87 | `TicketNumbering::settings` | read [system_settings](/code/tables/system_settings.md) |  |
+| 186 | `TicketNumbering::windCounterTo` | **insert** [ticket_number_counters](/code/tables/ticket_number_counters.md) (`counter_key`, `next_value`) |  |
+| 251 | `TicketNumbering::typeCode` | read [ticket_types](/code/tables/ticket_types.md) |  |
+| 288 | `TicketNumbering::resolveTenant` | read [tenants](/code/tables/tenants.md) |  |
 | 316 | `TicketNumbering::companyCode` | read [tenants](/code/tables/tenants.md) |  |
-| 368 | `TicketNumbering::codeClashes` | read [tenants](/code/tables/tenants.md) |  |
-| 403 | `TicketNumbering::claimNext` | **insert** [ticket_number_counters](/code/tables/ticket_number_counters.md) (`counter_key`, `next_value`) |  |
-| 458 | `TicketNumbering::inUse` | read [tickets](/code/tables/tickets.md) |  |
-| 464 | `TicketNumbering::inUse` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
-| 481 | `TicketNumbering::findTicketId` | read [tickets](/code/tables/tickets.md) |  |
-| 488 | `TicketNumbering::findTicketId` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
-| 631 | `TicketNumbering::planRenumber` | read [tickets](/code/tables/tickets.md) |  |
-| 736 | `TicketNumbering::assertPlanSafe` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
-| 764 | `TicketNumbering::applyRenumber` | **insert** [ticket_number_history](/code/tables/ticket_number_history.md) (`ticket_id`, `ticket_number`, `reason`) |  |
-| 766 | `TicketNumbering::applyRenumber` | **update** [tickets](/code/tables/tickets.md) (`ticket_number`) |  |
+| 323 | `TicketNumbering::companyCode` | read [tenants](/code/tables/tenants.md) |  |
+| 375 | `TicketNumbering::codeClashes` | read [tenants](/code/tables/tenants.md) |  |
+| 410 | `TicketNumbering::claimNext` | **insert** [ticket_number_counters](/code/tables/ticket_number_counters.md) (`counter_key`, `next_value`) |  |
+| 465 | `TicketNumbering::inUse` | read [tickets](/code/tables/tickets.md) |  |
+| 471 | `TicketNumbering::inUse` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
+| 488 | `TicketNumbering::findTicketId` | read [tickets](/code/tables/tickets.md) |  |
+| 495 | `TicketNumbering::findTicketId` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
+| 638 | `TicketNumbering::planRenumber` | read [tickets](/code/tables/tickets.md) |  |
+| 743 | `TicketNumbering::assertPlanSafe` | read [ticket_number_history](/code/tables/ticket_number_history.md) |  |
+| 771 | `TicketNumbering::applyRenumber` | **insert** [ticket_number_history](/code/tables/ticket_number_history.md) (`ticket_id`, `ticket_number`, `reason`) |  |
+| 773 | `TicketNumbering::applyRenumber` | **update** [tickets](/code/tables/tickets.md) (`ticket_number`) |  |
 
 ## How it hangs together
 

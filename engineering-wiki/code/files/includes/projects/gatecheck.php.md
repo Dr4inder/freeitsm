@@ -1,6 +1,6 @@
 # includes/projects/gatecheck.php
 
-> PHP - 118 lines
+> PHP - 119 lines
 
 Projects - stage gate checklists (3.3.0): what must be true before a "go".
 
@@ -28,21 +28,21 @@ never blocked. A gate with no items behaves exactly as before 3.3.0.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [projectGateItemsReady()](/code/functions/projectGateItemsReady.md) | 30 |  |
-| [projectGateDocuments()](/code/functions/projectGateDocuments.md) | 41 | The project's attached documents as {id, title} - what a document item may point at. |
-| [projectGateChanges()](/code/functions/projectGateChanges.md) | 52 | The project's linked changes with whether each is approved - what a change item may point at. |
-| [projectGateItems()](/code/functions/projectGateItems.md) | 66 | Every gate item of a project, each with `done` worked out, grouped by stage id. `$showChanges` = this analyst may open Changes (otherwise a change's title is left out). |
-| [projectGateOpenItems()](/code/functions/projectGateOpenItems.md) | 101 | The items still open at one stage's gate: [{id, kind, title}]. |
-| [projectGoLiveStarter()](/code/functions/projectGoLiveStarter.md) | 108 | The go-live starter checklist: [kind, title]. The sign-off goes to the project manager. |
+| [projectGateItemsReady()](/code/functions/projectGateItemsReady.md) | 31 | True when the project_gate_items table exists (after Database Verification). Cached per request. |
+| [projectGateDocuments()](/code/functions/projectGateDocuments.md) | 42 | The project's attached documents as {id, title} - what a document item may point at. |
+| [projectGateChanges()](/code/functions/projectGateChanges.md) | 53 | The project's linked changes with whether each is approved - what a change item may point at. |
+| [projectGateItems()](/code/functions/projectGateItems.md) | 67 | Every gate item of a project, each with `done` worked out, grouped by stage id. `$showChanges` = this analyst may open Changes (otherwise a change's title is left out). |
+| [projectGateOpenItems()](/code/functions/projectGateOpenItems.md) | 102 | The items still open at one stage's gate: [{id, kind, title}]. |
+| [projectGoLiveStarter()](/code/functions/projectGoLiveStarter.md) | 109 | The go-live starter checklist: [kind, title]. The sign-off goes to the project manager. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 34 | `projectGateItemsReady` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
-| 44 | `projectGateDocuments` | read [document_links](/code/tables/document_links.md), read [documents](/code/tables/documents.md) |  |
-| 55 | `projectGateChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md) |  |
-| 69 | `projectGateItems` | read [project_gate_items](/code/tables/project_gate_items.md), read [analysts](/code/tables/analysts.md) |  |
+| 35 | `projectGateItemsReady` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 45 | `projectGateDocuments` | read [document_links](/code/tables/document_links.md), read [documents](/code/tables/documents.md) |  |
+| 56 | `projectGateChanges` | read [project_changes](/code/tables/project_changes.md), read [changes](/code/tables/changes.md) |  |
+| 70 | `projectGateItems` | read [project_gate_items](/code/tables/project_gate_items.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

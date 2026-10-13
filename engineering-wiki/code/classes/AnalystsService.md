@@ -13,15 +13,15 @@
 | [setAccess()](#setaccess) | Set access. `$in`: any of is_admin, all_modules, modules[], all_companies, companies[], capabilities[]. Each list REPLACES what the analyst has in that part; anything not sent stays as it is. |
 | [managedRoleId()](#managedroleid) | The REST-API-managed role's id for an analyst, or null. |
 | [assertNotLastAdmin()](#assertnotlastadmin) | Refuse when this analyst is the last ACTIVE administrator - removing them would leave nobody able to open System. Same rule as System -> Analysts. |
-| [writeManagedRole()](#writemanagedrole) |  |
-| [moduleKeys()](#modulekeys) |  |
-| [companyIds()](#companyids) |  |
-| [capabilityKeys()](#capabilitykeys) |  |
-| [stringList()](#stringlist) |  |
-| [flag()](#flag) |  |
-| [cleanEmail()](#cleanemail) |  |
-| [assertEmailFree()](#assertemailfree) |  |
-| [providerId()](#providerid) |  |
+| [writeManagedRole()](#writemanagedrole) | Sets the capabilities of the analyst's API-managed role, creating the role the first time and assigning it to them. |
+| [moduleKeys()](#modulekeys) | Validates a list of module keys against the module registry. |
+| [companyIds()](#companyids) | Validates a list of company ids against the known companies. |
+| [capabilityKeys()](#capabilitykeys) | Validates a list of capability keys, mapping retired keys to their current ones and removing duplicates. |
+| [stringList()](#stringlist) | A list of unique trimmed strings; throws when the value is not an array. |
+| [flag()](#flag) | A true/false input as a bool; accepts true, false, 0, 1, '0' or '1' and throws on anything else. |
+| [cleanEmail()](#cleanemail) | A lower-case, validated email address, or null when blank. |
+| [assertEmailFree()](#assertemailfree) | Throws a conflict when another analyst already uses the email. |
+| [providerId()](#providerid) | A validated sign-in provider id, or null for none. |
 | [uniqueUsername()](#uniqueusername) | The asked-for username, else the email's local part, made unique - the SSO sign-up rule. |
 
 ### load
@@ -195,7 +195,9 @@ function assertNotLastAdmin(PDO $conn, int $id): void
 
 ### writeManagedRole
 
-*private static* - line 257
+*private static* - line 264
+
+Sets the capabilities of the analyst's API-managed role, creating the role the first time and assigning it to them.
 
 ```php
 function writeManagedRole(PDO $conn, ActorContext $ctx, array $a, array $caps): void
@@ -208,19 +210,23 @@ function writeManagedRole(PDO $conn, ActorContext $ctx, array $a, array $caps): 
 | `$a` | `array` |  |  |
 | `$caps` | `array` |  |  |
 
+**Writes:** rbac_roles, rbac_role_capabilities, rbac_analyst_roles - the role the REST API keeps for this analyst
+
 **Database**
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 263 | `AnalystsService::writeManagedRole` | **insert** [rbac_roles](/code/tables/rbac_roles.md) (`name`, `description`, `is_active`, `created_by_id`, `managed_for_analyst_id`, `created_datetime`, `updated_datetime`) |  |
-| 273 | `AnalystsService::writeManagedRole` | **delete** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) |  |
-| 274 | `AnalystsService::writeManagedRole` | **insert** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) (`role_id`, `capability_key`) |  |
-| 276 | `AnalystsService::writeManagedRole` | **insert** [rbac_analyst_roles](/code/tables/rbac_analyst_roles.md) (`analyst_id`, `role_id`, `created_datetime`) |  |
-| 278 | `AnalystsService::writeManagedRole` | **update** [rbac_roles](/code/tables/rbac_roles.md) (`updated_datetime`) |  |
+| 270 | `AnalystsService::writeManagedRole` | **insert** [rbac_roles](/code/tables/rbac_roles.md) (`name`, `description`, `is_active`, `created_by_id`, `managed_for_analyst_id`, `created_datetime`, `updated_datetime`) |  |
+| 280 | `AnalystsService::writeManagedRole` | **delete** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) |  |
+| 281 | `AnalystsService::writeManagedRole` | **insert** [rbac_role_capabilities](/code/tables/rbac_role_capabilities.md) (`role_id`, `capability_key`) |  |
+| 283 | `AnalystsService::writeManagedRole` | **insert** [rbac_analyst_roles](/code/tables/rbac_analyst_roles.md) (`analyst_id`, `role_id`, `created_datetime`) |  |
+| 285 | `AnalystsService::writeManagedRole` | **update** [rbac_roles](/code/tables/rbac_roles.md) (`updated_datetime`) |  |
 
 ### moduleKeys
 
-*private static* - line 281
+*private static* - line 289
+
+Validates a list of module keys against the module registry.
 
 ```php
 function moduleKeys($v): array
@@ -232,7 +238,9 @@ function moduleKeys($v): array
 
 ### companyIds
 
-*private static* - line 292
+*private static* - line 301
+
+Validates a list of company ids against the known companies.
 
 ```php
 function companyIds(PDO $conn, $v): array
@@ -245,7 +253,9 @@ function companyIds(PDO $conn, $v): array
 
 ### capabilityKeys
 
-*private static* - line 306
+*private static* - line 319
+
+Validates a list of capability keys, mapping retired keys to their current ones and removing duplicates.
 
 ```php
 function capabilityKeys($v): array
@@ -257,7 +267,9 @@ function capabilityKeys($v): array
 
 ### stringList
 
-*private static* - line 320
+*private static* - line 334
+
+A list of unique trimmed strings; throws when the value is not an array.
 
 ```php
 function stringList($v, string $field): array
@@ -270,7 +282,9 @@ function stringList($v, string $field): array
 
 ### flag
 
-*private static* - line 328
+*private static* - line 343
+
+A true/false input as a bool; accepts true, false, 0, 1, '0' or '1' and throws on anything else.
 
 ```php
 function flag($v, string $field): bool
@@ -283,7 +297,9 @@ function flag($v, string $field): bool
 
 ### cleanEmail
 
-*private static* - line 334
+*private static* - line 350
+
+A lower-case, validated email address, or null when blank.
 
 ```php
 function cleanEmail($v): ?string
@@ -295,7 +311,9 @@ function cleanEmail($v): ?string
 
 ### assertEmailFree
 
-*private static* - line 344
+*private static* - line 361
+
+Throws a conflict when another analyst already uses the email.
 
 ```php
 function assertEmailFree(PDO $conn, string $email, int $exceptId): void
@@ -311,11 +329,13 @@ function assertEmailFree(PDO $conn, string $email, int $exceptId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 346 | `AnalystsService::assertEmailFree` | read [analysts](/code/tables/analysts.md) |  |
+| 363 | `AnalystsService::assertEmailFree` | read [analysts](/code/tables/analysts.md) |  |
 
 ### providerId
 
-*private static* - line 353
+*private static* - line 371
+
+A validated sign-in provider id, or null for none.
 
 ```php
 function providerId(PDO $conn, $v): ?int
@@ -330,11 +350,11 @@ function providerId(PDO $conn, $v): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 357 | `AnalystsService::providerId` | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 375 | `AnalystsService::providerId` | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ### uniqueUsername
 
-*private static* - line 366
+*private static* - line 384
 
 The asked-for username, else the email's local part, made unique - the SSO sign-up rule.
 
@@ -352,5 +372,5 @@ function uniqueUsername(PDO $conn, string $want, string $email): string
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 370 | `AnalystsService::uniqueUsername` | read [analysts](/code/tables/analysts.md) |  |
+| 388 | `AnalystsService::uniqueUsername` | read [analysts](/code/tables/analysts.md) |  |
 

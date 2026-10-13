@@ -6,7 +6,7 @@ GET /cost-centres
 function apiCostCentresList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 80.
+Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md), line 92.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 125 | `apiCostCentresList` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 137 | `apiCostCentresList` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## Calls
 

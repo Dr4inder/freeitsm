@@ -6,7 +6,7 @@ Anything unrecognised reads as normal - the column's own default.
 function ticketSensitivityNormalise($value): string
 ```
 
-Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 62.
+Defined in [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md), line 64.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

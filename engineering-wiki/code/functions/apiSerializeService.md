@@ -1,10 +1,12 @@
 # apiSerializeService()
 
+Shapes a service row for the API, with its current status (the default impact level when nothing is affecting it) and that status's colour and severity.
+
 ```php
 function apiSerializeService(PDO $conn, array $r): array
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 71.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 76.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

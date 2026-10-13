@@ -1,10 +1,16 @@
 # apiSoftwareAppsList()
 
+GET /software/apps - the discovered applications with install and licence counts, paginated.
+
+?q= matches name or publisher, ?filter= is apps, components or all (the Software
+screen's tabs), and ?sort= takes name, publisher, install_count or id, with a leading
+- for descending.
+
 ```php
 function apiSoftwareAppsList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 37.
+Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software.php.md), line 45.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +25,8 @@ Defined in [api/v1/resources/software.php](/code/files/api/v1/resources/software
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 70 | `apiSoftwareAppsList` | read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
-| 80 | `apiSoftwareAppsList` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 78 | `apiSoftwareAppsList` | read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
+| 88 | `apiSoftwareAppsList` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md), read [software_inventory_detail](/code/tables/software_inventory_detail.md) |  |
 
 ## Calls
 

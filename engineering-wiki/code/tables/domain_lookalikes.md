@@ -19,7 +19,7 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/domains/watch.php](/code/files/api/domains/watch.php.md):38 |  | update | `dismissed` |  |
-| [includes/domains/watch.php](/code/files/includes/domains/watch.php.md):180 | `domainLookalikeScan` | insert | `domain_id`, `lookalike`, `technique`, `has_a`, `has_mx`, `first_seen_datetime`, `last_seen_datetime` |  |
+| [includes/domains/watch.php](/code/files/includes/domains/watch.php.md):186 | `domainLookalikeScan` | insert | `domain_id`, `lookalike`, `technique`, `has_a`, `has_mx`, `first_seen_datetime`, `last_seen_datetime` |  |
 
 ## Read by
 
@@ -27,5 +27,5 @@
 |---|---|---|
 | [api/domains/get.php](/code/files/api/domains/get.php.md) | L24 |  |
 | [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L39 |  |
-| [includes/domains/watch.php](/code/files/includes/domains/watch.php.md) | domainLookalikeScan L186 |  |
+| [includes/domains/watch.php](/code/files/includes/domains/watch.php.md) | domainLookalikeScan L192 |  |
 

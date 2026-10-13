@@ -12,7 +12,7 @@ remembering to take it away.
 function knowledgeViewerPrincipals(PDO $conn, KnowledgeViewer $viewer): array
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 662.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 670.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -25,8 +25,8 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 673 | `knowledgeViewerPrincipals` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 687 | `knowledgeViewerPrincipals` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 681 | `knowledgeViewerPrincipals` | read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 695 | `knowledgeViewerPrincipals` | read [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md), read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
 
 ## Called from
 

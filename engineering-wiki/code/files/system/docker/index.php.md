@@ -1,6 +1,6 @@
 # system/docker/index.php
 
-> PHP - 369 lines
+> PHP - 370 lines
 
 System - Docker: turn on HTTPS for the container.
 
@@ -15,7 +15,7 @@ Generate, after which the page reloads.
 | Function | Line | What it does |
 |---|--:|---|
 | [dk()](/code/functions/dk.md) | 48 | Escape a translated string, then drop pre-built HTML into its {placeholders}. |
-| [dkCode()](/code/functions/dkCode.md) | 54 |  |
+| [dkCode()](/code/functions/dkCode.md) | 55 | Escapes a command or path and wraps it in <code> for dropping into a `dk()` placeholder. |
 
 ## How it hangs together
 

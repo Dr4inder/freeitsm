@@ -6,7 +6,7 @@ Record that someone opened a ticket. Never throws: a view that fails to be recor
 function ticketViewRecord(PDO $conn, int $ticketId, string $viewerType, int $viewerId): void
 ```
 
-Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 51.
+Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 53.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 61 | `ticketViewRecord` | **insert** [ticket_views](/code/tables/ticket_views.md) (`ticket_id`, `viewer_type`, `viewer_id`, `view_date`, `first_viewed_datetime`, `last_viewed_datetime`, `view_count`) |  |
+| 63 | `ticketViewRecord` | **insert** [ticket_views](/code/tables/ticket_views.md) (`ticket_id`, `viewer_type`, `viewer_id`, `view_date`, `first_viewed_datetime`, `last_viewed_datetime`, `view_count`) |  |
 
 ## Calls
 

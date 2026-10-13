@@ -1,10 +1,12 @@
 # domainApiFail()
 
+Sends {success: false, error} as JSON, with an HTTP status when one other than 200 is given, and ends the request.
+
 ```php
 function domainApiFail(string $message, int $status = 200): void
 ```
 
-Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 49.
+Defined in [includes/domains/api_bootstrap.php](/code/files/includes/domains/api_bootstrap.php.md), line 51.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

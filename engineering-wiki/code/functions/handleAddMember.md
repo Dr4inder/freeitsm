@@ -13,7 +13,7 @@ only because its membership carries no expiry to lose.
 function handleAddMember(PDO $conn, int $analystId, array $input): void
 ```
 
-Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 340.
+Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php.md), line 350.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -27,10 +27,10 @@ Defined in [api/tickets/user_groups.php](/code/files/api/tickets/user_groups.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 351 | `handleAddMember` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
-| 359 | `handleAddMember` | read [analysts](/code/tables/analysts.md) |  |
-| 364 | `handleAddMember` | read [users](/code/tables/users.md) |  |
-| 380 | `handleAddMember` | **insert** [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) (`group_id`, `member_type`, `member_id`, `expires_at`, `created_datetime`) |  |
+| 361 | `handleAddMember` | read [knowledge_user_groups](/code/tables/knowledge_user_groups.md) |  |
+| 369 | `handleAddMember` | read [analysts](/code/tables/analysts.md) |  |
+| 374 | `handleAddMember` | read [users](/code/tables/users.md) |  |
+| 390 | `handleAddMember` | **insert** [knowledge_user_group_members](/code/tables/knowledge_user_group_members.md) (`group_id`, `member_type`, `member_id`, `expires_at`, `created_datetime`) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ Return the inline SVG markup for an area icon key. Unknown keys render a neutral
 function systemAreaIcon($key)
 ```
 
-Defined in [system/includes/areas.php](/code/files/system/includes/areas.php.md), line 299.
+Defined in [system/includes/areas.php](/code/files/system/includes/areas.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

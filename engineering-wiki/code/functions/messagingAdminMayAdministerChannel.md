@@ -20,7 +20,7 @@ check", which then produces the standard error.
 function messagingAdminMayAdministerChannel(PDO $conn, int $channelId): bool
 ```
 
-Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 448.
+Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/messaging.php.md), line 457.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -33,7 +33,7 @@ Defined in [includes/messaging/messaging.php](/code/files/includes/messaging/mes
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 454 | `messagingAdminMayAdministerChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
+| 463 | `messagingAdminMayAdministerChannel` | read [messaging_channels](/code/tables/messaging_channels.md) |  |
 
 ## Calls
 

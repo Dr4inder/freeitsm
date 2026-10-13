@@ -1,10 +1,12 @@
 # apiV1YamlNode()
 
+Renders one value as YAML at the given indent - lists as "- " items with the first key of a mapping hung on the dash, mappings as "key: value", empty arrays as [] or {}.
+
 ```php
 function apiV1YamlNode($value, int $indent): string
 ```
 
-Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 383.
+Defined in [api/v1/lib/openapi.php](/code/files/api/v1/lib/openapi.php.md), line 388.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

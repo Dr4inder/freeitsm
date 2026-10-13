@@ -6,7 +6,7 @@ Stop recording and return what was recorded.
 function aiProviderTraceTake(): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 381.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 385.
 
 **Returns:** `array`
 

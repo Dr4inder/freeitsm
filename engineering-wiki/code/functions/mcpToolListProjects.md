@@ -1,10 +1,12 @@
 # mcpToolListProjects()
 
+MCP tool: lists the projects the API key may see.
+
 ```php
 function mcpToolListProjects(PDO $conn, array $args, int $analystId, array $apiKey): string
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 235.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 242.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

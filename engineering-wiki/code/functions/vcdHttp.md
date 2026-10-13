@@ -13,7 +13,7 @@ function vcdHttp(
 ): array
 ```
 
-Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 49.
+Defined in [includes/vcloud_sync.php](/code/files/includes/vcloud_sync.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

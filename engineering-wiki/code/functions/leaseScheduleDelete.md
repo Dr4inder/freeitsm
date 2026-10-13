@@ -6,7 +6,7 @@ Delete a schedule and its asset rows (the assets keep their dates). The last sch
 function leaseScheduleDelete(PDO $conn, ActorContext $ctx, int $id): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 454.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 460.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 454.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 457 | `leaseScheduleDelete` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
-| 462 | `leaseScheduleDelete` | **delete** [lease_schedules](/code/tables/lease_schedules.md) |  |
+| 463 | `leaseScheduleDelete` | read [lease_schedules](/code/tables/lease_schedules.md) |  |
+| 468 | `leaseScheduleDelete` | **delete** [lease_schedules](/code/tables/lease_schedules.md) |  |
 
 ## Calls
 

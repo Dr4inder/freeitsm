@@ -30,6 +30,7 @@ require_once __DIR__ . '/settings.php';
 if (!defined('PROJECT_VISIBILITY_LOADED')) {
     define('PROJECT_VISIBILITY_LOADED', true);
 
+    /** The visibility a project can have: everyone, or members only. */
     function projectVisibilities(): array
     {
         return ['everyone', 'members'];

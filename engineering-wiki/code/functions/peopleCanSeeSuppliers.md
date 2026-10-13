@@ -6,7 +6,7 @@ Suppliers and contacts are Contracts' records: their pages need Contracts too.
 function peopleCanSeeSuppliers(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 583.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 584.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

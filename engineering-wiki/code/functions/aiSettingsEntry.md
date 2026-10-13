@@ -1,10 +1,12 @@
 # aiSettingsEntry()
 
+Returns a namespace's registry entry (label, default provider and model); throws RuntimeException for an unknown namespace.
+
 ```php
 function aiSettingsEntry(string $ns): array
 ```
 
-Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 106.
+Defined in [includes/ai_settings.php](/code/files/includes/ai_settings.php.md), line 110.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

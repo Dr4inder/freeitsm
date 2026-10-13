@@ -1,10 +1,12 @@
 # apiChangeCategoriesList()
 
+GET /change-categories - the change categories, in display order.
+
 ```php
 function apiChangeCategoriesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 508.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 524.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +21,7 @@ Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 509 | `apiChangeCategoriesList` | read [change_categories](/code/tables/change_categories.md) |  |
+| 525 | `apiChangeCategoriesList` | read [change_categories](/code/tables/change_categories.md) |  |
 
 ## Calls
 

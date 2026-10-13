@@ -26,23 +26,23 @@ open it in a tab; anything with a scheme opens in a new browser window.
 | Method | What it does |
 |---|---|
 | [render()](#render) | Render a page. |
-| [blocks()](#blocks) |  |
+| [blocks()](#blocks) | Renders a run of lines as block HTML - fenced code, headings, rules, quotes and alerts, tables, lists and paragraphs. |
 | [startsBlock()](#startsblock) | Would this line start a new block (and so end a paragraph)? |
-| [heading()](#heading) |  |
+| [heading()](#heading) | Renders a heading with its GitHub-style anchor; the first h1 becomes the page title and h2/h3 go into the table of contents. |
 | [slug()](#slug) | GitHub's anchor rule: lower case, punctuation dropped, spaces to hyphens, repeats numbered. |
-| [quote()](#quote) |  |
-| [isTableRule()](#istablerule) |  |
-| [cells()](#cells) |  |
-| [table()](#table) |  |
-| [listMarker()](#listmarker) |  |
+| [quote()](#quote) | Renders a block quote, or a GitHub alert box when the first line is [!NOTE], [!TIP], [!IMPORTANT], [!WARNING] or [!CAUTION]. |
+| [isTableRule()](#istablerule) | True when a line is a table's header separator (\| --- \| :---: \|). |
+| [cells()](#cells) | Splits a table row into trimmed cells, ignoring the outer pipes and any \| inside `code` or escaped as \\|. |
+| [table()](#table) | Renders a table from its header, separator and body rows, applying the column alignment. |
+| [listMarker()](#listmarker) | Reads a list item marker (- * + or 1. 1)) at the start of a line; null when the line is not a list item, including a --- rule. |
 | [listBlock()](#listblock) | One list (and its nested lists). `@return` array{0:string,1:int} [html, next line] |
-| [codeBlock()](#codeblock) |  |
+| [codeBlock()](#codeblock) | Renders a fenced code block with its language label, highlighted when the language is one it knows. |
 | [highlight()](#highlight) | Just enough colour to read by: comments, strings, numbers, keywords, variables. |
-| [inlineLines()](#inlinelines) |  |
-| [hold()](#hold) |  |
-| [inline()](#inline) |  |
-| [link()](#link) |  |
-| [e()](#e) |  |
+| [inlineLines()](#inlinelines) | Renders a paragraph's lines as inline HTML, turning two trailing spaces or a trailing backslash into a line break. |
+| [hold()](#hold) | Parks finished HTML (code, links, escapes) behind a placeholder so later inline passes cannot touch it. |
+| [inline()](#inline) | Renders inline Markdown - escapes, code, images, links, wiki links and autolinks, then bold, italic and strike - with all other text escaped. |
+| [link()](#link) | Builds a link - external ones open in a new window, #anchors stay on the page, and wiki paths go through the resolver (a page it cannot find is shown as a broken link). |
+| [e()](#e) | Escapes text for HTML. |
 
 ### render
 
@@ -65,7 +65,9 @@ function render(string $md, callable $resolve): array
 
 ### blocks
 
-*private* - line 51
+*private* - line 54
+
+Renders a run of lines as block HTML - fenced code, headings, rules, quotes and alerts, tables, lists and paragraphs.
 
 ```php
 function blocks(array $lines): string
@@ -77,7 +79,7 @@ function blocks(array $lines): string
 
 ### startsBlock
 
-*private* - line 125
+*private* - line 128
 
 Would this line start a new block (and so end a paragraph)?
 
@@ -91,7 +93,9 @@ function startsBlock(string $line): bool
 
 ### heading
 
-*private* - line 131
+*private* - line 137
+
+Renders a heading with its GitHub-style anchor; the first h1 becomes the page title and h2/h3 go into the table of contents.
 
 ```php
 function heading(int $level, string $text): string
@@ -104,7 +108,7 @@ function heading(int $level, string $text): string
 
 ### slug
 
-*private* - line 142
+*private* - line 148
 
 GitHub's anchor rule: lower case, punctuation dropped, spaces to hyphens, repeats numbered.
 
@@ -118,7 +122,9 @@ function slug(string $text): string
 
 ### quote
 
-*private* - line 154
+*private* - line 163
+
+Renders a block quote, or a GitHub alert box when the first line is [!NOTE], [!TIP], [!IMPORTANT], [!WARNING] or [!CAUTION].
 
 ```php
 function quote(array $lines): string
@@ -130,7 +136,9 @@ function quote(array $lines): string
 
 ### isTableRule
 
-*private* - line 167
+*private* - line 177
+
+True when a line is a table's header separator (| --- | :---: |).
 
 ```php
 function isTableRule(string $line): bool
@@ -142,7 +150,9 @@ function isTableRule(string $line): bool
 
 ### cells
 
-*private* - line 173
+*private* - line 184
+
+Splits a table row into trimmed cells, ignoring the outer pipes and any | inside `code` or escaped as \|.
 
 ```php
 function cells(string $row): array
@@ -154,7 +164,9 @@ function cells(string $row): array
 
 ### table
 
-*private* - line 191
+*private* - line 203
+
+Renders a table from its header, separator and body rows, applying the column alignment.
 
 ```php
 function table(array $rows): string
@@ -166,7 +178,9 @@ function table(array $rows): string
 
 ### listMarker
 
-*private* - line 213
+*private* - line 230
+
+Reads a list item marker (- * + or 1. 1)) at the start of a line; null when the line is not a list item, including a --- rule.
 
 ```php
 function listMarker(string $line): ?array
@@ -180,7 +194,7 @@ function listMarker(string $line): ?array
 
 ### listBlock
 
-*private* - line 222
+*private* - line 239
 
 One list (and its nested lists). `@return` array{0:string,1:int} [html, next line]
 
@@ -195,7 +209,9 @@ function listBlock(array $lines, int $i): array
 
 ### codeBlock
 
-*private* - line 282
+*private* - line 300
+
+Renders a fenced code block with its language label, highlighted when the language is one it knows.
 
 ```php
 function codeBlock(string $code, string $lang): string
@@ -208,7 +224,7 @@ function codeBlock(string $code, string $lang): string
 
 ### highlight
 
-*private* - line 293
+*private* - line 311
 
 Just enough colour to read by: comments, strings, numbers, keywords, variables.
 
@@ -223,7 +239,9 @@ function highlight(string $code, string $kind): string
 
 ### inlineLines
 
-*private* - line 330
+*private* - line 349
+
+Renders a paragraph's lines as inline HTML, turning two trailing spaces or a trailing backslash into a line break.
 
 ```php
 function inlineLines(array $lines): string
@@ -235,7 +253,9 @@ function inlineLines(array $lines): string
 
 ### hold
 
-*private* - line 343
+*private* - line 363
+
+Parks finished HTML (code, links, escapes) behind a placeholder so later inline passes cannot touch it.
 
 ```php
 function hold(string $html): string
@@ -247,7 +267,9 @@ function hold(string $html): string
 
 ### inline
 
-*private* - line 349
+*private* - line 372
+
+Renders inline Markdown - escapes, code, images, links, wiki links and autolinks, then bold, italic and strike - with all other text escaped.
 
 ```php
 function inline(string $t): string
@@ -259,7 +281,9 @@ function inline(string $t): string
 
 ### link
 
-*private* - line 379
+*private* - line 405
+
+Builds a link - external ones open in a new window, #anchors stay on the page, and wiki paths go through the resolver (a page it cannot find is shown as a broken link).
 
 ```php
 function link(string $href, string $label, bool $wiki = false): string
@@ -273,7 +297,9 @@ function link(string $href, string $label, bool $wiki = false): string
 
 ### e
 
-*private* - line 401
+*private* - line 428
+
+Escapes text for HTML.
 
 ```php
 function e(string $s): string

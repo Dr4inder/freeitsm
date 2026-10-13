@@ -18,16 +18,16 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/tickets/permanently_delete_ticket.php](/code/files/api/tickets/permanently_delete_ticket.php.md):101 |  | delete |  |  |
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):239 |  | insert | `ticket_id`, `template_id`, `title`, `closure_mode`, `created_by_id`, `created_datetime` |  |
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):327 |  | delete |  |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2041 | `WorkflowEngine::action_attach_checklist` | insert | `ticket_id`, `template_id`, `title`, `closure_mode`, `created_by_id`, `created_datetime` |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):247 |  | insert | `ticket_id`, `template_id`, `title`, `closure_mode`, `created_by_id`, `created_datetime` |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md):335 |  | delete |  |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2078 | `WorkflowEngine::action_attach_checklist` | insert | `ticket_id`, `template_id`, `title`, `closure_mode`, `created_by_id`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
 | [api/tickets/permanently_delete_ticket.php](/code/files/api/tickets/permanently_delete_ticket.php.md) | L98 |  |
-| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md) | checklistTicketForItem L46, checklistTicketForChecklist L52, L88 |  |
+| [api/tickets/ticket_checklists.php](/code/files/api/tickets/ticket_checklists.php.md) | checklistTicketForItem L50, checklistTicketForChecklist L60, L96 |  |
 | [includes/services/checklists.php](/code/files/includes/services/checklists.php.md) | ChecklistsService::hasAttachedChecklists L59, ChecklistsService::outstandingMandatorySteps L80 |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_attach_checklist L2027 |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_attach_checklist L2064 |  |
 

@@ -19,7 +19,7 @@
 |---|---|---|---|---|
 | [api/self-service/close_ticket.php](/code/files/api/self-service/close_ticket.php.md):134 |  | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 | [api/system/assign_ticket_department.php](/code/files/api/system/assign_ticket_department.php.md):64 |  | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md):359 |  | delete |  |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md):368 |  | delete |  |  |
 | [api/tickets/empty_trash.php](/code/files/api/tickets/empty_trash.php.md):76 |  | delete |  |  |
 | [api/tickets/log_ticket_audit.php](/code/files/api/tickets/log_ticket_audit.php.md):45 |  | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 | [api/tickets/move_ticket_to_company.php](/code/files/api/tickets/move_ticket_to_company.php.md):68 |  | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
@@ -30,22 +30,22 @@
 | [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md):734 | `messagingTelegramAudit` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 | [includes/services/checklists.php](/code/files/includes/services/checklists.php.md):286 | `ChecklistsService::writeClosureNote` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 | [includes/services/mandatory_fields.php](/code/files/includes/services/mandatory_fields.php.md):242 | `MandatoryFieldsService::writeNote` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md):1115 | `TicketsService::auditWrite` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [includes/ticket_links.php](/code/files/includes/ticket_links.php.md):38 | `ticketLinkAudit` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):625 | `mergeAudit` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md):86 | `ticketSensitivityRaise` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/services/tickets.php](/code/files/includes/services/tickets.php.md):1116 | `TicketsService::auditWrite` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/ticket_links.php](/code/files/includes/ticket_links.php.md):45 | `ticketLinkAudit` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md):632 | `mergeAudit` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/ticket_sensitivity.php](/code/files/includes/ticket_sensitivity.php.md):88 | `ticketSensitivityRaise` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 | [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.md):307 | `snoozeAudit` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):321 | `splitAudit` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2188 | `WorkflowEngine::action_add_ticket_note` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
-| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2537 | `WorkflowEngine::action_create_ticket` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/ticket_split.php](/code/files/includes/ticket_split.php.md):327 | `splitAudit` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2243 | `WorkflowEngine::action_add_ticket_note` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md):2621 | `WorkflowEngine::action_create_ticket` | insert | `ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L320 |  |
+| [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L329 |  |
 | [api/tickets/get_ticket_audit.php](/code/files/api/tickets/get_ticket_audit.php.md) | L36 |  |
-| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketAuditList L388 |  |
+| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketAuditList L401 |  |
 | [includes/sla.php](/code/files/includes/sla.php.md) | sla_get_state L116 |  |
 | [includes/watchtower_queries.php](/code/files/includes/watchtower_queries.php.md) | getWatchtowerData L246 |  |
 

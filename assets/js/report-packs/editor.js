@@ -10,13 +10,17 @@
  * The HTML here is only ever the analyst's own, built by docToHtml from the
  * stored model with every piece of text escaped; it is never stored. What is
  * stored is the model, which the server checks field by field.
+ *
+ * @wiki Report-Packs-Internals-1-The-Designer
  */
 (function () {
     'use strict';
 
     const FIELD_KEYS = ['page', 'pages', 'date_from', 'date_to', 'today', 'title', 'company'];
+    /** Translates a key under reporting.packs.*, or returns the key when the i18n helper is not loaded. */
     const T = (k, p) => (window.t ? window.t('reporting.packs.' + k, p) : k);
 
+    /** HTML-escapes a string (&, <, > and double quotes). */
     function esc(s) {
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
@@ -39,9 +43,16 @@
         return css.length ? '<span' + style + '>' + text + '</span>' : text;
     }
 
+    /**
+     * Turns the stored paragraph model into HTML for the in-place editor - headings, paragraphs,
+     * nested ul / ol lists, the logo image and field chips.
+     *
+     * An empty model becomes one empty paragraph so the box stays editable.
+     */
     function docToHtml(doc, logoUrl) {
         let html = '';
         const stack = [];                        // open lists: [{tag, lv}]
+        /** Closes every open list at or deeper than the given level. */
         const closeTo = (lv) => { while (stack.length && stack[stack.length - 1].lv >= lv) html += '</' + stack.pop().tag + '>'; };
         (doc || []).forEach(p => {
             const align = p.a && p.a !== 'left' ? ' style="text-align:' + p.a + '"' : '';
@@ -81,6 +92,10 @@
         return '#' + [m[1], m[2], m[3]].map(n => (+n).toString(16).padStart(2, '0')).join('');
     }
 
+    /**
+     * Converts a CSS font size in px or pt to points, rounded to the nearest half point and clamped to
+     * 6-72; null for anything else.
+     */
     function sizePt(v) {
         if (!v) return null;
         const m = /^([\d.]+)(px|pt)$/.exec(v.trim());
@@ -112,6 +127,12 @@
         return st;
     }
 
+    /**
+     * Appends a text run with its style to the run list, merging it into the previous run when the
+     * styles match.
+     *
+     * Default black text colours are dropped so the theme colour applies.
+     */
     function pushRun(runs, text, st) {
         if (!text) return;
         const r = { x: text };
@@ -125,6 +146,10 @@
         } else runs.push(r);
     }
 
+    /**
+     * Walks an element's children into text runs - text, line breaks and field chips - carrying
+     * inherited styles down; block elements are skipped as they are handled separately.
+     */
     function collectRuns(node, st, runs) {
         node.childNodes.forEach(ch => {
             // The zero-width space is only there to give the caret somewhere to sit
@@ -150,21 +175,34 @@
         });
     }
 
+    /** Returns an element's text alignment (center, right or justify), or left. */
     function alignOf(el) {
         const a = (el.style && el.style.textAlign) || el.getAttribute('align') || '';
         return ['center', 'right', 'justify'].includes(a) ? a : 'left';
     }
 
+    /** Drops trailing line-break runs and empty text runs. */
     function trimRuns(runs) {
         // Drop a trailing line break the editor leaves behind, and empty runs.
         while (runs.length && runs[runs.length - 1].x !== undefined && /^\n*$/.test(runs[runs.length - 1].x)) runs.pop();
         return runs.filter(r => r.fld || r.x !== '');
     }
 
+    /**
+     * Reads the editor's HTML back into the paragraph model - paragraphs, headings (h4-h6 become h3),
+     * list items with levels up to 4, and the logo.
+     *
+     * Always returns at least one empty paragraph.
+     */
     function htmlToDoc(root) {
         const doc = [];
+        /**
+         * Walks one container's children into the model; inline nodes between blocks are gathered and
+         * flushed as a paragraph.
+         */
         const walk = (container, listCtx) => {
             let loose = [];
+            /** Turns the gathered loose inline nodes into one paragraph, if they hold any text. */
             const flushLoose = () => {
                 if (!loose.length) return;
                 const wrap = document.createElement('div');
@@ -221,6 +259,7 @@
             });
             flushLoose();
         };
+        /** Wraps a copy of a list in a div so walk() can treat it as a container. */
         const wrapList = (list) => { const d = document.createElement('div'); d.appendChild(list.cloneNode(true)); return d; };
         walk(root, null);
         // Keep an empty paragraph rather than nothing, so the box stays editable.
@@ -239,6 +278,7 @@
         const s = window.getSelection();
         if (s.rangeCount && active.el.contains(s.anchorNode)) savedRange = s.getRangeAt(0).cloneRange();
     });
+    /** Puts back the last selection made in the editor, when a ribbon control has taken it away. */
     function restoreRange() {
         if (!active || !savedRange) return;
         const s = window.getSelection();
@@ -292,6 +332,7 @@
         return el;
     }
 
+    /** Turns an element's pt font size into on-screen px for the zoom, keeping the pt value in data-pt. */
     function scaleFont(node, pxPerMm) {
         const m = /([\d.]+)pt/.exec(node.style.fontSize || '');
         if (m) { node.dataset.pt = m[1]; node.style.fontSize = (+m[1] * 25.4 / 72 * pxPerMm) + 'px'; }
@@ -304,6 +345,7 @@
         document.execCommand('insertText', false, text);
     }
 
+    /** Moves the caret to the end of an element. */
     function placeCaretAtEnd(el) {
         const r = document.createRange();
         r.selectNodeContents(el);
@@ -329,7 +371,9 @@
         if (opts.onDone) opts.onDone(doc, commit !== false);
     }
 
+    /** Whether an in-place editor is open. */
     function isActive() { return !!active; }
+    /** Returns the open editor element, or null. */
     function element() { return active && active.el; }
 
     // ── Commands from the ribbon ───────────────────────────────────────────
@@ -357,6 +401,7 @@
         return true;
     }
 
+    /** Wraps the current non-empty selection in a new span that fn styles, then selects the span. */
     function wrapSelection(fn) {
         const sel = window.getSelection();
         if (!sel.rangeCount || sel.isCollapsed) return;
@@ -372,6 +417,7 @@
     /** What the cursor is sitting in, so the ribbon can show it (B pressed etc.). */
     function state() {
         if (!active) return null;
+        /** Asks the browser whether a formatting command is on at the caret, treating an error as off. */
         const q = (c) => { try { return document.queryCommandState(c); } catch (e) { return false; } };
         let block = 'p';
         const sel = window.getSelection();

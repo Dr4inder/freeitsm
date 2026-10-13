@@ -6,7 +6,7 @@ Active cost centres of the project's company (NULL company = the Default one).
 function projectBudgetCostCentres(PDO $conn, array $project): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 467.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 471.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 471 | `projectBudgetCostCentres` | read [cost_centres](/code/tables/cost_centres.md) |  |
+| 475 | `projectBudgetCostCentres` | read [cost_centres](/code/tables/cost_centres.md) |  |
 
 ## Calls
 

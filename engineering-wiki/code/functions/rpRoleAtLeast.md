@@ -6,7 +6,7 @@ True if `$role` is at least `$need` ('view' < 'edit' < 'owner').
 function rpRoleAtLeast(?string $role, string $need): bool
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 105.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 106.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

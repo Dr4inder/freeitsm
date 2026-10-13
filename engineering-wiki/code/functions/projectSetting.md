@@ -1,10 +1,12 @@
 # projectSetting()
 
+One Projects setting as a string; '' when it is not set.
+
 ```php
 function projectSetting(PDO $conn, string $key): string
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 171.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 172.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

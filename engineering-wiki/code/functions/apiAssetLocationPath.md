@@ -1,10 +1,12 @@
 # apiAssetLocationPath()
 
+The full path of a location, top level first, or null when there is no location.
+
 ```php
 function apiAssetLocationPath(PDO $conn, ?int $locationId): ?string
 ```
 
-Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 74.
+Defined in [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md), line 80.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

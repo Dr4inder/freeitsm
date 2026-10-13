@@ -13,7 +13,7 @@
 | [recordClosureOverride()](#recordclosureoverride) | Called by TicketsService when a ticket moves to a closed status. |
 | [closedBy()](#closedby) | "Closed by Jane Smith via the web interface." — one phrasing, used by both notes. |
 | [writeClosureNote()](#writeclosurenote) | Write one closure-audit entry, wherever it belongs. |
-| [lookup()](#lookup) |  |
+| [lookup()](#lookup) | The table and label of a checklist settings list; throws for an unknown list. |
 | [saveLookup()](#savelookup) | Create (no id) or rename (id present) a category or role. Returns the id. |
 | [deleteLookup()](#deletelookup) | Delete a category or role. |
 | [tasksEnabled()](#tasksenabled) | Is Tasks → Settings → Checklists switched on? Off by default; safe before DB Verification. |
@@ -26,7 +26,7 @@
 | [reorderTaskChecklists()](#reordertaskchecklists) | Put a task's checklists in a new order. `$ids` is the whole list, top first. Each UPDATE is pinned to the task, so an id from another task matches nothing - the caller gates on `$taskId` and that gate then covers every row. |
 | [reorderTaskChecklistItems()](#reordertaskchecklistitems) | The same for the steps inside one checklist, pinned to that checklist. |
 | [taskIdForItem()](#taskidforitem) | Which task does this step / checklist belong to? 0 if neither exists. Callers gate on the task. |
-| [taskIdForChecklist()](#taskidforchecklist) |  |
+| [taskIdForChecklist()](#taskidforchecklist) | The task a checklist is attached to, or 0. |
 | [toggleTaskItem()](#toggletaskitem) | Tick or untick a step. A step that asks for a value cannot be ticked without one - enforced here, not only in the panel, because a tick with an empty answer is a record that says something was checked when it was not. |
 | [removeTaskChecklist()](#removetaskchecklist) | Remove one checklist from a task: its steps first (no FK to rely on), then it. |
 | [deleteForTasks()](#deletefortasks) | Remove every checklist from these tasks - for TasksService::deleteTask, which deletes a whole subtask tree. Children explicitly, then parents; tolerant of the tables not existing yet. |
@@ -230,7 +230,9 @@ function writeClosureNote(PDO $conn, ActorContext $ctx, int $ticketId, string $n
 
 ### lookup
 
-*private static* - line 312
+*private static* - line 313
+
+The table and label of a checklist settings list; throws for an unknown list.
 
 ```php
 function lookup(string $kind): array
@@ -242,7 +244,7 @@ function lookup(string $kind): array
 
 ### saveLookup
 
-*public static* - line 328
+*public static* - line 329
 
 Create (no id) or rename (id present) a category or role. Returns the id.
 
@@ -266,15 +268,15 @@ function saveLookup(PDO $conn, ActorContext $ctx, string $kind, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 358 | `ChecklistsService::saveLookup` | **update** [checklist_templates](/code/tables/checklist_templates.md) (`category`) |  |
-| 360 | `ChecklistsService::saveLookup` | **update** [checklist_template_items](/code/tables/checklist_template_items.md) (`suggested_role`) |  |
-| 361 | `ChecklistsService::saveLookup` | **update** [ticket_checklist_items](/code/tables/ticket_checklist_items.md) (`suggested_role`) |  |
+| 359 | `ChecklistsService::saveLookup` | **update** [checklist_templates](/code/tables/checklist_templates.md) (`category`) |  |
+| 361 | `ChecklistsService::saveLookup` | **update** [checklist_template_items](/code/tables/checklist_template_items.md) (`suggested_role`) |  |
+| 362 | `ChecklistsService::saveLookup` | **update** [ticket_checklist_items](/code/tables/ticket_checklist_items.md) (`suggested_role`) |  |
 
 **Called from:** [api/checklists/save_lookup.php](/code/files/api/checklists/save_lookup.php.md)
 
 ### deleteLookup
 
-*public static* - line 383
+*public static* - line 384
 
 Delete a category or role.
 
@@ -297,7 +299,7 @@ function deleteLookup(PDO $conn, ActorContext $ctx, string $kind, int $id): void
 
 ### tasksEnabled
 
-*public static* - line 425
+*public static* - line 426
 
 Is Tasks → Settings → Checklists switched on? Off by default; safe before DB Verification.
 
@@ -313,13 +315,13 @@ function tasksEnabled(PDO $conn): bool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 428 | `ChecklistsService::tasksEnabled` | read [system_settings](/code/tables/system_settings.md) |  |
+| 429 | `ChecklistsService::tasksEnabled` | read [system_settings](/code/tables/system_settings.md) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md), [checklists/edit/index.php](/code/files/checklists/edit/index.php.md)
 
 ### taskTenantId
 
-*public static* - line 437
+*public static* - line 438
 
 The task's company for the gate (NULL = the Default company, read as the install default).
 
@@ -336,11 +338,11 @@ function taskTenantId(PDO $conn, int $taskId): ?int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 440 | `ChecklistsService::taskTenantId` | read [tasks](/code/tables/tasks.md) |  |
+| 441 | `ChecklistsService::taskTenantId` | read [tasks](/code/tables/tasks.md) |  |
 
 ### taskChecklists
 
-*public static* - line 454
+*public static* - line 455
 
 The task's checklists with their steps and progress, each carrying the gate it will ACTUALLY apply (template mode + company setting), resolved here so the padlock in the panel is the lock the server enforces.
 
@@ -357,14 +359,14 @@ function taskChecklists(PDO $conn, int $taskId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 457 | `ChecklistsService::taskChecklists` | read [task_checklists](/code/tables/task_checklists.md) |  |
-| 462 | `ChecklistsService::taskChecklists` | read [task_checklist_items](/code/tables/task_checklist_items.md) |  |
+| 458 | `ChecklistsService::taskChecklists` | read [task_checklists](/code/tables/task_checklists.md) |  |
+| 463 | `ChecklistsService::taskChecklists` | read [task_checklist_items](/code/tables/task_checklist_items.md) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### templatesForTask
 
-*public static* - line 481
+*public static* - line 482
 
 Templates offered for a task: scope task or both, active, with the gate each would apply.
 
@@ -381,13 +383,13 @@ function templatesForTask(PDO $conn, int $taskId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 484 | `ChecklistsService::templatesForTask` | read [checklist_templates](/code/tables/checklist_templates.md) |  |
+| 485 | `ChecklistsService::templatesForTask` | read [checklist_templates](/code/tables/checklist_templates.md) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### attachTemplateToTask
 
-*public static* - line 501
+*public static* - line 502
 
 Attach a template to a task: copy its title, gate and steps. Returns the new id.
 
@@ -409,13 +411,13 @@ function attachTemplateToTask(PDO $conn, ActorContext $ctx, int $taskId, int $te
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 503 | `ChecklistsService::attachTemplateToTask` | read [checklist_templates](/code/tables/checklist_templates.md) |  |
+| 504 | `ChecklistsService::attachTemplateToTask` | read [checklist_templates](/code/tables/checklist_templates.md) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### copyTemplateToTask
 
-*private static* - line 517
+*private static* - line 518
 
 The one place a task checklist is written: parent, then its steps, in one transaction.
 
@@ -443,13 +445,13 @@ function copyTemplateToTask(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 523 | `ChecklistsService::copyTemplateToTask` | **insert** [task_checklists](/code/tables/task_checklists.md) (`task_id`, `template_id`, `title`, `closure_mode`, `sort_order`, `created_by_id`, `created_datetime`) |  |
-| 529 | `ChecklistsService::copyTemplateToTask` | read [checklist_template_items](/code/tables/checklist_template_items.md) |  |
-| 532 | `ChecklistsService::copyTemplateToTask` | **insert** [task_checklist_items](/code/tables/task_checklist_items.md) (`task_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`) |  |
+| 524 | `ChecklistsService::copyTemplateToTask` | **insert** [task_checklists](/code/tables/task_checklists.md) (`task_id`, `template_id`, `title`, `closure_mode`, `sort_order`, `created_by_id`, `created_datetime`) |  |
+| 530 | `ChecklistsService::copyTemplateToTask` | read [checklist_template_items](/code/tables/checklist_template_items.md) |  |
+| 533 | `ChecklistsService::copyTemplateToTask` | **insert** [task_checklist_items](/code/tables/task_checklist_items.md) (`task_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`) |  |
 
 ### nextTaskChecklistOrder
 
-*private static* - line 549
+*private static* - line 550
 
 A newly attached checklist goes below the ones already on the task.
 
@@ -466,11 +468,11 @@ function nextTaskChecklistOrder(PDO $conn, int $taskId): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 551 | `ChecklistsService::nextTaskChecklistOrder` | read [task_checklists](/code/tables/task_checklists.md) |  |
+| 552 | `ChecklistsService::nextTaskChecklistOrder` | read [task_checklists](/code/tables/task_checklists.md) |  |
 
 ### reorderTaskChecklists
 
-*public static* - line 561
+*public static* - line 562
 
 Put a task's checklists in a new order. `$ids` is the whole list, top first. Each UPDATE is pinned to the task, so an id from another task matches nothing - the caller gates on `$taskId` and that gate then covers every row.
 
@@ -488,13 +490,13 @@ function reorderTaskChecklists(PDO $conn, int $taskId, array $ids): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 563 | `ChecklistsService::reorderTaskChecklists` | **update** [task_checklists](/code/tables/task_checklists.md) (`sort_order`) |  |
+| 564 | `ChecklistsService::reorderTaskChecklists` | **update** [task_checklists](/code/tables/task_checklists.md) (`sort_order`) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### reorderTaskChecklistItems
 
-*public static* - line 570
+*public static* - line 571
 
 The same for the steps inside one checklist, pinned to that checklist.
 
@@ -512,13 +514,13 @@ function reorderTaskChecklistItems(PDO $conn, int $checklistId, array $ids): voi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 572 | `ChecklistsService::reorderTaskChecklistItems` | **update** [task_checklist_items](/code/tables/task_checklist_items.md) (`sort_order`) |  |
+| 573 | `ChecklistsService::reorderTaskChecklistItems` | **update** [task_checklist_items](/code/tables/task_checklist_items.md) (`sort_order`) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### taskIdForItem
 
-*public static* - line 579
+*public static* - line 580
 
 Which task does this step / checklist belong to? 0 if neither exists. Callers gate on the task.
 
@@ -535,13 +537,15 @@ function taskIdForItem(PDO $conn, int $itemId): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 581 | `ChecklistsService::taskIdForItem` | read [task_checklist_items](/code/tables/task_checklist_items.md), read [task_checklists](/code/tables/task_checklists.md) |  |
+| 582 | `ChecklistsService::taskIdForItem` | read [task_checklist_items](/code/tables/task_checklist_items.md), read [task_checklists](/code/tables/task_checklists.md) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### taskIdForChecklist
 
-*public static* - line 586
+*public static* - line 588
+
+The task a checklist is attached to, or 0.
 
 ```php
 function taskIdForChecklist(PDO $conn, int $checklistId): int
@@ -556,13 +560,13 @@ function taskIdForChecklist(PDO $conn, int $checklistId): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 588 | `ChecklistsService::taskIdForChecklist` | read [task_checklists](/code/tables/task_checklists.md) |  |
+| 590 | `ChecklistsService::taskIdForChecklist` | read [task_checklists](/code/tables/task_checklists.md) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### toggleTaskItem
 
-*public static* - line 600
+*public static* - line 602
 
 Tick or untick a step. A step that asks for a value cannot be ticked without one - enforced here, not only in the panel, because a tick with an empty answer is a record that says something was checked when it was not.
 
@@ -590,16 +594,16 @@ function toggleTaskItem(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 602 | `ChecklistsService::toggleTaskItem` | read [task_checklist_items](/code/tables/task_checklist_items.md) |  |
-| 615 | `ChecklistsService::toggleTaskItem` | **update** [task_checklist_items](/code/tables/task_checklist_items.md) (`is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime`) |  |
-| 622 | `ChecklistsService::toggleTaskItem` | **update** [task_checklist_items](/code/tables/task_checklist_items.md) (`is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime`) |  |
-| 628 | `ChecklistsService::toggleTaskItem` | read [task_checklist_items](/code/tables/task_checklist_items.md) |  |
+| 604 | `ChecklistsService::toggleTaskItem` | read [task_checklist_items](/code/tables/task_checklist_items.md) |  |
+| 617 | `ChecklistsService::toggleTaskItem` | **update** [task_checklist_items](/code/tables/task_checklist_items.md) (`is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime`) |  |
+| 624 | `ChecklistsService::toggleTaskItem` | **update** [task_checklist_items](/code/tables/task_checklist_items.md) (`is_completed`, `response_value`, `completed_by_id`, `completed_by_name`, `completed_datetime`) |  |
+| 630 | `ChecklistsService::toggleTaskItem` | read [task_checklist_items](/code/tables/task_checklist_items.md) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### removeTaskChecklist
 
-*public static* - line 635
+*public static* - line 637
 
 Remove one checklist from a task: its steps first (no FK to rely on), then it.
 
@@ -616,14 +620,14 @@ function removeTaskChecklist(PDO $conn, int $checklistId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 640 | `ChecklistsService::removeTaskChecklist` | **delete** [task_checklist_items](/code/tables/task_checklist_items.md) |  |
-| 641 | `ChecklistsService::removeTaskChecklist` | **delete** [task_checklists](/code/tables/task_checklists.md) |  |
+| 642 | `ChecklistsService::removeTaskChecklist` | **delete** [task_checklist_items](/code/tables/task_checklist_items.md) |  |
+| 643 | `ChecklistsService::removeTaskChecklist` | **delete** [task_checklists](/code/tables/task_checklists.md) |  |
 
 **Called from:** [api/tasks/checklists.php](/code/files/api/tasks/checklists.php.md)
 
 ### deleteForTasks
 
-*public static* - line 656
+*public static* - line 658
 
 Remove every checklist from these tasks - for TasksService::deleteTask, which deletes a whole subtask tree. Children explicitly, then parents; tolerant of the tables not existing yet.
 
@@ -640,14 +644,14 @@ function deleteForTasks(PDO $conn, array $taskIds): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 662 | `ChecklistsService::deleteForTasks` | **delete** [task_checklist_items](/code/tables/task_checklist_items.md), read [task_checklists](/code/tables/task_checklists.md) |  |
-| 665 | `ChecklistsService::deleteForTasks` | **delete** [task_checklists](/code/tables/task_checklists.md) |  |
+| 664 | `ChecklistsService::deleteForTasks` | **delete** [task_checklist_items](/code/tables/task_checklist_items.md), read [task_checklists](/code/tables/task_checklists.md) |  |
+| 667 | `ChecklistsService::deleteForTasks` | **delete** [task_checklists](/code/tables/task_checklists.md) |  |
 
 **Called from:** [includes/services/tasks.php](/code/files/includes/services/tasks.php.md)
 
 ### taskOutstandingMandatorySteps
 
-*public static* - line 672
+*public static* - line 674
 
 Mandatory steps still outstanding on a task (same shape as the ticket version).
 
@@ -664,11 +668,11 @@ function taskOutstandingMandatorySteps(PDO $conn, int $taskId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 677 | `ChecklistsService::taskOutstandingMandatorySteps` | read [task_checklist_items](/code/tables/task_checklist_items.md), read [task_checklists](/code/tables/task_checklists.md) |  |
+| 679 | `ChecklistsService::taskOutstandingMandatorySteps` | read [task_checklist_items](/code/tables/task_checklist_items.md), read [task_checklists](/code/tables/task_checklists.md) |  |
 
 ### taskCompletionCheck
 
-*public static* - line 696
+*public static* - line 698
 
 What completing this task now would run into - for the panel and the board to warn BEFORE they post. Read-only; the server still decides.
 
@@ -687,7 +691,7 @@ function taskCompletionCheck(PDO $conn, int $taskId): array
 
 ### assertTaskCompletionAllowed
 
-*public static* - line 715
+*public static* - line 717
 
 Refuse completing the task where a Critical checklist has steps outstanding.
 
@@ -707,7 +711,7 @@ function assertTaskCompletionAllowed(PDO $conn, int $taskId): void
 
 ### recordTaskCompletionOverride
 
-*public static* - line 736
+*public static* - line 738
 
 Called AFTER a task has moved to a closed status: record any Standard checklist steps it was completed without, on the task's own audit trail.
 
@@ -730,13 +734,13 @@ function recordTaskCompletionOverride(PDO $conn, ActorContext $ctx, int $taskId)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 744 | `ChecklistsService::recordTaskCompletionOverride` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
+| 746 | `ChecklistsService::recordTaskCompletionOverride` | **insert** [task_audit](/code/tables/task_audit.md) (`task_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `source`, `created_datetime`) |  |
 
 **Called from:** [api/tasks/reorder.php](/code/files/api/tasks/reorder.php.md), [api/tasks/toggle_subtask.php](/code/files/api/tasks/toggle_subtask.php.md), [includes/services/tasks.php](/code/files/includes/services/tasks.php.md)
 
 ### copyTaskChecklists
 
-*public static* - line 763
+*public static* - line 765
 
 Give a new occurrence of a recurring task fresh, unticked copies of the checklists the finished one had (TaskRecurrence::createOccurrence).
 
@@ -759,9 +763,9 @@ function copyTaskChecklists(PDO $conn, int $fromTaskId, int $toTaskId): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 767 | `ChecklistsService::copyTaskChecklists` | read [task_checklists](/code/tables/task_checklists.md), read [checklist_templates](/code/tables/checklist_templates.md) |  |
-| 779 | `ChecklistsService::copyTaskChecklists` | **insert** [task_checklists](/code/tables/task_checklists.md) (`task_id`, `template_id`, `title`, `closure_mode`, `sort_order`, `created_by_id`, `created_datetime`) |  |
-| 784 | `ChecklistsService::copyTaskChecklists` | **insert** [task_checklist_items](/code/tables/task_checklist_items.md) (`task_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`) |  |
+| 769 | `ChecklistsService::copyTaskChecklists` | read [task_checklists](/code/tables/task_checklists.md), read [checklist_templates](/code/tables/checklist_templates.md) |  |
+| 781 | `ChecklistsService::copyTaskChecklists` | **insert** [task_checklists](/code/tables/task_checklists.md) (`task_id`, `template_id`, `title`, `closure_mode`, `sort_order`, `created_by_id`, `created_datetime`) |  |
+| 786 | `ChecklistsService::copyTaskChecklists` | **insert** [task_checklist_items](/code/tables/task_checklist_items.md) (`task_checklist_id`, `title`, `suggested_role`, `is_mandatory`, `requires_input`, `input_placeholder`, `sort_order`) |  |
 
 **Called from:** [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md)
 

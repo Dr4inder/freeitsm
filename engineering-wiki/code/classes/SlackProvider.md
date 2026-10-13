@@ -12,7 +12,7 @@
 | [verifyWebhook()](#verifywebhook) | Slack request signing: HMAC-SHA256 of "v0:{timestamp}:{rawBody}" with the signing secret, compared against the X-Slack-Signature header. |
 | [parseInbound()](#parseinbound) | Parse an Events API callback into zero or more normalised messages. |
 | [sendMessage()](#sendmessage) | Post a reply. `$to` is the reply address parseInbound produced — "C08ABCDE:1719500000.123456" — so the reply lands in the same thread rather than as a new top-level message in the channel. |
-| [testConnection()](#testconnection) |  |
+| [testConnection()](#testconnection) | Checks the bot token with auth.test and returns the workspace and bot name. |
 | [downloadMedia()](#downloadmedia) | Download a file shared in Slack. url_private needs the bot token as a bearer header; without it Slack silently returns its sign-in HTML page with HTTP 200, which is why the content type is checked rather than trusted. |
 | [botUserId()](#botuserid) | The bot's own Slack user id, or '' if the token will not authenticate. Used as a harmless probe subject for the profile-lookup health check — a user that certainly exists and certainly is not somebody's real account. |
 | [grantedScopes()](#grantedscopes) | The scopes this token was actually granted, lowercased. |
@@ -147,7 +147,11 @@ function sendMessage(string $to, string $body): string
 
 ### testConnection
 
-*public* - line 237
+*public* - line 242
+
+Checks the bot token with auth.test and returns the workspace and bot name.
+
+Warns when the token lacks the chat:write scope, since replies would then fail.
 
 ```php
 function testConnection(): string
@@ -155,7 +159,7 @@ function testConnection(): string
 
 ### downloadMedia
 
-*public* - line 261
+*public* - line 266
 
 Download a file shared in Slack. url_private needs the bot token as a bearer header; without it Slack silently returns its sign-in HTML page with HTTP 200, which is why the content type is checked rather than trusted.
 
@@ -169,7 +173,7 @@ function downloadMedia(array $item): array
 
 ### botUserId
 
-*public* - line 300
+*public* - line 305
 
 The bot's own Slack user id, or '' if the token will not authenticate. Used as a harmless probe subject for the profile-lookup health check — a user that certainly exists and certainly is not somebody's real account.
 
@@ -179,7 +183,7 @@ function botUserId(): string
 
 ### grantedScopes
 
-*public* - line 322
+*public* - line 327
 
 The scopes this token was actually granted, lowercased.
 
@@ -199,7 +203,7 @@ function grantedScopes(): array
 
 ### channelMembership
 
-*public* - line 353
+*public* - line 358
 
 Is the app actually a member of this Slack channel?
 
@@ -225,7 +229,7 @@ function channelMembership(string $slackChannelId): array
 
 ### lookupUser
 
-*public* - line 368
+*public* - line 373
 
 Look up a Slack user. Returns ['name' => …, 'email' => …]; either may be ''. Never throws — identity is a nice-to-have and must not stop a ticket being raised. A missing email simply means the app has no users:read.email scope.
 
@@ -239,7 +243,7 @@ function lookupUser(string $slackUserId): array
 
 ### splitAddress
 
-*private* - line 383
+*private* - line 388
 
 Split "C08ABCDE:1719500000.123456" into [channel, threadTs].
 
@@ -253,7 +257,7 @@ function splitAddress(string $addr): array
 
 ### call
 
-*private* - line 409
+*private* - line 414
 
 One Slack Web API call.
 
@@ -282,7 +286,7 @@ function call(string $method, array $args = []): array
 
 ### explainError
 
-*private* - line 444
+*private* - line 449
 
 Slack's error strings are terse machine tokens. An analyst reading "not_in_channel" has no idea the fix is to invite the app to the channel, so the common ones are translated into the action that fixes them.
 
@@ -296,7 +300,7 @@ function explainError(string $err): string
 
 ### httpRequestWithHeaders
 
-*private* - line 464
+*private* - line 469
 
 `httpRequest()` drops response headers, but Slack reports the token's granted scopes in X-OAuth-Scopes and that is the only way to warn about a missing one BEFORE it fails in use. Same cURL setup, including `sslApplyCurl()`.
 
@@ -311,7 +315,7 @@ function httpRequestWithHeaders(string $url, array $opts = []): array
 
 ### toPlainText
 
-*private* - line 501
+*private* - line 506
 
 Slack text → plain text for the ticket body. Unwraps the link syntax (<https://x|label> and <@U123>) which would otherwise show as raw angle brackets, and decodes the three entities Slack escapes.
 
@@ -325,7 +329,7 @@ function toPlainText(string $text): string
 
 ### toMrkdwn
 
-*private* - line 515
+*private* - line 520
 
 Plain text → Slack mrkdwn. Escapes the three characters Slack reserves.
 

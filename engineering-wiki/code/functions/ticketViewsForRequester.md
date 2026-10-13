@@ -6,7 +6,7 @@ Portal viewers of a ticket OTHER than its requester, newest first - what the req
 function ticketViewsForRequester(PDO $conn, int $ticketId, int $requesterUserId): array
 ```
 
-Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 126.
+Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 128.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 132 | `ticketViewsForRequester` | read [ticket_views](/code/tables/ticket_views.md), read [users](/code/tables/users.md) |  |
+| 134 | `ticketViewsForRequester` | read [ticket_views](/code/tables/ticket_views.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

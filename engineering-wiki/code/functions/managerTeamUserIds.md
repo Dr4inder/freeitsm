@@ -8,7 +8,7 @@ The people a manager may see the tickets of, as user ids. Memoised per request. 
 function managerTeamUserIds(PDO $conn, int $managerUserId): array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 126.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 127.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 1
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 137 | `managerTeamUserIds` | read [manager_grants](/code/tables/manager_grants.md) |  |
+| 138 | `managerTeamUserIds` | read [manager_grants](/code/tables/manager_grants.md) |  |
 
 ## Calls
 

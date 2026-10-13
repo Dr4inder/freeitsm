@@ -6,7 +6,7 @@ Fetch one block's data for this viewer. Throws RuntimeException with a message f
 function rpBlockData(PDO $conn, int $analystId, string $handler, $opts, array $criteria): array
 ```
 
-Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 347.
+Defined in [includes/report_packs/blocks.php](/code/files/includes/report_packs/blocks.php.md), line 351.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -37,7 +37,7 @@ calling - Warbot - could not work on Azure at all.
 function aiProviderChatTools(array $cfg, array $opts, array $tools, callable $runTool): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 471.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 475.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

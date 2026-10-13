@@ -20,7 +20,7 @@ rather than a hand-rolled strip.
 function mergeBuildSnapshotHtml(PDO $conn, int $sourceId, array $source): string
 ```
 
-Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 648.
+Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md), line 655.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -34,8 +34,8 @@ Defined in [includes/ticket_merge.php](/code/files/includes/ticket_merge.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 655 | `mergeBuildSnapshotHtml` | read [emails](/code/tables/emails.md) |  |
-| 665 | `mergeBuildSnapshotHtml` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
+| 662 | `mergeBuildSnapshotHtml` | read [emails](/code/tables/emails.md) |  |
+| 672 | `mergeBuildSnapshotHtml` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

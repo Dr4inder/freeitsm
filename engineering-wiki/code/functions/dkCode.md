@@ -1,10 +1,12 @@
 # dkCode()
 
+Escapes a command or path and wraps it in <code> for dropping into a `dk()` placeholder.
+
 ```php
 function dkCode(string $s): string
 ```
 
-Defined in [system/docker/index.php](/code/files/system/docker/index.php.md), line 54.
+Defined in [system/docker/index.php](/code/files/system/docker/index.php.md), line 55.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

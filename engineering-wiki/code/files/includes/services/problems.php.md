@@ -1,6 +1,6 @@
 # includes/services/problems.php
 
-> PHP - 505 lines
+> PHP - 507 lines
 
 ProblemsService — the shared write rules for Problem Management: create/update a problem (with the per-field audit trail + PRB-##### numbering), delete, the append-only notes journal, and incident/change linking with the same-company rule.
 
@@ -46,13 +46,13 @@ gone → 404 (the UI silently succeeded).
 | 351 | `ProblemsService::linkChange` | **insert** [change_relations](/code/tables/change_relations.md) (`change_id`, `related_type`, `related_id`, `relation_type`, `created_by_id`, `created_datetime`) |  |
 | 365 | `ProblemsService::unlinkChange` | **delete** [change_relations](/code/tables/change_relations.md) |  |
 | 388 | `ProblemsService::loadProblem` | read [problems](/code/tables/problems.md), read [problem_statuses](/code/tables/problem_statuses.md), read [problem_priorities](/code/tables/problem_priorities.md), read [analysts](/code/tables/analysts.md) |  |
-| 438 | `ProblemsService::auditWrite` | **insert** [problem_audit](/code/tables/problem_audit.md) (`problem_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 449 | `ProblemsService::touch` | **update** [problems](/code/tables/problems.md) (`updated_datetime`) |  |
-| 456 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 459 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
-| 478 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
-| 481 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
-| 496 | `ProblemsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
+| 439 | `ProblemsService::auditWrite` | **insert** [problem_audit](/code/tables/problem_audit.md) (`problem_id`, `analyst_id`, `action_type`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 451 | `ProblemsService::touch` | **update** [problems](/code/tables/problems.md) (`updated_datetime`) |  |
+| 458 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 461 | `ProblemsService::resolveStatus` | read [problem_statuses](/code/tables/problem_statuses.md) |  |
+| 480 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 483 | `ProblemsService::resolvePriority` | read [problem_priorities](/code/tables/problem_priorities.md) |  |
+| 498 | `ProblemsService::resolveAnalyst` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 

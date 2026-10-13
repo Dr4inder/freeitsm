@@ -6,7 +6,7 @@ Relationships — POST /cmdb/objects/{id}/relationships, DELETE .../{rel_id}
 function apiCmdbRelationshipsCreate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 468.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 476.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

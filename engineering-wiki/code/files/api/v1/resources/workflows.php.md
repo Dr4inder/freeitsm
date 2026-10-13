@@ -1,6 +1,6 @@
 # api/v1/resources/workflows.php
 
-> API endpoint - 437 lines
+> API endpoint - 452 lines
 
 FreeITSM REST API v1 — workflows resource (definitions + executions).
 
@@ -43,38 +43,38 @@ send email from the ticket's mailbox), so scope those to trusted keys.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiWorkflowSelect()](/code/functions/apiWorkflowSelect.md) | 39 |  |
-| [apiSerializeWorkflow()](/code/functions/apiSerializeWorkflow.md) | 45 |  |
-| [apiLoadWorkflow()](/code/functions/apiLoadWorkflow.md) | 75 |  |
-| [apiWorkflowExecutionSelect()](/code/functions/apiWorkflowExecutionSelect.md) | 85 |  |
-| [apiSerializeWorkflowExecution()](/code/functions/apiSerializeWorkflowExecution.md) | 93 |  |
-| [apiValidateWorkflowConditions()](/code/functions/apiValidateWorkflowConditions.md) | 118 | Validate a conditions array. Returns it normalised (list of objects). |
-| [apiValidateWorkflowActions()](/code/functions/apiValidateWorkflowActions.md) | 142 | Validate an actions array against the engine's action catalogue. |
-| [apiValidateWorkflowTrigger()](/code/functions/apiValidateWorkflowTrigger.md) | 166 | Validate a trigger event name against the engine's catalogue. |
-| [apiWorkflowsList()](/code/functions/apiWorkflowsList.md) | 178 | GET /workflows |
-| [apiWorkflowsGet()](/code/functions/apiWorkflowsGet.md) | 208 | GET /workflows/{id} |
-| [apiWorkflowsCreate()](/code/functions/apiWorkflowsCreate.md) | 213 | POST /workflows |
-| [apiWorkflowsUpdate()](/code/functions/apiWorkflowsUpdate.md) | 239 | PATCH /workflows/{id} |
-| [apiWorkflowsDelete()](/code/functions/apiWorkflowsDelete.md) | 279 | DELETE /workflows/{id} — executions survive (the module's audit-trail intent) but are detached explicitly: name snapshot filled, workflow_id NULLed. Explicit rather than FK-reliant so grown installs that haven't re-run Database Verification behave identically. |
-| [apiWorkflowsFire()](/code/functions/apiWorkflowsFire.md) | 300 | POST /workflows/{id}/fire — manual test fire with a synthetic payload. |
-| [apiWorkflowExecutionsRespondList()](/code/functions/apiWorkflowExecutionsRespondList.md) | 318 | Shared list plumbing for both execution list routes. |
-| [apiWorkflowExecutionsList()](/code/functions/apiWorkflowExecutionsList.md) | 356 | GET /workflows/{id}/executions |
-| [apiWorkflowExecutionsListAll()](/code/functions/apiWorkflowExecutionsListAll.md) | 363 | GET /workflow-executions — install-wide, including orphaned runs whose workflow has been deleted (filter with ?workflow_id or ?orphaned=true). |
-| [apiWorkflowExecutionsGet()](/code/functions/apiWorkflowExecutionsGet.md) | 377 | GET /workflow-executions/{id} — full detail with payload + step log. |
-| [apiWorkflowTriggersList()](/code/functions/apiWorkflowTriggersList.md) | 394 | GET /workflow-triggers — every trigger with its condition fields, each field's type and the operators valid for it. |
-| [apiWorkflowActionsList()](/code/functions/apiWorkflowActionsList.md) | 413 | GET /workflow-actions — every action type with its args spec (labels, required flags, lookup sources, template-variable support). |
+| [apiWorkflowSelect()](/code/functions/apiWorkflowSelect.md) | 40 | The SELECT for workflows, with the creator's name. |
+| [apiSerializeWorkflow()](/code/functions/apiSerializeWorkflow.md) | 51 | Shapes a workflow row for the API - trigger, active flag, people, dates, last run and run count, plus the full conditions and actions when `$full` (only their counts otherwise). |
+| [apiLoadWorkflow()](/code/functions/apiLoadWorkflow.md) | 82 | Loads one workflow row, or answers 404 and stops. |
+| [apiWorkflowExecutionSelect()](/code/functions/apiWorkflowExecutionSelect.md) | 96 | The SELECT for workflow executions, keeping the workflow's name from the snapshot when the workflow has since been deleted. |
+| [apiSerializeWorkflowExecution()](/code/functions/apiSerializeWorkflowExecution.md) | 108 | Shapes a workflow execution for the API - workflow, trigger, status, times and error, plus the trigger payload and step log when `$full`. |
+| [apiValidateWorkflowConditions()](/code/functions/apiValidateWorkflowConditions.md) | 133 | Validate a conditions array. Returns it normalised (list of objects). |
+| [apiValidateWorkflowActions()](/code/functions/apiValidateWorkflowActions.md) | 157 | Validate an actions array against the engine's action catalogue. |
+| [apiValidateWorkflowTrigger()](/code/functions/apiValidateWorkflowTrigger.md) | 181 | Validate a trigger event name against the engine's catalogue. |
+| [apiWorkflowsList()](/code/functions/apiWorkflowsList.md) | 193 | GET /workflows |
+| [apiWorkflowsGet()](/code/functions/apiWorkflowsGet.md) | 223 | GET /workflows/{id} |
+| [apiWorkflowsCreate()](/code/functions/apiWorkflowsCreate.md) | 228 | POST /workflows |
+| [apiWorkflowsUpdate()](/code/functions/apiWorkflowsUpdate.md) | 254 | PATCH /workflows/{id} |
+| [apiWorkflowsDelete()](/code/functions/apiWorkflowsDelete.md) | 294 | DELETE /workflows/{id} — executions survive (the module's audit-trail intent) but are detached explicitly: name snapshot filled, workflow_id NULLed. Explicit rather than FK-reliant so grown installs that haven't re-run Database Verification behave identically. |
+| [apiWorkflowsFire()](/code/functions/apiWorkflowsFire.md) | 315 | POST /workflows/{id}/fire — manual test fire with a synthetic payload. |
+| [apiWorkflowExecutionsRespondList()](/code/functions/apiWorkflowExecutionsRespondList.md) | 333 | Shared list plumbing for both execution list routes. |
+| [apiWorkflowExecutionsList()](/code/functions/apiWorkflowExecutionsList.md) | 371 | GET /workflows/{id}/executions |
+| [apiWorkflowExecutionsListAll()](/code/functions/apiWorkflowExecutionsListAll.md) | 378 | GET /workflow-executions — install-wide, including orphaned runs whose workflow has been deleted (filter with ?workflow_id or ?orphaned=true). |
+| [apiWorkflowExecutionsGet()](/code/functions/apiWorkflowExecutionsGet.md) | 392 | GET /workflow-executions/{id} — full detail with payload + step log. |
+| [apiWorkflowTriggersList()](/code/functions/apiWorkflowTriggersList.md) | 409 | GET /workflow-triggers — every trigger with its condition fields, each field's type and the operators valid for it. |
+| [apiWorkflowActionsList()](/code/functions/apiWorkflowActionsList.md) | 428 | GET /workflow-actions — every action type with its args spec (labels, required flags, lookup sources, template-variable support). |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 40 | `apiWorkflowSelect` | read [workflows](/code/tables/workflows.md), read [analysts](/code/tables/analysts.md) |  |
-| 88 | `apiWorkflowExecutionSelect` | read [workflow_executions](/code/tables/workflow_executions.md), read [workflows](/code/tables/workflows.md) |  |
-| 223 | `apiWorkflowsCreate` | **insert** [workflows](/code/tables/workflows.md) (`name`, `description`, `trigger_event`, `conditions`, `actions`, `is_active`, `created_by`, `created_datetime`, `updated_datetime`) |  |
-| 266 | `apiWorkflowsUpdate` | **update** [workflows](/code/tables/workflows.md) (`name`, `description`, `trigger_event`, `conditions`, `actions`, `is_active`, `updated_datetime`) |  |
-| 284 | `apiWorkflowsDelete` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_name`, `workflow_id`) |  |
-| 288 | `apiWorkflowsDelete` | **delete** [workflows](/code/tables/workflows.md) |  |
-| 335 | `apiWorkflowExecutionsRespondList` | read [workflow_executions](/code/tables/workflow_executions.md) |  |
+| 41 | `apiWorkflowSelect` | read [workflows](/code/tables/workflows.md), read [analysts](/code/tables/analysts.md) |  |
+| 99 | `apiWorkflowExecutionSelect` | read [workflow_executions](/code/tables/workflow_executions.md), read [workflows](/code/tables/workflows.md) |  |
+| 238 | `apiWorkflowsCreate` | **insert** [workflows](/code/tables/workflows.md) (`name`, `description`, `trigger_event`, `conditions`, `actions`, `is_active`, `created_by`, `created_datetime`, `updated_datetime`) |  |
+| 281 | `apiWorkflowsUpdate` | **update** [workflows](/code/tables/workflows.md) (`name`, `description`, `trigger_event`, `conditions`, `actions`, `is_active`, `updated_datetime`) |  |
+| 299 | `apiWorkflowsDelete` | **update** [workflow_executions](/code/tables/workflow_executions.md) (`workflow_name`, `workflow_id`) |  |
+| 303 | `apiWorkflowsDelete` | **delete** [workflows](/code/tables/workflows.md) |  |
+| 350 | `apiWorkflowExecutionsRespondList` | read [workflow_executions](/code/tables/workflow_executions.md) |  |
 
 ## How it hangs together
 

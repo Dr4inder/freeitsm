@@ -1,10 +1,15 @@
 # syncSoftwareLicenceCalendar()
 
+Rebuilds the software renewal entries in the calendar from the active licences' renewal dates.
+
+Deletes every entry from source 'software_renewal' first, and adds new ones only when
+the renewal surface includes the calendar.
+
 ```php
 function syncSoftwareLicenceCalendar(PDO $conn): array
 ```
 
-Defined in [includes/software_licence_calendar.php](/code/files/includes/software_licence_calendar.php.md), line 41.
+Defined in [includes/software_licence_calendar.php](/code/files/includes/software_licence_calendar.php.md), line 47.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,9 +21,9 @@ Defined in [includes/software_licence_calendar.php](/code/files/includes/softwar
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 54 | `syncSoftwareLicenceCalendar` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
-| 66 | `syncSoftwareLicenceCalendar` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
-| 78 | `syncSoftwareLicenceCalendar` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
+| 60 | `syncSoftwareLicenceCalendar` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
+| 72 | `syncSoftwareLicenceCalendar` | read [software_licences](/code/tables/software_licences.md), read [software_inventory_apps](/code/tables/software_inventory_apps.md) |  |
+| 84 | `syncSoftwareLicenceCalendar` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
 
 ## Calls
 

@@ -1,10 +1,12 @@
 # projectGateItemsReady()
 
+True when the project_gate_items table exists (after Database Verification). Cached per request.
+
 ```php
 function projectGateItemsReady(PDO $conn): bool
 ```
 
-Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 30.
+Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md), line 31.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -16,7 +18,7 @@ Defined in [includes/projects/gatecheck.php](/code/files/includes/projects/gatec
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 34 | `projectGateItemsReady` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
+| 35 | `projectGateItemsReady` | read [project_gate_items](/code/tables/project_gate_items.md) |  |
 
 ## Called from
 

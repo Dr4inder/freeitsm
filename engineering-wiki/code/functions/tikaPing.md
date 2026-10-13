@@ -6,7 +6,7 @@ Is the service answering? Used by the settings screen's Test button, and NOWHERE
 function tikaPing(PDO $conn, string $overrideUrl = ''): array
 ```
 
-Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 180.
+Defined in [includes/search/tika.php](/code/files/includes/search/tika.php.md), line 184.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

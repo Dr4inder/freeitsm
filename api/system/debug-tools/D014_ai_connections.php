@@ -52,10 +52,18 @@ session_write_close();
 require_once __DIR__ . '/../../../includes/ai_settings.php';
 
 $sections = [];
+/**
+ * Adds one titled section ("=== TITLE ===" and its lines) to the report; $body is a
+ * string or an array of lines.
+ */
 function addSection(&$sections, $title, $body) {
     if (is_array($body)) $body = implode("\n", $body);
     $sections[] = "=== {$title} ===\n" . rtrim($body, "\n");
 }
+/**
+ * Prints every section, separated by blank lines, and stops - the end of the report, and
+ * the early exit when a check cannot go on.
+ */
 function emit_and_exit($sections) {
     if (!headers_sent()) header('Content-Type: text/plain; charset=utf-8');
     echo implode("\n\n", $sections) . "\n";
@@ -77,6 +85,7 @@ function prettyBody(?string $s, int $max = 4000): string {
     if ($j !== null) $s = json_encode($j, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     return strlen($s) > $max ? substr($s, 0, $max) . "\n… (" . strlen($s) . ' characters in all)' : $s;
 }
+/** Indents every line of a block of text by $pad. */
 function indent(string $s, string $pad = '  '): string {
     return $pad . str_replace("\n", "\n" . $pad, $s);
 }
@@ -104,6 +113,10 @@ function setupKey(array $cfg): string {
         $cfg['azure_endpoint'] ?? '', $cfg['azure_deployment'] ?? '', $cfg['azure_api_version'] ?? '',
         hash('sha256', (string)$cfg['api_key']), !empty($cfg['verify_ssl']) ? 1 : 0]);
 }
+/**
+ * The display name of an AI provider key (anthropic, openai, openrouter, azure), or the
+ * key itself when it is not one of those.
+ */
 function providerLabel(string $p): string {
     return ['anthropic' => 'Anthropic', 'openai' => 'OpenAI', 'openrouter' => 'OpenRouter', 'azure' => 'Azure OpenAI'][$p] ?? $p;
 }

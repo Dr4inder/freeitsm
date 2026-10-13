@@ -26,6 +26,8 @@
  * ⚠️ The unique key is what makes the upsert below an upsert. Database
  * Verification creates tables without constraints, so it is restored from
  * db_verify_indexes.php - without it every view would be a new row.
+ *
+ * @wiki Ticket-Views-Developer-Guide
  */
 
 function ticketViewsReady(PDO $conn): bool

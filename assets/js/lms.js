@@ -38,6 +38,7 @@ const LMS = (() => {
         openModal('createModal');
     }
 
+    /** Creates an authored (native) course from the New course modal through course.php and opens it in the editor. */
     async function createCourse(e) {
         e.preventDefault();
         const pm = document.getElementById('newCoursePassMark').value;
@@ -87,6 +88,10 @@ const LMS = (() => {
         } catch (e) { console.error(e); }
     }
 
+    /**
+     * Draws the Courses table - title, SCORM version or "Authored", created date, active state, and Launch
+     * / Edit / Delete buttons (Edit only for authored courses).
+     */
     function renderCourses() {
         const tbody = document.getElementById('coursesBody');
         if (!courses.length) {
@@ -126,6 +131,7 @@ const LMS = (() => {
         }).join('');
     }
 
+    /** Opens the SCORM upload modal with its fields and progress bar reset. */
     function openUploadModal() {
         document.getElementById('courseTitle').value = '';
         document.getElementById('courseDescription').value = '';
@@ -135,6 +141,7 @@ const LMS = (() => {
         openModal('uploadModal');
     }
 
+    /** Uploads a SCORM package to courses.php with a progress bar, then reloads the course list. */
     async function uploadCourse(e) {
         e.preventDefault();
         const btn = document.getElementById('uploadBtn');
@@ -159,10 +166,12 @@ const LMS = (() => {
             });
 
             const result = await new Promise((resolve, reject) => {
+                /** Resolves with the upload's JSON reply, or rejects when it is not valid JSON. */
                 xhr.onload = function() {
                     try { resolve(JSON.parse(xhr.responseText)); }
                     catch (e) { reject(new Error('Invalid response')); }
                 };
+                /** Rejects when the upload fails at the network level. */
                 xhr.onerror = function() { reject(new Error('Upload failed')); };
                 xhr.open('POST', API_BASE + 'courses.php');
                 xhr.send(formData);
@@ -185,6 +194,7 @@ const LMS = (() => {
         }
     }
 
+    /** Deletes a course after a confirm and reloads the list. */
     async function deleteCourse(id) {
         if (!(await showConfirm({ title: window.t('lms.confirm.delete_title'), message: window.t('lms.confirm.delete_course'), okLabel: window.t('lms.confirm.ok_delete'), okClass: 'danger' }))) return;
         try {
@@ -213,6 +223,7 @@ const LMS = (() => {
         } catch (e) { console.error(e); }
     }
 
+    /** Draws the Learning groups table with each group's members and Edit / Delete buttons. */
     function renderGroups() {
         const tbody = document.getElementById('groupsBody');
         if (!groups.length) {
@@ -233,6 +244,7 @@ const LMS = (() => {
         }).join('');
     }
 
+    /** Loads the analysts for the learning group member picker. */
     async function loadAnalysts() {
         try {
             const r = await fetch(API_BASE + 'analysts.php');
@@ -241,6 +253,7 @@ const LMS = (() => {
         } catch (e) { console.error(e); }
     }
 
+    /** Opens the learning group modal, new or filled from a group, with a tick box per analyst for its members. */
     function openGroupModal(group = null) {
         document.getElementById('groupModalTitle').textContent = group ? window.t('lms.group_modal.title_edit') : window.t('lms.group_modal.title_new');
         document.getElementById('groupId').value = group ? group.id : '';
@@ -257,11 +270,16 @@ const LMS = (() => {
         openModal('groupModal');
     }
 
+    /** Opens the learning group modal for one group. */
     function editGroup(id) {
         const group = groups.find(g => g.id == id);
         if (group) openGroupModal(group);
     }
 
+    /**
+     * Saves the learning group modal - a new group through groups.php, an existing one through group.php
+     * (PUT) - and reloads the groups.
+     */
     async function saveGroup(e) {
         e.preventDefault();
         const id = document.getElementById('groupId').value;
@@ -301,6 +319,7 @@ const LMS = (() => {
         } catch (e) { showToast(window.t('lms.toast.save_failed'), 'error'); }
     }
 
+    /** Deletes a learning group after a confirm and reloads the groups. */
     async function deleteGroup(id) {
         if (!(await showConfirm({ title: window.t('lms.confirm.delete_title'), message: window.t('lms.confirm.delete_group'), okLabel: window.t('lms.confirm.ok_delete'), okClass: 'danger' }))) return;
         try {
@@ -328,6 +347,10 @@ const LMS = (() => {
         } catch (e) { console.error(e); }
     }
 
+    /**
+     * Draws the Assignments table - course, who it goes to, deadline, who assigned it - with Edit and
+     * Delete buttons.
+     */
     function renderAssignments() {
         const tbody = document.getElementById('assignmentsBody');
         if (!assignments.length) {
@@ -450,6 +473,10 @@ const LMS = (() => {
     // Which assignment the dialogue is editing, or null when creating one.
     let editingAssignmentId = null;
 
+    /**
+     * Shows the person search in the assign modal when "a named person" is chosen, and clears the chosen
+     * person otherwise.
+     */
     function assignTargetChanged() {
         const isPerson = document.getElementById('assignGroup').value === 'person';
         document.getElementById('assignPersonGroup').style.display = isPerson ? '' : 'none';
@@ -461,6 +488,10 @@ const LMS = (() => {
         }
     }
 
+    /**
+     * Searches analysts and portal users for the assign modal (debounced, two characters minimum) and
+     * lists them to pick one.
+     */
     function searchAssignPeople() {
         clearTimeout(personSearchTimer);
         personSearchTimer = setTimeout(async () => {
@@ -495,6 +526,10 @@ const LMS = (() => {
         }, 300);
     }
 
+    /**
+     * Saves the assign modal - course, target (a group, everyone, or one person) and deadline - creating
+     * through assignments.php or updating through assignment.php, then reloads.
+     */
     async function saveAssignment(e) {
         e.preventDefault();
         // "user_group:3" -> {target_type:'user_group', group_id:3}. Split from
@@ -544,6 +579,7 @@ const LMS = (() => {
         } catch (e) { showToast(window.t('lms.toast.failed'), 'error'); }
     }
 
+    /** Removes an assignment after a confirm and reloads the assignments. */
     async function deleteAssignment(id) {
         if (!(await showConfirm({ title: window.t('lms.confirm.delete_title'), message: window.t('lms.confirm.remove_assignment'), okLabel: window.t('lms.confirm.ok_delete'), okClass: 'danger' }))) return;
         try {
@@ -623,6 +659,10 @@ const LMS = (() => {
         fa.value = current || '';
     }
 
+    /**
+     * Draws the Progress table - learner, course, group, status (Overdue when past the deadline), score,
+     * deadline, last access - with a View button for learners who have started.
+     */
     function renderProgress(data) {
         const tbody = document.getElementById('progressBody');
         if (!data.length) {
@@ -799,6 +839,7 @@ const LMS = (() => {
         }
     }
 
+    /** Formats a SCORM time (PT5M30S or HH:MM:SS) as a short "1h 5m" / "5m 30s" / "30s" string. */
     function formatTime(timeStr) {
         if (!timeStr) return '—';
         // Handle SCORM time formats: "00:05:30" or "PT5M30S"
@@ -823,6 +864,7 @@ const LMS = (() => {
         return timeStr;
     }
 
+    /** Pretty-prints a value as indented, colour-classed HTML JSON for the learner data viewer. */
     function formatJson(obj, indent = 0) {
         if (obj === null) return '<span class="ld-json-null">null</span>';
         if (typeof obj === 'boolean') return '<span class="ld-json-bool">' + obj + '</span>';
@@ -848,6 +890,7 @@ const LMS = (() => {
     //  Modal helpers
     // =========================================================
     function openModal(id) { document.getElementById(id).classList.add('active'); }
+    /** Closes a modal by id. */
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
     // =========================================================

@@ -6,7 +6,7 @@
 function mcpToolSearchKnowledge(PDO $conn, array $args, int $analystId, array $apiKey): string
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 292.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 303.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 299 | `mcpToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 310 | `mcpToolSearchKnowledge` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Calls
 

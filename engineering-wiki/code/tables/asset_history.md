@@ -17,9 +17,9 @@
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):2261 |  | update | `field_name` |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md):713 | `AssetsService::auditWrite` | insert | `asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md):717 | `AssetsService::auditWrite` | insert | `asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 | [includes/services/asset_fields.php](/code/files/includes/services/asset_fields.php.md):378 | `AssetFieldsService::logChanges` | insert | `asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value` |  |
-| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md):389 | `AssetTagsService::assign` | insert | `asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
+| [includes/services/asset_tags.php](/code/files/includes/services/asset_tags.php.md):391 | `AssetTagsService::assign` | insert | `asset_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime` |  |
 
 ## Read by
 
@@ -27,6 +27,6 @@
 |---|---|---|
 | [api/assets/get_asset_history.php](/code/files/api/assets/get_asset_history.php.md) | L34 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L1044 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetHistoryList L439 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetHistoryList L451 |  |
 | [includes/db_verify_preview.php](/code/files/includes/db_verify_preview.php.md) | dbPreviewRepairs L130 |  |
 

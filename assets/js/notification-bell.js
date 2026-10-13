@@ -18,8 +18,11 @@
  *
  * Needs window.t (i18n.js) for the common.notifications.* strings, and uses
  * showConfirm / showToast when present.
+ *
+ * @wiki Notifications-Developer-Guide
  */
 window.NotificationBell = {
+    /** Wires up the bell on this page - badge, panel, mark-read, clear and the 60-second poll - from the URLs in cfg. */
     init: function (cfg) {
         // Where to ask. The analyst bell and the portal bell differ ONLY here.
         const LIST   = cfg.list;
@@ -33,6 +36,7 @@ window.NotificationBell = {
         const list  = document.getElementById('nbList');
         if (!btn) return;
 
+        /** Escapes a value for safe use in HTML. */
         const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
             ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 
@@ -50,6 +54,7 @@ window.NotificationBell = {
             return window.t('common.notifications.days', { n: Math.floor(hrs / 24) });
         }
 
+        /** The notification's one-line description in the viewer's language, falling back to the actor's name when no string exists for the event type. */
         function describe(n) {
             // Translated at render time, never baked into the row — otherwise a
             // notification written today reads forever in whoever wrote it's language.
@@ -58,6 +63,7 @@ window.NotificationBell = {
             return txt === key ? (n.actor_name || '') : txt;
         }
 
+        /** Draws the notification rows into the panel, or the empty message when there are none. */
         function render(items) {
             if (!items.length) {
                 list.innerHTML = '<div class="nb-empty">' + esc(window.t('common.notifications.empty')) + '</div>';
@@ -85,6 +91,7 @@ window.NotificationBell = {
         }
 
         let lastUnread = 0;
+        /** Shows the unread count on the bell (capped at 99+) and hides the badge at zero. */
         function paintBadge(unread) {
             lastUnread = unread;
             badge.textContent = unread > 99 ? '99+' : String(unread);
@@ -99,9 +106,11 @@ window.NotificationBell = {
         // tab only records a baseline. Private-mode browsers throw on
         // sessionStorage, which costs nothing worse than a silent chime.
         const SEEN_KEY = cfg.seenKey || 'nbSeenUnread';
+        /** Stores the unread count as this tab's baseline for the chime. */
         function recordSeen(unread) {
             try { sessionStorage.setItem(SEEN_KEY, String(unread)); } catch (e) { /* ignore */ }
         }
+        /** Plays the chime and raises desktop notifications when the unread count has risen since the last poll in this tab. */
         function chimeIfNew(unread) {
             let prev = null;
             try { prev = sessionStorage.getItem(SEEN_KEY); } catch (e) { /* ignore */ }
@@ -125,6 +134,7 @@ window.NotificationBell = {
         // The very first run only records where things stand, or switching the
         // setting on would replay every unread notification at once.
         const DESK_KEY = 'nbDesktopShownUntil';
+        /** Raises desktop notifications for unread items newer than any already shown, at most three plus a "more" line; the first run only records a baseline. */
         async function desktopNotify() {
             if (!window.DESKTOP_NOTIFICATIONS || !('Notification' in window) || Notification.permission !== 'granted') return;
             let items;
@@ -152,6 +162,7 @@ window.NotificationBell = {
                         icon: icon,
                         tag: 'freeitsm-nb-' + n.id + '-' + n.updated_datetime
                     });
+                    /** Clicking the desktop notification focuses the tab and opens what it was about. */
                     note.onclick = function () {
                         window.focus();
                         if (n.link) location.href = PREFIX + n.link;
@@ -164,6 +175,7 @@ window.NotificationBell = {
                     const more = new Notification(window.t('common.notifications.desktop_more', { n: fresh.length - 3 }), {
                         icon: icon, tag: 'freeitsm-nb-more'
                     });
+                    /** Clicking the "more" notification focuses the tab and opens the bell panel. */
                     more.onclick = function () { window.focus(); open(); more.close(); };
                 } catch (e) { /* ignore */ }
             }
@@ -172,6 +184,7 @@ window.NotificationBell = {
         // thing that arrives afterwards is shown rather than taken as the baseline.
         desktopNotify();
 
+        /** Fetches the unread count only, repaints the badge and chimes if something new arrived. */
         async function poll() {
             try {
                 const d = await (await fetch(COUNT, { credentials: 'same-origin' })).json();
@@ -179,6 +192,7 @@ window.NotificationBell = {
             } catch (e) { /* a failed poll is not worth telling anyone about */ }
         }
 
+        /** Opens the panel and loads the full list, re-baselining the chime because the viewer is now looking at it. */
         async function open() {
             panel.classList.add('open');
             list.innerHTML = '<div class="nb-empty">' + esc(window.t('common.notifications.loading')) + '</div>';
@@ -315,6 +329,7 @@ window.NotificationBell = {
             showConfirm(opts);
         });
 
+        /** Deletes notifications for good - read ones only unless includeUnread - then reloads the panel, saying so when nothing was cleared. */
         async function doClearAll(includeUnread) {
             try {
                 const d = await (await fetch(CLEAR, {

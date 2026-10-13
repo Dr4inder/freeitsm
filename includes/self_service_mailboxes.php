@@ -25,6 +25,9 @@ require_once __DIR__ . '/tenancy.php';
 require_once __DIR__ . '/encryption.php';
 
 /**
+ * The active mailboxes a self-service user may raise a ticket through - their own company's
+ * and the shared ones. Used for the dropdown and to re-check the posted choice.
+ *
  * @return array<int,array{id:int,name:string,target_mailbox:string,shared:bool}>
  *         keyed by mailbox id, the user's own company's first, then shared.
  */

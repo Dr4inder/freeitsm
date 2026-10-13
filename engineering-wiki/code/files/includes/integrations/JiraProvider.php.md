@@ -1,6 +1,6 @@
 # includes/integrations/JiraProvider.php
 
-> PHP - 834 lines
+> PHP - 856 lines
 
 JiraProvider — Jira Cloud and Jira Data Center / Server behind one contract.
 

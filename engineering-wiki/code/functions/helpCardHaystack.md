@@ -6,7 +6,7 @@ The text a card is matched against when someone searches. Lower-cased and flatte
 function helpCardHaystack(array $card)
 ```
 
-Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 582.
+Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 588.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

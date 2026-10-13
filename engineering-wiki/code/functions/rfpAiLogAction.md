@@ -16,7 +16,7 @@ function rfpAiLogAction(
 ): void
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 455.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 463.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -36,7 +36,7 @@ Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 455.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 468 | `rfpAiLogAction` | **insert** [rfp_processing_log](/code/tables/rfp_processing_log.md) (`rfp_id`, `document_id`, `section_id`, `action`, `status`, `details`, `tokens_in`, `tokens_out`) |  |
+| 476 | `rfpAiLogAction` | **insert** [rfp_processing_log](/code/tables/rfp_processing_log.md) (`rfp_id`, `document_id`, `section_id`, `action`, `status`, `details`, `tokens_in`, `tokens_out`) |  |
 
 ## Called from
 

@@ -25,6 +25,7 @@ function ticketLinkLoad(PDO $conn, int $id): ?array
     return $row ?: null;
 }
 
+/** A ticket's number for audit text, falling back to "#id" when it has none (deleted tickets included). */
 function ticketLinkNum(PDO $conn, int $id): string
 {
     $st = $conn->prepare("SELECT ticket_number FROM tickets WHERE id = ?");
@@ -32,6 +33,12 @@ function ticketLinkNum(PDO $conn, int $id): string
     return $st->fetchColumn() ?: ('#' . $id);
 }
 
+/**
+ * Writes one ticket_audit row for a link change, with no old value and the new
+ * value cut to 500 characters.
+ *
+ * @writes ticket_audit - the link or unlink shows in the ticket's history
+ */
 function ticketLinkAudit(PDO $conn, int $ticketId, int $analystId, string $field, string $newVal): void
 {
     $conn->prepare(

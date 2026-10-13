@@ -11,7 +11,7 @@ function projectVisibleSql(
 ): array
 ```
 
-Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 67.
+Defined in [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md), line 68.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,7 +26,7 @@ Defined in [includes/projects/visibility.php](/code/files/includes/projects/visi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 72 | `projectVisibleSql` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 73 | `projectVisibleSql` | read [project_members](/code/tables/project_members.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
 
 ## Calls
 

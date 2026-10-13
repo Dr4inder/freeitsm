@@ -37,14 +37,14 @@
 | [api/self-service/get_my_assets.php](/code/files/api/self-service/get_my_assets.php.md) | L37 |  |
 | [api/tickets/get_ticket_assets.php](/code/files/api/tickets/get_ticket_assets.php.md) | L39 |  |
 | [api/tickets/search_linkable_assets.php](/code/files/api/tickets/search_linkable_assets.php.md) | L49 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L47 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52 |  |
 | [asset-management/labels.php](/code/files/asset-management/labels.php.md) | L104 |  |
 | [asset-management/scan.php](/code/files/asset-management/scan.php.md) | L65 |  |
 | [includes/contract_assets.php](/code/files/includes/contract_assets.php.md) | contractAssetSelect L64, contractAssetSearch L250 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleAssets L348, peopleSupplierAssets L778 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleAssets L349, peopleSupplierAssets L781 |  |
 | [includes/projects/targets.php](/code/files/includes/projects/targets.php.md) | projectTargetsFor L180, projectTargetOptions L281 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewAsset L288 |  |
 | [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | L14 |  |
-| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1073 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L532 |  |
+| [includes/services/assets.php](/code/files/includes/services/assets.php.md) | AssetsService::assetsForUser L1077 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolAssetLookup L546 |  |
 

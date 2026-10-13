@@ -6,7 +6,7 @@ Remove a link by id.
 function ticketLinkRemove(PDO $conn, int $analystId, int $linkId): array
 ```
 
-Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 159.
+Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md), line 166.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/ticket_links.php](/code/files/includes/ticket_links.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 161 | `ticketLinkRemove` | read [ticket_links](/code/tables/ticket_links.md) |  |
-| 174 | `ticketLinkRemove` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 168 | `ticketLinkRemove` | read [ticket_links](/code/tables/ticket_links.md) |  |
+| 181 | `ticketLinkRemove` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
 
 ## Calls
 

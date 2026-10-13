@@ -6,7 +6,7 @@ Extra rules that only matter on paper.
 function contractReportPrintCss(): string
 ```
 
-Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 41.
+Defined in [includes/contract_report.php](/code/files/includes/contract_report.php.md), line 44.
 
 **Returns:** `string`
 

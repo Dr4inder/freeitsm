@@ -6,23 +6,33 @@
  * what is still open into the decide box (openBox()). Whether an item is done
  * comes from the server - a change item is done when the change is approved,
  * a document item while that document is still on the project.
+ *
+ * @wiki Projects-Internals-6-Governance
  */
 (function () {
     'use strict';
     const P = window.Prj;
+    /** Translates a key under projects.gatecheck.*. */
     const T = (k, p) => P.T('gatecheck.' + k, p);
     const esc = P.esc;
+    /** Shorthand for document.getElementById. */
     const $ = id => document.getElementById(id);
     let ctx = null;
     let wired = false;
     let editing = null;     // {stageId, item|null}
 
+    /** Posts a gate checklist action to tools.php for the current project. */
     const call = body => P.api('tools.php', Object.assign({ project_id: ctx.projectId }, body));
+    /** True when the viewer may change this project. */
     const canChange = () => !!(ctx.data.permissions && ctx.data.permissions.can_change);
+    /** The project's gate checklist data, or an empty set when the server sent none. */
     const gate = () => ctx.data.gate || { items: {}, documents: [], changes: [], mode: 'block', me: 0 };
+    /** The checklist items for one stage's gate. */
     const itemsOf = stageId => gate().items[stageId] || [];
+    /** A date-time formatted for the viewer, or empty when there is none. */
     const when = dt => dt ? (window.fmtDateTime ? window.fmtDateTime(dt) : dt) : '';
 
+    /** One checklist item - its tick mark, kind, title and detail, plus the control its kind needs (tick box, sign button for the named person, document or change picker) and delete. */
     function itemRow(i) {
         const g = gate();
         let detail = '', control = '';
@@ -90,6 +100,7 @@
     }
 
     // ---- The item box -------------------------------------------------------------------------
+    /** Opens the checklist item dialog for a stage, filled from item or empty for a new one; an existing item's kind cannot be changed. */
     function openItem(stageId, item) {
         editing = { stageId: stageId, item: item };
         $('pgiTitle').textContent = item ? item.title : T('add_title');
@@ -106,12 +117,14 @@
         P.openModal('prjGateItemModal');
         setTimeout(() => $('pgiName').focus(), 60);
     }
+    /** Shows the person or change picker and the hint that suit the chosen item kind. */
     function showKind() {
         const k = $('pgiKind').value;
         $('pgiPersonWrap').hidden = k !== 'signoff';
         $('pgiChangeWrap').hidden = k !== 'change';
         $('pgiHint').textContent = T('hint_' + k);
     }
+    /** Saves the checklist item dialog through tools.php and redraws the project. */
     async function saveItem() {
         const k = $('pgiKind').value;
         const body = { action: 'gate_item_save', id: editing.item ? editing.item.id : undefined, stage_id: editing.stageId, kind: k, title: $('pgiName').value.trim(), notes: $('pgiNotes').value };
@@ -121,16 +134,20 @@
         catch (e) { $('pgiError').textContent = e.message; $('pgiError').hidden = false; }
     }
 
+    /** The checklist item with this id, whichever gate it is on. */
     function find(id) {
         for (const list of Object.values(gate().items)) { const i = list.find(x => x.id === Number(id)); if (i) return i; }
         return null;
     }
+    /** The stage whose gate holds this item, or 0. */
     const stageOfItem = id => { for (const [sid, list] of Object.entries(gate().items)) if (list.some(x => x.id === Number(id))) return Number(sid); return 0; };
 
+    /** Wires the Gates tab's checklist controls (add, edit, sign, delete, tick, document and change pickers, gate kind) and the item dialog, once. */
     function wire() {
         if (wired) return;
         wired = true;
         const box = $('pvGates');
+        /** Sends a checklist action, shows the toast if one is given, and redraws the project - also after a failure, so the screen matches the server. */
         const act = async (body, toast) => { try { await call(body); if (toast) P.toast(toast); await ctx.refresh(); } catch (e) { P.toast(e.message, 'error'); await ctx.refresh(); } };
         box.addEventListener('click', async e => {
             const add = e.target.closest('[data-gc-add]'); if (add) { openItem(Number(add.dataset.gcAdd), null); return; }

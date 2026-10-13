@@ -53,5 +53,5 @@
 | [api/intune/get_intune_device.php](/code/files/api/intune/get_intune_device.php.md) | L28 |  |
 | [api/intune/list_app_sync_jobs.php](/code/files/api/intune/list_app_sync_jobs.php.md) | L39 |  |
 | [includes/intune.php](/code/files/includes/intune.php.md) | intuneLinkDevicesToAssets L303, intuneLinkDevicesToAssets L315, intuneLinkDevicesToAssets L348, intuneSyncDisks L381, intuneGetAppSyncCandidates L604, intuneRunAppSyncJob L800 |  |
-| [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | rpIntuneBreakdown L97, rpIntuneKpis L105 |  |
+| [includes/report_packs/blocks_assets.php](/code/files/includes/report_packs/blocks_assets.php.md) | rpIntuneBreakdown L106, rpIntuneKpis L118 |  |
 

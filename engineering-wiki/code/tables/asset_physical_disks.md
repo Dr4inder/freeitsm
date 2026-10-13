@@ -26,6 +26,6 @@ The physical drives themselves, as opposed to the lettered volumes above.  WHY A
 | File | Where | Purpose |
 |---|---|---|
 | [api/assets/get_asset_disks.php](/code/files/api/assets/get_asset_disks.php.md) | L58 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetPhysicalDisksList L520 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetPhysicalDisksList L533 |  |
 | [includes/asset_disk_visibility.php](/code/files/includes/asset_disk_visibility.php.md) | assetDiskMatchCount L104 |  |
 

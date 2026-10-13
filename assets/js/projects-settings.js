@@ -6,6 +6,8 @@
  * capability), runs the Roles list (add, edit, deactivate, delete, drag to
  * reorder) and the Templates list (show or hide a built-in; rename, switch off
  * or delete a saved one) over api/projects/templates.php.
+ *
+ * @wiki Projects-Internals-8-Connections-and-Templates
  */
 (function () {
     'use strict';
@@ -13,12 +15,14 @@
     const T = P.T, esc = P.esc;
     let state = null;
 
+    /** Shows a settings tab and puts it in the address bar (?tab=), so a reload stays on it. */
     window.switchTab = function (tab) {
         document.querySelectorAll('.tabs .tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === tab + '-tab'));
         try { history.replaceState(null, '', '?tab=' + tab); } catch (e) { /* ignore */ }
     };
 
+    /** A setting's default value in words, for the "Default is" line under its control. */
     function defaultLabel(key, value) {
         if (key === 'project_default_method') return T('method.' + value);
         if (key === 'project_create_policy') return T('settings.create_' + value);
@@ -50,6 +54,7 @@
         return value;
     }
 
+    /** Fills every setting control from the loaded values (drop-downs, risk scales, working days), writes each "Default is" line and redraws the roles list. */
     function fill() {
         const L = state.lookups;
         const methodSel = document.querySelector('[data-k="project_default_method"]');
@@ -80,6 +85,7 @@
         renderRoles();
     }
 
+    /** Saves the settings on one tab (the server checks that tab's capability) and refills the page. */
     async function save(tab) {
         const settings = {};
         document.querySelectorAll('[data-settings-tab="' + tab + '"] [data-k]').forEach(el => {
@@ -99,9 +105,11 @@
 
     // ---- Templates ----------------------------------------------------------------
     let templates = [];
+    /** Draws the built-in templates with a "Offered" tick box each, and the saved templates with an edit button. */
     function renderTemplates() {
         const b = document.getElementById('tplBuiltin');
         if (!b) return;
+        /** One template row - icon, name, what it sets up, who saved it, and its control. */
         const row = (t, control) =>
             '<li class="prj-role' + (t.active ? '' : ' inactive') + '">'
             + '<span class="prj-tpl-icon" style="background:' + P.gradient(t.colour) + '">' + P.icon(t.icon, 16) + '</span>'
@@ -116,6 +124,7 @@
             '<button type="button" class="prj-icon-btn" data-tpl-edit="' + t.id + '" title="' + esc(P.TC('edit')) + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>')).join('');
         document.getElementById('tplNone').hidden = saved.length > 0;
     }
+    /** Sends a templates action and redraws the list; errors go into the template dialog when it is open, else a toast. Returns true on success. */
     async function tplCall(body) {
         try {
             const r = await P.api('templates.php', body);
@@ -129,6 +138,7 @@
             return false;
         }
     }
+    /** Loads the templates and the colour palette, draws them and wires the show/hide ticks and the edit dialog's save and delete. */
     async function wireTemplates() {
         if (!document.getElementById('tplBuiltin')) return;
         try {
@@ -165,6 +175,7 @@
     }
 
     // ---- Roles --------------------------------------------------------------------
+    /** Draws the project roles list - name, description, how many use it, inactive flag and an edit button - with each row draggable. */
     function renderRoles() {
         const list = document.getElementById('roleList');
         if (!list) return;
@@ -178,6 +189,7 @@
             + '</li>').join('');
     }
 
+    /** Opens the role dialog filled from role, or empty for a new one. */
     function openRole(role) {
         document.getElementById('rmTitle').textContent = role ? T('settings.role_edit') : T('settings.role_new');
         document.getElementById('rmId').value = role ? role.id : '';
@@ -196,6 +208,7 @@
         const box = document.getElementById('rateList');
         if (!box) return;
         const cur = state.settings.project_currency || 'GBP';
+        /** An amount in the install's currency for the viewer's locale. */
         const money = v => { try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(v); } catch (e) { return cur + ' ' + v; } };
         if (!state.rates.length) { box.innerHTML = '<p class="prj-muted">' + esc(T('settings.no_rates')) + '</p>'; return; }
         box.innerHTML = '<table class="prj-budget-table"><tbody>' + state.rates.map(r =>
@@ -203,10 +216,12 @@
             + '<td class="num">' + esc(money(Number(r.hourly_rate))) + '</td><td>' + esc(P.fmtDate(r.effective_from)) + '</td>'
             + '<td class="num"><button type="button" class="prj-task-remove" style="opacity:1" data-rate-del="' + r.id + '" aria-label="' + esc(P.TC('delete')) + '">&times;</button></td></tr>').join('') + '</tbody></table>';
     }
+    /** Sends an hourly-rate action to settings.php and redraws the rates list; returns true on success. */
     async function rateCall(body) {
         try { const r = await P.api('settings.php', body); state.rates = r.rates || []; renderRates(); return true; }
         catch (e) { P.toast(e.message, 'error'); return false; }
     }
+    /** Fills the rate picker (default or an analyst) and wires adding and deleting hourly rates. */
     function wireRates() {
         const sel = document.getElementById('rtScope');
         if (!sel) return;
@@ -226,6 +241,7 @@
         });
     }
 
+    /** Sends a roles action to settings.php and redraws the list; errors go into the role dialog when it is open, else a toast. Returns true on success. */
     async function roleCall(body) {
         try {
             const r = await P.api('settings.php', body);

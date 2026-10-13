@@ -1,6 +1,6 @@
 # assets/js/confirm.js
 
-> JavaScript - 277 lines
+> JavaScript - 294 lines
 
 Global Confirmation Modal
 
@@ -59,14 +59,13 @@ Anything added here later must follow the same rule.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `build()` | 122 |  |
-| `handleConfirm()` | 185 |  |
-| `handleCancel()` | 201 |  |
-| `close()` | 209 |  |
-| `showConfirm(opts)` | 221 |  |
-| `cd(key, english)` | 228 | `tf()` is translate-or-this-English (i18n.js). Guarded because this file is injected by pages that do not all load i18n.js, and a dialog whose buttons read "common.ok" is worse than one reading "OK". |
-| `keyHandler(e)` | 264 |  |
-| `requestAnimationFrame(function()` | 270 |  |
+| `build()` | 125 | Creates the shared dialog's markup (title, message, optional tickbox and text box, Cancel and OK) the first time it is needed. |
+| `handleConfirm()` | 191 | OK: closes the dialog, calls onConfirm with the tickbox and text box state, and resolves the promise with true. |
+| `handleCancel()` | 210 | Cancel, Escape or a backdrop click: closes the dialog, calls onCancel and resolves the promise with false. |
+| `close()` | 219 | Hides the dialog, removes its key handler and forgets the current callbacks. |
+| `showConfirm(opts)` | 236 | Shows the shared OK/Cancel dialog with the given options and returns a promise of true (OK) or false (Cancel). |
+| `cd(key, english)` | 243 | `tf()` is translate-or-this-English (i18n.js). Guarded because this file is injected by pages that do not all load i18n.js, and a dialog whose buttons read "common.ok" is worse than one reading "OK". |
+| `keyHandler(e)` | 280 | Escape cancels; Enter confirms unless Cancel has the focus. |
 
 ## Loaded by
 

@@ -6,7 +6,7 @@ GET /domains/{id}/history
 function apiDomainsHistory(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 362.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 375.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 366 | `apiDomainsHistory` | read [domain_audit](/code/tables/domain_audit.md) |  |
-| 369 | `apiDomainsHistory` | read [domain_audit](/code/tables/domain_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 379 | `apiDomainsHistory` | read [domain_audit](/code/tables/domain_audit.md) |  |
+| 382 | `apiDomainsHistory` | read [domain_audit](/code/tables/domain_audit.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

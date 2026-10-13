@@ -32,6 +32,7 @@ class ProjectReportsService
     const KINDS = ['highlight', 'exception', 'checkpoint', 'closure'];
     const BRIEFING_COOLDOWN_MINUTES = 10;
 
+    /** True when the project_reports table exists (after Database Verification). */
     public static function ready(PDO $conn): bool
     {
         try { $conn->query("SELECT 1 FROM project_reports LIMIT 0"); return true; } catch (Throwable $e) { return false; }
@@ -55,6 +56,7 @@ class ProjectReportsService
         return array_map([self::class, 'shape'], $st->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    /** The project's most recent AI briefing, or null. */
     public static function latestBriefing(PDO $conn, int $projectId): ?array
     {
         if (!self::ready($conn)) return null;
@@ -67,6 +69,7 @@ class ProjectReportsService
         return $row ? self::shape($row) : null;
     }
 
+    /** A project_reports row as the API returns it. */
     private static function shape(array $r): array
     {
         return [
@@ -413,6 +416,7 @@ class ProjectReportsService
         return $id;
     }
 
+    /** Loads one report (not a briefing) of the project; throws not found otherwise. */
     private static function load(PDO $conn, int $projectId, int $id): array
     {
         $st = $conn->prepare("SELECT * FROM project_reports WHERE id = ? AND project_id = ? AND kind <> 'briefing'");

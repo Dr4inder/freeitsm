@@ -1,10 +1,12 @@
 # apiSerializeMorningCheck()
 
+Shapes a morning check row for the API - name, description, active flag, order and dates.
+
 ```php
 function apiSerializeMorningCheck(array $r): array
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 37.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 38.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -16,7 +16,7 @@ function documentVisibleParents(
 ): array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 530.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 535.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -31,7 +31,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 535 | `documentVisibleParents` | read [document_links](/code/tables/document_links.md) |  |
+| 540 | `documentVisibleParents` | read [document_links](/code/tables/document_links.md) |  |
 
 ## Calls
 

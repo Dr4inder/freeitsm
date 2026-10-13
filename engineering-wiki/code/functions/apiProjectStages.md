@@ -1,10 +1,12 @@
 # apiProjectStages()
 
+Every stage of a project in order, each with its count of top-level tasks and how many of those are closed.
+
 ```php
 function apiProjectStages(PDO $conn, int $projectId): array
 ```
 
-Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 287.
+Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), line 300.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -17,7 +19,7 @@ Defined in [api/v1/resources/projects.php](/code/files/api/v1/resources/projects
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 288 | `apiProjectStages` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [project_stages](/code/tables/project_stages.md) |  |
+| 301 | `apiProjectStages` | read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [project_stages](/code/tables/project_stages.md) |  |
 
 ## Called from
 

@@ -71,6 +71,7 @@ function lmsCtSettings(PDO $conn): array
     return $s;
 }
 
+/** Saves one competency test setting to system_settings (insert or update). */
 function lmsCtSaveSetting(PDO $conn, string $key, string $value): void
 {
     $st = $conn->prepare("INSERT INTO system_settings (setting_key, setting_value, updated_datetime)
@@ -93,6 +94,7 @@ function lmsCtParseMarks(string $raw): ?array
     return $m[0] > 0 ? $m : null;
 }
 
+/** The marks for each grade of a graded question, from the settings, or the default 5, 3, 1, 0. */
 function lmsCtGradedMarks(array $settings): array
 {
     return lmsCtParseMarks($settings[LMS_CT_GRADED_MARKS] ?? '') ?? [5, 3, 1, 0];
@@ -264,6 +266,7 @@ function lmsCtNewToken(): array
     return [$raw, hash('sha256', $raw)];
 }
 
+/** The app-relative path of a test link for a raw token. */
 function lmsCtLinkPath(string $rawToken): string
 {
     return 'lms/test.php?t=' . $rawToken;

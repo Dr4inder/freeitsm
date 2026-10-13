@@ -1,6 +1,6 @@
 # api/v1/resources/calendar.php
 
-> API endpoint - 232 lines
+> API endpoint - 240 lines
 
 FreeITSM REST API v1 — calendar resource (the standalone team calendar).
 
@@ -44,23 +44,23 @@ the naive-datetime parser (also used by the list filters) stay here.
 | Function | Line | What it does |
 |---|--:|---|
 | [apiParseNaiveDatetime()](/code/functions/apiParseNaiveDatetime.md) | 45 | Parse a NAIVE local datetime ("YYYY-MM-DD HH:MM[:SS]", T separator OK, date-only OK). 422s on timezone designators — this resource is naive-local by design (see header). |
-| [apiCalendarEventSelect()](/code/functions/apiCalendarEventSelect.md) | 66 |  |
-| [apiSerializeCalendarEvent()](/code/functions/apiSerializeCalendarEvent.md) | 74 |  |
-| [apiLoadCalendarEvent()](/code/functions/apiLoadCalendarEvent.md) | 98 |  |
-| [apiCalendarEventsList()](/code/functions/apiCalendarEventsList.md) | 111 | GET /calendar/events |
-| [apiCalendarEventsGet()](/code/functions/apiCalendarEventsGet.md) | 178 |  |
-| [apiCalendarEventsCreate()](/code/functions/apiCalendarEventsCreate.md) | 185 | POST /calendar/events |
-| [apiCalendarEventsUpdate()](/code/functions/apiCalendarEventsUpdate.md) | 195 | PATCH /calendar/events/{id} |
-| [apiCalendarEventsDelete()](/code/functions/apiCalendarEventsDelete.md) | 205 | DELETE /calendar/events/{id} |
-| [apiCalendarCategoriesList()](/code/functions/apiCalendarCategoriesList.md) | 215 | GET /calendar-categories (reference) |
+| [apiCalendarEventSelect()](/code/functions/apiCalendarEventSelect.md) | 67 | The SELECT for calendar events, with the category's name and colour and the creator's name. |
+| [apiSerializeCalendarEvent()](/code/functions/apiSerializeCalendarEvent.md) | 80 | Shapes a calendar event row for the API - times stay naive server-local, source says whether it was generated (null = typed in), and created_by is null for generated events. |
+| [apiLoadCalendarEvent()](/code/functions/apiLoadCalendarEvent.md) | 105 | Loads one calendar event row (apiCalendarEventSelect), or answers 404 and stops. |
+| [apiCalendarEventsList()](/code/functions/apiCalendarEventsList.md) | 118 | GET /calendar/events |
+| [apiCalendarEventsGet()](/code/functions/apiCalendarEventsGet.md) | 186 | GET /calendar/events/{id} - one calendar event. |
+| [apiCalendarEventsCreate()](/code/functions/apiCalendarEventsCreate.md) | 193 | POST /calendar/events |
+| [apiCalendarEventsUpdate()](/code/functions/apiCalendarEventsUpdate.md) | 203 | PATCH /calendar/events/{id} |
+| [apiCalendarEventsDelete()](/code/functions/apiCalendarEventsDelete.md) | 213 | DELETE /calendar/events/{id} |
+| [apiCalendarCategoriesList()](/code/functions/apiCalendarCategoriesList.md) | 223 | GET /calendar-categories (reference) |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 67 | `apiCalendarEventSelect` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md), read [analysts](/code/tables/analysts.md) |  |
-| 164 | `apiCalendarEventsList` | read [calendar_events](/code/tables/calendar_events.md) |  |
-| 217 | `apiCalendarCategoriesList` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 68 | `apiCalendarEventSelect` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md), read [analysts](/code/tables/analysts.md) |  |
+| 171 | `apiCalendarEventsList` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 225 | `apiCalendarCategoriesList` | read [calendar_events](/code/tables/calendar_events.md), read [calendar_categories](/code/tables/calendar_categories.md) |  |
 
 ## How it hangs together
 

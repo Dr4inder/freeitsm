@@ -6,7 +6,7 @@ The address and key of a setup, so features sharing one are called once.
 function setupKey(array $cfg): string
 ```
 
-Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 102.
+Defined in [api/system/debug-tools/D014_ai_connections.php](/code/files/api/system/debug-tools/D014_ai_connections.php.md), line 111.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Hide the host and the account, keep the shape. Reports get sent on.
 function maskUrl(string $u): string
 ```
 
-Defined in [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md), line 61.
+Defined in [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md), line 66.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

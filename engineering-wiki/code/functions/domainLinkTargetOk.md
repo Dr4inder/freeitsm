@@ -12,7 +12,7 @@ function domainLinkTargetOk(
 ): bool
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 92.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 95.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -28,8 +28,8 @@ Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 102 | `domainLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
-| 107 | `domainLinkTargetOk` | read [status_services](/code/tables/status_services.md) |  |
+| 105 | `domainLinkTargetOk` | read [tickets](/code/tables/tickets.md) |  |
+| 110 | `domainLinkTargetOk` | read [status_services](/code/tables/status_services.md) |  |
 
 ## Calls
 

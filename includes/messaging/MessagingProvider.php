@@ -25,6 +25,7 @@ abstract class MessagingProvider
     /** @var array decrypted messaging_channels row (credentials already a PHP array) */
     protected $channel;
 
+    /** Keeps the decrypted messaging_channels row the provider works with. */
     public function __construct(array $channel)
     {
         $this->channel = $channel;

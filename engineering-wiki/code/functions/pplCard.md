@@ -14,7 +14,7 @@ function pplCard(
 ): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 39.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 43.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

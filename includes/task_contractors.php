@@ -23,6 +23,8 @@
  * in any company may name any supplier. CHOOSING one needs the Contracts module
  * (where suppliers live - api/tasks/contractors.php); SEEING the name on a task
  * you can already see does not, like a project or team name.
+ *
+ * @wiki Projects-Internals-10-Contractors
  */
 
 /** Has Database Verification added the two columns? Before it, there are no contractors and no errors. */

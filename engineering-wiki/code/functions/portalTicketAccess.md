@@ -6,7 +6,7 @@ THE question every portal endpoint asks: may this portal user see this ticket, a
 function portalTicketAccess(PDO $conn, int $userId, int $ticketId): ?array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 306.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 307.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 3
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 310 | `portalTicketAccess` | read [tickets](/code/tables/tickets.md) |  |
+| 311 | `portalTicketAccess` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

@@ -12,7 +12,7 @@ knowledgeTenantFilterForCompany above for why).
 function knowledgeTenantFilter(PDO $conn, int $analystId, string $alias = 'a'): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 941.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 947.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

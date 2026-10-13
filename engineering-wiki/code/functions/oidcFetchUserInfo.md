@@ -6,7 +6,7 @@ Fetch claims from the provider userinfo_endpoint using the access_token. Returns
 function oidcFetchUserInfo(string $userinfoEndpoint, string $accessToken): array
 ```
 
-Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 251.
+Defined in [includes/oidc.php](/code/files/includes/oidc.php.md), line 261.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

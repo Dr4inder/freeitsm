@@ -315,6 +315,12 @@ function splitLeaveMarker(PDO $conn, int $ticketId, string $newNumber, array $mo
     return (int)$conn->lastInsertId();
 }
 
+/**
+ * Writes one ticket_audit row for a split step, best-effort - a failed audit
+ * write never stops the split. An actor id of 0 is stored as NULL.
+ *
+ * @writes ticket_audit - the split shows in each ticket's history
+ */
 function splitAudit(PDO $conn, int $ticketId, int $actorId, string $field, ?string $old, ?string $new): void {
     try {
         $conn->prepare(

@@ -365,12 +365,14 @@ class ContractsService
         return [$curId, $curText];
     }
 
+    /** Sets a contract's cost centre, once that column exists. */
     private static function writeCostCentre(PDO $conn, int $id, ?int $ccId): void
     {
         if (!costCentreReady($conn, 'contracts')) return;
         $conn->prepare("UPDATE contracts SET cost_centre_id = ? WHERE id = ?")->execute([$ccId, $id]);
     }
 
+    /** Sets a contract's company, once that column exists. */
     private static function writeTenant(PDO $conn, int $id, int $tenant): void
     {
         if (!contractTenantReady($conn)) return;
@@ -418,6 +420,7 @@ class ContractsService
         return $p;
     }
 
+    /** Sets who a contract is with (supplier or customer), once those columns exist. */
     private static function writeParty(PDO $conn, int $id, array $p): void
     {
         if (!contractPartyReady($conn)) return;
@@ -425,11 +428,13 @@ class ContractsService
              ->execute([$p['party_type'], $p['customer_tenant_id'], $p['customer_user_id'], $id]);
     }
 
+    /** The party fields of a contract as an array. */
     private static function partyPayload(array $p): array
     {
         return ['party_type' => $p['party_type'], 'customer_tenant_id' => $p['customer_tenant_id'], 'customer_user_id' => $p['customer_user_id']];
     }
 
+    /** Loads one row from the given table by id; throws not found with $notFoundMsg when it does not exist. */
     private static function loadRow(PDO $conn, string $table, int $id, string $notFoundMsg): array
     {
         $stmt = $conn->prepare("SELECT * FROM `$table` WHERE id = ?");

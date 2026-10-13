@@ -1,10 +1,12 @@
 # pplSectionCoursesCompany()
 
+A company's Courses card: each course with how many of its people have finished it and how many are part-way.
+
 ```php
 function pplSectionCoursesCompany(array $s): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 152.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 164.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

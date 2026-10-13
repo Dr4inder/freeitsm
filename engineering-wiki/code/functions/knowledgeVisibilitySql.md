@@ -39,7 +39,7 @@ function knowledgeVisibilitySql(
 ): array
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 316.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 324.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

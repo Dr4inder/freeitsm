@@ -23,7 +23,7 @@ function oversizeNotify(
 ): array
 ```
 
-Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 228.
+Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limits.php.md), line 231.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -44,7 +44,7 @@ Defined in [includes/attachment_limits.php](/code/files/includes/attachment_limi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 241 | `oversizeNotify` | read [tickets](/code/tables/tickets.md) |  |
+| 244 | `oversizeNotify` | read [tickets](/code/tables/tickets.md) |  |
 
 ## Calls
 

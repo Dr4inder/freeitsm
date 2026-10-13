@@ -6,7 +6,7 @@ GET /cmdb/objects/{id}/impact — blast radius (mirrors get_object_impact.php)
 function apiCmdbObjectImpact(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 439.
+Defined in [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md), line 447.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

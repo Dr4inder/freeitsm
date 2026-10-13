@@ -6,7 +6,7 @@ Who has polled recently, and whether they are in THIS channel or elsewhere in th
 function warRoomPresent(PDO $conn, int $excludeAnalystId, int $channelId): array
 ```
 
-Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1088.
+Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 1089.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/warroom.php](/code/files/includes/warroom.php.md), line 108
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1091 | `warRoomPresent` | read [warroom_presence](/code/tables/warroom_presence.md), read [analysts](/code/tables/analysts.md) |  |
+| 1092 | `warRoomPresent` | read [warroom_presence](/code/tables/warroom_presence.md), read [analysts](/code/tables/analysts.md) |  |
 
 ## Called from
 

@@ -51,6 +51,7 @@ function dk(string $key, array $html = []): string
     foreach ($html as $k => $v) $out = str_replace('{' . $k . '}', $v, $out);
     return $out;
 }
+/** Escapes a command or path and wraps it in <code> for dropping into a dk() placeholder. */
 function dkCode(string $s): string { return '<code>' . htmlspecialchars($s) . '</code>'; }
 
 $overrideFile = "services:\n  app:\n    ports:\n      - \"8443:443\"\n    volumes:\n      - tls:" . DOCKER_TLS_DIR . "\n\nvolumes:\n  tls:\n";

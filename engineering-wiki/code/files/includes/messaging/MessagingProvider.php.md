@@ -1,6 +1,22 @@
 # includes/messaging/MessagingProvider.php
 
-> PHP - 239 lines
+> PHP - 240 lines
+
+MessagingProvider — the provider-agnostic contract for a chat channel (WhatsApp today; SMS/others later). Everything above this line — webhook ingestion, ticket creation, the reply path — talks to this interface and never knows whether Twilio or Meta Cloud is actually live.
+
+Concrete providers: TwilioProvider, MetaCloudProvider. They are constructed
+with a decrypted messaging_channels row (see messaging.php → `messagingProvider()`).
+
+A "normalised inbound message" (the shape parseInbound returns) is:
+  [
+    'from'           => '+447700900123',   // sender, normalised (+ and digits)
+    'to'             => '+14155238886',    // the business number it arrived on
+    'body'           => 'Hi, my laptop…',  // plain text
+    'profile_name'   => 'Jane Doe',        // sender display name, or ''
+    'provider_msg_id'=> 'SMxxxx',          // provider's message id (dedupe)
+    'media'          => [ ['url'=>…, 'content_type'=>…], … ],
+    'timestamp'      => 1719500000,        // unix seconds, or null
+  ]
 
 ## Classes
 

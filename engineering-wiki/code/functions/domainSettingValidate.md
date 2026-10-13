@@ -6,7 +6,7 @@ Validate and normalise one incoming value. Returns the value to store, or throws
 function domainSettingValidate(string $key, $raw): string
 ```
 
-Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 178.
+Defined in [includes/domains/settings.php](/code/files/includes/domains/settings.php.md), line 179.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

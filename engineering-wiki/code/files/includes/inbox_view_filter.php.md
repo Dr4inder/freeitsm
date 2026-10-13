@@ -2,6 +2,22 @@
 
 > PHP - 55 lines
 
+The inbox's view filter (GH #149): "My tickets" and "Hide closed".
+
+🔑 ONE HOME, because two endpoints must agree to the ticket: the folder
+counts (get_ticket_counts.php) and the list (get_emails.php). If they each
+spelled out "mine" or "closed" for themselves, a department badge would say
+12 while the list showed 11 the first time one of them was edited — the
+count-disagrees-with-list bug this inbox already carries scars from.
+
+🔴 A FILTER, NOT A PERMISSION. Both fragments only ever narrow what the
+analyst could already see; neither widens it.
+
+Both fragments are PLACEHOLDER-FREE on purpose. The counts endpoint appends
+its shared predicate to WHERE clauses and LEFT JOIN ON clauses alike, and
+relies on it binding no parameters so the positional order of everything
+around it is untouched. The analyst id is an int cast, never user input.
+
 ## Functions
 
 | Function | Line | What it does |

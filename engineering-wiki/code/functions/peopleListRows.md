@@ -6,7 +6,7 @@ People the analyst can see, newest-relevant first by name.
 function peopleListRows(PDO $conn, int $analystId, array $f = [], int $limit = 200): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 71.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 72.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 71.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 92 | `peopleListRows` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
+| 93 | `peopleListRows` | read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
 
 ## Calls
 

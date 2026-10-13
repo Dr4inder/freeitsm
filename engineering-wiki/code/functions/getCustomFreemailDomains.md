@@ -6,7 +6,7 @@ Admin-added custom freemail domains (the freemail_domains table), lower-cased. C
 function getCustomFreemailDomains(PDO $conn): array
 ```
 
-Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1223.
+Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 1229.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 122
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 1228 | `getCustomFreemailDomains` | read [freemail_domains](/code/tables/freemail_domains.md) |  |
+| 1234 | `getCustomFreemailDomains` | read [freemail_domains](/code/tables/freemail_domains.md) |  |
 
 ## Called from
 

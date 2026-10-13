@@ -1,6 +1,6 @@
 # includes/ticket_split.php
 
-> PHP - 455 lines
+> PHP - 461 lines
 
 Splitting a ticket.
 
@@ -45,9 +45,9 @@ exactly this reason; keep that wording if you touch it.
 | [splitTicket()](/code/functions/splitTicket.md) | 149 | Split messages off a ticket into a brand-new one. |
 | [splitCreateTicket()](/code/functions/splitCreateTicket.md) | 248 | Create the ticket the messages move into. |
 | [splitLeaveMarker()](/code/functions/splitLeaveMarker.md) | 301 | Leave a visible marker in the original thread where the messages left. |
-| [splitAudit()](/code/functions/splitAudit.md) | 318 |  |
-| [splitInfoFor()](/code/functions/splitInfoFor.md) | 334 | Splits recorded against a ticket, in both directions, for the banner. |
-| [undoSplit()](/code/functions/undoSplit.md) | 371 | Undo a split: send the messages back and remove the ticket that was created. |
+| [splitAudit()](/code/functions/splitAudit.md) | 324 | Writes one ticket_audit row for a split step, best-effort - a failed audit write never stops the split. An actor id of 0 is stored as NULL. |
+| [splitInfoFor()](/code/functions/splitInfoFor.md) | 340 | Splits recorded against a ticket, in both directions, for the banner. |
+| [undoSplit()](/code/functions/undoSplit.md) | 377 | Undo a split: send the messages back and remove the ticket that was created. |
 
 ## Database
 
@@ -65,16 +65,16 @@ exactly this reason; keep that wording if you touch it.
 | 268 | `splitCreateTicket` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 | 273 | `splitCreateTicket` | **insert** [tickets](/code/tables/tickets.md) (`ticket_number`, `subject`, `status_id`, `priority_id`, `department_id`, `ticket_type_id`, `assigned_analyst_id`, `origin_id`, `user_id`, `owner_id`, `tenant_id`, `created_datetime`) |  |
 | 309 | `splitLeaveMarker` | **insert** [emails](/code/tables/emails.md) (`subject`, `from_address`, `from_name`, `received_datetime`, `body_content`, `body_type`, `has_attachments`, `is_read`, `ticket_id`, `direction`, `channel`, `is_initial`) |  |
-| 321 | `splitAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 337 | `splitInfoFor` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
+| 327 | `splitAudit` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
 | 343 | `splitInfoFor` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
-| 374 | `undoSplit` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
-| 399 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
+| 349 | `splitInfoFor` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
+| 380 | `undoSplit` | read [ticket_splits](/code/tables/ticket_splits.md) |  |
 | 405 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
-| 424 | `undoSplit` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
-| 428 | `undoSplit` | **delete** [emails](/code/tables/emails.md) |  |
-| 433 | `undoSplit` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
-| 442 | `undoSplit` | **update** [ticket_splits](/code/tables/ticket_splits.md) (`undone_datetime`, `undone_by_id`) |  |
+| 411 | `undoSplit` | read [emails](/code/tables/emails.md) |  |
+| 430 | `undoSplit` | **update** [emails](/code/tables/emails.md) (`ticket_id`) |  |
+| 434 | `undoSplit` | **delete** [emails](/code/tables/emails.md) |  |
+| 439 | `undoSplit` | **delete** [ticket_links](/code/tables/ticket_links.md) |  |
+| 448 | `undoSplit` | **update** [ticket_splits](/code/tables/ticket_splits.md) (`undone_datetime`, `undone_by_id`) |  |
 
 ## How it hangs together
 

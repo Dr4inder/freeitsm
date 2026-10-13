@@ -6,7 +6,7 @@ Contractors (3.3.0): the supplier and the person there, by name - includes/task_
 function apiTaskContractor(PDO $conn, int $taskId): ?array
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 56.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 57.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

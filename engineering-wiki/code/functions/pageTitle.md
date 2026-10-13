@@ -23,7 +23,7 @@ Returns plain text - escape it where it is printed.
 function pageTitle(?string $module = null, ?string ...$parts): string
 ```
 
-Defined in [includes/system_name.php](/code/files/includes/system_name.php.md), line 57.
+Defined in [includes/system_name.php](/code/files/includes/system_name.php.md), line 58.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -29,7 +29,9 @@ requireModuleAccessJson('lms', $conn);
 requireCapabilityJson(Cap::LMS_TESTS, $conn);
 $me = (int)$_SESSION['analyst_id'];
 
+/** Echoes {success: true} merged with $a as JSON, then stops. */
 function ctOut(array $a): void { echo json_encode(['success' => true] + $a, JSON_UNESCAPED_UNICODE); exit; }
+/** Sends an HTTP status and {success: false, error}, then stops. */
 function ctFail(string $e, int $code = 400): void { http_response_code($code); echo json_encode(['success' => false, 'error' => $e]); exit; }
 
 /** A sitting row as the analyst pages see it - never the token hash. */
@@ -53,6 +55,10 @@ function ctSittingRow(array $s): array
     ];
 }
 
+/**
+ * Loads one candidate sitting with its test's title, or answers 404 "Candidate not
+ * found" and stops.
+ */
 function ctLoadSitting(PDO $conn, int $id): array
 {
     $st = $conn->prepare("SELECT s.*, t.title AS test_title FROM lms_ct_sittings s LEFT JOIN lms_ct_tests t ON t.id = s.test_id WHERE s.id = ?");

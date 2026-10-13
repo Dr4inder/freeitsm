@@ -1,10 +1,12 @@
 # rpBucketKey()
 
+The bucket a date falls in: the Monday of its week, its month (Y-m) or its day.
+
 ```php
 function rpBucketKey(DateTimeImmutable $d, string $grouping): string
 ```
 
-Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 125.
+Defined in [includes/report_packs/blocks_tickets.php](/code/files/includes/report_packs/blocks_tickets.php.md), line 127.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

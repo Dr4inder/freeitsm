@@ -334,6 +334,10 @@ function spreadsheetInlineText($node): string
     return $s;
 }
 
+/**
+ * Parses one XML part of an .xlsx file safely (no network, no entity expansion); null when
+ * empty or not valid XML.
+ */
 function spreadsheetXml(?string $xml)
 {
     if ($xml === null || $xml === '') return null;

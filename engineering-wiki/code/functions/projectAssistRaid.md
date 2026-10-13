@@ -6,7 +6,7 @@ args: project, type (risk | assumption | issue | dependency | decision | lesson)
 function projectAssistRaid(PDO $conn, array $scope, array $args): string
 ```
 
-Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 204.
+Defined in [includes/projects/assistant.php](/code/files/includes/projects/assistant.php.md), line 209.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

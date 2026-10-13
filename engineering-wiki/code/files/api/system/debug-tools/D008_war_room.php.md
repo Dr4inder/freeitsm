@@ -1,6 +1,6 @@
 # api/system/debug-tools/D008_war_room.php
 
-> API endpoint - 345 lines
+> API endpoint - 355 lines
 
 D008 — War room health.
 
@@ -39,24 +39,24 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 57 |  |
-| [yn()](/code/functions/yn.md) | 61 |  |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 62 |  |
-| [warroomD008Bytes()](/code/functions/warroomD008Bytes.md) | 339 |  |
+| [addSection()](/code/functions/addSection.md) | 61 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [yn()](/code/functions/yn.md) | 66 | Formats a boolean as YES or NO for the report. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 71 | Adds the VERDICT section - the numbered problems found, or an all-clear - then prints every section as plain text and stops. |
+| [warroomD008Bytes()](/code/functions/warroomD008Bytes.md) | 349 | Formats a byte count as B, KB or MB for the report. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 157 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
 | 166 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
-| 167 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
-| 174 |  | read [teams](/code/tables/teams.md), read [warroom_channels](/code/tables/warroom_channels.md) |  |
-| 181 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
-| 209 |  | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
-| 237 |  | read [warroom_messages](/code/tables/warroom_messages.md) |  |
-| 291 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
-| 312 |  | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 175 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
+| 176 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
+| 183 |  | read [teams](/code/tables/teams.md), read [warroom_channels](/code/tables/warroom_channels.md) |  |
+| 190 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
+| 218 |  | read [warroom_attachments](/code/tables/warroom_attachments.md) |  |
+| 246 |  | read [warroom_messages](/code/tables/warroom_messages.md) |  |
+| 300 |  | read [warroom_channels](/code/tables/warroom_channels.md) |  |
+| 321 |  | read [warroom_messages](/code/tables/warroom_messages.md) |  |
 
 ## How it hangs together
 

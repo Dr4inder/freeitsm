@@ -1,6 +1,6 @@
 # api/v1/resources/tickets.php
 
-> API endpoint - 486 lines
+> API endpoint - 508 lines
 
 FreeITSM REST API v1 — tickets resource.
 
@@ -36,37 +36,37 @@ requires the workflow engine for the ticket.* events.)
 
 | Function | Line | What it does |
 |---|--:|---|
-| [apiTicketSelect()](/code/functions/apiTicketSelect.md) | 33 |  |
-| [apiSerializeTicket()](/code/functions/apiSerializeTicket.md) | 54 |  |
-| [apiLoadTicket()](/code/functions/apiLoadTicket.md) | 99 | Load one ticket (with joins) enforcing the key's company scope; 404s if not visible. |
-| [apiTicketsList()](/code/functions/apiTicketsList.md) | 120 | GET /tickets |
-| [apiTicketsGet()](/code/functions/apiTicketsGet.md) | 242 | GET /tickets/{id} |
-| [apiTicketsCreate()](/code/functions/apiTicketsCreate.md) | 260 | POST /tickets |
-| [apiTicketsUpdate()](/code/functions/apiTicketsUpdate.md) | 294 | PATCH /tickets/{id} |
-| [apiTicketsDelete()](/code/functions/apiTicketsDelete.md) | 304 | DELETE /tickets/{id} + POST /tickets/{id}/restore (soft delete / trash) |
-| [apiTicketsRestore()](/code/functions/apiTicketsRestore.md) | 311 |  |
-| [apiTicketNotesList()](/code/functions/apiTicketNotesList.md) | 321 | Notes |
-| [apiTicketNotesCreate()](/code/functions/apiTicketNotesCreate.md) | 341 |  |
-| [apiTicketThreadList()](/code/functions/apiTicketThreadList.md) | 356 | Thread (emails / channel messages) |
-| [apiTicketAuditList()](/code/functions/apiTicketAuditList.md) | 385 | Audit log |
-| [apiTicketSlaGet()](/code/functions/apiTicketSlaGet.md) | 410 | SLA (compute-on-read via includes/sla.php) |
-| [apiRequireTimeTracking()](/code/functions/apiRequireTimeTracking.md) | 432 | Refuse if this ticket's company has switched time tracking off FOR THE API (discussion #72). |
-| [apiTicketTimeEntriesList()](/code/functions/apiTicketTimeEntriesList.md) | 439 |  |
-| [apiTicketTimeEntriesCreate()](/code/functions/apiTicketTimeEntriesCreate.md) | 462 |  |
-| [apiTicketTimeEntriesDelete()](/code/functions/apiTicketTimeEntriesDelete.md) | 479 |  |
+| [apiTicketSelect()](/code/functions/apiTicketSelect.md) | 37 | The SELECT for tickets, with status, priority, type, origin, department, analyst, requester and company names. |
+| [apiSerializeTicket()](/code/functions/apiSerializeTicket.md) | 62 | Shapes a ticket row for the API - number, subject, status (with is_closed), priority, type, origin, department, analyst, requester and the rest of the record. |
+| [apiLoadTicket()](/code/functions/apiLoadTicket.md) | 107 | Load one ticket (with joins) enforcing the key's company scope; 404s if not visible. |
+| [apiTicketsList()](/code/functions/apiTicketsList.md) | 128 | GET /tickets |
+| [apiTicketsGet()](/code/functions/apiTicketsGet.md) | 250 | GET /tickets/{id} |
+| [apiTicketsCreate()](/code/functions/apiTicketsCreate.md) | 268 | POST /tickets |
+| [apiTicketsUpdate()](/code/functions/apiTicketsUpdate.md) | 302 | PATCH /tickets/{id} |
+| [apiTicketsDelete()](/code/functions/apiTicketsDelete.md) | 312 | DELETE /tickets/{id} + POST /tickets/{id}/restore (soft delete / trash) |
+| [apiTicketsRestore()](/code/functions/apiTicketsRestore.md) | 320 | POST /tickets/{id}/restore - restores a deleted ticket through TicketsService and returns it. |
+| [apiTicketNotesList()](/code/functions/apiTicketNotesList.md) | 330 | Notes |
+| [apiTicketNotesCreate()](/code/functions/apiTicketNotesCreate.md) | 354 | POST /tickets/{id}/notes - adds a note to the ticket through TicketsService. Notes are internal unless is_internal is false. |
+| [apiTicketThreadList()](/code/functions/apiTicketThreadList.md) | 369 | Thread (emails / channel messages) |
+| [apiTicketAuditList()](/code/functions/apiTicketAuditList.md) | 398 | Audit log |
+| [apiTicketSlaGet()](/code/functions/apiTicketSlaGet.md) | 423 | SLA (compute-on-read via includes/sla.php) |
+| [apiRequireTimeTracking()](/code/functions/apiRequireTimeTracking.md) | 445 | Refuse if this ticket's company has switched time tracking off FOR THE API (discussion #72). |
+| [apiTicketTimeEntriesList()](/code/functions/apiTicketTimeEntriesList.md) | 456 | GET /tickets/{id}/time-entries - the ticket's active time entries, oldest first. Refused when time tracking is off for the ticket. |
+| [apiTicketTimeEntriesCreate()](/code/functions/apiTicketTimeEntriesCreate.md) | 483 | POST /tickets/{id}/time-entries - logs time on the ticket through TicketsService, returning the minutes and time as stored. |
+| [apiTicketTimeEntriesDelete()](/code/functions/apiTicketTimeEntriesDelete.md) | 501 | DELETE /tickets/{id}/time-entries/{entryId} - deletes a time entry through TicketsService. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 34 | `apiTicketSelect` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [ticket_types](/code/tables/ticket_types.md), read [ticket_origins](/code/tables/ticket_origins.md), read [departments](/code/tables/departments.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
-| 218 | `apiTicketsList` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [users](/code/tables/users.md) |  |
-| 248 | `apiTicketsGet` | read [emails](/code/tables/emails.md) |  |
-| 324 | `apiTicketNotesList` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
-| 359 | `apiTicketThreadList` | read [emails](/code/tables/emails.md) |  |
-| 388 | `apiTicketAuditList` | read [ticket_audit](/code/tables/ticket_audit.md), read [analysts](/code/tables/analysts.md) |  |
-| 443 | `apiTicketTimeEntriesList` | read [ticket_time_entries](/code/tables/ticket_time_entries.md), read [analysts](/code/tables/analysts.md) |  |
-| 468 | `apiTicketTimeEntriesCreate` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
+| 38 | `apiTicketSelect` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [ticket_types](/code/tables/ticket_types.md), read [ticket_origins](/code/tables/ticket_origins.md), read [departments](/code/tables/departments.md), read [analysts](/code/tables/analysts.md), read [users](/code/tables/users.md), read [tenants](/code/tables/tenants.md) |  |
+| 226 | `apiTicketsList` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [users](/code/tables/users.md) |  |
+| 256 | `apiTicketsGet` | read [emails](/code/tables/emails.md) |  |
+| 333 | `apiTicketNotesList` | read [ticket_notes](/code/tables/ticket_notes.md), read [analysts](/code/tables/analysts.md) |  |
+| 372 | `apiTicketThreadList` | read [emails](/code/tables/emails.md) |  |
+| 401 | `apiTicketAuditList` | read [ticket_audit](/code/tables/ticket_audit.md), read [analysts](/code/tables/analysts.md) |  |
+| 460 | `apiTicketTimeEntriesList` | read [ticket_time_entries](/code/tables/ticket_time_entries.md), read [analysts](/code/tables/analysts.md) |  |
+| 489 | `apiTicketTimeEntriesCreate` | read [ticket_time_entries](/code/tables/ticket_time_entries.md) |  |
 
 ## How it hangs together
 

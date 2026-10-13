@@ -6,7 +6,7 @@ One port-43 query. null when the server could not be reached.
 function domainWhoisQuery(string $server, string $query): ?string
 ```
 
-Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 338.
+Defined in [includes/domains/lookup.php](/code/files/includes/domains/lookup.php.md), line 347.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Fetch (and cache) the OpenRouter model catalogue. No API key required. Cached in
 function aiProviderListOpenRouterModels(PDO $conn, bool $force = false): array
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 741.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 745.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,8 +19,8 @@ Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 744 | `aiProviderListOpenRouterModels` | read [system_settings](/code/tables/system_settings.md) |  |
-| 796 | `aiProviderListOpenRouterModels` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
+| 748 | `aiProviderListOpenRouterModels` | read [system_settings](/code/tables/system_settings.md) |  |
+| 800 | `aiProviderListOpenRouterModels` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`) |  |
 
 ## Calls
 

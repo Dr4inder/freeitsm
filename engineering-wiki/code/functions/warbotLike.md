@@ -6,7 +6,7 @@ Escape the LIKE wildcards themselves, or a search for "50%" matches everything.
 function warbotLike(string $s): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 600.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 619.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Change detection's e-mail. Called by DomainsService::runChecks() when something 
 function domainAlertOnChange(PDO $conn, array $row, array $serious): void
 ```
 
-Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 299.
+Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md), line 306.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,7 +20,7 @@ Defined in [includes/domains/alerts.php](/code/files/includes/domains/alerts.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 308 | `domainAlertOnChange` | read [analysts](/code/tables/analysts.md) |  |
+| 315 | `domainAlertOnChange` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 

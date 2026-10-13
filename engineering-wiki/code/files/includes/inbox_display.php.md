@@ -2,6 +2,33 @@
 
 > PHP - 203 lines
 
+What each ticket row in the inbox middle pane shows, and how.
+
+── Why this is a setting rather than a decision ─────────────────────────────
+
+GitHub discussion #61 asked for two things: the assigned agent on the row, and
+a coloured priority indicator. The request was to REPLACE the description
+preview with "Assigned to: …", which is the one thing not done here — that line
+is the only content signal in the row, and it is how you tell "printer jammed
+again" from something that needs reading now.
+
+Everything else is offered rather than chosen, because row density is genuinely
+personal: a manager scanning a queue for breaches wants different chips from
+somebody working one department all day. Hence per-analyst, over an install
+default an administrator sets for everyone who has not chosen.
+
+── The one real design constraint ───────────────────────────────────────────
+
+⚠️ THE ROW ALREADY HAS A COLOURED DOT, AND IT ALREADY MEANS SOMETHING.
+`.email-sla-pill` carries an SLA dot in red / amber / green. Priority in a
+traffic-light palette is the obvious second dot and would be actively harmful:
+red would mean "about to breach" in one place and "Critical" in another, in the
+same row, and those call for different actions.
+
+That is why STRIPE and BLOCK exist as styles at all, and why the shipped
+default puts priority on the left edge rather than in the footer. Anyone who
+prefers a dot can still choose one — they just have to choose it.
+
 ## Functions
 
 | Function | Line | What it does |

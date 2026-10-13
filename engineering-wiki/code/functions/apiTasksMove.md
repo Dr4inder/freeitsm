@@ -6,7 +6,7 @@ POST /tasks/{id}/move — kanban move (mirrors reorder.php: NO workflow event)
 function apiTasksMove(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 391.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 400.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

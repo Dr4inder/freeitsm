@@ -25,6 +25,10 @@ require_once dirname(__DIR__, 3) . '/includes/services/cost_centres.php';
 /** The most rows one sync call may carry. Bigger lists: split them by company. */
 const API_COST_CENTRE_SYNC_MAX = 10000;
 
+/**
+ * The SELECT for cost centres, with the parent's code and name, the company name and the
+ * number of child cost centres.
+ */
 function apiCostCentreSelect(): string {
     return "SELECT c.*, p.code AS parent_code, p.name AS parent_name, t.name AS company_name,
                    (SELECT COUNT(*) FROM cost_centres k WHERE k.parent_id = c.id) AS child_count
@@ -33,6 +37,10 @@ function apiCostCentreSelect(): string {
          LEFT JOIN tenants t ON t.id = c.tenant_id";
 }
 
+/**
+ * Shapes a cost centre row for the API - code, name, description, parent, active flag,
+ * company, child count and dates.
+ */
 function apiSerializeCostCentre(array $r): array {
     return [
         'id'          => (int)$r['id'],
@@ -68,6 +76,10 @@ function apiCostCentreCompany(PDO $conn, array $apiKey, $raw): int {
     return $tenantId;
 }
 
+/**
+ * Answers 503 and stops when the cost centre tables are not there yet (Database
+ * Verification has not been run).
+ */
 function apiCostCentresReady(PDO $conn): void {
     if (!CostCentresService::ready($conn)) {
         apiError(503, 'not_ready', 'Cost centres are not set up on this install yet: an administrator needs to run System > Database Verification.');

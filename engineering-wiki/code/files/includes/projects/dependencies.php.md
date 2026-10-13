@@ -2,6 +2,24 @@
 
 > PHP - 119 lines
 
+Projects - task dependencies and the critical path (3.3.0).
+
+A dependency is FINISH-TO-START: task_id cannot start until depends_on_id
+has finished, plus lag_days. Both tasks belong to the same project (checked
+when it is made; a task later moved out of the project is simply left out on
+read). Everything else is worked out, never stored:
+
+  waiting_on  an OPEN task whose predecessor is not finished - "blocked by a
+              dependency", in the status breakdown and on the Plan
+  clash       the task is planned to start before its predecessor (plus the
+              lag) is due to finish - the plan cannot be true as written
+  critical    on the critical path: no slack. A forward pass (earliest start
+              = the later of its own start and every predecessor's finish +
+              lag + 1) and a backward pass from the latest finish; slack =
+              latest start - earliest start. Only dated tasks take part.
+
+Cycles are refused when a dependency is made (projectDependencyMakesCycle).
+
 ## Functions
 
 | Function | Line | What it does |

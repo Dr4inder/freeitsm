@@ -6,7 +6,7 @@ Every rate, [scope][ref] => [[from, rate], ...] newest first. Cached per request
 function projectLabourRates(PDO $conn): array
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 84.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 88.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.p
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 89 | `projectLabourRates` | read [project_labour_rates](/code/tables/project_labour_rates.md) |  |
+| 93 | `projectLabourRates` | read [project_labour_rates](/code/tables/project_labour_rates.md) |  |
 
 ## Called from
 

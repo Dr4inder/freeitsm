@@ -9,7 +9,7 @@ selected drops out instead of being counted as a member that no longer exists.
 function wtItemMembers(PDO $conn, string $itemKey): ?array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 326.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 329.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -22,8 +22,8 @@ Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 333 | `wtItemMembers` | read [watchtower_items](/code/tables/watchtower_items.md) |  |
-| 338 | `wtItemMembers` | read [watchtower_item_members](/code/tables/watchtower_item_members.md) |  |
+| 336 | `wtItemMembers` | read [watchtower_items](/code/tables/watchtower_items.md) |  |
+| 341 | `wtItemMembers` | read [watchtower_item_members](/code/tables/watchtower_item_members.md) |  |
 
 ## Calls
 

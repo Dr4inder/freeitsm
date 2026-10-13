@@ -1,6 +1,6 @@
 # assets/js/ai-settings.js
 
-> JavaScript - 270 lines
+> JavaScript - 301 lines
 
 Drives the reusable AI settings panel (includes/ai_settings_panel.php).
 
@@ -21,18 +21,18 @@ scroll, so it can never move the page.
 
 | Function | Line | What it does |
 |---|--:|---|
-| `tr(key, fallback)` | 20 |  |
-| `toast(msg, type)` | 30 |  |
-| `esc(s)` | 34 |  |
-| `fmtPrice(perToken)` | 40 |  |
-| `initPanel(panel)` | 47 |  |
-| `setResult(text, cls)` | 75 |  |
-| `renderMenu()` | 81 |  |
-| `showMenu()` | 97 |  |
-| `hideMenu()` | 98 |  |
-| `setCuratedModels(provider)` | 113 |  |
-| `loadOpenRouterModels()` | 118 |  |
-| `applyProviderUi(provider, opts)` | 136 |  |
+| `tr(key, fallback)` | 24 | Translates a key under common.ai, falling back to the given English when there is no translation. |
+| `toast(msg, type)` | 35 | Shows a toast when the page has the shared toast helper. |
+| `esc(s)` | 40 | Escapes text for safe use inside HTML. |
+| `fmtPrice(perToken)` | 50 | Turns an OpenRouter per-token price into dollars per million tokens, such as "$3.00" - null when there is no price. |
+| `initPanel(panel)` | 61 | Wires one AI settings panel: the provider switch, the model dropdown, the Azure fields, Save and Test, then fills it from the saved settings for its namespace. |
+| `setResult(text, cls)` | 90 | Shows a result line under the panel's buttons, styled by cls (for example 'err'). |
+| `renderMenu()` | 100 | Fills the model dropdown with up to 50 suggestions matching what has been typed, with prices for OpenRouter models. |
+| `showMenu()` | 117 | Opens the model dropdown. |
+| `hideMenu()` | 119 | Closes the model dropdown. |
+| `setCuratedModels(provider)` | 135 | Uses the built-in model list for a provider as the dropdown's suggestions. |
+| `loadOpenRouterModels()` | 144 | Fetches the live OpenRouter model catalogue with prices and uses it as the dropdown's suggestions. |
+| `applyProviderUi(provider, opts)` | 167 | Shows the fields a provider needs - the Azure boxes instead of the model for Azure OpenAI, the OpenRouter note and live catalogue for OpenRouter - and resets the model to that provider's default unless opts.keepModel. |
 
 ## Loaded by
 

@@ -1,10 +1,12 @@
 # apiLoadContract()
 
+Loads one contract row the key may see (apiContractVisibility), or answers 404 and stops.
+
 ```php
 function apiLoadContract(PDO $conn, int $contractId, array $apiKey): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 128.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 138.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

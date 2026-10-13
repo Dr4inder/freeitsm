@@ -1109,6 +1109,7 @@ class TicketsService
         return in_array($tid, $ctx->companyScope, true);
     }
 
+    /** Records one field change in the ticket's audit trail. */
     private static function auditWrite(PDO $conn, int $ticketId, int $analystId, string $field, ?string $old, ?string $new): void
     {
         $conn->prepare(
@@ -1192,6 +1193,10 @@ class TicketsService
         }
     }
 
+    /**
+     * The ticket type a category is bound to, taken from its top-level category; null when
+     * unbound or it cannot be worked out.
+     */
     private static function categoryEffectiveTypeId(PDO $conn, int $categoryId): ?int
     {
         $cur   = $categoryId;
@@ -1216,6 +1221,7 @@ class TicketsService
         return null;
     }
 
+    /** The name of a row in a lookup table, or null for no id; throws for an unknown id. */
     private static function validateLookupId(PDO $conn, string $table, $id, string $label): ?string
     {
         if ($id === null || $id === '') {

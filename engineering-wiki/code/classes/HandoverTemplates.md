@@ -12,16 +12,16 @@
 | [mergeCodes()](#mergecodes) | Merge codes, as code => description key. |
 | [defaultBlocks()](#defaultblocks) | The template used when nobody has made one — the document as it shipped. |
 | [sanitiseBlocks()](#sanitiseblocks) | Force whatever arrived from the browser into the shape above. |
-| [listAll()](#listall) |  |
-| [load()](#load) |  |
+| [listAll()](#listall) | Every handover template (id, name, default, active, updated), the default first; empty before the table exists. |
+| [load()](#load) | Loads one handover template with its blocks cleaned, or null when it does not exist. |
 | [effective()](#effective) | The template a handover document should use. |
-| [save()](#save) |  |
+| [save()](#save) | Adds or updates a handover template and returns its id; can also make it the default. |
 | [makeDefault()](#makedefault) | Exactly one default. Cleared for everyone else in the same breath. |
-| [delete()](#delete) |  |
+| [delete()](#delete) | Deletes a handover template. |
 | [mergeValues()](#mergevalues) | The values merge codes resolve to, for this person on this day. |
 | [mergeText()](#mergetext) | Escape first, substitute second. |
 | [renderBlocks()](#renderblocks) | Render the document body as HTML. |
-| [renderAssetTable()](#renderassettable) |  |
+| [renderAssetTable()](#renderassettable) | The HTML table of the handed-over assets, with the chosen columns including custom asset fields. |
 
 ### catalogue
 
@@ -141,7 +141,9 @@ function sanitiseBlocks($input): array
 
 ### listAll
 
-*public static* - line 231
+*public static* - line 235
+
+Every handover template (id, name, default, active, updated), the default first; empty before the table exists.
 
 ```php
 function listAll(PDO $conn): array
@@ -155,13 +157,15 @@ function listAll(PDO $conn): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 235 | `HandoverTemplates::listAll` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
+| 239 | `HandoverTemplates::listAll` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
 
 **Called from:** [api/assets/handover_templates.php](/code/files/api/assets/handover_templates.php.md)
 
 ### load
 
-*public static* - line 249
+*public static* - line 254
+
+Loads one handover template with its blocks cleaned, or null when it does not exist.
 
 ```php
 function load(PDO $conn, int $id): ?array
@@ -176,13 +180,13 @@ function load(PDO $conn, int $id): ?array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 252 | `HandoverTemplates::load` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
+| 257 | `HandoverTemplates::load` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
 
 **Called from:** [api/assets/handover_templates.php](/code/files/api/assets/handover_templates.php.md)
 
 ### effective
 
-*public static* - line 270
+*public static* - line 275
 
 The template a handover document should use.
 
@@ -203,13 +207,15 @@ function effective(PDO $conn, ?int $id = null): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 285 | `HandoverTemplates::effective` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
+| 290 | `HandoverTemplates::effective` | read [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
 
 **Called from:** [api/assets/email_handover.php](/code/files/api/assets/email_handover.php.md), [asset-management/handover.php](/code/files/asset-management/handover.php.md)
 
 ### save
 
-*public static* - line 300
+*public static* - line 306
+
+Adds or updates a handover template and returns its id; can also make it the default.
 
 ```php
 function save(PDO $conn, array $in): int
@@ -224,14 +230,14 @@ function save(PDO $conn, array $in): int
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 312 | `HandoverTemplates::save` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`name`, `blocks`, `is_active`, `updated_datetime`) |  |
-| 318 | `HandoverTemplates::save` | **insert** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`name`, `blocks`, `is_active`, `created_datetime`, `updated_datetime`) |  |
+| 318 | `HandoverTemplates::save` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`name`, `blocks`, `is_active`, `updated_datetime`) |  |
+| 324 | `HandoverTemplates::save` | **insert** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`name`, `blocks`, `is_active`, `created_datetime`, `updated_datetime`) |  |
 
 **Called from:** [api/assets/handover_templates.php](/code/files/api/assets/handover_templates.php.md)
 
 ### makeDefault
 
-*public static* - line 331
+*public static* - line 337
 
 Exactly one default. Cleared for everyone else in the same breath.
 
@@ -248,14 +254,16 @@ function makeDefault(PDO $conn, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 333 | `HandoverTemplates::makeDefault` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`is_default`) |  |
-| 334 | `HandoverTemplates::makeDefault` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`is_default`, `is_active`) |  |
+| 339 | `HandoverTemplates::makeDefault` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`is_default`) |  |
+| 340 | `HandoverTemplates::makeDefault` | **update** [asset_handover_templates](/code/tables/asset_handover_templates.md) (`is_default`, `is_active`) |  |
 
 **Called from:** [api/assets/handover_templates.php](/code/files/api/assets/handover_templates.php.md)
 
 ### delete
 
-*public static* - line 337
+*public static* - line 344
+
+Deletes a handover template.
 
 ```php
 function delete(PDO $conn, int $id): void
@@ -270,13 +278,13 @@ function delete(PDO $conn, int $id): void
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 339 | `HandoverTemplates::delete` | **delete** [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
+| 346 | `HandoverTemplates::delete` | **delete** [asset_handover_templates](/code/tables/asset_handover_templates.md) |  |
 
 **Called from:** [api/assets/handover_templates.php](/code/files/api/assets/handover_templates.php.md)
 
 ### mergeValues
 
-*public static* - line 347
+*public static* - line 354
 
 The values merge codes resolve to, for this person on this day.
 
@@ -292,7 +300,7 @@ function mergeValues(array $user, array $assets, ?string $analystName): array
 
 ### mergeText
 
-*private static* - line 367
+*private static* - line 374
 
 Escape first, substitute second.
 
@@ -312,7 +320,7 @@ function mergeText(string $text, array $values): string
 
 ### renderBlocks
 
-*public static* - line 382
+*public static* - line 389
 
 Render the document body as HTML.
 
@@ -335,7 +343,9 @@ function renderBlocks(array $blocks, array $user, array $assets, array $opts = [
 
 ### renderAssetTable
 
-*private static* - line 466
+*private static* - line 474
+
+The HTML table of the handed-over assets, with the chosen columns including custom asset fields.
 
 ```php
 function renderAssetTable(array $assets, array $cols, callable $L): string

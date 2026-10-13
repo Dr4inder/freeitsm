@@ -1,5 +1,8 @@
 # ticketViewsReady()
 
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Ticket Views Developer Guide](https://github.com/edmozley/freeitsm/wiki/Ticket-Views-Developer-Guide)
+
 Who has looked at a ticket (discussion #62, step 2).
 
 WHY
@@ -31,7 +34,7 @@ db_verify_indexes.php - without it every view would be a new row.
 function ticketViewsReady(PDO $conn): bool
 ```
 
-Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 31.
+Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md), line 33.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -43,7 +46,7 @@ Defined in [includes/ticket_views.php](/code/files/includes/ticket_views.php.md)
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 36 | `ticketViewsReady` | read [ticket_views](/code/tables/ticket_views.md) |  |
+| 38 | `ticketViewsReady` | read [ticket_views](/code/tables/ticket_views.md) |  |
 
 ## Called from
 

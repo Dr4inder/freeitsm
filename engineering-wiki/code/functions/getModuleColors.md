@@ -1,16 +1,20 @@
 # getModuleColors()
 
+Every module's colour pair, the built-in defaults overridden by any module_color_* system setting.
+
+Cached per request; if the database cannot be read the defaults are returned.
+
 ```php
 function getModuleColors()
 ```
 
-Defined in [includes/module-colors.php](/code/files/includes/module-colors.php.md), line 51.
+Defined in [includes/module-colors.php](/code/files/includes/module-colors.php.md), line 57.
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 65 | `getModuleColors` | read [system_settings](/code/tables/system_settings.md) |  |
+| 71 | `getModuleColors` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

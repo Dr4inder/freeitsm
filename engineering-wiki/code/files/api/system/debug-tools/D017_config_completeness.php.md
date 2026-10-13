@@ -1,6 +1,6 @@
 # api/system/debug-tools/D017_config_completeness.php
 
-> API endpoint - 152 lines
+> API endpoint - 160 lines
 
 Debug Tool D017 — is anything missing from config.php?
 
@@ -35,8 +35,8 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 50 |  |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 54 |  |
+| [addSection()](/code/functions/addSection.md) | 54 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 62 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
 
 ## How it hangs together
 

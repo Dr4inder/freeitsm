@@ -6,7 +6,7 @@ The manager's own row, or null if they cannot be a manager (missing, or left).
 function managerRow(PDO $conn, int $managerUserId): ?array
 ```
 
-Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 108.
+Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 109.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/managers.php](/code/files/includes/managers.php.md), line 1
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 110 | `managerRow` | read [users](/code/tables/users.md) |  |
+| 111 | `managerRow` | read [users](/code/tables/users.md) |  |
 
 ## Called from
 

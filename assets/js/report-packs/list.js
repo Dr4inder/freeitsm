@@ -3,11 +3,14 @@
  *
  * Everything a pack's name or description contains goes onto the page with
  * textContent, never innerHTML: a shared pack's name is somebody else's text.
+ *
+ * @wiki Report-Packs-Developer-Guide
  */
 (function () {
     'use strict';
 
     const API = window.RP_API;
+    /** Translates a key under reporting.packs.*, or returns the key when the i18n helper is not loaded. */
     const T = (k, p) => (window.t ? window.t('reporting.packs.' + k, p) : k);
 
     let packs = [];
@@ -15,6 +18,10 @@
     let deleting = null;
     let sharing = null;         // {id, shares[], analysts[], teams[], departments[]}
 
+    /**
+     * Creates an element with an optional class and text, set through textContent so names are never
+     * read as HTML.
+     */
     function el(tag, cls, text) {
         const e = document.createElement(tag);
         if (cls) e.className = cls;
@@ -22,6 +29,13 @@
         return e;
     }
 
+    /**
+     * Calls a Report Packs API endpoint - a GET with no body, a JSON POST with one - and returns the
+     * reply.
+     *
+     * Throws an Error with the server's message (and the reply on err.data) when success is false or
+     * the reply is not JSON.
+     */
     async function api(path, body) {
         const opts = body === undefined ? {} : {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
@@ -34,6 +48,7 @@
         return data;
     }
 
+    /** Loads the packs the analyst can see from list.php and renders the grid, or shows the error in it. */
     async function load() {
         const grid = document.getElementById('rpGrid');
         try {
@@ -46,6 +61,10 @@
 
     const ROLE_LABEL = { owner: 'list.role_owner', edit: 'list.role_edit', view: 'list.role_view' };
 
+    /**
+     * Renders the pack cards that match the search box, the first-run empty state when there are no
+     * packs, or a no-match message.
+     */
     function render() {
         const grid = document.getElementById('rpGrid');
         const q = (document.getElementById('rpSearch').value || '').trim().toLowerCase();
@@ -65,6 +84,10 @@
         grid.replaceChildren(...shown.map(card));
     }
 
+    /**
+     * Builds one pack card - title, description, role, last change and the Open / Copy / Share /
+     * Delete actions the analyst's role allows.
+     */
     function card(p) {
         const c = el('article', 'rp-card');
         c.tabIndex = 0;
@@ -93,6 +116,7 @@
         c.append(body);
 
         const actions = el('div', 'rp-card-actions');
+        /** Adds an action link to the card that runs fn without also opening the pack. */
         const add = (label, fn, cls) => { const b = el('button', 'rp-link' + (cls ? ' ' + cls : ''), label); b.onclick = (e) => { e.stopPropagation(); fn(); }; actions.append(b); };
         add(p.role === 'view' ? T('list.open_view') : T('list.open'), () => open(p.id));
         add(T('list.copy'), () => openNew(p));
@@ -104,6 +128,7 @@
         return c;
     }
 
+    /** Opens a pack in the designer. */
     function open(id) { window.location.href = 'designer.php?id=' + encodeURIComponent(id); }
 
     // ── Modals ──────────────────────────────────────────────────────────
@@ -113,17 +138,20 @@
         const first = m.querySelector('input, select, button');
         if (first) setTimeout(() => first.focus(), 50);
     }
+    /** Hides a modal by id. */
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') document.querySelectorAll('.modal.active').forEach(m => m.classList.remove('active'));
     });
 
+    /** Shows a message in a dialog's error box, or hides the box when the message is empty. */
     function showError(id, msg) {
         const e = document.getElementById(id);
         e.textContent = msg || '';
         e.hidden = !msg;
     }
 
+    /** Opens the New pack dialog, or the Copy dialog prefilled from a pack when one is passed. */
     function openNew(from) {
         copyOf = from && from.id ? from : null;
         document.getElementById('rpNewTitle').textContent = copyOf ? T('list.copy_title') : T('list.new_title');
@@ -134,6 +162,7 @@
         openModal('rpNewModal');
     }
 
+    /** Creates the pack (or the copy) through create.php and opens it in the designer; a name is required. */
     async function create() {
         const name = document.getElementById('rpNewName').value.trim();
         if (!name) { showError('rpNewError', T('err.name_required')); return; }
@@ -151,11 +180,16 @@
         if (e.key === 'Enter' && document.getElementById('rpNewModal').classList.contains('active') && e.target.tagName === 'INPUT') create();
     });
 
+    /** Opens the delete confirmation for a pack. */
     function askDelete(p) {
         deleting = p;
         document.getElementById('rpDeleteText').textContent = T('list.delete_confirm', { name: p.name });
         openModal('rpDeleteModal');
     }
+    /**
+     * Deletes the pack through delete.php, removes it from the grid and closes the dialog; an error
+     * replaces the confirmation text.
+     */
     async function confirmDelete() {
         if (!deleting) return;
         try {
@@ -185,6 +219,10 @@
         }
     }
 
+    /**
+     * Returns the analysts, teams or departments that can be picked as share targets, as label / id
+     * pairs.
+     */
     function targetsFor(type) {
         if (!sharing) return [];
         if (type === 'analyst') return sharing.analysts.map(a => ({ id: a.id, label: a.name + (a.department ? ' (' + a.department + ')' : '') }));
@@ -192,6 +230,7 @@
         return sharing.departments.map(d => ({ value: d, label: d }));
     }
 
+    /** Refills the share target suggestions for the chosen type and clears the input. */
     function fillShareTargets() {
         const type = document.getElementById('rpShareType').value;
         const dl = document.getElementById('rpShareTargets');
@@ -201,6 +240,12 @@
         input.placeholder = T('share.pick_' + type);
     }
 
+    /**
+     * Adds the typed analyst, team or department to the pack's share list, or updates its level if
+     * already there.
+     *
+     * A department need not exist yet; an analyst or team must match one in the list.
+     */
     function addShare() {
         showError('rpShareError', '');
         const type = document.getElementById('rpShareType').value;
@@ -216,6 +261,7 @@
             if (!hit) { showError('rpShareError', T('share.not_found')); return; }
             entry = { type, id: hit.id, label: type === 'analyst' ? sharing.analysts.find(a => a.id === hit.id).name : hit.label, can_edit: canEdit };
         }
+        /** Returns the identity of a share - type plus id, or the lower-cased name for a department. */
         const key = s => s.type + ':' + (s.type === 'department' ? String(s.value).toLowerCase() : s.id);
         const existing = sharing.shares.findIndex(s => key(s) === key(entry));
         if (existing >= 0) sharing.shares[existing].can_edit = canEdit; else sharing.shares.push(entry);
@@ -225,6 +271,7 @@
 
     const TYPE_ICON = { analyst: '👤', team: '👥', department: '🏢' };
 
+    /** Renders the share list with a view / edit level picker and a Remove link per entry. */
     function renderShares() {
         const list = document.getElementById('rpShareList');
         if (!sharing.shares.length) { list.replaceChildren(el('li', 'rp-share-empty', T('share.none'))); return; }
@@ -246,6 +293,10 @@
         }));
     }
 
+    /**
+     * Saves the whole share list through shares.php, then closes the dialog and refreshes the card's
+     * shared marker.
+     */
     async function saveShares() {
         if (!sharing) return;
         try {

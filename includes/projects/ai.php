@@ -358,6 +358,10 @@ function projectAiReady(PDO $conn): bool
     try { return (aiSettingsLoad($conn, 'projects_ai')['api_key'] ?? '') !== ''; } catch (Throwable $e) { return false; }
 }
 
+/**
+ * The instruction given to the AI for a project's Monday briefing - a few short bullets,
+ * most important first.
+ */
 function projectAiBriefingTask(): string
 {
     return 'Write a BRIEFING for the project manager opening this project on a Monday morning: four to seven short bullets, most important first. '

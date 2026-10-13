@@ -1,12 +1,21 @@
 # checklists/includes/header.php
 
-> PHP - 123 lines
+> PHP - 131 lines
+
+> [!TIP]
+> **Developer guide on the GitHub wiki:** [Checklists and SOPs Developer Guide](https://github.com/edmozley/freeitsm/wiki/Checklists-and-SOPs-Developer-Guide)
+
+The Checklists module header - waffle menu, Templates / Settings / Help navigation and the teal styling.
+
+Included by every Checklists page; expects `$current_page` and `$path_prefix`. Reads the
+analyst's checklists_sidebar_mode preference into `$checklistsSidebarMode` ('always' or
+'hover') for the left-panel CSS that follows.
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 17 |  | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 25 |  | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## How it hangs together
 

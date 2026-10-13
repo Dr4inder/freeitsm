@@ -1,10 +1,12 @@
 # rpFail()
 
+Sends a failure JSON reply ({success: false, error}) with an HTTP status, 400 by default.
+
 ```php
 function rpFail(string $message, int $code = 400): void
 ```
 
-Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 24.
+Defined in [includes/report_packs/api_common.php](/code/files/includes/report_packs/api_common.php.md), line 26.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

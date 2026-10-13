@@ -1,10 +1,12 @@
 # domainTlsCertificate()
 
+Reads the certificate a host presents - subject, issuer, dates, days left and names - then says whether it matches the host name and whether the chain verifies against the trusted CA bundle.
+
 ```php
 function domainTlsCertificate(string $host, int $port = 443, int $timeout = 8): array
 ```
 
-Defined in [includes/domains/tls.php](/code/files/includes/domains/tls.php.md), line 25.
+Defined in [includes/domains/tls.php](/code/files/includes/domains/tls.php.md), line 29.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

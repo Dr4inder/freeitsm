@@ -6,7 +6,7 @@ One topic by slug, or null. Slug comes from the page (`$helpSlug`) or the URL.
 function getHelpTopic($slug)
 ```
 
-Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 533.
+Defined in [system/help/_registry.php](/code/files/system/help/_registry.php.md), line 539.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

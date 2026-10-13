@@ -1,10 +1,12 @@
 # mcpToolProjectTasks()
 
+MCP tool: a project's tasks.
+
 ```php
 function mcpToolProjectTasks(PDO $conn, array $args, int $analystId, array $apiKey): string
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 253.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 263.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -14,7 +14,7 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md):360 |  | insert | `analyst_id`, `team_id` |  |
+| [api/system/debug-tools/D001_demo_core_import.php](/code/files/api/system/debug-tools/D001_demo_core_import.php.md):373 |  | insert | `analyst_id`, `team_id` |  |
 | [api/tickets/save_analyst_teams.php](/code/files/api/tickets/save_analyst_teams.php.md):37 |  | delete |  |  |
 | [api/tickets/save_analyst_teams.php](/code/files/api/tickets/save_analyst_teams.php.md):43 |  | insert | `analyst_id`, `team_id` |  |
 | [api/tickets/save_team_analysts.php](/code/files/api/tickets/save_team_analysts.php.md):44 |  | delete |  |  |
@@ -33,20 +33,20 @@
 | [api/tickets/get_team_analysts.php](/code/files/api/tickets/get_team_analysts.php.md) | L28 |  |
 | [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L28, L72 |  |
 | [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | analystSignInTeamMethods L73, analystSignInTeamMemberIds L175 |  |
-| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::teamIds L112 |  |
+| [includes/files/acl.php](/code/files/includes/files/acl.php.md) | FilesAcl::teamIds L113 |  |
 | [includes/functions.php](/code/files/includes/functions.php.md) | getAnalystAllowedModules L153 |  |
-| [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeViewerPrincipals L673 |  |
+| [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeViewerPrincipals L681 |  |
 | [includes/notifications_router.php](/code/files/includes/notifications_router.php.md) | notificationsAudienceFor L192 |  |
-| [includes/projects/settings.php](/code/files/includes/projects/settings.php.md) | projectIsTeam L413 |  |
-| [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md) | projectVisibleSql L72 |  |
+| [includes/projects/settings.php](/code/files/includes/projects/settings.php.md) | projectIsTeam L419 |  |
+| [includes/projects/visibility.php](/code/files/includes/projects/visibility.php.md) | projectVisibleSql L73 |  |
 | [includes/rbac.php](/code/files/includes/rbac.php.md) | getAnalystCapabilities L63 |  |
 | [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md) | rpViewer L38 |  |
-| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) | ProjectReportsService::recipients L239 |  |
+| [includes/services/project_reports.php](/code/files/includes/services/project_reports.php.md) | ProjectReportsService::recipients L242 |  |
 | [includes/sla_notifications.php](/code/files/includes/sla_notifications.php.md) | sla_resolve_recipients L248 |  |
 | [includes/sso_claims.php](/code/files/includes/sso_claims.php.md) | ssoApplyGroupAccess L213 |  |
 | [includes/table_views.php](/code/files/includes/table_views.php.md) | tableViewTeamIds L28 |  |
 | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | getAccessibleTenantIds L214, getAccessibleTenantIds L228 |  |
-| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomEnsureChannels L96, warRoomChannelList L149, warRoomCanAccessChannel L243, warRoomChannelAudience L747, warRoomMyMentions L815, warRoomSearch L1005 ... |  |
-| [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtTeamAnalystIds L164, wtMorningCheckScope L203 |  |
+| [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomEnsureChannels L96, warRoomChannelList L149, warRoomCanAccessChannel L243, warRoomChannelAudience L748, warRoomMyMentions L816, warRoomSearch L1006 ... |  |
+| [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md) | wtTeamAnalystIds L167, wtMorningCheckScope L206 |  |
 | [morning-checks/index.php](/code/files/morning-checks/index.php.md) | L43 |  |
 

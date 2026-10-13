@@ -1,6 +1,6 @@
 # includes/services/tickets.php
 
-> PHP - 1245 lines
+> PHP - 1251 lines
 
 TicketsService — the shared write rules for tickets: create, the unified update (status/priority/lookups/assignment/booleans/schedule/company-move, with closed_datetime, owner sync, template emails, CSAT auto-trigger and the workflow dispatches), soft delete + restore, notes, and time entries.
 
@@ -64,13 +64,13 @@ refused on a trashed ticket (409). The UI converges to these.
 | 1013 | `TicketsService::deleteTimeEntry` | **update** [ticket_time_entries](/code/tables/ticket_time_entries.md) (`is_active`) |  |
 | 1061 | `TicketsService::loadTicket` | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md), read [ticket_priorities](/code/tables/ticket_priorities.md), read [ticket_types](/code/tables/ticket_types.md), read [ticket_origins](/code/tables/ticket_origins.md), read [departments](/code/tables/departments.md), read [analysts](/code/tables/analysts.md), read [tenants](/code/tables/tenants.md) |  |
 | 1099 | `TicketsService::canAccessTicket` | read [tickets](/code/tables/tickets.md) |  |
-| 1115 | `TicketsService::auditWrite` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
-| 1136 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 1139 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 1158 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 1161 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
-| 1186 | `TicketsService::teamName` | read [teams](/code/tables/teams.md) |  |
-| 1200 | `TicketsService::categoryEffectiveTypeId` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
+| 1116 | `TicketsService::auditWrite` | **insert** [ticket_audit](/code/tables/ticket_audit.md) (`ticket_id`, `analyst_id`, `field_name`, `old_value`, `new_value`, `created_datetime`) |  |
+| 1137 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 1140 | `TicketsService::resolveStatus` | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 1159 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 1162 | `TicketsService::resolvePriority` | read [ticket_priorities](/code/tables/ticket_priorities.md) |  |
+| 1187 | `TicketsService::teamName` | read [teams](/code/tables/teams.md) |  |
+| 1205 | `TicketsService::categoryEffectiveTypeId` | read [ticket_categories](/code/tables/ticket_categories.md) |  |
 
 ## How it hangs together
 

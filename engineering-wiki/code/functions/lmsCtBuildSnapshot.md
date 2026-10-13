@@ -6,7 +6,7 @@ Freeze a test into what a candidate will sit. Throws, with a sentence an analyst
 function lmsCtBuildSnapshot(PDO $conn, int $testId): array
 ```
 
-Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 218.
+Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competency_tests.php.md), line 220.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/lms/competency_tests.php](/code/files/includes/lms/competen
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 220 | `lmsCtBuildSnapshot` | read [lms_ct_tests](/code/tables/lms_ct_tests.md) |  |
+| 222 | `lmsCtBuildSnapshot` | read [lms_ct_tests](/code/tables/lms_ct_tests.md) |  |
 
 ## Calls
 

@@ -1,10 +1,12 @@
 # projectLinkKind()
 
+The definition (table, column, module) of one link kind; throws a validation error for an unknown kind.
+
 ```php
 function projectLinkKind(string $kind): array
 ```
 
-Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 70.
+Defined in [includes/projects/links.php](/code/files/includes/projects/links.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

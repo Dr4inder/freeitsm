@@ -28,7 +28,7 @@
 | File | Where | Purpose |
 |---|---|---|
 | [api/rfp-builder/get_consolidated.php](/code/files/api/rfp-builder/get_consolidated.php.md) | L87 |  |
-| [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L28 |  |
+| [api/rfp-builder/get_rfp.php](/code/files/api/rfp-builder/get_rfp.php.md) | L38 |  |
 | [api/rfp-builder/resolve_conflict.php](/code/files/api/rfp-builder/resolve_conflict.php.md) | L45 |  |
 | [includes/rfp_scope.php](/code/files/includes/rfp_scope.php.md) | rfpIdOf L79 |  |
 

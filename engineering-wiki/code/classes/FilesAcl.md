@@ -42,12 +42,12 @@ fine; if that ever stops being true, materialise levels per principal.
 | Method | What it does |
 |---|---|
 | [reset()](#reset) | Forget everything cached - call after changing folders or grants. |
-| [levelKey()](#levelkey) |  |
+| [levelKey()](#levelkey) | The short key for a permission level ('view', 'download', 'upload', 'modify', 'full'), or 'none'. |
 | [tree()](#tree) | Every live (not deleted) folder, keyed by id. |
 | [teamIds()](#teamids) | The teams an analyst is in (active teams only). |
 | [levels()](#levels) | This analyst's level on every folder they can see at all: [folderId => level]. A folder missing from the result is invisible to them. |
-| [level()](#level) |  |
-| [can()](#can) |  |
+| [level()](#level) | The analyst's effective level on one folder - 0 when they have no grant there. |
+| [can()](#can) | True when the analyst's level on the folder is at least `$need` (levels are cumulative). |
 | [entries()](#entries) | Every entry that applies to a folder, for the Permissions window: its own rows, then (while inheriting) each ancestor's, marked with where they came from. Names are resolved here so the window needs nothing else. |
 | [watermark()](#watermark) | Is the viewer watermark on for files in this folder? The nearest folder that says on or off decides; NULL means "as the parent", and nothing set anywhere means off. Follows the folder tree, NOT permission inheritance - a folder that stops inheriting permissions still sits inside its parent. |
 | [path()](#path) | "Finance / Invoices / 2026" - for audit rows, tooltips and the address bar. |
@@ -67,7 +67,9 @@ function reset(): void
 
 ### levelKey
 
-*public static* - line 60
+*public static* - line 61
+
+The short key for a permission level ('view', 'download', 'upload', 'modify', 'full'), or 'none'.
 
 ```php
 function levelKey(int $level): string
@@ -81,7 +83,7 @@ function levelKey(int $level): string
 
 ### tree
 
-*public static* - line 73
+*public static* - line 74
 
 Every live (not deleted) folder, keyed by id.
 
@@ -97,13 +99,13 @@ function tree(PDO $conn): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 77 | `FilesAcl::tree` | read [files_folders](/code/tables/files_folders.md) |  |
+| 78 | `FilesAcl::tree` | read [files_folders](/code/tables/files_folders.md) |  |
 
 **Called from:** [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/list.php](/code/files/api/files/list.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md), [api/files/search.php](/code/files/api/files/search.php.md), [api/files/settings.php](/code/files/api/files/settings.php.md), [api/files/shortcut.php](/code/files/api/files/shortcut.php.md), [api/files/transfer.php](/code/files/api/files/transfer.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md)
 
 ### teamIds
 
-*public static* - line 110
+*public static* - line 111
 
 The teams an analyst is in (active teams only).
 
@@ -120,11 +122,11 @@ function teamIds(PDO $conn, int $analystId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 112 | `FilesAcl::teamIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 113 | `FilesAcl::teamIds` | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
 
 ### levels
 
-*public static* - line 123
+*public static* - line 124
 
 This analyst's level on every folder they can see at all: [folderId => level]. A folder missing from the result is invisible to them.
 
@@ -141,13 +143,15 @@ function levels(PDO $conn, int $analystId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 131 | `FilesAcl::levels` | read [files_permissions](/code/tables/files_permissions.md) |  |
+| 132 | `FilesAcl::levels` | read [files_permissions](/code/tables/files_permissions.md) |  |
 
 **Called from:** [api/files/list.php](/code/files/api/files/list.php.md), [api/files/recent.php](/code/files/api/files/recent.php.md), [api/files/search.php](/code/files/api/files/search.php.md), [api/files/settings.php](/code/files/api/files/settings.php.md), [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md)
 
 ### level
 
-*public static* - line 168
+*public static* - line 170
+
+The analyst's effective level on one folder - 0 when they have no grant there.
 
 ```php
 function level(PDO $conn, int $analystId, int $folderId): int
@@ -163,7 +167,9 @@ function level(PDO $conn, int $analystId, int $folderId): int
 
 ### can
 
-*public static* - line 173
+*public static* - line 176
+
+True when the analyst's level on the folder is at least `$need` (levels are cumulative).
 
 ```php
 function can(PDO $conn, int $analystId, int $folderId, int $need): bool
@@ -178,7 +184,7 @@ function can(PDO $conn, int $analystId, int $folderId, int $need): bool
 
 ### entries
 
-*public static* - line 183
+*public static* - line 186
 
 Every entry that applies to a folder, for the Permissions window: its own rows, then (while inheriting) each ancestor's, marked with where they came from. Names are resolved here so the window needs nothing else.
 
@@ -195,13 +201,13 @@ function entries(PDO $conn, int $folderId): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 198 | `FilesAcl::entries` | read [files_permissions](/code/tables/files_permissions.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
+| 201 | `FilesAcl::entries` | read [files_permissions](/code/tables/files_permissions.md), read [analysts](/code/tables/analysts.md), read [teams](/code/tables/teams.md) |  |
 
 **Called from:** [api/files/folder.php](/code/files/api/files/folder.php.md), [api/files/permissions.php](/code/files/api/files/permissions.php.md)
 
 ### watermark
 
-*public static* - line 233
+*public static* - line 236
 
 Is the viewer watermark on for files in this folder? The nearest folder that says on or off decides; NULL means "as the parent", and nothing set anywhere means off. Follows the folder tree, NOT permission inheritance - a folder that stops inheriting permissions still sits inside its parent.
 
@@ -218,7 +224,7 @@ function watermark(PDO $conn, int $folderId): bool
 
 ### path
 
-*public static* - line 246
+*public static* - line 249
 
 "Finance / Invoices / 2026" - for audit rows, tooltips and the address bar.
 
@@ -235,7 +241,7 @@ function path(PDO $conn, ?int $folderId): string
 
 ### descendants
 
-*public static* - line 261
+*public static* - line 264
 
 Ids of a folder and everything beneath it (live folders only).
 

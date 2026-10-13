@@ -1,10 +1,12 @@
 # projectSettingWrite()
 
+Saves one Projects setting to system_settings (insert or update).
+
 ```php
 function projectSettingWrite(PDO $conn, string $key, string $value): void
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 176.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 178.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +20,7 @@ Defined in [includes/projects/settings.php](/code/files/includes/projects/settin
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 179 | `projectSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
+| 181 | `projectSettingWrite` | **insert** [system_settings](/code/tables/system_settings.md) (`setting_key`, `setting_value`, `updated_datetime`) |  |
 
 ## Called from
 

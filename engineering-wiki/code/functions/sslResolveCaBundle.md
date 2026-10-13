@@ -1,10 +1,12 @@
 # sslResolveCaBundle()
 
+The CA bundle file to verify TLS with: PHP's configured one, else the bundled cacert.pem on Windows, else '' for the system store.
+
 ```php
 function sslResolveCaBundle(): string
 ```
 
-Defined in [includes/ssl.php](/code/files/includes/ssl.php.md), line 46.
+Defined in [includes/ssl.php](/code/files/includes/ssl.php.md), line 50.
 
 **Returns:** `string`
 

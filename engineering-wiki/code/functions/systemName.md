@@ -1,10 +1,12 @@
 # systemName()
 
+The system's name from System -> Branding, or "Service Desk" when it is not set. Cached per request.
+
 ```php
 function systemName(): string
 ```
 
-Defined in [includes/system_name.php](/code/files/includes/system_name.php.md), line 18.
+Defined in [includes/system_name.php](/code/files/includes/system_name.php.md), line 19.
 
 **Returns:** `string`
 
@@ -12,7 +14,7 @@ Defined in [includes/system_name.php](/code/files/includes/system_name.php.md), 
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 25 | `systemName` | read [system_settings](/code/tables/system_settings.md) |  |
+| 26 | `systemName` | read [system_settings](/code/tables/system_settings.md) |  |
 
 ## Calls
 

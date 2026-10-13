@@ -2,6 +2,15 @@
 
 > PHP - 55 lines
 
+The "Back to ..." link (3.5.0, proposed in PR #174): System -> Branding can put a link back to your own site - an intranet, a community website the portal is reached from - at the top of the portal, the analyst screens, or both.
+
+Three system_settings keys, all owned by System -> Branding:
+  back_link_label   the words, e.g. "Back to the intranet" (max 60)
+  back_link_url     http(s) only - checked on save AND here, so a bad stored
+                    value never becomes a javascript: link in every header
+  back_link_where   portal | analyst | both
+Nothing shows until both the label and the address are set.
+
 ## Functions
 
 | Function | Line | What it does |

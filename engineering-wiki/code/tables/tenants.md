@@ -34,9 +34,9 @@ Multi-tenancy foundation — a single install can host multiple client companies
 | [api/domains/accounts.php](/code/files/api/domains/accounts.php.md) | L20 |  |
 | [api/integrations/get_mapping.php](/code/files/api/integrations/get_mapping.php.md) | L53, L62 |  |
 | [api/messaging/save_channel.php](/code/files/api/messaging/save_channel.php.md) | L113 |  |
-| [api/rfp-builder/get_rfps.php](/code/files/api/rfp-builder/get_rfps.php.md) | L24 |  |
+| [api/rfp-builder/get_rfps.php](/code/files/api/rfp-builder/get_rfps.php.md) | L32 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L661, L1672, L1686, L1712, L1736 |  |
-| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L242, L259, L371 |  |
+| [api/system/debug-tools/D003_selfservice_sso.php](/code/files/api/system/debug-tools/D003_selfservice_sso.php.md) | L260, L277, L389 |  |
 | [api/system/get_orphaned_tickets.php](/code/files/api/system/get_orphaned_tickets.php.md) | L27 |  |
 | [api/system/get_sso_providers.php](/code/files/api/system/get_sso_providers.php.md) | L45 |  |
 | [api/system/get_tenant_email_routing.php](/code/files/api/system/get_tenant_email_routing.php.md) | L50 |  |
@@ -52,31 +52,31 @@ Multi-tenancy foundation — a single install can host multiple client companies
 | [api/tickets/manager_access.php](/code/files/api/tickets/manager_access.php.md) | maManager L50 |  |
 | [api/tickets/save_mailbox.php](/code/files/api/tickets/save_mailbox.php.md) | L120 |  |
 | [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) | apiEffectiveCompanyScope L180, apiKeyCheckCompanies L197, apiKeyCheckCompanies L205 |  |
-| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L47 |  |
-| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L48 |  |
-| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbLoadObject L144, apiCmdbObjectsList L259 |  |
-| [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | apiCostCentreSelect L29 |  |
-| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L44, apiDomainAccountsList L395 |  |
-| [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | apiKnowledgeSelect L50 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L37 |  |
-| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectSelect L41 |  |
-| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L34 |  |
+| [api/v1/resources/assets.php](/code/files/api/v1/resources/assets.php.md) | apiAssetSelect L52 |  |
+| [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L53 |  |
+| [api/v1/resources/cmdb.php](/code/files/api/v1/resources/cmdb.php.md) | apiCmdbLoadObject L151, apiCmdbObjectsList L267 |  |
+| [api/v1/resources/cost_centres.php](/code/files/api/v1/resources/cost_centres.php.md) | apiCostCentreSelect L33 |  |
+| [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L48, apiDomainAccountsList L412 |  |
+| [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md) | apiKnowledgeSelect L51 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41 |  |
+| [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectSelect L45 |  |
+| [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L38 |  |
 | [api/webchat/save_widget.php](/code/files/api/webchat/save_widget.php.md) | L91 |  |
 | [asset-management/labels.php](/code/files/asset-management/labels.php.md) | L73, L104 |  |
 | [asset-management/settings/index.php](/code/files/asset-management/settings/index.php.md) | L55 |  |
 | [includes/carddav_create.php](/code/files/includes/carddav_create.php.md) | cardDavCreateContact L174 |  |
 | [includes/contract_party.php](/code/files/includes/contract_party.php.md) | contractOwnerSql L146, contractPartySql L166, contractNormaliseParty L219 |  |
-| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L80 |  |
+| [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L85 |  |
 | [includes/domains/read.php](/code/files/includes/domains/read.php.md) | domainListSelect L39 |  |
-| [includes/files/storage.php](/code/files/includes/files/storage.php.md) | filesDesktopLogo L151 |  |
-| [includes/leases.php](/code/files/includes/leases.php.md) | leaseList L280, leaseDueBack L684 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleListRows L92, peopleCompanies L117, peopleCompanyCards L172, personDetail L201 |  |
+| [includes/files/storage.php](/code/files/includes/files/storage.php.md) | filesDesktopLogo L160 |  |
+| [includes/leases.php](/code/files/includes/leases.php.md) | leaseList L286, leaseDueBack L690 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleListRows L93, peopleCompanies L118, peopleCompanyCards L173, personDetail L202 |  |
 | [includes/projects/read.php](/code/files/includes/projects/read.php.md) | projectListRows L304, projectDetail L348 |  |
 | [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L492 |  |
-| [includes/services/cost_centres.php](/code/files/includes/services/cost_centres.php.md) | CostCentresService::load L113 |  |
+| [includes/services/cost_centres.php](/code/files/includes/services/cost_centres.php.md) | CostCentresService::load L114 |  |
 | [includes/services/tickets.php](/code/files/includes/services/tickets.php.md) | TicketsService::loadTicket L1061 |  |
 | [includes/tenancy.php](/code/files/includes/tenancy.php.md) | tenancyTablesReady L82, tenantCount L109, getDefaultTenantId L138, getDefaultTenantId L140, getAllTenants L154, getTenantById L171 ... |  |
-| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md) | TicketNumbering::resolveTenant L281, TicketNumbering::companyCode L309, TicketNumbering::companyCode L316, TicketNumbering::codeClashes L368 |  |
+| [includes/ticket_numbering.php](/code/files/includes/ticket_numbering.php.md) | TicketNumbering::resolveTenant L288, TicketNumbering::companyCode L316, TicketNumbering::companyCode L323, TicketNumbering::codeClashes L375 |  |
 | [system/sso/index.php](/code/files/system/sso/index.php.md) | L29 |  |
 | [system/sso/provider.php](/code/files/system/sso/provider.php.md) | L61 |  |
 

@@ -1,10 +1,12 @@
 # projectCanCreate()
 
+True when the analyst may create projects - anyone, if the create policy says so, else project managers only.
+
 ```php
 function projectCanCreate(PDO $conn, int $analystId): bool
 ```
 
-Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 398.
+Defined in [includes/projects/settings.php](/code/files/includes/projects/settings.php.md), line 404.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

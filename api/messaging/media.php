@@ -24,6 +24,10 @@ require_once '../../includes/functions.php';
 require_once '../../includes/messaging/messaging.php';
 require_once '../../includes/uploads.php';   // attachmentSendHeaders()
 
+/**
+ * Sends the given HTTP status with a plain "Not found", then stops - every refusal looks
+ * the same, so nothing is revealed about why.
+ */
 function mediaFail(int $code): void
 {
     http_response_code($code);

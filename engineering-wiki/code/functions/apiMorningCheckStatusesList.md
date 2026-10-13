@@ -6,7 +6,7 @@ GET /morning-check-statuses — full list like get_statuses.php (inactive includ
 function apiMorningCheckStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 289.
+Defined in [api/v1/resources/morning_checks.php](/code/files/api/v1/resources/morning_checks.php.md), line 298.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

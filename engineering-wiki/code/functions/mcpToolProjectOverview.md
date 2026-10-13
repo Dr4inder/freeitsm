@@ -1,10 +1,12 @@
 # mcpToolProjectOverview()
 
+MCP tool: one project's overview.
+
 ```php
 function mcpToolProjectOverview(PDO $conn, array $args, int $analystId, array $apiKey): string
 ```
 
-Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 241.
+Defined in [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md), line 249.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

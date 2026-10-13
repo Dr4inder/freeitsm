@@ -1,6 +1,6 @@
 # includes/projects/ai.php
 
-> PHP - 368 lines
+> PHP - 372 lines
 
 Projects - the AI project manager (3.2.0).
 
@@ -36,7 +36,7 @@ draft that a person reads before approving: nothing is written anywhere else.
 | [projectAiSystemPrompt()](/code/functions/projectAiSystemPrompt.md) | 325 | The standing rules every prompt starts with. |
 | [projectAiAsk()](/code/functions/projectAiAsk.md) | 340 | Ask the model. Returns ['text', 'model']. Throws RuntimeException when AI is not set up ('not_configured') or the provider cannot be reached. |
 | [projectAiReady()](/code/functions/projectAiReady.md) | 356 | Is AI set up for Projects? |
-| [projectAiBriefingTask()](/code/functions/projectAiBriefingTask.md) | 361 |  |
+| [projectAiBriefingTask()](/code/functions/projectAiBriefingTask.md) | 365 | The instruction given to the AI for a project's Monday briefing - a few short bullets, most important first. |
 
 ## Database
 

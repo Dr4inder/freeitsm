@@ -1,5 +1,7 @@
 # addCheck()
 
+Appends one result row (key, label, status, detail and an optional fix) to the global `$checks` list the diagnosis returns.
+
 ```php
 function addCheck(
     string $key,
@@ -10,7 +12,7 @@ function addCheck(
 ): void
 ```
 
-Defined in [api/messaging/slack_diagnose.php](/code/files/api/messaging/slack_diagnose.php.md), line 69.
+Defined in [api/messaging/slack_diagnose.php](/code/files/api/messaging/slack_diagnose.php.md), line 73.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

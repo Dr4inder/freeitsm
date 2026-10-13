@@ -19,7 +19,7 @@ function documentVisibilityClause(
 ): array
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 410.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 415.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -34,7 +34,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 425 | `documentVisibilityClause` | read [document_links](/code/tables/document_links.md) |  |
+| 430 | `documentVisibilityClause` | read [document_links](/code/tables/document_links.md) |  |
 
 ## Calls
 

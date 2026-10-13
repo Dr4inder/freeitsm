@@ -6,7 +6,7 @@ Tasks given to a supplier, or to one person there, as a contractor (3.3.0, inclu
 function peopleContractorTasks(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 716.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 719.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,8 +20,8 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 716.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 725 | `peopleContractorTasks` | read [projects](/code/tables/projects.md) |  |
-| 729 | `peopleContractorTasks` | read [projects](/code/tables/projects.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [contacts](/code/tables/contacts.md) |  |
+| 728 | `peopleContractorTasks` | read [projects](/code/tables/projects.md) |  |
+| 732 | `peopleContractorTasks` | read [projects](/code/tables/projects.md), read [tasks](/code/tables/tasks.md), read [task_statuses](/code/tables/task_statuses.md), read [analysts](/code/tables/analysts.md), read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

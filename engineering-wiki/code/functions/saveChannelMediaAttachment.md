@@ -1,5 +1,7 @@
 # saveChannelMediaAttachment()
 
+Stores one downloaded media file as an attachment on the channel message's email row.
+
 ```php
 function saveChannelMediaAttachment(
     PDO $conn,
@@ -10,7 +12,7 @@ function saveChannelMediaAttachment(
 ): array
 ```
 
-Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 962.
+Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest.php.md), line 966.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,7 +28,7 @@ Defined in [includes/messaging/ingest.php](/code/files/includes/messaging/ingest
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 984 | `saveChannelMediaAttachment` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline`) |  |
+| 988 | `saveChannelMediaAttachment` | **insert** [email_attachments](/code/tables/email_attachments.md) (`email_id`, `exchange_attachment_id`, `filename`, `content_type`, `content_id`, `file_path`, `file_size`, `is_inline`) |  |
 
 ## Calls
 

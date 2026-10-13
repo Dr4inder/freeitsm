@@ -32,6 +32,8 @@
  * Failures don't propagate. The engine catches per-step exceptions, logs
  * them in the execution row, and continues. The point is that a buggy
  * workflow can't take down the host module's request.
+ *
+ * @wiki Workflows
  */
 class WorkflowEngine
 {
@@ -924,6 +926,7 @@ class WorkflowEngine
         return implode(' · ', array_map([self::class, 'humaniseSegment'], $parts));
     }
 
+    /** One dot-path segment as a label: underscores to spaces, a trailing " id" dropped, first letter capitalised ("id" alone becomes "ID"). */
     private static function humaniseSegment(string $seg): string
     {
         $s = str_replace('_', ' ', $seg);
@@ -934,6 +937,7 @@ class WorkflowEngine
         return ucfirst(trim($s));
     }
 
+    /** The condition operators the editor offers, as operator key => label; evaluateOperator() implements each one. */
     public static function availableOperators(): array
     {
         return [
@@ -1566,6 +1570,20 @@ class WorkflowEngine
         ];
     }
 
+    /**
+     * Runs one workflow against one event: adds {{event}} and the readable
+     * lookup names to the payload, records a running execution, checks the
+     * conditions, runs the actions (or previews them on a dry run) and stores
+     * the outcome and step log.
+     *
+     * Conditions that fail make the run "skipped"; an exception makes it
+     * "failed". Last-run stats on the workflow are updated only for real,
+     * non-manual runs.
+     *
+     * @writes workflow_executions - one row per run, with the payload and step log
+     * @writes workflows(last_run_datetime, last_run_status, run_count)
+     * @return array execution_id, workflow_id, status, is_dry_run, step_log, error_message
+     */
     private static function runInner(array $wf, string $event, array $payload, bool $isManual, bool $dryRun = false): array
     {
         $conn = connectToDatabase();
@@ -1691,6 +1709,11 @@ class WorkflowEngine
     //  Conditions
     // -----------------------------------------------------------------
 
+    /**
+     * True when every condition matches the payload (AND), or there are none.
+     * Each condition checked is added to the step log, and checking stops at the
+     * first that fails.
+     */
     private static function evaluateConditions(array $conditions, array $payload, array &$stepLog): bool
     {
         if (empty($conditions)) {
@@ -1716,6 +1739,7 @@ class WorkflowEngine
         return true;
     }
 
+    /** Applies one condition operator to the payload value and the configured value; numeric operators need both sides numeric. */
     private static function evaluateOperator(string $op, $actual, $value): bool
     {
         switch ($op) {
@@ -1758,6 +1782,7 @@ class WorkflowEngine
         return false;
     }
 
+    /** Compares two values as strings, so a typed-in "4" equals a numeric id 4; null also equals an empty string. */
     private static function loose_equal($a, $b): bool
     {
         // Cast both to string for comparison so the editor's typed-in values
@@ -1770,6 +1795,7 @@ class WorkflowEngine
     //  Action handlers
     // -----------------------------------------------------------------
 
+    /** Hands one action to its action_* handler by type and returns the handler's result; an unknown type throws. */
     private static function executeAction(string $type, array $args, array $payload)
     {
         switch ($type) {
@@ -1952,6 +1978,10 @@ class WorkflowEngine
         $payload['last'] = $result;
     }
 
+    /**
+     * Replaces each {{path.to.field}} in a string with the payload value at that
+     * dot path - empty when missing, JSON when the value is an array.
+     */
     private static function renderTemplate(string $tmpl, array $payload): string
     {
         return preg_replace_callback('/\{\{\s*([^}]+?)\s*\}\}/', function ($m) use ($payload) {
@@ -2003,6 +2033,13 @@ class WorkflowEngine
         return !in_array($s, ['0', 'false', 'no', 'off'], true);
     }
 
+    /**
+     * attach_checklist: copies each chosen checklist template, with its items,
+     * onto the ticket, skipping templates already attached. No templates chosen
+     * is a skip, not an error.
+     *
+     * @writes ticket_checklists, ticket_checklist_items - the attached copies
+     */
     private static function action_attach_checklist(array $args, array $payload): array
     {
         $ticketId = self::argInt($args, 'ticket_id', $payload);
@@ -2070,6 +2107,7 @@ class WorkflowEngine
         ];
     }
 
+    /** log_message: puts the rendered message into the run's step log and changes nothing else. */
     private static function action_log_message(array $args, array $payload): array
     {
         $message = self::argString($args, 'message', $payload);
@@ -2077,6 +2115,15 @@ class WorkflowEngine
         return ['message' => $message];
     }
 
+    /**
+     * set_ticket_status: writes the ticket's status directly, stamping or
+     * clearing closed_datetime.
+     *
+     * Closing applies the same gates as an analyst closing it - mandatory SOP
+     * steps and mandatory fields - and the action fails when they block.
+     *
+     * @writes tickets(status_id, closed_datetime, updated_datetime)
+     */
     private static function action_set_ticket_status(array $args, array $payload): array
     {
         $ticketId = self::argInt($args, 'ticket_id', $payload);
@@ -2138,6 +2185,7 @@ class WorkflowEngine
         return ['ticket_id' => $ticketId, 'status_id' => $statusId, 'status_name' => $sRow['name']];
     }
 
+    /** set_ticket_priority: sets the ticket's priority after checking the priority id exists. */
     private static function action_set_ticket_priority(array $args, array $payload): array
     {
         $ticketId   = self::argInt($args, 'ticket_id', $payload);
@@ -2154,6 +2202,7 @@ class WorkflowEngine
         return ['ticket_id' => $ticketId, 'priority_id' => $priorityId, 'priority_name' => $pRow['name']];
     }
 
+    /** assign_ticket: sets both the assigned analyst and the owner of the ticket to one analyst, so the two stay in step. */
     private static function action_assign_ticket(array $args, array $payload): array
     {
         $ticketId  = self::argInt($args, 'ticket_id', $payload);
@@ -2173,6 +2222,12 @@ class WorkflowEngine
         return ['ticket_id' => $ticketId, 'analyst_id' => $analystId, 'analyst_name' => $aRow['full_name']];
     }
 
+    /**
+     * add_ticket_note: adds the rendered note to the ticket's audit trail as a
+     * "Workflow Note" with no analyst.
+     *
+     * @writes ticket_audit
+     */
     private static function action_add_ticket_note(array $args, array $payload): array
     {
         $ticketId = self::argInt($args, 'ticket_id', $payload);
@@ -2191,6 +2246,16 @@ class WorkflowEngine
         return ['ticket_id' => $ticketId, 'note_length' => strlen($note)];
     }
 
+    /**
+     * send_email: sends an email from the ticket's mailbox or a chosen one,
+     * through Microsoft Graph, Gmail or SMTP depending on the mailbox.
+     *
+     * The recipient defaults to the ticket's requester. With a ticket the
+     * subject carries the SDREF tag and the body the reply marker, and the sent
+     * copy is filed on the ticket; without one it is a plain styled email. A
+     * confidential ticket's email to anyone but its requester or an analyst is
+     * skipped. Every send, or failed send, is written to the email log.
+     */
     private static function action_send_email(array $args, array $payload): array
     {
         $ticketId  = self::argInt($args, 'ticket_id',  $payload);
@@ -2355,6 +2420,13 @@ class WorkflowEngine
              . '</div>';
     }
 
+    /**
+     * create_task: creates a task, optionally linked to a ticket, using the
+     * default status and priority when none is chosen and placing it at the end
+     * of its board column.
+     *
+     * @writes tasks
+     */
     private static function action_create_task(array $args, array $payload): array
     {
         $title       = self::argString($args, 'title',       $payload);
@@ -2421,6 +2493,18 @@ class WorkflowEngine
         return projectCreateFromAction(connectToDatabase(), $a, $payload);
     }
 
+    /**
+     * create_ticket: raises a new ticket.
+     *
+     * When the event carries a form submission the job goes to the shared
+     * form-to-ticket path (catalogueRaiseTicketFromSubmissionId), with the
+     * configured args as overrides. Otherwise it finds or creates the requester
+     * by email, numbers the ticket with TicketNumbering, applies the
+     * confidential defaults and adds the opening message and a "Ticket Created"
+     * audit row, all in one transaction.
+     *
+     * @writes tickets, emails, ticket_audit, users - a requester row for a new email address
+     */
     private static function action_create_ticket(array $args, array $payload): array
     {
         $subject            = self::argString($args, 'subject', $payload);
@@ -2925,6 +3009,7 @@ class WorkflowEngine
         return $cur;
     }
 
+    /** A JSON column (a workflow's conditions or actions) decoded to an array; [] when empty or not valid JSON. */
     private static function decodeJsonField($raw): array
     {
         if ($raw === null || $raw === '') return [];

@@ -1,6 +1,6 @@
 # assets/js/tasks-priority.js
 
-> JavaScript - 109 lines
+> JavaScript - 110 lines
 
 How a task's priority is drawn — the one home for it.
 
@@ -31,10 +31,10 @@ can sit ahead of any of them.
 | Function | Line | What it does |
 |---|--:|---|
 | `safeColour(value)` | 45 | Only a literal hex value may reach a style attribute. Mirrors `inboxSafeColour()` in inbox.js — the colour is admin-editable free text, so it is untrusted input on its way into markup. |
-| `esc(s)` | 50 |  |
-| `normaliseStyle(value)` | 61 | Coerce a stored value to a known style. Legacy installs hold the old on/off boolean: 1 becomes a dot, which is exactly what they see today, so nobody's board changes under them. |
-| `markup(name, colour, style)` | 72 | The inline indicator — a dot, or a pill that also carries the name. Returns '' for 'off', for 'border' (which is drawn by the container, not here) and when the task has no priority at all. |
-| `accentAttrs(name, colour, style, extraStyle)` | 96 | The left-edge accent, as attributes for the container element. |
+| `esc(s)` | 51 | HTML-escapes a value; null and undefined become an empty string. |
+| `normaliseStyle(value)` | 62 | Coerce a stored value to a known style. Legacy installs hold the old on/off boolean: 1 becomes a dot, which is exactly what they see today, so nobody's board changes under them. |
+| `markup(name, colour, style)` | 73 | The inline indicator — a dot, or a pill that also carries the name. Returns '' for 'off', for 'border' (which is drawn by the container, not here) and when the task has no priority at all. |
+| `accentAttrs(name, colour, style, extraStyle)` | 97 | The left-edge accent, as attributes for the container element. |
 
 ## Loaded by
 

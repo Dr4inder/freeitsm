@@ -6,7 +6,7 @@ Check and tidy template content (from a saved row, the screen or a built-in). Un
 function projectTemplateNormalise(array $c): array
 ```
 
-Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 221.
+Defined in [includes/projects/templates.php](/code/files/includes/projects/templates.php.md), line 222.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Reference lookups
 function apiChangeLookupList(PDO $conn, string $table, bool $hasIsClosed = false): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 478.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 489.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -6,7 +6,7 @@ Assets the person holds now / assets belonging to the company.
 function peopleAssets(PDO $conn, int $analystId, array $who): array
 ```
 
-Defined in [includes/people.php](/code/files/includes/people.php.md), line 344.
+Defined in [includes/people.php](/code/files/includes/people.php.md), line 345.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -20,10 +20,10 @@ Defined in [includes/people.php](/code/files/includes/people.php.md), line 344.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 348 | `peopleAssets` | read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
-| 350 | `peopleAssets` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md) |  |
-| 355 | `peopleAssets` | read [assets](/code/tables/assets.md) |  |
-| 356 | `peopleAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
+| 349 | `peopleAssets` | read [asset_types](/code/tables/asset_types.md), read [asset_status_types](/code/tables/asset_status_types.md) |  |
+| 351 | `peopleAssets` | read [users_assets](/code/tables/users_assets.md), read [assets](/code/tables/assets.md) |  |
+| 356 | `peopleAssets` | read [assets](/code/tables/assets.md) |  |
+| 357 | `peopleAssets` | read [users_assets](/code/tables/users_assets.md), read [users](/code/tables/users.md) |  |
 
 ## Calls
 

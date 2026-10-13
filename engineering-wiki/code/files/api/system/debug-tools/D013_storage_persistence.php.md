@@ -1,6 +1,6 @@
 # api/system/debug-tools/D013_storage_persistence.php
 
-> API endpoint - 228 lines
+> API endpoint - 236 lines
 
 Debug Tool D013 — will the files this server holds survive its next update?
 
@@ -43,8 +43,8 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [addSection()](/code/functions/addSection.md) | 57 |  |
-| [emit_and_exit()](/code/functions/emit_and_exit.md) | 61 |  |
+| [addSection()](/code/functions/addSection.md) | 61 | Adds one titled section ("=== TITLE ===" and its lines) to the report; `$body` is a string or an array of lines. |
+| [emit_and_exit()](/code/functions/emit_and_exit.md) | 69 | Prints every section, separated by blank lines, and stops - the end of the report, and the early exit when a check cannot go on. |
 
 ## How it hangs together
 

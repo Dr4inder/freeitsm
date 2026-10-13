@@ -1,6 +1,6 @@
 # api/messaging/teams_package.php
 
-> API endpoint - 61 lines
+> API endpoint - 65 lines
 
 API Endpoint: download the Microsoft Teams app package for one Teams channel.
 
@@ -21,7 +21,7 @@ messaging capability, and a channel this analyst may administer.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [teamsPackageFail()](/code/functions/teamsPackageFail.md) | 19 |  |
+| [teamsPackageFail()](/code/functions/teamsPackageFail.md) | 23 | Answers {success: false, error} as JSON and stops - used instead of the zip download when the package cannot be built. |
 
 ## How it hangs together
 

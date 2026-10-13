@@ -47,6 +47,12 @@ require_once dirname(__DIR__, 3) . '/includes/cmdb_impact.php';
 // Classes (read-only in v1 — class design stays an admin activity in the UI)
 // ---------------------------------------------------------------------------
 
+/**
+ * GET /cmdb/classes - every CMDB class with its icon and how many objects it holds.
+ *
+ * Classes are install-wide, but object_count is scoped to the key's companies so it
+ * neither contradicts the object list nor reveals how many objects other companies hold.
+ */
 function apiCmdbClassesList(PDO $conn, array $apiKey, array $params, array $body): void {
     // Classes are install-wide config, but object_count is a count of DATA — so
     // it scopes to the key's companies. Unscoped it both contradicts the CI list
@@ -75,6 +81,7 @@ function apiCmdbClassesList(PDO $conn, array $apiKey, array $params, array $body
     }, $rows));
 }
 
+/** GET /cmdb/classes/{id} - one CMDB class with its property definitions and their options. */
 function apiCmdbClassesGet(PDO $conn, array $apiKey, array $params, array $body): void {
     $stmt = $conn->prepare(
         "SELECT c.id, c.class_key, c.name, c.description, c.is_active, i.icon_key
@@ -158,6 +165,7 @@ function apiCmdbLoadObject(PDO $conn, int $objectId, ?array $apiKey = null): arr
     return $row;
 }
 
+/** Shapes a CMDB object row for the API - name, company, class, parent, planned flag and dates. */
 function apiCmdbSerializeObject(array $r): array {
     return [
         'id'         => (int)$r['id'],
@@ -477,6 +485,7 @@ function apiCmdbRelationshipsCreate(PDO $conn, array $apiKey, array $params, arr
     } catch (ServiceError $e) { apiFailFromService($e); }
 }
 
+/** DELETE /cmdb/objects/{id}/relationships/{relId} - deletes a relationship through CmdbService. */
 function apiCmdbRelationshipsDelete(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
         CmdbService::deleteRelationship($conn, ActorContext::fromApiKey($apiKey), (int)$params[1], (int)$params[0]);
@@ -515,6 +524,12 @@ function apiCmdbObjectTicketsList(PDO $conn, array $apiKey, array $params, array
     }, $stmt->fetchAll(PDO::FETCH_ASSOC)));
 }
 
+/**
+ * POST /cmdb/objects/{id}/tickets - links a ticket to the object. Both must be in the
+ * key's companies; a link that already exists answers 409.
+ *
+ * @writes ticket_cmdb_objects - the link, with the key's analyst as creator
+ */
 function apiCmdbObjectTicketsLink(PDO $conn, array $apiKey, array $params, array $body): void {
     apiCmdbLoadObject($conn, (int)$params[0], $apiKey);
     $ticketId = isset($body['ticket_id']) ? (int)$body['ticket_id'] : 0;
@@ -540,6 +555,10 @@ function apiCmdbObjectTicketsLink(PDO $conn, array $apiKey, array $params, array
     apiRespond(['object_id' => $params[0], 'ticket_id' => $ticketId, 'linked' => true], 201);
 }
 
+/**
+ * DELETE /cmdb/objects/{id}/tickets/{ticketId} - removes the link between the object and
+ * a ticket, or answers 404 when there is none.
+ */
 function apiCmdbObjectTicketsUnlink(PDO $conn, array $apiKey, array $params, array $body): void {
     [$objectId, $ticketId] = $params;
     apiCmdbLoadObject($conn, (int)$objectId, $apiKey);

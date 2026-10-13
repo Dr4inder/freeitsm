@@ -16,10 +16,13 @@
  * (lookups `toolbox`); "Hide" hides it for this project in this browser.
  *
  *   PrjToolbox.render({ data, L, projectId, refresh })   from projects-view.js
+ *
+ * @wiki Projects-Internals-6-Governance
  */
 (function () {
     'use strict';
     const P = window.Prj;
+    /** Translates a key under projects.toolbox.*. */
     const T = (k, p) => P.T('toolbox.' + k, p);
     const esc = P.esc;
     const ORDER = ['people', 'scope', 'raid', 'gates', 'budget', 'raci', 'control', 'benefits'];
@@ -27,7 +30,9 @@
     const NEEDS = { raci: ['people', 'scope'] };
     let ctx = null;
 
+    /** The browser storage key that remembers the Toolbox was hidden on this project. */
     const hiddenKey = id => 'freeitsm.projects.toolbox.hide.' + id;
+    /** True when the Toolbox was hidden for this project in this browser. */
     function isHidden(id) { try { return localStorage.getItem(hiddenKey(id)) === '1'; } catch (e) { return false; } }
 
     /** Why the project itself suggests a tool, or null. Reads only what get.php already sent. */
@@ -51,6 +56,7 @@
         return null;
     }
 
+    /** Draws the Toolbox on the Overview - a card per tool not yet in use, the ones the project suggests first, each with what it is for and Add; hidden when switched off, finished, read-only, nothing is left to add or the viewer hid it. */
     function render(c) {
         ctx = c;
         const box = document.getElementById('pvToolbox');
@@ -76,6 +82,7 @@
             + '</div></div>';
     }
 
+    /** Switches a tool on for the project (with the tools it needs - RACI brings People and Scope) by saving its tailoring, then redraws. */
     async function add(tool) {
         const p = ctx.data.project;
         let tail = {};

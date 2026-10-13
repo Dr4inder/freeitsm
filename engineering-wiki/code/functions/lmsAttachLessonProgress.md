@@ -26,7 +26,7 @@ One extra query for the whole page, not one per course.
 function lmsAttachLessonProgress(PDO $conn, array &$rows): void
 ```
 
-Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 357.
+Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), line 363.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -39,7 +39,7 @@ Defined in [includes/lms_access.php](/code/files/includes/lms_access.php.md), li
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 377 | `lmsAttachLessonProgress` | read [lms_lessons](/code/tables/lms_lessons.md) |  |
+| 383 | `lmsAttachLessonProgress` | read [lms_lessons](/code/tables/lms_lessons.md) |  |
 
 ## Called from
 

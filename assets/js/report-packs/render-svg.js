@@ -7,6 +7,8 @@
  * Helvetica, the run is nudged to fit rather than wrapping differently.
  *
  * Text is set with textContent only; nothing from a pack is ever parsed as markup.
+ *
+ * @wiki Report-Packs-Internals-2-The-Layout-Engine
  */
 (function () {
     'use strict';
@@ -14,6 +16,10 @@
     const NS = 'http://www.w3.org/2000/svg';
     const PT = 25.4 / 72;
 
+    /**
+     * Creates an SVG element with the given attributes (null and undefined skipped), appending it to
+     * parent when given.
+     */
     function el(name, attrs, parent) {
         const e = document.createElementNS(NS, name);
         for (const k in attrs) if (attrs[k] !== undefined && attrs[k] !== null) e.setAttribute(k, attrs[k]);
@@ -21,6 +27,7 @@
         return e;
     }
 
+    /** Returns the SVG font attributes for a run style - family, size in mm, weight, style and colour. */
     function fontAttrs(st) {
         return {
             'font-family': window.RPEngine.FONT_CSS[st.font] || window.RPEngine.FONT_CSS.helvetica,
@@ -31,6 +38,10 @@
         };
     }
 
+    /**
+     * Draws a run of text pinned to the engine's measured width, with its highlight, underline or
+     * strike-through.
+     */
     function drawText(g, x, y, text, st, w) {
         if (!text) return;
         if (st.hl) el('rect', { x, y: y - st.size * PT * 0.82, width: w, height: st.size * PT * 1.08, fill: st.hl }, g);
@@ -45,6 +56,7 @@
         if (st.s) el('line', { x1: x, x2: x + w, y1: y - st.size * PT * 0.28, y2: y - st.size * PT * 0.28, stroke: st.color || '#222', 'stroke-width': lw }, g);
     }
 
+    /** Draws one engine primitive (text, rect, line or dot leader) into the SVG group. */
     function drawPrim(g, d) {
         switch (d.k) {
             case 'text': drawText(g, d.x, d.y, d.text, d.st, d.w); break;
@@ -64,6 +76,10 @@
         }
     }
 
+    /**
+     * Draws laid-out rich text - the logo (or a grey box when there is none), list markers and text
+     * runs - at its position.
+     */
     function drawRich(g, rich, logoUrl) {
         if (!rich || !rich.L) return;
         const { L, x, y } = rich;

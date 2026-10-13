@@ -457,6 +457,10 @@ function calendarSyncEnsureSubscription(PDO $conn, int $analystId): string
     }
 }
 
+/**
+ * Records an analyst's change-notification subscription (id, expiry, secret) and clears any stored error, since subscribing succeeded.
+ * @writes calendar_enrolments(subscription_id, subscription_expires, subscription_secret, last_error)
+ */
 function calendarStoreSubscription(PDO $conn, int $analystId, string $id, string $expires, ?string $secret): void
 {
     // ⚠️ CLEARING last_error IS PART OF SUCCEEDING. Subscribing writes the failure
@@ -473,6 +477,10 @@ function calendarStoreSubscription(PDO $conn, int $analystId, string $id, string
     )->execute([$id, $expires, $secret, $analystId]);
 }
 
+/**
+ * Forgets an analyst's change-notification subscription.
+ * @writes calendar_enrolments(subscription_id, subscription_expires, subscription_secret)
+ */
 function calendarClearSubscription(PDO $conn, int $analystId): void
 {
     $conn->prepare(

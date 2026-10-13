@@ -2,6 +2,51 @@
 
 > PHP - 270 lines
 
+Feature Bingo - System -> Feature Bingo.
+
+Most people use a fraction of what they bought. Every card here is one thing
+FreeITSM can do - "at least one analyst", "an SLA calendar", "portal managers"
+- with a star that lights up once it is set up, and an explainer of what it is
+and why it is worth doing.
+
+─────────────────────────────────────────────────────────────────────────────
+ A CARD IS DATA. The cards live in includes/feature_bingo/cards/<module>.php,
+ one file per module, each returning a list of:
+─────────────────────────────────────────────────────────────────────────────
+
+  [
+    'id'     => 'tickets.sla_calendar',     // unique, stable - "Not for us" is stored against it
+    'module' => 'tickets',                   // a key of `featureBingoModules()`
+    'tier'   => 'essential',                 // essential | recommended | extra
+    'category' => 'governance',              // a key of `featureBingoCategories()` - what KIND of thing it is
+    'title'  => 'Business hours for SLAs',   // the feature, short
+    'what'   => 'One or two sentences: what it is.',
+    'why'    => 'One or two sentences: why it is worth setting up.',
+    'done'   => 'Plain words for exactly what the check counts, e.g. "At least one business calendar exists."',
+    'link'   => 'tickets/settings/?tab=sla', // app-relative page where it is set up (no leading slash)
+    'check'  => [...],                        // see below
+  ]
+
+THE CHECK - declarative, so a card can never run anything but a read:
+
+  ['rows', 'table']                          at least one row
+  ['rows', 'table', 'where sql', min]        at least `min` rows matching (min defaults to 1)
+  ['setting', 'key', 'eq', 'value']          system_settings value equals
+  ['setting', 'key', 'neq', 'value']         ... is set and differs (a never-saved key counts as not configured)
+  ['setting', 'key', 'in', ['a','b']]        ... is one of
+  ['setting', 'key', 'nonempty']             ... has any non-empty value
+  ['sql', 'SELECT COUNT(*) ...', min]        a single number >= min (default 1). SELECT only.
+  ['any', [check, check, ...]]               any one lights it
+  ['all', [check, check, ...]]               all of them
+
+A check that errors - a table Database Verification has not created yet, a
+column that does not exist - reads as NOT configured and is reported by
+scripts/feature_bingo_check.php, which runs every check against a database.
+It never breaks the page.
+
+Card copy is English, like System help (includes a lot of prose; see
+system/help/_init.php for the reasoning). The page's own labels are translated.
+
 ## Functions
 
 | Function | Line | What it does |

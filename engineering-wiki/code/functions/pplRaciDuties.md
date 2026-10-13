@@ -6,7 +6,7 @@ A person's RACI duties on one project, one line per letter: "Accountable for Pho
 function pplRaciDuties(array $duties): string
 ```
 
-Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 179.
+Defined in [people/includes/render.php](/code/files/people/includes/render.php.md), line 192.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

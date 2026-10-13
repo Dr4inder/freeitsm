@@ -43,6 +43,11 @@ require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 // ============================================================================
 
 /**
+ * Asks crt.sh for the unexpired certificates issued for a domain and stores any
+ * not seen before; the first scan stores them as acknowledged, later ones as new
+ * and fire domain.certificate_issued.
+ *
+ * @writes domain_certificates - one row per crt.sh certificate id
  * @return array{ok:bool, new:int, total:int, error:?string, first_scan:bool}
  */
 function domainCtScan(PDO $conn, int $domainId, string $name): array
@@ -95,6 +100,7 @@ function domainCtIssuer(string $dn): string
     return $o ?: ($cn ?: $dn);
 }
 
+/** Turns a crt.sh timestamp (UTC, with or without a Z) into a 'Y-m-d H:i:s' UTC string, or null. */
 function domainCtDate($v): ?string
 {
     if (!$v) return null;

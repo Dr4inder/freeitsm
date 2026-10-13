@@ -6,7 +6,7 @@ Check a whole design from the browser. Returns the cleaned design; throws Invali
 function rpCleanDesign($d, string $name): array
 ```
 
-Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 149.
+Defined in [includes/report_packs/design.php](/code/files/includes/report_packs/design.php.md), line 153.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

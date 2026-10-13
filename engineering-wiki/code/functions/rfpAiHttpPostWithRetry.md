@@ -6,7 +6,7 @@ POST with retry on 429 / 5xx / network errors. Exponential backoff starting at R
 function rfpAiHttpPostWithRetry(string $url, array $headers, string $body, bool $verifySsl): array
 ```
 
-Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 398.
+Defined in [includes/rfp_ai.php](/code/files/includes/rfp_ai.php.md), line 406.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

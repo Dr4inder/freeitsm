@@ -11,7 +11,7 @@ which is the entire reason the column holds a key rather than a path.
 function documentStorageKey(string $storedName): string
 ```
 
-Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 718.
+Defined in [includes/documents.php](/code/files/includes/documents.php.md), line 723.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

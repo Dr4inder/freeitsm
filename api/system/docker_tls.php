@@ -14,6 +14,7 @@ require_once '../../includes/admin_api_guard.php'; // System admins only
 require_once '../../includes/storage_persistence.php';
 require_once '../../includes/docker_tls.php';
 
+/** Sends an HTTP status and the given body as JSON, then stops. */
 function dockerTlsJson(array $body, int $status = 200): void
 {
     http_response_code($status);

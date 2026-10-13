@@ -6,7 +6,7 @@ PATCH /service-status/incidents/{id}
 function apiStatusIncidentsUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 300.
+Defined in [api/v1/resources/service_status.php](/code/files/api/v1/resources/service_status.php.md), line 326.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

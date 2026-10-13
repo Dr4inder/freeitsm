@@ -6,7 +6,7 @@ Get the mailbox associated with a ticket's emails.
 function templateGetMailboxForTicket(PDO $conn, int $ticketId): ?array
 ```
 
-Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 455.
+Defined in [includes/template_email.php](/code/files/includes/template_email.php.md), line 460.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/template_email.php](/code/files/includes/template_email.php
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 456 | `templateGetMailboxForTicket` | read [emails](/code/tables/emails.md), read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
+| 461 | `templateGetMailboxForTicket` | read [emails](/code/tables/emails.md), read [target_mailboxes](/code/tables/target_mailboxes.md) |  |
 
 ## Calls
 

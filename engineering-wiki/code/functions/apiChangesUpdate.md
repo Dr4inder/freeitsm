@@ -6,7 +6,7 @@ PATCH /changes/{id}
 function apiChangesUpdate(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 347.
+Defined in [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), line 356.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

@@ -71,6 +71,10 @@ function rpProjectHealthPill(?string $h): array
     return ['pill' => t('projects.health.' . $h), 'colour' => RP_HEALTH_COLOURS[$h]];
 }
 
+/**
+ * Projects block: KPI tiles - live projects, how many are green, amber and red now, and
+ * stages ending in the period.
+ */
 function rpProjectsKpis(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $rows = rpProjectRows($conn, $analystId, $tenant, [], true);
@@ -91,6 +95,7 @@ function rpProjectsKpis(PDO $conn, int $analystId, array $o, array $range, $tena
     ]];
 }
 
+/** Projects block: a chart of live projects by health (green, amber, red). A snapshot of today. */
 function rpProjectsHealth(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $count = ['green' => 0, 'amber' => 0, 'red' => 0];
@@ -106,6 +111,10 @@ function rpProjectsHealth(PDO $conn, int $analystId, array $o, array $range, $te
     ];
 }
 
+/**
+ * Projects block: a table of projects with health, progress, current stage, target date
+ * and, optionally, manager and the reason for the health.
+ */
 function rpProjectsStatus(PDO $conn, int $analystId, array $o, array $range, $tenant): array
 {
     $out = [];

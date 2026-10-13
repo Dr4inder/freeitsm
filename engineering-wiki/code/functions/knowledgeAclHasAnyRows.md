@@ -18,7 +18,7 @@ had rows in it — the unit-shaped test passed throughout.
 function knowledgeAclHasAnyRows(PDO $conn): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 772.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 785.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -30,9 +30,9 @@ Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/vi
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 777 | `knowledgeAclHasAnyRows` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
-| 778 | `knowledgeAclHasAnyRows` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
-| 779 | `knowledgeAclHasAnyRows` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
+| 790 | `knowledgeAclHasAnyRows` | read [knowledge_acl](/code/tables/knowledge_acl.md) |  |
+| 791 | `knowledgeAclHasAnyRows` | read [knowledge_folders](/code/tables/knowledge_folders.md) |  |
+| 792 | `knowledgeAclHasAnyRows` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## Called from
 

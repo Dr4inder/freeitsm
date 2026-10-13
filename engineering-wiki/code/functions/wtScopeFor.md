@@ -6,7 +6,7 @@ The scope this analyst last chose. Defaults to everyone, i.e. today's view.
 function wtScopeFor(PDO $conn, int $analystId): string
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 135.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 138.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_se
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 140 | `wtScopeFor` | read [user_preferences](/code/tables/user_preferences.md) |  |
+| 143 | `wtScopeFor` | read [user_preferences](/code/tables/user_preferences.md) |  |
 
 ## Calls
 

@@ -6,7 +6,7 @@ Helper function to log errors/responses
 function logApiResponse($conn, $hostId, $message)
 ```
 
-Defined in [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md), line 105.
+Defined in [api/external/software-inventory/submit/index.php](/code/files/api/external/software-inventory/submit/index.php.md), line 120.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Defined in [api/external/software-inventory/submit/index.php](/code/files/api/ex
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 107 | `logApiResponse` | **insert** [software_inventory_log](/code/tables/software_inventory_log.md) (`host_id`, `api_response`) |  |
+| 122 | `logApiResponse` | **insert** [software_inventory_log](/code/tables/software_inventory_log.md) (`host_id`, `api_response`) |  |
 
 ## Called from
 

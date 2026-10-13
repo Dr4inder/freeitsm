@@ -60,9 +60,14 @@ if (!$__dbgAdmin) {
 if (!headers_sent()) header('Content-Type: text/plain; charset=utf-8');
 
 $sections = [];
+/** Adds one titled section ("=== TITLE ===" and its lines) to the report. */
 function addSection(array &$s, string $title, array $lines): void {
     $s[] = "=== {$title} ===\n" . rtrim(implode("\n", $lines), "\n");
 }
+/**
+ * Prints every section, separated by blank lines, and stops - the end of the report, and
+ * the early exit when a check cannot go on.
+ */
 function emit_and_exit(array $sections): void {
     echo implode("\n\n", $sections) . "\n";
     exit;

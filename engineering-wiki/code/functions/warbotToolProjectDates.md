@@ -1,10 +1,12 @@
 # warbotToolProjectDates()
 
+project_dates: one project's key dates via `projectAssistDates()`, scoped to the projects the asker may see.
+
 ```php
 function warbotToolProjectDates(PDO $conn, array $args, int $analystId): string
 ```
 
-Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 955.
+Defined in [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md), line 994.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

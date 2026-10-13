@@ -6,7 +6,7 @@
 function filesFreeName(PDO $conn, ?int $parentId, string $name): string
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 189.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 195.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

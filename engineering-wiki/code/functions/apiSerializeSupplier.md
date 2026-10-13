@@ -1,10 +1,12 @@
 # apiSerializeSupplier()
 
+Shapes a supplier row for the API - legal, trading and display name, registration numbers, type, status, address and counts.
+
 ```php
 function apiSerializeSupplier(array $r): array
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 150.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 165.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

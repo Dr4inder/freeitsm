@@ -1,10 +1,12 @@
 # webhookFail()
 
+Sends an HTTP status and {success: false, error} as JSON, then stops.
+
 ```php
 function webhookFail(int $code, string $msg): void
 ```
 
-Defined in [api/messaging/webhook.php](/code/files/api/messaging/webhook.php.md), line 65.
+Defined in [api/messaging/webhook.php](/code/files/api/messaging/webhook.php.md), line 66.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

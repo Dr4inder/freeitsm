@@ -31,7 +31,7 @@ Projects phase 2 (3.2.0): roles, members, scope, RACI, RAID, tolerances.
 | [api/projects/lookups.php](/code/files/api/projects/lookups.php.md) | L26 |  |
 | [api/projects/settings.php](/code/files/api/projects/settings.php.md) | projectRolesForSettings L31, L120, L126 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L811 |  |
-| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L456 |  |
+| [includes/people.php](/code/files/includes/people.php.md) | peopleProjects L457 |  |
 | [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md) | projectChatApplyOne L587 |  |
-| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::members L990, ProjectToolsService::roleId L1530, ProjectToolsService::roleName L1539 |  |
+| [includes/services/project_tools.php](/code/files/includes/services/project_tools.php.md) | ProjectToolsService::members L1029, ProjectToolsService::roleId L1586, ProjectToolsService::roleName L1596 |  |
 

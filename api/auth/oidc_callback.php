@@ -317,12 +317,14 @@ try {
 
 // --------------------------------------------------------------------------
 
+/** Loads one analyst row by id, or null when there is none. */
 function oidcLoadAnalyst(PDO $conn, int $id): ?array {
     $stmt = $conn->prepare("SELECT * FROM analysts WHERE id = ?");
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
+/** Loads one self-service user row by id, or null when there is none. */
 function ssLoadUser(PDO $conn, int $id): ?array {
     $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$id]);

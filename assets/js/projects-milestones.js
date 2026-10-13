@@ -11,6 +11,8 @@
  * Done, missed or due is worked out by the server (includes/projects/milestones.php)
  * and sent as `state`; this file never decides it, so the page, the health and the
  * bell always agree.
+ *
+ * @wiki Projects-Internals-4-Plan-and-Timeline
  */
 (function () {
     'use strict';
@@ -20,9 +22,11 @@
 
     const STATE_CLASS = { done: 'ms-done', missed: 'ms-missed', due: 'ms-due' };
 
+    /** True when the viewer may change this project. */
     function canChange() {
         return !!(ctx && ctx.data.permissions && ctx.data.permissions.can_change);
     }
+    /** The project's milestones, or an empty list before the page has loaded. */
     function list() {
         return (ctx && ctx.data.milestones) || [];
     }
@@ -32,6 +36,7 @@
         return '<span class="prj-ms-dia ' + STATE_CLASS[m.state] + '" style="--s:' + (size || 12) + 'px" aria-hidden="true"></span>';
     }
 
+    /** Days from today to a date - negative when it has passed. */
     const daysFromToday = d => P.daysTo(d);
 
     /** "Reached on time" / "Missed" / "In 5 days" - a phrase for the state. */
@@ -65,6 +70,7 @@
     }
 
     // ---- Overview -----------------------------------------------------------------
+    /** Draws the Overview's milestones panel - missed first, then up to four coming up, then the last two reached, each with Done when it can still be marked; hidden when there are none and nobody can add one. */
     function renderOverview() {
         const box = document.getElementById('pvMilestones');
         if (!box) return;
@@ -75,6 +81,7 @@
         const missed = rows.filter(m => m.state === 'missed');
         const due = rows.filter(m => m.state === 'due').slice(0, 4);
         const done = rows.filter(m => m.state === 'done').slice(-2);
+        /** One milestone row on the Overview - diamond, name, date, stage, state phrase and the Done button. */
         const item = m => '<li class="prj-ms-row ' + STATE_CLASS[m.state] + '">' + diamond(m, 13)
             + '<button type="button" class="prj-ms-row-main" data-ms-edit="' + m.id + '"><span class="prj-ms-row-name">' + esc(m.name) + '</span>'
             + '<span class="prj-ms-row-sub">' + esc(P.fmtDate(m.due_date)) + (m.stage_name ? ' &middot; ' + esc(m.stage_name) : '') + '</span></button>'
@@ -91,6 +98,7 @@
     }
 
     // ---- The dialog ------------------------------------------------------------------
+    /** The stage drop-down options for the dialog, with "Whole project" first and the given stage selected. */
     function stageOptions(selected) {
         return '<option value="">' + esc(T('milestones.whole_project')) + '</option>'
             + (ctx.data.stages || []).map(s => '<option value="' + s.id + '"' + (String(s.id) === String(selected || '') ? ' selected' : '') + '>' + esc(s.name) + '</option>').join('');
@@ -130,6 +138,7 @@
         return r;
     }
 
+    /** Saves the milestone dialog and redraws the project; reopens the dialog with the error when the save fails. */
     async function saveDialog() {
         const id = document.getElementById('pmsId').value;
         const err = document.getElementById('pmsError');
@@ -154,6 +163,7 @@
         }
     }
 
+    /** Asks, then deletes the milestone open in the dialog. */
     async function remove() {
         const id = document.getElementById('pmsId').value;
         const m = list().find(x => String(x.id) === id);
@@ -189,6 +199,7 @@
     });
 
     window.PrjMilestones = {
+        /** Keeps the page's data and draws the Overview's milestones panel. */
         render: function (c) { ctx = c; renderOverview(); },
         chips: chips,
         projectStrip: projectStrip,

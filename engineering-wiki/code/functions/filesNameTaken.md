@@ -17,7 +17,7 @@ function filesNameTaken(
 ): bool
 ```
 
-Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 110.
+Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -33,9 +33,9 @@ Defined in [includes/files/api_bootstrap.php](/code/files/includes/files/api_boo
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 113 | `filesNameTaken` | read [files_folders](/code/tables/files_folders.md) |  |
-| 121 | `filesNameTaken` | read [files_items](/code/tables/files_items.md) |  |
-| 127 | `filesNameTaken` | read [files_shortcuts](/code/tables/files_shortcuts.md) |  |
+| 119 | `filesNameTaken` | read [files_folders](/code/tables/files_folders.md) |  |
+| 127 | `filesNameTaken` | read [files_items](/code/tables/files_items.md) |  |
+| 133 | `filesNameTaken` | read [files_shortcuts](/code/tables/files_shortcuts.md) |  |
 
 ## Calls
 

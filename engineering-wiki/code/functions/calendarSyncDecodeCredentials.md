@@ -6,7 +6,7 @@ Decrypt + JSON-decode a stored credentials blob (never throws).
 function calendarSyncDecodeCredentials($stored): array
 ```
 
-Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 73.
+Defined in [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md), line 74.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

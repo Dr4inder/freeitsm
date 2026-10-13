@@ -1,10 +1,12 @@
 # rpNormDept()
 
+A department name normalised for matching: spaces collapsed, trimmed and lower case.
+
 ```php
 function rpNormDept($s): string
 ```
 
-Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 56.
+Defined in [includes/report_packs/access.php](/code/files/includes/report_packs/access.php.md), line 57.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

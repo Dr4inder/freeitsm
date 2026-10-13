@@ -1,5 +1,10 @@
 # wfCallAnthropic()
 
+Sends a system prompt and one user message to the Anthropic Messages API and returns the reply text, trimmed.
+
+Throws on a network error or a non-200 answer, with the provider's own message where
+it gave one.
+
 ```php
 function wfCallAnthropic(
     array $cfg,
@@ -9,7 +14,7 @@ function wfCallAnthropic(
 ): string
 ```
 
-Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 110.
+Defined in [api/workflow/_ai_helpers.php](/code/files/api/workflow/_ai_helpers.php.md), line 117.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

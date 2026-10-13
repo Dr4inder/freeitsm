@@ -6,7 +6,7 @@ Forget the cached rates - after a rate is saved in the same request.
 function projectLabourRatesReset(): void
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 97.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 101.
 
 **Returns:** `void`
 

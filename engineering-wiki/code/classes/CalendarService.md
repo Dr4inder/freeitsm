@@ -10,7 +10,7 @@
 | [deleteEvent()](#deleteevent) | Delete an event. 404 if missing, 409 if generated. Returns the id. |
 | [saveCategory()](#savecategory) | Create (no id) or update (id present) a category. Returns ['id','created']. |
 | [deleteCategory()](#deletecategory) | Delete a category — refused (409) while events still use it. Returns the id. |
-| [loadEventRow()](#loadeventrow) |  |
+| [loadEventRow()](#loadeventrow) | Loads one calendar event; throws not found when it does not exist. |
 | [guardGenerated()](#guardgenerated) | Generated rows belong to their sync — never edited/deleted through here. |
 | [collectEventFields()](#collecteventfields) | Collect + validate the writable event fields (mirrors the API resource's apiCalendarEventFields). On update, absent keys fall back to the current row. Datetimes are naive server-local (Z/offset rejected). |
 | [parseNaiveDatetime()](#parsenaivedatetime) | Parse a NAIVE local datetime ("YYYY-MM-DD HH:MM[:SS]", T separator OK, date-only OK). Throws on timezone designators — naive-local by design. (Throwing twin of the resource's apiParseNaiveDatetime.) |
@@ -117,7 +117,9 @@ function deleteCategory(PDO $conn, ActorContext $ctx, int $id): int
 
 ### loadEventRow
 
-*private static* - line 162
+*private static* - line 163
+
+Loads one calendar event; throws not found when it does not exist.
 
 ```php
 function loadEventRow(PDO $conn, int $id): array
@@ -132,11 +134,11 @@ function loadEventRow(PDO $conn, int $id): array
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 164 | `CalendarService::loadEventRow` | read [calendar_events](/code/tables/calendar_events.md) |  |
+| 165 | `CalendarService::loadEventRow` | read [calendar_events](/code/tables/calendar_events.md) |  |
 
 ### guardGenerated
 
-*private static* - line 174
+*private static* - line 175
 
 Generated rows belong to their sync — never edited/deleted through here.
 
@@ -150,7 +152,7 @@ function guardGenerated(array $event): void
 
 ### collectEventFields
 
-*private static* - line 186
+*private static* - line 187
 
 Collect + validate the writable event fields (mirrors the API resource's apiCalendarEventFields). On update, absent keys fall back to the current row. Datetimes are naive server-local (Z/offset rejected).
 
@@ -174,12 +176,12 @@ function collectEventFields(
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 212 | `CalendarService::collectEventFields` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
-| 225 | `CalendarService::collectEventFields` | read [contracts](/code/tables/contracts.md) |  |
+| 213 | `CalendarService::collectEventFields` | read [calendar_categories](/code/tables/calendar_categories.md) |  |
+| 226 | `CalendarService::collectEventFields` | read [contracts](/code/tables/contracts.md) |  |
 
 ### parseNaiveDatetime
 
-*private static* - line 242
+*private static* - line 243
 
 Parse a NAIVE local datetime ("YYYY-MM-DD HH:MM[:SS]", T separator OK, date-only OK). Throws on timezone designators — naive-local by design. (Throwing twin of the resource's apiParseNaiveDatetime.)
 

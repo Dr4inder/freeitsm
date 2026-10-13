@@ -22,7 +22,7 @@ function knowledgeFolderReadable(
 ): bool
 ```
 
-Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 631.
+Defined in [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), line 639.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

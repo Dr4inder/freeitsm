@@ -1,10 +1,16 @@
 # leaseSyncCalendar()
 
+Rebuilds the "Lease notice" calendar entries - the last day to give notice on each schedule that still has kit out.
+
+Deletes every entry from source 'asset_lease_notice' and, when the lease alert surface
+includes the calendar, adds one all-day event per schedule. Never throws, so a calendar
+problem cannot fail a lease save.
+
 ```php
 function leaseSyncCalendar(PDO $conn): void
 ```
 
-Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 735.
+Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 751.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -12,14 +18,16 @@ Defined in [includes/leases.php](/code/files/includes/leases.php.md), line 735.
 
 **Returns:** `void`
 
+**Writes:** calendar_events - one all-day entry per schedule, on end date minus notice days
+
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 741 | `leaseSyncCalendar` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
-| 745 | `leaseSyncCalendar` | read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
-| 754 | `leaseSyncCalendar` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
-| 760 | `leaseSyncCalendar` | read [assets](/code/tables/assets.md) |  |
+| 757 | `leaseSyncCalendar` | **delete** [calendar_events](/code/tables/calendar_events.md) |  |
+| 761 | `leaseSyncCalendar` | read [lease_schedules](/code/tables/lease_schedules.md), read [leases](/code/tables/leases.md), read [lease_assets](/code/tables/lease_assets.md), read [lease_outcomes](/code/tables/lease_outcomes.md) |  |
+| 770 | `leaseSyncCalendar` | **insert** [calendar_events](/code/tables/calendar_events.md) (`title`, `description`, `category_id`, `start_datetime`, `end_datetime`, `all_day`, `created_by`, `source`) |  |
+| 776 | `leaseSyncCalendar` | read [assets](/code/tables/assets.md) |  |
 
 ## Calls
 

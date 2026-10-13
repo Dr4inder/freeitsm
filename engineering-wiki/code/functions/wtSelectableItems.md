@@ -6,7 +6,7 @@ The set-driven items, and what kind of thing each one selects from. item_key => 
 function wtSelectableItems(): array
 ```
 
-Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 249.
+Defined in [includes/watchtower_settings.php](/code/files/includes/watchtower_settings.php.md), line 252.
 
 **Returns:** `array`
 

@@ -6,7 +6,7 @@ The contractor on each of these tasks: [task_id => {supplier_id, supplier_name, 
 function tasksContractors(PDO $conn, array $taskIds): array
 ```
 
-Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 49.
+Defined in [includes/task_contractors.php](/code/files/includes/task_contractors.php.md), line 51.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Defined in [includes/task_contractors.php](/code/files/includes/task_contractors
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 55 | `tasksContractors` | read [tasks](/code/tables/tasks.md), read [suppliers](/code/tables/suppliers.md), read [contacts](/code/tables/contacts.md) |  |
+| 57 | `tasksContractors` | read [tasks](/code/tables/tasks.md), read [suppliers](/code/tables/suppliers.md), read [contacts](/code/tables/contacts.md) |  |
 
 ## Calls
 

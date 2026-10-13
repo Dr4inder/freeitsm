@@ -2,6 +2,22 @@
 
 > PHP - 86 lines
 
+Projects - milestones (3.3.0): the dates a project promises, as diamonds on the Timeline, the Overview, the Calendar and in the health.
+
+A milestone is a NAMED DATE, not work: "Move day", "Go-live", "Board sign-off".
+The work is tasks; a milestone is what the tasks are racing towards. It may
+sit in a stage (it is drawn in that stage's band) or belong to the whole
+project (stage_id NULL).
+
+Its state is worked out, never stored, the same rule as health:
+  done    - done_date is set ("reached"); met if done on or before due_date
+  missed  - not done and due_date is in the past
+  due     - not done, today or later
+
+🔑 A MISSED MILESTONE TURNS AUTOMATIC HEALTH AMBER (projectAutoHealth), the
+same weight as an overdue task: a date the project promised has gone by. It
+never makes a project red on its own - that is what the time tolerance is for.
+
 ## Functions
 
 | Function | Line | What it does |

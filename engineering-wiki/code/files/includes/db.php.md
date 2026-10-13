@@ -1,6 +1,6 @@
 # includes/db.php
 
-> PHP - 70 lines
+> PHP - 71 lines
 
 Database connection options — the app's own, never the operator's.
 
@@ -65,7 +65,7 @@ page; the queries that do it are marked.
 
 | Function | Line | What it does |
 |---|--:|---|
-| [dbConnectionOptions()](/code/functions/dbConnectionOptions.md) | 63 |  |
+| [dbConnectionOptions()](/code/functions/dbConnectionOptions.md) | 64 | Returns the PDO options every connection uses - the session time zone set to UTC. |
 
 ## How it hangs together
 

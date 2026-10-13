@@ -17,26 +17,26 @@
 
 | File | In | Does | Columns | Purpose |
 |---|---|---|---|---|
-| [api/problem-management/delete_problem_status.php](/code/files/api/problem-management/delete_problem_status.php.md):19 |  | delete |  |  |
-| [api/problem-management/save_problem_status.php](/code/files/api/problem-management/save_problem_status.php.md):21 |  | update | `is_default` |  |
-| [api/problem-management/save_problem_status.php](/code/files/api/problem-management/save_problem_status.php.md):23 |  | update | `name`, `is_closed`, `colour`, `is_default`, `display_order`, `is_active` |  |
-| [api/problem-management/save_problem_status.php](/code/files/api/problem-management/save_problem_status.php.md):28 |  | insert | `name`, `is_closed`, `colour`, `is_default`, `display_order`, `is_active` |  |
+| [api/problem-management/delete_problem_status.php](/code/files/api/problem-management/delete_problem_status.php.md):28 |  | delete |  |  |
+| [api/problem-management/save_problem_status.php](/code/files/api/problem-management/save_problem_status.php.md):36 |  | update | `is_default` |  |
+| [api/problem-management/save_problem_status.php](/code/files/api/problem-management/save_problem_status.php.md):38 |  | update | `name`, `is_closed`, `colour`, `is_default`, `display_order`, `is_active` |  |
+| [api/problem-management/save_problem_status.php](/code/files/api/problem-management/save_problem_status.php.md):43 |  | insert | `name`, `is_closed`, `colour`, `is_default`, `display_order`, `is_active` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):2480 |  | insert | `name`, `is_closed`, `colour`, `is_default`, `display_order` |  |
 
 ## Read by
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/problem-management/delete_problem_status.php](/code/files/api/problem-management/delete_problem_status.php.md) | L18 |  |
+| [api/problem-management/delete_problem_status.php](/code/files/api/problem-management/delete_problem_status.php.md) | L27 |  |
 | [api/problem-management/get.php](/code/files/api/problem-management/get.php.md) | L22 |  |
-| [api/problem-management/get_problem_statuses.php](/code/files/api/problem-management/get_problem_statuses.php.md) | L10 |  |
+| [api/problem-management/get_problem_statuses.php](/code/files/api/problem-management/get_problem_statuses.php.md) | L16 |  |
 | [api/problem-management/list.php](/code/files/api/problem-management/list.php.md) | L28, L46 |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2479 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L204 |  |
-| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L37, apiProblemsList L176, apiProblemStatusesList L396 |  |
+| [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L184, apiProblemStatusesList L413 |  |
 | [includes/feature_bingo/cards/problems.php](/code/files/includes/feature_bingo/cards/problems.php.md) | L112 |  |
-| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L207 |  |
+| [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L211 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewProblem L256 |  |
-| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::createProblem L52, ProblemsService::loadProblem L388, ProblemsService::resolveStatus L456, ProblemsService::resolveStatus L459 |  |
-| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolKnownErrors L612 |  |
+| [includes/services/problems.php](/code/files/includes/services/problems.php.md) | ProblemsService::createProblem L52, ProblemsService::loadProblem L388, ProblemsService::resolveStatus L458, ProblemsService::resolveStatus L461 |  |
+| [includes/warbot/tools.php](/code/files/includes/warbot/tools.php.md) | warbotToolKnownErrors L632 |  |
 

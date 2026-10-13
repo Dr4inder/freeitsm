@@ -6,7 +6,7 @@ The other direction: the domains linked to one CI / service / ticket / article t
 function domainsLinkedTo(PDO $conn, int $analystId, string $kind, int $targetId): array
 ```
 
-Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 263.
+Defined in [includes/domains/links.php](/code/files/includes/domains/links.php.md), line 270.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

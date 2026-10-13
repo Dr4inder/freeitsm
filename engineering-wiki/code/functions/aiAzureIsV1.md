@@ -6,7 +6,7 @@ An API version of "v1" means Azure's newer route, which has no api-version.
 function aiAzureIsV1(array $cfg): bool
 ```
 
-Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 230.
+Defined in [includes/ai_provider.php](/code/files/includes/ai_provider.php.md), line 234.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

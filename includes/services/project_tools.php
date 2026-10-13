@@ -111,6 +111,10 @@ class ProjectToolsService
         ];
     }
 
+    /**
+     * Changes a project member's role, notes and stakeholder map details (power, interest,
+     * stance, how they are kept informed), and records the change in the project's history.
+     */
     public static function updateMember(PDO $conn, ActorContext $ctx, int $projectId, int $memberId, array $in): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -156,6 +160,10 @@ class ProjectToolsService
         return $ready;
     }
 
+    /**
+     * The stakeholder columns for a member query, or NULL placeholders before Database
+     * Verification has added them.
+     */
     private static function stakeColumns(PDO $conn): string
     {
         return self::stakeReady($conn) ? 'm.power, m.interest, m.stance, m.keep_informed' : 'NULL AS power, NULL AS interest, NULL AS stance, NULL AS keep_informed';
@@ -176,6 +184,13 @@ class ProjectToolsService
     //  Scope (deliverables and requirements, MoSCoW)
     // ======================================================================
 
+    /**
+     * Adds or updates a deliverable or requirement (title, description, acceptance
+     * criteria, MoSCoW priority, stage, status) and returns its id.
+     *
+     * A new item goes to the end of the list; adding one, or changing its MoSCoW priority,
+     * is recorded in the project's history.
+     */
     public static function saveItem(PDO $conn, ActorContext $ctx, int $projectId, array $in): int
     {
         self::changeable($conn, $ctx, $projectId);
@@ -207,6 +222,10 @@ class ProjectToolsService
         return $newId;
     }
 
+    /**
+     * Deletes a deliverable with its RACI rows; any child items lose their parent. Recorded
+     * in the project's history.
+     */
     public static function deleteItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -363,6 +382,10 @@ class ProjectToolsService
         return $newId;
     }
 
+    /**
+     * Deletes a RAID log entry; its follow-up tasks are unlinked but kept. Recorded in the
+     * project's history.
+     */
     public static function deleteRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -411,6 +434,10 @@ class ProjectToolsService
         ProjectsService::raidEscalated($conn, $projectId, self::raidRow($conn, $projectId, $raidId));
     }
 
+    /**
+     * Clears a RAID entry's escalation; does nothing when it is not escalated. Recorded in
+     * the project's history.
+     */
     public static function deescalateRaid(PDO $conn, ActorContext $ctx, int $projectId, int $raidId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -455,6 +482,7 @@ class ProjectToolsService
         $conn->prepare("DELETE FROM project_raid_tasks WHERE raid_id = ? AND task_id = ?")->execute([$raidId, $taskId]);
     }
 
+    /** True when the project_raid_tasks table exists (after Database Verification). Cached per request. */
     public static function raidActionsReady(PDO $conn): bool
     {
         static $ready = null;
@@ -714,6 +742,12 @@ class ProjectToolsService
         return ['closed' => $closed, 'next' => $next];
     }
 
+    /**
+     * The project's RAID log - each entry with its owner, ticket, risk score, escalation,
+     * lesson article and follow-up tasks.
+     *
+     * Highest risk score first, closed entries last. Empty when the tables are not there.
+     */
     public static function raid(PDO $conn, int $projectId): array
     {
         try {
@@ -809,6 +843,7 @@ class ProjectToolsService
         return $id;
     }
 
+    /** Deletes an asset target from a project and records it; health and tolerances are checked again. */
     public static function deleteTarget(PDO $conn, ActorContext $ctx, int $projectId, int $targetId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -827,6 +862,7 @@ class ProjectToolsService
         }
     }
 
+    /** Loads one asset target of the project; throws not found otherwise. */
     public static function target(PDO $conn, int $projectId, int $targetId): array
     {
         $st = $conn->prepare("SELECT * FROM project_asset_targets WHERE id = ? AND project_id = ?");
@@ -837,6 +873,7 @@ class ProjectToolsService
     }
 
 
+    /** Validates an optional YYYY-MM-DD date; blank gives null. */
     private static function date($v): ?string
     {
         if ($v === null || trim((string)$v) === '') return null;
@@ -909,6 +946,7 @@ class ProjectToolsService
         return $id;
     }
 
+    /** Deletes a milestone from a project, records it, and refreshes the calendar, health and tolerances. */
     public static function deleteMilestone(PDO $conn, ActorContext $ctx, int $projectId, int $milestoneId): void
     {
         require_once __DIR__ . '/../projects/milestones.php';
@@ -921,6 +959,7 @@ class ProjectToolsService
         ProjectsService::afterChange($conn, $projectId);
     }
 
+    /** Loads one milestone of the project; throws not found otherwise. */
     private static function milestone(PDO $conn, int $projectId, int $milestoneId): array
     {
         if (!projectMilestonesReady($conn)) throw new ServiceError('not_found', 'not_found', 'That milestone is not part of this project.');
@@ -1001,6 +1040,10 @@ class ProjectToolsService
         }
     }
 
+    /**
+     * The project's deliverables and requirements, in order, with their stage names; empty
+     * before the table exists.
+     */
     public static function items(PDO $conn, int $projectId): array
     {
         try {
@@ -1056,6 +1099,7 @@ class ProjectToolsService
         return (int)$st->fetchColumn();
     }
 
+    /** Removes a dependency between two of the project's tasks and records it in the project's history. */
     public static function removeTaskDependency(PDO $conn, ActorContext $ctx, int $projectId, int $depId): void
     {
         require_once __DIR__ . '/../projects/dependencies.php';
@@ -1112,6 +1156,7 @@ class ProjectToolsService
         return $id;
     }
 
+    /** Deletes a stage gate item and records it in the project's history. */
     public static function deleteGateItem(PDO $conn, ActorContext $ctx, int $projectId, int $itemId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -1188,6 +1233,7 @@ class ProjectToolsService
         return $added;
     }
 
+    /** Loads one stage gate item of the project; throws not found otherwise. */
     private static function gateItem(PDO $conn, int $projectId, int $itemId): array
     {
         try {
@@ -1254,6 +1300,7 @@ class ProjectToolsService
         return $id;
     }
 
+    /** Deletes a benefit with its measurements and records it in the project's history. */
     public static function deleteBenefit(PDO $conn, ActorContext $ctx, int $projectId, int $benefitId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -1291,6 +1338,7 @@ class ProjectToolsService
         return $id;
     }
 
+    /** Deletes one measurement of a benefit; throws not found when it is not that benefit's. */
     public static function deleteBenefitMeasure(PDO $conn, ActorContext $ctx, int $projectId, int $benefitId, int $measureId): void
     {
         self::changeable($conn, $ctx, $projectId);
@@ -1301,6 +1349,7 @@ class ProjectToolsService
         ProjectsService::touchProject($conn, $projectId);
     }
 
+    /** Loads one benefit of the project; throws not found otherwise. */
     private static function benefit(PDO $conn, int $projectId, int $benefitId): array
     {
         try {
@@ -1465,6 +1514,7 @@ class ProjectToolsService
         ProjectsService::touchProject($conn, $projectId);
     }
 
+    /** Loads one change request of the project; throws not found otherwise. */
     private static function changeRequest(PDO $conn, int $projectId, int $crId): array
     {
         try {
@@ -1482,6 +1532,7 @@ class ProjectToolsService
     //  Helpers
     // ======================================================================
 
+    /** Loads the project for the actor and checks they may change it; throws otherwise. */
     private static function changeable(PDO $conn, ActorContext $ctx, int $projectId): array
     {
         $p = ProjectsService::loadForActor($conn, $ctx, $projectId);
@@ -1489,6 +1540,7 @@ class ProjectToolsService
         return $p;
     }
 
+    /** Loads one member row of the project; throws not found otherwise. */
     private static function member(PDO $conn, int $projectId, int $memberId): array
     {
         $st = $conn->prepare("SELECT * FROM project_members WHERE id = ? AND project_id = ?");
@@ -1498,6 +1550,7 @@ class ProjectToolsService
         return $r;
     }
 
+    /** Loads one deliverable of the project; throws not found otherwise. */
     private static function item(PDO $conn, int $projectId, int $itemId): array
     {
         $st = $conn->prepare("SELECT * FROM project_items WHERE id = ? AND project_id = ?");
@@ -1507,6 +1560,7 @@ class ProjectToolsService
         return $r;
     }
 
+    /** A validated MoSCoW value in lower case, or null for none. */
     private static function moscow($v): ?string
     {
         if ($v === null || $v === '') return null;
@@ -1515,6 +1569,7 @@ class ProjectToolsService
         return $v;
     }
 
+    /** A validated stage id of this project, or null for none. */
     private static function stageOf(PDO $conn, int $projectId, $stageId): ?int
     {
         if ($stageId === null || $stageId === '' || (int)$stageId <= 0) return null;
@@ -1524,6 +1579,7 @@ class ProjectToolsService
         return (int)$stageId;
     }
 
+    /** A validated project role id, or null for none. */
     private static function roleId(PDO $conn, $v): ?int
     {
         if ($v === null || $v === '' || (int)$v <= 0) return null;
@@ -1533,6 +1589,7 @@ class ProjectToolsService
         return (int)$v;
     }
 
+    /** The name of a project role, or null. */
     private static function roleName(PDO $conn, ?int $id): ?string
     {
         if (!$id) return null;
@@ -1541,6 +1598,7 @@ class ProjectToolsService
         return ($n = $st->fetchColumn()) !== false ? (string)$n : null;
     }
 
+    /** The name of a project member - analyst, team, portal user or contractor - or #id. */
     private static function memberName(PDO $conn, int $memberId): string
     {
         $c = self::contractorMemberSql($conn);
@@ -1551,6 +1609,7 @@ class ProjectToolsService
         return (string)($st->fetchColumn() ?: ('#' . $memberId));
     }
 
+    /** Runs a one-id lookup query and throws a validation error with $msg when it finds nothing. */
     private static function mustExist(PDO $conn, string $sql, int $id, string $msg): void
     {
         $st = $conn->prepare($sql);
@@ -1558,6 +1617,7 @@ class ProjectToolsService
         if (!$st->fetchColumn()) throw new ServiceError('validation', 'invalid_field', $msg);
     }
 
+    /** Trimmed text cut to $max characters, or null when blank. */
     private static function str($v, int $max): ?string
     {
         if ($v === null) return null;
@@ -1565,6 +1625,7 @@ class ProjectToolsService
         return $s === '' ? null : mb_substr($s, 0, $max);
     }
 
+    /** The history source for the actor: 'api' or 'app'. */
     private static function src(ActorContext $ctx): string
     {
         return $ctx->source === 'api' ? 'api' : 'app';
@@ -1645,6 +1706,7 @@ class ProjectToolsService
         }
     }
 
+    /** Deletes a budget line, records it in the project's history, and checks health and tolerances again. */
     public static function deleteBudgetLine(PDO $conn, ActorContext $ctx, int $projectId, int $lineId): void
     {
         self::changeable($conn, $ctx, $projectId);

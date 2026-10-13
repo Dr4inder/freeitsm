@@ -6,7 +6,7 @@ Reference lookups
 function apiContractLookupList(PDO $conn, string $table): void
 ```
 
-Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 528.
+Defined in [api/v1/resources/contracts.php](/code/files/api/v1/resources/contracts.php.md), line 565.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

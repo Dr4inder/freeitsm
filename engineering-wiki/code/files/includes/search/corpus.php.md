@@ -2,6 +2,27 @@
 
 > PHP - 151 lines
 
+The search corpus — the ONE place anything writes to `search_documents`.
+
+A corpus row is DERIVED. Every one of them is rebuildable from its source, so
+losing the table costs a reindex and nothing else. That is deliberate: it is
+what stops a future change of search engine from turning into a re-extraction
+of every attachment ever received.
+
+Two rules hold this together:
+
+ 1. NOTHING ELSE WRITES TO THE TABLE. Indexing is an upsert keyed on
+    (source_type, source_id), so re-indexing the same source updates in place
+    and can never duplicate it.
+
+ 2. `body` IS STRIPPED PLAINTEXT, never HTML. Indexing markup makes every
+    ticket "contain" div, span and style, so a search for "table" matches the
+    entire database.
+
+⚠️ InnoDB does not expose rows written in an UNCOMMITTED transaction to
+MATCH...AGAINST — its full-text cache is flushed at commit. Nothing here can
+therefore write a row and then search for it in the same transaction.
+
 ## Functions
 
 | Function | Line | What it does |

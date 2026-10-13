@@ -1,4 +1,9 @@
 <?php
+/**
+ * API: every supplier, with its type and status names, sorted by legal name.
+ *
+ * @output {success, suppliers: [...]}
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

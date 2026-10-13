@@ -6,7 +6,7 @@ One entry's bytes, or null when it is not there.
 function spreadsheetZipGet(array &$zip, string $name): ?string
 ```
 
-Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 375.
+Defined in [includes/spreadsheet.php](/code/files/includes/spreadsheet.php.md), line 379.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

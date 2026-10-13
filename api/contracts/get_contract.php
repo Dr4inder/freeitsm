@@ -1,4 +1,15 @@
 <?php
+/**
+ * API: one contract, with its supplier or customer, owner, status, payment schedule and
+ * cost centre.
+ *
+ * A customer contract for a company the analyst cannot see is answered as "not found",
+ * like one that does not exist (contractVisibilitySql).
+ *
+ * @input  id  the contract
+ * @output {success, contract} - contract carries party_label and multi_company (show the company only when there is a choice)
+ * @wiki Customer-Contracts-Developer-Guide
+ */
 session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';

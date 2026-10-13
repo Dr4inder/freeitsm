@@ -6,7 +6,7 @@ Reference lookups
 function apiTaskStatusesList(PDO $conn, array $apiKey, array $params, array $body): void
 ```
 
-Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 443.
+Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md), line 453.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,7 +21,7 @@ Defined in [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.m
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 445 | `apiTaskStatusesList` | read [task_statuses](/code/tables/task_statuses.md) |  |
+| 455 | `apiTaskStatusesList` | read [task_statuses](/code/tables/task_statuses.md) |  |
 
 ## Calls
 

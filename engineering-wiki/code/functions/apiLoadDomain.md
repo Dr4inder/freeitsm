@@ -6,7 +6,7 @@ The by-id gate: existence + company scope, both failing as 404.
 function apiLoadDomain(PDO $conn, array $apiKey, int $id): array
 ```
 
-Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 132.
+Defined in [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), line 141.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

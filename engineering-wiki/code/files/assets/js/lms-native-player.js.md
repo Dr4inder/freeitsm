@@ -1,6 +1,6 @@
 # assets/js/lms-native-player.js
 
-> JavaScript - 264 lines
+> JavaScript - 294 lines
 
 LMS — the learner's player for an authored course.
 
@@ -15,18 +15,18 @@ be made to lie about it either.
 | Function | Line | What it does |
 |---|--:|---|
 | `LMSPlayer(()` | 10 | LMS — the learner's player for an authored course. |
-| `esc(s)` | 35 |  |
-| `elapsed()` | 36 |  |
-| `init()` | 38 |  |
-| `renderToc()` | 68 |  |
-| `renderLesson()` | 86 |  |
-| `unanswered()` | 136 | Every question in the course must be answered before it can be graded. |
-| `go(i)` | 144 |  |
-| `next()` | 152 |  |
-| `prev()` | 157 |  |
-| `saveBookmark(unloading)` | 159 |  |
-| `finish()` | 176 |  |
-| `renderResult(d)` | 207 |  |
+| `esc(s)` | 36 | Escapes text for safe use in HTML. |
+| `elapsed()` | 38 | Seconds since the time count was last sent to the server. |
+| `init()` | 44 | Loads the course and its lessons, registers the attempt and resumes at the saved bookmark, then draws the contents list and the lesson. Saves a bookmark when the page is closed before finishing. |
+| `renderToc()` | 78 | Draws the lesson contents list (current and done lessons marked) and updates the progress bar and "step n of m" label. |
+| `renderLesson()` | 100 | Shows the current lesson's body and its quiz questions, keeping answers already given, and sets the Previous / Next (or Finish) buttons. |
+| `unanswered()` | 150 | Every question in the course must be answered before it can be graded. |
+| `go(i)` | 159 | Moves to lesson i, saving a bookmark first. |
+| `next()` | 168 | Moves to the next lesson, or finishes the course on the last one. |
+| `prev()` | 174 | Moves back one lesson. |
+| `saveBookmark(unloading)` | 180 | Saves the current lesson and the time spent through native_progress.php; when the page is closing it uses sendBeacon so the request survives. |
+| `finish()` | 201 | Submits every answer for grading through native_progress.php, asking first when some questions are unanswered, then shows the result. |
+| `renderResult(d)` | 237 | Shows the graded result - passed, failed or completed with the score and pass mark - then the review of each question with the correct answer and explanation, and the Finish (and Retry on a fail) buttons. |
 
 ## Loaded by
 

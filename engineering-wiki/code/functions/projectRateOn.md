@@ -6,7 +6,7 @@ The rate in force on `$date` for one scope/ref, or null.
 function projectRateOn(array $rates, string $scope, int $ref, string $date): ?float
 ```
 
-Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 103.
+Defined in [includes/projects/budget.php](/code/files/includes/projects/budget.php.md), line 107.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

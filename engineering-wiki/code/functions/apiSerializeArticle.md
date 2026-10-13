@@ -6,7 +6,7 @@ Summary shape (lists) — preview instead of the full body. Detail adds body_htm
 function apiSerializeArticle(PDO $conn, array $r, bool $detail = false): array
 ```
 
-Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 73.
+Defined in [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md), line 75.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
