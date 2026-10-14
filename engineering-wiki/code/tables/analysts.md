@@ -181,7 +181,7 @@
 | [api/tickets/get_sla_notification_rules.php](/code/files/api/tickets/get_sla_notification_rules.php.md) | L24, L43 |  |
 | [api/tickets/get_team_analysts.php](/code/files/api/tickets/get_team_analysts.php.md) | L28 |  |
 | [api/tickets/get_ticket_audit.php](/code/files/api/tickets/get_ticket_audit.php.md) | L36 |  |
-| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L339, L350 |  |
+| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L337, L348 |  |
 | [api/tickets/get_ticket_tasks.php](/code/files/api/tickets/get_ticket_tasks.php.md) | L44 |  |
 | [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L345, getCategoricalData L347, getCategoricalWithSeries L391, getCategoricalWithSeries L394 |  |
 | [api/tickets/get_time_entries.php](/code/files/api/tickets/get_time_entries.php.md) | L47 |  |

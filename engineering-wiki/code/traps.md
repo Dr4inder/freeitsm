@@ -14,6 +14,12 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 [Open D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md)
 
+## api/tickets/get_ticket_counts.php
+
+- **Line 82:** never short-circuit an empty department list to 0 - count "t.department_id IS NULL". Every team member sees no-department tickets (the branch below says so with "OR t.department_id IS NULL"); returning 0 here hid ALL of them, and an install with no departments yet showed 0 everywhere once someone joined a team. Applies to the three other empty-list branches below too. tests/team-counts-no-departments.php
+
+[Open get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md)
+
 ## assets/js/engineering-wiki.js
 
 - **Line 86:** `renderAll()` rebuilds EVERY pane's DOM, so every pane is redrawn (from

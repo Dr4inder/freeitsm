@@ -52,7 +52,7 @@
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L49 |  |
 | [api/tickets/get_emails.php](/code/files/api/tickets/get_emails.php.md) | L56 |  |
 | [api/tickets/get_scheduled_tickets.php](/code/files/api/tickets/get_scheduled_tickets.php.md) | L45 |  |
-| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L98, L137, L152, L191, L206, L264 ... |  |
+| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L96, L135, L150, L189, L204, L262 ... |  |
 | [api/tickets/get_ticket_statuses.php](/code/files/api/tickets/get_ticket_statuses.php.md) | L20 |  |
 | [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L303, getCategoricalWithSeries L381, getTimeData L459, getTimeWithSeries L499, getCreatedVsClosedData L581 |  |
 | [api/tickets/get_user_tickets.php](/code/files/api/tickets/get_user_tickets.php.md) | L31 |  |

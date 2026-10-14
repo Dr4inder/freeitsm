@@ -163,7 +163,7 @@
 | [api/tickets/get_inbox_activity.php](/code/files/api/tickets/get_inbox_activity.php.md) | L41 |  |
 | [api/tickets/get_scheduled_tickets.php](/code/files/api/tickets/get_scheduled_tickets.php.md) | L45 |  |
 | [api/tickets/get_ticket_classification.php](/code/files/api/tickets/get_ticket_classification.php.md) | L64, L67, L73 |  |
-| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L89, L98, L112, L121, L137, L152 ... |  |
+| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L87, L96, L110, L119, L135, L150 ... |  |
 | [api/tickets/get_ticket_thread.php](/code/files/api/tickets/get_ticket_thread.php.md) | L143 |  |
 | [api/tickets/get_ticket_widget_data.php](/code/files/api/tickets/get_ticket_widget_data.php.md) | getCategoricalData L305, getCategoricalData L307, getCategoricalData L309, getCategoricalData L311, getCategoricalData L334, getCategoricalData L343 ... |  |
 | [api/tickets/get_triage.php](/code/files/api/tickets/get_triage.php.md) | L38 |  |

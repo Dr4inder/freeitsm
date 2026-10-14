@@ -79,13 +79,11 @@ try {
         $accessibleDeptsStmt->closeCursor();
 
         if (empty($accessibleDepts)) {
-            // 🔴 A team linked to NO departments still sees tickets with no
-            // department - the same allowance the branch below gives every team
-            // ("OR t.department_id IS NULL"). This used to set every count to 0
-            // instead, so the emptiest setup hid the most: an install with no
-            // departments yet, where EVERY ticket has none, showed 0 everywhere
-            // the moment someone joined a team. A department nobody linked is
-            // still hidden from team members, exactly as before.
+            // TRAP: never short-circuit an empty department list to 0 - count "t.department_id IS NULL".
+            // Every team member sees no-department tickets (the branch below says so with
+            // "OR t.department_id IS NULL"); returning 0 here hid ALL of them, and an install with
+            // no departments yet showed 0 everywhere once someone joined a team. Applies to the
+            // three other empty-list branches below too. tests/team-counts-no-departments.php
             $totalStmt = $conn->prepare("SELECT COUNT(*) FROM tickets t WHERE t.department_id IS NULL$ttSql");
             $totalStmt->execute($ttParams);
             $totalCount = (int)$totalStmt->fetchColumn();
