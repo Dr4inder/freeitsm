@@ -131,5 +131,5 @@
 | [system/analysts/index.php](/code/files/system/analysts/index.php.md) | L264 |  |
 | [system/sso/carddav.php](/code/files/system/sso/carddav.php.md) | L59 |  |
 | [system/sso/provider.php](/code/files/system/sso/provider.php.md) | L47 |  |
-| [system/teams/index.php](/code/files/system/teams/index.php.md) | L198 |  |
+| [system/teams/index.php](/code/files/system/teams/index.php.md) | L199 |  |
 

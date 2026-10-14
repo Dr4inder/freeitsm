@@ -1,6 +1,6 @@
 # api/tickets/get_ticket_counts.php
 
-> API endpoint - 545 lines
+> API endpoint - 579 lines
 
 API Endpoint: Get ticket counts by department and status Returns hierarchical count data for folder view Respects team-based filtering for users with team assignments
 
@@ -17,28 +17,32 @@ API Endpoint: Get ticket counts by department and status Returns hierarchical co
 |--:|---|---|---|
 | 28 |  | read [analyst_teams](/code/tables/analyst_teams.md) |  |
 | 72 |  | read [department_teams](/code/tables/department_teams.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 92 |  | read [tickets](/code/tables/tickets.md) |  |
-| 101 |  | read [departments](/code/tables/departments.md), read [tickets](/code/tables/tickets.md) |  |
-| 117 |  | read [departments](/code/tables/departments.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 132 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 147 |  | read [tickets](/code/tables/tickets.md) |  |
-| 155 |  | read [departments](/code/tables/departments.md), read [tickets](/code/tables/tickets.md) |  |
-| 171 |  | read [departments](/code/tables/departments.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 186 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 200 |  | read [tickets](/code/tables/tickets.md) |  |
-| 212 |  | read [tickets](/code/tables/tickets.md) |  |
-| 221 |  | read [tickets](/code/tables/tickets.md) |  |
-| 239 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 254 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 267 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 305 |  | read [analysts](/code/tables/analysts.md), read [tickets](/code/tables/tickets.md) |  |
-| 316 |  | read [analysts](/code/tables/analysts.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 330 |  | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 453 |  | read [teams](/code/tables/teams.md), read [tickets](/code/tables/tickets.md) |  |
-| 464 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 496 |  | read [tickets](/code/tables/tickets.md) |  |
-| 508 |  | read [tickets](/code/tables/tickets.md) |  |
-| 517 |  | read [tickets](/code/tables/tickets.md) |  |
+| 89 |  | read [tickets](/code/tables/tickets.md) |  |
+| 98 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 112 |  | read [tickets](/code/tables/tickets.md) |  |
+| 121 |  | read [departments](/code/tables/departments.md), read [tickets](/code/tables/tickets.md) |  |
+| 137 |  | read [departments](/code/tables/departments.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 152 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 167 |  | read [tickets](/code/tables/tickets.md) |  |
+| 175 |  | read [departments](/code/tables/departments.md), read [tickets](/code/tables/tickets.md) |  |
+| 191 |  | read [departments](/code/tables/departments.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 206 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 220 |  | read [tickets](/code/tables/tickets.md) |  |
+| 230 |  | read [tickets](/code/tables/tickets.md) |  |
+| 237 |  | read [tickets](/code/tables/tickets.md) |  |
+| 246 |  | read [tickets](/code/tables/tickets.md) |  |
+| 264 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 277 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 288 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 301 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 339 |  | read [analysts](/code/tables/analysts.md), read [tickets](/code/tables/tickets.md) |  |
+| 350 |  | read [analysts](/code/tables/analysts.md), read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 364 |  | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 487 |  | read [teams](/code/tables/teams.md), read [tickets](/code/tables/tickets.md) |  |
+| 498 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 530 |  | read [tickets](/code/tables/tickets.md) |  |
+| 542 |  | read [tickets](/code/tables/tickets.md) |  |
+| 551 |  | read [tickets](/code/tables/tickets.md) |  |
 
 ## How it hangs together
 

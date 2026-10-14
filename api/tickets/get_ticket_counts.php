@@ -79,11 +79,31 @@ try {
         $accessibleDeptsStmt->closeCursor();
 
         if (empty($accessibleDepts)) {
-            // No accessible departments - just count unassigned
-            $totalCount = 0;
+            // 🔴 A team linked to NO departments still sees tickets with no
+            // department - the same allowance the branch below gives every team
+            // ("OR t.department_id IS NULL"). This used to set every count to 0
+            // instead, so the emptiest setup hid the most: an install with no
+            // departments yet, where EVERY ticket has none, showed 0 everywhere
+            // the moment someone joined a team. A department nobody linked is
+            // still hidden from team members, exactly as before.
+            $totalStmt = $conn->prepare("SELECT COUNT(*) FROM tickets t WHERE t.department_id IS NULL$ttSql");
+            $totalStmt->execute($ttParams);
+            $totalCount = (int)$totalStmt->fetchColumn();
+            $totalStmt->closeCursor();
+
             $departments = [];
             $deptStatusCounts = [];
-            $statusCounts = [];
+
+            $statusStmt = $conn->prepare(
+                "SELECT ts.name AS status, COUNT(*) as count
+                   FROM tickets t
+                   LEFT JOIN ticket_statuses ts ON ts.id = t.status_id
+                  WHERE t.department_id IS NULL$ttSql
+               GROUP BY ts.name"
+            );
+            $statusStmt->execute($ttParams);
+            $statusCounts = $statusStmt->fetchAll(PDO::FETCH_ASSOC);
+            $statusStmt->closeCursor();
         } else {
             // Build IN clause with the department IDs
             $deptIdPlaceholders = implode(',', array_fill(0, count($accessibleDepts), '?'));
@@ -206,7 +226,12 @@ try {
     // Unassigned-by-analyst count (tickets with no assigned analyst, within accessible depts)
     if ($hasTeamFilter) {
         if (empty($accessibleDepts)) {
-            $unassignedAnalystCount = 0;
+            // No departments linked: tickets with no department, as above.
+            $uaStmt = $conn->prepare("SELECT COUNT(*) FROM tickets t
+                                       WHERE t.assigned_analyst_id IS NULL AND t.department_id IS NULL$ttSql");
+            $uaStmt->execute($ttParams);
+            $unassignedAnalystCount = (int)$uaStmt->fetchColumn();
+            $uaStmt->closeCursor();
         } else {
             $deptIdPlaceholdersUA = implode(',', array_fill(0, count($accessibleDepts), '?'));
             $uaSql = "SELECT COUNT(*) FROM tickets t
@@ -248,7 +273,16 @@ try {
 
     if ($hasTeamFilter) {
         if (empty($accessibleDepts)) {
-            $unassignedAnalystStatusRows = [];
+            $uaStatusStmt = $conn->prepare(
+                "SELECT ts.name AS status, COUNT(*) as count
+                   FROM tickets t
+                   LEFT JOIN ticket_statuses ts ON ts.id = t.status_id
+                  WHERE t.assigned_analyst_id IS NULL AND t.department_id IS NULL$ttSql
+               GROUP BY ts.name"
+            );
+            $uaStatusStmt->execute($ttParams);
+            $unassignedAnalystStatusRows = $uaStatusStmt->fetchAll(PDO::FETCH_ASSOC);
+            $uaStatusStmt->closeCursor();
         } else {
             $uaStatusStmt = $conn->prepare(
                 "SELECT ts.name AS status, COUNT(*) as count
@@ -289,7 +323,7 @@ try {
     if ($hasTeamFilter) {
         $ownClause = "t.assigned_analyst_id = ? OR t.owner_id = ?";
         if (empty($accessibleDepts)) {
-            $deptJoinFilter = " AND ($ownClause)";
+            $deptJoinFilter = " AND (t.department_id IS NULL OR $ownClause)";
             $analystParams = [$analystId, $analystId];
         } else {
             $deptIn = implode(',', array_fill(0, count($accessibleDepts), '?'));

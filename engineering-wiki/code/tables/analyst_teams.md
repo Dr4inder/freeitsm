@@ -26,7 +26,7 @@
 
 | File | Where | Purpose |
 |---|---|---|
-| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L234, L241, L373, L405, L409, L410 ... |  |
+| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L234, L241, L383, L416, L420, L421 ... |  |
 | [api/system/get_effective_module_access.php](/code/files/api/system/get_effective_module_access.php.md) | L35 |  |
 | [api/tickets/get_analyst_teams.php](/code/files/api/tickets/get_analyst_teams.php.md) | L28 |  |
 | [api/tickets/get_analysts.php](/code/files/api/tickets/get_analysts.php.md) | L46, L49 |  |

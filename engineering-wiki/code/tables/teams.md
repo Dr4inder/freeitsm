@@ -40,7 +40,7 @@
 | [api/projects/lookups.php](/code/files/api/projects/lookups.php.md) | L27 |  |
 | [api/reporting/packs/shares.php](/code/files/api/reporting/packs/shares.php.md) | L34 |  |
 | [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L194 |  |
-| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L312, L366, L409, L411, L420 |  |
+| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L317, L376, L420, L422, L431 |  |
 | [api/system/get_effective_module_access.php](/code/files/api/system/get_effective_module_access.php.md) | L35 |  |
 | [api/system/get_module_access.php](/code/files/api/system/get_module_access.php.md) | L36 |  |
 | [api/system/save_module_grants.php](/code/files/api/system/save_module_grants.php.md) | L36 |  |
@@ -52,7 +52,7 @@
 | [api/tickets/get_department_teams.php](/code/files/api/tickets/get_department_teams.php.md) | L28 |  |
 | [api/tickets/get_team_companies.php](/code/files/api/tickets/get_team_companies.php.md) | L28 |  |
 | [api/tickets/get_teams.php](/code/files/api/tickets/get_teams.php.md) | L21, L40 |  |
-| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L453 |  |
+| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L487 |  |
 | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42 |  |
 | [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | analystSignInReady L54, analystSignInTeamMethods L73 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTask L184 |  |

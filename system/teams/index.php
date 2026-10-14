@@ -129,6 +129,7 @@ $translationNamespaces = ['common', 'tickets'];
             <div></div>
             <button class="add-btn" onclick="openTeamModal()"><?php echo htmlspecialchars(t('common.add')); ?></button>
         </div>
+        <div id="teamsNoDeptWarning" style="display:none; margin:0 0 15px; padding:12px 15px; border-radius:6px; background:var(--warning-bg, #fef3c7); color:var(--warning-text, #92400e); border:1px solid var(--warning-border, #f0d9a8); font-size:13px; line-height:1.5;"></div>
         <table>
             <thead>
                 <tr>
@@ -343,11 +344,27 @@ $translationNamespaces = ['common', 'tickets'];
                 return { ...team, deptCount, analystCount, companyChip };
             }));
 
+            // A team with members but no departments narrows those members' ticket
+            // folders to tickets with no department. Fine on an install with no
+            // departments yet; a surprise anywhere else - so say it, once, here.
+            const noDept = teamsWithCounts.filter(tm => tm.deptCount === 0 && tm.analystCount > 0);
+            const warn = document.getElementById('teamsNoDeptWarning');
+            if (noDept.length) {
+                warn.innerHTML = `<strong>${noDept.length === 1 ? '1 team has' : noDept.length + ' teams have'} members but no departments:</strong> `
+                    + noDept.map(tm => escapeHtml(tm.name)).join(', ') + '. '
+                    + 'Someone in a team only gets ticket folders and counts for that team\'s departments, so these members\' folders only count tickets with no department, plus their own. '
+                    + 'Link departments with the building icon on the team, or take the members out of the team. '
+                    + 'No departments yet? Create them in <a href="../../tickets/settings/#departments" style="color:inherit; font-weight:600;">Tickets → Settings → Departments</a>.';
+                warn.style.display = 'block';
+            } else {
+                warn.style.display = 'none';
+            }
+
             tbody.innerHTML = teamsWithCounts.map(team => `
                 <tr>
                     <td><strong>${escapeHtml(team.name)}</strong>${team.companyChip}${signinChip(team)}</td>
                     <td>${escapeHtml(team.description || '')}</td>
-                    <td>${team.deptCount} department(s)</td>
+                    <td>${team.deptCount} department(s)${team.deptCount === 0 && team.analystCount > 0 ? ' <span class="status-badge" style="background:var(--warning-bg, #fef3c7);color:var(--warning-text, #92400e);margin-left:6px;" title="Members' ticket folders only count tickets with no department, plus their own">Check</span>' : ''}</td>
                     <td>${team.analystCount} analyst(s)</td>
                     <td>${team.display_order}</td>
                     <td><span class="status-badge status-${team.is_active ? 'active' : 'inactive'}">${team.is_active ? 'Active' : 'Inactive'}</span></td>
@@ -436,8 +453,11 @@ $translationNamespaces = ['common', 'tickets'];
                 currentIds = cur.map(x => x.id);
             } catch (e) { }
 
-            if (items.length === 0) {
-                list.innerHTML = `<div style="padding:15px;text-align:center;color:var(--text-faint,#999);">No ${isDept ? 'departments' : 'analysts'} available.</div>`;
+            if (items.length === 0 && isDept) {
+                list.innerHTML = '<div style="padding:15px;text-align:center;color:var(--text-muted,#666);line-height:1.5;">There are no departments yet. '
+                    + 'Create them in <a href="../../tickets/settings/#departments" style="font-weight:600;">Tickets → Settings → Departments</a>, then come back here to link them to this team.</div>';
+            } else if (items.length === 0) {
+                list.innerHTML = `<div style="padding:15px;text-align:center;color:var(--text-faint,#999);">No analysts available.</div>`;
             } else {
                 // Render ALL items (not just active) so an existing link to an
                 // inactive department/analyst isn't silently dropped on save.

@@ -1,6 +1,6 @@
 # api/system/debug-tools/D018_ticket_folder_counts.php
 
-> API endpoint - 488 lines
+> API endpoint - 499 lines
 
 Debug Tool D018 — why do the ticket folder counts say 0?
 
@@ -12,11 +12,11 @@ while the install is perfectly healthy. This tool walks the same filters one
 at a time for a chosen analyst and says which step the tickets disappear at.
 
 🔑 THE COMMONEST CAUSE IS NOT THE DATABASE. An analyst who belongs to a team
-only sees the departments that team is linked to (department_teams). A team
-linked to NO department sees nothing - except their own analyst folder,
-which always counts tickets assigned to them. So "My tickets 153, everything
-else 0" is the fingerprint of a team with no departments, and the fix is in
-System → Teams, not in Database Verification.
+gets folders and counts only for the departments that team is linked to
+(department_teams), plus tickets with no department and their own. Until
+3.6.2 a team linked to NO department counted nothing at all bar their own
+folder - "My tickets 153, everything else 0" - even on an install with no
+departments yet. The fix is in System → Teams, not in Database Verification.
 
 🔴 ONE COPY OF THE FILTERS. The funnel uses the endpoint's own helpers -
 `ticketTenantFilter()`, `snoozeHiddenSql()` - rather than restating them, so a
@@ -59,25 +59,27 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 | 256 |  | read [tickets](/code/tables/tickets.md) |  |
 | 259 |  | read [tickets](/code/tables/tickets.md) |  |
 | 265 |  | read [tickets](/code/tables/tickets.md) |  |
-| 286 |  | read [tickets](/code/tables/tickets.md) |  |
-| 312 |  | read [teams](/code/tables/teams.md) |  |
-| 324 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
-| 346 |  | read [tickets](/code/tables/tickets.md), read [departments](/code/tables/departments.md) |  |
-| 366 |  | read [teams](/code/tables/teams.md) |  |
-| 373 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
-| 378 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
-| 387 |  | read [tickets](/code/tables/tickets.md), read [department_teams](/code/tables/department_teams.md) |  |
-| 401 |  | read [departments](/code/tables/departments.md), read [department_teams](/code/tables/department_teams.md) |  |
-| 405 |  | read [analysts](/code/tables/analysts.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
-| 409 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
-| 410 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
-| 411 |  | read [department_teams](/code/tables/department_teams.md), read [teams](/code/tables/teams.md) |  |
-| 412 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
+| 269 |  | read [tickets](/code/tables/tickets.md) |  |
+| 288 |  | read [tickets](/code/tables/tickets.md) |  |
+| 309 |  | read [tickets](/code/tables/tickets.md) |  |
+| 317 |  | read [teams](/code/tables/teams.md) |  |
+| 329 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
+| 356 |  | read [tickets](/code/tables/tickets.md), read [departments](/code/tables/departments.md) |  |
+| 376 |  | read [teams](/code/tables/teams.md) |  |
+| 383 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 388 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
+| 398 |  | read [tickets](/code/tables/tickets.md), read [department_teams](/code/tables/department_teams.md) |  |
+| 412 |  | read [departments](/code/tables/departments.md), read [department_teams](/code/tables/department_teams.md) |  |
+| 416 |  | read [analysts](/code/tables/analysts.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
 | 420 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
-| 435 |  | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 440 |  | read [tickets](/code/tables/tickets.md) |  |
-| 441 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 443 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 421 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 422 |  | read [department_teams](/code/tables/department_teams.md), read [teams](/code/tables/teams.md) |  |
+| 423 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
+| 431 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 446 |  | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 451 |  | read [tickets](/code/tables/tickets.md) |  |
+| 452 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 454 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## How it hangs together
 

@@ -10,11 +10,11 @@
  * at a time for a chosen analyst and says which step the tickets disappear at.
  *
  * 🔑 THE COMMONEST CAUSE IS NOT THE DATABASE. An analyst who belongs to a team
- * only sees the departments that team is linked to (department_teams). A team
- * linked to NO department sees nothing - except their own analyst folder,
- * which always counts tickets assigned to them. So "My tickets 153, everything
- * else 0" is the fingerprint of a team with no departments, and the fix is in
- * System → Teams, not in Database Verification.
+ * gets folders and counts only for the departments that team is linked to
+ * (department_teams), plus tickets with no department and their own. Until
+ * 3.6.2 a team linked to NO department counted nothing at all bar their own
+ * folder - "My tickets 153, everything else 0" - even on an install with no
+ * departments yet. The fix is in System → Teams, not in Database Verification.
  *
  * 🔴 ONE COPY OF THE FILTERS. The funnel uses the endpoint's own helpers -
  * ticketTenantFilter(), snoozeHiddenSql() - rather than restating them, so a
@@ -264,7 +264,9 @@ if ($hasTeamFilter) {
         $in = implode(',', array_fill(0, count($deptIds), '?'));
         $total = d018Count($conn, "SELECT COUNT(*) FROM tickets t WHERE (t.department_id IN ($in) OR t.department_id IS NULL) AND $where", array_merge($deptIds, $params));
     } else {
-        $total = 0;   // the endpoint does not query at all - see get_ticket_counts.php
+        // No departments linked: only tickets with no department (3.6.2 - before
+        // that the endpoint counted nothing at all here).
+        $total = d018Count($conn, "SELECT COUNT(*) FROM tickets t WHERE t.department_id IS NULL AND $where", $params);
     }
     $steps[] = ["...in a department the analyst's teams can see (or no department)", $total];
 } else {
@@ -302,6 +304,9 @@ if ($tenantOn) {
 }
 
 // ---- 4. TEAMS AND DEPARTMENTS ------------------------------------------
+// Tickets that are IN a department - what a team with no departments leaves out.
+// Zero on an install with no departments yet, where such a team changes nothing.
+$deptTickets = d018Count($conn, "SELECT COUNT(*) FROM tickets t WHERE t.department_id IS NOT NULL AND $baseWhere", $baseParams);
 $teamLines = [];
 if (!$hasTeamFilter) {
     $teamLines[] = "The analyst is in no team, so they see every department. Teams do not narrow their counts.";
@@ -337,9 +342,14 @@ if (!$hasTeamFilter) {
         }
     }
     if (!$deptIds) {
-        $findings[] = "The analyst is in a team, but none of their teams is linked to a department. That hides every ticket "
-                    . "except those assigned to them - which is why their own folder has a number and everything else says 0. "
-                    . "Fix: link the team to its departments in System → Teams, or take the analyst out of the team.";
+        $teamLines[] = '';
+        $teamLines[] = "None of their teams is linked to a department, so their folder numbers count only tickets with no";
+        $teamLines[] = "department, plus their own. Tickets that ARE in a department and left out: {$deptTickets}";
+        if (is_int($deptTickets) && $deptTickets > 0) {
+            $findings[] = "None of the analyst's teams is linked to a department, so their folder numbers leave out the {$deptTickets} "
+                        . "ticket(s) that are in a department. Fix: link the team to its departments in System → Teams "
+                        . "(departments are created in Tickets → Settings → Departments), or take the analyst out of the team.";
+        }
     } else {
         // Tickets sitting in departments this analyst cannot see.
         $in = implode(',', array_fill(0, count($deptIds), '?'));
@@ -379,8 +389,9 @@ if ($teams !== null) {
                             INNER JOIN departments d ON d.id = dt.department_id ORDER BY d.name")->fetchAll(PDO::FETCH_ASSOC) as $r) {
         $depts[(int)$r['team_id']][] = $r['name'] . ($r['is_active'] ? '' : ' [inactive]');
     }
-    $all[] = count($teams) . " team(s). Anyone in a team sees only that team's departments (plus tickets with no department";
-    $all[] = "and tickets assigned to them). Anyone in no team sees every department.";
+    $all[] = count($teams) . " team(s). Anyone in a team gets folders and counts for only that team's departments (plus";
+    $all[] = "tickets with no department, and their own). Anyone in no team gets every department. The ticket list itself";
+    $all[] = "is not narrowed by team.";
     foreach ($teams as $tm) {
         $tid = (int)$tm['id'];
         $inactive = isset($tm['is_active']) && !$tm['is_active'];
@@ -389,11 +400,11 @@ if ($teams !== null) {
         $all[] = '';
         $all[] = "{$tm['name']} (id {$tid})" . ($inactive ? '  [INACTIVE - still limits its members]' : '');
         $all[] = "  Members     : " . (empty($members[$tid]) ? '(none)' : count($members[$tid]) . ' - ' . implode(', ', $members[$tid]));
-        $all[] = "  Departments : " . (empty($depts[$tid]) ? 'NONE - its members see only their own tickets and unassigned ones' : implode(', ', $depts[$tid]));
+        $all[] = "  Departments : " . (empty($depts[$tid]) ? 'NONE - its members\' folder numbers count only tickets with no department, plus their own' : implode(', ', $depts[$tid]));
         $all[] = "  Tickets     : " . (is_int($tickets) ? number_format($tickets) : $tickets) . " in those departments (in the company used above)";
-        if (empty($depts[$tid]) && !empty($members[$tid])) {
-            $findings[] = "Team \"{$tm['name']}\" has members but no departments, so " . count($members[$tid])
-                        . " analyst(s) will see 0 on nearly every folder: " . implode(', ', $members[$tid]) . ".";
+        if (empty($depts[$tid]) && !empty($members[$tid]) && is_int($deptTickets) && $deptTickets > 0) {
+            $findings[] = "Team \"{$tm['name']}\" has members but no departments, so the folder numbers of " . count($members[$tid])
+                        . " analyst(s) leave out every ticket that is in a department: " . implode(', ', $members[$tid]) . ".";
         }
     }
 

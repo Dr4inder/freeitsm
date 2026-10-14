@@ -14,6 +14,9 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2329 | Tickets           | Fix         | An analyst in a team linked to no departments saw 0 on every ticket folder except their own, even for tickets with no department (which every team member is meant to see); those tickets are now counted, and departments a team is not linked to stay hidden as before. D018 updated to match. |
+| 2330 | System            | Improvement | System → Teams warns when a team has members but no departments, and the team's departments popup points to Tickets → Settings → Departments when none exist yet. |
+| 2331 | Tests             | Fix         | The module-access coverage test lists the MCP server (api/mcp/index.php) as exempt - it authenticates by API key and checks module access per tool - so the test passes again. |
 
 
 

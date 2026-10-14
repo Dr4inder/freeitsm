@@ -49,6 +49,7 @@ $EXEMPT = [
     'api/messaging/webhook.php'            => 'inbound messages from Telegram/WhatsApp/Slack, verified per channel',
     'api/messaging/media.php'              => 'media for inbound messages, served to the channel provider',
     'api/watchtower/get_dashboard_ext.php' => 'browser extension, authenticated by API key',
+    'api/mcp/index.php'                    => 'MCP server: bearer API key with mcp.read, no session; each tool checks module access (includes/mcp/tools.php)',
     'api/change-management/_field_catalogue.php' => 'an include, not an endpoint',
     'api/cmdb/_ai_helpers.php'             => 'an include, not an endpoint',
     'api/forms/_ai_helpers.php'            => 'an include, not an endpoint',

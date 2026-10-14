@@ -1,6 +1,6 @@
 # system/teams/index.php
 
-> PHP - 624 lines
+> PHP - 644 lines
 
 System - Teams
 
@@ -25,7 +25,7 @@ doesn't require moving the API.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 198 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 199 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## How it hangs together
 
