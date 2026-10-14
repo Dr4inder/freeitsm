@@ -27,6 +27,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2339 | Self-Service      | Improvement | Help Centre cards line up: titles along the top of each row and tags along the bottom (each card was a button, which centres its content vertically), with "N documents" above the tags. |
 | 2340 | Self-Service      | Fix         | Help Centre and dashboard article previews stopped mid-word with no sign there was more ("Close ot"): the body is cut in HTML characters, so the plain text never reached the length that added an ellipsis. The list now says when the article was longer, and the preview ends on a whole word with "…". |
 | 2341 | Self-Service      | Improvement | An article's documents in the Help Centre are tiles rather than a plain list: an icon per file type (one colour per kind - PDF, picture, Word, Excel, slides, archive, media, link), the name without its extension (two lines at most), and type and size; the whole tile downloads. |
+| 2342 | Self-Service      | Fix         | Help Centre articles had no space between paragraphs and numbered lists lost their indent (the portal loads inbox.css, which zeroes every margin and padding); article text now gets the same spacing as the analyst Knowledge reader - paragraphs, headings, lists, quotes, tables and code. |
 
 
 

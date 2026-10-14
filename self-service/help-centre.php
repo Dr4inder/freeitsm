@@ -107,6 +107,25 @@ $pageStyles = <<<'CSS'
             line-height: 1.7;
             color: var(--text, #333);
         }
+        /* Article spacing. The portal loads inbox.css, whose first rule is
+           `* { margin: 0; padding: 0 }` - so an article's paragraphs ran
+           together and a numbered list lost its indent, the numbers hanging
+           out past the text. The same values the analyst reader uses
+           (assets/css/knowledge.css, .article-content-body), so an article
+           reads the same to a customer as to the team that wrote it. */
+        .hc-body h1, .hc-body h2, .hc-body h3, .hc-body h4 { margin: 24px 0 12px; line-height: 1.35; }
+        .hc-body p { margin-bottom: 16px; }
+        .hc-body ul, .hc-body ol { margin-bottom: 16px; padding-left: 24px; }
+        .hc-body li { margin-bottom: 4px; }
+        .hc-body li > ul, .hc-body li > ol { margin: 4px 0 0; }
+        .hc-body blockquote { margin: 0 0 16px; padding: 4px 0 4px 14px; border-left: 3px solid var(--border, #e5e7eb); color: var(--text-muted, #666); }
+        .hc-body table { margin-bottom: 16px; border-collapse: collapse; }
+        .hc-body th, .hc-body td { border: 1px solid var(--border, #e5e7eb); padding: 6px 10px; text-align: left; vertical-align: top; }
+        .hc-body code { background: var(--surface-hover, #f3f4f6); padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+        .hc-body pre code { background: none; padding: 0; }
+        .hc-body pre { margin-bottom: 16px; }
+        .hc-body > :first-child { margin-top: 0; }
+        .hc-body > :last-child { margin-bottom: 0; }
         .hc-body img { max-width: 100%; height: auto; }
         .hc-body table { max-width: 100%; }
         .hc-body pre {
