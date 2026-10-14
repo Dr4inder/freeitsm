@@ -34,6 +34,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2346 | System            | Feature     | System -> Analysts: the bin icon opens "When someone leaves" - lists their open work (moved to another analyst or nobody through each module's own service), what is set up for them, and offers Deactivate, Anonymise ("Former analyst #N": contact details, sign-in links and personal settings removed, stored name copies replaced, records kept) or Delete (only with no history). |
 | 2347 | Tests             | Improvement | New tests/analyst-lifecycle.php: every one of the 212 columns that refers to an analyst must be classified in analystReferenceRegistry(), plus the three actions on throwaway analysts (21 checks). |
 | 2348 | Docs              | Improvement | Pre-release docs audit for 3.7.0: System help Teams no longer says a team with no departments shows an empty ticket list (and says teams organise folders rather than lock tickets); D018 text follows the fix; the portal guide tells customers about article documents; wiki System, Staff access, Folder pane (user + developer), Knowledge and REST Analysts pages cover #176, #177 and #178; every "3.6.2" reference now says 3.7.0. |
+| 2349 | Assets            | Fix         | A lease could not be scrolled on a phone: the mobile layer makes the page a fixed-height column and the Leases wrapper (a plain div) was squeezed to it with nothing left to scroll. .ls-wrap now takes the scroller role at 768px and below (Mobile-Friendly-Techniques section 28); desktop unchanged. |
 
 
 

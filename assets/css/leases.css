@@ -92,6 +92,17 @@
 .ls-pick-row input { margin-top: 3px; }
 
 
+/* The scroller. At 768px and below mobile.css (LAYER 2) makes <body> a 100dvh
+   flex column, so .ls-wrap - a plain div - became a flex item squeezed to the
+   screen with nothing left to scroll: a lease could not be read past the fold
+   on a phone. Hand it the scroller role explicitly, as the RFP pages do
+   (Mobile-Friendly-Techniques §28). 768 to match the layer that causes it.
+   TRAP: keep min-height: 0 - without it the flex item will not shrink below its
+   content, the page grows past the screen again and overflow-y never fires. */
+@media (max-width: 768px) {
+    .ls-wrap { flex: 1 1 auto; min-height: 0; width: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+}
+
 @media (max-width: 700px) {
     .ls-wrap { padding: 14px 16px 30px; }
     .ls-top input[type=search] { min-width: 0; flex: 1; }
