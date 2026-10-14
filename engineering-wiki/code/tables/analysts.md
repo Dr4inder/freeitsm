@@ -51,7 +51,6 @@
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):614 |  | insert | `username`, `password_hash`, `full_name`, `email`, `is_active`, `is_admin`, `must_change_password`, `created_datetime` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):641 |  | update | `must_change_password` |  |
 | [api/system/delete_sso_provider.php](/code/files/api/system/delete_sso_provider.php.md):57 |  | update | `auth_provider_id` |  |
-| [api/tickets/delete_analyst.php](/code/files/api/tickets/delete_analyst.php.md):59 |  | delete |  |  |
 | [api/tickets/reset_analyst_password.php](/code/files/api/tickets/reset_analyst_password.php.md):50 |  | update | `password_hash`, `last_modified_datetime` |  |
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md):112 |  | update | `username`, `full_name`, `email`, `password_hash`, `is_active`, `auth_provider_id`, `is_admin`, `last_modified_datetime` |  |
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md):126 |  | update | `username`, `full_name`, `email`, `is_active`, `auth_provider_id`, `is_admin`, `last_modified_datetime` |  |
@@ -59,6 +58,9 @@
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md):154 |  | update | `auth_follow_team` |  |
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md):163 |  | update | `can_access_all_modules` |  |
 | [api/tickets/save_analyst.php](/code/files/api/tickets/save_analyst.php.md):173 |  | update | `can_access_all_tenants` |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md):587 | `analystDeactivate` | update | `is_active`, `last_modified_datetime` |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md):612 | `analystAnonymise` | update | `username`, `full_name`, `email`, `job_title`, `department`, `phone`, `mobile`, `password_hash`, `totp_secret`, `totp_enabled` |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md):666 | `analystDelete` | delete |  |  |
 | [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md):151 | `analystSignInApply` | update | `auth_provider_id`, `last_modified_datetime` |  |
 | [includes/ldap.php](/code/files/includes/ldap.php.md):585 | `ldapCreateAnalyst` | insert | `username`, `password_hash`, `full_name`, `email`, `is_active`, `created_datetime`, `auth_provider_id`, `can_access_all_modules` |  |
 | [includes/ldap.php](/code/files/includes/ldap.php.md):651 | `ldapResolveAnalyst` | update | `email` |  |
@@ -170,9 +172,9 @@
 | [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md) | L117 |  |
 | [api/tickets/ai_read.php](/code/files/api/tickets/ai_read.php.md) | L103 |  |
 | [api/tickets/ai_summary.php](/code/files/api/tickets/ai_summary.php.md) | L89 |  |
+| [api/tickets/analyst_leaving.php](/code/files/api/tickets/analyst_leaving.php.md) | L39 |  |
 | [api/tickets/calendar_enrolment.php](/code/files/api/tickets/calendar_enrolment.php.md) | L401 |  |
 | [api/tickets/clear_rota_cells.php](/code/files/api/tickets/clear_rota_cells.php.md) | L56 |  |
-| [api/tickets/delete_analyst.php](/code/files/api/tickets/delete_analyst.php.md) | L38, L49, L51 |  |
 | [api/tickets/get_analysts.php](/code/files/api/tickets/get_analysts.php.md) | L21, L80 |  |
 | [api/tickets/get_emails.php](/code/files/api/tickets/get_emails.php.md) | L56 |  |
 | [api/tickets/get_notes.php](/code/files/api/tickets/get_notes.php.md) | L37 |  |
@@ -211,6 +213,7 @@
 | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiTasksGet L362, apiTaskCommentsList L429 |  |
 | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L38, apiTicketNotesList L335, apiTicketAuditList L403, apiTicketTimeEntriesList L462 |  |
 | [api/v1/resources/workflows.php](/code/files/api/v1/resources/workflows.php.md) | apiWorkflowSelect L41 |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md) | analystFootprint L436, analystFootprint L466, analystReassignLive L497, analystAnonymise L603, analystLcAssertActionable L686, analystLcAssertActionable L691 |  |
 | [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | analystSignInReady L53, analystSignInApply L135, analystSignInFollowerIds L191 |  |
 | [includes/calendar_sync/calendar_sync.php](/code/files/includes/calendar_sync/calendar_sync.php.md) | calendarSyncEnrolment L310 |  |
 | [includes/catalogue_approvals.php](/code/files/includes/catalogue_approvals.php.md) | catalogueApprovalsList L568 |  |

@@ -96,7 +96,7 @@ Then open [http://localhost:8080/setup/](http://localhost:8080/setup/) to verify
 | [War Room](https://github.com/edmozley/freeitsm/wiki/War-Room) | Chat on your own server for when Teams, Slack or the internet are down — channels, direct messages, search, attachments, and an AI situation report that drafts the update to the business |
 | [LMS](https://github.com/edmozley/freeitsm/wiki/LMS) | Author courses in-app (with AI) or upload SCORM; assign to learning groups, take them, and track progress by course, group, analyst or status; [competency tests](https://github.com/edmozley/freeitsm/wiki/LMS-Competency-Tests) for job candidates |
 | [Process Mapper](https://github.com/edmozley/freeitsm/wiki/Process-Mapper) | Flowchart builder with swimlanes, custom step types and Mermaid export |
-| [System](https://github.com/edmozley/freeitsm/wiki/System) | Administration — analysts, teams, roles, encryption, database verify, demo data, and your finance department's cost centres |
+| [System](https://github.com/edmozley/freeitsm/wiki/System) | Administration — analysts (with [leavers handled properly](https://github.com/edmozley/freeitsm/wiki/Analysts-Leaving): hand their open work on, then deactivate, anonymise or delete), teams, roles, encryption, database verify, demo data, and your finance department's cost centres |
 
 A **System Wiki** module also auto-documents the codebase from within the app, and a [browser extension](https://github.com/edmozley/freeitsm/wiki/Browser-Extension) puts the Watchtower badge count in your Chrome/Edge toolbar.
 

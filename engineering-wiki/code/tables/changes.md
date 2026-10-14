@@ -80,6 +80,7 @@
 | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L57, apiChangesList L258 |  |
 | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L241 |  |
 | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTasksGet L351 |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md) | analystReferenceRegistry L59, analystReferenceRegistry L60 |  |
 | [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateChanges L56 |  |
 | [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L198, projectLinkSearch L350, projectUnapprovedChanges L503 |  |
 | [includes/recent_trail.php](/code/files/includes/recent_trail.php.md) | recentTrailLabelsForType L463 |  |

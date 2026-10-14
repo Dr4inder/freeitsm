@@ -73,7 +73,7 @@ function getHelpTopics() {
                 ['id' => 'passwords', 'label' => 'Resetting a password'],
                 ['id' => 'leavers',   'label' => 'Leavers'],
             ],
-            'terms' => 'user staff agent account technician add person joiner leaver disable deactivate admin rights permissions'
+            'terms' => 'user staff agent account technician add person joiner leaver disable deactivate admin rights permissions anonymise anonymize gdpr forget erasure delete analyst reassign remove'
                      . " can't see tickets cannot see tickets no tickets empty queue locked out of system",
         ],
         'teams' => [

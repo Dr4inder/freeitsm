@@ -41,6 +41,7 @@
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L220 |  |
 | [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md) | apiChangeSelect L57, apiChangesList L258 |  |
 | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemsGet L241 |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md) | analystReferenceRegistry L58, analystReferenceRegistry L59, analystReferenceRegistry L60 |  |
 | [includes/feature_bingo/cards/changes.php](/code/files/includes/feature_bingo/cards/changes.php.md) | L43 |  |
 | [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L198, projectUnapprovedChanges L503 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewChange L231 |  |

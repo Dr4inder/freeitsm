@@ -149,7 +149,7 @@ function updateDomain(PDO $conn, ActorContext $ctx, int $id, array $in, string $
 | 198 | `DomainsService::updateDomain` | read [domains](/code/tables/domains.md) |  |
 | 230 | `DomainsService::updateDomain` | **update** [domains](/code/tables/domains.md) |  |
 
-**Called from:** [api/domains/auth_code.php](/code/files/api/domains/auth_code.php.md), [api/domains/links.php](/code/files/api/domains/links.php.md), [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md)
+**Called from:** [api/domains/auth_code.php](/code/files/api/domains/auth_code.php.md), [api/domains/links.php](/code/files/api/domains/links.php.md), [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md), [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md)
 
 ### deleteDomain
 

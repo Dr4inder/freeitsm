@@ -132,7 +132,7 @@ function updateProject(PDO $conn, ActorContext $ctx, int $id, array $in): int
 |--:|---|---|---|
 | 217 | `ProjectsService::updateProject` | **update** [projects](/code/tables/projects.md) |  |
 
-**Called from:** [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
+**Called from:** [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md), [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md), [includes/projects/assistant_chat.php](/code/files/includes/projects/assistant_chat.php.md)
 
 ### deleteProject
 

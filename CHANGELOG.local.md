@@ -30,6 +30,9 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2342 | Self-Service      | Fix         | Help Centre articles had no space between paragraphs and numbered lists lost their indent (the portal loads inbox.css, which zeroes every margin and padding); article text now gets the same spacing as the analyst Knowledge reader - paragraphs, headings, lists, quotes, tables and code. |
 | 2343 | Self-Service      | Improvement | Reading a Help Centre article no longer shows the Cards / List / Tree / Table buttons (they only affect the list, and come back with it), and "Back to all articles" is a proper button with an arrow rather than a small text link. |
 | 2344 | Self-Service      | Improvement | The Help Centre's Cards / List / Tree / Table buttons are the same height as the search box beside them, and a comfortable tap size on a phone, where they sit on their own line. |
+| 2345 | System            | Fix         | Deleting an analyst failed with a raw foreign-key error once they had a dashboard widget (GH #178); Delete now removes their personal settings with them and, when their name is on history or something is still set up for them, refuses in plain words and offers Deactivate or Anonymise instead. |
+| 2346 | System            | Feature     | System -> Analysts: the bin icon opens "When someone leaves" - lists their open work (moved to another analyst or nobody through each module's own service), what is set up for them, and offers Deactivate, Anonymise ("Former analyst #N": contact details, sign-in links and personal settings removed, stored name copies replaced, records kept) or Delete (only with no history). |
+| 2347 | Tests             | Improvement | New tests/analyst-lifecycle.php: every one of the 212 columns that refers to an analyst must be classified in analystReferenceRegistry(), plus the three actions on throwaway analysts (21 checks). |
 
 
 

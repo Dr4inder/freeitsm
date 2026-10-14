@@ -66,6 +66,7 @@
 | [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md) | apiTicketSelect L38, apiTicketsList L228 |  |
 | [api/v1/resources/users.php](/code/files/api/v1/resources/users.php.md) | apiUsersGet L135 |  |
 | [api/webchat/poll.php](/code/files/api/webchat/poll.php.md) | L75 |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md) | analystReferenceRegistry L57 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTicket L51 |  |
 | [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkDescribe L173 |  |
 | [includes/inbox_view_filter.php](/code/files/includes/inbox_view_filter.php.md) | inboxViewFilterSql L53 |  |

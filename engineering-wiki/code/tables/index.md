@@ -13,7 +13,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [analyst_teams](/code/tables/analyst_teams.md) | 5 | 24 | 4 |  |
 | [analyst_tenant_access](/code/tables/analyst_tenant_access.md) | 4 | 4 | 3 | Which analysts may access which tenants (only consulted when an analyst is NOT flagged can_access_all_tenants). |
 | [analyst_ticket_dashboard_widgets](/code/tables/analyst_ticket_dashboard_widgets.md) | 7 | 2 | 4 |  |
-| [analysts](/code/tables/analysts.md) | 28 | 212 | 16 |  |
+| [analysts](/code/tables/analysts.md) | 28 | 213 | 16 |  |
 | [api_key_rate_limits](/code/tables/api_key_rate_limits.md) | 4 | 1 | 1 |  |
 | [api_keys](/code/tables/api_keys.md) | 14 | 3 | 4 | REST API v1 keys (System > API) — distinct from the legacy `apikeys` table above (api/external ingest): stored hashed, granular permission map (JSON), optional company scope, acts as an analyst. |
 | [api_rate_limits](/code/tables/api_rate_limits.md) | 4 | 1 | 1 |  |
@@ -63,11 +63,11 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [change_notifications](/code/tables/change_notifications.md) | 7 | 0 | 0 |  |
 | [change_priorities](/code/tables/change_priorities.md) | 7 | 12 | 3 |  |
 | [change_relations](/code/tables/change_relations.md) | 7 | 5 | 1 |  |
-| [change_statuses](/code/tables/change_statuses.md) | 8 | 19 | 3 |  |
+| [change_statuses](/code/tables/change_statuses.md) | 8 | 20 | 3 |  |
 | [change_templates](/code/tables/change_templates.md) | 18 | 0 | 0 |  |
 | [change_tickets](/code/tables/change_tickets.md) | 5 | 4 | 1 | Incidents (tickets) linked to a change — twin of problem_tickets. |
 | [change_types](/code/tables/change_types.md) | 7 | 11 | 3 |  |
-| [changes](/code/tables/changes.md) | 39 | 29 | 2 |  |
+| [changes](/code/tables/changes.md) | 39 | 30 | 2 |  |
 | [checklist_categories](/code/tables/checklist_categories.md) | 4 | 3 | 1 |  |
 | [checklist_roles](/code/tables/checklist_roles.md) | 4 | 4 | 1 |  |
 | [checklist_template_items](/code/tables/checklist_template_items.md) | 12 | 6 | 2 |  |
@@ -85,7 +85,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [contract_statuses](/code/tables/contract_statuses.md) | 7 | 10 | 2 |  |
 | [contract_term_tabs](/code/tables/contract_term_tabs.md) | 7 | 3 | 2 |  |
 | [contract_term_values](/code/tables/contract_term_values.md) | 7 | 3 | 3 |  |
-| [contracts](/code/tables/contracts.md) | 29 | 28 | 4 |  |
+| [contracts](/code/tables/contracts.md) | 29 | 28 | 5 |  |
 | [cost_centres](/code/tables/cost_centres.md) | 10 | 11 | 1 | Cost centres (GH #160, stage 1). |
 | [department_teams](/code/tables/department_teams.md) | 5 | 6 | 3 |  |
 | [departments](/code/tables/departments.md) | 8 | 25 | 2 |  |
@@ -105,7 +105,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [domain_status_incidents](/code/tables/domain_status_incidents.md) | 7 | 1 | 1 |  |
 | [domain_status_services](/code/tables/domain_status_services.md) | 5 | 2 | 0 |  |
 | [domain_statuses](/code/tables/domain_statuses.md) | 8 | 13 | 2 | Domains module (GitHub #154) — see the matching block in freeitsm.sql for what each table is for. |
-| [domains](/code/tables/domains.md) | 53 | 23 | 1 |  |
+| [domains](/code/tables/domains.md) | 53 | 24 | 1 |  |
 | [email_attachments](/code/tables/email_attachments.md) | 10 | 17 | 11 |  |
 | [email_send_log](/code/tables/email_send_log.md) | 11 | 1 | 1 |  |
 | [emails](/code/tables/emails.md) | 28 | 48 | 20 |  |
@@ -189,7 +189,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [problem_audit](/code/tables/problem_audit.md) | 8 | 2 | 1 |  |
 | [problem_notes](/code/tables/problem_notes.md) | 5 | 2 | 1 | Free-text journal notes on a problem (who / when / the note). |
 | [problem_priorities](/code/tables/problem_priorities.md) | 7 | 8 | 3 |  |
-| [problem_statuses](/code/tables/problem_statuses.md) | 8 | 12 | 3 |  |
+| [problem_statuses](/code/tables/problem_statuses.md) | 8 | 13 | 3 |  |
 | [problem_tickets](/code/tables/problem_tickets.md) | 5 | 11 | 1 | The incident link: which tickets a problem explains. |
 | [problems](/code/tables/problems.md) | 15 | 17 | 1 | Problem Management A Problem is the root cause behind one or more incidents (tickets). |
 | [process_annotations](/code/tables/process_annotations.md) | 9 | 2 | 1 |  |
@@ -282,7 +282,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [supplier_statuses](/code/tables/supplier_statuses.md) | 7 | 8 | 2 |  |
 | [supplier_types](/code/tables/supplier_types.md) | 7 | 5 | 2 | Contracts module |
 | [suppliers](/code/tables/suppliers.md) | 20 | 44 | 7 |  |
-| [system_logs](/code/tables/system_logs.md) | 5 | 1 | 3 |  |
+| [system_logs](/code/tables/system_logs.md) | 5 | 1 | 4 |  |
 | [system_settings](/code/tables/system_settings.md) | 3 | 132 | 52 |  |
 | [table_views](/code/tables/table_views.md) | 11 | 1 | 1 | Saved table views (#96). |
 | [target_mailboxes](/code/tables/target_mailboxes.md) | 39 | 26 | 13 |  |
@@ -294,7 +294,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [task_dependencies](/code/tables/task_dependencies.md) | 7 | 3 | 2 | Task dependencies (3.3.0) - includes/projects/dependencies.php. |
 | [task_priorities](/code/tables/task_priorities.md) | 7 | 13 | 3 |  |
 | [task_recurrences](/code/tables/task_recurrences.md) | 25 | 2 | 2 |  |
-| [task_statuses](/code/tables/task_statuses.md) | 8 | 32 | 4 |  |
+| [task_statuses](/code/tables/task_statuses.md) | 8 | 33 | 4 |  |
 | [task_tag_map](/code/tables/task_tag_map.md) | 2 | 4 | 2 |  |
 | [task_tags](/code/tables/task_tags.md) | 5 | 7 | 3 |  |
 | [task_time_entries](/code/tables/task_time_entries.md) | 9 | 5 | 1 | Time actually SPENT on a task, as many sessions as it took (GH #112). |
@@ -335,7 +335,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [ticket_rota_entries](/code/tables/ticket_rota_entries.md) | 8 | 7 | 7 |  |
 | [ticket_rota_shifts](/code/tables/ticket_rota_shifts.md) | 7 | 7 | 2 |  |
 | [ticket_splits](/code/tables/ticket_splits.md) | 12 | 1 | 1 |  |
-| [ticket_statuses](/code/tables/ticket_statuses.md) | 9 | 59 | 3 |  |
+| [ticket_statuses](/code/tables/ticket_statuses.md) | 9 | 60 | 3 |  |
 | [ticket_time_entries](/code/tables/ticket_time_entries.md) | 9 | 6 | 4 |  |
 | [ticket_types](/code/tables/ticket_types.md) | 8 | 13 | 3 |  |
 | [ticket_views](/code/tables/ticket_views.md) | 8 | 1 | 1 | Who has looked at a ticket (discussion #62, step 2). |

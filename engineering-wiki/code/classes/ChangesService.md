@@ -76,7 +76,7 @@ function updateChange(PDO $conn, ActorContext $ctx, int $changeId, array $in): v
 | 226 | `ChangesService::updateChange` | read [change_categories](/code/tables/change_categories.md) |  |
 | 364 | `ChangesService::updateChange` | **update** [changes](/code/tables/changes.md) |  |
 
-**Called from:** [api/change-management/save.php](/code/files/api/change-management/save.php.md), [api/change-management/update_field.php](/code/files/api/change-management/update_field.php.md), [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md)
+**Called from:** [api/change-management/save.php](/code/files/api/change-management/save.php.md), [api/change-management/update_field.php](/code/files/api/change-management/update_field.php.md), [api/v1/resources/changes.php](/code/files/api/v1/resources/changes.php.md), [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md)
 
 ### deleteChange
 

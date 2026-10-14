@@ -185,6 +185,32 @@ $translationNamespaces = ['common', 'tickets'];
         }
         .form-group input::placeholder { color: var(--text-faint, #999); }
         .form-group input[type="checkbox"] { accent-color: var(--accent, #546e7a); }
+
+        /* When someone leaves (GH #178) - Deactivate / Anonymise / Delete.
+           .btn-danger is page-local, the same rule calendar.css carries. */
+        .btn.btn-danger { background: var(--danger-accent, #d13438); color: #fff; border: none; }
+        .btn.btn-danger:hover { filter: brightness(1.08); }
+        #leaveModal .modal-content { max-width: 640px; }
+        .lv-section { margin-bottom: 20px; }
+        .lv-section h4 { font-size: 14px; font-weight: 600; color: var(--text, #333); margin: 0 0 8px; }
+        .lv-muted { font-size: 13px; color: var(--text-muted, #666); line-height: 1.5; }
+        .lv-list { list-style: none; padding: 0; margin: 0 0 10px; font-size: 13px; color: var(--text, #333); }
+        .lv-list li { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px solid var(--border, #eee); }
+        .lv-list li span:last-child { font-weight: 600; }
+        .lv-move { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 13px; color: var(--text, #333); }
+        .lv-move select { padding: 6px 8px; border: 1px solid var(--border, #ccc); border-radius: 5px; background: var(--surface, #fff); color: var(--text, #333); }
+        .lv-note { font-size: 12.5px; padding: 9px 12px; border-radius: 6px; line-height: 1.5;
+                   background: var(--warning-bg, #fef3c7); color: var(--warning-text, #92400e); border: 1px solid var(--warning-border, #f0d9a8); }
+        .lv-option { display: flex; gap: 10px; align-items: flex-start; padding: 12px; margin-bottom: 8px; cursor: pointer;
+                     border: 1px solid var(--border, #e0e0e0); border-radius: 8px; background: var(--surface, #fff); }
+        .lv-option:hover { border-color: var(--accent, #546e7a); }
+        .lv-option.is-chosen { border-color: var(--accent, #546e7a); background: var(--accent-soft, #eef2f5); }
+        .lv-option.is-disabled { cursor: not-allowed; opacity: .6; }
+        .lv-option input { margin-top: 3px; accent-color: var(--accent, #546e7a); }
+        .lv-option strong { display: block; font-size: 14px; color: var(--text, #333); margin-bottom: 3px; }
+        .lv-option .lv-muted { display: block; }
+        .lv-failed { font-size: 12.5px; color: var(--danger-text, #991b1b); background: var(--danger-bg, #fee2e2);
+                     border: 1px solid var(--danger-border, #f0c2c2); border-radius: 6px; padding: 9px 12px; margin-top: 10px; }
     </style>
     <!-- Mobile layer LAST, after this page's own <style> (Techniques §9). -->
     <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
@@ -294,6 +320,7 @@ $translationNamespaces = ['common', 'tickets'];
                         </span>
                         <?php echo htmlspecialchars(t('tickets.settings.modals.analyst.active')); ?>
                     </label>
+                    <small style="display:block; margin-top:6px; font-size:12px; color:var(--text-muted, #666);">Somebody leaving? Use the bin icon on their row instead - it can hand their open work to someone else first.</small>
                 </div>
 
                 <div class="form-group">
@@ -350,6 +377,19 @@ $translationNamespaces = ['common', 'tickets'];
                     <button type="submit" class="btn btn-primary"><?php echo htmlspecialchars(t('tickets.settings.modals.password_reset.submit')); ?></button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- When someone leaves (GH #178): what they hold, who takes it, and
+         Deactivate / Anonymise / Delete. Filled in by openLeaveModal(). -->
+    <div class="modal" id="leaveModal" role="dialog" aria-modal="true" aria-labelledby="lvTitle">
+        <div class="modal-content">
+            <div class="modal-header" id="lvTitle">When someone leaves</div>
+            <div class="modal-body" id="lvBody"><p class="lv-muted">Loading…</p></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeLeaveModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="lvGo" onclick="runLeaveAction()" disabled>Deactivate</button>
+            </div>
         </div>
     </div>
 
@@ -554,7 +594,7 @@ $translationNamespaces = ['common', 'tickets'];
                             <button class="action-btn" onclick="openPasswordResetModal(${a.id}, '${safeName}')" title="${t('tickets.settings.tooltips.reset_password')}">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>
                             </button>
-                            <button class="action-btn delete" onclick="deleteAnalyst(${a.id}, '${safeUsername}')" title="${t('common.delete')}">
+                            <button class="action-btn delete" onclick="deleteAnalyst(${a.id}, '${safeUsername}')" title="Remove">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             </button>
                         </td>
@@ -786,31 +826,161 @@ $translationNamespaces = ['common', 'tickets'];
             }
         }
 
-        async function deleteAnalyst(id, username) {
-            const ok = await showConfirm({
-                title: 'Delete analyst',
-                message: `Are you sure you want to delete the analyst "${username}"?`,
-                okLabel: 'Delete',
-                okClass: 'danger'
-            });
-            if (!ok) return;
+        // The Delete button opens "When someone leaves" (GH #178). Deleting is only
+        // one of three answers, and for anybody who has done any work it is not
+        // possible at all - their name is on history. The rules are server-side
+        // (includes/analyst_lifecycle.php); this window explains them.
+        function deleteAnalyst(id, username) { openLeaveModal(id); }
 
+        let lvState = null;
+
+        async function openLeaveModal(id) {
+            lvState = { id: id, action: null, data: null };
+            const body = document.getElementById('lvBody');
+            body.innerHTML = '<p class="lv-muted">Loading…</p>';
+            document.getElementById('lvGo').disabled = true;
+            document.getElementById('leaveModal').classList.add('active');
             try {
-                const response = await fetch(API_BASE + 'delete_analyst.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id })
+                const r = await fetch(API_BASE + 'analyst_leaving.php?id=' + encodeURIComponent(id));
+                const d = await r.json();
+                if (!d.success) { body.innerHTML = '<p class="lv-muted">' + escapeHtml(d.error || 'Something went wrong.') + '</p>'; return; }
+                lvState.data = d;
+                renderLeaveModal();
+            } catch (e) {
+                body.innerHTML = '<p class="lv-muted">Could not load what this analyst holds.</p>';
+            }
+        }
+
+        function closeLeaveModal() {
+            document.getElementById('leaveModal').classList.remove('active');
+            lvState = null;
+        }
+
+        function renderLeaveModal() {
+            const d = lvState.data;
+            const name = escapeHtml(d.analyst.name);
+            document.getElementById('lvTitle').textContent = 'When ' + d.analyst.name + ' leaves';
+            const body = document.getElementById('lvBody');
+
+            if (d.is_self) {
+                body.innerHTML = '<p class="lv-muted">This is your own account. Ask another administrator to do this.</p>';
+                return;
+            }
+            if (d.is_last_admin) {
+                body.innerHTML = '<p class="lv-muted">' + name + ' is the last active administrator. Make another analyst an administrator first, or nobody will be able to manage FreeITSM.</p>';
+                return;
+            }
+
+            const live = Object.values(d.live || {});
+            const setup = Object.entries(d.setup || {});
+            let html = '';
+
+            // 1. Their open work, and who takes it.
+            html += '<div class="lv-section"><h4>Their open work</h4>';
+            if (!live.length) {
+                html += '<p class="lv-muted">They hold no open work.</p>';
+            } else {
+                html += '<ul class="lv-list">' + live.map(g => '<li><span>' + escapeHtml(g.label) + '</span><span>' + g.count + '</span></li>').join('') + '</ul>';
+                html += '<label class="lv-move"><input type="checkbox" id="lvMove" checked> Move it to '
+                     +  '<select id="lvTo"><option value="">Nobody (leave it unassigned)</option>'
+                     +  (d.candidates || []).map(c => '<option value="' + c.id + '">' + escapeHtml(c.name) + '</option>').join('')
+                     +  '</select></label>'
+                     +  '<p class="lv-muted" style="margin-top:6px">Each item is moved the same way as doing it by hand, so its history shows the change. Closed items keep their name: that is history.</p>';
+            }
+            html += '</div>';
+
+            // 2. Things routed to them that a person has to rethink.
+            if (setup.length) {
+                html += '<div class="lv-section"><h4>Also set up for them</h4>'
+                     +  '<ul class="lv-list">' + setup.map(([l, n]) => '<li><span>' + escapeHtml(l) + '</span><span>' + n + '</span></li>').join('') + '</ul>'
+                     +  '<div class="lv-note">Change these by hand. FreeITSM does not change who approves or is notified for you: clearing an approver could let requests through unchecked.</div></div>';
+            }
+
+            // 3. What happens to them.
+            const histWords = d.history ? (d.history + ' record' + (d.history === 1 ? '' : 's') + ' carry their name') : '';
+            const delReason = !d.can_delete
+                ? (d.history ? histWords + ', such as notes, time and audit entries. Deleting would leave holes in that history, so choose Deactivate or Anonymise.'
+                             : 'Something is still set up for them (above). Change that first.')
+                : 'Removes the account, with their personal settings (dashboard, preferences, sign-in links). Cannot be undone.';
+            html += '<div class="lv-section"><h4>What happens to ' + name + '</h4>'
+                 +  leaveOption('deactivate', 'Deactivate', d.analyst.is_active
+                        ? 'They can no longer sign in, and their API keys stop working. Their name stays on everything they did. Undo it any time by ticking Active again.'
+                        : 'Already deactivated.', !d.analyst.is_active)
+                 +  leaveOption('anonymise', 'Anonymise', 'Everything Deactivate does, then their name and contact details are removed: their records stay, credited to "Former analyst #' + d.analyst.id + '". Use this for a request to be forgotten. Cannot be undone. Names typed into notes or emails are not changed.', false)
+                 +  leaveOption('delete', 'Delete', delReason, !d.can_delete)
+                 +  '</div>';
+            html += '<p class="lv-muted"><a href="../help/analysts.php#leavers" target="_blank" rel="noopener">How this works</a></p>';
+            html += '<div id="lvResult"></div>';
+            body.innerHTML = html;
+
+            // The sensible default: Deactivate, or Anonymise when that is already done.
+            pickLeaveOption(d.analyst.is_active ? 'deactivate' : 'anonymise');
+        }
+
+        function leaveOption(key, title, text, disabled) {
+            return '<label class="lv-option' + (disabled ? ' is-disabled' : '') + '" data-lv="' + key + '">'
+                 + '<input type="radio" name="lvAction" value="' + key + '"' + (disabled ? ' disabled' : '') + ' onchange="pickLeaveOption(\'' + key + '\')">'
+                 + '<span><strong>' + title + '</strong><span class="lv-muted">' + escapeHtml(text) + '</span></span></label>';
+        }
+
+        function pickLeaveOption(key) {
+            const radio = document.querySelector('#lvBody input[name="lvAction"][value="' + key + '"]');
+            if (!radio || radio.disabled) return;
+            radio.checked = true;
+            lvState.action = key;
+            document.querySelectorAll('#lvBody .lv-option').forEach(o => o.classList.toggle('is-chosen', o.dataset.lv === key));
+            const go = document.getElementById('lvGo');
+            go.disabled = false;
+            go.textContent = key === 'deactivate' ? 'Deactivate' : key === 'anonymise' ? 'Anonymise' : 'Delete';
+            go.className = 'btn ' + (key === 'deactivate' ? 'btn-primary' : 'btn-danger');
+        }
+
+        async function runLeaveAction() {
+            if (!lvState || !lvState.action) return;
+            const d = lvState.data, action = lvState.action;
+            if (action !== 'deactivate') {
+                const ok = await showConfirm({
+                    title: action === 'anonymise' ? 'Anonymise ' + d.analyst.name + '?' : 'Delete ' + d.analyst.name + '?',
+                    message: action === 'anonymise'
+                        ? 'Their name and contact details will be removed for good. This cannot be undone.'
+                        : 'The account will be removed for good. This cannot be undone.',
+                    okLabel: action === 'anonymise' ? 'Anonymise' : 'Delete',
+                    okClass: 'danger'
                 });
-                const data = await response.json();
-                if (data.success) {
-                    showToast('Analyst deleted', 'success');
-                    loadAnalysts();
-                } else {
-                    showToast('Error deleting analyst: ' + data.error, 'error');
+                if (!ok) return;
+            }
+            const move = document.getElementById('lvMove');
+            const payload = { id: d.analyst.id, action: action, reassign: !!(move && move.checked) };
+            if (payload.reassign) payload.reassign_to = document.getElementById('lvTo').value || null;
+            const go = document.getElementById('lvGo');
+            go.disabled = true;
+            try {
+                const r = await fetch(API_BASE + 'analyst_leaving.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                });
+                const res = await r.json();
+                if (!res.success) {
+                    document.getElementById('lvResult').innerHTML = '<div class="lv-failed">' + escapeHtml(res.error || 'Something went wrong.') + '</div>';
+                    go.disabled = false;
+                    return;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Failed to delete analyst', 'error');
+                const done = action === 'deactivate' ? 'deactivated' : action === 'anonymise' ? 'anonymised' : 'deleted';
+                if (res.failed && res.failed.length) {
+                    // Done, but some work would not move - say which, rather than a toast that vanishes.
+                    document.getElementById('lvResult').innerHTML = '<div class="lv-failed"><strong>' + escapeHtml(d.analyst.name) + ' was ' + done
+                        + ', but ' + res.failed.length + ' item(s) could not be moved - open each to reassign it:</strong><br>'
+                        + res.failed.map(escapeHtml).join('<br>') + '</div>';
+                    go.textContent = 'Done';
+                    go.onclick = () => { closeLeaveModal(); go.onclick = runLeaveAction; };
+                    go.disabled = false;
+                } else {
+                    showToast('Analyst ' + done, 'success');
+                    closeLeaveModal();
+                }
+                loadAnalysts();
+            } catch (e) {
+                document.getElementById('lvResult').innerHTML = '<div class="lv-failed">Something went wrong.</div>';
+                go.disabled = false;
             }
         }
 

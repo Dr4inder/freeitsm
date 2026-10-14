@@ -4,9 +4,9 @@ Written by the scanner from FreeITSM's own code - do not edit these pages, they 
 
 | | |
 |---|--:|
-| [Files](/code/files/index.md) | 1682 PHP, 110 JavaScript |
-| [API endpoints](/code/endpoints.md) | 991 |
-| [Functions](/code/functions/index.md) | 2638 |
+| [Files](/code/files/index.md) | 1684 PHP, 110 JavaScript |
+| [API endpoints](/code/endpoints.md) | 992 |
+| [Functions](/code/functions/index.md) | 2655 |
 | [Classes](/code/classes/index.md) | 67 |
 | [Database tables](/code/tables/index.md) | 371 |
 | [Traps](/code/traps.md) | 51 |

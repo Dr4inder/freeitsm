@@ -101,7 +101,7 @@ function updateTicket(
 | 648 | `TicketsService::updateTicket` | **update** [tickets](/code/tables/tickets.md) |  |
 | 740 | `TicketsService::updateTicket` | read [tickets](/code/tables/tickets.md), read [users](/code/tables/users.md) |  |
 
-**Called from:** [api/self-service/close_ticket.php](/code/files/api/self-service/close_ticket.php.md), [api/tickets/assign_ticket.php](/code/files/api/tickets/assign_ticket.php.md), [api/tickets/bulk_update_tickets.php](/code/files/api/tickets/bulk_update_tickets.php.md), [api/tickets/schedule_ticket.php](/code/files/api/tickets/schedule_ticket.php.md), [api/tickets/update_ticket_owner.php](/code/files/api/tickets/update_ticket_owner.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md)
+**Called from:** [api/self-service/close_ticket.php](/code/files/api/self-service/close_ticket.php.md), [api/tickets/assign_ticket.php](/code/files/api/tickets/assign_ticket.php.md), [api/tickets/bulk_update_tickets.php](/code/files/api/tickets/bulk_update_tickets.php.md), [api/tickets/schedule_ticket.php](/code/files/api/tickets/schedule_ticket.php.md), [api/tickets/update_ticket_owner.php](/code/files/api/tickets/update_ticket_owner.php.md), [api/v1/resources/tickets.php](/code/files/api/v1/resources/tickets.php.md), [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md)
 
 ### deleteTicket
 

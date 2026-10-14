@@ -1,6 +1,6 @@
 # system/help/analysts.php
 
-> PHP - 155 lines
+> PHP - 158 lines
 
 System Help — Analysts.
 

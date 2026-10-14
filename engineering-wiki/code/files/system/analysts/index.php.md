@@ -1,6 +1,6 @@
 # system/analysts/index.php
 
-> PHP - 996 lines
+> PHP - 1166 lines
 
 System - Analysts
 
@@ -17,7 +17,7 @@ UI here doesn't require moving the API.
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 264 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
+| 290 |  | read [auth_providers](/code/tables/auth_providers.md) |  |
 
 ## How it hangs together
 

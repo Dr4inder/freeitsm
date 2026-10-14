@@ -43,6 +43,7 @@
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):1668 |  | update | `tenant_id` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):1673 |  | update | `tenant_id` |  |
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md):1689 |  | update | `cost_centre_id`, `cost_centre` |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md):534 | `analystReassignLive` | update | `contract_owner_id` |  |
 | [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):63 | `ContractsService::saveContract` | update | `contract_number`, `title`, `description`, `supplier_id`, `contract_owner_id`, `contract_status_id`, `contract_start`, `contract_end`, `notice_period_days`, `notice_date` |  |
 | [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):85 | `ContractsService::saveContract` | insert | `contract_number`, `title`, `description`, `supplier_id`, `contract_owner_id`, `contract_status_id`, `contract_start`, `contract_end`, `notice_period_days`, `notice_date` |  |
 | [includes/services/contracts.php](/code/files/includes/services/contracts.php.md):117 | `ContractsService::deleteContract` | delete |  |  |

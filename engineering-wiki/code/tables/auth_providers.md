@@ -128,7 +128,7 @@
 | [includes/users.php](/code/files/includes/users.php.md) | userSignsInElsewhere L180, userSourcesInScope L224, portalProfileAccess L318 |  |
 | [includes/waffle-menu.php](/code/files/includes/waffle-menu.php.md) | renderHeaderRight L1510 |  |
 | [self-service/login.php](/code/files/self-service/login.php.md) | L69, L77, L88 |  |
-| [system/analysts/index.php](/code/files/system/analysts/index.php.md) | L264 |  |
+| [system/analysts/index.php](/code/files/system/analysts/index.php.md) | L290 |  |
 | [system/sso/carddav.php](/code/files/system/sso/carddav.php.md) | L59 |  |
 | [system/sso/provider.php](/code/files/system/sso/provider.php.md) | L47 |  |
 | [system/teams/index.php](/code/files/system/teams/index.php.md) | L199 |  |

@@ -1,6 +1,6 @@
 # self-service/help-centre.php
 
-> PHP - 619 lines
+> PHP - 651 lines
 
 Self-Service Portal — Help Centre (the knowledge base).
 

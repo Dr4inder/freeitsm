@@ -44,6 +44,7 @@
 | [api/tickets/search_linkable_tasks.php](/code/files/api/tickets/search_linkable_tasks.php.md) | L50 |  |
 | [api/v1/resources/projects.php](/code/files/api/v1/resources/projects.php.md) | apiProjectStages L316, apiProjectTasks L656 |  |
 | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42, apiSerializeTask L80, apiTasksList L277, apiTasksGet L319, apiTaskStatusesList L457 |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md) | analystReferenceRegistry L116, analystReferenceRegistry L127 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTask L184 |  |
 | [includes/people.php](/code/files/includes/people.php.md) | peopleContractorTasks L793 |  |
 | [includes/projects/ai.php](/code/files/includes/projects/ai.php.md) | projectAiFacts L156, projectAiFacts L251 |  |

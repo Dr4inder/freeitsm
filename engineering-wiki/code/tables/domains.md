@@ -84,6 +84,7 @@
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L401 |  |
 | [api/v1/resources/domains.php](/code/files/api/v1/resources/domains.php.md) | apiDomainSelect L48, apiDomainsList L241, apiDomainAccountsList L423 |  |
 | [domains/view.php](/code/files/domains/view.php.md) | L26 |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md) | analystReassignLive L539 |  |
 | [includes/domains/alerts.php](/code/files/includes/domains/alerts.php.md) | domainAlertsDue L104, domainRenewalActionsRun L411 |  |
 | [includes/domains/calendar.php](/code/files/includes/domains/calendar.php.md) | domainSyncCalendarKind L87 |  |
 | [includes/domains/customer.php](/code/files/includes/domains/customer.php.md) | domainCustomerReady L28, domainPartiesReady L38 |  |

@@ -34,6 +34,7 @@
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2479 |  |
 | [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md) | L204 |  |
 | [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md) | apiProblemSelect L41, apiProblemsList L190, apiProblemStatusesList L419 |  |
+| [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md) | analystReferenceRegistry L114, analystReferenceRegistry L125 |  |
 | [includes/feature_bingo/cards/problems.php](/code/files/includes/feature_bingo/cards/problems.php.md) | L112 |  |
 | [includes/projects/links.php](/code/files/includes/projects/links.php.md) | projectLinkDescribe L233 |  |
 | [includes/record_preview.php](/code/files/includes/record_preview.php.md) | recordPreviewProblem L273 |  |

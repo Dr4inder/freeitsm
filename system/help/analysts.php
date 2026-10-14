@@ -138,16 +138,19 @@ require __DIR__ . '/_top.php';
     <div class="help-section-header"><?php echo helpSectionNum('leavers'); ?>
         <div>
             <h3>Leavers</h3>
-            <p>When someone leaves, you almost always want <strong>Active = off</strong>, not <strong>Delete</strong>.</p>
+            <p>When someone leaves, press the <strong>bin icon</strong> on their row. It opens <strong>When someone leaves</strong>, which shows what they hold, offers to hand their open work to someone else, and gives you three choices.</p>
         </div>
     </div>
     <div class="help-table"><table>
-        <tr><th>Option</th><th>What happens</th></tr>
-        <tr><td><strong>Set Active to off</strong></td><td>They can no longer sign in. Their name stays on the tickets, notes and assets they touched, so your history still reads correctly. This is the right choice for a leaver.</td></tr>
-        <tr><td><strong>Delete</strong></td><td>The account row is removed outright. There is no undo, and no warning if they still have tickets or tasks assigned to them.</td></tr>
+        <tr><th>Choice</th><th>What happens</th><th>Undo?</th></tr>
+        <tr><td><strong>Deactivate</strong></td><td>They can no longer sign in, and their API keys stop working. Their name stays on every ticket, note, change and audit entry they touched, so your history still reads correctly. <strong>This is the right choice for almost every leaver.</strong></td><td>Yes - tick Active again</td></tr>
+        <tr><td><strong>Anonymise</strong></td><td>Everything Deactivate does, then their name and contact details are removed. Their records all stay, credited to "Former analyst #42", and their personal settings and sign-in links are deleted. Use it when someone asks to be forgotten.</td><td>No</td></tr>
+        <tr><td><strong>Delete</strong></td><td>Removes the account and their personal settings. Only possible when their name is on no history at all - an account made by mistake, or a test login.</td><td>No</td></tr>
     </table></div>
-    <div class="help-note warn"><strong>Delete does not check for assigned work.</strong> Reassign anything that belongs to the person before you delete them — nothing will stop you otherwise.</div>
-    <div class="help-note">FreeITSM won't let you delete <strong>your own account</strong>, or the <strong>last active administrator</strong>. Everything else is fair game, so pause before you press it.</div>
+    <p><strong>Their open work</strong> - open tickets, problems, changes and tasks, and the articles, projects, contracts and domains they own - can be moved to another analyst, or left unassigned, as part of the same step. Each item moves exactly as if you had reassigned it by hand, so its own history shows the change. Closed items keep their name: that is history, not work.</p>
+    <p><strong>Also set up for them</strong> lists things routed to them that you need to change yourself, such as a form that sends approvals to them or an SLA alert that notifies them. FreeITSM does not change those for you: clearing an approver could let requests through unchecked.</p>
+    <div class="help-note warn"><strong>Anonymise changes names FreeITSM stored next to their account</strong> - on tickets, audit trails and checklists - but not a name somebody typed into the text of a note or an email.</div>
+    <div class="help-note">FreeITSM won't let you do any of this to <strong>your own account</strong>, or to the <strong>last active administrator</strong>.</div>
     <div class="help-note ok"><strong>Done.</strong> Add the person, set admin only if they need System, tick their companies and modules, and put them in the right teams — then check the chips on their row read the way you expect.</div>
 </div>
 

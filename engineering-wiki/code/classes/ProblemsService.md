@@ -72,7 +72,7 @@ function updateProblem(PDO $conn, ActorContext $ctx, int $problemId, array $in):
 |--:|---|---|---|
 | 210 | `ProblemsService::updateProblem` | **update** [problems](/code/tables/problems.md) |  |
 
-**Called from:** [api/problem-management/save.php](/code/files/api/problem-management/save.php.md), [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md)
+**Called from:** [api/problem-management/save.php](/code/files/api/problem-management/save.php.md), [api/v1/resources/problems.php](/code/files/api/v1/resources/problems.php.md), [includes/analyst_lifecycle.php](/code/files/includes/analyst_lifecycle.php.md)
 
 ### deleteProblem
 

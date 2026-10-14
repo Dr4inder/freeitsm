@@ -663,6 +663,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 - [api/tickets/ai_merge_summary.php](/code/files/api/tickets/ai_merge_summary.php.md)
 - [api/tickets/ai_read.php](/code/files/api/tickets/ai_read.php.md)
 - [api/tickets/ai_summary.php](/code/files/api/tickets/ai_summary.php.md)
+- [api/tickets/analyst_leaving.php](/code/files/api/tickets/analyst_leaving.php.md)
 - [api/tickets/assign_ticket.php](/code/files/api/tickets/assign_ticket.php.md)
 - [api/tickets/bulk_delete_tickets.php](/code/files/api/tickets/bulk_delete_tickets.php.md)
 - [api/tickets/bulk_update_tickets.php](/code/files/api/tickets/bulk_update_tickets.php.md)
