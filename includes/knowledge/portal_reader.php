@@ -126,7 +126,12 @@ function portalCanReadArticle(PDO $conn, int $userId, int $articleId): bool {
 function portalArticlePreview(?string $body, int $length = 400): string {
     $raw = preg_replace('#<(script|style)\b[^>]*>.*?</\1>#is', ' ', (string) $body);
     $raw = str_replace('<', ' <', (string) $raw);
-    $text = trim(preg_replace('/\s+/', ' ', strip_tags($raw)));
+    // strip_tags() leaves ENTITIES alone, and every caller escapes the preview
+    // as it draws it - so "Settings &gt; Mail" reached the page as the literal
+    // text "&gt;". Decode to plain text here; the escaping on output is what
+    // keeps it safe (help-centre.php, index.php, new-ticket.php all escape).
+    $text = html_entity_decode(strip_tags($raw), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = trim(preg_replace('/\s+/u', ' ', $text));
 
     // The caller already LEFT()s the body, so this is a tidy-up of the tail
     // rather than the real truncation.

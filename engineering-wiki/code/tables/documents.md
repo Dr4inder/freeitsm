@@ -46,7 +46,7 @@ A document is either a file we hold or a link to somewhere else (an external DMS
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L468, L677 |  |
 | [api/tickets/get_notes.php](/code/files/api/tickets/get_notes.php.md) | L98 |  |
 | [includes/documents.php](/code/files/includes/documents.php.md) | documentsCollectOrphans L690, documentsCollectOrphans L711 |  |
-| [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md) | helpCentreArticleDocuments L59, helpCentreDocumentForPortalUser L92 |  |
+| [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md) | helpCentreArticleDocuments L59, helpCentreDocumentCounts L90, helpCentreDocumentForPortalUser L119 |  |
 | [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateDocuments L45 |  |
 | [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md) | searchIndexDocument L112, documentTextDrain L186, documentSearchVisibilityClause L293 |  |
 

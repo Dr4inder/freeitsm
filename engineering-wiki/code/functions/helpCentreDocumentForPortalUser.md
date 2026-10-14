@@ -12,7 +12,7 @@ the endpoint's 404 cannot be used to learn which.
 function helpCentreDocumentForPortalUser(PDO $conn, int $userId, int $documentId): ?array
 ```
 
-Defined in [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md), line 89.
+Defined in [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md), line 116.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -26,7 +26,7 @@ Defined in [includes/knowledge/help_centre_documents.php](/code/files/includes/k
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 92 | `helpCentreDocumentForPortalUser` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
+| 119 | `helpCentreDocumentForPortalUser` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
 
 ## Calls
 

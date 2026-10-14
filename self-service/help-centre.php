@@ -76,6 +76,13 @@ $pageStyles = <<<'CSS'
             background: var(--surface-hover, #f3f4f6);
             color: var(--text-muted, #666);
         }
+        /* "3 documents" on an article in the list (GH #177). */
+        .hc-doc-count {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 12px; color: var(--ss-accent, #0078d4); margin-top: 10px;
+        }
+        .hc-doc-count svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .hc-tree-item .hc-doc-count, .hc-td-title .hc-doc-count { margin: 0 0 0 8px; vertical-align: middle; }
 
         /* Article view */
         .hc-article {
@@ -283,6 +290,19 @@ let hcSearchTimer = null;
         let hcArticles = [];
         let hcLayout   = 'cards';
 
+        // "3 documents" with a paperclip, when an article has any shown in the
+        // Help Centre (GH #177). compact = the number alone, for the tree and
+        // table, where a row has room for little more than the title.
+        function hcDocCount(a, compact) {
+            const n = a.doc_count || 0;
+            if (!n) return '';
+            const words = n === 1 ? window.t('self-service.help_centre.doc_count_one')
+                                  : window.t('self-service.help_centre.doc_count_many', { n: n });
+            return '<span class="hc-doc-count" title="' + escapeHtml(words) + '">'
+                 + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>'
+                 + escapeHtml(compact ? String(n) : words) + '</span>';
+        }
+
         function hcCardsHtml(articles) {
             return '<div class="hc-list hc-cards">' + articles.map(a => {
                 const tags = (a.tags || []).map(t => '<span class="hc-tag">' + escapeHtml(t) + '</span>').join('');
@@ -290,6 +310,7 @@ let hcSearchTimer = null;
                      +   '<div class="hc-card-title">' + escapeHtml(a.title || '') + '</div>'
                      +   '<div class="hc-card-preview">' + escapeHtml(a.preview || '') + '</div>'
                      +   (tags ? '<div class="hc-tags">' + tags + '</div>' : '')
+                     +   hcDocCount(a, false)
                      + '</button>';
             }).join('') + '</div>';
         }
@@ -303,6 +324,7 @@ let hcSearchTimer = null;
                      +   '<div class="hc-card-title">' + escapeHtml(a.title || '') + '</div>'
                      +   '<div class="hc-card-preview">' + escapeHtml(a.preview || '') + '</div>'
                      +   (tags ? '<div class="hc-tags">' + tags + '</div>' : '')
+                     +   hcDocCount(a, false)
                      + '</button>';
             }).join('') + '</div>';
         }
@@ -324,7 +346,7 @@ let hcSearchTimer = null;
               +   '<div class="hc-tree-name">' + escapeHtml(name) + '</div>'
               +   '<div class="hc-tree-items">' + byName[name].map(a =>
                       '<button type="button" class="hc-tree-item" onclick="openArticle(' + a.id + ')">'
-                    + escapeHtml(a.title || '') + '</button>').join('')
+                    + escapeHtml(a.title || '') + hcDocCount(a, true) + '</button>').join('')
               +   '</div>'
               + '</div>').join('');
         }
@@ -336,7 +358,7 @@ let hcSearchTimer = null;
                  + '</tr></thead><tbody>'
                  + articles.map(a =>
                      '<tr onclick="openArticle(' + a.id + ')">'
-                   +   '<td class="hc-td-title">' + escapeHtml(a.title || '') + '</td>'
+                   +   '<td class="hc-td-title">' + escapeHtml(a.title || '') + hcDocCount(a, true) + '</td>'
                    +   '<td class="hc-td-folder">' + escapeHtml(a.folder_name || window.t('self-service.help_centre.unfiled')) + '</td>'
                    + '</tr>').join('')
                  + '</tbody></table>';

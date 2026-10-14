@@ -21,7 +21,7 @@ What each document is attached to. A ROW, deliberately, not a column on `documen
 | [api/documents/unlink.php](/code/files/api/documents/unlink.php.md):61 |  | delete |  |  |
 | [includes/documents.php](/code/files/includes/documents.php.md):626 | `documentsDetachParent` | delete |  |  |
 | [includes/documents.php](/code/files/includes/documents.php.md):670 | `documentsCollectOrphans` | delete |  |  |
-| [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md):125 | `helpCentreSetShown` | update | `show_in_help_centre` |  |
+| [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md):152 | `helpCentreSetShown` | update | `show_in_help_centre` |  |
 | [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md):798 | `TaskRecurrence::createOccurrence` | insert | `document_id`, `parent_type`, `parent_id`, `linked_by_id`, `created_datetime` |  |
 
 ## Read by
@@ -38,7 +38,7 @@ What each document is attached to. A ROW, deliberately, not a column on `documen
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L482, L685 |  |
 | [api/tickets/get_notes.php](/code/files/api/tickets/get_notes.php.md) | L98 |  |
 | [includes/documents.php](/code/files/includes/documents.php.md) | documentVisibilityClause L443, documentCanView L489, documentVisibleParents L562, documentsCollectOrphans L690, documentHelpCentreReady L778 |  |
-| [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md) | helpCentreArticleDocuments L59, helpCentreDocumentForPortalUser L92, helpCentreSetShown L121 |  |
+| [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md) | helpCentreArticleDocuments L59, helpCentreDocumentCounts L90, helpCentreDocumentForPortalUser L119, helpCentreSetShown L148 |  |
 | [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateDocuments L45 |  |
 | [includes/services/task_recurrence.php](/code/files/includes/services/task_recurrence.php.md) | TaskRecurrence::createOccurrence L798 |  |
 

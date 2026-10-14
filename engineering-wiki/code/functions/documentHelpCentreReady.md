@@ -29,5 +29,5 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 - [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md)
 - [api/documents/list.php](/code/files/api/documents/list.php.md)
 - [includes/documents.php](/code/files/includes/documents.php.md) - in [documentInsertLink()](/code/functions/documentInsertLink.md)
-- [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md) - in [helpCentreArticleDocuments()](/code/functions/helpCentreArticleDocuments.md), [helpCentreDocumentForPortalUser()](/code/functions/helpCentreDocumentForPortalUser.md), [helpCentreSetShown()](/code/functions/helpCentreSetShown.md)
+- [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md) - in [helpCentreArticleDocuments()](/code/functions/helpCentreArticleDocuments.md), [helpCentreDocumentCounts()](/code/functions/helpCentreDocumentCounts.md), [helpCentreDocumentForPortalUser()](/code/functions/helpCentreDocumentForPortalUser.md), [helpCentreSetShown()](/code/functions/helpCentreSetShown.md)
 

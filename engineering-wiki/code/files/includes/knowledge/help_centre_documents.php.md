@@ -1,6 +1,6 @@
 # includes/knowledge/help_centre_documents.php
 
-> PHP - 130 lines
+> PHP - 157 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [Knowledge](https://github.com/edmozley/freeitsm/wiki/Knowledge)
@@ -29,8 +29,9 @@ Analyst-facing help: knowledge/help/documents-help-centre.php.
 |---|--:|---|
 | [helpCentreArticleIsCustomerFacing()](/code/functions/helpCentreArticleIsCustomerFacing.md) | 37 | Is this article one that customers could read in the Help Centre at all - published, not archived, and with an audience that includes signed-in customers? Drives the explanation on the analyst's Documents panel only; it is NOT an access check (that is `portalCanReadArticle()`, which also knows the requester's company and the access list). |
 | [helpCentreArticleDocuments()](/code/functions/helpCentreArticleDocuments.md) | 56 | The documents on an article that the Help Centre shows, newest first. |
-| [helpCentreDocumentForPortalUser()](/code/functions/helpCentreDocumentForPortalUser.md) | 89 | The document a portal requester may download, or null. |
-| [helpCentreSetShown()](/code/functions/helpCentreSetShown.md) | 119 | Show or hide one article attachment in the Help Centre. Only ever touches a knowledge_article link. Returns false when there is no such link (or the column does not exist yet). |
+| [helpCentreDocumentCounts()](/code/functions/helpCentreDocumentCounts.md) | 85 | How many documents each article shows in the Help Centre - for the "N documents" note on the list. Hidden ones are not counted: the list must not promise a file the article will not offer. Same caveat as above: the caller passes only ids the requester may already read. |
+| [helpCentreDocumentForPortalUser()](/code/functions/helpCentreDocumentForPortalUser.md) | 116 | The document a portal requester may download, or null. |
+| [helpCentreSetShown()](/code/functions/helpCentreSetShown.md) | 146 | Show or hide one article attachment in the Help Centre. Only ever touches a knowledge_article link. Returns false when there is no such link (or the column does not exist yet). |
 
 ## Database
 
@@ -38,15 +39,16 @@ Analyst-facing help: knowledge/help/documents-help-centre.php.
 |--:|---|---|---|
 | 40 | `helpCentreArticleIsCustomerFacing` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 | 59 | `helpCentreArticleDocuments` | read [document_links](/code/tables/document_links.md), read [documents](/code/tables/documents.md) |  |
-| 92 | `helpCentreDocumentForPortalUser` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
-| 121 | `helpCentreSetShown` | read [document_links](/code/tables/document_links.md) |  |
-| 125 | `helpCentreSetShown` | **update** [document_links](/code/tables/document_links.md) (`show_in_help_centre`) |  |
+| 90 | `helpCentreDocumentCounts` | read [document_links](/code/tables/document_links.md), read [documents](/code/tables/documents.md) |  |
+| 119 | `helpCentreDocumentForPortalUser` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
+| 148 | `helpCentreSetShown` | read [document_links](/code/tables/document_links.md) |  |
+| 152 | `helpCentreSetShown` | **update** [document_links](/code/tables/document_links.md) (`show_in_help_centre`) |  |
 
 ## How it hangs together
 
 **Includes:** [includes/documents.php](/code/files/includes/documents.php.md), [includes/knowledge/audience.php](/code/files/includes/knowledge/audience.php.md), [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md)
 
-**Included by:** [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md), [api/documents/list.php](/code/files/api/documents/list.php.md), [api/self-service/get_article_document.php](/code/files/api/self-service/get_article_document.php.md), [api/self-service/get_knowledge_article.php](/code/files/api/self-service/get_knowledge_article.php.md)
+**Included by:** [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md), [api/documents/list.php](/code/files/api/documents/list.php.md), [api/self-service/get_article_document.php](/code/files/api/self-service/get_article_document.php.md), [api/self-service/get_knowledge_article.php](/code/files/api/self-service/get_knowledge_article.php.md), [api/self-service/get_knowledge_articles.php](/code/files/api/self-service/get_knowledge_articles.php.md)
 
 **Calls:** [documentHelpCentreReady()](/code/functions/documentHelpCentreReady.md), [portalCanReadArticle()](/code/functions/portalCanReadArticle.md)
 

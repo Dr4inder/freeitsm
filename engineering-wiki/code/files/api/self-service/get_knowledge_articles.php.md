@@ -1,6 +1,6 @@
 # api/self-service/get_knowledge_articles.php
 
-> API endpoint - 118 lines
+> API endpoint - 128 lines
 
 API: Help Centre article list / search, for the self-service portal. GET ?q=&limit=
 
@@ -44,7 +44,7 @@ anonymous web chat visitors.
 
 ## How it hangs together
 
-**Includes:** [config.php](/code/files/config.php.md), [includes/functions.php](/code/files/includes/functions.php.md), [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md)
+**Includes:** [config.php](/code/files/config.php.md), [includes/functions.php](/code/files/includes/functions.php.md), [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md)
 
-**Calls:** [connectToDatabase()](/code/functions/connectToDatabase.md), [portalArticlePreview()](/code/functions/portalArticlePreview.md), [portalKnowledgeScope()](/code/functions/portalKnowledgeScope.md), [portalUserTenantId()](/code/functions/portalUserTenantId.md)
+**Calls:** [connectToDatabase()](/code/functions/connectToDatabase.md), [helpCentreDocumentCounts()](/code/functions/helpCentreDocumentCounts.md), [portalArticlePreview()](/code/functions/portalArticlePreview.md), [portalKnowledgeScope()](/code/functions/portalKnowledgeScope.md), [portalUserTenantId()](/code/functions/portalUserTenantId.md)
 

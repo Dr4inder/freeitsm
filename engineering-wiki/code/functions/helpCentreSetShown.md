@@ -6,7 +6,7 @@ Show or hide one article attachment in the Help Centre. Only ever touches a know
 function helpCentreSetShown(PDO $conn, int $documentId, int $articleId, bool $show): bool
 ```
 
-Defined in [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md), line 119.
+Defined in [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md), line 146.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|
@@ -21,8 +21,8 @@ Defined in [includes/knowledge/help_centre_documents.php](/code/files/includes/k
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 121 | `helpCentreSetShown` | read [document_links](/code/tables/document_links.md) |  |
-| 125 | `helpCentreSetShown` | **update** [document_links](/code/tables/document_links.md) (`show_in_help_centre`) |  |
+| 148 | `helpCentreSetShown` | read [document_links](/code/tables/document_links.md) |  |
+| 152 | `helpCentreSetShown` | **update** [document_links](/code/tables/document_links.md) (`show_in_help_centre`) |  |
 
 ## Calls
 

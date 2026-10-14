@@ -101,12 +101,22 @@ try {
         } catch (Exception $e) { /* tag tables absent → no tags, not an error */ }
     }
 
+    // Documents shown in the Help Centre, per article (GH #177) - the list says
+    // "3 documents" so somebody looking for a form knows which article has it.
+    // Best-effort, like the tags: a count must never cost the list.
+    $docCounts = [];
+    try {
+        require_once '../../includes/knowledge/help_centre_documents.php';
+        $docCounts = helpCentreDocumentCounts($conn, array_column($articles, 'id'));
+    } catch (Exception $e) { /* no counts, not an error */ }
+
     foreach ($articles as &$a) {
         // The preview is plain text: the body is TinyMCE HTML and a truncated
         // fragment would be unbalanced markup.
         //
-        $a['preview'] = portalArticlePreview($a['preview']);
-        $a['tags']    = $tagsById[(int)$a['id']] ?? [];
+        $a['preview']   = portalArticlePreview($a['preview']);
+        $a['tags']      = $tagsById[(int)$a['id']] ?? [];
+        $a['doc_count'] = $docCounts[(int)$a['id']] ?? 0;
     }
     unset($a);
 

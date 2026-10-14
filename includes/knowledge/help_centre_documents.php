@@ -74,6 +74,33 @@ function helpCentreArticleDocuments(PDO $conn, int $articleId): array {
 }
 
 /**
+ * How many documents each article shows in the Help Centre - for the "N
+ * documents" note on the list. Hidden ones are not counted: the list must not
+ * promise a file the article will not offer. Same caveat as above: the caller
+ * passes only ids the requester may already read.
+ *
+ * @param int[] $articleIds  knowledge_articles.id values from a scoped list
+ * @return array<int,int> article id => count; articles with none are absent
+ */
+function helpCentreDocumentCounts(PDO $conn, array $articleIds): array {
+    $ids = array_values(array_filter(array_map('intval', $articleIds)));
+    if (!$ids || !documentHelpCentreReady($conn)) return [];
+    $marks = implode(',', array_fill(0, count($ids), '?'));
+    $st = $conn->prepare(
+        "SELECT dl.parent_id, COUNT(*) AS n
+           FROM document_links dl
+           JOIN documents d ON d.id = dl.document_id AND d.deleted_datetime IS NULL
+          WHERE dl.parent_type = 'knowledge_article' AND dl.show_in_help_centre = 1
+            AND dl.parent_id IN ($marks)
+       GROUP BY dl.parent_id"
+    );
+    $st->execute($ids);
+    $out = [];
+    foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $r) $out[(int) $r['parent_id']] = (int) $r['n'];
+    return $out;
+}
+
+/**
  * The document a portal requester may download, or null.
  *
  * Served if ANY article it is shown on is one this requester may read - one

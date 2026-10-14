@@ -1,6 +1,6 @@
 # includes/knowledge/portal_reader.php
 
-> PHP - 138 lines
+> PHP - 143 lines
 
 What a self-service requester may read of the knowledge base — in ONE place.
 

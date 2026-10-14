@@ -418,6 +418,8 @@ return [
         'documents'          => 'Documents',
         'doc_download'       => 'Download',
         'doc_open'           => 'Open',
+        'doc_count_one'      => '1 document',
+        'doc_count_many'     => '{n} documents',
     ],
 
     'help' => [

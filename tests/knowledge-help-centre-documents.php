@@ -142,6 +142,9 @@ try {
         sort($listed);
         $want = [$dShown, $dTwo]; sort($want);
         ok('the article lists exactly its shown documents', $listed === $want, 'listed ' . implode(',', $listed));
+        $counts = helpCentreDocumentCounts($conn, [$aCust, $aInt]);
+        ok('the list\'s "N documents" counts shown ones only (2 shown, 1 hidden)', ($counts[$aCust] ?? 0) === 2,
+           json_encode($counts));
 
         // ---- the article moves out of reach ----------------------------------------
         $conn->prepare("UPDATE knowledge_articles SET audience = 'internal' WHERE id = ?")->execute([$aCust]);

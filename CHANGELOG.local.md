@@ -22,6 +22,8 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2334 | Knowledge         | Feature     | Documents attached to a knowledge article can be downloaded from the self-service Help Centre by anyone who can read the article there, with a per-attachment Show/Hide (document_links.show_in_help_centre; new article links start shown, links from before start hidden), an explanation line and tags on the Documents panel, a warning when an article's audience opens it to customers, and Show/Hide recorded in the article's history (GH #177). |
 | 2335 | Knowledge         | Improvement | Knowledge help gains in-depth topic pages (knowledge/help/, the Forms pattern), starting with "Documents and the Help Centre", linked from the Documents panel's "How this works". |
 | 2336 | Tests             | Improvement | New tests/knowledge-help-centre-documents.php: 20 checks of who can download what from the Help Centre (every refusal paired with a positive control, two pins, companies, leavers), plus a before-Database-Verification mode. |
+| 2337 | Self-Service      | Fix         | Article previews in the portal (Help Centre cards, the dashboard's popular list, New Ticket's suggestions) showed HTML codes such as "&gt;" and "&amp;" instead of ">" and "&"; portalArticlePreview() now decodes them before the page escapes them. |
+| 2338 | Self-Service      | Improvement | Help Centre articles with documents show a paperclip and "N documents" on their card and list row (the number alone in the tree and table), counting only documents shown in the Help Centre (GH #177). |
 
 
 
