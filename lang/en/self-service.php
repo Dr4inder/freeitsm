@@ -447,6 +447,7 @@ return [
         'kb_li1'             => 'Click <strong>Knowledge</strong> in the top navigation.',
         'kb_li2'             => 'Type what you are stuck on into the search box — a word or two is usually enough (<em>vpn</em>, <em>printer</em>, <em>password</em>).',
         'kb_li3'             => 'Click an article to read it. You can link straight to one, so it is easy to share with a colleague.',
+        'kb_li4'             => 'Some articles come with documents - a form to fill in, or a guide as a PDF. They are listed under the article; click one to download it. An article with documents shows a paperclip in the list.',
         'kb_p2'              => 'You will also see suggestions <em>while you are raising a ticket</em>: start typing the subject and any matching guides appear underneath it. Reading one costs you nothing, and if it solves the problem you can simply close the page — nothing is submitted until you press Submit.',
         'kb_tip'             => '<strong>Nothing showing?</strong> Either your search found no match, or your IT team has not published any guides yet. Raise a ticket as normal and they will help you directly.',
         'st_title'   => 'Knowing whether something is down',

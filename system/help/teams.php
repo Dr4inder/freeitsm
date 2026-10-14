@@ -61,15 +61,16 @@ require __DIR__ . '/_top.php';
 <div class="help-section" id="departments">
     <div class="help-section-header"><?php echo helpSectionNum('departments'); ?>
         <div>
-            <h3>Departments — the setting that decides who sees which tickets</h3>
-            <p>This is the whole point of teams, and the thing most likely to catch you out. Ticket visibility works like this:</p>
+            <h3>Departments — which ticket folders a team member gets</h3>
+            <p>A team's departments decide the <strong>department folders</strong> its members see in the Tickets folder list, and what the folder numbers count:</p>
         </div>
     </div>
     <div class="help-steps">
-        <div class="help-step"><span class="help-step-num">1</span><div>An analyst in <strong>no team</strong> sees <strong>every</strong> active department.</div></div>
-        <div class="help-step"><span class="help-step-num">2</span><div>An analyst in <strong>one or more teams</strong> sees only the departments linked to those teams — the union of them.</div></div>
+        <div class="help-step"><span class="help-step-num">1</span><div>An analyst in <strong>no team</strong> gets a folder for <strong>every</strong> active department.</div></div>
+        <div class="help-step"><span class="help-step-num">2</span><div>An analyst in <strong>one or more teams</strong> gets folders only for the departments linked to those teams — the union of them. Their numbers count those departments, <strong>plus every ticket with no department</strong>, plus anything assigned to them.</div></div>
     </div>
-    <div class="help-note warn"><strong>A team with no departments hides everything from its members.</strong> The moment you put someone into their first team, they stop seeing all departments and start seeing only that team's — and if the team has none linked, that's zero departments and an empty ticket list. Link the departments <em>before</em> you add the members.</div>
+    <div class="help-note warn"><strong>A team with members but no departments</strong> leaves those members counting only tickets with no department, plus their own. That is fine on an install that has no departments yet; anywhere else it is usually a mistake, so <strong>System → Teams</strong> flags such a team with a <strong>Check</strong> badge and a note at the top. Link the departments <em>before</em> you add the members.</div>
+    <div class="help-note"><strong>Teams organise the folder list; they are not a lock.</strong> An analyst can still open a ticket from another department in a company they can access. To keep tickets from someone, use <strong>company access</strong> (System → Analysts or Teams), or make the ticket <strong>confidential</strong>.</div>
     <p>The picker lists <em>all</em> departments, including inactive ones (labelled as such), deliberately — so that saving the form doesn't silently drop a link to a department that happens to be switched off.</p>
     <div class="help-note">The same links can be edited from the other side, under Tickets &rarr; Settings &rarr; Departments. It's one relationship, two doors.</div>
 </div>

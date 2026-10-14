@@ -3,12 +3,12 @@
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 
 /**
- * Ticket folder counts for an analyst in a team (3.6.2).
+ * Ticket folder counts for an analyst in a team (3.7.0).
  *
  *   php tests/team-counts-no-departments.php
  *
  * Someone in a team gets ticket folders and counts for that team's departments,
- * PLUS every ticket with no department. Until 3.6.2 a team linked to NO
+ * PLUS every ticket with no department. Until 3.7.0 a team linked to NO
  * department short-circuited every count to 0 instead - All Tickets, every
  * status, every other analyst's folder - so an install with no departments yet
  * showed 0 everywhere the moment somebody joined a team. Wiki:
@@ -93,7 +93,7 @@ function ownCount(array $d, int $analystId): int {
     return 0;
 }
 
-echo "\nTicket folder counts for a team with no departments (3.6.2)\n" . str_repeat('=', 70) . "\n";
+echo "\nTicket folder counts for a team with no departments (3.7.0)\n" . str_repeat('=', 70) . "\n";
 $endpoint = getenv('COUNTS_ENDPOINT') ?: realpath(__DIR__ . '/../api/tickets/get_ticket_counts.php');
 $conn = connectToDatabase();
 

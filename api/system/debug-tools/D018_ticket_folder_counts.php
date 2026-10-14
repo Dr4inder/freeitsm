@@ -12,7 +12,7 @@
  * 🔑 THE COMMONEST CAUSE IS NOT THE DATABASE. An analyst who belongs to a team
  * gets folders and counts only for the departments that team is linked to
  * (department_teams), plus tickets with no department and their own. Until
- * 3.6.2 a team linked to NO department counted nothing at all bar their own
+ * 3.7.0 a team linked to NO department counted nothing at all bar their own
  * folder - "My tickets 153, everything else 0" - even on an install with no
  * departments yet. The fix is in System → Teams, not in Database Verification.
  *
@@ -264,7 +264,7 @@ if ($hasTeamFilter) {
         $in = implode(',', array_fill(0, count($deptIds), '?'));
         $total = d018Count($conn, "SELECT COUNT(*) FROM tickets t WHERE (t.department_id IN ($in) OR t.department_id IS NULL) AND $where", array_merge($deptIds, $params));
     } else {
-        // No departments linked: only tickets with no department (3.6.2 - before
+        // No departments linked: only tickets with no department (3.7.0 - before
         // that the endpoint counted nothing at all here).
         $total = d018Count($conn, "SELECT COUNT(*) FROM tickets t WHERE t.department_id IS NULL AND $where", $params);
     }

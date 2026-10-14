@@ -447,7 +447,7 @@ function getDebugTools() {
             'inputs'   => [
                 ['name' => 'analyst', 'label' => 'Analyst', 'type' => 'select', 'optional' => true, 'options' => debugToolAnalystOptions()],
             ],
-            'when'     => 'Run this when somebody\'s inbox folder list shows 0 on All Tickets, the statuses or the departments, while they know there are tickets. Choose the analyst who sees the wrong numbers. The commonest cause is not the database: an analyst in a team only sees the departments that team is linked to, and a team linked to none shows them nothing except their own folder. That is why "My tickets" can show a number while everything else says 0.',
+            'when'     => 'Run this when somebody\'s inbox folder list shows 0 on All Tickets, the statuses or the departments, while they know there are tickets. Choose the analyst who sees the wrong numbers. The usual cause is not the database but teams: someone in a team gets folders and counts only for that team\'s departments, plus tickets with no department and their own. Up to 3.6.1 a team linked to no department counted nothing at all, which is why "My tickets" could show a number while everything else said 0; 3.7.0 counts the tickets with no department, and this tool shows which departments are being left out and why.',
             'checks'   => [
                 'The analyst: active, and allowed into the Tickets module',
                 'Every table and column the counts read, with the optional ones (snooze, team grouping, companies) named separately because the counts work without them',

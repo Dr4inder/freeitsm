@@ -207,6 +207,7 @@ if ($ssHelpIsManager) array_splice($helpNav, array_search('s7', $helpNav, true),
                 <li><?php echo t('self-service.help.kb_li1'); ?></li>
                 <li><?php echo t('self-service.help.kb_li2'); ?></li>
                 <li><?php echo t('self-service.help.kb_li3'); ?></li>
+                <li><?php echo t('self-service.help.kb_li4'); ?></li>
             </ol>
             <p><?php echo t('self-service.help.kb_p2'); ?></p>
             <div class="help-note"><?php echo t('self-service.help.kb_tip'); ?></div>

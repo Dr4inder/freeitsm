@@ -1,6 +1,6 @@
 # self-service/help.php
 
-> PHP - 377 lines
+> PHP - 378 lines
 
 Self-Service Portal — Help.
 

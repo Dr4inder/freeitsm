@@ -14,7 +14,7 @@ at a time for a chosen analyst and says which step the tickets disappear at.
 🔑 THE COMMONEST CAUSE IS NOT THE DATABASE. An analyst who belongs to a team
 gets folders and counts only for the departments that team is linked to
 (department_teams), plus tickets with no department and their own. Until
-3.6.2 a team linked to NO department counted nothing at all bar their own
+3.7.0 a team linked to NO department counted nothing at all bar their own
 folder - "My tickets 153, everything else 0" - even on an install with no
 departments yet. The fix is in System → Teams, not in Database Verification.
 
