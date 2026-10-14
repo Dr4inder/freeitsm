@@ -136,12 +136,37 @@ $pageStyles = <<<'CSS'
         /* ── documents attached to the article (GH #177) ──────────────── */
         .hc-docs { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border, #e5e7eb); }
         .hc-docs h2 { font-size: 14px; font-weight: 600; color: var(--text, #333); margin: 0 0 10px; }
-        .hc-doc { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--border, #e5e7eb);
-                  border-radius: 6px; margin-bottom: 8px; color: var(--text, #333); text-decoration: none; }
+        /* Tiles: a type icon, the name, then type and size. The whole tile is the
+           download. Fills the width, so a phone gets one or two per row. */
+        .hc-doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+        .hc-doc {
+            display: flex; gap: 12px; align-items: flex-start; padding: 12px;
+            border: 1px solid var(--border, #e5e7eb); border-radius: 8px;
+            background: var(--surface, #fff); color: var(--text, #333); text-decoration: none; min-width: 0;
+        }
         .hc-doc:hover { border-color: var(--ss-accent, #0078d4); }
-        .hc-doc-name { flex: 1; min-width: 0; font-size: 13.5px; overflow-wrap: anywhere; }
-        .hc-doc-desc { display: block; font-size: 12px; color: var(--text-muted, #666); margin-top: 2px; }
-        .hc-doc-act { font-size: 12.5px; color: var(--ss-accent, #0078d4); white-space: nowrap; }
+        /* A page with its corner folded, and the type written on it. The hue is
+           the type's (one per KIND of file, set inline) and mid-tone on purpose,
+           so white lettering reads on it in both light and dark themes. */
+        .hc-doc-icon {
+            flex: 0 0 auto; width: 38px; height: 46px; border-radius: 4px; position: relative;
+            background: var(--doc-c, #64748b); color: #fff;
+            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 7px;
+            font-size: 9.5px; font-weight: 700; letter-spacing: .3px;
+            clip-path: polygon(0 0, 72% 0, 100% 22%, 100% 100%, 0 100%);
+        }
+        .hc-doc-icon::after {
+            content: ''; position: absolute; top: 0; right: 0; width: 28%; height: 22%;
+            background: rgba(255, 255, 255, .35); border-bottom-left-radius: 3px;
+        }
+        .hc-doc-icon svg { position: absolute; top: 13px; width: 16px; height: 16px; opacity: .9; }
+        .hc-doc-text { min-width: 0; flex: 1; }
+        .hc-doc-name {
+            font-size: 13.5px; font-weight: 500; line-height: 1.35; overflow-wrap: anywhere;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .hc-doc-meta { display: block; font-size: 12px; color: var(--text-muted, #666); margin-top: 4px; }
+        .hc-doc-desc { display: block; font-size: 12px; color: var(--text-muted, #666); margin-top: 4px; line-height: 1.4; }
 
         /* ── Layout toggle ─────────────────────────────────────────── */
         .hc-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
@@ -465,19 +490,58 @@ let hcSearchTimer = null;
         function documentsHtml(docs) {
             if (!docs.length) return '';
             return '<div class="hc-docs"><h2>' + escapeHtml(window.t('self-service.help_centre.documents')) + '</h2>'
+                + '<div class="hc-doc-grid">'
                 + docs.map(d => {
                     const isLink = d.kind === 'link';
                     const href = isLink
                         ? (/^https?:\/\//i.test(d.external_url || '') ? d.external_url : '#')
                         : '../api/self-service/get_article_document.php?id=' + encodeURIComponent(d.id);
-                    const size = (!isLink && d.size_bytes) ? ' (' + docSize(d.size_bytes) + ')' : '';
+                    const type = docType(d);
+                    // The extension is on the icon, so the name drops it - but only
+                    // when it IS the extension the icon shows.
+                    let name = d.title || d.original_name || '';
+                    if (type.ext && name.toLowerCase().endsWith('.' + type.ext)) name = name.slice(0, -(type.ext.length + 1));
+                    const action = window.t(isLink ? 'self-service.help_centre.doc_open' : 'self-service.help_centre.doc_download');
+                    const meta = [type.label];
+                    if (!isLink && d.size_bytes) meta.push(docSize(d.size_bytes));
                     return '<a class="hc-doc" href="' + escapeHtml(href) + '"'
-                        + (isLink ? ' target="_blank" rel="noopener noreferrer"' : '') + '>'
-                        + '<span class="hc-doc-name">' + escapeHtml(d.title || d.original_name || '') + escapeHtml(size)
-                        + (d.description ? '<span class="hc-doc-desc">' + escapeHtml(d.description) + '</span>' : '') + '</span>'
-                        + '<span class="hc-doc-act">' + escapeHtml(window.t(isLink ? 'self-service.help_centre.doc_open' : 'self-service.help_centre.doc_download')) + '</span>'
+                        + (isLink ? ' target="_blank" rel="noopener noreferrer"' : '')
+                        + ' title="' + escapeHtml(action + ': ' + (d.title || d.original_name || '')) + '">'
+                        + '<span class="hc-doc-icon" style="--doc-c:' + type.colour + '" aria-hidden="true">'
+                        +   (isLink ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>' : '')
+                        +   escapeHtml(type.badge) + '</span>'
+                        + '<span class="hc-doc-text">'
+                        +   '<span class="hc-doc-name">' + escapeHtml(name) + '</span>'
+                        +   '<span class="hc-doc-meta">' + escapeHtml(meta.join(' · ')) + '</span>'
+                        +   (d.description ? '<span class="hc-doc-desc">' + escapeHtml(d.description) + '</span>' : '')
+                        + '</span>'
                         + '</a>';
-                }).join('') + '</div>';
+                }).join('') + '</div></div>';
+        }
+
+        // What a document is, for its icon: the word on it, its colour, and the
+        // type in words. One colour per KIND of file (every picture format is the
+        // same purple), so the colours mean something rather than decorating.
+        function docType(d) {
+            if (d.kind === 'link') return { badge: 'LINK', label: window.t('self-service.help_centre.doc_link'), colour: '#0e7490', ext: '' };
+            const m = /\.([a-z0-9]{1,5})$/i.exec(d.original_name || d.title || '');
+            const ext = m ? m[1].toLowerCase() : '';
+            const kinds = [
+                [['pdf'], '#dc2626'],
+                [['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg', 'heic', 'tif', 'tiff'], '#7c3aed'],
+                [['doc', 'docx', 'odt', 'rtf'], '#2563eb'],
+                [['xls', 'xlsx', 'csv', 'ods'], '#16a34a'],
+                [['ppt', 'pptx', 'odp'], '#ea580c'],
+                [['zip', '7z', 'rar', 'gz', 'tar'], '#b45309'],
+                [['mp4', 'mov', 'avi', 'mkv', 'webm', 'mp3', 'wav'], '#db2777'],
+            ];
+            const hit = kinds.find(k => k[0].includes(ext));
+            return {
+                badge:  ext ? ext.toUpperCase().slice(0, 4) : 'FILE',
+                label:  ext ? ext.toUpperCase() : window.t('self-service.help_centre.doc_file'),
+                colour: hit ? hit[1] : '#64748b',
+                ext:    ext,
+            };
         }
 
         function docSize(n) {

@@ -1,6 +1,6 @@
 # includes/knowledge/portal_reader.php
 
-> PHP - 143 lines
+> PHP - 158 lines
 
 What a self-service requester may read of the knowledge base — in ONE place.
 
@@ -41,7 +41,7 @@ chat reader follows (includes/webchat/ai.php).
 | [portalUserTenantId()](/code/functions/portalUserTenantId.md) | 49 | The company a portal user belongs to, or null for "shared articles only". |
 | [portalKnowledgeScope()](/code/functions/portalKnowledgeScope.md) | 71 | The WHERE fragment and bound params for "articles this requester may read". |
 | [portalCanReadArticle()](/code/functions/portalCanReadArticle.md) | 101 | May this portal requester read this article in the Help Centre? |
-| [portalArticlePreview()](/code/functions/portalArticlePreview.md) | 126 | Turn an article body into a short plain-text preview. |
+| [portalArticlePreview()](/code/functions/portalArticlePreview.md) | 134 | Turn an article body into a short plain-text preview. |
 
 ## Database
 

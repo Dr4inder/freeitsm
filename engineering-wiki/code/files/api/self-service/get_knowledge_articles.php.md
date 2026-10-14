@@ -1,6 +1,6 @@
 # api/self-service/get_knowledge_articles.php
 
-> API endpoint - 128 lines
+> API endpoint - 129 lines
 
 API: Help Centre article list / search, for the self-service portal. GET ?q=&limit=
 
