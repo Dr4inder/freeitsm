@@ -25,6 +25,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2337 | Self-Service      | Fix         | Article previews in the portal (Help Centre cards, the dashboard's popular list, New Ticket's suggestions) showed HTML codes such as "&gt;" and "&amp;" instead of ">" and "&"; portalArticlePreview() now decodes them before the page escapes them. |
 | 2338 | Self-Service      | Improvement | Help Centre articles with documents show a paperclip and "N documents" on their card and list row (the number alone in the tree and table), counting only documents shown in the Help Centre (GH #177). |
 | 2339 | Self-Service      | Improvement | Help Centre cards line up: titles along the top of each row and tags along the bottom (each card was a button, which centres its content vertically), with "N documents" above the tags. |
+| 2340 | Self-Service      | Fix         | Help Centre and dashboard article previews stopped mid-word with no sign there was more ("Close ot"): the body is cut in HTML characters, so the plain text never reached the length that added an ellipsis. The list now says when the article was longer, and the preview ends on a whole word with "…". |
 
 
 
