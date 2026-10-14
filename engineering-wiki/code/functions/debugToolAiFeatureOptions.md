@@ -6,7 +6,7 @@ D014's feature picker: every AI feature, plus "all" (GH #171).
 function debugToolAiFeatureOptions(): array
 ```
 
-Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md), line 454.
+Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md), line 494.
 
 **Returns:** `array`
 

@@ -10,10 +10,10 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [analyst_signatures](/code/tables/analyst_signatures.md) | 8 | 2 | 3 |  |
 | [analyst_software_dashboard_widgets](/code/tables/analyst_software_dashboard_widgets.md) | 5 | 2 | 4 |  |
 | [analyst_sso_identities](/code/tables/analyst_sso_identities.md) | 7 | 2 | 2 |  |
-| [analyst_teams](/code/tables/analyst_teams.md) | 5 | 23 | 4 |  |
+| [analyst_teams](/code/tables/analyst_teams.md) | 5 | 24 | 4 |  |
 | [analyst_tenant_access](/code/tables/analyst_tenant_access.md) | 4 | 4 | 3 | Which analysts may access which tenants (only consulted when an analyst is NOT flagged can_access_all_tenants). |
 | [analyst_ticket_dashboard_widgets](/code/tables/analyst_ticket_dashboard_widgets.md) | 7 | 2 | 4 |  |
-| [analysts](/code/tables/analysts.md) | 28 | 210 | 16 |  |
+| [analysts](/code/tables/analysts.md) | 28 | 212 | 16 |  |
 | [api_key_rate_limits](/code/tables/api_key_rate_limits.md) | 4 | 1 | 1 |  |
 | [api_keys](/code/tables/api_keys.md) | 14 | 3 | 4 | REST API v1 keys (System > API) — distinct from the legacy `apikeys` table above (api/external ingest): stored hashed, granular permission map (JSON), optional company scope, acts as an analyst. |
 | [api_rate_limits](/code/tables/api_rate_limits.md) | 4 | 1 | 1 |  |
@@ -87,8 +87,8 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [contract_term_values](/code/tables/contract_term_values.md) | 7 | 3 | 3 |  |
 | [contracts](/code/tables/contracts.md) | 29 | 28 | 4 |  |
 | [cost_centres](/code/tables/cost_centres.md) | 10 | 11 | 1 | Cost centres (GH #160, stage 1). |
-| [department_teams](/code/tables/department_teams.md) | 5 | 5 | 3 |  |
-| [departments](/code/tables/departments.md) | 8 | 24 | 2 |  |
+| [department_teams](/code/tables/department_teams.md) | 5 | 6 | 3 |  |
+| [departments](/code/tables/departments.md) | 8 | 25 | 2 |  |
 | [directory_sync_entries](/code/tables/directory_sync_entries.md) | 8 | 1 | 1 | What a run did to each PERSON. |
 | [directory_sync_runs](/code/tables/directory_sync_runs.md) | 15 | 3 | 2 | One row per directory sync RUN — the attempt, not just the success. |
 | [document_access_log](/code/tables/document_access_log.md) | 6 | 0 | 1 | Who fetched which document, and when. |
@@ -301,7 +301,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [tasks](/code/tables/tasks.md) | 30 | 44 | 12 |  |
 | [team_modules](/code/tables/team_modules.md) | 4 | 2 | 1 | Per-team module grants (issue #30) — the team twin of analyst_modules, mirroring team_tenant_access. |
 | [team_tenant_access](/code/tables/team_tenant_access.md) | 4 | 3 | 1 | Which companies a TEAM grants its members (only consulted when the team is NOT flagged can_access_all_tenants). |
-| [teams](/code/tables/teams.md) | 12 | 40 | 4 |  |
+| [teams](/code/tables/teams.md) | 12 | 41 | 4 |  |
 | [tenant_channel_senders](/code/tables/tenant_channel_senders.md) | 4 | 1 | 0 | Specific sender phone numbers mapped to a company (shared-intake channel routing). |
 | [tenant_config_hidden](/code/tables/tenant_config_hidden.md) | 5 | 9 | 4 | Multi-tenancy: the per-company "hide" layer for global config (the add+hide override model — design §7). |
 | [tenant_domains](/code/tables/tenant_domains.md) | 4 | 12 | 3 | Domains owned by a tenant (used by shared-intake email routing). |
@@ -335,11 +335,11 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [ticket_rota_entries](/code/tables/ticket_rota_entries.md) | 8 | 7 | 7 |  |
 | [ticket_rota_shifts](/code/tables/ticket_rota_shifts.md) | 7 | 7 | 2 |  |
 | [ticket_splits](/code/tables/ticket_splits.md) | 12 | 1 | 1 |  |
-| [ticket_statuses](/code/tables/ticket_statuses.md) | 9 | 58 | 3 |  |
+| [ticket_statuses](/code/tables/ticket_statuses.md) | 9 | 59 | 3 |  |
 | [ticket_time_entries](/code/tables/ticket_time_entries.md) | 9 | 6 | 4 |  |
 | [ticket_types](/code/tables/ticket_types.md) | 8 | 13 | 3 |  |
 | [ticket_views](/code/tables/ticket_views.md) | 8 | 1 | 1 | Who has looked at a ticket (discussion #62, step 2). |
-| [tickets](/code/tables/tickets.md) | 34 | 134 | 30 |  |
+| [tickets](/code/tables/tickets.md) | 34 | 135 | 30 |  |
 | [trusted_devices](/code/tables/trusted_devices.md) | 7 | 0 | 2 |  |
 | [user_password_reset_tokens](/code/tables/user_password_reset_tokens.md) | 6 | 1 | 2 | Password reset for SELF-SERVICE PORTAL users (GH #134). |
 | [user_preferences](/code/tables/user_preferences.md) | 5 | 27 | 7 |  |

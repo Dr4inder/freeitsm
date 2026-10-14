@@ -63,6 +63,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 125
 - [api/system/api_keys/list_keys.php](/code/files/api/system/api_keys/list_keys.php.md)
 - [api/system/db_verify.php](/code/files/api/system/db_verify.php.md)
 - [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md)
+- [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md)
 - [api/system/email_routing_test.php](/code/files/api/system/email_routing_test.php.md)
 - [api/system/get_orphaned_tickets.php](/code/files/api/system/get_orphaned_tickets.php.md)
 - [api/system/get_topology.php](/code/files/api/system/get_topology.php.md)

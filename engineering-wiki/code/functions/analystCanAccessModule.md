@@ -41,6 +41,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 - [api/rfp-builder/restyle_section.php](/code/files/api/rfp-builder/restyle_section.php.md)
 - [api/rfp-builder/run_consolidation.php](/code/files/api/rfp-builder/run_consolidation.php.md)
 - [api/self-service/get_recording.php](/code/files/api/self-service/get_recording.php.md)
+- [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md)
 - [api/tasks/contractors.php](/code/files/api/tasks/contractors.php.md)
 - [api/war-room/alerts.php](/code/files/api/war-room/alerts.php.md)
 - [asset-management/index.php](/code/files/asset-management/index.php.md)

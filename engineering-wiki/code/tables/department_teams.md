@@ -24,6 +24,7 @@
 
 | File | Where | Purpose |
 |---|---|---|
+| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L241, L316 |  |
 | [api/tickets/get_department_teams.php](/code/files/api/tickets/get_department_teams.php.md) | L28 |  |
 | [api/tickets/get_my_departments.php](/code/files/api/tickets/get_my_departments.php.md) | L44 |  |
 | [api/tickets/get_team_departments.php](/code/files/api/tickets/get_team_departments.php.md) | L28 |  |

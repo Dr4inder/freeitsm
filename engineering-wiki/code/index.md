@@ -4,11 +4,11 @@ Written by the scanner from FreeITSM's own code - do not edit these pages, they 
 
 | | |
 |---|--:|
-| [Files](/code/files/index.md) | 1673 PHP, 110 JavaScript |
-| [API endpoints](/code/endpoints.md) | 988 |
-| [Functions](/code/functions/index.md) | 2624 |
+| [Files](/code/files/index.md) | 1675 PHP, 110 JavaScript |
+| [API endpoints](/code/endpoints.md) | 989 |
+| [Functions](/code/functions/index.md) | 2628 |
 | [Classes](/code/classes/index.md) | 67 |
 | [Database tables](/code/tables/index.md) | 371 |
-| [Traps](/code/traps.md) | 46 |
+| [Traps](/code/traps.md) | 47 |
 
 How to make these pages say more: [[handbook/comments|Writing comments for the wiki]].

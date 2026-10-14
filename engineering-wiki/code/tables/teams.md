@@ -40,6 +40,7 @@
 | [api/projects/lookups.php](/code/files/api/projects/lookups.php.md) | L27 |  |
 | [api/reporting/packs/shares.php](/code/files/api/reporting/packs/shares.php.md) | L34 |  |
 | [api/system/debug-tools/D008_war_room.php](/code/files/api/system/debug-tools/D008_war_room.php.md) | L194 |  |
+| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L311 |  |
 | [api/system/get_effective_module_access.php](/code/files/api/system/get_effective_module_access.php.md) | L35 |  |
 | [api/system/get_module_access.php](/code/files/api/system/get_module_access.php.md) | L36 |  |
 | [api/system/save_module_grants.php](/code/files/api/system/save_module_grants.php.md) | L36 |  |

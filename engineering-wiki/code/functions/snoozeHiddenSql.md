@@ -21,6 +21,7 @@ Defined in [includes/ticket_snooze.php](/code/files/includes/ticket_snooze.php.m
 
 ## Called from
 
+- [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md)
 - [api/tickets/get_emails.php](/code/files/api/tickets/get_emails.php.md)
 - [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md)
 

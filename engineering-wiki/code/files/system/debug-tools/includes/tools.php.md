@@ -1,6 +1,6 @@
 # system/debug-tools/includes/tools.php
 
-> PHP - 483 lines
+> PHP - 524 lines
 
 > [!TIP]
 > **Developer guide on the GitHub wiki:** [System](https://github.com/edmozley/freeitsm/wiki/System)
@@ -24,15 +24,22 @@ To add a new diagnostic:
 | Function | Line | What it does |
 |---|--:|---|
 | [getDebugTools()](/code/functions/getDebugTools.md) | 25 | Every Debug Tool with its card and page metadata - id, slug, backend file, title, category, description, search keywords, when to run it, what it checks. |
-| [getDebugToolBySlug()](/code/functions/getDebugToolBySlug.md) | 446 | Find one tool by its slug (e.g. 'd001'). Returns null if not found. |
-| [debugToolAiFeatureOptions()](/code/functions/debugToolAiFeatureOptions.md) | 454 | D014's feature picker: every AI feature, plus "all" (GH #171). |
-| [debugToolIcon()](/code/functions/debugToolIcon.md) | 469 | Inline SVG markup for a debug-tool icon key. Unknown keys render a neutral wrench so a typo never breaks the page. Sizing/colour come from CSS. |
+| [getDebugToolBySlug()](/code/functions/getDebugToolBySlug.md) | 471 | Find one tool by its slug (e.g. 'd001'). Returns null if not found. |
+| [debugToolAnalystOptions()](/code/functions/debugToolAnalystOptions.md) | 482 | D018's analyst picker: "you" first, then every active analyst. An empty list (database unreachable) still leaves "you", so the page always renders. |
+| [debugToolAiFeatureOptions()](/code/functions/debugToolAiFeatureOptions.md) | 494 | D014's feature picker: every AI feature, plus "all" (GH #171). |
+| [debugToolIcon()](/code/functions/debugToolIcon.md) | 509 | Inline SVG markup for a debug-tool icon key. Unknown keys render a neutral wrench so a typo never breaks the page. Sizing/colour come from CSS. |
+
+## Database
+
+| Line | In | Tables | Purpose |
+|--:|---|---|---|
+| 486 | `debugToolAnalystOptions` | read [analysts](/code/tables/analysts.md) |  |
 
 ## How it hangs together
 
-**Includes:** [includes/ai_settings.php](/code/files/includes/ai_settings.php.md)
+**Includes:** [includes/functions.php](/code/files/includes/functions.php.md), [includes/ai_settings.php](/code/files/includes/ai_settings.php.md)
 
 **Included by:** [system/debug-tools/includes/tool-page.php](/code/files/system/debug-tools/includes/tool-page.php.md), [system/debug-tools/index.php](/code/files/system/debug-tools/index.php.md)
 
-**Calls:** [aiSettingsRegistry()](/code/functions/aiSettingsRegistry.md)
+**Calls:** [aiSettingsRegistry()](/code/functions/aiSettingsRegistry.md), [connectToDatabase()](/code/functions/connectToDatabase.md)
 

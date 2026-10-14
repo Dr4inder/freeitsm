@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2328 | System            | Feature     | New Debug Tool D018 explains why an analyst's ticket folder numbers say 0, following every ticket through each filter (Trash, merged, snoozed, company, team departments) and checking the tables, statuses and team links the counts depend on. |
 
 
 

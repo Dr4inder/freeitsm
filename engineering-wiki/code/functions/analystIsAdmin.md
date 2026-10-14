@@ -40,6 +40,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 - [api/system/debug-tools/D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md)
 - [api/system/debug-tools/D016_carddav_drift.php](/code/files/api/system/debug-tools/D016_carddav_drift.php.md)
 - [api/system/debug-tools/D017_config_completeness.php](/code/files/api/system/debug-tools/D017_config_completeness.php.md)
+- [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md)
 - [api/system/get_directory_sync_log.php](/code/files/api/system/get_directory_sync_log.php.md)
 - [api/system/run_directory_sync.php](/code/files/api/system/run_directory_sync.php.md)
 - [api/system/test_directory_mapping.php](/code/files/api/system/test_directory_mapping.php.md)

@@ -5,7 +5,7 @@ Every PHP and JavaScript file the scanner read, by folder. Open a folder in the 
 | Folder | Files |
 |---|--:|
 | top level | 3 |
-| `api/` | 989 |
+| `api/` | 990 |
 | `asset-management/` | 19 |
 | `assets/` | 99 |
 | `browser-extension/` | 3 |
@@ -33,7 +33,7 @@ Every PHP and JavaScript file the scanner read, by folder. Open a folder in the 
 | `service-status/` | 5 |
 | `setup/` | 1 |
 | `software/` | 8 |
-| `system/` | 102 |
+| `system/` | 103 |
 | `tasks/` | 8 |
 | `tickets/` | 20 |
 | `war-room/` | 5 |

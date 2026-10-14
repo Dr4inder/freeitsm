@@ -35,6 +35,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 750
 - [api/cmdb/get_object_tickets.php](/code/files/api/cmdb/get_object_tickets.php.md)
 - [api/problem-management/ai_suggest_problem.php](/code/files/api/problem-management/ai_suggest_problem.php.md)
 - [api/problem-management/list.php](/code/files/api/problem-management/list.php.md)
+- [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md)
 - [api/system/global_search.php](/code/files/api/system/global_search.php.md)
 - [api/tasks/search_links.php](/code/files/api/tasks/search_links.php.md)
 - [api/tickets/empty_trash.php](/code/files/api/tickets/empty_trash.php.md)

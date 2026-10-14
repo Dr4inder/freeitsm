@@ -12,7 +12,7 @@ Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tool
 
 ## Calls
 
-[debugToolAiFeatureOptions()](/code/functions/debugToolAiFeatureOptions.md)
+[debugToolAiFeatureOptions()](/code/functions/debugToolAiFeatureOptions.md), [debugToolAnalystOptions()](/code/functions/debugToolAnalystOptions.md)
 
 ## Called from
 

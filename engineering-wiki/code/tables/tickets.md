@@ -137,6 +137,7 @@
 | [api/system/db_verify.php](/code/files/api/system/db_verify.php.md) | L2186, L2206, L2279, L2321, L2322, L2323 |  |
 | [api/system/debug-tools/D002_delete_ticket.php](/code/files/api/system/debug-tools/D002_delete_ticket.php.md) | L141, L146, L418 |  |
 | [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L334, L338, L981, L993 |  |
+| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L250, L252, L254, L256, L259, L265 ... |  |
 | [api/system/get_orphaned_tickets.php](/code/files/api/system/get_orphaned_tickets.php.md) | L27 |  |
 | [api/system/get_topology.php](/code/files/api/system/get_topology.php.md) | L68 |  |
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L70, L567 |  |

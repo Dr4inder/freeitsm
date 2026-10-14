@@ -8,6 +8,12 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 [Open save_channel.php](/code/files/api/messaging/save_channel.php.md)
 
+## api/system/debug-tools/D018_ticket_folder_counts.php
+
+- **Line 108:** only ever for the analyst who is signed in. Running it for somebody else would mean putting their id into the admin's live session, and a fatal error part-way through would leave the admin signed in as them.
+
+[Open D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md)
+
 ## assets/js/engineering-wiki.js
 
 - **Line 86:** `renderAll()` rebuilds EVERY pane's DOM, so every pane is redrawn (from

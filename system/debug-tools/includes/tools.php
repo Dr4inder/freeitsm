@@ -435,6 +435,31 @@ function getDebugTools() {
             'duration' => 'Instant',
             'persists' => 'Nothing. Read-only - it reads config.php\'s text for the NAMES it defines and checks which settings exist. 🔒 It never prints a value: no password, no path, no address - names and yes/no only, so the report is safe to send on.',
         ],
+        [
+            'id'       => 'D018',
+            'slug'     => 'd018',
+            'file'     => 'D018_ticket_folder_counts.php',
+            'title'    => 'Ticket folder counts — why do the numbers say 0?',
+            'category' => 'Tickets',
+            'icon'     => 'count',
+            'desc'     => 'Follow every ticket through the filters behind the inbox\'s folder numbers, for one analyst, and see the step where they drop to zero.',
+            'keywords' => 'ticket counts totals badge folder numbers zero 0 all tickets my tickets status department analyst team inbox folder list empty d018',
+            'inputs'   => [
+                ['name' => 'analyst', 'label' => 'Analyst', 'type' => 'select', 'optional' => true, 'options' => debugToolAnalystOptions()],
+            ],
+            'when'     => 'Run this when somebody\'s inbox folder list shows 0 on All Tickets, the statuses or the departments, while they know there are tickets. Choose the analyst who sees the wrong numbers. The commonest cause is not the database: an analyst in a team only sees the departments that team is linked to, and a team linked to none shows them nothing except their own folder. That is why "My tickets" can show a number while everything else says 0.',
+            'checks'   => [
+                'The analyst: active, and allowed into the Tickets module',
+                'Every table and column the counts read, with the optional ones (snooze, team grouping, companies) named separately because the counts work without them',
+                'Every ticket, then each filter in turn - the Trash, merged tickets, snoozed tickets, the company in use, the departments their teams can see - with how many each step removes',
+                'Their teams and the departments each team is linked to, naming a team linked to none, and how many tickets sit in departments they cannot see',
+                'Statuses: which are active, and tickets with no status, a deleted status or an inactive one, which count in the total but in no status folder',
+                'When you run it for yourself, the real counts endpoint is called too, and its numbers printed beside the step-by-step ones',
+                'A plain-English verdict with the fix for anything found',
+            ],
+            'duration' => 'Instant',
+            'persists' => 'Nothing. Read-only - it counts tickets and reads table structure. It shows team, department and status names and ticket counts, never ticket content.',
+        ],
     ];
 }
 
@@ -448,6 +473,21 @@ function getDebugToolBySlug($slug) {
         if ($tool['slug'] === $slug) return $tool;
     }
     return null;
+}
+
+/**
+ * D018's analyst picker: "you" first, then every active analyst. An empty list
+ * (database unreachable) still leaves "you", so the page always renders.
+ */
+function debugToolAnalystOptions(): array {
+    $opts = [['value' => '', 'label' => 'You']];
+    try {
+        require_once __DIR__ . '/../../../includes/functions.php';
+        $rows = connectToDatabase()->query("SELECT id, full_name FROM analysts WHERE is_active = 1 ORDER BY full_name")->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $r) $opts[] = ['value' => (string)$r['id'], 'label' => $r['full_name']];
+    } catch (Throwable $e) {
+    }
+    return $opts;
 }
 
 /** D014's feature picker: every AI feature, plus "all" (GH #171). */
@@ -475,6 +515,7 @@ function debugToolIcon($key) {
         'shield' => '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline>',
         'people' => '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
         'sync'   => '<polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>',
+        'count'  => '<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>',
         'clip'   => '<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>',
     ];
     $inner = $icons[$key] ?? '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>';

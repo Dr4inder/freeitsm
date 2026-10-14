@@ -886,6 +886,7 @@ Every PHP file under `api/`, with how it is protected and what it is for. *Publi
 | [D015_carddav_health.php](/code/files/api/system/debug-tools/D015_carddav_health.php.md) | Signed-in analyst (session check) | Debug Tool D015 — Is the CardDAV connection healthy, in both directions? |  |
 | [D016_carddav_drift.php](/code/files/api/system/debug-tools/D016_carddav_drift.php.md) | Signed-in analyst (session check) | Debug Tool D016 — Where do FreeITSM and the address book disagree? |  |
 | [D017_config_completeness.php](/code/files/api/system/debug-tools/D017_config_completeness.php.md) | Signed-in analyst (session check) | Debug Tool D017 — is anything missing from config.php? |  |
+| [D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | Signed-in analyst (session check) (via includes/timezone.php) | Debug Tool D018 — why do the ticket folder counts say 0? |  |
 
 ## api/table-views
 
