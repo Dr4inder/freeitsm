@@ -135,22 +135,27 @@ $pageStyles = <<<'CSS'
             border-radius: 6px;
         }
         .hc-body a { color: var(--ss-accent, #0078d4); }
+        /* A real button, not a text link: on an article it is the way back, and
+           the only control left above it once the toolbar is hidden. */
         .hc-back {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             color: var(--ss-accent, #0078d4);
             text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 600;
             margin-bottom: 20px;
-            background: none;
-            border: none;
+            background: var(--surface, #fff);
+            border: 1px solid var(--ss-accent, #0078d4);
+            border-radius: 8px;
             cursor: pointer;
-            padding: 0;
+            padding: 9px 16px 9px 12px;
             font-family: inherit;
+            line-height: 1;
         }
-        .hc-back:hover { text-decoration: underline; }
+        .hc-back svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .hc-back:hover { background: var(--ss-accent, #0078d4); color: var(--ss-on-accent, #fff); }
 
         /* ── documents attached to the article (GH #177) ──────────────── */
         .hc-docs { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border, #e5e7eb); }
@@ -457,8 +462,10 @@ let hcSearchTimer = null;
 
         async function openArticle(id, isDeepLink) {
             const container = document.getElementById('hcContent');
-            const searchBox = document.getElementById('hcSearch');
-            if (searchBox) searchBox.style.display = 'none';
+            // The whole toolbar goes, not just the search: Cards / List / Tree /
+            // Table choose how the LIST is drawn and mean nothing on one article.
+            const toolbar = document.getElementById('hcToolbar');
+            if (toolbar) toolbar.style.display = 'none';
 
             try {
                 const response = await fetch('../api/self-service/get_knowledge_article.php?id=' + encodeURIComponent(id));
@@ -570,13 +577,16 @@ let hcSearchTimer = null;
         }
 
         function backButtonHtml() {
-            return '<button type="button" class="hc-back" onclick="backToList()">&lsaquo; '
+            return '<button type="button" class="hc-back" onclick="backToList()">'
+                 + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>'
                  + escapeHtml(window.t('self-service.help_centre.back')) + '</button>';
         }
 
         function backToList() {
+            const toolbar = document.getElementById('hcToolbar');
+            if (toolbar) toolbar.style.display = '';
             const searchBox = document.getElementById('hcSearch');
-            if (searchBox) { searchBox.style.display = ''; searchBox.value = ''; }
+            if (searchBox) searchBox.value = '';
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', 'help-centre.php');
             }
