@@ -160,6 +160,13 @@ $pageStyles = <<<'CSS'
 
         /* ── cards: a grid, for scanning many titles at once ─────────── */
         .hc-list.hc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        /* A card is a <button>, and a button centres its content vertically - so
+           in a row of different-length previews every title started at a
+           different height. Lay each card out from the top instead, and let the
+           preview take the spare space, so titles line up along the top of a row
+           and the pills (and "N documents") along the bottom. */
+        .hc-list.hc-cards .hc-card { display: flex; flex-direction: column; justify-content: flex-start; }
+        .hc-list.hc-cards .hc-card-preview { flex: 1 1 auto; }
 
         /* ── list: full-width rows with a preview (what this page had) ── */
         .hc-list.hc-rows { display: grid; gap: 12px; }
@@ -309,8 +316,8 @@ let hcSearchTimer = null;
                 return '<button type="button" class="hc-card" onclick="openArticle(' + a.id + ')">'
                      +   '<div class="hc-card-title">' + escapeHtml(a.title || '') + '</div>'
                      +   '<div class="hc-card-preview">' + escapeHtml(a.preview || '') + '</div>'
-                     +   (tags ? '<div class="hc-tags">' + tags + '</div>' : '')
                      +   hcDocCount(a, false)
+                     +   (tags ? '<div class="hc-tags">' + tags + '</div>' : '')
                      + '</button>';
             }).join('') + '</div>';
         }
@@ -323,8 +330,8 @@ let hcSearchTimer = null;
                 return '<button type="button" class="hc-card" onclick="openArticle(' + a.id + ')">'
                      +   '<div class="hc-card-title">' + escapeHtml(a.title || '') + '</div>'
                      +   '<div class="hc-card-preview">' + escapeHtml(a.preview || '') + '</div>'
-                     +   (tags ? '<div class="hc-tags">' + tags + '</div>' : '')
                      +   hcDocCount(a, false)
+                     +   (tags ? '<div class="hc-tags">' + tags + '</div>' : '')
                      + '</button>';
             }).join('') + '</div>';
         }

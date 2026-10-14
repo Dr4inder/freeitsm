@@ -24,6 +24,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2336 | Tests             | Improvement | New tests/knowledge-help-centre-documents.php: 20 checks of who can download what from the Help Centre (every refusal paired with a positive control, two pins, companies, leavers), plus a before-Database-Verification mode. |
 | 2337 | Self-Service      | Fix         | Article previews in the portal (Help Centre cards, the dashboard's popular list, New Ticket's suggestions) showed HTML codes such as "&gt;" and "&amp;" instead of ">" and "&"; portalArticlePreview() now decodes them before the page escapes them. |
 | 2338 | Self-Service      | Improvement | Help Centre articles with documents show a paperclip and "N documents" on their card and list row (the number alone in the tree and table), counting only documents shown in the Help Centre (GH #177). |
+| 2339 | Self-Service      | Improvement | Help Centre cards line up: titles along the top of each row and tags along the bottom (each card was a button, which centres its content vertically), with "N documents" above the tags. |
 
 
 
