@@ -156,7 +156,7 @@
 | [api/system/debug-tools/D004_local_login.php](/code/files/api/system/debug-tools/D004_local_login.php.md) | L204 |  |
 | [api/system/debug-tools/D010_signin_methods.php](/code/files/api/system/debug-tools/D010_signin_methods.php.md) | L263, L441, L442, L443, L444, L446 |  |
 | [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md) | L859 |  |
-| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L156 |  |
+| [api/system/debug-tools/D018_ticket_folder_counts.php](/code/files/api/system/debug-tools/D018_ticket_folder_counts.php.md) | L156, L373, L405, L410 |  |
 | [api/system/get_carddav_write_log.php](/code/files/api/system/get_carddav_write_log.php.md) | L50 |  |
 | [api/system/get_directory_sync_log.php](/code/files/api/system/get_directory_sync_log.php.md) | L67 |  |
 | [api/system/get_effective_module_access.php](/code/files/api/system/get_effective_module_access.php.md) | L25 |  |
@@ -281,7 +281,7 @@
 | [includes/warroom.php](/code/files/includes/warroom.php.md) | warRoomChannelList L132, warRoomChannel L220, warRoomAddMembers L346, warRoomOpenDm L414, warRoomDirectory L451, warRoomMessages L507 ... |  |
 | [projects/settings/index.php](/code/files/projects/settings/index.php.md) | L102 |  |
 | [self-service/includes/user-menu.php](/code/files/self-service/includes/user-menu.php.md) | L29 |  |
-| [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md) | debugToolAnalystOptions L486 |  |
+| [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md) | debugToolAnalystOptions L488 |  |
 | [system/roles/index.php](/code/files/system/roles/index.php.md) | L35 |  |
 | [tickets/csat/index.php](/code/files/tickets/csat/index.php.md) | L135, L166, L184 |  |
 | [workflow/includes/engine.php](/code/files/workflow/includes/engine.php.md) | WorkflowEngine::action_assign_ticket L2360 |  |

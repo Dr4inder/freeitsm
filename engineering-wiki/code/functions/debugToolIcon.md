@@ -6,7 +6,7 @@ Inline SVG markup for a debug-tool icon key. Unknown keys render a neutral wrenc
 function debugToolIcon($key)
 ```
 
-Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md), line 509.
+Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md), line 511.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

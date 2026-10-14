@@ -1,6 +1,6 @@
 # api/system/debug-tools/D018_ticket_folder_counts.php
 
-> API endpoint - 410 lines
+> API endpoint - 488 lines
 
 Debug Tool D018 — why do the ticket folder counts say 0?
 
@@ -60,13 +60,24 @@ Output: plain text, section-delimited with === HEADERS === for easy skimming.
 | 259 |  | read [tickets](/code/tables/tickets.md) |  |
 | 265 |  | read [tickets](/code/tables/tickets.md) |  |
 | 286 |  | read [tickets](/code/tables/tickets.md) |  |
-| 311 |  | read [teams](/code/tables/teams.md) |  |
-| 316 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
-| 338 |  | read [tickets](/code/tables/tickets.md), read [departments](/code/tables/departments.md) |  |
-| 357 |  | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 362 |  | read [tickets](/code/tables/tickets.md) |  |
-| 363 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
-| 365 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 312 |  | read [teams](/code/tables/teams.md) |  |
+| 324 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
+| 346 |  | read [tickets](/code/tables/tickets.md), read [departments](/code/tables/departments.md) |  |
+| 366 |  | read [teams](/code/tables/teams.md) |  |
+| 373 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 378 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
+| 387 |  | read [tickets](/code/tables/tickets.md), read [department_teams](/code/tables/department_teams.md) |  |
+| 401 |  | read [departments](/code/tables/departments.md), read [department_teams](/code/tables/department_teams.md) |  |
+| 405 |  | read [analysts](/code/tables/analysts.md), read [analyst_teams](/code/tables/analyst_teams.md) |  |
+| 409 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 410 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [analysts](/code/tables/analysts.md) |  |
+| 411 |  | read [department_teams](/code/tables/department_teams.md), read [teams](/code/tables/teams.md) |  |
+| 412 |  | read [department_teams](/code/tables/department_teams.md), read [departments](/code/tables/departments.md) |  |
+| 420 |  | read [analyst_teams](/code/tables/analyst_teams.md), read [teams](/code/tables/teams.md) |  |
+| 435 |  | read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 440 |  | read [tickets](/code/tables/tickets.md) |  |
+| 441 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
+| 443 |  | read [tickets](/code/tables/tickets.md), read [ticket_statuses](/code/tables/ticket_statuses.md) |  |
 
 ## How it hangs together
 

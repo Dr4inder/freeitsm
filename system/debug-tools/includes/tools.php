@@ -453,6 +453,8 @@ function getDebugTools() {
                 'Every table and column the counts read, with the optional ones (snooze, team grouping, companies) named separately because the counts work without them',
                 'Every ticket, then each filter in turn - the Trash, merged tickets, snoozed tickets, the company in use, the departments their teams can see - with how many each step removes',
                 'Their teams and the departments each team is linked to, naming a team linked to none, and how many tickets sit in departments they cannot see',
+                'Every team on the install: active or not, its members, its departments and how many tickets those hold - so one run covers everybody, not just the analyst chosen',
+                'The loose ends: departments no team is linked to, analysts in no team, and team or department links left pointing at something deleted',
                 'Statuses: which are active, and tickets with no status, a deleted status or an inactive one, which count in the total but in no status folder',
                 'When you run it for yourself, the real counts endpoint is called too, and its numbers printed beside the step-by-step ones',
                 'A plain-English verdict with the fix for anything found',

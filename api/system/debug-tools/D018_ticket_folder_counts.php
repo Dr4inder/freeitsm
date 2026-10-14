@@ -307,9 +307,17 @@ if (!$hasTeamFilter) {
     $teamLines[] = "The analyst is in no team, so they see every department. Teams do not narrow their counts.";
 } else {
     $teamNames = [];
+    $teamOff = [];
     try {
-        foreach ($conn->query("SELECT id, name FROM teams")->fetchAll(PDO::FETCH_ASSOC) as $r) $teamNames[(int)$r['id']] = $r['name'];
+        foreach ($conn->query("SELECT id, name, is_active FROM teams")->fetchAll(PDO::FETCH_ASSOC) as $r) {
+            $teamNames[(int)$r['id']] = $r['name'] . (isset($r['is_active']) && !$r['is_active'] ? ' [INACTIVE team]' : '');
+            if (isset($r['is_active']) && !$r['is_active']) $teamOff[] = (int)$r['id'];
+        }
     } catch (Throwable $e) {}
+    if (array_intersect($teamIds, $teamOff)) {
+        $findings[] = "The analyst belongs to a team marked inactive. The counts do not look at whether a team is active, "
+                    . "so an inactive team still limits its members to its departments. Take the analyst out of it in System → Teams.";
+    }
     $teamLines[] = "The analyst is in " . count($teamIds) . " team(s). Being in ANY team limits them to the departments those teams are linked to.";
     $teamLines[] = '';
     foreach ($teamIds as $tid) {
@@ -350,7 +358,77 @@ if (!$hasTeamFilter) {
 }
 addSection($sections, '4. TEAMS AND THE DEPARTMENTS THEY SEE', $teamLines);
 
-// ---- 5. STATUSES -------------------------------------------------------
+// ---- 5. EVERY TEAM ON THIS INSTALL --------------------------------------
+// The whole picture in one go, so a second run for another analyst is rarely
+// needed: every team, who is in it, what it can see, and the loose ends.
+$all = [];
+try {
+    $teams = $conn->query("SELECT * FROM teams ORDER BY display_order, name")->fetchAll(PDO::FETCH_ASSOC);
+} catch (Throwable $e) {
+    $teams = null;
+    $all[] = "Could not read the teams table: " . $e->getMessage();
+}
+if ($teams !== null) {
+    $members = [];
+    foreach ($conn->query("SELECT ant.team_id, a.full_name, a.is_active FROM analyst_teams ant
+                            INNER JOIN analysts a ON a.id = ant.analyst_id ORDER BY a.full_name")->fetchAll(PDO::FETCH_ASSOC) as $r) {
+        $members[(int)$r['team_id']][] = $r['full_name'] . ($r['is_active'] ? '' : ' [inactive]');
+    }
+    $depts = [];
+    foreach ($conn->query("SELECT dt.team_id, d.name, d.is_active FROM department_teams dt
+                            INNER JOIN departments d ON d.id = dt.department_id ORDER BY d.name")->fetchAll(PDO::FETCH_ASSOC) as $r) {
+        $depts[(int)$r['team_id']][] = $r['name'] . ($r['is_active'] ? '' : ' [inactive]');
+    }
+    $all[] = count($teams) . " team(s). Anyone in a team sees only that team's departments (plus tickets with no department";
+    $all[] = "and tickets assigned to them). Anyone in no team sees every department.";
+    foreach ($teams as $tm) {
+        $tid = (int)$tm['id'];
+        $inactive = isset($tm['is_active']) && !$tm['is_active'];
+        $tickets = d018Count($conn, "SELECT COUNT(*) FROM tickets t INNER JOIN department_teams dt ON dt.department_id = t.department_id
+                                      WHERE dt.team_id = ? AND $baseWhere", array_merge([$tid], $baseParams));
+        $all[] = '';
+        $all[] = "{$tm['name']} (id {$tid})" . ($inactive ? '  [INACTIVE - still limits its members]' : '');
+        $all[] = "  Members     : " . (empty($members[$tid]) ? '(none)' : count($members[$tid]) . ' - ' . implode(', ', $members[$tid]));
+        $all[] = "  Departments : " . (empty($depts[$tid]) ? 'NONE - its members see only their own tickets and unassigned ones' : implode(', ', $depts[$tid]));
+        $all[] = "  Tickets     : " . (is_int($tickets) ? number_format($tickets) : $tickets) . " in those departments (in the company used above)";
+        if (empty($depts[$tid]) && !empty($members[$tid])) {
+            $findings[] = "Team \"{$tm['name']}\" has members but no departments, so " . count($members[$tid])
+                        . " analyst(s) will see 0 on nearly every folder: " . implode(', ', $members[$tid]) . ".";
+        }
+    }
+
+    $loose = [];
+    $noTeam = $conn->query("SELECT d.name FROM departments d WHERE d.is_active = 1
+                             AND NOT EXISTS (SELECT 1 FROM department_teams dt WHERE dt.department_id = d.id) ORDER BY d.name")->fetchAll(PDO::FETCH_COLUMN);
+    $loose[] = "Active departments no team is linked to: " . ($noTeam ? implode(', ', $noTeam) : 'none');
+    if ($noTeam) $loose[] = "  (only analysts in NO team see tickets in these)";
+    $solo = $conn->query("SELECT a.full_name FROM analysts a WHERE a.is_active = 1
+                           AND NOT EXISTS (SELECT 1 FROM analyst_teams ant WHERE ant.analyst_id = a.id) ORDER BY a.full_name")->fetchAll(PDO::FETCH_COLUMN);
+    $loose[] = "Active analysts in no team (they see every department): " . ($solo ? count($solo) . ' - ' . implode(', ', $solo) : 'none');
+    $orphans = [
+        'Team memberships pointing at a team that no longer exists'      => "SELECT COUNT(*) FROM analyst_teams ant LEFT JOIN teams tm ON tm.id = ant.team_id WHERE tm.id IS NULL",
+        'Team memberships pointing at an analyst that no longer exists'  => "SELECT COUNT(*) FROM analyst_teams ant LEFT JOIN analysts a ON a.id = ant.analyst_id WHERE a.id IS NULL",
+        'Department links pointing at a team that no longer exists'      => "SELECT COUNT(*) FROM department_teams dt LEFT JOIN teams tm ON tm.id = dt.team_id WHERE tm.id IS NULL",
+        'Department links pointing at a department that no longer exists'=> "SELECT COUNT(*) FROM department_teams dt LEFT JOIN departments d ON d.id = dt.department_id WHERE d.id IS NULL",
+    ];
+    foreach ($orphans as $label => $sql) {
+        $n = d018Count($conn, $sql);
+        $loose[] = sprintf("%-66s %s", $label . ':', $n);
+    }
+    // A membership of a deleted team still counts as "in a team" - the counts
+    // query only asks whether analyst_teams has a row - so it hides everything.
+    $ghost = d018Count($conn, "SELECT COUNT(*) FROM analyst_teams ant LEFT JOIN teams tm ON tm.id = ant.team_id
+                                WHERE tm.id IS NULL AND ant.analyst_id = ?", [$target]);
+    if (is_int($ghost) && $ghost > 0) {
+        $findings[] = "The analyst is still a member of {$ghost} team(s) that have been deleted. That still counts as being in a team, "
+                    . "and a deleted team usually has no departments left, so it hides tickets. Their leftover membership rows need removing from analyst_teams.";
+    }
+    $all[] = '';
+    $all = array_merge($all, $loose);
+}
+addSection($sections, '5. EVERY TEAM ON THIS INSTALL', $all);
+
+// ---- 6. STATUSES -------------------------------------------------------
 // The per-status folders only count statuses that are ACTIVE. A ticket whose
 // status is inactive, missing, or empty is in the total but in no child folder.
 $stat = [];
@@ -370,9 +448,9 @@ $stat[] = "Tickets on an INACTIVE status     : {$offStatus}";
 if ((is_int($noStatus) && $noStatus) || (is_int($badStatus) && $badStatus) || (is_int($offStatus) && $offStatus)) {
     $stat[] = "These count towards All Tickets and their department, but appear under no status beneath them.";
 }
-addSection($sections, '5. STATUSES', $stat);
+addSection($sections, '6. STATUSES', $stat);
 
-// ---- 6. THE REAL ENDPOINT ----------------------------------------------
+// ---- 7. THE REAL ENDPOINT ----------------------------------------------
 $real = [];
 if ($target !== $me) {
     $real[] = "Skipped: the real endpoint can only be called as you. Run this tool for yourself to compare,";
@@ -382,7 +460,7 @@ if ($target !== $me) {
     if (!$r['ok']) {
         $real[] = "The endpoint did NOT return a successful answer. What it sent back:";
         $real[] = substr(trim($r['raw']), 0, 2000);
-        $findings[] = "The counts endpoint itself fails (see section 6). The folder list cannot show numbers until it answers.";
+        $findings[] = "The counts endpoint itself fails (see section 7). The folder list cannot show numbers until it answers.";
     } else {
         $d = $r['data'];
         $real[] = "All Tickets        : " . $d['total_count'] . (is_int($total) && (int)$d['total_count'] !== $total ? "   <- DIFFERS from the funnel ({$total})" : '   (agrees with the funnel)');
@@ -394,7 +472,7 @@ if ($target !== $me) {
         foreach ($d['overall_statuses'] ?? [] as $name => $n) $real[] = sprintf("  %-17s: %s", $name, $n);
     }
 }
-addSection($sections, '6. THE REAL ENDPOINT (what the inbox is given)', $real);
+addSection($sections, '7. THE REAL ENDPOINT (what the inbox is given)', $real);
 
 // ---- VERDICT -----------------------------------------------------------
 $verdict = [];

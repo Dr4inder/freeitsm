@@ -6,7 +6,7 @@ D018's analyst picker: "you" first, then every active analyst. An empty list (da
 function debugToolAnalystOptions(): array
 ```
 
-Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md), line 482.
+Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tools/includes/tools.php.md), line 484.
 
 **Returns:** `array`
 
@@ -14,7 +14,7 @@ Defined in [system/debug-tools/includes/tools.php](/code/files/system/debug-tool
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
-| 486 | `debugToolAnalystOptions` | read [analysts](/code/tables/analysts.md) |  |
+| 488 | `debugToolAnalystOptions` | read [analysts](/code/tables/analysts.md) |  |
 
 ## Calls
 
