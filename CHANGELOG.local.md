@@ -33,6 +33,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2345 | System            | Fix         | Deleting an analyst failed with a raw foreign-key error once they had a dashboard widget (GH #178); Delete now removes their personal settings with them and, when their name is on history or something is still set up for them, refuses in plain words and offers Deactivate or Anonymise instead. |
 | 2346 | System            | Feature     | System -> Analysts: the bin icon opens "When someone leaves" - lists their open work (moved to another analyst or nobody through each module's own service), what is set up for them, and offers Deactivate, Anonymise ("Former analyst #N": contact details, sign-in links and personal settings removed, stored name copies replaced, records kept) or Delete (only with no history). |
 | 2347 | Tests             | Improvement | New tests/analyst-lifecycle.php: every one of the 212 columns that refers to an analyst must be classified in analystReferenceRegistry(), plus the three actions on throwaway analysts (21 checks). |
+| 2348 | Docs              | Improvement | Pre-release docs audit for 3.7.0: System help Teams no longer says a team with no departments shows an empty ticket list (and says teams organise folders rather than lock tickets); D018 text follows the fix; the portal guide tells customers about article documents; wiki System, Staff access, Folder pane (user + developer), Knowledge and REST Analysts pages cover #176, #177 and #178; every "3.6.2" reference now says 3.7.0. |
 
 
 
