@@ -14,7 +14,6 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
-| 2328 | System            | Feature     | New Debug Tool D018 explains why an analyst's ticket folder numbers say 0, following every ticket through each filter (Trash, merged, snoozed, company, team departments) and checking the tables, statuses and team links the counts depend on, plus every team on the install with its members, departments and loose ends. |
 
 
 
@@ -1168,6 +1167,12 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 317 | Tasks             | Fix         | **Drag-reorder drop indicator invisible in scrolling board columns.** The purple line that shows where a dragged card will land vanished whenever its column had enough cards to scroll. Cause: `.board-cards` is a `flex-direction:column` container and the `.drop-indicator` is an empty `<div>` &mdash; so its min-content height is 0, and when the column overflowed, flexbox's `flex-shrink` compressed the indicator to 0px (the cards resist because their text gives them a min-content height; the empty indicator does not). Fixed by adding `flex-shrink:0` to `.drop-indicator` (and to `.task-card` for good measure, so cards can never be squished either). `tasks.css` bumped to `?v=6`. |
 
 ## Published
+
+### 3.6.1 - 14 October 2026
+
+| ID   | Module            | Type        | Description |
+|------|-------------------|-------------|-------------|
+| 2328 | System            | Feature     | New Debug Tool D018 explains why an analyst's ticket folder numbers say 0, following every ticket through each filter (Trash, merged, snoozed, company, team departments) and checking the tables, statuses and team links the counts depend on, plus every team on the install with its members, departments and loose ends. |
 
 ### 3.6.0 - 14 October 2026
 
