@@ -305,6 +305,15 @@ return [
         'find_none'       => 'No documents match, that you can see and that are not already here.',
         // Shown against each candidate, because attaching WIDENS who can read it.
         'currently_on'    => 'currently on {where}',
+        // The Help Centre - knowledge articles only (GH #177).
+        'hc_customer'     => 'Customers who can read this article in the Help Centre can download the documents marked Shown.',
+        'hc_internal'     => 'Customers cannot read this article, so none of its documents are in the Help Centre.',
+        'hc_verify'       => 'Run System → Database Verification to choose which documents customers can download.',
+        'hc_how'          => 'How this works',
+        'hc_shown'        => 'Shown in Help Centre',
+        'hc_hidden'       => 'Hidden from Help Centre',
+        'hc_show'         => 'Show',
+        'hc_hide'         => 'Hide',
     ],
 
     'notifications' => [

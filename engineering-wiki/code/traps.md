@@ -57,7 +57,7 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 
 ## assets/js/knowledge.js
 
-- **Line 3427:** escape the WHOLE answer first, then add markup. The answer is model
+- **Line 3440:** escape the WHOLE answer first, then add markup. The answer is model
 
 [Open knowledge.js](/code/files/assets/js/knowledge.js.md)
 
@@ -76,6 +76,18 @@ Every `TRAP:` comment in the code - the things that will bite the next person, a
 - **Line 206:** a bare digit is usually NOT a rating. "Which floor?" "3" is an answer to the analyst, and a "2" next month starts a new conversation - loosen any of the three conditions and real messages vanish into a survey, with no error anywhere. tests/messaging-teams-mattermost.php checks each one.
 
 [Open csat.php](/code/files/includes/csat.php.md)
+
+## includes/db_verify_schema.php
+
+- **Line 1434:** keep the column DEFAULT 0. Adding it gives every EXISTING link 0, so nothing attached before 3.7.0 goes public on upgrade; new article links are written with 1 by `documentLinkHelpCentreDefault()`.
+
+[Open db_verify_schema.php](/code/files/includes/db_verify_schema.php.md)
+
+## includes/documents.php
+
+- **Line 785:** new links only. Never backfill existing rows to 1 - they were attached before anybody was told that publishes them (see the column's TRAP in includes/db_verify_schema.php).
+
+[Open documents.php](/code/files/includes/documents.php.md)
 
 ## includes/engineering_wiki/scanner.php
 

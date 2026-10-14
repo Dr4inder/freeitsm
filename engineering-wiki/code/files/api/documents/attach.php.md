@@ -1,6 +1,6 @@
 # api/documents/attach.php
 
-> API endpoint - 79 lines
+> API endpoint - 77 lines
 
 API Endpoint: attach an EXISTING document to a record.
 
@@ -22,15 +22,9 @@ inherited from the parent. Two clicks, and the permission model is inverted.
 | URL | `api/documents/attach.php` |
 | Protected by | Signed-in analyst (session check) (via includes/rbac.php); Signed-in analyst (session check) (via includes/service_context.php) |
 
-## Database
-
-| Line | In | Tables | Purpose |
-|--:|---|---|---|
-| 62 |  | **insert** [document_links](/code/tables/document_links.md) (`document_id`, `parent_type`, `parent_id`, `linked_by_id`) |  |
-
 ## How it hangs together
 
 **Includes:** [config.php](/code/files/config.php.md), [includes/functions.php](/code/files/includes/functions.php.md), [includes/tenancy.php](/code/files/includes/tenancy.php.md), [includes/documents.php](/code/files/includes/documents.php.md), [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md)
 
-**Calls:** [connectToDatabase()](/code/functions/connectToDatabase.md), [documentCanView()](/code/functions/documentCanView.md), [documentCanViewParent()](/code/functions/documentCanViewParent.md), [documentEntityDef()](/code/functions/documentEntityDef.md), [searchIndexDocument()](/code/functions/searchIndexDocument.md)
+**Calls:** [connectToDatabase()](/code/functions/connectToDatabase.md), [documentCanView()](/code/functions/documentCanView.md), [documentCanViewParent()](/code/functions/documentCanViewParent.md), [documentEntityDef()](/code/functions/documentEntityDef.md), [documentInsertLink()](/code/functions/documentInsertLink.md), [searchIndexDocument()](/code/functions/searchIndexDocument.md)
 

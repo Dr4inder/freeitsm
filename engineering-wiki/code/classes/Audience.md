@@ -102,6 +102,8 @@ function visibleTo(string $viewerLevel): array
 |---|---|---|---|
 | `$viewerLevel` | `string` |  | the reader's audience level - 'internal', 'customer' or 'public' |
 
+**Called from:** [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md)
+
 ### sqlFilter
 
 *public static* - line 119

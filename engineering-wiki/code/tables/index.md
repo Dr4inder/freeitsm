@@ -92,9 +92,9 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [directory_sync_entries](/code/tables/directory_sync_entries.md) | 8 | 1 | 1 | What a run did to each PERSON. |
 | [directory_sync_runs](/code/tables/directory_sync_runs.md) | 15 | 3 | 2 | One row per directory sync RUN — the attempt, not just the success. |
 | [document_access_log](/code/tables/document_access_log.md) | 6 | 0 | 1 | Who fetched which document, and when. |
-| [document_links](/code/tables/document_links.md) | 6 | 12 | 5 | What each document is attached to. |
+| [document_links](/code/tables/document_links.md) | 7 | 13 | 4 | What each document is attached to. |
 | [document_text](/code/tables/document_text.md) | 6 | 2 | 1 | Extracted text for an attached document (discussion #76). |
-| [documents](/code/tables/documents.md) | 15 | 13 | 3 | A document is either a file we hold or a link to somewhere else (an external DMS). |
+| [documents](/code/tables/documents.md) | 15 | 15 | 3 | A document is either a file we hold or a link to somewhere else (an external DMS). |
 | [domain_alerts_sent](/code/tables/domain_alerts_sent.md) | 5 | 1 | 1 |  |
 | [domain_audit](/code/tables/domain_audit.md) | 8 | 3 | 3 |  |
 | [domain_certificates](/code/tables/domain_certificates.md) | 10 | 3 | 2 |  |
@@ -137,7 +137,7 @@ From [includes/db_verify_schema.php](/code/files/includes/db_verify_schema.php.m
 | [knowledge_acl](/code/tables/knowledge_acl.md) | 7 | 3 | 2 | ── The access list ───────────────────────────────────────────────────── 🔑 THERE IS NO allow/deny COLUMN, AND ITS ABSENCE IS THE GUARANTEE. |
 | [knowledge_article_tags](/code/tables/knowledge_article_tags.md) | 3 | 8 | 3 |  |
 | [knowledge_article_versions](/code/tables/knowledge_article_versions.md) | 7 | 1 | 3 |  |
-| [knowledge_articles](/code/tables/knowledge_articles.md) | 22 | 39 | 7 |  |
+| [knowledge_articles](/code/tables/knowledge_articles.md) | 22 | 41 | 7 |  |
 | [knowledge_audit](/code/tables/knowledge_audit.md) | 9 | 1 | 1 | ── Audit ─────────────────────────────────────────────────────────────── Modelled on document_access_log, which already does this job for attached documents. |
 | [knowledge_folders](/code/tables/knowledge_folders.md) | 10 | 5 | 1 | ── Knowledge folders ─────────────────────────────────────────────────── A document lives in EXACTLY ONE folder. |
 | [knowledge_gap_cluster_tickets](/code/tables/knowledge_gap_cluster_tickets.md) | 3 | 3 | 1 |  |

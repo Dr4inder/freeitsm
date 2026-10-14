@@ -58,10 +58,8 @@ try {
 
     // INSERT IGNORE against the unique key: attaching twice is a no-op, not an
     // error somebody has to understand.
-    $conn->prepare(
-        "INSERT IGNORE INTO document_links (document_id, parent_type, parent_id, linked_by_id)
-         VALUES (?,?,?,?)"
-    )->execute([$documentId, $parentType, $parentId, $analystId]);
+    // documentInsertLink() also sets the Help Centre flag for an article (#177).
+    documentInsertLink($conn, $documentId, $parentType, $parentId, $analystId, true);
 
     // The corpus row carries no parent, but its VISIBILITY just changed — and the
     // search clause resolves that live, so nothing needs reindexing. Reindexed

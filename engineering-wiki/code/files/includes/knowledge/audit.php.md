@@ -51,5 +51,5 @@ still exact, because it comes from view_count and never from here.
 
 ## How it hangs together
 
-**Included by:** [api/knowledge/audit.php](/code/files/api/knowledge/audit.php.md), [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md)
+**Included by:** [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md), [api/knowledge/audit.php](/code/files/api/knowledge/audit.php.md), [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md), [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md), [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md), [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md)
 

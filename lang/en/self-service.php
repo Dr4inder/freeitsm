@@ -414,6 +414,10 @@ return [
         'no_results_hint'    => 'Try a different word, or raise a ticket and the IT team will help.',
         'no_articles'        => 'No articles yet',
         'no_articles_hint'   => 'The IT team has not published any guides here yet. Raise a ticket and they will help you directly.',
+        // Documents attached to an article (GH #177).
+        'documents'          => 'Documents',
+        'doc_download'       => 'Download',
+        'doc_open'           => 'Open',
     ],
 
     'help' => [

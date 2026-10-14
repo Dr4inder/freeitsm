@@ -23,6 +23,7 @@ Defined in [includes/uploads.php](/code/files/includes/uploads.php.md), line 758
 
 - [api/documents/download.php](/code/files/api/documents/download.php.md)
 - [api/messaging/media.php](/code/files/api/messaging/media.php.md)
+- [api/self-service/get_article_document.php](/code/files/api/self-service/get_article_document.php.md)
 - [api/self-service/get_attachment.php](/code/files/api/self-service/get_attachment.php.md)
 - [api/self-service/get_document.php](/code/files/api/self-service/get_document.php.md)
 - [api/tickets/get_attachment.php](/code/files/api/tickets/get_attachment.php.md)

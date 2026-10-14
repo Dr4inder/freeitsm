@@ -148,6 +148,7 @@ Defined in [includes/i18n.php](/code/files/includes/i18n.php.md), line 358.
 - [index.php](/code/files/index.php.md)
 - [knowledge/assistant/index.php](/code/files/knowledge/assistant/index.php.md)
 - [knowledge/help.php](/code/files/knowledge/help.php.md)
+- [knowledge/help/_top.php](/code/files/knowledge/help/_top.php.md)
 - [knowledge/includes/header.php](/code/files/knowledge/includes/header.php.md)
 - [knowledge/index.php](/code/files/knowledge/index.php.md)
 - [knowledge/review/index.php](/code/files/knowledge/review/index.php.md)

@@ -24,6 +24,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 ## Called from
 
 - [api/auth/oidc_callback.php](/code/files/api/auth/oidc_callback.php.md) - in [completeSelfServiceSso()](/code/functions/completeSelfServiceSso.md)
+- [api/self-service/get_article_document.php](/code/files/api/self-service/get_article_document.php.md)
 - [api/self-service/login.php](/code/files/api/self-service/login.php.md)
 - [api/self-service/verify_login_otp.php](/code/files/api/self-service/verify_login_otp.php.md)
 - [self-service/includes/auth.php](/code/files/self-service/includes/auth.php.md)

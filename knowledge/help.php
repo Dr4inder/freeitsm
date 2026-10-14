@@ -139,6 +139,28 @@ $translationNamespaces = ['common', 'knowledge'];
 
             <div class="help-content">
 
+                <?php /* In-depth topics, each on its own page - the same arrangement
+                     as the Forms guide. The cards come from knowledge/help/_registry.php,
+                     so the guide cannot offer a topic that does not exist. */ ?>
+                <?php require_once __DIR__ . '/help/_registry.php'; ?>
+                <div class="help-section" id="topics">
+                    <div class="help-section-header">
+                        <span class="help-section-num"></span>
+                        <div>
+                            <h3><?php echo htmlspecialchars(t('knowledge.help.topics_title')); ?></h3>
+                            <p><?php echo htmlspecialchars(t('knowledge.help.topics_body')); ?></p>
+                        </div>
+                    </div>
+                    <div class="help-cards">
+                        <?php foreach (knowledgeHelpTopics() as $slug => $topicCard): ?>
+                            <a class="help-card" href="help/<?php echo htmlspecialchars($slug); ?>.php">
+                                <strong><?php echo htmlspecialchars($topicCard['title']); ?></strong>
+                                <span><?php echo htmlspecialchars($topicCard['blurb']); ?></span>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
                 <!-- Section 1: Overview -->
                 <div class="help-section" id="overview">
                     <div class="help-section-header">

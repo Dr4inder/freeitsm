@@ -1,5 +1,8 @@
 # helpSectionEnd()
 
+> [!NOTE]
+> Defined in 2 places (each behind a function_exists() check, or in files never loaded together): [forms/help/_top.php](/code/files/forms/help/_top.php.md), [knowledge/help/_top.php](/code/files/knowledge/help/_top.php.md)
+
 Closes a section opened by `helpSection()`.
 
 ```php
@@ -17,4 +20,5 @@ Defined in [forms/help/_top.php](/code/files/forms/help/_top.php.md), line 68.
 - [forms/help/layout.php](/code/files/forms/help/layout.php.md)
 - [forms/help/tables.php](/code/files/forms/help/tables.php.md)
 - [forms/help/who-can-request.php](/code/files/forms/help/who-can-request.php.md)
+- [knowledge/help/documents-help-centre.php](/code/files/knowledge/help/documents-help-centre.php.md)
 

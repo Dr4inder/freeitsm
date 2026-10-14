@@ -35,7 +35,7 @@
 | [api/knowledge/generate_embedding.php](/code/files/api/knowledge/generate_embedding.php.md):129 |  | update | `embedding`, `embedding_updated` |  |
 | [api/knowledge/knowledge_archive.php](/code/files/api/knowledge/knowledge_archive.php.md):139 | `purgeExpired` | delete |  |  |
 | [api/knowledge/knowledge_article.php](/code/files/api/knowledge/knowledge_article.php.md):79 |  | update | `view_count` |  |
-| [api/self-service/get_knowledge_article.php](/code/files/api/self-service/get_knowledge_article.php.md):74 |  | update | `view_count` |  |
+| [api/self-service/get_knowledge_article.php](/code/files/api/self-service/get_knowledge_article.php.md):84 |  | update | `view_count` |  |
 | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md):166 | `apiKnowledgePurgeExpired` | delete |  |  |
 | [api/v1/resources/knowledge.php](/code/files/api/v1/resources/knowledge.php.md):299 | `apiKnowledgeArticlesGet` | update | `view_count` |  |
 | [includes/services/knowledge.php](/code/files/includes/services/knowledge.php.md):237 | `KnowledgeService::saveArticle` | update |  |  |
@@ -74,7 +74,9 @@
 | [includes/domains/links.php](/code/files/includes/domains/links.php.md) | domainLinkDescribe L181, domainLinkSearch L290 |  |
 | [includes/files/api_bootstrap.php](/code/files/includes/files/api_bootstrap.php.md) | filesArticleTarget L223 |  |
 | [includes/knowledge/gap_analysis.php](/code/files/includes/knowledge/gap_analysis.php.md) | gapAnalyse L233 |  |
+| [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md) | helpCentreArticleIsCustomerFacing L40 |  |
 | [includes/knowledge/kb_ai.php](/code/files/includes/knowledge/kb_ai.php.md) | kbRetrieveArticles L141, kbRetrieveArticles L149, kbRetrieveArticles L167 |  |
+| [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md) | portalCanReadArticle L104 |  |
 | [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) | knowledgeCanRead L442, knowledgeAclSql L599, knowledgeAclHasAnyRows L849 |  |
 | [includes/lms/knowledge_source.php](/code/files/includes/lms/knowledge_source.php.md) | lmsCanUseArticle L58 |  |
 | [includes/mcp/tools.php](/code/files/includes/mcp/tools.php.md) | mcpToolSearchKnowledge L363 |  |

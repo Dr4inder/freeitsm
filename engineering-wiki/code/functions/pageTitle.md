@@ -117,6 +117,7 @@ Defined in [includes/system_name.php](/code/files/includes/system_name.php.md), 
 - [index.php](/code/files/index.php.md)
 - [knowledge/assistant/index.php](/code/files/knowledge/assistant/index.php.md)
 - [knowledge/help.php](/code/files/knowledge/help.php.md)
+- [knowledge/help/_top.php](/code/files/knowledge/help/_top.php.md)
 - [knowledge/index.php](/code/files/knowledge/index.php.md)
 - [knowledge/review/index.php](/code/files/knowledge/review/index.php.md)
 - [knowledge/settings/index.php](/code/files/knowledge/settings/index.php.md)

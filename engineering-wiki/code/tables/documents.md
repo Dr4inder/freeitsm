@@ -36,8 +36,9 @@ A document is either a file we hold or a link to somewhere else (an external DMS
 |---|---|---|
 | [api/documents/download.php](/code/files/api/documents/download.php.md) | L55 |  |
 | [api/documents/find.php](/code/files/api/documents/find.php.md) | L60 |  |
+| [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md) | L64 |  |
 | [api/documents/links.php](/code/files/api/documents/links.php.md) | L49 |  |
-| [api/documents/list.php](/code/files/api/documents/list.php.md) | L58, L66 |  |
+| [api/documents/list.php](/code/files/api/documents/list.php.md) | L58, L72, L127 |  |
 | [api/documents/unlink.php](/code/files/api/documents/unlink.php.md) | L73, L92 |  |
 | [api/self-service/get_document.php](/code/files/api/self-service/get_document.php.md) | L64 |  |
 | [api/self-service/get_ticket_detail.php](/code/files/api/self-service/get_ticket_detail.php.md) | L222 |  |
@@ -45,6 +46,7 @@ A document is either a file we hold or a link to somewhere else (an external DMS
 | [api/system/global_search.php](/code/files/api/system/global_search.php.md) | L468, L677 |  |
 | [api/tickets/get_notes.php](/code/files/api/tickets/get_notes.php.md) | L98 |  |
 | [includes/documents.php](/code/files/includes/documents.php.md) | documentsCollectOrphans L690, documentsCollectOrphans L711 |  |
+| [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md) | helpCentreArticleDocuments L59, helpCentreDocumentForPortalUser L92 |  |
 | [includes/projects/gatecheck.php](/code/files/includes/projects/gatecheck.php.md) | projectGateDocuments L45 |  |
 | [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md) | searchIndexDocument L112, documentTextDrain L186, documentSearchVisibilityClause L293 |  |
 

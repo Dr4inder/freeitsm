@@ -348,6 +348,7 @@ HARD RULE mirror of the CSS: every behaviour here is gated on
 - [forms/submissions.php](/code/files/forms/submissions.php.md)
 - [knowledge/assistant/index.php](/code/files/knowledge/assistant/index.php.md)
 - [knowledge/help.php](/code/files/knowledge/help.php.md)
+- [knowledge/help/_bottom.php](/code/files/knowledge/help/_bottom.php.md)
 - [knowledge/index.php](/code/files/knowledge/index.php.md)
 - [knowledge/review/index.php](/code/files/knowledge/review/index.php.md)
 - [knowledge/settings/index.php](/code/files/knowledge/settings/index.php.md)

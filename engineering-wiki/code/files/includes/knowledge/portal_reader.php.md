@@ -1,6 +1,6 @@
 # includes/knowledge/portal_reader.php
 
-> PHP - 119 lines
+> PHP - 138 lines
 
 What a self-service requester may read of the knowledge base — in ONE place.
 
@@ -40,19 +40,21 @@ chat reader follows (includes/webchat/ai.php).
 |---|--:|---|
 | [portalUserTenantId()](/code/functions/portalUserTenantId.md) | 49 | The company a portal user belongs to, or null for "shared articles only". |
 | [portalKnowledgeScope()](/code/functions/portalKnowledgeScope.md) | 71 | The WHERE fragment and bound params for "articles this requester may read". |
-| [portalArticlePreview()](/code/functions/portalArticlePreview.md) | 107 | Turn an article body into a short plain-text preview. |
+| [portalCanReadArticle()](/code/functions/portalCanReadArticle.md) | 101 | May this portal requester read this article in the Help Centre? |
+| [portalArticlePreview()](/code/functions/portalArticlePreview.md) | 126 | Turn an article body into a short plain-text preview. |
 
 ## Database
 
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 50 | `portalUserTenantId` | read [users](/code/tables/users.md) |  |
+| 104 | `portalCanReadArticle` | read [knowledge_articles](/code/tables/knowledge_articles.md) |  |
 
 ## How it hangs together
 
 **Includes:** [includes/knowledge/audience.php](/code/files/includes/knowledge/audience.php.md), [includes/tenancy.php](/code/files/includes/tenancy.php.md), [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md)
 
-**Included by:** [api/self-service/get_knowledge_article.php](/code/files/api/self-service/get_knowledge_article.php.md), [api/self-service/get_knowledge_articles.php](/code/files/api/self-service/get_knowledge_articles.php.md)
+**Included by:** [api/self-service/get_knowledge_article.php](/code/files/api/self-service/get_knowledge_article.php.md), [api/self-service/get_knowledge_articles.php](/code/files/api/self-service/get_knowledge_articles.php.md), [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md)
 
 **Calls:** [knowledgeVisibilitySql()](/code/functions/knowledgeVisibilitySql.md)
 

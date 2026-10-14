@@ -22,6 +22,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 - [api/documents/download.php](/code/files/api/documents/download.php.md)
 - [api/documents/unlink.php](/code/files/api/documents/unlink.php.md)
+- [api/self-service/get_article_document.php](/code/files/api/self-service/get_article_document.php.md)
 - [api/self-service/get_document.php](/code/files/api/self-service/get_document.php.md)
 - [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md)
 - [includes/documents.php](/code/files/includes/documents.php.md) - in [documentsCollectOrphans()](/code/functions/documentsCollectOrphans.md)

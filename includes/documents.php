@@ -754,3 +754,69 @@ function documentStoragePath(string $storageKey): string {
 function documentStorageKey(string $storedName): string {
     return basename(str_replace('\\', '/', $storedName));
 }
+
+// ─── The Help Centre (GH #177) ───────────────────────────────────────────────
+//
+// Documents on a KNOWLEDGE ARTICLE can be downloaded from the self-service
+// portal's Help Centre, by anyone who may read that article there - unless the
+// link says not to. Every other kind of record is unaffected: its documents
+// never reach the portal (ticket-note files have their own route,
+// api/self-service/get_document.php). The article side lives in
+// includes/knowledge/help_centre_documents.php.
+
+/**
+ * Has Database Verification added document_links.show_in_help_centre yet?
+ *
+ * Every writer of document_links asks this first, because naming a column that
+ * is not there yet would break EVERY document upload on EVERY module between
+ * pulling the code and running verification - not just the new feature.
+ */
+function documentHelpCentreReady(PDO $conn): bool {
+    static $ready = null;
+    if ($ready !== null) return $ready;
+    try {
+        $ready = (bool) $conn->query("SHOW COLUMNS FROM `document_links` LIKE 'show_in_help_centre'")->fetch(PDO::FETCH_ASSOC);
+    } catch (Throwable $e) {
+        $ready = false;
+    }
+    return $ready;
+}
+
+/**
+ * The show_in_help_centre value a NEW link to this kind of record starts with:
+ * 1 for a knowledge article (attaching a document to a customer-facing article
+ * publishes it, which is what people expect), 0 for everything else.
+ *
+ * TRAP: new links only. Never backfill existing rows to 1 - they were attached
+ *   before anybody was told that publishes them (see the column's TRAP in
+ *   includes/db_verify_schema.php).
+ *
+ * @param string $parentType  the document_links.parent_type being written, e.g. 'knowledge_article'
+ */
+function documentLinkHelpCentreDefault(string $parentType): int {
+    return $parentType === 'knowledge_article' ? 1 : 0;
+}
+
+/**
+ * Insert one document_links row, setting show_in_help_centre when the column
+ * exists. The one place a link is written, so the default above cannot be
+ * forgotten by a new caller.
+ *
+ * @param int $documentId  documents.id
+ * @param string $parentType  the record type, a key of documentEntityRegistry()
+ * @param int $parentId  that record's id
+ * @param ?int $linkedById  the analyst making the link; null for the system
+ * @param bool $ignoreDuplicate  true = INSERT IGNORE (attaching twice is a no-op)
+ */
+function documentInsertLink(PDO $conn, int $documentId, string $parentType, int $parentId, ?int $linkedById, bool $ignoreDuplicate = false): void {
+    $verb = $ignoreDuplicate ? 'INSERT IGNORE' : 'INSERT';
+    if (documentHelpCentreReady($conn)) {
+        $conn->prepare("$verb INTO document_links (document_id, parent_type, parent_id, linked_by_id, show_in_help_centre)
+                        VALUES (?,?,?,?,?)")
+             ->execute([$documentId, $parentType, $parentId, $linkedById, documentLinkHelpCentreDefault($parentType)]);
+    } else {
+        $conn->prepare("$verb INTO document_links (document_id, parent_type, parent_id, linked_by_id)
+                        VALUES (?,?,?,?)")
+             ->execute([$documentId, $parentType, $parentId, $linkedById]);
+    }
+}

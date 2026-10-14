@@ -2436,6 +2436,8 @@ CREATE TABLE IF NOT EXISTS `document_links` (
     `parent_id`         INT NOT NULL,
     `linked_by_id`      INT NULL,
     `created_datetime`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    -- Knowledge articles only: downloadable from the portal's Help Centre (GH #177).
+    `show_in_help_centre` TINYINT(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_document_links` (`document_id`,`parent_type`,`parent_id`),
     KEY `idx_document_links_parent` (`parent_type`,`parent_id`),

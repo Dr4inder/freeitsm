@@ -88,6 +88,25 @@ function portalKnowledgeScope(PDO $conn, ?int $tenantId, string $alias = 'a'): a
 }
 
 /**
+ * May this portal requester read this article in the Help Centre?
+ *
+ * The single-article form of portalKnowledgeScope(), for a caller that already
+ * has an id - the Help Centre's document download (GH #177). Built on the scope
+ * rather than beside it, so it cannot disagree with the article page that
+ * listed the document.
+ *
+ * @param int $userId  the portal user's users.id, from the session's ss_user_id
+ * @param int $articleId  knowledge_articles.id
+ */
+function portalCanReadArticle(PDO $conn, int $userId, int $articleId): bool {
+    if ($articleId <= 0) return false;
+    [$where, $params] = portalKnowledgeScope($conn, portalUserTenantId($conn, $userId), 'a');
+    $st = $conn->prepare("SELECT 1 FROM knowledge_articles a WHERE $where AND a.id = ? LIMIT 1");
+    $st->execute(array_merge($params, [$articleId]));
+    return (bool) $st->fetchColumn();
+}
+
+/**
  * Turn an article body into a short plain-text preview.
  *
  * strip_tags() removes TAGS but keeps their CONTENTS, so a <script> or <style>

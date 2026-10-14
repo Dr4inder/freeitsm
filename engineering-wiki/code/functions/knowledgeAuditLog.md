@@ -36,6 +36,7 @@ Defined in [includes/knowledge/audit.php](/code/files/includes/knowledge/audit.p
 
 ## Called from
 
+- [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md)
 - [api/knowledge/folders.php](/code/files/api/knowledge/folders.php.md) - in [knowledgeAudit()](/code/functions/knowledgeAudit.md)
 - [api/knowledge/permission_model.php](/code/files/api/knowledge/permission_model.php.md) - in [handleSet()](/code/functions/handleSet.md)
 - [api/knowledge/permissions.php](/code/files/api/knowledge/permissions.php.md) - in [permAudit()](/code/functions/permAudit.md)

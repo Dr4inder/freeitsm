@@ -135,10 +135,8 @@ try {
         ]);
         $documentId = (int) $conn->lastInsertId();
 
-        $conn->prepare(
-            "INSERT INTO document_links (document_id, parent_type, parent_id, linked_by_id)
-             VALUES (?,?,?,?)"
-        )->execute([$documentId, $parentType, $parentId, $analystId]);
+        // documentInsertLink() also sets the Help Centre flag for an article (#177).
+        documentInsertLink($conn, $documentId, $parentType, $parentId, $analystId);
 
         $conn->commit();
     } catch (Throwable $e) {

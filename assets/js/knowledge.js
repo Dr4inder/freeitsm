@@ -99,6 +99,9 @@ async function loadCompanies() {
     group.style.display = '';
 }
 
+/** What the editor's Documents panel last said about the Help Centre (GH #177), or null. */
+let kbEditorHelpCentre = null;
+
 /**
  * The editor shows the three stored audiences as TWO choices plus an opt-in
  * tickbox. This pair converts between the two shapes; nothing else in the
@@ -154,6 +157,15 @@ function updateAudienceHint() {
     }
 
     hint.textContent = window.t('knowledge.editor.audience_hint_' + audienceFromControls());
+
+    // GH #177: opening an article to customers also opens its documents. Said
+    // here, at the moment of choosing, rather than discovered afterwards - but
+    // only when it is a CHANGE (customers cannot read it yet) and there is
+    // something shown to publish.
+    const hc = kbEditorHelpCentre;
+    if (hc && hc.ready && hc.shown > 0 && !hc.customer_facing && audienceFromControls() !== 'internal') {
+        hint.textContent += ' ' + window.t('knowledge.editor.audience_docs_warning', { n: hc.shown });
+    }
 }
 
 /** Put the two visibility controls back to the safe default (a new article). */
@@ -2293,7 +2305,8 @@ function renderArticleDetail() {
             parentId:   currentArticle.id,
             apiBase:    '../api/documents/',
             canEdit:    false,
-            showHeading: true      // nothing else on this page names the section
+            showHeading: true,     // nothing else on this page names the section
+            helpCentreHelpUrl: kbHelpCentreHelpUrl()
         });
     }
 
@@ -3619,13 +3632,26 @@ function mountEditorDocuments() {
     } });
     const prj = document.getElementById('kbEditorProjects');
     if (prj && window.KB_SHOW_PROJECTS && window.ProjectLinks) ProjectLinks.mount(prj, { kind: 'article', id: id, base: window.KB_BASE });
+    // The panel reports what the Help Centre will show (GH #177); kept so the
+    // audience hint can warn before a change publishes these documents.
+    if (!box.dataset.hcListening) {
+        box.dataset.hcListening = '1';
+        box.addEventListener('fd:helpcentre', e => { kbEditorHelpCentre = e.detail; updateAudienceHint(); });
+    }
+    kbEditorHelpCentre = null;
     FreeITSMDocuments.mount(box, {
         parentType: 'knowledge_article',
         parentId:   id,
         apiBase:    '../api/documents/',
         canEdit:    true,
-        showHeading: true
+        showHeading: true,
+        helpCentreHelpUrl: kbHelpCentreHelpUrl()
     });
+}
+
+/** The help page about documents in the Help Centre (GH #177). */
+function kbHelpCentreHelpUrl() {
+    return (window.KB_BASE || '../') + 'knowledge/help/documents-help-centre.php';
 }
 
 // ---------------------------------------------------------------------------
@@ -3753,6 +3779,10 @@ function renderAuditDetail(e) {
         }));
     }
     if (d.name) bits.push(escapeHtml(d.name));
+    if (typeof d.help_centre_document !== 'undefined') {
+        bits.push(escapeHtml(window.t(d.shown ? 'knowledge.audit.detail_doc_shown' : 'knowledge.audit.detail_doc_hidden',
+            { name: d.help_centre_document })));
+    }
 
     if (!bits.length) return `<div class="kb-audit-detail">${escapeHtml(JSON.stringify(d))}</div>`;
     return `<div class="kb-audit-detail">${bits.join(' · ')}</div>`;

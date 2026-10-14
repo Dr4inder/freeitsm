@@ -36,6 +36,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 - [api/documents/attach.php](/code/files/api/documents/attach.php.md)
 - [api/documents/find.php](/code/files/api/documents/find.php.md)
+- [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md)
 - [api/documents/list.php](/code/files/api/documents/list.php.md)
 - [api/documents/save.php](/code/files/api/documents/save.php.md)
 - [api/documents/unlink.php](/code/files/api/documents/unlink.php.md)

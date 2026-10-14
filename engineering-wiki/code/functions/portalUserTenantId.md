@@ -29,4 +29,5 @@ Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge
 
 - [api/self-service/get_knowledge_article.php](/code/files/api/self-service/get_knowledge_article.php.md)
 - [api/self-service/get_knowledge_articles.php](/code/files/api/self-service/get_knowledge_articles.php.md)
+- [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md) - in [portalCanReadArticle()](/code/functions/portalCanReadArticle.md)
 

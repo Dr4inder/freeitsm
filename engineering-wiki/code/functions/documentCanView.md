@@ -37,6 +37,7 @@ Defined in [includes/documents.php](/code/files/includes/documents.php.md), line
 
 - [api/documents/attach.php](/code/files/api/documents/attach.php.md)
 - [api/documents/download.php](/code/files/api/documents/download.php.md)
+- [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md)
 - [api/documents/links.php](/code/files/api/documents/links.php.md)
 - [api/documents/unlink.php](/code/files/api/documents/unlink.php.md)
 - [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md)

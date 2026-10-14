@@ -1,6 +1,6 @@
 # api/documents/save.php
 
-> API endpoint - 171 lines
+> API endpoint - 169 lines
 
 API Endpoint: attach a document to something.
 
@@ -29,11 +29,10 @@ being a way to launder a document into somewhere you can read.
 | Line | In | Tables | Purpose |
 |--:|---|---|---|
 | 125 |  | **insert** [documents](/code/tables/documents.md) (`kind`, `title`, `description`, `storage_key`, `original_name`, `mime_type`, `size_bytes`, `content_hash`, `external_url`, `tenant_id`, `uploaded_by_id`) |  |
-| 139 |  | **insert** [document_links](/code/tables/document_links.md) (`document_id`, `parent_type`, `parent_id`, `linked_by_id`) |  |
 
 ## How it hangs together
 
 **Includes:** [config.php](/code/files/config.php.md), [includes/functions.php](/code/files/includes/functions.php.md), [includes/tenancy.php](/code/files/includes/tenancy.php.md), [includes/uploads.php](/code/files/includes/uploads.php.md), [includes/documents.php](/code/files/includes/documents.php.md), [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md)
 
-**Calls:** [attachmentAllowedTypes()](/code/functions/attachmentAllowedTypes.md), [connectToDatabase()](/code/functions/connectToDatabase.md), [documentCanViewParent()](/code/functions/documentCanViewParent.md), [documentEntityDef()](/code/functions/documentEntityDef.md), [documentStorageKey()](/code/functions/documentStorageKey.md), [documentTextDrain()](/code/functions/documentTextDrain.md), [documentTextEnqueue()](/code/functions/documentTextEnqueue.md), [getActiveTenantId()](/code/functions/getActiveTenantId.md), [searchIndexDocument()](/code/functions/searchIndexDocument.md), [uploadStoreFile()](/code/functions/uploadStoreFile.md)
+**Calls:** [attachmentAllowedTypes()](/code/functions/attachmentAllowedTypes.md), [connectToDatabase()](/code/functions/connectToDatabase.md), [documentCanViewParent()](/code/functions/documentCanViewParent.md), [documentEntityDef()](/code/functions/documentEntityDef.md), [documentInsertLink()](/code/functions/documentInsertLink.md), [documentStorageKey()](/code/functions/documentStorageKey.md), [documentTextDrain()](/code/functions/documentTextDrain.md), [documentTextEnqueue()](/code/functions/documentTextEnqueue.md), [getActiveTenantId()](/code/functions/getActiveTenantId.md), [searchIndexDocument()](/code/functions/searchIndexDocument.md), [uploadStoreFile()](/code/functions/uploadStoreFile.md)
 

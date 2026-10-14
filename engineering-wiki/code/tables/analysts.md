@@ -94,7 +94,7 @@
 | [api/contracts/get_contract.php](/code/files/api/contracts/get_contract.php.md) | L39 |  |
 | [api/contracts/get_contracts.php](/code/files/api/contracts/get_contracts.php.md) | L37 |  |
 | [api/documents/links.php](/code/files/api/documents/links.php.md) | L49 |  |
-| [api/documents/list.php](/code/files/api/documents/list.php.md) | L66 |  |
+| [api/documents/list.php](/code/files/api/documents/list.php.md) | L72 |  |
 | [api/domains/accounts.php](/code/files/api/domains/accounts.php.md) | L20 |  |
 | [api/domains/bulk_add.php](/code/files/api/domains/bulk_add.php.md) | domainImportResolveNames L61 |  |
 | [api/domains/get.php](/code/files/api/domains/get.php.md) | L17 |  |

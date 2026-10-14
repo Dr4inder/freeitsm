@@ -126,6 +126,16 @@ $pageStyles = <<<'CSS'
         }
         .hc-back:hover { text-decoration: underline; }
 
+        /* ── documents attached to the article (GH #177) ──────────────── */
+        .hc-docs { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border, #e5e7eb); }
+        .hc-docs h2 { font-size: 14px; font-weight: 600; color: var(--text, #333); margin: 0 0 10px; }
+        .hc-doc { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--border, #e5e7eb);
+                  border-radius: 6px; margin-bottom: 8px; color: var(--text, #333); text-decoration: none; }
+        .hc-doc:hover { border-color: var(--ss-accent, #0078d4); }
+        .hc-doc-name { flex: 1; min-width: 0; font-size: 13.5px; overflow-wrap: anywhere; }
+        .hc-doc-desc { display: block; font-size: 12px; color: var(--text-muted, #666); margin-top: 2px; }
+        .hc-doc-act { font-size: 12.5px; color: var(--ss-accent, #0078d4); white-space: nowrap; }
+
         /* ── Layout toggle ─────────────────────────────────────────── */
         .hc-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
         .hc-toolbar .hc-search { margin-bottom: 0; flex: 1 1 260px; }
@@ -405,6 +415,7 @@ let hcSearchTimer = null;
                     +   '</div>'
                     +   (tags ? '<div class="hc-tags" style="margin-bottom:16px">' + tags + '</div>' : '')
                     +   '<div class="hc-body">' + safeArticleHtml(a.body) + '</div>'
+                    +   documentsHtml(a.documents || [])
                     + '</div>';
 
                 // Deep links get a real URL to share; in-page navigation doesn't
@@ -417,6 +428,33 @@ let hcSearchTimer = null;
                     + escapeHtml(window.t('self-service.help_centre.load_failed')) + '</div></div>'
                     + backButtonHtml();
             }
+        }
+
+        // The article's documents (GH #177). The server sends only those shown in
+        // the Help Centre, on an article this requester may already read. A DMS
+        // link opens where it points; a file downloads through the portal route.
+        function documentsHtml(docs) {
+            if (!docs.length) return '';
+            return '<div class="hc-docs"><h2>' + escapeHtml(window.t('self-service.help_centre.documents')) + '</h2>'
+                + docs.map(d => {
+                    const isLink = d.kind === 'link';
+                    const href = isLink
+                        ? (/^https?:\/\//i.test(d.external_url || '') ? d.external_url : '#')
+                        : '../api/self-service/get_article_document.php?id=' + encodeURIComponent(d.id);
+                    const size = (!isLink && d.size_bytes) ? ' (' + docSize(d.size_bytes) + ')' : '';
+                    return '<a class="hc-doc" href="' + escapeHtml(href) + '"'
+                        + (isLink ? ' target="_blank" rel="noopener noreferrer"' : '') + '>'
+                        + '<span class="hc-doc-name">' + escapeHtml(d.title || d.original_name || '') + escapeHtml(size)
+                        + (d.description ? '<span class="hc-doc-desc">' + escapeHtml(d.description) + '</span>' : '') + '</span>'
+                        + '<span class="hc-doc-act">' + escapeHtml(window.t(isLink ? 'self-service.help_centre.doc_open' : 'self-service.help_centre.doc_download')) + '</span>'
+                        + '</a>';
+                }).join('') + '</div>';
+        }
+
+        function docSize(n) {
+            if (n < 1024) return n + ' B';
+            if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+            return (n / 1048576).toFixed(1) + ' MB';
         }
 
         function backButtonHtml() {

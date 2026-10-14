@@ -1,6 +1,6 @@
 # includes/documents.php
 
-> PHP - 757 lines
+> PHP - 823 lines
 
 Documents — attach files (or links to an external DMS) to anything.
 
@@ -55,6 +55,9 @@ empty filter. An empty filter would return everything.
 | [documentsCollectOrphans()](/code/functions/documentsCollectOrphans.md) | 657 | Remove links whose parent no longer exists, then collect what that orphans. |
 | [documentStoragePath()](/code/functions/documentStoragePath.md) | 736 | Absolute path for a stored document. |
 | [documentStorageKey()](/code/functions/documentStorageKey.md) | 754 | The key for a newly stored file. |
+| [documentHelpCentreReady()](/code/functions/documentHelpCentreReady.md) | 774 | Has Database Verification added document_links.show_in_help_centre yet? |
+| [documentLinkHelpCentreDefault()](/code/functions/documentLinkHelpCentreDefault.md) | 796 | The show_in_help_centre value a NEW link to this kind of record starts with: 1 for a knowledge article (attaching a document to a customer-facing article publishes it, which is what people expect), 0 for everything else. |
+| [documentInsertLink()](/code/functions/documentInsertLink.md) | 811 | Insert one document_links row, setting show_in_help_centre when the column exists. The one place a link is written, so the default above cannot be forgotten by a new caller. |
 
 ## Database
 
@@ -74,12 +77,18 @@ empty filter. An empty filter would return everything.
 | 690 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md), read [document_links](/code/tables/document_links.md) |  |
 | 700 | `documentsCollectOrphans` | **update** [documents](/code/tables/documents.md) (`deleted_datetime`) |  |
 | 711 | `documentsCollectOrphans` | read [documents](/code/tables/documents.md) |  |
+| 778 | `documentHelpCentreReady` | read [document_links](/code/tables/document_links.md) |  |
 
 ## How it hangs together
 
 **Includes:** [includes/tenancy.php](/code/files/includes/tenancy.php.md), [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md), [includes/contract_party.php](/code/files/includes/contract_party.php.md), [includes/leases.php](/code/files/includes/leases.php.md)
 
-**Included by:** [api/documents/attach.php](/code/files/api/documents/attach.php.md), [api/documents/download.php](/code/files/api/documents/download.php.md), [api/documents/find.php](/code/files/api/documents/find.php.md), [api/documents/links.php](/code/files/api/documents/links.php.md), [api/documents/list.php](/code/files/api/documents/list.php.md), [api/documents/save.php](/code/files/api/documents/save.php.md), [api/documents/unlink.php](/code/files/api/documents/unlink.php.md), [api/self-service/get_document.php](/code/files/api/self-service/get_document.php.md), [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md), [api/system/global_search.php](/code/files/api/system/global_search.php.md), [api/tickets/empty_trash.php](/code/files/api/tickets/empty_trash.php.md), [api/tickets/permanently_delete_ticket.php](/code/files/api/tickets/permanently_delete_ticket.php.md), [includes/documents_panel.php](/code/files/includes/documents_panel.php.md), [includes/leases.php](/code/files/includes/leases.php.md), [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), [includes/services/domains.php](/code/files/includes/services/domains.php.md)
+**Included by:** [api/documents/attach.php](/code/files/api/documents/attach.php.md), [api/documents/download.php](/code/files/api/documents/download.php.md), [api/documents/find.php](/code/files/api/documents/find.php.md), [api/documents/help_centre.php](/code/files/api/documents/help_centre.php.md), [api/documents/links.php](/code/files/api/documents/links.php.md), [api/documents/list.php](/code/files/api/documents/list.php.md), [api/documents/save.php](/code/files/api/documents/save.php.md), [api/documents/unlink.php](/code/files/api/documents/unlink.php.md), [api/self-service/get_document.php](/code/files/api/self-service/get_document.php.md), [api/system/debug-tools/D012_ticket_attachments.php](/code/files/api/system/debug-tools/D012_ticket_attachments.php.md), [api/system/global_search.php](/code/files/api/system/global_search.php.md), [api/tickets/empty_trash.php](/code/files/api/tickets/empty_trash.php.md), [api/tickets/permanently_delete_ticket.php](/code/files/api/tickets/permanently_delete_ticket.php.md), [includes/documents_panel.php](/code/files/includes/documents_panel.php.md), [includes/knowledge/help_centre_documents.php](/code/files/includes/knowledge/help_centre_documents.php.md), [includes/leases.php](/code/files/includes/leases.php.md), [includes/search/documents_index.php](/code/files/includes/search/documents_index.php.md), [includes/services/domains.php](/code/files/includes/services/domains.php.md)
 
 **Calls:** [activeTenantFilter()](/code/functions/activeTenantFilter.md), [analystCanAccessAsset()](/code/functions/analystCanAccessAsset.md), [analystCanAccessChange()](/code/functions/analystCanAccessChange.md), [analystCanAccessCmdbObject()](/code/functions/analystCanAccessCmdbObject.md), [analystCanAccessDomain()](/code/functions/analystCanAccessDomain.md), [analystCanAccessProblem()](/code/functions/analystCanAccessProblem.md), [analystCanAccessProject()](/code/functions/analystCanAccessProject.md), [analystCanAccessTicket()](/code/functions/analystCanAccessTicket.md), [contractCanView()](/code/functions/contractCanView.md), [contractVisibilitySql()](/code/functions/contractVisibilitySql.md), [knowledgeCanRead()](/code/functions/knowledgeCanRead.md), [knowledgeVisibilitySql()](/code/functions/knowledgeVisibilitySql.md), [leaseCanView()](/code/functions/leaseCanView.md), [searchUnindexDocument()](/code/functions/searchUnindexDocument.md), [ticketTenantFilter()](/code/functions/ticketTenantFilter.md)
+
+## Traps
+
+> [!WARNING]
+> **Line 785:** new links only. Never backfill existing rows to 1 - they were attached before anybody was told that publishes them (see the column's TRAP in includes/db_verify_schema.php).
 

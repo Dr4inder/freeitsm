@@ -1428,6 +1428,13 @@ return [
         'parent_id'         => 'INT NOT NULL',
         'linked_by_id'      => 'INT NULL',
         'created_datetime'  => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        // Knowledge articles only (GH #177): may portal users download this
+        // document from the Help Centre? On the LINK, not the document, so the
+        // same file can be shown on one article and held back on another.
+        // TRAP: keep the column DEFAULT 0. Adding it gives every EXISTING link 0, so
+        //   nothing attached before 3.7.0 goes public on upgrade; new article links
+        //   are written with 1 by documentLinkHelpCentreDefault().
+        'show_in_help_centre' => 'TINYINT(1) NOT NULL DEFAULT 0',
     ],
 
     // Who fetched which document, and when. One row per download, written at the

@@ -99,6 +99,7 @@ Defined in [includes/functions.php](/code/files/includes/functions.php.md), line
 - [forms/submissions.php](/code/files/forms/submissions.php.md)
 - [knowledge/assistant/index.php](/code/files/knowledge/assistant/index.php.md)
 - [knowledge/help.php](/code/files/knowledge/help.php.md)
+- [knowledge/help/_top.php](/code/files/knowledge/help/_top.php.md)
 - [knowledge/index.php](/code/files/knowledge/index.php.md)
 - [knowledge/review/index.php](/code/files/knowledge/review/index.php.md)
 - [knowledge/settings/index.php](/code/files/knowledge/settings/index.php.md)

@@ -135,6 +135,8 @@ return [
         // reader shipped. Keep it accurate.
         'audience_hint_customer' => 'Appears in the Help Centre of the self-service portal, so anyone signed in there can read it. The website chat will never use it, because a chat visitor is an anonymous stranger.',
         'audience_hint_public'   => 'The website chat can answer visitors from this article. Only mark things public that you would happily show a stranger.',
+        // GH #177: added to the hint when a change of audience would publish documents.
+        'audience_docs_warning'  => 'This article also has {n} document(s) shown in the Help Centre: once it is published and saved, customers who can read it can download them. Hide any you want to keep internal in the Documents section below.',
         'field_company'    => 'Company',
         'company_shared'   => 'Shared with all companies',
         'documents_after_save' => 'Save the article first, then reopen it to attach documents.',
@@ -227,6 +229,9 @@ return [
         'detail_opened'     => 'Opened to everyone',
         'detail_wiped'      => 'Cleared {count} entries, because the list means the opposite thing in the other mode',
         'detail_moved'      => 'Into {folder}',
+        // GH #177: a document on the article shown in / hidden from the Help Centre.
+        'detail_doc_shown'  => '{name}: shown in the Help Centre',
+        'detail_doc_hidden' => '{name}: hidden from the Help Centre',
 
         'principal_analyst'   => 'analyst',
         'principal_team'      => 'team',
@@ -581,6 +586,10 @@ return [
 
     'help' => [
         'guide'          => 'Guide',
+        // The in-depth topic pages (knowledge/help/), first: documents in the Help Centre (GH #177).
+        'topics_title'   => 'In depth',
+        'topics_body'    => 'Longer guides to the parts of the knowledge base that need more explaining than a paragraph.',
+        'back_to_guide'  => 'Back to the Knowledge guide',
         'nav_overview'   => 'Overview',
         'nav_writing'    => 'Writing articles',
         'nav_review'     => 'Review workflow',

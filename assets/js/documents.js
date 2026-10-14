@@ -59,7 +59,16 @@
         idx_failed:   'Its contents could not be read.',
         find_existing:'Or attach a document already in FreeITSM — start typing its name',
         find_none:    'No documents match, that you can see and that are not already here.',
-        currently_on: 'currently on {where}'
+        currently_on: 'currently on {where}',
+        // The Help Centre - knowledge articles only (GH #177).
+        hc_customer:  'Customers who can read this article in the Help Centre can download the documents marked Shown.',
+        hc_internal:  'Customers cannot read this article, so none of its documents are in the Help Centre.',
+        hc_verify:    'Run System → Database Verification to choose which documents customers can download.',
+        hc_how:       'How this works',
+        hc_shown:     'Shown in Help Centre',
+        hc_hidden:    'Hidden from Help Centre',
+        hc_show:      'Show',
+        hc_hide:      'Hide'
     };
 
     /**
@@ -123,6 +132,10 @@
         // The COUNT still shows, because that is the part the host does not know.
         this.showHeading = opts.showHeading === true;
         this.pageSize   = opts.pageSize || 25;
+        // Where "How this works" points, on a knowledge article (GH #177). The
+        // server decides whether the Help Centre applies; this is only the link.
+        this.helpCentreHelp = opts.helpCentreHelpUrl || '';
+        this.helpCentre = null;
         this.offset     = 0;
         this.items      = [];
         this.total      = 0;
@@ -158,6 +171,7 @@
                   '</div>'
                 : '') +
             '<div class="fd-error" hidden></div>' +
+            '<div class="fd-hc" hidden></div>' +
             '<div class="fd-list"></div>' +
             '<div class="fd-more" hidden><button type="button" class="fd-btn fd-moreBtn">' + esc(t('show_more')) + '</button></div>';
 
@@ -165,6 +179,7 @@
         this.$list  = this.el.querySelector('.fd-list');
         this.$err   = this.el.querySelector('.fd-error');
         this.$more  = this.el.querySelector('.fd-more');
+        this.$hc    = this.el.querySelector('.fd-hc');
 
         var self = this;
         if (this.canEdit) {
@@ -205,6 +220,8 @@
         this.$list.addEventListener('click', function (e) {
             var rm = e.target.closest('[data-remove]');
             if (rm) { self.remove(parseInt(rm.getAttribute('data-remove'), 10), rm.getAttribute('data-name')); return; }
+            var hc = e.target.closest('[data-hc]');
+            if (hc) { self.setHelpCentre(parseInt(hc.getAttribute('data-hc'), 10), hc.getAttribute('data-show') === '1'); return; }
             var nfo = e.target.closest('[data-info]');
             if (nfo) {
                 // The panel sits at a module path, the parent links are relative
@@ -260,6 +277,7 @@
                 if (!d.success) { self.fail(d.error); return; }
                 self.clearFail();
                 self.total  = d.total;
+                self.helpCentre = d.help_centre || null;
                 self.items  = self.items.concat(d.documents || []);
                 self.offset = self.items.length;
                 self.paint();
@@ -275,6 +293,26 @@
         try {
             this.el.dispatchEvent(new CustomEvent('fd:count', { bubbles: true, detail: { total: this.total } }));
         } catch (e) {}
+
+        // The Help Centre line (GH #177). Present only when the server sent
+        // help_centre, i.e. on a knowledge article - every other record type is
+        // untouched. Also told to the host, so the article editor can warn when
+        // a change of audience is about to publish these documents.
+        var hc = this.helpCentre;
+        if (hc && this.items.length) {
+            var msg = !hc.ready ? t('hc_verify') : (hc.customer_facing ? t('hc_customer') : t('hc_internal'));
+            this.$hc.innerHTML = esc(msg) +
+                (this.helpCentreHelp ? ' <a href="' + esc(this.helpCentreHelp) + '" target="_blank" rel="noopener">' + esc(t('hc_how')) + '</a>' : '');
+            this.$hc.hidden = false;
+        } else {
+            this.$hc.hidden = true;
+        }
+        if (hc) {
+            try {
+                this.el.dispatchEvent(new CustomEvent('fd:helpcentre', { bubbles: true, detail: hc }));
+            } catch (e) {}
+        }
+        var hcRows = !!(hc && hc.ready);
 
         if (!this.items.length) {
             this.$list.innerHTML = '<div class="fd-empty">' + esc(t('none')) + '</div>';
@@ -307,6 +345,10 @@
                     (d.description ? '<div class="fd-desc">' + esc(d.description) + '</div>' : '') +
                     (meta.length ? '<div class="fd-meta">' + meta.join(' · ') + '</div>' : '') +
                     (also ? '<div class="fd-also">' + also + '</div>' : '') +
+                    (hcRows
+                        ? '<span class="fd-hc-tag' + (d.show_in_help_centre ? '' : ' fd-hc-hidden') + '">' +
+                          esc(d.show_in_help_centre ? t('hc_shown') : t('hc_hidden')) + '</span>'
+                        : '') +
                 '</div>' +
                 '<div class="fd-actions">' +
                     '<button type="button" class="fd-btn fd-info" data-info="' + d.id +
@@ -314,6 +356,11 @@
                     '<a class="fd-btn" href="' + esc(href) + '"' +
                         (isLink ? ' target="_blank" rel="noopener noreferrer"' : '') + '>' +
                         esc(isLink ? t('open') : t('download')) + '</a>' +
+                    (self.canEdit && hcRows
+                        ? '<button type="button" class="fd-btn" data-hc="' + d.id + '" data-show="' +
+                          (d.show_in_help_centre ? '0' : '1') + '">' +
+                          esc(d.show_in_help_centre ? t('hc_hide') : t('hc_show')) + '</button>'
+                        : '') +
                     (self.canEdit
                         ? '<button type="button" class="fd-btn fd-danger" data-remove="' + d.id +
                           '" data-name="' + esc(d.title) + '">' + esc(t('remove')) + '</button>'
@@ -448,6 +495,23 @@
               var find = self.el.querySelector('.fd-find');
               find.value = '';
               self.el.querySelector('.fd-findresults').hidden = true;
+              self.load(true);
+          })
+          .catch(function () { self.fail(); });
+    };
+
+    /** Show (true) or hide (false) one document in the Help Centre, then redraw. */
+    Panel.prototype.setHelpCentre = function (documentId, show) {
+        var self = this;
+        this.clearFail();
+        fetch(this.api + 'help_centre.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ document_id: documentId, parent_id: this.parentId, show: show ? 1 : 0 })
+        }).then(function (r) { return r.json(); })
+          .then(function (d) {
+              if (!d.success) { self.fail(d.error); return; }
               self.load(true);
           })
           .catch(function () { self.fail(); });

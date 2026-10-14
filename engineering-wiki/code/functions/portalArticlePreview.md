@@ -17,7 +17,7 @@ a hand-rolled tag regex.
 function portalArticlePreview(?string $body, int $length = 400): string
 ```
 
-Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), line 107.
+Defined in [includes/knowledge/portal_reader.php](/code/files/includes/knowledge/portal_reader.php.md), line 126.
 
 | Parameter | Type | Default | Meaning |
 |---|---|---|---|

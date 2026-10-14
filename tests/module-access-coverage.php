@@ -62,6 +62,7 @@ $EXEMPT = [
     'api/documents/download.php'           => 'checks the parent record and its module, and logs the access',
     'api/documents/save.php'               => 'checks the parent record and its module before storing',
     'api/documents/unlink.php'             => 'checks the parent record and its module',
+    'api/documents/help_centre.php'        => 'documents panel on knowledge articles; checks the article (and so the Knowledge module) and the document',
     'api/notifications/clear.php'          => 'your own notifications (the bell on every page)',
     'api/notifications/get_notifications.php' => 'your own notifications (the bell on every page)',
     'api/notifications/mark_read.php'      => 'your own notifications (the bell on every page)',

@@ -1,6 +1,6 @@
 # includes/db_verify_schema.php
 
-> PHP - 5830 lines
+> PHP - 5837 lines
 
 The expected COLUMNS of every table, table => [column => definition].
 
@@ -27,4 +27,9 @@ in db_verify.php.
 ## How it hangs together
 
 **Included by:** [api/system/db_verify.php](/code/files/api/system/db_verify.php.md), [api/system/db_verify_preview.php](/code/files/api/system/db_verify_preview.php.md)
+
+## Traps
+
+> [!WARNING]
+> **Line 1434:** keep the column DEFAULT 0. Adding it gives every EXISTING link 0, so nothing attached before 3.7.0 goes public on upgrade; new article links are written with 1 by `documentLinkHelpCentreDefault()`.
 
