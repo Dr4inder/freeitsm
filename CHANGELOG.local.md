@@ -29,6 +29,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2341 | Self-Service      | Improvement | An article's documents in the Help Centre are tiles rather than a plain list: an icon per file type (one colour per kind - PDF, picture, Word, Excel, slides, archive, media, link), the name without its extension (two lines at most), and type and size; the whole tile downloads. |
 | 2342 | Self-Service      | Fix         | Help Centre articles had no space between paragraphs and numbered lists lost their indent (the portal loads inbox.css, which zeroes every margin and padding); article text now gets the same spacing as the analyst Knowledge reader - paragraphs, headings, lists, quotes, tables and code. |
 | 2343 | Self-Service      | Improvement | Reading a Help Centre article no longer shows the Cards / List / Tree / Table buttons (they only affect the list, and come back with it), and "Back to all articles" is a proper button with an arrow rather than a small text link. |
+| 2344 | Self-Service      | Improvement | The Help Centre's Cards / List / Tree / Table buttons are the same height as the search box beside them, and a comfortable tap size on a phone, where they sit on their own line. |
 
 
 

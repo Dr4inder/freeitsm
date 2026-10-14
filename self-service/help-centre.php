@@ -193,13 +193,16 @@ $pageStyles = <<<'CSS'
         .hc-doc-desc { display: block; font-size: 12px; color: var(--text-muted, #666); margin-top: 4px; line-height: 1.4; }
 
         /* ── Layout toggle ─────────────────────────────────────────── */
-        .hc-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
+        /* stretch, not center: the layout buttons take the search box's height,
+           so the toolbar reads as one row rather than a tall box and small pills. */
+        .hc-toolbar { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; margin-bottom: 20px; }
         .hc-toolbar .hc-search { margin-bottom: 0; flex: 1 1 260px; }
         .hc-layouts { display: flex; gap: 4px; flex-shrink: 0; }
         .hc-layout-btn {
             background: var(--surface, #fff); border: 1px solid var(--border, #e5e7eb);
-            color: var(--text-muted, #666); border-radius: 6px; padding: 7px 10px;
-            cursor: pointer; font: inherit; font-size: 12.5px; line-height: 1;
+            color: var(--text-muted, #666); border-radius: 8px; padding: 8px 14px; min-height: 38px;
+            display: inline-flex; align-items: center;
+            cursor: pointer; font: inherit; font-size: 13.5px; line-height: 1;
         }
         .hc-layout-btn:hover { border-color: var(--ss-accent, #0078d4); }
         .hc-layout-btn.active {
