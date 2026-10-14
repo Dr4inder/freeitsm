@@ -24,6 +24,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 667
 - [api/tickets/create_ticket.php](/code/files/api/tickets/create_ticket.php.md)
 - [api/tickets/get_emails.php](/code/files/api/tickets/get_emails.php.md)
 - [api/tickets/get_ticket_classification.php](/code/files/api/tickets/get_ticket_classification.php.md)
+- [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md)
 - [api/tickets/get_ticket_origins.php](/code/files/api/tickets/get_ticket_origins.php.md)
 - [api/tickets/get_ticket_types.php](/code/files/api/tickets/get_ticket_types.php.md)
 - [asset-management/index.php](/code/files/asset-management/index.php.md)

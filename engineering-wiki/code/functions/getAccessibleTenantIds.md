@@ -39,6 +39,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 193
 - [api/system/get_tenants.php](/code/files/api/system/get_tenants.php.md)
 - [api/system/global_search.php](/code/files/api/system/global_search.php.md)
 - [api/tickets/get_ticket_classification.php](/code/files/api/tickets/get_ticket_classification.php.md)
+- [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md)
 - [api/v1/lib/auth.php](/code/files/api/v1/lib/auth.php.md) - in [apiEffectiveCompanyScope()](/code/functions/apiEffectiveCompanyScope.md), [apiKeyCheckCompanies()](/code/functions/apiKeyCheckCompanies.md)
 - [includes/knowledge/visibility.php](/code/files/includes/knowledge/visibility.php.md) - in `KnowledgeViewer::scopeForAllAccessible`
 - [includes/people.php](/code/files/includes/people.php.md) - in [peopleCompanies()](/code/functions/peopleCompanies.md)

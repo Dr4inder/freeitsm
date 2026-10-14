@@ -18,6 +18,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2330 | System            | Improvement | System → Teams warns when a team has members but no departments, and the team's departments popup points to Tickets → Settings → Departments when none exist yet. |
 | 2331 | Tests             | Fix         | The module-access coverage test lists the MCP server (api/mcp/index.php) as exempt - it authenticates by API key and checks module access per tool - so the test passes again. |
 | 2332 | Tests             | Improvement | New tests/team-counts-no-departments.php drives the real counts endpoint through no team, a team with no departments and a team with one department, so #2329 cannot come back and a fix for it cannot widen what teams see; a TRAP: line marks the spot in get_ticket_counts.php. |
+| 2333 | Tickets           | Fix         | On a multi-company install the inbox's Analyst folders listed every active analyst, so one client's analysts saw another client's by name; now only analysts who can access the company being viewed (any of yours under All companies), plus you and anyone holding tickets in scope (GH #176). New tests/analyst-folders-by-company.php. |
 
 
 

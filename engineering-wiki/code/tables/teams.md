@@ -52,7 +52,7 @@
 | [api/tickets/get_department_teams.php](/code/files/api/tickets/get_department_teams.php.md) | L28 |  |
 | [api/tickets/get_team_companies.php](/code/files/api/tickets/get_team_companies.php.md) | L28 |  |
 | [api/tickets/get_teams.php](/code/files/api/tickets/get_teams.php.md) | L21, L40 |  |
-| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L485 |  |
+| [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md) | L509 |  |
 | [api/v1/resources/tasks.php](/code/files/api/v1/resources/tasks.php.md) | apiTaskSelect L42 |  |
 | [includes/analyst_signin.php](/code/files/includes/analyst_signin.php.md) | analystSignInReady L54, analystSignInTeamMethods L73 |  |
 | [includes/calendar_sync/push.php](/code/files/includes/calendar_sync/push.php.md) | calendarSyncReconcileTask L184 |  |

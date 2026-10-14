@@ -357,6 +357,30 @@ try {
         $analystStatusStmt->closeCursor();
     }
 
+    // Which analysts get a folder (GH #176). On a multi-company install the list
+    // was every active analyst, so one client's analysts saw another client's by
+    // name. Now: those who can access the company being viewed ("All companies"
+    // = any company the viewer can access), plus the viewer, plus anyone holding
+    // tickets in scope - their name is already on those tickets, and dropping
+    // their folder would stop the analyst folders adding up to the tickets.
+    // TRAP: decide access with getAccessibleTenantIds(), never a copy of its rule in SQL.
+    //   It unions the analyst's own grants with every team's; a second copy drifts.
+    if (isMultiTenant($conn)) {
+        $viewScope = isActiveTenantAll($conn)
+            ? getAccessibleTenantIds($conn, $analystId)
+            : [getActiveTenantId($conn, $analystId)];
+        $shown = [];
+        foreach ($analystCounts as $row) {
+            $aid = (int)$row['id'];
+            if ($aid === $analystId || (int)$row['count'] > 0
+                || array_intersect($viewScope, getAccessibleTenantIds($conn, $aid))) {
+                $shown[$aid] = true;
+            }
+        }
+        $analystCounts = array_values(array_filter($analystCounts, fn($r) => isset($shown[(int)$r['id']])));
+        $analystStatusCounts = array_values(array_filter($analystStatusCounts, fn($r) => isset($shown[(int)$r['analyst_id']])));
+    }
+
     // Master list of active statuses — drives the folder UI
     $statusListStmt = $conn->query(
         "SELECT id, name, colour, is_closed, is_default, display_order

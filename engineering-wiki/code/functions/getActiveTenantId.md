@@ -58,6 +58,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 620
 - [api/tickets/delete_ticket_type.php](/code/files/api/tickets/delete_ticket_type.php.md)
 - [api/tickets/get_sendable_mailboxes.php](/code/files/api/tickets/get_sendable_mailboxes.php.md)
 - [api/tickets/get_ticket_classification.php](/code/files/api/tickets/get_ticket_classification.php.md)
+- [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md)
 - [api/tickets/get_ticket_origins.php](/code/files/api/tickets/get_ticket_origins.php.md)
 - [api/tickets/get_ticket_types.php](/code/files/api/tickets/get_ticket_types.php.md)
 - [api/tickets/save_reply_template.php](/code/files/api/tickets/save_reply_template.php.md)

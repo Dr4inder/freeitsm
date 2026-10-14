@@ -76,6 +76,7 @@ Defined in [includes/tenancy.php](/code/files/includes/tenancy.php.md), line 125
 - [api/tickets/get_email_detail.php](/code/files/api/tickets/get_email_detail.php.md)
 - [api/tickets/get_sendable_mailboxes.php](/code/files/api/tickets/get_sendable_mailboxes.php.md)
 - [api/tickets/get_ticket_classification.php](/code/files/api/tickets/get_ticket_classification.php.md)
+- [api/tickets/get_ticket_counts.php](/code/files/api/tickets/get_ticket_counts.php.md)
 - [api/tickets/get_ticket_origins.php](/code/files/api/tickets/get_ticket_origins.php.md)
 - [api/tickets/get_ticket_types.php](/code/files/api/tickets/get_ticket_types.php.md)
 - [api/tickets/get_time_tracking_settings.php](/code/files/api/tickets/get_time_tracking_settings.php.md)
