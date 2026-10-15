@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2350 | Change Management | Improvement | Design write-up for GH #180 (enforceable approvals, change text history, approver/reviewer access) published to the wiki as Approvals-and-Evidence-Design + 3 parts; no code changed. Found while mapping: manual approval never stamps approval_datetime (Watchtower/Projects), stale CAB Reject deadlocks resubmissions, status names hard-coded, no transactions; two further issues to be logged separately when fixed. |
 
 
 
