@@ -15,6 +15,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
 | 2350 | Change Management | Improvement | Design write-up for GH #180 (enforceable approvals, change text history, approver/reviewer access) published to the wiki as Approvals-and-Evidence-Design + 3 parts; no code changed. Found while mapping: manual approval never stamps approval_datetime (Watchtower/Projects), stale CAB Reject deadlocks resubmissions, status names hard-coded, no transactions; two further issues to be logged separately when fixed. |
+| 2351 | Change Management | Improvement | GH #180 design revised after the requester's follow-up (wiki 84f6974): a vote carries the round and content version its page was drawn with and is refused as stale in Enforce mode (a setting in Record mode); a submitted change is cancelled rather than deleted in Enforce mode (a setting in Record mode, change_approvals FK RESTRICT); standard changes are pre-authorised by versioned, approved templates with a scope and who-may-use list, replacing the by-type route. No code changed. |
 
 
 
