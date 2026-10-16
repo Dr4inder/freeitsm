@@ -13,6 +13,11 @@ I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('forms');
+// Filling in a form creates a submission - a write (#180 Part 3). Read only goes back.
+if (analystModuleLevel(connectToDatabase(), (int)$_SESSION['analyst_id'], 'forms') === 'read') {
+    header('Location: ' . BASE_URL . 'forms/');
+    exit;
+}
 
 $current_page = 'forms';
 $path_prefix = '../';

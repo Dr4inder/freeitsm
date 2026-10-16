@@ -25,7 +25,7 @@ $translationNamespaces = ['common', 'change-management'];
     <title><?php echo htmlspecialchars(pageTitle('changes')); ?></title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/theme.css?v=27">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/change-management.css?v=10">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/change-management.css?v=11">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=193">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -36,7 +36,8 @@ $translationNamespaces = ['common', 'change-management'];
     <script src="<?php echo BASE_URL; ?>assets/js/tinymce/tinymce.min.js"></script>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/project-links.css?v=1">
 </head>
-<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>">
+<?php $cmLevel = analystModuleLevel(connectToDatabase(), (int)($_SESSION['analyst_id'] ?? 0), 'changes'); /* #180: 'full' or 'read' */ ?>
+<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>"<?php echo $cmLevel === 'read' ? ' class="module-read-only"' : ''; ?>>
     <?php include __DIR__ . '/includes/header.php'; ?>
 
     <div class="changes-container">
@@ -57,9 +58,11 @@ $translationNamespaces = ['common', 'change-management'];
                     </div>
                 </div>
             </div>
+            <?php if ($cmLevel !== 'read'): ?>
             <div class="sidebar-section">
                 <a class="btn btn-primary btn-full" href="new/"><?php echo htmlspecialchars(t('change-management.sidebar.new_change')); ?></a>
             </div>
+            <?php endif; ?>
         </div>
 
         <!-- Main content area -->
@@ -566,11 +569,13 @@ $translationNamespaces = ['common', 'change-management'];
     </script>
     <script>window.CHG_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.CHG_BASE = <?php echo json_encode(BASE_URL); ?>;
         // "Choose approvers" (#180): comfort for the editor; ChangesService enforces it.
+        // Read only (#180): the page leaves out what the server would refuse.
+        window.MODULE_LEVEL = <?php echo json_encode($cmLevel ?: 'full'); ?>;
         window.CHG_CAN_CHOOSE_APPROVERS = <?php require_once __DIR__ . '/../includes/rbac.php'; echo analystMayAct(connectToDatabase(), (int)$_SESSION['analyst_id'], Cap::CHANGES_CHOOSE_APPROVERS) ? 'true' : 'false'; ?>;</script>
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/safe-html.js?v=2"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/change-revisions.js?v=3"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=26"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=27"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=78"></script>
 </body>
 </html>

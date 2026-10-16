@@ -1426,6 +1426,18 @@ body.cm-editor-open .editor-form {
 
 /* ============ CAB Review Panel (Detail View) ============ */
 
+/* Read only access (#180): the controls the server would refuse are not offered. The
+   vote and the approver's decision stay - approving is identity, not a write. */
+body.module-read-only .comment-input-area,
+body.module-read-only button[onclick="editCurrentChange()"],
+body.module-read-only button[onclick="deleteCurrentChange()"],
+body.module-read-only button[onclick="cancelCurrentChange()"],
+body.module-read-only button[onclick="openLinkIncidentModal()"],
+body.module-read-only .linked-incident-btn.danger,
+body.module-read-only #fileUploadArea { display: none !important; }
+.read-only-badge { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; vertical-align: middle;
+    background: var(--warning-bg, #fff8e1); color: var(--warning-text, #8a5a00); border: 1px solid var(--warning-border, #ffcc80); }
+
 /* Approval panel (#180) - wraps the CAB review, or the named approver's decision */
 .approval-section {
     background: #f0faf9;

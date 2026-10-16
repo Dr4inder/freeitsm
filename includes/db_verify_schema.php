@@ -311,6 +311,7 @@ return [
         'id'          => 'INT NOT NULL AUTO_INCREMENT',
         'team_id'     => 'INT NOT NULL',
         'module_key'  => 'VARCHAR(50) NOT NULL',
+        'access_level' => "VARCHAR(10) NOT NULL DEFAULT 'full'",   // full | read (#180) - see analystModuleLevel()
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
     ],
 
@@ -318,6 +319,7 @@ return [
         'id'          => 'INT NOT NULL AUTO_INCREMENT',
         'analyst_id'  => 'INT NOT NULL',
         'module_key'  => 'VARCHAR(50) NOT NULL',
+        'access_level' => "VARCHAR(10) NOT NULL DEFAULT 'full'",   // full | read (#180) - see analystModuleLevel()
     ],
 
     // RBAC Layer 2 — per-module settings permissions (see docs/design/rbac.md).

@@ -33,6 +33,7 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('changes');
+requireModuleWriteJson('changes');   // Read only access (#180) changes nothing here
 
 $analystId = (int)$_SESSION['analyst_id'];
 $changeId  = (int)($_POST['change_id'] ?? 0);

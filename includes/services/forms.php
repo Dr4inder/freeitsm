@@ -978,8 +978,22 @@ class FormsService
      */
     private static function guardDesign(PDO $conn, ActorContext $ctx): void
     {
+        self::assertCanWrite($conn, $ctx);
         if (!analystMayAct($conn, $ctx->actorId, Cap::FORMS_DESIGN)) {
             throw new ServiceError('forbidden', 'forbidden', 'Designing forms needs the "Design forms" permission.');
+        }
+    }
+
+    /**
+     * Read only access (#180 Part 3), in the service as well as the endpoints, so an API
+     * key acting as a read-only analyst cannot write either. Only an explicit Read only
+     * refuses (see ChangesService::assertCanWrite()). Deciding a catalogue request is
+     * identity, not a write, and does not come here.
+     */
+    private static function assertCanWrite(PDO $conn, ActorContext $ctx): void
+    {
+        if ($ctx->actorId > 0 && analystModuleLevel($conn, $ctx->actorId, 'forms') === 'read') {
+            throw new ServiceError('forbidden', 'read_only', 'You have read-only access to Forms.');
         }
     }
 
@@ -1438,6 +1452,9 @@ class FormsService
      */
     public static function submitForm(PDO $conn, ActorContext $ctx, int $formId, array $data, ?int $portalUserId = null): int
     {
+        if ($portalUserId === null) {
+            self::assertCanWrite($conn, $ctx);   // an analyst filling in a form; portal users never come here
+        }
         $form = self::loadFormRow($conn, $formId);             // 404 if gone
         if (!(int)$form['is_active']) {
             throw new ServiceError('conflict', 'conflict', 'This form is inactive and cannot accept submissions.');
@@ -1852,6 +1869,7 @@ class FormsService
      */
     public static function deleteSubmission(PDO $conn, ActorContext $ctx, int $submissionId, ?int $formId = null): int
     {
+        self::assertCanWrite($conn, $ctx);
         if ($formId !== null) {
             $stmt = $conn->prepare("SELECT id FROM form_submissions WHERE id = ? AND form_id = ?");
             $stmt->execute([$submissionId, $formId]);

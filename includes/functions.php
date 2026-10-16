@@ -88,6 +88,131 @@ function getModuleRegistry(): array {
 }
 
 /**
+ * The modules that offer a Read only level (#180 Part 3). A module joins only once EVERY
+ * one of its write endpoints calls requireModuleWriteJson() and its service has the
+ * backstop - otherwise Read only would be a promise with a hole in it.
+ * tests/module-access-coverage.php holds the line.
+ */
+const MODULES_WITH_READ_ONLY = ['changes', 'forms'];
+
+/**
+ * What may this analyst do in this module: 'full', 'read', or null (no access)? The
+ * same sources and the same most/least rule as getAnalystAllowedModules(): 'most' takes
+ * the highest level any source gives, 'least' the lowest every source gives. An
+ * all-modules flag means full on everything, as it always has; a module without a Read
+ * only level is always full where it is granted.
+ *
+ * analystCanAccessModule() is unchanged - read IS access - so every page and read
+ * endpoint lets a reviewer in without being touched. Only writes ask this.
+ *
+ * @param int $analystId  the analyst
+ * @param string $moduleKey  a module key from getModuleRegistry()
+ */
+function analystModuleLevel(PDO $conn, int $analystId, string $moduleKey): ?string {
+    static $cache = [];
+    $k = $analystId . '|' . $moduleKey;
+    if (array_key_exists($k, $cache)) return $cache[$k];
+    if (!analystCanAccessModule($conn, $analystId, $moduleKey)) return $cache[$k] = null;
+    if (!in_array($moduleKey, MODULES_WITH_READ_ONLY, true)) return $cache[$k] = 'full';
+
+    $rank = ['read' => 1, 'full' => 2];
+    $levels = [];   // one per source that grants the module; null where a source does not
+    try {
+        $a = $conn->prepare("SELECT can_access_all_modules FROM analysts WHERE id = ?");
+        $a->execute([$analystId]);
+        if ((int)$a->fetchColumn() === 1) {
+            $levels[] = 'full';
+        } else {
+            $r = $conn->prepare("SELECT access_level FROM analyst_modules WHERE analyst_id = ? AND module_key = ?");
+            $r->execute([$analystId, $moduleKey]);
+            $lv = $r->fetchColumn();
+            $levels[] = $lv === false ? null : ($lv === 'read' ? 'read' : 'full');
+        }
+        $t = $conn->prepare(
+            "SELECT t.can_access_all_modules, tm.access_level
+               FROM analyst_teams at JOIN teams t ON at.team_id = t.id
+               LEFT JOIN team_modules tm ON tm.team_id = t.id AND tm.module_key = ?
+              WHERE at.analyst_id = ?"
+        );
+        $t->execute([$moduleKey, $analystId]);
+        foreach ($t->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $levels[] = (int)$row['can_access_all_modules'] === 1 ? 'full'
+                : ($row['access_level'] === null ? null : ($row['access_level'] === 'read' ? 'read' : 'full'));
+        }
+    } catch (Throwable $e) {
+        return $cache[$k] = 'full';   // pre-upgrade DB (no access_level yet): today's behaviour
+    }
+
+    $granted = array_values(array_filter($levels, fn($l) => $l !== null));
+    if (!$granted) return $cache[$k] = 'full';   // access came from somewhere this does not model: unchanged
+    if (getModulePermissionMode($conn) === 'least') {
+        $lowest = 'full';
+        foreach ($granted as $l) if ($rank[$l] < $rank[$lowest]) $lowest = $l;
+        return $cache[$k] = $lowest;
+    }
+    $highest = 'read';
+    foreach ($granted as $l) if ($rank[$l] > $rank[$highest]) $highest = $l;
+    return $cache[$k] = $highest;
+}
+
+/**
+ * The level of each specific grant one analyst or team holds: module_key => 'full'|'read'.
+ * Every screen that rewrites grants (delete, then insert the new list) reads this first
+ * and writes the levels back, so saving a module list never quietly turns a Read only
+ * grant into Full.
+ *
+ * @param string $kind  'analyst' or 'team'
+ * @param int $id  the analyst or team id
+ */
+function moduleGrantLevels(PDO $conn, string $kind, int $id): array {
+    $table = $kind === 'team' ? 'team_modules' : 'analyst_modules';
+    $col   = $kind === 'team' ? 'team_id' : 'analyst_id';
+    try {
+        $s = $conn->prepare("SELECT module_key, access_level FROM {$table} WHERE {$col} = ?");
+        $s->execute([$id]);
+        return $s->fetchAll(PDO::FETCH_KEY_PAIR) ?: [];
+    } catch (Throwable $e) {
+        return [];   // before Database Verify added access_level: every grant is full
+    }
+}
+
+/**
+ * May this analyst change things in this module, not only read them? (#180 Part 3)
+ *
+ * @param int $analystId  the analyst
+ * @param string $moduleKey  a module key
+ */
+function analystCanWriteModule(PDO $conn, int $analystId, string $moduleKey): bool {
+    return analystModuleLevel($conn, $analystId, $moduleKey) === 'full';
+}
+
+/**
+ * JSON gate for a module WRITE: 403 for an analyst with Read only access. Beside
+ * requireModuleAccessJson(), never instead of it.
+ *
+ * TRAP: voting on a change and deciding as its approver are NOT writes - they are decided
+ * by identity (a CAB row, the approver_id), so a read-only approver can still approve.
+ * Those endpoints must not call this.
+ *
+ * @param string $moduleKey  a module key
+ */
+function requireModuleWriteJson(string $moduleKey, ?PDO $conn = null): void {
+    $ok = false;
+    try {
+        if ($conn === null) $conn = connectToDatabase();
+        $ok = isset($_SESSION['analyst_id']) && analystCanWriteModule($conn, (int)$_SESSION['analyst_id'], $moduleKey);
+    } catch (Throwable $e) {
+        $ok = false;
+    }
+    if (!$ok) {
+        http_response_code(403);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'error' => function_exists('t') ? t('common.module_read_only') : 'You have read-only access to this module.', 'code' => 'read_only']);
+        exit;
+    }
+}
+
+/**
  * Site-wide policy for combining module grants from several sources (issue #30):
  *   'most'  (default) — an analyst may use a module if ANY source grants it (union).
  *   'least'           — only if their own access AND every team allow it (intersection).

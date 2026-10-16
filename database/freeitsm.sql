@@ -492,6 +492,7 @@ CREATE TABLE IF NOT EXISTS `analyst_modules` (
     `id`            INT NOT NULL AUTO_INCREMENT,
     `analyst_id`    INT NOT NULL,
     `module_key`    VARCHAR(50) NOT NULL,
+    `access_level`  VARCHAR(10) NOT NULL DEFAULT 'full',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_analyst_module` (`analyst_id`, `module_key`),
     CONSTRAINT `fk_analyst_modules_analyst` FOREIGN KEY (`analyst_id`) REFERENCES `analysts` (`id`) ON DELETE CASCADE
@@ -502,6 +503,7 @@ CREATE TABLE IF NOT EXISTS `team_modules` (
     `id`            INT NOT NULL AUTO_INCREMENT,
     `team_id`       INT NOT NULL,
     `module_key`    VARCHAR(50) NOT NULL,
+    `access_level`  VARCHAR(10) NOT NULL DEFAULT 'full',
     `is_demo`           TINYINT(1) NOT NULL DEFAULT 0,   -- set by the demo data importer (#1297)
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_team_module` (`team_id`, `module_key`),

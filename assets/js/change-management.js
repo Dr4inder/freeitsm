@@ -682,7 +682,7 @@ function renderChangeDetail() {
                 </div>
             </div>
             <div class="sticky-header-top">
-                <div class="change-detail-ref">${ref}</div>
+                <div class="change-detail-ref">${ref}${window.MODULE_LEVEL === 'read' ? ` <span class="read-only-badge">${escapeHtml(window.t('common.module_read_only_badge'))}</span>` : ''}</div>
                 ${badgesHtml ? `<div class="sticky-header-badges">${badgesHtml}</div>` : ''}
             </div>
             ${v('title') ? `<div class="change-detail-title">${escapeHtml(c.title)}</div>` : ''}
@@ -1350,6 +1350,7 @@ function clearSearch() {
 
 /** Opens a blank change editor with the default status and empty risk, review and CAB fields. */
 function openCreateChange() {
+    if (window.MODULE_LEVEL === 'read') return;   // Read only (#180): nothing to create
     applyApprovalEditorRules(null);
     document.getElementById('editChangeId').value = '';
     document.getElementById('editorTitle').textContent = window.t('change-management.editor.new');
@@ -1409,7 +1410,7 @@ function openCreateChange() {
  * CAB members and the rich-text sections.
  */
 function editCurrentChange() {
-    if (!currentChange) return;
+    if (!currentChange || window.MODULE_LEVEL === 'read') return;   // Read only (#180)
     const c = currentChange;
 
     document.getElementById('editChangeId').value = c.id;
@@ -2728,6 +2729,7 @@ let ctxTargetChangeId = null;
  */
 function openChangeContextMenu(event, changeId) {
     event.preventDefault();
+    if (window.MODULE_LEVEL === 'read') return;   // every item in it is a write (#180)
     ctxTargetChangeId = changeId;
     const menu = document.getElementById('changeContextMenu');
     if (!menu) return;

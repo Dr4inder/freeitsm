@@ -221,9 +221,12 @@ final class AnalystsService
                  ->execute([$isAdmin ? 1 : 0, $allModules ? 1 : 0, $allCompanies ? 1 : 0, $id]);
 
             if (array_key_exists('modules', $in)) {
+                // Each grant keeps its level (#180): re-saving the list must not turn
+                // a Read only grant into Full.
+                $levels = moduleGrantLevels($conn, 'analyst', $id);
                 $conn->prepare("DELETE FROM analyst_modules WHERE analyst_id = ?")->execute([$id]);
-                $ins = $conn->prepare("INSERT INTO analyst_modules (analyst_id, module_key) VALUES (?, ?)");
-                foreach ($modules as $k) $ins->execute([$id, $k]);
+                $ins = $conn->prepare("INSERT INTO analyst_modules (analyst_id, module_key, access_level) VALUES (?, ?, ?)");
+                foreach ($modules as $k) $ins->execute([$id, $k, ($levels[$k] ?? 'full') === 'read' ? 'read' : 'full']);
             }
             if (array_key_exists('companies', $in)) {
                 $conn->prepare("DELETE FROM analyst_tenant_access WHERE analyst_id = ?")->execute([$id]);

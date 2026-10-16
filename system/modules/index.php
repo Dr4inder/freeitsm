@@ -67,6 +67,9 @@ $translationNamespaces = ['common', 'system'];
         .all-note { color: #5e35b1; }
 
         .chk-row { display: block; padding: 6px 4px; cursor: pointer; border-bottom: 1px solid var(--border, #f2f2f2); color: var(--text, #333); }
+        .chk-line { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border, #f2f2f2); }
+        .chk-line .chk-row { flex: 1; border-bottom: none; }
+        .lvl-select { font-size: 12px; padding: 2px 6px; }
         .chk-row input { margin-right: 8px; }
         #moduleModalBody h4 { margin: 14px 0 4px; font-size: 13px; color: var(--text-muted, #667); text-transform: uppercase; letter-spacing: 0.4px; }
 
@@ -187,7 +190,10 @@ $translationNamespaces = ['common', 'system'];
         }
     }
 
-    function grantedBy(list, key) { return list.filter(e => e.all_modules || (e.modules || []).includes(key)); }
+    function grantedBy(list, key) {
+        return list.filter(e => e.all_modules || (e.modules || []).includes(key))
+                   .map(e => Object.assign({}, e, { _read: !e.all_modules && e.levels && e.levels[key] === 'read' }));
+    }
 
     // Access-level lists: an all-modules toggle per team / analyst, editable in place.
     function renderAccessLevels() {
@@ -227,7 +233,7 @@ $translationNamespaces = ['common', 'system'];
     function pills(items) {
         if (!items.length) return '<span class="pill-none">None</span>';
         const shown = items.slice(0, 3), extra = items.length - 3;
-        let html = shown.map(e => `<span class="pill ${e.all_modules ? 'pill-all' : ''}"${e.all_modules ? ' title="Has all modules"' : ''}>${escapeHtml(e.name)}${e.all_modules ? ' &#10022;' : ''}</span>`).join('');
+        let html = shown.map(e => `<span class="pill ${e.all_modules ? 'pill-all' : ''}"${e.all_modules ? ' title="Has all modules"' : ''}>${escapeHtml(e.name)}${e.all_modules ? ' &#10022;' : ''}${e._read ? ' (read only)' : ''}</span>`).join('');
         if (extra > 0) html += `<span class="pill pill-more">+${extra}</span>`;
         return html;
     }
@@ -257,13 +263,20 @@ $translationNamespaces = ['common', 'system'];
         editingModule = key;
         const m = DATA.modules.find(x => x.key === key);
         document.getElementById('moduleModalTitle').textContent = 'Who can use ' + m.name + '?';
+        // A module that offers Read only (#180) shows Full / Read only beside each grant.
+        const offersRead = !!m.read_only;
         const rows = (arr, kind) => (arr.length ? arr.map(e => {
             const has = e.all_modules || (e.modules || []).includes(key);
             const note = e.all_modules ? ' <span class="all-note">(all modules)</span>' : '';
-            return `<label class="chk-row"><input type="checkbox" data-kind="${kind}" data-id="${e.id}" ${has ? 'checked' : ''} ${e.all_modules ? 'disabled' : ''}> ${escapeHtml(e.name)}${note}</label>`;
+            const lvl = (e.levels && e.levels[key]) === 'read' ? 'read' : 'full';
+            const levelSel = offersRead && !e.all_modules
+                ? `<select class="lvl-select" data-kind="${kind}" data-id="${e.id}"><option value="full"${lvl === 'full' ? ' selected' : ''}>Full</option><option value="read"${lvl === 'read' ? ' selected' : ''}>Read only</option></select>`
+                : '';
+            return `<div class="chk-line"><label class="chk-row"><input type="checkbox" data-kind="${kind}" data-id="${e.id}" ${has ? 'checked' : ''} ${e.all_modules ? 'disabled' : ''}> ${escapeHtml(e.name)}${note}</label>${levelSel}</div>`;
         }).join('') : '<p class="pill-none">None</p>');
         document.getElementById('moduleModalBody').innerHTML =
             `<p style="color:var(--text-muted,#666);font-size:13px;margin:0 0 6px;">Tick the teams and analysts that can use <strong>${escapeHtml(m.name)}</strong>. Anyone with <em>all modules</em> always has access &mdash; flip that with the <strong>Access level</strong> toggles above.</p>
+             ${offersRead ? '<p style="color:var(--text-muted,#666);font-size:13px;margin:0 0 6px;"><strong>Read only</strong> lets them see everything here - records, history, exports - and change nothing. A named approver can still approve.</p>' : ''}
              <h4>Teams</h4>${rows(DATA.teams, 'team')}
              <h4>Analysts</h4>${rows(DATA.analysts, 'analyst')}`;
         document.getElementById('moduleModal').classList.add('active');
@@ -271,13 +284,16 @@ $translationNamespaces = ['common', 'system'];
     function closeModuleModal() { document.getElementById('moduleModal').classList.remove('active'); }
 
     async function saveModuleModal() {
-        const team_ids = [], analyst_ids = [];
+        const team_ids = [], analyst_ids = [], levels = { team: {}, analyst: {} };
         document.querySelectorAll('#moduleModalBody input[type=checkbox]:not([disabled])').forEach(c => {
             if (c.checked) (c.dataset.kind === 'team' ? team_ids : analyst_ids).push(parseInt(c.dataset.id));
         });
+        document.querySelectorAll('#moduleModalBody .lvl-select').forEach(s => {
+            levels[s.dataset.kind][s.dataset.id] = s.value;
+        });
         const d = await (await fetch(API + 'save_module_grants.php', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ module_key: editingModule, team_ids, analyst_ids })
+            body: JSON.stringify({ module_key: editingModule, team_ids, analyst_ids, levels })
         })).json();
         if (d.success) { closeModuleModal(); showToast('Saved', 'success'); loadData(); }
         else showToast('Failed: ' + (d.error || ''), 'error');
@@ -293,7 +309,7 @@ $translationNamespaces = ['common', 'system'];
         box.innerHTML =
             `<div class="eff-head">Conflict policy: <strong>${d.mode === 'least' ? 'Least permissive (strict)' : 'Most permissive'}</strong></div>` +
             '<table class="eff-table">' + d.modules.map(m =>
-                `<tr><td>${escapeHtml(m.name)}</td><td>${m.allowed ? '<span class="yes">&#10003; Access</span>' : '<span class="no">&#10007; No access</span>'}</td><td class="reason">${escapeHtml(m.reason)}</td></tr>`
+                `<tr><td>${escapeHtml(m.name)}</td><td>${m.allowed ? (m.level === 'read' ? '<span class="yes">&#10003; Read only</span>' : '<span class="yes">&#10003; Access</span>') : '<span class="no">&#10007; No access</span>'}</td><td class="reason">${escapeHtml(m.reason)}</td></tr>`
             ).join('') + '</table>';
     }
 

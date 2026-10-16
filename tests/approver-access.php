@@ -150,6 +150,7 @@ try {
     } else {
         echo "  SKIP  HTTP checks (no base URL)\n";
     }
+
 } catch (Throwable $e) {
     ok('no unexpected exception', false, get_class($e) . ': ' . $e->getMessage() . ' @ ' . basename($e->getFile()) . ':' . $e->getLine());
 } finally {
@@ -158,6 +159,9 @@ try {
         $conn->prepare("UPDATE changes SET approval_id = NULL WHERE id = ? AND title LIKE 'ZZ-%'")->execute([$cid]);
         $conn->prepare("DELETE FROM change_approvals WHERE change_id = ?")->execute([$cid]);
         $conn->prepare("DELETE FROM changes WHERE id = ? AND title LIKE 'ZZ-%'")->execute([$cid]);
+    }
+    if (!empty($made['grant'])) {
+        $conn->prepare("DELETE FROM analyst_modules WHERE analyst_id = ? AND module_key = 'changes' AND access_level = 'read'")->execute([$plain]);
     }
     foreach ($made['forms'] as $fid) {
         $conn->prepare("DELETE FROM forms WHERE id = ? AND title LIKE 'ZZ-%'")->execute([$fid]);

@@ -17,6 +17,12 @@ I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('forms');
+// Read only access and "Design forms" (#180 Part 3): the list leaves out what the server
+// would refuse. Comfort only - every write endpoint and FormsService check again.
+require_once '../includes/rbac.php';
+$fmConn       = connectToDatabase();
+$formsLevel   = analystModuleLevel($fmConn, (int)$_SESSION['analyst_id'], 'forms');
+$formsMayDesign = $formsLevel === 'full' && analystMayAct($fmConn, (int)$_SESSION['analyst_id'], Cap::FORMS_DESIGN);
 
 $current_page = 'forms';
 $path_prefix = '../';
@@ -92,6 +98,12 @@ $translationNamespaces = ['common', 'forms'];
             gap: 6px;
         }
         .new-form-btn:hover { background: var(--forms-accent-hover, #00695c); color: white; }
+        /* #180: no design rights - no New form, no per-form design actions. Read only - no
+           filling in either (a submission is a record created). The server refuses all of
+           these anyway; this is so they are not offered. */
+        body.forms-no-design .new-form-btn,
+        body.forms-no-design .col-actions button.ft-action-btn { display: none !important; }
+        body.module-read-only .col-actions a[href*="forms/fill.php"] { display: none !important; }
 
         /* The table card itself — scrolls internally so the toolbar
            stays pinned at the top of the page. */
@@ -261,8 +273,7 @@ $translationNamespaces = ['common', 'forms'];
          would silently lose to the desktop block below (the load-order trap). -->
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=193">
 </head>
-<body>
-    <?php include 'includes/header.php'; ?>
+<body class="<?php echo trim(($formsLevel === 'read' ? 'module-read-only ' : '') . ($formsMayDesign ? '' : 'forms-no-design')); ?>">    <?php include 'includes/header.php'; ?>
 
     <div class="forms-list-container">
         <div class="forms-list-toolbar">
@@ -392,6 +403,7 @@ $translationNamespaces = ['common', 'forms'];
     <script>
         const API_BASE = '<?php echo BASE_URL; ?>api/forms/';
         const EDIT_BASE = '<?php echo BASE_URL; ?>forms/edit/';
+        const FORMS_MAY_DESIGN = <?php echo $formsMayDesign ? 'true' : 'false'; ?>;   // #180
 
         let allForms = [];
         let filteredForms = [];
@@ -588,7 +600,8 @@ $translationNamespaces = ['common', 'forms'];
         }
 
         function openEdit(id) {
-            window.location.href = EDIT_BASE + '?id=' + id;
+            // Somebody who may not design (#180) opens what they may read: the submissions.
+            window.location.href = FORMS_MAY_DESIGN ? EDIT_BASE + '?id=' + id : '<?php echo BASE_URL; ?>forms/submissions.php?id=' + id;
         }
 
         // Friendly "5 minutes ago" / "2 days ago" — falls back to the

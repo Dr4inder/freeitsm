@@ -68,6 +68,7 @@ class ChangesService
      */
     private static function applyCreate(PDO $conn, ActorContext $ctx, int $tenantId, array $in): array
     {
+        self::assertCanWrite($conn, $ctx);
         $title = trim((string)($in['title'] ?? ''));
         if ($title === '') {
             throw new ServiceError('validation', 'missing_field', "'title' is required.");
@@ -238,6 +239,7 @@ class ChangesService
      */
     private static function applyUpdate(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
     {
+        self::assertCanWrite($conn, $ctx);
         self::lockRow($conn, $changeId);
         $current = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
         if (!$in) {
@@ -582,6 +584,7 @@ class ChangesService
      */
     public static function cancelChange(PDO $conn, ActorContext $ctx, int $changeId, array $in): void
     {
+        self::assertCanWrite($conn, $ctx);
         $after = self::inTransaction($conn, function () use ($conn, $ctx, $changeId, $in) {
             self::lockRow($conn, $changeId);
             $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
@@ -695,6 +698,7 @@ class ChangesService
      */
     public static function deleteChange(PDO $conn, ActorContext $ctx, int $changeId): void
     {
+        self::assertCanWrite($conn, $ctx);
         // The rows go inside the transaction; the files only once it has committed, so
         // a failed delete never leaves a change whose attachments have vanished.
         [$files, $title] = self::inTransaction($conn, function () use ($conn, $ctx, $changeId) {
@@ -742,6 +746,7 @@ class ChangesService
      */
     public static function overrideApproval(PDO $conn, ActorContext $ctx, int $changeId, array $in): void
     {
+        self::assertCanWrite($conn, $ctx);
         $after = self::inTransaction($conn, function () use ($conn, $ctx, $changeId, $in) {
             self::lockRow($conn, $changeId);
             $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
@@ -796,6 +801,7 @@ class ChangesService
      */
     public static function createComment(PDO $conn, ActorContext $ctx, int $changeId, array $in): int
     {
+        self::assertCanWrite($conn, $ctx);
         self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
         $text = trim((string)($in['text'] ?? ''));
         if ($text === '') {
@@ -823,6 +829,7 @@ class ChangesService
      */
     public static function deleteComment(PDO $conn, ActorContext $ctx, int $commentId, ?int $changeId = null): void
     {
+        self::assertCanWrite($conn, $ctx);
         // Resolve the owning change so company scope is enforced even when the
         // caller only has the comment id (the UI's delete_comment.php).
         if ($changeId === null) {
@@ -877,6 +884,7 @@ class ChangesService
      */
     private static function applySaveCab(PDO $conn, ActorContext $ctx, int $changeId, $members): void
     {
+        self::assertCanWrite($conn, $ctx);
         self::lockRow($conn, $changeId);
         $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
         $actorId = $ctx->actorId;
@@ -1112,6 +1120,7 @@ class ChangesService
      */
     public static function linkTicket(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
     {
+        self::assertCanWrite($conn, $ctx);
         $change = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone / out of scope
         $actorId = $ctx->actorId;
 
@@ -1161,6 +1170,7 @@ class ChangesService
      */
     public static function unlinkTicket(PDO $conn, ActorContext $ctx, int $changeId, int $ticketId): void
     {
+        self::assertCanWrite($conn, $ctx);
         self::loadJoined($conn, $ctx, $changeId);   // 404 if gone / out of scope
         // Ticket number for the audit trail (before the link is removed).
         $tn = $conn->prepare("SELECT ticket_number FROM tickets WHERE id = ?");
@@ -1249,6 +1259,23 @@ class ChangesService
         $s = $conn->prepare("SELECT * FROM changes WHERE id = ?");
         $s->execute([$changeId]);
         return $s->fetch(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    /**
+     * Read only access (#180 Part 3), in the service as well as the endpoints - so an API
+     * key acting as an analyst who was given Read only cannot PATCH a change either, even
+     * if the key holds changes.update. Only an explicit Read only refuses: an analyst
+     * with no module access at all is not refused here, because the REST API has never
+     * consulted it (F7) and starting to would be a separate decision.
+     *
+     * TRAP: not called by voteCab() or decideApproval(). Approving is identity, not a
+     * write - a read-only approver must still be able to approve.
+     */
+    private static function assertCanWrite(PDO $conn, ActorContext $ctx): void
+    {
+        if ($ctx->actorId > 0 && analystModuleLevel($conn, $ctx->actorId, 'changes') === 'read') {
+            throw new ServiceError('forbidden', 'read_only', 'You have read-only access to Change Management.');
+        }
     }
 
     /**

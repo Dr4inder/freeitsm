@@ -207,6 +207,10 @@ return [
     ],
 
     // Waffle module-switcher panel (shared header)
+    // A Read only grant (#180): the analyst can see this module but not change it.
+    'module_read_only'       => 'You have read-only access to this module.',
+    'module_read_only_badge' => 'Read only',
+
     'waffle' => [
         'title' => 'ITSM Modules',
         // The recent trail (#124). "Recent" rather than "History": history is a

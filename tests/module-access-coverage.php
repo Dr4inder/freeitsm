@@ -127,5 +127,37 @@ foreach (['tickets/csat/index.php', 'tickets/dashboard/index.php', 'tickets/dash
     check(strpos(file_get_contents($root . '/' . $p), "requireModuleAccess('tickets')") !== false, "$p is gated on tickets");
 }
 
+echo "4. Read only modules: every write is refused to a read-only analyst (#180)\n";
+// A module offers Read only (MODULES_WITH_READ_ONLY) only once every write endpoint calls
+// requireModuleWriteJson(). Without this check Read only would be a promise with a hole
+// in it - and the hole would look exactly like a working feature.
+$READ_ONLY_DIRS = ['changes' => 'api/change-management/', 'forms' => 'api/forms/'];
+$WRITE_EXEMPT = [
+    // Approving is identity, not a write: a read-only approver must still approve.
+    'api/change-management/submit_cab_vote.php'  => 'a CAB vote - needs a change_cab_members row, not write access',
+    'api/change-management/decide_approval.php'  => 'the named approver deciding - identity, not write access',
+    'api/forms/decide_catalogue_approval.php'    => 'the named approver deciding - identity, not write access',
+];
+$writeShaped = '/INSERT INTO|UPDATE [a-z_]+ SET|DELETE FROM|Service::(create|update|delete|save|link|unlink|cancel|override|move|set|submit)|uploadStoreFile|saveDraft|deleteDraft/';
+$checked = 0; $holes = [];
+require_once $root . '/config.php';
+require_once $root . '/includes/functions.php';
+foreach ($READ_ONLY_DIRS as $module => $dir) {
+    check(in_array($module, MODULES_WITH_READ_ONLY, true), "$module is declared as offering Read only");
+    foreach (glob($root . '/' . $dir . '*.php') as $abs) {
+        $rel = $dir . basename($abs);
+        if (basename($abs)[0] === '_') continue;
+        $src = file_get_contents($abs);
+        if (!preg_match($writeShaped, $src)) continue;                        // a read
+        if (preg_match('/requireCapabilityJson|admin_api_guard/', $src) || strpos(basename($abs), 'settings') !== false) continue;   // a settings tab: its own permission
+        if (isset($WRITE_EXEMPT[$rel])) continue;
+        $checked++;
+        if (strpos($src, "requireModuleWriteJson('{$module}')") === false) $holes[] = $rel;
+    }
+}
+check($checked >= 20, "positive control: write endpoints were found ($checked)");
+check(!$holes, count($holes) . ' write endpoint(s) a read-only analyst could still use');
+foreach ($holes as $h) echo "          $h\n";
+
 echo "\n$pass passed, $fail failed\n";
 exit($fail ? 1 : 0);

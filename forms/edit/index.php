@@ -26,6 +26,15 @@ require_once '../../includes/timezone.php';
 I18n::initFromSession();
 Tz::init();
 requireModuleAccess('forms');
+// The designer is design (#180 Part 3): Read only access, or "Design forms" restricted and
+// not held, goes back to the list. Its endpoints refuse the saves regardless.
+require_once __DIR__ . '/../../includes/rbac.php';
+$edConn = connectToDatabase();
+if (analystModuleLevel($edConn, (int)$_SESSION['analyst_id'], 'forms') !== 'full'
+    || !analystMayAct($edConn, (int)$_SESSION['analyst_id'], Cap::FORMS_DESIGN)) {
+    header('Location: ' . BASE_URL . 'forms/');
+    exit;
+}
 
 $current_page = 'forms';
 $path_prefix = '../../';
