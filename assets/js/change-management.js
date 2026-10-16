@@ -611,17 +611,17 @@ function renderChangeDetail() {
 
     // Build badges
     let badgesHtml = '';
-    if (v('status')) badgesHtml += `<span class="status-badge ${statusClass}">${c.status}</span>`;
-    if (v('change_type')) badgesHtml += `<span class="type-badge ${typeClass}">${c.change_type}</span>`;
-    if (v('priority')) badgesHtml += `<span class="priority-badge ${priorityClass}">${c.priority}</span>`;
+    if (v('status')) badgesHtml += `<span class="status-badge ${statusClass}">${escapeHtml(c.status)}</span>`;
+    if (v('change_type')) badgesHtml += `<span class="type-badge ${typeClass}">${escapeHtml(c.change_type)}</span>`;
+    if (v('priority')) badgesHtml += `<span class="priority-badge ${priorityClass}">${escapeHtml(c.priority)}</span>`;
 
     // Build meta grid — only include visible fields
     let metaItems = '';
     if (v('impact')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.impact')}</span><span class="detail-meta-value">${c.impact}</span></div>`;
     if (v('category') && c.category) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.category')}</span><span class="detail-meta-value">${escapeHtml(c.category)}</span></div>`;
-    if (v('requester')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.requester')}</span><span class="detail-meta-value">${c.requester_name || window.t('change-management.detail.not_set')}</span></div>`;
-    if (v('assigned_to')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.assigned_to')}</span><span class="detail-meta-value">${c.assigned_to_name || window.t('change-management.detail.not_set')}</span></div>`;
-    if (v('approver')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.approver')}</span><span class="detail-meta-value">${c.approver_name || window.t('change-management.detail.not_set')}</span></div>`;
+    if (v('requester')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.requester')}</span><span class="detail-meta-value">${c.requester_name ? escapeHtml(c.requester_name) : window.t('change-management.detail.not_set')}</span></div>`;
+    if (v('assigned_to')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.assigned_to')}</span><span class="detail-meta-value">${c.assigned_to_name ? escapeHtml(c.assigned_to_name) : window.t('change-management.detail.not_set')}</span></div>`;
+    if (v('approver')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.approver')}</span><span class="detail-meta-value">${c.approver_name ? escapeHtml(c.approver_name) : window.t('change-management.detail.not_set')}</span></div>`;
     if (v('approver') && c.approval_datetime) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.approved')}</span><span class="detail-meta-value">${formatDateTime(c.approval_datetime)}</span></div>`;
     if (v('work_start') && c.work_start_datetime) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.work_start')}</span><span class="detail-meta-value">${formatNaiveDateTime(c.work_start_datetime)}</span></div>`;
     if (v('work_end') && c.work_end_datetime) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.work_end')}</span><span class="detail-meta-value">${formatNaiveDateTime(c.work_end_datetime)}</span></div>`;
@@ -895,8 +895,24 @@ async function unlinkChangeIncident(ticketId) {
 }
 
 /**
+ * The editor HTML of a change's long-text fields, cleaned for display.
+ *
+ * TRAP: change text is stored as the editor sent it, and anybody with Change Management
+ * (or an API key) can write it, so it is untrusted. Every place it reaches innerHTML -
+ * the detail view AND the PDF export - must come through here. Fails closed: if
+ * safe-html.js did not load, the markup is shown as inert text.
+ */
+function safeChangeHtml(html) {
+    if (typeof safeHtmlFragment !== 'function') {
+        console.error('FreeITSM: assets/js/safe-html.js did not load - change text shown as plain text.');
+        return escapeHtml(html || '');
+    }
+    return safeHtmlFragment(html || '');
+}
+
+/**
  * One titled rich-text section of the detail view, or a "not provided" placeholder when
- * it is empty. The content is the editor's HTML, inserted as it is.
+ * it is empty. The content is the editor's HTML, cleaned by safeChangeHtml().
  */
 function renderDetailSection(title, content, field) {
     // Every rich field keeps its full history (#180); the link opens the viewer.
@@ -914,7 +930,7 @@ function renderDetailSection(title, content, field) {
     return `
         <div class="detail-section">
             <h3>${title}${history}</h3>
-            <div class="detail-section-body">${content}</div>
+            <div class="detail-section-body">${safeChangeHtml(content)}</div>
         </div>
     `;
 }
@@ -2714,15 +2730,15 @@ function buildPdfContent() {
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                 <tr>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9; width: 25%;"><strong>${window.t('change-management.pdf.status')}</strong></td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${c.status}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(c.status)}</td>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9; width: 25%;"><strong>${window.t('change-management.pdf.change_type')}</strong></td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${c.change_type}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(c.change_type)}</td>
                 </tr>
                 <tr>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>${window.t('change-management.pdf.priority')}</strong></td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${c.priority}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(c.priority)}</td>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>${window.t('change-management.pdf.impact')}</strong></td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${c.impact}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${escapeHtml(c.impact)}</td>
                 </tr>
                 ${c.category ? `<tr>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>${window.t('change-management.pdf.category')}</strong></td>
@@ -2730,13 +2746,13 @@ function buildPdfContent() {
                 </tr>` : ''}
                 <tr>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>${window.t('change-management.pdf.requester')}</strong></td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${c.requester_name || window.t('change-management.pdf.not_set')}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${c.requester_name ? escapeHtml(c.requester_name) : window.t('change-management.pdf.not_set')}</td>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>${window.t('change-management.pdf.assigned_to')}</strong></td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">${c.assigned_to_name || window.t('change-management.pdf.not_set')}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${c.assigned_to_name ? escapeHtml(c.assigned_to_name) : window.t('change-management.pdf.not_set')}</td>
                 </tr>
                 <tr>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>${window.t('change-management.pdf.approver')}</strong></td>
-                    <td style="padding: 8px; border: 1px solid #ddd;" colspan="3">${c.approver_name || window.t('change-management.pdf.not_set')}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;" colspan="3">${c.approver_name ? escapeHtml(c.approver_name) : window.t('change-management.pdf.not_set')}</td>
                 </tr>
                 ${c.work_start_datetime || c.work_end_datetime ? `<tr>
                     <td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>${window.t('change-management.pdf.work_start')}</strong></td>
@@ -2767,7 +2783,7 @@ function buildPdfContent() {
         if (section.content && section.content.trim()) {
             html += `
                 <h3 style="color: #00897b; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 20px;">${section.title}</h3>
-                <div style="line-height: 1.6;">${section.content}</div>
+                <div style="line-height: 1.6;">${safeChangeHtml(section.content)}</div>
             `;
         }
     });

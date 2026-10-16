@@ -272,6 +272,20 @@ foreach ($rows as $r) {
     }
 }
 
+// A CREDENTIAL written behind module access alone. Module access is the everyday job;
+// replacing a provider's API key, or pointing it at another endpoint, is a settings-tab
+// job and needs that tab's capability - usually the one its test_*.php sibling already
+// checks. Found by hand twice (the Forms and Workflow AI panels saved their keys behind
+// module access while the Test buttons beside them were capability-guarded), hence this
+// rule: a settings-shaped endpoint that encrypts a secret must not stop at Layer 1.
+$credential = [];
+foreach ($rows as $r) {
+    if ($r['public'] || $r['level'] !== 'module' || !$r['write']) continue;
+    if (!preg_match('/(settings|credential|connection|provider|_key)[^\/]*\.php$/', $r['rel'])) continue;
+    $src = (string) file_get_contents($appRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $r['rel']));
+    if (strpos($src, 'encryptValue(') !== false) $credential[] = $r;
+}
+
 $byDesign = [];
 foreach ($rows as $r) {
     if ($r['public']) continue;
@@ -373,6 +387,18 @@ if ($high) {
         $b[] = '';
     }
     addSection($sections, 'HIGH — data-changing endpoints behind "logged in" only (' . count($high) . ')', $b);
+}
+
+if ($credential) {
+    $b = [
+        'These SAVE AN ENCRYPTED SECRET (an API key, a password) and check nothing beyond',
+        'module access. Anyone who uses the module day to day can then replace the key or',
+        'point it at a server of their choosing. A settings tab needs its capability - the',
+        'test_*.php sibling of the same panel usually shows which one.',
+        '',
+    ];
+    foreach ($credential as $r) $b[] = sprintf('  [%-18s] %s', $r['module'], $r['rel']);
+    addSection($sections, 'HIGH — credentials saved behind module access only (' . count($credential) . ')', $b);
 }
 
 if ($stringly) {
