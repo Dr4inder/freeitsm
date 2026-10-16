@@ -48,6 +48,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2381 | System | Improvement | A settings tab can now be visible to holders of other named capabilities without granting them its own (manifest 'also_visible_to'), so a template approver can read the versions they approve. |
 | 2382 | System | Fix | When an analyst leaves, the approval rounds they opened or decided and the votes they cast are now counted as their history (kept, never deleted), like the rest of a change's record. |
 | 2383 | Change Management | Feature | Export evidence (the change's share menu): a printable page holding the change as it stands, every approval round and vote (counted or not, current version or not, and for a pre-authorised change the template version in full), every saved version of the long-text fields with the baseline labelled, the audit trail and comments including deleted ones, and the attachments with their sha256 - times in UTC, author text cleaned, and the export itself recorded on the audit trail (GH #180 Part 2). |
+| 2384 | System | Improvement | In-app help for System → Roles (everyday work permissions), System → Modules (Read only) and Forms (who can design forms, approvers without Forms access, Read only) now covers the 3.8.0 access changes (GH #180). |
 
 
 

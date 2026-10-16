@@ -55,7 +55,28 @@ require __DIR__ . '/_top.php';
     <div class="help-note">Removing a module only hides it from that one analyst. It doesn't delete any data or affect other analysts — restoring access brings the module straight back.</div>
 </div>
 
-<!-- 4. Good to know -->
+<!-- 4. Read only (#180) -->
+<div class="help-section" id="read-only">
+    <div class="help-section-header"><?php echo helpSectionNum('read-only'); ?>
+        <div>
+            <h3>Read only</h3>
+            <p><strong>Change Management</strong> and <strong>Forms</strong> offer a second level for a grant. Open the module on this page and choose <strong>Full</strong> or <strong>Read only</strong> beside each team and analyst you tick.</p>
+        </div>
+    </div>
+    <div class="help-cards">
+        <div class="help-card">
+            <h4>A reviewer</h4>
+            <p>Read only lets someone open the module and read everything in it - records, approval history, text history and exports - and change nothing. The server refuses their changes on screen and through an API key acting as them.</p>
+        </div>
+        <div class="help-card">
+            <h4>An approver</h4>
+            <p>Approving is not editing. A read-only analyst named on a change's CAB, or as a change's or form's approver, can still vote or decide.</p>
+        </div>
+    </div>
+    <div class="help-note">Levels combine like grants: under <strong>Most permissive</strong>, the highest level wins, so an analyst's own Full beats a team's Read only; under <strong>Least permissive</strong>, the lowest wins. Anyone with <em>all modules</em> has Full everywhere. The effective access checker shows the level and where it came from. Other modules have no level - they are Full wherever granted.</div>
+</div>
+
+<!-- 5. Good to know -->
 <div class="help-section" id="notes">
     <div class="help-section-header"><?php echo helpSectionNum('notes'); ?>
         <div>

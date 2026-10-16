@@ -948,7 +948,14 @@ return [
         'settings_center_body'  => 'Logo centred above the form title. The default option, giving a balanced and symmetrical appearance.',
         'settings_right_title' => 'Right',
         'settings_right_body'  => 'Logo aligned to the right edge. Useful when form fields start on the left and you want the logo out of the way.',
-        'settings_tip'   => 'Navigate to Settings from the header navigation bar. Changes take effect immediately on any form that is opened after saving.',
+        'access_body'    => 'Who can do what in Forms:',
+        'access_design_title' => 'Who can design forms',
+        'access_design_body'  => 'Settings → Access can limit designing - including choosing approvers and what happens next - to people with "Design forms" in System → Roles. Administrators always can. The tab lists who would keep designing before you switch.',
+        'access_approvers_title' => 'Approvers need no Forms access',
+        'access_approvers_body'  => 'Somebody named as a form\'s approver opens Form approvals from the launcher and decides their own requests, without seeing the designer or anybody else\'s submissions.',
+        'access_readonly_title' => 'Read only',
+        'access_readonly_body'  => 'Give a reviewer Read only access to Forms in System → Modules: they can read forms and submissions and export them, and change nothing.',
+        'settings_tip'   =>'Navigate to Settings from the header navigation bar. Changes take effect immediately on any form that is opened after saving.',
 
         // Section 7: Quick tips
         'tips_title' => 'Quick tips',

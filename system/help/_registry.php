@@ -98,6 +98,7 @@ function getHelpTopics() {
             'sections' => [
                 ['id' => 'overview',      'label' => 'What roles are for'],
                 ['id' => 'two-layers',    'label' => 'Access vs administration'],
+                ['id' => 'everyday',      'label' => 'Everyday work'],
                 ['id' => 'creating',      'label' => 'Creating a role'],
                 ['id' => 'assigning',     'label' => 'Assigning it'],
                 ['id' => 'admins',        'label' => 'Administrators'],
@@ -112,9 +113,10 @@ function getHelpTopics() {
                 ['id' => 'overview', 'label' => 'Overview'],
                 ['id' => 'matrix',   'label' => 'The access matrix'],
                 ['id' => 'effect',   'label' => 'What analysts see'],
+                ['id' => 'read-only', 'label' => 'Read only'],
                 ['id' => 'notes',    'label' => 'Good to know'],
             ],
-            'terms' => 'permissions hide show waffle licence enable disable feature',
+            'terms' => 'permissions hide show waffle licence enable disable feature read only reviewer auditor view only',
         ],
         'db-verify' => [
             'hero' => 'Database verification',

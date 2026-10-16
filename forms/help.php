@@ -457,6 +457,17 @@ $translationNamespaces = ['common', 'forms'];
                         </div>
                     </div>
 
+                    <p><?php echo htmlspecialchars(t('forms.help.access_body')); ?></p>
+
+                    <div class="help-cards cols-3">
+                        <?php foreach (['design', 'approvers', 'readonly'] as $acc): ?>
+                        <div class="help-card">
+                            <strong><?php echo htmlspecialchars(t('forms.help.access_' . $acc . '_title')); ?></strong>
+                            <span><?php echo htmlspecialchars(t('forms.help.access_' . $acc . '_body')); ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+
                     <p class="help-note"><?php echo htmlspecialchars(t('forms.help.settings_tip')); ?></p>
                 </div>
 
