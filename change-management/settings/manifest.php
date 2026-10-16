@@ -75,4 +75,14 @@ return [
             'label_key' => 'common.left_panel.tab',
         ],
     ],
+
+    // Everyday work (#180 Part 3) - not a tab. Bites only once Settings → Approvals →
+    // "Who can choose a change's approvers" is set to the permission.
+    'actions' => [
+        [
+            'cap'      => Cap::CHANGES_CHOOSE_APPROVERS,
+            'grant'    => 'Choose who approves a change: the approver, the CAB and whether it is required',
+            'restrict' => ['setting' => 'change_approval_choose_approvers', 'value' => 'permission'],
+        ],
+    ],
 ];

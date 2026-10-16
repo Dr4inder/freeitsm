@@ -20,7 +20,14 @@ if (!isset($_SESSION['analyst_id'])) {
     header('Location: ../auth/login.php');
     exit;
 }
-requireModuleAccess('forms');
+// Forms access, or named as an approver (#180 Part 3): an approver no longer needs the
+// whole Forms module to decide the requests sent to them.
+require_once '../includes/catalogue_approvals.php';
+$caConn = connectToDatabase();
+if (!catalogueApproverCanEnter($caConn, (int)$_SESSION['analyst_id'])) {
+    requireModuleAccess('forms');   // the ordinary bounce
+}
+$caFullAccess = analystCanAccessModule($caConn, (int)$_SESSION['analyst_id'], 'forms');
 
 $current_page = 'approvals';
 $path_prefix = '../';
@@ -106,10 +113,12 @@ $translationNamespaces = ['common', 'forms'];
                 <span><?php echo htmlspecialchars(t('forms.approval.filter_mine')); ?></span>
                 <span class="cnt" id="cntMine">0</span>
             </div>
+            <?php if ($caFullAccess): /* every pending request and its answers - Forms users only (#180) */ ?>
             <div class="ca-filter" data-filter="all" onclick="setFilter('all')">
                 <span><?php echo htmlspecialchars(t('forms.approval.filter_all')); ?></span>
                 <span class="cnt" id="cntAll">0</span>
             </div>
+            <?php endif; ?>
             <div class="ca-filter" data-filter="decided" onclick="setFilter('decided')">
                 <span><?php echo htmlspecialchars(t('forms.approval.filter_decided')); ?></span>
                 <span class="cnt" id="cntDecided">0</span>
@@ -162,7 +171,7 @@ $translationNamespaces = ['common', 'forms'];
                     return;
                 }
                 document.getElementById('cntMine').textContent = data.counts.mine;
-                document.getElementById('cntAll').textContent = data.counts.all;
+                if (document.getElementById('cntAll')) document.getElementById('cntAll').textContent = data.counts.all;
                 document.getElementById('cntDecided').textContent = data.counts.decided;
                 renderApprovals(data.items);
             } catch (e) {

@@ -386,6 +386,31 @@ function requireModuleAccessJson(string $moduleKey, ?PDO $conn = null): void {
 }
 
 /**
+ * Is the signed-in analyst a catalogue approver WITHOUT the Forms module (#180 Part 3)?
+ * Then the launcher and the landing page offer them Form approvals - their one way into
+ * Forms. Without this front door the approver would hold the permission and have no way
+ * to find it. The page itself checks again (catalogueApproverCanEnter()).
+ */
+function sessionIsFormApproverOnly(): bool
+{
+    static $memo = null;
+    if ($memo !== null) return $memo;
+    $memo = false;
+    $aid = (int)($_SESSION['analyst_id'] ?? 0);
+    $allowed = $_SESSION['allowed_modules'] ?? null;
+    if ($aid <= 0 || $allowed === null || in_array('forms', $allowed, true)) return $memo;   // null = every module
+    try {
+        $st = connectToDatabase()->prepare(
+            "SELECT 1 FROM forms WHERE approver_id = ? AND requires_approval = 1
+             UNION SELECT 1 FROM form_submissions WHERE approver_id = ? LIMIT 1"
+        );
+        $st->execute([$aid, $aid]);
+        $memo = (bool)$st->fetchColumn();
+    } catch (Throwable $e) { /* no door rather than a broken page */ }
+    return $memo;
+}
+
+/**
  * Fire a settings/CRUD workflow event ({entity}.{created|updated|deleted}) from a
  * UI settings endpoint, without each file having to require the workflow engine.
  * Lazily loads the engine and is fully self-safe — swallows any Throwable

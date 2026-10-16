@@ -59,6 +59,8 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('forms');
+require_once '../../includes/rbac.php';
+requireActionJson(Cap::FORMS_DESIGN);   // designing - #180; module access is enough until Forms → Settings → Access restricts it
 
 $rawBody = file_get_contents('php://input');
 $input   = json_decode($rawBody, true);

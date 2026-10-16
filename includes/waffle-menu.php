@@ -717,7 +717,14 @@ function renderWaffleMenuPanel($modules, $current_module, $path_prefix) {
                 if ($key === 'system') {
                     if (!sessionIsAdmin()) continue;
                 } elseif ($allowed !== null && !in_array($key, $allowed)) {
-                    continue;
+                    // A catalogue approver without Forms gets its approvals inbox, and only
+                    // that (#180 Part 3).
+                    if ($key === 'forms' && sessionIsFormApproverOnly()) {
+                        $module['path'] = 'forms/approvals.php';
+                        $module['name'] = htmlspecialchars(t('common.waffle.form_approvals'));
+                    } else {
+                        continue;
+                    }
                 }
             ?>
             <a href="<?php echo BASE_URL . $module['path']; ?>" class="waffle-module-link <?php echo $key === $current_module ? 'current' : ''; ?>">

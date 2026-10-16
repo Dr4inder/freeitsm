@@ -212,6 +212,7 @@ return [
         // The recent trail (#124). "Recent" rather than "History": history is a
         // record of what happened, and this is a way back to it.
         'tab_modules'  => 'Modules',
+        'form_approvals' => 'Form approvals',   // a catalogue approver without the Forms module (#180)
         'tab_recent'   => 'Recent',
         'trail_search' => 'Search your trail',
         'trail_loading' => 'Loading…',

@@ -431,8 +431,9 @@ $translationNamespaces = ['common'];
             </a>
             <?php endif; ?>
 
-            <?php if ($allowed_modules === null || in_array('forms', $allowed_modules)): ?>
-            <a href="forms/" class="module-card forms" title="<?php echo htmlspecialchars(t('common.modules.forms.description')); ?>">
+            <?php $formApproverOnly = sessionIsFormApproverOnly();   // #180: an approver without Forms gets its inbox ?>
+            <?php if ($allowed_modules === null || in_array('forms', $allowed_modules) || $formApproverOnly): ?>
+            <a href="<?php echo $formApproverOnly ? 'forms/approvals.php' : 'forms/'; ?>" class="module-card forms" title="<?php echo htmlspecialchars(t('common.modules.forms.description')); ?>">
                 <div class="module-icon forms">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -442,7 +443,7 @@ $translationNamespaces = ['common'];
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
                 </div>
-                <div class="module-name"><?php echo htmlspecialchars(t('common.modules.forms.name')); ?></div>
+                <div class="module-name"><?php echo htmlspecialchars($formApproverOnly ? t('common.waffle.form_approvals') : t('common.modules.forms.name')); ?></div>
             </a>
             <?php endif; ?>
 

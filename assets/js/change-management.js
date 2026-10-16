@@ -1483,7 +1483,8 @@ function applyApprovalEditorRules(c) {
         const st = changeStatuses.find(s => s.name === opt.value);
         opt.disabled = !!(allowed && st && !allowed.includes(parseInt(st.id)));
     });
-    const locked = !!(c && c.approval_rules && c.approval_rules.setup_locked);
+    const mayChoose = c && c.approval_rules ? c.approval_rules.can_choose_approvers !== false : window.CHG_CAN_CHOOSE_APPROVERS !== false;
+    const locked = !!(c && c.approval_rules && c.approval_rules.setup_locked) || !mayChoose;
     ['cabRequired', 'cabApprovalType', 'changeApprover', 'cabMemberSelect'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.disabled = locked;
@@ -1494,7 +1495,7 @@ function applyApprovalEditorRules(c) {
         note = document.createElement('div');
         note.id = 'approvalLockedNote';
         note.className = 'approval-note';
-        note.textContent = window.t('change-management.approval_panel.locked_note');
+        note.textContent = window.t(mayChoose ? 'change-management.approval_panel.locked_note' : 'change-management.approval.cannot_choose_approvers');
         const host = document.getElementById('cabRequired');
         if (host && host.closest('.form-group')) host.closest('.form-group').appendChild(note);
     } else if (!locked && note) {
@@ -1564,7 +1565,9 @@ async function saveChange() {
     }
 
     const changeId = document.getElementById('editChangeId').value;
-    const setupLocked = !!(changeId && currentChange && currentChange.approval_rules && currentChange.approval_rules.setup_locked);
+    const setupLocked = !!(changeId && currentChange && currentChange.approval_rules
+        && (currentChange.approval_rules.setup_locked || currentChange.approval_rules.can_choose_approvers === false))
+        || (!changeId && window.CHG_CAN_CHOOSE_APPROVERS === false);
 
     const payload = {
         id: changeId ? parseInt(changeId) : null,

@@ -532,6 +532,42 @@ $translationNamespaces = ['common', 'forms'];
             </form>
         </div>
     </div>
+        <?php if (settingsTabVisible($visibleTabs, 'access')): ?>
+        <!-- Access (#180) - who may design forms. Designing includes choosing who approves a
+             request and what happens next, so an approver role must be able to leave it out. -->
+        <?php
+            // Who would keep the ability if it were restricted now: holders of Design forms
+            // (or the Forms umbrella), and administrators. Shown BEFORE the switch, so
+            // "nobody can design forms" is seen rather than discovered.
+            $accConn = connectToDatabase();
+            $designers = [];
+            foreach ($accConn->query("SELECT id, full_name FROM analysts WHERE is_active = 1 ORDER BY full_name")->fetchAll(PDO::FETCH_ASSOC) as $an) {
+                if (analystHasCapability($accConn, (int)$an['id'], Cap::FORMS_DESIGN)) $designers[] = $an['full_name'];
+            }
+        ?>
+        <div class="tab-content<?php echo $activeTabId === 'access' ? ' active' : ''; ?>" id="access-tab" data-capability="<?php echo Cap::FORMS_ACCESS; ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('forms.settings.access_heading')); ?></h2>
+            </div>
+            <p style="color: var(--text-muted, #666); margin-bottom: 24px;"><?php echo htmlspecialchars(t('forms.settings.access_intro')); ?></p>
+            <div class="form-group">
+                <label for="designRestricted"><?php echo htmlspecialchars(t('forms.settings.design_who')); ?></label>
+                <select id="designRestricted" class="form-input" style="max-width: 420px;">
+                    <option value="0"><?php echo htmlspecialchars(t('forms.settings.design_everyone')); ?></option>
+                    <option value="1"><?php echo htmlspecialchars(t('forms.settings.design_permission')); ?></option>
+                </select>
+                <small><?php echo htmlspecialchars(t('forms.settings.design_help')); ?></small>
+            </div>
+            <div class="form-group">
+                <small><strong><?php echo htmlspecialchars(t('forms.settings.design_holders', ['count' => count($designers)])); ?></strong>
+                <?php echo htmlspecialchars(implode(', ', $designers)); ?></small>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" onclick="saveAccessSettings()"><?php echo htmlspecialchars(t('forms.settings.save')); ?></button>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <?php if (settingsTabVisible($visibleTabs, 'ai')): ?>
         <div class="tab-content<?php echo $activeTabId === 'ai' ? ' active' : ''; ?>" id="ai-tab" data-capability="<?php echo Cap::FORMS_AI; ?>">
             <div class="section-header">
@@ -591,6 +627,8 @@ $translationNamespaces = ['common', 'forms'];
                 if (data.success && data.settings) {
                     const align = data.settings.logo_alignment || 'center';
                     selectAlignment(align);
+                    const dr = document.getElementById('designRestricted');
+                    if (dr) dr.value = data.settings.design_restricted === '1' ? '1' : '0';
                 }
             } catch (e) {
                 console.error(e);
@@ -884,6 +922,22 @@ $translationNamespaces = ['common', 'forms'];
                     // sending logo_alignment as well would demand a capability this
                     // tab's owner may not have.
                     body: JSON.stringify({ settings: { collection_close_effect: value } })
+                });
+                const data = await res.json();
+                if (data.success) showToast(window.t('forms.toast.settings_saved'), 'success');
+                else showToast(window.t('forms.toast.error_prefix', { message: data.error }), 'error');
+            } catch (e) {
+                showToast(window.t('forms.toast.settings_save_failed'), 'error');
+            }
+        }
+
+        // Access tab: only its own key - the endpoint checks a capability per key.
+        async function saveAccessSettings() {
+            try {
+                const res = await fetch(API_BASE + 'save_settings.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ settings: { design_restricted: document.getElementById('designRestricted').value } })
                 });
                 const data = await res.json();
                 if (data.success) showToast(window.t('forms.toast.settings_saved'), 'success');

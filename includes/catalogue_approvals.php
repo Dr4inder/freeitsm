@@ -563,6 +563,32 @@ function catalogueSubmissionBodyHtml(PDO $conn, int $submissionId, string $formT
  *                       'decided' (recently decided by me)
  * @return array { items: [...], counts: { mine, all, decided } }
  */
+/**
+ * May this analyst open the catalogue approvals inbox (#180 Part 3)? Forms module
+ * access, OR being named as the approver of a form that needs approval or of a
+ * submission. An approver no longer has to be given the whole Forms module - the
+ * designer, every form's submissions, delete - to decide the requests sent to them.
+ *
+ * TRAP: entry only. Deciding is still catalogueApprovalDecide()'s approver_id check,
+ * and an approver without Forms never sees "All pending" (catalogue_approvals.php).
+ *
+ * @param int $analystId  the analyst
+ */
+function catalogueApproverCanEnter(PDO $conn, int $analystId): bool {
+    if ($analystId <= 0) return false;
+    if (analystCanAccessModule($conn, $analystId, 'forms')) return true;
+    try {
+        $st = $conn->prepare(
+            "SELECT 1 FROM forms WHERE approver_id = ? AND requires_approval = 1
+             UNION SELECT 1 FROM form_submissions WHERE approver_id = ? LIMIT 1"
+        );
+        $st->execute([$analystId, $analystId]);
+        return (bool)$st->fetchColumn();
+    } catch (Throwable $e) {
+        return false;
+    }
+}
+
 function catalogueApprovalsList(PDO $conn, int $analystId, string $filter = 'mine'): array {
     $base =
         "SELECT s.id, s.form_id, f.title AS form_title, s.submitted_date,

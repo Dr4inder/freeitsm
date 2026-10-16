@@ -31,6 +31,8 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('forms');
+require_once '../../includes/rbac.php';
+requireActionJson(Cap::FORMS_DESIGN);   // designing - #180; module access is enough until Forms → Settings → Access restricts it
 
 /* An image block's picture is at most this big. Deliberately well under the
    general attachment ceiling: this is drawn on every render of the form, for

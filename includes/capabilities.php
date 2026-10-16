@@ -111,6 +111,8 @@ final class Cap
     const CHANGES_TYPES      = 'changes.types';
     const CHANGES_IMPACTS    = 'changes.impacts';
     const CHANGES_APPROVALS  = 'changes.approvals';   // the approval rules (#180) - sensitive: they govern the audit trail
+    // Everyday work, not a settings tab (#180 Part 3) - see the manifest's 'actions'.
+    const CHANGES_CHOOSE_APPROVERS = 'changes.choose_approvers';
 
     // ---- Tasks -------------------------------------------------------------
     const TASKS_MANAGE     = 'tasks.manage';       // umbrella
@@ -186,6 +188,9 @@ final class Cap
     const FORMS_MANAGE = 'forms.manage';    // umbrella
     const FORMS_LAYOUT = 'forms.layout';
     const FORMS_AI     = 'forms.ai';        // AI provider + API key
+    const FORMS_ACCESS      = 'forms.access';       // who may design forms (#180)
+    // Everyday work, not a settings tab (#180 Part 3) - see the manifest's 'actions'.
+    const FORMS_DESIGN      = 'forms.design';
     const FORMS_COLLECTIONS = 'forms.collections';   // create / close collections — closing can stop forms accepting submissions
 
     // ---- Process Mapper ----------------------------------------------------
@@ -391,6 +396,24 @@ function capRegistry(): array
                 'label'     => $tab['grant'] ?? $tab['id'],
             ];
         }
+
+        // Everyday work (#180 Part 3): permissions that are not a settings tab - design a
+        // form, choose a change's approvers. Each names the module setting that makes it
+        // bite ('restrict'), because a deny-by-default permission added to an existing
+        // install would take the ability from everybody who has it today. See
+        // analystMayAct() in includes/rbac.php.
+        foreach ($m['actions'] ?? [] as $action) {
+            $cap = $action['cap'] ?? null;
+            if ($cap === null || isset($registry[$cap])) continue;
+            $registry[$cap] = [
+                'module'    => $module,
+                'umbrella'  => false,
+                'everyday'  => true,
+                'sensitive' => !empty($action['sensitive']),
+                'label'     => $action['grant'] ?? $cap,
+                'restrict'  => $action['restrict'] ?? null,   // ['setting' => key, 'value' => v]; null = always restricted
+            ];
+        }
     }
     return $registry;
 }
@@ -552,11 +575,14 @@ function capGroups(): array
         $caps = capsForModule($module);
         if (!$caps) continue;
 
-        // Umbrella first, then the rest alphabetically — a stable, readable order.
+        // Umbrella first, then everyday work, then the settings tabs alphabetically — a
+        // stable, readable order, and the everyday permissions where a role-builder looks.
         $umbrella = capUmbrella($module);
         usort($caps, function ($a, $b) use ($umbrella) {
             if ($a === $umbrella) return -1;
             if ($b === $umbrella) return 1;
+            $ea = capIsEveryday($a); $eb = capIsEveryday($b);
+            if ($ea !== $eb) return $ea ? -1 : 1;
             return strcmp($a, $b);
         });
 
@@ -566,6 +592,7 @@ function capGroups(): array
                 'label'     => capLabel($key),
                 'sensitive' => capIsSensitive($key),
                 'umbrella'  => $key === $umbrella,
+                'everyday'  => capIsEveryday($key),
             ];
         }
         $groups[$module] = ['label' => $moduleLabel, 'capabilities' => $entries];
@@ -646,6 +673,27 @@ function capSelfCheck(): array
     }
 
     return $problems;
+}
+
+/**
+ * Is this an everyday-work permission (a manifest 'action') rather than a settings tab?
+ *
+ * @param string $key  a capability key
+ */
+function capIsEveryday(string $key): bool
+{
+    return (bool) (capRegistry()[$key]['everyday'] ?? false);
+}
+
+/**
+ * The switch that makes an everyday-work permission bite: ['setting' => key,
+ * 'value' => the value meaning "restricted"], or null when it always applies.
+ *
+ * @param string $key  an everyday-work capability key
+ */
+function capActionRestriction(string $key): ?array
+{
+    return capRegistry()[$key]['restrict'] ?? null;
 }
 
 /**

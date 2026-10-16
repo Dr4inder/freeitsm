@@ -38,6 +38,7 @@ require_once __DIR__ . '/../service_context.php';
 require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/../changes/approvals.php';
 require_once __DIR__ . '/../changes/revisions.php';
+require_once __DIR__ . '/../rbac.php';   // analystMayAct() - "Choose approvers" (#180 Part 3)
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 
 class ChangesService
@@ -117,6 +118,12 @@ class ChangesService
         $riskLevel = self::riskLevel($riskScore);
 
         $cabRequired = !empty($in['cab_required']) ? 1 : 0;
+        // "Choose approvers" (#180 Part 3): where Settings restricts it, somebody without
+        // the permission can still raise a change - with nobody chosen to approve it.
+        if (($cabRequired || $people['approver_id'] !== null)
+            && !analystMayAct($conn, $actorId, Cap::CHANGES_CHOOSE_APPROVERS)) {
+            throw new ServiceError('forbidden', 'forbidden', t('change-management.approval.cannot_choose_approvers'));
+        }
         $cabType = $in['cab_approval_type'] ?? 'all';
         if (!in_array($cabType, ['all', 'majority'], true)) {
             $cabType = 'all';
@@ -425,20 +432,23 @@ class ChangesService
             return []; // idempotent — nothing to write
         }
 
-        // ---- Enforce mode (#180 Part 1 §9, §10) ----------------------------------
+        // ---- Who approves (#180 Part 1 §9, Part 3) --------------------------------
         $cfg = changeApprovalSettings($conn);
         $targetStage = $newStatusId !== null ? self::stageOf($conn, $newStatusId) : $oldStage;
+        $setupTouched =
+            (array_key_exists('cab_required', $in) && (!empty($in['cab_required']) ? 1 : 0) !== (int)$current['cab_required'])
+            || (array_key_exists('cab_approval_type', $in)
+                && (in_array($in['cab_approval_type'], ['all', 'majority'], true) ? $in['cab_approval_type'] : 'all') !== $current['cab_approval_type'])
+            || (array_key_exists('approver_id', $in)
+                && (($in['approver_id'] === '' || $in['approver_id'] === null) ? null : (int)$in['approver_id'])
+                   !== ($current['approver_id'] !== null ? (int)$current['approver_id'] : null));
+        if ($setupTouched && !analystMayAct($conn, $actorId, Cap::CHANGES_CHOOSE_APPROVERS)) {
+            throw new ServiceError('forbidden', 'forbidden', t('change-management.approval.cannot_choose_approvers'));
+        }
         if ($cfg['enforce']) {
             // The approval set-up is fixed once submitted: changing who approves after
             // the votes have started is a way round the vote. Withdrawing to Draft in
             // the same save is how it is changed.
-            $setupTouched =
-                (array_key_exists('cab_required', $in) && (!empty($in['cab_required']) ? 1 : 0) !== (int)$current['cab_required'])
-                || (array_key_exists('cab_approval_type', $in)
-                    && (in_array($in['cab_approval_type'], ['all', 'majority'], true) ? $in['cab_approval_type'] : 'all') !== $current['cab_approval_type'])
-                || (array_key_exists('approver_id', $in)
-                    && (($in['approver_id'] === '' || $in['approver_id'] === null) ? null : (int)$in['approver_id'])
-                       !== ($current['approver_id'] !== null ? (int)$current['approver_id'] : null));
             if ($setupTouched && $oldStage !== 'draft' && $oldStage !== null && $targetStage !== 'draft') {
                 throw new ServiceError('conflict', 'approval_locked', t('change-management.approval.locked'));
             }
@@ -874,6 +884,9 @@ class ChangesService
         // could add themselves as the only required member and approve by vote).
         if (changeApprovalSettings($conn)['enforce'] && $row['status_stage'] !== 'draft' && $row['status_stage'] !== null) {
             throw new ServiceError('conflict', 'approval_locked', t('change-management.approval.locked'));
+        }
+        if (!analystMayAct($conn, $actorId, Cap::CHANGES_CHOOSE_APPROVERS)) {
+            throw new ServiceError('forbidden', 'forbidden', t('change-management.approval.cannot_choose_approvers'));
         }
 
         if (!is_array($members)) {

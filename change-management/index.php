@@ -564,7 +564,9 @@ $translationNamespaces = ['common', 'change-management'];
         window.openCreateOnLoad = true;
         <?php endif; ?>
     </script>
-    <script>window.CHG_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.CHG_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
+    <script>window.CHG_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.CHG_BASE = <?php echo json_encode(BASE_URL); ?>;
+        // "Choose approvers" (#180): comfort for the editor; ChangesService enforces it.
+        window.CHG_CAN_CHOOSE_APPROVERS = <?php require_once __DIR__ . '/../includes/rbac.php'; echo analystMayAct(connectToDatabase(), (int)$_SESSION['analyst_id'], Cap::CHANGES_CHOOSE_APPROVERS) ? 'true' : 'false'; ?>;</script>
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/safe-html.js?v=2"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/change-revisions.js?v=3"></script>

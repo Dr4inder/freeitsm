@@ -117,6 +117,7 @@ try {
     // back with a vote, every round with its votes, and the rules that decide what the
     // page offers. The rules here are comfort; ChangesService enforces them.
     require_once '../../includes/changes/approvals.php';
+    require_once '../../includes/rbac.php';
     $cfg = changeApprovalSettings($conn);
     $rawStmt = $conn->prepare("SELECT * FROM changes WHERE id = ?");
     $rawStmt->execute([$changeId]);
@@ -133,6 +134,7 @@ try {
         // Enforce: the approval set-up is fixed once submitted (the editor shows it read-only).
         'setup_locked'     => $cfg['enforce'] && $change['status_stage'] !== 'draft' && $change['status_stage'] !== null,
         'override_allowed' => $cfg['override'] && $isAdmin,
+        'can_choose_approvers' => analystMayAct($conn, (int)$_SESSION['analyst_id'], Cap::CHANGES_CHOOSE_APPROVERS),
         'material'         => $cfg['material'],
     ];
     // The statuses the guard would accept from here (comfort: the guard enforces it).

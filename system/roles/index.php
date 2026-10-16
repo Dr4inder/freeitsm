@@ -80,6 +80,7 @@ $capabilityGroups = capGroups();   // generated from the registry — add a Cap:
         .rl-check { display: flex; align-items: flex-start; gap: 9px; padding: 5px 0; font-size: 13.5px; color: var(--text, #374151); line-height: 1.45; }
         .rl-check input { margin-top: 2px; flex-shrink: 0; }
         /* The umbrella ("manage everything in this module") reads as the headline choice. */
+        .rl-cap-subhead { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted, #6b7280); margin: 8px 0 2px; }
         .rl-cap-umbrella { font-weight: 600; padding-bottom: 7px; margin-bottom: 3px; border-bottom: 1px dashed var(--border, #e5e7eb); }
         /* Sensitive = reaches credentials, email or money. Badge it; granting it should make you pause. */
         .rl-cap-sensitive { display: inline-block; margin-left: 5px; padding: 1px 6px; border-radius: 9px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; vertical-align: 1px;
@@ -198,7 +199,7 @@ $capabilityGroups = capGroups();   // generated from the registry — add a Cap:
     </script>
     <script src="../../assets/js/toast.js"></script>
     <script src="../../assets/js/confirm.js"></script>
-    <script src="../../assets/js/system-roles.js?v=2"></script>
+    <script src="../../assets/js/system-roles.js?v=3"></script>
     <script src="../../assets/js/mobile.js?v=78"></script>
 </body>
 </html>

@@ -35,6 +35,7 @@ require_once __DIR__ . '/../form_logic.php';
 // REFUSES the very record it had just offered. Two halves of one rule cannot be
 // allowed to disagree depending on who included what.
 require_once __DIR__ . '/../tenancy.php';
+require_once __DIR__ . '/../rbac.php';   // analystMayAct() - "Design forms" (#180 Part 3)
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 
 class FormsService
@@ -969,8 +970,22 @@ class FormsService
      * @param array $in  id (absent = new), title, description, is_active, is_portal_visible, requires_approval, approver_id,
      *     submission_actions, collection_id, fields - on update only keys sent are changed
      */
+    /**
+     * Designing a form - including who approves it and what happens next - needs "Design
+     * forms" once Forms → Settings → Access restricts it (#180 Part 3). Until then, as
+     * before, module access is enough. TRAP: in the service as well as the endpoints, so
+     * an API key acting as an analyst who may not design is refused too.
+     */
+    private static function guardDesign(PDO $conn, ActorContext $ctx): void
+    {
+        if (!analystMayAct($conn, $ctx->actorId, Cap::FORMS_DESIGN)) {
+            throw new ServiceError('forbidden', 'forbidden', 'Designing forms needs the "Design forms" permission.');
+        }
+    }
+
     public static function saveForm(PDO $conn, ActorContext $ctx, array $in): array
     {
+        self::guardDesign($conn, $ctx);
         if (!empty($in['id'])) {
             $formId  = (int)$in['id'];
             $current = self::loadFormRow($conn, $formId);      // 404 if gone
@@ -1093,6 +1108,7 @@ class FormsService
      */
     public static function deleteForm(PDO $conn, ActorContext $ctx, int $id, bool $chain = false): array
     {
+        self::guardDesign($conn, $ctx);
         $current = self::loadFormRow($conn, $id);              // 404 if gone
 
         if ($chain) {
@@ -1236,6 +1252,7 @@ class FormsService
      */
     public static function createVersion(PDO $conn, ActorContext $ctx, int $parentId): array
     {
+        self::guardDesign($conn, $ctx);
         if ($parentId <= 0) {
             throw new ServiceError('validation', 'missing_field', 'parent_form_id is required');
         }

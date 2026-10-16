@@ -399,6 +399,7 @@ return [
         'override_admin_only' => 'Only an administrator can approve by override.',
         'override_reason_required' => 'Give a reason for the override. It goes on the record.',
         'material_edit_confirm' => 'Saving this will withdraw the approval and send the change back for approval.',
+        'cannot_choose_approvers' => 'Choosing a change\'s approvers needs the "Choose approvers" permission. Ask a change manager to set the approver or the CAB.',
     ],
 
     // The Approval panel on a change (#180).
