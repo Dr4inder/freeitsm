@@ -14,7 +14,6 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
-| 2385 | Change Management | Fix | Security: the status, type and priority badges in the change list, the impact in the change detail view, and the status filter on the change calendar showed the names set in Change Management settings unescaped, so somebody allowed to edit those settings could plant script that ran for every Change Management user; all are now escaped, and the calendar filter passes the name through a data attribute (which also fixes a status name containing an apostrophe breaking the filter). |
 
 
 
@@ -1168,6 +1167,12 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 317 | Tasks             | Fix         | **Drag-reorder drop indicator invisible in scrolling board columns.** The purple line that shows where a dragged card will land vanished whenever its column had enough cards to scroll. Cause: `.board-cards` is a `flex-direction:column` container and the `.drop-indicator` is an empty `<div>` &mdash; so its min-content height is 0, and when the column overflowed, flexbox's `flex-shrink` compressed the indicator to 0px (the cards resist because their text gives them a min-content height; the empty indicator does not). Fixed by adding `flex-shrink:0` to `.drop-indicator` (and to `.task-card` for good measure, so cards can never be squished either). `tasks.css` bumped to `?v=6`. |
 
 ## Published
+
+### 3.8.1 - 17 October 2026
+
+| ID   | Module            | Type        | Description |
+|------|-------------------|-------------|-------------|
+| 2385 | Change Management | Fix | Security: the status, type and priority badges in the change list, the impact in the change detail view, and the status filter on the change calendar showed the names set in Change Management settings unescaped, so somebody allowed to edit those settings could plant script that ran for every Change Management user; all are now escaped, and the calendar filter passes the name through a data attribute (which also fixes a status name containing an apostrophe breaking the filter). |
 
 ### 3.8.0 - 17 October 2026
 
