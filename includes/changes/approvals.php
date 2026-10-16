@@ -109,6 +109,27 @@ function changeStagesMissingMessage(array $stages): string
 }
 
 /**
+ * Where Cancel moves a change: the Stopped-stage status chosen in Settings → Approvals,
+ * if it is still active, else the LAST active one by display order. Last, not first:
+ * the stage cannot tell "Rejected" from "Cancelled", and on a seeded install Rejected
+ * comes first - a cancelled change must not read as rejected.
+ *
+ * @param array $cfg  changeApprovalSettings()
+ */
+function changeCancelTarget(PDO $conn, array $cfg): ?array
+{
+    if ($cfg['cancel_status_id']) {
+        $s = $conn->prepare("SELECT id, name FROM change_statuses WHERE id = ? AND is_active = 1 AND stage = 'stopped'");
+        $s->execute([$cfg['cancel_status_id']]);
+        $r = $s->fetch(PDO::FETCH_ASSOC);
+        if ($r) return ['id' => (int)$r['id'], 'name' => $r['name']];
+    }
+    $r = $conn->query("SELECT id, name FROM change_statuses WHERE stage = 'stopped' AND is_active = 1 ORDER BY display_order DESC, id DESC LIMIT 1")
+              ->fetch(PDO::FETCH_ASSOC);
+    return $r ? ['id' => (int)$r['id'], 'name' => $r['name']] : null;
+}
+
+/**
  * Classify every status that has no stage but still carries a seeded name. Called by
  * Database Verify on every run - idempotent, and it never overrides a stage somebody
  * chose. A renamed or custom status stays NULL for an administrator to decide.
@@ -142,6 +163,7 @@ const CHANGE_APPROVAL_DEFAULTS = [
     'change_approval_override'         => '0',           // administrator override with a written reason
     'change_approval_material_fields'  => 'description,reason_for_change,risk_evaluation,risk_likelihood,risk_impact_score,test_plan,rollback_plan,change_type_id,impact_id',
     'change_approval_reject_status_id' => '',            // '' = the first draft-stage status (today)
+    'change_approval_cancel_status_id' => '',            // '' = the LAST stopped-stage status (Cancelled on a seeded install)
     'change_approval_choose_approvers' => 'anyone',      // anyone | permission
     'change_approval_edit_after'       => 'keep',        // Record mode: keep (and mark) | withdraw
     'change_approval_stale_vote'       => 'record',      // Record mode: record (and mark) | refuse
@@ -208,6 +230,7 @@ function changeApprovalSettings(PDO $conn, bool $fresh = false): array
         'override'          => $raw['change_approval_override'] === '1',
         'material'          => $list($raw['change_approval_material_fields'], array_keys(CHANGE_MATERIAL_CHOICES)),
         'reject_status_id'  => ctype_digit($raw['change_approval_reject_status_id']) ? (int)$raw['change_approval_reject_status_id'] : null,
+        'cancel_status_id'  => ctype_digit($raw['change_approval_cancel_status_id']) ? (int)$raw['change_approval_cancel_status_id'] : null,
         'choose_approvers'  => $pick($raw['change_approval_choose_approvers'], ['anyone', 'permission'], 'anyone'),
         'edit_after'        => $pick($raw['change_approval_edit_after'], ['keep', 'withdraw'], 'keep'),
         'stale_vote'        => $pick($raw['change_approval_stale_vote'], ['record', 'refuse'], 'record'),

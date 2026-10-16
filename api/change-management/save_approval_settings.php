@@ -65,6 +65,17 @@ try {
     }
     $values['change_approval_reject_status_id'] = $reject === '' ? '' : (string)(int)$reject;
 
+    // Where Cancel goes: blank (the last Stopped-stage status) or an active Stopped one.
+    $cancel = (string)($in['cancel_status_id'] ?? '');
+    if ($cancel !== '') {
+        $s = $conn->prepare("SELECT id FROM change_statuses WHERE id = ? AND is_active = 1 AND stage = 'stopped'");
+        $s->execute([(int)$cancel]);
+        if (!$s->fetchColumn()) {
+            throw new Exception(t('change-management.approval_settings.cancel_status_invalid'));
+        }
+    }
+    $values['change_approval_cancel_status_id'] = $cancel === '' ? '' : (string)(int)$cancel;
+
     if ($values['change_approval_mode'] === 'enforce') {
         $blockers = changeApprovalEnforceBlockers($conn);
         if ($blockers) {

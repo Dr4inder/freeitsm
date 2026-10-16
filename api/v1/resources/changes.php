@@ -56,7 +56,7 @@ function apiChangeNumber(int $id): string {
 function apiChangeSelect(): string {
     return "SELECT c.*,
                    ct.name AS type_name,
-                   cs.name AS status_name, cs.is_closed AS status_is_closed,
+                   cs.name AS status_name, cs.stage AS status_stage, cs.is_closed AS status_is_closed,
                    cp.name AS priority_name,
                    ci.name AS impact_name,
                    cc.name AS category_name,
@@ -99,7 +99,8 @@ function apiSerializeChange(array $r): array {
         'company'       => $rel($r['tenant_id'], $r['company_name']),
         'title'         => $r['title'],
         'change_type'   => $rel($r['change_type_id'], $r['type_name']),
-        'status'        => $rel($r['status_id'], $r['status_name'], ['is_closed' => (bool)($r['status_is_closed'] ?? false)]),
+        // stage (#180) is what approvals go by - a status can be renamed, its stage cannot drift.
+        'status'        => $rel($r['status_id'], $r['status_name'], ['is_closed' => (bool)($r['status_is_closed'] ?? false), 'stage' => $r['status_stage'] ?? null]),
         'priority'      => $rel($r['priority_id'], $r['priority_name']),
         'impact'        => $rel($r['impact_id'], $r['impact_name']),
         'category'      => $category,
@@ -289,6 +290,12 @@ function apiChangesGet(PDO $conn, array $apiKey, array $params, array $body): vo
     $change['risk']['evaluation'] = $r['risk_evaluation'];
     $change['test_plan']          = $r['test_plan'];
     $change['rollback_plan']      = $r['rollback_plan'];
+    // The approval (#180): the current round, and current_version - the fingerprint a
+    // vote or decision must send back as content_hash, so it names what was read.
+    require_once dirname(__DIR__, 3) . '/includes/changes/approvals.php';
+    $raw = $conn->prepare("SELECT * FROM changes WHERE id = ?");
+    $raw->execute([(int)$params[0]]);
+    $change['approval'] = changeApprovalLiveState($conn, $raw->fetch(PDO::FETCH_ASSOC), changeApprovalSettings($conn));
     $change['pir'] = [
         'review'          => $r['post_implementation_review'],
         'was_successful'  => $r['pir_was_successful'] === null ? null : (bool)$r['pir_was_successful'],
@@ -485,6 +492,68 @@ function apiChangeCabSave(PDO $conn, array $apiKey, array $params, array $body):
     apiChangeCabGet($conn, $apiKey, $params, $body);
 }
 
+/**
+ * GET /changes/{id}/approvals - every approval round of a change (#180), oldest first,
+ * each with its route, state, who decided and when, its snapshot (the material values
+ * and, for long text, the revision ids it was given) and every vote, with whether it
+ * counted and whether it was cast against the current version.
+ */
+function apiChangeApprovalsList(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiLoadChange($conn, $apiKey, (int)$params[0]);   // 404 outside the key's companies
+    require_once dirname(__DIR__, 3) . '/includes/changes/approvals.php';
+    apiRespond(changeApprovalRounds($conn, (int)$params[0]));
+}
+
+/**
+ * POST /changes/{id}/approval/decide - the named approver approves or rejects, as the
+ * analyst this key acts as. approval_id + content_hash (from GET /changes/{id}) name
+ * what was read; required where the approval rules refuse out-of-date decisions.
+ */
+function apiChangeApprovalDecide(PDO $conn, array $apiKey, array $params, array $body): void {
+    try {
+        $res = ChangesService::decideApproval($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $body);
+    } catch (ServiceError $e) { apiFailFromService($e); }
+    apiRespond($res, 201);
+}
+
+/** POST /changes/{id}/cancel - to the first Stopped-stage status, keeping every record (#180). */
+function apiChangesCancel(PDO $conn, array $apiKey, array $params, array $body): void {
+    try {
+        ChangesService::cancelChange($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $body);
+    } catch (ServiceError $e) { apiFailFromService($e); }
+    apiChangesGet($conn, $apiKey, $params, $body);
+}
+
+/**
+ * GET /changes/{id}/revisions - every saved version of the long-text fields (#180),
+ * newest first, WITHOUT content (?field=test_plan to filter).
+ */
+function apiChangeRevisionsList(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiLoadChange($conn, $apiKey, (int)$params[0]);
+    require_once dirname(__DIR__, 3) . '/includes/changes/revisions.php';
+    $field = isset($_GET['field']) && $_GET['field'] !== '' ? (string)$_GET['field'] : null;
+    if ($field !== null && !isset(ChangeRevisions::FIELDS[$field]) && $field !== 'comment') {
+        apiError(400, 'invalid_parameter', "Unknown field: {$field}");
+    }
+    $out = array_map(function ($r) {
+        $r['created_at'] = apiIsoDate($r['created_at']);
+        return $r;
+    }, ChangeRevisions::listFor($conn, (int)$params[0], $field));
+    apiRespond($out);
+}
+
+/** GET /changes/{id}/revisions/{revision_id} - one revision with its full content. */
+function apiChangeRevisionGet(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiLoadChange($conn, $apiKey, (int)$params[0]);
+    require_once dirname(__DIR__, 3) . '/includes/changes/revisions.php';
+    $rev = ChangeRevisions::get($conn, (int)$params[0], (int)$params[1]);
+    if ($rev === null) {
+        apiError(404, 'not_found', 'Revision not found.');
+    }
+    $rev['created_at'] = apiIsoDate($rev['created_at']);
+    apiRespond($rev);
+}
+
 /** POST /changes/{id}/cab/vote — the key's acts-as analyst votes; mirrors submit_cab_vote.php. */
 function apiChangeCabVote(PDO $conn, array $apiKey, array $params, array $body): void {
     try {
@@ -499,7 +568,7 @@ function apiChangeCabVote(PDO $conn, array $apiKey, array $params, array $body):
 // @param string $table  the change lookup table to list (change_statuses, change_types ...) - fixed by the caller, never input
 // @param bool $hasIsClosed  true to include the table's is_closed column (change_statuses only)
 function apiChangeLookupList(PDO $conn, string $table, bool $hasIsClosed = false): void {
-    $cols = 'id, name, colour, is_default, is_active' . ($hasIsClosed ? ', is_closed' : '');
+    $cols = 'id, name, colour, is_default, is_active' . ($hasIsClosed ? ', is_closed, stage' : '');
     $rows = $conn->query("SELECT $cols FROM `$table` ORDER BY display_order, name")->fetchAll(PDO::FETCH_ASSOC);
     apiRespond(array_map(function ($r) use ($hasIsClosed) {
         $out = [
@@ -511,6 +580,7 @@ function apiChangeLookupList(PDO $conn, string $table, bool $hasIsClosed = false
         ];
         if ($hasIsClosed) {
             $out['is_closed'] = (bool)$r['is_closed'];
+            $out['stage']     = $r['stage'];   // #180: draft|awaiting|approved|implementing|done|stopped, null = not classified
         }
         return $out;
     }, $rows));

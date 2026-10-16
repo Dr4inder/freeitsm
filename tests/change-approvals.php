@@ -327,7 +327,8 @@ try {
     ChangesService::deleteChange($conn, $ctx1, $id8);
     ok('POSITIVE CONTROL: a never-submitted draft still can', !zzChange($conn, $id8));
     ChangesService::cancelChange($conn, $ctx1, $id5, ['reason' => 'ZZ no longer needed']);
-    ok('Cancel moves it to a stopped-stage status instead', zzChange($conn, $id5)['status_stage'] === 'stopped');
+    $lastStopped = (int)$conn->query("SELECT id FROM change_statuses WHERE stage = 'stopped' AND is_active = 1 ORDER BY display_order DESC, id DESC LIMIT 1")->fetchColumn();
+    ok('Cancel moves it to the LAST stopped-stage status (Cancelled, not Rejected)', (int)zzChange($conn, $id5)['status_id'] === $lastStopped, zzChange($conn, $id5)['status_name'] ?? '');
     ok('and keeps every round', count($rounds($id5)) === 3);
     zzSettingRestore($conn);
     changeApprovalSettings($conn, true);

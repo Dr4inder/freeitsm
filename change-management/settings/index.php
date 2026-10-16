@@ -469,6 +469,12 @@ $translationNamespaces = ['common', 'change-management'];
                 </fieldset>
 
                 <fieldset class="ar-group">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.cancel')); ?></legend>
+                    <select id="arCancelStatus"></select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.cancel_help')); ?></span>
+                </fieldset>
+
+                <fieldset class="ar-group">
                     <legend><?php echo htmlspecialchars(t('change-management.approval_settings.choose')); ?></legend>
                     <select id="arChooseApprovers">
                         <option value="anyone"><?php echo htmlspecialchars(t('change-management.approval_settings.choose_anyone')); ?></option>
@@ -665,6 +671,11 @@ $translationNamespaces = ['common', 'change-management'];
                     + data.statuses.filter(st => st.is_active && (st.stage === 'draft' || st.stage === 'stopped'))
                         .map(st => `<option value="${st.id}">${escapeHtml(st.name)}</option>`).join('');
                 rej.value = s.reject_status_id ? String(s.reject_status_id) : '';
+                const can = document.getElementById('arCancelStatus');
+                can.innerHTML = `<option value="">${escapeHtml(window.t('change-management.approval_settings.cancel_default'))}</option>`
+                    + data.statuses.filter(st => st.is_active && st.stage === 'stopped')
+                        .map(st => `<option value="${st.id}">${escapeHtml(st.name)}</option>`).join('');
+                can.value = s.cancel_status_id ? String(s.cancel_status_id) : '';
                 const blockers = data.enforce_blockers || [];
                 const box = document.getElementById('arEnforceBlockers');
                 box.style.display = blockers.length ? '' : 'none';
@@ -692,6 +703,7 @@ $translationNamespaces = ['common', 'change-management'];
                 stale_vote: document.getElementById('arStaleVote').value,
                 delete_submitted: document.getElementById('arDeleteSubmitted').value,
                 reject_status_id: document.getElementById('arRejectStatus').value,
+                cancel_status_id: document.getElementById('arCancelStatus').value,
                 choose_approvers: document.getElementById('arChooseApprovers').value
             };
             try {

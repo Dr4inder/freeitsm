@@ -145,6 +145,19 @@ function apiV1PermissionCatalog(): array {
                 'vote'   => 'Cast a CAB vote as the analyst this key acts as',
             ],
         ],
+        'change_approvals' => [
+            'label'   => 'Change approvals',
+            'actions' => [
+                'read'   => 'Read every approval round of a change, with its snapshot and votes',
+                'decide' => 'Approve or reject a change as its named approver (the analyst this key acts as)',
+            ],
+        ],
+        'change_revisions' => [
+            'label'   => 'Change text history',
+            'actions' => [
+                'read' => 'Read every saved version of a change\'s long-text fields, in full',
+            ],
+        ],
         'knowledge' => [
             'label'   => 'Knowledge base',
             'actions' => [

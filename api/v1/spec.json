@@ -2542,7 +2542,7 @@
                     "p": "\/changes\/{id}",
                     "perm": "changes.read",
                     "s": "Get one change",
-                    "d": "Full detail: all plan bodies, risk evaluation, PIR block, the attachments list and any linked problems.",
+                    "d": "Full detail: all plan bodies, risk evaluation, PIR block, the attachments list and any linked problems. approval (#180) is the current approval round - id, round_no, route, state, is_independent, content_changed (the content moved on since the round opened) - and current_version, the fingerprint a vote or decision sends back as content_hash. status.stage is the stage of the status (draft, awaiting, approved, implementing, done, stopped).",
                     "params": [
                         {
                             "name": "id",
@@ -2666,7 +2666,7 @@
                     "p": "\/changes\/{id}",
                     "perm": "changes.delete",
                     "s": "Delete a change",
-                    "d": "Permanently deletes the change, its attachment files, and all children (comments, CAB, audit) — same as the UI. No restore.",
+                    "d": "Permanently deletes the change, its attachment files, and all children (comments, CAB, audit) — same as the UI. No restore. A change that has ever been submitted for approval is refused with 409 change_has_approval_history where the approval rules keep such changes (always in Enforce mode) - cancel it instead (POST \/changes\/{id}\/cancel).",
                     "params": [
                         {
                             "name": "id",
@@ -2685,6 +2685,13 @@
                                 "path": {
                                     "id": "7"
                                 }
+                            }
+                        ],
+                        "errors": [
+                            {
+                                "code": 409,
+                                "slug": "change_has_approval_history",
+                                "when": "The change has approval records and the approval rules do not allow deleting it."
                             }
                         ]
                     }
@@ -2987,7 +2994,7 @@
                     "p": "\/changes\/{id}\/cab\/vote",
                     "perm": "change_cab.vote",
                     "s": "Cast a CAB vote",
-                    "d": "Votes as the analyst this key acts as — they must be an un-voted CAB member. Mirrors the UI exactly: any required Reject sends the change back to Draft; when the all\/majority threshold of required members approves, the change auto-moves to Approved (approval timestamp set, workflow event fired).",
+                    "d": "Votes as the analyst this key acts as — they must be an un-voted CAB member. Mirrors the UI exactly: any required Reject sends the change back to Draft; when the all\/majority threshold of required members approves, the change auto-moves to Approved (approval timestamp set, workflow event fired). Since #180 a vote needs an open approval round, and records the version it was cast against: send approval_id and content_hash from GET \/changes\/{id} (approval.id, approval.current_version). Optional in Record mode (a vote without them is stored as \"version not stated\"); required where the approval rules refuse out-of-date votes, which refuse a vote against an edited change with 409 approval_stale. new_status is the name of the status it moved to.",
                     "params": [
                         {
                             "name": "id",
@@ -3005,6 +3012,18 @@
                             "name": "comment",
                             "in": "body",
                             "desc": "Optional vote comment",
+                            "req": false
+                        },
+                        {
+                            "name": "approval_id",
+                            "in": "body",
+                            "desc": "approval.id from GET \/changes\/{id}",
+                            "req": false
+                        },
+                        {
+                            "name": "content_hash",
+                            "in": "body",
+                            "desc": "approval.current_version from GET \/changes\/{id}",
                             "req": false
                         }
                     ],
@@ -3064,9 +3083,254 @@
                                 "code": 409,
                                 "slug": "conflict",
                                 "when": "This CAB member has already voted on this change."
+                            },
+                            {
+                                "code": 409,
+                                "slug": "not_awaiting_approval",
+                                "when": "The change has no open approval round."
+                            },
+                            {
+                                "code": 409,
+                                "slug": "approval_stale",
+                                "when": "The change was edited (or its round replaced) since the version named."
+                            },
+                            {
+                                "code": 400,
+                                "slug": "missing_field",
+                                "when": "approval_id \/ content_hash are required by the approval rules and were not sent."
                             }
                         ]
                     }
+                },
+                {
+                    "m": "GET",
+                    "p": "\/changes\/{id}\/approvals",
+                    "perm": "change_approvals.read",
+                    "s": "Approval rounds",
+                    "d": "Every approval round of the change, oldest first: route (cab, approver, manual, emergency, override, pre_authorised, legacy), state (open, approved, rejected, withdrawn, superseded), who opened and decided it and when, whether the decision was independent, its snapshot (the material values and, for long text, the revision ids it was given) and every vote with is_counted and was_current.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Change id",
+                            "req": true
+                        }
+                    ],
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "Every round",
+                                "note": "The full approval history - approved, edited, re-approved.",
+                                "path": {
+                                    "id": "7"
+                                }
+                            }
+                        ]
+                    },
+                    "section": "Change comments, history & CAB",
+                    "slug": "get-changes-id-approvals"
+                },
+                {
+                    "m": "POST",
+                    "p": "\/changes\/{id}\/approval\/decide",
+                    "perm": "change_approvals.decide",
+                    "s": "Decide as the named approver",
+                    "d": "The analyst this key acts as, who must be the change's named approver, approves or rejects a change awaiting their decision. Send approval_id and content_hash from GET \/changes\/{id} (approval.id, approval.current_version) so the decision names what was read; where the approval rules refuse out-of-date decisions they are required, and a decision against an edited change is refused with 409 approval_stale.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Change id",
+                            "req": true
+                        },
+                        {
+                            "name": "decision",
+                            "in": "body",
+                            "desc": "approve or reject",
+                            "req": true
+                        },
+                        {
+                            "name": "note",
+                            "in": "body",
+                            "desc": "Optional note for the record",
+                            "req": false
+                        },
+                        {
+                            "name": "approval_id",
+                            "in": "body",
+                            "desc": "approval.id from GET \/changes\/{id}",
+                            "req": false
+                        },
+                        {
+                            "name": "content_hash",
+                            "in": "body",
+                            "desc": "approval.current_version from GET \/changes\/{id}",
+                            "req": false
+                        }
+                    ],
+                    "body": {
+                        "decision": "approve",
+                        "note": "Rollback plan reviewed.",
+                        "approval_id": 12,
+                        "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                    },
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "Approve",
+                                "note": "Naming the version that was read.",
+                                "path": {
+                                    "id": "7"
+                                },
+                                "body": {
+                                    "decision": "approve",
+                                    "approval_id": 12,
+                                    "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                                }
+                            }
+                        ],
+                        "errors": [
+                            {
+                                "code": 403,
+                                "slug": "forbidden",
+                                "when": "The analyst this key acts as is not the change's named approver."
+                            },
+                            {
+                                "code": 403,
+                                "slug": "not_independent",
+                                "when": "Enforce mode, and the approver is one of the change's own people."
+                            },
+                            {
+                                "code": 409,
+                                "slug": "not_awaiting_approval",
+                                "when": "The change has no open round."
+                            },
+                            {
+                                "code": 409,
+                                "slug": "approval_stale",
+                                "when": "The change was edited (or its round replaced) since the version named."
+                            },
+                            {
+                                "code": 400,
+                                "slug": "missing_field",
+                                "when": "approval_id \/ content_hash are required by the approval rules and were not sent."
+                            }
+                        ]
+                    },
+                    "section": "Change comments, history & CAB",
+                    "slug": "post-changes-id-approval-decide"
+                },
+                {
+                    "m": "POST",
+                    "p": "\/changes\/{id}\/cancel",
+                    "perm": "changes.update",
+                    "s": "Cancel a change",
+                    "d": "Moves the change to the first active status in the Stopped stage and withdraws any open approval round, keeping every record. What a change with approval history gets instead of DELETE where the approval rules (and always Enforce mode) refuse to delete it. Returns the change.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Change id",
+                            "req": true
+                        },
+                        {
+                            "name": "reason",
+                            "in": "body",
+                            "desc": "Why, for the record",
+                            "req": false
+                        }
+                    ],
+                    "body": {
+                        "reason": "Superseded by CHG-0012."
+                    },
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "Cancel with a reason",
+                                "note": "The change closes; its approvals, votes and history stay.",
+                                "path": {
+                                    "id": "7"
+                                },
+                                "body": {
+                                    "reason": "Superseded by CHG-0012."
+                                }
+                            }
+                        ]
+                    },
+                    "section": "Change comments, history & CAB",
+                    "slug": "post-changes-id-cancel"
+                },
+                {
+                    "m": "GET",
+                    "p": "\/changes\/{id}\/revisions",
+                    "perm": "change_revisions.read",
+                    "s": "Text history",
+                    "d": "Every saved version of the eight long-text fields, newest first, WITHOUT content (cheap to list): id, field, editor, source (ui, api, system, upgrade, deleted), is_baseline (true = \"as found when history began\", no editor), created_at, content_hash and length. field=comment lists deleted comments, kept as evidence.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Change id",
+                            "req": true
+                        },
+                        {
+                            "name": "field",
+                            "in": "query",
+                            "desc": "One field: description, reason_for_change, risk_evaluation, test_plan, rollback_plan, post_implementation_review, pir_lessons_learned, pir_follow_up, comment",
+                            "req": false
+                        }
+                    ],
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "Every version of the test plan",
+                                "note": "Filter to one field.",
+                                "path": {
+                                    "id": "7"
+                                },
+                                "query": {
+                                    "field": "test_plan"
+                                }
+                            }
+                        ]
+                    },
+                    "section": "Change comments, history & CAB",
+                    "slug": "get-changes-id-revisions"
+                },
+                {
+                    "m": "GET",
+                    "p": "\/changes\/{id}\/revisions\/{revision_id}",
+                    "perm": "change_revisions.read",
+                    "s": "One revision, in full",
+                    "d": "One saved version WITH its full content, and previous_id - the version before it for the same field (null for the first). The content is author-written HTML for the rich fields: render it through a sanitiser, never raw.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Change id",
+                            "req": true
+                        },
+                        {
+                            "name": "revision_id",
+                            "in": "path",
+                            "desc": "Revision id",
+                            "req": true
+                        }
+                    ],
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "One revision",
+                                "note": "With its full text.",
+                                "path": {
+                                    "id": "7",
+                                    "revision_id": "812"
+                                }
+                            }
+                        ]
+                    },
+                    "section": "Change comments, history & CAB",
+                    "slug": "get-changes-id-revisions-revision-id"
                 }
             ]
         },
@@ -5909,7 +6173,7 @@
                         {
                             "name": "status_id \/ owner_analyst_id \/ registrar_supplier_id \/ registrar_account_id \/ tech_contact_id \/ tech_analyst_id \/ contract_id \/ customer_user_id \/ customer_supplier_id \/ customer_contact_id",
                             "in": "body",
-                            "desc": "Lookups, validated (422 on an unknown id). The customer is ONE of: customer_user_id (a user in the domain's own company), or customer_supplier_id and/or customer_contact_id (a supplier, one of its contacts - a contact sets its supplier). The technical contact is ONE of tech_contact_id (a supplier contact) or tech_analyst_id (an analyst). Setting one kind clears the other; naming both kinds is a 422",
+                            "desc": "Lookups, validated (422 on an unknown id). The customer is ONE of: customer_user_id (a user in the domain's own company), or customer_supplier_id and\/or customer_contact_id (a supplier, one of its contacts - a contact sets its supplier). The technical contact is ONE of tech_contact_id (a supplier contact) or tech_analyst_id (an analyst). Setting one kind clears the other; naming both kinds is a 422",
                             "req": false
                         },
                         {
@@ -7674,7 +7938,7 @@
                     "p": "\/projects\/{id}\/budget",
                     "perm": "projects.read",
                     "s": "Get a project's budget",
-                    "d": "Planned against actual in the project's currency, with labour (the time logged on its tasks, priced as Projects - Settings - Budget says, at the rate in force on each day) and every budget line. A line naming a contract uses the contract's value as its actual unless one was entered - only in the same currency: a contract in another currency is shown with currency_mismatch and NOT counted. Amounts in different currencies are never added. Never shows one person's rate. forecast (3.3.0) is what the project is now expected to cost: each line's forecast (the one entered, otherwise the larger of planned and actual) plus labour - logged, and still to come on open tasks' estimates (labour.to_come_hours / to_come_cost) unless Projects - Settings - Budget leaves estimates out; a labour line with no actual is the plan for labour, so labour is counted once. cost_basis says whether the overspend tolerance measures actual or forecast. Each line carries planned_date, spent_date, forecast and forecast_entered.",
+                    "d": "Planned against actual in the project's currency, with labour (the time logged on its tasks, priced as Projects - Settings - Budget says, at the rate in force on each day) and every budget line. A line naming a contract uses the contract's value as its actual unless one was entered - only in the same currency: a contract in another currency is shown with currency_mismatch and NOT counted. Amounts in different currencies are never added. Never shows one person's rate. forecast (3.3.0) is what the project is now expected to cost: each line's forecast (the one entered, otherwise the larger of planned and actual) plus labour - logged, and still to come on open tasks' estimates (labour.to_come_hours \/ to_come_cost) unless Projects - Settings - Budget leaves estimates out; a labour line with no actual is the plan for labour, so labour is counted once. cost_basis says whether the overspend tolerance measures actual or forecast. Each line carries planned_date, spent_date, forecast and forecast_entered.",
                     "params": [
                         {
                             "name": "id",
@@ -12781,7 +13045,7 @@
                     "p": "\/change-statuses",
                     "perm": "reference.read",
                     "s": "List change statuses",
-                    "d": "All change statuses with is_closed, is_default and colour (Draft → … → Completed).",
+                    "d": "All change statuses with is_closed, is_default and colour (Draft → … → Completed). Each carries its stage (draft, awaiting, approved, implementing, done, stopped; null = not yet classified), which is what approvals go by.",
                     "params": [],
                     "section": "Reference data",
                     "slug": "get-change-statuses",
@@ -14737,6 +15001,13 @@
                         "id": "7"
                     }
                 }
+            ],
+            "errors": [
+                {
+                    "code": 409,
+                    "slug": "change_has_approval_history",
+                    "when": "The change has approval records and the approval rules do not allow deleting it."
+                }
             ]
         },
         "GET \/changes\/{id}\/comments": {
@@ -14946,6 +15217,21 @@
                     "code": 409,
                     "slug": "conflict",
                     "when": "This CAB member has already voted on this change."
+                },
+                {
+                    "code": 409,
+                    "slug": "not_awaiting_approval",
+                    "when": "The change has no open approval round."
+                },
+                {
+                    "code": 409,
+                    "slug": "approval_stale",
+                    "when": "The change was edited (or its round replaced) since the version named."
+                },
+                {
+                    "code": 400,
+                    "slug": "missing_field",
+                    "when": "approval_id \/ content_hash are required by the approval rules and were not sent."
                 }
             ]
         },
@@ -18620,6 +18906,100 @@
                     "code": 409,
                     "slug": "conflict",
                     "when": "Other cost centres sit below it."
+                }
+            ]
+        },
+        "GET \/changes\/{id}\/approvals": {
+            "examples": [
+                {
+                    "title": "Every round",
+                    "note": "The full approval history - approved, edited, re-approved.",
+                    "path": {
+                        "id": "7"
+                    }
+                }
+            ]
+        },
+        "POST \/changes\/{id}\/approval\/decide": {
+            "examples": [
+                {
+                    "title": "Approve",
+                    "note": "Naming the version that was read.",
+                    "path": {
+                        "id": "7"
+                    },
+                    "body": {
+                        "decision": "approve",
+                        "approval_id": 12,
+                        "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                    }
+                }
+            ],
+            "errors": [
+                {
+                    "code": 403,
+                    "slug": "forbidden",
+                    "when": "The analyst this key acts as is not the change's named approver."
+                },
+                {
+                    "code": 403,
+                    "slug": "not_independent",
+                    "when": "Enforce mode, and the approver is one of the change's own people."
+                },
+                {
+                    "code": 409,
+                    "slug": "not_awaiting_approval",
+                    "when": "The change has no open round."
+                },
+                {
+                    "code": 409,
+                    "slug": "approval_stale",
+                    "when": "The change was edited (or its round replaced) since the version named."
+                },
+                {
+                    "code": 400,
+                    "slug": "missing_field",
+                    "when": "approval_id \/ content_hash are required by the approval rules and were not sent."
+                }
+            ]
+        },
+        "POST \/changes\/{id}\/cancel": {
+            "examples": [
+                {
+                    "title": "Cancel with a reason",
+                    "note": "The change closes; its approvals, votes and history stay.",
+                    "path": {
+                        "id": "7"
+                    },
+                    "body": {
+                        "reason": "Superseded by CHG-0012."
+                    }
+                }
+            ]
+        },
+        "GET \/changes\/{id}\/revisions": {
+            "examples": [
+                {
+                    "title": "Every version of the test plan",
+                    "note": "Filter to one field.",
+                    "path": {
+                        "id": "7"
+                    },
+                    "query": {
+                        "field": "test_plan"
+                    }
+                }
+            ]
+        },
+        "GET \/changes\/{id}\/revisions\/{revision_id}": {
+            "examples": [
+                {
+                    "title": "One revision",
+                    "note": "With its full text.",
+                    "path": {
+                        "id": "7",
+                        "revision_id": "812"
+                    }
                 }
             ]
         }

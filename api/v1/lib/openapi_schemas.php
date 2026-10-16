@@ -1782,7 +1782,7 @@ return array (
     'ChangeCabVoteResult' => 
     array (
       'type' => 'object',
-      'description' => 'Returned by POST /changes/{id}/cab/vote. new_status is set only when the vote triggered an auto-transition (Draft on a required Reject, Approved once the threshold is met).',
+      'description' => 'Returned by POST /changes/{id}/cab/vote. new_status is set only when the vote decided the round - the name of the status it moved to (a Draft-stage status on a required Reject, the first Approved-stage status once the threshold is met). counted is false for a vote by one of the change\'s own people in Enforce mode; was_current is false for a vote cast against an earlier version (null = not stated).',
       'properties' => 
       array (
         'change_id' => 
@@ -1807,11 +1807,420 @@ return array (
         array (
           'type' => 'string',
           'nullable' => true,
+        ),
+        'counted' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'was_current' => 
+        array (
+          'type' => 'boolean',
+          'nullable' => true,
+        ),
+      ),
+    ),    'ChangeApproval' => 
+    array (
+      'type' => 'object',
+      'description' => 'The current approval round of a change (#180), and current_version - the fingerprint of its material content that a vote or decision sends back as content_hash. id is null when the change has no current round.',
+      'properties' => 
+      array (
+        'id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'round_no' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'route' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
           'enum' => 
           array (
-            0 => 'Draft',
-            1 => 'Approved',
+            0 => 'cab',
+            1 => 'approver',
+            2 => 'manual',
+            3 => 'emergency',
+            4 => 'override',
+            5 => 'pre_authorised',
+            6 => 'legacy',
           ),
+        ),
+        'state' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+          'enum' => 
+          array (
+            0 => 'open',
+            1 => 'approved',
+            2 => 'rejected',
+            3 => 'withdrawn',
+            4 => 'superseded',
+          ),
+        ),
+        'is_independent' => 
+        array (
+          'type' => 'boolean',
+          'nullable' => true,
+        ),
+        'current_version' => 
+        array (
+          'type' => 'string',
+        ),
+        'content_changed' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'changed_fields' => 
+        array (
+          'type' => 'object',
+          'description' => 'Long field => the revision id the round was given, for the fields that changed since.',
+          'additionalProperties' => 
+          array (
+            'type' => 'integer',
+          ),
+        ),
+        'mode' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'record',
+            1 => 'enforce',
+          ),
+        ),
+      ),
+    ),
+    'ChangeApprovalVote' => 
+    array (
+      'type' => 'object',
+      'properties' => 
+      array (
+        'id' => 
+        array (
+          'type' => 'integer',
+        ),
+        'analyst_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'analyst_name' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'vote' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'Approve',
+            1 => 'Reject',
+            2 => 'Abstain',
+          ),
+        ),
+        'comment' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'is_required' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'is_counted' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'content_hash' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'was_current' => 
+        array (
+          'type' => 'boolean',
+          'nullable' => true,
+        ),
+        'voted_at' => 
+        array (
+          'type' => 'string',
+        ),
+      ),
+    ),
+    'ChangeApprovalRound' => 
+    array (
+      'type' => 'object',
+      'description' => 'One approval round of a change (#180).',
+      'properties' => 
+      array (
+        'id' => 
+        array (
+          'type' => 'integer',
+        ),
+        'round_no' => 
+        array (
+          'type' => 'integer',
+        ),
+        'route' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'cab',
+            1 => 'approver',
+            2 => 'manual',
+            3 => 'emergency',
+            4 => 'override',
+            5 => 'pre_authorised',
+            6 => 'legacy',
+          ),
+        ),
+        'state' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'open',
+            1 => 'approved',
+            2 => 'rejected',
+            3 => 'withdrawn',
+            4 => 'superseded',
+          ),
+        ),
+        'is_independent' => 
+        array (
+          'type' => 'boolean',
+          'nullable' => true,
+        ),
+        'content_hash' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'snapshot' => 
+        array (
+          'type' => 'object',
+          'nullable' => true,
+          'description' => 'material (the field keys), values (short fields by value, long by sha256), revisions (long field => revision id), template_version_id.',
+        ),
+        'opened_by_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'opened_by_name' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'opened_at' => 
+        array (
+          'type' => 'string',
+        ),
+        'decided_by_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'decided_by_name' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'decided_at' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'decision_note' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'closed_reason' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'votes' => 
+        array (
+          'type' => 'array',
+          'items' => 
+          array (
+            '$ref' => '#/components/schemas/ChangeApprovalVote',
+          ),
+        ),
+      ),
+    ),
+    'ChangeApprovalDecideResult' => 
+    array (
+      'type' => 'object',
+      'description' => 'Returned by POST /changes/{id}/approval/decide.',
+      'properties' => 
+      array (
+        'change_id' => 
+        array (
+          'type' => 'integer',
+        ),
+        'decision' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'approve',
+            1 => 'reject',
+          ),
+        ),
+        'status_changed' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'new_status' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+      ),
+    ),
+    'ChangeRevision' => 
+    array (
+      'type' => 'object',
+      'description' => 'One saved version of a long-text field (#180), without its content.',
+      'properties' => 
+      array (
+        'id' => 
+        array (
+          'type' => 'integer',
+        ),
+        'field' => 
+        array (
+          'type' => 'string',
+        ),
+        'format' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'html',
+            1 => 'text',
+          ),
+        ),
+        'content_hash' => 
+        array (
+          'type' => 'string',
+        ),
+        'is_baseline' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'editor_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'editor_name' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'source' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'ui',
+            1 => 'api',
+            2 => 'system',
+            3 => 'upgrade',
+            4 => 'deleted',
+          ),
+        ),
+        'created_at' => 
+        array (
+          'type' => 'string',
+        ),
+        'length' => 
+        array (
+          'type' => 'integer',
+        ),
+      ),
+    ),
+    'ChangeRevisionDetail' => 
+    array (
+      'type' => 'object',
+      'description' => 'One saved version of a long-text field (#180), with its full content and the id of the version before it.',
+      'properties' => 
+      array (
+        'id' => 
+        array (
+          'type' => 'integer',
+        ),
+        'field' => 
+        array (
+          'type' => 'string',
+        ),
+        'format' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'html',
+            1 => 'text',
+          ),
+        ),
+        'content_hash' => 
+        array (
+          'type' => 'string',
+        ),
+        'is_baseline' => 
+        array (
+          'type' => 'boolean',
+        ),
+        'editor_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
+        ),
+        'editor_name' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'source' => 
+        array (
+          'type' => 'string',
+          'enum' => 
+          array (
+            0 => 'ui',
+            1 => 'api',
+            2 => 'system',
+            3 => 'upgrade',
+            4 => 'deleted',
+          ),
+        ),
+        'created_at' => 
+        array (
+          'type' => 'string',
+        ),
+        'length' => 
+        array (
+          'type' => 'integer',
+        ),
+        'content' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+        ),
+        'previous_id' => 
+        array (
+          'type' => 'integer',
+          'nullable' => true,
         ),
       ),
     ),
@@ -1923,9 +2332,13 @@ return array (
     'ChangeDetail' => 
     array (
       'type' => 'object',
-      'description' => 'The full change detail returned by GET /changes/{id}: every Change field plus bodies, PIR, attachments and linked problems.',
+      'description' => 'The full change detail returned by GET /changes/{id}: every Change field plus bodies, PIR, attachments and linked problems, and the current approval round.',
       'properties' => 
       array (
+        'approval' => 
+        array (
+          '$ref' => '#/components/schemas/ChangeApproval',
+        ),
         'id' => 
         array (
           'type' => 'integer',
@@ -8661,7 +9074,7 @@ return array (
     'StatusLookupItem' => 
     array (
       'type' => 'object',
-      'description' => 'A closeable, coloured status lookup, shared by change statuses and problem statuses.',
+      'description' => 'A closeable, coloured status lookup, shared by change statuses and problem statuses. Change statuses also carry their stage (#180).',
       'properties' => 
       array (
         'id' => 
@@ -8689,13 +9102,19 @@ return array (
         array (
           'type' => 'boolean',
         ),
+        'stage' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+          'description' => 'Change statuses only: draft, awaiting, approved, implementing, done or stopped; null = not yet classified.',
+        ),
       ),
     ),
     'StatusRef' => 
     array (
       'type' => 'object',
       'nullable' => true,
-      'description' => 'An id/name status reference with its closed flag. Null when unset.',
+      'description' => 'An id/name status reference with its closed flag. Null when unset. A change status also carries its stage (#180).',
       'properties' => 
       array (
         'id' => 
@@ -8710,6 +9129,12 @@ return array (
         'is_closed' => 
         array (
           'type' => 'boolean',
+        ),
+        'stage' => 
+        array (
+          'type' => 'string',
+          'nullable' => true,
+          'description' => 'Change statuses only: draft, awaiting, approved, implementing, done or stopped; null = not yet classified.',
         ),
       ),
     ),
@@ -13269,6 +13694,26 @@ return array (
     array (
       '$ref' => '#/components/schemas/ChangeCab',
     ),
+    'GET /changes/{id}/approvals' => 
+    array (
+      'type' => 'array',
+      'items' => 
+      array (
+        '$ref' => '#/components/schemas/ChangeApprovalRound',
+      ),
+    ),
+    'GET /changes/{id}/revisions' => 
+    array (
+      'type' => 'array',
+      'items' => 
+      array (
+        '$ref' => '#/components/schemas/ChangeRevision',
+      ),
+    ),
+    'GET /changes/{id}/revisions/{revision_id}' => 
+    array (
+      '$ref' => '#/components/schemas/ChangeRevisionDetail',
+    ),
     'GET /changes/{id}/comments' => 
     array (
       'type' => 'array',
@@ -13718,6 +14163,24 @@ return array (
                   ),
                 ),
                 'change_cab' => 
+                array (
+                  'type' => 'array',
+                  'items' => 
+                  array (
+                    'type' => 'string',
+                    'nullable' => true,
+                  ),
+                ),
+                'change_approvals' => 
+                array (
+                  'type' => 'array',
+                  'items' => 
+                  array (
+                    'type' => 'string',
+                    'nullable' => true,
+                  ),
+                ),
+                'change_revisions' => 
                 array (
                   'type' => 'array',
                   'items' => 
@@ -14492,6 +14955,14 @@ return array (
     'POST /changes/{id}/cab/vote' => 
     array (
       '$ref' => '#/components/schemas/ChangeCabVoteResult',
+    ),
+    'POST /changes/{id}/approval/decide' => 
+    array (
+      '$ref' => '#/components/schemas/ChangeApprovalDecideResult',
+    ),
+    'POST /changes/{id}/cancel' => 
+    array (
+      '$ref' => '#/components/schemas/ChangeDetail',
     ),
     'POST /changes/{id}/comments' => 
     array (

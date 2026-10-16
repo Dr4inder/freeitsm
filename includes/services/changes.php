@@ -528,7 +528,8 @@ class ChangesService
     }
 
     /**
-     * Cancel a change: move it to the first status in the Stopped stage and withdraw any
+     * Cancel a change: move it to the Stopped-stage status Settings names (by default the
+     * last one, Cancelled on a seeded install - see changeCancelTarget()) and withdraw any
      * open round, keeping every record. This is what a change that has approval history
      * gets instead of Delete (§4) - an audit months later needs the abandoned changes as
      * much as the finished ones.
@@ -541,7 +542,7 @@ class ChangesService
         $after = self::inTransaction($conn, function () use ($conn, $ctx, $changeId, $in) {
             self::lockRow($conn, $changeId);
             $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
-            $target = changeStatusForStage($conn, 'stopped');
+            $target = changeCancelTarget($conn, changeApprovalSettings($conn));
             if (!$target) {
                 throw new ServiceError('conflict', 'no_stopped_status', t('change-management.approval.no_stopped_status'));
             }
