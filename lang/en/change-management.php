@@ -53,6 +53,7 @@ return [
         'share'     => 'Share',
         'copy_link' => 'Copy Link',
         'export_pdf' => 'Export as PDF',
+        'export_evidence' => 'Export evidence',
         'email_link_pdf' => 'Email (Link + PDF)',
         'edit'      => 'Edit',
         'delete'    => 'Delete',
@@ -571,6 +572,7 @@ return [
         'attached'         => 'attached {file}',
         'removed_attachment' => 'removed the attachment {file}',
         'deleted_comment'  => 'deleted a comment',
+        'exported_evidence' => 'exported the evidence',
     ],
 
     // The stage of a status - what the approval rules read (includes/changes/approvals.php).

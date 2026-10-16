@@ -666,6 +666,13 @@ function renderChangeDetail() {
                                 </svg>
                                 ${window.t('change-management.detail.export_pdf')}
                             </a>
+                            <a href="${window.CHG_BASE}change-management/evidence.php?id=${c.id}" target="_blank" rel="noopener">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <polyline points="9 12 11 14 15 10"></polyline>
+                                </svg>
+                                ${window.t('change-management.detail.export_evidence')}
+                            </a>
                             <a href="#" onclick="shareChangeBoth(); return false;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -1102,6 +1109,8 @@ function renderActivityTimeline(timeline, container) {
                 if (field && revId && currentChange) {
                     description += ` <button type="button" class="timeline-view-link" onclick="openRevisionViewer(${currentChange.id}, '${field}', ${revId})">${escapeHtml(window.t('change-management.revisions.view'))}</button>`;
                 }
+            } else if (entry.action_type === 'evidence_export') {
+                description = escapeHtml(window.t('change-management.timeline.exported_evidence'));
             } else if (entry.action_type === 'attachment') {
                 description = entry.new_value
                     ? escapeHtml(window.t('change-management.timeline.attached', { file: entry.new_value }))
