@@ -69,6 +69,13 @@ function settingsVisibleTabs(PDO $conn, int $analystId, array $manifest): array
             $visible[] = $tab;                     // personal preference — never gated
         } elseif (analystHasCapability($conn, $analystId, $tab['cap'])) {
             $visible[] = $tab;
+        } else {
+            // 'also_visible_to': capabilities that may SEE the tab without holding it - an
+            // approver has to read what they approve (#180: template approvers). Saving is
+            // still the tab's own capability, checked by its endpoints.
+            foreach ($tab['also_visible_to'] ?? [] as $cap) {
+                if (analystHasCapability($conn, $analystId, $cap)) { $visible[] = $tab; break; }
+            }
         }
     }
     return $visible;

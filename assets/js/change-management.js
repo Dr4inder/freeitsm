@@ -1352,6 +1352,7 @@ function clearSearch() {
 function openCreateChange() {
     if (window.MODULE_LEVEL === 'read') return;   // Read only (#180): nothing to create
     applyApprovalEditorRules(null);
+    loadChangeTemplatePicker();
     document.getElementById('editChangeId').value = '';
     document.getElementById('editorTitle').textContent = window.t('change-management.editor.new');
     document.getElementById('changeTitle').value = '';
@@ -1411,6 +1412,8 @@ function openCreateChange() {
  */
 function editCurrentChange() {
     if (!currentChange || window.MODULE_LEVEL === 'read') return;   // Read only (#180)
+    document.getElementById('templatePickerWrap').style.display = 'none';   // a template is chosen when a change is raised
+    document.getElementById('templateVersionId').value = '';
     const c = currentChange;
 
     document.getElementById('editChangeId').value = c.id;
@@ -1470,6 +1473,54 @@ function editCurrentChange() {
     showView('editor');
     updatePirVisibility();
     applyApprovalEditorRules(c);
+}
+
+// The approved templates this analyst may use (#180 §8), for the picker.
+let usableTemplates = [];
+
+/** Fills the "From a template" picker on a new change, if any approved template is usable. */
+async function loadChangeTemplatePicker() {
+    const wrap = document.getElementById('templatePickerWrap');
+    document.getElementById('templateVersionId').value = '';
+    document.getElementById('templateScope').textContent = '';
+    wrap.style.display = 'none';
+    try {
+        const res = await fetch(API_BASE + 'get_usable_templates.php');
+        const data = await res.json();
+        usableTemplates = data.success ? data.templates : [];
+    } catch (e) { usableTemplates = []; }
+    if (!usableTemplates.length) return;
+    const T = k => window.t('change-management.templates.' + k);
+    document.getElementById('templatePicker').innerHTML = `<option value="">${escapeHtml(T('none_option'))}</option>`
+        + usableTemplates.map(t => `<option value="${t.version_id}">${escapeHtml(t.name)} (v${t.version_no})</option>`).join('');
+    wrap.style.display = '';
+}
+
+/**
+ * Fill the editor from a template version. The fields stay editable - but changing a fixed
+ * one means the change is no longer the recipe, and it goes to normal approval (the server
+ * decides that on submission, comparing the words).
+ */
+function applyChangeTemplate(versionId) {
+    const tpl = usableTemplates.find(t => String(t.version_id) === String(versionId));
+    document.getElementById('templateVersionId').value = tpl ? tpl.version_id : '';
+    const scope = document.getElementById('templateScope');
+    scope.textContent = tpl ? [tpl.scope_use, tpl.scope_not ? '✗ ' + tpl.scope_not : ''].filter(Boolean).join('  ·  ') : '';
+    if (!tpl) return;
+    const v = tpl.values || {};
+    const nameOf = (rows, id) => { const r = rows.find(x => String(x.id) === String(id)); return r ? r.name : null; };
+    if (v.change_type_id && nameOf(changeTypes, v.change_type_id)) document.getElementById('changeType').value = nameOf(changeTypes, v.change_type_id);
+    if (v.priority_id && nameOf(changePriorities, v.priority_id)) document.getElementById('changePriority').value = nameOf(changePriorities, v.priority_id);
+    if (v.impact_id && nameOf(changeImpacts, v.impact_id)) document.getElementById('changeImpact').value = nameOf(changeImpacts, v.impact_id);
+    if (v.risk_likelihood) document.getElementById('riskLikelihood').value = v.risk_likelihood;
+    if (v.risk_impact_score) document.getElementById('riskImpactScore').value = v.risk_impact_score;
+    updateRiskScore();
+    const set = (id, val) => { if (val) setEditorContent(id, val); };
+    set('editorDescription', v.description);
+    set('editorReason', v.reason_for_change);
+    set('editorRisk', v.risk_evaluation);
+    set('editorTestplan', v.test_plan);
+    set('editorRollback', v.rollback_plan);
 }
 
 /**
@@ -1601,6 +1652,10 @@ async function saveChange() {
         cab_required: document.getElementById('cabRequired').checked ? 1 : 0,
         cab_approval_type: document.getElementById('cabApprovalType').value
     };
+    // Raised from a template (#180 §8): only on a new change.
+    if (!changeId && document.getElementById('templateVersionId').value) {
+        payload.template_version_id = parseInt(document.getElementById('templateVersionId').value);
+    }
 
     if (changeId && savingWithdrawsApproval(payload)
         && !(await showConfirm({ title: window.t('change-management.approval_panel.heading'),
@@ -2042,7 +2097,7 @@ function renderCabMemberChips() {
 function renderApprovalPanel(c) {
     const rounds = c.approval_rounds || [];
     const live = c.approval || {};
-    const hasSetup = parseInt(c.cab_required) || c.approver_id;
+    const hasSetup = parseInt(c.cab_required) || c.approver_id || c.template;
     if (!rounds.length && !hasSetup) return '';
 
     const T = (k, p) => window.t('change-management.approval_panel.' + k, p);
@@ -2068,6 +2123,17 @@ function renderApprovalPanel(c) {
         html += `<div class="approval-earlier">${escapeHtml(T(current.state === 'approved' ? 'approved_earlier' : 'edited_since'))}`
             + fields.map(f => ` <button type="button" class="timeline-view-link" onclick="openRevisionViewer(${c.id}, '${f.field}', null, ${f.since})">${escapeHtml(window.t('change-management.revisions.field.' + f.field))}</button>`).join('')
             + '</div>';
+    }
+    if (c.template) {
+        const TM = (k, p) => window.t('change-management.templates.' + k, p);
+        const why = c.template.check;
+        let line = TM('raised_from', { name: c.template.name, n: c.template.version_no });
+        if (current && current.route === 'pre_authorised') line += ' ' + TM('pre_authorised');
+        else if (why && why.reason === 'changed') line += ' ' + TM('lost_changed', { fields: (why.changed_fields || []).map(f => window.t('change-management.approval_settings.field_' + f)).join(', ') });
+        else if (why && why.reason === 'switched_off') line += ' ' + TM('lost_switched_off');
+        else if (why && why.reason === 'version_not_current') line += ' ' + TM('lost_version');
+        else if (why && why.reason === 'not_allowed') line += ' ' + TM('lost_not_allowed');
+        html += `<div class="approval-note">${escapeHtml(line)}${c.template.scope_use ? `<br><em>${escapeHtml(c.template.scope_use)}</em>` : ''}</div>`;
     }
     if (current && current.route === 'legacy') {
         html += `<div class="approval-note">${escapeHtml(T(current.state === 'open' ? 'legacy_open' : 'legacy_approved'))}</div>`;

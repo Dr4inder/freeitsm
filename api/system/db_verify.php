@@ -993,6 +993,12 @@ try {
         ['change_approvals',      'fk_change_approvals_decided_by', 'analysts',         'decided_by_id', 'id', 'SET NULL'],
         ['change_approval_votes', 'fk_cav_approval',                'change_approvals', 'approval_id',   'id', 'CASCADE'],
         ['change_approval_votes', 'fk_cav_analyst',                 'analysts',         'analyst_id',    'id', 'SET NULL'],
+        // Templates (#180 §8): versions RESTRICT their template (evidence); teams go with it.
+        ['change_template_versions', 'fk_ctv_template',    'change_templates', 'template_id',    'id', null],
+        ['change_template_versions', 'fk_ctv_created_by',  'analysts',         'created_by_id',  'id', 'SET NULL'],
+        ['change_template_versions', 'fk_ctv_approved_by', 'analysts',         'approved_by_id', 'id', 'SET NULL'],
+        ['change_template_teams',    'fk_ctt_template',    'change_templates', 'template_id',    'id', 'CASCADE'],
+        ['change_template_teams',    'fk_ctt_team',        'teams',            'team_id',        'id', 'CASCADE'],
     ];
     foreach ($changeEvidenceFks as [$table, $name, $refTable, $col, $refCol, $onDelete]) {
         if ($tableExists($table) && $tableExists($refTable) && !$fkExists($table, $name)) {

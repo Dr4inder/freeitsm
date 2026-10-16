@@ -113,6 +113,8 @@ final class Cap
     const CHANGES_APPROVALS  = 'changes.approvals';   // the approval rules (#180) - sensitive: they govern the audit trail
     // Everyday work, not a settings tab (#180 Part 3) - see the manifest's 'actions'.
     const CHANGES_CHOOSE_APPROVERS = 'changes.choose_approvers';
+    const CHANGES_TEMPLATES         = 'changes.templates';           // write standard-change templates (#180 §8)
+    const CHANGES_TEMPLATES_APPROVE = 'changes.templates_approve';   // everyday work: approve a template version
 
     // ---- Tasks -------------------------------------------------------------
     const TASKS_MANAGE     = 'tasks.manage';       // umbrella

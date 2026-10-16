@@ -2422,6 +2422,7 @@ return [
         'approver_id'                   => 'INT NULL',
         'approval_datetime'             => 'DATETIME NULL',
         'approval_id'                   => 'INT NULL',   // the current approval round, open or approved (#180); NULL = none
+        'template_version_id'           => 'INT NULL',   // the approved template version it was raised from (#180 §8)
         'work_start_datetime'           => 'DATETIME NULL',
         'work_end_datetime'             => 'DATETIME NULL',
         'outage_start_datetime'         => 'DATETIME NULL',
@@ -2601,6 +2602,35 @@ return [
         'display_order'             => 'INT NOT NULL DEFAULT 0',
         'created_by_id'             => 'INT NULL',
         'created_datetime'          => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        // Approved standard-change templates (#180 §8) - see includes/changes/templates.php.
+        // The columns above are the WORKING DRAFT; approved versions live in change_template_versions.
+        'scope_use'                 => 'TEXT NULL',      // "Use this template for..."
+        'scope_not'                 => 'TEXT NULL',      // "Do not use it for..."
+        'open_fields'               => "VARCHAR(255) NOT NULL DEFAULT 'description'",   // completed per change
+        'current_version_id'        => 'INT NULL',       // the approved version in use
+        'retired_datetime'          => 'DATETIME NULL',
+    ],
+
+    // Every version of a template submitted for approval (#180 §8). Immutable once approved.
+    'change_template_versions' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'template_id'       => 'INT NOT NULL',
+        'version_no'        => 'INT NOT NULL',
+        'state'             => 'VARCHAR(20) NOT NULL',     // draft (awaiting approval) | approved | superseded | retired
+        'content'           => 'LONGTEXT NOT NULL',        // JSON: every field, scope, per-change fields, who may use it
+        'content_hash'      => 'CHAR(64) NOT NULL',        // sha256 of the FIXED fields
+        'created_by_id'     => 'INT NULL',
+        'created_datetime'  => 'DATETIME NOT NULL',
+        'approved_by_id'    => 'INT NULL',
+        'approved_datetime' => 'DATETIME NULL',
+        'approval_note'     => 'TEXT NULL',
+    ],
+
+    // Who may use a template (#180 §8): no rows = everyone with Change Management.
+    'change_template_teams' => [
+        'id'          => 'INT NOT NULL AUTO_INCREMENT',
+        'template_id' => 'INT NOT NULL',
+        'team_id'     => 'INT NOT NULL',
     ],
 
     'change_notifications' => [

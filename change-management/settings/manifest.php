@@ -69,6 +69,16 @@ return [
             'sensitive' => true,
         ],
         [
+            // Standard-change templates (#180 §8): writing the recipes. Approving one is a
+            // separate, everyday permission (below), so the author cannot approve their own.
+            'id'        => 'templates',
+            'cap'       => Cap::CHANGES_TEMPLATES,
+            'label_key' => 'change-management.settings.tab_templates',
+            'grant'     => 'Write standard-change templates',
+            // An approver must be able to read the versions they approve.
+            'also_visible_to' => [Cap::CHANGES_TEMPLATES_APPROVE],
+        ],
+        [
             // A per-analyst display preference. Not administration; nothing to grant.
             'id'        => 'left-panel',
             'cap'       => null,
@@ -83,6 +93,13 @@ return [
             'cap'      => Cap::CHANGES_CHOOSE_APPROVERS,
             'grant'    => 'Choose who approves a change: the approver, the CAB and whether it is required',
             'restrict' => ['setting' => 'change_approval_choose_approvers', 'value' => 'permission'],
+        ],
+        [
+            // Always applies: approving a recipe that pre-approves changes is never everybody's job.
+            'cap'       => Cap::CHANGES_TEMPLATES_APPROVE,
+            'grant'     => 'Approve standard-change templates (which then approve the changes raised from them)',
+            'sensitive' => true,
+            'restrict'  => null,
         ],
     ],
 ];

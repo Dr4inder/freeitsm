@@ -182,6 +182,8 @@ function analystReferenceRegistry(): array {
         ['change_checklist_items', 'completed_by_id', 'history'],
         ['change_relations', 'created_by_id', 'history'],
         ['change_templates', 'created_by_id', 'history'],
+        ['change_template_versions', 'created_by_id', 'history'],
+        ['change_template_versions', 'approved_by_id', 'history'],
         ['change_tickets', 'created_by_id', 'history'],
         ['problems', 'created_by_id', 'history'],
         ['problem_tickets', 'created_by_id', 'history'],

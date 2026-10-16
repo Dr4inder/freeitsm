@@ -110,6 +110,13 @@ $translationNamespaces = ['common', 'change-management'];
                     <div class="cm-form-section" data-section-id="1" data-section-key="general">
                         <h3 class="form-section-title"><?php echo htmlspecialchars(t('change-management.editor.section_general')); ?></h3>
 
+                        <!-- From a template (#180 §8): shown on a NEW change when approved templates exist. -->
+                        <div id="templatePickerWrap" class="form-group" style="display:none;">
+                            <label class="form-label" for="templatePicker"><?php echo htmlspecialchars(t('change-management.templates.from_template')); ?></label>
+                            <select class="form-input" id="templatePicker" onchange="applyChangeTemplate(this.value)"></select>
+                            <input type="hidden" id="templateVersionId" value="">
+                            <div id="templateScope" class="approval-note"></div>
+                        </div>
                         <div class="cm-field-wrap" data-field-key="title">
                             <div class="form-group">
                                 <label class="form-label"><?php echo htmlspecialchars(t('change-management.editor.title_label')); ?></label>
@@ -575,7 +582,7 @@ $translationNamespaces = ['common', 'change-management'];
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/safe-html.js?v=2"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/change-revisions.js?v=3"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=27"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=28"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=78"></script>
 </body>
 </html>

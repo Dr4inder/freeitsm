@@ -137,6 +137,21 @@ try {
         'can_choose_approvers' => analystMayAct($conn, (int)$_SESSION['analyst_id'], Cap::CHANGES_CHOOSE_APPROVERS),
         'material'         => $cfg['material'],
     ];
+    // Raised from a template (#180 §8): which version, its scope, and whether it would
+    // pre-authorise the change now - with the reason when it would not.
+    $change['template'] = null;
+    if (!empty($rawRow['template_version_id'])) {
+        require_once '../../includes/changes/templates.php';
+        $tv = ChangeTemplates::version($conn, (int)$rawRow['template_version_id']);
+        if ($tv) {
+            $chk = ChangeTemplates::check($conn, $rawRow, $cfg, (int)$_SESSION['analyst_id']);
+            $change['template'] = [
+                'version_id' => (int)$tv['id'], 'version_no' => (int)$tv['version_no'], 'name' => $tv['template_name'],
+                'scope_use'  => $tv['content']['scope_use'] ?? null, 'scope_not' => $tv['content']['scope_not'] ?? null,
+                'check'      => ['ok' => $chk['ok'], 'reason' => $chk['reason'], 'changed_fields' => $chk['changed_fields'] ?? []],
+            ];
+        }
+    }
     // The statuses the guard would accept from here (comfort: the guard enforces it).
     $change['allowed_status_ids'] = changeApprovalAllowedStatuses($conn, $rawRow, $cfg);
 

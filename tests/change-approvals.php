@@ -36,7 +36,7 @@ function ok(string $what, bool $cond, string $detail = ''): void {
 }
 
 $conn = connectToDatabase();
-$made = ['changes' => [], 'statuses' => [], 'types' => []];
+$made = ['changes' => [], 'statuses' => [], 'types' => [], 'templates' => []];
 
 /** Reads one change row with its status name and stage. */
 function zzChange(PDO $conn, int $id): array {
@@ -427,6 +427,76 @@ try {
     ok('an administrator approves it by override: recorded as such, with the reason', end($rd)['route'] === 'override' && end($rd)['decision_note'] === 'ZZ board unreachable'
         && zzChange($conn, $id11)['status_stage'] === 'approved');
 
+    // ── Slice G: standard changes from approved templates ──────────────────
+    echo "\nStandard changes from approved templates (§8)\n";
+    zzSettingRestore($conn);
+    changeApprovalSettings($conn, true);
+    require_once __DIR__ . '/../includes/changes/templates.php';
+    $conn->prepare("INSERT INTO change_templates (name, scope_use, scope_not, open_fields, test_plan_template, rollback_plan_template, created_by_id, created_datetime)
+                    VALUES ('ZZ Restart print spooler', 'One print server', 'Domain controllers', 'description', 'Print a test page.', 'Restart the service again.', ?, UTC_TIMESTAMP())")->execute([$a1]);
+    $made['templates'][] = $tplId = (int)$conn->lastInsertId();
+    $v1 = ChangeTemplates::submitVersion($conn, $tplId, $a1);
+    ok('the author cannot approve their own version (an administrator included)',
+        $code(fn() => ChangeTemplates::approveVersion($conn, $v1, $a1, 'ZZ')) === 'not_independent');
+    $v1 = ChangeTemplates::submitVersion($conn, $tplId, $a2);   // resubmitted by somebody else
+    ChangeTemplates::approveVersion($conn, $v1, $a1, 'ZZ approved at CAB');
+    ok('another approver approves it', ChangeTemplates::version($conn, $v1)['state'] === 'approved');
+
+    $raise = fn(array $extra = []) => ChangesService::createChange($conn, $ctx2, 1, array_merge(
+        ['title' => 'ZZ-TPL change', 'status' => 'Draft', 'template_version_id' => $v1, 'description' => '<p>PRN01</p>'], $extra));
+    ok('the template fills in what the change leaves out', ($tid = $raise()) && zzChange($conn, $tid)['test_plan'] === 'Print a test page.');
+    $made['changes'][] = $tid;
+
+    ChangesService::updateChange($conn, $ctx2, $tid, ['status' => 'Pending Approval']);
+    $rd = $rounds($tid);
+    ok('switched off (the default): it takes the normal route', ($rd[0]['route'] ?? '') !== 'pre_authorised');
+
+    zzSetting($conn, 'change_templates_enabled', '1');
+    changeApprovalSettings($conn, true);
+    $t2 = $raise(['test_plan' => '<p>Print a test page.</p>']);   // the editor's markup, the same words
+    $made['changes'][] = $t2;
+    ChangesService::updateChange($conn, $ctx2, $t2, ['status' => 'Pending Approval']);
+    $rd = $rounds($t2);
+    ok('switched on, untouched (markup aside): pre-authorised on submission', ($rd[0]['route'] ?? '') === 'pre_authorised' && $rd[0]['state'] === 'approved');
+    ok('and moved on to the approved stage, its approval dated', zzChange($conn, $t2)['status_stage'] === 'approved' && zzChange($conn, $t2)['approval_datetime'] !== null);
+    ok('the round names the template version and its approver', strpos((string)$rd[0]['decision_note'], 'ZZ Restart print spooler" v') !== false
+        && $rd[0]['snapshot']['template_version_id'] === $v1);
+
+    $t3 = $raise(['rollback_plan' => '<p>Reboot the whole server.</p>']);
+    $made['changes'][] = $t3;
+    ChangesService::updateChange($conn, $ctx2, $t3, ['status' => 'Pending Approval']);
+    ok('the rollback plan altered: normal route', ($rounds($t3)[0]['route'] ?? '') !== 'pre_authorised');
+    $chk = ChangeTemplates::check($conn, zzChange($conn, $t3), changeApprovalSettings($conn), $a2);
+    ok('and the reason names the field', $chk['reason'] === 'changed' && $chk['changed_fields'] === ['rollback_plan'], json_encode($chk['changed_fields'] ?? null));
+    $t4 = $raise(['description' => '<p>PRN02 - a different server</p>']);
+    $made['changes'][] = $t4;
+    ChangesService::updateChange($conn, $ctx2, $t4, ['status' => 'Pending Approval']);
+    ok('POSITIVE CONTROL: the description is completed per change, so a different one keeps it pre-authorised',
+        ($rounds($t4)[0]['route'] ?? '') === 'pre_authorised');
+
+    zzSetting($conn, 'change_approval_mode', 'enforce');
+    changeApprovalSettings($conn, true);
+    $t5 = $raise();
+    $made['changes'][] = $t5;
+    ChangesService::updateChange($conn, $ctx2, $t5, ['status' => 'In Progress']);
+    ok('Enforce: an untouched standard change may go straight to In Progress', zzChange($conn, $t5)['status_stage'] === 'implementing'
+        && ($rounds($t5)[0]['route'] ?? '') === 'pre_authorised');
+    $t6 = $raise(['test_plan' => '<p>Skip testing.</p>']);
+    $made['changes'][] = $t6;
+    ok('Enforce: an altered one may not', $code(fn() => ChangesService::updateChange($conn, $ctx2, $t6, ['status' => 'In Progress'])) === 'approval_required');
+
+    // Who may use it.
+    $otherTeam = (int)$conn->query("SELECT id FROM teams WHERE id NOT IN (SELECT team_id FROM analyst_teams WHERE analyst_id = {$a2}) ORDER BY id LIMIT 1")->fetchColumn();
+    if (!$otherTeam) throw new RuntimeException("needs a team analyst {$a2} is not in");
+    $conn->prepare("INSERT INTO change_template_teams (template_id, team_id) VALUES (?, ?)")->execute([$tplId, $otherTeam]);
+    $v2 = ChangeTemplates::submitVersion($conn, $tplId, $a2);
+    ChangeTemplates::approveVersion($conn, $v2, $a1, 'ZZ team-only');
+    ok('a version superseded by a newer approval stops pre-authorising', ChangeTemplates::version($conn, $v1)['state'] === 'superseded');
+    ok('restricted to a team they are not in, they cannot raise from it',
+        $code(fn() => ChangesService::createChange($conn, $ctx2, 1, ['title' => 'ZZ-TPL refused', 'template_version_id' => $v2])) === 'invalid_field');
+    ChangeTemplates::retire($conn, $tplId);
+    ok('retired: no longer offered to anybody', !array_filter(ChangeTemplates::usable($conn, $a1), fn($t) => $t['template_id'] === $tplId));
+
     zzSettingRestore($conn);
     changeApprovalSettings($conn, true);
     $id12 = ChangesService::createChange($conn, $ctx1, 1, ['title' => 'ZZ-ENF negative control', 'status' => 'Draft']);
@@ -446,6 +516,11 @@ try {
         $conn->prepare("UPDATE changes SET approval_id = NULL WHERE id = ?")->execute([$cid]);
         $conn->prepare("DELETE FROM change_approvals WHERE change_id = ?")->execute([$cid]);
         $conn->prepare("DELETE FROM changes WHERE id = ? AND title LIKE 'ZZ-%'")->execute([$cid]);
+    }
+    foreach ($made['templates'] as $tplDel) {
+        $conn->prepare("DELETE FROM change_template_teams WHERE template_id = ?")->execute([$tplDel]);
+        $conn->prepare("DELETE FROM change_template_versions WHERE template_id = ?")->execute([$tplDel]);
+        $conn->prepare("DELETE FROM change_templates WHERE id = ? AND name LIKE 'ZZ %'")->execute([$tplDel]);
     }
     foreach ($made['types'] as $tid) {
         $conn->prepare("DELETE FROM change_types WHERE id = ? AND name LIKE 'ZZ %'")->execute([$tid]);

@@ -51,6 +51,7 @@ try {
         'change_approval_edit_after'       => $pick('edit_after', ['keep', 'withdraw']),
         'change_approval_stale_vote'       => $pick('stale_vote', ['record', 'refuse']),
         'change_approval_delete_submitted' => $pick('delete_submitted', ['allowed', 'refuse']),
+        'change_templates_enabled'         => !empty($in['templates_enabled']) ? '1' : '0',
     ];
 
     // Where a rejection goes: blank (the first Draft-stage status) or an active status in

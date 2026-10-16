@@ -3640,6 +3640,7 @@ CREATE TABLE IF NOT EXISTS `changes` (
     `approver_id`                   INT NULL,
     `approval_datetime`             DATETIME NULL,
     `approval_id`                   INT NULL,
+    `template_version_id`           INT NULL,
     `work_start_datetime`           DATETIME NULL,
     `work_end_datetime`             DATETIME NULL,
     `outage_start_datetime`         DATETIME NULL,
@@ -3886,12 +3887,49 @@ CREATE TABLE IF NOT EXISTS `change_templates` (
     `display_order`             INT NOT NULL DEFAULT 0,
     `created_by_id`             INT NULL,
     `created_datetime`          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `scope_use`                 TEXT NULL,
+    `scope_not`                 TEXT NULL,
+    `open_fields`               VARCHAR(255) NOT NULL DEFAULT 'description',
+    `current_version_id`        INT NULL,
+    `retired_datetime`          DATETIME NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_template_category` FOREIGN KEY (`category_id`) REFERENCES `change_categories` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_template_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `analysts` (`id`),
     CONSTRAINT `fk_template_change_type` FOREIGN KEY (`change_type_id`) REFERENCES `change_types` (`id`),
     CONSTRAINT `fk_template_priority` FOREIGN KEY (`priority_id`) REFERENCES `change_priorities` (`id`),
     CONSTRAINT `fk_template_impact` FOREIGN KEY (`impact_id`) REFERENCES `change_impacts` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Every version of a template submitted for approval (#180 §8); immutable once approved.
+-- RESTRICT on the template: a template with versions is evidence for every change it approved.
+CREATE TABLE IF NOT EXISTS `change_template_versions` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `template_id`       INT NOT NULL,
+    `version_no`        INT NOT NULL,
+    `state`             VARCHAR(20) NOT NULL,
+    `content`           LONGTEXT NOT NULL,
+    `content_hash`      CHAR(64) NOT NULL,
+    `created_by_id`     INT NULL,
+    `created_datetime`  DATETIME NOT NULL,
+    `approved_by_id`    INT NULL,
+    `approved_datetime` DATETIME NULL,
+    `approval_note`     TEXT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_ctv_template_version` (`template_id`, `version_no`),
+    CONSTRAINT `fk_ctv_template` FOREIGN KEY (`template_id`) REFERENCES `change_templates` (`id`),
+    CONSTRAINT `fk_ctv_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_ctv_approved_by` FOREIGN KEY (`approved_by_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Who may use a template (#180 §8): no rows = everyone with Change Management.
+CREATE TABLE IF NOT EXISTS `change_template_teams` (
+    `id`          INT NOT NULL AUTO_INCREMENT,
+    `template_id` INT NOT NULL,
+    `team_id`     INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_ctt_template_team` (`template_id`, `team_id`),
+    CONSTRAINT `fk_ctt_template` FOREIGN KEY (`template_id`) REFERENCES `change_templates` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_ctt_team` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `change_notifications` (

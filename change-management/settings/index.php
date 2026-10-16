@@ -256,6 +256,11 @@ $translationNamespaces = ['common', 'change-management'];
         .approval-rules.is-enforce .ar-record-only select { opacity: .5; pointer-events: none; }
         .approval-rules.is-enforce .ar-record-only .ar-enforced { display: block; }
         .ar-actions { margin-top: 6px; }
+        .tpl-body { padding: 16px 20px; max-height: 70vh; overflow-y: auto; }
+        .tpl-body textarea, .tpl-body input[type=text] { width: 100%; box-sizing: border-box; }
+        .tpl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0 12px; }
+        .tpl-version { font-size: 13px; padding: 6px 0; border-bottom: 1px solid var(--border-soft, #eee); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .tpl-version input { flex: 1; min-width: 200px; }
         .stage-unset { display: inline-block; padding: 2px 8px; border-radius: 10px; background: var(--warning-bg, #fff8e1); border: 1px solid var(--warning-border, #ffcc80); color: var(--warning-text, #8a5a00); font-size: 11px; font-weight: 600; cursor: help; }
         .badge-yes { display: inline-block; padding: 2px 8px; border-radius: 10px; background: var(--cm-accent-soft, #e0f2f1); color: var(--cm-accent-hover, #00695c); font-size: 11px; font-weight: 600; }
         .badge-no  { color: var(--text-faint, #999); }
@@ -377,6 +382,21 @@ $translationNamespaces = ['common', 'change-management'];
         <!-- Left panel tab — per-analyst preference -->
         <?php endif; ?>
 
+        <?php if (settingsTabVisible($visibleTabs, 'templates')): ?>
+        <!-- Standard-change templates (#180 §8) - get_templates / save_template / template_action. -->
+        <div class="tab-content<?php echo $activeTabId === 'templates' ? ' active' : ''; ?>" id="templates-tab" data-capability="<?php echo Cap::CHANGES_TEMPLATES; ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('change-management.templates.heading')); ?></h2>
+                <button class="add-btn" onclick="openTemplateEditor(null)"><?php echo htmlspecialchars(t('change-management.templates.new')); ?></button>
+            </div>
+            <p style="color: var(--text-muted, #666); margin-bottom: 12px;"><?php echo htmlspecialchars(t('change-management.templates.intro')); ?></p>
+            <div id="tplOffNote" class="ar-warning" style="display:none; margin-bottom: 12px;"><?php echo htmlspecialchars(t('change-management.templates.off_note')); ?></div>
+            <table class="lookup-table">
+                <thead><tr><th><?php echo htmlspecialchars(t('change-management.templates.col_name')); ?></th><th><?php echo htmlspecialchars(t('change-management.templates.col_state')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_actions')); ?></th></tr></thead>
+                <tbody id="templates-list"><tr><td colspan="3" style="text-align:center;"><?php echo htmlspecialchars(t('change-management.settings.loading')); ?></td></tr></tbody>
+            </table>
+        </div>
+        <?php endif; ?>
         <?php if (settingsTabVisible($visibleTabs, 'approvals')): ?>
         <!-- Approval rules (#180) - api/change-management/get|save_approval_settings.php.
              Every choice here is a dropdown or a tick; the defaults are today's behaviour. -->
@@ -472,6 +492,15 @@ $translationNamespaces = ['common', 'change-management'];
                     <legend><?php echo htmlspecialchars(t('change-management.approval_settings.cancel')); ?></legend>
                     <select id="arCancelStatus"></select>
                     <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.cancel_help')); ?></span>
+                </fieldset>
+
+                <fieldset class="ar-group">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.templates')); ?></legend>
+                    <select id="arTemplates">
+                        <option value="0"><?php echo htmlspecialchars(t('change-management.approval_settings.templates_off')); ?></option>
+                        <option value="1"><?php echo htmlspecialchars(t('change-management.approval_settings.templates_on')); ?></option>
+                    </select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.templates_help')); ?></span>
                 </fieldset>
 
                 <fieldset class="ar-group">
@@ -591,6 +620,49 @@ $translationNamespaces = ['common', 'change-management'];
         </div>
     </div>
 
+    <!-- Template editor (#180 §8). A .modal-content, so mobile.css LAYER 3 makes it a sheet. -->
+    <div class="modal" id="templateModal">
+        <div class="modal-content" style="max-width: 820px;">
+            <div class="modal-header" id="tplTitle"></div>
+            <div class="tpl-body">
+                <input type="hidden" id="tplId">
+                <div class="form-group"><label for="tplName"><?php echo htmlspecialchars(t('change-management.templates.name')); ?></label><input type="text" id="tplName"></div>
+                <div class="form-group"><label for="tplScopeUse"><?php echo htmlspecialchars(t('change-management.templates.scope_use')); ?></label><textarea id="tplScopeUse" rows="2"></textarea></div>
+                <div class="form-group"><label for="tplScopeNot"><?php echo htmlspecialchars(t('change-management.templates.scope_not')); ?></label><textarea id="tplScopeNot" rows="2"></textarea></div>
+                <div class="tpl-grid">
+                    <div class="form-group"><label for="tplType"><?php echo htmlspecialchars(t('change-management.approval_settings.field_change_type_id')); ?></label><select id="tplType"></select></div>
+                    <div class="form-group"><label for="tplPriority"><?php echo htmlspecialchars(t('change-management.approval_settings.field_priority_id')); ?></label><select id="tplPriority"></select></div>
+                    <div class="form-group"><label for="tplImpact"><?php echo htmlspecialchars(t('change-management.approval_settings.field_impact_id')); ?></label><select id="tplImpact"></select></div>
+                    <div class="form-group"><label for="tplRiskL"><?php echo htmlspecialchars(t('change-management.approval_settings.field_risk_likelihood')); ?></label><select id="tplRiskL"><option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                    <div class="form-group"><label for="tplRiskI"><?php echo htmlspecialchars(t('change-management.approval_settings.field_risk_impact_score')); ?></label><select id="tplRiskI"><option value=""></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+                </div>
+                <?php foreach (['description', 'reason_for_change', 'risk_evaluation', 'test_plan', 'rollback_plan'] as $lf): ?>
+                <div class="form-group"><label for="tpl_<?php echo $lf; ?>"><?php echo htmlspecialchars(t('change-management.revisions.field.' . $lf)); ?></label><textarea id="tpl_<?php echo $lf; ?>" rows="3"></textarea></div>
+                <?php endforeach; ?>
+                <div class="form-group">
+                    <label><?php echo htmlspecialchars(t('change-management.templates.open_fields')); ?></label>
+                    <span class="help"><?php echo htmlspecialchars(t('change-management.templates.open_help')); ?></span>
+                    <div class="ar-ticks ar-ticks-grid" id="tplOpen"></div>
+                </div>
+                <div class="form-group">
+                    <label><?php echo htmlspecialchars(t('change-management.templates.teams')); ?></label>
+                    <span class="help"><?php echo htmlspecialchars(t('change-management.templates.teams_help')); ?></span>
+                    <div class="ar-ticks" id="tplTeams"></div>
+                </div>
+                <div class="form-group" id="tplVersionsGroup">
+                    <label><?php echo htmlspecialchars(t('change-management.templates.versions')); ?></label>
+                    <div id="tplVersions"></div>
+                </div>
+                <span class="help"><?php echo htmlspecialchars(t('change-management.templates.submit_help')); ?></span>
+            </div>
+            <div class="modal-actions" style="padding: 12px 20px;">
+                <button type="button" class="btn btn-secondary" onclick="closeTemplateEditor()"><?php echo htmlspecialchars(t('change-management.templates.close')); ?></button>
+                <button type="button" class="btn btn-secondary" id="tplSaveBtn" onclick="saveTemplate(false)"><?php echo htmlspecialchars(t('change-management.templates.save')); ?></button>
+                <button type="button" class="btn btn-primary" id="tplSubmitBtn" onclick="saveTemplate(true)"><?php echo htmlspecialchars(t('change-management.templates.submit')); ?></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast notification -->
 
     <script>
@@ -655,6 +727,7 @@ $translationNamespaces = ['common', 'change-management'];
             loadSettings();
             loadLookups();
             if (document.getElementById('approvalRulesForm')) loadApprovalRules();
+            if (document.getElementById('templates-list')) loadTemplates();
         });
 
         // ============================================================
@@ -675,6 +748,7 @@ $translationNamespaces = ['common', 'change-management'];
                 document.getElementById('arStaleVote').value = s.stale_vote;
                 document.getElementById('arDeleteSubmitted').value = s.delete_submitted;
                 document.getElementById('arChooseApprovers').value = s.choose_approvers;
+                document.getElementById('arTemplates').value = s.templates_enabled ? '1' : '0';
                 const rej = document.getElementById('arRejectStatus');
                 rej.innerHTML = `<option value="">${escapeHtml(window.t('change-management.approval_settings.reject_default'))}</option>`
                     + data.statuses.filter(st => st.is_active && (st.stage === 'draft' || st.stage === 'stopped'))
@@ -691,6 +765,129 @@ $translationNamespaces = ['common', 'change-management'];
                 box.textContent = blockers.length ? window.t('change-management.approval_settings.enforce_blocked', { statuses: blockers.join(', ') }) : '';
                 syncApprovalRules();
             } catch (e) { console.error(e); }
+        }
+
+        // ============================================================
+        // Standard-change templates (#180 §8)
+        // ============================================================
+        let TPL = { templates: [], teams: [], fields: [], can_write: false, can_approve: false, me: 0 };
+        const TT = (k, p) => window.t('change-management.templates.' + k, p);
+
+        async function loadTemplates() {
+            try {
+                const res = await fetch(API_BASE + 'get_templates.php');
+                const data = await res.json();
+                if (!data.success) return;
+                TPL = data;
+                document.getElementById('tplOffNote').style.display = data.enabled ? 'none' : '';
+                const tbody = document.getElementById('templates-list');
+                if (!data.templates.length) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">${escapeHtml(TT('none'))}</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = data.templates.map(t => {
+                    const approved = t.versions.find(v => v.state === 'approved');
+                    const waiting = t.versions.find(v => v.state === 'draft');
+                    let state = t.retired ? TT('state_retired')
+                        : approved ? TT('state_approved', { n: approved.version_no, name: approved.approved_by_name || '' })
+                        : TT('state_draft_only');
+                    if (waiting && !t.retired) state += ' · ' + TT('state_awaiting', { n: waiting.version_no });
+                    return `<tr>
+                        <td><strong>${escapeHtml(t.name)}</strong>${t.scope_use ? `<div style="font-size:12px;color:var(--text-muted,#777);">${escapeHtml(t.scope_use)}</div>` : ''}</td>
+                        <td>${escapeHtml(state)}</td>
+                        <td><button class="action-btn" onclick="openTemplateEditor(${t.id})" title="${escapeHtml(window.t('change-management.settings.edit'))}">&#9998;</button>
+                            ${data.can_write && !t.retired ? `<button class="action-btn delete" onclick="retireTemplate(${t.id})" title="${escapeHtml(TT('retire'))}">&#10005;</button>` : ''}</td>
+                    </tr>`;
+                }).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        function fillSelect(id, rows, value) {
+            const sel = document.getElementById(id);
+            sel.innerHTML = '<option value=""></option>' + rows.filter(r => r.is_active).map(r => `<option value="${r.id}">${escapeHtml(r.name)}</option>`).join('');
+            sel.value = value == null ? '' : String(value);
+        }
+
+        function openTemplateEditor(id) {
+            const t = id ? TPL.templates.find(x => x.id === id) : null;
+            const v = t ? t.values : {};
+            document.getElementById('tplTitle').textContent = t ? t.name : TT('new');
+            document.getElementById('tplId').value = t ? t.id : '';
+            document.getElementById('tplName').value = t ? t.name : '';
+            document.getElementById('tplScopeUse').value = t ? (t.scope_use || '') : '';
+            document.getElementById('tplScopeNot').value = t ? (t.scope_not || '') : '';
+            fillSelect('tplType', lookupCache.type, v.change_type_id);
+            fillSelect('tplPriority', lookupCache.priority, v.priority_id);
+            fillSelect('tplImpact', lookupCache.impact, v.impact_id);
+            document.getElementById('tplRiskL').value = v.risk_likelihood || '';
+            document.getElementById('tplRiskI').value = v.risk_impact_score || '';
+            ['description', 'reason_for_change', 'risk_evaluation', 'test_plan', 'rollback_plan'].forEach(f => {
+                document.getElementById('tpl_' + f).value = v[f] || '';
+            });
+            const open = t ? t.open_fields : ['description'];
+            document.getElementById('tplOpen').innerHTML = TPL.fields.map(f =>
+                `<label><input type="checkbox" name="tplOpen" value="${f}" ${open.includes(f) ? 'checked' : ''}> ${escapeHtml(window.t('change-management.approval_settings.field_' + f) !== 'change-management.approval_settings.field_' + f ? window.t('change-management.approval_settings.field_' + f) : f)}</label>`).join('');
+            const teams = t ? t.team_ids : [];
+            document.getElementById('tplTeams').innerHTML = TPL.teams.map(tm =>
+                `<label><input type="checkbox" name="tplTeam" value="${tm.id}" ${teams.includes(parseInt(tm.id)) ? 'checked' : ''}> ${escapeHtml(tm.name)}</label>`).join('');
+            const vers = t ? t.versions : [];
+            document.getElementById('tplVersionsGroup').style.display = vers.length ? '' : 'none';
+            document.getElementById('tplVersions').innerHTML = vers.map(ver => {
+                const mayApprove = ver.state === 'draft' && TPL.can_approve;
+                return `<div class="tpl-version"><strong>v${ver.version_no}</strong> ${escapeHtml(ver.state)}
+                    ${ver.approved_by_name ? ' · ' + escapeHtml(ver.approved_by_name) + (ver.approval_note ? ': ' + escapeHtml(ver.approval_note) : '') : ''}
+                    ${ver.created_by_name ? ' · ' + escapeHtml(ver.created_by_name) : ''}
+                    ${mayApprove ? `<input type="text" id="tplNote${ver.id}" placeholder="${escapeHtml(TT('approve_note'))}"><button type="button" class="btn btn-primary btn-sm" onclick="approveTemplateVersion(${ver.id})">${escapeHtml(TT('approve'))}</button>` : ''}
+                </div>`;
+            }).join('');
+            const ro = !TPL.can_write;
+            document.getElementById('tplSaveBtn').style.display = ro ? 'none' : '';
+            document.getElementById('tplSubmitBtn').style.display = ro ? 'none' : '';
+            document.getElementById('templateModal').classList.add('active');
+        }
+
+        function closeTemplateEditor() { document.getElementById('templateModal').classList.remove('active'); }
+
+        async function saveTemplate(submit) {
+            const values = {
+                change_type_id: document.getElementById('tplType').value, priority_id: document.getElementById('tplPriority').value,
+                impact_id: document.getElementById('tplImpact').value, risk_likelihood: document.getElementById('tplRiskL').value,
+                risk_impact_score: document.getElementById('tplRiskI').value
+            };
+            ['description', 'reason_for_change', 'risk_evaluation', 'test_plan', 'rollback_plan'].forEach(f => { values[f] = document.getElementById('tpl_' + f).value; });
+            const payload = {
+                id: document.getElementById('tplId').value || null,
+                name: document.getElementById('tplName').value,
+                scope_use: document.getElementById('tplScopeUse').value,
+                scope_not: document.getElementById('tplScopeNot').value,
+                values,
+                open_fields: [...document.querySelectorAll('input[name="tplOpen"]:checked')].map(i => i.value),
+                team_ids: [...document.querySelectorAll('input[name="tplTeam"]:checked')].map(i => parseInt(i.value)),
+                submit
+            };
+            try {
+                const res = await fetch(API_BASE + 'save_template.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const data = await res.json();
+                if (data.success) { closeTemplateEditor(); showToast(TT(submit ? 'submitted' : 'saved'), 'success'); loadTemplates(); }
+                else showToast(data.error || window.t('change-management.toast.save_failed'), 'error');
+            } catch (e) { showToast(window.t('change-management.toast.save_failed'), 'error'); }
+        }
+
+        async function approveTemplateVersion(versionId) {
+            const note = (document.getElementById('tplNote' + versionId) || {}).value || '';
+            const res = await fetch(API_BASE + 'template_action.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'approve', version_id: versionId, note }) });
+            const data = await res.json();
+            if (data.success) { closeTemplateEditor(); showToast(TT('approved'), 'success'); loadTemplates(); }
+            else showToast(data.error || window.t('change-management.toast.save_failed'), 'error');
+        }
+
+        async function retireTemplate(id) {
+            const t = TPL.templates.find(x => x.id === id);
+            if (!(await showConfirm({ title: TT('retire'), message: TT('retire_confirm', { name: t ? t.name : '' }), okLabel: TT('retire'), okClass: 'danger' }))) return;
+            const res = await fetch(API_BASE + 'template_action.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'retire', template_id: id }) });
+            const data = await res.json();
+            if (data.success) { showToast(TT('retired'), 'success'); loadTemplates(); }
+            else showToast(data.error || window.t('change-management.toast.save_failed'), 'error');
         }
 
         // In Enforce mode the three Record-only choices are fixed (each one, the other
@@ -713,7 +910,8 @@ $translationNamespaces = ['common', 'change-management'];
                 delete_submitted: document.getElementById('arDeleteSubmitted').value,
                 reject_status_id: document.getElementById('arRejectStatus').value,
                 cancel_status_id: document.getElementById('arCancelStatus').value,
-                choose_approvers: document.getElementById('arChooseApprovers').value
+                choose_approvers: document.getElementById('arChooseApprovers').value,
+                templates_enabled: document.getElementById('arTemplates').value === '1'
             };
             try {
                 const res = await fetch(API_BASE + 'save_approval_settings.php', {

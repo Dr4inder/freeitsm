@@ -39,6 +39,7 @@ require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/../changes/approvals.php';
 require_once __DIR__ . '/../changes/revisions.php';
 require_once __DIR__ . '/../rbac.php';   // analystMayAct() - "Choose approvers" (#180 Part 3)
+require_once __DIR__ . '/../changes/templates.php';
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 
 class ChangesService
@@ -69,6 +70,19 @@ class ChangesService
     private static function applyCreate(PDO $conn, ActorContext $ctx, int $tenantId, array $in): array
     {
         self::assertCanWrite($conn, $ctx);
+        // Raised from an approved template (#180 §8): the version must be approved and usable
+        // by this person; its fields fill in whatever the request leaves out.
+        $templateVersion = null;
+        if (!empty($in['template_version_id'])) {
+            $templateVersion = ChangeTemplates::version($conn, (int)$in['template_version_id']);
+            if (!$templateVersion || $templateVersion['state'] !== 'approved' || $templateVersion['retired_datetime'] !== null
+                || !ChangeTemplates::mayUse($conn, $templateVersion['content'], $ctx->actorId)) {
+                throw new ServiceError('validation', 'invalid_field', t('change-management.templates.not_usable'));
+            }
+            foreach ($templateVersion['content']['values'] ?? [] as $col => $val) {
+                if (!array_key_exists($col, $in) && $val !== null && $val !== '') $in[$col] = $val;
+            }
+        }
         $title = trim((string)($in['title'] ?? ''));
         if ($title === '') {
             throw new ServiceError('validation', 'missing_field', "'title' is required.");
@@ -200,6 +214,18 @@ class ChangesService
         // straight into awaiting must have somebody who can decide it. Thrown inside the
         // transaction, so the INSERT goes too.
         $cfg = changeApprovalSettings($conn);
+        if ($templateVersion) {
+            $conn->prepare("UPDATE changes SET template_version_id = ? WHERE id = ?")->execute([(int)$templateVersion['id'], $changeId]);
+        }
+        // A standard change created straight into an approval stage, its recipe untouched:
+        // pre-authorised by the template's own approval (§8).
+        if ($templateVersion && in_array($statusStage, ['awaiting', 'approved', 'implementing', 'done'], true)) {
+            $pre = self::preAuthorise($conn, $changeId, $statusStage, $actorId, $cfg);
+            if ($pre) {
+                $after = array_merge($after, $pre);
+                return [$changeId, $after];
+            }
+        }
         changeApprovalGuardMove(null, ['name' => $status[1], 'stage' => $statusStage], $cfg);
         if ($statusStage === 'awaiting' || $statusStage === 'approved') {
             $fresh = self::rawRow($conn, $changeId);
@@ -454,10 +480,8 @@ class ChangesService
             if ($setupTouched && $oldStage !== 'draft' && $oldStage !== null && $targetStage !== 'draft') {
                 throw new ServiceError('conflict', 'approval_locked', t('change-management.approval.locked'));
             }
-            if ($newStatusId !== null) {
-                changeApprovalGuardMove(changeApprovalCurrent($conn, $changeId),
-                    ['name' => self::statusName($conn, $newStatusId), 'stage' => $targetStage], $cfg);
-            }
+            // The guard on the move itself runs after the save (below), still inside this
+            // transaction: a standard change is judged on the fields as they will stand.
         }
 
         // Entering the approved stage by hand is an approval, so it records when (F1).
@@ -497,7 +521,26 @@ class ChangesService
         $who = self::actorName($conn, $ctx);
         $after = [];
 
-        if ($newStatusId !== null && $newStage !== $oldStage) {
+        // A standard change leaving Draft with its recipe untouched is pre-authorised by its
+        // template's approval (§8), before the guard judges the move.
+        $preAuthorised = false;
+        if ($newStatusId !== null && $oldStage === 'draft' && !empty($fresh['template_version_id'])
+            && in_array($newStage, ['awaiting', 'approved', 'implementing', 'done'], true)) {
+            $pre = self::preAuthorise($conn, $changeId, $newStage, $actorId, $cfg);
+            if ($pre) {
+                $after = array_merge($after, $pre);
+                $preAuthorised = true;
+                $round = null;
+            }
+        }
+        // TRAP: the guard. After the save so a template change is judged as it will stand;
+        // still inside the transaction, so a refusal rolls the save back with it.
+        if ($cfg['enforce'] && $newStatusId !== null && !$preAuthorised) {
+            changeApprovalGuardMove(changeApprovalCurrent($conn, $changeId),
+                ['name' => self::statusName($conn, $newStatusId), 'stage' => $targetStage], $cfg);
+        }
+
+        if (!$preAuthorised && $newStatusId !== null && $newStage !== $oldStage) {
             if ($newStage === 'awaiting') {
                 // Submitted, or resubmitted by hand: a new request, so a standing
                 // approval is superseded and the vote starts again (F2 - votes used to
@@ -564,7 +607,7 @@ class ChangesService
         }
 
         // change.approved on a genuine manual transition into the approved stage.
-        if ($becameApproved) {
+        if ($becameApproved && !$preAuthorised) {
             $joined = self::loadJoined($conn, $ctx, $changeId);
             $after[] = fn() => self::approvedDispatch($changeId, $joined['title'], $joined['risk_level'],
                 $joined['approver_id'] !== null ? (int)$joined['approver_id'] : null, 'manual');
@@ -1276,6 +1319,43 @@ class ChangesService
         if ($ctx->actorId > 0 && analystModuleLevel($conn, $ctx->actorId, 'changes') === 'read') {
             throw new ServiceError('forbidden', 'read_only', 'You have read-only access to Change Management.');
         }
+    }
+
+    /**
+     * Pre-authorise a standard change if its template allows it now (§8): record an approved
+     * 'pre_authorised' round naming the template version and who approved it, stamp the
+     * approval, and move a change entering awaiting on to the first approved status. Returns
+     * the events to fire, or null when the template does not pre-authorise it - the change
+     * then takes the normal route, and the page says why.
+     *
+     * @param int $changeId  the change, already saved
+     * @param string $stage  the stage it is entering
+     * @param int $actorId  who is submitting it (must be allowed to use the template)
+     * @param array $cfg  changeApprovalSettings()
+     */
+    private static function preAuthorise(PDO $conn, int $changeId, string $stage, int $actorId, array $cfg): ?array
+    {
+        $row = self::rawRow($conn, $changeId);
+        $chk = ChangeTemplates::check($conn, $row, $cfg, $actorId);
+        if (!$chk['ok']) {
+            return null;
+        }
+        $current = changeApprovalCurrent($conn, $changeId);
+        if ($current) {
+            changeApprovalClose($conn, (int)$current['id'], $current['state'] === 'open' ? 'withdrawn' : 'superseded', 'Pre-authorised by its template');
+        }
+        changeApprovalRecordApproved($conn, $row, 'pre_authorised', null, ChangeTemplates::decisionNote($chk['version']), $cfg);
+        $conn->prepare("UPDATE changes SET approval_datetime = COALESCE(approval_datetime, UTC_TIMESTAMP()) WHERE id = ?")->execute([$changeId]);
+        if ($stage === 'awaiting') {
+            $target = changeStatusForStage($conn, 'approved');
+            if ($target) {
+                $from = self::statusName($conn, (int)$row['status_id']);
+                $conn->prepare("UPDATE changes SET status_id = ?, modified_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$target['id'], $changeId]);
+                self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status', $from, $target['name']);
+            }
+        }
+        self::auditWrite($conn, $changeId, $actorId, 'cab_vote', 'Template', null, ChangeTemplates::decisionNote($chk['version']));
+        return [fn() => self::approvedDispatch($changeId, $row['title'] ?? null, $row['risk_level'] ?? null, null, 'pre_authorised')];
     }
 
     /**
