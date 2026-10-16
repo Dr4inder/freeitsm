@@ -36,6 +36,7 @@
 
 require_once __DIR__ . '/../service_context.php';
 require_once __DIR__ . '/../tenancy.php';
+require_once __DIR__ . '/../changes/approvals.php';
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 
 class ChangesService
@@ -65,6 +66,7 @@ class ChangesService
             $d = self::lookupDefault($conn, 'change_statuses');
             $status = [$d[0], $d[1], 0];
         }
+        $statusStage = self::stageOf($conn, $status[0]);
         $priority = self::resolveLookup($conn, $in, 'priority', 'change_priorities') ?? self::lookupDefault($conn, 'change_priorities');
         $impact   = self::resolveLookup($conn, $in, 'impact', 'change_impacts') ?? self::lookupDefault($conn, 'change_impacts');
 
@@ -119,8 +121,10 @@ class ChangesService
                 description, reason_for_change, risk_evaluation, test_plan, rollback_plan,
                 post_implementation_review, risk_likelihood, risk_impact_score, risk_score, risk_level,
                 pir_actual_start, pir_actual_end, pir_lessons_learned, pir_follow_up,
-                cab_required, cab_approval_type, created_by_id, created_datetime, modified_datetime
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP())"
+                cab_required, cab_approval_type, created_by_id, created_datetime, modified_datetime,
+                approval_datetime
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP(),
+                IF(?, UTC_TIMESTAMP(), NULL))"
         );
         $ins->execute([
             $tenantId, $title, $type[0], $status[0], $priority[0], $impact[0], $text('category'), $categoryId,
@@ -133,6 +137,7 @@ class ChangesService
             $dates['pir_actual_start'], $dates['pir_actual_end'],
             $text('pir_lessons_learned'), $text('pir_follow_up'),
             $cabRequired, $cabType, $actorId,
+            $statusStage === 'approved' ? 1 : 0,
         ]);
         $changeId = (int)$conn->lastInsertId();
 
@@ -199,8 +204,8 @@ class ChangesService
             }
         }
 
-        $newStatusName = null;
-        $wasApproved = ($current['status_name'] === 'Approved');
+        $newStatusId = null;
+        $oldStage = $current['status_stage'];
         foreach ([
             ['change_type', 'change_types',      'change_type_id', 'Type',     'type_name'],
             ['status',      'change_statuses',   'status_id',      'Status',   'status_name'],
@@ -215,7 +220,7 @@ class ChangesService
             $args[]    = $res[0];
             $queueAudit($label, $current[$currentNameKey], $res[1], $key === 'status' ? 'status_change' : 'field_change');
             if ($key === 'status') {
-                $newStatusName = $res[1];
+                $newStatusId = $res[0];
             }
         }
 
@@ -359,6 +364,17 @@ class ChangesService
             return; // idempotent — nothing to write
         }
 
+        // Entering the approved stage by hand is an approval, so it records when (F1).
+        // Without the stamp Watchtower counted a hand-approved change as awaiting for
+        // ever, and a Projects "change approved" gate never ticked. Moving back from
+        // implementing/done to approved is not a new approval, so it keeps the old date.
+        $newStage = $newStatusId !== null ? self::stageOf($conn, $newStatusId) : $oldStage;
+        $becameApproved = $newStatusId !== null && $newStage === 'approved'
+            && !in_array($oldStage, ['approved', 'implementing', 'done'], true);
+        if ($becameApproved) {
+            $updates[] = 'approval_datetime = UTC_TIMESTAMP()';
+        }
+
         $updates[] = 'modified_datetime = UTC_TIMESTAMP()';
         $args[]    = $changeId;
         $conn->prepare('UPDATE changes SET ' . implode(', ', $updates) . ' WHERE id = ?')->execute($args);
@@ -367,8 +383,24 @@ class ChangesService
             self::auditWrite($conn, $changeId, $actorId, $actionType, $label, $old, $new);
         }
 
-        // change.approved on a genuine manual transition into Approved.
-        if ($newStatusName === 'Approved' && !$wasApproved) {
+        // A resubmission starts the vote again (F2). Votes used to survive on the
+        // member rows, so after a required Reject the change was resubmitted with that
+        // Reject still counted - and the next vote by anybody sent it straight back to
+        // Draft. Entering the awaiting stage from anywhere else clears them.
+        if ($newStatusId !== null && $newStage === 'awaiting' && $oldStage !== 'awaiting') {
+            $clr = $conn->prepare(
+                "UPDATE change_cab_members SET vote = NULL, vote_comment = NULL, vote_datetime = NULL
+                  WHERE change_id = ? AND vote IS NOT NULL"
+            );
+            $clr->execute([$changeId]);
+            if ($clr->rowCount() > 0) {
+                self::auditWrite($conn, $changeId, $actorId, 'cab_vote', 'CAB Vote', null,
+                    'Votes from the previous submission cleared (' . $clr->rowCount() . ')');
+            }
+        }
+
+        // change.approved on a genuine manual transition into the approved stage.
+        if ($becameApproved) {
             $fresh = self::loadJoined($conn, $ctx, $changeId);
             self::approvedDispatch($changeId, $fresh['title'], $fresh['risk_level'],
                 $fresh['approver_id'] !== null ? (int)$fresh['approver_id'] : null);
@@ -573,19 +605,13 @@ class ChangesService
         $newStatus = null;
 
         $changeStmt = $conn->prepare(
-            "SELECT c.cab_approval_type, c.title, c.risk_level, c.approver_id, cs.name AS status
+            "SELECT c.cab_approval_type, c.title, c.risk_level, c.approver_id, cs.name AS status, cs.stage AS status_stage
              FROM changes c LEFT JOIN change_statuses cs ON cs.id = c.status_id WHERE c.id = ?"
         );
         $changeStmt->execute([$changeId]);
         $changeRow = $changeStmt->fetch(PDO::FETCH_ASSOC);
 
-        $statusIdFor = function ($name) use ($conn) {
-            $s = $conn->prepare("SELECT id FROM change_statuses WHERE name = ? LIMIT 1");
-            $s->execute([$name]);
-            return $s->fetchColumn() ?: null;
-        };
-
-        if ($changeRow && $changeRow['status'] === 'Pending Approval') {
+        if ($changeRow && $changeRow['status_stage'] === 'awaiting') {
             $approvalType = $changeRow['cab_approval_type'] ?: 'all';
             $reqStmt = $conn->prepare("SELECT vote FROM change_cab_members WHERE change_id = ? AND is_required = 1");
             $reqStmt->execute([$changeId]);
@@ -595,25 +621,31 @@ class ChangesService
             $approved = count(array_filter($reqVotes, fn($v) => $v === 'Approve'));
             $rejected = count(array_filter($reqVotes, fn($v) => $v === 'Reject'));
 
+            // TRAP: the targets come from the STAGE, never a name. Looking up 'Approved' by
+            // name set status_id to NULL as soon as somebody renamed it (F3).
+            $target = null;
             if ($rejected > 0) {
-                $conn->prepare("UPDATE changes SET status_id = ?, modified_datetime = UTC_TIMESTAMP() WHERE id = ?")
-                     ->execute([$statusIdFor('Draft'), $changeId]);
-                self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status', 'Pending Approval', 'Draft');
-                $statusChanged = true;
-                $newStatus = 'Draft';
+                $target = changeStatusForStage($conn, 'draft');
             } elseif ($totalRequired > 0) {
                 $thresholdMet = ($approvalType === 'majority') ? ($approved > $totalRequired / 2) : ($approved === $totalRequired);
                 if ($thresholdMet) {
-                    $conn->prepare("UPDATE changes SET status_id = ?, approval_datetime = UTC_TIMESTAMP(), modified_datetime = UTC_TIMESTAMP() WHERE id = ?")
-                         ->execute([$statusIdFor('Approved'), $changeId]);
-                    self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status', 'Pending Approval', 'Approved');
-                    $statusChanged = true;
-                    $newStatus = 'Approved';
+                    $target = changeStatusForStage($conn, 'approved');
                 }
+            }
+            if ($target !== null) {
+                $isApproval = ($rejected === 0);
+                $conn->prepare(
+                    "UPDATE changes SET status_id = ?, modified_datetime = UTC_TIMESTAMP()"
+                    . ($isApproval ? ', approval_datetime = UTC_TIMESTAMP()' : '') . ' WHERE id = ?'
+                )->execute([$target['id'], $changeId]);
+                self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status', $changeRow['status'], $target['name']);
+                $statusChanged = true;
+                $newStatus = $target['name'];
+                $approvedNow = $isApproval;
             }
         }
 
-        if ($statusChanged && $newStatus === 'Approved') {
+        if ($statusChanged && !empty($approvedNow)) {
             self::approvedDispatch($changeId, $changeRow['title'] ?? null, $changeRow['risk_level'] ?? null,
                 isset($changeRow['approver_id']) && $changeRow['approver_id'] !== null ? (int)$changeRow['approver_id'] : null);
         }
@@ -745,7 +777,7 @@ class ChangesService
         $stmt = $conn->prepare(
             "SELECT c.*,
                     ct.name AS type_name,
-                    cs.name AS status_name, cs.is_closed AS status_is_closed,
+                    cs.name AS status_name, cs.stage AS status_stage, cs.is_closed AS status_is_closed,
                     cp.name AS priority_name,
                     ci.name AS impact_name,
                     cc.name AS category_name,
@@ -861,6 +893,23 @@ class ChangesService
              ORDER BY is_default DESC, display_order, id LIMIT 1"
         )->fetch(PDO::FETCH_ASSOC);
         return $row ? [(int)$row['id'], $row['name']] : [null, null];
+    }
+
+    /**
+     * The stage of a status (draft/awaiting/approved/implementing/done/stopped), or
+     * null when it has not been classified. See includes/changes/approvals.php.
+     *
+     * @param ?int $statusId  a change_statuses id
+     */
+    private static function stageOf(PDO $conn, ?int $statusId): ?string
+    {
+        if ($statusId === null) {
+            return null;
+        }
+        $s = $conn->prepare("SELECT stage FROM change_statuses WHERE id = ?");
+        $s->execute([$statusId]);
+        $stage = $s->fetchColumn();
+        return changeStageIsValid($stage) ? $stage : null;
     }
 
     /**

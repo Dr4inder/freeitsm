@@ -3515,6 +3515,7 @@ INSERT IGNORE INTO `change_types` (`name`, `colour`, `is_default`, `display_orde
 CREATE TABLE IF NOT EXISTS `change_statuses` (
     `id`                INT NOT NULL AUTO_INCREMENT,
     `name`              VARCHAR(50) NOT NULL,
+    `stage`             VARCHAR(20) NULL,
     `is_closed`         TINYINT(1) NOT NULL DEFAULT 0,
     `colour`            VARCHAR(20) NULL,
     `is_default`        TINYINT(1) NOT NULL DEFAULT 0,
@@ -3525,17 +3526,17 @@ CREATE TABLE IF NOT EXISTS `change_statuses` (
     UNIQUE KEY `uq_change_statuses_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT IGNORE INTO `change_statuses` (`name`, `is_closed`, `colour`, `is_default`, `display_order`) VALUES
-    ('Draft',            0, '#9e9e9e', 1, 10),
-    ('Submitted',        0, '#2563eb', 0, 20),
-    ('Pending Approval', 0, '#e65100', 0, 30),
-    ('Approved',         0, '#2e7d32', 0, 40),
-    ('Rejected',         1, '#c62828', 0, 50),
-    ('Scheduled',        0, '#9333ea', 0, 60),
-    ('In Progress',      0, '#1565c0', 0, 70),
-    ('Completed',        1, '#1b5e20', 0, 80),
-    ('Failed',           1, '#c62828', 0, 90),
-    ('Cancelled',        1, '#bdbdbd', 0, 100);
+INSERT IGNORE INTO `change_statuses` (`name`, `stage`, `is_closed`, `colour`, `is_default`, `display_order`) VALUES
+    ('Draft',            'draft',        0, '#9e9e9e', 1, 10),
+    ('Submitted',        'draft',        0, '#2563eb', 0, 20),
+    ('Pending Approval', 'awaiting',     0, '#e65100', 0, 30),
+    ('Approved',         'approved',     0, '#2e7d32', 0, 40),
+    ('Rejected',         'stopped',      1, '#c62828', 0, 50),
+    ('Scheduled',        'implementing', 0, '#9333ea', 0, 60),
+    ('In Progress',      'implementing', 0, '#1565c0', 0, 70),
+    ('Completed',        'done',         1, '#1b5e20', 0, 80),
+    ('Failed',           'done',         1, '#c62828', 0, 90),
+    ('Cancelled',        'stopped',      1, '#bdbdbd', 0, 100);
 
 CREATE TABLE IF NOT EXISTS `change_priorities` (
     `id`                INT NOT NULL AUTO_INCREMENT,

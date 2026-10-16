@@ -301,21 +301,20 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     // Failed, Cancelled) that list caught exactly one, so completed and failed
     // changes were counted as upcoming work. is_closed is the fact it wanted.
 
-    // Awaiting approval is a recorded fact, not a status name: not yet approved,
-    // not finished, and no longer sitting in the status it started in. Reading it
-    // from the approval itself means an extra approval stage added to the
-    // workflow is counted without being listed in here.
+    // Awaiting approval = the status is in the AWAITING stage (Settings → Statuses),
+    // not yet approved. The stage is what the approval rules themselves read
+    // (includes/changes/approvals.php), so this count and the Approvals page can
+    // never disagree, and renaming Pending Approval changes neither.
     //
-    // is_default = 0 is doing real work. A change still in its starting status is
-    // a DRAFT — nobody has submitted it, so it is not waiting on anyone, and
-    // putting it on an "awaiting approval" count would nag about something that
-    // is nobody's turn. The first version of this counted drafts, which is how
-    // the number went from 0 to 1 on a database with one unsubmitted draft in it.
+    // It used to be "no approval date, not closed, not the default status". That
+    // counted a Draft-stage status such as Submitted, and every change moved to
+    // Scheduled by hand, because a manual approval never recorded its date (F1 on
+    // the #180 design). Drafts stay out either way: nobody has asked for a decision.
     $chUnapprovedStmt = $conn->prepare(
         "SELECT COUNT(*)
          FROM changes c
          JOIN change_statuses cs ON cs.id = c.status_id
-         WHERE c.approval_datetime IS NULL AND cs.is_closed = 0 AND cs.is_default = 0{$chScopeSql}"
+         WHERE c.approval_datetime IS NULL AND cs.stage = 'awaiting'{$chScopeSql}"
     );
     $chUnapprovedStmt->execute($chScopeArgs);
     $chUnapproved = (int)$chUnapprovedStmt->fetchColumn();

@@ -242,6 +242,7 @@ $translationNamespaces = ['common', 'change-management'];
         .lookup-table { width: 100%; border-collapse: collapse; }
         .lookup-table th, .lookup-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border-soft, #f0f0f0); font-size: 14px; }
         .lookup-table th { font-weight: 600; color: var(--text-muted, #666); background: var(--surface-2, #fafafa); }
+        .stage-unset { display: inline-block; padding: 2px 8px; border-radius: 10px; background: var(--warning-bg, #fff8e1); border: 1px solid var(--warning-border, #ffcc80); color: var(--warning-text, #8a5a00); font-size: 11px; font-weight: 600; cursor: help; }
         .badge-yes { display: inline-block; padding: 2px 8px; border-radius: 10px; background: var(--cm-accent-soft, #e0f2f1); color: var(--cm-accent-hover, #00695c); font-size: 11px; font-weight: 600; }
         .badge-no  { color: var(--text-faint, #999); }
         /* Active/Inactive uses the shared .status-badge / .status-active / .status-inactive classes from inbox.css (canonical green/red). */
@@ -306,8 +307,8 @@ $translationNamespaces = ['common', 'change-management'];
             </div>
             <p style="color: var(--text-muted, #666); margin-bottom: 16px;"><?php echo t('change-management.settings.statuses_intro'); ?></p>
             <table class="lookup-table">
-                <thead><tr><th><?php echo htmlspecialchars(t('change-management.settings.col_name')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_colour')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_closed')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_default')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_order')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_status')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_actions')); ?></th></tr></thead>
-                <tbody id="statuses-list"><tr><td colspan="7" style="text-align:center;"><?php echo htmlspecialchars(t('change-management.settings.loading')); ?></td></tr></tbody>
+                <thead><tr><th><?php echo htmlspecialchars(t('change-management.settings.col_name')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_stage')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_colour')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_closed')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_default')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_order')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_status')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_actions')); ?></th></tr></thead>
+                <tbody id="statuses-list"><tr><td colspan="8" style="text-align:center;"><?php echo htmlspecialchars(t('change-management.settings.loading')); ?></td></tr></tbody>
             </table>
         </div>
 
@@ -408,6 +409,17 @@ $translationNamespaces = ['common', 'change-management'];
                     <label for="lookupItemColour"><?php echo htmlspecialchars(t('change-management.settings.modal_colour')); ?></label>
                     <input type="color" id="lookupItemColour" value="#2563eb" style="width: 60px; height: 32px; padding: 2px;">
                     <span class="help"><?php echo htmlspecialchars(t('change-management.settings.modal_colour_help')); ?></span>
+                </div>
+
+                <div class="form-group" id="lookupItemStageGroup" style="display: none;">
+                    <label for="lookupItemStage"><?php echo htmlspecialchars(t('change-management.settings.modal_stage')); ?></label>
+                    <select id="lookupItemStage" onchange="syncClosedToStage()">
+                        <option value=""><?php echo htmlspecialchars(t('change-management.stage.none')); ?></option>
+                        <?php require_once __DIR__ . '/../../includes/changes/approvals.php'; foreach (CHANGE_STAGES as $st): ?>
+                        <option value="<?php echo $st; ?>"><?php echo htmlspecialchars(t('change-management.stage.' . $st)); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <span class="help"><?php echo htmlspecialchars(t('change-management.settings.modal_stage_help')); ?></span>
                 </div>
 
                 <div class="form-group" id="lookupItemClosedGroup" style="display: none;">
@@ -514,7 +526,7 @@ $translationNamespaces = ['common', 'change-management'];
 
         // Per-kind metadata: API filenames, response key, table id, column count, fields shown.
         const LOOKUP_KINDS = {
-            'status':   { get: 'get_change_statuses.php',   save: 'save_change_status.php',   del: 'delete_change_status.php',   listKey: 'statuses',   tableId: 'statuses-list',   colspan: 7, hasClosed: true,  label: window.t('change-management.settings.kind_status')   },
+            'status':   { get: 'get_change_statuses.php',   save: 'save_change_status.php',   del: 'delete_change_status.php',   listKey: 'statuses',   tableId: 'statuses-list',   colspan: 8, hasClosed: true,  hasStage: true, label: window.t('change-management.settings.kind_status')   },
             'priority': { get: 'get_change_priorities.php', save: 'save_change_priority.php', del: 'delete_change_priority.php', listKey: 'priorities', tableId: 'priorities-list', colspan: 6, hasClosed: false, label: window.t('change-management.settings.kind_priority') },
             'type':     { get: 'get_change_types.php',      save: 'save_change_type.php',     del: 'delete_change_type.php',     listKey: 'types',      tableId: 'types-list',      colspan: 6, hasClosed: false, label: window.t('change-management.settings.kind_type')     },
             'impact':   { get: 'get_change_impacts.php',    save: 'save_change_impact.php',   del: 'delete_change_impact.php',   listKey: 'impacts',    tableId: 'impacts-list',    colspan: 6, hasClosed: false, label: window.t('change-management.settings.kind_impact')   }
@@ -555,12 +567,20 @@ $translationNamespaces = ['common', 'change-management'];
                 const swatch = r.colour
                     ? `<span class="swatch" style="background:${escapeHtml(r.colour)};"></span><code style="font-size:12px;">${escapeHtml(r.colour)}</code>`
                     : '<span class="badge-no">—</span>';
+                // A status with no stage is shown loudly: approvals cannot be enforced
+                // until every active status has one (includes/changes/approvals.php).
+                const stageCol = cfg.hasStage
+                    ? (r.stage
+                        ? `<td>${escapeHtml(window.t('change-management.stage.' + r.stage))}</td>`
+                        : `<td><span class="stage-unset" title="${escapeHtml(window.t('change-management.settings.stage_unset_marker'))}">${escapeHtml(window.t('change-management.stage.none'))}</span></td>`)
+                    : '';
                 const closedCol = cfg.hasClosed
                     ? `<td>${r.is_closed ? `<span class="badge-yes">${window.t('change-management.settings.yes')}</span>` : `<span class="badge-no">${window.t('change-management.settings.no')}</span>`}</td>`
                     : '';
                 return `
                 <tr>
                     <td><strong>${escapeHtml(r.name)}</strong></td>
+                    ${stageCol}
                     <td>${swatch}</td>
                     ${closedCol}
                     <td>${r.is_default ? `<span class="badge-yes">${window.t('change-management.settings.yes')}</span>` : `<span class="badge-no">${window.t('change-management.settings.no')}</span>`}</td>
@@ -596,7 +616,10 @@ $translationNamespaces = ['common', 'change-management'];
             document.getElementById('lookupItemDefault').checked = false;
             document.getElementById('lookupItemOrder').value = '0';
             document.getElementById('lookupItemActive').checked = true;
+            document.getElementById('lookupItemStage').value = '';
+            document.getElementById('lookupItemStageGroup').style.display = cfg.hasStage ? '' : 'none';
             document.getElementById('lookupItemClosedGroup').style.display = cfg.hasClosed ? '' : 'none';
+            syncClosedToStage();
             document.getElementById('lookupModal').classList.add('active');
         }
 
@@ -613,8 +636,23 @@ $translationNamespaces = ['common', 'change-management'];
             document.getElementById('lookupItemDefault').checked = !!item.is_default;
             document.getElementById('lookupItemOrder').value = item.display_order;
             document.getElementById('lookupItemActive').checked = !!item.is_active;
+            document.getElementById('lookupItemStage').value = item.stage || '';
+            document.getElementById('lookupItemStageGroup').style.display = cfg.hasStage ? '' : 'none';
             document.getElementById('lookupItemClosedGroup').style.display = cfg.hasClosed ? '' : 'none';
+            syncClosedToStage();
             document.getElementById('lookupModal').classList.add('active');
+        }
+
+        // Closed follows the stage (Done and Stopped are closed, the rest open), so the
+        // tick box is only offered for a status that has no stage yet. The server
+        // applies the same rule, so this is comfort, not the control.
+        function syncClosedToStage() {
+            const kind = document.getElementById('lookupItemKind').value;
+            if (!LOOKUP_KINDS[kind] || !LOOKUP_KINDS[kind].hasStage) return;
+            const stage = document.getElementById('lookupItemStage').value;
+            const closed = document.getElementById('lookupItemClosed');
+            if (stage) closed.checked = (stage === 'done' || stage === 'stopped');
+            document.getElementById('lookupItemClosedGroup').style.display = stage ? 'none' : '';
         }
 
         function closeLookupModal() {
@@ -654,6 +692,7 @@ $translationNamespaces = ['common', 'change-management'];
                 is_active: document.getElementById('lookupItemActive').checked ? 1 : 0
             };
             if (cfg.hasClosed) payload.is_closed = document.getElementById('lookupItemClosed').checked ? 1 : 0;
+            if (cfg.hasStage) payload.stage = document.getElementById('lookupItemStage').value;
 
             try {
                 const res = await fetch(API_BASE + cfg.save, {

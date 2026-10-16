@@ -17,7 +17,7 @@ requireModuleAccessJson('changes');
 try {
     $conn = connectToDatabase();
 
-    $sql = "SELECT id, name, is_closed, colour, is_default, display_order, is_active, created_datetime
+    $sql = "SELECT id, name, stage, is_closed, colour, is_default, display_order, is_active, created_datetime
             FROM change_statuses
             ORDER BY display_order, name";
 

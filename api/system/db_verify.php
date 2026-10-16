@@ -2446,18 +2446,27 @@ try {
     if ($tableExists('change_statuses')) {
         $cnt = (int) $conn->query("SELECT COUNT(*) FROM change_statuses")->fetchColumn();
         if ($cnt === 0) {
-            $conn->exec("INSERT INTO change_statuses (name, is_closed, colour, is_default, display_order) VALUES
-                ('Draft',            0, '#9e9e9e', 1, 10),
-                ('Submitted',        0, '#2563eb', 0, 20),
-                ('Pending Approval', 0, '#e65100', 0, 30),
-                ('Approved',         0, '#2e7d32', 0, 40),
-                ('Rejected',         1, '#c62828', 0, 50),
-                ('Scheduled',        0, '#9333ea', 0, 60),
-                ('In Progress',      0, '#1565c0', 0, 70),
-                ('Completed',        1, '#1b5e20', 0, 80),
-                ('Failed',           1, '#c62828', 0, 90),
-                ('Cancelled',        1, '#bdbdbd', 0, 100)");
+            $conn->exec("INSERT INTO change_statuses (name, stage, is_closed, colour, is_default, display_order) VALUES
+                ('Draft',            'draft',        0, '#9e9e9e', 1, 10),
+                ('Submitted',        'draft',        0, '#2563eb', 0, 20),
+                ('Pending Approval', 'awaiting',     0, '#e65100', 0, 30),
+                ('Approved',         'approved',     0, '#2e7d32', 0, 40),
+                ('Rejected',         'stopped',      1, '#c62828', 0, 50),
+                ('Scheduled',        'implementing', 0, '#9333ea', 0, 60),
+                ('In Progress',      'implementing', 0, '#1565c0', 0, 70),
+                ('Completed',        'done',         1, '#1b5e20', 0, 80),
+                ('Failed',           'done',         1, '#c62828', 0, 90),
+                ('Cancelled',        'stopped',      1, '#bdbdbd', 0, 100)");
             $results[] = ['table' => 'change_statuses', 'status' => 'seeded', 'details' => ['Inserted 10 default change statuses']];
+        }
+
+        // Give every status that still carries a seeded name its stage. Idempotent and
+        // never overrides a stage somebody chose; a renamed or custom status is left
+        // without one, for an administrator to decide in Settings → Statuses.
+        require_once __DIR__ . '/../../includes/changes/approvals.php';
+        $classified = changeStagesBackfill($conn);
+        if ($classified > 0) {
+            $results[] = ['table' => 'change_statuses', 'status' => 'updated', 'details' => ['Gave ' . $classified . ' change status(es) their stage']];
         }
     }
 

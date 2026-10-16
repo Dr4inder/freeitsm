@@ -35,6 +35,7 @@ try {
                 c.*,
                 ct.name AS change_type,
                 cs.name AS status,
+                cs.stage AS status_stage,
                 cs.is_closed AS status_is_closed,
                 cp.name AS priority,
                 ci.name AS impact,

@@ -2351,6 +2351,9 @@ return [
     'change_statuses' => [
         'id'                => 'INT NOT NULL AUTO_INCREMENT',
         'name'              => 'VARCHAR(50) NOT NULL',
+        // draft|awaiting|approved|implementing|done|stopped; NULL = not classified yet.
+        // The approval rules ask about the stage, never the name - see includes/changes/approvals.php.
+        'stage'             => 'VARCHAR(20) NULL',
         'is_closed'         => 'TINYINT(1) NOT NULL DEFAULT 0',
         'colour'            => 'VARCHAR(20) NULL',
         'is_default'        => 'TINYINT(1) NOT NULL DEFAULT 0',

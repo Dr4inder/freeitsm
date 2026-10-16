@@ -534,7 +534,7 @@ $translationNamespaces = ['common', 'change-management'];
     </script>
     <script>window.CHG_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.CHG_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=22"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=23"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=78"></script>
 </body>
 </html>

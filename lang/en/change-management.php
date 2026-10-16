@@ -342,6 +342,17 @@ return [
         'save_failed'     => 'Save failed',
     ],
 
+    // The stage of a status - what the approval rules read (includes/changes/approvals.php).
+    'stage' => [
+        'draft'        => 'Draft',
+        'awaiting'     => 'Awaiting approval',
+        'approved'     => 'Approved',
+        'implementing' => 'Implementing',
+        'done'         => 'Done',
+        'stopped'      => 'Stopped',
+        'none'         => 'Choose a stage',
+    ],
+
     'settings' => [
         'tab_fields'      => 'Form fields',
         'tab_statuses'    => 'Statuses',
@@ -370,7 +381,9 @@ return [
         'unknown_error'   => 'unknown error',
 
         'statuses_heading' => 'Statuses',
-        'statuses_intro'   => 'Workflow states a change can be in. Statuses flagged as <em>Closed</em> count as terminal — used by reports and watchtower counters. Exactly one status is the default for new changes.',
+        'statuses_intro'   => 'Workflow states a change can be in. Each status belongs to a <em>stage</em>, which is what approvals go by, so a status can be renamed freely. Statuses in the Done and Stopped stages count as closed. Exactly one status is the default for new changes.',
+        'stage_unset_marker' => 'Choose a stage for this status. Until it has one, approvals cannot be enforced.',
+        'stage_required_error' => 'At least one active status must stay in each of these stages: {stages}.',
         'priorities_heading' => 'Priorities',
         'priorities_intro' => 'Priority bands shown on change records. Exactly one priority is the default for new changes.',
         'types_heading'    => 'Change types',
@@ -381,6 +394,7 @@ return [
 
         'col_name'    => 'Name',
         'col_colour'  => 'Colour',
+        'col_stage'   => 'Stage',
         'col_closed'  => 'Closed',
         'col_default' => 'Default',
         'col_order'   => 'Order',
@@ -405,6 +419,8 @@ return [
         'modal_name'     => 'Name',
         'modal_colour'   => 'Colour',
         'modal_colour_help' => 'Used for badges in lists, dashboards and the calendar.',
+        'modal_stage'    => 'Stage',
+        'modal_stage_help' => 'Where this status sits in a change\'s life. Approvals go by the stage, never the name. Done and Stopped are closed.',
         'modal_closed'   => 'Counts as closed',
         'modal_closed_help' => 'Changes in this status are treated as terminal — excluded from open-queue counts.',
         'modal_default'  => 'Default for new changes',

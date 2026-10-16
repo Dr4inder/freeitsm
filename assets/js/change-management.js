@@ -710,8 +710,8 @@ function renderChangeDetail() {
         html += renderRiskMatrix(c.risk_likelihood, c.risk_impact_score, c.risk_score, c.risk_level);
     }
 
-    // PIR Structured Data (for Completed/Failed changes)
-    if (v('pir') && (c.status === 'Completed' || c.status === 'Failed') && (c.pir_was_successful !== null || c.pir_actual_start || c.pir_lessons_learned)) {
+    // PIR Structured Data (for changes in the Done stage - Completed, Failed, or any renamed equivalent)
+    if (v('pir') && c.status_stage === 'done' && (c.pir_was_successful !== null || c.pir_actual_start || c.pir_lessons_learned)) {
         html += renderPirDetail(c);
     }
 
@@ -1854,13 +1854,23 @@ function updateRiskScore() {
     }
 }
 
-/** Shows the post-implementation review fields only when the status is Completed or Failed. */
+/** Shows the post-implementation review fields only when the chosen status is in the Done stage. */
 function updatePirVisibility() {
     const status = document.getElementById('changeStatus').value;
     const pirSection = document.getElementById('pirStructuredFields');
     if (pirSection) {
-        pirSection.style.display = (status === 'Completed' || status === 'Failed') ? '' : 'none';
+        pirSection.style.display = statusStage(status) === 'done' ? '' : 'none';
     }
+}
+
+/**
+ * The stage of a status, by name, from the loaded statuses (draft, awaiting, approved,
+ * implementing, done, stopped), or null when it has none. TRAP: decide by the stage,
+ * never by a status name - names are editable in Settings.
+ */
+function statusStage(name) {
+    const s = changeStatuses.find(x => x.name === name);
+    return s && s.stage ? s.stage : null;
 }
 
 // ============ CAB Editor Functions ============
@@ -1941,7 +1951,7 @@ function renderCabReviewPanel(c) {
     const approvalType = c.cab_approval_type === 'majority' ? window.t('change-management.cab.type_majority') : window.t('change-management.cab.type_all');
     const currentAnalystId = parseInt(document.body.dataset.analystId) || 0;
     const myMembership = members.find(m => parseInt(m.analyst_id) === currentAnalystId);
-    const canVote = myMembership && !myMembership.vote && c.status === 'Pending Approval';
+    const canVote = myMembership && !myMembership.vote && c.status_stage === 'awaiting';
 
     let html = `
         <div class="cab-review-section">
