@@ -3689,6 +3689,7 @@ CREATE TABLE IF NOT EXISTS `change_attachments` (
     `file_type`         VARCHAR(100) NULL,
     `uploaded_by_id`    INT NULL,
     `uploaded_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `sha256`            CHAR(64) NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_change_attachments_change` FOREIGN KEY (`change_id`) REFERENCES `changes` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_change_attachments_uploaded_by` FOREIGN KEY (`uploaded_by_id`) REFERENCES `analysts` (`id`)
@@ -3708,6 +3709,26 @@ CREATE TABLE IF NOT EXISTS `change_audit` (
     INDEX `idx_change_audit_change` (`change_id`),
     CONSTRAINT `fk_change_audit_change` FOREIGN KEY (`change_id`) REFERENCES `changes` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_change_audit_analyst` FOREIGN KEY (`analyst_id`) REFERENCES `analysts` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Every saved version of a change's long-text fields, in full (#180 Part 2).
+-- Written only by ChangesService, in the same transaction as the save; never
+-- updated or deleted by any endpoint. See includes/changes/revisions.php.
+CREATE TABLE IF NOT EXISTS `change_text_revisions` (
+    `id`                BIGINT NOT NULL AUTO_INCREMENT,
+    `change_id`         INT NOT NULL,
+    `field_key`         VARCHAR(40) NOT NULL,
+    `content`           LONGTEXT NULL,
+    `content_format`    VARCHAR(10) NOT NULL,
+    `content_hash`      CHAR(64) NOT NULL,
+    `is_baseline`       TINYINT(1) NOT NULL DEFAULT 0,
+    `editor_id`         INT NULL,
+    `source`            VARCHAR(10) NOT NULL,
+    `created_datetime`  DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `idx_ctr_change_field` (`change_id`, `field_key`, `id`),
+    CONSTRAINT `fk_ctr_change` FOREIGN KEY (`change_id`) REFERENCES `changes` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_ctr_editor` FOREIGN KEY (`editor_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `change_comments` (

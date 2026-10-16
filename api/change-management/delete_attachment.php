@@ -6,6 +6,7 @@ session_start(['read_and_close' => true]);
 require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/tenancy.php';
+require_once '../../includes/services/changes.php';
 
 header('Content-Type: application/json');
 
@@ -27,7 +28,7 @@ try {
     $conn = connectToDatabase();
 
     // Get file path (+ owning change for the scope check) before deleting
-    $sql = "SELECT change_id, file_path FROM change_attachments WHERE id = ?";
+    $sql = "SELECT change_id, file_path, file_name, sha256 FROM change_attachments WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->execute([$attachmentId]);
     $attachment = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -44,9 +45,15 @@ try {
     }
 
     // Delete from DB
+    // The row and its audit line together: an attachment can be evidence, so removing
+    // one always leaves its name and hash in the trail (#180).
+    $conn->beginTransaction();
     $delSql = "DELETE FROM change_attachments WHERE id = ?";
     $delStmt = $conn->prepare($delSql);
     $delStmt->execute([$attachmentId]);
+    ChangesService::auditAttachment($conn, ActorContext::fromSession($conn), (int)$attachment['change_id'], false,
+        (string)$attachment['file_name'], $attachment['sha256'] ?? null);
+    $conn->commit();
 
     // Delete file from disk
     $filePath = dirname(dirname(__DIR__)) . '/change-management/attachments/' . $attachment['file_path'];

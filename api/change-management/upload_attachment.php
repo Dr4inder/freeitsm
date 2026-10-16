@@ -24,6 +24,7 @@ require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/tenancy.php';
 require_once '../../includes/uploads.php';
+require_once '../../includes/services/changes.php';
 
 header('Content-Type: application/json');
 
@@ -65,12 +66,16 @@ try {
     // delete_attachment.php both expect. It now names OUR generated file; the
     // name the person recognises lives in file_name.
     $relativePath = $changeId . '/' . $stored['stored_name'];
+    // The sha256 of the bytes as stored: the evidence export shows it, so anybody can
+    // check that the file in the change is the file that was attached (#180).
+    $sha256 = @hash_file('sha256', $stored['path']) ?: null;
 
     try {
+        $conn->beginTransaction();
         $stmt = $conn->prepare(
             "INSERT INTO change_attachments
-                (change_id, file_name, file_path, file_size, file_type, uploaded_by_id, uploaded_datetime)
-             VALUES (?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())"
+                (change_id, file_name, file_path, file_size, file_type, uploaded_by_id, uploaded_datetime, sha256)
+             VALUES (?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(), ?)"
         );
         $stmt->execute([
             $changeId,
@@ -79,8 +84,13 @@ try {
             $stored['size'],
             $stored['mime'],
             $analystId,
+            $sha256,
         ]);
+        $attachmentId = $conn->lastInsertId();
+        ChangesService::auditAttachment($conn, ActorContext::fromSession($conn), $changeId, true, $stored['original_name'], $sha256);
+        $conn->commit();
     } catch (Exception $dbEx) {
+        if ($conn->inTransaction()) $conn->rollBack();
         // Never leave bytes on disk with no row pointing at them.
         @unlink($stored['path']);
         throw $dbEx;
@@ -88,7 +98,7 @@ try {
 
     echo json_encode([
         'success'       => true,
-        'attachment_id' => $conn->lastInsertId(),
+        'attachment_id' => $attachmentId,
         'message'       => 'File uploaded successfully',
     ]);
 

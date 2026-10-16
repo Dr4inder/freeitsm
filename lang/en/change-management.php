@@ -342,6 +342,52 @@ return [
         'save_failed'     => 'Save failed',
     ],
 
+    // Text history - every saved version of the long fields (includes/changes/revisions.php).
+    'revisions' => [
+        'title'          => 'History: {field}',
+        'versions'       => 'Versions',
+        'loading'        => 'Loading...',
+        'load_failed'    => 'Could not load the history.',
+        'none'           => 'No versions recorded yet.',
+        'baseline'       => 'As found when history began',
+        'baseline_note'  => 'As found on {date}, when history began. FreeITSM did not keep earlier versions of this text, so who wrote it and when is not known.',
+        'by'             => '{name}, {date}',
+        'unknown_editor' => 'Unknown',
+        'system_edit'    => 'Changed outside the editor, found {date}',
+        'deleted_comment' => 'Comment by {name}, written {date}, later deleted',
+        'empty_value'    => '(empty)',
+        'compare_with'   => 'Compare with',
+        'previous'       => 'The version before',
+        'nothing_before' => 'Nothing before this one',
+        'tab_changes'    => 'Changes',
+        'tab_side'       => 'Side by side',
+        'too_long_to_diff' => 'Too long to highlight word by word. Showing both versions side by side.',
+        'no_difference'  => 'The text is the same; only its formatting changed.',
+        'this_version'   => 'This version',
+        'close'          => 'Close',
+        'view'           => 'View',
+        'source_api'     => 'via the API',
+        'field' => [
+            'description'                => 'Description',
+            'reason_for_change'          => 'Reason for change',
+            'risk_evaluation'            => 'Risk evaluation',
+            'test_plan'                  => 'Test plan',
+            'rollback_plan'              => 'Rollback plan',
+            'post_implementation_review' => 'Post-implementation review',
+            'pir_lessons_learned'        => 'Lessons learned',
+            'pir_follow_up'              => 'Follow-up',
+            'comment'                    => 'Deleted comment',
+        ],
+    ],
+
+    // Timeline lines for the records #180 added.
+    'timeline' => [
+        'edited_text'      => 'edited the {field}',
+        'attached'         => 'attached {file}',
+        'removed_attachment' => 'removed the attachment {file}',
+        'deleted_comment'  => 'deleted a comment',
+    ],
+
     // The stage of a status - what the approval rules read (includes/changes/approvals.php).
     'stage' => [
         'draft'        => 'Draft',

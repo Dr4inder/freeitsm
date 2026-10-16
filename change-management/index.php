@@ -25,7 +25,7 @@ $translationNamespaces = ['common', 'change-management'];
     <title><?php echo htmlspecialchars(pageTitle('changes')); ?></title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/theme.css?v=27">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/change-management.css?v=7">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/change-management.css?v=8">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/mobile.css?v=193">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -522,6 +522,38 @@ $translationNamespaces = ['common', 'change-management'];
         </div>
     </div>
 
+    <!-- Text history viewer (#180 Part 2) - assets/js/change-revisions.js. A .modal-content,
+         so mobile.css LAYER 3 makes it a full-screen sheet on a phone. -->
+    <div class="modal" id="revisionModal">
+        <div class="modal-content rev-modal">
+            <div class="modal-header">
+                <h3 id="revisionTitle"></h3>
+            </div>
+            <div class="modal-body rev-layout">
+                <div class="rev-sidebar">
+                    <div class="rev-sidebar-head"><?php echo htmlspecialchars(t('change-management.revisions.versions')); ?></div>
+                    <div id="revisionList" class="rev-list"></div>
+                </div>
+                <div class="rev-main">
+                    <div class="rev-toolbar">
+                        <div class="rev-tabs">
+                            <button type="button" class="rev-tab active" data-tab="changes" onclick="revisionTab('changes')"><?php echo htmlspecialchars(t('change-management.revisions.tab_changes')); ?></button>
+                            <button type="button" class="rev-tab" data-tab="side" onclick="revisionTab('side')"><?php echo htmlspecialchars(t('change-management.revisions.tab_side')); ?></button>
+                        </div>
+                        <label class="rev-compare">
+                            <?php echo htmlspecialchars(t('change-management.revisions.compare_with')); ?>
+                            <select id="revisionCompare" onchange="revisionCompareChanged(this.value)"></select>
+                        </label>
+                    </div>
+                    <div id="revisionBody" class="rev-body"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeRevisionViewer()"><?php echo htmlspecialchars(t('change-management.revisions.close')); ?></button>
+            </div>
+        </div>
+    </div>
+
     <!-- html2pdf for PDF generation -->
     <script src="../assets/js/vendor/html2pdf.bundle.min.js"></script>
     <script>
@@ -534,7 +566,9 @@ $translationNamespaces = ['common', 'change-management'];
     </script>
     <script>window.CHG_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.CHG_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=23"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/safe-html.js?v=2"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/change-revisions.js?v=2"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/change-management.js?v=24"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=78"></script>
 </body>
 </html>

@@ -177,6 +177,7 @@ function analystReferenceRegistry(): array {
         ['change_attachments', 'uploaded_by_id', 'history'],
         ['change_audit', 'analyst_id', 'history'],
         ['change_comments', 'analyst_id', 'history'],
+        ['change_text_revisions', 'editor_id', 'history'],
         ['change_cab_members', 'added_by_id', 'history'],
         ['change_checklist_items', 'completed_by_id', 'history'],
         ['change_relations', 'created_by_id', 'history'],

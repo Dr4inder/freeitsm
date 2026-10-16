@@ -2454,6 +2454,25 @@ return [
         'file_type'             => 'VARCHAR(100) NULL',
         'uploaded_by_id'        => 'INT NULL',
         'uploaded_datetime'     => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        // sha256 of the file as uploaded, so the evidence export can show that the
+        // file in the change is the file that was attached. NULL = uploaded before #180.
+        'sha256'                => 'CHAR(64) NULL',
+    ],
+
+    // Every saved version of a change's long-text fields, in full (#180 Part 2).
+    // Written only by ChangesService, in the same transaction as the save; never
+    // updated or deleted by any endpoint. See includes/changes/revisions.php.
+    'change_text_revisions' => [
+        'id'                => 'BIGINT NOT NULL AUTO_INCREMENT',
+        'change_id'         => 'INT NOT NULL',
+        'field_key'         => 'VARCHAR(40) NOT NULL',     // test_plan, ... ; 'comment' for a deleted comment
+        'content'           => 'LONGTEXT NULL',            // the WHOLE value after this save; NULL = cleared
+        'content_format'    => 'VARCHAR(10) NOT NULL',     // html | text
+        'content_hash'      => 'CHAR(64) NOT NULL',        // sha256 of content ('' for NULL)
+        'is_baseline'       => 'TINYINT(1) NOT NULL DEFAULT 0',   // 1 = "as found when history began"
+        'editor_id'         => 'INT NULL',                 // NULL for a baseline
+        'source'            => 'VARCHAR(10) NOT NULL',     // ui | api | system | upgrade | deleted
+        'created_datetime'  => 'DATETIME NOT NULL',        // UTC
     ],
 
     'change_audit' => [

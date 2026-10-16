@@ -696,12 +696,12 @@ function renderChangeDetail() {
 
     // Detail sections — only include visible fields
     let sections = '';
-    if (v('description')) sections += renderDetailSection(window.t('change-management.detail.description'), c.description);
-    if (v('reason')) sections += renderDetailSection(window.t('change-management.detail.reason'), c.reason_for_change);
-    if (v('risk')) sections += renderDetailSection(window.t('change-management.detail.risk_eval'), c.risk_evaluation);
-    if (v('testplan')) sections += renderDetailSection(window.t('change-management.detail.test_plan'), c.test_plan);
-    if (v('rollback')) sections += renderDetailSection(window.t('change-management.detail.rollback_plan'), c.rollback_plan);
-    if (v('pir')) sections += renderDetailSection(window.t('change-management.detail.pir'), c.post_implementation_review);
+    if (v('description')) sections += renderDetailSection(window.t('change-management.detail.description'), c.description, 'description');
+    if (v('reason')) sections += renderDetailSection(window.t('change-management.detail.reason'), c.reason_for_change, 'reason_for_change');
+    if (v('risk')) sections += renderDetailSection(window.t('change-management.detail.risk_eval'), c.risk_evaluation, 'risk_evaluation');
+    if (v('testplan')) sections += renderDetailSection(window.t('change-management.detail.test_plan'), c.test_plan, 'test_plan');
+    if (v('rollback')) sections += renderDetailSection(window.t('change-management.detail.rollback_plan'), c.rollback_plan, 'rollback_plan');
+    if (v('pir')) sections += renderDetailSection(window.t('change-management.detail.pir'), c.post_implementation_review, 'post_implementation_review');
 
     if (sections) html += `<div class="detail-sections">${sections}</div>`;
 
@@ -889,18 +889,22 @@ async function unlinkChangeIncident(ticketId) {
  * One titled rich-text section of the detail view, or a "not provided" placeholder when
  * it is empty. The content is the editor's HTML, inserted as it is.
  */
-function renderDetailSection(title, content) {
+function renderDetailSection(title, content, field) {
+    // Every rich field keeps its full history (#180); the link opens the viewer.
+    const history = field && currentChange
+        ? `<button type="button" class="detail-history-link" onclick="openRevisionViewer(${currentChange.id}, '${field}')">${escapeHtml(window.t('change-management.revisions.versions'))}</button>`
+        : '';
     if (!content || content.trim() === '') {
         return `
             <div class="detail-section">
-                <h3>${title}</h3>
+                <h3>${title}${history}</h3>
                 <div class="detail-section-body"><span class="detail-section-empty">${window.t('change-management.detail.not_provided')}</span></div>
             </div>
         `;
     }
     return `
         <div class="detail-section">
-            <h3>${title}</h3>
+            <h3>${title}${history}</h3>
             <div class="detail-section-body">${content}</div>
         </div>
     `;
@@ -1083,6 +1087,23 @@ function renderActivityTimeline(timeline, container) {
                 });
             } else if (entry.action_type === 'comment') {
                 return ''; // Already shown as comment entry
+            } else if (entry.action_type === 'text_edit' || entry.action_type === 'comment_deleted') {
+                // A long field's edit, or a deleted comment: the full text is a revision
+                // (#180), and the audit row's new_value names it - "Revision #812".
+                const revId = parseInt(String(entry.new_value || '').replace(/\D+/g, ''), 10) || null;
+                const field = entry.action_type === 'comment_deleted' ? 'comment' : (REVISION_FIELD_BY_LABEL[entry.field_name] || null);
+                description = entry.action_type === 'comment_deleted'
+                    ? escapeHtml(window.t('change-management.timeline.deleted_comment'))
+                    : window.t('change-management.timeline.edited_text', {
+                        field: `<strong>${escapeHtml(field ? window.t('change-management.revisions.field.' + field) : (entry.field_name || ''))}</strong>`
+                    });
+                if (field && revId && currentChange) {
+                    description += ` <button type="button" class="timeline-view-link" onclick="openRevisionViewer(${currentChange.id}, '${field}', ${revId})">${escapeHtml(window.t('change-management.revisions.view'))}</button>`;
+                }
+            } else if (entry.action_type === 'attachment') {
+                description = entry.new_value
+                    ? escapeHtml(window.t('change-management.timeline.attached', { file: entry.new_value }))
+                    : escapeHtml(window.t('change-management.timeline.removed_attachment', { file: entry.old_value || '' }));
             } else if (entry.action_type === 'cab_vote') {
                 description = `<strong>${escapeHtml(entry.field_name || 'CAB')}</strong>`;
                 if (entry.new_value) description += `: <span class="new-val">${escapeHtml(entry.new_value)}</span>`;
@@ -2064,6 +2085,20 @@ function backToList() {
 }
 
 // ============ Utility Functions ============
+
+// change_audit.field_name of a text edit is the field's English label
+// (ChangeRevisions::FIELDS in includes/changes/revisions.php); this maps it back to
+// the field key the viewer and the translations use.
+const REVISION_FIELD_BY_LABEL = {
+    'Description': 'description',
+    'Reason for change': 'reason_for_change',
+    'Risk evaluation': 'risk_evaluation',
+    'Test plan': 'test_plan',
+    'Rollback plan': 'rollback_plan',
+    'Post-implementation review': 'post_implementation_review',
+    'Lessons learned': 'pir_lessons_learned',
+    'Follow-up': 'pir_follow_up',
+};
 
 /** Escapes text for safe use inside HTML. */
 function escapeHtml(text) {

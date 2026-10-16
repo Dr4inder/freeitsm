@@ -968,6 +968,22 @@ try {
         }
     }
 
+    // Change approvals and evidence (#180). A revision goes with its change, and
+    // outlives its editor (SET NULL): the text stays in the evidence when the person
+    // who wrote it has left.
+    $changeEvidenceFks = [
+        ['change_text_revisions', 'fk_ctr_change', 'changes',  'change_id', 'id', 'CASCADE'],
+        ['change_text_revisions', 'fk_ctr_editor', 'analysts', 'editor_id', 'id', 'SET NULL'],
+    ];
+    foreach ($changeEvidenceFks as [$table, $name, $refTable, $col, $refCol, $onDelete]) {
+        if ($tableExists($table) && $tableExists($refTable) && !$fkExists($table, $name)) {
+            $action = $onDelete ? " ON DELETE {$onDelete}" : '';
+            try {
+                $conn->exec("ALTER TABLE {$table} ADD CONSTRAINT {$name} FOREIGN KEY ({$col}) REFERENCES {$refTable} ({$refCol}){$action}");
+            } catch (Exception $e) {}
+        }
+    }
+
     // Ticket team assignment (#1566). SET NULL, never CASCADE: deleting a team
     // must not take its tickets with it. They return to "no team", which is
     // visible on screen and fixable; vanishing is neither.

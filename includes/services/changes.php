@@ -37,6 +37,7 @@
 require_once __DIR__ . '/../service_context.php';
 require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/../changes/approvals.php';
+require_once __DIR__ . '/../changes/revisions.php';
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 
 class ChangesService
@@ -52,6 +53,19 @@ class ChangesService
      * @param array $in  title (required), lookups as name or <key>_id, category_id, people ids, dates, text bodies, risk, cab_*
      */
     public static function createChange(PDO $conn, ActorContext $ctx, int $tenantId, array $in): int
+    {
+        [$changeId, $after] = self::inTransaction($conn, fn() => self::applyCreate($conn, $ctx, $tenantId, $in));
+        self::afterCommit($after);
+        return $changeId;
+    }
+
+    /**
+     * createChange()'s work, inside its transaction. Returns [the new id, the events to
+     * fire once it has committed].
+     *
+     * @param array $in  as createChange()
+     */
+    private static function applyCreate(PDO $conn, ActorContext $ctx, int $tenantId, array $in): array
     {
         $title = trim((string)($in['title'] ?? ''));
         if ($title === '') {
@@ -143,24 +157,35 @@ class ChangesService
 
         self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status', null, 'Created as ' . ($status[1] ?? 'Draft'));
 
-        try {
-            WorkflowEngine::dispatch('change.created', [
-                'change' => [
-                    'id'             => $changeId,
-                    'title'          => $title,
-                    'status_id'      => $status[0],
-                    'priority_id'    => $priority[0],
-                    'type_id'        => $type[0],
-                    'risk'           => $riskLevel,
-                    'assigned_to_id' => $people['assigned_to_id'],
-                    'company_id'     => $tenantId,
-                ],
-            ]);
-        } catch (Exception $wfEx) {
-            error_log('Workflow dispatch error in change service (created): ' . $wfEx->getMessage());
+        // A change created now has complete text history from its first save, so it
+        // never needs a baseline (includes/changes/revisions.php).
+        foreach (ChangeRevisions::FIELDS as $field => $_) {
+            if ($text($field) !== null) {
+                ChangeRevisions::write($conn, $changeId, $field, $text($field), $actorId ?: null, $ctx->source);
+            }
         }
 
-        return $changeId;
+        $event = [
+            'change' => [
+                'id'             => $changeId,
+                'title'          => $title,
+                'status_id'      => $status[0],
+                'priority_id'    => $priority[0],
+                'type_id'        => $type[0],
+                'risk'           => $riskLevel,
+                'assigned_to_id' => $people['assigned_to_id'],
+                'company_id'     => $tenantId,
+            ],
+        ];
+        $after = [function () use ($event) {
+            try {
+                WorkflowEngine::dispatch('change.created', $event);
+            } catch (Exception $wfEx) {
+                error_log('Workflow dispatch error in change service (created): ' . $wfEx->getMessage());
+            }
+        }];
+
+        return [$changeId, $after];
     }
 
     /**
@@ -174,6 +199,20 @@ class ChangesService
      */
     public static function updateChange(PDO $conn, ActorContext $ctx, int $changeId, array $in): void
     {
+        $after = self::inTransaction($conn, fn() => self::applyUpdate($conn, $ctx, $changeId, $in));
+        self::afterCommit($after);
+    }
+
+    /**
+     * updateChange()'s work, inside its transaction and holding the change's row lock.
+     * Returns the events to fire once it has committed.
+     *
+     * @param int $changeId  as updateChange()
+     * @param array $in  as updateChange()
+     */
+    private static function applyUpdate(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
+    {
+        self::lockRow($conn, $changeId);
         $current = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
         if (!$in) {
             throw new ServiceError('validation', 'missing_field', 'No fields to update.');
@@ -286,9 +325,11 @@ class ChangesService
             }
         }
 
-        // Longtext bodies — updated but NOT audited (same as the UI).
-        foreach (['description', 'reason_for_change', 'risk_evaluation', 'test_plan',
-                  'rollback_plan', 'post_implementation_review', 'pir_lessons_learned', 'pir_follow_up'] as $field) {
+        // Longtext bodies. Too long for change_audit, so each changed one keeps its
+        // WHOLE new value as a revision instead (written after the UPDATE, below), and
+        // the audit trail gets a one-line summary pointing at it.
+        $changedLong = [];
+        foreach (ChangeRevisions::FIELDS as $field => $_) {
             if (!array_key_exists($field, $in)) {
                 continue;
             }
@@ -296,6 +337,7 @@ class ChangesService
             if ($newVal !== $current[$field]) {
                 $updates[] = "$field = ?";
                 $args[]    = $newVal;
+                $changedLong[$field] = $newVal;
             }
         }
 
@@ -361,7 +403,7 @@ class ChangesService
         }
 
         if (!$updates) {
-            return; // idempotent — nothing to write
+            return []; // idempotent — nothing to write
         }
 
         // Entering the approved stage by hand is an approval, so it records when (F1).
@@ -383,6 +425,15 @@ class ChangesService
             self::auditWrite($conn, $changeId, $actorId, $actionType, $label, $old, $new);
         }
 
+        // The full text of every changed long field, in this same transaction: the
+        // UPDATE and its revisions commit together or not at all.
+        foreach ($changedLong as $field => $newVal) {
+            ChangeRevisions::ensureBaseline($conn, $changeId, $field, $current[$field]);
+            $revId = ChangeRevisions::write($conn, $changeId, $field, $newVal, $actorId ?: null, $ctx->source);
+            self::auditWrite($conn, $changeId, $actorId, ChangeRevisions::AUDIT_ACTION,
+                ChangeRevisions::FIELDS[$field][1], null, 'Revision #' . $revId);
+        }
+
         // A resubmission starts the vote again (F2). Votes used to survive on the
         // member rows, so after a required Reject the change was resubmitted with that
         // Reject still counted - and the next vote by anybody sent it straight back to
@@ -400,11 +451,13 @@ class ChangesService
         }
 
         // change.approved on a genuine manual transition into the approved stage.
+        $after = [];
         if ($becameApproved) {
             $fresh = self::loadJoined($conn, $ctx, $changeId);
-            self::approvedDispatch($changeId, $fresh['title'], $fresh['risk_level'],
+            $after[] = fn() => self::approvedDispatch($changeId, $fresh['title'], $fresh['risk_level'],
                 $fresh['approver_id'] !== null ? (int)$fresh['approver_id'] : null);
         }
+        return $after;
     }
 
     /**
@@ -414,23 +467,30 @@ class ChangesService
      */
     public static function deleteChange(PDO $conn, ActorContext $ctx, int $changeId): void
     {
-        $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
+        // The rows go inside the transaction; the files only once it has committed, so
+        // a failed delete never leaves a change whose attachments have vanished.
+        [$files, $title] = self::inTransaction($conn, function () use ($conn, $ctx, $changeId) {
+            self::lockRow($conn, $changeId);
+            $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
+            $att = $conn->prepare("SELECT file_path FROM change_attachments WHERE change_id = ?");
+            $att->execute([$changeId]);
+            $files = $att->fetchAll(PDO::FETCH_COLUMN);
+            $conn->prepare("DELETE FROM change_attachments WHERE change_id = ?")->execute([$changeId]);
+            $conn->prepare("DELETE FROM changes WHERE id = ?")->execute([$changeId]);
+            return [$files, $row['title'] ?? null];
+        });
 
-        $att = $conn->prepare("SELECT file_path FROM change_attachments WHERE change_id = ?");
-        $att->execute([$changeId]);
-        foreach ($att->fetchAll(PDO::FETCH_ASSOC) as $a) {
-            $filePath = dirname(__DIR__, 2) . '/change-management/attachments/' . $a['file_path'];
+        foreach ($files as $path) {
+            $filePath = dirname(__DIR__, 2) . '/change-management/attachments/' . $path;
             if (file_exists($filePath)) {
                 @unlink($filePath);
             }
         }
-        $conn->prepare("DELETE FROM change_attachments WHERE change_id = ?")->execute([$changeId]);
-        $conn->prepare("DELETE FROM changes WHERE id = ?")->execute([$changeId]);
         $dir = dirname(__DIR__, 2) . '/change-management/attachments/' . $changeId;
         if (is_dir($dir)) {
             @rmdir($dir);
         }
-        WorkflowEngine::dispatch('change.deleted', ['change' => ['id' => $changeId, 'title' => $row['title'] ?? null]]);
+        WorkflowEngine::dispatch('change.deleted', ['change' => ['id' => $changeId, 'title' => $title]]);
     }
 
     // ======================================================================
@@ -484,11 +544,23 @@ class ChangesService
             $changeId = (int)$cid;
         }
         self::loadJoined($conn, $ctx, $changeId);   // 404 if the change is gone / out of scope
-        $stmt = $conn->prepare("DELETE FROM change_comments WHERE id = ? AND change_id = ?");
-        $stmt->execute([$commentId, $changeId]);
-        if ($stmt->rowCount() === 0) {
-            throw new ServiceError('not_found', 'not_found', 'Comment not found.');
-        }
+
+        // A deleted comment leaves the timeline, not the evidence: its text, author
+        // and date are copied into the revisions first, and the deletion is audited.
+        self::inTransaction($conn, function () use ($conn, $ctx, $commentId, $changeId) {
+            $c = $conn->prepare("SELECT analyst_id, comment_text, created_datetime FROM change_comments WHERE id = ? AND change_id = ? FOR UPDATE");
+            $c->execute([$commentId, $changeId]);
+            $comment = $c->fetch(PDO::FETCH_ASSOC);
+            if (!$comment) {
+                throw new ServiceError('not_found', 'not_found', 'Comment not found.');
+            }
+            $revId = ChangeRevisions::write($conn, $changeId, 'comment', $comment['comment_text'],
+                $comment['analyst_id'] !== null ? (int)$comment['analyst_id'] : null, 'deleted', false, $comment['created_datetime']);
+            $conn->prepare("DELETE FROM change_comments WHERE id = ? AND change_id = ?")->execute([$commentId, $changeId]);
+            $text = (string)$comment['comment_text'];
+            $preview = mb_strlen($text) > 100 ? mb_substr($text, 0, 100) . '...' : $text;
+            self::auditWrite($conn, $changeId, $ctx->actorId, 'comment_deleted', 'Comment', $preview, 'Revision #' . $revId);
+        });
     }
 
     // ======================================================================
@@ -503,6 +575,18 @@ class ChangesService
      */
     public static function saveCab(PDO $conn, ActorContext $ctx, int $changeId, $members): void
     {
+        self::inTransaction($conn, fn() => self::applySaveCab($conn, $ctx, $changeId, $members));
+    }
+
+    /**
+     * saveCab()'s work, inside its transaction and holding the change's row lock.
+     *
+     * @param int $changeId  as saveCab()
+     * @param mixed $members  as saveCab()
+     */
+    private static function applySaveCab(PDO $conn, ActorContext $ctx, int $changeId, $members): void
+    {
+        self::lockRow($conn, $changeId);
         self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
         $actorId = $ctx->actorId;
 
@@ -566,6 +650,24 @@ class ChangesService
      */
     public static function voteCab(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
     {
+        // TRAP: one transaction holding the change's row lock. Two last votes landing
+        // together used to both tip the threshold and fire change.approved twice; now
+        // the second waits, then sees the change already approved.
+        [$result, $after] = self::inTransaction($conn, fn() => self::applyVote($conn, $ctx, $changeId, $in));
+        self::afterCommit($after);
+        return $result;
+    }
+
+    /**
+     * voteCab()'s work, inside its transaction. Returns [the result, the events to fire
+     * once it has committed].
+     *
+     * @param int $changeId  as voteCab()
+     * @param array $in  as voteCab()
+     */
+    private static function applyVote(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
+    {
+        self::lockRow($conn, $changeId);
         self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
         $actorId = $ctx->actorId;
 
@@ -645,17 +747,18 @@ class ChangesService
             }
         }
 
+        $after = [];
         if ($statusChanged && !empty($approvedNow)) {
-            self::approvedDispatch($changeId, $changeRow['title'] ?? null, $changeRow['risk_level'] ?? null,
+            $after[] = fn() => self::approvedDispatch($changeId, $changeRow['title'] ?? null, $changeRow['risk_level'] ?? null,
                 isset($changeRow['approver_id']) && $changeRow['approver_id'] !== null ? (int)$changeRow['approver_id'] : null);
         }
 
-        return [
+        return [[
             'change_id'      => $changeId,
             'vote'           => $vote,
             'status_changed' => $statusChanged,
             'new_status'     => $newStatus,
-        ];
+        ], $after];
     }
 
     // ======================================================================
@@ -735,8 +838,79 @@ class ChangesService
     }
 
     // ======================================================================
+    //  Attachments - the audit rows (the upload itself stays in its endpoint)
+    // ======================================================================
+
+    /**
+     * Record that a file was attached to, or removed from, a change. Attachments are
+     * evidence (the help page suggests attaching approval emails), so neither may
+     * happen without a trace. The sha256 shows the file is the one that was attached.
+     *
+     * @param int $changeId  the change
+     * @param bool $added  true for an upload, false for a delete
+     * @param string $fileName  the name the person recognises
+     * @param ?string $sha256  the file's sha256, when known
+     */
+    public static function auditAttachment(PDO $conn, ActorContext $ctx, int $changeId, bool $added, string $fileName, ?string $sha256): void
+    {
+        $label = $fileName . ($sha256 ? ' (sha256 ' . substr($sha256, 0, 12) . '…)' : '');
+        self::auditWrite($conn, $changeId, $ctx->actorId, 'attachment', 'Attachment',
+            $added ? null : $label, $added ? $label : null);
+    }
+
+    // ======================================================================
     //  Internals
     // ======================================================================
+
+    /**
+     * Run $fn inside a transaction - or inside the caller's, when one is already open
+     * (analyst offboarding moves many records in one go). Rolls back on ANY throwable,
+     * so a failed save leaves neither the change nor its revisions half-written.
+     *
+     * @param callable $fn  the work; its return value is returned
+     */
+    private static function inTransaction(PDO $conn, callable $fn)
+    {
+        if ($conn->inTransaction()) {
+            return $fn();
+        }
+        $conn->beginTransaction();
+        try {
+            $result = $fn();
+            $conn->commit();
+            return $result;
+        } catch (Throwable $e) {
+            if ($conn->inTransaction()) {
+                $conn->rollBack();
+            }
+            throw $e;
+        }
+    }
+
+    /**
+     * Fire the events a write collected, once it has committed. TRAP: never inside the
+     * transaction - a rolled-back change must not have sent its email.
+     *
+     * @param callable[] $after  closures returned by an apply*() method
+     */
+    private static function afterCommit(array $after): void
+    {
+        foreach ($after as $fn) {
+            $fn();
+        }
+    }
+
+    /**
+     * Take the change's row lock for the rest of the transaction, so two writes to the
+     * same change happen one after the other. A missing row locks nothing;
+     * loadJoined() then reports the 404.
+     *
+     * @param int $changeId  the change
+     */
+    private static function lockRow(PDO $conn, int $changeId): void
+    {
+        $conn->prepare("SELECT id FROM changes WHERE id = ? FOR UPDATE")->execute([$changeId]);
+    }
 
     /**
      * May the actor access this row of a tenant-scoped table (by its company)?
