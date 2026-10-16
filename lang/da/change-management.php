@@ -6,6 +6,7 @@
  * file may be a subset; what IS here must match the English key structure
  * exactly, because I18n::t() splits on every dot.
  */
+
 return [
     'title' => 'Ændringsstyring',
     'nav' => [
@@ -330,7 +331,6 @@ return [
         'save_failed' => 'Kunne ikke gemme: {message}',
         'unknown_error' => 'ukendt fejl',
         'statuses_heading' => 'Statusser',
-        'statuses_intro' => 'Arbejdsgangstilstande, en ændring kan være i. Statusser markeret som <em>Lukket</em> tæller som afsluttende — bruges af rapporter og vagttårnstællere. Præcis én status er standard for nye ændringer.',
         'priorities_heading' => 'Prioriteter',
         'priorities_intro' => 'Prioritetsniveauer vist på ændringsposter. Præcis én prioritet er standard for nye ændringer.',
         'types_heading' => 'Ændringstyper',
@@ -451,21 +451,17 @@ return [
         'what_body' => 'En ændring er enhver planlagt tilpasning af dit it-miljø &mdash; installation af software, opgradering af en server, ændring af en firewallregel, udrulning af ny hardware. Registrering af ændringer sikrer, at intet gøres uden ordentlig planlægning, godkendelse og en reversérplan, hvis noget går galt.',
         'types_heading' => 'Ændringstyper',
         'type_standard' => 'Standard',
-        'type_standard_desc' => 'Forhåndsgodkendte ændringer med lav risiko, der følger en veltestet procedure. Tænk på månedlig patching eller rutinemæssig vedligeholdelse. Ingen CAB-gennemgang nødvendig.',
         'type_normal' => 'Normal',
         'type_normal_desc' => 'Den mest almindelige type. Kræver planlægning, risikovurdering og som regel godkendelse fra en eller flere personer. Kan kræve CAB-gennemgang ved ændringer med større konsekvens.',
         'type_emergency' => 'Nødændring',
-        'type_emergency_desc' => 'Til hastende rettelser, der ikke kan vente &mdash; som en kritisk sikkerhedsrettelse eller et produktionsnedbrud. Hurtig godkendelse, men stadig dokumenteret efterfølgende.',
         'lifecycle_heading' => 'Ændringens livscyklus',
         'lc_draft' => 'Kladde',
         'lc_draft_title' => 'Opret &amp; planlæg',
         'lc_draft_desc' => 'Udfyld detaljerne: hvad, hvorfor, hvem, hvornår. Tilføj en risikovurdering, testplan og reversérplan.',
         'lc_pending' => 'Afventer godkendelse',
         'lc_pending_title' => 'Send til gennemgang',
-        'lc_pending_desc' => 'Skift status til Afventer godkendelse. Hvis CAB er aktiveret, får medlemmerne besked om at stemme.',
         'lc_approved' => 'Godkendt',
         'lc_approved_title' => 'Grønt lys',
-        'lc_approved_desc' => 'Godkenderen eller CAB giver sit samtykke. Ændringen er godkendt til at blive gennemført i det planlagte tidsrum.',
         'lc_inprogress' => 'I gang',
         'lc_inprogress_title' => 'Implementering',
         'lc_inprogress_desc' => 'Arbejdet er i gang. Opdatér status, når du går i gang. Tilføj kommentarer for at logge fremdriften.',
@@ -496,7 +492,6 @@ return [
         'cab_members_heading' => 'Påkrævede vs. valgfrie medlemmer',
         'cab_members_desc' => 'Hvert medlem kan skifte mellem <strong>Påkrævet</strong> og <strong>Valgfri</strong>. Kun stemmer fra påkrævede medlemmer tæller med i tærsklen. Valgfrie medlemmer kan bidrage med input, men deres stemme er ikke obligatorisk.',
         'cab_vote_heading' => 'Afstemningsprocessen',
-        'cab_vote_desc' => 'Når ændringen skifter til <strong>Afventer godkendelse</strong>, ser hvert CAB-medlem et afstemningspanel på ændringens detaljeside med tre muligheder:',
         'cab_approve' => 'Godkend',
         'cab_reject' => 'Afvis',
         'cab_abstain' => 'Undlad at stemme',
@@ -505,7 +500,6 @@ return [
         'cab_auto_met' => 'Tærskel nået',
         'cab_auto_met_desc' => 'Status skifter automatisk til <strong>Godkendt</strong>',
         'cab_auto_reject' => 'Et påkrævet medlem afviser',
-        'cab_auto_reject_desc' => 'Status går tilbage til <strong>Kladde</strong>, så du kan revidere og indsende igen',
         'risk_heading' => 'Risikovurdering',
         'risk_intro' => 'Alle ændringer bør risikovurderes. Vælg en score for <strong>Sandsynlighed</strong> (1&ndash;5) og <strong>Konsekvens</strong> (1&ndash;5). De ganges sammen og giver et risikoniveau:',
         'risk_low' => 'Lav',
@@ -527,8 +521,6 @@ return [
         'tip_comments' => 'Kommentarer',
         'tip_comments_desc' => 'Brug aktivitetssektionen til at diskutere ændringer. Alt logges med tidsstempler.',
         'tip_attachments' => 'Vedhæftede filer',
-        'tip_attachments_desc' => 'Upload skærmbilleder, konfigurationsbackup eller godkendelses-e-mails sammen med ændringen.',
         'tip_audit' => 'Revisionsspor',
-        'tip_audit_desc' => 'Hver feltændring registreres automatisk. Se hvem der ændrede hvad og hvornår i aktivitetstidslinjen.',
     ],
 ];

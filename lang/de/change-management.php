@@ -3,6 +3,7 @@
  * Deutsch (de) — Change-management module strings.
  * Missing keys fall back to lang/en/change-management.php per-key.
  */
+
 return [
     'title' => 'Change Management',
     'nav' => [
@@ -327,7 +328,6 @@ return [
         'save_failed' => 'Speichern fehlgeschlagen: {message}',
         'unknown_error' => 'unbekannter Fehler',
         'statuses_heading' => 'Status',
-        'statuses_intro' => 'Workflow-Zustände, in denen sich ein Change befinden kann. Als <em>Geschlossen</em> markierte Status gelten als final — werden von Berichten und Watchtower-Zählern verwendet. Genau ein Status ist der Standard für neue Changes.',
         'priorities_heading' => 'Prioritäten',
         'priorities_intro' => 'Prioritätsstufen, die in Change-Datensätzen angezeigt werden. Genau eine Priorität ist der Standard für neue Changes.',
         'types_heading' => 'Change-Typen',
@@ -448,21 +448,17 @@ return [
         'what_body' => 'Ein Change ist jede geplante Änderung an Ihrer IT-Umgebung &mdash; Software installieren, einen Server aktualisieren, eine Firewall-Regel ändern, neue Hardware bereitstellen. Das Erfassen von Changes stellt sicher, dass nichts ohne ordnungsgemäße Planung, Genehmigung und einen Rollback-Plan für den Fall von Problemen durchgeführt wird.',
         'types_heading' => 'Change-Typen',
         'type_standard' => 'Standard',
-        'type_standard_desc' => 'Vorab genehmigte, risikoarme Changes, die einem gut getesteten Verfahren folgen. Denken Sie an monatliches Patching oder routinemäßige Wartung. Keine CAB-Prüfung erforderlich.',
         'type_normal' => 'Normal',
         'type_normal_desc' => 'Der häufigste Typ. Erfordert Planung, Risikobewertung und in der Regel die Genehmigung durch eine oder mehrere Personen. Kann bei Changes mit höherer Auswirkung eine CAB-Prüfung erfordern.',
         'type_emergency' => 'Notfall',
-        'type_emergency_desc' => 'Für dringende Korrekturen, die nicht warten können &mdash; etwa ein kritischer Sicherheitspatch oder ein Produktionsausfall. Beschleunigte Genehmigung, aber dennoch im Nachhinein dokumentiert.',
         'lifecycle_heading' => 'Der Change-Lebenszyklus',
         'lc_draft' => 'Entwurf',
         'lc_draft_title' => 'Erstellen &amp; planen',
         'lc_draft_desc' => 'Füllen Sie die Details aus: was, warum, wer, wann. Fügen Sie eine Risikobewertung, einen Testplan und einen Rollback-Plan hinzu.',
         'lc_pending' => 'Genehmigung ausstehend',
         'lc_pending_title' => 'Zur Prüfung einreichen',
-        'lc_pending_desc' => 'Ändern Sie den Status auf Genehmigung ausstehend. Wenn CAB aktiviert ist, werden die Prüfer zur Abstimmung benachrichtigt.',
         'lc_approved' => 'Genehmigt',
         'lc_approved_title' => 'Grünes Licht',
-        'lc_approved_desc' => 'Genehmiger oder CAB gibt frei. Der Change ist autorisiert, während seines geplanten Fensters durchgeführt zu werden.',
         'lc_inprogress' => 'In Bearbeitung',
         'lc_inprogress_title' => 'Umsetzung',
         'lc_inprogress_desc' => 'Die Arbeit läuft. Aktualisieren Sie den Status, wenn Sie beginnen. Fügen Sie Kommentare hinzu, um den Fortschritt zu protokollieren.',
@@ -493,7 +489,6 @@ return [
         'cab_members_heading' => 'Erforderliche vs. optionale Mitglieder',
         'cab_members_desc' => 'Jedes Mitglied kann zwischen <strong>Erforderlich</strong> und <strong>Optional</strong> umgeschaltet werden. Nur die Stimmen erforderlicher Mitglieder zählen für den Schwellenwert. Optionale Mitglieder können Beiträge leisten, aber ihre Stimme ist nicht verpflichtend.',
         'cab_vote_heading' => 'Der Abstimmungsprozess',
-        'cab_vote_desc' => 'Wenn der Change zu <strong>Genehmigung ausstehend</strong> wechselt, sieht jedes CAB-Mitglied auf der Change-Detailseite ein Abstimmungspanel mit drei Optionen:',
         'cab_approve' => 'Genehmigen',
         'cab_reject' => 'Ablehnen',
         'cab_abstain' => 'Enthalten',
@@ -502,7 +497,6 @@ return [
         'cab_auto_met' => 'Schwellenwert erreicht',
         'cab_auto_met_desc' => 'Status wechselt automatisch zu <strong>Genehmigt</strong>',
         'cab_auto_reject' => 'Ein erforderliches Mitglied lehnt ab',
-        'cab_auto_reject_desc' => 'Status kehrt zu <strong>Entwurf</strong> zurück, sodass Sie überarbeiten und erneut einreichen können',
         'risk_heading' => 'Risikobewertung',
         'risk_intro' => 'Jeder Change sollte auf Risiko bewertet werden. Wählen Sie einen Wert für <strong>Eintrittswahrscheinlichkeit</strong> (1&ndash;5) und <strong>Auswirkung</strong> (1&ndash;5). Sie werden multipliziert, um eine Risikostufe zu ergeben:',
         'risk_low' => 'Niedrig',
@@ -524,8 +518,6 @@ return [
         'tip_comments' => 'Kommentare',
         'tip_comments_desc' => 'Nutzen Sie den Aktivitätsabschnitt, um Changes zu besprechen. Alles wird mit Zeitstempeln protokolliert.',
         'tip_attachments' => 'Anhänge',
-        'tip_attachments_desc' => 'Laden Sie Screenshots, Konfigurationssicherungen oder Genehmigungs-E-Mails zusammen mit dem Change hoch.',
         'tip_audit' => 'Prüfprotokoll',
-        'tip_audit_desc' => 'Jede Feldänderung wird automatisch nachverfolgt. Sehen Sie in der Aktivitäts-Chronik, wer was und wann geändert hat.',
     ],
 ];

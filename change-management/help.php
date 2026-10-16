@@ -86,6 +86,10 @@ $translationNamespaces = ['common', 'change-management'];
                 <span class="help-nav-num">8</span>
                 <?php echo htmlspecialchars(t('change-management.help.nav_tips')); ?>
             </a>
+            <a href="#evidence" class="help-nav-link" data-section="evidence">
+                <span class="help-nav-num">9</span>
+                <?php echo htmlspecialchars(t('change-management.help.nav_evidence')); ?>
+            </a>
         </div>
 
         <!-- Main content area -->
@@ -389,6 +393,22 @@ $translationNamespaces = ['common', 'change-management'];
                             <div class="help-card-icon plain">&#128269;</div>
                             <div><strong><?php echo htmlspecialchars(t('change-management.help.tip_audit')); ?></strong><br><?php echo htmlspecialchars(t('change-management.help.tip_audit_desc')); ?></div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Section 9: Approvals and evidence (#180) -->
+                <div class="help-section" id="evidence">
+                    <div class="help-section-header">
+                        <span class="help-section-num">9</span>
+                        <h3><?php echo htmlspecialchars(t('change-management.help.ev_heading')); ?></h3>
+                    </div>
+                    <p><?php echo htmlspecialchars(t('change-management.help.ev_intro')); ?></p>
+                    <div class="help-cards">
+                        <?php foreach (['record', 'rounds', 'history', 'export', 'templates', 'access'] as $ev): ?>
+                        <div class="help-card row">
+                            <div><strong><?php echo htmlspecialchars(t('change-management.help.ev_' . $ev)); ?></strong><br><?php echo htmlspecialchars(t('change-management.help.ev_' . $ev . '_desc')); ?></div>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
