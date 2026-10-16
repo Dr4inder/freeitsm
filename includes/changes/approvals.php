@@ -679,3 +679,119 @@ function changeApprovalEnforceBlockers(PDO $conn): array
     return $conn->query("SELECT name FROM change_statuses WHERE is_active = 1 AND stage IS NULL ORDER BY display_order, name")
                 ->fetchAll(PDO::FETCH_COLUMN);
 }
+
+// ===========================================================================
+//  Enforce mode (#180 Part 1 §4, §9, §10)
+// ===========================================================================
+
+/** Stages a change may not enter in Enforce mode without a current approval. */
+const CHANGE_STAGES_NEED_APPROVAL = ['approved', 'implementing', 'done'];
+
+/**
+ * Is this change's type approved afterwards (Emergency)? Read from change_types.
+ *
+ * @param array $row  the changes row
+ */
+function changeTypeIsEmergency(PDO $conn, array $row): bool
+{
+    if (empty($row['change_type_id'])) return false;
+    $s = $conn->prepare("SELECT approval_route FROM change_types WHERE id = ?");
+    $s->execute([(int)$row['change_type_id']]);
+    return $s->fetchColumn() === 'emergency';
+}
+
+/**
+ * The guard on every status move. TRAP: the ONLY place a move is judged in Enforce
+ * mode. Every ChangesService write that can change status_id must call it, or that
+ * path is a way round - the edit form, the right-click menu, PATCH and POST creating a
+ * change straight into Completed all meet this same function.
+ *
+ * Record mode never refuses. Enforce mode refuses a move into Approved, Implementing or
+ * Done without a current approved round - except an Emergency round, which may go ahead
+ * (Implementing, Done) while its retrospective decision is still open, but not into
+ * Approved, which only a decision does.
+ *
+ * @param ?array $round  the change's current round (open or approved), or null
+ * @param array $to  the target status: ['name' => ..., 'stage' => ...]
+ * @param array $cfg  changeApprovalSettings()
+ */
+function changeApprovalGuardMove(?array $round, array $to, array $cfg): void
+{
+    if (!$cfg['enforce']) return;
+    if (!changeStageIsValid($to['stage'] ?? null)) {
+        throw new ServiceError('conflict', 'status_unclassified',
+            t('change-management.approval.status_unclassified', ['status' => $to['name'] ?? '']));
+    }
+    if (!in_array($to['stage'], CHANGE_STAGES_NEED_APPROVAL, true)) return;
+    if ($round && $round['state'] === 'approved') return;
+    if ($round && $round['route'] === 'emergency' && $round['state'] === 'open' && $to['stage'] !== 'approved') return;
+    throw new ServiceError('conflict', 'approval_required',
+        t('change-management.approval.approval_required', ['status' => $to['name'] ?? '']));
+}
+
+/**
+ * Before a change is submitted in Enforce mode: is there somebody who can decide it?
+ * A round nobody can close helps nobody, so the submission is refused with the reason
+ * instead - no CAB and no approver; a CAB whose required members are all the change's
+ * own people; a named approver who is one of them.
+ *
+ * @param array $row  the changes row as it will stand
+ * @param array $cabRequiredIds  the required CAB members' analyst ids
+ * @param array $cfg  changeApprovalSettings()
+ */
+function changeApprovalGuardSubmit(array $row, array $cabRequiredIds, array $cfg): void
+{
+    if (!$cfg['enforce']) return;
+    $route = changeApprovalRoute($row);
+    if ($route === 'manual') {
+        throw new ServiceError('conflict', 'approval_setup_missing', t('change-management.approval.setup_missing'));
+    }
+    if ($cfg['own_allowed']) return;
+    if ($route === 'cab') {
+        $independent = array_filter($cabRequiredIds, fn($aid) => changeApprovalIsIndependent($row, (int)$aid, $cfg));
+        if (!$independent) {
+            throw new ServiceError('conflict', 'cab_unreachable', t('change-management.approval.cab_unreachable'));
+        }
+    } elseif (!changeApprovalIsIndependent($row, (int)$row['approver_id'], $cfg)) {
+        throw new ServiceError('conflict', 'approver_not_independent', t('change-management.approval.approver_not_independent'));
+    }
+}
+
+/**
+ * The statuses the page may offer for a change right now: every active status the guard
+ * would accept. Comfort only - the guard is what enforces it, and the API, which has no
+ * dropdown, meets the same guard.
+ *
+ * @param array $row  the changes row
+ * @param array $cfg  changeApprovalSettings()
+ * @return int[]  status ids
+ */
+function changeApprovalAllowedStatuses(PDO $conn, array $row, array $cfg): array
+{
+    $round = !empty($row['approval_id']) ? changeApprovalCurrent($conn, (int)$row['id']) : null;
+    $out = [];
+    foreach ($conn->query("SELECT id, name, stage FROM change_statuses WHERE is_active = 1 ORDER BY display_order, name")->fetchAll(PDO::FETCH_ASSOC) as $st) {
+        if ((int)$st['id'] === (int)($row['status_id'] ?? 0)) { $out[] = (int)$st['id']; continue; }
+        try {
+            changeApprovalGuardMove($round, $st, $cfg);
+            $out[] = (int)$st['id'];
+        } catch (ServiceError $e) { /* not offered */ }
+    }
+    return $out;
+}
+
+/**
+ * Emergency changes that went ahead and still await their retrospective decision - the
+ * Watchtower count, so an approve-afterwards change cannot quietly stay unapproved.
+ */
+function changeApprovalEmergencyOpenCount(PDO $conn, string $scopeSql = '', array $scopeArgs = []): int
+{
+    $s = $conn->prepare(
+        "SELECT COUNT(*) FROM changes c
+           JOIN change_approvals a ON a.id = c.approval_id
+           JOIN change_statuses cs ON cs.id = c.status_id
+          WHERE a.route = 'emergency' AND a.state = 'open' AND cs.stage IN ('implementing', 'done'){$scopeSql}"
+    );
+    $s->execute($scopeArgs);
+    return (int)$s->fetchColumn();
+}

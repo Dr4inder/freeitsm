@@ -1350,6 +1350,7 @@ function clearSearch() {
 
 /** Opens a blank change editor with the default status and empty risk, review and CAB fields. */
 function openCreateChange() {
+    applyApprovalEditorRules(null);
     document.getElementById('editChangeId').value = '';
     document.getElementById('editorTitle').textContent = window.t('change-management.editor.new');
     document.getElementById('changeTitle').value = '';
@@ -1467,6 +1468,60 @@ function editCurrentChange() {
 
     showView('editor');
     updatePirVisibility();
+    applyApprovalEditorRules(c);
+}
+
+/**
+ * Enforce mode in the editor (#180): offer only the statuses the guard would accept, and
+ * show the approval set-up read-only once the change is submitted. Comfort, not the
+ * control - ChangesService refuses the same moves, and the API meets the same guard.
+ * Called with null for a new change, which resets everything.
+ */
+function applyApprovalEditorRules(c) {
+    const allowed = c && Array.isArray(c.allowed_status_ids) ? c.allowed_status_ids : null;
+    document.querySelectorAll('#changeStatus option').forEach(opt => {
+        const st = changeStatuses.find(s => s.name === opt.value);
+        opt.disabled = !!(allowed && st && !allowed.includes(parseInt(st.id)));
+    });
+    const locked = !!(c && c.approval_rules && c.approval_rules.setup_locked);
+    ['cabRequired', 'cabApprovalType', 'changeApprover', 'cabMemberSelect'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = locked;
+    });
+    document.querySelectorAll('#cabConfigSection button, #cabMembersList button').forEach(b => { b.disabled = locked; });
+    let note = document.getElementById('approvalLockedNote');
+    if (locked && !note) {
+        note = document.createElement('div');
+        note.id = 'approvalLockedNote';
+        note.className = 'approval-note';
+        note.textContent = window.t('change-management.approval_panel.locked_note');
+        const host = document.getElementById('cabRequired');
+        if (host && host.closest('.form-group')) host.closest('.form-group').appendChild(note);
+    } else if (!locked && note) {
+        note.remove();
+    }
+}
+
+/**
+ * Would this save change a field the approval was given against? Then, where an edit
+ * withdraws the approval (Enforce, or Settings say so), the person is told before saving.
+ */
+function savingWithdrawsApproval(payload) {
+    const c = currentChange;
+    if (!c || !c.approval || !c.approval.id || !c.approval_rules || !c.approval_rules.edit_withdraws) return false;
+    if (!['open', 'approved'].includes(c.approval.state)) return false;
+    const norm = v => (v === null || v === undefined) ? '' : String(v).trim();
+    const map = {
+        title: [payload.title, c.title], description: [payload.description, c.description],
+        reason_for_change: [payload.reason_for_change, c.reason_for_change], risk_evaluation: [payload.risk_evaluation, c.risk_evaluation],
+        test_plan: [payload.test_plan, c.test_plan], rollback_plan: [payload.rollback_plan, c.rollback_plan],
+        risk_likelihood: [payload.risk_likelihood, c.risk_likelihood], risk_impact_score: [payload.risk_impact_score, c.risk_impact_score],
+        change_type_id: [payload.change_type, c.change_type], impact_id: [payload.impact, c.impact], priority_id: [payload.priority, c.priority],
+        assigned_to_id: [payload.assigned_to_id, c.assigned_to_id],
+        work_window: [norm(payload.work_start_datetime) + '|' + norm(payload.work_end_datetime), toDatetimeLocal(c.work_start_datetime) + '|' + toDatetimeLocal(c.work_end_datetime)],
+        outage_window: [norm(payload.outage_start_datetime) + '|' + norm(payload.outage_end_datetime), toDatetimeLocal(c.outage_start_datetime) + '|' + toDatetimeLocal(c.outage_end_datetime)],
+    };
+    return (c.approval_rules.material || []).some(k => map[k] && norm(map[k][0]) !== norm(map[k][1]));
 }
 
 /**
@@ -1509,6 +1564,7 @@ async function saveChange() {
     }
 
     const changeId = document.getElementById('editChangeId').value;
+    const setupLocked = !!(changeId && currentChange && currentChange.approval_rules && currentChange.approval_rules.setup_locked);
 
     const payload = {
         id: changeId ? parseInt(changeId) : null,
@@ -1542,6 +1598,13 @@ async function saveChange() {
         cab_approval_type: document.getElementById('cabApprovalType').value
     };
 
+    if (changeId && savingWithdrawsApproval(payload)
+        && !(await showConfirm({ title: window.t('change-management.approval_panel.heading'),
+                                 message: window.t('change-management.approval.material_edit_confirm'),
+                                 okLabel: window.t('change-management.editor.save') }))) {
+        return;
+    }
+
     try {
         const response = await fetch(API_BASE + 'save.php', {
             method: 'POST',
@@ -1551,8 +1614,9 @@ async function saveChange() {
         const data = await response.json();
 
         if (data.success) {
-            // Save CAB members if CAB is enabled
-            if (payload.cab_required) {
+            // Save CAB members if CAB is enabled - not while the set-up is locked (the
+            // service would refuse it anyway, Enforce mode, #180).
+            if (payload.cab_required && !setupLocked) {
                 await fetch(API_BASE + 'save_cab_members.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -2022,7 +2086,12 @@ function renderApprovalPanel(c) {
         } else {
             html += `<div class="approval-note">${escapeHtml(T('waiting_for', { name: c.approver_name || '' }))}</div>`;
         }
-    } else if (current && current.state === 'approved' && current.decided_by_name) {
+    }
+    // The administrator override (Settings → Approvals), never the default action.
+    if (current && current.state === 'open' && c.approval_rules && c.approval_rules.override_allowed) {
+        html += `<div class="approval-override"><button type="button" class="btn btn-secondary" onclick="openOverrideDialog()">${escapeHtml(T('override'))}</button></div>`;
+    }
+    if (current && current.state === 'approved' && current.decided_by_name) {
         html += `<div class="approval-note">${escapeHtml(T('decided', { name: current.decided_by_name, date: formatDateTime(current.decided_at) }))}`
             + (current.decision_note ? `: ${escapeHtml(current.decision_note)}` : '') + '</div>';
     }
@@ -2088,6 +2157,46 @@ async function handleStaleApproval(typed, inputId) {
     window._staleNotice = '';
     const box = document.getElementById(inputId);
     if (box) box.value = typed;
+}
+
+/** The administrator override dialog: a written reason is required and recorded. */
+function openOverrideDialog() {
+    if (!currentChange) return;
+    const T = (k, p) => window.t('change-management.approval_panel.' + k, p);
+    document.getElementById('deleteModal').innerHTML = `
+        <div class="modal-overlay" onclick="closeDeleteModal()">
+            <div class="modal-box" onclick="event.stopPropagation()">
+                <h3>${escapeHtml(T('override_heading'))}</h3>
+                <p>${escapeHtml(T('override_explain'))}</p>
+                <textarea class="form-input" id="overrideReason" rows="3" placeholder="${escapeHtml(T('override_reason'))}"></textarea>
+                <div class="modal-box-actions">
+                    <button class="btn btn-secondary" onclick="closeDeleteModal()">${escapeHtml(T('back'))}</button>
+                    <button class="btn btn-primary" onclick="confirmOverride(${currentChange.id})">${escapeHtml(T('override'))}</button>
+                </div>
+            </div>
+        </div>`;
+}
+
+/** Sends the override and reloads the change. */
+async function confirmOverride(id) {
+    const reason = document.getElementById('overrideReason')?.value?.trim() || '';
+    try {
+        const res = await fetch(API_BASE + 'override_approval.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ change_id: id, reason })
+        });
+        const data = await res.json();
+        if (data.success) {
+            closeDeleteModal();
+            showToast(window.t('change-management.approval_panel.override_toast'), 'success');
+            await viewChange(id);
+            loadChanges();
+        } else {
+            showToast(window.t('change-management.toast.error_prefix', { message: data.error }), 'error');
+        }
+    } catch (e) {
+        showToast(window.t('change-management.toast.vote_error'), 'error');
+    }
 }
 
 /** Cancel instead of Delete: the change keeps every record (#180 §4). */

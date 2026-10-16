@@ -798,7 +798,7 @@ try {
     function renderChanges(d) {
         const ch = d.changes;
 
-        if (ch.unapproved > 0) {
+        if (ch.unapproved > 0 || ch.emergency_unapproved > 0) {
             setDot('wtChDot', 'amber');
         } else {
             setDot('wtChDot', 'green');
@@ -820,6 +820,9 @@ try {
         if (ch.unapproved > 0) {
             html += attentionItem('amber', window.t('watchtower.changes.awaiting', { count: ch.unapproved }));
         }
+        if (ch.emergency_unapproved > 0) {
+            html += attentionItem('amber', window.t('watchtower.changes.emergency_unapproved', { count: ch.emergency_unapproved }));
+        }
         if (ch.in_progress_today > 0) {
             html += attentionItem('blue', window.t('watchtower.changes.in_progress', { count: ch.in_progress_today }));
         }
@@ -832,7 +835,7 @@ try {
         if (ch.upcoming_7d > 0) {
             html += attentionItem('neutral', window.t('watchtower.changes.scheduled', { count: ch.upcoming_7d }));
         }
-        if (ch.unapproved === 0 && ch.in_progress_today === 0 && ch.upcoming_7d === 0 && !ch.overrunning) {
+        if (ch.unapproved === 0 && !ch.emergency_unapproved && ch.in_progress_today === 0 && ch.upcoming_7d === 0 && !ch.overrunning) {
             html += attentionItem('green', window.t('watchtower.changes.all_clear'));
         }
         html += '</div>';

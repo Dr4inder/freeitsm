@@ -122,12 +122,21 @@ try {
     $rawStmt->execute([$changeId]);
     $change['approval']        = changeApprovalLiveState($conn, $rawStmt->fetch(PDO::FETCH_ASSOC), $cfg);
     $change['approval_rounds'] = changeApprovalRounds($conn, $changeId);
+    $rawStmt->execute([$changeId]);
+    $rawRow = $rawStmt->fetch(PDO::FETCH_ASSOC);
+    $isAdmin = (int)$conn->query("SELECT is_admin FROM analysts WHERE id = " . (int)$_SESSION['analyst_id'])->fetchColumn() === 1;
     $change['approval_rules']  = [
-        'mode'           => $cfg['mode'],
-        'edit_withdraws' => $cfg['edit_withdraws'],
-        'stale_refused'  => $cfg['stale_refused'],
-        'delete_refused' => $cfg['delete_refused'] && changeApprovalHasHistory($conn, $changeId),
+        'mode'             => $cfg['mode'],
+        'edit_withdraws'   => $cfg['edit_withdraws'],
+        'stale_refused'    => $cfg['stale_refused'],
+        'delete_refused'   => $cfg['delete_refused'] && changeApprovalHasHistory($conn, $changeId),
+        // Enforce: the approval set-up is fixed once submitted (the editor shows it read-only).
+        'setup_locked'     => $cfg['enforce'] && $change['status_stage'] !== 'draft' && $change['status_stage'] !== null,
+        'override_allowed' => $cfg['override'] && $isAdmin,
+        'material'         => $cfg['material'],
     ];
+    // The statuses the guard would accept from here (comfort: the guard enforces it).
+    $change['allowed_status_ids'] = changeApprovalAllowedStatuses($conn, $rawRow, $cfg);
 
     echo json_encode([
         'success' => true,

@@ -36,7 +36,7 @@ function ok(string $what, bool $cond, string $detail = ''): void {
 }
 
 $conn = connectToDatabase();
-$made = ['changes' => [], 'statuses' => []];
+$made = ['changes' => [], 'statuses' => [], 'types' => []];
 
 /** Reads one change row with its status name and stage. */
 function zzChange(PDO $conn, int $id): array {
@@ -339,6 +339,100 @@ try {
     $raw = '';
     try { $conn->prepare("DELETE FROM changes WHERE id = ?")->execute([$id5]); } catch (PDOException $e) { $raw = $e->getCode(); }
     ok('the schema backstop: a raw DELETE of a change with rounds fails', $raw !== '' && zzChange($conn, $id5));
+
+    // ── Slice D: Enforce mode ───────────────────────────────────────────────
+    echo "\nEnforce mode (Part 1 §4, §7-§10)\n";
+    $code = function (callable $fn): string {
+        try { $fn(); return ''; } catch (ServiceError $e) { return $e->errorCode; }
+    };
+    // A vote or decision sent the way the page sends it: with the version it read.
+    $voteAsPage = function (ActorContext $ctx, int $cid, string $vote) use ($conn) {
+        $live = changeApprovalLiveState($conn, zzChange($conn, $cid), changeApprovalSettings($conn));
+        return ChangesService::voteCab($conn, $ctx, $cid, ['vote' => $vote, 'approval_id' => $live['id'], 'content_hash' => $live['current_version']]);
+    };
+    zzSetting($conn, 'change_approval_mode', 'enforce');
+    $cfg = changeApprovalSettings($conn, true);
+    ok('POSITIVE CONTROL: Enforce is on, and it fixes the three Record-only choices', $cfg['enforce'] && $cfg['edit_withdraws'] && $cfg['stale_refused'] && $cfg['delete_refused']);
+
+    $id9 = ChangesService::createChange($conn, $ctx1, 1, ['title' => 'ZZ-ENF guard', 'status' => 'Draft', 'requester_id' => $a1]);
+    $made['changes'][] = $id9;
+    ok('a status edit straight to Approved is refused (approval_required)', $code(fn() => ChangesService::updateChange($conn, $ctx1, $id9, ['status' => 'Approved'])) === 'approval_required');
+    ok('so is In Progress, and Completed', $code(fn() => ChangesService::updateChange($conn, $ctx1, $id9, ['status' => 'In Progress'])) === 'approval_required'
+        && $code(fn() => ChangesService::updateChange($conn, $ctx1, $id9, ['status' => 'Completed'])) === 'approval_required');
+    ok('and the change is untouched', zzChange($conn, $id9)['status_stage'] === 'draft');
+    $before = (int)$conn->query("SELECT COUNT(*) FROM changes")->fetchColumn();
+    ok('creating a change straight into Completed is refused', $code(fn() => ChangesService::createChange($conn, $ctx1, 1, ['title' => 'ZZ-ENF created done', 'status' => 'Completed'])) === 'approval_required');
+    ok('and leaves no row behind (the transaction rolled back)', (int)$conn->query("SELECT COUNT(*) FROM changes")->fetchColumn() === $before);
+    ok('submitting with neither a CAB nor an approver is refused', $code(fn() => ChangesService::updateChange($conn, $ctx1, $id9, ['status' => 'Pending Approval'])) === 'approval_setup_missing');
+    ChangesService::updateChange($conn, $ctx1, $id9, ['approver_id' => $a1]);
+    ok('so is a named approver who is the requester', $code(fn() => ChangesService::updateChange($conn, $ctx1, $id9, ['status' => 'Pending Approval'])) === 'approver_not_independent');
+    ChangesService::updateChange($conn, $ctx1, $id9, ['cab_required' => 1]);
+    ChangesService::saveCab($conn, $ctx1, $id9, [['analyst_id' => $a1, 'is_required' => true]]);
+    ok('and a CAB whose only required member is the requester', $code(fn() => ChangesService::updateChange($conn, $ctx1, $id9, ['status' => 'Pending Approval'])) === 'cab_unreachable');
+
+    ChangesService::saveCab($conn, $ctx1, $id9, [['analyst_id' => $a1, 'is_required' => true], ['analyst_id' => $a2, 'is_required' => true]]);
+    ChangesService::updateChange($conn, $ctx1, $id9, ['status' => 'Pending Approval']);
+    ok('POSITIVE CONTROL: with an independent required member it is submitted', zzChange($conn, $id9)['status_stage'] === 'awaiting');
+    ok('the roster is now fixed (approval_locked)', $code(fn() => ChangesService::saveCab($conn, $ctx1, $id9, [['analyst_id' => $a2, 'is_required' => true]])) === 'approval_locked');
+    ok('so is the approver field', $code(fn() => ChangesService::updateChange($conn, $ctx1, $id9, ['approver_id' => $a2])) === 'approval_locked');
+    ok('a vote that does not say what it read is refused', $code(fn() => ChangesService::voteCab($conn, $ctx1, $id9, ['vote' => 'Approve'])) === 'missing_field');
+    $r = $voteAsPage($ctx1, $id9, 'Approve');
+    ok('the requester\'s own vote is recorded but not counted', $r['counted'] === false && zzChange($conn, $id9)['status_stage'] === 'awaiting');
+    $r = $voteAsPage($ctx2, $id9, 'Approve');
+    $rd = $rounds($id9);
+    ok('the independent member\'s vote decides it', zzChange($conn, $id9)['status_stage'] === 'approved' && end($rd)['state'] === 'approved');
+    ok('and the round is independent (the uncounted vote did not make it so)', end($rd)['is_independent'] === true);
+    ChangesService::updateChange($conn, $ctx2, $id9, ['status' => 'In Progress']);
+    ok('POSITIVE CONTROL: an approved change may move on to In Progress', zzChange($conn, $id9)['status_stage'] === 'implementing');
+    ChangesService::updateChange($conn, $ctx2, $id9, ['rollback_plan' => '<p>ZZ new rollback</p>']);
+    $rd = $rounds($id9);
+    ok('a material edit withdraws the approval and sends it back for approval', zzChange($conn, $id9)['status_stage'] === 'awaiting'
+        && end($rd)['state'] === 'open');
+    ok('a submitted change cannot be deleted in Enforce mode', $code(fn() => ChangesService::deleteChange($conn, $ctx1, $id9)) === 'change_has_approval_history');
+    ChangesService::updateChange($conn, $ctx1, $id9, ['status' => 'Draft']);
+    ChangesService::updateChange($conn, $ctx1, $id9, ['approver_id' => $a2]);
+    ok('back in Draft the approvers can be changed again', (int)zzChange($conn, $id9)['approver_id'] === $a2);
+
+    // Emergency - approve afterwards.
+    $conn->prepare("INSERT INTO change_types (name, colour, approval_route, is_default, display_order, is_active) VALUES ('ZZ Emergency', '#000000', 'emergency', 0, 999, 1)")->execute();
+    $made['types'][] = $zzType = (int)$conn->lastInsertId();
+    $id10 = ChangesService::createChange($conn, $ctx1, 1, ['title' => 'ZZ-ENF emergency', 'status' => 'Draft', 'change_type_id' => $zzType, 'approver_id' => $a2, 'requester_id' => $a1]);
+    $made['changes'][] = $id10;
+    ChangesService::updateChange($conn, $ctx1, $id10, ['status' => 'Pending Approval']);
+    ok('an emergency change opens an emergency round', ($rounds($id10)[0]['route'] ?? '') === 'emergency');
+    ChangesService::updateChange($conn, $ctx1, $id10, ['status' => 'In Progress']);
+    ok('it may go ahead before its decision', zzChange($conn, $id10)['status_stage'] === 'implementing' && $rounds($id10)[0]['state'] === 'open');
+    ok('Watchtower counts it as awaiting retrospective approval', changeApprovalEmergencyOpenCount($conn, ' AND c.id = ?', [$id10]) === 1);
+    ok('but not into Approved, which only a decision does', $code(fn() => ChangesService::updateChange($conn, $ctx1, $id10, ['status' => 'Approved'])) === 'approval_required');
+    $live = changeApprovalLiveState($conn, zzChange($conn, $id10), changeApprovalSettings($conn));
+    ChangesService::decideApproval($conn, $ctx2, $id10, ['decision' => 'approve', 'approval_id' => $live['id'], 'content_hash' => $live['current_version']]);
+    ok('the approver approves it afterwards, without moving it back', $rounds($id10)[0]['state'] === 'approved' && zzChange($conn, $id10)['status_stage'] === 'implementing'
+        && zzChange($conn, $id10)['approval_datetime'] !== null);
+    ok('and it leaves the Watchtower count', changeApprovalEmergencyOpenCount($conn, ' AND c.id = ?', [$id10]) === 0);
+
+    // The administrator override.
+    $id11 = ChangesService::createChange($conn, $ctx1, 1, ['title' => 'ZZ-ENF override', 'status' => 'Draft', 'approver_id' => $a2]);
+    $made['changes'][] = $id11;
+    ChangesService::updateChange($conn, $ctx1, $id11, ['status' => 'Pending Approval']);
+    ok('the override is off by default', $code(fn() => ChangesService::overrideApproval($conn, $ctx1, $id11, ['reason' => 'ZZ'])) === 'override_off');
+    zzSetting($conn, 'change_approval_override', '1');
+    changeApprovalSettings($conn, true);
+    ok('switched on, it needs a reason', $code(fn() => ChangesService::overrideApproval($conn, $ctx1, $id11, ['reason' => ''])) === 'missing_field');
+    $nonAdmin = (int)$conn->query("SELECT id FROM analysts WHERE is_active = 1 AND is_admin = 0 ORDER BY id LIMIT 1")->fetchColumn();
+    if ($nonAdmin) {
+        ok('and an administrator', $code(fn() => ChangesService::overrideApproval($conn, new ActorContext($nonAdmin, null, 'ui', 'en', 'ZZ'), $id11, ['reason' => 'ZZ'])) === 'forbidden');
+    }
+    ChangesService::overrideApproval($conn, $ctx1, $id11, ['reason' => 'ZZ board unreachable']);
+    $rd = $rounds($id11);
+    ok('an administrator approves it by override: recorded as such, with the reason', end($rd)['route'] === 'override' && end($rd)['decision_note'] === 'ZZ board unreachable'
+        && zzChange($conn, $id11)['status_stage'] === 'approved');
+
+    zzSettingRestore($conn);
+    changeApprovalSettings($conn, true);
+    $id12 = ChangesService::createChange($conn, $ctx1, 1, ['title' => 'ZZ-ENF negative control', 'status' => 'Draft']);
+    $made['changes'][] = $id12;
+    ChangesService::updateChange($conn, $ctx1, $id12, ['status' => 'Approved']);
+    ok('NEGATIVE CONTROL: back in Record mode the same hand-set Approved goes through', zzChange($conn, $id12)['status_stage'] === 'approved');
 } catch (Throwable $e) {
     ok('no unexpected exception', false, get_class($e) . ': ' . $e->getMessage() . ' @ ' . basename($e->getFile()) . ':' . $e->getLine());
 } finally {
@@ -352,6 +446,9 @@ try {
         $conn->prepare("UPDATE changes SET approval_id = NULL WHERE id = ?")->execute([$cid]);
         $conn->prepare("DELETE FROM change_approvals WHERE change_id = ?")->execute([$cid]);
         $conn->prepare("DELETE FROM changes WHERE id = ? AND title LIKE 'ZZ-%'")->execute([$cid]);
+    }
+    foreach ($made['types'] as $tid) {
+        $conn->prepare("DELETE FROM change_types WHERE id = ? AND name LIKE 'ZZ %'")->execute([$tid]);
     }
     foreach ($made['statuses'] as $sid) {
         $conn->prepare("DELETE FROM change_statuses WHERE id = ? AND name LIKE 'ZZ %'")->execute([$sid]);

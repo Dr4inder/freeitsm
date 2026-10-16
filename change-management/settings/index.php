@@ -353,8 +353,8 @@ $translationNamespaces = ['common', 'change-management'];
             </div>
             <p style="color: var(--text-muted, #666); margin-bottom: 16px;"><?php echo htmlspecialchars(t('change-management.settings.types_intro')); ?></p>
             <table class="lookup-table">
-                <thead><tr><th><?php echo htmlspecialchars(t('change-management.settings.col_name')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_colour')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_default')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_order')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_status')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_actions')); ?></th></tr></thead>
-                <tbody id="types-list"><tr><td colspan="6" style="text-align:center;"><?php echo htmlspecialchars(t('change-management.settings.loading')); ?></td></tr></tbody>
+                <thead><tr><th><?php echo htmlspecialchars(t('change-management.settings.col_name')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_route')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_colour')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_default')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_order')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_status')); ?></th><th><?php echo htmlspecialchars(t('change-management.settings.col_actions')); ?></th></tr></thead>
+                <tbody id="types-list"><tr><td colspan="7" style="text-align:center;"><?php echo htmlspecialchars(t('change-management.settings.loading')); ?></td></tr></tbody>
             </table>
         </div>
 
@@ -549,6 +549,15 @@ $translationNamespaces = ['common', 'change-management'];
                     <span class="help"><?php echo htmlspecialchars(t('change-management.settings.modal_stage_help')); ?></span>
                 </div>
 
+                <div class="form-group" id="lookupItemRouteGroup" style="display: none;">
+                    <label for="lookupItemRoute"><?php echo htmlspecialchars(t('change-management.settings.modal_route')); ?></label>
+                    <select id="lookupItemRoute">
+                        <option value="review"><?php echo htmlspecialchars(t('change-management.settings.route_review')); ?></option>
+                        <option value="emergency"><?php echo htmlspecialchars(t('change-management.settings.route_emergency')); ?></option>
+                    </select>
+                    <span class="help"><?php echo htmlspecialchars(t('change-management.settings.modal_route_help')); ?></span>
+                </div>
+
                 <div class="form-group" id="lookupItemClosedGroup" style="display: none;">
                     <label><input type="checkbox" id="lookupItemClosed"> <?php echo htmlspecialchars(t('change-management.settings.modal_closed')); ?></label>
                     <span class="help"><?php echo htmlspecialchars(t('change-management.settings.modal_closed_help')); ?></span>
@@ -724,7 +733,7 @@ $translationNamespaces = ['common', 'change-management'];
         const LOOKUP_KINDS = {
             'status':   { get: 'get_change_statuses.php',   save: 'save_change_status.php',   del: 'delete_change_status.php',   listKey: 'statuses',   tableId: 'statuses-list',   colspan: 8, hasClosed: true,  hasStage: true, label: window.t('change-management.settings.kind_status')   },
             'priority': { get: 'get_change_priorities.php', save: 'save_change_priority.php', del: 'delete_change_priority.php', listKey: 'priorities', tableId: 'priorities-list', colspan: 6, hasClosed: false, label: window.t('change-management.settings.kind_priority') },
-            'type':     { get: 'get_change_types.php',      save: 'save_change_type.php',     del: 'delete_change_type.php',     listKey: 'types',      tableId: 'types-list',      colspan: 6, hasClosed: false, label: window.t('change-management.settings.kind_type')     },
+            'type':     { get: 'get_change_types.php',      save: 'save_change_type.php',     del: 'delete_change_type.php',     listKey: 'types',      tableId: 'types-list',      colspan: 7, hasClosed: false, hasRoute: true, label: window.t('change-management.settings.kind_type')     },
             'impact':   { get: 'get_change_impacts.php',    save: 'save_change_impact.php',   del: 'delete_change_impact.php',   listKey: 'impacts',    tableId: 'impacts-list',    colspan: 6, hasClosed: false, label: window.t('change-management.settings.kind_impact')   }
         };
 
@@ -770,6 +779,9 @@ $translationNamespaces = ['common', 'change-management'];
                         ? `<td>${escapeHtml(window.t('change-management.stage.' + r.stage))}</td>`
                         : `<td><span class="stage-unset" title="${escapeHtml(window.t('change-management.settings.stage_unset_marker'))}">${escapeHtml(window.t('change-management.stage.none'))}</span></td>`)
                     : '';
+                const routeCol = cfg.hasRoute
+                    ? `<td>${escapeHtml(window.t('change-management.settings.route_' + (r.approval_route || 'review')))}</td>`
+                    : '';
                 const closedCol = cfg.hasClosed
                     ? `<td>${r.is_closed ? `<span class="badge-yes">${window.t('change-management.settings.yes')}</span>` : `<span class="badge-no">${window.t('change-management.settings.no')}</span>`}</td>`
                     : '';
@@ -777,6 +789,7 @@ $translationNamespaces = ['common', 'change-management'];
                 <tr>
                     <td><strong>${escapeHtml(r.name)}</strong></td>
                     ${stageCol}
+                    ${routeCol}
                     <td>${swatch}</td>
                     ${closedCol}
                     <td>${r.is_default ? `<span class="badge-yes">${window.t('change-management.settings.yes')}</span>` : `<span class="badge-no">${window.t('change-management.settings.no')}</span>`}</td>
@@ -814,6 +827,8 @@ $translationNamespaces = ['common', 'change-management'];
             document.getElementById('lookupItemActive').checked = true;
             document.getElementById('lookupItemStage').value = '';
             document.getElementById('lookupItemStageGroup').style.display = cfg.hasStage ? '' : 'none';
+            document.getElementById('lookupItemRoute').value = 'review';
+            document.getElementById('lookupItemRouteGroup').style.display = cfg.hasRoute ? '' : 'none';
             document.getElementById('lookupItemClosedGroup').style.display = cfg.hasClosed ? '' : 'none';
             syncClosedToStage();
             document.getElementById('lookupModal').classList.add('active');
@@ -834,6 +849,8 @@ $translationNamespaces = ['common', 'change-management'];
             document.getElementById('lookupItemActive').checked = !!item.is_active;
             document.getElementById('lookupItemStage').value = item.stage || '';
             document.getElementById('lookupItemStageGroup').style.display = cfg.hasStage ? '' : 'none';
+            document.getElementById('lookupItemRoute').value = item.approval_route || 'review';
+            document.getElementById('lookupItemRouteGroup').style.display = cfg.hasRoute ? '' : 'none';
             document.getElementById('lookupItemClosedGroup').style.display = cfg.hasClosed ? '' : 'none';
             syncClosedToStage();
             document.getElementById('lookupModal').classList.add('active');
@@ -889,6 +906,7 @@ $translationNamespaces = ['common', 'change-management'];
             };
             if (cfg.hasClosed) payload.is_closed = document.getElementById('lookupItemClosed').checked ? 1 : 0;
             if (cfg.hasStage) payload.stage = document.getElementById('lookupItemStage').value;
+            if (cfg.hasRoute) payload.approval_route = document.getElementById('lookupItemRoute').value;
 
             try {
                 const res = await fetch(API_BASE + cfg.save, {

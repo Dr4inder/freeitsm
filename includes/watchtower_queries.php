@@ -383,9 +383,18 @@ function getWatchtowerData($conn, $analystId = 0, $scope = WT_SCOPE_ALL) {
     $chOverrunningStmt->execute(array_merge([$chNow], $chScopeArgs));
     $chOverrunning = (int)$chOverrunningStmt->fetchColumn();
 
+    // Emergency changes that went ahead and still await their retrospective decision
+    // (#180): an approve-afterwards change must not quietly stay unapproved.
+    $chEmergencyOpen = 0;
+    try {
+        require_once __DIR__ . '/changes/approvals.php';
+        $chEmergencyOpen = changeApprovalEmergencyOpenCount($conn, $chScopeSql, $chScopeArgs);
+    } catch (Throwable $e) { /* never break the dashboard (approval tables not created yet) */ }
+
     $changes = [
         'upcoming_7d'       => $chUpcoming,
         'unapproved'        => $chUnapproved,
+        'emergency_unapproved' => $chEmergencyOpen,
         'in_progress_today' => $chInProgress,
         'overrunning'       => $chOverrunning,
         'by_status'         => $chStatuses,

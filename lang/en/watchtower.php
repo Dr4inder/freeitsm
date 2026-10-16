@@ -166,6 +166,7 @@ return [
         // / metric_pending are gone: they repeated the three lines below them.
         'metric_open'    => 'Open',
         'awaiting'       => '<span class="wt-attention-bold">{count}</span> change(s) awaiting approval',
+        'emergency_unapproved' => '<span class="wt-attention-bold">{count}</span> emergency change(s) awaiting retrospective approval',
         // Deliberately NOT "in progress now". There is a status called In
         // Progress sitting inches away in the metric row, and the two count
         // different things — where changes are, versus what is happening this

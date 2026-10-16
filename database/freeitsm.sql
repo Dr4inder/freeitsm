@@ -3499,6 +3499,7 @@ CREATE TABLE IF NOT EXISTS `change_types` (
     `id`                INT NOT NULL AUTO_INCREMENT,
     `name`              VARCHAR(50) NOT NULL,
     `colour`            VARCHAR(20) NULL,
+    `approval_route`    VARCHAR(20) NOT NULL DEFAULT 'review',
     `is_default`        TINYINT(1) NOT NULL DEFAULT 0,
     `display_order`     INT NOT NULL DEFAULT 0,
     `is_active`         TINYINT(1) NOT NULL DEFAULT 1,

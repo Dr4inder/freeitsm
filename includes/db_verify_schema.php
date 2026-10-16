@@ -2342,6 +2342,9 @@ return [
         'id'                => 'INT NOT NULL AUTO_INCREMENT',
         'name'              => 'VARCHAR(50) NOT NULL',
         'colour'            => 'VARCHAR(20) NULL',
+        // review | emergency (#180). Emergency = may go ahead before its approval, which
+        // is decided afterwards. Pre-authorisation comes from templates, never a type.
+        'approval_route'    => "VARCHAR(20) NOT NULL DEFAULT 'review'",
         'is_default'        => 'TINYINT(1) NOT NULL DEFAULT 0',
         'display_order'     => 'INT NOT NULL DEFAULT 0',
         'is_active'         => 'TINYINT(1) NOT NULL DEFAULT 1',
