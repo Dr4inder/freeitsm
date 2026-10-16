@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2385 | Change Management | Fix | Security: the status, type and priority badges in the change list, the impact in the change detail view, and the status filter on the change calendar showed the names set in Change Management settings unescaped, so somebody allowed to edit those settings could plant script that ran for every Change Management user; all are now escaped, and the calendar filter passes the name through a data attribute (which also fixes a status name containing an apostrophe breaking the filter). |
 
 
 

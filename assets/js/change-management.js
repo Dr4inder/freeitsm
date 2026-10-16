@@ -563,9 +563,9 @@ function renderChangeList() {
                 </div>
                 <div class="change-card-badges">
                     ${c.risk_level ? `<span class="risk-badge risk-${c.risk_level.toLowerCase().replace(/\s+/g, '-')}">${c.risk_level}</span>` : ''}
-                    <span class="type-badge ${typeClass}">${c.change_type}</span>
-                    <span class="priority-badge ${priorityClass}">${c.priority}</span>
-                    <span class="status-badge ${statusClass}">${c.status}</span>
+                    <span class="type-badge ${typeClass}">${escapeHtml(c.change_type)}</span>
+                    <span class="priority-badge ${priorityClass}">${escapeHtml(c.priority)}</span>
+                    <span class="status-badge ${statusClass}">${escapeHtml(c.status)}</span>
                 </div>
             </div>
         `;
@@ -617,7 +617,7 @@ function renderChangeDetail() {
 
     // Build meta grid — only include visible fields
     let metaItems = '';
-    if (v('impact')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.impact')}</span><span class="detail-meta-value">${c.impact}</span></div>`;
+    if (v('impact')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.impact')}</span><span class="detail-meta-value">${escapeHtml(c.impact)}</span></div>`;
     if (v('category') && c.category) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.category')}</span><span class="detail-meta-value">${escapeHtml(c.category)}</span></div>`;
     if (v('requester')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.requester')}</span><span class="detail-meta-value">${c.requester_name ? escapeHtml(c.requester_name) : window.t('change-management.detail.not_set')}</span></div>`;
     if (v('assigned_to')) metaItems += `<div class="detail-meta-item"><span class="detail-meta-label">${window.t('change-management.detail.assigned_to')}</span><span class="detail-meta-value">${c.assigned_to_name ? escapeHtml(c.assigned_to_name) : window.t('change-management.detail.not_set')}</span></div>`;

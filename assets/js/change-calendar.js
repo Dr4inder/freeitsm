@@ -62,7 +62,7 @@ function renderStatusFilters() {
     container.innerHTML = STATUSES.map(s => `
         <label class="category-filter-item">
             <input type="checkbox" ${selectedStatuses.has(s.name) ? 'checked' : ''}
-                   onchange="toggleStatus('${s.name}')">
+                   data-status="${escapeHtml(s.name)}" onchange="toggleStatus(this.dataset.status)">
             <span class="category-color-dot" style="background-color: ${s.color}"></span>
             <span class="category-filter-name">${escapeHtml(s.name)}</span>
         </label>
