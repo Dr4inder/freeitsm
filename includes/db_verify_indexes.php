@@ -214,6 +214,8 @@ return [
     ['changes', 'ix_changes_impact_id', 'key', '(`impact_id`)'],
     ['changes', 'ix_changes_tenant_id', 'key', '(`tenant_id`)'],
     ['change_audit', 'idx_change_audit_change', 'key', '(`change_id`)'],
+    ['change_approvals', 'uq_change_approvals_round', 'unique', '(`change_id`,`round_no`)'],
+    ['change_approval_votes', 'idx_cav_approval', 'key', '(`approval_id`)'],
     ['change_text_revisions', 'idx_ctr_change_field', 'key', '(`change_id`,`field_key`,`id`)'],
     ['change_comments', 'idx_change_comments_change', 'key', '(`change_id`)'],
     ['change_cab_members', 'uq_cab_change_analyst', 'unique', '(`change_id`,`analyst_id`)'],

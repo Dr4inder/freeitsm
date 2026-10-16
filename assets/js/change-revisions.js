@@ -1,7 +1,7 @@
 /**
  * The text history viewer for a change's long fields (#180 Part 2).
  *
- *   openRevisionViewer(changeId, field, revisionId?)
+ *   openRevisionViewer(changeId, field, revisionId?, compareTo?)  - compareTo: a revision id to compare against (an approval round's)
  *
  * Lists every saved version of one field (newest first, the baseline last and
  * labelled), shows the chosen version against the one before it - or any other -
@@ -167,8 +167,8 @@
     }
 
     /** Opens the viewer on one field of a change, at a given revision or the newest. */
-    window.openRevisionViewer = async function (changeId, field, revisionId) {
-        state = { changeId, field, list: [], selected: 0, compareTo: null, tab: 'changes', cache: {} };
+    window.openRevisionViewer = async function (changeId, field, revisionId, compareTo) {
+        state = { changeId, field, list: [], selected: 0, compareTo: compareTo || null, tab: 'changes', cache: {} };
         document.getElementById('revisionTitle').textContent =
             T('title', { field: window.t('change-management.revisions.field.' + field) });
         document.getElementById('revisionList').innerHTML = '';

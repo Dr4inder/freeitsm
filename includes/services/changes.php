@@ -185,6 +185,19 @@ class ChangesService
             }
         }];
 
+        // Created straight into an approval stage: the record starts there too. Into
+        // awaiting opens a round; into approved is a hand-set approval, recorded as such.
+        if ($statusStage === 'awaiting' || $statusStage === 'approved') {
+            $cfg = changeApprovalSettings($conn);
+            $fresh = self::rawRow($conn, $changeId);
+            if ($statusStage === 'awaiting') {
+                $roundId = changeApprovalOpenRound($conn, $fresh, changeApprovalRoute($fresh), $actorId ?: null, $cfg);
+                $after[] = self::roundEvent($conn, 'change.submitted', $fresh, $roundId);
+            } else {
+                changeApprovalRecordApproved($conn, $fresh, 'manual', $actorId ?: null, null, $cfg);
+            }
+        }
+
         return [$changeId, $after];
     }
 
@@ -434,30 +447,197 @@ class ChangesService
                 ChangeRevisions::FIELDS[$field][1], null, 'Revision #' . $revId);
         }
 
-        // A resubmission starts the vote again (F2). Votes used to survive on the
-        // member rows, so after a required Reject the change was resubmitted with that
-        // Reject still counted - and the next vote by anybody sent it straight back to
-        // Draft. Entering the awaiting stage from anywhere else clears them.
-        if ($newStatusId !== null && $newStage === 'awaiting' && $oldStage !== 'awaiting') {
-            $clr = $conn->prepare(
-                "UPDATE change_cab_members SET vote = NULL, vote_comment = NULL, vote_datetime = NULL
-                  WHERE change_id = ? AND vote IS NOT NULL"
-            );
-            $clr->execute([$changeId]);
-            if ($clr->rowCount() > 0) {
-                self::auditWrite($conn, $changeId, $actorId, 'cab_vote', 'CAB Vote', null,
-                    'Votes from the previous submission cleared (' . $clr->rowCount() . ')');
+        // ---- The approval round follows the change (#180 Part 1) -----------------
+        // In every mode the record is kept: rounds open on submission, close when the
+        // change goes back, and a hand-set Approved is recorded as exactly that. What
+        // the settings change is only whether an edit WITHDRAWS an approval (§6).
+        $cfg = changeApprovalSettings($conn);
+        $fresh = self::rawRow($conn, $changeId);
+        $round = changeApprovalCurrent($conn, $changeId);
+        $who = self::actorName($conn, $ctx);
+        $after = [];
+
+        if ($newStatusId !== null && $newStage !== $oldStage) {
+            if ($newStage === 'awaiting') {
+                // Submitted, or resubmitted by hand: a new request, so a standing
+                // approval is superseded and the vote starts again (F2 - votes used to
+                // survive on the member rows, so an old required Reject sent the
+                // resubmitted change straight back to Draft on the next vote).
+                if ($round) {
+                    changeApprovalClose($conn, (int)$round['id'], $round['state'] === 'open' ? 'withdrawn' : 'superseded', "Resubmitted by {$who}");
+                }
+                self::clearCabVotes($conn, $changeId, $actorId);
+                $roundId = changeApprovalOpenRound($conn, $fresh, changeApprovalRoute($fresh), $actorId ?: null, $cfg);
+                $after[] = self::roundEvent($conn, $round ? 'change.resubmitted' : 'change.submitted', $fresh, $roundId, "Submitted by {$who}");
+                $round = null;
+            } elseif ($becameApproved) {
+                // Approved by hand. Allowed in Record mode, and recorded as exactly that:
+                // a 'manual' round, attributed, so the history never shows a vote that
+                // did not happen.
+                if ($round) {
+                    changeApprovalClose($conn, (int)$round['id'], $round['state'] === 'open' ? 'withdrawn' : 'superseded', "Approved by hand by {$who}");
+                }
+                changeApprovalRecordApproved($conn, $fresh, 'manual', $actorId ?: null, null, $cfg);
+                $round = null;
+            } elseif ($round && ($round['state'] === 'open' || $newStage === 'draft')) {
+                // Back to Draft, stopped, or moved past the decision by hand: the
+                // request is withdrawn. Back to Draft also withdraws a standing approval.
+                $reason = $newStage === 'draft'
+                    ? "Returned to Draft by {$who}"
+                    : 'Moved to ' . self::statusName($conn, $newStatusId) . " by {$who} before a decision";
+                changeApprovalClose($conn, (int)$round['id'], 'withdrawn', $reason);
+                if ($round['state'] === 'approved') {
+                    $conn->prepare("UPDATE changes SET approval_datetime = NULL WHERE id = ?")->execute([$changeId]);
+                }
+                $after[] = self::roundEvent($conn, 'change.approval_withdrawn', $fresh, (int)$round['id'], $reason);
+                $round = null;
             }
         }
 
+        // A material edit while a round stands (§6). Keep (Record's default): nothing is
+        // written - the Approval panel compares the round's snapshot with the content and
+        // says "approved against an earlier version". Withdraw (and always in Enforce):
+        // the round is superseded and the change goes back to the board.
+        if ($round && changeApprovalContentHash($current, $cfg['material']) !== changeApprovalContentHash($fresh, $cfg['material'])
+            && $cfg['edit_withdraws']) {
+            $reason = implode(', ', self::materialChanged($current, $fresh, $cfg)) . " edited by {$who}";
+            changeApprovalClose($conn, (int)$round['id'], 'superseded', mb_substr($reason, 0, 255));
+            if ($round['state'] === 'approved') {
+                $awaiting = changeStatusForStage($conn, 'awaiting');
+                if ($awaiting) {
+                    $conn->prepare("UPDATE changes SET status_id = ?, approval_datetime = NULL, modified_datetime = UTC_TIMESTAMP() WHERE id = ?")
+                         ->execute([$awaiting['id'], $changeId]);
+                    self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status',
+                        self::statusName($conn, (int)$fresh['status_id']), $awaiting['name']);
+                }
+                $after[] = self::roundEvent($conn, 'change.approval_withdrawn', $fresh, (int)$round['id'], $reason);
+            }
+            self::clearCabVotes($conn, $changeId, $actorId);
+            $fresh = self::rawRow($conn, $changeId);
+            $roundId = changeApprovalOpenRound($conn, $fresh, changeApprovalRoute($fresh), $actorId ?: null, $cfg);
+            $after[] = self::roundEvent($conn, 'change.resubmitted', $fresh, $roundId, $reason);
+        }
+
         // change.approved on a genuine manual transition into the approved stage.
-        $after = [];
         if ($becameApproved) {
-            $fresh = self::loadJoined($conn, $ctx, $changeId);
-            $after[] = fn() => self::approvedDispatch($changeId, $fresh['title'], $fresh['risk_level'],
-                $fresh['approver_id'] !== null ? (int)$fresh['approver_id'] : null);
+            $joined = self::loadJoined($conn, $ctx, $changeId);
+            $after[] = fn() => self::approvedDispatch($changeId, $joined['title'], $joined['risk_level'],
+                $joined['approver_id'] !== null ? (int)$joined['approver_id'] : null, 'manual');
         }
         return $after;
+    }
+
+    /**
+     * Cancel a change: move it to the first status in the Stopped stage and withdraw any
+     * open round, keeping every record. This is what a change that has approval history
+     * gets instead of Delete (§4) - an audit months later needs the abandoned changes as
+     * much as the finished ones.
+     *
+     * @param int $changeId  the change
+     * @param array $in  reason (optional) - why, in words; it goes on the record
+     */
+    public static function cancelChange(PDO $conn, ActorContext $ctx, int $changeId, array $in): void
+    {
+        $after = self::inTransaction($conn, function () use ($conn, $ctx, $changeId, $in) {
+            self::lockRow($conn, $changeId);
+            $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
+            $target = changeStatusForStage($conn, 'stopped');
+            if (!$target) {
+                throw new ServiceError('conflict', 'no_stopped_status', t('change-management.approval.no_stopped_status'));
+            }
+            if ($row['status_stage'] === 'stopped') {
+                return [];   // already stopped - nothing to do
+            }
+            $reasonText = mb_substr(trim((string)($in['reason'] ?? '')), 0, 200);
+            $who = self::actorName($conn, $ctx);
+            $conn->prepare("UPDATE changes SET status_id = ?, modified_datetime = UTC_TIMESTAMP() WHERE id = ?")
+                 ->execute([$target['id'], $changeId]);
+            self::auditWrite($conn, $changeId, $ctx->actorId, 'status_change', 'Status', $row['status_name'],
+                $target['name'] . ($reasonText !== '' ? ' - ' . $reasonText : ''));
+            $after = [];
+            $round = changeApprovalCurrent($conn, $changeId);
+            if ($round && $round['state'] === 'open') {
+                $reason = "Cancelled by {$who}" . ($reasonText !== '' ? ": {$reasonText}" : '');
+                changeApprovalClose($conn, (int)$round['id'], 'withdrawn', mb_substr($reason, 0, 255));
+                $after[] = self::roundEvent($conn, 'change.approval_withdrawn', self::rawRow($conn, $changeId), (int)$round['id'], $reason);
+            }
+            return $after;
+        });
+        self::afterCommit($after);
+    }
+
+    /**
+     * The named approver decides a change awaiting their approval (route 'approver').
+     * Until #180 the Approver field was a label with no button; now it is a decision,
+     * recorded on the round like a CAB vote, and checked against the version on screen.
+     * Returns [change_id, decision, status_changed, new_status].
+     *
+     * @param int $changeId  the change
+     * @param array $in  decision ('approve' or 'reject'), note, approval_id, content_hash
+     */
+    public static function decideApproval(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
+    {
+        [$result, $after] = self::inTransaction($conn, function () use ($conn, $ctx, $changeId, $in) {
+            self::lockRow($conn, $changeId);
+            $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
+            $cfg = changeApprovalSettings($conn);
+            $actorId = $ctx->actorId;
+
+            $decision = strtolower((string)($in['decision'] ?? ''));
+            if (!in_array($decision, ['approve', 'reject'], true)) {
+                throw new ServiceError('validation', 'invalid_field', "'decision' must be approve or reject.");
+            }
+            $round = changeApprovalCurrent($conn, $changeId);
+            if (!$round || $round['state'] !== 'open' || $row['status_stage'] !== 'awaiting') {
+                throw new ServiceError('conflict', 'not_awaiting_approval', t('change-management.approval.not_awaiting'));
+            }
+            if ($round['route'] !== 'approver' && $round['route'] !== 'legacy') {
+                throw new ServiceError('conflict', 'not_approver_route', t('change-management.approval.not_approver_route'));
+            }
+            if ((int)($row['approver_id'] ?? 0) !== $actorId || $actorId <= 0) {
+                throw new ServiceError('forbidden', 'forbidden', t('change-management.approval.not_the_approver'));
+            }
+            changeApprovalCheckVersion($row, $round, $in['approval_id'] ?? null, $in['content_hash'] ?? null, $cfg);
+            $independent = changeApprovalIsIndependent($row, $actorId, $cfg);
+            self::guardIndependence($row, $actorId, $cfg);
+
+            $note = trim((string)($in['note'] ?? ''));
+            $who = self::actorName($conn, $ctx);
+            $approve = $decision === 'approve';
+            $target = $approve ? changeStatusForStage($conn, 'approved') : self::rejectTarget($conn, $cfg);
+            changeApprovalClose($conn, (int)$round['id'], $approve ? 'approved' : 'rejected', null, $actorId, $note !== '' ? $note : null, $independent);
+            if ($approve) {
+                // The approved round stays the change's current one.
+                $conn->prepare("UPDATE changes SET approval_id = ? WHERE id = ?")->execute([(int)$round['id'], $changeId]);
+            }
+            self::auditWrite($conn, $changeId, $actorId, 'cab_vote', 'Approver', null,
+                ($approve ? 'Approved' : 'Rejected') . " by {$who}" . ($note !== '' ? ': ' . mb_substr($note, 0, 80) : ''));
+
+            $after = [];
+            $newStatus = null;
+            if ($target) {
+                $conn->prepare(
+                    "UPDATE changes SET status_id = ?, modified_datetime = UTC_TIMESTAMP()"
+                    . ($approve ? ', approval_datetime = UTC_TIMESTAMP()' : '') . ' WHERE id = ?'
+                )->execute([$target['id'], $changeId]);
+                self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status', $row['status_name'], $target['name']);
+                $newStatus = $target['name'];
+            }
+            $fresh = self::rawRow($conn, $changeId);
+            if ($approve) {
+                $after[] = fn() => self::approvedDispatch($changeId, $row['title'], $row['risk_level'], $actorId, 'approver');
+            } else {
+                $after[] = self::roundEvent($conn, 'change.rejected', $fresh, (int)$round['id'], $note, $actorId);
+            }
+            return [[
+                'change_id'      => $changeId,
+                'decision'       => $decision,
+                'status_changed' => $target !== null,
+                'new_status'     => $newStatus,
+            ], $after];
+        });
+        self::afterCommit($after);
+        return $result;
     }
 
     /**
@@ -472,6 +652,17 @@ class ChangesService
         [$files, $title] = self::inTransaction($conn, function () use ($conn, $ctx, $changeId) {
             self::lockRow($conn, $changeId);
             $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
+            // A change that has ever been submitted is evidence (§4). Where the settings
+            // say so - and always in Enforce mode - it can be cancelled, not deleted.
+            if (changeApprovalHasHistory($conn, $changeId)) {
+                if (changeApprovalSettings($conn)['delete_refused']) {
+                    throw new ServiceError('conflict', 'change_has_approval_history', t('change-management.approval.delete_refused'));
+                }
+                // TRAP: change_approvals is ON DELETE RESTRICT, so the rounds go first,
+                // deliberately and here, or the DELETE below fails. Votes cascade.
+                $conn->prepare("UPDATE changes SET approval_id = NULL WHERE id = ?")->execute([$changeId]);
+                $conn->prepare("DELETE FROM change_approvals WHERE change_id = ?")->execute([$changeId]);
+            }
             $att = $conn->prepare("SELECT file_path FROM change_attachments WHERE change_id = ?");
             $att->execute([$changeId]);
             $files = $att->fetchAll(PDO::FETCH_COLUMN);
@@ -668,8 +859,9 @@ class ChangesService
     private static function applyVote(PDO $conn, ActorContext $ctx, int $changeId, array $in): array
     {
         self::lockRow($conn, $changeId);
-        self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
+        $row = self::loadJoined($conn, $ctx, $changeId);   // 404 if gone
         $actorId = $ctx->actorId;
+        $cfg = changeApprovalSettings($conn);
 
         $vote = $in['vote'] ?? '';
         if (!in_array($vote, ['Approve', 'Reject', 'Abstain'], true)) {
@@ -677,7 +869,14 @@ class ChangesService
         }
         $voteComment = trim((string)($in['comment'] ?? ''));
 
-        $memberStmt = $conn->prepare("SELECT id, vote FROM change_cab_members WHERE change_id = ? AND analyst_id = ?");
+        // A vote needs an open round. It used to be accepted on a Draft and counted
+        // later, against content that may have changed in between.
+        $round = changeApprovalCurrent($conn, $changeId);
+        if (!$round || $round['state'] !== 'open' || $row['status_stage'] !== 'awaiting') {
+            throw new ServiceError('conflict', 'not_awaiting_approval', t('change-management.approval.not_awaiting'));
+        }
+
+        $memberStmt = $conn->prepare("SELECT id, vote, is_required FROM change_cab_members WHERE change_id = ? AND analyst_id = ?");
         $memberStmt->execute([$changeId, $actorId]);
         $membership = $memberStmt->fetch(PDO::FETCH_ASSOC);
         if (!$membership) {
@@ -687,70 +886,96 @@ class ChangesService
             throw new ServiceError('conflict', 'conflict', 'This CAB member has already voted on this change.');
         }
 
+        // Cast against the version on screen (§5)? Refused where the settings say so;
+        // otherwise recorded, with whether it was current.
+        $wasCurrent = changeApprovalCheckVersion($row, $round, $in['approval_id'] ?? null, $in['content_hash'] ?? null, $cfg);
+        $counted = self::voteCounts($row, $actorId, $cfg);
+
         $conn->prepare(
             "UPDATE change_cab_members SET vote = ?, vote_comment = ?, vote_datetime = UTC_TIMESTAMP()
              WHERE change_id = ? AND analyst_id = ?"
         )->execute([$vote, $voteComment ?: null, $changeId, $actorId]);
+        $conn->prepare(
+            "INSERT INTO change_approval_votes (approval_id, analyst_id, is_required, is_counted, vote, comment, content_hash, was_current, voted_datetime)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())"
+        )->execute([(int)$round['id'], $actorId, (int)$membership['is_required'], $counted ? 1 : 0, $vote, $voteComment ?: null,
+                    is_string($in['content_hash'] ?? null) && $in['content_hash'] !== '' ? $in['content_hash'] : null,
+                    $wasCurrent === null ? null : ($wasCurrent ? 1 : 0)]);
 
-        $nameStmt = $conn->prepare("SELECT full_name FROM analysts WHERE id = ?");
-        $nameStmt->execute([$actorId]);
-        $analystName = $nameStmt->fetchColumn() ?: 'Unknown';
-
+        $analystName = self::actorName($conn, $ctx);
         $auditDisplay = "$vote by $analystName";
         if ($voteComment) {
             $preview = mb_strlen($voteComment) > 80 ? mb_substr($voteComment, 0, 80) . '...' : $voteComment;
             $auditDisplay .= ": $preview";
         }
+        if (!$counted) {
+            $auditDisplay .= ' (not counted: one of the change\'s own people)';
+        }
+        if ($wasCurrent === false) {
+            $auditDisplay .= ' (cast against an earlier version)';
+        }
         self::auditWrite($conn, $changeId, $actorId, 'cab_vote', 'CAB Vote', null, $auditDisplay);
 
-        $statusChanged = false;
-        $newStatus = null;
+        // Today's arithmetic, over THIS round's counted votes: all = every counted
+        // required member approves; majority = more than half of them; one counted
+        // required Reject rejects; Abstain never moves anything; optional members never
+        // count. In Enforce mode with independence on, the change's own people neither
+        // vote nor make up the total.
+        $memStmt = $conn->prepare("SELECT analyst_id FROM change_cab_members WHERE change_id = ? AND is_required = 1");
+        $memStmt->execute([$changeId]);
+        $required = array_values(array_filter(array_map('intval', $memStmt->fetchAll(PDO::FETCH_COLUMN)),
+            fn($aid) => self::voteCounts($row, $aid, $cfg)));
+        $vStmt = $conn->prepare("SELECT analyst_id, vote FROM change_approval_votes WHERE approval_id = ? AND is_counted = 1 ORDER BY id");
+        $vStmt->execute([(int)$round['id']]);
+        $votes = [];
+        foreach ($vStmt->fetchAll(PDO::FETCH_ASSOC) as $v) {
+            $votes[(int)$v['analyst_id']] = $v['vote'];
+        }
+        $totalRequired = count($required);
+        $approved = count(array_filter($required, fn($aid) => ($votes[$aid] ?? null) === 'Approve'));
+        $rejected = count(array_filter($required, fn($aid) => ($votes[$aid] ?? null) === 'Reject'));
+        $approvalType = $row['cab_approval_type'] ?: 'all';
 
-        $changeStmt = $conn->prepare(
-            "SELECT c.cab_approval_type, c.title, c.risk_level, c.approver_id, cs.name AS status, cs.stage AS status_stage
-             FROM changes c LEFT JOIN change_statuses cs ON cs.id = c.status_id WHERE c.id = ?"
-        );
-        $changeStmt->execute([$changeId]);
-        $changeRow = $changeStmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($changeRow && $changeRow['status_stage'] === 'awaiting') {
-            $approvalType = $changeRow['cab_approval_type'] ?: 'all';
-            $reqStmt = $conn->prepare("SELECT vote FROM change_cab_members WHERE change_id = ? AND is_required = 1");
-            $reqStmt->execute([$changeId]);
-            $reqVotes = $reqStmt->fetchAll(PDO::FETCH_COLUMN);
-
-            $totalRequired = count($reqVotes);
-            $approved = count(array_filter($reqVotes, fn($v) => $v === 'Approve'));
-            $rejected = count(array_filter($reqVotes, fn($v) => $v === 'Reject'));
-
-            // TRAP: the targets come from the STAGE, never a name. Looking up 'Approved' by
-            // name set status_id to NULL as soon as somebody renamed it (F3).
-            $target = null;
-            if ($rejected > 0) {
-                $target = changeStatusForStage($conn, 'draft');
-            } elseif ($totalRequired > 0) {
-                $thresholdMet = ($approvalType === 'majority') ? ($approved > $totalRequired / 2) : ($approved === $totalRequired);
-                if ($thresholdMet) {
-                    $target = changeStatusForStage($conn, 'approved');
-                }
-            }
-            if ($target !== null) {
-                $isApproval = ($rejected === 0);
-                $conn->prepare(
-                    "UPDATE changes SET status_id = ?, modified_datetime = UTC_TIMESTAMP()"
-                    . ($isApproval ? ', approval_datetime = UTC_TIMESTAMP()' : '') . ' WHERE id = ?'
-                )->execute([$target['id'], $changeId]);
-                self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status', $changeRow['status'], $target['name']);
-                $statusChanged = true;
-                $newStatus = $target['name'];
-                $approvedNow = $isApproval;
+        // TRAP: the targets come from the STAGE, never a name. Looking up 'Approved' by
+        // name set status_id to NULL as soon as somebody renamed it (F3).
+        $target = null;
+        $isApproval = false;
+        if ($rejected > 0) {
+            $target = self::rejectTarget($conn, $cfg);
+        } elseif ($totalRequired > 0) {
+            $thresholdMet = ($approvalType === 'majority') ? ($approved > $totalRequired / 2) : ($approved === $totalRequired);
+            if ($thresholdMet) {
+                $target = changeStatusForStage($conn, 'approved');
+                $isApproval = true;
             }
         }
 
         $after = [];
-        if ($statusChanged && !empty($approvedNow)) {
-            $after[] = fn() => self::approvedDispatch($changeId, $changeRow['title'] ?? null, $changeRow['risk_level'] ?? null,
-                isset($changeRow['approver_id']) && $changeRow['approver_id'] !== null ? (int)$changeRow['approver_id'] : null);
+        $statusChanged = false;
+        $newStatus = null;
+        if ($rejected > 0 || $isApproval) {
+            // Independent if no counted approval came from the change's own people.
+            $own = changeApprovalOwnPeople($row, $cfg);
+            $independent = !array_filter($required, fn($aid) => in_array($aid, $own, true) && ($votes[$aid] ?? null) === 'Approve');
+            changeApprovalClose($conn, (int)$round['id'], $isApproval ? 'approved' : 'rejected', null, $actorId, null, $independent);
+            if ($isApproval) {
+                $conn->prepare("UPDATE changes SET approval_id = ? WHERE id = ?")->execute([(int)$round['id'], $changeId]);
+            }
+            if ($target !== null) {
+                $conn->prepare(
+                    "UPDATE changes SET status_id = ?, modified_datetime = UTC_TIMESTAMP()"
+                    . ($isApproval ? ', approval_datetime = UTC_TIMESTAMP()' : '') . ' WHERE id = ?'
+                )->execute([$target['id'], $changeId]);
+                self::auditWrite($conn, $changeId, $actorId, 'status_change', 'Status', $row['status_name'], $target['name']);
+                $statusChanged = true;
+                $newStatus = $target['name'];
+            }
+            if ($isApproval) {
+                $after[] = fn() => self::approvedDispatch($changeId, $row['title'] ?? null, $row['risk_level'] ?? null,
+                    $row['approver_id'] !== null ? (int)$row['approver_id'] : null, 'cab');
+            } else {
+                $after[] = self::roundEvent($conn, 'change.rejected', self::rawRow($conn, $changeId), (int)$round['id'], $voteComment, $actorId);
+            }
         }
 
         return [[
@@ -758,6 +983,8 @@ class ChangesService
             'vote'           => $vote,
             'status_changed' => $statusChanged,
             'new_status'     => $newStatus,
+            'counted'        => $counted,
+            'was_current'    => $wasCurrent,
         ], $after];
     }
 
@@ -898,6 +1125,172 @@ class ChangesService
         foreach ($after as $fn) {
             $fn();
         }
+    }
+
+    /**
+     * The changes row as stored (no joins), for the approval rules.
+     *
+     * @param int $changeId  the change
+     */
+    private static function rawRow(PDO $conn, int $changeId): array
+    {
+        $s = $conn->prepare("SELECT * FROM changes WHERE id = ?");
+        $s->execute([$changeId]);
+        return $s->fetch(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    /**
+     * The acting analyst's display name, for the reasons written on a round.
+     */
+    private static function actorName(PDO $conn, ActorContext $ctx): string
+    {
+        if ($ctx->actorId > 0) {
+            $s = $conn->prepare("SELECT full_name FROM analysts WHERE id = ?");
+            $s->execute([$ctx->actorId]);
+            $name = $s->fetchColumn();
+            if ($name) return (string)$name;
+        }
+        return $ctx->actorName !== '' ? $ctx->actorName : 'System';
+    }
+
+    /**
+     * A status's name by id.
+     *
+     * @param int $statusId  a change_statuses id
+     */
+    private static function statusName(PDO $conn, int $statusId): string
+    {
+        $s = $conn->prepare("SELECT name FROM change_statuses WHERE id = ?");
+        $s->execute([$statusId]);
+        return (string)($s->fetchColumn() ?: '');
+    }
+
+    /**
+     * Clear the CAB members' votes for a new round (the member rows hold the current
+     * round's vote only; the history is change_approval_votes).
+     *
+     * @param int $changeId  the change
+     * @param int $actorId  who caused it, for the audit row
+     */
+    private static function clearCabVotes(PDO $conn, int $changeId, int $actorId): void
+    {
+        $clr = $conn->prepare(
+            "UPDATE change_cab_members SET vote = NULL, vote_comment = NULL, vote_datetime = NULL
+              WHERE change_id = ? AND vote IS NOT NULL"
+        );
+        $clr->execute([$changeId]);
+        if ($clr->rowCount() > 0) {
+            self::auditWrite($conn, $changeId, $actorId, 'cab_vote', 'CAB Vote', null,
+                'Votes from the previous submission cleared (' . $clr->rowCount() . ')');
+        }
+    }
+
+    /**
+     * Where a rejection sends a change: the status chosen in Settings → Approvals, if it
+     * is still active and in the Draft or Stopped stage, else the first Draft-stage one.
+     *
+     * @param array $cfg  changeApprovalSettings()
+     */
+    private static function rejectTarget(PDO $conn, array $cfg): ?array
+    {
+        if ($cfg['reject_status_id']) {
+            $s = $conn->prepare("SELECT id, name FROM change_statuses WHERE id = ? AND is_active = 1 AND stage IN ('draft', 'stopped')");
+            $s->execute([$cfg['reject_status_id']]);
+            $r = $s->fetch(PDO::FETCH_ASSOC);
+            if ($r) return ['id' => (int)$r['id'], 'name' => $r['name']];
+        }
+        return changeStatusForStage($conn, 'draft');
+    }
+
+    /**
+     * Does this analyst's vote count? Always in Record mode (the round is marked not
+     * independent instead); in Enforce mode the change's own people are recorded but
+     * not counted, unless Settings allows approving your own change.
+     *
+     * @param array $row  the changes row
+     * @param int $analystId  the voter
+     * @param array $cfg  changeApprovalSettings()
+     */
+    private static function voteCounts(array $row, int $analystId, array $cfg): bool
+    {
+        return !$cfg['enforce'] || $cfg['own_allowed'] || changeApprovalIsIndependent($row, $analystId, $cfg);
+    }
+
+    /**
+     * Refuse a decision by one of the change's own people where independence is
+     * enforced (Enforce mode, "Approving your own change: Not allowed").
+     *
+     * @param array $row  the changes row
+     * @param int $analystId  who is deciding
+     * @param array $cfg  changeApprovalSettings()
+     */
+    private static function guardIndependence(array $row, int $analystId, array $cfg): void
+    {
+        if ($cfg['enforce'] && !$cfg['own_allowed'] && !changeApprovalIsIndependent($row, $analystId, $cfg)) {
+            throw new ServiceError('forbidden', 'not_independent', t('change-management.approval.not_independent'));
+        }
+    }
+
+    /**
+     * The labels of the material fields that differ between two versions of a change,
+     * for the reason written on a superseded round ("Test plan, Rollback plan edited by Sam").
+     *
+     * @param array $before  the row before the save
+     * @param array $after  the row after it
+     * @param array $cfg  changeApprovalSettings()
+     */
+    private static function materialChanged(array $before, array $after, array $cfg): array
+    {
+        $labels = [
+            'title' => 'Title', 'description' => 'Description', 'reason_for_change' => 'Reason for change',
+            'risk_evaluation' => 'Risk evaluation', 'risk_likelihood' => 'Risk likelihood', 'risk_impact_score' => 'Risk impact',
+            'test_plan' => 'Test plan', 'rollback_plan' => 'Rollback plan', 'change_type_id' => 'Type', 'impact_id' => 'Impact',
+            'priority_id' => 'Priority', 'assigned_to_id' => 'Assigned to', 'work_window' => 'Work window', 'outage_window' => 'Outage window',
+        ];
+        $a = changeApprovalMaterialValues($before, $cfg['material']);
+        $b = changeApprovalMaterialValues($after, $cfg['material']);
+        $out = [];
+        foreach ($b as $k => $v) {
+            if (($a[$k] ?? null) !== $v) $out[] = $labels[$k] ?? $k;
+        }
+        return $out ?: ['Content'];
+    }
+
+    /**
+     * A round event for the workflow engine, as a closure to fire after the commit.
+     * notify_ids is who should look: the required CAB members, or the named approver.
+     *
+     * @param string $event  change.submitted | change.resubmitted | change.rejected | change.approval_withdrawn
+     * @param array $row  the changes row
+     * @param int $roundId  the round
+     * @param ?string $reason  why, in words
+     * @param ?int $decidedBy  who decided (change.rejected)
+     */
+    private static function roundEvent(PDO $conn, string $event, array $row, int $roundId, ?string $reason = null, ?int $decidedBy = null): callable
+    {
+        $r = $conn->prepare("SELECT round_no, route FROM change_approvals WHERE id = ?");
+        $r->execute([$roundId]);
+        $round = $r->fetch(PDO::FETCH_ASSOC) ?: ['round_no' => null, 'route' => null];
+        $m = $conn->prepare("SELECT analyst_id FROM change_cab_members WHERE change_id = ? AND is_required = 1");
+        $m->execute([(int)$row['id']]);
+        $notify = !empty($row['cab_required']) ? array_map('intval', $m->fetchAll(PDO::FETCH_COLUMN))
+                                                 : (!empty($row['approver_id']) ? [(int)$row['approver_id']] : []);
+        $payload = [
+            'change'     => ['id' => (int)$row['id'], 'title' => $row['title'] ?? null, 'risk' => $row['risk_level'] ?? null],
+            'round'      => ['id' => $roundId, 'no' => $round['round_no'] !== null ? (int)$round['round_no'] : null, 'route' => $round['route']],
+            'reason'     => $reason,
+            'notify_ids' => $notify,
+        ];
+        if ($decidedBy !== null) {
+            $payload['decided_by'] = ['id' => $decidedBy];
+        }
+        return function () use ($event, $payload) {
+            try {
+                WorkflowEngine::dispatch($event, $payload);
+            } catch (Exception $wfEx) {
+                error_log('Workflow dispatch error in ChangesService (' . $event . '): ' . $wfEx->getMessage());
+            }
+        };
     }
 
     /**
@@ -1144,13 +1537,15 @@ class ChangesService
      * @param ?string $title  the change's title
      * @param ?string $riskLevel  the change's risk level, e.g. 'High'
      * @param ?int $approverId  the change's named approver, or null
+     * @param string $route  how it was approved (the round's route)
      */
-    private static function approvedDispatch(int $changeId, ?string $title, ?string $riskLevel, ?int $approverId): void
+    private static function approvedDispatch(int $changeId, ?string $title, ?string $riskLevel, ?int $approverId, string $route = 'cab'): void
     {
         try {
             WorkflowEngine::dispatch('change.approved', [
                 'change'   => ['id' => $changeId, 'title' => $title, 'risk' => $riskLevel],
                 'approver' => ['id' => $approverId],
+                'round'    => ['route' => $route],   // cab | approver | manual | override | pre_authorised - so a rule can tell them apart
             ]);
         } catch (Exception $wfEx) {
             error_log('Workflow dispatch error in ChangesService: ' . $wfEx->getMessage());

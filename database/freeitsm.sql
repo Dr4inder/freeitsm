@@ -3636,6 +3636,7 @@ CREATE TABLE IF NOT EXISTS `changes` (
     `assigned_to_id`                INT NULL,
     `approver_id`                   INT NULL,
     `approval_datetime`             DATETIME NULL,
+    `approval_id`                   INT NULL,
     `work_start_datetime`           DATETIME NULL,
     `work_end_datetime`             DATETIME NULL,
     `outage_start_datetime`         DATETIME NULL,
@@ -3709,6 +3710,50 @@ CREATE TABLE IF NOT EXISTS `change_audit` (
     INDEX `idx_change_audit_change` (`change_id`),
     CONSTRAINT `fk_change_audit_change` FOREIGN KEY (`change_id`) REFERENCES `changes` (`id`) ON DELETE CASCADE,
     CONSTRAINT `fk_change_audit_analyst` FOREIGN KEY (`analyst_id`) REFERENCES `analysts` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- One row per approval round (#180 Part 1); see includes/changes/approvals.php.
+-- fk_change_approvals_change is RESTRICT, NOT CASCADE, on purpose: a change that has
+-- approval records is evidence, and a stray DELETE must fail rather than wipe them.
+-- ChangesService::deleteChange() removes the rounds itself when the settings allow it.
+CREATE TABLE IF NOT EXISTS `change_approvals` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `change_id`         INT NOT NULL,
+    `round_no`          INT NOT NULL,
+    `route`             VARCHAR(20) NOT NULL,
+    `state`             VARCHAR(20) NOT NULL,
+    `is_independent`    TINYINT(1) NULL,
+    `content_hash`      CHAR(64) NULL,
+    `snapshot`          LONGTEXT NULL,
+    `opened_by_id`      INT NULL,
+    `opened_datetime`   DATETIME NOT NULL,
+    `decided_by_id`     INT NULL,
+    `decided_datetime`  DATETIME NULL,
+    `decision_note`     TEXT NULL,
+    `closed_reason`     VARCHAR(255) NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_change_approvals_round` (`change_id`, `round_no`),
+    CONSTRAINT `fk_change_approvals_change` FOREIGN KEY (`change_id`) REFERENCES `changes` (`id`),
+    CONSTRAINT `fk_change_approvals_opened_by` FOREIGN KEY (`opened_by_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_change_approvals_decided_by` FOREIGN KEY (`decided_by_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Every vote ever cast, never updated (#180 Part 1).
+CREATE TABLE IF NOT EXISTS `change_approval_votes` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `approval_id`       INT NOT NULL,
+    `analyst_id`        INT NULL,
+    `is_required`       TINYINT(1) NOT NULL,
+    `is_counted`        TINYINT(1) NOT NULL,
+    `vote`              VARCHAR(20) NOT NULL,
+    `comment`           TEXT NULL,
+    `content_hash`      CHAR(64) NULL,
+    `was_current`       TINYINT(1) NULL,
+    `voted_datetime`    DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `idx_cav_approval` (`approval_id`),
+    CONSTRAINT `fk_cav_approval` FOREIGN KEY (`approval_id`) REFERENCES `change_approvals` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_cav_analyst` FOREIGN KEY (`analyst_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Every saved version of a change's long-text fields, in full (#180 Part 2).

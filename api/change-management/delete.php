@@ -29,7 +29,7 @@ try {
     ChangesService::deleteChange($conn, ActorContext::fromSession($conn), $changeId);
     echo json_encode(['success' => true, 'message' => 'Change deleted']);
 } catch (ServiceError $e) {
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'error' => $e->getMessage(), 'code' => $e->errorCode]);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }

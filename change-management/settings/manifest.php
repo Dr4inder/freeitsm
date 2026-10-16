@@ -59,6 +59,16 @@ return [
             'grant'     => 'Manage change impacts',
         ],
         [
+            // The approval rules (#180): Record or Enforce, independence, what counts as a
+            // material edit, out-of-date votes, deleting submitted changes. Sensitive: these
+            // decide what the approval record proves, so they are the audit trail's settings.
+            'id'        => 'approvals',
+            'cap'       => Cap::CHANGES_APPROVALS,
+            'label_key' => 'change-management.settings.tab_approvals',
+            'grant'     => 'Manage the approval rules for changes',
+            'sensitive' => true,
+        ],
+        [
             // A per-analyst display preference. Not administration; nothing to grant.
             'id'        => 'left-panel',
             'cap'       => null,

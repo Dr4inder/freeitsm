@@ -174,6 +174,18 @@ try {
         $providerAutoAnalystsColWasMissing = ((int)$aaProbe->fetchColumn() === 0);
     } catch (Exception $e) {}
 
+    // Did change_approvals exist before this run? If not, every change already past
+    // submission predates approval records and gets a 'legacy' round (below), once.
+    // Running it on every Verify would be wrong: a change moved straight to Scheduled
+    // in Record mode after the upgrade has no round, and must not be dressed up as
+    // "approved before records were kept".
+    $changeApprovalsWasMissing = false;
+    try {
+        $caProbe = $conn->prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = 'change_approvals'");
+        $caProbe->execute([$dbName]);
+        $changeApprovalsWasMissing = ((int)$caProbe->fetchColumn() === 0);
+    } catch (Exception $e) {}
+
     // Was analysts.is_admin absent *before* this run added it? If so, every existing
     // analyst predates the admin/non-admin split and must be grandfathered to admin
     // (below) so an upgrade never locks anyone out of System. Once the column exists
@@ -974,6 +986,13 @@ try {
     $changeEvidenceFks = [
         ['change_text_revisions', 'fk_ctr_change', 'changes',  'change_id', 'id', 'CASCADE'],
         ['change_text_revisions', 'fk_ctr_editor', 'analysts', 'editor_id', 'id', 'SET NULL'],
+        // TRAP: no ON DELETE action = RESTRICT, deliberately. A change that has approval
+        // records is evidence; a stray DELETE must fail rather than wipe them.
+        ['change_approvals',      'fk_change_approvals_change',     'changes',          'change_id',     'id', null],
+        ['change_approvals',      'fk_change_approvals_opened_by',  'analysts',         'opened_by_id',  'id', 'SET NULL'],
+        ['change_approvals',      'fk_change_approvals_decided_by', 'analysts',         'decided_by_id', 'id', 'SET NULL'],
+        ['change_approval_votes', 'fk_cav_approval',                'change_approvals', 'approval_id',   'id', 'CASCADE'],
+        ['change_approval_votes', 'fk_cav_analyst',                 'analysts',         'analyst_id',    'id', 'SET NULL'],
     ];
     foreach ($changeEvidenceFks as [$table, $name, $refTable, $col, $refCol, $onDelete]) {
         if ($tableExists($table) && $tableExists($refTable) && !$fkExists($table, $name)) {
@@ -2483,6 +2502,18 @@ try {
         $classified = changeStagesBackfill($conn);
         if ($classified > 0) {
             $results[] = ['table' => 'change_statuses', 'status' => 'updated', 'details' => ['Gave ' . $classified . ' change status(es) their stage']];
+        }
+
+        // One-time: rounds for the changes that were past submission before approval
+        // records existed (#180 §8 Legacy). Needs the stages above, so it runs after them.
+        if ($changeApprovalsWasMissing && $tableExists('change_approvals') && $tableExists('change_approval_votes')) {
+            [$legacyApproved, $legacyOpen] = changeApprovalBackfillLegacy($conn);
+            if ($legacyApproved + $legacyOpen > 0) {
+                $results[] = ['table' => 'change_approvals', 'status' => 'updated', 'details' => [
+                    'Recorded ' . $legacyApproved . ' change(s) as approved before approval records were kept, and opened '
+                    . $legacyOpen . ' round(s) for changes awaiting approval (one-time upgrade)'
+                ]];
+            }
         }
     }
 

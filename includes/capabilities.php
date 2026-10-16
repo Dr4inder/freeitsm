@@ -110,6 +110,7 @@ final class Cap
     const CHANGES_PRIORITIES = 'changes.priorities';
     const CHANGES_TYPES      = 'changes.types';
     const CHANGES_IMPACTS    = 'changes.impacts';
+    const CHANGES_APPROVALS  = 'changes.approvals';   // the approval rules (#180) - sensitive: they govern the audit trail
 
     // ---- Tasks -------------------------------------------------------------
     const TASKS_MANAGE     = 'tasks.manage';       // umbrella

@@ -676,7 +676,9 @@ function renderChangeDetail() {
                         </div>
                     </div>
                     <button class="btn btn-primary" onclick="editCurrentChange()">${window.t('change-management.detail.edit')}</button>
-                    <button class="btn btn-danger" onclick="deleteCurrentChange()">${window.t('change-management.detail.delete')}</button>
+                    ${c.approval_rules && c.approval_rules.delete_refused
+                        ? (c.status_stage !== 'stopped' ? `<button class="btn btn-danger" onclick="cancelCurrentChange()">${window.t('change-management.approval_panel.cancel')}</button>` : '')
+                        : `<button class="btn btn-danger" onclick="deleteCurrentChange()">${window.t('change-management.detail.delete')}</button>`}
                 </div>
             </div>
             <div class="sticky-header-top">
@@ -688,8 +690,8 @@ function renderChangeDetail() {
         </div>
     `;
 
-    // CAB Review panel
-    html += renderCabReviewPanel(c);
+    // Approval panel (#180): the current round, the CAB or the approver, earlier rounds.
+    html += renderApprovalPanel(c);
 
     // Projects (3.2.0): the projects this change is part of.
     if (window.CHG_SHOW_PROJECTS) html += '<div id="changeProjects" class="chg-projects"></div>';
@@ -1963,8 +1965,176 @@ function renderCabMemberChips() {
  * not voted on a change pending approval, the voting form. Empty when CAB is not
  * required.
  */
-function renderCabReviewPanel(c) {
+/**
+ * The Approval panel (#180): the current round (its route and state, and whether the
+ * content has moved on since it opened), the CAB vote or the named approver's decision,
+ * and the earlier rounds, collapsed. Everything here is drawn from get.php's approval /
+ * approval_rounds; the rules it shows are enforced by ChangesService, not here.
+ */
+function renderApprovalPanel(c) {
+    const rounds = c.approval_rounds || [];
+    const live = c.approval || {};
+    const hasSetup = parseInt(c.cab_required) || c.approver_id;
+    if (!rounds.length && !hasSetup) return '';
+
+    const T = (k, p) => window.t('change-management.approval_panel.' + k, p);
+    const current = rounds.find(r => r.id === live.id) || null;
+    const me = parseInt(document.body.dataset.analystId) || 0;
+    let html = `<div class="approval-section"><div class="approval-header"><h3>${escapeHtml(T('heading'))}</h3>`;
+    if (current) {
+        html += `<div class="approval-badges"><span class="approval-badge route">${escapeHtml(T('route_' + current.route))}</span>`
+            + `<span class="approval-badge state-${current.state}">${escapeHtml(T('state_' + current.state))}</span>`
+            + (current.is_independent === false ? `<span class="approval-badge not-independent">${escapeHtml(T('not_independent'))}</span>` : '')
+            + `<span class="approval-round-no">${escapeHtml(T('round', { n: current.round_no }))}</span></div>`;
+    } else {
+        html += `<div class="approval-badges"><span class="approval-badge">${escapeHtml(T('none_yet'))}</span></div>`;
+    }
+    html += '</div>';
+
+    if (window._staleNotice) {
+        html += window._staleNotice;
+    }
+
+    if (current && live.content_changed) {
+        const fields = Object.entries(live.changed_fields || {}).map(([field, since]) => ({ field, since }));
+        html += `<div class="approval-earlier">${escapeHtml(T(current.state === 'approved' ? 'approved_earlier' : 'edited_since'))}`
+            + fields.map(f => ` <button type="button" class="timeline-view-link" onclick="openRevisionViewer(${c.id}, '${f.field}', null, ${f.since})">${escapeHtml(window.t('change-management.revisions.field.' + f.field))}</button>`).join('')
+            + '</div>';
+    }
+    if (current && current.route === 'legacy') {
+        html += `<div class="approval-note">${escapeHtml(T(current.state === 'open' ? 'legacy_open' : 'legacy_approved'))}</div>`;
+    }
+
+    // The CAB, for a CAB round.
+    if (parseInt(c.cab_required) && c.cab_members) {
+        html += renderCabReviewPanel(c, current);
+    }
+
+    // The named approver's own decision (until #180 the Approver was only a label).
+    if (current && current.state === 'open' && current.route === 'approver' && c.status_stage === 'awaiting') {
+        if (parseInt(c.approver_id) === me) {
+            html += `<div class="cab-vote-form">
+                <textarea class="form-input" id="approverNote" rows="2" placeholder="${escapeHtml(T('note_placeholder'))}"></textarea>
+                <div class="cab-vote-buttons">
+                    <button class="btn cab-btn-approve" onclick="submitApproverDecision('approve')">${window.t('change-management.cab.approve')}</button>
+                    <button class="btn cab-btn-reject" onclick="submitApproverDecision('reject')">${window.t('change-management.cab.reject')}</button>
+                </div></div>`;
+        } else {
+            html += `<div class="approval-note">${escapeHtml(T('waiting_for', { name: c.approver_name || '' }))}</div>`;
+        }
+    } else if (current && current.state === 'approved' && current.decided_by_name) {
+        html += `<div class="approval-note">${escapeHtml(T('decided', { name: current.decided_by_name, date: formatDateTime(current.decided_at) }))}`
+            + (current.decision_note ? `: ${escapeHtml(current.decision_note)}` : '') + '</div>';
+    }
+
+    // Earlier rounds, collapsed: the history reads approved, edited, re-approved.
+    const earlier = rounds.filter(r => !current || r.id !== current.id).reverse();
+    if (earlier.length) {
+        html += `<details class="approval-history"><summary>${escapeHtml(T('earlier', { n: earlier.length }))}</summary><ul>`
+            + earlier.map(r => `<li><strong>${escapeHtml(T('round', { n: r.round_no }))}</strong> · ${escapeHtml(T('route_' + r.route))} · ${escapeHtml(T('state_' + r.state))}`
+                + (r.decided_by_name ? ` · ${escapeHtml(T('decided', { name: r.decided_by_name, date: formatDateTime(r.decided_at) }))}` : '')
+                + (r.closed_reason ? ` · ${escapeHtml(r.closed_reason)}` : '')
+                + (r.votes.length ? ` · ${escapeHtml(T('votes', { n: r.votes.length }))}` : '') + '</li>').join('')
+            + '</ul></details>';
+    }
+    html += '</div>';
+    return html;
+}
+
+
+/** The named approver approves or rejects, against the version this page was drawn with. */
+async function submitApproverDecision(decision) {
+    if (!currentChange) return;
+    const note = document.getElementById('approverNote')?.value?.trim() || '';
+    try {
+        const res = await fetch(API_BASE + 'decide_approval.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                change_id: currentChange.id, decision, note,
+                approval_id: currentChange.approval ? currentChange.approval.id : null,
+                content_hash: currentChange.approval ? currentChange.approval.current_version : null
+            })
+        });
+        const data = await res.json();
+        if (!data.success && data.code === 'approval_stale') { await handleStaleApproval(note, 'approverNote'); return; }
+        if (data.success) {
+            showToast(window.t('change-management.approval_panel.decided_toast'), 'success');
+            await viewChange(currentChange.id);
+            loadChanges();
+        } else {
+            showToast(window.t('change-management.toast.error_prefix', { message: data.error }), 'error');
+        }
+    } catch (e) {
+        showToast(window.t('change-management.toast.vote_error'), 'error');
+    }
+}
+
+/**
+ * A vote or decision refused because the change was edited after this page was drawn
+ * (#180 §5): reload it, say what changed, keep what they had typed, and let them vote
+ * again - knowingly - against the new version.
+ */
+async function handleStaleApproval(typed, inputId) {
+    const before = currentChange;
+    await viewChange(before.id);
+    const after = currentChange;
+    const longFields = ['description', 'reason_for_change', 'risk_evaluation', 'test_plan', 'rollback_plan'];
+    const changed = longFields.filter(f => (before[f] || '') !== (after[f] || ''));
+    const T = (k, p) => window.t('change-management.approval_panel.' + k, p);
+    window._staleNotice = `<div class="approval-stale">${escapeHtml(T('stale'))}`
+        + changed.map(f => ` <button type="button" class="timeline-view-link" onclick="openRevisionViewer(${after.id}, '${f}')">${escapeHtml(window.t('change-management.revisions.field.' + f))}</button>`).join('')
+        + '</div>';
+    await viewChange(after.id);
+    window._staleNotice = '';
+    const box = document.getElementById(inputId);
+    if (box) box.value = typed;
+}
+
+/** Cancel instead of Delete: the change keeps every record (#180 §4). */
+function cancelCurrentChange() {
+    if (!currentChange) return;
+    const T = (k, p) => window.t('change-management.approval_panel.' + k, p);
+    document.getElementById('deleteModal').innerHTML = `
+        <div class="modal-overlay" onclick="closeDeleteModal()">
+            <div class="modal-box" onclick="event.stopPropagation()">
+                <h3>${escapeHtml(T('cancel_heading'))}</h3>
+                <p>${escapeHtml(T('cancel_explain'))}</p>
+                <textarea class="form-input" id="cancelReason" rows="2" placeholder="${escapeHtml(T('cancel_reason'))}"></textarea>
+                <div class="modal-box-actions">
+                    <button class="btn btn-secondary" onclick="closeDeleteModal()">${escapeHtml(T('back'))}</button>
+                    <button class="btn btn-danger" onclick="confirmCancelChange(${currentChange.id})">${escapeHtml(T('cancel'))}</button>
+                </div>
+            </div>
+        </div>`;
+}
+
+/** Sends the cancel and reloads the change. */
+async function confirmCancelChange(id) {
+    const reason = document.getElementById('cancelReason')?.value?.trim() || '';
+    try {
+        const res = await fetch(API_BASE + 'cancel.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ change_id: id, reason })
+        });
+        const data = await res.json();
+        closeDeleteModal();
+        if (data.success) {
+            showToast(window.t('change-management.approval_panel.cancelled_toast'), 'success');
+            await viewChange(id);
+            loadChanges();
+        } else {
+            showToast(window.t('change-management.toast.error_prefix', { message: data.error }), 'error');
+        }
+    } catch (e) {
+        showToast(window.t('change-management.toast.error_deleting'), 'error');
+    }
+}
+
+function renderCabReviewPanel(c, round) {
     if (!parseInt(c.cab_required) || !c.cab_members) return '';
+    // This round's votes, by voter: whether each counted and was cast on the current version.
+    const roundVotes = {};
+    ((round && round.votes) || []).forEach(v => { roundVotes[v.analyst_id] = v; });
 
     const members = c.cab_members;
     const requiredMembers = members.filter(m => parseInt(m.is_required));
@@ -1972,7 +2142,7 @@ function renderCabReviewPanel(c) {
     const approvalType = c.cab_approval_type === 'majority' ? window.t('change-management.cab.type_majority') : window.t('change-management.cab.type_all');
     const currentAnalystId = parseInt(document.body.dataset.analystId) || 0;
     const myMembership = members.find(m => parseInt(m.analyst_id) === currentAnalystId);
-    const canVote = myMembership && !myMembership.vote && c.status_stage === 'awaiting';
+    const canVote = myMembership && !myMembership.vote && c.status_stage === 'awaiting' && round && round.state === 'open';
 
     let html = `
         <div class="cab-review-section">
@@ -2002,6 +2172,8 @@ function renderCabReviewPanel(c) {
                     ${m.vote_datetime ? `<span class="cab-vote-date">${formatDateTime(m.vote_datetime)}</span>` : ''}
                 </div>
                 ${m.vote_comment ? `<div class="cab-vote-comment">${escapeHtml(m.vote_comment)}</div>` : ''}
+                ${m.vote && roundVotes[m.analyst_id] && !roundVotes[m.analyst_id].is_counted ? `<div class="cab-vote-flag">${escapeHtml(window.t('change-management.approval_panel.not_counted'))}</div>` : ''}
+                ${m.vote && roundVotes[m.analyst_id] && roundVotes[m.analyst_id].was_current === false ? `<div class="cab-vote-flag">${escapeHtml(window.t('change-management.approval_panel.earlier_version_vote'))}</div>` : ''}
             </div>
         `;
     });
@@ -2039,11 +2211,19 @@ async function submitCabVote(vote) {
             body: JSON.stringify({
                 change_id: currentChange.id,
                 vote: vote,
-                vote_comment: comment
+                vote_comment: comment,
+                // TRAP: the values this page was DRAWN with - never re-fetched before
+                // posting, or the check becomes "approve whatever is current" (#180 §5).
+                approval_id: currentChange.approval ? currentChange.approval.id : null,
+                content_hash: currentChange.approval ? currentChange.approval.current_version : null
             })
         });
         const data = await response.json();
 
+        if (!data.success && data.code === 'approval_stale') {
+            await handleStaleApproval(comment, 'cabVoteComment');
+            return;
+        }
         if (data.success) {
             showToast(window.t('change-management.toast.vote_recorded', { vote: vote }), 'success');
             // Refresh the change detail

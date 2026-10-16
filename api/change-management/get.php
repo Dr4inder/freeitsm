@@ -113,6 +113,22 @@ try {
     $cabStmt->execute([$changeId]);
     $change['cab_members'] = $cabStmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // The approval record (#180): the current round with the version the page must send
+    // back with a vote, every round with its votes, and the rules that decide what the
+    // page offers. The rules here are comfort; ChangesService enforces them.
+    require_once '../../includes/changes/approvals.php';
+    $cfg = changeApprovalSettings($conn);
+    $rawStmt = $conn->prepare("SELECT * FROM changes WHERE id = ?");
+    $rawStmt->execute([$changeId]);
+    $change['approval']        = changeApprovalLiveState($conn, $rawStmt->fetch(PDO::FETCH_ASSOC), $cfg);
+    $change['approval_rounds'] = changeApprovalRounds($conn, $changeId);
+    $change['approval_rules']  = [
+        'mode'           => $cfg['mode'],
+        'edit_withdraws' => $cfg['edit_withdraws'],
+        'stale_refused'  => $cfg['stale_refused'],
+        'delete_refused' => $cfg['delete_refused'] && changeApprovalHasHistory($conn, $changeId),
+    ];
+
     echo json_encode([
         'success' => true,
         'change' => $change

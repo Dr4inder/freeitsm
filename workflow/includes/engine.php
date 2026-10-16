@@ -142,6 +142,12 @@ class WorkflowEngine
             'task.deleted'             => 'A task is deleted',
             'change.created'           => 'A change request is created',
             'change.approved'          => 'A change request is approved',
+            // #180: the approval round's life. TRAP: dispatched from ChangesService - both
+            // halves, here AND there, or the event can never be heard.
+            'change.submitted'         => 'A change request is submitted for approval',
+            'change.resubmitted'       => 'A change request goes back for approval after an edit',
+            'change.rejected'          => 'A change request is rejected',
+            'change.approval_withdrawn' => 'A change request\'s approval is withdrawn',
             'change.deleted'           => 'A change request is deleted',
             'problem.created'          => 'A problem is created',
             'problem.status_changed'   => 'A problem\'s status changes',
@@ -374,8 +380,12 @@ class WorkflowEngine
                 'change.type_id', 'change.risk', 'change.assigned_to_id',
             ],
             'change.approved' => [
-                'change.id', 'change.title', 'change.risk', 'approver.id',
+                'change.id', 'change.title', 'change.risk', 'approver.id', 'round.route',
             ],
+            'change.submitted'          => ['change.id', 'change.title', 'change.risk', 'round.route', 'round.no'],
+            'change.resubmitted'        => ['change.id', 'change.title', 'change.risk', 'round.route', 'round.no', 'reason'],
+            'change.rejected'           => ['change.id', 'change.title', 'change.risk', 'round.route', 'decided_by.id', 'reason'],
+            'change.approval_withdrawn' => ['change.id', 'change.title', 'change.risk', 'round.route', 'reason'],
             'problem.created' => [
                 'problem.id', 'problem.problem_number', 'problem.title', 'problem.status_id',
                 'problem.priority_id', 'problem.assigned_analyst_id', 'problem.is_known_error', 'problem.company_id',
@@ -1095,6 +1105,9 @@ class WorkflowEngine
         'change.id'              => 'numeric',
         'change.title'           => 'text',
         'change.risk'            => 'text',
+        'round.route'            => 'text',      // cab | approver | manual | override | pre_authorised (#180)
+        'round.no'               => 'numeric',
+        'reason'                 => 'text',
         'problem.id'             => 'numeric',
         'problem.problem_number' => 'text',
         'problem.title'          => 'text',

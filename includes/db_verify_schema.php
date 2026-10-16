@@ -2416,6 +2416,7 @@ return [
         'assigned_to_id'                => 'INT NULL',
         'approver_id'                   => 'INT NULL',
         'approval_datetime'             => 'DATETIME NULL',
+        'approval_id'                   => 'INT NULL',   // the current approval round, open or approved (#180); NULL = none
         'work_start_datetime'           => 'DATETIME NULL',
         'work_end_datetime'             => 'DATETIME NULL',
         'outage_start_datetime'         => 'DATETIME NULL',
@@ -2457,6 +2458,42 @@ return [
         // sha256 of the file as uploaded, so the evidence export can show that the
         // file in the change is the file that was attached. NULL = uploaded before #180.
         'sha256'                => 'CHAR(64) NULL',
+    ],
+
+    // One row per approval round (#180 Part 1). A round opens when a change is
+    // submitted, keeps a snapshot of exactly what was submitted, and closes as
+    // approved, rejected, withdrawn or superseded - never deleted, never reopened.
+    // See includes/changes/approvals.php.
+    'change_approvals' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'change_id'         => 'INT NOT NULL',             // FK RESTRICT: a change with rounds is evidence
+        'round_no'          => 'INT NOT NULL',             // 1, 2, 3... per change
+        'route'             => 'VARCHAR(20) NOT NULL',     // cab | approver | manual | emergency | override | pre_authorised | legacy
+        'state'             => 'VARCHAR(20) NOT NULL',     // open | approved | rejected | withdrawn | superseded
+        'is_independent'    => 'TINYINT(1) NULL',          // NULL until decided; 0 = one of the change's own people decided
+        'content_hash'      => 'CHAR(64) NULL',            // sha256 of the material fields at submission
+        'snapshot'          => 'LONGTEXT NULL',            // JSON: material values, long fields by revision id
+        'opened_by_id'      => 'INT NULL',
+        'opened_datetime'   => 'DATETIME NOT NULL',
+        'decided_by_id'     => 'INT NULL',
+        'decided_datetime'  => 'DATETIME NULL',
+        'decision_note'     => 'TEXT NULL',
+        'closed_reason'     => 'VARCHAR(255) NULL',        // why withdrawn / superseded, in words
+    ],
+
+    // Every vote ever cast, never updated. change_cab_members.vote is "this member's vote
+    // in the current round"; this is the history.
+    'change_approval_votes' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'approval_id'       => 'INT NOT NULL',
+        'analyst_id'        => 'INT NULL',                 // SET NULL: a vote outlives its voter
+        'is_required'       => 'TINYINT(1) NOT NULL',
+        'is_counted'        => 'TINYINT(1) NOT NULL',      // 0 = one of the change's own people (Enforce, independence on)
+        'vote'              => 'VARCHAR(20) NOT NULL',     // Approve | Reject | Abstain
+        'comment'           => 'TEXT NULL',
+        'content_hash'      => 'CHAR(64) NULL',            // the version the voter's page showed, sent by the browser
+        'was_current'       => 'TINYINT(1) NULL',          // 0 = cast from an out-of-date page; NULL = not stated (API)
+        'voted_datetime'    => 'DATETIME NOT NULL',
     ],
 
     // Every saved version of a change's long-text fields, in full (#180 Part 2).

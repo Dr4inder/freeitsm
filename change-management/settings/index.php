@@ -242,6 +242,20 @@ $translationNamespaces = ['common', 'change-management'];
         .lookup-table { width: 100%; border-collapse: collapse; }
         .lookup-table th, .lookup-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid var(--border-soft, #f0f0f0); font-size: 14px; }
         .lookup-table th { font-weight: 600; color: var(--text-muted, #666); background: var(--surface-2, #fafafa); }
+        .approval-rules { max-width: 760px; }
+        .ar-group { border: 1px solid var(--border, #e0e0e0); border-radius: 8px; padding: 14px 16px; margin: 0 0 14px 0; }
+        .ar-group legend { font-weight: 600; padding: 0 6px; color: var(--text, #333); }
+        .ar-choice { display: block; padding: 8px 10px; border: 1px solid var(--border-soft, #eee); border-radius: 6px; margin-bottom: 8px; cursor: pointer; }
+        .ar-help { display: block; font-size: 12px; color: var(--text-muted, #777); margin-top: 4px; }
+        .ar-choice .ar-help { margin-left: 22px; }
+        .ar-sub { font-size: 13px; font-weight: 500; margin: 12px 0 6px; color: var(--text, #333); }
+        .ar-ticks { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+        .ar-ticks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-top: 8px; }
+        .ar-warning { margin-top: 8px; padding: 10px 12px; border-radius: 6px; background: var(--warning-bg, #fff8e1); border: 1px solid var(--warning-border, #ffcc80); color: var(--warning-text, #8a5a00); font-size: 13px; }
+        .ar-enforced { display: none; font-size: 12px; color: var(--warning-text, #8a5a00); margin-top: 6px; }
+        .approval-rules.is-enforce .ar-record-only select { opacity: .5; pointer-events: none; }
+        .approval-rules.is-enforce .ar-record-only .ar-enforced { display: block; }
+        .ar-actions { margin-top: 6px; }
         .stage-unset { display: inline-block; padding: 2px 8px; border-radius: 10px; background: var(--warning-bg, #fff8e1); border: 1px solid var(--warning-border, #ffcc80); color: var(--warning-text, #8a5a00); font-size: 11px; font-weight: 600; cursor: help; }
         .badge-yes { display: inline-block; padding: 2px 8px; border-radius: 10px; background: var(--cm-accent-soft, #e0f2f1); color: var(--cm-accent-hover, #00695c); font-size: 11px; font-weight: 600; }
         .badge-no  { color: var(--text-faint, #999); }
@@ -361,6 +375,113 @@ $translationNamespaces = ['common', 'change-management'];
         </div>
 
         <!-- Left panel tab — per-analyst preference -->
+        <?php endif; ?>
+
+        <?php if (settingsTabVisible($visibleTabs, 'approvals')): ?>
+        <!-- Approval rules (#180) - api/change-management/get|save_approval_settings.php.
+             Every choice here is a dropdown or a tick; the defaults are today's behaviour. -->
+        <div class="tab-content<?php echo $activeTabId === 'approvals' ? ' active' : ''; ?>" id="approvals-tab" data-capability="<?php echo Cap::CHANGES_APPROVALS; ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('change-management.approval_settings.heading')); ?></h2>
+            </div>
+            <p style="color: var(--text-muted, #666); margin-bottom: 16px;"><?php echo htmlspecialchars(t('change-management.approval_settings.intro')); ?></p>
+
+            <form id="approvalRulesForm" class="approval-rules" autocomplete="off" onsubmit="event.preventDefault(); saveApprovalRules();">
+                <fieldset class="ar-group">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.mode')); ?></legend>
+                    <label class="ar-choice"><input type="radio" name="arMode" value="record" onchange="syncApprovalRules()">
+                        <strong><?php echo htmlspecialchars(t('change-management.approval_settings.mode_record')); ?></strong>
+                        <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.mode_record_help')); ?></span></label>
+                    <label class="ar-choice"><input type="radio" name="arMode" value="enforce" onchange="syncApprovalRules()">
+                        <strong><?php echo htmlspecialchars(t('change-management.approval_settings.mode_enforce')); ?></strong>
+                        <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.mode_enforce_help')); ?></span></label>
+                    <div id="arEnforceBlockers" class="ar-warning" style="display:none;"></div>
+                </fieldset>
+
+                <fieldset class="ar-group">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.own')); ?></legend>
+                    <select id="arOwnAllowed">
+                        <option value="0"><?php echo htmlspecialchars(t('change-management.approval_settings.own_not_allowed')); ?></option>
+                        <option value="1"><?php echo htmlspecialchars(t('change-management.approval_settings.own_allowed')); ?></option>
+                    </select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.own_help')); ?></span>
+                    <div class="ar-sub"><?php echo htmlspecialchars(t('change-management.approval_settings.own_people')); ?></div>
+                    <div class="ar-ticks">
+                        <?php foreach (['requester', 'assignee', 'creator'] as $who): ?>
+                        <label><input type="checkbox" name="arOwnPeople" value="<?php echo $who; ?>"> <?php echo htmlspecialchars(t('change-management.approval_settings.own_' . $who)); ?></label>
+                        <?php endforeach; ?>
+                    </div>
+                </fieldset>
+
+                <fieldset class="ar-group">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.override')); ?></legend>
+                    <select id="arOverride">
+                        <option value="0"><?php echo htmlspecialchars(t('change-management.approval_settings.override_off')); ?></option>
+                        <option value="1"><?php echo htmlspecialchars(t('change-management.approval_settings.override_on')); ?></option>
+                    </select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.override_help')); ?></span>
+                </fieldset>
+
+                <fieldset class="ar-group">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.material')); ?></legend>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.material_help')); ?></span>
+                    <div class="ar-ticks ar-ticks-grid">
+                        <?php require_once __DIR__ . '/../../includes/changes/approvals.php'; foreach (array_keys(CHANGE_MATERIAL_CHOICES) as $mk): ?>
+                        <label><input type="checkbox" name="arMaterial" value="<?php echo $mk; ?>"> <?php echo htmlspecialchars(t('change-management.approval_settings.field_' . $mk)); ?></label>
+                        <?php endforeach; ?>
+                    </div>
+                </fieldset>
+
+                <fieldset class="ar-group ar-record-only">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.edit_after')); ?></legend>
+                    <select id="arEditAfter">
+                        <option value="keep"><?php echo htmlspecialchars(t('change-management.approval_settings.edit_after_keep')); ?></option>
+                        <option value="withdraw"><?php echo htmlspecialchars(t('change-management.approval_settings.edit_after_withdraw')); ?></option>
+                    </select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.edit_after_help')); ?></span>
+                    <span class="ar-enforced"><?php echo htmlspecialchars(t('change-management.approval_settings.enforce_fixes_this')); ?></span>
+                </fieldset>
+
+                <fieldset class="ar-group ar-record-only">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.stale')); ?></legend>
+                    <select id="arStaleVote">
+                        <option value="record"><?php echo htmlspecialchars(t('change-management.approval_settings.stale_record')); ?></option>
+                        <option value="refuse"><?php echo htmlspecialchars(t('change-management.approval_settings.stale_refuse')); ?></option>
+                    </select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.stale_help')); ?></span>
+                    <span class="ar-enforced"><?php echo htmlspecialchars(t('change-management.approval_settings.enforce_fixes_this')); ?></span>
+                </fieldset>
+
+                <fieldset class="ar-group ar-record-only">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.delete')); ?></legend>
+                    <select id="arDeleteSubmitted">
+                        <option value="allowed"><?php echo htmlspecialchars(t('change-management.approval_settings.delete_allowed')); ?></option>
+                        <option value="refuse"><?php echo htmlspecialchars(t('change-management.approval_settings.delete_refuse')); ?></option>
+                    </select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.delete_help')); ?></span>
+                    <span class="ar-enforced"><?php echo htmlspecialchars(t('change-management.approval_settings.enforce_fixes_this')); ?></span>
+                </fieldset>
+
+                <fieldset class="ar-group">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.reject')); ?></legend>
+                    <select id="arRejectStatus"></select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.reject_help')); ?></span>
+                </fieldset>
+
+                <fieldset class="ar-group">
+                    <legend><?php echo htmlspecialchars(t('change-management.approval_settings.choose')); ?></legend>
+                    <select id="arChooseApprovers">
+                        <option value="anyone"><?php echo htmlspecialchars(t('change-management.approval_settings.choose_anyone')); ?></option>
+                        <option value="permission"><?php echo htmlspecialchars(t('change-management.approval_settings.choose_permission')); ?></option>
+                    </select>
+                    <span class="ar-help"><?php echo htmlspecialchars(t('change-management.approval_settings.choose_help')); ?></span>
+                </fieldset>
+
+                <div class="ar-actions">
+                    <button type="submit" class="btn btn-primary"><?php echo htmlspecialchars(t('change-management.settings.modal_save')); ?></button>
+                </div>
+            </form>
+        </div>
         <?php endif; ?>
 
         <!-- Left panel — a per-analyst display preference, so it declares no capability. -->
@@ -518,7 +639,70 @@ $translationNamespaces = ['common', 'change-management'];
         document.addEventListener('DOMContentLoaded', function() {
             loadSettings();
             loadLookups();
+            if (document.getElementById('approvalRulesForm')) loadApprovalRules();
         });
+
+        // ============================================================
+        // Approval rules (#180) - get|save_approval_settings.php
+        // ============================================================
+        async function loadApprovalRules() {
+            try {
+                const res = await fetch(API_BASE + 'get_approval_settings.php');
+                const data = await res.json();
+                if (!data.success) { showToast(data.error || window.t('change-management.toast.save_failed'), 'error'); return; }
+                const s = data.settings;
+                document.querySelectorAll('input[name="arMode"]').forEach(i => { i.checked = (i.value === s.mode); });
+                document.getElementById('arOwnAllowed').value = s.own_allowed ? '1' : '0';
+                document.querySelectorAll('input[name="arOwnPeople"]').forEach(i => { i.checked = s.own_people.includes(i.value); });
+                document.getElementById('arOverride').value = s.override ? '1' : '0';
+                document.querySelectorAll('input[name="arMaterial"]').forEach(i => { i.checked = s.material.includes(i.value); });
+                document.getElementById('arEditAfter').value = s.edit_after;
+                document.getElementById('arStaleVote').value = s.stale_vote;
+                document.getElementById('arDeleteSubmitted').value = s.delete_submitted;
+                document.getElementById('arChooseApprovers').value = s.choose_approvers;
+                const rej = document.getElementById('arRejectStatus');
+                rej.innerHTML = `<option value="">${escapeHtml(window.t('change-management.approval_settings.reject_default'))}</option>`
+                    + data.statuses.filter(st => st.is_active && (st.stage === 'draft' || st.stage === 'stopped'))
+                        .map(st => `<option value="${st.id}">${escapeHtml(st.name)}</option>`).join('');
+                rej.value = s.reject_status_id ? String(s.reject_status_id) : '';
+                const blockers = data.enforce_blockers || [];
+                const box = document.getElementById('arEnforceBlockers');
+                box.style.display = blockers.length ? '' : 'none';
+                box.textContent = blockers.length ? window.t('change-management.approval_settings.enforce_blocked', { statuses: blockers.join(', ') }) : '';
+                syncApprovalRules();
+            } catch (e) { console.error(e); }
+        }
+
+        // In Enforce mode the three Record-only choices are fixed (each one, the other
+        // way, would be a way round the approval), so they are shown but not offered.
+        function syncApprovalRules() {
+            const mode = (document.querySelector('input[name="arMode"]:checked') || {}).value || 'record';
+            document.getElementById('approvalRulesForm').classList.toggle('is-enforce', mode === 'enforce');
+        }
+
+        async function saveApprovalRules() {
+            const ticks = name => [...document.querySelectorAll('input[name="' + name + '"]:checked')].map(i => i.value);
+            const payload = {
+                mode: (document.querySelector('input[name="arMode"]:checked') || {}).value || 'record',
+                own_allowed: document.getElementById('arOwnAllowed').value === '1',
+                own_people: ticks('arOwnPeople'),
+                override: document.getElementById('arOverride').value === '1',
+                material: ticks('arMaterial'),
+                edit_after: document.getElementById('arEditAfter').value,
+                stale_vote: document.getElementById('arStaleVote').value,
+                delete_submitted: document.getElementById('arDeleteSubmitted').value,
+                reject_status_id: document.getElementById('arRejectStatus').value,
+                choose_approvers: document.getElementById('arChooseApprovers').value
+            };
+            try {
+                const res = await fetch(API_BASE + 'save_approval_settings.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.success) { showToast(window.t('change-management.toast.saved'), 'success'); loadApprovalRules(); }
+                else showToast(data.error || window.t('change-management.toast.save_failed'), 'error');
+            } catch (e) { showToast(window.t('change-management.toast.save_failed'), 'error'); }
+        }
 
         // ============================================================
         // Lookup tabs (Statuses / Priorities / Types / Impacts)
