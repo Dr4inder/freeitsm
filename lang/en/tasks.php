@@ -40,6 +40,7 @@ return [
     ],
 
     'filter' => [
+        'hide_done' => 'Hide done',   // GH #184
         'my'            => 'My Tasks',
         'all'           => 'All Tasks',
         'all_teams'     => 'All teams',
@@ -63,6 +64,16 @@ return [
     ],
 
     'board' => [
+        // GH #184: the subtasks under each card, and each card's own show/hide.
+        'subtasks_label'      => 'Subtasks on cards',
+        'subtasks_all'        => 'All',
+        'subtasks_open'       => 'Open',
+        'subtasks_none'       => 'None',
+        'subtasks_all_title'  => 'List every subtask under its card',
+        'subtasks_open_title' => 'List only the subtasks still to do',
+        'subtasks_none_title' => 'List no subtasks - each card still shows its count',
+        'subtasks_card_show'  => 'Show this card\'s subtasks',
+        'subtasks_card_hide'  => 'Hide this card\'s subtasks',
         'no_tasks'             => 'No tasks',
         'add_task'             => 'Add task',
         'quick_add_placeholder'=> 'Task title...',

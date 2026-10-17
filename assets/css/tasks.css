@@ -434,6 +434,24 @@ body {
 .due-badge.overdue { color: #dc3545; font-weight: 600; }
 .due-badge.today { color: #f57c00; font-weight: 600; }
 
+/* The "1/4" line is also the card's own subtask show/hide (GH #184). */
+button.subtask-toggle {
+    border: none;
+    background: none;
+    padding: 1px 4px 1px 2px;
+    margin: -1px 0;
+    border-radius: 4px;
+    font-family: inherit;
+    cursor: pointer;
+}
+button.subtask-toggle:hover { background: var(--surface-2, #f1f1f4); color: var(--text, #333); }
+button.subtask-toggle:focus-visible { outline: 2px solid var(--tsk-accent, #7c3aed); outline-offset: 1px; }
+.subtask-caret { font-size: 9px; width: 8px; display: inline-block; }
+
+/* A tick box in the sidebar, e.g. Hide done (GH #184). */
+.sidebar-check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text, #333); cursor: pointer; padding: 4px 2px; }
+.sidebar-check input { accent-color: var(--tsk-accent, #7c3aed); width: 15px; height: 15px; cursor: pointer; margin: 0; }
+
 /* Subtask progress */
 .subtask-progress {
     display: flex;

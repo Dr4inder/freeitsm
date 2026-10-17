@@ -267,6 +267,74 @@ function buildSearchText(t) {
     return text.toLowerCase();
 }
 
+// ── Hide done, and the subtasks under each card (GH #184) ──────────
+
+let hideDone = !!window.TASK_HIDE_DONE;
+let boardSubtasks = ['all', 'open', 'none'].includes(window.TASK_BOARD_SUBTASKS) ? window.TASK_BOARD_SUBTASKS : 'all';
+/** card (task) id => 'show' | 'hide': this analyst's own choice for one card, over boardSubtasks. */
+let subtaskCards = Object.assign({}, window.TASK_SUBTASK_CARDS || {});
+
+/** True unless Hide done is on and the task is done. */
+function taskMatchesDone(t) {
+    return !hideDone || !taskIsDone(t);
+}
+
+/** Hide done on or off: redraws (the status board also drops its done columns) and remembers it. */
+function setHideDone(on) {
+    hideDone = !!on;
+    saveTaskPreference('tasks_hide_done', hideDone ? 'on' : '');
+    if (currentView === 'board') { buildBoardColumns(); renderBoard(); }
+    else renderList();
+}
+
+/** All, open only or no subtasks under the cards; remembered. Each card's own choice still wins. */
+function setBoardSubtasks(mode) {
+    boardSubtasks = ['all', 'open', 'none'].includes(mode) ? mode : 'all';
+    document.querySelectorAll('#boardSubtasksToggle .view-btn')
+        .forEach(b => b.classList.toggle('active', b.dataset.subtasks === boardSubtasks));
+    saveTaskPreference('tasks_board_subtasks', boardSubtasks);
+    renderBoard();
+}
+
+/** The subtasks a card lists under it by the board-wide choice alone. */
+function defaultCardSubtasks(items) {
+    if (boardSubtasks === 'none') return [];
+    if (boardSubtasks === 'open') return items.filter(s => !taskIsDone(s));
+    return items;
+}
+
+/**
+ * The subtasks a card lists under it: its own choice if it has one ('show' =
+ * every subtask, 'hide' = none), otherwise the board-wide one.
+ */
+function cardSubtasks(t) {
+    const items = t.subtask_items || [];
+    const own = subtaskCards[t.id];
+    if (own === 'show') return items;
+    if (own === 'hide') return [];
+    return defaultCardSubtasks(items);
+}
+
+/**
+ * Opens or closes one card's subtask list (its "1/4" line), and remembers that
+ * card. A choice that matches what the board would show anyway is forgotten, so
+ * the remembered list only holds the cards that are different.
+ */
+function toggleCardSubtasks(event, taskId) {
+    event.stopPropagation();
+    const t = tasks.find(x => String(x.id) === String(taskId));
+    if (!t) return;
+    const showing = cardSubtasks(t).length > 0;
+    const want = showing ? 'hide' : 'show';
+    const byDefault = defaultCardSubtasks(t.subtask_items || []).length > 0 ? 'show' : 'hide';
+    if (want === byDefault) delete subtaskCards[t.id]; else subtaskCards[t.id] = want;
+    // Bounded: the 300 most recent choices are plenty, and a stale id costs nothing.
+    const keys = Object.keys(subtaskCards);
+    if (keys.length > 300) keys.slice(0, keys.length - 300).forEach(k => delete subtaskCards[k]);
+    saveTaskPreference('tasks_subtask_cards', JSON.stringify(subtaskCards));
+    renderBoard();
+}
+
 /** True when every search term appears in the task's pre-built search text (always true with no search). */
 function taskMatchesSearch(t) {
     if (searchTerms.length === 0) return true;
@@ -427,12 +495,15 @@ function saveTaskPreference(key, value) {
  */
 function switchView(view) {
     currentView = view;
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.view-btn[data-view="${view}"]`).classList.add('active');
+    // Only the Board/List buttons: '.view-btn' alone also caught the Status/Analyst
+    // and subtask switches below, and left them with nothing highlighted.
+    document.querySelectorAll('.view-btn[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === view));
     document.getElementById('boardView').style.display = view === 'board' ? 'flex' : 'none';
     document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';
     const groupToggle = document.getElementById('boardGroupSection');
     if (groupToggle) groupToggle.style.display = view === 'board' ? '' : 'none';
+    const subtasksToggle = document.getElementById('boardSubtasksSection');
+    if (subtasksToggle) subtasksToggle.style.display = view === 'board' ? '' : 'none';
     if (view === 'board') renderBoard();
     else renderList();
     saveTaskPreference('tasks_view', view);
@@ -452,7 +523,8 @@ function buildBoardColumns() {
     // By analyst, renderBoardByAnalyst() builds the columns itself on every draw.
     if (boardGroup === 'analyst') return;
     const board = document.getElementById('boardView');
-    const cols = statusList.length ? statusList : DEFAULT_STATUSES;
+    // Hide done (GH #184): a done column would only ever be empty.
+    const cols = (statusList.length ? statusList : DEFAULT_STATUSES).filter(s => !(hideDone && Number(s.is_closed)));
     board.innerHTML = '';
     cols.forEach(s => {
         const col = document.createElement('div');
@@ -586,7 +658,7 @@ function switchBoardGroup(group) {
  */
 function renderBoardByAnalyst() {
     const board = document.getElementById('boardView');
-    const visible = tasks.filter(t => taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t));
+    const visible = tasks.filter(t => taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t) && taskMatchesDone(t));
 
     // One column per analyst who has a task in view, yours first, then by name;
     // Unassigned last. Your own column is always there, so you can drag work
@@ -667,7 +739,7 @@ function renderBoard() {
         const cardsEl = col.querySelector('.board-cards');
         const countEl = col.querySelector('.column-count');
         const filtered = tasks.filter(t =>
-            t.status === status && taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t));
+            t.status === status && taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t) && taskMatchesDone(t));
         if (countEl) countEl.textContent = filtered.length;
 
         if (filtered.length === 0) {
@@ -731,10 +803,17 @@ function renderCard(t) {
         if (dueBadge) meta.push(dueBadge);
     }
     if (cf.subtasks && t.subtasks.total > 0) {
-        meta.push(`<span class="subtask-progress">
+        // Also this card's own show/hide for its subtask list (GH #184). A button,
+        // so it is reachable from the keyboard; mousedown stops here so pressing it
+        // never starts dragging the card.
+        const open = cardSubtasks(t).length > 0;
+        meta.push(`<button type="button" class="subtask-progress subtask-toggle" aria-expanded="${open}"
+                title="${escAttr(window.t(open ? 'tasks.board.subtasks_card_hide' : 'tasks.board.subtasks_card_show'))}"
+                onmousedown="event.stopPropagation()" onclick="toggleCardSubtasks(event, ${t.id})">
+             <span class="subtask-caret" aria-hidden="true">${open ? '&#9662;' : '&#9656;'}</span>
              <span class="subtask-bar"><span class="subtask-bar-fill" style="width:${Math.round(t.subtasks.done / t.subtasks.total * 100)}%"></span></span>
              ${t.subtasks.done}/${t.subtasks.total}
-           </span>`);
+           </button>`);
     }
     if (cf.links && (t.ticket_id || t.change_id)) {
         meta.push(`<span class="link-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></span>`);
@@ -789,9 +868,9 @@ function renderCard(t) {
  * Each row opens ITS subtask, not the parent - the click stops at the row.
  */
 function boardSubtasksHtml(t) {
-    const items = t.subtask_items || [];
+    // All, open only or none, unless this card has its own choice (GH #184).
+    const items = cardSubtasks(t);
     if (!cardFields.subtasks || !items.length) return '';
-    if (window.TASK_HIDE_DONE_SUBTASKS && items.every(s => s.status_is_closed)) return '';
     return `<div class="task-card-subtasks">${items.map(s => {
         const due = s.due_date ? formatDueBadge(s.due_date) : '';
         return `<div class="task-card-subtask${s.status_is_closed ? ' is-done' : ''}"
@@ -1194,7 +1273,7 @@ async function endDrag(e) {
  * the sorted column header.
  */
 function renderList() {
-    const sorted = tasks.filter(t => taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t)).sort((a, b) => {
+    const sorted = tasks.filter(t => taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t) && taskMatchesDone(t)).sort((a, b) => {
         let va = a[sortField] || '';
         let vb = b[sortField] || '';
         if (typeof va === 'string') va = va.toLowerCase();
