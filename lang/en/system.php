@@ -170,6 +170,9 @@ return [
         'date_formats_title' => 'Date and time formats',
         'date_formats_desc'  => 'How dates and times are written across FreeITSM - 25/08/2026, 25.08.2026 or 25 Aug 2026, and 14:30 or 2:30 PM. Sets the default for everyone; analysts can choose their own.',
         'date_formats_keywords' => 'date time format formats dd/mm/yyyy mm/dd/yyyy iso 24 hour 12 hour am pm regional locale',
+        'currencies_title'    => 'Currencies',
+        'currencies_desc'     => 'The currency new contracts, licences, domains, leases and projects start in, the favourites shown first in every currency list, and how amounts are written - £1,234.56, 1.234,56 € or Rp 1.500.000.',
+        'currencies_keywords' => 'currency currencies money cost price value gbp usd eur idr symbol decimal thousands separator comma dot format favourite default iso 4217 pound dollar euro rupiah',
         'demo_data_title'   => 'Demo Data',
         'demo_data_desc'    => 'Import realistic sample data across all modules. Ideal for evaluation and testing on a fresh install.',
         'demo_data_keywords' => 'demo data sample seed test evaluation import fixtures example',
@@ -1145,6 +1148,16 @@ return [
         'timeformat_desc'    => 'The 24-hour clock, or a 12-hour clock with AM and PM.',
         'format_follow_default' => 'Use the system default ({example})',
         'format_saved'          => 'Format saved',
+        // Money (GH #189) - the analyst's own way of writing amounts.
+        'money_heading'     => 'Money',
+        'money_desc'        => 'How amounts of money are written for you. The currency of each record never changes - only how its amount looks on your screen.',
+        'money_follow'      => 'Use the system default ({example})',
+        'money_own'         => 'Choose my own',
+        'money_exc_heading' => 'Particular currencies',
+        'money_exc_desc'    => 'A different format for one currency - say, euros the way they are written in Germany while everything else stays as above.',
+        'money_exc_none'    => 'None. Every currency follows the choice above.',
+        'money_add'         => 'Add',
+        'money_remove'      => 'Remove',
 
         'position_heading' => 'Notification position',
         'position_desc'    => 'Where toast notifications appear on the screen.',
@@ -1241,6 +1254,37 @@ return [
         'save_failed' => 'Could not save the date and time formats',
     ],
 
+    // Currencies page (system/currencies/index.php, GH #189)
+    'currencies' => [
+        'title'    => 'Currencies',
+        'subtitle' => 'Every currency in use in the world is available everywhere FreeITSM records money. Choose which ones come first, which one new records start in, and how amounts are written. Any analyst can choose a different format for themselves in Preferences.',
+
+        'fav_heading'  => 'Favourites',
+        'fav_desc'     => 'Up to {max} currencies shown at the top of every currency list. The one marked Default is what a new contract, licence, domain, lease or project starts in.',
+        'fav_default'  => 'Default',
+        'fav_remove'   => 'Remove {code}',
+        'fav_add'      => 'Add',
+        'fav_full'     => 'That is the most favourites there can be. Remove one to add another.',
+        'fav_existing' => 'Changing the default never changes a record that already has a currency.',
+
+        'format_heading' => 'How amounts are written',
+        'format_desc'    => 'The format for every currency, unless an exception below says otherwise. Decimal places "As the currency" follows the currency itself: none for the yen, two for the pound, three for the Kuwaiti dinar.',
+        'preview_label'  => 'Your favourites will look like',
+
+        'exc_heading' => 'Exceptions for particular currencies',
+        'exc_desc'    => 'A different format for one currency - for example the rupiah written the Indonesian way, Rp 1.500.000, while everything else stays as above.',
+        'exc_none'    => 'No exceptions. Every currency uses the format above.',
+        'exc_add'     => 'Add',
+        'exc_remove'  => 'Remove',
+
+        'unknown_heading' => 'Codes in your records that are not recognised',
+        'unknown_desc'    => 'These were typed in before currencies became a list. They still show as they are, but the record cannot be saved until a currency is chosen from the list.',
+        'unknown_row'     => '{code} - {count} in {where}',
+
+        'saved'       => 'Currencies saved',
+        'error'       => 'Could not save: {error}',
+        'save_failed' => 'Could not save the currencies',
+    ],
     // Security page (system/security/index.php)
     'security' => [
         'title'    => 'Security',

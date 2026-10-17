@@ -8,6 +8,7 @@ require_once '../../includes/functions.php';
 require_once '../../includes/theme.php';
 require_once '../../includes/i18n.php';
 require_once '../../includes/timezone.php';
+require_once '../../includes/money.php';
 I18n::initFromSession();
 Tz::init();
 
@@ -369,6 +370,19 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
         }
         .pref-saving-hint.show { opacity: 1; }
 
+        /* Money (GH #189) - the three format dropdowns, and one row per currency exception. */
+        .money-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .money-picker .pref-language-select { min-width: 160px; flex: 1; }
+        .money-sub { font-size: 13px; font-weight: 600; color: var(--text, #333); margin: 18px 0 2px; }
+        .money-exc { border: 1px solid var(--border, #ddd); border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+        .money-exc-head { display: flex; align-items: center; gap: 10px; }
+        .money-exc-head .nm { flex: 1; font-size: 14px; color: var(--text, #333); }
+        .money-exc-head code { font-weight: 600; margin-right: 6px; }
+        .money-exc-head .eg { font-size: 13px; color: var(--text-muted, #666); font-variant-numeric: tabular-nums; }
+        .money-exc-head button { border: none; background: none; cursor: pointer; color: var(--text-dim, #888); font-size: 18px; line-height: 1; padding: 2px 6px; }
+        .money-exc-head button:hover { color: var(--danger, #c62828); }
+        .money-add { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+
         .sidebar-panels-list {
             display: flex;
             flex-direction: column;
@@ -508,6 +522,31 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                     <?php endforeach; ?>
                 </select>
                 <span class="pref-saving-hint" id="timeFormatSavingHint"><?php echo htmlspecialchars(t('system.preferences.saving')); ?></span>
+            </div>
+
+            <?php /* Money (GH #189): how amounts are written for THIS analyst. The
+                     currency of a record is never theirs to change here - only its
+                     look. '' follows System > Currencies; the per-currency map wins
+                     over both (see includes/money.php for the order). */
+                $moneyInstall  = Money::installSettings();
+                $moneyFollowEg = Money::format(1234567.891, $moneyInstall['default'], $moneyInstall['format']);
+            ?>
+            <div class="pref-section">
+                <h3 id="money"><?php echo htmlspecialchars(t('system.preferences.money_heading')); ?></h3>
+                <p><?php echo htmlspecialchars(t('system.preferences.money_desc')); ?></p>
+                <select id="moneyMode" class="pref-language-select">
+                    <option value=""><?php echo htmlspecialchars(t('system.preferences.money_follow', ['example' => $moneyFollowEg])); ?></option>
+                    <option value="own"><?php echo htmlspecialchars(t('system.preferences.money_own')); ?></option>
+                </select>
+                <span class="pref-saving-hint" id="moneySavingHint"><?php echo htmlspecialchars(t('system.preferences.saving')); ?></span>
+                <div class="money-picker" id="moneyAll" hidden></div>
+                <h4 class="money-sub"><?php echo htmlspecialchars(t('system.preferences.money_exc_heading')); ?></h4>
+                <p><?php echo htmlspecialchars(t('system.preferences.money_exc_desc')); ?></p>
+                <div id="moneyExc"></div>
+                <div class="money-add">
+                    <select class="pref-language-select" id="moneyExcAdd" aria-label="<?php echo htmlspecialchars(t('system.preferences.money_add')); ?>"></select>
+                    <button type="button" class="btn btn-secondary" id="moneyExcAddBtn"><?php echo htmlspecialchars(t('system.preferences.money_add')); ?></button>
+                </div>
             </div>
 
             <?php
@@ -966,6 +1005,15 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
     <script>window.__MY_NAME = <?php echo json_encode($_SESSION['analyst_name'] ?? ''); ?>; window.__MY_EMAIL = <?php echo json_encode($_SESSION['analyst_email'] ?? ''); ?>;</script>
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <script src="../../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <?php
+        // The analyst's own money format, and the install's for "follow" (GH #189).
+        $moneyMine = Money::personalSettings();
+        $moneyMine['formats'] = (object)$moneyMine['formats'];
+        $moneyMine['install'] = Money::installSettings()['format'];
+    ?>
+    <script>window.MONEY_MINE = <?php echo json_encode($moneyMine, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;</script>
+    <script src="../../assets/js/money.js?v=1"></script>
     <script src="../../assets/js/qrcode.min.js"></script>
     <script src="../../assets/js/subscribe.js?v=1"></script>
     <script src="../../assets/js/tinymce/tinymce.min.js"></script>
@@ -1269,6 +1317,74 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 if (ok) showToast(window.t('system.preferences.format_saved'), 'success');
             });
         });
+
+        // ===== Money (currency_format / currency_formats, GH #189) =====
+        // Saved as soon as anything changes, like the formats above. '' for
+        // currency_format means "follow System > Currencies".
+        (function () {
+            const mode = document.getElementById('moneyMode');
+            if (!mode || !window.Money) return;
+            const hint   = document.getElementById('moneySavingHint');
+            const allBox = document.getElementById('moneyAll');
+            const excBox = document.getElementById('moneyExc');
+            const addSel = document.getElementById('moneyExcAdd');
+            const P = k => window.t('system.preferences.' + k);
+            const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            const mine = window.MONEY_MINE || { format: '', formats: {}, install: '' };
+            const state = { all: mine.format || '', per: Object.assign({}, mine.formats) };
+            const SAMPLE = 1234567.891;
+            const base = () => state.all || mine.install;
+
+            function draw() {
+                mode.value = state.all ? 'own' : '';
+                allBox.hidden = !state.all;
+                if (state.all) allBox.innerHTML = Money.formatPickerHtml(Money.def(), state.all, 'pref-language-select');
+                const codes = Object.keys(state.per).sort();
+                excBox.innerHTML = codes.length ? codes.map(c => '<div class="money-exc" data-exc="' + esc(c) + '">'
+                    + '<div class="money-exc-head"><span class="nm"><code>' + esc(c) + '</code>' + esc(Money.name(c)) + '</span>'
+                    + '<span class="eg">' + esc(Money.format(SAMPLE, c, state.per[c])) + '</span>'
+                    + '<button type="button" data-exc-remove="' + esc(c) + '" title="' + esc(P('money_remove')) + '" aria-label="' + esc(P('money_remove')) + '">&times;</button></div>'
+                    + '<div class="money-picker">' + Money.formatPickerHtml(c, state.per[c], 'pref-language-select') + '</div></div>').join('')
+                    : '<p>' + esc(P('money_exc_none')) + '</p>';
+                // Favourites first, as everywhere; minus the currencies that already have a row.
+                addSel.innerHTML = Money.optionsHtml(Money.favourites()[0]);
+                codes.forEach(c => { const o = addSel.querySelector('option[value="' + c + '"]'); if (o) o.remove(); });
+            }
+
+            // One save at a time, each sending the value as it is WHEN it goes: two
+            // quick changes otherwise race, and the older request can land last.
+            let queue = Promise.resolve();
+            function save(key) {
+                queue = queue.then(async () => {
+                    hint.classList.add('show');
+                    const ok = await savePref(key, key === 'currency_format' ? state.all : JSON.stringify(state.per));
+                    hint.classList.remove('show');
+                    if (ok) showToast(window.t('system.preferences.format_saved'), 'success');
+                });
+            }
+
+            mode.addEventListener('change', () => { state.all = mode.value ? base() : ''; draw(); save('currency_format'); });
+            allBox.addEventListener('change', () => { state.all = Money.readPicker(allBox); draw(); save('currency_format'); });
+            excBox.addEventListener('change', e => {
+                const row = e.target.closest('[data-exc]');
+                if (!row) return;
+                state.per[row.dataset.exc] = Money.readPicker(row.querySelector('.money-picker'));
+                draw(); save('currency_formats');
+            });
+            excBox.addEventListener('click', e => {
+                const b = e.target.closest('[data-exc-remove]');
+                if (!b) return;
+                delete state.per[b.dataset.excRemove];
+                draw(); save('currency_formats');
+            });
+            document.getElementById('moneyExcAddBtn').addEventListener('click', () => {
+                const c = addSel.value;
+                if (!c || state.per[c]) return;
+                state.per[c] = base();
+                draw(); save('currency_formats');
+            });
+            draw();
+        })();
 
         // ===== Generic two-button toggle wiring =====
         // Used for animation style, sidebar modes, MC fill — anything

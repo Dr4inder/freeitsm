@@ -164,6 +164,16 @@ function settingKeyOwners(): array
         // everyone who has not chosen sees, and the only format the portal reads.
         'date_format'              => ['module' => 'system', 'cap' => null, 'tab' => 'date-formats'],
         'time_format'              => ['module' => 'system', 'cap' => null, 'tab' => 'date-formats'],
+
+        // --- System: Currencies area (GH #189) ---
+        // The default currency, the favourites shown first in every currency
+        // dropdown, and the install-wide format (plus per-currency exceptions).
+        // Analysts override the FORMAT in Preferences (user_preferences). Stored
+        // as given; includes/money.php validates every one of them on read.
+        'currency_default'         => ['module' => 'system', 'cap' => null, 'tab' => 'currencies'],
+        'currency_favourites'      => ['module' => 'system', 'cap' => null, 'tab' => 'currencies'],
+        'currency_format'          => ['module' => 'system', 'cap' => null, 'tab' => 'currencies'],
+        'currency_formats'         => ['module' => 'system', 'cap' => null, 'tab' => 'currencies'],
     ];
 }
 

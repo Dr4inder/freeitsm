@@ -208,6 +208,13 @@ function getSystemAreas() {
             'keywords' => 'system.landing.date_formats_keywords',
         ],
         [
+            'icon'     => 'currencies',
+            'url'      => 'currencies/',
+            'title'    => 'system.landing.currencies_title',
+            'desc'     => 'system.landing.currencies_desc',
+            'keywords' => 'system.landing.currencies_keywords',
+        ],
+        [
             'icon'     => 'preferences',
             'url'      => 'preferences/',
             'title'    => 'system.landing.preferences_title',
@@ -331,6 +338,8 @@ function systemAreaIcon($key) {
         'branding'    => '<path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle>',
         // A calendar with a clock in the corner — the two things this area formats.
         // Distinct from 'calendar_sync', which is a calendar with sync arrows.
+        // A coin with a currency mark - GH #189.
+        'currencies'  => '<circle cx="12" cy="12" r="10"></circle><path d="M15 8.5a3.5 3.5 0 0 0-6 1.5c0 3 6 2 6 5a3.5 3.5 0 0 1-6 1.5"></path><line x1="12" y1="5.5" x2="12" y2="7"></line><line x1="12" y1="17" x2="12" y2="18.5"></line>',
         'date_formats' => '<path d="M21 12V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h7"></path><line x1="3" y1="10" x2="21" y2="10"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="16" y1="2" x2="16" y2="6"></line><circle cx="17.5" cy="17.5" r="4.5"></circle><polyline points="17.5 15.5 17.5 17.5 19 18.6"></polyline>',
         'security'    => '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>',
         'sso'         => '<path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line>',
@@ -400,6 +409,11 @@ function systemAreaSettings(): array
         ],
         'companies/' => [
             ['freemail', 'system.companies.freemail_title'],
+        ],
+        'currencies/' => [
+            ['favourites', 'system.currencies.fav_heading'],
+            ['format',     'system.currencies.format_heading'],
+            ['exceptions', 'system.currencies.exc_heading'],
         ],
         'date-formats/' => [
             ['date-format', 'system.dateformat.date_heading'],
