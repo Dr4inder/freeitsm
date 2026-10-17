@@ -90,11 +90,10 @@ $capStorage = $hasCap(Cap::FILES_STORAGE);
 
     <?php
     // The modules this person may open, for the start menu's switcher - the same
-    // filter the waffle uses, so the two can never disagree.
-    $allowed = $_SESSION['allowed_modules'] ?? null;
+    // list and order the waffle uses (analystVisibleModules, GH #187), so the two
+    // can never disagree.
     $startModules = [];
-    foreach ($modules as $key => $m) {
-        if ($key === 'system' ? !sessionIsAdmin() : ($allowed !== null && !in_array($key, $allowed))) continue;
+    foreach (analystVisibleModules($modules) as $key => $m) {
         $startModules[] = ['key' => $key, 'name' => $m['name'], 'url' => BASE_URL . $m['path'], 'icon' => $m['icon']];
     }
     $boot = [

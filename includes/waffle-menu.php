@@ -20,6 +20,7 @@ $analyst_name = $analyst_name ?? ($_SESSION['analyst_name'] ?? 'Analyst');
 require_once __DIR__ . '/functions.php';
 
 require_once __DIR__ . '/module-colors.php';
+require_once __DIR__ . '/display_order.php';   // each analyst's own module order (GH #187)
 
 // Bootstrap i18n so every module that includes this header gets t() for free.
 // Idempotent — pages that already initialised it (tickets, process-mapper) are fine.
@@ -44,6 +45,11 @@ if (!empty($_SESSION['password_expired'])) {
 // Module definitions - add new modules here.
 // Display names resolve via t('common.modules.<key>.name') so adding a module means
 // one entry here + one entry in lang/<locale>/common.php's 'modules' array per language.
+// The ORDER here is the default order. Each analyst can choose their own in
+// Preferences (GH #187); a module added here appears for them automatically, in
+// its default place - see includes/display_order.php. The home page, the ⌘K
+// palette and the Files start menu all draw from this list through
+// analystVisibleModules(), so a new module needs no other launcher edited.
 $modules = [
     'watchtower' => [
         'name' => t('common.modules.watchtower.name'),
@@ -276,7 +282,8 @@ $modules = [
        doing"), and it lives here rather than in the ⌘K palette on purpose: the
        control you used to LEAVE a module is the one you come back through, it
        is already the mobile drawer at 360px, and it disturbs no keyboard path —
-       ⌘K then Enter still means "go to Watchtower", as it always has.
+       ⌘K then Enter still means "go to my first module" (Watchtower unless the
+       analyst has reordered their modules, GH #187).
        ==================================================================== */
     .waffle-tabs {
         display: flex;
@@ -683,7 +690,6 @@ function renderWaffleMenuButton() {
  * @param mixed $path_prefix  relative path from the page to the app root, e.g. '../'; not used here (links use BASE_URL)
  */
 function renderWaffleMenuPanel($modules, $current_module, $path_prefix) {
-    $allowed = $_SESSION['allowed_modules'] ?? null;
     ?>
     <div class="waffle-panel" id="wafflePanel">
         <div class="waffle-panel-header">
@@ -710,22 +716,12 @@ function renderWaffleMenuPanel($modules, $current_module, $path_prefix) {
 
         <div class="waffle-tabpanel active" id="waffleTabModules" role="tabpanel">
         <div class="waffle-modules">
-            <?php foreach ($modules as $key => $module):
-                // System visibility is governed by admin status alone (not the per-analyst
-                // module list) — so an admin with module restrictions still sees it, and a
-                // non-admin never does. All other modules honour the allowed-modules list.
-                if ($key === 'system') {
-                    if (!sessionIsAdmin()) continue;
-                } elseif ($allowed !== null && !in_array($key, $allowed)) {
-                    // A catalogue approver without Forms gets its approvals inbox, and only
-                    // that (#180 Part 3).
-                    if ($key === 'forms' && sessionIsFormApproverOnly()) {
-                        $module['path'] = 'forms/approvals.php';
-                        $module['name'] = htmlspecialchars(t('common.waffle.form_approvals'));
-                    } else {
-                        continue;
-                    }
-                }
+            <?php
+            // In the analyst's own order, filtered exactly as before (System for admins
+            // only, the rest by allowed modules, the Forms-approver inbox) - one helper
+            // shared with the home page, ⌘K and the Files start menu (GH #187).
+            foreach (analystVisibleModules($modules) as $key => $module):
+                if (!empty($module['approvals'])) $module['name'] = htmlspecialchars($module['name']);
             ?>
             <a href="<?php echo BASE_URL . $module['path']; ?>" class="waffle-module-link <?php echo $key === $current_module ? 'current' : ''; ?>">
                 <div class="waffle-module-icon <?php echo $key; ?>">
@@ -841,16 +837,11 @@ function renderWaffleMenuJS() {
     // can never offer a destination the launcher wouldn't.
     // $modules is defined at this file's top level (global scope) when a header
     // requires it; pull it in here since we're inside a function.
+    // In the analyst's own order (GH #187), so ⌘K then Enter goes to their first module.
     global $modules;
-    $cpAllowed = $_SESSION['allowed_modules'] ?? null;
     $cpModules = [];
     if (isset($modules) && is_array($modules)) {
-        foreach ($modules as $cpKey => $cpMod) {
-            if ($cpKey === 'system') {
-                if (!sessionIsAdmin()) continue;
-            } elseif ($cpAllowed !== null && !in_array($cpKey, $cpAllowed)) {
-                continue;
-            }
+        foreach (analystVisibleModules($modules) as $cpKey => $cpMod) {
             $cpModules[] = [
                 'key'  => $cpKey,
                 'name' => $cpMod['name'],

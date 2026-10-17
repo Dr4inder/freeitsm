@@ -1148,6 +1148,15 @@ return [
         'timeformat_desc'    => 'The 24-hour clock, or a 12-hour clock with AM and PM.',
         'format_follow_default' => 'Use the system default ({example})',
         'format_saved'          => 'Format saved',
+        // Module order (GH #187) - the analyst's own order for the waffle menu,
+        // the home page and the ⌘K "Go to" list.
+        'modorder_heading' => 'Module order',
+        'modorder_desc'    => 'The order of the modules in your waffle menu, on the home page and in the Ctrl+K "Go to" list. Drag a module by its handle, use the arrows, or select one and press Alt with the up or down arrow. Only you see this order.',
+        'modorder_note'    => 'Saved as you go, and used from the next page you open. A module added in a later update joins the list on its own.',
+        'modorder_reset'   => 'Reset',
+        'modorder_reset_done' => 'Modules are back in the default order',
+        'modorder_saved'   => 'Module order saved',
+        'modorder_label'   => 'Module order',
         // Money (GH #189) - the analyst's own way of writing amounts.
         'money_heading'     => 'Money',
         'money_desc'        => 'How amounts of money are written for you. The currency of each record never changes - only how its amount looks on your screen.',

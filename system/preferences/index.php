@@ -370,6 +370,10 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
         }
         .pref-saving-hint.show { opacity: 1; }
 
+        /* Module order (GH #187) - the list itself is assets/js/reorder-list.js. */
+        .module-order-actions { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+        .module-order-note { font-size: 12px; color: var(--text-dim, #888); margin-top: 8px; }
+
         /* Money (GH #189) - the three format dropdowns, and one row per currency exception. */
         .money-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
         .money-picker .pref-language-select { min-width: 160px; flex: 1; }
@@ -882,6 +886,36 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
         </div><!-- /#notifications-tab -->
 
         <div class="tab-content" id="display-tab">
+            <?php
+                // Module order (GH #187). $modules is the waffle's list (the header has
+                // just included it). The list shows the modules this analyst can open;
+                // the FULL order travels too, so a module they cannot open today keeps
+                // its place for when they can (see includes/display_order.php).
+                $moDefault = array_keys($modules);
+                $moSaved   = analystModuleOrderSaved();
+                $moItems   = [];
+                foreach (analystVisibleModules($modules) as $moKey => $moMod) {
+                    $moItems[] = ['key' => $moKey, 'label' => $moMod['name'], 'icon' => $moMod['icon'], 'iconClass' => 'waffle-module-icon ' . $moKey];
+                }
+                $moPayload = [
+                    'all'      => displayOrderMerge($moSaved, $moDefault),
+                    'defaults' => $moDefault,
+                    'items'    => $moItems,
+                    'custom'   => !empty($moSaved),
+                ];
+            ?>
+            <div class="pref-section">
+                <h3 id="module-order"><?php echo htmlspecialchars(t('system.preferences.modorder_heading')); ?></h3>
+                <p><?php echo htmlspecialchars(t('system.preferences.modorder_desc')); ?></p>
+                <div id="moduleOrderList"></div>
+                <div class="module-order-actions">
+                    <button type="button" class="btn btn-secondary" id="moduleOrderReset"><?php echo htmlspecialchars(t('system.preferences.modorder_reset')); ?></button>
+                    <span class="pref-saving-hint" id="moduleOrderHint"><?php echo htmlspecialchars(t('system.preferences.saving')); ?></span>
+                </div>
+                <p class="module-order-note"><?php echo htmlspecialchars(t('system.preferences.modorder_note')); ?></p>
+                <script>window.MODULE_ORDER = <?php echo json_encode($moPayload, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
+            </div>
+
             <div class="pref-section">
                 <h3 id="left-panels"><?php echo htmlspecialchars(t('system.preferences.panels_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.panels_desc')); ?></p>
@@ -1014,6 +1048,7 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
     ?>
     <script>window.MONEY_MINE = <?php echo json_encode($moneyMine, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;</script>
     <script src="../../assets/js/money.js?v=1"></script>
+    <script src="../../assets/js/reorder-list.js?v=1"></script>
     <script src="../../assets/js/qrcode.min.js"></script>
     <script src="../../assets/js/subscribe.js?v=1"></script>
     <script src="../../assets/js/tinymce/tinymce.min.js"></script>
@@ -1317,6 +1352,61 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 if (ok) showToast(window.t('system.preferences.format_saved'), 'success');
             });
         });
+
+        // ===== Module order (module_order, GH #187) =====
+        // Every move saves the FULL order (all modules, including any this analyst
+        // cannot open today, in the slots they already had). A failed save puts the
+        // list back to what was last saved; Reset deletes the preference, so the
+        // default order - including modules added later - applies again.
+        (function () {
+            const box = document.getElementById('moduleOrderList');
+            const D = window.MODULE_ORDER;
+            if (!box || !D || !window.ReorderList) return;
+            const P = k => window.t('system.preferences.' + k);
+            const hint = document.getElementById('moduleOrderHint');
+            const resetBtn = document.getElementById('moduleOrderReset');
+            const visible = new Set(D.items.map(i => i.key));
+            const shown = full => full.filter(k => visible.has(k));
+            let saved = D.all.slice();
+            let custom = D.custom;
+            resetBtn.disabled = !custom;
+
+            /** The visible order written back into the slots the visible modules hold, so hidden ones never move. */
+            function withHidden(visOrder) {
+                let i = 0;
+                return saved.map(k => (visible.has(k) ? visOrder[i++] : k));
+            }
+
+            let queue = Promise.resolve();
+            /** One save at a time; on failure (savePref shows the error) the list returns to the last saved order. */
+            function save(value, next, onOk) {
+                queue = queue.then(async () => {
+                    hint.classList.add('show');
+                    const ok = await savePref('module_order', value);
+                    hint.classList.remove('show');
+                    if (ok) { saved = next; onOk(); }
+                    else rl.setOrder(shown(saved));
+                });
+            }
+
+            const rl = ReorderList.mount(box, {
+                items: shown(saved).map(k => D.items.find(i => i.key === k)),
+                label: P('modorder_label'),
+                onChange: keys => {
+                    const next = withHidden(keys);
+                    save(JSON.stringify(next), next, () => { custom = true; resetBtn.disabled = false; });
+                },
+            });
+
+            resetBtn.addEventListener('click', () => {
+                save('', D.defaults.slice(), () => {
+                    custom = false;
+                    resetBtn.disabled = true;
+                    rl.setOrder(shown(D.defaults));
+                    showToast(P('modorder_reset_done'), 'success');
+                });
+            });
+        })();
 
         // ===== Money (currency_format / currency_formats, GH #189) =====
         // Saved as soon as anything changes, like the formats above. '' for

@@ -22,6 +22,15 @@ return [
         'dec_0'      => 'None',
         'dec_2'      => 'Two',
     ],
+    // The shared "put these in order" control (assets/js/reorder-list.js, GH #187):
+    // module order in Preferences, card order in Watchtower settings.
+    'reorder' => [
+        'drag'     => 'Drag to move',
+        'up'       => 'Move {name} up',
+        'down'     => 'Move {name} down',
+        'position' => '{name}, {n} of {total}. Alt and the arrow keys move it.',
+        'moved'    => '{name} moved to position {n} of {total}',
+    ],
     // Shared "add this calendar to your phone" dialogue
     // (includes/subscribe_modal.php + assets/js/subscribe.js). Only the strings
     // that are genuinely identical for every feed live here; each caller passes
