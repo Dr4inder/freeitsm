@@ -89,7 +89,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/tasks.css?v=39">
+    <link rel="stylesheet" href="../assets/css/tasks.css?v=40">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
@@ -344,7 +344,7 @@ $translationNamespaces = ['common', 'tasks'];
     window.TASK_CAN_PROJECTS = <?php echo json_encode($taskCanProjects); ?>;</script>
     <script src="../assets/js/tasks-priority.js?v=1"></script>
     <script src="../assets/js/tasks-ctx-menu.js?v=4"></script>
-    <script src="../assets/js/tasks.js?v=49"></script>
+    <script src="../assets/js/tasks.js?v=50"></script>
     <script src="../assets/js/mobile.js?v=78"></script>
 </body>
 </html>

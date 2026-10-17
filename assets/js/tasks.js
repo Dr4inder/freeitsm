@@ -727,7 +727,7 @@ function renderCard(t) {
         meta.push(`<span class="due-badge start-date-badge" title="${escAttr(window.t('tasks.detail.start_date'))}">${formatShortDate(t.start_date)}</span>`);
     }
     if (cf.due_date) {
-        const dueBadge = formatDueBadge(t.due_date);
+        const dueBadge = formatDueBadge(t.due_date, taskIsDone(t));
         if (dueBadge) meta.push(dueBadge);
     }
     if (cf.subtasks && t.subtasks.total > 0) {
@@ -819,15 +819,32 @@ function descExcerpt(html) {
     return text;
 }
 
-/** Returns a due-date badge: "Overdue" or "Due today" with a matching class, otherwise the day and month. */
-function formatDueBadge(dateStr) {
+/**
+ * Whether a task is done - its status is a closed one. The list endpoint has sent
+ * this as a number, a boolean and the string "0", and "0" is truthy, so always
+ * through Number().
+ */
+function taskIsDone(t) {
+    return !!Number(t && t.status_is_closed);
+}
+
+/**
+ * Returns a due-date badge: "Overdue" or "Due today" with a matching class,
+ * otherwise the day and month. A DONE task only ever shows its date: finishing
+ * late is not being overdue (GH #184 - done tasks said "Overdue" for ever).
+ *
+ * @param {string} dateStr  the due date, YYYY-MM-DD
+ * @param {boolean} [done]  the task is done
+ */
+function formatDueBadge(dateStr, done) {
     if (!dateStr) return '';
     const today = new Date(); today.setHours(0, 0, 0, 0);
     const due = new Date(dateStr + 'T00:00:00');
     const diff = Math.floor((due - today) / 86400000);
     let cls = '';
     let text = '';
-    if (diff < 0) { cls = 'overdue'; text = window.t('tasks.board.overdue'); }
+    if (done) { text = fmtNaiveDayMonth(due); }
+    else if (diff < 0) { cls = 'overdue'; text = window.t('tasks.board.overdue'); }
     else if (diff === 0) { cls = 'today'; text = window.t('tasks.board.due_today'); }
     else if (diff <= 7) { text = fmtNaiveDayMonth(due); }
     else { text = fmtNaiveDayMonth(due); }
@@ -1196,7 +1213,7 @@ function renderList() {
     tbody.innerHTML = sorted.map(t => {
         const sc = statusColour(t.status);
         const subtaskText = t.subtasks.total > 0 ? `${t.subtasks.done}/${t.subtasks.total}` : '—';
-        const dueBadge = formatDueBadge(t.due_date);
+        const dueBadge = formatDueBadge(t.due_date, taskIsDone(t));
 
         const tagsHtml = (tagSettings.surface_card && t.tags && t.tags.length)
             ? `<div class="task-card-tags">${t.tags.map(tg => tagChipHtml(tg)).join('')}</div>` : '';

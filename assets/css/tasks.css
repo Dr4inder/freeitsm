@@ -2357,6 +2357,48 @@ body {
     .subtask-head > span:nth-child(4) { display: none; }
 }
 
+/* ── Subtasks in a NARROW space - the side panel (GH #184) ─────────────
+   The one-line grid needs ~330px for its fixed parts, and the 480px side panel
+   leaves ~440px - so the owner took what was left and the subtask's NAME got
+   nothing at all. The @media rule above never helped: it measures the WINDOW,
+   and the panel is narrow on the widest screen.
+
+   So this measures the subtask area itself (a container query) and, when it is
+   narrow, gives each row two lines: the handle, tick and name on the first -
+   the name with the whole width - and the owner and the two dates on the
+   second, under their headings. Nothing is hidden; the large task window, which
+   has the room, keeps the one-line row. */
+.subtask-section { container: subtasks / inline-size; }
+@container subtasks (max-width: 600px) {
+    .subtask-item,
+    .subtask-head {
+        grid-template-columns: 14px 16px minmax(0, 1fr) 118px 118px;
+        grid-template-areas:
+            "grip tick name name  name"
+            "grip .    who  start due";
+        row-gap: 2px;
+    }
+    .subtask-item > :nth-child(1), .subtask-head > :nth-child(1) { grid-area: grip; }
+    .subtask-item > :nth-child(2), .subtask-head > :nth-child(2) { grid-area: tick; }
+    .subtask-item > :nth-child(3), .subtask-head > :nth-child(3) { grid-area: name; }
+    .subtask-item > :nth-child(4), .subtask-head > :nth-child(4) { grid-area: who; }
+    .subtask-item > :nth-child(5), .subtask-head > :nth-child(5) { grid-area: start; }
+    .subtask-item > :nth-child(6), .subtask-head > :nth-child(6) { grid-area: due; }
+    .subtask-item .subtask-assignee { font-size: 11px; }
+    .subtask-item .subtask-date { font-size: 11px; padding: 2px 4px; }
+    /* The headings now sit on the second line, over the dates. */
+    .subtask-head { padding-bottom: 0; }
+
+    /* The add row: the name on a line of its own, then the dates and the button. */
+    .subtask-add #newSubtaskInput { flex: 1 1 100%; }
+}
+/* The add row never pushes the panel sideways: it wraps, and its boxes may shrink
+   below the browser's own minimum width for a date box (Mobile-Friendly-Tasks §20).
+   input.subtask-add-due outranks ".subtask-add input", which had been cancelling it. */
+.subtask-add { flex-wrap: wrap; }
+.subtask-add input { min-width: 0; }
+.subtask-add input.subtask-add-due { flex: 1 1 120px; max-width: 160px; }
+
 /* ── Subtasks listed under their card on the board ───────────────────────────
    Drawn as branches of a tree (Ed): a trunk runs down from the card's meta row
    and each subtask hangs off it on its own short branch. The last one ends the

@@ -267,6 +267,8 @@ try {
 
     // Attach subtask counts, tags and collaborators
     foreach ($tasks as &$task) {
+        // A number, as for subtasks: some drivers return "0", which JavaScript reads as true (GH #184).
+        $task['status_is_closed'] = $task['status_is_closed'] === null ? null : (int)$task['status_is_closed'];
         $task['subtasks']      = $subtaskCounts[$task['id']] ?? ['total' => 0, 'done' => 0];
         $task['subtask_items'] = $subtaskRows[$task['id']] ?? [];
         $task['tags']          = $tagsByTask[$task['id']] ?? [];
