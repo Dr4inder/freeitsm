@@ -1949,6 +1949,31 @@ button.subtask-toggle:focus-visible { outline: 2px solid var(--tsk-accent, #7c3a
 .tdm-tabpanel { display: none; }
 .tdm-tabpanel.active { display: block; }
 
+/* The Details tab fills the window's width (Ed: "fit in more form fields per
+   row"). Two to a row left each dropdown ~860px wide for "Medium" on a wide
+   screen, and pushed the description below the fold. So the short fields flow
+   into as many columns as fit - at least 240px each - and the pairs (.detail-row)
+   dissolve into that grid. Prose and lists keep a whole row. A narrow window
+   simply gets fewer columns, down to one. Columns layout is unaffected: its
+   right-hand column is narrow on purpose. */
+#tdmTab-details.active {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    column-gap: 16px;
+    align-items: start;
+}
+#tdmTab-details > .detail-row { display: contents; }
+#tdmTab-details > .detail-description,
+#tdmTab-details > #involvedField,
+#tdmTab-details > #taskChecklistSection,
+#tdmTab-details > .detail-field:has(#detailTagSection),
+#tdmTab-details > .recur-section,
+#tdmTab-details > .recur-master-link,
+#tdmTab-details > .subtask-of,
+#tdmTab-details > :not(.detail-field):not(.detail-row) { grid-column: 1 / -1; }
+/* "All day" is a tick box with no label above it - sit it level with the boxes beside it. */
+#tdmTab-details > .detail-field:has(#detailWorkAllDay) { align-self: end; padding-bottom: 10px; }
+
 /* A tab panel holds blocks that were written to sit in a scrolling column, and
    several of them open with their own heading. The first one loses its top
    margin so the content starts against the tab strip rather than a gap. */

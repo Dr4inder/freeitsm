@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2412 | Tasks             | Improvement | The large task window's Details tab (tabs layout) now fits as many fields per row as the window allows - six on a wide screen instead of two - with the people involved, tags, checklist, repeats and the description keeping a full row, so the description is on screen without scrolling. |
 | 2405 | Tasks             | Fix         | In the task side panel each subtask showed only its tick box, priority and dates - its name was squeezed to nothing, because the row's fixed columns needed the panel's whole width (GH #184). When the subtask area is narrow (measured on the area itself, so it works on a desktop panel and a phone), each row is now two lines: the name with the full width, then the owner and dates under their headings. |
 | 2406 | Tasks             | Fix         | The subtask Add row (name, two dates and the button) pushed the side panel into a sideways scroll, with Add off the edge (GH #184); it now wraps, and its date boxes may shrink. |
 | 2407 | Tasks             | Fix         | A done task still showed **Overdue** (or **Due today**) on its board card and in the list (GH #184); a done task now shows just its date. The list endpoint now sends whether a task is done as a number, so it can never read "0" as true. |
