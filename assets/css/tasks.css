@@ -434,19 +434,29 @@ body {
 .due-badge.overdue { color: #dc3545; font-weight: 600; }
 .due-badge.today { color: #f57c00; font-weight: 600; }
 
-/* The "1/4" line is also the card's own subtask show/hide (GH #184). */
-button.subtask-toggle {
+/* A card's subtask line: chevron, progress and "1/4 subtasks", left-aligned above
+   the list, and the button that shows or hides it (GH #184). */
+.card-subtask-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0 0 -4px;
+    padding: 3px 6px 3px 4px;
     border: none;
+    border-radius: 5px;
     background: none;
-    padding: 1px 4px 1px 2px;
-    margin: -1px 0;
-    border-radius: 4px;
+    color: var(--text-dim, #888);
     font-family: inherit;
+    font-size: 12px;
     cursor: pointer;
 }
-button.subtask-toggle:hover { background: var(--surface-2, #f1f1f4); color: var(--text, #333); }
-button.subtask-toggle:focus-visible { outline: 2px solid var(--tsk-accent, #7c3aed); outline-offset: 1px; }
-.subtask-caret { font-size: 9px; width: 8px; display: inline-block; }
+.card-subtask-head:hover { background: var(--surface-2, #f1f1f4); color: var(--text, #333); }
+.card-subtask-head:focus-visible { outline: 2px solid var(--tsk-accent, #7c3aed); outline-offset: 1px; }
+.card-subtask-chevron { flex-shrink: 0; transition: transform 0.15s ease; }
+.card-subtask-head.is-open .card-subtask-chevron { transform: rotate(90deg); }
+/* A track you can see in both themes, so an empty bar still reads as a bar. */
+.card-subtask-head .subtask-bar { background: var(--border, #d6d6dc); }
+.card-subtask-head + .task-card-subtasks { margin-top: 2px; }
 
 /* A tick box in the sidebar, e.g. Hide done (GH #184). */
 .sidebar-check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text, #333); cursor: pointer; padding: 4px 2px; }

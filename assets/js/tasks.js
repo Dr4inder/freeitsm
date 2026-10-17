@@ -802,19 +802,7 @@ function renderCard(t) {
         const dueBadge = formatDueBadge(t.due_date, taskIsDone(t));
         if (dueBadge) meta.push(dueBadge);
     }
-    if (cf.subtasks && t.subtasks.total > 0) {
-        // Also this card's own show/hide for its subtask list (GH #184). A button,
-        // so it is reachable from the keyboard; mousedown stops here so pressing it
-        // never starts dragging the card.
-        const open = cardSubtasks(t).length > 0;
-        meta.push(`<button type="button" class="subtask-progress subtask-toggle" aria-expanded="${open}"
-                title="${escAttr(window.t(open ? 'tasks.board.subtasks_card_hide' : 'tasks.board.subtasks_card_show'))}"
-                onmousedown="event.stopPropagation()" onclick="toggleCardSubtasks(event, ${t.id})">
-             <span class="subtask-caret" aria-hidden="true">${open ? '&#9662;' : '&#9656;'}</span>
-             <span class="subtask-bar"><span class="subtask-bar-fill" style="width:${Math.round(t.subtasks.done / t.subtasks.total * 100)}%"></span></span>
-             ${t.subtasks.done}/${t.subtasks.total}
-           </button>`);
-    }
+
     if (cf.links && (t.ticket_id || t.change_id)) {
         meta.push(`<span class="link-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></span>`);
     }
@@ -855,8 +843,30 @@ function renderCard(t) {
         ${descHtml}
         ${meta.length ? `<div class="task-card-meta">${meta.join('')}</div>` : ''}
         ${tagsHtml}
+        ${cardSubtaskHeadHtml(t)}
         ${boardSubtasksHtml(t)}
     </div>`;
+}
+
+/**
+ * The subtasks' own line on a card: a chevron, the progress bar and "1/4 subtasks",
+ * left-aligned directly above the list - and the button that shows or hides this
+ * card's list (GH #184). It used to sit at the end of the meta row, where it
+ * wrapped onto a line of its own with a 9px arrow and, in dark mode, an empty bar
+ * you could not see - so the count looked like it was floating. A button, so the
+ * keyboard reaches it; mousedown stops here so pressing it never drags the card.
+ */
+function cardSubtaskHeadHtml(t) {
+    if (!cardFields.subtasks || !(t.subtasks && t.subtasks.total > 0)) return '';
+    const open = cardSubtasks(t).length > 0;
+    const pct = Math.round(t.subtasks.done / t.subtasks.total * 100);
+    return `<button type="button" class="card-subtask-head${open ? ' is-open' : ''}" aria-expanded="${open}"
+            title="${escAttr(window.t(open ? 'tasks.board.subtasks_card_hide' : 'tasks.board.subtasks_card_show'))}"
+            onmousedown="event.stopPropagation()" onclick="toggleCardSubtasks(event, ${t.id})">
+        <svg class="card-subtask-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"></polyline></svg>
+        <span class="subtask-bar"><span class="subtask-bar-fill" style="width:${pct}%"></span></span>
+        <span>${esc(window.t('tasks.board.subtasks_count', { done: t.subtasks.done, total: t.subtasks.total }))}</span>
+    </button>`;
 }
 
 /**

@@ -73,6 +73,7 @@ return [
         'subtasks_open_title' => 'List only the subtasks still to do',
         'subtasks_none_title' => 'List no subtasks - each card still shows its count',
         'subtasks_card_show'  => 'Show this card\'s subtasks',
+        'subtasks_count'      => '{done}/{total} subtasks',
         'subtasks_card_hide'  => 'Hide this card\'s subtasks',
         'no_tasks'             => 'No tasks',
         'add_task'             => 'Add task',
