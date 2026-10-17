@@ -80,7 +80,7 @@ $tt = fn(string $k) => htmlspecialchars(t('files.settings.' . $k));
         .fil-filter { padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; width: 320px; max-width: 100%; background: var(--surface); color: var(--text); font: inherit; margin-bottom: 10px; }
         @media (max-width: 900px) { .set-row { grid-template-columns: 1fr; gap: 8px; } }
     </style>
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
 </head>
 <body data-mobile-module="files" data-mobile-page="settings">
     <?php include '../includes/header.php'; ?>
@@ -116,6 +116,6 @@ $tt = fn(string $k) => htmlspecialchars(t('files.settings.' . $k));
     </div>
     <script>window.FILES_API = <?php echo json_encode(BASE_URL . 'api/files/'); ?>;</script>
     <script src="../../assets/js/files-settings.js?v=1"></script>
-    <script src="../../assets/js/mobile.js?v=78"></script>
+    <script src="../../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

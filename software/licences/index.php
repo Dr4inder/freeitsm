@@ -423,7 +423,7 @@ $translationNamespaces = ['common', 'software'];
             font-weight: 500;
         }
     </style>
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
@@ -979,6 +979,6 @@ $translationNamespaces = ['common', 'software'];
             if (e.key === 'Escape') closeLicenceModal();
         });
     </script>
-    <script src="../../assets/js/mobile.js?v=78"></script>
+    <script src="../../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

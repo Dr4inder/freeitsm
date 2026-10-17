@@ -348,7 +348,8 @@
         const closed = !!Number(t.is_closed);
         const late = !closed && t.due_date && t.due_date < P.todayStr();
         return '<div class="prj-task' + (closed ? ' done' : '') + '" draggable="true" data-task="' + t.id + '">'
-            + '<span class="prj-grip" aria-hidden="true">&#8942;&#8942;</span>'
+            // GH #184: also the keyboard handle - focus it and press the up or down arrow.
+            + '<span class="prj-grip" tabindex="0" role="button" aria-keyshortcuts="ArrowUp ArrowDown" aria-label="' + esc(T('plan.move_task', { title: t.title })) + '" title="' + esc(T('plan.drag_tip')) + '">&#8942;&#8942;</span>'
             + '<span class="prj-task-status" style="background:' + esc(t.status_colour || '#94a3b8') + '" title="' + esc(t.status_name || '') + '"></span>'
             + '<a class="prj-task-title" href="' + esc(window.PRJ_BASE + 'tasks/?task=' + t.id) + '" title="' + esc(T('plan.task_open')) + '">' + esc(t.title) + '</a>'
             + (Number(t.subtask_count) ? '<span class="prj-task-sub">' + esc(t.subtask_count) + '</span>' : '')
@@ -444,7 +445,7 @@
         html += data.stages.map(s => lane(s, byStage[s.id] || [])).join('');
         html += lane(null, byStage[''] || []);
         document.getElementById('pvPlan').innerHTML = html;
-        if (data.permissions && !data.permissions.can_change) document.querySelectorAll('#pvPlan .prj-task').forEach(r => { r.draggable = false; });
+        if (data.permissions && !data.permissions.can_change) document.querySelectorAll('#pvPlan .prj-task').forEach(r => { r.draggable = false; const g = r.querySelector('.prj-grip'); if (g) g.removeAttribute('tabindex'); });
     }
 
     // ---- Drawing everything ---------------------------------------------------------
@@ -824,6 +825,50 @@
         }
     }
 
+    /**
+     * Puts a task at a place in a lane (GH #184): into the lane if it is not
+     * already there (task_assign.php), then the lane's order (task_order.php),
+     * then redraws. index null = the end, without an order call - which is what a
+     * drop without a pointer position (the phone's move sheet) means.
+     *
+     * @param {string} taskId
+     * @param {string} laneId   a stage id, or '' for the tasks not in a stage
+     * @param {?number} index   where in the lane, 0 = top
+     */
+    async function placeTask(taskId, laneId, index) {
+        const t = data.tasks.find(x => String(x.id) === String(taskId));
+        if (!t) return;
+        const sameLane = String(t.project_stage_id || '') === String(laneId || '');
+        if (index === null || index === undefined) { if (!sameLane) await moveTask(taskId, laneId); return; }
+        const laneEl = document.querySelector('#pvPlan .prj-lane[data-lane="' + CSS.escape(String(laneId || '')) + '"]');
+        const ids = laneEl ? [...laneEl.querySelectorAll('.prj-task')].map(r => r.dataset.task).filter(id => String(id) !== String(taskId)) : [];
+        const before = ids.join(',');
+        ids.splice(Math.max(0, Math.min(index, ids.length)), 0, String(taskId));
+        if (sameLane && laneEl && [...laneEl.querySelectorAll('.prj-task')].map(r => r.dataset.task).join(',') === ids.join(',')) return;
+        try {
+            if (!sameLane) await P.api('task_assign.php', { task_id: taskId, project_id: projectId, stage_id: laneId || null });
+            await P.api('task_order.php', { project_id: projectId, stage_id: laneId || null, ids: ids });
+        } catch (e) { P.toast(e.message, 'error'); }
+        await refresh();
+        // Keep the keyboard where it was: on the moved task's handle.
+        const grip = document.querySelector('#pvPlan .prj-task[data-task="' + CSS.escape(String(taskId)) + '"] .prj-grip');
+        if (grip && before !== null) grip.focus();
+    }
+
+    /** Moves a task one place up (-1) or down (+1) within its lane - the arrow keys on its handle, and the phone's Up / Down. */
+    function nudgeTask(taskId, delta) {
+        const row = document.querySelector('#pvPlan .prj-task[data-task="' + CSS.escape(String(taskId)) + '"]');
+        const laneEl = row && row.closest('.prj-lane');
+        if (!laneEl) return;
+        const rows = [...laneEl.querySelectorAll('.prj-task')];
+        const at = rows.indexOf(row);
+        const to = at + delta;
+        if (to < 0 || to >= rows.length) return;
+        placeTask(taskId, laneEl.dataset.lane, to);
+    }
+    // For the phone layer (mobile.js LAYER 44c), which offers Up / Down beside its lane list.
+    window.PrjPlan = { nudgeTask: nudgeTask };
+
     /** Moves a task to another lane (or out of every lane) through task_assign.php and redraws; nothing happens when it is already there. */
     async function moveTask(taskId, stageId) {
         const t = data.tasks.find(x => String(x.id) === String(taskId));
@@ -959,22 +1004,51 @@
             e.dataTransfer.effectAllowed = 'move';
             try { e.dataTransfer.setData('text/plain', dragId); } catch (err) { /* old browsers */ }
         });
+        const clearDropMarks = () => document.querySelectorAll('#pvPlan .drop-before, #pvPlan .drop-after').forEach(r => r.classList.remove('drop-before', 'drop-after'));
+        /**
+         * Where in a lane a drop at this pointer height lands (GH #184): the index
+         * among the lane's other tasks, and the row to mark. null when the event has
+         * no pointer position - the phone's move sheet - which means "the end".
+         */
+        function dropSpot(laneEl, clientY) {
+            if (typeof clientY !== 'number') return null;
+            const rows = [...laneEl.querySelectorAll('.prj-task')].filter(r => r.dataset.task !== dragId);
+            for (let i = 0; i < rows.length; i++) {
+                const r = rows[i].getBoundingClientRect();
+                if (clientY < r.top + r.height / 2) return { index: i, row: rows[i], after: false };
+            }
+            return { index: rows.length, row: rows[rows.length - 1] || null, after: true };
+        }
         page.addEventListener('dragend', e => {
             const row = e.target.closest('.prj-task'); if (row) row.classList.remove('dragging');
             document.querySelectorAll('.prj-lane.drop-over').forEach(l => l.classList.remove('drop-over'));
+            clearDropMarks();
         });
         page.addEventListener('dragover', e => {
             const laneEl = e.target.closest('.prj-lane'); if (!laneEl || !dragId) return;
             e.preventDefault();
             document.querySelectorAll('.prj-lane.drop-over').forEach(l => { if (l !== laneEl) l.classList.remove('drop-over'); });
             laneEl.classList.add('drop-over');
+            clearDropMarks();
+            const spot = dropSpot(laneEl, e.clientY);
+            if (spot && spot.row) spot.row.classList.add(spot.after ? 'drop-after' : 'drop-before');
         });
         page.addEventListener('drop', e => {
             const laneEl = e.target.closest('.prj-lane'); if (!laneEl || !dragId) return;
             e.preventDefault();
             laneEl.classList.remove('drop-over');
+            const spot = dropSpot(laneEl, e.clientY);
+            clearDropMarks();
             const id = dragId; dragId = null;
-            moveTask(id, laneEl.dataset.lane);
+            placeTask(id, laneEl.dataset.lane, spot ? spot.index : null);
+        });
+        // The keyboard (GH #184): up / down on a task's handle moves it within its lane.
+        page.addEventListener('keydown', e => {
+            const grip = e.target.closest && e.target.closest('#pvPlan .prj-grip');
+            if (!grip || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return;
+            if (data.permissions && !data.permissions.can_change) return;
+            e.preventDefault();
+            nudgeTask(grip.closest('.prj-task').dataset.task, e.key === 'ArrowUp' ? -1 : 1);
         });
 
         load();

@@ -353,6 +353,11 @@ return [
     ],
 
     'plan' => [
+        // GH #184: putting the tasks of a stage in order.
+        'move_task' => 'Move {title} - up or down arrow',
+        'drag_tip'  => 'Drag to move this task, within its stage or to another',
+        'move_up'   => 'Up',
+        'move_down' => 'Down',
         'intro'         => 'Break the work into {timeboxes}, then add the tasks. Tasks live on the Tasks board as well, so the people doing them see them where they already look.',
         'unassigned'    => 'Not in a {timebox} yet',
         'unassigned_hint' => 'Drag a task onto a {timebox} to file it there.',

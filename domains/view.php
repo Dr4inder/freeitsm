@@ -53,7 +53,7 @@ $translationNamespaces = ['common', 'domains'];
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/domains.css?v=7">
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
 </head>
 <body data-mobile-module="domains" data-mobile-page="domains-view">
     <?php include 'includes/header.php'; ?>
@@ -192,6 +192,6 @@ $translationNamespaces = ['common', 'domains'];
     <script src="../assets/js/domains.js?v=2"></script>
     <script src="../assets/js/domains-view.js?v=8"></script>
     <?php endif; ?>
-    <script src="../assets/js/mobile.js?v=78"></script>
+    <script src="../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

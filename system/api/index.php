@@ -147,7 +147,7 @@ $mcpUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_URL . 
         [data-theme-mode="dark"] .table-action-btn.danger:hover { background: #3a1a1d; color: #fca5a5; }
     </style>
     <!-- Mobile layer LAST, after this page's own <style> (Techniques §9). -->
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
 </head>
@@ -517,6 +517,6 @@ $mcpUrl = $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . BASE_URL . 
 
     loadKeys();
     </script>
-    <script src="../../assets/js/mobile.js?v=78"></script>
+    <script src="../../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

@@ -348,6 +348,10 @@ body { --accent: var(--prj-accent, #e11d48); --accent-hover: var(--prj-accent-ho
 .prj-task.dragging { opacity: .4; }
 .prj-grip { color: var(--text-faint, #bbb); cursor: grab; font-size: 12px; letter-spacing: -3px; user-select: none; opacity: 0; transition: opacity .12s ease; }
 .prj-task:hover .prj-grip { opacity: 1; }
+/* GH #184: reordering within a lane - where the task will land, and the handle when it has the keyboard. */
+.prj-task.drop-before { box-shadow: 0 -2px 0 var(--prj-accent, #e11d48); }
+.prj-task.drop-after  { box-shadow: 0 2px 0 var(--prj-accent, #e11d48); }
+.prj-grip:focus-visible { opacity: 1; outline: 2px solid var(--prj-accent, #e11d48); outline-offset: 2px; border-radius: 3px; }
 .prj-task-status { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .prj-task-title { flex: 1; min-width: 0; color: var(--text, #222); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .prj-task-title:hover { color: var(--prj-accent, #e11d48); }

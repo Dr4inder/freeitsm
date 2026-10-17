@@ -72,7 +72,7 @@ $translationNamespaces = ['common', 'workflow'];
         }
     </style>
     <!-- Mobile layer LAST (Techniques §9). -->
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
 </head>
 <body data-mobile-module="workflow" data-mobile-page="settings">
     <?php include '../includes/header.php'; ?>
@@ -307,6 +307,6 @@ $translationNamespaces = ['common', 'workflow'];
         window.WFF = WFF;
     })();
     </script>
-    <script src="../../assets/js/mobile.js?v=78"></script>
+    <script src="../../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

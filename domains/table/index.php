@@ -35,7 +35,7 @@ $dtSearchPlaceholder = t('domains.table.search');
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../../assets/css/data-table.css?v=4">
     <link rel="stylesheet" href="../../assets/css/domains.css?v=7">
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
@@ -51,6 +51,6 @@ $dtSearchPlaceholder = t('domains.table.search');
     <script src="../../assets/js/domains.js?v=2"></script>
     <script src="../../assets/js/data-table.js?v=6"></script>
     <script src="../../assets/js/domains-table.js?v=2"></script>
-    <script src="../../assets/js/mobile.js?v=78"></script>
+    <script src="../../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

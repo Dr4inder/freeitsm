@@ -231,7 +231,7 @@ $contract_id = $_GET['id'] ?? null;
         .party-hint { display: block; margin-top: 6px; color: var(--text-muted, #777); font-size: 12px; }
     </style>
     <!-- Mobile layer: linked AFTER this page's own <style> so its @media rules win on ties. -->
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
 </head>
 <body data-mobile-module="contracts" data-mobile-page="contract-edit">
     <?php include 'includes/header.php'; ?>
@@ -967,6 +967,6 @@ $contract_id = $_GET['id'] ?? null;
         }
 
     </script>
-    <script src="../assets/js/mobile.js?v=78"></script>
+    <script src="../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

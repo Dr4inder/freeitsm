@@ -15797,6 +15797,25 @@
         justify-content: center;
     }
 
+    /* GH #184: Up / Down within the task's own lane, above the lane list. */
+    body[data-mobile-page="projects-view"] .prj-move-nudge {
+        display: flex;
+        gap: 8px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border-soft, #f0f0f0);
+    }
+    body[data-mobile-page="projects-view"] .prj-move-nudge-btn {
+        flex: 1;
+        min-height: 44px;
+        border: 1px solid var(--border, #ddd);
+        border-radius: 8px;
+        background: var(--surface, #fff);
+        color: var(--text, #222);
+        font: inherit;
+        font-size: 15px;
+    }
+    body[data-mobile-page="projects-view"] .prj-move-nudge-btn:disabled { opacity: .4; }
+
     /* The phase picker: a list of the plan's own lanes, harvested from their
        headings. The lane the task is in is marked and cannot be chosen. */
     body[data-mobile-page="projects-view"] .prj-move-opt {

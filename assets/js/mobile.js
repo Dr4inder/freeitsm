@@ -5956,6 +5956,14 @@
         // A tap on the dimmed plan above the choices closes the sheet.
         sheet.addEventListener('click', function (e) { if (e.target === sheet) setOpen(false); });
         sheetBody.addEventListener('click', function (e) {
+            var nudge = e.target.closest ? e.target.closest('.prj-move-nudge-btn') : null;
+            if (nudge) {
+                if (nudge.disabled || !current) return;
+                var id = current;
+                setOpen(false);
+                window.PrjPlan.nudgeTask(id, parseInt(nudge.getAttribute('data-nudge'), 10));
+                return;
+            }
             var opt = e.target.closest ? e.target.closest('.prj-move-opt') : null;
             if (!opt || opt.getAttribute('aria-current') === 'true') return;
             moveTo(opt.getAttribute('data-lane'));
@@ -5984,6 +5992,16 @@
         var here = row.closest('.prj-lane');
         sheetTitle.textContent = txt(row.querySelector('.prj-task-title'));
         var html = '';
+        // GH #184: Up / Down within its own lane, before the list of lanes. Done by
+        // projects-view.js's own nudgeTask(), the same as the arrow keys on desktop.
+        if (window.PrjPlan && window.PrjPlan.nudgeTask) {
+            var rows = here ? here.querySelectorAll('.prj-task') : [];
+            var at = Array.prototype.indexOf.call(rows, row);
+            html += '<div class="prj-move-nudge">'
+                + '<button type="button" class="prj-move-nudge-btn" data-nudge="-1"' + (at <= 0 ? ' disabled' : '') + '>&#8593; ' + tr('projects.plan.move_up', 'Up') + '</button>'
+                + '<button type="button" class="prj-move-nudge-btn" data-nudge="1"' + (at < 0 || at >= rows.length - 1 ? ' disabled' : '') + '>&#8595; ' + tr('projects.plan.move_down', 'Down') + '</button>'
+                + '</div>';
+        }
         Array.prototype.forEach.call(plan.querySelectorAll('.prj-lane'), function (lane) {
             var id = lane.getAttribute('data-lane') || '';
             var kind = lane.querySelector('.prj-lane-kind');

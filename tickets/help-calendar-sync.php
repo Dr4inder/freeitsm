@@ -41,7 +41,7 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/help.css?v=6">
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
 </head>
 <body data-mobile-page="tickets-help-calsync">
 <?php include 'includes/header.php'; ?>
@@ -539,6 +539,6 @@ echo ===== %DATE% %TIME% ===== &gt;&gt; "%LOG%"
         });
     });
 </script>
-    <script src="../assets/js/mobile.js?v=78"></script>
+    <script src="../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

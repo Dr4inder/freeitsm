@@ -3819,6 +3819,12 @@ return [
         // 3.3.0: how long the work is expected to take, in hours. Read by the
         // Projects capacity view and estimate-vs-logged; NULL = not estimated.
         'estimate_hours'      => 'DECIMAL(7,2) NULL',
+        // GH #184: the task's place within its project stage (the Plan tab's
+        // order). NOT board_position, which is the task's place in its Tasks-board
+        // status column - sharing it meant moving a card on the board reshuffled the
+        // plan. NULL = after the numbered ones, in board order; cleared whenever the
+        // task changes stage, so it never arrives somewhere carrying another lane's number.
+        'project_position'    => 'INT NULL',
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
     ],
 

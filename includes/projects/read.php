@@ -354,6 +354,17 @@ function projectPriorityColumn(PDO $conn): string
     return $ready ? 'p.priority' : "'medium' AS priority";
 }
 
+/** Has Database Verification added tasks.project_position (GH #184)? The plan keeps its old order before it. */
+function projectPlanOrderReady(PDO $conn): bool
+{
+    static $ready = null;
+    if ($ready === null) {
+        try { $conn->query("SELECT project_position FROM tasks LIMIT 0"); $ready = true; }
+        catch (Throwable $e) { $ready = false; }
+    }
+    return $ready;
+}
+
 /** Has Database Verification added tasks.estimate_hours (3.3.0)? Reads stay working before it. */
 function projectEstimatesReady(PDO $conn): bool
 {
@@ -404,7 +415,11 @@ function projectDetail(PDO $conn, array $row): array
                       LEFT JOIN analysts an ON an.id = t.assigned_analyst_id
                       LEFT JOIN teams tm ON tm.id = t.assigned_team_id
                           WHERE t.project_id = ? AND t.parent_task_id IS NULL
-                       ORDER BY t.board_position, t.id");
+                       ORDER BY " . (projectPlanOrderReady($conn)
+                           // GH #184: the order someone chose in the stage, then anything not yet
+                           // placed - a plan nobody has reordered keeps exactly its old order.
+                           ? '(t.project_position IS NULL), t.project_position, t.board_position, t.id'
+                           : 't.board_position, t.id'));
     $t->execute([$id]);
     $tasks = $t->fetchAll(PDO::FETCH_ASSOC);
     // Contractors (3.3.0): the supplier (and person there) doing each task.

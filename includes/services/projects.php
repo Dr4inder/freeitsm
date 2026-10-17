@@ -402,7 +402,7 @@ class ProjectsService
         if ((int)$stage['project_id'] !== $projectId) throw new ServiceError('not_found', 'not_found', 'Stage not found.');
         $conn->beginTransaction();
         try {
-            $conn->prepare("UPDATE tasks SET project_stage_id = NULL WHERE project_stage_id = ?")->execute([$stageId]);
+            $conn->prepare("UPDATE tasks SET project_stage_id = NULL" . self::clearPlanPosition($conn) . " WHERE project_stage_id = ?")->execute([$stageId]);
             // Its milestones stay, as the whole project's - by hand, for an install whose FK failed to add.
             try { $conn->prepare("UPDATE project_milestones SET stage_id = NULL WHERE stage_id = ?")->execute([$stageId]); } catch (Throwable $e) { /* not created yet */ }
             // Its gate's checklist goes with the gate (3.3.0) - by hand, for an install whose FK failed to add.
@@ -465,7 +465,7 @@ class ProjectsService
             try { self::assertCanChange($conn, $ctx, self::loadRow($conn, (int)$task['project_id'])); } catch (ServiceError $e) { if ($e->kind === 'forbidden') throw $e; }
         }
         if ($projectId === null || $projectId <= 0) {
-            $conn->prepare("UPDATE tasks SET project_id = NULL, project_stage_id = NULL, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$taskId]);
+            $conn->prepare("UPDATE tasks SET project_id = NULL, project_stage_id = NULL" . self::clearPlanPosition($conn) . ", updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$taskId]);
             if (!empty($task['project_id'])) self::touch($conn, (int)$task['project_id']);
             return;
         }
@@ -480,8 +480,68 @@ class ProjectsService
         } else {
             $stageId = null;
         }
-        $conn->prepare("UPDATE tasks SET project_id = ?, project_stage_id = ?, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
+        // A task arriving in a stage goes to its end (GH #184) - the drag that moved
+        // it then sends the order it was dropped in.
+        $conn->prepare("UPDATE tasks SET project_id = ?, project_stage_id = ?" . self::clearPlanPosition($conn) . ", updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
              ->execute([$projectId, $stageId, $taskId]);
+        self::touch($conn, $projectId);
+    }
+
+    /**
+     * ", project_position = NULL" once Database Verification has added the column
+     * (GH #184), else nothing - so moving a task works before and after it.
+     */
+    private static function clearPlanPosition(PDO $conn): string
+    {
+        require_once __DIR__ . '/../projects/read.php';
+        return projectPlanOrderReady($conn) ? ', project_position = NULL' : '';
+    }
+
+    /**
+     * Put the tasks of one Plan lane (a stage, or "not in a stage") in the order
+     * given (GH #184). The whole lane is renumbered 1..n, so the order is exact and
+     * a task missing from the list - one added a moment ago by somebody else - just
+     * keeps no number and sorts after the numbered ones.
+     *
+     * Every update is pinned to this project AND this lane: an id from elsewhere is
+     * not an error, it simply changes nothing.
+     *
+     * @param ?int  $stageId  the lane; null or 0 for the tasks not in a stage
+     * @param int[] $ids      the lane's task ids, top first
+     */
+    public static function orderTasks(PDO $conn, ActorContext $ctx, int $projectId, ?int $stageId, array $ids): void
+    {
+        require_once __DIR__ . '/../projects/read.php';
+        $project = self::loadForActor($conn, $ctx, $projectId);
+        self::assertCanChange($conn, $ctx, $project);
+        if (!projectPlanOrderReady($conn)) {
+            throw new ServiceError('validation', 'not_ready', 'Run System - Database Verification to turn on ordering tasks within a stage.');
+        }
+        if ($stageId !== null && $stageId > 0) {
+            $st = self::loadStage($conn, $stageId);
+            if ((int)$st['project_id'] !== $projectId) throw new ServiceError('validation', 'invalid_field', 'That stage is not part of this project.');
+        } else {
+            $stageId = null;
+        }
+        $ids = array_values(array_unique(array_filter(array_map('intval', $ids), fn($i) => $i > 0)));
+        if (count($ids) > 2000) throw new ServiceError('validation', 'invalid_field', 'Too many tasks.');
+        $up = $conn->prepare(
+            "UPDATE tasks SET project_position = ?
+              WHERE id = ? AND project_id = ? AND parent_task_id IS NULL AND project_stage_id <=> ?"
+        );
+        $conn->beginTransaction();
+        try {
+            // Clear the lane first: a task left out of the list must lose its old
+            // number, or it ties with a new one and sorts into the middle (the test
+            // caught exactly that).
+            $conn->prepare("UPDATE tasks SET project_position = NULL WHERE project_id = ? AND parent_task_id IS NULL AND project_stage_id <=> ?")
+                 ->execute([$projectId, $stageId]);
+            foreach ($ids as $i => $id) $up->execute([$i + 1, $id, $projectId, $stageId]);
+            $conn->commit();
+        } catch (Throwable $e) {
+            $conn->rollBack();
+            throw $e;
+        }
         self::touch($conn, $projectId);
     }
 
@@ -522,7 +582,7 @@ class ProjectsService
             : null;
         $res = TasksService::saveTask($conn, $ctx, $in);
         $taskId = (int)$res['id'];
-        $conn->prepare("UPDATE tasks SET tenant_id = ?, project_id = ?, project_stage_id = ? WHERE id = ?")
+        $conn->prepare("UPDATE tasks SET tenant_id = ?, project_id = ?, project_stage_id = ?" . self::clearPlanPosition($conn) . " WHERE id = ?")
              ->execute([$project['tenant_id'], $projectId, $stageId, $taskId]);
         if (array_filter($contractor)) TasksService::saveTask($conn, $ctx, ['id' => $taskId] + $contractor);
         self::touch($conn, $projectId);

@@ -107,6 +107,6 @@ $multi = isMultiTenant($conn);
         </div>
     <?php endif; ?>
     </main>
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=78"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=79"></script>
 </body>
 </html>

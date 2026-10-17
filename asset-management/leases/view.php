@@ -41,7 +41,7 @@ $translationNamespaces = ['common', 'asset-management'];
     <script src="../../assets/js/i18n.js?v=3"></script>
     <?php echo Money::scriptTag(); ?>
     <script src="../../assets/js/money.js?v=1"></script>
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
@@ -66,6 +66,6 @@ $translationNamespaces = ['common', 'asset-management'];
     ]); ?>;</script>
     <script src="../../assets/js/leases.js?v=2"></script>
     <?php endif; ?>
-    <script src="../../assets/js/mobile.js?v=78"></script>
+    <script src="../../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

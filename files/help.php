@@ -74,7 +74,7 @@ $para = fn(string $k) => preg_replace(['/\*\*([^*]+)\*\*/', '/`([^`]+)`/'], ['<s
         .help-container { height: 100vh !important; }
         <?php endif; ?>
     </style>
-    <link rel="stylesheet" href="../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
 </head>
 <body data-mobile-module="files" data-mobile-page="files-help">
     <?php include 'includes/header.php'; ?>
@@ -147,6 +147,6 @@ $para = fn(string $k) => preg_replace(['/\*\*([^*]+)\*\*/', '/`([^`]+)`/'], ['<s
         if (location.hash) goTo(location.hash.slice(1), 'auto');
         window.addEventListener('hashchange', () => goTo(location.hash.slice(1), 'smooth'));
     </script>
-    <?php if (!$embed): ?><script src="../assets/js/mobile.js?v=78"></script><?php endif; ?>
+    <?php if (!$embed): ?><script src="../assets/js/mobile.js?v=79"></script><?php endif; ?>
 </body>
 </html>

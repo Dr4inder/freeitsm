@@ -52,8 +52,8 @@ $row = function (string $label, string $desc, string $control) {
     <script src="../../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/projects.css?v=47">
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../../assets/css/projects.css?v=48">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
 </head>
 <body data-mobile-module="projects" data-mobile-page="settings">
     <?php include '../includes/header.php'; ?>
@@ -259,6 +259,6 @@ $row = function (string $label, string $desc, string $control) {
     <script src="../../assets/js/projects.js?v=10"></script>
     <script src="../../assets/js/projects-settings.js?v=18"></script>
     <script src="../../assets/js/ai-settings.js?v=3"></script>
-    <script src="../../assets/js/mobile.js?v=78"></script>
+    <script src="../../assets/js/mobile.js?v=79"></script>
 </body>
 </html>

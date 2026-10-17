@@ -150,7 +150,7 @@ $installSettings['formats'] = (object)$installSettings['formats'];   // {} not [
         [data-theme-mode="dark"] .icon-btn:hover:not(:disabled) { background: var(--surface-2, #232830); }
     </style>
     <!-- Mobile layer LAST, after this page's own <style> (Techniques §9). -->
-    <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
+    <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
 </head>
 <body data-mobile-module="system" data-mobile-page="currencies">
     <?php include '../includes/header.php'; ?>
@@ -350,6 +350,6 @@ $installSettings['formats'] = (object)$installSettings['formats'];   // {} not [
         renderAll();
     })();
     </script>
-    <script src="../../assets/js/mobile.js?v=78"></script>
+    <script src="../../assets/js/mobile.js?v=79"></script>
 </body>
 </html>
