@@ -152,6 +152,10 @@ return [
         'currency'           => 'Currency',
         'billing_years'      => 'Renewal period (years)',
         'cost_centre'        => 'Cost centre',
+        // GH #188: a real cost centre now; text typed before that is shown until one is chosen.
+        'cost_centre_old'      => '(previously recorded - choose a cost centre)',
+        'cost_centre_was'      => 'Previously recorded: {text}. Choose the cost centre it means.',
+        'cost_centre_inactive' => 'switched off',
         'contract'           => 'Contract',
         'notes'              => 'Notes',
         'monitoring_enabled' => 'Monitoring',
@@ -930,7 +934,7 @@ return [
             'p1'    => 'Accounts lists the accounts at registrars that hold your domains - the login, its owner, and who holds the second factor. Link each domain to its account. Passwords never belong here; keep them in your password manager.',
             'p2'    => 'Pick the registrar on a domain from your Contracts suppliers, so the supplier\'s record lists every domain it holds. When a registry lookup reports a registrar whose name matches a supplier, it is linked for you.',
             'p3'    => 'A domain\'s auth code (EPP code) lets whoever holds it transfer the domain to another registrar. FreeITSM encrypts it, never shows it in lists, and only analysts with the auth codes permission (System → Roles) can see or change it. Every view is recorded in the domain\'s history.',
-            'p4'    => 'Keep the transfer lock on unless a transfer is under way. The register\'s "Transfer unlocked" view lists every domain without it.',
+            'p4'    => 'Keep the transfer lock on unless a transfer is under way. The register\'s "Transfer unlocked" view lists every domain without it. A lock is only shown as off when the registry says so plainly: many country registries (.id, .au and others) answer just "active", which says nothing about the lock, so those show <em>not known</em> - check with your registrar.',
         ],
         'schedule' => [
             'nav'   => 'The schedule',

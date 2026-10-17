@@ -155,6 +155,14 @@ try {
     // the real one with that CODE in the contract's company - only this once.
     // Text that matches nothing stays, shown as "previously recorded" until
     // somebody chooses a cost centre.
+    // GH #188: the same for domains.cost_centre_id.
+    $domainsCcColWasMissing = false;
+    try {
+        $dcProbe = $conn->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = 'domains' AND column_name = 'cost_centre_id'");
+        $dcProbe->execute([$dbName]);
+        $domainsCcColWasMissing = ((int)$dcProbe->fetchColumn() === 0);
+    } catch (Exception $e) {}
+
     $contractsCcColWasMissing = false;
     try {
         $ccProbe = $conn->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = ? AND table_name = 'contracts' AND column_name = 'cost_centre_id'");
@@ -1737,6 +1745,22 @@ try {
         } catch (Exception $e) {}
     }
 
+    // domains.cost_centre_id (GH #188) - the ONE-TIME link of the old free text,
+    // exactly as for contracts above: on the code, in the domain's own company.
+    if ($domainsCcColWasMissing && $tableExists('cost_centres') && $colExists('domains', 'cost_centre_id')) {
+        try {
+            $def = (int)($conn->query("SELECT id FROM tenants WHERE is_default = 1 ORDER BY id LIMIT 1")->fetchColumn() ?: 0);
+            $n = $conn->exec(
+                "UPDATE domains d
+                   JOIN cost_centres cc ON cc.tenant_id = COALESCE(d.tenant_id, $def) AND cc.code = TRIM(d.cost_centre)
+                    SET d.cost_centre_id = cc.id, d.cost_centre = NULL
+                  WHERE d.cost_centre IS NOT NULL AND TRIM(d.cost_centre) <> '' AND d.cost_centre_id IS NULL");
+            if ($n > 0) {
+                $results[] = ['table' => 'domains', 'status' => 'updated', 'details' => ["Linked the typed-in cost centre of $n domain(s) to the matching cost centre"]];
+            }
+        } catch (Exception $e) {}
+    }
+
     // tickets.tenant_id — index + FK + a ONE-TIME backfill of existing tickets to
     // the Default company. Like target_mailboxes (and unlike a naive sweep), we
     // backfill ONLY when the column was just added ($ticketsTenantColWasMissing):
@@ -3012,6 +3036,7 @@ try {
         ['domains',                   'fk_domains_customer_contact', "ALTER TABLE domains ADD CONSTRAINT fk_domains_customer_contact FOREIGN KEY (customer_contact_id) REFERENCES contacts (id) ON DELETE SET NULL"],
         ['domains',                   'fk_domains_tech_analyst',    "ALTER TABLE domains ADD CONSTRAINT fk_domains_tech_analyst FOREIGN KEY (tech_analyst_id) REFERENCES analysts (id) ON DELETE SET NULL"],
         ['domains',                   'fk_domains_contract',        "ALTER TABLE domains ADD CONSTRAINT fk_domains_contract FOREIGN KEY (contract_id) REFERENCES contracts (id) ON DELETE SET NULL"],
+        ['domains',                   'fk_domains_cost_centre',     "ALTER TABLE domains ADD CONSTRAINT fk_domains_cost_centre FOREIGN KEY (cost_centre_id) REFERENCES cost_centres (id) ON DELETE SET NULL"],   // GH #188
         ['domain_audit',              'fk_domain_audit_domain',     "ALTER TABLE domain_audit ADD CONSTRAINT fk_domain_audit_domain FOREIGN KEY (domain_id) REFERENCES domains (id) ON DELETE CASCADE"],
         ['domain_alerts_sent',        'fk_domain_alerts_domain',    "ALTER TABLE domain_alerts_sent ADD CONSTRAINT fk_domain_alerts_domain FOREIGN KEY (domain_id) REFERENCES domains (id) ON DELETE CASCADE"],
         ['domain_lookalikes',         'fk_domain_lookalikes_domain', "ALTER TABLE domain_lookalikes ADD CONSTRAINT fk_domain_lookalikes_domain FOREIGN KEY (domain_id) REFERENCES domains (id) ON DELETE CASCADE"],

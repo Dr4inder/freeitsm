@@ -33,6 +33,7 @@ require_once __DIR__ . '/../money.php';   // GH #189: currencies are checked aga
 require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/../encryption.php';
 require_once __DIR__ . '/../domains/settings.php';
+require_once __DIR__ . '/../cost_centre_assign.php';   // GH #188
 require_once __DIR__ . '/../domains/names.php';
 require_once __DIR__ . '/../domains/lookup.php';
 require_once __DIR__ . '/../domains/checks.php';
@@ -78,7 +79,8 @@ class DomainsService
             'cost'                  => ['type' => 'money'],
             'currency'              => ['type' => 'currency'],
             'billing_years'         => ['type' => 'int',    'min' => 1, 'max' => 10],
-            'cost_centre'           => ['type' => 'string', 'max' => 100],
+            'cost_centre'           => ['type' => 'string', 'max' => 100],   // the old free text - see normaliseCostCentre()
+            'cost_centre_id'        => ['type' => 'cost_centre'],             // GH #188
             'contract_id'           => ['type' => 'lookup', 'table' => 'contracts'],
             'tags'                  => ['type' => 'tags'],
             'notes'                 => ['type' => 'text'],
@@ -90,7 +92,7 @@ class DomainsService
     public static function bulkFields(): array
     {
         return ['status_id', 'purpose', 'owner_analyst_id', 'renewal_mode', 'registrar_supplier_id',
-                'registrar_account_id', 'monitoring_enabled', 'cost_centre', 'tags'];
+                'registrar_account_id', 'monitoring_enabled', 'cost_centre', 'cost_centre_id', 'tags'];
     }
 
     // ======================================================================
@@ -145,6 +147,7 @@ class DomainsService
         $vals = [$n['name'], $n['display'], $store, $ctx->actorId > 0 ? $ctx->actorId : null];
         $row  = ['tenant_id' => $store];
         $in   = self::normaliseParties($conn, $in, []);
+        $in   = self::normaliseCostCentre($conn, $in, ['tenant_id' => $store]);
         foreach (self::fieldMap() as $field => $def) {
             if (!array_key_exists($field, $in)) continue;
             if (!self::fieldReady($conn, $field)) continue;   // before Database Verification
@@ -209,6 +212,7 @@ class DomainsService
         }
 
         $in = self::normaliseParties($conn, $in, $cur);
+        $in = self::normaliseCostCentre($conn, $in, $cur);
         foreach (self::fieldMap() as $field => $def) {
             if (!array_key_exists($field, $in)) continue;
             if (!self::fieldReady($conn, $field)) continue;   // before Database Verification
@@ -718,6 +722,12 @@ class DomainsService
         switch ($def['type']) {
             case 'lookup':
                 return self::lookup($conn, $def['table'], $v, str_replace('_', ' ', preg_replace('/_id$/', '', $field)));
+            case 'cost_centre':
+                // An ACTIVE cost centre of the domain's own company - or the one it
+                // already has, even if that has since been switched off (GH #160 rules).
+                if ($blank) return null;
+                return costCentreCheck($conn, costCentreRecordTenant($conn, $row['tenant_id'] ?? null), $v,
+                    isset($row['cost_centre_id']) && $row['cost_centre_id'] !== null ? (int)$row['cost_centre_id'] : null);
             case 'customer':
                 // A person in the domain's own company (#153): the domain's company
                 // IS the customer's company, so there is nothing else to choose.
@@ -805,10 +815,50 @@ class DomainsService
      *
      * @param string $field  a fieldMap() key
      */
+    /**
+     * GH #188: a domain's cost centre is a real one (cost_centre_id), as on
+     * contracts. Once Database Verification has added the column:
+     *  - cost_centre_id chosen: the old free text goes - it has been replaced;
+     *  - cost_centre (text) sent without an id - the REST API, the CSV import
+     *    and the bulk editor always took text - is a CODE in the domain's
+     *    company: linked if it exists, refused if not; '' clears both.
+     * Before Verification, nothing changes: the text is stored as it always was.
+     *
+     * @param array $in   the request fields
+     * @param array $cur  the stored domain row on update; on create just ['tenant_id' => ...]
+     */
+    private static function normaliseCostCentre(PDO $conn, array $in, array $cur): array
+    {
+        if (!costCentreReady($conn, 'domains')) return $in;
+        $tenant = costCentreRecordTenant($conn, $cur['tenant_id'] ?? null);
+        if (array_key_exists('cost_centre', $in) && !array_key_exists('cost_centre_id', $in)) {
+            $code = trim((string)$in['cost_centre']);
+            if ($code === '') {
+                $in['cost_centre_id'] = null;
+                $in['cost_centre'] = null;
+                return $in;
+            }
+            $cc = costCentreByCode($conn, $tenant, $code);
+            if (!$cc) throw new ServiceError('validation', 'invalid_field', "No cost centre with the code \"{$code}\" in this domain's company (System - Cost centres).");
+            $in['cost_centre_id'] = (int)$cc['id'];
+            $in['cost_centre'] = null;
+            return $in;
+        }
+        if (array_key_exists('cost_centre_id', $in) && $in['cost_centre_id'] !== null && $in['cost_centre_id'] !== '' && (int)$in['cost_centre_id'] > 0) {
+            // Chosen: the old text has been replaced. Choosing none keeps it, so
+            // saving the form without touching the box never wipes what was typed.
+            $in['cost_centre'] = null;
+        } else {
+            unset($in['cost_centre']);
+        }
+        return $in;
+    }
+
     private static function fieldReady(PDO $conn, string $field): bool
     {
         if ($field === 'customer_user_id') return domainCustomerReady($conn);
         if (in_array($field, ['customer_supplier_id', 'customer_contact_id', 'tech_analyst_id'], true)) return domainPartiesReady($conn);
+        if ($field === 'cost_centre_id') return costCentreReady($conn, 'domains');
         return true;
     }
 
@@ -1017,6 +1067,7 @@ class DomainsService
             'customer_supplier_id'  => "SELECT COALESCE(NULLIF(trading_name, ''), legal_name) FROM suppliers WHERE id = ?",
             'customer_contact_id'   => "SELECT CONCAT(first_name, ' ', surname) FROM contacts WHERE id = ?",
             'contract_id'           => "SELECT CONCAT(contract_number, ' ', title) FROM contracts WHERE id = ?",
+            'cost_centre_id'        => "SELECT CONCAT(code, ' ', name) FROM cost_centres WHERE id = ?",
             'customer_user_id'      => "SELECT COALESCE(NULLIF(display_name, ''), email) FROM users WHERE id = ?",
         ][$field] ?? null;
         if ($q) {

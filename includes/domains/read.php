@@ -13,6 +13,7 @@
 
 require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/customer.php';
+require_once __DIR__ . '/../cost_centre_assign.php';   // GH #188
 
 /** The columns + joins every register read uses. */
 function domainListSelect(?PDO $conn = null): string
@@ -46,7 +47,7 @@ function domainListSelect(?PDO $conn = null): string
                    d.owner_analyst_id, a.full_name AS owner_name,
                    d.tech_contact_id, TRIM(CONCAT(COALESCE(ct.first_name, ''), ' ', COALESCE(ct.surname, ''))) AS tech_contact_name,
                    d.registrant_name, d.dns_provider, d.hosting_provider,
-                   d.tags, d.cost, d.currency, d.billing_years, d.cost_centre,
+                   d.tags, d.cost, d.currency, d.billing_years, d.cost_centre" . ($conn !== null ? costCentreSelectSql($conn, 'domains', 'd') : ', NULL AS cost_centre_id, NULL AS cost_centre_label') . ",
                    d.contract_id, d.monitoring_enabled, $custCols
                    d.ssl_expiry_date, d.ssl_issuer, d.security_score, d.security_grade,
                    d.lookup_source, d.last_lookup_datetime, d.last_lookup_error, d.last_check_datetime,
@@ -103,7 +104,7 @@ function domainShapeRow(array $r): array
     $today = new DateTimeImmutable(gmdate('Y-m-d'));
     $days = fn($d) => $d ? (int)$today->diff(new DateTimeImmutable(substr($d, 0, 10)))->format('%r%a') : null;
     foreach (['id', 'tenant_id', 'status_id', 'registrar_supplier_id', 'registrar_account_id', 'owner_analyst_id',
-              'tech_contact_id', 'customer_user_id', 'customer_supplier_id', 'customer_contact_id', 'tech_analyst_id', 'contract_id', 'security_score', 'billing_years', 'lookalike_count', 'new_certificate_count'] as $k) {
+              'tech_contact_id', 'customer_user_id', 'customer_supplier_id', 'customer_contact_id', 'tech_analyst_id', 'contract_id', 'cost_centre_id', 'security_score', 'billing_years', 'lookalike_count', 'new_certificate_count'] as $k) {
         if (array_key_exists($k, $r)) $r[$k] = $r[$k] === null ? null : (int)$r[$k];
     }
     foreach (['transfer_lock', 'registry_lock', 'dnssec'] as $k) {
@@ -176,6 +177,11 @@ function domainDetail(PDO $conn, int $id, ?int $analystId = null): ?array
     $r['findings']     = $checks['findings'] ?? [];
     $r['certificates'] = $checks['certificates'] ?? [];
     $r['checked_at']   = $checks['at'] ?? null;
+    // GH #188: the cost centres this domain may be charged to - its company's
+    // active ones, plus its current one if that has since been switched off.
+    $r['cost_centre_ready']   = costCentreReady($conn, 'domains');
+    $r['cost_centre_options'] = $r['cost_centre_ready']
+        ? costCentreOptions($conn, costCentreRecordTenant($conn, $r['tenant_id']), $r['cost_centre_id'] ?? null) : [];
     return $r;
 }
 

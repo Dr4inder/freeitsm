@@ -150,7 +150,7 @@ $translationNamespaces = ['common', 'domains'];
                     <div class="form-group"><label for="eCost"><?php echo htmlspecialchars(t('domains.field.cost')); ?></label><input type="number" step="0.01" min="0" id="eCost" data-f="cost"></div>
                     <div class="form-group"><label for="eCur"><?php echo htmlspecialchars(t('domains.field.currency')); ?></label><select id="eCur" data-f="currency"></select></div>
                     <div class="form-group"><label for="eYears"><?php echo htmlspecialchars(t('domains.field.billing_years')); ?></label><input type="number" min="1" max="10" id="eYears" data-f="billing_years"></div>
-                    <div class="form-group"><label for="eCc"><?php echo htmlspecialchars(t('domains.field.cost_centre')); ?></label><input type="text" id="eCc" data-f="cost_centre"></div>
+                    <div class="form-group"><label for="eCc"><?php echo htmlspecialchars(t('domains.field.cost_centre')); ?></label><select id="eCc" data-f="cost_centre_id"></select><div class="dom-sub" id="eCcOld" hidden></div></div>
                     <div class="form-group full"><label for="eContract"><?php echo htmlspecialchars(t('domains.field.contract')); ?></label><select id="eContract" data-f="contract_id"></select></div>
 
                     <div class="dom-section-title"><?php echo htmlspecialchars(t('domains.edit.s_other')); ?></div>
@@ -190,7 +190,7 @@ $translationNamespaces = ['common', 'domains'];
     // Supplier and contact pages in People (#162) also need Contracts, which owns those records.
     window.DOM_PEOPLE_SUPPLIERS = <?php echo json_encode(analystCanAccessModule($conn, (int)$_SESSION['analyst_id'], 'people') && analystCanAccessModule($conn, (int)$_SESSION['analyst_id'], 'contracts')); ?>;</script>
     <script src="../assets/js/domains.js?v=2"></script>
-    <script src="../assets/js/domains-view.js?v=8"></script>
+    <script src="../assets/js/domains-view.js?v=9"></script>
     <?php endif; ?>
     <script src="../assets/js/mobile.js?v=79"></script>
 </body>

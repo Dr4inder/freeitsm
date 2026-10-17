@@ -116,7 +116,8 @@
             + row('field.customer', customerCell())
             + (data.multi_company ? row('field.company', esc(D.company_name || '')) : '')
             + row('field.cost', D.cost !== null ? esc(money(D.cost, D.currency)) + (D.billing_years > 1 ? ' <span class="dom-sub">/ ' + esc(T('page.years', { n: D.billing_years })) + '</span>' : '') : '')
-            + row('field.cost_centre', esc(D.cost_centre || ''))
+            // GH #188: the cost centre from System -> Cost centres; text typed before it was a list shows as previously recorded.
+            + row('field.cost_centre', D.cost_centre_label ? esc(D.cost_centre_label) : (D.cost_centre ? esc(D.cost_centre) + ' <span class="dom-sub">' + esc(T('field.cost_centre_old')) + '</span>' : ''))
             + row('field.contract', D.contract_id ? '<a href="' + esc(window.DOM_API.replace('api/domains/', '') + 'contracts/view.php?id=' + D.contract_id) + '">' + esc(D.contract_label || ('#' + D.contract_id)) + '</a>' : '')
             + row('field.tags', tags(D.tags))
             + '</div>' + (D.notes ? '<div style="margin-top:14px;white-space:pre-wrap;font-size:13px">' + esc(D.notes) + '</div>' : '') + '</div></div>';
@@ -559,6 +560,10 @@
         const contracts = (L.contracts || []).slice();
         if (D.contract_id && !contracts.some(c => +c.id === D.contract_id)) contracts.unshift({ id: D.contract_id, name: T('field.contract_hidden') });
         F('eContract', contracts, { blank: '—' });
+        // GH #188: the cost centres of this domain's company (active, plus its current one).
+        F('eCc', (D.cost_centre_options || []).map(c => ({ id: c.id, name: c.code + ' ' + c.name + (c.is_active ? '' : ' (' + T('field.cost_centre_inactive') + ')') })), { blank: '—' });
+        const ccOld = document.getElementById('eCcOld');
+        if (ccOld) { ccOld.hidden = !(D.cost_centre && !D.cost_centre_id); ccOld.textContent = D.cost_centre ? T('field.cost_centre_was', { text: D.cost_centre }) : ''; }
         fillTech();
         // Every currency, favourites first (GH #189). Filled before the data-f loop sets its value,
         // and with the domain's own code so a retired or unrecognised one is kept, not changed.

@@ -446,6 +446,7 @@ return [
     ['domains', 'idx_domains_customer_supplier', 'key', '(`customer_supplier_id`)'],
     ['domains', 'idx_domains_customer_contact', 'key', '(`customer_contact_id`)'],
     ['domains', 'idx_domains_tech_analyst', 'key', '(`tech_analyst_id`)'],
+    ['domains', 'idx_domains_cost_centre', 'key', '(`cost_centre_id`)'],
     ['domain_audit', 'idx_domain_audit_domain', 'key', '(`domain_id`,`created_datetime`)'],
     ['domain_alerts_sent', 'uq_domain_alert', 'unique', '(`domain_id`,`alert_kind`,`fingerprint`)'],
     ['domain_lookalikes', 'uq_domain_lookalike', 'unique', '(`domain_id`,`lookalike`)'],

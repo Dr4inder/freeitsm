@@ -7702,7 +7702,8 @@ CREATE TABLE IF NOT EXISTS `domains` (
     `cost`                   DECIMAL(10,2) NULL,
     `currency`               VARCHAR(3) NULL,
     `billing_years`          TINYINT NOT NULL DEFAULT 1,
-    `cost_centre`            VARCHAR(100) NULL,
+    `cost_centre`            VARCHAR(100) NULL,             -- the free text from before GH #188, shown until a cost centre is chosen
+    `cost_centre_id`         INT NULL,                      -- GH #188: System -> Cost centres, in the domain's company
     `contract_id`            INT NULL,
     `tags`                   VARCHAR(500) NULL,
     `notes`                  TEXT NULL,
@@ -7730,6 +7731,7 @@ CREATE TABLE IF NOT EXISTS `domains` (
     KEY `idx_domains_customer_supplier` (`customer_supplier_id`),
     KEY `idx_domains_customer_contact` (`customer_contact_id`),
     KEY `idx_domains_tech_analyst` (`tech_analyst_id`),
+    KEY `idx_domains_cost_centre` (`cost_centre_id`),
     CONSTRAINT `fk_domains_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_domains_status` FOREIGN KEY (`status_id`) REFERENCES `domain_statuses` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_domains_registrar` FOREIGN KEY (`registrar_supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE SET NULL,
@@ -7740,7 +7742,8 @@ CREATE TABLE IF NOT EXISTS `domains` (
     CONSTRAINT `fk_domains_customer_supplier` FOREIGN KEY (`customer_supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_domains_customer_contact` FOREIGN KEY (`customer_contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_domains_tech_analyst` FOREIGN KEY (`tech_analyst_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
-    CONSTRAINT `fk_domains_contract` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`id`) ON DELETE SET NULL
+    CONSTRAINT `fk_domains_contract` FOREIGN KEY (`contract_id`) REFERENCES `contracts` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_domains_cost_centre` FOREIGN KEY (`cost_centre_id`) REFERENCES `cost_centres` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Field-level history, the same shape as task_audit. analyst_id is NULL when

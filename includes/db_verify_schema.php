@@ -5168,6 +5168,11 @@ return [
         'currency'              => 'VARCHAR(3) NULL',
         'billing_years'         => 'TINYINT NOT NULL DEFAULT 1',
         'cost_centre'           => 'VARCHAR(100) NULL',
+        // GH #188: the real cost centre (System -> Cost centres), as contracts and
+        // assets have had since GH #160. 'cost_centre' above is the old free text,
+        // linked to the matching CODE once by Database Verification and otherwise
+        // shown as "previously recorded" until somebody chooses one.
+        'cost_centre_id'        => 'INT NULL',
         'contract_id'           => 'INT NULL',
         'tags'                  => 'VARCHAR(500) NULL',
         'notes'                 => 'TEXT NULL',

@@ -287,7 +287,18 @@ function domainDeriveFlags(array &$r, string $name = ''): void
         if (preg_match('/^(ok|active|inactive|(client|server) \w+ prohibited|pending \w+|add period|auto renew period|renew period|transfer period|redemption period)$/', $st)) { $epp = true; break; }
     }
     if ($epp) {
-        $r['transfer_lock'] = in_array('client transfer prohibited', $s, true) || in_array('server transfer prohibited', $s, true);
+        // 🔴 GH #188: "active" (or "ok") with no transfer status is NOT proof the
+        // lock is off. ON needs a transfer-prohibited status. OFF needs evidence
+        // that this registry would have shown one: either it is a generic TLD,
+        // where ICANN's RDAP profile obliges the registry to publish every EPP
+        // status, or the reply carries some OTHER prohibition (a registry that
+        // shows "delete prohibited" but not "transfer prohibited" is telling us).
+        // Otherwise - a country registry answering just "active" - not known.
+        $transfer = in_array('client transfer prohibited', $s, true) || in_array('server transfer prohibited', $s, true);
+        $anyProhibition = (bool)preg_grep('/^(client|server) \w+ prohibited$/', $s);
+        if ($transfer)                                                $r['transfer_lock'] = true;
+        elseif ($anyProhibition || domainTldPublishesAllStatuses($name)) $r['transfer_lock'] = false;
+        else                                                          $r['transfer_lock'] = null;
         $r['registry_lock'] = in_array('server transfer prohibited', $s, true)
                            && in_array('server delete prohibited', $s, true)
                            && in_array('server update prohibited', $s, true);
@@ -483,4 +494,21 @@ function domainLookupPace(PDO $conn, string $name, float $gapSeconds = 1.5): voi
 function domainTransferLockNotApplicable(string $name): bool
 {
     return in_array(domainTld($name), ['uk'], true);
+}
+
+/**
+ * Is this a generic TLD (.com, .org, .app ...), whose registry must publish every
+ * EPP status in RDAP under ICANN's gTLD RDAP profile - so the ABSENCE of
+ * "transfer prohibited" there really means unlocked (GH #188)?
+ *
+ * Country-code TLDs are two letters and are not bound by that profile: many
+ * answer just "active". An IDN TLD (xn--) can be either, so it is not assumed
+ * to be generic - "not known" is the safe answer, never a false "off".
+ *
+ * @param string $name  a stored domain name; only its TLD is read ('' = not known)
+ */
+function domainTldPublishesAllStatuses(string $name): bool
+{
+    $tld = strtolower(domainTld(trim($name)));
+    return $tld !== '' && strpos($name, '.') !== false && strlen($tld) > 2 && strpos($tld, 'xn--') !== 0;
 }

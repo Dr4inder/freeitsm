@@ -163,6 +163,10 @@ function costCentreUsage(PDO $conn, int $id): array
         'contract(s)'    => "SELECT COUNT(*) FROM contracts WHERE cost_centre_id = ?",
         'person/people'  => "SELECT COUNT(*) FROM users WHERE cost_centre_id = ?",
         'project budget line(s)' => "SELECT COUNT(*) FROM project_budget_lines WHERE cost_centre_id = ?",
+        // GH #188. Leases had the column (and a foreign key) but were not counted,
+        // so deleting a cost centre a lease used got past this check.
+        'lease(s)'       => "SELECT COUNT(*) FROM leases WHERE cost_centre_id = ?",
+        'domain(s)'      => "SELECT COUNT(*) FROM domains WHERE cost_centre_id = ?",
     ] as $what => $sql) {
         try {
             $st = $conn->prepare($sql);

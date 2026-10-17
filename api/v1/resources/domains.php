@@ -120,7 +120,9 @@ function apiSerializeDomain(array $r): array {
         'cost'              => $r['cost'] === null ? null : (float)$r['cost'],
         'currency'          => $r['currency'],
         'billing_years'     => (int)$r['billing_years'],
-        'cost_centre'       => $r['cost_centre'],
+        'cost_centre'       => $r['cost_centre'],                       // the old free text, until a cost centre is chosen
+        'cost_centre_id'    => isset($r['cost_centre_id']) && $r['cost_centre_id'] !== null ? (int)$r['cost_centre_id'] : null,   // GH #188
+        'cost_centre_label' => $r['cost_centre_label'] ?? null,
         'contract_id'       => $r['contract_id'] === null ? null : (int)$r['contract_id'],
         'tags'              => $list($r['tags'], '/\s*,\s*/'),
         'notes'             => $r['notes'],
