@@ -280,6 +280,7 @@ function getHelpTopics() {
             'sections' => [
                 ['id' => 'overview', 'label' => 'Overview'],
                 ['id' => 'language', 'label' => 'Interface language'],
+                ['id' => 'money',    'label' => 'Money'],
                 ['id' => 'toasts',   'label' => 'Toasts'],
                 ['id' => 'bell',     'label' => 'Notification bell'],
                 ['id' => 'panels',   'label' => 'Left panels'],
@@ -479,6 +480,22 @@ function getHelpTopics() {
                      . ' api token personal access token pat project key mapping resolved status'
                      . ' slack channel thread message to ticket intake'
                      . ' tika document reading pdf ocr scanned searchable attachment text extraction',
+        ],
+        'currencies' => [
+            'hero' => 'Currencies',
+            'sub'  => 'Every currency in use in the world is available wherever FreeITSM records money. This page sets which ones come first, which one new records start in, and how amounts are written; any analyst can choose their own format in Preferences.',
+            'sections' => [
+                ['id' => 'overview',   'label' => 'What this sets'],
+                ['id' => 'favourites', 'label' => 'Favourites and the default'],
+                ['id' => 'format',     'label' => 'How amounts are written'],
+                ['id' => 'exceptions', 'label' => 'Exceptions'],
+                ['id' => 'per-person', 'label' => 'When somebody wants their own'],
+                ['id' => 'unknown',    'label' => 'Codes that are not recognised'],
+            ],
+            'terms' => 'currency currencies money cost price value amount gbp usd eur idr rupiah pound dollar euro'
+                     . ' symbol code decimal places thousands separator comma dot space indian lakh crore'
+                     . ' favourite favourites default iso 4217 format exception preferences retired'
+                     . ' contracts licences domains leases projects',
         ],
         'date-formats' => [
             'hero' => 'Date and time formats',

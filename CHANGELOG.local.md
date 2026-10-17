@@ -14,6 +14,15 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2386 | System            | Feature     | Currencies (GH #189): one registry of every currency in use (ISO 4217, `includes/currencies.php`, plus recently retired ones kept for old records) and one formatter in PHP and JS (`includes/money.php`, `assets/js/money.js`) that agree to the character; rows still store the three-letter code. |
+| 2387 | System            | Feature     | New System → Currencies page: up to five favourites shown first in every currency list, the default currency new records start in, the install-wide format for writing amounts (separators, symbol or code before or after, decimal places) with per-currency exceptions, and a list of any codes in existing records that are not recognised. |
+| 2388 | System            | Feature     | Preferences → Money: each analyst can choose their own format for all currencies, and for particular currencies, over the install's; saves are queued so two quick changes cannot land out of order. |
+| 2389 | Contracts         | Improvement | The currency list offers every currency (favourites first) instead of a fixed 19, a new contract starts in the default currency, and the contract value is shown in the viewer's format (a value with no currency gets no symbol). |
+| 2390 | Software          | Improvement | Licence currency offers every currency (favourites first) instead of GBP, USD and EUR, licence costs are shown in the viewer's format with each currency's own decimal places, and a licence saved with no currency takes the install's default rather than GBP. |
+| 2391 | Domains           | Improvement | The domain currency is a list (favourites first) rather than a typed code, on the edit form and in the table's inline edit; amounts on domain pages and in linked-domain panels use the viewer's format. |
+| 2392 | Assets            | Improvement | Lease schedule currency is a list rather than a typed code, a new schedule starts in the default currency, and costs use the viewer's format. |
+| 2393 | Projects          | Improvement | "Currency for new projects" is a list and, unset, follows System → Currencies; changing a project's currency picks from a list instead of a typed prompt; every budget, change-control, intake, settings and portfolio amount uses the viewer's format. |
+| 2394 | System            | Improvement | Contracts, Software, Domains, Leases and Projects (forms, imports and the REST API) now refuse a currency code that is not a real currency, with the same message everywhere; licence costs in report packs use the reader's format. |
 
 
 

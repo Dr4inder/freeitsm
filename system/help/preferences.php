@@ -29,6 +29,18 @@ require __DIR__ . '/_top.php';
     <p>When you choose a new language the page <strong>reloads</strong> so everything re-renders in your selection. Ticket content and other data you've entered are not translated — only the interface labels, menus and messages.</p>
 </div>
 
+<!-- Money (GH #189) -->
+<div class="help-section" id="money">
+    <div class="help-section-header"><?php echo helpSectionNum('money'); ?>
+        <div>
+            <h3>Money</h3>
+            <p>How amounts of money are written for you - <code>£1,234.56</code>, <code>1.234,56 €</code> or <code>Rp 1.500.000</code>.</p>
+        </div>
+    </div>
+    <p>Left on <strong>Use the system default</strong>, you see whatever your administrator chose in <strong>System - Currencies</strong>. Choose <strong>Choose my own</strong> to pick the separators, where the symbol goes, and the decimal places for every currency. Under <strong>Particular currencies</strong> you can give one currency a format of its own - euros the German way, say, while everything else stays as it is.</p>
+    <p>It changes only how amounts <em>look</em> on your screen. The currency of a contract, licence or project, and the amount itself, stay exactly as they are, and nobody else sees your choice. It is saved as soon as you change it.</p>
+</div>
+
 <!-- 3. Toasts -->
 <div class="help-section" id="toasts">
     <div class="help-section-header"><?php echo helpSectionNum('toasts'); ?>

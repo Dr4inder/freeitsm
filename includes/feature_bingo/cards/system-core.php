@@ -732,6 +732,20 @@ return [
         ]],
     ],
 
+    // ───────────────────────── Currencies (GH #189) ─────────────────────────
+    [
+        'id'       => 'system.currencies',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'look',
+        'title'    => 'Currencies',
+        'what'     => 'The currency new contracts, licences, domains, leases and projects start in, up to five favourites at the top of every currency list, and how amounts are written - £1,234.56, 1.234,56 € or Rp 1.500.000.',
+        'why'      => 'Out of the box everything starts in pounds sterling. If your organisation pays in another currency, or in several, setting this once saves picking it on every record.',
+        'done'     => 'System - Currencies has been saved at least once.',
+        'link'     => 'system/currencies/',
+        'check'    => ['setting', 'currency_default', 'nonempty'],
+    ],
+
     // ───────────────────────── Colours & branding ─────────────────────────
     [
         'id'       => 'system.module_colours',
