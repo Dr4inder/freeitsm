@@ -6,6 +6,22 @@
  * Other locales mirror this file structure under lang/<locale>/common.php.
  */
 return [
+    // Every currency dropdown and every amount (includes/money.php +
+    // assets/js/money.js, GH #189). Published to the browser by
+    // Money::scriptTag(), so a page needs no namespace for them.
+    'currency' => [
+        'favourites' => 'Favourites',
+        'all'        => 'All currencies',
+        'none'       => 'None',
+        'retired'    => '{code} - {name} (no longer issued)',
+        'unknown'    => '{code} - not a recognised currency',
+        'sep'        => 'Separators',
+        'symbol'     => 'Symbol',
+        'decimals'   => 'Decimal places',
+        'dec_std'    => 'As the currency ({n})',
+        'dec_0'      => 'None',
+        'dec_2'      => 'Two',
+    ],
     // Shared "add this calendar to your phone" dialogue
     // (includes/subscribe_modal.php + assets/js/subscribe.js). Only the strings
     // that are genuinely identical for every feed live here; each caller passes
