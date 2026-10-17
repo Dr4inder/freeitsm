@@ -29,6 +29,11 @@ return [
 
         'cards_heading'  => 'Which cards appear',
         'cards_intro'    => 'Watchtower shows every card by default. Turn off the ones your team does not watch — nothing is lost, and each module still shows everything in its own screens.',
+        // Card order (GH #187) - shared by everybody, saved with the tick boxes.
+        'order_intro'    => 'The order here is the order on Watchtower, for everybody. Drag a card by its handle, use the arrows, or select one and press Alt with the up or down arrow. Each person still only sees the cards they have access to, in this order.',
+        'order_label'    => 'Watchtower cards, in order',
+        'order_reset'    => 'Reset order',
+        'order_reset_pending' => 'Back in the default order - press Save to keep it',
 
         'counts_heading' => 'What each count includes',
         'counts_intro'   => 'Each of these counts every status you have, which is why a status you rename or add keeps working without being listed anywhere in here. Narrow one only if a card is showing more than you want to read at a glance.',
@@ -289,10 +294,10 @@ return [
         's_whose_team'         => '<strong>My team</strong> &mdash; work assigned to anyone on a team you belong to.',
         's_whose_all'          => '<strong>Everyone</strong> &mdash; the whole installation. This is the default, and what Watchtower has always shown, so nothing changes unless you ask it to.',
         's_whose_narrows'      => 'Four cards narrow: <strong>Tickets</strong>, <strong>Tasks</strong>, <strong>Changes</strong> and <strong>Morning Checks</strong>. Every figure on them follows the toggle &mdash; your open tickets by status, your overdue tasks, the changes assigned to you.',
-        's_whose_impersonal'   => '<strong>Six cards cannot narrow, and are labelled <em>everyone</em> so you are never reading a team-wide number as a personal one.</strong> A degraded service and a failed workflow belong to nobody. Equipment is assigned to <em>end users</em> rather than to analysts, so &ldquo;my equipment&rdquo; would be empty for almost everybody. The Calendar card is the shared team calendar. Contracts and Knowledge do record an owner, but a contract about to expire needs chasing whoever owns it, and an article overdue review is a gap in the library rather than in one person&rsquo;s workload.',
+        's_whose_impersonal'   => '<strong>Eight cards cannot narrow, and are labelled <em>everyone</em> so you are never reading a team-wide number as a personal one.</strong> A degraded service and a failed workflow belong to nobody. Equipment is assigned to <em>end users</em> rather than to analysts, so &ldquo;my equipment&rdquo; would be empty for almost everybody. The Calendar card is the shared team calendar. Contracts and Knowledge do record an owner, but a contract about to expire needs chasing whoever owns it, and an article overdue review is a gap in the library rather than in one person&rsquo;s workload. Software licences and Domains are the same: a renewal needs handling whoever is named on it.',
         's_whose_unassigned'   => '<strong>Unassigned tickets never narrow</strong>, on any setting. An unassigned ticket is by definition not yours, so &ldquo;mine&rdquo; would report nought for ever &mdash; and nought there reads as <em>the queue is clear</em>, which is the opposite of what an unclaimed pile means.',
         's_whose_checks'       => '<strong>Morning checks are matched through their group.</strong> A check is routed by putting it in a group and pointing that group at a team or a person, so <em>mine</em> means checks assigned to you, checks in a group pointed at you, or checks in a group pointed at a team you are in.',
-        's_whose_setting'      => 'What happens to those six cards while you are on <strong>Mine</strong> is your own choice, under <strong>Preferences &rarr; General</strong>: keep showing them, or hide them for a strictly personal board. They are kept by default, because a degraded service is the last thing that should disappear because you switched to your own work.',
+        's_whose_setting'      => 'What happens to those eight cards while you are on <strong>Mine</strong> is your own choice, under <strong>Preferences &rarr; General</strong>: keep showing them, or hide them for a strictly personal board. They are kept by default, because a degraded service is the last thing that should disappear because you switched to your own work.',
         'nav_cards'     => 'Module cards explained',
         'nav_refresh'   => 'Auto-refresh',
         'nav_tips'      => 'Quick tips',
@@ -342,7 +347,7 @@ return [
 
         // Section 4 — Module cards explained
         's4_title' => 'Module cards explained',
-        's4_intro' => 'Watchtower monitors eight modules. Each card is tailored to show the most relevant information for that area. Here is what each card displays and what triggers its status dot colour.',
+        's4_intro' => 'Watchtower has thirteen cards, one for each area it watches. Each card is tailored to show the most relevant information for that area. Here is what the main cards display and what triggers their status dot colour.',
         's4_mc_title'    => 'Morning Checks',
         's4_mc_desc'     => 'Shows completion progress (e.g. 8/10 done) plus counts of OK, Warning, and Fail results. Attention items flag when checks have not been started or when any have failed.',
         's4_mc_triggers' => '<strong>Red:</strong> Checks not started today, or any checks failed. <strong>Amber:</strong> Checks incomplete or warnings present. <strong>Green:</strong> All checks completed and passing.',
@@ -397,9 +402,9 @@ return [
 
         // Section 7 — Settings
         's7_title'  => 'Settings',
-        's7_intro'  => 'Watchtower → Settings decides which cards appear and what each figure is counting. Everything there trims a dashboard that is already correct: leave the whole screen alone and every card is drawn and every status counted, so nothing needs configuring for the numbers to be right.',
+        's7_intro'  => 'Watchtower → Settings decides which cards appear, in what order, and what each figure is counting. Everything there trims a dashboard that is already correct: leave the whole screen alone and every card is drawn and every status counted, so nothing needs configuring for the numbers to be right.',
         's7_cards_title'  => 'Cards',
-        's7_cards_desc'   => 'Turn off any of the ten cards your team does not watch. Nothing is lost — each module still shows everything in its own screens.',
+        's7_cards_desc'   => 'Turn off any of the thirteen cards your team does not watch, and put the rest in the order your team reads them - drag a card by its handle, use the arrows, or select one and press Alt with an arrow key. The order is the same for everybody; each person still sees only the cards they have access to. Reset order puts the built-in order back. Nothing is lost - each module still shows everything in its own screens.',
         's7_counts_title' => 'Counts',
         's7_counts_desc'  => 'Each count includes every status you have, which is why renaming or adding one keeps working without being listed anywhere. Narrow one only if a card is showing more than you want to read at a glance. Each row is tagged with the module it affects, in that module\'s colour.',
         's7_mc_title'     => 'Which morning checks count as a problem',
@@ -418,7 +423,7 @@ return [
         'impersonal_heading'   => 'On “Mine”, cards that have no owner',
         'impersonal_show'      => 'Keep showing them',
         'impersonal_hide'      => 'Hide them',
-        'impersonal_note'      => 'Service status, workflows, equipment, the shared calendar, contracts and knowledge belong to the team rather than to a person, so they cannot narrow to you. Keeping them is the safer answer: a degraded service is the last thing that should disappear because you switched to a personal view.',
+        'impersonal_note'      => 'Service status, workflows, equipment, the shared calendar, contracts, knowledge, software licences and domains belong to the team rather than to a person, so they cannot narrow to you. Keeping them is the safer answer: a degraded service is the last thing that should disappear because you switched to a personal view.',
     ],
 
 ];

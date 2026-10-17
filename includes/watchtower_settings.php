@@ -32,11 +32,70 @@
 /** analyst_id 0 = the installation's setting. Per-analyst overrides are future work. */
 const WT_INSTALL_SCOPE = 0;
 
-/** Every card Watchtower draws, in the order it draws them. */
+require_once __DIR__ . '/display_order.php';   // the shared saved-order rule (GH #187)
+
+/**
+ * Every card Watchtower draws, in its DEFAULT order - the one list the dashboard,
+ * the settings screen and the save endpoint read (GH #187).
+ *
+ *   key => [element: the card's id on watchtower/index.php,
+ *           module:  its key in includes/module-colors.php (the card's colour on the settings screen)]
+ *
+ * ADDING A CARD: add it here, in the place it should appear by default. Every
+ * install that has saved its own order gets it automatically, in that place
+ * relative to the other cards it has not ordered (includes/display_order.php),
+ * and the Cards settings list shows it with no further change. The dashboard
+ * still needs the card's markup and its render function - see the developer
+ * guide, "Adding a card".
+ */
+function wtCardRegistry(): array
+{
+    return [
+        'morning_checks' => ['element' => 'wtMorningChecks', 'module' => 'morning-checks'],
+        'tickets'        => ['element' => 'wtTickets',       'module' => 'tickets'],
+        'changes'        => ['element' => 'wtChanges',       'module' => 'changes'],
+        'calendar'       => ['element' => 'wtCalendar',      'module' => 'calendar'],
+        'service_status' => ['element' => 'wtServiceStatus', 'module' => 'service-status'],
+        'contracts'      => ['element' => 'wtContracts',     'module' => 'contracts'],
+        'software'       => ['element' => 'wtSoftware',      'module' => 'software'],
+        'domains'        => ['element' => 'wtDomains',       'module' => 'domains'],
+        'knowledge'      => ['element' => 'wtKnowledge',     'module' => 'knowledge'],
+        'assets'         => ['element' => 'wtAssets',        'module' => 'assets'],
+        'tasks'          => ['element' => 'wtTasks',         'module' => 'tasks'],
+        'projects'       => ['element' => 'wtProjects',      'module' => 'projects'],
+        'workflows'      => ['element' => 'wtWorkflows',     'module' => 'workflow'],
+    ];
+}
+
+/** Every card key, in the default order. */
 function wtCardKeys(): array
 {
-    return ['morning_checks', 'tickets', 'changes', 'calendar', 'service_status',
-            'contracts', 'software', 'domains', 'knowledge', 'assets', 'tasks', 'projects', 'workflows'];
+    return array_keys(wtCardRegistry());
+}
+
+/**
+ * The install's saved card order (system_settings.watchtower_card_order), as
+ * stored - not yet merged. Empty when nobody has ordered the cards.
+ */
+function wtCardOrderSaved(PDO $conn): array
+{
+    try {
+        $v = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'watchtower_card_order' LIMIT 1")->fetchColumn();
+        return displayOrderParse($v === false ? '' : $v);
+    } catch (Throwable $e) {
+        return [];
+    }
+}
+
+/**
+ * Every card key in the order Watchtower shows them to everybody (GH #187): the
+ * saved order, with any card it does not mention - a new one, say - in its
+ * default place. Shared by the whole install, like card visibility; each viewer
+ * still sees only the cards available to them, in this order.
+ */
+function wtCardOrder(PDO $conn): array
+{
+    return displayOrderMerge(wtCardOrderSaved($conn), wtCardKeys());
 }
 
 // ─── Whose work am I looking at? (discussion #58) ───────────────────────────

@@ -14,6 +14,18 @@ return [
         'check'    => ['rows', 'watchtower_items', "analyst_id = 0 AND item_key LIKE 'card.%' AND is_visible = 0"],
     ],
     [
+        'id'       => 'watchtower.card_order',
+        'module'   => 'watchtower',
+        'tier'     => 'extra',
+        'category' => 'look',
+        'title'    => 'Order the Watchtower cards',
+        'what'     => 'The order of the cards on Watchtower, the same for everybody - set alongside the tick boxes in Watchtower Settings (GH #187).',
+        'why'      => 'The card your team checks first should be where the eye lands first. A new card added in an update joins in its usual place, so the order you set keeps working.',
+        'done'     => 'The Watchtower cards have been put in an order of your own.',
+        'link'     => 'watchtower/settings/',
+        'check'    => ['setting', 'watchtower_card_order', 'nonempty'],
+    ],
+    [
         'id'       => 'watchtower.ticket_statuses',
         'module'   => 'watchtower',
         'tier'     => 'extra',

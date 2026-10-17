@@ -29,6 +29,24 @@ require __DIR__ . '/_top.php';
     <p>When you choose a new language the page <strong>reloads</strong> so everything re-renders in your selection. Ticket content and other data you've entered are not translated — only the interface labels, menus and messages.</p>
 </div>
 
+<!-- Module order (GH #187) -->
+<div class="help-section" id="module-order">
+    <div class="help-section-header"><?php echo helpSectionNum('module-order'); ?>
+        <div>
+            <h3>Module order</h3>
+            <p>Put the modules you use most first - on the <strong>Display</strong> tab.</p>
+        </div>
+    </div>
+    <p>The order you choose is used in three places: the <strong>waffle menu</strong>, the <strong>home page</strong>, and the <strong>Ctrl+K</strong> "Go to" list - so Ctrl+K then Enter takes you to whichever module you put first. Move a module by dragging its handle (on a phone, press and hold the handle), with its arrow buttons, or by selecting it and pressing <kbd>Alt</kbd> with the up or down arrow.</p>
+    <ul>
+        <li>It is yours alone, and follows you to any browser or device you sign in from.</li>
+        <li>It changes the order only. Which modules you can open is decided by your administrator, exactly as before.</li>
+        <li>A module you cannot open today keeps its place, so if you are given it later it appears where it always would have.</li>
+        <li>A module added in a later update joins the list on its own, in its usual place.</li>
+        <li><strong>Reset</strong> puts the standard order back.</li>
+    </ul>
+</div>
+
 <!-- Money (GH #189) -->
 <div class="help-section" id="money">
     <div class="help-section-header"><?php echo helpSectionNum('money'); ?>

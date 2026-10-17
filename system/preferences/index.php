@@ -895,7 +895,9 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 $moSaved   = analystModuleOrderSaved();
                 $moItems   = [];
                 foreach (analystVisibleModules($modules) as $moKey => $moMod) {
-                    $moItems[] = ['key' => $moKey, 'label' => $moMod['name'], 'icon' => $moMod['icon'], 'iconClass' => 'waffle-module-icon ' . $moKey];
+                    // The waffle stores only the drawing; the <svg> around it is added where it is drawn.
+                    $moIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' . $moMod['icon'] . '</svg>';
+                    $moItems[] = ['key' => $moKey, 'label' => $moMod['name'], 'icon' => $moIcon, 'iconClass' => 'waffle-module-icon ' . $moKey];
                 }
                 $moPayload = [
                     'all'      => displayOrderMerge($moSaved, $moDefault),

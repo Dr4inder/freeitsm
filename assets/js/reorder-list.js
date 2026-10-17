@@ -5,6 +5,8 @@
  *
  *   const rl = ReorderList.mount(containerEl, {
  *       items: [{ key: 'tickets', label: 'Tickets', icon: '<svg…>' }, …],   // current order
+ *       // an item may carry `html` - the row's own markup (escaped by the caller), e.g. a tick box -
+ *       // in place of the plain label; `label` is still its accessible name
  *       onChange: keys => …,      // after every completed move, with the new order
  *       label: 'Module order',    // the list's accessible name
  *   });
@@ -55,6 +57,7 @@
             '.rl-item .rl-icon svg{width:16px;height:16px}',
             '.rl-label{flex:1;min-width:0;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
             '.rl-note{font-size:12px;color:var(--text-dim,#888)}',
+            '.rl-label.rl-html{white-space:normal;overflow:visible}',
             '.rl-btn{border:1px solid var(--border,#ddd);background:var(--surface,#fff);color:var(--text,#333);border-radius:5px;width:32px;height:32px;cursor:pointer;font-size:14px;line-height:1;padding:0}',
             '.rl-btn:hover:not(:disabled){background:var(--surface-2,#f7f8fa)}',
             '.rl-btn:disabled{opacity:.35;cursor:default}',
@@ -90,7 +93,8 @@
                 + '<span class="rl-grip" draggable="true" aria-hidden="true" title="' + esc(T('drag', null, 'Drag to move')) + '">⋮⋮</span>'
                 + '<span class="rl-pos" aria-hidden="true">' + (i + 1) + '</span>'
                 + (it.icon ? '<span class="rl-icon ' + esc(it.iconClass || '') + '" aria-hidden="true">' + it.icon + '</span>' : '')
-                + '<span class="rl-label">' + esc(it.label) + (it.note ? ' <span class="rl-note">' + esc(it.note) + '</span>' : '') + '</span>'
+                + (it.html ? '<div class="rl-label rl-html">' + it.html + '</div>'
+                           : '<span class="rl-label">' + esc(it.label) + (it.note ? ' <span class="rl-note">' + esc(it.note) + '</span>' : '') + '</span>')
                 + '<button type="button" class="rl-btn" data-rl-move="-1" tabindex="-1" aria-label="' + esc(T('up', { name: it.label }, 'Move {name} up')) + '"' + (i === 0 ? ' disabled' : '') + '>↑</button>'
                 + '<button type="button" class="rl-btn" data-rl-move="1" tabindex="-1" aria-label="' + esc(T('down', { name: it.label }, 'Move {name} down')) + '"' + (i === n - 1 ? ' disabled' : '') + '>↓</button>'
                 + '</li>';

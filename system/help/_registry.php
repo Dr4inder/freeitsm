@@ -280,6 +280,7 @@ function getHelpTopics() {
             'sections' => [
                 ['id' => 'overview', 'label' => 'Overview'],
                 ['id' => 'language', 'label' => 'Interface language'],
+                ['id' => 'module-order', 'label' => 'Module order'],
                 ['id' => 'money',    'label' => 'Money'],
                 ['id' => 'toasts',   'label' => 'Toasts'],
                 ['id' => 'bell',     'label' => 'Notification bell'],

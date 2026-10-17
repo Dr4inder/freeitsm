@@ -638,6 +638,24 @@ try {
         </div>
     </div>
 
+    <?php
+    // The install's card order (Watchtower -> Settings -> Cards, GH #187). The
+    // cards are MOVED, not restyled with CSS order, so the keyboard and a screen
+    // reader meet them in the order they are seen. Hidden and unavailable cards
+    // move too, so each keeps its place for when it shows again. This runs
+    // before the page first paints and never again: the five-minute refresh only
+    // fills cards in, it does not redraw the grid.
+    $wtOrderIds = [];
+    try { foreach (wtCardOrder(connectToDatabase()) as $k) $wtOrderIds[] = wtCardRegistry()[$k]['element']; } catch (Throwable $e) { /* default order stands */ }
+    ?>
+    <script>
+    (function () {
+        const grid = document.querySelector('.wt-grid');
+        if (!grid) return;
+        <?php echo json_encode($wtOrderIds); ?>.forEach(id => { const el = document.getElementById(id); if (el) grid.appendChild(el); });
+    })();
+    </script>
+
     <script>
     let refreshTimer = null;
 
@@ -677,13 +695,9 @@ try {
         return /^#[0-9a-fA-F]{3,8}$/.test(v) ? v : null;
     }
 
-    // Card keys map to the element ids the page already uses.
-    const WT_CARD_ELEMENTS = {
-        morning_checks: 'wtMorningChecks', tickets: 'wtTickets', changes: 'wtChanges',
-        calendar: 'wtCalendar', service_status: 'wtServiceStatus', contracts: 'wtContracts',
-        software: 'wtSoftware', domains: 'wtDomains',
-        knowledge: 'wtKnowledge', assets: 'wtAssets', tasks: 'wtTasks', projects: 'wtProjects', workflows: 'wtWorkflows',
-    };
+    // Card keys map to the element ids the page already uses - from the one card
+    // list, wtCardRegistry() (GH #187), so a new card is not a second edit here.
+    const WT_CARD_ELEMENTS = <?php echo json_encode(array_map(fn($c) => $c['element'], wtCardRegistry())); ?>;
 
     function applyCardVisibility(cards) {
         Object.entries(WT_CARD_ELEMENTS).forEach(([key, id]) => {
