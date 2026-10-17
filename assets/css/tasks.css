@@ -480,6 +480,9 @@ body {
 }
 
 .subtask-bar-fill {
+    /* A <span>, so without this it is inline and its width and height are
+       ignored - the green never showed, however many subtasks were done. */
+    display: block;
     height: 100%;
     background: #2e7d32;
     border-radius: 2px;
@@ -2500,14 +2503,34 @@ body {
 }
 .task-card-subtask:hover .task-card-subtask-title { text-decoration: underline; }
 .task-card-subtask.is-done:hover .task-card-subtask-title { text-decoration: line-through underline; }
+/* The tick is a button that completes the subtask (the rest of the row opens it).
+   The box it draws is 11px; the button around it is 20px, so it is easy to hit. */
 .task-card-subtask-tick {
     flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin: -4px -2px -4px -5px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: none;
+    cursor: pointer;
+}
+.task-card-subtask-tick::before {
+    content: '';
     width: 11px;
     height: 11px;
+    box-sizing: border-box;
     border: 1.5px solid var(--text-faint, #bbb);
     border-radius: 3px;
 }
-.task-card-subtask.is-done .task-card-subtask-tick {
+.task-card-subtask-tick:hover::before { border-color: var(--tsk-accent, #7c3aed); }
+.task-card-subtask-tick:focus-visible { outline: 2px solid var(--tsk-accent, #7c3aed); outline-offset: 0; }
+.task-card-subtask-tick:disabled { opacity: .5; cursor: progress; }
+.task-card-subtask.is-done .task-card-subtask-tick::before {
     background: var(--tsk-accent, #7c3aed);
     border-color: var(--tsk-accent, #7c3aed);
 }

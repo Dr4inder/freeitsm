@@ -885,7 +885,10 @@ function boardSubtasksHtml(t) {
         const due = s.due_date ? formatDueBadge(s.due_date) : '';
         return `<div class="task-card-subtask${s.status_is_closed ? ' is-done' : ''}"
                      onclick="event.stopPropagation(); openDetailPanel(${s.id})">
-            <span class="task-card-subtask-tick" aria-hidden="true"></span>
+            <button type="button" class="task-card-subtask-tick" role="checkbox" aria-checked="${taskIsDone(s)}"
+                    aria-label="${escAttr(window.t(taskIsDone(s) ? 'tasks.board.subtask_reopen' : 'tasks.board.subtask_complete', { title: s.title }))}"
+                    title="${escAttr(window.t(taskIsDone(s) ? 'tasks.board.subtask_reopen' : 'tasks.board.subtask_complete', { title: s.title }))}"
+                    onmousedown="event.stopPropagation()" onclick="boardToggleSubtask(event, ${s.id}, ${!taskIsDone(s)})"></button>
             <span class="task-card-subtask-title">${esc(s.title)}</span>
             ${due && !s.status_is_closed ? due : ''}
         </div>`;
@@ -2839,13 +2842,15 @@ function saveDetailTags() {
  * Ticks or unticks a subtask; completing one first runs the checklist check. Reopens the panel
  * afterwards and shows any refusal.
  */
-async function toggleSubtask(id, completing) {
-    // Ticking a subtask done is completing it, and a subtask can carry its own
-    // checklist (discussion #138). Unticking is never gated.
-    if (completing && !(await confirmChecklistCompletionById(id))) {
-        if (selectedTaskId) openDetailPanel(selectedTaskId);   // un-tick the box
-        return;
-    }
+/**
+ * Ticks a subtask done or open on the server - the one call behind the tick box in
+ * the task window and the one on the board. Completing it can be stopped by its
+ * own checklist (discussion #138); unticking never is. Says why when refused.
+ *
+ * @returns {Promise<boolean>} true when the server changed it
+ */
+async function postSubtaskToggle(id, completing) {
+    if (completing && !(await confirmChecklistCompletionById(id))) return false;
     try {
         // The response used to be thrown away — not parsed, not checked. The
         // server could refuse outright and the only visible result was the panel
@@ -2856,16 +2861,37 @@ async function toggleSubtask(id, completing) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id })
         }).then(r => r.json());
-
         if (!data.success) {
             showToast(data.error || window.t('tasks.toast.subtask_toggle_failed'), 'error');
+            return false;
         }
-        if (selectedTaskId) openDetailPanel(selectedTaskId);
+        return true;
     } catch (e) {
         console.error(e);
         showToast(window.t('tasks.toast.subtask_toggle_failed'), 'error');
-        if (selectedTaskId) openDetailPanel(selectedTaskId);
+        return false;
     }
+}
+
+/** The tick box on a subtask row in the task window: change it, then redraw the window (which also un-ticks a refused box). */
+async function toggleSubtask(id, completing) {
+    const changed = await postSubtaskToggle(id, completing);
+    if (selectedTaskId) openDetailPanel(selectedTaskId);
+    // The board behind the window: its count, bar and list follow straight away.
+    if (changed) loadTasks();
+}
+
+/**
+ * The tick box on a subtask listed under its card on the board (Ed: it opened the
+ * subtask instead). Completes or reopens it without opening anything - the click
+ * stops at the box - then redraws the board so the card's count and list follow.
+ */
+async function boardToggleSubtask(event, id, completing) {
+    event.stopPropagation();
+    const box = event.currentTarget;
+    if (box) box.disabled = true;
+    await postSubtaskToggle(id, completing);
+    loadTasks();
 }
 
 // ── Repeats (#94) ───────────────────────────────────────────────────────────
