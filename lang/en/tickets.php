@@ -2031,6 +2031,21 @@ return [
             'access_all_help'  => 'On = this analyst can work in every company (now and any added later). Off = only the companies you tick below.',
         ],
         // Sign-in method set at team level (GH #41) - System -> Teams and System -> Analysts
+        // System -> Teams (GH #186): the counts, and the warning about a team with
+        // members but no departments. These lived in the page's script as English;
+        // an apostrophe in one of them ended a JavaScript string and stopped the
+        // whole page working, in every language.
+        'team_counts' => [
+            'departments' => '{count} department(s)',
+            'analysts'    => '{count} analyst(s)',
+            'check'       => 'Check',
+            'check_title' => 'Members\' ticket folders only count tickets with no department, plus their own',
+            'warn_one'    => '1 team has members but no departments:',
+            'warn_many'   => '{count} teams have members but no departments:',
+            'warn_body'   => 'Someone in a team only gets ticket folders and counts for that team\'s departments, so these members\' folders only count tickets with no department, plus their own. Link departments with the building icon on the team, or take the members out of the team.',
+            'warn_none'   => 'No departments yet? Create them in {link}.',
+            'warn_link'   => 'Tickets → Settings → Departments',
+        ],
         'team_signin' => [
             'follow_team'      => 'Follow team',
             'follow_help'      => 'Follow team takes the sign-in method from this analyst\'s teams, and changes when their teams do.',

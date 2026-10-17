@@ -350,11 +350,14 @@ $translationNamespaces = ['common', 'tickets'];
             const noDept = teamsWithCounts.filter(tm => tm.deptCount === 0 && tm.analystCount > 0);
             const warn = document.getElementById('teamsNoDeptWarning');
             if (noDept.length) {
-                warn.innerHTML = `<strong>${noDept.length === 1 ? '1 team has' : noDept.length + ' teams have'} members but no departments:</strong> `
+                // Every word from the translation files, escaped (GH #186) - wording in
+                // this script once ended a string early and stopped the whole page.
+                const TC = (k, p) => t('tickets.settings.team_counts.' + k, p);
+                const link = '<a href="../../tickets/settings/#departments" style="color:inherit; font-weight:600;">' + escapeHtml(TC('warn_link')) + '</a>';
+                warn.innerHTML = '<strong>' + escapeHtml(noDept.length === 1 ? TC('warn_one') : TC('warn_many', { count: noDept.length })) + '</strong> '
                     + noDept.map(tm => escapeHtml(tm.name)).join(', ') + '. '
-                    + 'Someone in a team only gets ticket folders and counts for that team\'s departments, so these members\' folders only count tickets with no department, plus their own. '
-                    + 'Link departments with the building icon on the team, or take the members out of the team. '
-                    + 'No departments yet? Create them in <a href="../../tickets/settings/#departments" style="color:inherit; font-weight:600;">Tickets → Settings → Departments</a>.';
+                    + escapeHtml(TC('warn_body')) + ' '
+                    + escapeHtml(TC('warn_none', { link: '\u0000' })).replace('\u0000', link);
                 warn.style.display = 'block';
             } else {
                 warn.style.display = 'none';
@@ -364,8 +367,8 @@ $translationNamespaces = ['common', 'tickets'];
                 <tr>
                     <td><strong>${escapeHtml(team.name)}</strong>${team.companyChip}${signinChip(team)}</td>
                     <td>${escapeHtml(team.description || '')}</td>
-                    <td>${team.deptCount} department(s)${team.deptCount === 0 && team.analystCount > 0 ? ' <span class="status-badge" style="background:var(--warning-bg, #fef3c7);color:var(--warning-text, #92400e);margin-left:6px;" title="Members' ticket folders only count tickets with no department, plus their own">Check</span>' : ''}</td>
-                    <td>${team.analystCount} analyst(s)</td>
+                    <td>${escapeHtml(t('tickets.settings.team_counts.departments', { count: team.deptCount }))}${team.deptCount === 0 && team.analystCount > 0 ? ` <span class="status-badge" style="background:var(--warning-bg, #fef3c7);color:var(--warning-text, #92400e);margin-left:6px;" title="${escapeHtml(t('tickets.settings.team_counts.check_title'))}">${escapeHtml(t('tickets.settings.team_counts.check'))}</span>` : ''}</td>
+                    <td>${escapeHtml(t('tickets.settings.team_counts.analysts', { count: team.analystCount }))}</td>
                     <td>${team.display_order}</td>
                     <td><span class="status-badge status-${team.is_active ? 'active' : 'inactive'}">${team.is_active ? 'Active' : 'Inactive'}</span></td>
                     <td>
