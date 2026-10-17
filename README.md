@@ -65,6 +65,7 @@ Then open [http://localhost:8080/setup/](http://localhost:8080/setup/) to verify
 - **HTTPS in Docker**: **System → Docker** makes a certificate for the name your people type (such as `freeitsm.internal`) and walks you through the rest: the DNS record, installing its authority certificate on your PCs, and restarting the container. HTTPS is then served on port 8443. The authority can only vouch for that one name, so trusting it on your PCs does not let it impersonate any other site.
 - **First login**: `admin` / `freeitsm` — change it immediately via the account menu.
 - **Demo data**: System → Demo Data populates every module with realistic sample data, so you can evaluate with the system feeling alive. Every row it creates is marked as demo data, so re-importing a module replaces only its own sample records and leaves anything you have created alone.
+- **Your own module order**: each analyst can put the modules in their own order under **Preferences → Display**; the waffle menu, the home page and Ctrl+K follow it. Administrators can order the Watchtower cards for everybody in **Watchtower → Settings → Cards**.
 - **Any currency**: contracts, licences, domains, leases and projects all offer every currency in use in the world. **System → Currencies** sets up to five favourites at the top of every list, the currency new records start in, and how amounts are written (`£1,234.56`, `1.234,56 €`, `Rp 1.500.000`); each analyst can choose their own format in Preferences. See [Currencies](https://github.com/edmozley/freeitsm/wiki/Currencies).
 
 ## Modules
