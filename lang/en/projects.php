@@ -1984,7 +1984,7 @@ return [
             'title' => 'Building the plan',
             'intro' => 'Phases first, then tasks.',
             'p1'    => 'The Plan tab shows each phase (or stage, or sprint) as a lane of tasks, with its dates, its status and how many of its tasks are done. Tasks that are not in a phase yet sit at the bottom.',
-            'p2'    => 'Add a task by typing it into the box under a lane - pick who does it and when it is due if you like. Drag a task onto another lane to move it. Click a task to open it on the Tasks board, where it is edited like any other task.',
+            'p2'    => 'Add a task by typing it into the box under a lane - pick who does it and when it is due if you like. Drag a task onto another lane to move it, or up and down within its lane to put the lane in order - a line shows where it will land. From the keyboard, focus a task&rsquo;s handle and press the up or down arrow; on a phone, the move button on each task has Up and Down. Click a task to open it on the Tasks board, where it is edited like any other task.',
             'p3'    => 'Press **Start** on a phase when work on it begins and **Finish** when it is done. The cross at the end of a task row takes it out of the project; the task itself is kept.',
             'p4'    => 'Milestones are the dates the project promises - move day, go-live, the board signing off. Press **Milestone** on the Plan tab to add one, in a phase or for the whole project. Each phase shows its milestones as diamonds; tick **Reached** when it happens. A milestone whose date passes without being reached is missed, and turns the project amber.',
             'step1' => 'Press **New** on the portfolio, give the project a name and a goal, and choose how you run it.',
