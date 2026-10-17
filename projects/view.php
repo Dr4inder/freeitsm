@@ -19,6 +19,7 @@ require_once '../includes/functions.php';
 require_once '../includes/i18n.php';
 require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
+require_once '../includes/money.php';
 require_once '../includes/documents_panel.php';   // 3.3.0: documents on projects
 I18n::initFromSession();
 Tz::init();
@@ -41,6 +42,8 @@ $projectId = (int)($_GET['id'] ?? 0);
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/projects.css?v=47">
@@ -720,9 +723,9 @@ $projectId = (int)($_GET['id'] ?? 0);
     <script src="../assets/js/projects.js?v=10"></script>
     <script src="../assets/js/projects-tools.js?v=12"></script>
     <script src="../assets/js/projects-targets.js?v=1"></script>
-    <script src="../assets/js/projects-budget.js?v=6"></script>
-    <script src="../assets/js/projects-control.js?v=1"></script>
-    <script src="../assets/js/projects-intake.js?v=1"></script>
+    <script src="../assets/js/projects-budget.js?v=7"></script>
+    <script src="../assets/js/projects-control.js?v=2"></script>
+    <script src="../assets/js/projects-intake.js?v=2"></script>
     <script src="../assets/js/projects-benefits.js?v=1"></script>
     <script src="../assets/js/projects-gatecheck.js?v=1"></script>
     <script src="../assets/js/projects-insights.js?v=1"></script>

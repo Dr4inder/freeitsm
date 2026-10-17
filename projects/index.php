@@ -14,6 +14,7 @@ require_once '../includes/functions.php';
 require_once '../includes/i18n.php';
 require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
+require_once '../includes/money.php';
 I18n::initFromSession();
 Tz::init();
 
@@ -34,6 +35,8 @@ $translationNamespaces = ['common', 'projects'];
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/projects.css?v=47">
@@ -124,7 +127,7 @@ $translationNamespaces = ['common', 'projects'];
 
     <script src="../assets/js/projects.js?v=10"></script>
     <script src="../assets/js/projects-charts.js?v=9"></script>
-    <script src="../assets/js/projects-portfolio.js?v=13"></script>
+    <script src="../assets/js/projects-portfolio.js?v=14"></script>
     <script src="../assets/js/mobile.js?v=78"></script>
 </body>
 </html>

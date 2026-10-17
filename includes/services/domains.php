@@ -29,6 +29,7 @@
  */
 
 require_once __DIR__ . '/../service_context.php';
+require_once __DIR__ . '/../money.php';   // GH #189: currencies are checked against the registry
 require_once __DIR__ . '/../tenancy.php';
 require_once __DIR__ . '/../encryption.php';
 require_once __DIR__ . '/../domains/settings.php';
@@ -780,9 +781,7 @@ class DomainsService
                 return (string)round((float)$v, 2);
             case 'currency':
                 if ($blank) return null;
-                $c = strtoupper(trim((string)$v));
-                if (!preg_match('/^[A-Z]{3}$/', $c)) throw new ServiceError('validation', 'invalid_field', "'currency' must be a 3-letter code, e.g. GBP.");
-                return $c;
+                return moneyServiceCurrency($v);
             case 'int':
                 if ($blank) return $def['min'];
                 if (!is_numeric($v) || (int)$v < $def['min'] || (int)$v > $def['max']) {

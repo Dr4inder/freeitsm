@@ -33,6 +33,7 @@
 
 require_once __DIR__ . '/tenancy.php';
 require_once __DIR__ . '/service_context.php';
+require_once __DIR__ . '/money.php';   // GH #189: currencies are checked against the registry
 
 const LEASE_PERIODS = ['month', 'quarter', 'year', 'total'];
 
@@ -477,11 +478,7 @@ function leaseScheduleSave(PDO $conn, ActorContext $ctx, array $in): int
     }
     $period = (string)($pick('cost_period') ?: 'month');
     if (!in_array($period, LEASE_PERIODS, true)) throw new ServiceError('validation', 'invalid_field', 'Cost period is month, quarter, year or total.');
-    $currency = leaseText($pick('currency'), 10);
-    if ($currency !== null) {
-        $currency = strtoupper($currency);
-        if (!preg_match('/^[A-Z]{3}$/', $currency)) throw new ServiceError('validation', 'invalid_field', 'Currency is a three-letter code, such as GBP.');
-    }
+    $currency = moneyServiceCurrency($pick('currency'));
 
     // Per-asset dates must still sit the right way round against the new schedule dates.
     if ($cur) {

@@ -25,11 +25,12 @@
     /** True when the viewer may change this project. */
     const canChange = () => !!(ctx.data.permissions && ctx.data.permissions.can_change);
     /** The project's currency - from the budget, else the plan as it stands now, else GBP. */
-    const cur = () => (ctx.data.budget && ctx.data.budget.currency) || (ctx.data.control.now && ctx.data.control.now.currency) || 'GBP';
+    const cur = () => (ctx.data.budget && ctx.data.budget.currency) || (ctx.data.control.now && ctx.data.control.now.currency) || (window.Money ? Money.def() : 'GBP');
 
-    /** An amount formatted in the project's currency for the viewer's locale, or "-" when empty. */
+    /** An amount formatted in the project's currency in the viewer's format (GH #189), or "-" when empty. */
     function money(v) {
         if (v === null || v === undefined || v === '') return '-';
+        if (window.Money) return window.Money.format(v, cur());
         try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur() }).format(v); }
         catch (e) { return cur() + ' ' + Number(v).toFixed(2); }
     }

@@ -14,6 +14,7 @@ require_once '../../includes/functions.php';
 require_once '../../includes/i18n.php';
 require_once '../../includes/theme.php';
 require_once '../../includes/timezone.php';
+require_once '../../includes/money.php';
 require_once '../../includes/ai_settings_panel.php';
 I18n::initFromSession();
 Tz::init();
@@ -47,6 +48,8 @@ $row = function (string $label, string $desc, string $control) {
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <script src="../../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../../assets/css/projects.css?v=47">
@@ -171,7 +174,7 @@ $row = function (string $label, string $desc, string $control) {
             <h2><?php echo $tt('budget_title'); ?></h2>
             <p class="prj-muted"><?php echo $tt('budget_intro'); ?></p>
             <?php
-            $row($tt('currency'), $tt('currency_desc'), '<input type="text" maxlength="3" style="text-transform:uppercase;max-width:120px" data-k="project_currency"><div class="dflt" data-d="project_currency"></div>');
+            $row($tt('currency'), $tt('currency_desc'), '<select data-k="project_currency"></select><div class="dflt" data-d="project_currency"></div>');
             $row($tt('currency_per_project'), $tt('currency_per_project_desc'), '<select data-k="project_currency_per_project"><option value="0">' . htmlspecialchars(t('common.no')) . '</option><option value="1">' . htmlspecialchars(t('common.yes')) . '</option></select><div class="dflt" data-d="project_currency_per_project"></div>');
             // 3.3.0: the forecast.
             $row($tt('cost_basis'), $tt('cost_basis_desc'), '<select data-k="project_cost_basis"><option value="actual">' . $tt('basis_actual') . '</option><option value="forecast">' . $tt('basis_forecast') . '</option></select><div class="dflt" data-d="project_cost_basis"></div>');
@@ -254,7 +257,7 @@ $row = function (string $label, string $desc, string $control) {
     </div>
 
     <script src="../../assets/js/projects.js?v=10"></script>
-    <script src="../../assets/js/projects-settings.js?v=17"></script>
+    <script src="../../assets/js/projects-settings.js?v=18"></script>
     <script src="../../assets/js/ai-settings.js?v=3"></script>
     <script src="../../assets/js/mobile.js?v=78"></script>
 </body>

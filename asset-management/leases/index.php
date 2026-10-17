@@ -10,6 +10,7 @@ require_once '../../includes/functions.php';
 require_once '../../includes/i18n.php';
 require_once '../../includes/theme.php';
 require_once '../../includes/timezone.php';
+require_once '../../includes/money.php';
 require_once '../../includes/tenancy.php';
 I18n::initFromSession();
 Tz::init();
@@ -34,6 +35,8 @@ $translationNamespaces = ['common', 'asset-management'];
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <script src="../../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../../assets/css/mobile.css?v=193">
 </head>
 <body>
@@ -71,7 +74,7 @@ $translationNamespaces = ['common', 'asset-management'];
         'base'  => BASE_URL,
         'multi' => isMultiTenant($conn),
     ]); ?>;</script>
-    <script src="../../assets/js/leases.js?v=1"></script>
+    <script src="../../assets/js/leases.js?v=2"></script>
     <script src="../../assets/js/mobile.js?v=78"></script>
 </body>
 </html>

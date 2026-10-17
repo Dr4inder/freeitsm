@@ -44,6 +44,7 @@ require_once '../includes/functions.php';
 require_once '../includes/i18n.php';
 require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
+require_once '../includes/money.php';
 I18n::initFromSession();
 Tz::init();
 
@@ -82,6 +83,8 @@ if ($showDomains) $translationNamespaces[] = 'domains';
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../assets/js/money.js?v=1"></script>
     <style>
         /* ------------------------------------------------------------------
            Motion tokens. The built-in CSS easings are too soft to read as
@@ -930,7 +933,7 @@ if ($showDomains) $translationNamespaces[] = 'domains';
     <script src="../assets/js/network-mapper-icons.js?v=3"></script>
     <!-- The shared dropdown-options editor, same one the settings page uses. -->
     <script src="options-editor.js?v=3"></script>
-    <script src="../assets/js/domain-links.js?v=1"></script>
+    <script src="../assets/js/domain-links.js?v=2"></script>
     <script src="../assets/js/project-links.js?v=1"></script>
     <script src="object.js?v=12"></script>
     <script src="../assets/js/mobile.js?v=78"></script>

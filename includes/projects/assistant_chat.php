@@ -53,6 +53,7 @@
 
 require_once __DIR__ . '/ai.php';
 require_once __DIR__ . '/settings.php';
+require_once __DIR__ . '/../money.php';
 require_once __DIR__ . '/../ai_provider.php';
 require_once __DIR__ . '/../services/projects.php';
 require_once __DIR__ . '/../services/project_tools.php';
@@ -327,7 +328,7 @@ function projectChatDescribe(string $type, array $a): string
         case 'raid':       return t('projects.assistant.p_raid', ['type' => $a['type'] ?? 'risk', 'title' => $a['title'] ?? '', 'score' => !empty($a['probability']) && !empty($a['impact']) ? ' (' . ((int)$a['probability'] * (int)$a['impact']) . ')' : '']);
         case 'scope_item': return t('projects.assistant.p_scope', ['title' => $a['title'] ?? '', 'moscow' => $a['moscow'] ?? 'should']);
         case 'dependency': return t('projects.assistant.p_dependency', ['task' => $a['task_title'] ?? ('#' . ($a['task_id'] ?? '?')), 'on' => $a['depends_on_title'] ?? ('#' . ($a['depends_on_id'] ?? '?'))]);
-        case 'budget_line':return t('projects.assistant.p_budget', ['title' => $a['title'] ?? '', 'amount' => number_format((float)($a['planned'] ?? 0), 2), 'date' => $d($a['planned_date'] ?? null)]);
+        case 'budget_line':return t('projects.assistant.p_budget', ['title' => $a['title'] ?? '', 'amount' => Money::number((float)($a['planned'] ?? 0)), 'date' => $d($a['planned_date'] ?? null)]);
         case 'benefit':    return t('projects.assistant.p_benefit', ['title' => $a['title'] ?? '']);
         case 'member':     return t('projects.assistant.p_member', ['name' => $a['_label'] ?? ($a['_supplier'] ?? ('#' . ($a['analyst_id'] ?? '?'))), 'role' => $a['role_name'] ?? '-']);
         case 'tools':      return t('projects.assistant.p_tools', ['tools' => implode(', ', array_map(fn($k) => t('projects.tools.' . $k), (array)($a['tools'] ?? [])))]);

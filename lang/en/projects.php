@@ -1708,7 +1708,7 @@ return [
         'budget_title' => 'Budget',
         'budget_intro' => 'The currency projects use, and how the time logged on their tasks is costed.',
         'currency'     => 'Currency for new projects',
-        'currency_desc'=> 'A three-letter code such as GBP, EUR or USD. Each project keeps the currency it was created with, so changing this never relabels an existing budget.',
+        'currency_desc'=> 'Each project keeps the currency it was created with, so changing this never relabels an existing budget. Unset, it is the default in System - Currencies.',
         'currency_per_project' => 'Each project may choose its own currency',
         'currency_per_project_desc' => 'For a project billed in another country. Amounts in different currencies are never added together - reports show them side by side.',
         'labour_mode'  => 'Cost the time logged on project tasks',

@@ -8,6 +8,7 @@ require_once '../includes/functions.php';
 require_once __DIR__ . '/../includes/i18n.php';
 require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
+require_once '../includes/money.php';
 I18n::initFromSession();
 Tz::init();
 
@@ -47,6 +48,8 @@ $peopleBase = analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analys
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../assets/css/record-preview.css?v=1">
     <script src="../assets/js/record-preview.js?v=1"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
@@ -542,7 +545,8 @@ $peopleBase = analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analys
          */
         function renderContract(c) {
             const status = getContractStatus(c);
-            const contractValue = c.contract_value ? (c.currency || '') + ' ' + parseFloat(c.contract_value).toLocaleString('en-GB', {minimumFractionDigits: 2}) : '-';
+            // In the viewer's own format (GH #189); a value with no currency gets no symbol rather than a guessed one.
+            const contractValue = c.contract_value ? (c.currency ? Money.format(c.contract_value, c.currency) : Money.number(c.contract_value)) : '-';
 
             document.getElementById('contractCard').innerHTML = `
                 <div class="contract-card-header">
@@ -1461,7 +1465,7 @@ $peopleBase = analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analys
         </div>
     </div>
     <script>window.CT_SHOW_DOMAINS = <?php echo $ctShowDomains ? 'true' : 'false'; ?>; window.CT_SHOW_PROJECTS = <?php echo $ctShowProjects ? 'true' : 'false'; ?>; window.CT_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
-    <script src="../assets/js/domain-links.js?v=1"></script>
+    <script src="../assets/js/domain-links.js?v=2"></script>
     <script src="../assets/js/project-links.js?v=1"></script>
     <script src="../assets/js/mobile.js?v=78"></script>
 </body>

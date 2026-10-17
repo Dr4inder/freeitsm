@@ -13,6 +13,7 @@ require_once '../../includes/functions.php';
 require_once '../../includes/i18n.php';
 require_once '../../includes/theme.php';
 require_once '../../includes/timezone.php';
+require_once '../../includes/money.php';
 I18n::initFromSession();
 Tz::init();
 
@@ -39,15 +40,17 @@ $dtSearchPlaceholder = t('domains.table.search');
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <script src="../../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../../assets/js/money.js?v=1"></script>
 </head>
 <body data-mobile-module="domains" data-mobile-page="domains-table">
     <?php include '../includes/header.php'; ?>
     <div class="dt-page">
         <?php include '../../includes/data-table-skeleton.php'; ?>
     </div>
-    <script src="../../assets/js/domains.js?v=1"></script>
+    <script src="../../assets/js/domains.js?v=2"></script>
     <script src="../../assets/js/data-table.js?v=6"></script>
-    <script src="../../assets/js/domains-table.js?v=1"></script>
+    <script src="../../assets/js/domains-table.js?v=2"></script>
     <script src="../../assets/js/mobile.js?v=78"></script>
 </body>
 </html>

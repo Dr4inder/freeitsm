@@ -1992,7 +1992,7 @@ class ProjectToolsService
         $p = self::changeable($conn, $ctx, $projectId);
         if (projectSetting($conn, 'project_currency_per_project') !== '1') throw new ServiceError('forbidden', 'forbidden', 'Every project uses the install\'s currency (Projects - Settings - Budget).');
         $code = strtoupper(trim($code));
-        if (!projectValidCurrency($code)) throw new ServiceError('validation', 'invalid_field', 'Enter a three-letter currency code, like GBP, EUR or USD.');
+        if (!projectValidCurrency($code)) throw new ServiceError('validation', 'invalid_field', "'$code' is not a currency FreeITSM recognises. Use a three-letter ISO 4217 code, such as GBP, EUR or USD.");
         $old = projectCurrencyOf($conn, $p);
         if ($old === $code) return;
         $conn->prepare("UPDATE projects SET currency = ?, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$code, $projectId]);

@@ -25,6 +25,7 @@
  */
 
 require_once __DIR__ . '/../service_context.php';
+require_once __DIR__ . '/../money.php';   // GH #189: currencies are checked against the registry
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 require_once __DIR__ . '/../software_licence_calendar.php';   // renewals -> the calendar (#1551)
 
@@ -189,10 +190,8 @@ class SoftwareService
             }
             $f['cost'] = (string)round((float)$get('cost'), 2);
         }
-        $f['currency'] = trim((string)($get('currency') ?? '')) ?: 'GBP';
-        if (mb_strlen($f['currency']) > 10) {
-            throw new ServiceError('validation', 'invalid_field', "'currency' must be at most 10 characters.");
-        }
+        // A recognised currency (GH #189); blank means the install's default (System -> Currencies).
+        $f['currency'] = moneyServiceCurrency($get('currency')) ?? Money::defaultCurrency();
         $f['vendor_contact'] = ($v = trim((string)($get('vendor_contact') ?? ''))) !== '' ? $v : null;
         $f['notes']  = ($v = trim((string)($get('notes') ?? ''))) !== '' ? $v : null;
         $f['status'] = trim((string)($get('status') ?? '')) ?: 'Active';

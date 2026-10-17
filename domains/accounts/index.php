@@ -86,7 +86,7 @@ $translationNamespaces = ['common', 'domains'];
         </div>
     </div>
 
-    <script src="../../assets/js/domains.js?v=1"></script>
+    <script src="../../assets/js/domains.js?v=2"></script>
     <script>
     (function () {
         'use strict';

@@ -59,6 +59,9 @@
         const L = state.lookups;
         const methodSel = document.querySelector('[data-k="project_default_method"]');
         if (methodSel) methodSel.innerHTML = L.methodologies.map(m => '<option value="' + esc(m.key) + '">' + esc(m.label) + '</option>').join('');
+        // Every currency, favourites first (GH #189) - filled before its value is set below.
+        const curSel = document.querySelector('[data-k="project_currency"]');
+        if (curSel && window.Money) curSel.innerHTML = Money.optionsHtml(state.settings.project_currency);
         document.querySelectorAll('[data-k]').forEach(el => {
             const v = state.settings[el.dataset.k];
             if (el.classList.contains('prj-days')) {
@@ -207,9 +210,9 @@
     function renderRates() {
         const box = document.getElementById('rateList');
         if (!box) return;
-        const cur = state.settings.project_currency || 'GBP';
-        /** An amount in the install's currency for the viewer's locale. */
-        const money = v => { try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(v); } catch (e) { return cur + ' ' + v; } };
+        const cur = state.settings.project_currency || (window.Money ? Money.def() : 'GBP');
+        /** An amount in the install's currency, in the viewer's format (GH #189). */
+        const money = v => { if (window.Money) return Money.format(v, cur); try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(v); } catch (e) { return cur + ' ' + v; } };
         if (!state.rates.length) { box.innerHTML = '<p class="prj-muted">' + esc(T('settings.no_rates')) + '</p>'; return; }
         box.innerHTML = '<table class="prj-budget-table"><tbody>' + state.rates.map(r =>
             '<tr><td>' + esc(r.scope === 'default' ? T('settings.rate_default') : (r.analyst_name || '#' + r.ref_id)) + '</td>'

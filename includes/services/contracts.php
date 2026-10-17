@@ -23,6 +23,7 @@
  */
 
 require_once __DIR__ . '/../service_context.php';
+require_once __DIR__ . '/../money.php';   // GH #189: currencies are checked against the registry
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 require_once __DIR__ . '/../contract_party.php';   // supplier or customer, and who may see a customer contract (#153)
 require_once __DIR__ . '/../cost_centre_assign.php';   // GH #160: the cost centre it is charged to
@@ -579,14 +580,8 @@ class ContractsService
             }
             $f['contract_value'] = (string)round((float)$get('contract_value'), 2);
         }
-        $f['currency'] = null;
-        if ($get('currency') !== null && trim((string)$get('currency')) !== '') {
-            $cur = strtoupper(trim((string)$get('currency')));
-            if (!preg_match('/^[A-Z]{3}$/', $cur)) {
-                throw new ServiceError('validation', 'invalid_field', "'currency' must be a 3-letter code, e.g. GBP.");
-            }
-            $f['currency'] = $cur;
-        }
+        // Optional; when given, a currency FreeITSM recognises (includes/money.php, GH #189).
+        $f['currency'] = moneyServiceCurrency($get('currency'));
 
         $f['cost_centre']  = ($v = trim((string)$get('cost_centre', ''))) !== '' ? $v : null;
         $f['dms_link']     = ($v = trim((string)$get('dms_link', ''))) !== '' ? $v : null;

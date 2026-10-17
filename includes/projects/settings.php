@@ -15,6 +15,7 @@
  */
 
 require_once __DIR__ . '/methodologies.php';
+require_once __DIR__ . '/../money.php';   // GH #189
 
 if (!defined('PROJECT_SETTINGS_LOADED')) {
     define('PROJECT_SETTINGS_LOADED', true);
@@ -131,7 +132,8 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
             // given), whether a project may choose another, and how labour is
             // costed: hours only, one rate (with a per-project override), or a
             // rate per analyst. Rates themselves live in project_labour_rates.
-            'project_currency'             => ['GBP',   'currency', 'budget'],
+            // Unset, it follows the install's default currency (System -> Currencies, GH #189).
+            'project_currency'             => [Money::defaultCurrency(), 'currency', 'budget'],
             'project_currency_per_project' => ['0',     'bool',     'budget'],
             'project_labour_mode'          => ['hours', 'labour',   'budget'],
             // 3.3.0 - the forecast. Whether the cost tolerance measures what HAS been
@@ -218,9 +220,7 @@ if (!defined('PROJECT_SETTINGS_LOADED')) {
             return $v;
         }
         if ($rule === 'currency') {
-            $v = strtoupper($v);
-            if (!preg_match('/^[A-Z]{3}$/', $v)) throw new InvalidArgumentException('Enter a three-letter currency code, like GBP, EUR or USD.');
-            return $v;
+            return (string)Money::normalise($v);
         }
         if ($rule === 'bool') {
             return in_array($v, ['1', 'true', 'on'], true) ? '1' : '0';

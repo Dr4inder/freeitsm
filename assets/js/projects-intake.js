@@ -19,10 +19,11 @@
 
     /** Posts a proposal action to tools.php for the current project. */
     const call = body => P.api('tools.php', Object.assign({ project_id: ctx.projectId }, body));
-    /** An amount in the project's budget currency (GBP when it has none), or "-" when empty. */
+    /** An amount in the project's budget currency (the install's default when it has none), or "-" when empty. */
     function money(v) {
         if (v === null || v === undefined) return '-';
-        const cur = (ctx.data.budget && ctx.data.budget.currency) || 'GBP';
+        const cur = (ctx.data.budget && ctx.data.budget.currency) || (window.Money ? Money.def() : 'GBP');
+        if (window.Money) return window.Money.format(v, cur);
         try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(v); }
         catch (e) { return cur + ' ' + Number(v).toFixed(2); }
     }
@@ -91,7 +92,7 @@
         $('peCase').value = p.business_case || '';
         $('peCost').value = pr.estimated_cost !== null ? pr.estimated_cost : '';
         $('peBenefit').value = pr.estimated_benefit || '';
-        $('peCostLabel').textContent = T('cost_field', { currency: (ctx.data.budget && ctx.data.budget.currency) || 'GBP' });
+        $('peCostLabel').textContent = T('cost_field', { currency: (ctx.data.budget && ctx.data.budget.currency) || (window.Money ? Money.def() : 'GBP') });
         $('peError').hidden = true;
         P.openModal('prjProposalEditModal');
     }

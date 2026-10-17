@@ -14,6 +14,7 @@ require_once '../includes/functions.php';
 require_once '../includes/i18n.php';
 require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
+require_once '../includes/money.php';
 I18n::initFromSession();
 Tz::init();
 
@@ -34,6 +35,8 @@ $translationNamespaces = ['common', 'domains'];
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/domains.css?v=7">
@@ -201,7 +204,7 @@ $translationNamespaces = ['common', 'domains'];
         </div>
     </div>
 
-    <script src="../assets/js/domains.js?v=1"></script>
+    <script src="../assets/js/domains.js?v=2"></script>
     <script src="../assets/js/domains-register.js?v=3"></script>
     <script src="../assets/js/mobile.js?v=78"></script>
 </body>

@@ -77,6 +77,22 @@
         }
     }
 
+    /**
+     * An amount with NO currency (a contract value nobody gave a currency):
+     * the viewer's separators, two decimals, no symbol - never a guessed one.
+     *
+     * @param {number|string|null} amount
+     */
+    function number(amount) {
+        if (amount === null || amount === undefined || amount === '' || isNaN(Number(amount))) return '';
+        const f = String(M.all || 'comma_dot').split(':');
+        const s = M.sep[f[0]] || [',', '.', 'three'];
+        const dp = f[2] === '0' ? 0 : 2;
+        const v = Number(amount), abs = round(Math.abs(v), dp);
+        const parts = abs.toFixed(dp).split('.');
+        return (v < 0 && abs !== 0 ? '-' : '') + group(parts[0], s[0], s[2]) + (parts[1] ? s[1] + parts[1] : '');
+    }
+
     let names = null;
     /** The currency's name in the viewer's language (the browser knows them all), else the English one. */
     function name(code) {
@@ -169,7 +185,7 @@
     }
 
     window.Money = {
-        format, name, isCode, info, formatFor, optionsHtml, fill: fillSelect, current,
+        format, number, name, isCode, info, formatFor, optionsHtml, fill: fillSelect, current,
         formatPickerHtml, readPicker,
         def: () => M.def,
         favourites: () => (M.fav || []).slice(),

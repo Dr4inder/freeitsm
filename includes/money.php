@@ -324,6 +324,24 @@ class Money {
     }
 
     /**
+     * An amount with NO currency: the viewer's separators, two decimals, no
+     * symbol - never a guessed one. money.js number() is the twin.
+     *
+     * @param mixed $amount  a number or numeric string; null or '' gives ''
+     */
+    public static function number($amount): string {
+        if ($amount === null || $amount === '' || !is_numeric($amount)) return '';
+        self::init();
+        $f  = explode(':', self::$userAll ?? self::$sysAll ?? self::FORMAT_DEFAULT);
+        $dp = $f[2] === '0' ? 0 : 2;
+        $v  = (float)$amount;
+        $s  = number_format(abs(round($v, $dp)), $dp, '.', '');
+        $parts = explode('.', $s);
+        [$thou, $mark, $grouping] = self::SEPARATORS[$f[0]];
+        return ($v < 0 && (float)$s !== 0.0 ? '-' : '') . self::group($parts[0], $thou, $grouping) . (isset($parts[1]) ? $mark . $parts[1] : '');
+    }
+
+    /**
      * Insert the thousands separator into a string of digits.
      *
      * @param string $int       the whole-number digits, no sign
@@ -375,5 +393,21 @@ class Money {
     public static function scriptTag(): string {
         $flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE;
         return '<script>window.MONEY = ' . json_encode(self::jsPayload(), $flags) . ';</script>';
+    }
+}
+
+/**
+ * Money::normalise() for the service layer: the same check, thrown as the
+ * ServiceError every module's API already turns into a 400. One function so a
+ * contract, a licence, a domain and a lease refuse a bad code in the same words.
+ * Null for blank - each caller decides what blank means (none, or the default).
+ *
+ * @param mixed $raw  the currency as sent by a form, an import or the REST API
+ */
+function moneyServiceCurrency($raw): ?string {
+    try {
+        return Money::normalise($raw);
+    } catch (InvalidArgumentException $e) {
+        throw new ServiceError('validation', 'invalid_field', $e->getMessage());
     }
 }

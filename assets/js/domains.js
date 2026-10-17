@@ -128,9 +128,11 @@
             + (f.weight ? '<span class="pts">−' + esc(f.weight) + '</span>' : '') + '</div>';
     }
 
-    /** Formats an amount in a currency (GBP when none is given); blank for no amount. */
+    /** Formats an amount in a currency (the install's default when none is given); blank for no amount. */
     function money(v, cur) {
         if (v === null || v === undefined || v === '') return '';
+        // System -> Currencies and the viewer's own format (GH #189), on pages that load money.js.
+        if (window.Money) return window.Money.format(v, cur);
         try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur || 'GBP' }).format(v); }
         catch (e) { return (cur ? cur + ' ' : '') + Number(v).toFixed(2); }
     }

@@ -269,7 +269,7 @@
         if (!bud.length) bbox.innerHTML = '<p class="prj-muted">' + esc(T('portfolio.no_budgets')) + '</p>';
         curs.forEach(cur => {
             /** An amount in this chart's currency, whole units, for the viewer's locale. */
-            const money = v => { try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(v); } catch (e) { return cur + ' ' + Math.round(v); } };
+            const money = v => { if (window.Money) return Money.format(v, cur, Money.formatFor(cur).replace(/:[^:]*$/, ':0')); try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(v); } catch (e) { return cur + ' ' + Math.round(v); } };
             const host = document.createElement('div');
             if (curs.length > 1) { const h = document.createElement('h4'); h.className = 'prj-pc-cur'; h.textContent = cur; bbox.appendChild(h); }
             bbox.appendChild(host);

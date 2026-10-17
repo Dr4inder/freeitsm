@@ -3769,7 +3769,7 @@ return array (
         array (
           'type' => 'string',
           'nullable' => true,
-          'description' => '3-letter code.',
+          'description' => 'An ISO 4217 code such as GBP, EUR or IDR. Any currency in use is accepted; anything else is refused.',
           'example' => 'GBP',
         ),
       ),

@@ -65,6 +65,8 @@
      * Formats an amount in a currency (GBP when none is given), falling back to plain digits for an unknown code.
      */
     function money(amount, cur) {
+        // System -> Currencies and the viewer's own format (GH #189), on pages that load money.js.
+        if (window.Money) return window.Money.format(amount, cur);
         try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur || 'GBP' }).format(amount); }
         catch (e) { return (cur ? cur + ' ' : '') + Number(amount).toFixed(2); }
     }

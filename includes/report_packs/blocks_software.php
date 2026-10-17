@@ -125,7 +125,7 @@ function rpSoftwareLicences(PDO $conn, int $analystId, array $o, array $range, $
             'type'     => (string)$r['licence_type'],
             'quantity' => $r['quantity'] !== null ? (string)(int)$r['quantity'] : '',
             'renewal'  => $r['renewal_date'] ? rpFmtDate(substr((string)$r['renewal_date'], 0, 10)) : '',
-            'cost'     => $r['cost'] !== null ? trim(($r['currency'] ?? '') . ' ' . number_format((float)$r['cost'], 2)) : '',
+            'cost'     => $r['cost'] !== null ? Money::format($r['cost'], $r['currency'] ?: null) : '',   // GH #189
             'status'   => (string)$r['status'],
         ];
     }

@@ -29,6 +29,7 @@
  */
 
 require_once __DIR__ . '/criteria.php';
+require_once __DIR__ . '/../money.php';   // GH #189: licence costs in the reader's format
 require_once __DIR__ . '/blocks_tickets.php';
 require_once __DIR__ . '/blocks_status.php';
 require_once __DIR__ . '/blocks_software.php';

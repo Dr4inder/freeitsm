@@ -8,6 +8,7 @@ require_once '../includes/functions.php';
 require_once __DIR__ . '/../includes/i18n.php';
 require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
+require_once '../includes/money.php';
 I18n::initFromSession();
 Tz::init();
 
@@ -29,6 +30,8 @@ $contract_id = $_GET['id'] ?? null;
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <script src="../assets/js/tinymce/tinymce.min.js"></script>
@@ -510,28 +513,6 @@ $contract_id = $_GET['id'] ?? null;
         const TICKETS_API = '../api/tickets/';
         let contractId = <?php echo json_encode($contract_id); ?>;
 
-        const currencies = [
-            { code: 'GBP', name: 'British Pound (GBP)' },
-            { code: 'USD', name: 'US Dollar (USD)' },
-            { code: 'EUR', name: 'Euro (EUR)' },
-            { code: 'AUD', name: 'Australian Dollar (AUD)' },
-            { code: 'CAD', name: 'Canadian Dollar (CAD)' },
-            { code: 'CHF', name: 'Swiss Franc (CHF)' },
-            { code: 'CNY', name: 'Chinese Yuan (CNY)' },
-            { code: 'DKK', name: 'Danish Krone (DKK)' },
-            { code: 'HKD', name: 'Hong Kong Dollar (HKD)' },
-            { code: 'INR', name: 'Indian Rupee (INR)' },
-            { code: 'JPY', name: 'Japanese Yen (JPY)' },
-            { code: 'KRW', name: 'South Korean Won (KRW)' },
-            { code: 'MXN', name: 'Mexican Peso (MXN)' },
-            { code: 'NOK', name: 'Norwegian Krone (NOK)' },
-            { code: 'NZD', name: 'New Zealand Dollar (NZD)' },
-            { code: 'PLN', name: 'Polish Zloty (PLN)' },
-            { code: 'SEK', name: 'Swedish Krona (SEK)' },
-            { code: 'SGD', name: 'Singapore Dollar (SGD)' },
-            { code: 'ZAR', name: 'South African Rand (ZAR)' }
-        ];
-
         let termTabs = [];
         let termEditorIds = [];
 
@@ -571,10 +552,17 @@ $contract_id = $_GET['id'] ?? null;
             } catch (error) { console.error('Error loading stats:', error); }
         }
 
-        function populateCurrencies() {
-            const select = document.getElementById('currency');
-            select.innerHTML = '<option value="">-- ' + escapeHtml(window.t('contracts.edit.none')) + ' --</option>' +
-                currencies.map(c => `<option value="${c.code}">${c.name}</option>`).join('');
+        /**
+         * Every current currency, favourites first (System -> Currencies, GH #189).
+         * A new contract starts in the install's default; "None" stays for the
+         * contracts that never had one.
+         *
+         * @param {string} [selected]  the stored code; omitted on a new contract
+         */
+        function populateCurrencies(selected) {
+            Money.fill(document.getElementById('currency'),
+                selected !== undefined ? selected : (contractId ? '' : Money.def()),
+                { blank: '-- ' + window.t('contracts.edit.none') + ' --' });
         }
 
         async function loadSuppliers() {
@@ -756,7 +744,7 @@ $contract_id = $_GET['id'] ?? null;
                     document.getElementById('noticePeriod').value = c.notice_period_days || '';
                     document.getElementById('noticeDate').value = c.notice_date || '';
                     document.getElementById('contractValue').value = c.contract_value || '';
-                    document.getElementById('currency').value = c.currency || '';
+                    populateCurrencies(c.currency || '');
                     document.getElementById('paymentScheduleId').value = c.payment_schedule_id || '';
                     contractCostCentreId = c.cost_centre_id || null;
                     // Typed in before 3.5.0 and matching no cost centre code: shown, so it

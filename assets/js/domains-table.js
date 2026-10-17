@@ -46,7 +46,7 @@
         { key: 'dns_provider', label: T('field.dns_provider'), type: 'string', defaultVisible: false, defaultOrder: 18, display: r => r.dns_provider || '', editable: { kind: 'text' } },
         { key: 'hosting_provider', label: T('field.hosting_provider'), type: 'string', defaultVisible: false, defaultOrder: 19, display: r => r.hosting_provider || '', editable: { kind: 'text' } },
         { key: 'cost', label: T('field.cost'), type: 'number', defaultVisible: false, defaultOrder: 20, value: r => r.cost === null ? -1 : Number(r.cost), display: r => r.cost === null ? '' : String(r.cost), editable: { kind: 'text' } },
-        { key: 'currency', label: T('field.currency'), type: 'string', defaultVisible: false, defaultOrder: 21, display: r => r.currency || '', editable: { kind: 'text' } },
+        { key: 'currency', label: T('field.currency'), type: 'string', defaultVisible: false, defaultOrder: 21, display: r => r.currency || '', editable: { kind: 'lookup', listKey: 'currencies', valueKey: 'id', labelKey: 'id', allowNull: true, nullLabel: '—' } },
         { key: 'cost_centre', label: T('field.cost_centre'), type: 'string', defaultVisible: false, defaultOrder: 22, display: r => r.cost_centre || '', editable: { kind: 'text' } },
         { key: 'lookalike_count', label: T('tab.lookalikes'), type: 'number', defaultVisible: false, defaultOrder: 23, display: r => r.lookalike_count ? String(r.lookalike_count) : '' },
         { key: 'last_check_datetime', label: T('field.last_check'), type: 'date', defaultVisible: false, defaultOrder: 24, value: r => r.last_check_datetime || '', display: r => r.last_check_datetime ? fmtDate(r.last_check_datetime) : '' },
@@ -73,6 +73,8 @@
                 suppliers: lk.suppliers || [],
                 purposes: (lk.purposes || []).map(p => ({ id: p, name: purpose(p) })),
                 renewal_modes: (lk.renewal_modes || []).map(m => ({ id: m, name: renewal(m) })),
+                // Favourites first, then every other current currency (GH #189).
+                currencies: (window.Money ? Money.favourites().concat(Money.current().filter(c => !Money.favourites().includes(c))) : []).map(c => ({ id: c })),
             };
             return d.domains || [];
         },

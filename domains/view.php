@@ -13,6 +13,7 @@ require_once '../includes/functions.php';
 require_once '../includes/i18n.php';
 require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
+require_once '../includes/money.php';
 require_once '../includes/tenancy.php';
 I18n::initFromSession();
 Tz::init();
@@ -47,6 +48,8 @@ $translationNamespaces = ['common', 'domains'];
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
     <script src="../assets/js/i18n.js?v=3"></script>
+    <?php echo Money::scriptTag(); ?>
+    <script src="../assets/js/money.js?v=1"></script>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
     <link rel="stylesheet" href="../assets/css/domains.css?v=7">
@@ -145,7 +148,7 @@ $translationNamespaces = ['common', 'domains'];
 
                     <div class="dom-section-title"><?php echo htmlspecialchars(t('domains.edit.s_money')); ?></div>
                     <div class="form-group"><label for="eCost"><?php echo htmlspecialchars(t('domains.field.cost')); ?></label><input type="number" step="0.01" min="0" id="eCost" data-f="cost"></div>
-                    <div class="form-group"><label for="eCur"><?php echo htmlspecialchars(t('domains.field.currency')); ?></label><input type="text" id="eCur" data-f="currency" maxlength="3" placeholder="GBP"></div>
+                    <div class="form-group"><label for="eCur"><?php echo htmlspecialchars(t('domains.field.currency')); ?></label><select id="eCur" data-f="currency"></select></div>
                     <div class="form-group"><label for="eYears"><?php echo htmlspecialchars(t('domains.field.billing_years')); ?></label><input type="number" min="1" max="10" id="eYears" data-f="billing_years"></div>
                     <div class="form-group"><label for="eCc"><?php echo htmlspecialchars(t('domains.field.cost_centre')); ?></label><input type="text" id="eCc" data-f="cost_centre"></div>
                     <div class="form-group full"><label for="eContract"><?php echo htmlspecialchars(t('domains.field.contract')); ?></label><select id="eContract" data-f="contract_id"></select></div>
@@ -186,8 +189,8 @@ $translationNamespaces = ['common', 'domains'];
     window.DOM_PEOPLE = <?php echo json_encode(analystCanAccessModule($conn, (int)$_SESSION['analyst_id'], 'people') ? BASE_URL . 'people/' : null); ?>;
     // Supplier and contact pages in People (#162) also need Contracts, which owns those records.
     window.DOM_PEOPLE_SUPPLIERS = <?php echo json_encode(analystCanAccessModule($conn, (int)$_SESSION['analyst_id'], 'people') && analystCanAccessModule($conn, (int)$_SESSION['analyst_id'], 'contracts')); ?>;</script>
-    <script src="../assets/js/domains.js?v=1"></script>
-    <script src="../assets/js/domains-view.js?v=7"></script>
+    <script src="../assets/js/domains.js?v=2"></script>
+    <script src="../assets/js/domains-view.js?v=8"></script>
     <?php endif; ?>
     <script src="../assets/js/mobile.js?v=78"></script>
 </body>

@@ -67,7 +67,7 @@ function projectBudgetReady(PDO $conn): bool
 /** The install's currency (Projects -> Settings -> Budget). */
 function projectInstallCurrency(PDO $conn): string
 {
-    return projectSetting($conn, 'project_currency') ?: 'GBP';
+    return projectSetting($conn, 'project_currency') ?: Money::defaultCurrency();
 }
 
 /**
@@ -547,11 +547,11 @@ function projectMoney($v): ?float
 }
 
 /**
- * ISO 4217 code check (three letters).
+ * Whether a code is a currency FreeITSM recognises (includes/money.php, GH #189).
  *
  * @param string $c  the currency code to check, e.g. 'GBP' (must already be upper case)
  */
 function projectValidCurrency(string $c): bool
 {
-    return (bool)preg_match('/^[A-Z]{3}$/', $c);
+    return Money::isCode($c);
 }

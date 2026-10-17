@@ -31,11 +31,12 @@
     /** Adds n days to a YYYY-MM-DD date and returns the new YYYY-MM-DD. */
     function addDays(ymd, n) { var x = new Date(ymd + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); }
     /**
-     * Formats an amount in the given currency for the page language, or as a plain two-decimal number when
-     * there is no valid currency.
+     * Formats an amount in the given currency, in the viewer's format (System -> Currencies, GH #189), or as
+     * a plain number when the schedule has no currency - never a guessed symbol.
      */
     function money(v, cur) {
         if (v === null || v === undefined || v === '') return '';
+        if (window.Money) return cur ? esc(window.Money.format(v, cur)) : esc(window.Money.number(v));
         try { if (cur) return new Intl.NumberFormat(document.documentElement.lang || 'en', { style: 'currency', currency: cur }).format(v); } catch (e) {}
         return Number(v).toLocaleString(document.documentElement.lang || 'en', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + (cur ? ' ' + esc(cur) : '');
     }
@@ -167,7 +168,8 @@
             + field(t('ends'), '<input type="date" name="end_date" value="' + esc(s ? s.end_date || '' : '') + '">')
             + field(t('f_cost'), '<input type="text" inputmode="decimal" name="cost" value="' + esc(s && s.cost !== null ? s.cost : '') + '">')
             + field(t('f_period'), '<select name="cost_period">' + opts(periods, s ? s.cost_period : 'month') + '</select>')
-            + field(t('f_currency'), '<input type="text" name="currency" maxlength="3" style="text-transform:uppercase" value="' + esc(s ? s.currency || '' : '') + '" placeholder="GBP">')
+            // Every currency, favourites first; a new schedule starts in the install's default (GH #189).
+            + field(t('f_currency'), '<select name="currency">' + Money.optionsHtml(s ? s.currency || '' : Money.def(), { blank: '—' }) + '</select>')
             + field(t('f_order_number'), '<input type="text" name="order_number" maxlength="100" value="' + esc(s ? s.order_number || '' : '') + '">')
             + '</div>'
             + (s && s.assets && s.assets.length ? '<p class="ls-note">' + esc(t('schedule_dates_note')) + '</p>' : '')

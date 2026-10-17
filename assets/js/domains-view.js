@@ -560,6 +560,9 @@
         if (D.contract_id && !contracts.some(c => +c.id === D.contract_id)) contracts.unshift({ id: D.contract_id, name: T('field.contract_hidden') });
         F('eContract', contracts, { blank: '—' });
         fillTech();
+        // Every currency, favourites first (GH #189). Filled before the data-f loop sets its value,
+        // and with the domain's own code so a retired or unrecognised one is kept, not changed.
+        Money.fill(document.getElementById('eCur'), D.currency || '', { blank: '—' });
         document.querySelectorAll('#editForm [data-f]').forEach(el => {
             const k = el.dataset.f;
             let v = D[k];

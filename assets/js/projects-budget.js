@@ -18,9 +18,10 @@
     let ctx = null;
     let wired = false;
 
-    /** An amount formatted in the given currency for the viewer's locale, or "-" when empty. */
+    /** An amount formatted in the given currency in the viewer's format (System -> Currencies, GH #189), or "-" when empty. */
     function money(v, cur) {
         if (v === null || v === undefined || v === '') return '-';
+        if (window.Money) return window.Money.format(v, cur);
         try { return new Intl.NumberFormat(undefined, { style: 'currency', currency: cur }).format(v); }
         catch (e) { return cur + ' ' + Number(v).toFixed(2); }
     }
@@ -262,13 +263,32 @@
         catch (e) { P.toast(e.message, 'error'); }
     }
 
-    /** Asks for a new currency code and, after a warning that amounts are relabelled and not converted, changes the project's currency. */
-    async function changeCurrency() {
+    /**
+     * Swaps the Change button for the currency dropdown (favourites first, GH #189) - a list, not a
+     * typed code, so a typo can never relabel a budget.
+     */
+    function pickCurrency() {
+        const box = document.querySelector('#pvBudget .prj-budget-cur');
+        const btn = box && box.querySelector('[data-budget-currency]');
+        if (!btn) return;
+        const sel = document.createElement('select');
+        sel.setAttribute('data-budget-cur-pick', '');
+        sel.setAttribute('aria-label', T('change_currency'));
+        sel.innerHTML = Money.optionsHtml(ctx.data.budget.currency);
+        btn.replaceWith(sel);
+        sel.focus();
+    }
+
+    /**
+     * After a warning that amounts are relabelled and not converted, changes the project's currency.
+     *
+     * @param {string} code  the currency picked
+     */
+    async function changeCurrency(code) {
         const b = ctx.data.budget;
-        const code = (window.prompt(T('currency_prompt', { currency: b.currency }), b.currency) || '').trim().toUpperCase();
         if (!code || code === b.currency) return;
         const ok = await window.showConfirm({ title: T('relabel_title', { currency: code }), message: T('relabel_body', { from: b.currency, to: code }), okLabel: T('relabel_ok'), okClass: 'danger' });
-        if (!ok) return;
+        if (!ok) { await ctx.refresh(); return; }
         try { await call({ action: 'budget_currency', currency: code }); await ctx.refresh(); } catch (e) { P.toast(e.message, 'error'); }
     }
 
@@ -276,9 +296,12 @@
     function wire() {
         if (wired) return;
         wired = true;
+        document.getElementById('pvBudget').addEventListener('change', e => {
+            if (e.target.matches('[data-budget-cur-pick]')) changeCurrency(e.target.value);
+        });
         document.getElementById('pvBudget').addEventListener('click', async e => {
             if (e.target.closest('[data-budget-add]')) { openLine(null); return; }
-            if (e.target.closest('[data-budget-currency]')) { changeCurrency(); return; }
+            if (e.target.closest('[data-budget-currency]')) { pickCurrency(); return; }
             const row = e.target.closest('[data-budget-line]');
             if (row) { openLine(ctx.data.budget.lines.find(l => String(l.id) === row.dataset.budgetLine)); return; }
             if (e.target.closest('[data-rate-add]')) {
