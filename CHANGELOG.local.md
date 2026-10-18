@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2438 | i18n              | Improvement | Gujarati (gu) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2437 | i18n              | Improvement | Hindi (hi) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2436 | i18n              | Improvement | Bahasa Melayu (ms) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2435 | i18n              | Improvement | Ukrainian (uk) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
