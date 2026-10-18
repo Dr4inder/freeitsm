@@ -420,8 +420,8 @@ return [
             'project' => [
                 'health_changed' => 'Status for et projekt, du leder, er ændret',
                 'tolerance_breached' => 'Et projekt, du leder, overskred en tolerance',
-                'stage_due' => 'Et trin i et projekt, du leder, slutter snart',
-                'stage_closed' => 'Et trin i et projekt, du leder, blev lukket',
+                'stage_due' => 'En etape i et projekt, du leder, slutter snart',
+                'stage_closed' => 'En etape i et projekt, du leder, blev lukket',
                 'milestone_due' => 'En milepæl i et projekt, du leder, nærmer sig',
                 'milestone_missed' => 'En milepæl i et projekt, du leder, blev overskredet',
                 'milestone_reached' => 'En milepæl i et projekt, du leder, blev nået',
@@ -468,8 +468,8 @@ return [
             'project' => [
                 'health_changed' => 'Status for et projekt, jeg leder, ændres',
                 'tolerance_breached' => 'Et projekt, jeg leder, overskrider en tids- eller risikotolerance',
-                'stage_due' => 'Et trin i et projekt, jeg leder, slutter om 7 dage og dagen før',
-                'stage_closed' => 'Et trin i et projekt, jeg leder, lukkes',
+                'stage_due' => 'En etape i et projekt, jeg leder, slutter om 7 dage og dagen før',
+                'stage_closed' => 'En etape i et projekt, jeg leder, lukkes',
                 'milestone_due' => 'En milepæl i et projekt, jeg leder, er 7 dage væk og dagen før',
                 'milestone_missed' => 'En milepæl i et projekt, jeg leder, passerer uden at være nået',
                 'milestone_reached' => 'En milepæl i et projekt, jeg leder, markeres som nået',
