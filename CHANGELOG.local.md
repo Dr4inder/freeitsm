@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2421 | Tickets, Assets, Software | Improvement | Discussion #185: a shared action row under the module header puts the create action in one place - the page title on the left, a one-word New button on the right (includes/action_row.php, assets/css/action-row.css); Tickets loses the green plus in the list header, Assets moves its count heading and Add into the row and the Table view gains New, Software's toolbar becomes the row. |
 | 2420 | Tickets           | Fix         | Mailboxes: the Never checked and Not checked for N days warnings no longer blame a scheduled task that does not exist - mail is collected while somebody has the ticket inbox open; new wiki Mail-Collection-Developer-Guide. |
 | 2419 | Tickets           | Fix         | Mailboxes: only one check of a mailbox runs at a time and the open inboxes share one automatic check a minute, so two checks no longer pick up the same email; an email already imported is logged as Already imported with its ticket instead of "success" with no ticket (GH #183). tests/mailbox-check-overlap.php. |
 | 2418 | Tasks             | Fix         | Repeating tasks: setting, stopping and previewing a repeat, and the calendar's projected occurrences, now follow the same company rules as the rest of Tasks. Full write-up with the release. tests/task-recurrence-company-scope.php. |

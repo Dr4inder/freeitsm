@@ -332,6 +332,7 @@ return [
         'assign_tags'        => 'Assign tags',
         'scan'               => 'Scan',
         'add_asset'          => 'Add',
+        'new_asset'          => 'New asset',
     ],
 
     // Asset detail panel (right pane)

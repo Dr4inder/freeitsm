@@ -1481,6 +1481,12 @@ $translationNamespaces = ['common', 'asset-management'];
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
+    <?php /* The heading carries the count (Ed) - "Assets - 633 found" - and
+             since #185 it is the action row's title, beside New.
+             ⚠️ The static label is the FALLBACK: renderAssetsList() replaces
+             the title's whole textContent (#assetCount) once the list arrives. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('asset-management.nav.assets'), [actionRowNew('openNewAssetModal()', t('asset-management.list.new_asset'))], ['title_id' => 'assetCount']); ?>
 
     <div class="main-container assets-container">
         <!-- Assets List -->
@@ -1496,7 +1502,6 @@ $translationNamespaces = ['common', 'asset-management'];
                          renderAssetsList() replaces the whole textContent once
                          the list arrives, and an empty heading until then would
                          read as a page that failed to load. */ ?>
-                <h3 id="assetCount"><?php echo htmlspecialchars(t('asset-management.nav.assets')); ?></h3>
                 <input type="text" class="search-box" id="assetSearch" placeholder="<?php echo htmlspecialchars(t('asset-management.list.search_placeholder')); ?>" oninput="searchAssets()" autocomplete="off">
                 <div class="asset-count-row">
                     <?php /* Adding by hand (#1132), bulk tagging (#935) and
@@ -1507,7 +1512,6 @@ $translationNamespaces = ['common', 'asset-management'];
                              and three underlined words in a row read as a
                              breadcrumb. Outline rather than filled, so they
                              still do not outrank the search. */ ?>
-                    <button type="button" class="btn btn-outline btn-sm" onclick="openNewAssetModal()"><?php echo htmlspecialchars(t('asset-management.list.add_asset')); ?></button>
                     <a class="btn btn-outline btn-sm" href="scanner.php"><?php echo htmlspecialchars(t('asset-management.list.scan')); ?></a>
                     <a class="btn btn-outline btn-sm" href="assign-tags.php"><?php echo htmlspecialchars(t('asset-management.list.assign_tags')); ?></a>
                 </div>
@@ -1872,6 +1876,8 @@ $translationNamespaces = ['common', 'asset-management'];
                 // tolerant — a reader that quietly accepts both spellings is how
                 // the two drifted apart without anyone noticing (see GH #91).
                 var params = new URLSearchParams(window.location.search);
+                // ?new=1: New in the table view's action row lands here (#185).
+                if (params.get('new') === '1') { openNewAssetModal(); return; }
                 var aid = params.get('asset_id') || params.get('asset');
                 if (aid) {
                     var n = parseInt(aid, 10);

@@ -24,6 +24,11 @@ return [
     ],
     // The shared "put these in order" control (assets/js/reorder-list.js, GH #187):
     // module order in Preferences, card order in Watchtower settings.
+    // The action row under every module header (includes/action_row.php, #185).
+    // One word on the button; the tooltip names the thing.
+    'action_row' => [
+        'new' => 'New',
+    ],
     'reorder' => [
         'drag'     => 'Drag to move',
         'up'       => 'Move {name} up',

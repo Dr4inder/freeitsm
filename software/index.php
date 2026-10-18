@@ -467,31 +467,21 @@ $translationNamespaces = ['common', 'software'];
 <body>
     <?php include 'includes/header.php'; ?>
 
+    <?php /* The action row (#185) is what used to be this page's own toolbar:
+             the count reads as part of the heading - "Software inventory -
+             1,500 applications" - and the row draws the dash only once the
+             count is filled. New adds an application by hand (#1549): the
+             inventory agent finds what is installed, nothing installs a cloud
+             platform, so this is the only way Xero or Canva can be recorded -
+             and the only way a licence can be attached to one, since
+             software_licences.app_id is NOT NULL. */
+          require_once '../includes/action_row.php';
+          renderActionRow(t('software.inventory.heading'), [actionRowNew('openAppModal(null)', t('software.inventory.new_app'))], [
+              'count_id' => 'softwareCount',
+              'extra' => '<input type="text" class="search-box" id="softwareSearch" placeholder="'
+                       . htmlspecialchars(t('software.inventory.search')) . '" oninput="searchSoftware()">',
+          ]); ?>
     <div class="main-container software-container">
-        <div class="software-toolbar">
-            <h3>
-                <?php echo htmlspecialchars(t('software.inventory.heading')); ?>
-                <?php /* The count reads as part of the heading — "Software
-                         Inventory — 1,500 applications" — rather than floating at
-                         the far right of the toolbar away from the thing it counts.
-                         The dash is drawn by CSS on :not(:empty), so there is no
-                         dangling separator in the moment before the list loads. */ ?>
-                <span class="software-count" id="softwareCount"></span>
-            </h3>
-            <div class="toolbar-right">
-                <input type="text" class="search-box" id="softwareSearch"
-                       placeholder="<?php echo htmlspecialchars(t('software.inventory.search')); ?>"
-                       oninput="searchSoftware()">
-                <?php /* Manually added applications (#1549). The inventory agent
-                         finds what is installed; nothing installs a cloud
-                         platform, so this is the only way Xero or Canva can be
-                         recorded — and the only way a licence can be attached to
-                         one, since software_licences.app_id is NOT NULL. */ ?>
-                <button type="button" class="sw-add-btn" onclick="openAppModal(null)">
-                    <?php echo htmlspecialchars(t('software.inventory.add_app')); ?>
-                </button>
-            </div>
-        </div>
         <div class="filter-tabs">
             <button class="filter-tab active" data-filter="apps" onclick="switchTab('apps')"><?php echo htmlspecialchars(t('software.inventory.tab_apps')); ?> <span class="tab-count" id="countApps">0</span></button>
             <button class="filter-tab" data-filter="components" onclick="switchTab('components')"><?php echo htmlspecialchars(t('software.inventory.tab_components')); ?> <span class="tab-count" id="countComponents">0</span></button>

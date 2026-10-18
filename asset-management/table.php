@@ -119,6 +119,8 @@ try {
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
+    <?php require_once '../includes/action_row.php';
+          renderActionRow(t('asset-management.nav.assets'), [actionRowNew('./?new=1', t('asset-management.list.new_asset'), true)]); ?>
 
     <div class="dt-page">
         <?php /* Filled in by asset-table.js when the page is opened as
