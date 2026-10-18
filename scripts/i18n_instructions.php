@@ -1,4 +1,6 @@
 <?php
+/* 🔴 COMMAND LINE ONLY - see scripts/.htaccess. Over HTTP this would run for anyone, unauthenticated. */
+if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 /**
  * Generate INSTRUCTIONS.<loc>.md for each locale - the per-locale half of a
  * translator's prompt. The hard rules live in scripts/i18n_BRIEF.md, which
