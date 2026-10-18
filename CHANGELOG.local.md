@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2418 | Tasks             | Fix         | Repeating tasks: setting, stopping and previewing a repeat, and the calendar's projected occurrences, now follow the same company rules as the rest of Tasks. Full write-up with the release. tests/task-recurrence-company-scope.php. |
 
 
 

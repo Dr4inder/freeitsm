@@ -419,9 +419,13 @@ class TaskRecurrence
      * @param string $to  the last date (YYYY-MM-DD) to include
      * @param int $capPerSeries  the most dates to walk per series
      */
-    public static function project(PDO $conn, string $from, string $to, int $capPerSeries = 60): array
+    public static function project(PDO $conn, string $from, string $to, int $capPerSeries = 60, ?int $analystId = null): array
     {
         $out = [];
+        // 🔒 Company scope: a series is drawn only for the companies the analyst
+        // is looking at - the same filter as the task list. Without an analyst
+        // (internal use) every series is projected, as before.
+        [$tenantSql, $tenantParams] = $analystId !== null ? activeTenantReadFilter($conn, $analystId, 't') : ['', []];
         $s = $conn->prepare(
             "SELECT r.*, t.id AS source_task_id, t.title, t.status_id, t.priority_id,
                     t.assigned_analyst_id, t.tenant_id,
@@ -430,9 +434,9 @@ class TaskRecurrence
                JOIN tasks t ON t.id = (
                     SELECT id FROM tasks WHERE recurrence_id = r.id AND parent_task_id IS NULL
                      ORDER BY id DESC LIMIT 1)
-              WHERE r.is_active = 1 AND r.mode = 'schedule' AND r.next_due_date IS NOT NULL"
+              WHERE r.is_active = 1 AND r.mode = 'schedule' AND r.next_due_date IS NOT NULL" . $tenantSql
         );
-        $s->execute();
+        $s->execute($tenantParams);
 
         foreach ($s->fetchAll(PDO::FETCH_ASSOC) as $rule) {
             $due   = (string)$rule['next_due_date'];
