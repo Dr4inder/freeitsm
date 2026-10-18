@@ -50,6 +50,7 @@ return [
         'delete_failed' => 'Sletting mislyktes: {message}',
     ],
     'editor' => [
+        'browser_title' => 'Nettverksdiagram',
         'browser_title_named' => 'FreeITSM — {title}',
         'back' => '← Alle diagrammer',
         'loading' => 'Laster…',

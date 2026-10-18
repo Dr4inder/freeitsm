@@ -1,4 +1,14 @@
 <?php
+/**
+ * FreeITSM — system-wiki strings (nb).
+ *
+ * Keys mirror lang/en/system-wiki.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php nb
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
+ */
 
 return [
     'title' => 'System Wiki',
@@ -41,6 +51,7 @@ return [
         'files_count' => '{n} filer',
     ],
     'search' => [
+        'page_title' => 'Wiki-søk',
         'search_placeholder' => 'Søk i filer, funksjoner, databasetabeller ...',
         'search_btn' => 'Søk',
         'tab_files' => 'Filer',
@@ -56,6 +67,7 @@ return [
         'refs_across_files' => '{refs} referanser i {files} filer',
     ],
     'scan' => [
+        'page_title' => 'Skanneadministrasjon',
         'heading' => 'Administrasjon av skanning',
         'subtitle' => 'Kjør PowerShell-skanneren for å katalogisere kodebasen',
         'run_now' => 'Kjør skanning nå',
@@ -75,6 +87,7 @@ return [
         'error_prefix' => 'Feil: ',
     ],
     'file' => [
+        'page_title' => 'Fildetaljer',
         'loading' => 'Laster fildetaljer ...',
         'no_id' => 'Ingen fil-ID er angitt.',
         'error_prefix' => 'Feil: ',
@@ -107,6 +120,7 @@ return [
         'static' => 'statisk',
     ],
     'function' => [
+        'page_title' => 'Funksjonsdetaljer',
         'loading' => 'Laster funksjonsdetaljer ...',
         'no_id' => 'Ingen funksjons-ID er angitt.',
         'error_prefix' => 'Feil: ',
@@ -121,6 +135,7 @@ return [
         'col_line' => 'Linje',
     ],
     'table' => [
+        'page_title' => 'Tabellreferanser',
         'loading' => 'Laster tabellreferanser ...',
         'no_name' => 'Ingen tabellnavn er angitt.',
         'error_prefix' => 'Feil: ',
@@ -131,6 +146,7 @@ return [
         'no_references' => 'Ingen referanser funnet for denne tabellen.',
     ],
     'tables' => [
+        'page_title' => 'Databasetabeller',
         'heading' => 'Databasetabeller',
         'loading' => 'Laster ...',
         'col_name' => 'Tabellnavn',

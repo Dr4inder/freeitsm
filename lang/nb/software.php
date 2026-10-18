@@ -25,6 +25,7 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Servicedesk - Programvare',
+        'heading' => 'Programvareinventar',
         'search' => 'Søk etter applikasjonsnavn eller utgiver...',
         'tab_apps' => 'Applikasjoner',
         'tab_components' => 'Komponenter',
@@ -35,6 +36,7 @@ return [
         'col_seats' => 'Seter',
         'col_actions' => '',
         'add_app' => 'Legg til applikasjon',
+        'new_app' => 'Ny applikasjon',
         'edit_app' => 'Rediger applikasjon',
         'added_by_hand' => 'Lagt til manuelt',
         'f_name' => 'Navn',
@@ -115,6 +117,7 @@ return [
         'widget_removed' => 'Widget fjernet',
     ],
     'library' => [
+        'page_title' => 'Widgetbibliotek for programvare',
         'back' => 'Dashbord',
         'heading' => 'Widgetbibliotek',
         'search' => 'Søk i widgeter...',
