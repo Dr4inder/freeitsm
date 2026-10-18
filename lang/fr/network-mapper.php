@@ -50,6 +50,7 @@ return [
         'delete_failed' => 'Échec de la suppression : {message}',
     ],
     'editor' => [
+        'browser_title' => 'Diagramme réseau',
         'browser_title_named' => 'FreeITSM — {title}',
         'back' => '← Tous les diagrammes',
         'loading' => 'Chargement…',

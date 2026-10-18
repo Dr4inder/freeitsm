@@ -51,6 +51,7 @@ return [
         'files_count' => '{n} fichiers',
     ],
     'search' => [
+        'page_title' => 'Recherche wiki',
         'search_placeholder' => 'Rechercher des fichiers, des fonctions, des tables de base de données...',
         'search_btn' => 'Rechercher',
         'tab_files' => 'Fichiers',
@@ -66,6 +67,7 @@ return [
         'refs_across_files' => '{refs} références réparties sur {files} fichiers',
     ],
     'scan' => [
+        'page_title' => 'Gestion des analyses',
         'heading' => 'Gestion des analyses',
         'subtitle' => 'Lancez le scanner PowerShell pour cataloguer le code source',
         'run_now' => 'Lancer l\'analyse maintenant',
@@ -85,6 +87,7 @@ return [
         'error_prefix' => 'Erreur :',
     ],
     'file' => [
+        'page_title' => 'Détail du fichier',
         'loading' => 'Chargement des détails du fichier...',
         'no_id' => 'Aucun identifiant de fichier spécifié.',
         'error_prefix' => 'Erreur :',
@@ -117,6 +120,7 @@ return [
         'static' => 'statique',
     ],
     'function' => [
+        'page_title' => 'Détail de la fonction',
         'loading' => 'Chargement des détails de la fonction...',
         'no_id' => 'Aucun identifiant de fonction spécifié.',
         'error_prefix' => 'Erreur :',
@@ -131,6 +135,7 @@ return [
         'col_line' => 'Ligne',
     ],
     'table' => [
+        'page_title' => 'Références de la table',
         'loading' => 'Chargement des références de la table...',
         'no_name' => 'Aucun nom de table spécifié.',
         'error_prefix' => 'Erreur :',
@@ -141,6 +146,7 @@ return [
         'no_references' => 'Aucune référence trouvée pour cette table.',
     ],
     'tables' => [
+        'page_title' => 'Tables de la base de données',
         'heading' => 'Tables de la base de données',
         'loading' => 'Chargement...',
         'col_name' => 'Nom de la table',
