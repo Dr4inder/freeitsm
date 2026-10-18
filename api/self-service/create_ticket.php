@@ -11,6 +11,9 @@ require_once '../../includes/tenancy.php';
 require_once '../../includes/html_sanitise.php';
 require_once '../../includes/ticket_recordings.php';
 require_once '../../includes/uploads.php';   // uploadStoreBytes() — see F1
+require_once '../../includes/service_context.php';
+require_once '../../includes/services/ticket_fields.php';   // custom fields (#179)
+require_once '../../includes/self_service_ticket_types.php';
 
 header('Content-Type: application/json');
 
@@ -105,8 +108,24 @@ try {
         }
     }
 
-    // Generate unique ticket number
-    $ticketNumber = generateTicketNumber($conn, $ticketTenantId);
+    // The ticket type and the custom fields the requester was asked (#179).
+    // ⚠️ RE-CHECKED HERE, like the mailbox and the category: a type is accepted
+    // only if it is one this requester's company offers, and only the fields
+    // marked "Ask the requester" may be answered - a hand-posted key for an
+    // analyst-only field is refused, not quietly stored.
+    $ticketTypeId = null;
+    if (!empty($input['ticket_type_id'])) {
+        $wantedType = (int)$input['ticket_type_id'];
+        if (isset(selfServiceTicketTypes($conn, $ticketTenantId)[$wantedType])) {
+            $ticketTypeId = $wantedType;
+        }
+    }
+    $customDefs = TicketFieldsService::fieldsFor($conn, $ticketTenantId, $ticketTypeId, 'requester');
+    $customValues = TicketFieldsService::validate($conn, $customDefs,
+        is_array($input['custom_fields'] ?? null) ? $input['custom_fields'] : [], true);
+
+    // Generate unique ticket number - per type, where the numbering says so.
+    $ticketNumber = generateTicketNumber($conn, $ticketTenantId, $ticketTypeId);
 
     // Create ticket. The status resolves to the CONFIGURED default rather than the
     // literal name 'Open', which an admin may rename or translate (#79). The
@@ -133,13 +152,13 @@ try {
     }
 
     $ticketSql = "INSERT INTO tickets (
-        ticket_number, subject, status_id, priority_id, category_id,
+        ticket_number, subject, status_id, priority_id, category_id, ticket_type_id,
         user_id, tenant_id, created_datetime, updated_datetime
     ) VALUES (
         ?, ?,
         (SELECT id FROM ticket_statuses   WHERE is_active = 1 ORDER BY is_default DESC, display_order, id LIMIT 1),
         (SELECT id FROM ticket_priorities WHERE name = ? LIMIT 1),
-        ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP()
+        ?, ?, ?, ?, UTC_TIMESTAMP(), UTC_TIMESTAMP()
     )";
 
     $ticketStmt = $conn->prepare($ticketSql);
@@ -148,11 +167,18 @@ try {
         $subject,
         $priority,
         $categoryId,
+        $ticketTypeId,
         $userId,
         $ticketTenantId,
     ]);
 
     $ticketId = $conn->lastInsertId();
+
+    // The answers to the custom fields the requester was asked, already
+    // validated above. Audited like any other change, with no analyst behind it.
+    if ($customValues) {
+        TicketFieldsService::write($conn, new ActorContext(0, null, 'portal'), (int)$ticketId, $customDefs, $customValues);
+    }
 
     // Equipment the user attached to the report (discussion #57).
     //
@@ -325,10 +351,10 @@ try {
  * so the call sites in this file keep reading naturally; the format, the
  * counter and the uniqueness check all live in one place.
  */
-function generateTicketNumber($conn, ?int $tenantId = null) {
+function generateTicketNumber($conn, ?int $tenantId = null, ?int $typeId = null) {
     // ⚠️ THE COMPANY MUST BE PASSED IN. Under per-company numbering the number
     // carries that company's code and draws from its own counter, so numbering
     // before working out whose ticket it is would put every portal ticket on the
     // default company's sequence whatever the portal user's company is.
-    return TicketNumbering::next($conn, null, $tenantId);
+    return TicketNumbering::next($conn, $typeId, $tenantId);
 }

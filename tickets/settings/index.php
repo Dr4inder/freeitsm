@@ -290,6 +290,11 @@ function renderOversizeFields(string $px, bool $withLimits): void
             color: var(--text, #333);
         }
 
+        /* Custom fields dialog (#179): the ticket types a field is on. */
+        .tf-type-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 4px 12px; margin: 6px 0 0 24px; max-height: 180px; overflow-y: auto; }
+        .tf-type-item { font-weight: 400 !important; }
+        .tab-content .action-btn[disabled] { opacity: 0.35; cursor: default; }
+
         /* Settings page uses .action-btn for table buttons */
         .tab-content .action-btn {
             background: none;
@@ -985,6 +990,32 @@ function renderOversizeFields(string $px, bool $withLimits): void
             <div style="margin-top: 22px;">
                 <button class="add-btn" id="mfSave"><?php echo htmlspecialchars(t('common.save')); ?></button>
             </div>
+        </div>
+        <?php endif; ?>
+
+        <?php if (settingsTabVisible($visibleTabs, 'custom-fields')): ?>
+        <!-- Custom fields (#179): the extra details each ticket type asks for. -->
+        <div class="tab-content<?php echo $activeTabId === 'custom-fields' ? ' active' : ''; ?>" id="custom-fields-tab" data-capability="<?php echo Cap::TICKETS_CUSTOM_FIELDS; ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('tickets.settings.headings.custom_fields')); ?></h2>
+                <button class="add-btn" onclick="tfOpen(null)"><?php echo htmlspecialchars(t('common.add')); ?></button>
+            </div>
+            <p style="margin-bottom: 20px; color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.settings.intros.custom_fields')); ?></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th><?php echo htmlspecialchars(t('tickets.settings.custom_fields.col_name')); ?></th>
+                        <th><?php echo htmlspecialchars(t('tickets.settings.custom_fields.col_kind')); ?></th>
+                        <th><?php echo htmlspecialchars(t('tickets.settings.custom_fields.col_types')); ?></th>
+                        <th><?php echo htmlspecialchars(t('tickets.settings.custom_fields.col_required')); ?></th>
+                        <th><?php echo htmlspecialchars(t('tickets.settings.custom_fields.col_portal')); ?></th>
+                        <th><?php echo htmlspecialchars(t('tickets.settings.custom_fields.col_actions')); ?></th>
+                    </tr>
+                </thead>
+                <tbody id="custom-fields-list">
+                    <tr><td colspan="6" style="text-align: center;"><?php echo htmlspecialchars(t('tickets.settings.loading')); ?></td></tr>
+                </tbody>
+            </table>
         </div>
         <?php endif; ?>
 
@@ -2378,6 +2409,81 @@ function renderOversizeFields(string $px, bool $withLimits): void
     <!-- Ticket category add/edit (#1540). Its own dialog rather than the shared
          lookup modal: a category carries a parent, a ticket type and a portal
          flag, none of which the flat lookup lists have. -->
+    <!-- Custom ticket field add/edit (#179). -->
+    <div class="modal" id="tfModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header" id="tfModalTitle"></div>
+            <form id="tfForm" onsubmit="tfSave(event)">
+                <input type="hidden" id="tfId">
+                <div class="form-group">
+                    <label for="tfLabel"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_name')); ?></label>
+                    <input type="text" id="tfLabel" maxlength="150" required>
+                </div>
+                <div class="form-group">
+                    <label for="tfType"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_kind')); ?></label>
+                    <select id="tfType" onchange="tfKindChanged()">
+                        <?php foreach (['text', 'number', 'date', 'boolean', 'dropdown', 'url', 'email'] as $k): ?>
+                        <option value="<?php echo $k; ?>"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.kinds.' . $k)); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <small id="tfTypeLocked" style="color: var(--text-muted, #666); display: none;"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_kind_locked')); ?></small>
+                </div>
+                <div class="form-group tf-kind tf-kind-text">
+                    <label><input type="checkbox" id="tfMultiline"> <?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_multiline')); ?></label>
+                </div>
+                <div class="form-group tf-kind tf-kind-number" style="display: flex; gap: 16px;">
+                    <div style="flex: 1;">
+                        <label for="tfDecimals"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_decimals')); ?></label>
+                        <input type="number" id="tfDecimals" min="0" max="4" value="0">
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="tfUnit"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_unit')); ?></label>
+                        <input type="text" id="tfUnit" maxlength="20" placeholder="<?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_unit_hint')); ?>">
+                    </div>
+                </div>
+                <div class="form-group tf-kind tf-kind-date">
+                    <label for="tfDateMode"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_date_mode')); ?></label>
+                    <select id="tfDateMode">
+                        <option value="date"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.mode_date')); ?></option>
+                        <option value="datetime"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.mode_datetime')); ?></option>
+                        <option value="time"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.mode_time')); ?></option>
+                    </select>
+                </div>
+                <div class="form-group tf-kind tf-kind-dropdown">
+                    <label for="tfOptions"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_options')); ?></label>
+                    <textarea id="tfOptions" rows="4"></textarea>
+                    <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_options_hint')); ?></small>
+                </div>
+                <div class="form-group">
+                    <label for="tfHelp"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_help')); ?></label>
+                    <input type="text" id="tfHelp" maxlength="500">
+                    <small style="color: var(--text-muted, #666);"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_help_hint')); ?></small>
+                </div>
+                <div class="form-group">
+                    <label><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_types')); ?></label>
+                    <label><input type="radio" name="tfScope" id="tfAllTypes" value="all" onchange="tfScopeChanged()"> <?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_all_types')); ?></label>
+                    <label><input type="radio" name="tfScope" id="tfSomeTypes" value="some" onchange="tfScopeChanged()"> <?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_some_types')); ?></label>
+                    <div id="tfTypeList" class="tf-type-list"></div>
+                </div>
+                <div class="form-group">
+                    <label><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_required')); ?></label>
+                    <label><input type="checkbox" id="tfReqCreate"> <?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_req_create')); ?></label>
+                    <small style="color: var(--text-muted, #666); display: block; margin: 0 0 8px 24px;"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_req_create_hint')); ?></small>
+                    <label><input type="checkbox" id="tfReqClose"> <?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_req_close')); ?></label>
+                    <small style="color: var(--text-muted, #666); display: block; margin: 0 0 0 24px;"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_req_close_hint')); ?></small>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="tfAsk"> <?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_ask')); ?></label>
+                    <small style="color: var(--text-muted, #666); display: block; margin-left: 24px;"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_ask_hint')); ?></small>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn" onclick="document.getElementById('tfModal').classList.remove('active')"><?php echo htmlspecialchars(t('common.cancel')); ?></button>
+                    <button type="submit" class="btn btn-primary"><?php echo htmlspecialchars(t('common.save')); ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="modal" id="tcCategoryModal">
         <div class="modal-content" style="max-width: 560px;">
             <div class="modal-header" id="tcCategoryModalTitle"><?php echo htmlspecialchars(t('tickets.settings.categories.add_category')); ?></div>
@@ -3473,6 +3579,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
             });
             loadTicketTypes();
             loadTicketOrigins();
+            loadCustomFields();
             loadTicketStatuses();
             loadTicketPriorities();
             loadRotaLocations();
@@ -3530,6 +3637,187 @@ function renderOversizeFields(string $px, bool $withLimits): void
         }
 
         // Load ticket types
+        // ===== Custom fields (#179) =========================================
+        // The list on Tickets -> Settings -> Custom fields and its dialog. The
+        // types offered are the ones this company can see (the same list the
+        // New ticket form uses), so a field can never be linked to a type that
+        // no ticket here could ever have.
+        let tfFields = [];
+        let tfTypes = [];
+        async function loadCustomFields() {
+            const tbody = document.getElementById('custom-fields-list');
+            if (!tbody) return;   // tab not shown to this analyst
+            try {
+                const [fRes, tRes] = await Promise.all([
+                    fetch(API_BASE + 'get_ticket_fields_settings.php').then(r => r.json()),
+                    fetch(API_BASE + 'get_ticket_types.php').then(r => r.json())
+                ]);
+                if (!fRes.success) throw new Error(fRes.error);
+                tfFields = fRes.fields || [];
+                tfTypes = (tRes.success ? (tRes.ticket_types || []) : []);
+                if (!fRes.ready) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted,#666);">${escapeHtml(t('tickets.settings.custom_fields.not_ready'))}</td></tr>`;
+                    return;
+                }
+                tfRender();
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger,#c62828);">${escapeHtml(e.message || '')}</td></tr>`;
+            }
+        }
+
+        function tfRender() {
+            const tbody = document.getElementById('custom-fields-list');
+            if (!tfFields.length) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted,#666);">${escapeHtml(t('tickets.settings.custom_fields.none'))}</td></tr>`;
+                return;
+            }
+            const typeName = id => (tfTypes.find(x => +x.id === +id) || {}).name || ('#' + id);
+            tbody.innerHTML = tfFields.map((f, i) => {
+                const types = f.all_types
+                    ? `<em>${escapeHtml(t('tickets.settings.custom_fields.every_type'))}</em>`
+                    : f.type_ids.map(id => escapeHtml(typeName(id))).join(', ');
+                const req = [f.required_on_create ? t('tickets.settings.custom_fields.req_logging') : null,
+                             f.required_on_close ? t('tickets.settings.custom_fields.req_closing') : null].filter(Boolean);
+                const shared = !f.editable && f.scope === 'shared'
+                    ? ` <span class="status-badge status-inactive" title="${escapeHtml(t('tickets.settings.custom_fields.shared_hint'))}">${escapeHtml(t('tickets.settings.custom_fields.shared'))}</span>` : '';
+                const actions = f.editable ? `
+                    <button class="action-btn" onclick="tfMove(${i}, -1)" title="${escapeHtml(t('tickets.settings.custom_fields.move_up'))}" ${i === 0 ? 'disabled' : ''}>&#9650;</button>
+                    <button class="action-btn" onclick="tfMove(${i}, 1)" title="${escapeHtml(t('tickets.settings.custom_fields.move_down'))}" ${i === tfFields.length - 1 ? 'disabled' : ''}>&#9660;</button>
+                    <button class="action-btn" onclick="tfOpen(${f.id})" title="${escapeHtml(t('common.edit'))}">${TT_EDIT_SVG}</button>
+                    <button class="action-btn delete" onclick="tfRetire(${f.id})" title="${escapeHtml(t('tickets.settings.custom_fields.retire'))}">${TT_DELETE_SVG}</button>` : '';
+                return `<tr>
+                    <td><strong>${escapeHtml(f.label)}</strong>${shared}${f.help_text ? `<br><small style="color:var(--text-muted,#666);">${escapeHtml(f.help_text)}</small>` : ''}
+                        ${f.answered ? `<br><small style="color:var(--text-dim,#888);">${escapeHtml(t('tickets.settings.custom_fields.answered', { n: f.answered }))}</small>` : ''}</td>
+                    <td>${escapeHtml(t('tickets.settings.custom_fields.kinds.' + f.type))}</td>
+                    <td>${types}</td>
+                    <td>${escapeHtml(req.length ? req.join(', ') : t('tickets.settings.custom_fields.req_none'))}</td>
+                    <td>${f.ask_requester ? escapeHtml(t('tickets.settings.custom_fields.asked')) : ''}</td>
+                    <td style="white-space:nowrap;">${actions}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function tfOpen(id) {
+            const f = id ? tfFields.find(x => x.id === id) : null;
+            document.getElementById('tfModalTitle').textContent = t(f ? 'tickets.settings.custom_fields.edit_title' : 'tickets.settings.custom_fields.add_title');
+            document.getElementById('tfId').value = f ? f.id : '';
+            document.getElementById('tfLabel').value = f ? f.label : '';
+            const typeSel = document.getElementById('tfType');
+            typeSel.value = f ? f.type : 'text';
+            // The kind is fixed once tickets have answered it: a number cannot
+            // become text without stranding every answer already given.
+            typeSel.disabled = !!(f && f.answered);
+            document.getElementById('tfTypeLocked').style.display = (f && f.answered) ? '' : 'none';
+            const cfg = (f && f.config) || {};
+            document.getElementById('tfMultiline').checked = !!cfg.multiline;
+            document.getElementById('tfDecimals').value = cfg.decimals != null ? cfg.decimals : 0;
+            document.getElementById('tfUnit').value = cfg.unit || '';
+            document.getElementById('tfDateMode').value = cfg.date_mode || 'date';
+            document.getElementById('tfOptions').value = f ? (f.options || []).join('\n') : '';
+            document.getElementById('tfHelp').value = f ? (f.help_text || '') : '';
+            document.getElementById(!f || f.all_types ? 'tfAllTypes' : 'tfSomeTypes').checked = true;
+            const linked = f ? f.type_ids.map(Number) : [];
+            document.getElementById('tfTypeList').innerHTML = tfTypes.map(tp =>
+                `<label class="tf-type-item"><input type="checkbox" value="${tp.id}" ${linked.includes(+tp.id) ? 'checked' : ''}> ${escapeHtml(tp.name)}</label>`
+            ).join('');
+            document.getElementById('tfReqCreate').checked = !!(f && f.required_on_create);
+            document.getElementById('tfReqClose').checked = !!(f && f.required_on_close);
+            document.getElementById('tfAsk').checked = !!(f && f.ask_requester);
+            tfKindChanged();
+            tfScopeChanged();
+            document.getElementById('tfModal').classList.add('active');
+            document.getElementById('tfLabel').focus();
+        }
+
+        function tfKindChanged() {
+            const kind = document.getElementById('tfType').value;
+            document.querySelectorAll('#tfModal .tf-kind').forEach(el => {
+                el.style.display = el.classList.contains('tf-kind-' + kind) ? '' : 'none';
+            });
+        }
+
+        function tfScopeChanged() {
+            document.getElementById('tfTypeList').style.display = document.getElementById('tfSomeTypes').checked ? '' : 'none';
+        }
+
+        async function tfSave(e) {
+            e.preventDefault();
+            const kind = document.getElementById('tfType').value;
+            const all = document.getElementById('tfAllTypes').checked;
+            const typeIds = [...document.querySelectorAll('#tfTypeList input:checked')].map(i => +i.value);
+            const options = document.getElementById('tfOptions').value.split('\n').map(s => s.trim()).filter(Boolean);
+            if (!all && !typeIds.length) { showToast(t('tickets.settings.custom_fields.need_types'), 'error'); return; }
+            if (kind === 'dropdown' && !options.length) { showToast(t('tickets.settings.custom_fields.need_options'), 'error'); return; }
+            const body = {
+                id: +document.getElementById('tfId').value || 0,
+                label: document.getElementById('tfLabel').value,
+                field_type: kind,
+                config: {
+                    multiline: document.getElementById('tfMultiline').checked,
+                    decimals: document.getElementById('tfDecimals').value,
+                    unit: document.getElementById('tfUnit').value,
+                    date_mode: document.getElementById('tfDateMode').value
+                },
+                options,
+                help_text: document.getElementById('tfHelp').value,
+                all_types: all,
+                type_ids: typeIds,
+                required_on_create: document.getElementById('tfReqCreate').checked,
+                required_on_close: document.getElementById('tfReqClose').checked,
+                ask_requester: document.getElementById('tfAsk').checked
+            };
+            try {
+                const res = await fetch(API_BASE + 'save_ticket_field.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+                }).then(r => r.json());
+                if (!res.success) throw new Error(res.error);
+                document.getElementById('tfModal').classList.remove('active');
+                showToast(t('tickets.settings.custom_fields.saved'), 'success');
+                loadCustomFields();
+            } catch (err) {
+                showToast(err.message || 'Error', 'error');
+            }
+        }
+
+        async function tfRetire(id) {
+            const f = tfFields.find(x => x.id === id);
+            if (!f) return;
+            const ok = await showConfirm({
+                title: t('tickets.settings.custom_fields.retire_title'),
+                message: t('tickets.settings.custom_fields.retire_msg', { name: f.label }),
+                okLabel: t('tickets.settings.custom_fields.retire'),
+                okClass: 'danger'
+            });
+            if (!ok) return;
+            try {
+                const res = await fetch(API_BASE + 'delete_ticket_field.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id })
+                }).then(r => r.json());
+                if (!res.success) throw new Error(res.error);
+                showToast(t('tickets.settings.custom_fields.retired'), 'success');
+                loadCustomFields();
+            } catch (err) {
+                showToast(err.message || 'Error', 'error');
+            }
+        }
+
+        async function tfMove(index, dir) {
+            const j = index + dir;
+            if (j < 0 || j >= tfFields.length) return;
+            [tfFields[index], tfFields[j]] = [tfFields[j], tfFields[index]];
+            tfRender();
+            try {
+                const res = await fetch(API_BASE + 'reorder_ticket_fields.php', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ids: tfFields.map(f => f.id) })
+                }).then(r => r.json());
+                if (!res.success) throw new Error(res.error);
+            } catch (err) {
+                showToast(err.message || 'Error', 'error');
+                loadCustomFields();
+            }
+        }
+
         async function loadTicketTypes() {
             try {
                 const response = await fetch(API_BASE + 'get_ticket_types.php?manage=1');

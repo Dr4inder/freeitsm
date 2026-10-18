@@ -41,6 +41,7 @@ require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
 require_once __DIR__ . '/../calendar_sync/push.php';   // scheduled work -> the owner's calendar (GH #75)
 require_once __DIR__ . '/checklists.php';              // mandatory SOP steps at closure (PR #141)
 require_once __DIR__ . '/mandatory_fields.php';        // mandatory ticket fields at closure
+require_once __DIR__ . '/ticket_fields.php';           // custom ticket fields (#179)
 require_once __DIR__ . '/../ticket_sensitivity.php';   // Normal / Confidential (discussion #62)
 
 class TicketsService
@@ -69,7 +70,9 @@ class TicketsService
      *
      * @param array $in  subject (required), description, requester_email (required unless user_id), requester_name, user_id
      *     (a requester the caller has already authorised), status_id/status, priority_id/priority, department_id,
-     *     ticket_type_id, origin_id, category_id, assigned_analyst_id, assigned_team_id, mailbox_id, sensitivity
+     *     ticket_type_id, origin_id, category_id, assigned_analyst_id, assigned_team_id, mailbox_id, sensitivity,
+     *     custom_fields ([field_key => value]; PRESENT means this channel can ask, so the fields required when
+     *     logging are enforced - the New ticket form and the API pass it, an alert raised by the system does not)
      * @param ?int $defaultAnalystId  the assignee when $in names none (UI: the creator; API: null for unassigned)
      * @param string $creationNote  the text of the 'Ticket Created' audit row, e.g. "Created via API (key: X)"
      */
@@ -169,6 +172,17 @@ class TicketsService
                 throw new ServiceError('validation', 'invalid_field', "Unknown or inactive analyst id: {$analystId}");
             }
         }
+        // Custom fields (#179): checked in full BEFORE the ticket exists, so a
+        // missing or malformed answer never leaves a half-made ticket behind.
+        $customDefs = [];
+        $customValues = [];
+        if (array_key_exists('custom_fields', $in)) {
+            if (!is_array($in['custom_fields'])) {
+                throw new ServiceError('validation', 'invalid_field', "'custom_fields' must be an object of field key => value.");
+            }
+            $customDefs   = TicketFieldsService::fieldsFor($conn, $tenantId, $typeId);
+            $customValues = TicketFieldsService::validate($conn, $customDefs, $in['custom_fields'], true);
+        }
         if ($mailboxId !== null) {
             $mbStmt = $conn->prepare("SELECT tenant_id FROM target_mailboxes WHERE id = ? AND is_active = 1");
             $mbStmt->execute([$mailboxId]);
@@ -259,6 +273,10 @@ class TicketsService
 
             self::auditWrite($conn, $ticketId, $ctx->actorId, 'Ticket Created', null, $creationNote);
 
+            if ($customValues) {
+                TicketFieldsService::write($conn, $ctx, $ticketId, $customDefs, $customValues);
+            }
+
             $conn->commit();
         } catch (Exception $e) {
             if ($conn->inTransaction()) $conn->rollBack();
@@ -292,8 +310,10 @@ class TicketsService
      * the adapter reloads for its response.
      *
      * @param array $in  only the fields to change: subject, status/priority (by id or name), the lookup ids, assigned_analyst_id,
-     *     assigned_team_id, company_id, sensitivity, closed_message, work_start_at, work_end_at, work_all_day
-     * @param bool $writeAudit  true writes the ticket_audit rows here (API); false when the caller audits itself (UI)
+     *     assigned_team_id, company_id, sensitivity, closed_message, work_start_at, work_end_at, work_all_day,
+     *     custom_fields ([field_key => value]; '' clears; only the keys sent are touched)
+     * @param bool $writeAudit  true writes the ticket_audit rows here (API); false when the caller audits itself (UI).
+     *     Custom field changes are always audited here, by whichever channel made them.
      */
     public static function updateTicket(PDO $conn, ActorContext $ctx, int $ticketId, array $in, bool $writeAudit): void
     {
@@ -623,7 +643,21 @@ class TicketsService
             }
         }
 
-        if (!$updates) {
+        // Custom fields (#179). Resolved against the ticket as it will be after
+        // this save - a type changed in the same request decides which fields
+        // apply - and validated now, before anything is written.
+        $customDefs = [];
+        $customValues = null;
+        if (array_key_exists('custom_fields', $in)) {
+            if (!is_array($in['custom_fields'])) {
+                throw new ServiceError('validation', 'invalid_field', "'custom_fields' must be an object of field key => value.");
+            }
+            $customDefs   = TicketFieldsService::fieldsForTicket($conn, self::rowAfterUpdates($current, $updates, $args));
+            $customValues = TicketFieldsService::validate($conn, $customDefs, $in['custom_fields'], false);
+            if (!$customValues) $customValues = null;
+        }
+
+        if (!$updates && $customValues === null) {
             return; // idempotent
         }
 
@@ -639,13 +673,17 @@ class TicketsService
         $closeTenant  = ($afterRow['tenant_id'] ?? null) !== null ? (int)$afterRow['tenant_id'] : null;
         $emptyOnClose = [];
         if ($closing) {
-            $emptyOnClose = MandatoryFieldsService::missing($conn, $closeTenant, $afterRow);
+            $emptyOnClose = MandatoryFieldsService::missing($conn, $closeTenant, $afterRow, $customValues);
             MandatoryFieldsService::assertClosureAllowed($conn, $closeTenant, $emptyOnClose);
         }
 
         $updates[] = 'updated_datetime = UTC_TIMESTAMP()';
         $args[]    = $ticketId;
         $conn->prepare('UPDATE tickets SET ' . implode(', ', $updates) . ' WHERE id = ?')->execute($args);
+
+        if ($customValues !== null) {
+            TicketFieldsService::write($conn, $ctx, $ticketId, $customDefs, $customValues);
+        }
 
         // ⚠️ AN ENTRY FLAGGED `forced` IS WRITTEN EVEN WHEN $writeAudit IS FALSE.
         //

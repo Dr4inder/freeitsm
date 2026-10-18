@@ -3132,6 +3132,7 @@ ${classificationFields}
                         </select>
                     </div>
                     ${companyField}
+                    <div class="tf-panel-fields" id="ticketCustomFields"></div>
                 </div>
             </div>
         </div>
@@ -3236,6 +3237,7 @@ ${classificationFields}
     loadTicketTasks(email.ticket_id);
     loadTimeEntries(email.ticket_id);
     loadSlaState(email.ticket_id);
+    loadTicketCustomFields(email.ticket_id);
 
     // Announce ourselves on this ticket, and start listening for anyone else
     // (#934). Moving between tickets stops the old announcement first, so a
@@ -4790,6 +4792,9 @@ async function assignTicketType() {
         if (data.success) {
             await logAudit(currentEmail.ticket_id, 'Ticket Type', oldValue, newValue);
             currentEmail.ticket_type_id = ticketTypeId || null;
+            // Custom fields follow the type (#179): the new type's appear, and
+            // answers to fields it does not have are hidden, never deleted.
+            loadTicketCustomFields(currentEmail.ticket_id);
             // #1540. A category can be tied to one ticket type, so changing the
             // type can leave the ticket wearing a category that no longer belongs
             // to it. The server CLEARS such a category rather than keeping a pair
@@ -8282,6 +8287,45 @@ function logout() {
 }
 
 // New Ticket Modal Functions
+/**
+ * The ticket's custom fields (#179), drawn into the properties panel beside
+ * the built-in ones. Each saves as it changes, through updateTicket() - so the
+ * history row is written by the server, not here.
+ */
+async function loadTicketCustomFields(ticketId) {
+    const box = document.getElementById('ticketCustomFields');
+    if (!box || !window.TicketFields) return;
+    try {
+        const r = await fetch(API_BASE + 'get_ticket_custom_fields.php?ticket_id=' + encodeURIComponent(ticketId));
+        const d = await r.json();
+        if (!d.success) throw new Error(d.error);
+        // Drawn only if the ticket is still the one on screen.
+        if (!currentEmail || String(currentEmail.ticket_id) !== String(ticketId)) return;
+        box.innerHTML = TicketFields.render(d.fields || [], { variant: 'toolbar', onchange: 'saveTicketCustomField(this)' });
+    } catch (e) {
+        box.innerHTML = '';
+    }
+}
+
+async function saveTicketCustomField(el) {
+    const ticketId = currentEmail && currentEmail.ticket_id;
+    if (!ticketId) return;
+    try {
+        const r = await fetch(API_BASE + 'save_ticket_custom_fields.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ticket_id: ticketId, values: { [el.dataset.tfKey]: el.value } })
+        });
+        const d = await r.json();
+        if (!d.success) throw new Error(d.error);
+        showToast(tf('common.ticket_fields.saved', 'Saved'), 'success');
+    } catch (e) {
+        showToast(e.message || 'Error', 'error');
+        // Put the stored value back, so the screen never shows a value the
+        // database does not hold.
+        loadTicketCustomFields(ticketId);
+    }
+}
+
 function openNewTicketModal() {
     // Clear form. The requester picker owns the name/email fields now, so it
     // resets them — clearing them here as well would fight it.
@@ -8339,8 +8383,38 @@ function openNewTicketModal() {
 
     // Populate the "Send replies from" mailbox dropdown for the active company.
     loadNewTicketMailboxes();
+    loadNewTicketCustomFields();
 
     document.getElementById('newTicketModal').classList.add('active');
+}
+
+/**
+ * The custom fields (#179) a new ticket of the chosen type asks for, drawn
+ * under the department / type / priority row. Fields on every type show before
+ * a type is picked; choosing a type adds its own. Answers already typed are
+ * kept when the type changes, for the fields the new type still has.
+ */
+let newTicketCustomFieldDefs = [];
+async function loadNewTicketCustomFields() {
+    const box = document.getElementById('newTicketCustomFields');
+    if (!box || !window.TicketFields) return;
+    const kept = TicketFields.collect(box);
+    const typeId = document.getElementById('newTicketType').value;
+    const coRow = document.getElementById('newTicketCompanyRow');
+    const coId = coRow && !coRow.hidden ? (document.getElementById('newTicketCompany').value || '') : '';
+    try {
+        const r = await fetch(API_BASE + 'get_ticket_custom_fields.php?type_id=' + encodeURIComponent(typeId) + '&tenant_id=' + encodeURIComponent(coId));
+        const d = await r.json();
+        if (!d.success) throw new Error(d.error);
+        newTicketCustomFieldDefs = (d.fields || []).map(f => Object.assign({}, f, { value: kept[f.key] !== undefined && kept[f.key] !== '' ? kept[f.key] : null }));
+        box.innerHTML = TicketFields.render(newTicketCustomFieldDefs, { variant: 'form', required: true, inputClass: 'form-input', selectClass: 'form-select', labelClass: 'form-label' });
+        // A boolean or dropdown kept across a type change is a string here;
+        // put it back into the control the renderer just drew.
+        box.querySelectorAll('[data-tf-key]').forEach(el => { if (kept[el.dataset.tfKey] !== undefined) el.value = kept[el.dataset.tfKey]; });
+    } catch (e) {
+        newTicketCustomFieldDefs = [];
+        box.innerHTML = '';
+    }
 }
 
 /**
@@ -8364,6 +8438,7 @@ function onNewTicketCompanyChange() {
     typeSelect.innerHTML = '<option value="">' + escapeHtml(t('tickets.new_ticket_modal.select_placeholder')) + '</option>' +
         list.map(ty => `<option value="${ty.id}">${escapeHtml(ty.name)}</option>`).join('');
     typeSelect.disabled = false;
+    loadNewTicketCustomFields();
 }
 
 // Load the mailboxes this ticket can be sent from (scoped to the active company)
@@ -8447,6 +8522,14 @@ async function createNewTicket() {
         showToast(t('tickets.new_ticket_modal.company_required'), 'error');
         return;
     }
+    // Custom fields required when logging (#179). The server refuses too; this
+    // only saves a round trip and points at the field.
+    const cfBox = document.getElementById('newTicketCustomFields');
+    const cfMissing = window.TicketFields ? TicketFields.firstMissing(cfBox, newTicketCustomFieldDefs) : null;
+    if (cfMissing) {
+        showToast(tf('common.ticket_fields.required', 'Fill in {name}', { name: cfMissing }), 'error');
+        return;
+    }
 
     // Get the create button and show loading state
     const createBtn = document.querySelector('#newTicketModal .btn-primary');
@@ -8474,7 +8557,10 @@ async function createNewTicket() {
                 // Normal / Confidential (discussion #62).
                 sensitivity: (document.getElementById('newTicketSensitivity') || {}).value || 'normal',
                 // #1554: only sent from the consolidated view, where it was asked for.
-                tenant_id: newTicketCompanyId || null
+                tenant_id: newTicketCompanyId || null,
+                // Custom fields (#179): always sent from this form, so the ones
+                // required when logging are enforced; '' leaves one unanswered.
+                custom_fields: window.TicketFields ? TicketFields.collect(cfBox) : {}
             })
         });
 

@@ -16,7 +16,9 @@ $needsRecorder = true;
 
 // The rich-text editor, loaded only here — no other portal page needs 500KB of
 // editor. Bundled locally, so no third-party CDN is involved.
-$pageHead = '<script src="../assets/js/tinymce/tinymce.min.js"></script>';
+$pageHead = '<script src="../assets/js/tinymce/tinymce.min.js"></script>'
+          . '<link rel="stylesheet" href="../assets/css/ticket-fields.css?v=1">'
+          . '<script src="../assets/js/ticket-fields.js?v=1"></script>';
 
 // Page-specific styling only — shared chrome lives in self-service.css.
 $pageStyles = <<<'CSS'
@@ -541,6 +543,7 @@ let attachments = [];
     document.addEventListener('DOMContentLoaded', function() {
         loadMailboxes();
         loadTicketCategories();
+        loadTicketFields();
         loadMyEquipment();
         initDropzone();
         initDeflection();
@@ -914,6 +917,38 @@ let attachments = [];
         }
     }
 
+    // Ticket type and custom fields (#179). The server decides both: which types
+    // are offered (none, and no picker, when the choice would change nothing) and
+    // which fields the requester is asked for the chosen type.
+    let ticketFieldDefs = [];
+    async function loadTicketFields() {
+        const typeSel = document.getElementById('ticketType');
+        const box = document.getElementById('ticketCustomFields');
+        if (!typeSel || !box || !window.TicketFields) return;
+        const kept = TicketFields.collect(box);
+        try {
+            const resp = await fetch('../api/self-service/get_ticket_fields.php?type_id=' + encodeURIComponent(typeSel.value || ''));
+            const data = await resp.json();
+            if (!data.success) return;
+            // The picker is filled once; later calls only redraw the fields.
+            if (data.types.length && typeSel.options.length <= 1) {
+                data.types.forEach(tp => {
+                    const opt = document.createElement('option');
+                    opt.value = tp.id;
+                    opt.textContent = tp.name;
+                    typeSel.appendChild(opt);
+                });
+                document.getElementById('ticketTypeGroup').hidden = false;
+            }
+            ticketFieldDefs = data.fields || [];
+            box.innerHTML = TicketFields.render(ticketFieldDefs, { variant: 'form', required: true });
+            // Answers already given survive a change of type, for the fields it still has.
+            box.querySelectorAll('[data-tf-key]').forEach(el => { if (kept[el.dataset.tfKey] !== undefined) el.value = kept[el.dataset.tfKey]; });
+        } catch (err) {
+            /* the form still works without them; the server checks anything required */
+        }
+    }
+
     async function handleSubmit(e) {
         e.preventDefault();
 
@@ -962,6 +997,10 @@ let attachments = [];
                     // Optional. Re-validated server-side against the portal-visible
                     // list - a narrowed dropdown is not a check.
                     category_id: (document.getElementById('ticketCategory') || {}).value || null,
+                    // #179. Re-checked server-side: a type this company offers, and
+                    // only the fields the requester is asked.
+                    ticket_type_id: (document.getElementById('ticketType') || {}).value || null,
+                    custom_fields: window.TicketFields ? TicketFields.collect(document.getElementById('ticketCustomFields')) : {},
                     // The editor holds the content, not the textarea it replaced.
                     // Falls back to the textarea if TinyMCE failed to load, so the
                     // form still works rather than silently posting nothing.
@@ -1068,6 +1107,16 @@ require __DIR__ . '/includes/header.php';
                         <option value=""><?php echo htmlspecialchars(t('self-service.new_ticket.category_none')); ?></option>
                     </select>
                 </div>
+                <?php /* Ticket type and custom fields (#179). The type picker is
+                         revealed only when choosing one changes what is asked;
+                         the fields are drawn by loadTicketFields(). */ ?>
+                <div class="form-group" id="ticketTypeGroup" hidden>
+                    <label for="ticketType"><?php echo htmlspecialchars(t('self-service.new_ticket.ticket_type')); ?></label>
+                    <select id="ticketType" onchange="loadTicketFields()">
+                        <option value=""><?php echo htmlspecialchars(t('self-service.new_ticket.ticket_type_none')); ?></option>
+                    </select>
+                </div>
+                <div id="ticketCustomFields"></div>
                 <div class="form-group">
                     <label for="priority"><?php echo htmlspecialchars(t('self-service.new_ticket.priority')); ?></label>
                     <select id="priority">

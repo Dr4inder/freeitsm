@@ -121,6 +121,15 @@ return [
             ],
         ],
         [
+            // Custom fields (#179): the extra details each ticket type asks for.
+            // Its own capability: it decides what requesters are asked on the
+            // portal and can stop tickets being logged or closed.
+            'id'        => 'custom-fields',
+            'cap'       => Cap::TICKETS_CUSTOM_FIELDS,
+            'label_key' => 'tickets.settings.tabs.custom_fields',
+            'grant'     => 'Design the custom fields each ticket type carries, and when they must be filled in',
+        ],
+        [
             'id'        => 'statuses',
             'cap'       => Cap::TICKETS_STATUSES,
             'label_key' => 'tickets.settings.tabs.statuses',

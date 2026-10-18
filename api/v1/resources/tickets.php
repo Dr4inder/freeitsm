@@ -105,6 +105,29 @@ function apiSerializeTicket(array $r): array {
     ];
 }
 
+/**
+ * A ticket's custom fields (#179) for the API: {field_key: value} for every
+ * field the ticket has, null when unanswered. Typed - a number is a number, a
+ * yes/no is true/false, a date is "2026-11-03", a date and time is
+ * "2026-11-03T09:00:00", a time is "09:00".
+ *
+ * @param array $row  the ticket row (id, tenant_id, ticket_type_id)
+ */
+function apiTicketCustomFields(PDO $conn, array $row): object {
+    $defs = TicketFieldsService::fieldsForTicket($conn, $row);
+    $values = TicketFieldsService::values($conn, (int)$row['id'], $defs);
+    $out = [];
+    foreach ($defs as $key => $d) {
+        $v = $values[$key] ?? null;
+        if ($v !== null && $d['type'] === 'date') {
+            $mode = $d['config']['date_mode'] ?? 'date';
+            $v = $mode === 'time' ? substr($v, 11, 5) : ($mode === 'datetime' ? str_replace(' ', 'T', substr($v, 0, 19)) : substr($v, 0, 10));
+        }
+        $out[$key] = $v;
+    }
+    return (object)$out;
+}
+
 /** Load one ticket (with joins) enforcing the key's company scope; 404s if not visible. */
 function apiLoadTicket(PDO $conn, array $apiKey, int $ticketId): array {
     if (!apiKeyCanAccessTicket($conn, $apiKey, $ticketId)) {
@@ -260,6 +283,7 @@ function apiTicketsGet(PDO $conn, array $apiKey, array $params, array $body): vo
     $descStmt->execute([$params[0]]);
     $desc = $descStmt->fetchColumn();
     $ticket['description_html'] = $desc === false ? null : $desc;
+    $ticket['custom_fields'] = apiTicketCustomFields($conn, $row);
 
     apiRespond($ticket);
 }
@@ -291,11 +315,16 @@ function apiTicketsCreate(PDO $conn, array $apiKey, array $params, array $body):
         $tenantId = apiKeyDefaultTenantId($conn, $apiKey);
     }
 
+    // Custom fields (#179). Always passed, so the fields required when a ticket
+    // is logged are enforced for the API exactly as for the New ticket form - an
+    // integration that leaves one out gets a 422 naming it, not a ticket missing it.
+    $body['custom_fields'] = $body['custom_fields'] ?? [];
     try {
         $ticketId = TicketsService::createTicket($conn, ActorContext::fromApiKey($apiKey), $tenantId, $body, null,
             'Created via API (key: ' . $apiKey['name'] . ')');
     } catch (ServiceError $e) { apiFailFromService($e); }
-    apiRespond(apiSerializeTicket(apiLoadTicket($conn, $apiKey, $ticketId)), 201);
+    $row = apiLoadTicket($conn, $apiKey, $ticketId);
+    apiRespond(apiSerializeTicket($row) + ['custom_fields' => apiTicketCustomFields($conn, $row)], 201);
 }
 
 // ---------------------------------------------------------------------------
@@ -305,7 +334,8 @@ function apiTicketsUpdate(PDO $conn, array $apiKey, array $params, array $body):
     try {
         TicketsService::updateTicket($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $body, true);
     } catch (ServiceError $e) { apiFailFromService($e); }
-    apiRespond(apiSerializeTicket(apiLoadTicket($conn, $apiKey, $params[0])));
+    $row = apiLoadTicket($conn, $apiKey, $params[0]);
+    apiRespond(apiSerializeTicket($row) + ['custom_fields' => apiTicketCustomFields($conn, $row)]);
 }
 
 // ---------------------------------------------------------------------------

@@ -10775,6 +10775,12 @@ return array (
           'type' => 'string',
           'nullable' => true,
         ),
+        'custom_fields' =>
+        array (
+          'type' => 'object',
+          'additionalProperties' => true,
+          'description' => 'Custom fields (Tickets -> Settings -> Custom fields), keyed by field key: every field this ticket has, null when unanswered. Returned by GET /tickets/{id}, POST and PATCH. Send the same object on POST or PATCH to set them; "" clears one.',
+        ),
       ),
     ),
     'TicketAuditEntry' => 

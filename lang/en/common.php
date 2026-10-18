@@ -29,6 +29,16 @@ return [
     'action_row' => [
         'new' => 'New',
     ],
+    // Custom ticket fields (#179) as the inbox and the portal draw them
+    // (assets/js/ticket-fields.js).
+    'ticket_fields' => [
+        'not_set'   => 'Not set',
+        'yes'       => 'Yes',
+        'no'        => 'No',
+        'heading'   => 'More details',
+        'saved'     => 'Saved',
+        'required'  => 'Fill in {name}',
+    ],
     'reorder' => [
         'drag'     => 'Drag to move',
         'up'       => 'Move {name} up',

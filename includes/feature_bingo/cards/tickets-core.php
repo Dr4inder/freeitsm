@@ -256,6 +256,18 @@ return [
         'check'    => ['setting', 'ticket_mandatory_mode', 'eq', 'block'],
     ],
     [
+        'id'       => 'tickets.custom_fields',
+        'module'   => 'tickets',
+        'tier'     => 'extra',
+        'category' => 'governance',
+        'title'    => 'Custom ticket fields',
+        'what'     => 'Make up the extra details a kind of ticket needs - a start date and username on a new starter, say - and link each one to the ticket types that use it. Each can be required when the ticket is logged, when it is closed, and asked of the requester on the portal.',
+        'why'      => 'The details you need arrive with the ticket instead of in a chain of replies, and they are in a field you can rely on rather than somewhere in the description.',
+        'done'     => 'At least one custom field exists.',
+        'link'     => 'tickets/settings/#custom-fields',
+        'check'    => ['rows', 'ticket_fields', 'is_deleted = 0'],
+    ],
+    [
         'id'       => 'tickets.mandatory_fields_notify',
         'module'   => 'tickets',
         'tier'     => 'extra',

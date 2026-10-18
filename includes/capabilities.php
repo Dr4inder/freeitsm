@@ -274,6 +274,9 @@ final class Cap
     // Which ticket fields must be filled before a ticket may close, and what
     // happens when they are not - warn, warn and email, or refuse.
     const TICKETS_MANDATORY_FIELDS = 'tickets.mandatory_fields';
+    // Design the custom fields a ticket type carries (#179) - what an analyst and
+    // a requester are asked when a ticket is logged, and what must be filled to close.
+    const TICKETS_CUSTOM_FIELDS   = 'tickets.custom_fields';
     const TICKETS_STATUSES        = 'tickets.statuses';
     const TICKETS_PRIORITIES      = 'tickets.priorities';
     const TICKETS_SLA             = 'tickets.sla';

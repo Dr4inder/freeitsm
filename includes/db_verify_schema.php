@@ -385,6 +385,52 @@ return [
         'updated_datetime'  => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
     ],
 
+    // --- Custom ticket fields (discussion #179) ------------------------------
+    // Tickets -> Settings -> Custom fields. A field is defined once, linked to
+    // some ticket types (or all of them), and answered per ticket. The values
+    // run on the same engine as custom asset fields (includes/typed_fields.php).
+    'ticket_fields' => [
+        'id'                 => 'INT NOT NULL AUTO_INCREMENT',
+        'field_key'          => 'VARCHAR(100) NOT NULL',
+        'label'              => 'VARCHAR(150) NOT NULL',
+        'field_type'         => 'VARCHAR(20) NOT NULL',
+        'config'             => 'LONGTEXT NULL',
+        'help_text'          => 'VARCHAR(500) NULL',
+        'all_types'          => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'required_on_create' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'required_on_close'  => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'ask_requester'      => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'display_order'      => 'INT NOT NULL DEFAULT 0',
+        'tenant_id'          => 'INT NULL',
+        'is_deleted'         => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'created_datetime'   => 'DATETIME NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
+
+    'ticket_field_options' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'field_id'          => 'INT NOT NULL',
+        'option_value'      => 'VARCHAR(255) NOT NULL',
+        'display_order'     => 'INT NOT NULL DEFAULT 0',
+    ],
+
+    'ticket_field_types' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'field_id'          => 'INT NOT NULL',
+        'ticket_type_id'    => 'INT NOT NULL',
+    ],
+
+    'ticket_field_values' => [
+        'id'            => 'INT NOT NULL AUTO_INCREMENT',
+        'ticket_id'     => 'INT NOT NULL',
+        'field_id'      => 'INT NOT NULL',
+        'seq'           => 'INT NOT NULL DEFAULT 0',
+        'value_text'    => 'TEXT NULL',
+        'value_number'  => 'DECIMAL(20,4) NULL',
+        'value_date'    => 'DATETIME NULL',
+        'value_boolean' => 'TINYINT(1) NULL',
+        'value_ref_id'  => 'INT NULL',
+    ],
+
     'ticket_types' => [
         'id'                => 'INT NOT NULL AUTO_INCREMENT',
         'name'              => 'VARCHAR(100) NOT NULL',

@@ -1302,6 +1302,89 @@ CREATE TABLE IF NOT EXISTS `tickets` (
     CONSTRAINT `fk_tickets_merged_into` FOREIGN KEY (`merged_into_id`) REFERENCES `tickets` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Custom ticket fields (discussion #179): Tickets -> Settings -> Custom fields.
+-- 🔑 A field is defined ONCE and linked to the ticket types that use it (or to
+-- every type), so "Start date" on a New Starter and on a Contractor is one field
+-- one report can span. Values run on the same engine as custom asset fields
+-- (includes/typed_fields.php).
+CREATE TABLE IF NOT EXISTS `ticket_fields` (
+    `id`                 INT NOT NULL AUTO_INCREMENT,
+    -- Stable machine key, used by the REST API. NEVER changes; the label may.
+    `field_key`          VARCHAR(100) NOT NULL,
+    `label`              VARCHAR(150) NOT NULL,
+    -- One of TypedFields::TYPES, except 'ref'. ⚠️ Cannot change once values
+    -- exist; text/long text and date/time are MODES in `config` for that reason.
+    `field_type`         VARCHAR(20) NOT NULL,
+    `config`             LONGTEXT NULL,
+    `help_text`          VARCHAR(500) NULL,
+    -- 1 = on every ticket type; 0 = only the types in ticket_field_types.
+    `all_types`          TINYINT(1) NOT NULL DEFAULT 1,
+    -- When the field must hold a value. Logging = the New ticket form, the portal
+    -- (fields the requester is asked) and the REST API - the channels that can
+    -- ask. Closing = the Mandatory fields rule, whatever channel raised it.
+    `required_on_create` TINYINT(1) NOT NULL DEFAULT 0,
+    `required_on_close`  TINYINT(1) NOT NULL DEFAULT 0,
+    -- Shown to the requester on the self-service portal's New ticket form.
+    `ask_requester`      TINYINT(1) NOT NULL DEFAULT 0,
+    `display_order`      INT NOT NULL DEFAULT 0,
+    -- NULL = shared by every company; set = a company's own field.
+    `tenant_id`          INT NULL,
+    -- ⚠️ SOFT delete, never hard: ticket_field_values.field_id points here.
+    `is_deleted`         TINYINT(1) NOT NULL DEFAULT 0,
+    `created_datetime`   DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    -- ⚠️ Does NOT dedupe shared (NULL tenant) keys; that is enforced in code.
+    UNIQUE KEY `uq_ticket_fields_tenant_key` (`tenant_id`, `field_key`),
+    CONSTRAINT `fk_ticket_fields_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- The choices of a dropdown field. The answer stores the option's TEXT.
+CREATE TABLE IF NOT EXISTS `ticket_field_options` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `field_id`          INT NOT NULL,
+    `option_value`      VARCHAR(255) NOT NULL,
+    `display_order`     INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    KEY `ix_ticket_field_options_field` (`field_id`),
+    CONSTRAINT `fk_ticket_field_options_field` FOREIGN KEY (`field_id`) REFERENCES `ticket_fields` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Which ticket types a field is on, when it is not on all of them.
+CREATE TABLE IF NOT EXISTS `ticket_field_types` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `field_id`          INT NOT NULL,
+    `ticket_type_id`    INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_ticket_field_type` (`field_id`, `ticket_type_id`),
+    KEY `ix_tft_type` (`ticket_type_id`),
+    CONSTRAINT `fk_tft_field` FOREIGN KEY (`field_id`) REFERENCES `ticket_fields` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_tft_type` FOREIGN KEY (`ticket_type_id`) REFERENCES `ticket_types` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- The answers. 🔑 No row = not answered. Changing a ticket's type HIDES the
+-- answers of fields the new type does not have, and never deletes them, so
+-- changing it back brings them back.
+CREATE TABLE IF NOT EXISTS `ticket_field_values` (
+    `id`            INT NOT NULL AUTO_INCREMENT,
+    `ticket_id`     INT NOT NULL,
+    `field_id`      INT NOT NULL,
+    -- Always 0; reserved so multi-value fields need no index change later.
+    `seq`           INT NOT NULL DEFAULT 0,
+    `value_text`    TEXT NULL,
+    `value_number`  DECIMAL(20,4) NULL,
+    `value_date`    DATETIME NULL,
+    `value_boolean` TINYINT(1) NULL,
+    `value_ref_id`  INT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_ticket_field_value` (`ticket_id`, `field_id`, `seq`),
+    KEY `ix_tfv_field_text` (`field_id`, `value_text`(64)),
+    KEY `ix_tfv_field_number` (`field_id`, `value_number`),
+    KEY `ix_tfv_field_date` (`field_id`, `value_date`),
+    CONSTRAINT `fk_tfv_ticket` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`) ON DELETE CASCADE,
+    -- RESTRICT: a field with answers can only ever be retired, never deleted.
+    CONSTRAINT `fk_tfv_field` FOREIGN KEY (`field_id`) REFERENCES `ticket_fields` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Collision detection (#934). Who has which ticket open right now, so two
 -- analysts don't answer the same customer twice. Ephemeral: one row per
 -- (ticket, analyst), refreshed by a heartbeat, ignored once `last_seen` goes

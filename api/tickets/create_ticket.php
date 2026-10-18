@@ -98,6 +98,12 @@ try {
     if (isset($input['priority']) && trim((string)$input['priority']) !== '') {
         $in['priority'] = $input['priority'];
     }
+    // Custom fields (#179). Passed only when the form sent them: the New ticket
+    // form always does, so the fields required when logging are enforced there;
+    // Morning checks' "raise a ticket" does not ask for them and is not refused.
+    if (array_key_exists('custom_fields', $input)) {
+        $in['custom_fields'] = is_array($input['custom_fields']) ? $input['custom_fields'] : [];
+    }
     if (!empty($input['assigned_analyst_id'])) {
         $in['assigned_analyst_id'] = (int)$input['assigned_analyst_id'];
     }

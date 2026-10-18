@@ -275,6 +275,10 @@ return [
         // what the analyst's "category at close" exists to correct.
         'category'           => 'What is this about?',
         'category_none'      => 'Not sure',
+        // Ticket type (#179). Shown only when choosing one changes what the
+        // requester is asked - see api/self-service/get_ticket_fields.php.
+        'ticket_type'        => 'What kind of request is it?',
+        'ticket_type_none'   => 'Not sure',
 
         'priority'           => 'Priority',
         'priority_low'       => 'Low',

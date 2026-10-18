@@ -13823,6 +13823,20 @@
                         "company_id": 2,
                         "mailbox_id": 1
                     }
+                },
+                {
+                    "title": "With custom fields",
+                    "note": "Custom fields are set by their key (Tickets \u2192 Settings \u2192 Custom fields). A field the type requires when a ticket is logged must be sent, or the call is refused with 422.",
+                    "body": {
+                        "subject": "New starter: Alex Morgan",
+                        "requester_email": "hr@example.com",
+                        "ticket_type_id": 3,
+                        "custom_fields": {
+                            "start_date": "2026-11-03",
+                            "username": "amorgan",
+                            "remote_worker": true
+                        }
+                    }
                 }
             ],
             "errors": [
@@ -13845,6 +13859,16 @@
                     "code": 403,
                     "slug": "forbidden",
                     "when": "company_id is set but the key isn't scoped to that company."
+                },
+                {
+                    "code": 422,
+                    "slug": "missing_field",
+                    "when": "A custom field the ticket type requires when a ticket is logged is missing or empty."
+                },
+                {
+                    "code": 422,
+                    "slug": "invalid_field",
+                    "when": "custom_fields names a field this ticket does not have, or a value is the wrong kind (not a number, not one of a dropdown's options, not an email address)."
                 }
             ]
         },

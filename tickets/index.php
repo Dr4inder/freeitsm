@@ -36,6 +36,7 @@ $translationNamespaces = ['common', 'tickets'];
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../checklists/ticket_checklist.css?v=4">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
+    <link rel="stylesheet" href="../assets/css/ticket-fields.css?v=1">
     <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -491,7 +492,7 @@ $translationNamespaces = ['common', 'tickets'];
                     </div>
                     <div class="form-group">
                         <label class="form-label"><?php echo htmlspecialchars(t('tickets.new_ticket_modal.type')); ?></label>
-                        <select class="form-select" id="newTicketType">
+                        <select class="form-select" id="newTicketType" onchange="loadNewTicketCustomFields()">
                             <option value=""><?php echo htmlspecialchars(t('tickets.new_ticket_modal.select_placeholder')); ?></option>
                         </select>
                     </div>
@@ -510,6 +511,10 @@ $translationNamespaces = ['common', 'tickets'];
                         </select>
                     </div>
                 </div>
+                <?php /* Custom fields (#179) for the chosen type, filled in by
+                         loadNewTicketCustomFields(). Empty - and taking no room -
+                         when the type has none. */ ?>
+                <div class="tf-form-grid" id="newTicketCustomFields"></div>
                 <div class="form-group">
                     <label class="form-label"><?php echo htmlspecialchars(t('tickets.new_ticket_modal.description')); ?></label>
                     <textarea class="form-textarea" id="newTicketBody" rows="8" placeholder="<?php echo htmlspecialchars(t('tickets.new_ticket_modal.description_placeholder')); ?>"></textarea>
@@ -1032,7 +1037,8 @@ $translationNamespaces = ['common', 'tickets'];
     <script src="../assets/js/schedule.js?v=1"></script>
     <script src="../checklists/search_scoring.js?v=1"></script>
     <script src="../checklists/ticket_view.js?v=9"></script>
-    <script src="../assets/js/inbox.js?v=151"></script>
+    <script src="../assets/js/ticket-fields.js?v=1"></script>
+    <script src="../assets/js/inbox.js?v=152"></script>
     <script src="../assets/js/mobile.js?v=79"></script>
     <script>
     // Auto-check mailboxes every 60 seconds - and refresh the inbox whenever

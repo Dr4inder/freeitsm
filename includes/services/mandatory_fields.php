@@ -37,6 +37,7 @@
  */
 
 require_once __DIR__ . '/../tenant_settings.php';
+require_once __DIR__ . '/ticket_fields.php';   // custom fields required at closing (#179)
 
 final class MandatoryFieldsService
 {
@@ -124,14 +125,23 @@ final class MandatoryFieldsService
     /**
      * The required fields this ticket has left empty.
      *
+     * Custom fields (#179) come after the built-in ones, keyed `cf:<key>` with
+     * their own name as the label. They are required by the field itself -
+     * "Required when closing" on Tickets -> Settings -> Custom fields - so they
+     * count even when no built-in field is ticked here, and they follow this
+     * tab's warn / warn and email / refuse setting like everything else.
+     *
      * @param array $row the ticket as it will be after the save - `tickets`
      *                   column names, any other keys ignored
+     * @param ?array $pendingCustom custom field answers written by the same
+     *                   save, [field_key => value], which count
      * @return array<string,string> key => English label, in tab order
      */
-    public static function missing(PDO $conn, ?int $tenantId, array $row): array
+    public static function missing(PDO $conn, ?int $tenantId, array $row, ?array $pendingCustom = null): array
     {
         $cfg = self::settings($conn, $tenantId);
-        if (!$cfg['fields']) return [];
+        $custom = TicketFieldsService::missingOnClose($conn, $row, $pendingCustom);
+        if (!$cfg['fields']) return $custom;
 
         $out = [];
         foreach (self::FIELDS as $key => [$column, $label]) {
@@ -142,7 +152,7 @@ final class MandatoryFieldsService
                 $out[$key] = $label;
             }
         }
-        return $out;
+        return $out + $custom;
     }
 
     /**
