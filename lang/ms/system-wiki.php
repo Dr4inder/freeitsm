@@ -1,4 +1,14 @@
 <?php
+/**
+ * FreeITSM — system-wiki strings (ms).
+ *
+ * Keys mirror lang/en/system-wiki.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php ms
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
+ */
 
 return [
     'title' => 'Wiki Sistem',
@@ -41,6 +51,7 @@ return [
         'files_count' => '{n} fail',
     ],
     'search' => [
+        'page_title' => 'Carian Wiki',
         'search_placeholder' => 'Cari fail, fungsi, jadual pangkalan data...',
         'search_btn' => 'Cari',
         'tab_files' => 'Fail',
@@ -56,6 +67,7 @@ return [
         'refs_across_files' => '{refs} rujukan merentasi {files} fail',
     ],
     'scan' => [
+        'page_title' => 'Pengurusan Imbasan',
         'heading' => 'Pengurusan Imbasan',
         'subtitle' => 'Jalankan pengimbas PowerShell untuk mengkatalogkan kod sumber',
         'run_now' => 'Jalankan Imbasan Sekarang',
@@ -75,6 +87,7 @@ return [
         'error_prefix' => 'Ralat: ',
     ],
     'file' => [
+        'page_title' => 'Butiran Fail',
         'loading' => 'Memuatkan butiran fail...',
         'no_id' => 'Tiada ID fail dinyatakan.',
         'error_prefix' => 'Ralat: ',
@@ -107,6 +120,7 @@ return [
         'static' => 'statik',
     ],
     'function' => [
+        'page_title' => 'Butiran Fungsi',
         'loading' => 'Memuatkan butiran fungsi...',
         'no_id' => 'Tiada ID fungsi dinyatakan.',
         'error_prefix' => 'Ralat: ',
@@ -121,6 +135,7 @@ return [
         'col_line' => 'Baris',
     ],
     'table' => [
+        'page_title' => 'Rujukan Jadual',
         'loading' => 'Memuatkan rujukan jadual...',
         'no_name' => 'Tiada nama jadual dinyatakan.',
         'error_prefix' => 'Ralat: ',
@@ -131,6 +146,7 @@ return [
         'no_references' => 'Tiada rujukan ditemui untuk jadual ini.',
     ],
     'tables' => [
+        'page_title' => 'Jadual Pangkalan Data',
         'heading' => 'Jadual Pangkalan Data',
         'loading' => 'Memuatkan...',
         'col_name' => 'Nama Jadual',

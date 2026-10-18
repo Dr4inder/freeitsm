@@ -50,6 +50,7 @@ return [
         'delete_failed' => 'Gagal padam: {message}',
     ],
     'editor' => [
+        'browser_title' => 'Rajah Rangkaian',
         'browser_title_named' => 'FreeITSM — {title}',
         'back' => '← Semua rajah',
         'loading' => 'Memuatkan…',
