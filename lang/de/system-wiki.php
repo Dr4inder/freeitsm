@@ -1,4 +1,14 @@
 <?php
+/**
+ * FreeITSM — system-wiki strings (de).
+ *
+ * Keys mirror lang/en/system-wiki.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php de
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
+ */
 
 return [
     'title' => 'System-Wiki',
@@ -41,6 +51,7 @@ return [
         'files_count' => '{n} Dateien',
     ],
     'search' => [
+        'page_title' => 'Wiki-Suche',
         'search_placeholder' => 'Dateien, Funktionen, Datenbanktabellen suchen...',
         'search_btn' => 'Suchen',
         'tab_files' => 'Dateien',
@@ -56,6 +67,7 @@ return [
         'refs_across_files' => '{refs} Verweise in {files} Dateien',
     ],
     'scan' => [
+        'page_title' => 'Scan-Verwaltung',
         'heading' => 'Scan-Verwaltung',
         'subtitle' => 'Den PowerShell-Scanner ausführen, um den Quellcode zu katalogisieren',
         'run_now' => 'Scan jetzt ausführen',
@@ -75,6 +87,7 @@ return [
         'error_prefix' => 'Fehler: ',
     ],
     'file' => [
+        'page_title' => 'Dateidetails',
         'loading' => 'Dateidetails werden geladen...',
         'no_id' => 'Keine Datei-ID angegeben.',
         'error_prefix' => 'Fehler: ',
@@ -107,6 +120,7 @@ return [
         'static' => 'statisch',
     ],
     'function' => [
+        'page_title' => 'Funktionsdetails',
         'loading' => 'Funktionsdetails werden geladen...',
         'no_id' => 'Keine Funktions-ID angegeben.',
         'error_prefix' => 'Fehler: ',
@@ -121,6 +135,7 @@ return [
         'col_line' => 'Zeile',
     ],
     'table' => [
+        'page_title' => 'Tabellenverweise',
         'loading' => 'Tabellenverweise werden geladen...',
         'no_name' => 'Kein Tabellenname angegeben.',
         'error_prefix' => 'Fehler: ',
@@ -131,6 +146,7 @@ return [
         'no_references' => 'Für diese Tabelle wurden keine Verweise gefunden.',
     ],
     'tables' => [
+        'page_title' => 'Datenbanktabellen',
         'heading' => 'Datenbanktabellen',
         'loading' => 'Wird geladen...',
         'col_name' => 'Tabellenname',
