@@ -309,7 +309,7 @@ return [
         'attach_send_failed' => 'Impossible d\'envoyer le fichier.',
         'attach_heading' => '{count} pièce(s) jointe(s) seront envoyées avec l\'issue',
         'confidential_title' => 'Ce ticket est confidentiel.',
-        'confidential_body' => 'L\'escalade copie son sujet, son premier message et les pièces jointes affichées ci-dessous dans le outil de suivi, en dehors de FreeITSM, là où la confidentialité ne s\'applique plus et où cela ne peut pas être annulé.',
+        'confidential_body' => 'L\'escalade copie son sujet, son premier message et les pièces jointes affichées ci-dessous dans l'outil de suivi, en dehors de FreeITSM, là où la confidentialité ne s\'applique plus et où cela ne peut pas être annulé.',
         'confidential_confirm' => 'Je comprends, et je veux le copier dans l\'outil de suivi',
         'attach_skipped' => 'non envoyé',
         'modal_title' => 'Créer une issue de développement depuis',
