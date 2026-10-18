@@ -1,7 +1,13 @@
 <?php
 /**
- * Português (Brasil) (pt-BR) — System Wiki module.
- * Falls back per-key to lang/en/system-wiki.php for anything missing here.
+ * FreeITSM — system-wiki strings (pt-BR).
+ *
+ * Keys mirror lang/en/system-wiki.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php pt-BR
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
  */
 
 return [
@@ -45,6 +51,7 @@ return [
         'files_count' => '{n} arquivos',
     ],
     'search' => [
+        'page_title' => 'Pesquisa na wiki',
         'search_placeholder' => 'Pesquisar arquivos, funções, tabelas do banco de dados...',
         'search_btn' => 'Pesquisar',
         'tab_files' => 'Arquivos',
@@ -60,6 +67,7 @@ return [
         'refs_across_files' => '{refs} referências em {files} arquivos',
     ],
     'scan' => [
+        'page_title' => 'Gerenciamento de varreduras',
         'heading' => 'Gerenciamento de varredura',
         'subtitle' => 'Execute o scanner do PowerShell para catalogar o código',
         'run_now' => 'Executar varredura agora',
@@ -79,6 +87,7 @@ return [
         'error_prefix' => 'Erro: ',
     ],
     'file' => [
+        'page_title' => 'Detalhe do arquivo',
         'loading' => 'Carregando detalhes do arquivo...',
         'no_id' => 'Nenhum ID de arquivo especificado.',
         'error_prefix' => 'Erro: ',
@@ -111,6 +120,7 @@ return [
         'static' => 'estática',
     ],
     'function' => [
+        'page_title' => 'Detalhe da função',
         'loading' => 'Carregando detalhes da função...',
         'no_id' => 'Nenhum ID de função especificado.',
         'error_prefix' => 'Erro: ',
@@ -125,6 +135,7 @@ return [
         'col_line' => 'Linha',
     ],
     'table' => [
+        'page_title' => 'Referências da tabela',
         'loading' => 'Carregando referências da tabela...',
         'no_name' => 'Nenhum nome de tabela especificado.',
         'error_prefix' => 'Erro: ',
@@ -135,6 +146,7 @@ return [
         'no_references' => 'Nenhuma referência encontrada para esta tabela.',
     ],
     'tables' => [
+        'page_title' => 'Tabelas do banco de dados',
         'heading' => 'Tabelas do banco de dados',
         'loading' => 'Carregando...',
         'col_name' => 'Nome da tabela',
