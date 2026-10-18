@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2431 | i18n              | Improvement | Polish (pl) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2430 | i18n              | Improvement | Brazilian Portuguese (pt-BR) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2429 | i18n              | Improvement | French (fr) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2428 | i18n              | Improvement | Spanish (es) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
