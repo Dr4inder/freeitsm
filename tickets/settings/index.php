@@ -2413,7 +2413,11 @@ function renderOversizeFields(string $px, bool $withLimits): void
     <div class="modal" id="tfModal">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header" id="tfModalTitle"></div>
+            <?php /* The canonical header / body / footer layout (inbox.css): the
+                     header stays put, only the body scrolls, and Cancel / Save sit
+                     in a footer the fields never run under. */ ?>
             <form id="tfForm" onsubmit="tfSave(event)">
+                <div class="modal-body">
                 <input type="hidden" id="tfId">
                 <div class="form-group">
                     <label for="tfLabel"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_name')); ?></label>
@@ -2476,8 +2480,9 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     <label><input type="checkbox" id="tfAsk"> <?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_ask')); ?></label>
                     <small style="color: var(--text-muted, #666); display: block; margin-left: 24px;"><?php echo htmlspecialchars(t('tickets.settings.custom_fields.f_ask_hint')); ?></small>
                 </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn" onclick="document.getElementById('tfModal').classList.remove('active')"><?php echo htmlspecialchars(t('common.cancel')); ?></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('tfModal').classList.remove('active')"><?php echo htmlspecialchars(t('common.cancel')); ?></button>
                     <button type="submit" class="btn btn-primary"><?php echo htmlspecialchars(t('common.save')); ?></button>
                 </div>
             </form>
