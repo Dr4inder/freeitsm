@@ -50,6 +50,7 @@ return [
         'delete_failed' => 'Error al eliminar: {message}',
     ],
     'editor' => [
+        'browser_title' => 'Diagrama de red',
         'browser_title_named' => 'FreeITSM — {title}',
         'back' => '← Todos los diagramas',
         'loading' => 'Cargando…',
