@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2436 | i18n              | Improvement | Bahasa Melayu (ms) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2435 | i18n              | Improvement | Ukrainian (uk) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2434 | i18n              | Improvement | Norwegian nynorsk (nn) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
 | 2433 | i18n              | Improvement | Norwegian bokmål (nb) back to 100%: every string added between 2.5.0 and 3.10.0 translated - four new modules (Projects, Domains, Files, People) and the additions across the rest - through the chunk / verify / merge pipeline, every line mechanically checked against its English. |
