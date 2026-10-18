@@ -39,6 +39,11 @@ return [
         'saved'     => 'Saved',
         'required'  => 'Fill in {name}',
     ],
+    // The optional module sidebar (#124, includes/app_sidebar.php).
+    'sidebar' => [
+        'label'     => 'Modules',
+        'customise' => 'Choose what is on the sidebar',
+    ],
     'reorder' => [
         'drag'     => 'Drag to move',
         'up'       => 'Move {name} up',

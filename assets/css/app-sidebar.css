@@ -1,0 +1,104 @@
+/* The optional module sidebar (#124, includes/app_sidebar.php): a rail of
+   module icons down the left of every analyst screen. Only on the page at all
+   when the analyst has turned it on; desktop only. Theme tokens only. */
+
+@media (min-width: 769px) {
+    /* The page moves right to make room. Fixed-position overlays (dialogs, the
+       command palette) still cover the whole window, the rail included. */
+    body:has(.app-sidebar) { padding-left: 60px; box-sizing: border-box; }
+
+    .app-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 60px;
+        z-index: 1500;          /* above the page, below dialogs (2000) */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 0;
+        background: var(--surface, #fff);
+        border-right: 1px solid var(--border, #e0e0e0);
+        box-sizing: border-box;
+    }
+
+    .app-sidebar-modules {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        overflow-y: auto;
+        scrollbar-width: none;
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+    }
+    .app-sidebar-modules::-webkit-scrollbar { display: none; }
+
+    .app-sidebar-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+    .app-sidebar-link:hover,
+    .app-sidebar-link:focus-visible { background: var(--surface-hover, #f0f0f0); outline: none; }
+    .app-sidebar-link.current { background: var(--accent-soft, #e8f4fd); }
+    .app-sidebar-link.current::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 9px;
+        bottom: 9px;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+        background: var(--accent, #0078d4);
+    }
+    /* The waffle's own coloured tiles, a little smaller. */
+    .app-sidebar .waffle-module-icon { width: 32px; height: 32px; margin: 0; border-radius: 7px; }
+    .app-sidebar .waffle-module-icon svg { width: 18px; height: 18px; }
+
+    .app-sidebar-foot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding-top: 8px;
+        margin-top: 8px;
+        border-top: 1px solid var(--border, #e0e0e0);
+        width: 100%;
+    }
+    .app-sidebar-tool {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 36px;
+        border: none;
+        border-radius: 8px;
+        background: none;
+        color: var(--text-muted, #666);
+        cursor: pointer;
+    }
+    .app-sidebar-tool:hover,
+    .app-sidebar-tool:focus-visible { background: var(--surface-hover, #f0f0f0); color: var(--text, #333); outline: none; }
+    .app-sidebar-tool svg { width: 20px; height: 20px; }
+
+    /* Files is a desktop of its own, pinned to the window's edges rather than
+       laid out in the page, so its layers move over for the rail by hand. */
+    body:has(.app-sidebar) .fd-desktop,
+    body:has(.app-sidebar) .fd-taskbar,
+    body[data-navbar="auto"]:has(.app-sidebar) .fd-navwrap { left: 60px; }
+    body:has(.app-sidebar) .fd-startmenu { left: 68px; }
+}
+
+/* A phone keeps its compact menu: no rail, and the page does not move. */
+@media (max-width: 768px) {
+    .app-sidebar { display: none; }
+}

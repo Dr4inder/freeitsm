@@ -372,6 +372,16 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
         }
         .pref-saving-hint.show { opacity: 1; }
 
+        /* The sidebar's module ticks (#124): the same coloured tiles as the waffle. */
+        .app-sidebar-pick { margin-top: 14px; }
+        .app-sidebar-pick[hidden] { display: none; }
+        .app-sidebar-pick-hint { margin: 0 0 8px; color: var(--text-muted, #666); font-size: 13px; }
+        .app-sidebar-pick-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px 14px; }
+        .app-sidebar-pick-item { display: flex; align-items: center; gap: 10px; padding: 5px 6px; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .app-sidebar-pick-item:hover { background: var(--surface-hover, #f0f0f0); }
+        .app-sidebar-pick-item .waffle-module-icon { width: 26px; height: 26px; margin: 0; border-radius: 6px; flex-shrink: 0; }
+        .app-sidebar-pick-item .waffle-module-icon svg { width: 16px; height: 16px; }
+
         /* Module order (GH #187) - the list itself is assets/js/reorder-list.js. */
         .module-order-actions { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
         .module-order-note { font-size: 12px; color: var(--text-dim, #888); margin-top: 8px; }
@@ -921,6 +931,38 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 <script>window.MODULE_ORDER = <?php echo json_encode($moPayload, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
             </div>
 
+            <?php
+                // The optional sidebar (#124): on or off, and which of the modules
+                // this analyst can open it holds - listed in their module order,
+                // which is also the order the sidebar uses.
+                $sbPrefs = appSidebarPrefs();
+            ?>
+            <div class="pref-section">
+                <h3 id="app-sidebar"><?php echo htmlspecialchars(t('system.preferences.sidebar_heading')); ?></h3>
+                <p><?php echo htmlspecialchars(t('system.preferences.sidebar_desc')); ?></p>
+                <label class="toggle-group">
+                    <span class="toggle-switch">
+                        <input type="checkbox" id="appSidebarToggle" <?php echo $sbPrefs['on'] ? 'checked' : ''; ?>>
+                        <span class="toggle-slider"></span>
+                    </span>
+                    <span class="toggle-label"><?php echo htmlspecialchars(t('system.preferences.sidebar_label')); ?></span>
+                </label>
+                <div id="appSidebarModules" class="app-sidebar-pick"<?php echo $sbPrefs['on'] ? '' : ' hidden'; ?>>
+                    <p class="app-sidebar-pick-hint"><?php echo htmlspecialchars(t('system.preferences.sidebar_pick')); ?></p>
+                    <div class="app-sidebar-pick-list">
+                        <?php foreach ($moItems as $sbItem): ?>
+                        <label class="app-sidebar-pick-item">
+                            <input type="checkbox" value="<?php echo htmlspecialchars($sbItem['key']); ?>"
+                                <?php echo ($sbPrefs['modules'] === null || in_array($sbItem['key'], $sbPrefs['modules'], true)) ? 'checked' : ''; ?>>
+                            <span class="<?php echo htmlspecialchars($sbItem['iconClass']); ?>"><?php echo $sbItem['icon']; ?></span>
+                            <span><?php echo htmlspecialchars($sbItem['label']); ?></span>
+                        </label>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <span class="pref-saving-hint" id="appSidebarHint"><?php echo htmlspecialchars(t('system.preferences.saving')); ?></span>
+            </div>
+
             <div class="pref-section">
                 <h3 id="left-panels"><?php echo htmlspecialchars(t('system.preferences.panels_heading')); ?></h3>
                 <p><?php echo htmlspecialchars(t('system.preferences.panels_desc')); ?></p>
@@ -1074,8 +1116,20 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
             panel.classList.add('active');
             history.replaceState(null, '', '#' + tab);
         }
-        if (location.hash.length > 1) switchTab(location.hash.slice(1));
-
+        if (location.hash.length > 1) {
+            const want = location.hash.slice(1);
+            const section = !document.getElementById(want + '-tab') && document.getElementById(want);
+            const tab = section && section.closest('.tab-content');
+            if (tab) {
+                // A section rather than a tab (e.g. #app-sidebar, linked from the
+                // sidebar itself): open its tab and bring it into view.
+                switchTab(tab.id.replace(/-tab$/, ''));
+                history.replaceState(null, '', '#' + want);
+                section.scrollIntoView({ block: 'start' });
+            } else {
+                switchTab(want);
+            }
+        }
         // Generic save helper — fire-and-forget POST to the per-analyst
         // preference store. Returns a Promise resolving to the API's
         // success flag so call sites can chain UI feedback off it.
@@ -1357,6 +1411,35 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
                 if (ok) showToast(window.t('system.preferences.format_saved'), 'success');
             });
         });
+
+        // ===== Sidebar (app_sidebar / app_sidebar_modules, #124) =====
+        // Saved as soon as anything changes and drawn from the next page opened.
+        // The ticked modules are saved as a list; ticking every one saves the
+        // whole list too, so the choice is explicit either way.
+        (function () {
+            const toggle = document.getElementById('appSidebarToggle');
+            const box = document.getElementById('appSidebarModules');
+            const hint = document.getElementById('appSidebarHint');
+            if (!toggle || !box) return;
+            const P = k => window.t('system.preferences.' + k);
+            toggle.addEventListener('change', async () => {
+                box.hidden = !toggle.checked;
+                hint.classList.add('show');
+                const ok = await savePref('app_sidebar', toggle.checked ? '1' : '');
+                hint.classList.remove('show');
+                if (ok) showToast(P(toggle.checked ? 'sidebar_on' : 'sidebar_off'), 'success');
+                else toggle.checked = !toggle.checked;
+            });
+            box.addEventListener('change', async e => {
+                if (!e.target.matches('input[type="checkbox"]')) return;
+                const keys = [...box.querySelectorAll('input[type="checkbox"]:checked')].map(i => i.value);
+                hint.classList.add('show');
+                const ok = await savePref('app_sidebar_modules', JSON.stringify(keys));
+                hint.classList.remove('show');
+                if (ok) showToast(P('sidebar_saved'), 'success');
+                else e.target.checked = !e.target.checked;
+            });
+        })();
 
         // ===== Module order (module_order, GH #187) =====
         // Every move saves the FULL order (all modules, including any this analyst

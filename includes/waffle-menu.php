@@ -20,6 +20,7 @@ $analyst_name = $analyst_name ?? ($_SESSION['analyst_name'] ?? 'Analyst');
 require_once __DIR__ . '/functions.php';
 
 require_once __DIR__ . '/module-colors.php';
+require_once __DIR__ . '/app_sidebar.php';   // the optional module sidebar (#124)
 require_once __DIR__ . '/display_order.php';   // each analyst's own module order (GH #187)
 
 // Bootstrap i18n so every module that includes this header gets t() for free.
@@ -748,6 +749,9 @@ function renderWaffleMenuPanel($modules, $current_module, $path_prefix) {
         </div>
     </div>
     <?php
+    // The optional sidebar (#124) - drawn here because every analyst header
+    // already calls this, so no page needs editing to have it.
+    renderAppSidebar($modules, $current_module);
 }
 
 /**
