@@ -83,7 +83,7 @@ function renderAppSidebar(array $modules, $current_module): void
     $recent = t('common.waffle.tab_recent');
     $choose = t('common.sidebar.customise');
     ?>
-    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=1">
+    <link rel="stylesheet" href="<?php echo $h(BASE_URL); ?>assets/css/app-sidebar.css?v=2">
     <nav class="app-sidebar" aria-label="<?php echo $h(t('common.sidebar.label')); ?>">
         <div class="app-sidebar-modules">
             <?php foreach (appSidebarModules($modules) as $key => $module): ?>
