@@ -1214,7 +1214,7 @@ try {
                         <em>Confidential - arrived through the HR inbox mailbox</em>.
                     </p>
                     <p>
-                        <strong>It stays inside FreeITSM.</strong> A confidential ticket is not sent to AI (the summary, Read it for me,
+                        <strong>It stays inside FreeITSM.</strong> A confidential ticket is not sent to AI (the summary, Read it,
                         reply clean-up, Ask AI and the rest) unless <strong>Tickets &rarr; Settings &rarr; General &rarr; Confidential tickets and AI</strong>
                         allows it; a webhook, Slack or Teams post carries only its number and status; and escalating it to a tracker such as
                         Jira asks you to confirm first. A workflow never copies one into a tracker. A workflow's <strong>Send email</strong>
