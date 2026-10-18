@@ -1,10 +1,13 @@
 <?php
 /**
- * Danish (da) - contracts strings.
+ * FreeITSM — contracts strings (da).
  *
- * Mirrors lang/en/contracts.php. Keys absent here fall back to English, so this
- * file may be a subset; what IS here must match the English key structure
- * exactly, because I18n::t() splits on every dot.
+ * Keys mirror lang/en/contracts.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php da
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
  */
 
 return [
@@ -77,6 +80,7 @@ return [
         'result_count_other' => '{n} resultater',
     ],
     'detail' => [
+        'page_title' => 'Vis kontrakt',
         'loading' => 'Indlæser kontrakt...',
         'error_prefix' => 'Fejl:',
         'load_failed' => 'Kunne ikke hente kontrakten',
@@ -84,6 +88,7 @@ return [
         'back' => 'Tilbage',
         'task' => 'Opgave',
         'calendar' => 'Kalender',
+        'company' => 'Virksomhed',
         'contract_number' => 'Kontraktnummer',
         'status' => 'Status',
         'title_label' => 'Titel',
@@ -157,11 +162,17 @@ return [
         'toast_event_save_failed' => 'Kunne ikke gemme begivenheden',
     ],
     'edit' => [
+        'page_title_edit' => 'Redigér kontrakt',
+        'page_title_add' => 'Tilføj kontrakt',
         'heading_edit' => 'Redigér kontrakt',
         'heading_add' => 'Tilføj kontrakt',
         'none' => 'Ingen',
         'select_supplier' => 'Vælg leverandør',
         'select_owner' => 'Vælg ejer',
+        'company' => 'Virksomhed',
+        'company_hint' => 'Den virksomhed, kontrakten tilhører. Kun medarbejdere, der kan se den virksomhed, kan se kontrakten.',
+        'cost_centre_inactive' => 'inaktiv',
+        'cost_centre_previous' => 'Tidligere registreret: {text}',
         'contract_number' => 'Kontraktnummer',
         'contract_number_ph' => 'fx CON-001',
         'title_ph' => 'fx Årlig supportaftale',
@@ -179,6 +190,30 @@ return [
         'configure_in_settings' => 'Konfigurér i indstillinger',
         'toast_saved' => 'Kontrakt gemt',
         'toast_save_failed' => 'Kunne ikke gemme kontrakten',
+    ],
+    'party' => [
+        'with' => 'Kontrakt med',
+        'supplier' => 'Leverandør',
+        'customer' => 'Kunde',
+        'company' => 'Virksomhed',
+        'select_company' => 'Vælg virksomhed',
+        'person' => 'Person',
+        'person_ph' => 'Søg efter en person (valgfrit)...',
+        'clear_person' => 'Ryd',
+        'no_people' => 'Ingen matcher.',
+        'hint_multi' => 'Vælg virksomheden, en person eller begge. Hvem der kan se kontrakten, afgøres af den virksomhed, den tilhører, øverst i formularen.',
+        'hint_single' => 'Vælg den person, du sælger denne kontrakt til.',
+        'col_with' => 'Med',
+        'filter' => 'Vis kontrakter med',
+        'filter_all' => 'Leverandører og kunder',
+        'filter_supplier' => 'Kun leverandører',
+        'filter_customer' => 'Kun kunder',
+        'customer_suffix' => '(Kunde: {customer})',
+        'err_customer_required' => 'Vælg kunden: en virksomhed, en person eller begge.',
+        'err_type' => 'En kontrakt er med en leverandør eller en kunde.',
+        'err_company' => 'Du har ikke adgang til den virksomhed.',
+        'err_person' => 'Du kan ikke se den person.',
+        'err_person_company' => 'Den person er ikke i den virksomhed, du valgte.',
     ],
     'settings' => [
         'page_title' => 'Service Desk - Kontraktindstillinger',
@@ -258,6 +293,7 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Leverandører',
+        'view_page_title' => 'Vis leverandør',
         'all_suppliers' => 'Alle leverandører',
         'add_supplier' => 'Tilføj leverandør',
         'edit_supplier' => 'Redigér leverandør',
@@ -391,12 +427,14 @@ return [
         'feature_contacts' => 'Hold styr på de personer, der står bag dine leverandører. Gem navne, jobtitler, e-mailadresser og telefonnumre. Knyt hver kontakt til deres leverandør for hurtig opslag.',
         'feature_settings' => 'Konfigurér de rullelisteindstillinger, der driver modulet &mdash; leverandørtyper, leverandørstatusser, kontraktstatusser, betalingsplaner og brugerdefinerede kontraktvilkårs-faneblade.',
         'managing_intro' => 'Kontrakter er kernen i dette modul. Hver kontraktpost indeholder alt, du skal vide om en leverandøraftale &mdash; hvem den er med, hvor længe den løber, hvad den koster, og hvilke dokumenter der understøtter den.',
+        'managing_step1' => '<strong>Opret en kontrakt</strong> &mdash; klik på knappen Tilføj på kontraktoversigten. Udfyld kontraktens navn, vælg, hvem den er med (en leverandør eller en kunde), og angiv status.',
         'managing_step2' => '<strong>Angiv datoerne</strong> &mdash; indtast startdato, slutdato og revisionsdato. Revisionsdatoen fungerer som en tidlig advarsel, så du har tid til at genforhandle eller forny, før kontrakten udløber.',
         'managing_step3' => '<strong>Registrér økonomien</strong> &mdash; indtast den samlede kontraktværdi, og vælg betalingsplanen (månedligt, kvartalsvist, årligt eller en brugerdefineret plan konfigureret i indstillinger).',
         'managing_step4' => '<strong>Tilføj kontraktvilkår</strong> &mdash; brug de formaterede faneblade til at skrive SLA\'er, KPI\'er, særlige betingelser eller andre vilkår. Hvert faneblad bruger TinyMCE-editoren til fuld formatering.',
         'managing_step5' => '<strong>Upload dokumenter</strong> &mdash; vedhæft underskrevne kopier, planer, tillæg eller andre understøttende filer direkte til kontraktposten.',
         'managing_step6' => '<strong>Gem</strong>, og kontrakten vises på din oversigt. Du kan altid vende tilbage og redigere den eller opdatere status, efterhånden som den bevæger sig gennem sin livscyklus.',
         'managing_dashboard' => 'Kontraktoversigten giver dig et overblik over alle aktive, udløbende og udløbne kontrakter. Sidepanelet viser sammenfattende statistik &mdash; samlet antal kontrakter, dem der snart udløber, og genveje til at oprette nye poster eller gå til leverandører.',
+        'managing_customers' => '<strong>Kontrakter, du sælger.</strong> En kontrakt kan være med en <em>kunde</em> såvel som en leverandør &mdash; for eksempel en supportkontrakt, du leverer. Vælg <strong>Kunde</strong> under <em>Kontrakt med</em>, og vælg derefter virksomheden, en person eller begge. Listen viser, hvem hver kontrakt er med, og drop-down-menuen over den indsnævrer listen til leverandører eller kunder. Hver kontrakt <strong>tilhører også en virksomhed</strong> &mdash; valgt under <em>Virksomhed</em> øverst i formularen, som standard den virksomhed, du arbejder i. Kun medarbejdere, der kan se den virksomhed, kan se kontrakten, og kontraktlisten viser den virksomhed, du har skiftet til. Hvem en kontrakt er <em>med</em>, er noget andet: en kontrakt kan tilhøre din egen virksomhed og være med en kunde.',
         'managing_tip' => 'Brug feltet revisionsdato til at sætte påmindelser i god tid før en kontrakts slutdato. Det giver dit indkøbs- eller juridiske team nok tid til at forhandle fornyelser på gunstige vilkår.',
         'terms_title' => 'Kontraktvilkår &mdash; formaterede faneblade',
         'terms_intro' => 'Hver kontrakt kan have flere vilkårsfaneblade, som hver indeholder formateret tekst. Det er her, du fanger selve indholdet af aftalen &mdash; serviceniveauer, resultatindikatorer, forpligtelser og særlige betingelser.',
@@ -481,6 +519,7 @@ return [
             'col_updated' => 'Opdateret',
             'empty' => 'Ingen RFP\'er endnu. Klik på "+ Ny RFP" for at oprette en.',
             'name_ph' => 'f.eks. Ny ITSM-platform 2026',
+            'company_help' => 'Den virksomhed, dette RFP tilhører. Kun medarbejdere, der kan se den virksomhed, kan se det, dets dokumenter og dets score.',
             'style_guide_override' => 'Tilsidesættelse af stilguide',
             'style_guide_ph' => 'Valgfrit. Lad feltet stå tomt for at bruge systemets standard.',
             'style_guide_help' => 'Tilføjes til AI-prompts for at styre skrivestilen i den genererede RFP. Almindelig tekst, én regel pr. linje.',
@@ -520,6 +559,7 @@ Dette fjerner permanent alle dokumenter, krav, scorer og historik for denne RFP.
             'overview_p1' => 'RFP Builder tager afdelingers tilbagemeldingsdokumenter (ét pr. bidragende afdeling), bruger AI til at udtrække hvert enkelt krav, fjerner dubletter og kategoriserer dem, udarbejder et professionelt RFP-dokument, du kan sende til leverandører, og scorer derefter leverandørernes svar krav for krav for at understøtte en beslutning.',
             'overview_p2' => 'Værktøjet er <strong>kun til internt brug</strong>. Leverandører logger aldrig ind — du deler den genererede PDF med dem via din sædvanlige indkøbskanal (e-mail, sourcing-platform osv.), og de svarer uden for FreeITSM. Du indtaster selv deres scorer ud fra at læse deres svar.',
             'overview_tip' => '<strong>Det, der gør forskellen, er konsolideringen.</strong> Fem afdelinger, der beder om "det samme", bruger sjældent de samme ord — Pass 2 (konsolidering) fletter disse dubletter, mens hvert originalcitat bevares som politisk dækning, og markerer reelle modsætninger mellem afdelinger, som du skal løse.',
+            'overview_company' => '<strong>Hvert RFP tilhører en virksomhed</strong> - valgt under <em>Virksomhed</em>, når du opretter det, som standard den virksomhed, du arbejder i. Kun medarbejdere, der kan se den virksomhed, kan se RFP\'et, dets dokumenter, krav og score, og listen viser den virksomhed, du har skiftet til.',
             'wf_source' => 'Kildedok.',
             'wf_extract' => 'Udtræk',
             'wf_consolidate' => 'Konsolidér',
@@ -711,6 +751,7 @@ Eventuelle scorer, der allerede er indtastet for dem, slettes. Selve leverandør
             'low' => 'lav',
         ],
         'scoring' => [
+            'page_title' => 'Scoring',
             'title' => 'Scoring',
             'score_by_category' => 'Score pr. kategori',
             'my_overall' => 'Min samlede score',
@@ -737,6 +778,7 @@ Eventuelle scorer, der allerede er indtastet for dem, slettes. Selve leverandør
             'other_analysts' => 'Andre medarbejdere (gnsn.)',
         ],
         'documents' => [
+            'page_title' => 'RFP-dokumenter',
             'rfp' => 'RFP',
             'documents' => 'Dokumenter',
             'heading' => 'Kildedokumenter',
@@ -793,6 +835,7 @@ Eventuelle scorer, der allerede er indtastet for dem, slettes. Selve leverandør
 Eventuelle udtrukne krav fra dette dokument fjernes også.',
         ],
         'document' => [
+            'page_title' => 'RFP-dokument',
             'heading' => 'Genereret dokument',
             'preview_document' => 'Forhåndsvis dokument',
             'generate_all' => 'Generér alle',
@@ -891,6 +934,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'restore_failed_short' => 'Gendannelse mislykkedes',
         ],
         'extracted' => [
+            'page_title' => 'Udtrukne krav',
             'heading' => 'Udtrukne krav',
             'total' => 'I alt',
             'requirements' => 'Krav',
@@ -934,6 +978,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'not_generated' => '(Endnu ikke genereret.)',
         ],
         'compare' => [
+            'page_title' => 'Sammenlign',
             'compare' => 'Sammenlign',
             'heading' => 'Sammenlign leverandører',
             'load_failed' => 'Kunne ikke indlæse sammenligningsdata',
@@ -956,6 +1001,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'col_winner' => 'Vinder',
         ],
         'coverage' => [
+            'page_title' => 'Dækningskort',
             'heading' => 'Dækningskort',
             'consolidated_requirements' => 'Konsoliderede krav',
             'load_failed' => 'Kunne ikke indlæse dækning',
@@ -974,6 +1020,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'legend_note' => 'Ét konsolideret krav tæller med i hver afdeling, det har en kilde fra.',
         ],
         'audit' => [
+            'page_title' => 'AI-revisionsspor',
             'audit_trail' => 'Revisionsspor',
             'heading' => 'AI-revisionsspor',
             'total_input_tokens' => 'Input-tokens i alt',
@@ -989,6 +1036,7 @@ Den nuværende version gemmes først som et øjebliksbillede i historikken, så 
             'col_model' => 'Model',
         ],
         'consolidate' => [
+            'page_title' => 'Konsoliderede krav',
             'consolidated' => 'Konsolideret',
             'heading' => 'Konsoliderede krav',
             'add_custom' => 'Tilføj brugerdefineret',

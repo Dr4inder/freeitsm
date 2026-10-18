@@ -1,10 +1,13 @@
 <?php
 /**
- * Danish (da) - service-status strings.
+ * FreeITSM — service-status strings (da).
  *
- * Mirrors lang/en/service-status.php. Keys absent here fall back to English, so this
- * file may be a subset; what IS here must match the English key structure
- * exactly, because I18n::t() splits on every dot.
+ * Keys mirror lang/en/service-status.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php da
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
  */
 
 return [
@@ -62,6 +65,33 @@ return [
         'delete' => 'Slet',
         'cancel' => 'Annullér',
         'save' => 'Gem',
+    ],
+    'planned' => [
+        'title' => 'Planlagt vedligeholdelse',
+        'new' => 'Planlæg',
+        'new_title' => 'Planlæg vedligeholdelse',
+        'edit_title' => 'Ændr planlagt vedligeholdelse',
+        'intro' => 'Fortæl folk om arbejdet, før det sker. Indtil det starter, vises det her som kommende og ændrer intet; ved start bliver det en hændelse på de tjenester, du vælger, og ved slutningen bliver den løst.',
+        'title_label' => 'Titel',
+        'title_ph' => 'fx Flytning af telefonsystem',
+        'start' => 'Starter',
+        'end' => 'Slutter (valgfrit)',
+        'comment' => 'Hvad folk bør vide',
+        'comment_ph' => 'Hvad der bliver utilgængeligt, og hvad man kan gøre i stedet',
+        'none' => 'Ingen planlagt vedligeholdelse.',
+        'when_range' => '{start} til {end}',
+        'when_open' => 'Fra {start}, indtil det er løst',
+        'from_project' => 'Fra projektet {name}',
+        'open' => 'Åbn',
+        'edit' => 'Redigér',
+        'cancel_plan' => 'Træk tilbage',
+        'cancel_title' => 'Trække denne vedligeholdelse tilbage?',
+        'cancel_message' => '"{name}" starter ikke og forsvinder fra tavlen og portalen.',
+        'state_scheduled' => 'Kommende',
+        'state_started' => 'I gang',
+        'state_finished' => 'Afsluttet',
+        'state_cancelled' => 'Trukket tilbage',
+        'portal_heading' => 'Planlagt vedligeholdelse',
     ],
     'toast' => [
         'incident_saved' => 'Hændelse gemt',
@@ -271,6 +301,12 @@ return [
         'tip_update_desc' => 'Jævnlige statusopdateringer &mdash; selv hvis intet har ændret sig &mdash; viser brugerne, at der aktivt arbejdes på problemet. Tavshed skaber frustration og supportsager.',
         'tip_review_title' => 'Gennemgå mønstre',
         'tip_review_desc' => 'Tjek din hændelseshistorik jævnligt. Hvis den samme tjeneste bliver ved med at dukke op, kan det pege på et dybereliggende infrastrukturproblem, der er værd at tage fat på proaktivt.',
+        'planned_heading' => 'Planlagt vedligeholdelse',
+        'planned_p1' => 'Tryk på Planlæg under Planlagt vedligeholdelse for at fortælle folk om arbejdet, før det sker: en titel, hvornår det starter og (valgfrit) slutter, hvad folk bør vide, og de tjenester, det berører, med en konsekvens - Vedligeholdelse, medmindre du vælger en anden. Det vises straks som Kommende, her og på portalen, hvis hændelser vises der, og ændrer intet på tjenesterne.',
+        'planned_p2' => 'Ved starten bliver det til en almindelig hændelse på de tjenester, dateret fra den planlagte start, med dine ord som første eksterne opdatering - så dens arbejdsgange kører, og dens historik læses, som om du havde oprettet den dengang. Ved slutningen bliver den løst, dateret til den planlagte slutning. Lad slutningen stå tom for selv at løse den manuelt. Du må gerne løse den tidligere selv; dit tidspunkt gælder.',
+        'planned_p3' => 'Indtil det starter, kan du ændre det eller trække det tilbage med Redigér. Når det er startet, er det en hændelse: ændr den der, med Åbn.',
+        'planned_note' => 'Start og slutning opdages, når nogen åbner denne side, portalen eller Watchtower, og af det planlagte arbejdsgangsjob (cron/workflow_scheduled.php) - så planlæg det job, hvis starten skal ske til tiden, mens ingen kigger med. Niveauet Vedligeholdelse tæller ikke med i oppetiden. Et projekt kan annoncere planlagt vedligeholdelse fra sin fane Forbindelser.',
         'tip_maintenance_title' => 'Planlæg vedligeholdelse',
+        'tip_maintenance_desc' => 'Brug Planlagt vedligeholdelse til arbejde, du kender på forhånd. Det annonceres med det samme og bliver først en hændelse - på niveauet Vedligeholdelse, som ikke tæller med i oppetiden - når arbejdet starter.',
     ],
 ];
