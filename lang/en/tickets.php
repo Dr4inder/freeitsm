@@ -787,6 +787,7 @@ return [
         'schedule'             => 'Schedule',
         'ask_ai'               => 'Ask AI',
         'audit'                => 'Audit',
+        'more'                 => 'More',
         'request_feedback'     => 'Feedback',
         'delete'               => 'Delete',
         'loading_attachments'  => 'Loading attachments...',

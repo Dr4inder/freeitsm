@@ -3171,9 +3171,11 @@ ${classificationFields}
         <!-- Collision detection (#934). Left empty by the render and filled by the
              presence poll, so a re-render never flashes a stale set of faces. -->
         <div class="presence-strip" id="presenceStrip" hidden></div>
-        ${buildLinksSection(email)}
+        <div class="pane-strips">
+            ${buildLinksSection(email)}
+            ${buildAiSummarySlot()}
+        </div>
         ${buildRecordingsStrip(currentRecordings)}
-        ${buildAiSummarySlot()}
         <div class="action-toolbar">
             <button class="action-btn" onclick="openNoteModal()">
                 <span class="action-btn-icon">📝</span>
@@ -3196,19 +3198,26 @@ ${classificationFields}
                 <span>${escapeHtml(t('tickets.actions.ask_ai'))}</span>
             </button>
             ${buildReadForMeButton()}
-            <button class="action-btn" onclick="showAuditHistory()">
+            <button class="action-btn pane-secondary" onclick="showAuditHistory()">
                 <span class="action-btn-icon">📋</span>
                 <span>${escapeHtml(t('tickets.actions.audit'))}</span>
             </button>
             ${buildWriteUpButton(email)}
-            <button class="action-btn" onclick="requestCsatSurvey()" title="Send a satisfaction survey to the requester">
+            <button class="action-btn pane-secondary" onclick="requestCsatSurvey()" title="Send a satisfaction survey to the requester">
                 <span class="action-btn-icon">⭐</span>
                 <span>${escapeHtml(t('tickets.actions.request_feedback'))}</span>
             </button>
-            <button class="action-btn action-btn-danger" onclick="deleteTicket()">
+            <button class="action-btn action-btn-danger pane-secondary" onclick="deleteTicket()">
                 <span class="action-btn-icon">🗑️</span>
                 <span>${escapeHtml(t('tickets.actions.delete'))}</span>
             </button>
+            <div class="pane-more-wrap">
+                <button type="button" class="action-btn pane-more-btn" onclick="togglePaneMoreMenu(event)" aria-haspopup="true">
+                    <span class="action-btn-icon">⋯</span>
+                    <span>${escapeHtml(tf('tickets.actions.more', 'More'))} ▾</span>
+                </button>
+                <div class="pane-more-menu" id="paneMoreMenu" hidden></div>
+            </div>
         </div>
         <div class="email-body">
             <div id="ticketChecklistContainer"></div>
@@ -3223,6 +3232,7 @@ ${classificationFields}
 
     // Isolate the just-rendered email body in a shadow root (see emailBodyHost).
     hydrateEmailBodies(readingPane);
+    watchPaneCompact(readingPane);
 
     loadAiSummary(email.ticket_id);
     if (typeof loadTicketChecklists === "function") loadTicketChecklists(email.ticket_id);
@@ -8326,6 +8336,48 @@ async function saveTicketCustomField(el) {
     }
 }
 
+/**
+ * Shrink the reading pane's header to the subject alone once the thread is
+ * scrolled, and bring it back in full at the top - the header never scrolls, so
+ * on a long thread it was a third of the pane spent on lines already read.
+ * Two thresholds, so a scroll resting near the boundary does not flicker.
+ * Desktop only: the phone has its own collapsed header.
+ */
+function watchPaneCompact(pane) {
+    const body = pane && pane.querySelector('.email-body');
+    pane && pane.classList.remove('pane-compact');
+    if (!body || !window.matchMedia('(min-width: 769px)').matches) return;
+    body.addEventListener('scroll', () => {
+        if (body.scrollTop > 60) pane.classList.add('pane-compact');
+        else if (body.scrollTop < 10) pane.classList.remove('pane-compact');
+    }, { passive: true });
+}
+
+/**
+ * The toolbar's More menu (desktop). Built from the toolbar's own secondary
+ * buttons each time it opens, so it can never offer something the toolbar does
+ * not - the Write up button only exists on a closed ticket, for one.
+ */
+function togglePaneMoreMenu(event) {
+    event.stopPropagation();
+    const menu = document.getElementById('paneMoreMenu');
+    if (!menu) return;
+    if (!menu.hidden) { menu.hidden = true; return; }
+    const toolbar = menu.closest('.action-toolbar');
+    menu.innerHTML = '';
+    toolbar.querySelectorAll('.pane-secondary').forEach(btn => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.innerHTML = btn.innerHTML;
+        if (btn.classList.contains('action-btn-danger')) item.classList.add('is-danger');
+        item.addEventListener('click', () => { menu.hidden = true; btn.click(); });
+        menu.appendChild(item);
+    });
+    menu.hidden = false;
+    const close = e => { if (!menu.contains(e.target)) { menu.hidden = true; document.removeEventListener('click', close); } };
+    setTimeout(() => document.addEventListener('click', close), 0);
+}
+
 function openNewTicketModal() {
     // Clear form. The requester picker owns the name/email fields now, so it
     // resets them — clearing them here as well would fight it.
@@ -11712,7 +11764,7 @@ function ticketIsClosed(email) {
 function buildWriteUpButton(email) {
     if (!window.KB_WRITEUP_ENABLED || !ticketIsClosed(email)) return '';
     return `
-            <button class="action-btn" onclick="openWriteUpModal()" title="Turn this into a knowledge base article">
+            <button class="action-btn pane-secondary" onclick="openWriteUpModal()" title="Turn this into a knowledge base article">
                 <span class="action-btn-icon">📖</span>
                 <span>Write up</span>
             </button>`;

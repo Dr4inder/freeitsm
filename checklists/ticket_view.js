@@ -175,6 +175,10 @@ function renderTicketChecklistsInline(ticketId) {
         emailBody.insertBefore(host, emailBody.firstChild);
     }
 
+    // Hidden until there is something to say: a ticket with no checklist and
+    // nothing to suggest gets no strip - the Checklist button attaches one.
+    host.hidden = !ticketChecklistsData || ticketChecklistsData.length === 0;
+
     if (!ticketChecklistsData || ticketChecklistsData.length === 0) {
         host.innerHTML = `
             <div id="sopEmptyStateHost_${ticketId}" style="background: var(--surface, #ffffff); border: 1px dashed var(--border, #cbd5e1); border-radius: 6px; padding: 8px 14px; margin: -15px 0 12px 0; display: flex; justify-content: space-between; align-items: center;">
@@ -798,6 +802,8 @@ async function checkAndShowSopSuggestion(ticketId) {
             : (data.suggested ? [data.suggested] : []);
 
         if (list.length > 0) {
+            const strip = document.getElementById('ticketChecklistContainer');
+            if (strip) strip.hidden = false;   // a suggestion is worth the room
             hostDiv.style.background = '#f0fdfa';
             hostDiv.style.border = '1px solid #99f6e4';
             hostDiv.style.borderRadius = '6px';
@@ -881,6 +887,9 @@ async function checkAndShowSopSuggestion(ticketId) {
 /** Hides the suggestions for this ticket for the rest of the page visit and puts back the plain "none attached" box. */
 function dismissSopSuggestion(ticketId) {
     window.dismissedSuggestions[ticketId] = true;
+    // Dismissed: back to no strip at all, like any ticket with nothing attached.
+    const strip = document.getElementById('ticketChecklistContainer');
+    if (strip) strip.hidden = true;
     const hostDiv = document.getElementById(`sopEmptyStateHost_${ticketId}`);
     if (hostDiv) {
         hostDiv.style.background = 'var(--surface, #ffffff)';
