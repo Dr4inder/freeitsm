@@ -1,4 +1,14 @@
 <?php
+/**
+ * FreeITSM — system-wiki strings (uk).
+ *
+ * Keys mirror lang/en/system-wiki.php exactly. A key absent here falls back to
+ * English at runtime, so this file may be incomplete without breaking
+ * anything. Check coverage with: php scripts/i18n_audit.php uk
+ *
+ * ⚠️ Placeholders like {name} and %d are substituted at runtime — printf
+ * tokens substitute BY POSITION, so their order must match English.
+ */
 
 return [
     'title' => 'Системна вікі',
@@ -41,6 +51,7 @@ return [
         'files_count' => '{n} файлів',
     ],
     'search' => [
+        'page_title' => 'Пошук у вікі',
         'search_placeholder' => 'Пошук файлів, функцій, таблиць бази даних...',
         'search_btn' => 'Пошук',
         'tab_files' => 'Файли',
@@ -56,6 +67,7 @@ return [
         'refs_across_files' => '{refs} посилань у {files} файлах',
     ],
     'scan' => [
+        'page_title' => 'Керування скануванням',
         'heading' => 'Керування скануванням',
         'subtitle' => 'Запустіть сканер PowerShell для каталогізації кодової бази',
         'run_now' => 'Сканувати зараз',
@@ -75,6 +87,7 @@ return [
         'error_prefix' => 'Помилка: ',
     ],
     'file' => [
+        'page_title' => 'Деталі файлу',
         'loading' => 'Завантаження деталей файлу...',
         'no_id' => 'ID файлу не вказано.',
         'error_prefix' => 'Помилка: ',
@@ -107,6 +120,7 @@ return [
         'static' => 'static',
     ],
     'function' => [
+        'page_title' => 'Деталі функції',
         'loading' => 'Завантаження деталей функції...',
         'no_id' => 'ID функції не вказано.',
         'error_prefix' => 'Помилка: ',
@@ -121,6 +135,7 @@ return [
         'col_line' => 'Рядок',
     ],
     'table' => [
+        'page_title' => 'Посилання на таблиці',
         'loading' => 'Завантаження посилань на таблицю...',
         'no_name' => 'Назву таблиці не вказано.',
         'error_prefix' => 'Помилка: ',
@@ -131,6 +146,7 @@ return [
         'no_references' => 'Посилання для цієї таблиці не знайдено.',
     ],
     'tables' => [
+        'page_title' => 'Таблиці бази даних',
         'heading' => 'Таблиці бази даних',
         'loading' => 'Завантаження...',
         'col_name' => 'Назва таблиці',
