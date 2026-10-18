@@ -1045,8 +1045,8 @@ $translationNamespaces = ['common', 'tickets'];
 
         /* TRAP: "new mail from the check this page just ran" is not "something
            new arrived". Chat messages (WhatsApp, Telegram, Slack, Teams,
-           Mattermost) reach the server by webhook, and mail collected by the
-           scheduled task never passes through this page - so for both, an open
+           Mattermost) reach the server by webhook, and mail collected by another
+           analyst's inbox is not reported to this page - so for both, an open
            inbox showed nothing until someone pressed refresh. The marker is the
            newest message id on any ticket this analyst can see
            (api/tickets/get_inbox_activity.php); when it moves, refresh. */
@@ -1091,7 +1091,7 @@ $translationNamespaces = ['common', 'tickets'];
                 }
 
                 // Refresh if anything new arrived - from this check, a webhook,
-                // or the scheduled task. The first look only sets the baseline:
+                // or another analyst's inbox. The first look only sets the baseline:
                 // the page has just loaded, so it is already up to date.
                 const marker = await newestMarker();
                 const moved = marker !== null && lastMarker !== null && marker > lastMarker;

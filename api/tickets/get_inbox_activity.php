@@ -10,8 +10,8 @@
  *
  * Why it exists: the inbox only refreshed when the mailbox check IT ran found
  * mail. A WhatsApp, Telegram, Slack, Teams or Mattermost message arrives at the
- * server through a webhook, and mail collected by the scheduled task arrives
- * without the browser - neither ever told an open inbox, so a new chat ticket
+ * server through a webhook, and mail collected by another analyst's open inbox
+ * is not reported to this one - neither ever told an open inbox, so a new chat ticket
  * sat unseen until somebody pressed refresh.
  *
  * Deliberately says nothing but a number: no subject, no sender, no count, so it
