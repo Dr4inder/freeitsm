@@ -1680,6 +1680,7 @@ return [
             'asked'           => 'Asked',
             'answered'        => '{n} answered',
             'shared'          => 'Shared',
+            'key_hint'        => 'The field\'s key, used by the REST API. It never changes, even if the name does.',
             'shared_hint'     => 'Shared by every company - managed from the default company',
             'add_title'       => 'New custom field',
             'edit_title'      => 'Edit custom field',

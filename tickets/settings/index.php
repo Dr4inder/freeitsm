@@ -3687,6 +3687,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     <button class="action-btn delete" onclick="tfRetire(${f.id})" title="${escapeHtml(t('tickets.settings.custom_fields.retire'))}">${TT_DELETE_SVG}</button>` : '';
                 return `<tr>
                     <td><strong>${escapeHtml(f.label)}</strong>${shared}${f.help_text ? `<br><small style="color:var(--text-muted,#666);">${escapeHtml(f.help_text)}</small>` : ''}
+                        <br><small style="color:var(--text-dim,#888);" title="${escapeHtml(t('tickets.settings.custom_fields.key_hint'))}"><code>${escapeHtml(f.key)}</code></small>
                         ${f.answered ? `<br><small style="color:var(--text-dim,#888);">${escapeHtml(t('tickets.settings.custom_fields.answered', { n: f.answered }))}</small>` : ''}</td>
                     <td>${escapeHtml(t('tickets.settings.custom_fields.kinds.' + f.type))}</td>
                     <td>${types}</td>
