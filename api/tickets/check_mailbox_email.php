@@ -51,6 +51,24 @@ try {
         exit;
     }
 
+    /* TRAP: every open ticket inbox polls every mailbox every minute, so five
+       analysts meant five checks a minute - and two landing together both
+       fetched the same unread email. The second found it already imported and
+       logged "import: success, ticket_id: null" (GH #183); had both looked
+       before either saved, they would have made TWO tickets. So: one check per
+       mailbox at a time (the lock is released when this request's connection
+       closes), and an automatic poll stands down if any check of this mailbox
+       finished in the last 50 seconds. A manual Check is never throttled. */
+    $lock = $conn->prepare("SELECT GET_LOCK(CONCAT('freeitsm_mbx_', LEFT(SHA1(DATABASE()), 12), '_', ?), 0)");
+    $lock->execute([(int)$mailboxId]);
+    if ((int)$lock->fetchColumn() !== 1) {
+        mailboxCheckStandDown($mailbox, 'busy', 'Another check of ' . $mailbox['target_mailbox'] . ' is already running');
+    }
+    if (!empty($data['auto']) && !empty($mailbox['last_checked_datetime'])
+        && time() - strtotime($mailbox['last_checked_datetime'] . ' UTC') < 50) {
+        mailboxCheckStandDown($mailbox, 'recent', $mailbox['target_mailbox'] . ' was checked less than a minute ago');
+    }
+
     // Determine provider + auth mode
     $provider = $mailbox['provider'] ?? 'microsoft';
     $authMode = $mailbox['auth_mode'] ?? 'delegated';
@@ -290,15 +308,26 @@ try {
 
             $importResult = saveEmailToDatabase($conn, $email, $accessToken, $mailboxId, $prefetched,
                                                 $sizePlan['strip'] ?? [], (int)$oversizeRules['max_bytes']);
-            $ticketId = $importResult['ticket_id'] ?? $importResult;
+            $ticketId = $importResult['ticket_id'] ?? null;
             $isNewTicket = $importResult['is_new_ticket'] ?? false;
-            $processingLog['steps'][] = [
+            // Already in the database (GH #183): an earlier check imported it and
+            // the email is still in the mailbox - usually because the action after
+            // importing failed that time. Nothing new is saved; it is logged as
+            // what it is, with the ticket it went to, and the action below runs
+            // again so it does not come back on every check.
+            $alreadyImported = !empty($importResult['already_imported']);
+            $processingLog['steps'][] = $alreadyImported ? [
+                'step' => 'import',
+                'result' => 'already_imported',
+                'details' => 'This email was imported by an earlier check; nothing new was saved',
+                'ticket_id' => $ticketId ?: null,
+            ] : [
                 'step' => 'import',
                 'result' => 'success',
                 'ticket_id' => $ticketId ?: null,
                 'is_new_ticket' => $isNewTicket
             ];
-            $savedCount++;
+            if (!$alreadyImported) $savedCount++;
 
             // Handle imported email according to imported_action setting
             $postAction = ['step' => 'post_action', 'action' => $importedAction];
@@ -333,7 +362,7 @@ try {
             // Attachments removed for size: tell whoever the settings say, and
             // record it on the log row so it is findable without opening it.
             $sizeReason = null;
-            if ($sizePlan && $sizePlan['over'] && $importResult !== false) {
+            if ($sizePlan && $sizePlan['over'] && !$alreadyImported) {
                 foreach (oversizeNotify($conn, $mailbox, $oversizeRules, $fromAddress, $fromName, $subject, $sizeAtts, $sizePlan, 'stripped', $ticketId ? (int)$ticketId : null) as $s) {
                     $processingLog['steps'][] = $s;
                 }
@@ -341,7 +370,7 @@ try {
             }
 
             $activityEntries[] = [
-                'action' => 'imported',
+                'action' => $alreadyImported ? 'already_imported' : 'imported',
                 'from_address' => $fromAddress,
                 'from_name' => $fromName,
                 'subject' => $subject,
@@ -569,6 +598,26 @@ function recordMailboxCheckOutcome($conn, $mailboxId, ?string $error = null) {
 function failMailboxCheck($conn, $mailboxId, string $error, array $extra = []) {
     recordMailboxCheckOutcome($conn, $mailboxId, $error);
     echo json_encode(array_merge(['success' => false, 'error' => $error], $extra));
+    exit;
+}
+
+/**
+ * A check that did not run because it did not need to: another check of this
+ * mailbox is running, or (for an automatic poll) one finished moments ago.
+ * Not an error and not a check, so the mailbox's last-checked time and last
+ * error are left exactly as they were.
+ *
+ * @param array $mailbox  the target_mailboxes row
+ * @param string $why  'busy' or 'recent'
+ * @param string $message  what to say
+ */
+function mailboxCheckStandDown(array $mailbox, string $why, string $message) {
+    echo json_encode([
+        'success' => true,
+        'skipped' => $why,
+        'message' => $message,
+        'details' => ['emails_saved' => 0, 'mailbox' => $mailbox['target_mailbox']],
+    ]);
     exit;
 }
 
@@ -1082,13 +1131,14 @@ function saveEmailToDatabase($conn, $email, $accessToken, $mailboxId, ?array $pr
     $emailId = $email['internet_message_id'] ?? $email['id'] ?? null;
 
     // Check if email already exists
-    $checkSql = "SELECT id FROM emails WHERE exchange_message_id = ?";
+    $checkSql = "SELECT id, ticket_id FROM emails WHERE exchange_message_id = ? LIMIT 1";
     $checkStmt = $conn->prepare($checkSql);
     $checkStmt->execute([$emailId]);
     $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
     if ($existing) {
-        return false;
+        // Not false: the caller logged false as "import: success" with no ticket (GH #183).
+        return ['already_imported' => true, 'ticket_id' => $existing['ticket_id'] ? (int)$existing['ticket_id'] : null, 'is_new_ticket' => false];
     }
 
     // The provider-native id (Graph/Gmail message id, or IMAP UID) — used only for

@@ -6265,6 +6265,8 @@ function renderOversizeFields(string $px, bool $withLimits): void
                     const dt = fmtDateTime(e.created_datetime);
                     const badge = e.action === 'imported'
                         ? '<span style="display: inline-block; padding: 2px 8px; background: #d4edda; color: #155724; border-radius: 10px; font-size: 11px;">Imported</span>'
+                        : e.action === 'already_imported'
+                        ? '<span style="display: inline-block; padding: 2px 8px; background: #e2e3e5; color: #383d41; border-radius: 10px; font-size: 11px;">Already imported</span>'
                         : '<span style="display: inline-block; padding: 2px 8px; background: #f8d7da; color: #721c24; border-radius: 10px; font-size: 11px;">Rejected</span>';
                     const fromAddr = (e.from_address || '').trim();
                     const fromNm   = (e.from_name || '').trim();

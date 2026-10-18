@@ -1061,7 +1061,10 @@ $translationNamespaces = ['common', 'tickets'];
         // Show the icon on the inbox page
         if (btn) btn.style.display = '';
 
-        async function checkMailboxes() {
+        // auto: the timed poll, which the server skips when this mailbox was
+        // checked moments ago by somebody else's inbox (GH #183). Clicking the
+        // mail icon always checks.
+        async function checkMailboxes(auto) {
             if (polling) return;
             polling = true;
             if (btn) btn.classList.add('checking');
@@ -1080,7 +1083,7 @@ $translationNamespaces = ['common', 'tickets'];
                         const res = await fetch('../api/tickets/check_mailbox_email.php', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ mailbox_id: mb.id })
+                            body: JSON.stringify({ mailbox_id: mb.id, auto: auto === true })
                         });
                         const data = await res.json();
                         if (data.success) totalNew += data.details?.emails_saved || 0;
@@ -1103,11 +1106,11 @@ $translationNamespaces = ['common', 'tickets'];
         }
 
         // Manual trigger
-        window.triggerMailCheck = checkMailboxes;
+        window.triggerMailCheck = () => checkMailboxes(false);
 
         // Run on load then every 60s
-        checkMailboxes();
-        setInterval(checkMailboxes, POLL_INTERVAL);
+        checkMailboxes(true);
+        setInterval(() => checkMailboxes(true), POLL_INTERVAL);
     })();
     </script>
 
