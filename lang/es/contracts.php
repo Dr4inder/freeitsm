@@ -80,7 +80,6 @@ return [
         'result_count_other' => '{n} resultados',
     ],
     'detail' => [
-        'page_title' => 'Ver contrato',
         'loading' => 'Cargando contrato...',
         'error_prefix' => 'Error:',
         'load_failed' => 'No se pudo cargar el contrato',
@@ -161,8 +160,6 @@ return [
         'toast_event_save_failed' => 'No se pudo guardar el evento',
     ],
     'edit' => [
-        'page_title_edit' => 'Editar contrato',
-        'page_title_add' => 'Añadir contrato',
         'heading_edit' => 'Editar contrato',
         'heading_add' => 'Añadir contrato',
         'none' => 'Ninguno',
@@ -264,7 +261,6 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Proveedores',
-        'view_page_title' => 'Ver proveedor',
         'all_suppliers' => 'Todos los proveedores',
         'add_supplier' => 'Añadir proveedor',
         'edit_supplier' => 'Editar proveedor',
@@ -398,7 +394,6 @@ return [
         'feature_contacts' => 'Lleve el control de las personas detrás de sus proveedores. Guarde nombres, puestos, direcciones de correo electrónico y números de teléfono. Vincule cada contacto a su proveedor para tenerlo a mano.',
         'feature_settings' => 'Configure las opciones desplegables que rigen el módulo &mdash; tipos de proveedor, estados de proveedor, estados de contrato, calendarios de pago y pestañas de cláusulas personalizadas.',
         'managing_intro' => 'Los contratos son el núcleo de este módulo. Cada registro de contrato recoge todo lo que necesita saber sobre un acuerdo con un proveedor &mdash; con quién es, cuánto dura, cuánto cuesta y qué documentos lo respaldan.',
-        'managing_step1' => '<strong>Cree un contrato</strong> &mdash; desde el panel de contratos, haga clic en el botón Añadir. Rellene el nombre del contrato, seleccione un proveedor y establezca el estado.',
         'managing_step2' => '<strong>Establezca las fechas</strong> &mdash; introduzca la fecha de inicio, la fecha de fin y la fecha de revisión. La fecha de revisión actúa como aviso previo para que tenga tiempo de renegociar o renovar antes de que el contrato venza.',
         'managing_step3' => '<strong>Registre los datos financieros</strong> &mdash; introduzca el importe total del contrato y seleccione el calendario de pago (mensual, trimestral, anual, o uno personalizado configurado en Configuración).',
         'managing_step4' => '<strong>Añada cláusulas del contrato</strong> &mdash; use las pestañas de texto enriquecido para redactar SLAs, KPIs, condiciones especiales, o cualquier otra cláusula. Cada pestaña usa el editor TinyMCE con formato completo.',
@@ -719,7 +714,6 @@ Se eliminarán las puntuaciones ya introducidas para él. El registro del provee
             'low' => 'baja',
         ],
         'scoring' => [
-            'page_title' => 'Puntuación',
             'title' => 'Puntuación',
             'score_by_category' => 'Puntuación por categoría',
             'my_overall' => 'Mi global',
@@ -746,7 +740,6 @@ Se eliminarán las puntuaciones ya introducidas para él. El registro del provee
             'other_analysts' => 'Otros analistas (media)',
         ],
         'documents' => [
-            'page_title' => 'Documentos de RFP',
             'rfp' => 'RFP',
             'documents' => 'Documentos',
             'heading' => 'Documentos de origen',
@@ -803,7 +796,6 @@ Se eliminarán las puntuaciones ya introducidas para él. El registro del provee
 También se eliminarán los requisitos extraídos de este documento.',
         ],
         'document' => [
-            'page_title' => 'Documento de RFP',
             'heading' => 'Documento generado',
             'preview_document' => 'Vista previa del documento',
             'generate_all' => 'Generar todo',
@@ -902,7 +894,6 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'restore_failed_short' => 'Error al restaurar',
         ],
         'extracted' => [
-            'page_title' => 'Requisitos extraídos',
             'heading' => 'Requisitos extraídos',
             'total' => 'Total',
             'requirements' => 'Requisitos',
@@ -946,7 +937,6 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'not_generated' => '(Aún sin generar.)',
         ],
         'compare' => [
-            'page_title' => 'Comparar',
             'compare' => 'Comparar',
             'heading' => 'Comparar proveedores',
             'load_failed' => 'No se pudieron cargar los datos de comparación',
@@ -969,7 +959,6 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'col_winner' => 'Ganador',
         ],
         'coverage' => [
-            'page_title' => 'Mapa de cobertura',
             'heading' => 'Mapa de cobertura',
             'consolidated_requirements' => 'Requisitos consolidados',
             'load_failed' => 'No se pudo cargar la cobertura',
@@ -988,7 +977,6 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'legend_note' => 'Un requisito consolidado cuenta en todos los departamentos de los que tiene un origen.',
         ],
         'audit' => [
-            'page_title' => 'Registro de auditoría de IA',
             'audit_trail' => 'Registro de auditoría',
             'heading' => 'Registro de auditoría de IA',
             'total_input_tokens' => 'Total de tokens de entrada',
@@ -1004,7 +992,6 @@ La versión actual se guardará antes en el historial, así que esto se puede de
             'col_model' => 'Modelo',
         ],
         'consolidate' => [
-            'page_title' => 'Requisitos consolidados',
             'consolidated' => 'Consolidados',
             'heading' => 'Requisitos consolidados',
             'add_custom' => 'Añadir personalizado',

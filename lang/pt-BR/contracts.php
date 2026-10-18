@@ -80,7 +80,6 @@ return [
         'result_count_other' => '{n} resultados',
     ],
     'detail' => [
-        'page_title' => 'Ver contrato',
         'loading' => 'Carregando contrato...',
         'error_prefix' => 'Erro:',
         'load_failed' => 'Falha ao carregar contrato',
@@ -161,8 +160,6 @@ return [
         'toast_event_save_failed' => 'Falha ao salvar evento',
     ],
     'edit' => [
-        'page_title_edit' => 'Editar contrato',
-        'page_title_add' => 'Adicionar contrato',
         'heading_edit' => 'Editar contrato',
         'heading_add' => 'Adicionar contrato',
         'none' => 'Nenhum',
@@ -264,7 +261,6 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Central de Serviços - Fornecedores',
-        'view_page_title' => 'Ver Fornecedor',
         'all_suppliers' => 'Todos os fornecedores',
         'add_supplier' => 'Adicionar fornecedor',
         'edit_supplier' => 'Editar fornecedor',
@@ -398,7 +394,6 @@ return [
         'feature_contacts' => 'Acompanhe as pessoas por trás dos seus fornecedores. Armazene nomes, cargos, endereços de e-mail e números de telefone. Vincule cada contato ao seu fornecedor para referência rápida.',
         'feature_settings' => 'Configure as opções de menu suspenso que impulsionam o módulo &mdash; tipos de fornecedor, status de fornecedor, status de contrato, cronogramas de pagamento e abas de termos do contrato personalizadas.',
         'managing_intro' => 'Os contratos são o núcleo deste módulo. Cada registro de contrato captura tudo o que você precisa saber sobre um acordo com fornecedor &mdash; com quem é, por quanto tempo dura, quanto custa e quais documentos o apoiam.',
-        'managing_step1' => '<strong>Crie um contrato</strong> &mdash; no painel de contratos, clique no botão Adicionar. Preencha o nome do contrato, selecione um fornecedor e defina o status.',
         'managing_step2' => '<strong>Defina as datas</strong> &mdash; insira a data de início, a data de término e a data de revisão. A data de revisão atua como seu alerta antecipado para que você tenha tempo de renegociar ou renovar antes que o contrato expire.',
         'managing_step3' => '<strong>Registre os dados financeiros</strong> &mdash; insira o valor total do contrato e selecione o cronograma de pagamento (mensal, trimestral, anual ou um cronograma personalizado configurado nas configurações).',
         'managing_step4' => '<strong>Adicione termos do contrato</strong> &mdash; use as abas de texto formatado para escrever SLAs, KPIs, condições especiais ou quaisquer outros termos. Cada aba usa o editor TinyMCE para formatação completa.',
@@ -715,7 +710,6 @@ return [
             'low' => 'baixa',
         ],
         'scoring' => [
-            'page_title' => 'Pontuação',
             'title' => 'Pontuação',
             'score_by_category' => 'Pontuação por categoria',
             'my_overall' => 'Minha geral',
@@ -742,7 +736,6 @@ return [
             'other_analysts' => 'Outros analistas (média)',
         ],
         'documents' => [
-            'page_title' => 'Documentos de RFP',
             'rfp' => 'RFP',
             'documents' => 'Documentos',
             'heading' => 'Documentos de origem',
@@ -797,7 +790,6 @@ return [
             'delete_confirm' => 'Excluir "{name}"?\\n\\nQuaisquer requisitos extraídos deste documento também serão removidos.',
         ],
         'document' => [
-            'page_title' => 'Documento de RFP',
             'heading' => 'Documento gerado',
             'preview_document' => 'Pré-visualizar documento',
             'generate_all' => 'Gerar tudo',
@@ -885,7 +877,6 @@ return [
             'restore_failed_short' => 'Falha ao restaurar',
         ],
         'extracted' => [
-            'page_title' => 'Requisitos extraídos',
             'heading' => 'Requisitos extraídos',
             'total' => 'Total',
             'requirements' => 'Requisitos',
@@ -927,7 +918,6 @@ return [
             'not_generated' => '(Ainda não gerado.)',
         ],
         'compare' => [
-            'page_title' => 'Comparar',
             'compare' => 'Comparar',
             'heading' => 'Comparar fornecedores',
             'load_failed' => 'Falha ao carregar dados de comparação',
@@ -950,7 +940,6 @@ return [
             'col_winner' => 'Vencedor',
         ],
         'coverage' => [
-            'page_title' => 'Mapa de cobertura',
             'heading' => 'Mapa de cobertura',
             'consolidated_requirements' => 'Requisitos consolidados',
             'load_failed' => 'Falha ao carregar cobertura',
@@ -969,7 +958,6 @@ return [
             'legend_note' => 'Um requisito consolidado conta em cada departamento do qual tem uma origem.',
         ],
         'audit' => [
-            'page_title' => 'Trilha de auditoria de IA',
             'audit_trail' => 'Trilha de auditoria',
             'heading' => 'Trilha de auditoria de IA',
             'total_input_tokens' => 'Total de tokens de entrada',
@@ -985,7 +973,6 @@ return [
             'col_model' => 'Modelo',
         ],
         'consolidate' => [
-            'page_title' => 'Requisitos consolidados',
             'consolidated' => 'Consolidados',
             'heading' => 'Requisitos consolidados',
             'add_custom' => 'Adicionar personalizado',

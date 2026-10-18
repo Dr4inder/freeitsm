@@ -80,7 +80,6 @@ return [
         'result_count_other' => '{n} hasil',
     ],
     'detail' => [
-        'page_title' => 'Lihat kontrak',
         'loading' => 'Memuatkan kontrak...',
         'error_prefix' => 'Ralat:',
         'load_failed' => 'Gagal memuatkan kontrak',
@@ -161,8 +160,6 @@ return [
         'toast_event_save_failed' => 'Gagal menyimpan acara',
     ],
     'edit' => [
-        'page_title_edit' => 'Edit kontrak',
-        'page_title_add' => 'Tambah kontrak',
         'heading_edit' => 'Edit kontrak',
         'heading_add' => 'Tambah kontrak',
         'none' => 'Tiada',
@@ -264,7 +261,6 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Meja Bantuan - Pembekal',
-        'view_page_title' => 'Lihat Pembekal',
         'all_suppliers' => 'Semua pembekal',
         'add_supplier' => 'Tambah pembekal',
         'edit_supplier' => 'Edit pembekal',
@@ -398,7 +394,6 @@ return [
         'feature_contacts' => 'Jejaki orang di sebalik pembekal anda. Simpan nama, jawatan, alamat e-mel, dan nombor telefon. Pautkan setiap kenalan kepada pembekal mereka untuk rujukan pantas.',
         'feature_settings' => 'Konfigurasikan pilihan menu lungsur yang menggerakkan modul ini &mdash; jenis pembekal, status pembekal, status kontrak, jadual pembayaran, dan tab terma kontrak tersuai.',
         'managing_intro' => 'Kontrak ialah teras modul ini. Setiap rekod kontrak merangkumi segala yang anda perlu tahu tentang perjanjian pembekal &mdash; dengan siapa perjanjian itu, berapa lama tempohnya, berapa kosnya, dan dokumen apa yang menyokongnya.',
-        'managing_step1' => '<strong>Cipta kontrak</strong> &mdash; daripada papan pemuka kontrak, klik butang Tambah. Isikan nama kontrak, pilih pembekal, dan tetapkan status.',
         'managing_step2' => '<strong>Tetapkan tarikh</strong> &mdash; masukkan tarikh mula, tarikh tamat, dan tarikh semakan. Tarikh semakan bertindak sebagai amaran awal anda supaya anda mempunyai masa untuk merunding semula atau memperbaharui sebelum kontrak tamat tempoh.',
         'managing_step3' => '<strong>Rekodkan kewangan</strong> &mdash; masukkan jumlah nilai kontrak dan pilih jadual pembayaran (bulanan, suku tahunan, tahunan, atau jadual tersuai yang dikonfigurasikan dalam tetapan).',
         'managing_step4' => '<strong>Tambah terma kontrak</strong> &mdash; gunakan tab teks kaya untuk menulis SLA, KPI, syarat khas, atau sebarang terma lain. Setiap tab menggunakan editor TinyMCE untuk pemformatan penuh.',
@@ -715,7 +710,6 @@ return [
             'low' => 'rendah',
         ],
         'scoring' => [
-            'page_title' => 'Pemarkahan',
             'title' => 'Pemarkahan',
             'score_by_category' => 'Markah mengikut kategori',
             'my_overall' => 'Keseluruhan saya',
@@ -742,7 +736,6 @@ return [
             'other_analysts' => 'Penganalisis lain (purata)',
         ],
         'documents' => [
-            'page_title' => 'Dokumen RFP',
             'rfp' => 'RFP',
             'documents' => 'Dokumen',
             'heading' => 'Dokumen sumber',
@@ -797,7 +790,6 @@ return [
             'delete_confirm' => 'Padam "{name}"?\\n\\nSebarang keperluan yang diekstrak daripada dokumen ini turut akan dialih keluar.',
         ],
         'document' => [
-            'page_title' => 'Dokumen RFP',
             'heading' => 'Dokumen dijana',
             'preview_document' => 'Pratonton dokumen',
             'generate_all' => 'Jana semua',
@@ -885,7 +877,6 @@ return [
             'restore_failed_short' => 'Gagal memulihkan',
         ],
         'extracted' => [
-            'page_title' => 'Keperluan diekstrak',
             'heading' => 'Keperluan diekstrak',
             'total' => 'Jumlah',
             'requirements' => 'Keperluan',
@@ -927,7 +918,6 @@ return [
             'not_generated' => '(Belum dijana lagi.)',
         ],
         'compare' => [
-            'page_title' => 'Banding',
             'compare' => 'Banding',
             'heading' => 'Banding pembekal',
             'load_failed' => 'Gagal memuatkan data perbandingan',
@@ -950,7 +940,6 @@ return [
             'col_winner' => 'Pemenang',
         ],
         'coverage' => [
-            'page_title' => 'Peta liputan',
             'heading' => 'Peta liputan',
             'consolidated_requirements' => 'Keperluan disatukan',
             'load_failed' => 'Gagal memuatkan liputan',
@@ -969,7 +958,6 @@ return [
             'legend_note' => 'Satu keperluan disatukan dikira dalam setiap jabatan yang menjadi sumbernya.',
         ],
         'audit' => [
-            'page_title' => 'Jejak audit AI',
             'audit_trail' => 'Jejak audit',
             'heading' => 'Jejak audit AI',
             'total_input_tokens' => 'Jumlah token input',
@@ -985,7 +973,6 @@ return [
             'col_model' => 'Model',
         ],
         'consolidate' => [
-            'page_title' => 'Keperluan disatukan',
             'consolidated' => 'Disatukan',
             'heading' => 'Keperluan disatukan',
             'add_custom' => 'Tambah tersuai',

@@ -63,7 +63,6 @@ return [
     'reset_err_both' => 'Preencha os dois campos.',
     'reset_err_short' => 'A senha deve ter pelo menos 6 caracteres.',
     'reset_err_mismatch' => 'As senhas não coincidem.',
-    'expired_title' => 'Alterar senha',
     'expired_heading' => 'Senha expirada',
     'expired_intro' => 'Sua senha expirou e precisa ser alterada antes que você possa continuar.',
     'expired_current_pw' => 'Senha atual',

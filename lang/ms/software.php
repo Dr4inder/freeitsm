@@ -25,7 +25,6 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Meja Perkhidmatan - Perisian',
-        'heading' => 'Inventori Perisian',
         'search' => 'Cari mengikut nama aplikasi atau penerbit...',
         'tab_apps' => 'Aplikasi',
         'tab_components' => 'Komponen',
@@ -116,7 +115,6 @@ return [
         'widget_removed' => 'Widget dibuang',
     ],
     'library' => [
-        'page_title' => 'Pustaka Widget Perisian',
         'back' => 'Papan Pemuka',
         'heading' => 'Pustaka Widget',
         'search' => 'Cari widget...',

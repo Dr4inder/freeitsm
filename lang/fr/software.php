@@ -25,7 +25,6 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Service Desk - Logiciels',
-        'heading' => 'Inventaire logiciel',
         'search' => 'Rechercher par nom d\'application ou éditeur...',
         'tab_apps' => 'Applications',
         'tab_components' => 'Composants',
@@ -116,7 +115,6 @@ return [
         'widget_removed' => 'Widget supprimé',
     ],
     'library' => [
-        'page_title' => 'Bibliothèque de widgets logiciels',
         'back' => 'Tableau de bord',
         'heading' => 'Bibliothèque de widgets',
         'search' => 'Rechercher des widgets...',

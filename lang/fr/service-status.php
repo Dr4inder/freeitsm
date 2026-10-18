@@ -275,6 +275,5 @@ return [
         'tip_review_title' => 'Analysez les tendances',
         'tip_review_desc' => 'Consultez régulièrement votre historique des incidents. Si le même service revient sans cesse, cela peut révéler un problème d\'infrastructure plus profond à traiter de manière proactive.',
         'tip_maintenance_title' => 'Planifiez la maintenance',
-        'tip_maintenance_desc' => 'Utilisez le niveau d\'impact Maintenance pour les travaux planifiés. Créer un incident à l\'avance permet d\'informer les utilisateurs d\'une interruption programmée avant qu\'elle ne survienne.',
     ],
 ];

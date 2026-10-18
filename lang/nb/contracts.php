@@ -80,7 +80,6 @@ return [
         'result_count_other' => '{n} treff',
     ],
     'detail' => [
-        'page_title' => 'Vis kontrakt',
         'loading' => 'Laster kontrakt...',
         'error_prefix' => 'Feil:',
         'load_failed' => 'Kunne ikke laste kontrakten',
@@ -161,8 +160,6 @@ return [
         'toast_event_save_failed' => 'Kunne ikke lagre hendelsen',
     ],
     'edit' => [
-        'page_title_edit' => 'Rediger kontrakt',
-        'page_title_add' => 'Legg til kontrakt',
         'heading_edit' => 'Rediger kontrakt',
         'heading_add' => 'Legg til kontrakt',
         'none' => 'Ingen',
@@ -264,7 +261,6 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Servicedesk - Leverandører',
-        'view_page_title' => 'Vis leverandør',
         'all_suppliers' => 'Alle leverandører',
         'add_supplier' => 'Legg til leverandør',
         'edit_supplier' => 'Rediger leverandør',
@@ -398,7 +394,6 @@ return [
         'feature_contacts' => 'Hold oversikt over personene bak leverandørene. Lagre navn, stillingstitler, e-postadresser og telefonnumre. Knytt hver kontakt til sin leverandør for raskt oppslag.',
         'feature_settings' => 'Sett opp nedtrekkslistene som driver modulen &mdash; leverandørtyper, leverandørstatuser, kontraktsstatuser, betalingsplaner og egne faner for kontraktsvilkår.',
         'managing_intro' => 'Kontrakter er kjernen i denne modulen. Hver kontraktspost fanger opp alt du trenger å vite om en leverandøravtale &mdash; hvem den er med, hvor lenge den varer, hva den koster og hvilke dokumenter som hører til.',
-        'managing_step1' => '<strong>Opprett en kontrakt</strong> &mdash; klikk Legg til i kontraktsoversikten. Fyll inn kontraktsnavnet, velg en leverandør og sett status.',
         'managing_step2' => '<strong>Sett datoene</strong> &mdash; angi startdato, sluttdato og revisjonsdato. Revisjonsdatoen er varselet ditt i god tid, slik at du rekker å reforhandle eller fornye før kontrakten utløper.',
         'managing_step3' => '<strong>Registrer økonomien</strong> &mdash; angi total kontraktsverdi og velg betalingsplan (månedlig, kvartalsvis, årlig eller en egen plan satt opp i innstillingene).',
         'managing_step4' => '<strong>Legg inn kontraktsvilkår</strong> &mdash; bruk fanene med formatert tekst til å skrive ut SLA-er, KPI-er, særskilte betingelser eller andre vilkår. Hver fane bruker TinyMCE-editoren og full formatering.',
@@ -715,7 +710,6 @@ return [
             'low' => 'lav',
         ],
         'scoring' => [
-            'page_title' => 'Poengsetting',
             'title' => 'Poengsetting',
             'score_by_category' => 'Poeng per kategori',
             'my_overall' => 'Mitt totalsnitt',
@@ -742,7 +736,6 @@ return [
             'other_analysts' => 'Andre analytikere (snitt)',
         ],
         'documents' => [
-            'page_title' => 'RFP-dokumenter',
             'rfp' => 'RFP',
             'documents' => 'Dokumenter',
             'heading' => 'Kildedokumenter',
@@ -797,7 +790,6 @@ return [
             'delete_confirm' => 'Slette «{name}»?\\n\\nEventuelle krav som er hentet ut fra dette dokumentet, blir fjernet også.',
         ],
         'document' => [
-            'page_title' => 'RFP-dokument',
             'heading' => 'Generert dokument',
             'preview_document' => 'Forhåndsvis dokument',
             'generate_all' => 'Generer alt',
@@ -885,7 +877,6 @@ return [
             'restore_failed_short' => 'Gjenoppretting feilet',
         ],
         'extracted' => [
-            'page_title' => 'Uthentede krav',
             'heading' => 'Uthentede krav',
             'total' => 'Totalt',
             'requirements' => 'Krav',
@@ -927,7 +918,6 @@ return [
             'not_generated' => '(Ikke generert ennå.)',
         ],
         'compare' => [
-            'page_title' => 'Sammenlign',
             'compare' => 'Sammenlign',
             'heading' => 'Sammenlign leverandører',
             'load_failed' => 'Kunne ikke laste sammenligningsdata',
@@ -950,7 +940,6 @@ return [
             'col_winner' => 'Vinner',
         ],
         'coverage' => [
-            'page_title' => 'Dekningskart',
             'heading' => 'Dekningskart',
             'consolidated_requirements' => 'Konsoliderte krav',
             'load_failed' => 'Kunne ikke laste dekningen',
@@ -969,7 +958,6 @@ return [
             'legend_note' => 'Ett konsolidert krav teller i hver avdeling det har en kilde fra.',
         ],
         'audit' => [
-            'page_title' => 'KI-revisjonsspor',
             'audit_trail' => 'Revisjonsspor',
             'heading' => 'KI-revisjonsspor',
             'total_input_tokens' => 'Tokener inn totalt',
@@ -985,7 +973,6 @@ return [
             'col_model' => 'Modell',
         ],
         'consolidate' => [
-            'page_title' => 'Konsoliderte krav',
             'consolidated' => 'Konsolidert',
             'heading' => 'Konsoliderte krav',
             'add_custom' => 'Legg til egen',

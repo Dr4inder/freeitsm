@@ -275,6 +275,5 @@ return [
         'tip_review_title' => 'Sjå etter mønster',
         'tip_review_desc' => 'Gå gjennom hendingshistorikken jamleg. Dukkar den same tenesta opp gong på gong, kan det peike mot eit djupare infrastrukturproblem som er verdt å ta tak i på førehand.',
         'tip_maintenance_title' => 'Planlegg vedlikehald',
-        'tip_maintenance_desc' => 'Bruk påverknadsnivået Vedlikehald for planlagt arbeid. Å opprette ei hending på førehand lèt brukarane vite om planlagd nedetid før det skjer.',
     ],
 ];

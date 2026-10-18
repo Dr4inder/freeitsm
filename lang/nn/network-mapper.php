@@ -50,7 +50,6 @@ return [
         'delete_failed' => 'Klarte ikkje å slette: {message}',
     ],
     'editor' => [
-        'browser_title' => 'Nettverksdiagram',
         'browser_title_named' => 'FreeITSM — {title}',
         'back' => '← Alle diagram',
         'loading' => 'Lastar…',

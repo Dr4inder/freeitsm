@@ -25,7 +25,6 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Centro de servicios - Software',
-        'heading' => 'Inventario de software',
         'search' => 'Buscar por nombre de aplicación o editor...',
         'tab_apps' => 'Aplicaciones',
         'tab_components' => 'Componentes',
@@ -116,7 +115,6 @@ return [
         'widget_removed' => 'Widget eliminado',
     ],
     'library' => [
-        'page_title' => 'Biblioteca de widgets de software',
         'back' => 'Panel',
         'heading' => 'Biblioteca de widgets',
         'search' => 'Buscar widgets...',

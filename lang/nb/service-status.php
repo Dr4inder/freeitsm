@@ -275,6 +275,5 @@ return [
         'tip_review_title' => 'Se etter mønstre',
         'tip_review_desc' => 'Gå gjennom hendelseshistorikken jevnlig. Hvis den samme tjenesten stadig dukker opp, kan det peke mot et dypere infrastrukturproblem som bør tas tak i på forhånd.',
         'tip_maintenance_title' => 'Planlegg vedlikehold',
-        'tip_maintenance_desc' => 'Bruk påvirkningsnivået Vedlikehold for planlagt arbeid. Oppretter du hendelsen i forkant, får brukerne vite om nedetiden før den skjer.',
     ],
 ];

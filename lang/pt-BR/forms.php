@@ -121,7 +121,6 @@ return [
         'ai_settings_saved' => 'Configurações de IA salvas',
     ],
     'editor' => [
-        'page_title' => 'Editar formulário',
         'title_new' => 'Novo formulário',
         'title_edit' => 'Editar formulário',
         'unsaved' => 'Alterações não salvas',
@@ -448,7 +447,6 @@ return [
         'unsupported_type' => 'Esta pergunta não pode ser exibida aqui.',
     ],
     'fill' => [
-        'page_title' => 'Preencher Formulário',
         'loading' => 'Carregando formulário...',
         'no_id' => 'Nenhum ID de formulário especificado',
         'logo_alt' => 'Logotipo da Empresa',
@@ -543,7 +541,6 @@ return [
         'none_yet' => 'Ainda não existem coleções. Crie uma nas configurações de Formulários.',
     ],
     'subs' => [
-        'page_title' => 'Envios de Formulários',
         'page_title_named' => 'Central de Serviços - Envios de {title}',
         'back' => 'Voltar',
         'heading' => 'Envios',

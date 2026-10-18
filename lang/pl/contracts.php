@@ -80,7 +80,6 @@ return [
         'result_count_other' => '{n} wyników',
     ],
     'detail' => [
-        'page_title' => 'Wyświetl kontrakt',
         'loading' => 'Ładowanie kontraktu...',
         'error_prefix' => 'Błąd:',
         'load_failed' => 'Nie udało się załadować kontraktu',
@@ -161,8 +160,6 @@ return [
         'toast_event_save_failed' => 'Nie udało się zapisać wydarzenia',
     ],
     'edit' => [
-        'page_title_edit' => 'Edytuj kontrakt',
-        'page_title_add' => 'Dodaj kontrakt',
         'heading_edit' => 'Edytuj kontrakt',
         'heading_add' => 'Dodaj kontrakt',
         'none' => 'Brak',
@@ -264,7 +261,6 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Centrum obsługi - Dostawcy',
-        'view_page_title' => 'Wyświetl dostawcę',
         'all_suppliers' => 'Wszyscy dostawcy',
         'add_supplier' => 'Dodaj dostawcę',
         'edit_supplier' => 'Edytuj dostawcę',
@@ -398,7 +394,6 @@ return [
         'feature_contacts' => 'Śledź osoby stojące za Twoimi dostawcami. Przechowuj imiona i nazwiska, stanowiska, adresy e-mail i numery telefonów. Powiąż każdy kontakt z jego dostawcą dla szybkiego odniesienia.',
         'feature_settings' => 'Skonfiguruj opcje list rozwijanych, które napędzają ten moduł &mdash; typy dostawców, statusy dostawców, statusy kontraktów, harmonogramy płatności i niestandardowe zakładki warunków kontraktu.',
         'managing_intro' => 'Kontrakty są sercem tego modułu. Każdy rekord kontraktu zawiera wszystko, co musisz wiedzieć o umowie z dostawcą &mdash; z kim jest zawarta, jak długo obowiązuje, ile kosztuje i jakie dokumenty ją potwierdzają.',
-        'managing_step1' => '<strong>Utwórz kontrakt</strong> &mdash; na pulpicie kontraktów kliknij przycisk Dodaj. Wpisz nazwę kontraktu, wybierz dostawcę i ustaw status.',
         'managing_step2' => '<strong>Ustaw daty</strong> &mdash; wprowadź datę rozpoczęcia, datę zakończenia i datę przeglądu. Data przeglądu pełni rolę wczesnego ostrzeżenia, dzięki czemu masz czas na renegocjację lub odnowienie, zanim kontrakt wygaśnie.',
         'managing_step3' => '<strong>Zarejestruj dane finansowe</strong> &mdash; wprowadź łączną wartość kontraktu i wybierz harmonogram płatności (miesięczny, kwartalny, roczny lub niestandardowy, skonfigurowany w ustawieniach).',
         'managing_step4' => '<strong>Dodaj warunki kontraktu</strong> &mdash; użyj zakładek z tekstem sformatowanym, aby opisać SLA, KPI, warunki szczególne lub inne postanowienia. Każda zakładka korzysta z edytora TinyMCE z pełnym formatowaniem.',
@@ -719,7 +714,6 @@ Wszelkie wprowadzone dla niego oceny zostaną usunięte. Sam rekord dostawcy poz
             'low' => 'niski',
         ],
         'scoring' => [
-            'page_title' => 'Ocenianie',
             'title' => 'Ocenianie',
             'score_by_category' => 'Ocena według kategorii',
             'my_overall' => 'Mój wynik ogólny',
@@ -746,7 +740,6 @@ Wszelkie wprowadzone dla niego oceny zostaną usunięte. Sam rekord dostawcy poz
             'other_analysts' => 'Inni analitycy (średnia)',
         ],
         'documents' => [
-            'page_title' => 'Dokumenty RFP',
             'rfp' => 'RFP',
             'documents' => 'Dokumenty',
             'heading' => 'Dokumenty źródłowe',
@@ -803,7 +796,6 @@ Wszelkie wprowadzone dla niego oceny zostaną usunięte. Sam rekord dostawcy poz
 Wyodrębnione z tego dokumentu wymagania również zostaną usunięte.',
         ],
         'document' => [
-            'page_title' => 'Dokument RFP',
             'heading' => 'Wygenerowany dokument',
             'preview_document' => 'Podgląd dokumentu',
             'generate_all' => 'Generuj wszystko',
@@ -902,7 +894,6 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'restore_failed_short' => 'Przywracanie nie powiodło się',
         ],
         'extracted' => [
-            'page_title' => 'Wyodrębnione wymagania',
             'heading' => 'Wyodrębnione wymagania',
             'total' => 'Łącznie',
             'requirements' => 'Wymagania',
@@ -946,7 +937,6 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'not_generated' => '(Jeszcze nie wygenerowano.)',
         ],
         'compare' => [
-            'page_title' => 'Porównanie',
             'compare' => 'Porównanie',
             'heading' => 'Porównaj dostawców',
             'load_failed' => 'Nie udało się wczytać danych porównania',
@@ -969,7 +959,6 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'col_winner' => 'Zwycięzca',
         ],
         'coverage' => [
-            'page_title' => 'Mapa pokrycia',
             'heading' => 'Mapa pokrycia',
             'consolidated_requirements' => 'Skonsolidowane wymagania',
             'load_failed' => 'Nie udało się wczytać danych pokrycia',
@@ -988,7 +977,6 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'legend_note' => 'Jedno skonsolidowane wymaganie liczy się w każdym dziale, z którego pochodzi jedno z jego źródeł.',
         ],
         'audit' => [
-            'page_title' => 'Ścieżka audytu AI',
             'audit_trail' => 'Ścieżka audytu',
             'heading' => 'Ścieżka audytu AI',
             'total_input_tokens' => 'Łączne tokeny wejściowe',
@@ -1004,7 +992,6 @@ Bieżąca wersja zostanie najpierw zapisana w historii, więc operację można c
             'col_model' => 'Model',
         ],
         'consolidate' => [
-            'page_title' => 'Skonsolidowane wymagania',
             'consolidated' => 'Skonsolidowane',
             'heading' => 'Skonsolidowane wymagania',
             'add_custom' => 'Dodaj własne',

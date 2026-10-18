@@ -63,7 +63,6 @@ return [
     'reset_err_both' => 'Sila isi kedua-dua medan.',
     'reset_err_short' => 'Kata laluan mestilah sekurang-kurangnya 6 aksara.',
     'reset_err_mismatch' => 'Kata laluan tidak sepadan.',
-    'expired_title' => 'Tukar Kata Laluan',
     'expired_heading' => 'Kata Laluan Tamat Tempoh',
     'expired_intro' => 'Kata laluan anda telah tamat tempoh dan mesti ditukar sebelum anda boleh meneruskan.',
     'expired_current_pw' => 'Kata Laluan Semasa',

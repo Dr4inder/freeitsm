@@ -121,7 +121,6 @@ return [
         'ai_settings_saved' => 'AI-innstillingane er lagra',
     ],
     'editor' => [
-        'page_title' => 'Rediger skjema',
         'title_new' => 'Nytt skjema',
         'title_edit' => 'Rediger skjema',
         'unsaved' => 'Ulagra endringar',
@@ -448,7 +447,6 @@ return [
         'unsupported_type' => 'Dette spørsmålet kan ikkje visast her.',
     ],
     'fill' => [
-        'page_title' => 'Fyll ut skjema',
         'loading' => 'Lastar skjema...',
         'no_id' => 'Ingen skjema-ID er oppgjeven',
         'logo_alt' => 'Firmalogo',
@@ -543,7 +541,6 @@ return [
         'none_yet' => 'Det finst ingen samlingar enno. Opprett éi under Skjema-innstillingar.',
     ],
     'subs' => [
-        'page_title' => 'Skjemainnsendingar',
         'page_title_named' => 'Servicedesk - Innsendingar for {title}',
         'back' => 'Tilbake',
         'heading' => 'Innsendingar',

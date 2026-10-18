@@ -275,6 +275,5 @@ return [
         'tip_review_title' => 'Revisa los patrones',
         'tip_review_desc' => 'Comprueba tu historial de incidencias con regularidad. Si el mismo servicio sigue apareciendo, podría apuntar a un problema de infraestructura más profundo que vale la pena abordar de forma proactiva.',
         'tip_maintenance_title' => 'Planifica el mantenimiento',
-        'tip_maintenance_desc' => 'Usa el nivel de impacto Mantenimiento para los trabajos planificados. Crear una incidencia con antelación permite que los usuarios conozcan el tiempo de inactividad programado antes de que ocurra.',
     ],
 ];

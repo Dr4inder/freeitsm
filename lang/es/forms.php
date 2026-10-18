@@ -121,7 +121,6 @@ return [
         'ai_settings_saved' => 'Ajustes de IA guardados',
     ],
     'editor' => [
-        'page_title' => 'Editar formulario',
         'title_new' => 'Nuevo formulario',
         'title_edit' => 'Editar formulario',
         'unsaved' => 'Cambios sin guardar',
@@ -448,7 +447,6 @@ return [
         'unsupported_type' => 'Esta pregunta no se puede mostrar aquí.',
     ],
     'fill' => [
-        'page_title' => 'Rellenar formulario',
         'loading' => 'Cargando formulario...',
         'no_id' => 'No se ha especificado ningún ID de formulario',
         'logo_alt' => 'Logotipo de la empresa',
@@ -543,7 +541,6 @@ return [
         'none_yet' => 'Todavía no existe ninguna colección. Crea una en los ajustes de Formularios.',
     ],
     'subs' => [
-        'page_title' => 'Envíos de formularios',
         'page_title_named' => 'Service Desk - Envíos de {title}',
         'back' => 'Atrás',
         'heading' => 'Envíos',

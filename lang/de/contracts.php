@@ -80,7 +80,6 @@ return [
         'result_count_other' => '{n} Ergebnisse',
     ],
     'detail' => [
-        'page_title' => 'Vertrag anzeigen',
         'loading' => 'Vertrag wird geladen...',
         'error_prefix' => 'Fehler:',
         'load_failed' => 'Vertrag konnte nicht geladen werden',
@@ -161,8 +160,6 @@ return [
         'toast_event_save_failed' => 'Termin konnte nicht gespeichert werden',
     ],
     'edit' => [
-        'page_title_edit' => 'Vertrag bearbeiten',
-        'page_title_add' => 'Vertrag hinzufügen',
         'heading_edit' => 'Vertrag bearbeiten',
         'heading_add' => 'Vertrag hinzufügen',
         'none' => 'Keine',
@@ -264,7 +261,6 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Lieferanten',
-        'view_page_title' => 'Lieferant anzeigen',
         'all_suppliers' => 'Alle Lieferanten',
         'add_supplier' => 'Lieferant hinzufügen',
         'edit_supplier' => 'Lieferant bearbeiten',
@@ -398,7 +394,6 @@ return [
         'feature_contacts' => 'Behalten Sie die Ansprechpartner Ihrer Lieferanten im Blick. Speichern Sie Namen, Positionen, E-Mail-Adressen und Telefonnummern. Verknüpfen Sie jeden Kontakt mit seinem Lieferanten für schnellen Zugriff.',
         'feature_settings' => 'Konfigurieren Sie die Dropdown-Optionen, die dieses Modul steuern &mdash; Lieferantentypen, Lieferantenstatus, Vertragsstatus, Zahlungspläne und benutzerdefinierte Vertragsbedingungs-Reiter.',
         'managing_intro' => 'Verträge sind das Herzstück dieses Moduls. Jeder Vertragsdatensatz erfasst alles Wichtige zu einer Lieferantenvereinbarung &mdash; mit wem sie besteht, wie lange sie läuft, was sie kostet und welche Dokumente dazugehören.',
-        'managing_step1' => '<strong>Vertrag erstellen</strong> &mdash; klicken Sie im Vertrags-Dashboard auf die Schaltfläche Hinzufügen. Geben Sie den Vertragsnamen ein, wählen Sie einen Lieferanten aus und legen Sie den Status fest.',
         'managing_step2' => '<strong>Daten festlegen</strong> &mdash; geben Sie Startdatum, Enddatum und Überprüfungsdatum ein. Das Überprüfungsdatum dient als Frühwarnung, damit Sie Zeit haben, den Vertrag neu zu verhandeln oder zu verlängern, bevor er ausläuft.',
         'managing_step3' => '<strong>Finanzdaten erfassen</strong> &mdash; geben Sie den Gesamtvertragswert ein und wählen Sie den Zahlungsplan (monatlich, vierteljährlich, jährlich oder einen benutzerdefinierten, in den Einstellungen konfigurierten Plan).',
         'managing_step4' => '<strong>Vertragsbedingungen hinzufügen</strong> &mdash; nutzen Sie die Rich-Text-Reiter, um SLAs, KPIs, besondere Bedingungen oder sonstige Klauseln festzuhalten. Jeder Reiter verwendet den TinyMCE-Editor mit vollständiger Formatierung.',
@@ -719,7 +714,6 @@ Bereits erfasste Bewertungen für ihn werden gelöscht. Der Lieferantendatensatz
             'low' => 'niedrig',
         ],
         'scoring' => [
-            'page_title' => 'Bewertung',
             'title' => 'Bewertung',
             'score_by_category' => 'Bewertung nach Kategorie',
             'my_overall' => 'Meine Gesamtbewertung',
@@ -746,7 +740,6 @@ Bereits erfasste Bewertungen für ihn werden gelöscht. Der Lieferantendatensatz
             'other_analysts' => 'Andere Analysten (Ø)',
         ],
         'documents' => [
-            'page_title' => 'RFP-Dokumente',
             'rfp' => 'RFP',
             'documents' => 'Dokumente',
             'heading' => 'Quelldokumente',
@@ -803,7 +796,6 @@ Bereits erfasste Bewertungen für ihn werden gelöscht. Der Lieferantendatensatz
 Alle aus diesem Dokument extrahierten Anforderungen werden ebenfalls entfernt.',
         ],
         'document' => [
-            'page_title' => 'RFP-Dokument',
             'heading' => 'Erstelltes Dokument',
             'preview_document' => 'Dokument-Vorschau',
             'generate_all' => 'Alle erstellen',
@@ -902,7 +894,6 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'restore_failed_short' => 'Wiederherstellen fehlgeschlagen',
         ],
         'extracted' => [
-            'page_title' => 'Extrahierte Anforderungen',
             'heading' => 'Extrahierte Anforderungen',
             'total' => 'Gesamt',
             'requirements' => 'Anforderungen',
@@ -946,7 +937,6 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'not_generated' => '(Noch nicht erstellt.)',
         ],
         'compare' => [
-            'page_title' => 'Vergleichen',
             'compare' => 'Vergleichen',
             'heading' => 'Lieferanten vergleichen',
             'load_failed' => 'Vergleichsdaten konnten nicht geladen werden',
@@ -969,7 +959,6 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'col_winner' => 'Sieger',
         ],
         'coverage' => [
-            'page_title' => 'Abdeckungskarte',
             'heading' => 'Abdeckungskarte',
             'consolidated_requirements' => 'Konsolidierte Anforderungen',
             'load_failed' => 'Abdeckung konnte nicht geladen werden',
@@ -988,7 +977,6 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'legend_note' => 'Eine konsolidierte Anforderung zählt in jedem Fachbereich, aus dem sie eine Quelle hat.',
         ],
         'audit' => [
-            'page_title' => 'KI-Audit-Trail',
             'audit_trail' => 'Audit-Trail',
             'heading' => 'KI-Audit-Trail',
             'total_input_tokens' => 'Eingabe-Tokens gesamt',
@@ -1004,7 +992,6 @@ Die aktuelle Version wird zuvor als Schnappschuss im Verlauf gesichert, sodass d
             'col_model' => 'Modell',
         ],
         'consolidate' => [
-            'page_title' => 'Konsolidierte Anforderungen',
             'consolidated' => 'Konsolidiert',
             'heading' => 'Konsolidierte Anforderungen',
             'add_custom' => 'Eigene hinzufügen',

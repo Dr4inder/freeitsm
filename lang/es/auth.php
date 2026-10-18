@@ -63,7 +63,6 @@ return [
     'reset_err_both' => 'Rellene ambos campos.',
     'reset_err_short' => 'La contraseña debe tener al menos 6 caracteres.',
     'reset_err_mismatch' => 'Las contraseñas no coinciden.',
-    'expired_title' => 'Cambiar contraseña',
     'expired_heading' => 'Contraseña caducada',
     'expired_intro' => 'Su contraseña ha caducado y debe cambiarla antes de poder continuar.',
     'expired_current_pw' => 'Contraseña actual',

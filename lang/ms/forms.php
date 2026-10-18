@@ -121,7 +121,6 @@ return [
         'ai_settings_saved' => 'Tetapan AI disimpan',
     ],
     'editor' => [
-        'page_title' => 'Sunting borang',
         'title_new' => 'Borang baharu',
         'title_edit' => 'Sunting borang',
         'unsaved' => 'Perubahan belum disimpan',
@@ -448,7 +447,6 @@ return [
         'unsupported_type' => 'Soalan ini tidak dapat dipaparkan di sini.',
     ],
     'fill' => [
-        'page_title' => 'Isi Borang',
         'loading' => 'Memuatkan borang...',
         'no_id' => 'Tiada ID borang dinyatakan',
         'logo_alt' => 'Logo Syarikat',
@@ -543,7 +541,6 @@ return [
         'none_yet' => 'Belum ada koleksi. Cipta satu dalam tetapan Borang.',
     ],
     'subs' => [
-        'page_title' => 'Penyerahan Borang',
         'page_title_named' => 'Service Desk - Penyerahan {title}',
         'back' => 'Kembali',
         'heading' => 'Penyerahan',

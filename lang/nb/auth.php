@@ -63,7 +63,6 @@ return [
     'reset_err_both' => 'Fyll ut begge feltene.',
     'reset_err_short' => 'Passordet må være minst 6 tegn.',
     'reset_err_mismatch' => 'Passordene er ikke like.',
-    'expired_title' => 'Bytt passord',
     'expired_heading' => 'Passordet er utløpt',
     'expired_intro' => 'Passordet ditt er utløpt og må byttes før du kan fortsette.',
     'expired_current_pw' => 'Nåværende passord',

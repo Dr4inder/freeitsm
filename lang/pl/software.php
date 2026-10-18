@@ -25,7 +25,6 @@ return [
     ],
     'inventory' => [
         'page_title' => 'Service Desk - Oprogramowanie',
-        'heading' => 'Spis oprogramowania',
         'search' => 'Szukaj według nazwy aplikacji lub wydawcy...',
         'tab_apps' => 'Aplikacje',
         'tab_components' => 'Składniki',
@@ -116,7 +115,6 @@ return [
         'widget_removed' => 'Usunięto widżet',
     ],
     'library' => [
-        'page_title' => 'Biblioteka widżetów oprogramowania',
         'back' => 'Pulpit',
         'heading' => 'Biblioteka widżetów',
         'search' => 'Szukaj widżetów...',

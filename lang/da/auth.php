@@ -63,7 +63,6 @@ return [
     'reset_err_both' => 'Udfyld begge felter.',
     'reset_err_short' => 'Adgangskoden skal være på mindst 6 tegn.',
     'reset_err_mismatch' => 'Adgangskoderne er ikke ens.',
-    'expired_title' => 'Skift adgangskode',
     'expired_heading' => 'Adgangskoden er udløbet',
     'expired_intro' => 'Din adgangskode er udløbet og skal skiftes, før du kan fortsætte.',
     'expired_current_pw' => 'Nuværende adgangskode',

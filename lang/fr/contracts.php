@@ -80,7 +80,6 @@ return [
         'result_count_other' => '{n} résultats',
     ],
     'detail' => [
-        'page_title' => 'Voir le contrat',
         'loading' => 'Chargement du contrat...',
         'error_prefix' => 'Erreur :',
         'load_failed' => 'Échec du chargement du contrat',
@@ -161,8 +160,6 @@ return [
         'toast_event_save_failed' => 'Échec de l\'enregistrement de l\'événement',
     ],
     'edit' => [
-        'page_title_edit' => 'Modifier le contrat',
-        'page_title_add' => 'Ajouter un contrat',
         'heading_edit' => 'Modifier le contrat',
         'heading_add' => 'Ajouter un contrat',
         'none' => 'Aucun',
@@ -264,7 +261,6 @@ return [
     ],
     'suppliers' => [
         'page_title' => 'Service Desk - Fournisseurs',
-        'view_page_title' => 'Voir le fournisseur',
         'all_suppliers' => 'Tous les fournisseurs',
         'add_supplier' => 'Ajouter un fournisseur',
         'edit_supplier' => 'Modifier le fournisseur',
@@ -398,7 +394,6 @@ return [
         'feature_contacts' => 'Gardez une trace des personnes derrière vos fournisseurs. Stockez les noms, intitulés de poste, adresses e-mail et numéros de téléphone. Liez chaque contact à son fournisseur pour un accès rapide.',
         'feature_settings' => 'Configurez les listes déroulantes qui pilotent le module &mdash; types de fournisseur, statuts de fournisseur, statuts de contrat, échéanciers de paiement, et onglets de conditions de contrat personnalisés.',
         'managing_intro' => 'Les contrats sont le cœur de ce module. Chaque enregistrement de contrat rassemble tout ce que vous devez savoir sur un accord fournisseur &mdash; avec qui il est conclu, sa durée, son coût, et les documents qui le justifient.',
-        'managing_step1' => '<strong>Créer un contrat</strong> &mdash; depuis le tableau de bord des contrats, cliquez sur le bouton Ajouter. Renseignez le nom du contrat, sélectionnez un fournisseur et définissez le statut.',
         'managing_step2' => '<strong>Définir les dates</strong> &mdash; saisissez la date de début, la date de fin et la date de révision. La date de révision sert d\'alerte précoce pour avoir le temps de renégocier ou de renouveler avant l\'expiration du contrat.',
         'managing_step3' => '<strong>Enregistrer les finances</strong> &mdash; saisissez la valeur totale du contrat et sélectionnez l\'échéancier de paiement (mensuel, trimestriel, annuel, ou un échéancier personnalisé configuré dans les paramètres).',
         'managing_step4' => '<strong>Ajouter des conditions de contrat</strong> &mdash; utilisez les onglets de texte enrichi pour rédiger les SLA, KPI, conditions spéciales, ou toute autre clause. Chaque onglet utilise l\'éditeur TinyMCE pour une mise en forme complète.',
@@ -719,7 +714,6 @@ Toutes les notes déjà saisies pour lui seront supprimées. La fiche du fournis
             'low' => 'basse',
         ],
         'scoring' => [
-            'page_title' => 'Notation',
             'title' => 'Notation',
             'score_by_category' => 'Note par catégorie',
             'my_overall' => 'Ma note globale',
@@ -746,7 +740,6 @@ Toutes les notes déjà saisies pour lui seront supprimées. La fiche du fournis
             'other_analysts' => 'Autres analystes (moy.)',
         ],
         'documents' => [
-            'page_title' => 'Documents de l\'AO',
             'rfp' => 'AO',
             'documents' => 'Documents',
             'heading' => 'Documents source',
@@ -803,7 +796,6 @@ Toutes les notes déjà saisies pour lui seront supprimées. La fiche du fournis
 Les exigences extraites de ce document seront également supprimées.',
         ],
         'document' => [
-            'page_title' => 'Document d\'AO',
             'heading' => 'Document généré',
             'preview_document' => 'Aperçu du document',
             'generate_all' => 'Tout générer',
@@ -902,7 +894,6 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'restore_failed_short' => 'Échec de la restauration',
         ],
         'extracted' => [
-            'page_title' => 'Exigences extraites',
             'heading' => 'Exigences extraites',
             'total' => 'Total',
             'requirements' => 'Exigences',
@@ -946,7 +937,6 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'not_generated' => '(Pas encore généré.)',
         ],
         'compare' => [
-            'page_title' => 'Comparer',
             'compare' => 'Comparer',
             'heading' => 'Comparer les fournisseurs',
             'load_failed' => 'Échec du chargement des données de comparaison',
@@ -969,7 +959,6 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'col_winner' => 'Gagnant',
         ],
         'coverage' => [
-            'page_title' => 'Carte de couverture',
             'heading' => 'Carte de couverture',
             'consolidated_requirements' => 'Exigences consolidées',
             'load_failed' => 'Échec du chargement de la couverture',
@@ -988,7 +977,6 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'legend_note' => 'Une exigence consolidée compte dans chaque département dont elle est issue.',
         ],
         'audit' => [
-            'page_title' => 'Journal d\'audit IA',
             'audit_trail' => 'Journal d\'audit',
             'heading' => 'Journal d\'audit IA',
             'total_input_tokens' => 'Total des jetons d\'entrée',
@@ -1004,7 +992,6 @@ La version actuelle sera d\'abord archivée dans l\'historique, donc c\'est rév
             'col_model' => 'Modèle',
         ],
         'consolidate' => [
-            'page_title' => 'Exigences consolidées',
             'consolidated' => 'Consolidées',
             'heading' => 'Exigences consolidées',
             'add_custom' => 'Ajouter personnalisé',

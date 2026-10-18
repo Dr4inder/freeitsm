@@ -50,7 +50,6 @@ return [
         'delete_failed' => 'Помилка видалення: {message}',
     ],
     'editor' => [
-        'browser_title' => 'Мережева діаграма',
         'browser_title_named' => 'FreeITSM — {title}',
         'back' => '← Усі діаграми',
         'loading' => 'Завантаження…',

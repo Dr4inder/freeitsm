@@ -121,7 +121,6 @@ return [
         'ai_settings_saved' => 'KI-Einstellungen gespeichert',
     ],
     'editor' => [
-        'page_title' => 'Formular bearbeiten',
         'title_new' => 'Neues Formular',
         'title_edit' => 'Formular bearbeiten',
         'unsaved' => 'Nicht gespeicherte Änderungen',
@@ -448,7 +447,6 @@ return [
         'unsupported_type' => 'Diese Frage kann hier nicht angezeigt werden.',
     ],
     'fill' => [
-        'page_title' => 'Formular ausfüllen',
         'loading' => 'Formular wird geladen...',
         'no_id' => 'Keine Formular-ID angegeben',
         'logo_alt' => 'Firmenlogo',
@@ -543,7 +541,6 @@ return [
         'none_yet' => 'Es gibt noch keine Sammlungen. Legen Sie eine in den Formular-Einstellungen an.',
     ],
     'subs' => [
-        'page_title' => 'Formulareinreichungen',
         'page_title_named' => 'Service Desk - {title} Einreichungen',
         'back' => 'Zurück',
         'heading' => 'Einreichungen',

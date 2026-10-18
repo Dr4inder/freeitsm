@@ -275,6 +275,5 @@ return [
         'tip_review_title' => 'Semak corak',
         'tip_review_desc' => 'Semak sejarah insiden anda secara berkala. Jika perkhidmatan yang sama terus muncul, ia mungkin menunjukkan isu infrastruktur yang lebih mendalam yang wajar ditangani secara proaktif.',
         'tip_maintenance_title' => 'Rancang penyelenggaraan',
-        'tip_maintenance_desc' => 'Gunakan tahap impak Penyelenggaraan untuk kerja yang dirancang. Mencipta insiden lebih awal membolehkan pengguna mengetahui tentang masa henti berjadual sebelum ia berlaku.',
     ],
 ];

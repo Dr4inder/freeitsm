@@ -275,6 +275,5 @@ return [
         'tip_review_title' => 'Przeglądaj wzorce',
         'tip_review_desc' => 'Regularnie sprawdzaj historię incydentów. Jeśli ta sama usługa wciąż się pojawia, może to wskazywać na głębszy problem infrastrukturalny, który warto rozwiązać.',
         'tip_maintenance_title' => 'Planuj konserwację',
-        'tip_maintenance_desc' => 'Użyj poziomu wpływu Konserwacja dla zaplanowanych prac. Utworzenie incydentu z wyprzedzeniem pozwala poinformować użytkowników o planowanym przestoju, zanim nastąpi.',
     ],
 ];

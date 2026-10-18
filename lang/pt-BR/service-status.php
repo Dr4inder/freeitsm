@@ -275,6 +275,5 @@ return [
         'tip_review_title' => 'Revise padrões',
         'tip_review_desc' => 'Verifique seu histórico de incidentes regularmente. Se o mesmo serviço continua aparecendo, isso pode apontar para um problema de infraestrutura mais profundo que vale a pena resolver de forma proativa.',
         'tip_maintenance_title' => 'Planeje a manutenção',
-        'tip_maintenance_desc' => 'Use o nível de impacto Manutenção para trabalhos planejados. Criar um incidente com antecedência permite que os usuários saibam sobre o tempo de inatividade programado antes que ele aconteça.',
     ],
 ];

@@ -14,6 +14,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 
 | ID   | Module            | Type        | Description |
 |------|-------------------|-------------|-------------|
+| 2426 | i18n              | Fix         | 866 translations across 23 locales whose English had changed since 2.5.0 were evicted (i18n_evict_stale --since v2.5.0), so those strings now fall back to the current English instead of rendering an out-of-date translation; 3.8.0 had evicted only nine help keys. |
 
 
 
