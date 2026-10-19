@@ -998,6 +998,12 @@ class ChecklistsService
             $mode = self::effectiveClosureMode($conn, $f['mode'], $tenantId);
             $out[$mode === 'block' ? 'blocking' : 'warning'][(function_exists('t') ? t('tasks.forms.gate_name') : 'Forms')][] = $f['title'];
         }
+        // GH #190 phase 3: open follow-ups - only when Settings -> Evidence says they matter
+        // (allowed by default: the review can be complete while the remediation is open).
+        require_once __DIR__ . '/task_follow_ups.php';
+        foreach (TaskFollowUps::outstanding($conn, $taskId) as $f) {
+            $out[$f['mode'] === 'block' ? 'blocking' : 'warning'][(function_exists('t') ? t('tasks.followups.gate_name') : 'Open follow-ups')][] = $f['label'];
+        }
         return $out;
     }
 

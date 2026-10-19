@@ -31,6 +31,8 @@ require_once __DIR__ . '/../includes/services/checklists.php';
 require_once __DIR__ . '/../includes/services/task_forms.php';
 require_once __DIR__ . '/../includes/task_evidence.php';
 require_once __DIR__ . '/../includes/services/task_procedures.php';
+require_once __DIR__ . '/../includes/services/task_follow_ups.php';
+require_once __DIR__ . '/../includes/services/task_recurrence.php';
 
 $BASE = isset($argv[1]) ? rtrim($argv[1], '/') . '/' : null;
 $pass = 0; $fail = 0;
@@ -50,7 +52,7 @@ $other = new ActorContext($admin, null, 'ui', 'en', 'ZZ second analyst');
 $open  = (int)$conn->query("SELECT id FROM task_statuses WHERE is_active=1 AND is_closed=0 ORDER BY is_default DESC, display_order, id LIMIT 1")->fetchColumn();
 
 $tids = []; $formIds = []; $rids = [];
-$keys = ['tasks_forms_enabled', 'tasks_evidence_completed_checklist', 'tasks_procedures_enabled', 'tasks_checklists_enabled'];
+$keys = ['tasks_forms_enabled', 'tasks_evidence_completed_checklist', 'tasks_procedures_enabled', 'tasks_checklists_enabled', 'tasks_evidence_open_followups'];
 $maxSnap = (int)$conn->query("SELECT COALESCE(MAX(id), 0) FROM task_procedure_snapshots")->fetchColumn();
 $tplIds = [];
 $settingsBefore = $conn->query("SELECT setting_key, setting_value FROM system_settings WHERE setting_key IN ('" . implode("','", $keys) . "')")->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -86,6 +88,7 @@ function cleanup(): void {
             $conn->exec("DELETE FROM task_audit WHERE task_id IN ($p)");
             $conn->exec("DELETE FROM task_forms WHERE task_id IN ($p)");
             $conn->exec("DELETE FROM task_procedures WHERE task_id IN ($p)");
+            $conn->exec("DELETE FROM task_follow_ups WHERE task_id IN ($p)");
             $conn->exec("DELETE i FROM task_checklist_items i JOIN task_checklists c ON c.id = i.task_checklist_id WHERE c.task_id IN ($p)");
             $conn->exec("DELETE FROM task_checklist_item_events WHERE task_id IN ($p)");
             $conn->exec("DELETE FROM task_checklists WHERE task_id IN ($p)");
@@ -338,6 +341,132 @@ $t7 = zzTask($conn, 'ZZ-TF checklist next');
 ChecklistsService::copyTaskChecklists($conn, $t6, $t7);
 $lists7 = ChecklistsService::taskChecklists($conn, $t7);
 ok('...and the repeat copies it to the next occurrence', ($lists7[0]['items'][0]['description'] ?? '') === 'Open the console and read the last run');
+
+section('P3. Follow-ups (phase 3)');
+$t8 = zzTask($conn, 'ZZ-TF follow-up source');
+$fu = TaskFollowUps::createTask($conn, $ctx, $t8, 'ZZ-TF fix job 4', 'Job 4 failed twice', 'step', 123, 'fu-ref-1');
+$tids[] = $fu['record_id'];
+ok('a follow-up task is raised and linked', $fu['kind'] === 'task' && $fu['record_id'] > 0 && $fu['replayed'] === false);
+$again = TaskFollowUps::createTask($conn, $ctx, $t8, 'ZZ-TF fix job 4', '', null, null, 'fu-ref-1');
+ok('a retried Create with the same reference returns it - no second task', $again['replayed'] === true && $again['record_id'] === $fu['record_id']
+    && (int)$conn->query("SELECT COUNT(*) FROM tasks WHERE title = 'ZZ-TF fix job 4'")->fetchColumn() === 1);
+$new = $conn->query("SELECT tenant_id, description FROM tasks WHERE id = " . (int)$fu['record_id'])->fetch(PDO::FETCH_ASSOC);
+ok('...in the occurrence\'s company, saying where it came from', strpos((string)$new['description'], 'TASK-' . $t8) !== false);
+$list = TaskFollowUps::forTask($conn, $t8, $admin);
+ok('listed with its live state (open) and where it came from', ($list[0]['open'] ?? null) === true && $list[0]['source_kind'] === 'step' && $list[0]['visible'] === true);
+ok('history: follow_up_created', (int)$conn->query("SELECT COUNT(*) FROM task_events WHERE task_id = $t8 AND event_type = 'follow_up_created'")->fetchColumn() === 1);
+
+ok('by default an open follow-up does not stop completion', ChecklistsService::taskCompletionCheck($conn, $t8) === ['blocking' => [], 'warning' => []]);
+setSetting($conn, 'tasks_evidence_open_followups', 'block');
+ok('set to block, it does - naming the follow-up', !empty(ChecklistsService::taskCompletionCheck($conn, $t8)['blocking']));
+setSetting($conn, 'tasks_evidence_open_followups', 'warn');
+ok('set to warn, it warns', !empty(ChecklistsService::taskCompletionCheck($conn, $t8)['warning']) && !ChecklistsService::taskCompletionCheck($conn, $t8)['blocking']);
+$closedId = (int)$conn->query("SELECT id FROM task_statuses WHERE is_active=1 AND is_closed=1 ORDER BY display_order, id LIMIT 1")->fetchColumn();
+$conn->exec("UPDATE tasks SET status_id = $closedId WHERE id = " . (int)$fu['record_id']);
+ok('...and once the follow-up is closed, nothing is outstanding', ChecklistsService::taskCompletionCheck($conn, $t8) === ['blocking' => [], 'warning' => []]);
+setSetting($conn, 'tasks_evidence_open_followups', 'allow');
+
+$ticket = (int)$conn->query("SELECT id FROM tickets ORDER BY id DESC LIMIT 1")->fetchColumn();
+if ($ticket) {
+    $l = TaskFollowUps::link($conn, $ctx, $t8, 'ticket', (string)$ticket);
+    $row = array_values(array_filter(TaskFollowUps::forTask($conn, $t8, $admin), fn($x) => $x['kind'] === 'ticket'))[0] ?? null;
+    ok('an existing ticket links by id, shown with its number', $row && $row['number'] !== null && $row['created_here'] === false);
+    ok('linking it twice is refused', threw(fn() => TaskFollowUps::link($conn, $ctx, $t8, 'ticket', (string)$ticket)) instanceof ServiceError);
+    TaskFollowUps::unlink($conn, $ctx, $l['id']);
+    ok('unlinking removes the link and leaves the ticket alone', (int)$conn->query("SELECT COUNT(*) FROM tickets WHERE id = $ticket")->fetchColumn() === 1
+        && count(TaskFollowUps::forTask($conn, $t8, $admin)) === 1);
+}
+ok('a task cannot be its own follow-up', threw(fn() => TaskFollowUps::link($conn, $ctx, $t8, 'task', (string)$t8)) instanceof ServiceError);
+ok('the #181 frozen record carries the follow-ups', count(TaskHistory::snapshot($conn, $t8)['follow_ups'] ?? []) === 1);
+TasksService::deleteTask($conn, $ctx, $t8);
+$tids = array_values(array_diff($tids, [$t8]));
+ok('deleting the occurrence removes the link, not the follow-up task', (int)$conn->query("SELECT COUNT(*) FROM task_follow_ups WHERE task_id = $t8")->fetchColumn() === 0
+    && (int)$conn->query("SELECT COUNT(*) FROM tasks WHERE id = " . (int)$fu['record_id'])->fetchColumn() === 1);
+$conn->exec("DELETE FROM task_events WHERE task_id = $t8");
+$conn->exec("DELETE FROM task_removed_records WHERE task_id = $t8");
+
+section('P4. Period checked, and when it is due');
+ok('same day: due on the day it is for', TaskRecurrence::dueFor(['due_offset_mode' => 'same_day'], '2026-10-17') === '2026-10-17');
+ok('2 days later', TaskRecurrence::dueFor(['due_offset_mode' => 'days', 'due_offset_days' => 2], '2026-10-17') === '2026-10-19');
+ok('next working day: Saturday -> Monday', TaskRecurrence::dueFor(['due_offset_mode' => 'next_working_day'], '2026-10-17') === '2026-10-19');
+ok('next working day: Sunday -> Monday', TaskRecurrence::dueFor(['due_offset_mode' => 'next_working_day'], '2026-10-18') === '2026-10-19');
+ok('next working day: Friday -> Monday', TaskRecurrence::dueFor(['due_offset_mode' => 'next_working_day'], '2026-10-16') === '2026-10-19');
+ok('next working day: Monday -> Tuesday', TaskRecurrence::dueFor(['due_offset_mode' => 'next_working_day'], '2026-10-19') === '2026-10-20');
+ok('period: the day it is for', TaskRecurrence::periodFor($conn, ['period_mode' => 'scheduled_day'], '2026-10-17', 0) === ['2026-10-17', '2026-10-17']);
+ok('period: the day before', TaskRecurrence::periodFor($conn, ['period_mode' => 'day_before'], '2026-10-17', 0) === ['2026-10-16', '2026-10-16']);
+ok('period: none', TaskRecurrence::periodFor($conn, ['period_mode' => 'none'], '2026-10-17', 0) === [null, null]);
+$rule = TaskRecurrence::ruleFromInput(['mode' => 'schedule', 'freq' => 'daily', 'period_mode' => 'bogus', 'due_offset_mode' => 'days', 'due_offset_days' => 99]);
+ok('the rule refuses an unknown period and caps the offset', $rule['period_mode'] === 'none' && $rule['due_offset_days'] === 60);
+
+// Saturday's check, due Monday, reviewed Monday -> ON TIME (not "on time after rescheduling").
+$conn->exec("INSERT INTO task_recurrences (mode, freq, interval_n, ends_mode, occurrences_created, is_active, created_datetime, updated_datetime)
+             VALUES ('schedule', 'daily', 1, 'never', 1, 1, UTC_TIMESTAMP(), UTC_TIMESTAMP())");
+$rid4 = $rids[] = (int)$conn->lastInsertId();
+$closedId = (int)$conn->query("SELECT id FROM task_statuses WHERE is_active=1 AND is_closed=1 ORDER BY display_order, id LIMIT 1")->fetchColumn();
+$sat = zzTask($conn, 'ZZ-TF Saturday check');
+$conn->prepare("UPDATE tasks SET recurrence_id = ?, scheduled_date = '2026-10-17', due_date = '2026-10-19', original_due_date = '2026-10-19',
+                period_start = '2026-10-16', period_end = '2026-10-16', status_id = ?, completed_datetime = '2026-10-19 09:00:00' WHERE id = ?")
+     ->execute([$rid4, $closedId, $sat]);
+$conn->prepare("INSERT INTO task_events (task_id, recurrence_id, event_type, actor_kind, to_value, created_datetime) VALUES (?, ?, 'completed', 'analyst', '2026-10-19', '2026-10-19 09:00:00')")->execute([$sat, $rid4]);
+$tue = zzTask($conn, 'ZZ-TF Sunday check done Tuesday');
+$conn->prepare("UPDATE tasks SET recurrence_id = ?, scheduled_date = '2026-10-18', due_date = '2026-10-19', original_due_date = '2026-10-19',
+                status_id = ?, completed_datetime = '2026-10-20 09:00:00' WHERE id = ?")->execute([$rid4, $closedId, $tue]);
+$conn->prepare("INSERT INTO task_events (task_id, recurrence_id, event_type, actor_kind, to_value, created_datetime) VALUES (?, ?, 'completed', 'analyst', '2026-10-19', '2026-10-20 09:00:00')")->execute([$tue, $rid4]);
+$rep = TaskEvidence::report($conn, $rid4, '2026-10-16', '2026-10-19', $admin);
+$byId = [];
+foreach ($rep['rows'] as $x) if (!empty($x['task_id'])) $byId[(int)$x['task_id']] = $x;
+ok('Saturday\'s check, due Monday by the repeat, done Monday: ON TIME', ($byId[$sat]['outcome'] ?? '') === 'on_time', $byId[$sat]['outcome'] ?? 'no row');
+ok('...not flagged rescheduled', empty($byId[$sat]['flags']['rescheduled']));
+ok('...and the report carries the period it checked and its original due date', ($byId[$sat]['period_start'] ?? '') === '2026-10-16' && ($byId[$sat]['original_due'] ?? '') === '2026-10-19');
+ok('Sunday\'s, due Monday, done Tuesday: LATE', ($byId[$tue]['outcome'] ?? '') === 'late', $byId[$tue]['outcome'] ?? 'no row');
+
+// The real creation path, with the offset and period on the rule.
+$conn->exec("UPDATE task_recurrences SET period_mode = 'day_before', due_offset_mode = 'next_working_day' WHERE id = $rid4");
+$ruleRow = $conn->query("SELECT * FROM task_recurrences WHERE id = $rid4")->fetch(PDO::FETCH_ASSOC);
+$m = new ReflectionMethod('TaskRecurrence', 'createOccurrence');
+$m->setAccessible(true);
+$made = $m->invoke(null, $conn, $sat, $ruleRow, '2026-10-24', 'repeat_schedule', null);
+if ($made) $tids[] = (int)$made;
+$mrow = $made ? $conn->query("SELECT scheduled_date, due_date, original_due_date, period_start, period_end FROM tasks WHERE id = " . (int)$made)->fetch(PDO::FETCH_ASSOC) : [];
+ok('a repeat creates Saturday 24th\'s occurrence due Monday 26th, checking Friday 23rd',
+   ($mrow['scheduled_date'] ?? '') === '2026-10-24' && ($mrow['due_date'] ?? '') === '2026-10-26' && ($mrow['original_due_date'] ?? '') === '2026-10-26'
+   && ($mrow['period_start'] ?? '') === '2026-10-23' && ($mrow['period_end'] ?? '') === '2026-10-23', json_encode($mrow));
+
+section('P4. Answers that count as an exception');
+$fx = FormsService::saveForm($conn, $ctx, ['title' => 'ZZ-TF Exception check', 'is_active' => 1, 'fields' => [
+    ['field_type' => 'radio', 'label' => 'Result', 'is_required' => 1, 'options' => ['OK', 'Warning', 'Failure'],
+     'config' => ['exception_values' => ['Warning', 'Failure', 'Not an option']]],
+]]);
+$formIds[] = $fx['id'];
+$cfg = json_decode((string)$conn->query("SELECT config FROM form_fields WHERE form_id = " . (int)$fx['id'])->fetchColumn(), true);
+ok('the designer\'s exception answers are kept - only real options', ($cfg['exception_values'] ?? null) === ['Warning', 'Failure'], json_encode($cfg));
+$fieldX = (int)$conn->query("SELECT id FROM form_fields WHERE form_id = " . (int)$fx['id'])->fetchColumn();
+$tx = zzTask($conn, 'ZZ-TF exception occurrence');
+$conn->prepare("UPDATE tasks SET recurrence_id = ?, scheduled_date = '2026-10-18' WHERE id = ?")->execute([$rid4, $tx]);
+$tfx = TaskForms::add($conn, $ctx, $tx, $fx['id'], true, 'block');
+$sx = TaskForms::submit($conn, $ctx, $tfx, 0, 'ref-x', [(string)$fieldX => 'Failure']);
+$ax = TaskForms::answers($conn, $sx['submission_id']);
+ok('a "Failure" answer is marked as an exception', !empty($ax[0]['exception']));
+$rep = TaskEvidence::report($conn, $rid4, '2026-10-16', '2026-10-19', $admin);
+$rowx = null;
+foreach ($rep['rows'] as $x) if ((int)($x['task_id'] ?? 0) === $tx) $rowx = $x;
+$fe = array_values(array_filter($rowx['exceptions'] ?? [], fn($e) => $e['kind'] === 'form_answer'));
+ok('...and is one of the occurrence\'s exceptions in the report, naming the answer', ($fe[0]['answer'] ?? '') === 'Failure' && ($fe[0]['question'] ?? '') === 'Result');
+ok('...counted in the summary', ($rep['summary']['exceptions'] ?? 0) >= 1);
+if ($noForms) {
+    $rep2 = TaskEvidence::report($conn, $rid4, '2026-10-16', '2026-10-19', $noForms);
+    $r2 = null;
+    foreach ($rep2['rows'] as $x) if ((int)($x['task_id'] ?? 0) === $tx) $r2 = $x;
+    if ($r2) {
+        $fe2 = array_values(array_filter($r2['exceptions'] ?? [], fn($e) => $e['kind'] === 'form_answer'));
+        ok('to a viewer without access to answers: the exception is listed, the answer is not', count($fe2) === 1 && $fe2[0]['answer'] === null);
+    }
+}
+$okSub = FormsService::submitForm($conn, $ctx, $fx['id'], [(string)$fieldX => 'OK']);
+$ao = TaskForms::answers($conn, $okSub);
+ok('control: an "OK" answer is not an exception', empty($ao[0]['exception']));
+$conn->exec("DELETE FROM form_submission_data WHERE submission_id = $okSub");
+$conn->exec("DELETE FROM form_submissions WHERE id = $okSub");
 
 if ($BASE) {
     section('13. Over HTTP (api/tasks/forms.php)');

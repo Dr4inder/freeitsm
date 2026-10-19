@@ -55,7 +55,8 @@ try {
 
     $allowed = ['calendar_span_mode', 'card_fields', 'tag_settings', 'time_scope', 'collaborator_completion', 'checklists_enabled', 'forms_enabled', 'procedures_enabled',
                 // Repeating task evidence (#181) - Tasks -> Settings -> Evidence.
-                'evidence_completed_checklist', 'evidence_delete_occurrence', 'evidence_skip_status_id', 'evidence_report_access'];
+                'evidence_completed_checklist', 'evidence_delete_occurrence', 'evidence_skip_status_id', 'evidence_report_access',
+                'evidence_open_followups'];
     // `priority` is absent from this list on purpose — it holds a placement,
     // not a boolean, and is normalised separately below. See get_settings.php.
     $cardFieldKeys = ['assignee', 'team', 'start_date',
@@ -75,6 +76,8 @@ try {
             if (!in_array($value, ['both', 'tasks', 'subtasks', 'off'], true)) continue;
         } elseif ($key === 'evidence_completed_checklist' || $key === 'evidence_delete_occurrence') {
             if (!in_array($value, ['allow', 'refuse'], true)) continue;
+        } elseif ($key === 'evidence_open_followups') {
+            if (!in_array($value, ['allow', 'warn', 'block'], true)) continue;
         } elseif ($key === 'evidence_report_access') {
             if (!in_array($value, ['anyone', 'permission'], true)) continue;
         } elseif ($key === 'evidence_skip_status_id') {

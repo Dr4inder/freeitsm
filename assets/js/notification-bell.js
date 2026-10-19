@@ -58,8 +58,20 @@ window.NotificationBell = {
         function describe(n) {
             // Translated at render time, never baked into the row — otherwise a
             // notification written today reads forever in whoever wrote it's language.
-            const key = 'common.notifications.event.' + n.event_type;
-            const txt = window.t(key, { actor: n.actor_name || window.t('common.notifications.someone') });
+            // What it changed TO, where the row carries it (a task's new status or due
+            // date, as {"to": ...}). Without it - older rows - the plain wording is used.
+            let detail = null;
+            if (n.body && n.body.charAt(0) === '{') {
+                try { detail = JSON.parse(n.body); } catch (e) { detail = null; }
+            }
+            let to = detail && detail.to ? String(detail.to) : '';
+            if (to && detail.kind === 'date') {
+                const d = new Date(to + 'T00:00:00');
+                if (!isNaN(d)) to = d.toLocaleDateString();
+            }
+            const base = 'common.notifications.event.' + n.event_type;
+            const key = to || !/(status_changed|due_date_changed)$/.test(n.event_type) ? base : base + '_plain';
+            const txt = window.t(key, { actor: n.actor_name || window.t('common.notifications.someone'), to: to });
             return txt === key ? (n.actor_name || '') : txt;
         }
 

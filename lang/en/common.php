@@ -427,6 +427,15 @@ return [
                 'assigned'  => 'Assigned to you by {actor}',
                 'created'   => '{actor} created a task for you',
                 'completed' => '{actor} completed a task',
+                // These had no wording, so the bell showed the task's title and nothing
+                // else - and nothing at all when no person did it (a repeat, a workflow).
+                'status_changed'        => '{actor} moved it to {to}',
+                'status_changed_plain'  => '{actor} changed the status',
+                'due_date_changed'      => '{actor} changed the due date to {to}',
+                'due_date_changed_plain'=> '{actor} changed the due date',
+                'comment_added'         => '{actor} added a comment',
+                'collaborator_added'    => '{actor} added you to it',
+                'collaborator_removed'  => '{actor} took you off it',
             ],
             'domain' => [
                 'expiring'     => 'A domain you own is due for renewal',

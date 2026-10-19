@@ -1622,6 +1622,7 @@ foreach ($formActionDefs as $def) {
                                            onchange="updateOption(${i}, ${oi}, this.value)"
                                            onkeydown="onOptionKeydown(event, ${i}, ${oi})"
                                            placeholder="${escAttr(window.t('forms.field.option_ph', { n: oi + 1 }))}">
+                                    <label class="option-exc" title="${escAttr(window.t('forms.field.exception_title'))}"><input type="checkbox" ${isExceptionOption(f, opt) ? 'checked' : ''} onchange="setExceptionOption(${i}, ${oi}, this.checked)"> ${esc(window.t('forms.field.exception'))}</label>
                                     <button class="option-remove" onclick="removeOption(${i}, ${oi})">&times;</button>
                                 </div>
                             `).join('')}
@@ -2118,6 +2119,23 @@ foreach ($formActionDefs as $def) {
             });
             markDirty(); renderFields(); updatePreview();
         }
+        /* GH #190 phase 4: an answer that COUNTS AS AN EXCEPTION in a task's evidence -
+           "Warning" or "Failure" on a check. Held in config.exception_values, by the
+           option's text, and kept in step when an option is renamed or removed. */
+        function isExceptionOption(f, opt) {
+            const ev = f.config && Array.isArray(f.config.exception_values) ? f.config.exception_values : [];
+            return opt !== '' && ev.indexOf(opt) !== -1;
+        }
+        function setExceptionOption(fi, oi, on) {
+            const f = fields[fi];
+            const opt = f.options[oi] || '';
+            if (!opt) return;
+            if (!f.config || typeof f.config !== 'object') f.config = {};
+            const ev = Array.isArray(f.config.exception_values) ? f.config.exception_values.filter(v => v !== opt) : [];
+            if (on) ev.push(opt);
+            if (ev.length) f.config.exception_values = ev; else delete f.config.exception_values;
+            markDirty();
+        }
         function addOption(fi) {
             fields[fi].options.push('');
             markDirty(); renderFields();
@@ -2127,6 +2145,9 @@ foreach ($formActionDefs as $def) {
             }, 50);
         }
         function updateOption(fi, oi, val) {
+            const was = fields[fi].options[oi];
+            const ev = fields[fi].config && fields[fi].config.exception_values;
+            if (Array.isArray(ev) && ev.indexOf(was) !== -1) ev[ev.indexOf(was)] = val;   // the tick follows a renamed option
             fields[fi].options[oi] = val;
             markDirty(); updatePreview();
         }
@@ -2148,6 +2169,8 @@ foreach ($formActionDefs as $def) {
                 });
                 if (!ok) return;
             }
+            const ev = fields[fi].config && fields[fi].config.exception_values;
+            if (Array.isArray(ev)) fields[fi].config.exception_values = ev.filter(v => v !== opt);
             fields[fi].options.splice(oi, 1);
             markDirty(); renderFields(); updatePreview();
         }

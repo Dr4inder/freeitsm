@@ -79,6 +79,8 @@ try {
     // differently is how a preview ends up showing dates the worker will not
     // produce, so there is exactly one home for it.
     $rule = TaskRecurrence::ruleFromInput($in);
+    // GH #190 phase 4's columns exist only after Database Verification; until then they are not written.
+    if (!TaskRecurrence::hasPeriodColumns($conn)) unset($rule['period_mode'], $rule['due_offset_mode'], $rule['due_offset_days']);
     $mode = $rule['mode'];
 
     // A rule that cannot produce a date is refused HERE rather than saved and

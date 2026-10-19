@@ -2357,6 +2357,7 @@ body {
 #taskFormsSection .tf-answers table { width: 100%; border-collapse: collapse; margin-top: 6px; }
 #taskFormsSection .tf-answers th { text-align: left; font-weight: 600; color: var(--text-muted, #666); padding: 4px 8px 4px 0; vertical-align: top; width: 40%; }
 #taskFormsSection .tf-answers td { padding: 4px 0; color: var(--text, #333); white-space: pre-wrap; word-break: break-word; }
+#taskFormsSection .tf-exception td { color: var(--danger-text, #b91c1c); font-weight: 600; }
 #taskFormsSection .tf-add { display: flex; gap: 8px; align-items: center; }
 #taskFormsSection .tf-add .detail-select { flex: 1; min-width: 0; }
 #taskFormsSection .tf-empty { font-size: 13px; color: var(--text-muted, #666); margin-bottom: 8px; }
@@ -2392,6 +2393,20 @@ body {
 #taskProcedureSection .tp-result:hover { background: var(--accent-soft, #eef4ff); }
 #taskFormsSection .tf-inline { margin-top: 10px; }
 #taskFormsSection .tf-frame { width: 100%; height: 420px; border: 1px solid var(--border-soft, #eef0f3); border-radius: 6px; background: var(--surface, #fff); display: block; margin-bottom: 4px; }
+#taskFollowUpSection .fu-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border-soft, #eef0f3); font-size: 13px; flex-wrap: wrap; }
+#taskFollowUpSection .fu-num { font-weight: 600; white-space: nowrap; }
+#taskFollowUpSection .fu-title { flex: 1; min-width: 120px; color: var(--text, #333); }
+#taskFollowUpSection .fu-state { font-size: 11px; padding: 1px 6px; border-radius: 3px; background: var(--border-soft, #eef0f3); color: var(--text-muted, #666); }
+#taskFollowUpSection .fu-open { background: var(--warning-bg, #fef3c7); color: var(--warning-text, #92400e); }
+#taskFollowUpSection .fu-closed { background: var(--success-bg, #dcfce7); color: var(--success-text, #16a34a); }
+#taskFollowUpSection .btn-link-small, .chk-followup, .tf-followup { background: none; border: 0; padding: 0; cursor: pointer; font-size: 12px; color: var(--text-muted, #666); text-decoration: underline; }
+#taskFollowUpSection .fu-add { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+#taskFollowUpSection .fu-line { display: flex; gap: 8px; align-items: center; }
+#taskFollowUpSection .fu-line .detail-input { flex: 1; min-width: 0; }
+body.module-read-only .fu-add,
+body.module-read-only .fu-remove,
+body.module-read-only .chk-followup,
+body.module-read-only .tf-followup,
 body.module-read-only .work-complete,
 body.module-read-only .tp-add,
 body.module-read-only .tp-remove { display: none !important; }

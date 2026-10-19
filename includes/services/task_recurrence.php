@@ -668,7 +668,71 @@ class TaskRecurrence
             'copy_tags'        => !empty($in['copy_tags'])        ? 1 : 0,
             'copy_links'       => !empty($in['copy_links'])       ? 1 : 0,
             'copy_attachments' => !empty($in['copy_attachments']) ? 1 : 0,
+            // GH #190 phase 4: what each occurrence checks, and when it is due.
+            'period_mode'      => in_array(($in['period_mode'] ?? ''), ['scheduled_day', 'day_before', 'since_previous'], true) ? $in['period_mode'] : 'none',
+            'due_offset_mode'  => in_array(($in['due_offset_mode'] ?? ''), ['days', 'next_working_day'], true) ? $in['due_offset_mode'] : 'same_day',
+            'due_offset_days'  => ($in['due_offset_mode'] ?? '') === 'days' ? max(0, min(60, (int)($in['due_offset_days'] ?? 0))) : 0,
         ];
+    }
+
+    /** Have GH #190's period and due-offset columns been added yet? Cached per request. */
+    public static function hasPeriodColumns(PDO $conn): bool
+    {
+        static $has = null;
+        if ($has !== null) return $has;
+        try {
+            $conn->query("SELECT period_mode, due_offset_mode, due_offset_days FROM task_recurrences LIMIT 0");
+            $conn->query("SELECT period_start, period_end, original_due_date FROM tasks LIMIT 0");
+            return $has = true;
+        } catch (Throwable $e) {
+            return $has = false;
+        }
+    }
+
+    /**
+     * When an occurrence made for $scheduled is due (GH #190 phase 4): the same day (default),
+     * N days later, or the next working day - Monday to Friday - after it. Saturday's backup
+     * check can be due on Monday, so reviewing it on Monday is on time, and Tuesday is late.
+     *
+     * @param array $rule  the rule; due_offset_mode and due_offset_days are read
+     * @param string $scheduled  the date the occurrence is made for, YYYY-MM-DD
+     */
+    public static function dueFor(array $rule, string $scheduled): string
+    {
+        $mode = (string)($rule['due_offset_mode'] ?? 'same_day');
+        $d = new DateTimeImmutable($scheduled);
+        if ($mode === 'days') {
+            $n = max(0, (int)($rule['due_offset_days'] ?? 0));
+            return $d->modify("+{$n} days")->format('Y-m-d');
+        }
+        if ($mode === 'next_working_day') {
+            do { $d = $d->modify('+1 day'); } while ((int)$d->format('N') >= 6);
+            return $d->format('Y-m-d');
+        }
+        return $scheduled;
+    }
+
+    /**
+     * The period an occurrence made for $scheduled checks (GH #190 phase 4), [start, end] or
+     * [null, null]: the scheduled day itself, the day before it (last night's backups), or
+     * everything since the previous occurrence of the series.
+     *
+     * @param int $rid  the series, for "since the previous occurrence"
+     */
+    public static function periodFor(PDO $conn, array $rule, string $scheduled, int $rid): array
+    {
+        $mode = (string)($rule['period_mode'] ?? 'none');
+        $d = new DateTimeImmutable($scheduled);
+        if ($mode === 'scheduled_day') return [$scheduled, $scheduled];
+        if ($mode === 'day_before') { $b = $d->modify('-1 day')->format('Y-m-d'); return [$b, $b]; }
+        if ($mode === 'since_previous') {
+            $q = $conn->prepare("SELECT MAX(COALESCE(scheduled_date, due_date)) FROM tasks WHERE recurrence_id = ? AND COALESCE(scheduled_date, due_date) < ?");
+            $q->execute([$rid, $scheduled]);
+            $prev = $q->fetchColumn();
+            $start = $prev ? (new DateTimeImmutable((string)$prev))->modify('+1 day')->format('Y-m-d') : $scheduled;
+            return [$start, $scheduled];
+        }
+        return [null, null];
     }
 
     /**
@@ -840,6 +904,9 @@ class TaskRecurrence
         if ($statusId === null) return null;   // no open status configured: do nothing rather than guess
 
         $start = self::startForDue($t, $due);
+        // GH #190 phase 4: $due is the day it is MADE FOR (scheduled_date, what the series
+        // matches on); it may be due later. Work still starts from the scheduled day.
+        $dueDate = self::dueFor($rule, $due);
 
         $master = $t['recurrence_master_id'] ?: $t['id'];
 
@@ -859,7 +926,7 @@ class TaskRecurrence
             $statusId,
             $t['priority_id'],
             $start,
-            $due,
+            $dueDate,
             (int)$rule['copy_assignee'] ? $t['assigned_analyst_id'] : null,
             (int)$rule['copy_assignee'] ? $t['assigned_team_id']    : null,
             (int)$rule['copy_links'] ? $t['ticket_id']   : null,
@@ -879,6 +946,11 @@ class TaskRecurrence
             $conn->prepare("UPDATE tasks SET scheduled_date = ?, created_via = ?, previous_occurrence_id = ? WHERE id = ?")
                  ->execute([$due, $via, $previousId, $newId]);
         } catch (Throwable $e) { /* before Database Verification */ }
+        if (self::hasPeriodColumns($conn)) {
+            [$ps, $pe] = self::periodFor($conn, $rule, $due, (int)$rule['id']);
+            $conn->prepare("UPDATE tasks SET period_start = ?, period_end = ?, original_due_date = ? WHERE id = ?")
+                 ->execute([$ps, $pe, $dueDate, $newId]);
+        }
         require_once __DIR__ . '/task_history.php';
         TaskHistory::record($conn, $newId, 'created', null, null, $due, array_filter([
             'via'                    => $via,

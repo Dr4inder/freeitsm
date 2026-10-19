@@ -1757,6 +1757,7 @@ async function openDetailPanel(taskId) {
     loadTaskChecklists(taskId);
     loadTaskForms(taskId);
     loadTaskProcedures(taskId);
+    loadTaskFollowUps(taskId);
         loadTaskHistory(taskId);
         // Who else is on it (GH #89). Fetched separately from the task itself
         // because the same call returns the CANDIDATE list, which is a different
@@ -1946,6 +1947,7 @@ function renderDetailPanel(task) {
             <div class="detail-field" id="taskProcedureSection" style="display:none"></div>
             <div class="detail-field" id="taskChecklistSection" style="display:none"></div>
             <div class="detail-field" id="taskFormsSection" style="display:none"></div>
+            <div class="detail-field" id="taskFollowUpSection" style="display:none"></div>
         </div>
 
         <div class="detail-field">
@@ -2406,7 +2408,8 @@ function renderTaskChecklists() {
                     <textarea id="chkNote${i.id}" rows="2" placeholder="${esc(T('checklist_exception_placeholder'))}"></textarea>
                     <button type="button" class="btn btn-primary btn-sm" onclick="saveTaskStepFail(${i.id})">${esc(T('checklist_result_save'))}</button>
                 </div>
-                ${i.result === 'fail' && i.exception_note ? `<div class="chk-exception-note">${esc(T('checklist_exception', { note: i.exception_note }))}</div>` : ''}` : '';
+                ${i.result === 'fail' && i.exception_note ? `<div class="chk-exception-note">${esc(T('checklist_exception', { note: i.exception_note }))}
+                    <button type="button" class="btn-link-small chk-followup" onclick="followUpFrom('step', ${i.id}, ${escAttr(JSON.stringify(i.title))}, ${escAttr(JSON.stringify(i.exception_note))})">${esc(window.t('tasks.followups.raise'))}</button></div>` : ''}` : '';
             return `
                 <div class="chk-step${done ? ' done' : ''}${i.result === 'fail' ? ' failed' : ''}" data-sort-id="${i.id}" draggable="true"
                      ondragstart="chkDragStart(event)" ondragend="chkDragEnd(event)">
@@ -2630,7 +2633,7 @@ function renderTaskForms() {
         const answers = f.submission_id
             ? (f.may_read
                 ? `<details class="tf-answers"><summary>${esc(T('answers'))}</summary>
-                       <table>${(f.answers || []).map(a => `<tr><th>${esc(a.label)}</th><td>${esc(a.value)}</td></tr>`).join('')}</table>
+                       <table>${(f.answers || []).map(a => `<tr${a.exception ? ' class="tf-exception"' : ''}><th>${esc(a.label)}</th><td>${esc(a.value)}</td></tr>`).join('')}</table>
                    </details>`
                 : `<div class="tf-note">${esc(T('no_answer_access'))}</div>`)
             : '';
@@ -2649,6 +2652,7 @@ function renderTaskForms() {
                     <button type="button" class="btn-link-small" onclick="removeTaskForm(${f.id})">${esc(T('remove'))}</button>
                 </div>
                 <div class="tf-row">${state}${fill}</div>
+                ${f.submission_id && f.may_fill !== undefined ? `<button type="button" class="btn-link-small tf-followup" onclick="followUpFrom('form', ${f.submission_id}, ${escAttr(JSON.stringify(f.title))}, '')">${esc(window.t('tasks.followups.raise'))}</button>` : ''}
                 ${formState.open && formState.open[f.id] ? `<div class="tf-inline">
                     <iframe class="tf-frame" id="tfFrame${f.id}" title="${esc(f.title)}" src="${(window.APP_BASE || '/')}forms/fill.php?embed=1&task_form=${f.id}"></iframe>
                     <a class="btn-link-small" href="#" onclick="openTaskForm(${f.id}); return false;">${esc(T('new_tab'))}</a>
@@ -2808,6 +2812,9 @@ function renderWorkHead() {
         <div class="work-title">
             <label>${esc(T('heading'))}</label>
             ${task.scheduled_date ? `<span class="work-sub">${esc(T('for_day', { date: formatDate(task.scheduled_date) }))}</span>` : ''}
+            ${task.period_start ? `<span class="work-sub">${esc(task.period_start === task.period_end
+                ? T('checks_day', { date: formatDate(task.period_start) })
+                : T('checks_range', { from: formatDate(task.period_start), to: formatDate(task.period_end) }))}</span>` : ''}
         </div>
         ${total ? `<div class="work-progress"><div class="chk-bar"><div class="chk-bar-fill" style="width:${pct}%"></div></div>
                    <span class="work-sub">${esc(T('progress', { done, total }))}</span></div>` : ''}
@@ -2844,6 +2851,108 @@ async function setWorkOpenPref(on) {
         if (!r || !r.success) showToast(window.t('tasks.detail.view_not_saved'), 'error');
     } catch (e) { showToast(window.t('tasks.detail.view_not_saved'), 'error'); }
 }
+
+// ── Follow-ups: tickets and tasks that fix what a check found (GH #190 phase 3) ──
+
+let followState = { taskId: null, items: [], mayTicket: false, source: null, ref: null };
+
+/** Fetches the occurrence's follow-ups. Shown inside the Work view, so only while that is. */
+async function loadTaskFollowUps(taskId) {
+    const host = document.getElementById('taskFollowUpSection');
+    if (!host) return;
+    try {
+        const d = await fetch(API_BASE + 'follow_ups.php?task_id=' + taskId).then(r => r.json());
+        if (!d.success) { host.style.display = 'none'; return; }
+        followState = { taskId, items: d.follow_ups || [], mayTicket: !!d.may_ticket, source: null, ref: null };
+        renderTaskFollowUps();
+    } catch (e) { console.error(e); host.style.display = 'none'; }
+}
+
+/** Draws the follow-ups with their live state, and the create / link row. */
+function renderTaskFollowUps() {
+    const host = document.getElementById('taskFollowUpSection');
+    if (!host || followState.taskId !== selectedTaskId) return;
+    host.style.display = '';
+    /** Shorthand for a tasks.followups translation. */
+    const T = (k, p) => window.t('tasks.followups.' + k, p);
+    const base = window.APP_BASE || '/';
+    const rows = followState.items.map(f => `
+        <div class="fu-row">
+            <span class="fu-num">${f.url ? `<a href="${escAttr(base + f.url)}" target="_blank" rel="noopener">${esc(f.number || '')}</a>` : esc(f.number || (f.kind + ' #' + f.record_id))}</span>
+            <span class="fu-title">${f.visible ? esc(f.title || '') : esc(T('not_visible'))}</span>
+            <span class="fu-state ${f.open === null ? '' : (f.open ? 'fu-open' : 'fu-closed')}">${esc(T(f.open === null ? 'gone' : (f.open ? 'open' : 'closed')))}</span>
+            <button type="button" class="btn-link-small fu-remove" onclick="unlinkTaskFollowUp(${f.id})">${esc(T('remove'))}</button>
+        </div>`).join('');
+    const src = followState.source;
+    host.innerHTML = `
+        <label>${esc(T('heading'))}</label>
+        ${rows || `<div class="tf-empty">${esc(T('none'))}</div>`}
+        <div class="fu-add">
+            ${src ? `<div class="work-sub">${esc(T('from_' + src.kind, { name: src.name }))}</div>` : ''}
+            <div class="fu-line">
+                <select id="fuKind" class="detail-select" aria-label="${esc(T('kind'))}">
+                    <option value="task">${esc(T('kind_task'))}</option>
+                    ${followState.mayTicket ? `<option value="ticket">${esc(T('kind_ticket'))}</option>` : ''}
+                </select>
+                <input type="text" id="fuTitle" class="detail-input" placeholder="${esc(T('title_placeholder'))}" value="${escAttr(src ? src.title : '')}">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="createTaskFollowUp()">${esc(T('create'))}</button>
+            </div>
+            <div class="fu-line">
+                <input type="text" id="fuRef" class="detail-input" placeholder="${esc(T('link_placeholder'))}">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="linkTaskFollowUp()">${esc(T('link'))}</button>
+            </div>
+        </div>`;
+}
+
+/** Starts a follow-up from a failed step or a submitted form: prefilled, and remembered as its source. */
+function followUpFrom(kind, id, name, note) {
+    followState.source = { kind, id, name, title: window.t('tasks.followups.default_title', { name }) , note: note || '' };
+    renderTaskFollowUps();
+    const box = document.getElementById('fuTitle');
+    if (box) { box.focus(); box.scrollIntoView({ block: 'center' }); }
+}
+
+/** Sends a follow-up action and redraws from what comes back. */
+async function postTaskFollowUp(payload) {
+    try {
+        const d = await fetch(API_BASE + 'follow_ups.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        }).then(r => r.json());
+        if (!d.success) { showToast(d.error || window.t('tasks.followups.failed'), 'error'); return false; }
+        followState.items = d.follow_ups || [];
+        followState.source = null;
+        followState.ref = null;
+        renderTaskFollowUps();
+        loadTaskHistory(selectedTaskId);
+        return true;
+    } catch (e) { showToast(window.t('tasks.followups.failed'), 'error'); return false; }
+}
+
+/**
+ * Raises a follow-up task or ticket. The client reference is kept until it succeeds, so pressing
+ * Create again after a dropped connection returns the one already made rather than a second.
+ */
+function createTaskFollowUp() {
+    const kind = (document.getElementById('fuKind') || {}).value || 'task';
+    const title = ((document.getElementById('fuTitle') || {}).value || '').trim();
+    const src = followState.source;
+    followState.ref = followState.ref || ('fu-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8));
+    postTaskFollowUp({ action: kind === 'ticket' ? 'create_ticket' : 'create_task', task_id: selectedTaskId, title,
+                       note: src ? src.note : '', source_kind: src ? src.kind : null, source_id: src ? src.id : null,
+                       client_reference: followState.ref });
+}
+
+/** Links an existing ticket (by number) or task (by number) as a follow-up. */
+function linkTaskFollowUp() {
+    const ref = ((document.getElementById('fuRef') || {}).value || '').trim();
+    if (!ref) return;
+    const kind = /^task-?\d+$/i.test(ref) || /^\d+$/.test(ref) && (document.getElementById('fuKind') || {}).value === 'task' ? 'task' : 'ticket';
+    const src = followState.source;
+    postTaskFollowUp({ action: 'link', task_id: selectedTaskId, kind, ref, source_kind: src ? src.kind : null, source_id: src ? src.id : null });
+}
+
+/** Removes a follow-up link. The ticket or task itself is untouched. */
+function unlinkTaskFollowUp(id) { postTaskFollowUp({ action: 'unlink', follow_up_id: id }); }
 
 /**
  * Complete, from the Work view: the first closed status, through saveField() - so the
@@ -3579,6 +3688,9 @@ async function loadTaskHistory(taskId) {
             case 'form_replaced':  return T('form_replaced', { name: h.to || '' });
             case 'procedure_added':   return T('procedure_added', { name: h.to || '' });
             case 'procedure_removed': return T('procedure_removed', { name: h.from || '' });
+            case 'follow_up_created': return T('follow_up_created', { what: h.to || '' });
+            case 'follow_up_linked':  return T('follow_up_linked', { what: h.to || '' });
+            case 'follow_up_removed': return T('follow_up_removed', { what: h.from || '' });
         }
         return h.type;
     };
@@ -3653,6 +3765,7 @@ function renderRecurrenceEditor(r) {
         ends_mode: 'never', ends_on: '', max_occurrences: '',
         copy_description: 1, copy_subtasks: 1, copy_assignee: 1, copy_tags: 1,
         copy_links: 0, copy_attachments: 0,
+        period_mode: 'none', due_offset_mode: 'same_day', due_offset_days: 0,
     }, r || {});
     /** Returns "selected" when the two values match. */
     const sel = (a, b) => String(a) === String(b) ? 'selected' : '';
@@ -3738,6 +3851,22 @@ function renderRecurrenceEditor(r) {
                ['copy_links','carry_links'],['copy_attachments','carry_attachments']]
               .map(([k, label]) => `<label class="recur-day"><input type="checkbox" id="rec_${k}" ${chk(v[k])}><span>${T(label)}</span></label>`).join('')}
         </div>
+
+        <!-- GH #190 phase 4: the period each occurrence checks, and when it is due. -->
+        <label>${T('period_label')}</label>
+        <div class="recur-row">
+            <select id="recPeriod" class="detail-select">
+                ${['none','scheduled_day','day_before','since_previous'].map(p => `<option value="${p}" ${sel(v.period_mode, p)}>${T('period_' + p)}</option>`).join('')}
+            </select>
+        </div>
+        <label>${T('due_label')}</label>
+        <div class="recur-row">
+            <select id="recDueMode" class="detail-select" onchange="recurEditorRefresh()">
+                ${['same_day','days','next_working_day'].map(p => `<option value="${p}" ${sel(v.due_offset_mode, p)}>${T('due_' + p)}</option>`).join('')}
+            </select>
+            <input type="number" id="recDueDays" class="detail-input recur-n recur-due-days" min="0" max="60" value="${esc(v.due_offset_days || 0)}">
+            <span class="recur-due-days">${T('due_days_after')}</span>
+        </div>
       </div>
       <div class="recur-actions">
         <button type="button" class="btn btn-primary" onclick="saveRecurrence()">${esc(window.t('common.save'))}</button>
@@ -3763,6 +3892,7 @@ function recurEditorRefresh() {
     show('.recur-nth',     mm === 'nth');
     show('.recur-ends-date',  ends === 'on_date');
     show('.recur-ends-count', ends === 'after_count');
+    show('.recur-due-days', ((document.getElementById('recDueMode') || {}).value || 'same_day') === 'days');
 }
 
 /**
@@ -3789,6 +3919,8 @@ function recurrenceFormPayload() {
         copy_description: on('rec_copy_description'), copy_subtasks: on('rec_copy_subtasks'),
         copy_assignee: on('rec_copy_assignee'), copy_tags: on('rec_copy_tags'),
         copy_links: on('rec_copy_links'), copy_attachments: on('rec_copy_attachments'),
+        period_mode: val('recPeriod') || 'none', due_offset_mode: val('recDueMode') || 'same_day',
+        due_offset_days: parseInt(val('recDueDays'), 10) || 0,
     };
 }
 

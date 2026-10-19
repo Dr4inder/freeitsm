@@ -290,6 +290,8 @@ final class TaskHistory
             'forms'       => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_forms.php'; return TaskForms::snapshot($conn, $taskId); })(),
             // ...and the procedures it followed, with the frozen text each points at (GH #190 phase 2).
             'procedures'  => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_procedures.php'; return TaskProcedures::snapshot($conn, $taskId); })(),
+            // ...and its follow-up tickets and tasks (GH #190 phase 3).
+            'follow_ups'  => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_follow_ups.php'; return TaskFollowUps::snapshot($conn, $taskId); })(),
         ];
     }
 

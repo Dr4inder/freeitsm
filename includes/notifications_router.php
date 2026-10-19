@@ -102,7 +102,7 @@ function notificationsHandleEvent(string $event, array $payload): void
                 'entity_id'   => $entity['id'],
                 'entity_ref'  => $entity['ref'],
                 'title'       => $entity['title'],
-                'body'        => notificationsBodyFor($event, $actorName),
+                'body'        => notificationsBodyFor($event, $actorName, $payload, $conn),
                 'actor_id'    => $actorId,
                 'actor_name'  => $actorName,
             ]);
@@ -392,10 +392,24 @@ function notificationsEntityFor(string $event, array $payload, string $entityTyp
  * @param string $event  the workflow event name (not used - the bell picks the wording by event at render time)
  * @param ?string $actorName  the display name of whoever caused the event; null when nobody did (e.g. cron)
  */
-function notificationsBodyFor(string $event, ?string $actorName): string
+function notificationsBodyFor(string $event, ?string $actorName, array $payload = [], ?PDO $conn = null): string
 {
-    // The bell renders 'notifications.body.<event>' with {actor} substituted.
-    // Stored as the raw actor so the string itself can be translated per reader.
+    /* WHAT CHANGED, for the two task events where the title alone says nothing:
+       "moved it to Done", "changed the due date to 24 Oct". Stored as JSON
+       ({"to": ...}) - a VALUE, not a sentence - so the bell still words it in the
+       reader's own language. A row without it (older ones) gets the plain wording.
+       Everything else keeps storing the actor's name, as it always has. */
+    if ($event === 'task.status_changed' && $conn && !empty($payload['task']['status_id'])) {
+        try {
+            $s = $conn->prepare("SELECT name FROM task_statuses WHERE id = ?");
+            $s->execute([(int)$payload['task']['status_id']]);
+            $name = $s->fetchColumn();
+            if ($name !== false) return json_encode(['to' => (string)$name]);
+        } catch (Throwable $e) { /* fall through to the plain wording */ }
+    }
+    if ($event === 'task.due_date_changed') {
+        return json_encode(['to' => (string)($payload['task']['due_date'] ?? ''), 'kind' => 'date']);
+    }
     return $actorName !== null ? $actorName : '';
 }
 

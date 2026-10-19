@@ -3885,6 +3885,10 @@ return [
         'recurrence_master_id' => 'INT NULL',
         // Repeating task evidence (#181) - see freeitsm.sql for each one.
         'scheduled_date'         => 'DATE NULL',
+        // GH #190 phase 4: the period it checks, and the due date it was created with (set once).
+        'period_start'           => 'DATE NULL',
+        'period_end'             => 'DATE NULL',
+        'original_due_date'      => 'DATE NULL',
         'previous_occurrence_id' => 'INT NULL',
         'created_via'            => 'VARCHAR(20) NULL',
         'completed_by_id'        => 'INT NULL',
@@ -3987,6 +3991,10 @@ return [
         'copy_tags'           => 'TINYINT(1) NOT NULL DEFAULT 1',
         'copy_links'          => 'TINYINT(1) NOT NULL DEFAULT 0',
         'copy_attachments'    => 'TINYINT(1) NOT NULL DEFAULT 0',
+        // GH #190 phase 4: the period each occurrence checks, and its due offset.
+        'period_mode'         => "VARCHAR(16) NOT NULL DEFAULT 'none'",
+        'due_offset_mode'     => "VARCHAR(16) NOT NULL DEFAULT 'same_day'",
+        'due_offset_days'     => 'INT NOT NULL DEFAULT 0',
         // schedule mode only: the date the worker should next produce one for.
         'next_due_date'       => 'DATE NULL',
         'is_active'           => 'TINYINT(1) NOT NULL DEFAULT 1',
@@ -5245,6 +5253,22 @@ return [
         'title' => 'VARCHAR(255) NOT NULL',
         'body' => 'LONGTEXT NULL',
         'created_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+    ],
+
+    // GH #190 phase 3: tickets and tasks raised from, or linked to, an occurrence.
+    'task_follow_ups' => [
+        'id' => 'INT NOT NULL AUTO_INCREMENT',
+        'task_id' => 'INT NOT NULL',
+        'kind' => 'VARCHAR(10) NOT NULL',
+        'record_id' => 'INT NOT NULL',
+        'created_here' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'source_kind' => 'VARCHAR(10) NULL',
+        'source_id' => 'INT NULL',
+        'note' => 'TEXT NULL',
+        'client_reference' => 'VARCHAR(64) NULL',
+        'created_by_id' => 'INT NULL',
+        'created_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'is_demo' => 'TINYINT(1) NOT NULL DEFAULT 0',
     ],
 
     'task_checklists' => [

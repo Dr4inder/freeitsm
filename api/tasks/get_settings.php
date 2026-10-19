@@ -61,6 +61,7 @@ try {
     $settings['evidence_delete_occurrence']   = ($settings['evidence_delete_occurrence'] ?? '') === 'refuse' ? 'refuse' : 'allow';
     $settings['evidence_report_access']       = ($settings['evidence_report_access'] ?? '') === 'permission' ? 'permission' : 'anyone';
     $settings['evidence_skip_status_id']      = (string)($settings['evidence_skip_status_id'] ?? '');
+    $settings['evidence_open_followups']      = in_array($settings['evidence_open_followups'] ?? '', ['warn', 'block'], true) ? $settings['evidence_open_followups'] : 'allow';
     // The closed statuses to choose from, and which one an unset choice falls back to.
     require_once '../../includes/services/tasks.php';
     $settings['evidence_closed_statuses'] = $conn->query(

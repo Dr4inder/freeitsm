@@ -94,7 +94,7 @@ function evExplain(?array $e): string {
     <title><?php echo htmlspecialchars(pageTitle('tasks', $r ? t('tasks.evidence.report_title', ['title' => $r['series']['title']]) : t('tasks.nav.evidence'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=51">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=53">
     <link rel="stylesheet" href="../../assets/css/task-evidence.css?v=1">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -174,7 +174,10 @@ function evExplain(?array $e): string {
             <tbody>
             <?php foreach ($r['rows'] as $row): ?>
                 <tr class="ev-row-<?php echo htmlspecialchars($row['outcome']); ?>">
-                    <td><?php echo htmlspecialchars(TaskEvidence::day($row['scheduled'])); ?></td>
+                    <td><?php echo htmlspecialchars(TaskEvidence::day($row['scheduled'])); ?>
+                        <?php /* GH #190 phase 4: the period it checks, and a due date set apart from the scheduled day. */ ?>
+                        <?php if (!empty($row['period_start'])): ?><div class="ev-sub"><?php echo $T('period', ['from' => TaskEvidence::day($row['period_start']), 'to' => TaskEvidence::day($row['period_end'])]); ?></div><?php endif; ?>
+                        <?php if (!empty($row['original_due']) && $row['original_due'] !== $row['scheduled']): ?><div class="ev-sub"><?php echo $T('original_due', ['date' => TaskEvidence::day($row['original_due'])]); ?></div><?php endif; ?></td>
                     <td class="ev-sub"><?php
                         if (!empty($row['due_at_completion']) && $row['due_at_completion'] !== $row['scheduled']) echo $T('due_at_completion', ['d' => TaskEvidence::day($row['due_at_completion'])]) . '<br>';
                         if (!empty($row['current_due']) && $row['current_due'] !== ($row['due_at_completion'] ?? $row['scheduled'])) echo $T('due_now', ['d' => TaskEvidence::day($row['current_due'])]);
@@ -193,7 +196,10 @@ function evExplain(?array $e): string {
                     <td><?php foreach ($row['exceptions'] ?? [] as $x): ?>
                         <div class="ev-exception"><?php echo $x['kind'] === 'failed_step'
                             ? $T('exception_failed', ['checklist' => $x['checklist'], 'step' => $x['step'], 'note' => $x['note'] ?? ''])
-                            : $T('exception_outstanding', ['note' => $x['note'] ?? '']); ?></div>
+                            : ($x['kind'] === 'form_answer'
+                                ? ($x['answer'] !== null ? $T('exception_form', ['form' => $x['form'], 'question' => $x['question'], 'answer' => $x['answer']])
+                                                         : $T('exception_form_hidden', ['form' => $x['form']]))
+                                : $T('exception_outstanding', ['note' => $x['note'] ?? ''])); ?></div>
                     <?php endforeach; ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -254,6 +260,20 @@ function evExplain(?array $e): string {
                         </ul>
                     </div>
                 <?php endif; ?>
+                <?php /* GH #190 phase 3: follow-up tickets and tasks, with their state now. */ ?>
+                <?php if (!empty($row['follow_ups'])): ?>
+                    <div class="ev-checklist">
+                        <div class="ev-checklist-title"><?php echo $T('follow_ups_heading'); ?></div>
+                        <ul>
+                        <?php foreach ($row['follow_ups'] as $fu): ?>
+                            <li><?php echo htmlspecialchars((string)($fu['number'] ?? ($fu['kind'] . ' #' . $fu['record_id']))); ?>
+                                <?php if (!empty($fu['title'])): ?> - <?php echo htmlspecialchars($fu['title']); ?><?php endif; ?>
+                                <span class="ev-sub">(<?php echo $T($fu['open'] === null ? 'follow_up_gone' : ($fu['open'] ? 'follow_up_open' : 'follow_up_closed')); ?><?php if (!empty($fu['created_here'])): ?>, <?php echo $T('follow_up_raised_here'); ?><?php endif; ?>)</span></li>
+                        <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+
                 <?php /* GH #190: the forms this occurrence needed, who submitted them, and the
                          answers - only where the viewer may read them (TaskForms::mayReadAnswers). */ ?>
                 <?php foreach ($row['forms'] ?? [] as $f): ?>

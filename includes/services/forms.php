@@ -2885,6 +2885,21 @@ class FormsService
             unset($config['date_mode']);
         }
 
+        /* GH #190 phase 4: answers that COUNT AS AN EXCEPTION - "Warning", "Failure" on a
+           backup check - so the task evidence report lists them beside failed checklist
+           steps. A choice field's own options only; anything else is dropped. Belongs to
+           the form VERSION, like the options themselves, so it cannot change after the fact. */
+        if (in_array($type, ['dropdown', 'radio', 'checkboxes'], true) && !empty($config['exception_values']) && is_array($config['exception_values'])) {
+            $opts = $fields[$i]['options'] ?? [];
+            if (is_string($opts)) $opts = json_decode($opts, true) ?: [];
+            $opts = array_map('strval', is_array($opts) ? $opts : []);
+            $keep = array_values(array_unique(array_filter(array_map('strval', $config['exception_values']),
+                fn($v) => in_array($v, $opts, true))));
+            if ($keep) $config['exception_values'] = $keep; else unset($config['exception_values']);
+        } else {
+            unset($config['exception_values']);
+        }
+
         /* ---- Grid columns ------------------------------------------------
            🔑 Identified by a STABLE ID, never a position or a label. An id is
            what lets a column be reordered, renamed and retired without

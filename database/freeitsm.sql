@@ -5081,6 +5081,11 @@ CREATE TABLE IF NOT EXISTS `tasks` (
     -- completed_by_id: who completed it (cleared on reopening; task_events keeps it).
     -- skipped_datetime: set when the occurrence was SKIPPED rather than done.
     `scheduled_date`         DATE NULL,
+    -- GH #190 phase 4: the period this occurrence checks (from the repeat's "This occurrence checks"),
+    -- and the due date it was CREATED with (scheduled day + the repeat's due offset), set once.
+    `period_start`           DATE NULL,
+    `period_end`             DATE NULL,
+    `original_due_date`      DATE NULL,
     `previous_occurrence_id` INT NULL,
     `created_via`            VARCHAR(20) NULL,
     `completed_by_id`        INT NULL,
@@ -5156,6 +5161,11 @@ CREATE TABLE IF NOT EXISTS `task_recurrences` (
     `copy_tags`           TINYINT(1) NOT NULL DEFAULT 1,
     `copy_links`          TINYINT(1) NOT NULL DEFAULT 0,
     `copy_attachments`    TINYINT(1) NOT NULL DEFAULT 0,
+    -- GH #190 phase 4: what each occurrence checks (none | scheduled_day | day_before | since_previous)
+    -- and when it is due relative to its scheduled day (same_day | days | next_working_day).
+    `period_mode`         VARCHAR(16) NOT NULL DEFAULT 'none',
+    `due_offset_mode`     VARCHAR(16) NOT NULL DEFAULT 'same_day',
+    `due_offset_days`     INT NOT NULL DEFAULT 0,
     `next_due_date`       DATE NULL,
     `is_active`           TINYINT(1) NOT NULL DEFAULT 1,
     `created_by_id`       INT NULL,
@@ -7895,6 +7905,31 @@ CREATE TABLE IF NOT EXISTS `task_procedure_snapshots` (
     `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uq_task_procedure_snapshots_hash` (`content_hash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Follow-up work raised from, or linked to, a task occurrence (GH #190 phase 3):
+-- a ticket or task that fixes what a check found. Its own table because
+-- tasks.ticket_id is already "the ticket this task belongs to", and a subtask is
+-- part of the task rather than a follow-up from it. `source_kind` / `source_id`
+-- say where it came from (a checklist step, or a form submission);
+-- `client_reference` stops a retried Create making a second one. No foreign keys:
+-- the link is part of the occurrence's record.
+CREATE TABLE IF NOT EXISTS `task_follow_ups` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `task_id` INT NOT NULL,
+    `kind` VARCHAR(10) NOT NULL,                -- ticket | task
+    `record_id` INT NOT NULL,
+    `created_here` TINYINT(1) NOT NULL DEFAULT 0,
+    `source_kind` VARCHAR(10) NULL,             -- step | form
+    `source_id` INT NULL,
+    `note` TEXT NULL,
+    `client_reference` VARCHAR(64) NULL,
+    `created_by_id` INT NULL,
+    `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `is_demo` tinyint(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    KEY `idx_task_follow_ups_task` (`task_id`),
+    UNIQUE KEY `uq_task_follow_ups_ref` (`task_id`, `client_reference`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `task_checklist_items` (

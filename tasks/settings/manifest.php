@@ -102,7 +102,7 @@ return [
             'grant'        => 'Configure repeating task evidence: deleting occurrences, changing finished checklists, who runs the report',
             'sensitive'    => true,
             'setting_keys' => ['tasks_evidence_completed_checklist', 'tasks_evidence_delete_occurrence',
-                               'tasks_evidence_skip_status_id', 'tasks_evidence_report_access'],
+                               'tasks_evidence_skip_status_id', 'tasks_evidence_report_access', 'tasks_evidence_open_followups'],
         ],
         [
             // Deleting tags and configuring them. Creating one inline from the board is

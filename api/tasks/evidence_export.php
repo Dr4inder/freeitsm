@@ -60,11 +60,15 @@ if ($file === 'occurrences') {
     $head = ['series_id', 'series_title', 'task_id', 'scheduled_date', 'due_date_at_completion', 'current_due_date', 'outcome',
              'rescheduled', 'due_changed_after_completion', 'created_late', 'changed_after_completion', 'not_recorded',
              'status', 'created_utc', 'created_local', 'created_via', 'completed_utc', 'completed_local', 'completed_by',
-             'assigned_to', 'team', 'skip_reason', 'removed_by', 'removed_utc', 'exceptions', 'explanation', 'successor_of_task_id'];
+             'assigned_to', 'team', 'skip_reason', 'removed_by', 'removed_utc', 'exceptions', 'explanation', 'successor_of_task_id',
+             // GH #190 phase 4, at the end so existing joins and column positions hold.
+             'original_due_date', 'period_start', 'period_end'];
     foreach ($r['rows'] as $o) {
         $notRec = !empty($o['flags']['not_recorded']) || !empty($o['flags']['scheduled_not_recorded'])
                || !empty($o['flags']['due_history_not_recorded']) || !empty($o['flags']['history_not_recorded']);
-        $exc = array_map(fn($x) => $x['kind'] === 'failed_step' ? ($x['checklist'] . ' / ' . $x['step'] . ': ' . ($x['note'] ?? '')) : ($x['note'] ?? ''), $o['exceptions'] ?? []);
+        $exc = array_map(fn($x) => $x['kind'] === 'failed_step' ? ($x['checklist'] . ' / ' . $x['step'] . ': ' . ($x['note'] ?? ''))
+            : ($x['kind'] === 'form_answer' ? ($x['form'] . ' / ' . ($x['question'] ?? '-') . ': ' . ($x['answer'] ?? t('tasks.forms.no_answer_access'))) : ($x['note'] ?? '')),
+            $o['exceptions'] ?? []);
         $rows[] = [$rid, $r['series']['title'], $o['task_id'] ?? '', $o['scheduled'], $o['due_at_completion'] ?? '', $o['current_due'] ?? '',
                    $o['outcome'], !empty($o['flags']['rescheduled']) ? 1 : 0, !empty($o['flags']['due_changed_after_completion']) ? 1 : 0,
                    !empty($o['flags']['created_late']) ? 1 : 0, !empty($o['flags']['changed_after_completion']) ? 1 : 0, $notRec ? 1 : 0,
@@ -72,7 +76,8 @@ if ($file === 'occurrences') {
                    $o['completed_utc'] ?? '', $local($o['completed_utc'] ?? null), $o['completed_by'] ?? '',
                    $o['assignee'] ?? '', $o['team'] ?? '', $o['skip_reason'] ?? '',
                    $o['removed']['by'] ?? '', $o['removed']['at_utc'] ?? '', implode(' | ', $exc),
-                   !empty($o['explanation']) ? $o['explanation']['code'] : '', $o['missing_successor_of'] ?? ''];
+                   !empty($o['explanation']) ? $o['explanation']['code'] : '', $o['missing_successor_of'] ?? '',
+                   $o['original_due'] ?? '', $o['period_start'] ?? '', $o['period_end'] ?? ''];
     }
 } elseif ($file === 'checklist_results') {
     $head = ['series_id', 'task_id', 'scheduled_date', 'outcome', 'checklist', 'template_id', 'template_version', 'step', 'mandatory',
@@ -147,6 +152,11 @@ if ($file === 'occurrences') {
                            $p['frozen_datetime'] ?? '', $local($p['frozen_datetime'] ?? null),
                            !empty($p['snapshot_id']) ? 'version ' . ($p['article_version'] ?? '-') : 'not completed yet'];
             }
+        }
+        // GH #190 phase 3: each follow-up ticket or task, by number, with whether it is still open.
+        foreach ($o['follow_ups'] ?? [] as $fu) {
+            $rows[] = [$rid, $o['task_id'], $o['scheduled'], 'follow_up_' . $fu['kind'], $fu['kind'] . ':' . $fu['record_id'], (string)($fu['number'] ?? ''),
+                       '', '', '', '', '', $fu['open'] === null ? 'deleted' : ($fu['open'] ? 'open' : 'closed')];
         }
         // GH #190: each form submission, as evidence beside the attachments.
         foreach ($o['forms'] ?? [] as $f) {

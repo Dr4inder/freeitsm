@@ -156,9 +156,24 @@ class TaskForms
         $out = [];
         foreach ($st->fetchAll(PDO::FETCH_ASSOC) as $f) {
             $out[] = ['field_id' => (int)$f['id'], 'label' => (string)$f['label'], 'type' => (string)$f['field_type'],
-                      'value' => self::displayValue($f, (string)$f['field_value'])];
+                      'value' => self::displayValue($f, (string)$f['field_value']),
+                      'exception' => self::isException($f, (string)$f['field_value'])];
         }
         return $out;
+    }
+
+    /**
+     * Does this answer COUNT AS AN EXCEPTION (GH #190 phase 4)? The form version's
+     * config.exception_values against the answer - any of a checkbox list's ticks.
+     */
+    public static function isException(array $field, string $raw): bool
+    {
+        $cfg = is_array($field['config'] ?? null) ? $field['config'] : (json_decode((string)($field['config'] ?? ''), true) ?: []);
+        $ev = $cfg['exception_values'] ?? [];
+        if (!is_array($ev) || !$ev) return false;
+        $d = json_decode($raw, true);
+        $vals = is_array($d) ? array_map('strval', $d) : [$raw];
+        return (bool)array_intersect($vals, array_map('strval', $ev));
     }
 
     /** One stored answer as text a person reads - lists joined, a lookup's label, a grid's rows. */

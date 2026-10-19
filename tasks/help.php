@@ -449,6 +449,8 @@ $translationNamespaces = ['common', 'tasks'];
                     <h4><?php echo htmlspecialchars(t('tasks.help.work_heading')); ?></h4>
                     <p><?php echo t('tasks.help.work_body'); ?></p>
                     <p><?php echo t('tasks.help.work_procedures'); ?></p>
+                    <p><?php echo t('tasks.help.work_followups'); ?></p>
+                    <p><?php echo t('tasks.help.work_period'); ?></p>
 
                     <?php /* GH #190: forms a task occurrence needs. */ ?>
                     <h4><?php echo htmlspecialchars(t('tasks.help.forms_heading')); ?></h4>

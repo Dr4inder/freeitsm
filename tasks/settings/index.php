@@ -39,7 +39,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks', t('tasks.nav.settings'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=51">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=53">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
@@ -313,6 +313,8 @@ $translationNamespaces = ['common', 'tasks'];
                 ['evidence_completed_checklist', 'evidence_checklist', ['allow' => 'evidence_checklist_allow', 'refuse' => 'evidence_checklist_refuse']],
                 ['evidence_delete_occurrence',   'evidence_delete',    ['allow' => 'evidence_delete_allow', 'refuse' => 'evidence_delete_refuse']],
                 ['evidence_report_access',       'evidence_access',    ['anyone' => 'evidence_access_anyone', 'permission' => 'evidence_access_permission']],
+                // GH #190 decision 5: open follow-ups at completion - allowed by default.
+                ['evidence_open_followups',      'evidence_followups', ['allow' => 'evidence_followups_allow', 'warn' => 'evidence_followups_warn', 'block' => 'evidence_followups_block']],
             ] as [$evKey, $evLabel, $evOptions]): ?>
             <div class="card-field-row" style="display:block;">
                 <label class="card-field-name" for="ev_<?php echo $evKey; ?>"><?php echo htmlspecialchars(t('tasks.settings.' . $evLabel . '_name')); ?></label>

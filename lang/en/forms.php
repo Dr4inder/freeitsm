@@ -263,6 +263,9 @@ return [
         'drag_reorder'      => 'Drag to reorder',
         'option_ph'         => 'Option {n}',
         'default_option'    => 'Option 1',
+        // GH #190 phase 4: an answer that counts as an exception in a task's evidence.
+        'exception'       => 'Exception',
+        'exception_title' => 'Choosing this answer counts as an exception in a task\'s evidence report - Warning or Failure on a check, say',
         'add_option'        => '+ Add option',
         'label_ph'          => 'Field label...',
         'section_ph'        => 'Section heading...',

@@ -229,13 +229,17 @@ final class TaskEvidence
         // (TaskForms::mayReadAnswers) - on screen, in print and in the CSV alike.
         require_once __DIR__ . '/services/task_forms.php';
         require_once __DIR__ . '/services/task_procedures.php';
+        require_once __DIR__ . '/services/task_follow_ups.php';
         $mayReadAnswers = TaskForms::mayReadAnswers($conn, $analystId);
         foreach ($live as $t) {
             if (!self::tenantVisible($conn, $analystId, $t['tenant_id'])) { $hidden++; continue; }
             $o = self::occurrenceFromLive($conn, $t, $events[(int)$t['id']] ?? []);
             $o['forms'] = self::formsOf(TaskForms::snapshot($conn, (int)$t['id']), $mayReadAnswers);
+            self::addFormExceptions($o, $mayReadAnswers);
             // GH #190 phase 2: the procedures it followed, and the frozen text each points at.
             $o['procedures'] = TaskProcedures::snapshot($conn, (int)$t['id']);
+            // GH #190 phase 3: follow-ups, named by number only where the viewer cannot see them.
+            $o['follow_ups'] = TaskFollowUps::forTask($conn, (int)$t['id'], $analystId);
             $occ[] = $o;
         }
         foreach ($removed as $r) {
@@ -243,7 +247,9 @@ final class TaskEvidence
             $o = self::occurrenceFromRemoved($r);
             $snap = json_decode((string)$r['snapshot_json'], true) ?: [];
             $o['forms'] = self::formsOf($snap['forms'] ?? [], $mayReadAnswers);
+            self::addFormExceptions($o, $mayReadAnswers);
             $o['procedures'] = $snap['procedures'] ?? [];
+            $o['follow_ups'] = $snap['follow_ups'] ?? [];
             $occ[] = $o;
         }
 
@@ -428,10 +434,28 @@ final class TaskEvidence
                 'at_utc'        => $s['submitted_date'] ?? null,
                 'earlier'       => count($earlier),
                 'answers'       => $s && $mayRead ? ($s['answers'] ?? []) : null,
+                // Counted for everybody; WHICH answer, only for those who may read answers.
+                'exception_answers' => $s ? array_values(array_filter($s['answers'] ?? [], fn($a) => !empty($a['exception']))) : [],
                 'answers_hidden'=> $s !== null && !$mayRead,
             ];
         }
         return $out;
+    }
+
+    /**
+     * GH #190 phase 4: answers marked "counts as an exception" join the occurrence's exceptions,
+     * beside failed checklist steps, so the summary counts them. Without access to the answers
+     * the exception is still listed - that something was flagged - but not the answer itself.
+     */
+    private static function addFormExceptions(array &$o, bool $mayRead): void
+    {
+        foreach ($o['forms'] ?? [] as $f) {
+            foreach ($f['exception_answers'] ?? [] as $a) {
+                $o['exceptions'][] = ['kind' => 'form_answer', 'form' => $f['title'],
+                                      'question' => $mayRead ? $a['label'] : null, 'answer' => $mayRead ? $a['value'] : null];
+            }
+        }
+        foreach ($o['forms'] ?? [] as $i => $f) unset($o['forms'][$i]['exception_answers']);
     }
 
     /** One removed occurrence, from its frozen copy - judged exactly like a live one, then marked Removed. */
@@ -472,6 +496,10 @@ final class TaskEvidence
             $flags['scheduled_not_recorded'] = true;
         }
         $currentDue = !empty($t['due_date']) ? substr($t['due_date'], 0, 10) : null;
+        /* GH #190 phase 4: the due date it was CREATED with - its scheduled day plus the
+           repeat's due offset. Saturday's check due on Monday and done on Monday is on time,
+           not "on time after rescheduling". Without an offset this is the scheduled day. */
+        $originalDue = !empty($t['original_due_date']) ? substr($t['original_due_date'], 0, 10) : $scheduled;
 
         // The LATEST closing of it - completed or skipped - and anything since.
         $closeEv = null; $closeIdx = -1;
@@ -503,19 +531,19 @@ final class TaskEvidence
                 $dueAtCompletion = $currentDue;
                 $flags['due_history_not_recorded'] = true;
             }
-            $original = $scheduled ?? $dueAtCompletion;
+            $original = $originalDue ?? $dueAtCompletion;
             if ($dueAtCompletion !== null && $completedLocal > $dueAtCompletion) $outcome = 'late';
             elseif ($original !== null && $completedLocal > $original)          $outcome = 'on_time_rescheduled';
             elseif ($dueAtCompletion === null && $original === null)              $outcome = 'not_recorded';
             else                                                                  $outcome = 'on_time';
-            if ($dueAtCompletion !== null && $scheduled !== null && $dueAtCompletion !== $scheduled) $flags['rescheduled'] = true;
+            if ($dueAtCompletion !== null && $originalDue !== null && $dueAtCompletion !== $originalDue) $flags['rescheduled'] = true;
             // A due date moved AFTER completion is flagged, and never re-judges the work.
             foreach ($events as $i => $e) {
                 if ($i > $closeIdx && $e['event_type'] === 'due_date_changed') { $flags['due_changed_after_completion'] = true; break; }
             }
         } elseif (!$closed) {
             $outcome = ($currentDue !== null && $currentDue < $today) ? 'overdue' : 'open';
-            if ($currentDue !== null && $scheduled !== null && $currentDue !== $scheduled) $flags['rescheduled'] = true;
+            if ($currentDue !== null && $originalDue !== null && $currentDue !== $originalDue) $flags['rescheduled'] = true;
         }
 
         // Created late: the scheduler made it after the day work on it should have begun.
@@ -574,6 +602,9 @@ final class TaskEvidence
             'task_id'            => (int)$t['id'],
             'title'              => $t['title'] ?? null,
             'scheduled'          => $scheduled,
+            'original_due'       => $originalDue,
+            'period_start'       => !empty($t['period_start']) ? substr($t['period_start'], 0, 10) : null,
+            'period_end'         => !empty($t['period_end']) ? substr($t['period_end'], 0, 10) : null,
             'begins'             => $begins,
             'due_at_completion'  => $dueAtCompletion,
             'current_due'        => $currentDue,

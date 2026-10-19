@@ -459,6 +459,8 @@ return [
     ['task_forms', 'idx_task_forms_submission', 'key', '(`submission_id`)'],
     ['task_procedures', 'idx_task_procedures_task', 'key', '(`task_id`)'],
     ['task_procedure_snapshots', 'uq_task_procedure_snapshots_hash', 'unique', '(`content_hash`)'],
+    ['task_follow_ups', 'idx_task_follow_ups_task', 'key', '(`task_id`)'],
+    ['task_follow_ups', 'uq_task_follow_ups_ref', 'unique', '(`task_id`,`client_reference`)'],
     ['task_checklist_items', 'idx_item_task_chk', 'key', '(`task_checklist_id`)'],
     ['task_checklist_item_events', 'idx_tcie_task', 'key', '(`task_id`,`id`)'],
     ['task_checklist_item_events', 'idx_tcie_item', 'key', '(`item_id`)'],
