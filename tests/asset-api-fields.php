@@ -23,7 +23,7 @@ $actor = (int)$conn->query('SELECT MIN(id) FROM analysts WHERE is_admin=1')->fet
 if (!$actor) { fwrite(STDERR, "A development administrator is required.\n"); exit(1); }
 $ctx = new ActorContext($actor, null, 'api', 'en', 'Asset API field test');
 $prefix = 'zz_api_fields_' . bin2hex(random_bytes(5));
-$typeIds = []; $fieldIds = []; $setId = null; $hostnames = []; $keyIds = [];
+$typeIds = []; $fieldIds = []; $setId = null; $setIds = []; $hostnames = []; $keyIds = []; $assetIds = [];
 $passed = 0; $failed = 0;
 $ok = function (string $name, bool $condition) use (&$passed, &$failed): void {
     if ($condition) { ++$passed; echo "PASS $name\n"; }
@@ -51,9 +51,9 @@ try {
     $setId = (int)AssetFieldsService::saveSet($conn, $ctx, ['name'=>$prefix])['id'];
     AssetFieldsService::setSetFields($conn, $setId, array_map(function ($id) { return ['field_id'=>$id]; }, $fieldIds));
     AssetFieldsService::setTypeSets($conn, $typeIds[0], [$setId]);
-    $create = function (string $suffix, array $values) use ($conn, $ctx, $prefix, &$hostnames, $typeIds): int {
+    $create = function (string $suffix, array $values) use ($conn, $ctx, $prefix, &$hostnames, &$assetIds, $typeIds): int {
         $hostname = $prefix . $suffix; $hostnames[] = $hostname;
-        return AssetsService::createAsset($conn, $ctx, array_merge([
+        return $assetIds[] = AssetsService::createAsset($conn, $ctx, array_merge([
             'hostname'=>$hostname, 'asset_type_id'=>$typeIds[0],
         ], $values), 'Synthetic API field test');
     };
@@ -101,7 +101,26 @@ try {
         AssetsService::updateFields($conn,$ctx,$id,['asset_type_id'=>$typeIds[1],'fields'=>[$fields['text']=>'invalid']]);
     }));
     $ok('failed type/custom edit rolls back the type', (int)$conn->query('SELECT asset_type_id FROM assets WHERE id=' . $id)->fetchColumn()===$typeIds[0]);
-    $audit=$conn->prepare('SELECT COUNT(*) FROM asset_history WHERE asset_id=? AND field_name=?');
+    // Review fix: the POSITIVE type change - a type whose own set has a different field.
+    $otherField = AssetFieldsService::saveField($conn, $ctx, ['label'=>$prefix . 'other', 'field_type'=>'text']);
+    $fieldIds[] = (int)$otherField['id'];
+    $otherSet = (int)AssetFieldsService::saveSet($conn, $ctx, ['name'=>$prefix . 'other_set'])['id'];
+    $setIds[] = $otherSet;
+    AssetFieldsService::setSetFields($conn, $otherSet, [['field_id'=>(int)$otherField['id']]]);
+    AssetFieldsService::setTypeSets($conn, $typeIds[1], [$otherSet]);
+    AssetsService::updateFields($conn, $ctx, $id, ['asset_type_id'=>$typeIds[1], 'fields'=>[$otherField['field_key']=>'new type value']]);
+    $now = AssetFieldsService::valuesForAsset($conn, $id, AssetFieldsService::fieldsForAsset($conn, $id, $typeIds[1]));
+    $ok('changing type AND setting a field of the NEW type succeeds together',
+        (int)$conn->query('SELECT asset_type_id FROM assets WHERE id=' . $id)->fetchColumn()===$typeIds[1]
+        && ($now[$otherField['field_key']] ?? null)==='new type value');
+    $ok('...and a field of the OLD type is then refused', $rejects(function () use ($conn,$ctx,$id,$fields) {
+        AssetsService::updateFields($conn,$ctx,$id,['fields'=>[$fields['text']=>'old type']]);
+    }));
+    AssetsService::updateFields($conn, $ctx, $id, ['asset_type_id'=>$typeIds[0]]);
+    // Review fix (#194 decision 1): keys the write will not use are named, not silently accepted.
+    $ok('ignoredKeys names an unknown top-level key on update', AssetsService::ignoredKeys(['colour'=>'red','manufacturer'=>'x','fields'=>[]], false)===['colour']);
+    $ok('...and on create, company_id and asset_tag are not "ignored"', AssetsService::ignoredKeys(['hostname'=>'h','company_id'=>1,'asset_tag'=>'A1','nonsense'=>1], true)===['nonsense']);
+    $ok('...and company_id IS ignored on update (it cannot move an asset)', AssetsService::ignoredKeys(['company_id'=>1], false)===['company_id']);    $audit=$conn->prepare('SELECT COUNT(*) FROM asset_history WHERE asset_id=? AND field_name=?');
     $audit->execute([$id,'field:' . $fields['number']]);
     $ok('API custom values use existing field history', (int)$audit->fetchColumn()===1);
     if ($base = getenv('FREEITSM_TEST_URL')) {
@@ -131,6 +150,7 @@ try {
         [$code,$data]=$request('POST','assets',$keys['write'],['hostname'=>$hostname,'asset_type_id'=>$typeIds[0],
             'fields'=>[$fields['text']=>'http',$fields['boolean']=>false]]);
         $httpId=(int)($data['data']['id'] ?? 0);
+        if ($httpId) $assetIds[] = $httpId;
         if ($code!==201) { echo 'HTTP POST diagnostic: ' . $code . ' ' . json_encode($data['error'] ?? []) . "\n"; }
         $ok('HTTP POST persists and serializes typed custom fields', $code===201 && $httpId>0
             && ($data['data']['fields'][$fields['text']] ?? null)==='http'
@@ -157,9 +177,15 @@ try {
         $conn->prepare('DELETE FROM api_key_rate_limits WHERE api_key_id=?')->execute([$keyId]);
         $conn->prepare('DELETE FROM api_keys WHERE id=?')->execute([$keyId]);
     }
+    /* Review fix: by the ids it MADE as well as by hostname. An install whose hostname column is
+       narrower than the schema's 50 stores a shortened name without an error, and a clean-up by
+       name then finds nothing and strands the rows. */
     foreach ($hostnames as $hostname) {
         $find=$conn->prepare('SELECT id FROM assets WHERE hostname=?'); $find->execute([$hostname]);
-        foreach ($find->fetchAll(PDO::FETCH_COLUMN) as $assetId) {
+        $assetIds = array_merge($assetIds, array_map('intval', $find->fetchAll(PDO::FETCH_COLUMN)));
+    }
+    foreach (array_unique($assetIds) as $assetId) {
+        {
             foreach (['asset_history','asset_field_values','asset_field_set_assets'] as $table) {
                 $conn->prepare("DELETE FROM $table WHERE asset_id=?")->execute([$assetId]);
             }
@@ -167,9 +193,9 @@ try {
         }
     }
     foreach ($typeIds as $typeId) { $conn->prepare('DELETE FROM asset_type_field_sets WHERE asset_type_id=?')->execute([$typeId]); }
-    if ($setId) {
-        $conn->prepare('DELETE FROM asset_field_set_fields WHERE set_id=?')->execute([$setId]);
-        $conn->prepare('DELETE FROM asset_field_sets WHERE id=?')->execute([$setId]);
+    foreach (array_filter(array_merge([$setId], $setIds)) as $sid) {
+        $conn->prepare('DELETE FROM asset_field_set_fields WHERE set_id=?')->execute([$sid]);
+        $conn->prepare('DELETE FROM asset_field_sets WHERE id=?')->execute([$sid]);
     }
     foreach ($fieldIds as $fieldId) { $conn->prepare('DELETE FROM asset_fields WHERE id=?')->execute([$fieldId]); }
     foreach ($typeIds as $typeId) { $conn->prepare('DELETE FROM asset_types WHERE id=?')->execute([$typeId]); }

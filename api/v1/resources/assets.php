@@ -397,7 +397,10 @@ function apiAssetsCreate(PDO $conn, array $apiKey, array $params, array $body): 
         $assetId = AssetsService::createAsset($conn, ActorContext::fromApiKey($apiKey), $body,
             'Created via API (key: ' . $apiKey['name'] . ')', $tenantId);
     } catch (ServiceError $e) { apiFailFromService($e); }
-    apiRespond(apiSerializeAsset($conn, apiLoadAsset($conn, $apiKey, $assetId)), 201);
+    $out = apiSerializeAsset($conn, apiLoadAsset($conn, $apiKey, $assetId));
+    // #194 decision 1: name the keys that were not used, rather than accept them silently.
+    if ($ignored = AssetsService::ignoredKeys($body, true)) $out['ignored'] = $ignored;
+    apiRespond($out, 201);
 }
 
 // ---------------------------------------------------------------------------
@@ -407,7 +410,9 @@ function apiAssetsUpdate(PDO $conn, array $apiKey, array $params, array $body): 
     try {
         AssetsService::updateFields($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $body);
     } catch (ServiceError $e) { apiFailFromService($e); }
-    apiRespond(apiSerializeAsset($conn, apiLoadAsset($conn, $apiKey, $params[0])));
+    $out = apiSerializeAsset($conn, apiLoadAsset($conn, $apiKey, $params[0]));
+    if ($ignored = AssetsService::ignoredKeys($body, false)) $out['ignored'] = $ignored;
+    apiRespond($out);
 }
 
 // ---------------------------------------------------------------------------

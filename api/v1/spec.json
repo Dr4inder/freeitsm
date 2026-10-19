@@ -992,7 +992,7 @@
                     "p": "\/assets",
                     "perm": "assets.create",
                     "s": "Create an asset",
-                    "d": "Creates an asset record. hostname is the identity the inventory agent and Intune sync upsert on, so a duplicate hostname is refused (409) — PATCH the existing asset instead. All other fields are optional and match PATCH below. The optional fields object accepts values keyed by applicable custom field_key. Omitted keys remain unchanged; null or an empty string clears a non-required value. An empty object is a no-op. Unknown\/inapplicable keys or invalid values return 422. Core and custom changes are atomic.",
+                    "d": "Creates an asset record. hostname is the identity the inventory agent and Intune sync upsert on, so a duplicate hostname is refused (409) — PATCH the existing asset instead. All other fields are optional and match PATCH below. The optional fields object accepts values keyed by applicable custom field_key. Omitted keys remain unchanged; null or an empty string clears a non-required value. An empty object is a no-op. Unknown\/inapplicable keys or invalid values return 422. Core and custom changes are atomic. Top-level keys the write does not use are still accepted, but the response names them in an ignored array (absent when there are none) instead of answering as if they were saved.",
                     "params": [
                         {
                             "name": "hostname",
@@ -1144,7 +1144,7 @@
                     "p": "\/assets\/{id}",
                     "perm": "assets.update",
                     "s": "Update an asset",
-                    "d": "Updates any combination of fields. Every change is written to the asset history with the same field keys the UI uses; changing warranty_expiry re-syncs the calendar's warranty events. Send only what changes; null clears a field. Unknown lookup ids are a 422. The optional fields object accepts values keyed by applicable custom field_key. Omitted keys remain unchanged; null or an empty string clears a non-required value. An empty object is a no-op. Unknown\/inapplicable keys or invalid values return 422. Core and custom changes are atomic.",
+                    "d": "Updates any combination of fields. Every change is written to the asset history with the same field keys the UI uses; changing warranty_expiry re-syncs the calendar's warranty events. Send only what changes; null clears a field. Unknown lookup ids are a 422. The optional fields object accepts values keyed by applicable custom field_key. Omitted keys remain unchanged; null or an empty string clears a non-required value. An empty object is a no-op. Unknown\/inapplicable keys or invalid values return 422. Core and custom changes are atomic. Top-level keys the write does not use are still accepted, but the response names them in an ignored array (absent when there are none) instead of answering as if they were saved.",
                     "params": [
                         {
                             "name": "id",

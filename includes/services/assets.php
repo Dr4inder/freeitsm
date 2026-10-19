@@ -307,7 +307,6 @@ class AssetsService
             foreach ($audits as [$fieldKey, $old, $new]) {
                 self::auditWrite($conn, $assetId, $ctx->actorId, $fieldKey, $old, $new);
             }
-            if ($warrantyChanged) { self::syncWarranty($conn); }
             // Leases (3.5.0): propagate edited dates to the lease schedule.
             if (array_key_exists('lease_start', $in) || array_key_exists('lease_expiry', $in)) {
                 require_once __DIR__ . '/../leases.php';
@@ -318,6 +317,24 @@ class AssetsService
             if ($owns && $conn->inTransaction()) { $conn->rollBack(); }
             throw $e;
         }
+        // After the commit, as createAsset() does: it re-syncs the warranty calendar for
+        // the whole estate and swallows its own errors - neither belongs inside the
+        // asset's transaction (holding its locks, or committing a half-done sync with it).
+        if ($warrantyChanged) { self::syncWarranty($conn); }
+    }
+
+    /**
+     * The top-level keys a create or update will NOT use (#194 decision 1): not an asset
+     * column, not `fields`, not `asset_tag` - and on create not `company_id`, which the API
+     * reads. They are still accepted, so existing scripts do not break on upgrade, but the
+     * response names them instead of answering 200 to a change it never made.
+     *
+     * @param bool $create  a create (accepts company_id) rather than an update
+     */
+    public static function ignoredKeys(array $in, bool $create): array
+    {
+        $known = self::fieldMap() + ['fields' => true, 'asset_tag' => true] + ($create ? ['company_id' => true] : []);
+        return array_values(array_map('strval', array_diff(array_keys($in), array_keys($known))));
     }
 
     /** Validate the optional custom-field map; absent/empty maps change nothing. */
