@@ -740,9 +740,12 @@ class FormsService
      *
      * @param int $collectionId  the form_collections row
      */
-    public static function collectionSubmissions(PDO $conn, int $collectionId): array
+    public static function collectionSubmissions(PDO $conn, int $collectionId, ?array $companyScope = null): array
     {
         self::requireCollections($conn);
+        // GH #190: one made inside a task is visible only within that task's company.
+        require_once __DIR__ . '/task_forms.php';
+        [$scopeSql, $scopeArgs] = TaskForms::submissionScopeSql($conn, $companyScope, 's');
 
         $q = $conn->prepare(
             "SELECT s.id, s.form_id, f.title AS form_title,
@@ -758,10 +761,10 @@ class FormsService
                LEFT JOIN analysts a    ON a.id = s.submitted_by
                LEFT JOIN users u       ON u.id = s.submitted_by_user_id
                LEFT JOIN analysts decider ON decider.id = s.approval_decided_by_id
-              WHERE s.collection_id = ?
+              WHERE s.collection_id = ? AND $scopeSql
               ORDER BY s.submitted_date DESC, s.id DESC"
         );
-        $q->execute([$collectionId]);
+        $q->execute(array_merge([$collectionId], $scopeArgs));
         $subs = $q->fetchAll(PDO::FETCH_ASSOC);
         if (!$subs) return ['submissions' => [], 'forms' => []];
 
@@ -1155,6 +1158,7 @@ class FormsService
         }
 
         $place = implode(',', array_fill(0, count($ids), '?'));
+        self::assertNotTaskEvidence($conn, "form_id IN ($place)", $ids);
         $conn->beginTransaction();
         try {
             $conn->prepare(
@@ -1449,8 +1453,12 @@ class FormsService
      *   LEFT JOINs it to `analysts`, so writing a users.id there would silently
      *   attribute a customer's request to whichever analyst happened to share
      *   the number. They go in different columns and exactly one is set.
+     * @param array $link  GH #190, a submission made inside a task occurrence (TaskForms::submit()):
+     *   task_id, tenant_id, client_reference, and `within` - a callable(PDO, int $submissionId) run
+     *   INSIDE this transaction, which links the occurrence and may throw to roll the whole
+     *   submission back (a lost race). Empty for every other caller, which behave as before.
      */
-    public static function submitForm(PDO $conn, ActorContext $ctx, int $formId, array $data, ?int $portalUserId = null): int
+    public static function submitForm(PDO $conn, ActorContext $ctx, int $formId, array $data, ?int $portalUserId = null, array $link = []): int
     {
         if ($portalUserId === null) {
             self::assertCanWrite($conn, $ctx);   // an analyst filling in a form; portal users never come here
@@ -1767,12 +1775,22 @@ class FormsService
                 $vals .= ', ?';
                 $args[] = $collectionId;
             }
+            if (!empty($link['task_id'])) {
+                $cols .= ', task_id, tenant_id, client_reference';
+                $vals .= ', ?, ?, ?';
+                array_push($args, (int)$link['task_id'], $link['tenant_id'] ?? null, $link['client_reference'] ?? null);
+            }
             $conn->prepare("INSERT INTO form_submissions ($cols) VALUES ($vals)")->execute($args);
             $submissionId = (int)$conn->lastInsertId();
 
             $ins = $conn->prepare("INSERT INTO form_submission_data (submission_id, field_id, field_value) VALUES (?, ?, ?)");
             foreach ($normalised as $fieldId => $value) {
                 $ins->execute([$submissionId, $fieldId, $value]);
+            }
+            // GH #190: the occurrence's link, in this same transaction - so a submission
+            // can never exist half-linked, and a lost race undoes the submission too.
+            if (isset($link['within']) && is_callable($link['within'])) {
+                ($link['within'])($conn, $submissionId);
             }
             $conn->commit();
         } catch (Exception $e) {
@@ -1813,6 +1831,8 @@ class FormsService
                     'fields' => $submissionFields,
                 ],
             ];
+            // GH #190: made inside a task occurrence - say which, for a rule that cares.
+            if (!empty($link['task_id'])) $payload['task'] = ['id' => (int)$link['task_id']];
             // A gated request must NOT fire form.submitted: an admin's create-ticket
             // rule on that event would jump the approval gate and raise the ticket
             // anyway. It fires catalogue_request.submitted instead — the hook to
@@ -1883,6 +1903,7 @@ class FormsService
                 throw new ServiceError('not_found', 'not_found', 'Submission not found.');
             }
         }
+        self::assertNotTaskEvidence($conn, 'id = ?', [$submissionId]);
         $conn->beginTransaction();
         try {
             $conn->prepare("DELETE FROM form_submission_data WHERE submission_id = ?")->execute([$submissionId]);
@@ -1893,6 +1914,44 @@ class FormsService
             throw $e;
         }
         return $submissionId;
+    }
+
+    /**
+     * Refuse to delete a submission that is a task occurrence's evidence (GH #190), or a
+     * form that one was made on or that a task still needs.
+     *
+     * 🔴 Deleting it would delete the answers behind a completed check, and deleting the
+     * form would take the field labels with it. A form can be made inactive instead.
+     * Quiet on an install that has not run Database Verification - nothing can be linked yet.
+     *
+     * @param string $where  a condition on form_submissions (e.g. "id = ?" or "form_id IN (...)")
+     * @param array $args  its parameters
+     */
+    private static function assertNotTaskEvidence(PDO $conn, string $where, array $args): void
+    {
+        try {
+            $q = $conn->prepare("SELECT COUNT(*) FROM form_submissions WHERE task_id IS NOT NULL AND $where");
+            $q->execute($args);
+            $linked = (int)$q->fetchColumn();
+            $needed = 0;
+            if (strpos($where, 'form_id') === 0) {
+                $r = $conn->prepare("SELECT COUNT(*) FROM task_forms WHERE $where");
+                $r->execute($args);
+                $needed = (int)$r->fetchColumn();
+            }
+        } catch (Throwable $e) {
+            return;
+        }
+        if ($linked > 0) {
+            throw new ServiceError('conflict', 'task_evidence',
+                $linked === 1 && strpos($where, 'id = ?') === 0
+                    ? 'This submission is the record of work done on a task, so it cannot be deleted. It stays with that task\'s history and its evidence report.'
+                    : 'Submissions of this form are the record of work on ' . $linked . ' task occurrence(s), so it cannot be deleted. Make it inactive instead.');
+        }
+        if ($needed > 0) {
+            throw new ServiceError('conflict', 'task_evidence',
+                $needed . ' task(s) need this form. Take it off those tasks, or make the form inactive instead.');
+        }
     }
 
     // ======================================================================

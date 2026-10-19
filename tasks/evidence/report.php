@@ -94,7 +94,7 @@ function evExplain(?array $e): string {
     <title><?php echo htmlspecialchars(pageTitle('tasks', $r ? t('tasks.evidence.report_title', ['title' => $r['series']['title']]) : t('tasks.nav.evidence'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=48">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=49">
     <link rel="stylesheet" href="../../assets/css/task-evidence.css?v=1">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -124,6 +124,7 @@ function evExplain(?array $e): string {
                 <a class="btn btn-secondary" href="../../api/tasks/evidence_export.php?<?php echo $qs(['file' => 'occurrences']); ?>"><?php echo $T('csv_occurrences'); ?></a>
                 <a class="btn btn-secondary" href="../../api/tasks/evidence_export.php?<?php echo $qs(['file' => 'checklist_results']); ?>"><?php echo $T('csv_checklists'); ?></a>
                 <a class="btn btn-secondary" href="../../api/tasks/evidence_export.php?<?php echo $qs(['file' => 'evidence']); ?>"><?php echo $T('csv_evidence'); ?></a>
+                <a class="btn btn-secondary" href="../../api/tasks/evidence_export.php?<?php echo $qs(['file' => 'form_answers']); ?>"><?php echo $T('csv_forms'); ?></a>
             </div>
         </div>
 
@@ -219,6 +220,29 @@ function evExplain(?array $e): string {
                             </tr>
                             <?php endforeach; ?>
                         </table>
+                    </div>
+                <?php endforeach; ?>
+                <?php /* GH #190: the forms this occurrence needed, who submitted them, and the
+                         answers - only where the viewer may read them (TaskForms::mayReadAnswers). */ ?>
+                <?php foreach ($row['forms'] ?? [] as $f): ?>
+                    <div class="ev-checklist">
+                        <div class="ev-checklist-title"><?php echo htmlspecialchars($f['title']); ?>
+                            <span class="ev-sub"><?php echo $T('form_label'); ?><?php if ($f['required']): ?> · <?php echo $T('form_required'); ?><?php endif; ?></span></div>
+                        <?php if (!$f['submission_id']): ?>
+                            <div class="ev-sub"><?php echo $T('form_not_submitted'); ?></div>
+                        <?php else: ?>
+                            <div class="ev-sub"><?php echo $T('form_submitted', ['who' => (string)($f['by'] ?? '-'), 'when' => TaskEvidence::when($f['at_utc'])]); ?>
+                                <?php if ($f['earlier']): ?> · <?php echo $T('form_earlier', ['n' => $f['earlier']]); ?><?php endif; ?></div>
+                            <?php if ($f['answers_hidden']): ?>
+                                <div class="ev-sub"><em><?php echo htmlspecialchars(t('tasks.forms.no_answer_access')); ?></em></div>
+                            <?php else: ?>
+                                <table class="ev-steps">
+                                    <?php foreach ($f['answers'] ?? [] as $a): ?>
+                                    <tr><td><?php echo htmlspecialchars($a['label']); ?></td><td style="white-space:pre-wrap"><?php echo htmlspecialchars($a['value']); ?></td></tr>
+                                    <?php endforeach; ?>
+                                </table>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
                 <?php if ($row['events'] || $row['steps']): ?>

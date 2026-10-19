@@ -225,13 +225,22 @@ final class TaskEvidence
 
         $occ = [];
         $hidden = 0;
+        // GH #190: an occurrence's form answers follow the ONE answers rule
+        // (TaskForms::mayReadAnswers) - on screen, in print and in the CSV alike.
+        require_once __DIR__ . '/services/task_forms.php';
+        $mayReadAnswers = TaskForms::mayReadAnswers($conn, $analystId);
         foreach ($live as $t) {
             if (!self::tenantVisible($conn, $analystId, $t['tenant_id'])) { $hidden++; continue; }
-            $occ[] = self::occurrenceFromLive($conn, $t, $events[(int)$t['id']] ?? []);
+            $o = self::occurrenceFromLive($conn, $t, $events[(int)$t['id']] ?? []);
+            $o['forms'] = self::formsOf(TaskForms::snapshot($conn, (int)$t['id']), $mayReadAnswers);
+            $occ[] = $o;
         }
         foreach ($removed as $r) {
             if (!self::tenantVisible($conn, $analystId, $r['tenant_id'])) { $hidden++; continue; }
-            $occ[] = self::occurrenceFromRemoved($r);
+            $o = self::occurrenceFromRemoved($r);
+            $snap = json_decode((string)$r['snapshot_json'], true) ?: [];
+            $o['forms'] = self::formsOf($snap['forms'] ?? [], $mayReadAnswers);
+            $occ[] = $o;
         }
 
         $mode = $series['mode'] ?? 'completion';
@@ -369,6 +378,48 @@ final class TaskEvidence
             $audit = $s->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) { /* none */ }
         return self::judge($t, $lists, $steps, $events, $audit, null);
+    }
+
+    /**
+     * An occurrence's forms for the report (GH #190): each requirement, the submission that met
+     * it, any earlier ones it replaced, and - only where the viewer may read them - the answers.
+     * Built from TaskForms::snapshot() for a live occurrence and from the frozen copy for a removed
+     * one, so both read the same.
+     *
+     * @param array $snap  ['requirements' => [...], 'submissions' => [...]]
+     * @param bool $mayRead  TaskForms::mayReadAnswers() for the viewer
+     */
+    private static function formsOf(array $snap, bool $mayRead): array
+    {
+        $subs = [];
+        foreach ($snap['submissions'] ?? [] as $s) $subs[(int)$s['id']] = $s;
+        $out = [];
+        foreach ($snap['requirements'] ?? [] as $req) {
+            $sid = $req['submission_id'] !== null ? (int)$req['submission_id'] : null;
+            $s = $sid && isset($subs[$sid]) ? $subs[$sid] : null;
+            // The submissions this one replaced: follow each superseded_by_id chain to it.
+            $earlier = [];
+            foreach ($subs as $x) {
+                $at = $x; $hops = 0;
+                while ($sid && $at['superseded_by_id'] !== null && $hops++ < 100) {
+                    if ((int)$at['superseded_by_id'] === $sid) { $earlier[] = $x; break; }
+                    $at = $subs[(int)$at['superseded_by_id']] ?? ['superseded_by_id' => null];
+                }
+            }
+            $out[] = [
+                'title'         => (string)$req['title'],
+                'required'      => (int)$req['is_required'] === 1,
+                'mode'          => (string)$req['requirement_mode'],
+                'submission_id' => $sid,
+                'form_id'       => $s ? (int)$s['form_id'] : (int)$req['form_id'],
+                'by'            => $s['submitted_by'] ?? null,
+                'at_utc'        => $s['submitted_date'] ?? null,
+                'earlier'       => count($earlier),
+                'answers'       => $s && $mayRead ? ($s['answers'] ?? []) : null,
+                'answers_hidden'=> $s !== null && !$mayRead,
+            ];
+        }
+        return $out;
     }
 
     /** One removed occurrence, from its frozen copy - judged exactly like a live one, then marked Removed. */

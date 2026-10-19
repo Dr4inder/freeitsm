@@ -88,8 +88,8 @@ return [
             'id'           => 'checklists',
             'cap'          => Cap::TASKS_CHECKLISTS,
             'label_key'    => 'tasks.settings.tab_checklists',
-            'grant'        => 'Switch checklists on tasks on or off',
-            'setting_keys' => ['tasks_checklists_enabled'],
+            'grant'        => 'Switch checklists and forms on tasks on or off',
+            'setting_keys' => ['tasks_checklists_enabled', 'tasks_forms_enabled'],
         ],
         [
             // Repeating task evidence (#181): what deleting an occurrence and changing a
@@ -127,6 +127,13 @@ return [
             'cap'      => Cap::TASKS_EVIDENCE_REPORT,
             'grant'    => 'Run the evidence report for a repeating task, and export it (print and CSV)',
             'restrict' => ['setting' => 'tasks_evidence_report_access', 'value' => 'permission'],
+        ],
+        [
+            // GH #190 decision 4: task access alone never reveals form answers. This grants
+            // exactly those on the occurrences you can see - nothing else in Forms.
+            'cap'      => Cap::TASKS_FORM_ANSWERS,
+            'grant'    => 'Read the form answers on tasks you can see, without access to the Forms module',
+            'restrict' => null,
         ],
     ],
 ];

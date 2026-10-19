@@ -2334,6 +2334,32 @@ body {
 #taskChecklistSection .chk-attach .detail-select { flex: 1; min-width: 0; }
 #taskChecklistSection .chk-empty { font-size: 13px; color: var(--text-muted, #666); margin-bottom: 8px; }
 
+/* ── Forms a task needs (GH #190) ─────────────────────────────────
+   Shaped like the checklist cards above it, with the same theme variables. */
+#taskFormsSection .tf-card {
+    border: 1px solid var(--border, #e5e7eb); border-radius: 8px; padding: 10px 12px;
+    margin-bottom: 10px; background: var(--surface, #fff);
+}
+#taskFormsSection .tf-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+#taskFormsSection .tf-title { font-weight: 600; color: var(--text, #333); flex: 1; min-width: 140px; display: flex; align-items: center; gap: 6px; }
+#taskFormsSection .chk-lock { color: var(--danger-text, #b91c1c); flex-shrink: 0; }
+#taskFormsSection .tf-req { font-size: 12px; padding: 2px 4px; border: 1px solid var(--border, #e5e7eb); border-radius: 4px; background: var(--surface, #fff); color: var(--text, #333); }
+#taskFormsSection .btn-link-small { background: none; border: 0; padding: 0; cursor: pointer; font-size: 12px; color: var(--text-muted, #666); text-decoration: underline; }
+#taskFormsSection .btn-link-small:hover { color: var(--danger-text, #b91c1c); }
+#taskFormsSection .tf-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+#taskFormsSection .tf-state { font-size: 12px; color: var(--text-muted, #666); }
+#taskFormsSection .tf-done { color: var(--success-text, #16a34a); }
+#taskFormsSection .tf-draft { color: var(--warning-text, #92400e); }
+#taskFormsSection .tf-note { font-size: 12px; color: var(--text-muted, #666); font-style: italic; }
+#taskFormsSection .tf-answers { margin-top: 8px; font-size: 13px; }
+#taskFormsSection .tf-answers summary { cursor: pointer; color: var(--text-muted, #666); font-size: 12px; }
+#taskFormsSection .tf-answers table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+#taskFormsSection .tf-answers th { text-align: left; font-weight: 600; color: var(--text-muted, #666); padding: 4px 8px 4px 0; vertical-align: top; width: 40%; }
+#taskFormsSection .tf-answers td { padding: 4px 0; color: var(--text, #333); white-space: pre-wrap; word-break: break-word; }
+#taskFormsSection .tf-add { display: flex; gap: 8px; align-items: center; }
+#taskFormsSection .tf-add .detail-select { flex: 1; min-width: 0; }
+#taskFormsSection .tf-empty { font-size: 13px; color: var(--text-muted, #666); margin-bottom: 8px; }
+
 /* ── Board columns by status or by analyst (2.10.0) ─────────────── */
 .board-column--analyst .column-analyst-badge {
     display: inline-flex; align-items: center; justify-content: center;
@@ -2636,6 +2662,10 @@ body.module-read-only .comment-add,
 body.module-read-only .link-search-container,
 body.module-read-only .link-remove,
 body.module-read-only .chk-attach,
+body.module-read-only .tf-add,
+body.module-read-only .tf-req,
+body.module-read-only .tf-fill,
+body.module-read-only #taskFormsSection .btn-link-small,
 body.module-read-only .chk-results,
 body.module-read-only .chk-handle,
 body.module-read-only .subtask-handle,

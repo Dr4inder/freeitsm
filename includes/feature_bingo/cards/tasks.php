@@ -328,6 +328,31 @@ return [
         'link'     => 'tasks/',
         'check'    => ['rows', 'task_checklists', "is_demo = 0"],
     ],
+    // GH #190: forms a task occurrence needs, filled in and linked automatically.
+    [
+        'id'       => 'tasks.forms_enabled',
+        'module'   => 'tasks',
+        'tier'     => 'extra',
+        'category' => 'governance',
+        'title'    => 'Forms on tasks switched on',
+        'what'     => 'Tasks -> Settings -> Checklists -> Forms on tasks, so a task (or a repeating one) can need forms from the Forms module.',
+        'why'      => 'A check that records its results in a form - OK, Warning or Failure, and why - is filled in inside the task it belongs to, and nobody copies submission numbers between modules.',
+        'done'     => 'Forms on tasks is switched on.',
+        'link'     => 'tasks/settings/',
+        'check'    => ['setting', 'tasks_forms_enabled', 'eq', '1'],
+    ],
+    [
+        'id'       => 'tasks.form_submitted',
+        'module'   => 'tasks',
+        'tier'     => 'extra',
+        'category' => 'governance',
+        'title'    => 'A form submitted for a task',
+        'what'     => 'At least one form filled in for a task occurrence and linked to it automatically.',
+        'why'      => 'The answers belong to that day\'s occurrence: the task shows them, completion checks them, and the evidence report and its CSV carry them.',
+        'done'     => 'At least one real form submission is linked to a task.',
+        'link'     => 'tasks/',
+        'check'    => ['rows', 'form_submissions', "task_id IS NOT NULL AND is_demo = 0"],
+    ],
     // 2.10.0: board columns by analyst, and subtasks under their card.
     [
         'id'       => 'tasks.board_by_analyst',

@@ -941,6 +941,13 @@ class TaskRecurrence
         } catch (Throwable $e) {
             error_log('Recurrence: checklist copy failed for task ' . $newId . ': ' . $e->getMessage());
         }
+        // And the forms it needs (GH #190) - the requirement, never the answers.
+        try {
+            require_once __DIR__ . '/task_forms.php';
+            TaskForms::copyForOccurrence($conn, $sourceTaskId, $newId);
+        } catch (Throwable $e) {
+            error_log('Recurrence: form copy failed for task ' . $newId . ': ' . $e->getMessage());
+        }
 
         $conn->prepare(
             "UPDATE task_recurrences

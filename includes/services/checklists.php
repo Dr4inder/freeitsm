@@ -965,12 +965,21 @@ class ChecklistsService
     public static function taskCompletionCheck(PDO $conn, int $taskId): array
     {
         $out = ['blocking' => [], 'warning' => []];
-        if (!self::tasksEnabled($conn)) return $out;
         $tenantId = self::taskTenantId($conn, $taskId);
-        foreach (self::taskOutstandingMandatorySteps($conn, $taskId) as $r) {
-            $name = $r['checklist'] !== '' ? $r['checklist'] : 'Checklist';
-            $mode = self::effectiveClosureMode($conn, (string)($r['closure_mode'] ?? 'warn'), $tenantId);
-            $out[$mode === 'block' ? 'blocking' : 'warning'][$name][] = $r['step'];
+        if (self::tasksEnabled($conn)) {
+            foreach (self::taskOutstandingMandatorySteps($conn, $taskId) as $r) {
+                $name = $r['checklist'] !== '' ? $r['checklist'] : 'Checklist';
+                $mode = self::effectiveClosureMode($conn, (string)($r['closure_mode'] ?? 'warn'), $tenantId);
+                $out[$mode === 'block' ? 'blocking' : 'warning'][$name][] = $r['step'];
+            }
+        }
+        /* GH #190: required forms with no submission - the SAME gate, not a second
+           one, so the board, the window, a subtask tick and the REST API all ask it.
+           Warn / block per form, with the company's "block all" floor as for steps. */
+        require_once __DIR__ . '/task_forms.php';
+        foreach (TaskForms::outstanding($conn, $taskId) as $f) {
+            $mode = self::effectiveClosureMode($conn, $f['mode'], $tenantId);
+            $out[$mode === 'block' ? 'blocking' : 'warning'][(function_exists('t') ? t('tasks.forms.gate_name') : 'Forms')][] = $f['title'];
         }
         return $out;
     }
@@ -990,7 +999,7 @@ class ChecklistsService
             $parts[] = $checklist . ' (' . implode(', ', $steps) . ')';
         }
         throw new ServiceError('validation', 'mandatory_steps_outstanding',
-            'This task cannot be completed until its mandatory checklist steps are done: ' . implode('; ', $parts));
+            'This task cannot be completed until its required work is done: ' . implode('; ', $parts));
     }
 
     /**
@@ -1004,11 +1013,20 @@ class ChecklistsService
      */
     public static function recordTaskCompletionOverride(PDO $conn, ActorContext $ctx, int $taskId): void
     {
-        if (!self::tasksEnabled($conn)) return;
-        $outstanding = self::taskOutstandingMandatorySteps($conn, $taskId);
-        if (!$outstanding) return;
-        $list = implode('; ', array_map(fn($r) => $r['checklist'] . ' - ' . $r['step'], $outstanding));
-        $note = count($outstanding) . ' mandatory checklist step(s) outstanding: ' . $list . '. ' . self::closedBy($ctx);
+        $outstanding = self::tasksEnabled($conn) ? self::taskOutstandingMandatorySteps($conn, $taskId) : [];
+        // GH #190: required forms it was completed without are recorded the same way.
+        require_once __DIR__ . '/task_forms.php';
+        $forms = TaskForms::outstanding($conn, $taskId);
+        if (!$outstanding && !$forms) return;
+        $parts = [];
+        if ($outstanding) {
+            $parts[] = count($outstanding) . ' mandatory checklist step(s) outstanding: '
+                     . implode('; ', array_map(fn($r) => $r['checklist'] . ' - ' . $r['step'], $outstanding));
+        }
+        if ($forms) {
+            $parts[] = count($forms) . ' required form(s) not submitted: ' . implode('; ', array_column($forms, 'title'));
+        }
+        $note = implode('. ', $parts) . '. ' . self::closedBy($ctx);
         try {
             $conn->prepare("INSERT INTO task_audit (task_id, analyst_id, field_name, old_value, new_value, source, created_datetime)
                             VALUES (?, ?, 'Completed with checklist steps outstanding', NULL, ?, ?, UTC_TIMESTAMP())")

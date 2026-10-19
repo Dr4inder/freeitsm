@@ -444,6 +444,14 @@ $translationNamespaces = ['common', 'tasks'];
 
                     <h4><?php echo htmlspecialchars(t('tasks.help.evidence_auditor_heading')); ?></h4>
                     <p><?php echo t('tasks.help.evidence_auditor_body'); ?></p>
+
+                    <?php /* GH #190: forms a task occurrence needs. */ ?>
+                    <h4><?php echo htmlspecialchars(t('tasks.help.forms_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.forms_body'); ?></p>
+                    <p><?php echo t('tasks.help.forms_fill'); ?></p>
+                    <p><?php echo t('tasks.help.forms_complete'); ?></p>
+                    <p><?php echo t('tasks.help.forms_access'); ?></p>
+                    <p class="help-note"><?php echo t('tasks.help.forms_note'); ?></p>
                 </div>
                 <!-- 10. Tags -->
                 <div class="help-section" id="tags">

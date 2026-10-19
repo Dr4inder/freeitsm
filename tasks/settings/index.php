@@ -39,7 +39,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks', t('tasks.nav.settings'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=48">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=49">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
@@ -282,6 +282,16 @@ $translationNamespaces = ['common', 'tasks'];
             <!-- Said plainly, because "does this stop me completing a task?" and
                  "what happens if I switch it off again?" are the two questions. -->
             <p style="color: var(--text-muted, #666); margin-top: 16px;"><?php echo htmlspecialchars(t('tasks.settings.checklists_note')); ?></p>
+
+            <!-- Forms on tasks (GH #190): a task can need forms from the Forms module,
+                 filled in for that occurrence and checked by the same completion gate. -->
+            <label class="card-field-row" style="margin-top: 16px;">
+                <input type="checkbox" id="taskFormsEnabled" onchange="saveTaskFormsEnabled(this.checked)">
+                <div>
+                    <div class="card-field-name"><?php echo htmlspecialchars(t('tasks.settings.forms_enabled_name')); ?></div>
+                    <div class="card-field-desc"><?php echo htmlspecialchars(t('tasks.settings.forms_enabled_desc')); ?></div>
+                </div>
+            </label>
         </div>
         <?php endif; ?>
 
@@ -761,6 +771,8 @@ $translationNamespaces = ['common', 'tasks'];
                 if (!data.success) return;
                 box.checked  = String(data.settings.checklists_enabled || '0') === '1';
                 box.disabled = false;
+                const forms = document.getElementById('taskFormsEnabled');
+                if (forms) forms.checked = String(data.settings.forms_enabled || '0') === '1';
             } catch (e) { console.error(e); }
         }
 
@@ -769,6 +781,19 @@ $translationNamespaces = ['common', 'tasks'];
                 const res = await fetch(API_BASE + 'save_settings.php', {
                     method: 'POST', headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ settings: { checklists_enabled: on ? '1' : '0' } })
+                });
+                const data = await res.json();
+                if (data.success) showToast(t('tasks.toast.saved'), 'success');
+                else showToast(data.error || t('tasks.toast.save_failed'), 'error');
+            } catch (e) { showToast(t('tasks.toast.save_failed'), 'error'); }
+        }
+
+        /** Forms on tasks (GH #190), saved on its own like the checklists switch. */
+        async function saveTaskFormsEnabled(on) {
+            try {
+                const res = await fetch(API_BASE + 'save_settings.php', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ settings: { forms_enabled: on ? '1' : '0' } })
                 });
                 const data = await res.json();
                 if (data.success) showToast(t('tasks.toast.saved'), 'success');

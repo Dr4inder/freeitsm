@@ -50,7 +50,7 @@ $to   = $isDate($_GET['to'] ?? null) ? $_GET['to'] : date('Y-m-d');
 $from = $isDate($_GET['from'] ?? null) ? $_GET['from'] : date('Y-m-d', strtotime($to . ' -12 months +1 day'));
 if ($from > $to) [$from, $to] = [$to, $from];
 $file = (string)($_GET['file'] ?? 'occurrences');
-if (!in_array($file, ['occurrences', 'checklist_results', 'evidence'], true)) $file = 'occurrences';
+if (!in_array($file, ['occurrences', 'checklist_results', 'evidence', 'form_answers'], true)) $file = 'occurrences';
 
 $r = TaskEvidence::report($conn, $rid, $from, $to, $analystId);
 $local = fn(?string $utc) => TaskEvidence::localDateTime($utc) ?? '';
@@ -84,6 +84,22 @@ if ($file === 'occurrences') {
                            $it['title'], $it['mandatory'] ? 1 : 0, $it['done'] ? 1 : 0, $it['value'] ?? '', $it['result'] ?? '',
                            $it['exception_note'] ?? '', $it['by'] ?? '', $it['at_utc'] ?? '', $local($it['at_utc'] ?? null)];
             }
+        }
+    }
+} elseif ($file === 'form_answers') {
+    // GH #190: one row per answer, joining to the other files on task_id. Answers the
+    // viewer may not read (TaskForms::mayReadAnswers) say so in the value column rather
+    // than leaving the row out, so the row count does not depend on who ran it.
+    $head = ['series_id', 'task_id', 'scheduled_date', 'outcome', 'form', 'required', 'requirement', 'submission_id', 'form_version_id',
+             'submitted_by', 'submitted_utc', 'submitted_local', 'question', 'answer'];
+    $hidden = t('tasks.forms.no_answer_access');
+    foreach ($r['rows'] as $o) {
+        foreach ($o['forms'] ?? [] as $f) {
+            $base = [$rid, $o['task_id'], $o['scheduled'], $o['outcome'], $f['title'], $f['required'] ? 1 : 0, $f['mode'],
+                     $f['submission_id'] ?? '', $f['form_id'] ?? '', $f['by'] ?? '', $f['at_utc'] ?? '', $local($f['at_utc'] ?? null)];
+            if (!$f['submission_id']) { $rows[] = array_merge($base, ['', '']); continue; }
+            if ($f['answers_hidden'])  { $rows[] = array_merge($base, ['', $hidden]); continue; }
+            foreach ($f['answers'] ?? [] as $a) $rows[] = array_merge($base, [$a['label'], $a['value']]);
         }
     }
 } else {
@@ -121,6 +137,11 @@ if ($file === 'occurrences') {
                 $rows[] = [$rid, $o['task_id'], $o['scheduled'], 'comment', 'comment:' . $c['id'], '', '', '', $c['full_name'] ?? '',
                            $c['created_datetime'], $local($c['created_datetime']), $c['comment']];
             }
+        }
+        // GH #190: each form submission, as evidence beside the attachments.
+        foreach ($o['forms'] ?? [] as $f) {
+            if ($f['submission_id']) $rows[] = [$rid, $o['task_id'], $o['scheduled'], 'form_submission', 'form_submission:' . $f['submission_id'],
+                                               $f['title'], '', '', $f['by'] ?? '', $f['at_utc'] ?? '', $local($f['at_utc'] ?? null), ''];
         }
         if (!empty($o['ticket_id'])) $rows[] = [$rid, $o['task_id'], $o['scheduled'], 'linked_ticket', 'ticket:' . $o['ticket_id'], '', '', '', '', '', '', ''];
         if (!empty($o['change_id'])) $rows[] = [$rid, $o['task_id'], $o['scheduled'], 'linked_change', 'change:' . $o['change_id'], '', '', '', '', '', '', ''];

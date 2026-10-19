@@ -599,6 +599,9 @@ class TasksService
         // Their checklists too (discussion #138) - whether or not the feature is
         // switched on now, or the rows are stranded pointing at deleted tasks.
         ChecklistsService::deleteForTasks($conn, $ids);
+        // Their form requirements (GH #190). The submissions themselves stay - evidence.
+        require_once __DIR__ . '/task_forms.php';
+        TaskForms::deleteForTasks($conn, $ids);
         foreach (array_reverse($ids) as $id) {
             $conn->prepare("DELETE FROM tasks WHERE id = ?")->execute([$id]);
         }

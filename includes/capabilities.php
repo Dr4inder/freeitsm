@@ -133,6 +133,10 @@ final class Cap
     // with Read only access to Tasks it makes an Auditor role.
     const TASKS_EVIDENCE        = 'tasks.evidence';
     const TASKS_EVIDENCE_REPORT = 'tasks.evidence_report';
+    // GH #190: read a task occurrence's form answers WITHOUT access to Forms - how a
+    // Read only auditor sees them and nothing else in Forms. Always restricted: off
+    // unless a role grants it, so an upgrade gives nobody anything new.
+    const TASKS_FORM_ANSWERS    = 'tasks.form_answers';
 
     // ---- Reporting: background job health (#182) ----------------------------
     // Not a settings tab - Reporting has no settings - so both are everyday-work

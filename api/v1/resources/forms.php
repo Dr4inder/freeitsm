@@ -220,15 +220,18 @@ function apiSerializeFormSubmission(PDO $conn, array $r): array {
  * @param int $formId  the forms id the submission must belong to
  * @param int $submissionId  the form_submissions id
  */
-function apiLoadFormSubmission(PDO $conn, int $formId, int $submissionId): array {
+function apiLoadFormSubmission(PDO $conn, int $formId, int $submissionId, ?array $companyScope = null): array {
+    // GH #190: one made inside a task is visible only within that task's company.
+    require_once __DIR__ . '/../../../includes/services/task_forms.php';
+    [$scopeSql, $scopeArgs] = TaskForms::submissionScopeSql($conn, $companyScope, 's');
     $stmt = $conn->prepare(
         "SELECT s.*, f.title AS form_title, a.full_name AS submitted_by_name
          FROM form_submissions s
          JOIN forms f ON f.id = s.form_id
          LEFT JOIN analysts a ON a.id = s.submitted_by
-         WHERE s.id = ? AND s.form_id = ?"
+         WHERE s.id = ? AND s.form_id = ? AND $scopeSql"
     );
-    $stmt->execute([$submissionId, $formId]);
+    $stmt->execute(array_merge([$submissionId, $formId], $scopeArgs));
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row) {
         apiError(404, 'not_found', 'Submission not found on this form.');
@@ -355,6 +358,11 @@ function apiFormSubmissionsList(PDO $conn, array $apiKey, array $params, array $
     apiLoadForm($conn, $params[0]);
     $where = ['s.form_id = ?'];
     $args  = [$params[0]];
+    // GH #190: a submission made inside a task is listed only within that task's company.
+    require_once __DIR__ . '/../../../includes/services/task_forms.php';
+    [$scopeSql, $scopeArgs] = TaskForms::submissionScopeSql($conn, ActorContext::fromApiKey($apiKey)->companyScope, 's');
+    $where[] = $scopeSql;
+    $args = array_merge($args, $scopeArgs);
     foreach (['submitted_since' => '>=', 'submitted_before' => '<'] as $param => $op) {
         if (isset($_GET[$param]) && $_GET[$param] !== '') {
             $where[] = "s.submitted_date $op ?";
@@ -386,7 +394,7 @@ function apiFormSubmissionsList(PDO $conn, array $apiKey, array $params, array $
 
 /** GET /forms/{id}/submissions/{submissionId} - one submission with its answers. */
 function apiFormSubmissionsGet(PDO $conn, array $apiKey, array $params, array $body): void {
-    apiRespond(apiSerializeFormSubmission($conn, apiLoadFormSubmission($conn, $params[0], $params[1])));
+    apiRespond(apiSerializeFormSubmission($conn, apiLoadFormSubmission($conn, $params[0], $params[1], ActorContext::fromApiKey($apiKey)->companyScope)));
 }
 
 // POST /forms/{id}/submissions — submit_form.php: per-type validation, then
@@ -395,7 +403,7 @@ function apiFormSubmissionsCreate(PDO $conn, array $apiKey, array $params, array
     try {
         $data = (isset($body['data']) && is_array($body['data'])) ? $body['data'] : [];
         $submissionId = FormsService::submitForm($conn, ActorContext::fromApiKey($apiKey), (int)$params[0], $data);
-        apiRespond(apiSerializeFormSubmission($conn, apiLoadFormSubmission($conn, $params[0], $submissionId)), 201);
+        apiRespond(apiSerializeFormSubmission($conn, apiLoadFormSubmission($conn, $params[0], $submissionId, ActorContext::fromApiKey($apiKey)->companyScope)), 201);
     } catch (ServiceError $e) { apiFailFromService($e); }
 }
 

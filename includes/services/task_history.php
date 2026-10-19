@@ -283,6 +283,8 @@ final class TaskHistory
                                    FROM tasks t LEFT JOIN task_statuses ts ON ts.id = t.status_id
                                   WHERE t.parent_task_id = ? ORDER BY t.board_position, t.id", [$taskId]),
             'documents'   => $docs,
+            // GH #190: its forms and every submission made for them, answers and labels included.
+            'forms'       => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_forms.php'; return TaskForms::snapshot($conn, $taskId); })(),
         ];
     }
 

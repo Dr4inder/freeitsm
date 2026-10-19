@@ -53,7 +53,7 @@ try {
         }
     }
 
-    $allowed = ['calendar_span_mode', 'card_fields', 'tag_settings', 'time_scope', 'collaborator_completion', 'checklists_enabled',
+    $allowed = ['calendar_span_mode', 'card_fields', 'tag_settings', 'time_scope', 'collaborator_completion', 'checklists_enabled', 'forms_enabled',
                 // Repeating task evidence (#181) - Tasks -> Settings -> Evidence.
                 'evidence_completed_checklist', 'evidence_delete_occurrence', 'evidence_skip_status_id', 'evidence_report_access'];
     // `priority` is absent from this list on purpose — it holds a placement,
@@ -85,7 +85,7 @@ try {
                 $chk->execute([(int)$value]);
                 if (!$chk->fetchColumn()) continue;
             }
-        } elseif ($key === 'checklists_enabled') {
+        } elseif ($key === 'checklists_enabled' || $key === 'forms_enabled') {
             // Checklists on tasks (discussion #138). '1'/'0' only, read by
             // ChecklistsService::tasksEnabled() as exactly '1'.
             $value = !empty($value) && $value !== '0' && $value !== 'false' ? '1' : '0';

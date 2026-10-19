@@ -4235,6 +4235,12 @@ return [
         // re-pairing a form must never rewrite what last year's responses
         // belonged to. Same snapshot rule as approver_id above.
         'collection_id'     => 'INT NULL',
+        // GH #190: made inside a task occurrence - its task, that task's company,
+        // the retry key, and the correction that replaced it.
+        'task_id'           => 'INT NULL',
+        'tenant_id'         => 'INT NULL',
+        'client_reference'  => 'VARCHAR(64) NULL',
+        'superseded_by_id'  => 'INT NULL',
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
     ],
 
@@ -5196,6 +5202,27 @@ return [
     // Checklists on TASKS (discussion #138, round three) - the same shape as the
     // two ticket tables above, keyed on a task instead. Only used while
     // Tasks → Settings → Checklists is switched on.
+    // GH #190: forms a task occurrence needs, with the shared draft and the
+    // submission that met it. No foreign keys - it is evidence (see freeitsm.sql).
+    'task_forms' => [
+        'id' => 'INT NOT NULL AUTO_INCREMENT',
+        'task_id' => 'INT NOT NULL',
+        'form_id' => 'INT NOT NULL',
+        'title' => 'VARCHAR(255) NOT NULL',
+        'is_required' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'requirement_mode' => "ENUM('warn','block') NOT NULL DEFAULT 'block'",
+        'submission_id' => 'INT NULL',
+        'draft_json' => 'LONGTEXT NULL',
+        'draft_by_id' => 'INT NULL',
+        'draft_by_name' => 'VARCHAR(150) NULL',
+        'draft_datetime' => 'DATETIME NULL',
+        'revision' => 'INT NOT NULL DEFAULT 0',
+        'sort_order' => 'INT NOT NULL DEFAULT 0',
+        'added_by_id' => 'INT NULL',
+        'added_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'is_demo' => 'TINYINT(1) NOT NULL DEFAULT 0',
+    ],
+
     'task_checklists' => [
         'id'                => 'INT NOT NULL AUTO_INCREMENT',
         'task_id'           => 'INT NOT NULL',

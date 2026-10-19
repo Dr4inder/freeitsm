@@ -5610,9 +5610,20 @@ CREATE TABLE IF NOT EXISTS `form_submissions` (
     -- the point: re-pairing a form must never rewrite what last year's
     -- responses belonged to. Same snapshot rule as approver_id above.
     `collection_id`     INT NULL,
+    -- GH #190: a submission made inside a task occurrence. task_id is the
+    -- occurrence it is evidence for; tenant_id is that task's company, so the
+    -- Forms module shows it only to people who can see the task (forms are
+    -- otherwise install-wide). client_reference makes a retried submit return
+    -- the submission it already made. superseded_by_id: a correction replaced it.
+    `task_id`           INT NULL,
+    `tenant_id`         INT NULL,
+    `client_reference`  VARCHAR(64) NULL,
+    `superseded_by_id`  INT NULL,
     `is_demo`           TINYINT(1) NOT NULL DEFAULT 0,   -- set by the demo data importer (#1297)
     PRIMARY KEY (`id`),
     KEY `idx_form_submissions_user` (`submitted_by_user_id`),
+    KEY `idx_form_submissions_task` (`task_id`),
+    UNIQUE KEY `uq_form_submissions_task_ref` (`task_id`, `client_reference`),
     KEY `idx_form_submissions_ticket` (`ticket_id`),
     KEY `idx_form_submissions_approval` (`approval_status`, `approver_id`),
     -- The collection view reads every submission for a collection across
@@ -7816,6 +7827,37 @@ CREATE TABLE IF NOT EXISTS `task_checklists` (
     PRIMARY KEY (`id`),
     KEY `idx_task_chk_task` (`task_id`),
     CONSTRAINT `fk_task_checklists_task` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Forms a task needs (GH #190): the requirement, its shared draft and the
+-- submission that met it. One row per form per task occurrence; the repeat copies
+-- the requirement (never the answers) to each new occurrence. Only used while
+-- Tasks → Settings → Checklists has "Forms on tasks" on (tasks_forms_enabled).
+-- 🔴 NO foreign keys, like the #181 history tables: the submission and this row
+-- are an occurrence's evidence and must not be cascaded away with a form.
+-- `revision` makes every draft save and submit CONDITIONAL on what the saver
+-- last read, so two analysts with the occurrence open get a visible conflict
+-- rather than one silently overwriting the other.
+CREATE TABLE IF NOT EXISTS `task_forms` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `task_id` INT NOT NULL,
+    `form_id` INT NOT NULL,                     -- the exact form VERSION this occurrence is filled on
+    `title` VARCHAR(255) NOT NULL,              -- the form's title when added, kept if the form is renamed
+    `is_required` TINYINT(1) NOT NULL DEFAULT 1,
+    `requirement_mode` ENUM('warn','block') NOT NULL DEFAULT 'block',
+    `submission_id` INT NULL,                   -- the submission that currently meets it
+    `draft_json` LONGTEXT NULL,                 -- shared by everyone who may work the occurrence
+    `draft_by_id` INT NULL,
+    `draft_by_name` VARCHAR(150) NULL,
+    `draft_datetime` DATETIME NULL,
+    `revision` INT NOT NULL DEFAULT 0,
+    `sort_order` INT NOT NULL DEFAULT 0,
+    `added_by_id` INT NULL,
+    `added_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `is_demo` tinyint(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    KEY `idx_task_forms_task` (`task_id`),
+    KEY `idx_task_forms_submission` (`submission_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `task_checklist_items` (

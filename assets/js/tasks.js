@@ -1753,6 +1753,7 @@ async function openDetailPanel(taskId) {
         detailTaskStatus = data.task.status || null;
         renderDetailPanel(data.task);
         loadTaskChecklists(taskId);
+    loadTaskForms(taskId);
         loadTaskHistory(taskId);
         // Who else is on it (GH #89). Fetched separately from the task itself
         // because the same call returns the CANDIDATE list, which is a different
@@ -1932,6 +1933,10 @@ function renderDetailPanel(task) {
         <!-- Checklists (discussion #138). Filled by loadTaskChecklists(); stays
              hidden unless Tasks → Settings → Checklists is switched on. -->
         <div class="detail-field" id="taskChecklistSection" style="display:none"></div>
+
+        <!-- Forms the task needs (GH #190). Filled by loadTaskForms(); hidden unless
+             Tasks → Settings → Checklists → Forms on tasks is switched on. -->
+        <div class="detail-field" id="taskFormsSection" style="display:none"></div>
 
         <div class="detail-field">
             <label>${esc(window.t('tasks.detail.tags'))}</label>
@@ -2573,6 +2578,146 @@ async function removeTaskChecklist(checklistId) {
     postTaskChecklist({ action: 'remove', checklist_id: checklistId });
 }
 
+// ── Forms a task needs (GH #190) ─────────────────────────────────────────────
+//
+// Every rule is on the server (TaskForms): who may fill, who may read the answers,
+// the revision check on the shared draft. This shows the state - required or not,
+// submitted by whom, a draft in progress - and opens the form to fill it in.
+
+let formState = { taskId: null, forms: [], available: [] };
+
+/** Fetches the open task's forms, hiding the section while forms on tasks are switched off. */
+async function loadTaskForms(taskId) {
+    const host = document.getElementById('taskFormsSection');
+    if (!host) return;
+    try {
+        const data = await fetch(API_BASE + 'forms.php?answers=1&task_id=' + taskId).then(r => r.json());
+        if (!data.success || !data.enabled) { host.innerHTML = ''; host.style.display = 'none'; return; }
+        formState = { taskId, forms: data.forms || [], available: data.available || [] };
+        renderTaskForms();
+    } catch (e) { console.error(e); host.innerHTML = ''; host.style.display = 'none'; }
+}
+
+/** Draws each form the task needs - its requirement, who submitted or is drafting it, its answers - and the picker. */
+function renderTaskForms() {
+    const host = document.getElementById('taskFormsSection');
+    if (!host || formState.taskId !== selectedTaskId) return;
+    host.style.display = '';
+    /** Shorthand for a tasks.forms translation. */
+    const T = (k, p) => window.t('tasks.forms.' + k, p);
+
+    const cards = formState.forms.map(f => {
+        const req = !f.is_required ? 'optional' : f.requirement_mode;
+        const state = f.submission_id
+            ? `<span class="tf-state tf-done">${esc(T('submitted_by', { name: f.submitted_by || '-', when: formatDateTime(f.submitted_utc) }))}</span>`
+            : f.has_draft
+                ? `<span class="tf-state tf-draft">${esc(T('draft_by', { name: f.draft_by || '-', when: formatDateTime(f.draft_utc) }))}</span>`
+                : `<span class="tf-state">${esc(T('not_started'))}</span>`;
+        const answers = f.submission_id
+            ? (f.may_read
+                ? `<details class="tf-answers"><summary>${esc(T('answers'))}</summary>
+                       <table>${(f.answers || []).map(a => `<tr><th>${esc(a.label)}</th><td>${esc(a.value)}</td></tr>`).join('')}</table>
+                   </details>`
+                : `<div class="tf-note">${esc(T('no_answer_access'))}</div>`)
+            : '';
+        const fill = !f.form_exists
+            ? `<div class="tf-note">${esc(T('form_gone'))}</div>`
+            : f.may_fill
+                ? `<button type="button" class="btn btn-secondary btn-sm tf-fill" onclick="openTaskForm(${f.id})">${esc(T(f.submission_id ? 'correct' : 'fill'))}</button>`
+                : `<div class="tf-note">${esc(T('need_forms_access'))}</div>`;
+        return `
+            <div class="tf-card${f.submission_id ? ' done' : ''}">
+                <div class="tf-head">
+                    <span class="tf-title">${req === 'block' ? `<span title="${esc(T('req_block'))}">${ICON_LOCK}</span>` : ''}${esc(f.title)}</span>
+                    <select class="tf-req" onchange="setTaskFormRequirement(${f.id}, this.value)" aria-label="${esc(T('requirement'))}">
+                        ${['block', 'warn', 'optional'].map(v => `<option value="${v}"${v === req ? ' selected' : ''}>${esc(T('req_' + v))}</option>`).join('')}
+                    </select>
+                    <button type="button" class="btn-link-small" onclick="removeTaskForm(${f.id})">${esc(T('remove'))}</button>
+                </div>
+                <div class="tf-row">${state}${fill}</div>
+                ${answers}
+            </div>`;
+    }).join('');
+
+    // Not the ones already on the task (the server refuses a second copy too).
+    const onTask = new Set(formState.forms.map(f => Number(f.form_id)));
+    const offer = formState.available.filter(f => !onTask.has(Number(f.id)));
+    const options = offer.map(f => `<option value="${f.id}">${esc(f.title)}</option>`).join('');
+    const add = offer.length
+        ? `<div class="tf-add">
+               <select id="tfFormPick" class="detail-select"><option value="">${esc(T('choose'))}</option>${options}</select>
+               <button type="button" class="btn btn-secondary btn-sm" onclick="addTaskForm()">${esc(T('add'))}</button>
+           </div>`
+        : `<div class="tf-empty">${esc(T('none_available'))}</div>`;
+
+    host.innerHTML = `
+        <label>${esc(T('heading'))}</label>
+        ${cards || `<div class="tf-empty">${esc(T('none'))}</div>`}
+        ${add}`;
+}
+
+/** Sends a forms action and redraws from what comes back; on a refusal says why and redraws. */
+async function postTaskForm(payload) {
+    try {
+        const data = await fetch(API_BASE + 'forms.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        }).then(r => r.json());
+        if (!data.success) {
+            showToast(data.error || window.t('tasks.forms.failed'), 'error');
+            renderTaskForms();
+            return false;
+        }
+        formState.forms = data.forms || [];
+        loadTaskForms(selectedTaskId);          // answers too
+        if (selectedTaskId) loadTaskHistory(selectedTaskId);
+        return true;
+    } catch (e) {
+        showToast(window.t('tasks.forms.failed'), 'error');
+        renderTaskForms();
+        return false;
+    }
+}
+
+/** Adds the form chosen in the picker - required, blocking completion until it is submitted. */
+function addTaskForm() {
+    const pick = document.getElementById('tfFormPick');
+    if (!pick || !pick.value) return;
+    postTaskForm({ action: 'add', task_id: selectedTaskId, form_id: Number(pick.value), required: 1, mode: 'block' });
+}
+
+/** Required and blocking, required with a warning, or optional. */
+function setTaskFormRequirement(taskFormId, value) {
+    postTaskForm({ action: 'update', task_form_id: taskFormId, required: value === 'optional' ? 0 : 1, mode: value === 'warn' ? 'warn' : 'block' });
+}
+
+/** Asks first, then takes a form off the task. A submission it already has stays with the task. */
+async function removeTaskForm(taskFormId) {
+    const f = formState.forms.find(x => x.id == taskFormId);
+    if (!(await showConfirm({
+        title: window.t('tasks.forms.remove'),
+        message: window.t(f && f.submission_id ? 'tasks.forms.remove_confirm_submitted' : 'tasks.forms.remove_confirm', { name: f ? f.title : '' }),
+        okLabel: window.t('tasks.forms.remove'),
+        okClass: 'danger'
+    }))) return;
+    postTaskForm({ action: 'remove', task_form_id: taskFormId });
+}
+
+/**
+ * Opens the form to fill in for this occurrence, in a new tab. The fill page says when it has
+ * saved or submitted, so this section redraws without anybody refreshing.
+ */
+function openTaskForm(taskFormId) {
+    window.open((window.APP_BASE || '/') + 'forms/fill.php?task_form=' + taskFormId, '_blank');
+}
+try {
+    new BroadcastChannel('freeitsm-task-forms').onmessage = e => {
+        if (e.data && formState.taskId && Number(e.data.task_id) === Number(formState.taskId)) {
+            loadTaskForms(formState.taskId);
+            loadTaskHistory(formState.taskId);
+        }
+    };
+} catch (e) { /* no BroadcastChannel: the section refreshes the next time the task opens */ }
+
 /**
  * Before completing a task from ANY route in this page (the status box, a drag
  * into a closed column, a subtask tick): ask the server what completing it now
@@ -2601,7 +2746,10 @@ async function confirmChecklistCompletionById(taskId) {
     try {
         data = await fetch(API_BASE + 'checklists.php?check=complete&task_id=' + taskId).then(r => r.json());
     } catch (e) { return true; }            // the server still enforces Critical
-    if (!data || !data.success || !data.enabled) return true;
+    // Not `!data.enabled`: that is the CHECKLIST switch, and the same check now also
+    // covers required forms (GH #190), which can be on while checklists are off. The
+    // server answers empty lists for whatever is switched off.
+    if (!data || !data.success) return true;
 
     /** Formats checklist groups as bullet lines - the checklist name, then its outstanding steps. */
     const fmt = groups => Object.entries(groups || {})
@@ -3203,6 +3351,11 @@ async function loadTaskHistory(taskId) {
             case 'checklist_attached': return T('checklist_attached', { name: h.to || '' }) + (det.after_completion ? ' ' + T('after_completion') : '');
             case 'checklist_removed':  return T('checklist_removed', { name: h.from || '' }) + (det.after_completion ? ' ' + T('after_completion') : '');
             case 'evidence_exported':  return T('evidence_exported', { what: h.to || '' });
+            // GH #190 - the form's name only. Its answers follow the answers rule, not the history.
+            case 'form_added':     return T('form_added', { name: h.to || '' });
+            case 'form_removed':   return T('form_removed', { name: h.from || '' });
+            case 'form_submitted': return T('form_submitted', { name: h.to || '' });
+            case 'form_replaced':  return T('form_replaced', { name: h.to || '' });
         }
         return h.type;
     };
