@@ -17,6 +17,119 @@ return array (
         'client_reference'=>['type'=>'string','nullable'=>true], 'content_url'=>['type'=>'string'],
       ],
     ],
+    'InventorySoftwareItem'=>[
+      'type'=>'object',
+      'properties'=>[
+        'display_name'=>['type'=>'string', 'maxLength'=>512],
+        'publisher'=>['type'=>'string', 'maxLength'=>512, 'nullable'=>true],
+        'display_version'=>['type'=>'string', 'maxLength'=>100, 'nullable'=>true],
+        'install_date'=>['type'=>'string', 'maxLength'=>50, 'nullable'=>true],
+        'uninstall_string'=>['type'=>'string', 'maxLength'=>8192, 'nullable'=>true],
+        'install_location'=>['type'=>'string', 'maxLength'=>8192, 'nullable'=>true],
+        'estimated_size'=>['type'=>'string', 'maxLength'=>100, 'nullable'=>true],
+        'system_component'=>['type'=>'boolean', 'default'=>false]
+      ],
+      'required'=>['display_name'],
+      'additionalProperties'=>false
+    ],
+    'InventoryDiskItem'=>[
+      'type'=>'object',
+      'properties'=>[
+        'external_id'=>['type'=>'string', 'maxLength'=>128],
+        'drive'=>['type'=>'string', 'maxLength'=>10, 'nullable'=>true],
+        'label'=>['type'=>'string', 'maxLength'=>100, 'nullable'=>true],
+        'file_system'=>['type'=>'string', 'maxLength'=>20, 'nullable'=>true],
+        'size_bytes'=>['type'=>'integer', 'format'=>'int64', 'minimum'=>0, 'nullable'=>true],
+        'free_bytes'=>['type'=>'integer', 'format'=>'int64', 'minimum'=>0, 'nullable'=>true],
+        'used_percent'=>['type'=>'number', 'minimum'=>0, 'maximum'=>100, 'nullable'=>true]
+      ],
+      'required'=>['external_id'],
+      'additionalProperties'=>false
+    ],
+    'InventoryAdapterItem'=>[
+      'type'=>'object',
+      'properties'=>[
+        'external_id'=>['type'=>'string', 'maxLength'=>128],
+        'name'=>['type'=>'string', 'maxLength'=>255, 'nullable'=>true],
+        'mac_address'=>['type'=>'string', 'maxLength'=>17, 'nullable'=>true],
+        'ip_address'=>['type'=>'string', 'maxLength'=>45, 'nullable'=>true],
+        'subnet_mask'=>['type'=>'string', 'maxLength'=>45, 'nullable'=>true],
+        'gateway'=>['type'=>'string', 'maxLength'=>45, 'nullable'=>true],
+        'dhcp_enabled'=>['type'=>'boolean', 'nullable'=>true]
+      ],
+      'required'=>['external_id'],
+      'additionalProperties'=>false
+    ],
+    'AssetInventorySnapshot'=>[
+      'type'=>'object',
+      'properties'=>[
+        'schema_version'=>['type'=>'integer', 'enum'=>[1]],
+        'source_id'=>['type'=>'string', 'maxLength'=>48, 'pattern'=>'^[a-z0-9][a-z0-9._-]*$'],
+        'external_device_id'=>['type'=>'string', 'maxLength'=>128],
+        'observed_at'=>['type'=>'string', 'format'=>'date-time', 'description'=>'Original observation: RFC3339 seconds and explicit timezone, at most five minutes in future.'],
+        'sections'=>[
+          'type'=>'object',
+          'properties'=>[
+            'software'=>[
+              'type'=>'object',
+              'properties'=>['complete'=>['type'=>'boolean'], 'items'=>['type'=>'array', 'maxItems'=>10000, 'items'=>['$ref'=>'#/components/schemas/InventorySoftwareItem']]],
+              'required'=>['complete', 'items'],
+              'additionalProperties'=>false
+            ],
+            'disks'=>[
+              'type'=>'object',
+              'properties'=>['complete'=>['type'=>'boolean'], 'items'=>['type'=>'array', 'maxItems'=>10000, 'items'=>['$ref'=>'#/components/schemas/InventoryDiskItem']]],
+              'required'=>['complete', 'items'],
+              'additionalProperties'=>false
+            ],
+            'network_adapters'=>[
+              'type'=>'object',
+              'properties'=>['complete'=>['type'=>'boolean'], 'items'=>['type'=>'array', 'maxItems'=>10000, 'items'=>['$ref'=>'#/components/schemas/InventoryAdapterItem']]],
+              'required'=>['complete', 'items'],
+              'additionalProperties'=>false
+            ]
+          ],
+
+          'additionalProperties'=>false,
+          'minProperties'=>1
+        ]
+      ],
+      'required'=>['schema_version', 'source_id', 'external_device_id', 'observed_at', 'sections'],
+      'additionalProperties'=>false
+    ],
+    'AssetInventoryResult'=>[
+      'type'=>'object',
+      'properties'=>[
+        'asset_id'=>['type'=>'integer'],
+        'source_id'=>['type'=>'string'],
+        'external_device_id'=>['type'=>'string'],
+        'applied'=>['type'=>'array', 'items'=>['type'=>'string', 'enum'=>['software', 'disks', 'network_adapters']]],
+        'stale'=>['type'=>'array', 'items'=>['type'=>'string', 'enum'=>['software', 'disks', 'network_adapters']]],
+        'replayed'=>['type'=>'array', 'items'=>['type'=>'string', 'enum'=>['software', 'disks', 'network_adapters']]]
+      ],
+
+      'additionalProperties'=>false
+    ],
+    'AssetInventoryProvenance'=>[
+      'type'=>'object',
+      'properties'=>[
+        'source_id'=>['type'=>'string'],
+        'external_device_id'=>['type'=>'string'],
+        'owner_analyst_id'=>['type'=>'integer'],
+        'sections'=>[
+          'type'=>'object',
+          'additionalProperties'=>[
+            'type'=>'object',
+            'properties'=>['observed_at'=>['type'=>'string', 'format'=>'date-time'], 'imported_at'=>['type'=>'string', 'format'=>'date-time'], 'imported_by_id'=>['type'=>'integer']],
+            'required'=>['observed_at', 'imported_at', 'imported_by_id'],
+            'additionalProperties'=>false
+          ]
+        ]
+      ],
+
+      'additionalProperties'=>false
+    ],
+
     'Analyst' => 
     array (
       'type' => 'object',
@@ -974,6 +1087,11 @@ return array (
       'type' => 'object',
       'properties' => 
       array (
+        'source'=>['type'=>'string'],
+        'observed_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+        'imported_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+        'external_id'=>['type'=>'string', 'maxLength'=>128, 'nullable'=>true],
+
         'id' => 
         array (
           'type' => 'integer',
@@ -1124,6 +1242,11 @@ return array (
       'type' => 'object',
       'properties' => 
       array (
+        'source'=>['type'=>'string'],
+        'observed_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+        'imported_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+        'external_id'=>['type'=>'string', 'maxLength'=>128, 'nullable'=>true],
+
         'id' => 
         array (
           'type' => 'integer',
@@ -1165,6 +1288,10 @@ return array (
       'type' => 'object',
       'properties' => 
       array (
+        'source'=>['type'=>'string'],
+        'observed_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+        'imported_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+
         'id' => 
         array (
           'type' => 'integer',
@@ -8804,6 +8931,10 @@ return array (
       'description' => 'A machine an application is installed on.',
       'properties' => 
       array (
+        'source'=>['type'=>'string'],
+        'observed_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+        'imported_at'=>['type'=>'string', 'format'=>'date-time', 'nullable'=>true],
+
         'asset_id' => 
         array (
           'type' => 'integer',
@@ -13300,6 +13431,8 @@ return array (
   array (
     'GET /changes/{id}/attachments' => ['type'=>'array','items'=>['$ref'=>'#/components/schemas/ChangeEvidenceAttachment']],
     'POST /changes/{id}/attachments' => ['$ref'=>'#/components/schemas/ChangeEvidenceAttachment'],
+    'GET /assets/{id}/inventory'=>['type'=>'array','items'=>['$ref'=>'#/components/schemas/AssetInventoryProvenance']],
+    'POST /assets/{id}/inventory'=>['$ref'=>'#/components/schemas/AssetInventoryResult'],
     'DELETE /domains/{id}' => 
     array (
       '$ref' => '#/components/schemas/DeleteAck',
@@ -15339,6 +15472,7 @@ return array (
           'description'=>'Optional retry key, unique per change and acting analyst. Same filename/bytes returns the original (200); conflicting reuse is 409.'],
       ],
     ],
+    'POST /assets/{id}/inventory'=>['$ref'=>'#/components/schemas/AssetInventorySnapshot'],
   ),
   'requestContentTypes' => ['POST /changes/{id}/attachments'=>'multipart/form-data'],
   'responseContents' => [
