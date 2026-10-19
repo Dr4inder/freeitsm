@@ -33,7 +33,8 @@
 require_once __DIR__ . '/job_registry.php';
 
 /** The states that need somebody's attention - the ones the Watchtower card, the System notice and ?strict=1 react to. */
-const JOB_HEALTH_UNHEALTHY = ['stuck', 'failing', 'overdue', 'never_seen', 'partial'];
+// 'unknown' (#182 review): something needed to judge the job could not be read - never assumed healthy.
+const JOB_HEALTH_UNHEALTHY = ['unknown', 'stuck', 'failing', 'overdue', 'never_seen', 'partial'];
 
 /** A string through the translator when there is one, otherwise the fallback (the REST address, a CLI). */
 function jobHealthT(string $key, string $fallback, array $params = []): string
@@ -53,10 +54,18 @@ function jobHealthT(string $key, string $fallback, array $params = []): string
  */
 function jobHealthAll(PDO $conn): array
 {
-    $cfg = jobHealthConfig($conn);
+    $cfgFailed = false;
+    try {
+        $cfg = jobHealthConfig($conn, true);
+    } catch (Throwable $e) {
+        // Without the configuration nothing can be called "not used here" or on time.
+        error_log('[job health] configuration unreadable: ' . ($e->getPrevious() ?? $e)->getMessage());
+        $cfg = [];
+        $cfgFailed = true;
+    }
     $out = [];
     foreach (jobRegistry() as $key => $def) {
-        $out[$key] = jobHealthOne($conn, $def, $cfg[$key] ?? []);
+        $out[$key] = $cfgFailed ? jobHealthUnknownResult($def, 'configuration') : jobHealthOne($conn, $def, $cfg[$key] ?? []);
     }
     return $out;
 }
@@ -90,9 +99,46 @@ function jobHealthOne(PDO $conn, array $def, array $cfg): array
     $grace    = max((int)$def['grace'], (int)ceil($interval / 2));   // a longer interval earns a longer grace
     $now      = time();
 
+    try {
+        return jobHealthJudge($conn, $def, $cfg, $key, $interval, $grace, $now);
+    } catch (Throwable $e) {
+        // 🔴 A failed lookup is not an answer: "unknown", which is unhealthy, never "not needed".
+        $what = $e instanceof JobHealthUnknown ? $e->getMessage() : 'history';
+        error_log('[job health] ' . $key . ': could not read the ' . $what . ': ' . ($e->getPrevious() ?? $e)->getMessage());
+        return jobHealthUnknownResult($def, $what, $interval, $grace);
+    }
+}
+
+/**
+ * The status for a job whose health could not be worked out: "unknown", the most severe, naming
+ * WHAT could not be read (requirement, configuration, setting, sources, source health, history)
+ * but not the database's own message - that goes to the server log, not to a monitor or a page.
+ *
+ * @param string $what  which lookup failed
+ */
+function jobHealthUnknownResult(array $def, string $what, ?int $interval = null, ?int $grace = null): array
+{
+    $key = $def['key'];
+    return [
+        'key' => $key, 'name' => jobHealthT($def['name_key'], $key), 'affects' => jobHealthT($def['affects_key'], ''),
+        'command' => $def['command'], 'web' => (bool)$def['web'], 'needed' => null,
+        'interval' => $interval ?? (int)$def['interval'], 'default_interval' => (int)$def['interval'], 'grace' => $grace ?? (int)$def['grace'],
+        'last_scheduled_success' => null, 'last_success' => null, 'last_success_trigger' => null, 'last_run' => null,
+        'failing_sources' => [], 'refused' => null, 'not_used' => null,
+        'status' => 'unknown', 'severity' => 6,
+        'problems' => [['code' => 'unknown', 'severity' => 6, 'what' => $what]],
+    ];
+}
+
+/** jobHealthOne()'s work. Throws when something it needs cannot be read. */
+function jobHealthJudge(PDO $conn, array $def, array $cfg, string $key, int $interval, int $grace, int $now): array
+{
     $row = function (string $sql, array $args) use ($conn) {
         try { $s = $conn->prepare($sql); $s->execute($args); return $s->fetch(PDO::FETCH_ASSOC) ?: null; }
-        catch (Throwable $e) { return null; }
+        catch (Throwable $e) {
+            if (jobLookupMissingTable($e)) return null;      // run history not set up yet
+            throw new JobHealthUnknown('history', 0, $e);
+        }
     };
     $ts = fn(?string $utc) => $utc ? strtotime($utc . ' UTC') : null;
 
@@ -108,8 +154,8 @@ function jobHealthOne(PDO $conn, array $def, array $cfg): array
     $running   = $row("SELECT id, started_datetime, trigger_kind FROM job_runs
                         WHERE job_key = ? AND outcome = 'running' ORDER BY id DESC LIMIT 1", [$key]);
 
-    $needed = false;
-    try { $needed = (bool)($def['needed'])($conn); } catch (Throwable $e) { $needed = false; }
+    // 🔴 Not caught: a requirement that cannot be looked up is "unknown", never "not needed".
+    $needed = (bool)($def['needed'])($conn);
 
     // Rule 3: each source's newest result; a failing one counts while the source still exists.
     $failing = [];
@@ -125,7 +171,11 @@ function jobHealthOne(PDO $conn, array $def, array $cfg): array
             $failing[] = ['key' => $src['source_key'], 'label' => $src['source_label'], 'message' => $src['message'],
                           'at' => $src['created_datetime']];
         }
-    } catch (Throwable $e) { /* before Database Verification */ }
+    } catch (Throwable $e) {
+        // Only a run-history table not created yet means "nothing failing". A failed READ of
+        // source health, or of which sources still exist, is not "removed" - it is unknown.
+        if (!jobLookupMissingTable($e)) throw $e instanceof JobHealthUnknown ? $e : new JobHealthUnknown('source health', 0, $e);
+    }
 
     $refused = null;
     $r = jobSetting($conn, 'job_refused_' . $key);

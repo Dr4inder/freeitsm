@@ -184,5 +184,72 @@ try {
     zzClear($conn);
 }
 
+// ── #182 review: a lookup that FAILS is "unknown", never "not needed" ───────
+echo "\nFailed lookups are unknown, not fine (Dr4inder's review)\n";
+
+/** Dr4inder's reproduction: every read throws, no real database touched. */
+class SyntheticUnavailablePDO extends PDO {
+    public function __construct() {}
+    public function prepare(string $query, array $options = []): PDOStatement|false { throw new PDOException('Synthetic database read failure'); }
+    public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false { throw new PDOException('Synthetic database read failure'); }
+}
+$res = jobHealthSummary(new SyntheticUnavailablePDO());
+$states = array_count_values(array_column($res['jobs'], 'status'));
+ok('every read failing: NOT healthy (it used to say healthy, 13 not needed)', $res['healthy'] === false, json_encode($states));
+ok('...every job is "unknown", none "not needed"', ($states['unknown'] ?? 0) === count(jobRegistry()) && !isset($states['not_needed']), json_encode($states));
+
+/** The real database, except for queries matching $fail - which throw, as a failed read or (code 42S02) a missing table. */
+class SelectiveFailPDO extends PDO {
+    public ?string $fail = null;
+    public string $code = 'HY000';
+    private function boom(string $sql): void {
+        if ($this->fail !== null && preg_match($this->fail, $sql)) {
+            $e = new PDOException('Synthetic failure');
+            $p = new ReflectionProperty(Exception::class, 'code');
+            $p->setValue($e, $this->code);
+            throw $e;
+        }
+    }
+    public function prepare(string $query, array $options = []): PDOStatement|false { $this->boom($query); return parent::prepare($query, $options); }
+    public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false {
+        $this->boom($query);
+        return $fetchMode === null ? parent::query($query) : parent::query($query, $fetchMode, ...$fetchModeArgs);
+    }
+}
+$sel = new SelectiveFailPDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USERNAME, DB_PASSWORD, dbConnectionOptions());
+$normal = jobHealthAll($sel);
+
+$sel->fail = '/FROM task_recurrences WHERE is_active = 1 AND mode/';
+$h = jobHealthAll($sel);
+ok('a failed REQUIREMENT lookup: that job is unknown', $h['task_recurrence']['status'] === 'unknown' && $h['task_recurrence']['problems'][0]['what'] === 'requirement', $h['task_recurrence']['status']);
+ok('...and the other jobs are judged as before', $h['domains']['status'] === $normal['domains']['status'] && $h['sla_breach']['status'] === $normal['sla_breach']['status']);
+
+$sel->code = '42S02';
+$h = jobHealthAll($sel);
+ok('control: the same table MISSING (never set up) is an answer - not needed, not unknown', $h['task_recurrence']['status'] === 'not_needed', $h['task_recurrence']['status']);
+$sel->code = 'HY000';
+
+$sel->fail = '/FROM job_run_sources/';
+$h = jobHealthAll($sel);
+$unk = array_filter($h, fn($j) => $j['status'] === 'unknown' && ($j['problems'][0]['what'] ?? '') === 'source health');
+ok('a failed SOURCE HEALTH read: unknown, not "no failing sources"', count($unk) === count(jobRegistry()), count($unk) . ' of ' . count(jobRegistry()));
+
+$sel->fail = '/SELECT id FROM integration_connections WHERE is_active = 1$/';
+$h = jobHealthAll($sel);
+if ($normal['integration_poll']['needed']) {
+    ok('a failed read of WHICH SOURCES still exist: unknown, not "source removed"', $h['integration_poll']['status'] === 'unknown', $h['integration_poll']['status']);
+}
+
+$sel->fail = "/setting_key = \\?/";
+$h = jobHealthAll($sel);
+ok('a failed read of the job SETTINGS: every job unknown', count(array_filter($h, fn($j) => $j['status'] === 'unknown')) === count(jobRegistry()));
+
+$sel->fail = '/FROM job_runs/';
+$s = jobHealthSummary($sel);
+ok('a failed read of the RUN HISTORY: unhealthy, so the strict address answers 503', $s['healthy'] === false);
+
+$sel->fail = null;
+ok('control: nothing failing, nothing unknown', !array_filter(jobHealthAll($sel), fn($j) => $j['status'] === 'unknown'));
+
 echo "\n$pass passed, $fail failed\n";
 exit($fail ? 1 : 0);

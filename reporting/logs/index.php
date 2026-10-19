@@ -385,7 +385,7 @@ $translationNamespaces = ['common', 'reporting'];
         .job-affects { font-size: 12px; color: var(--text-muted, #666); margin-top: 2px; }
         .job-pill { padding: 3px 8px; border-radius: 3px; font-size: 12px; font-weight: 500; white-space: nowrap; display: inline-block; }
         .job-pill.healthy, .job-pill.ok { background: var(--success-bg, #d4edda); color: var(--success-text, #155724); }
-        .job-pill.failing, .job-pill.stuck, .job-pill.failed { background: var(--danger-bg, #f8d7da); color: var(--danger-text, #721c24); }
+        .job-pill.failing, .job-pill.stuck, .job-pill.failed, .job-pill.unknown { background: var(--danger-bg, #f8d7da); color: var(--danger-text, #721c24); }
         .job-pill.overdue, .job-pill.never_seen, .job-pill.partial { background: var(--warning-bg, #fff3cd); color: var(--warning-text, #856404); }
         .job-pill.not_needed, .job-pill.not_used, .job-pill.skipped, .job-pill.running { background: var(--surface-2, #f0f0f0); color: var(--text-muted, #666); }
         .job-problem { font-size: 12px; margin-top: 4px; color: var(--text, #444); }
@@ -739,6 +739,9 @@ $translationNamespaces = ['common', 'reporting'];
                     return `<div class="job-problem">${escapeHtml(JT('problem_partial'))}${p.sources && p.sources.length
                         ? '<ul class="job-sources">' + p.sources.map(s => `<li><strong>${escapeHtml(s.label || s.key)}</strong>${s.message ? ' - ' + escapeHtml(s.message) : ''} <span class="job-sub">(${escapeHtml(fmtUtc(s.at))})</span></li>`).join('') + '</ul>'
                         : (p.message ? '<br><span class="job-sub">' + escapeHtml(p.message) + '</span>' : '')}</div>`;
+                case 'unknown':
+                    // #182 review: something needed to judge the job could not be read.
+                    return `<div class="job-problem">${escapeHtml(JT('problem_unknown', { what: JT('unknown_' + String(p.what || 'history').replace(/ /g, '_')) }))}<br><span class="job-sub">${escapeHtml(JT('problem_unknown_hint'))}</span></div>`;
             }
             return '';
         }

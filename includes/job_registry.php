@@ -20,11 +20,29 @@
  *                           expected), which is the "explicit change" Dr4inder asked for
  *
  * TRAP: every `needed` and `sources` callable must survive a missing table - an
- * install part-way through an upgrade still opens the health page. jobNeedOne()
- * and jobSourceKeys() catch for you; use them.
+ * install part-way through an upgrade still opens the health page - AND must NOT
+ * survive any other failure. jobNeedOne(), jobSourceKeys() and jobSettingStrict()
+ * draw that line for you; use them.
+ *
+ * 🔴 A FAILED LOOKUP IS NOT AN ANSWER (#182, Dr4inder's review). These used to turn
+ * every error into false / empty, so a database that could not be read made every
+ * job "Not needed" and the health address said healthy - a monitor stayed green
+ * through exactly the failure it is there to catch. Only a table that does not
+ * exist (SQLSTATE 42S02: the feature has never been set up here) is an answer;
+ * anything else throws JobHealthUnknown and the job's status is "unknown", which
+ * counts as unhealthy.
  */
 
-/** True when the query returns a row. False on any error (a table not created yet). */
+/** A lookup the health check could not make. The job's status becomes "unknown". */
+class JobHealthUnknown extends RuntimeException {}
+
+/** Is this failure "the table is not there" (the feature never set up) rather than a read that failed? */
+function jobLookupMissingTable(Throwable $e): bool
+{
+    return $e instanceof PDOException && (string)$e->getCode() === '42S02';
+}
+
+/** True when the query returns a row; false when it returns none or its table does not exist. Throws on any other failure. */
 function jobNeedOne(PDO $conn, string $sql, array $args = []): bool
 {
     try {
@@ -32,17 +50,33 @@ function jobNeedOne(PDO $conn, string $sql, array $args = []): bool
         $s->execute($args);
         return (bool)$s->fetchColumn();
     } catch (Throwable $e) {
-        return false;
+        if (jobLookupMissingTable($e)) return false;
+        throw new JobHealthUnknown('requirement', 0, $e);
     }
 }
 
-/** The source keys a query returns, prefixed. Empty on any error. */
+/** The source keys a query returns, prefixed; empty when its table does not exist. Throws on any other failure. */
 function jobSourceKeys(PDO $conn, string $prefix, string $sql): array
 {
     try {
         return array_map(fn($id) => $prefix . $id, $conn->query($sql)->fetchAll(PDO::FETCH_COLUMN));
     } catch (Throwable $e) {
-        return [];
+        if (jobLookupMissingTable($e)) return [];
+        throw new JobHealthUnknown('sources', 0, $e);
+    }
+}
+
+/** A system_settings value, or '' when unset. Throws when it cannot be read - for the health check. */
+function jobSettingStrict(PDO $conn, string $key): string
+{
+    try {
+        $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
+        $s->execute([$key]);
+        $v = $s->fetchColumn();
+        return $v === false || $v === null ? '' : (string)$v;
+    } catch (Throwable $e) {
+        if (jobLookupMissingTable($e)) return '';
+        throw new JobHealthUnknown('setting', 0, $e);
     }
 }
 
@@ -68,7 +102,7 @@ function jobRegistry(): array
         'sla_breach' => [
             'command' => 'php cron/sla_breach_check.php', 'web' => true,
             'interval' => 5, 'grace' => 10, 'max_runtime' => 10,
-            'needed'  => fn(PDO $c) => jobSetting($c, 'sla_enforce_from') !== '',
+            'needed'  => fn(PDO $c) => jobSettingStrict($c, 'sla_enforce_from') !== '',
         ],
         'webhook_deliveries' => [
             'command' => 'php cron/webhook_deliveries.php', 'web' => true,
@@ -101,7 +135,7 @@ function jobRegistry(): array
         'attachment_extract' => [
             'command' => 'php cron/attachment_extract.php', 'web' => true,
             'interval' => 5, 'grace' => 30, 'max_runtime' => 15,
-            'needed'  => fn(PDO $c) => jobSetting($c, 'attachment_extract_cron') === '1'
+            'needed'  => fn(PDO $c) => jobSettingStrict($c, 'attachment_extract_cron') === '1'
                                      && jobNeedOne($c, "SELECT 1 FROM system_settings WHERE setting_key = 'tika_url' AND setting_value <> '' LIMIT 1"),
         ],
         'calendar_sync_pull' => [
@@ -120,7 +154,7 @@ function jobRegistry(): array
         'lms_reminders' => [
             'command' => 'php cron/lms_reminders.php', 'web' => true,
             'interval' => 1440, 'grace' => 360, 'max_runtime' => 10,
-            'needed'  => fn(PDO $c) => jobSetting($c, 'lms_reminders_enabled') === '1',
+            'needed'  => fn(PDO $c) => jobSettingStrict($c, 'lms_reminders_enabled') === '1',
         ],
         'proxmox_sync' => [
             'command' => 'php cron/proxmox_sync.php', 'web' => false,
@@ -162,9 +196,11 @@ function jobRegistry(): array
  *
  * @return array<string,array{interval?:int,not_used?:bool,not_used_by?:string,not_used_at?:string}>
  */
-function jobHealthConfig(PDO $conn): array
+function jobHealthConfig(PDO $conn, bool $strict = false): array
 {
-    $raw = jobSetting($conn, 'job_health_config');
+    // Strict for the health check: whether a job is "not used here", and its interval,
+    // are part of the verdict - a failed read must not pass for "no changes".
+    $raw = $strict ? jobSettingStrict($conn, 'job_health_config') : jobSetting($conn, 'job_health_config');
     $cfg = $raw !== '' ? json_decode($raw, true) : null;
     return is_array($cfg) ? $cfg : [];
 }

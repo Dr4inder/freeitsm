@@ -132,6 +132,7 @@ return [
         'schedule_hint'  => 'Schedule:',
 
         'status_healthy'    => 'Healthy',
+        'status_unknown'    => 'Unknown',
         'status_overdue'    => 'Overdue',
         'status_failing'    => 'Failing',
         'status_partial'    => 'Partial',
@@ -158,6 +159,15 @@ return [
         'problem_never_seen' => 'No scheduled run has ever been recorded.',
         'problem_never_seen_other' => 'No scheduled run has ever been recorded - only {trigger}.',
         'problem_partial'    => 'These have failed, and have not succeeded since:',
+        // #182 review: a lookup the health check could not make is never read as "fine".
+        'problem_unknown'      => 'Its health could not be worked out: FreeITSM could not read {what}.',
+        'problem_unknown_hint' => 'This is shown as a problem rather than assumed to be fine. The server\'s error log has the detail; it is usually the database being unavailable.',
+        'unknown_requirement'   => 'whether this install needs it',
+        'unknown_setting'       => 'one of its settings',
+        'unknown_configuration' => 'the background job settings',
+        'unknown_sources'       => 'which of its sources are in use',
+        'unknown_source_health' => 'how its sources last ran',
+        'unknown_history'       => 'its run history',
 
         // The jobs, and what stops without each one.
         'name_sla_breach'            => 'SLA breach check',
@@ -384,7 +394,7 @@ return [
         // Background jobs (#182).
         's3_jobs_heading' => 'Background jobs',
         's3_jobs_intro'   => 'A background job that stops does not announce itself - nothing errors, things just stop happening. This tab works out each job\'s health when you open it, so a job that has stopped turns overdue because time has passed, not because it ran to say so.',
-        's3_jobs_states'  => 'Healthy, Overdue (no scheduled run has succeeded within its interval), Failing (its last real run failed), Partial (a source - a directory, a tracker connection, a server - has failed and not succeeded since; it is named), Stuck (a run started and never finished), Never seen (no scheduled run has ever been recorded), Not needed (the feature it serves is not in use), and Not used here (an administrator has said so).',
+        's3_jobs_states'  => 'Healthy, Overdue (no scheduled run has succeeded within its interval), Failing (its last real run failed), Partial (a source - a directory, a tracker connection, a server - has failed and not succeeded since; it is named), Stuck (a run started and never finished), Never seen (no scheduled run has ever been recorded), Unknown (FreeITSM could not read something it needs to judge the job - usually the database being unavailable - so it is shown as a problem rather than assumed fine), Not needed (the feature it serves is not in use), and Not used here (an administrator has said so).',
         's3_jobs_rules'   => 'Only a run from the schedule - the command line or the job\'s web address - keeps a job healthy. A page load or Run now does the work and is shown in the history, but never makes an overdue schedule look healthy. A skipped run - turned away by its lock or minimum interval, or a dry run - never clears a failure.',
         's3_jobs_told'    => 'While anything needs attention, a Background jobs card appears on Watchtower and a notice on the System page. For an alarm that does not depend on FreeITSM itself, point a monitoring tool at the REST address GET /api/v1/jobs/health - with ?strict=1 it answers 503 while anything is unhealthy.',
         's3_jobs_edit'    => 'Edit on a job sets how often your scheduler runs it, or marks it Not used here. Both need the Change what background jobs are expected to do permission, and marking a job is recorded with who did it.',
