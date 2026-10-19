@@ -191,6 +191,15 @@ function apiV1PermissionCatalog(): array {
                 'create' => 'Add a comment to a task',
             ],
         ],
+        // GH #190 phase 5. Reading the ANSWERS also follows the in-app rule: the key's
+        // analyst needs Forms access or "Read the form answers on tasks you can see".
+        'task_forms' => [
+            'label'   => 'Task forms',
+            'actions' => [
+                'read'   => 'List the forms a task needs, with who submitted them (answers where the key\'s analyst may read them)',
+                'create' => 'Submit a form for a task, linked to that task (the key\'s analyst needs Forms access)',
+            ],
+        ],
         'cmdb_classes' => [
             'label'   => 'CMDB classes',
             'actions' => [

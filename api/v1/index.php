@@ -132,6 +132,7 @@ function apiHandleRoot(PDO $conn, array $apiKey, array $params, array $body): vo
             'GET /knowledge/tags',
             'GET /tasks', 'POST /tasks', 'GET /tasks/{id}', 'PATCH /tasks/{id}', 'DELETE /tasks/{id}',
             'POST /tasks/{id}/move', 'GET /tasks/{id}/comments', 'POST /tasks/{id}/comments',
+            'GET /tasks/{id}/forms', 'POST /tasks/{id}/forms/{task_form_id}/submissions',
             'GET /task-statuses', 'GET /task-priorities', 'GET /task-tags',
             'GET /cmdb/classes', 'GET /cmdb/classes/{id}', 'GET /cmdb/objects', 'POST /cmdb/objects',
             'GET /cmdb/objects/{id}', 'PATCH /cmdb/objects/{id}', 'DELETE /cmdb/objects/{id}',

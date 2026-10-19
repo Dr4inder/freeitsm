@@ -455,6 +455,64 @@ function apiTaskCommentsCreate(PDO $conn, array $apiKey, array $params, array $b
 }
 
 // ---------------------------------------------------------------------------
+// Forms a task needs (GH #190 phase 5)
+// ---------------------------------------------------------------------------
+
+/** GET /tasks/{id}/forms - each form the task needs, its state, and its answers where the key's analyst may read them. */
+function apiTaskFormsList(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiLoadTask($conn, $params[0], $apiKey);           // the task's gate, company scope included
+    require_once __DIR__ . '/../../../includes/services/task_forms.php';
+    if (!TaskForms::columnsReady($conn)) apiRespond([]);
+    $actor = (int)($apiKey['analyst_id'] ?? 0);
+    apiRespond(array_map(function ($f) {
+        $out = [
+            'id'            => $f['id'],
+            'form_id'       => $f['form_id'],
+            'title'         => $f['title'],
+            'required'      => $f['is_required'],
+            'requirement'   => $f['is_required'] ? $f['requirement_mode'] : 'optional',
+            'submission_id' => $f['submission_id'],
+            'submitted_by'  => $f['submitted_by'],
+            'submitted_at'  => $f['submitted_utc'] ? apiIsoDate($f['submitted_utc']) : null,
+            'has_draft'     => $f['has_draft'],
+            'revision'      => $f['revision'],
+        ];
+        // The one answers rule, as in the app: absent rather than empty when not allowed.
+        if (array_key_exists('answers', $f)) {
+            $out['answers'] = array_map(fn($a) => ['field_id' => $a['field_id'], 'question' => $a['label'], 'answer' => $a['value'],
+                                                   'exception' => !empty($a['exception'])], $f['answers']);
+        }
+        return $out;
+    }, TaskForms::forTask($conn, (int)$params[0], $actor, true)));
+}
+
+/**
+ * POST /tasks/{id}/forms/{task_form_id}/submissions - submit the form for this occurrence.
+ *
+ * Body: { data: {field_id: value}, client_reference?, revision? }. The same validation as the
+ * Forms page; the submission is linked to the task in the same transaction. A retry with the same
+ * client_reference returns the submission already made (200, "replayed": true). `revision`, when
+ * sent, makes the submit conditional on nobody having saved since (409 otherwise); without it the
+ * current revision is used - an integration that is the only writer need not track it.
+ */
+function apiTaskFormSubmit(PDO $conn, array $apiKey, array $params, array $body): void {
+    apiLoadTask($conn, $params[0], $apiKey);
+    require_once __DIR__ . '/../../../includes/services/task_forms.php';
+    try {
+        if (!TaskForms::enabled($conn) || !TaskForms::columnsReady($conn)) {
+            throw new ServiceError('validation', 'disabled', 'Forms on tasks are switched off (Tasks -> Settings -> Checklists).');
+        }
+        $row = TaskForms::row($conn, (int)$params[1]);
+        if ((int)$row['task_id'] !== (int)$params[0]) throw new ServiceError('not_found', 'not_found', 'That form is not on this task.');
+        $revision = isset($body['revision']) ? (int)$body['revision'] : (int)$row['revision'];
+        $res = TaskForms::submit($conn, ActorContext::fromApiKey($apiKey), (int)$row['id'], $revision,
+                                 (string)($body['client_reference'] ?? ''), (array)($body['data'] ?? []));
+        apiRespond(['task_id' => (int)$params[0], 'task_form_id' => (int)$row['id'], 'submission_id' => $res['submission_id'],
+                    'revision' => $res['revision'], 'replayed' => $res['replayed']], $res['replayed'] ? 200 : 201);
+    } catch (ServiceError $e) { apiFailFromService($e); }
+}
+
+// ---------------------------------------------------------------------------
 // Reference lookups
 // ---------------------------------------------------------------------------
 function apiTaskStatusesList(PDO $conn, array $apiKey, array $params, array $body): void {

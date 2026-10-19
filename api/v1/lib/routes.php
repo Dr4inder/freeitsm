@@ -100,6 +100,9 @@ return [
     ['POST',   '#^/tasks/(\d+)/move$#',                    ['tasks', 'update'],               'apiTasksMove'],
     ['GET',    '#^/tasks/(\d+)/comments$#',                ['task_comments', 'read'],         'apiTaskCommentsList'],
     ['POST',   '#^/tasks/(\d+)/comments$#',                ['task_comments', 'create'],       'apiTaskCommentsCreate'],
+    // GH #190 phase 5: the forms a task occurrence needs, and submitting one for it.
+    ['GET',    '#^/tasks/(\d+)/forms$#',                   ['task_forms', 'read'],            'apiTaskFormsList'],
+    ['POST',   '#^/tasks/(\d+)/forms/(\d+)/submissions$#',  ['task_forms', 'create'],          'apiTaskFormSubmit'],
     ['GET',    '#^/task-statuses$#',                       ['reference', 'read'],             'apiTaskStatusesList'],
     ['GET',    '#^/task-priorities$#',                     ['reference', 'read'],             'apiTaskPrioritiesList'],
     ['GET',    '#^/task-tags$#',                           ['reference', 'read'],             'apiTaskTagsList'],

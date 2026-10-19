@@ -496,6 +496,58 @@ if ($BASE) {
     curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_COOKIE => "PHPSESSID=$sess"]);
     $csv = (string)curl_exec($ch); curl_close($ch);
     ok('the form answers CSV has the question and the answer', strpos($csv, 'Explanation') !== false && strpos($csv, 'Job 4 failed again') !== false, substr($csv, 0, 300));
+    // ── The REST API (phase 5) ─────────────────────────────────────────────
+    section('P5. REST API (GET /tasks/{id}/forms, POST .../submissions)');
+    $rawKey = 'fitsm_zz' . bin2hex(random_bytes(16));
+    $conn->prepare("INSERT INTO api_keys (name, key_hash, key_prefix, analyst_id, permissions, active, created_datetime)
+                    VALUES ('ZZ task forms test', ?, ?, ?, ?, 1, UTC_TIMESTAMP())")
+         ->execute([hash('sha256', $rawKey), substr($rawKey, 0, 12), $admin, json_encode(['tasks' => ['read'], 'task_forms' => ['read', 'create']])]);
+    $keyId = (int)$conn->lastInsertId();
+    $rest = function (string $method, string $path, ?array $body = null) use ($BASE, $rawKey) {
+        $ch = curl_init($BASE . 'api/v1' . $path);
+        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_CUSTOMREQUEST => $method,
+            CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $rawKey, 'Content-Type: application/json']]);
+        if ($body !== null) curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+        $raw = (string)curl_exec($ch); $code = curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
+        return [$code, json_decode($raw, true), $raw];
+    };
+    try {
+        $t9 = zzTask($conn, 'ZZ-TF REST occurrence');
+        $tf9 = TaskForms::add($conn, $ctx, $t9, $v1['id'], true, 'block');
+        // The requirement is on the form's NEWEST version, whose field ids are its own.
+        $f9 = $conn->prepare("SELECT label, id FROM form_fields WHERE form_id = ?");
+        $f9->execute([(int)TaskForms::row($conn, $tf9)['form_id']]);
+        $f9 = $f9->fetchAll(PDO::FETCH_KEY_PAIR);
+        $resultField = (int)$f9['Result'];
+        $explField = (int)$f9['Explanation'];
+        [$c, $j, $raw] = $rest('GET', "/tasks/$t9/forms");
+        $list = $j['data'] ?? $j;
+        ok('GET /tasks/{id}/forms lists the requirement', $c === 200 && (int)($list[0]['id'] ?? 0) === $tf9 && ($list[0]['requirement'] ?? '') === 'block', "$c " . substr($raw, 0, 200));
+        $payload = ['data' => [(string)$resultField => 'Warning'], 'client_reference' => 'rest-ref-1'];
+        [$c, $j, $raw] = $rest('POST', "/tasks/$t9/forms/$tf9/submissions", $payload);
+        $d = $j['data'] ?? $j;
+        ok('POST .../submissions submits it, linked to the task (201)', $c === 201 && !empty($d['submission_id']), "$c " . substr($raw, 0, 200));
+        $sid = (int)($d['submission_id'] ?? 0);
+        [$c, $j, $raw] = $rest('POST', "/tasks/$t9/forms/$tf9/submissions", $payload);
+        $d2 = $j['data'] ?? $j;
+        ok('a retry with the same client_reference returns it (200, replayed) - no second', $c === 200 && !empty($d2['replayed']) && (int)$d2['submission_id'] === $sid
+            && (int)$conn->query("SELECT COUNT(*) FROM form_submissions WHERE task_id = $t9")->fetchColumn() === 1, "$c " . substr($raw, 0, 200));
+        [$c, $j, $raw] = $rest('POST', "/tasks/$t9/forms/$tf9/submissions", ['data' => [(string)$resultField => 'OK'], 'revision' => 0]);
+        ok('a stale revision is refused with 409', $c === 409, "$c " . substr($raw, 0, 200));
+        [$c, $j, $raw] = $rest('POST', "/tasks/$t9/forms/$tf9/submissions", ['data' => [(string)$explField => 'no result']]);
+        ok('a missing required answer is refused with 422 by the Forms validation', $c === 422, "$c " . substr($raw, 0, 200));
+        [$c, $j, $raw] = $rest('GET', "/tasks/$t9/forms");
+        $list = $j['data'] ?? $j;
+        ok('GET now shows it submitted, with the answers (the key\'s analyst may read them)', ($list[0]['submission_id'] ?? 0) === $sid && ($list[0]['answers'][0]['answer'] ?? '') === 'Warning', substr($raw, 0, 300));
+        [$c] = $rest('POST', "/tasks/$t9/forms/" . ($tf9 + 100000) . "/submissions", $payload);
+        ok('a requirement that is not on this task: 404', $c === 404);
+        $conn->prepare("UPDATE api_keys SET permissions = ? WHERE id = ?")->execute([json_encode(['tasks' => ['read'], 'task_forms' => ['read']]), $keyId]);
+        [$c] = $rest('POST', "/tasks/$t9/forms/$tf9/submissions", $payload);
+        ok('without task_forms.create: 403', $c === 403, (string)$c);
+    } finally {
+        $conn->prepare("DELETE FROM api_keys WHERE id = ?")->execute([$keyId]);
+    }
+
     @unlink("$sessDir/sess_$sess");
 }
 

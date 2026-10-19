@@ -4420,6 +4420,94 @@
                             }
                         ]
                     }
+                },
+                {
+                    "m": "GET",
+                    "p": "\/tasks\/{id}\/forms",
+                    "perm": "task_forms.read",
+                    "s": "List the forms a task needs",
+                    "d": "Each form the task (an occurrence of a repeating check, typically) needs: whether it is required, who submitted it and when, whether a draft is in progress, and its revision. The answers are included only where the key's analyst may read them - access to Forms, or the \"Read the form answers on tasks you can see\" permission - exactly as in the app; otherwise the field is absent. An answer the form marks as an exception carries \"exception\": true. GH #190.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Task id",
+                            "req": true
+                        }
+                    ],
+                    "section": "Tasks",
+                    "slug": "get-tasks-id-forms",
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "List a task's forms",
+                                "note": "The daily backup check's form, submitted, with its answers.",
+                                "path": {
+                                    "id": 340
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "m": "POST",
+                    "p": "\/tasks\/{id}\/forms\/{task_form_id}\/submissions",
+                    "perm": "task_forms.create",
+                    "s": "Submit a task's form",
+                    "d": "Submits the form for this task, linked to it in the same transaction, with the same validation as the Forms page (required answers, conditional questions, formats, options). Send a client_reference: a retry with the same one returns the submission already made (200, \"replayed\": true) rather than a second. Send revision to make the submit conditional on nobody having saved the form since (409 otherwise); without it the current revision is used. Submitting again replaces the earlier submission on the task, which is kept. The key's analyst needs Forms access. GH #190.",
+                    "params": [
+                        {
+                            "name": "id",
+                            "in": "path",
+                            "desc": "Task id",
+                            "req": true
+                        },
+                        {
+                            "name": "task_form_id",
+                            "in": "path",
+                            "desc": "The form requirement's id, from GET \/tasks\/{id}\/forms",
+                            "req": true
+                        },
+                        {
+                            "name": "data",
+                            "in": "body",
+                            "desc": "The answers, keyed by form field id",
+                            "req": true
+                        },
+                        {
+                            "name": "client_reference",
+                            "in": "body",
+                            "desc": "Your own id for this submit, up to 64 characters - makes a retry safe",
+                            "req": false
+                        },
+                        {
+                            "name": "revision",
+                            "in": "body",
+                            "desc": "The revision you read; the submit fails with 409 if it has moved",
+                            "req": false
+                        }
+                    ],
+                    "body": {
+                        "data": {
+                            "812": "Warning",
+                            "813": "Job 4 retried overnight"
+                        },
+                        "client_reference": "backup-2026-10-18"
+                    },
+                    "section": "Tasks",
+                    "slug": "post-tasks-id-forms-task-form-id-submissions",
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "Submit the daily check",
+                                "note": "Linked to the task automatically; pressing it twice with the same client_reference makes one submission.",
+                                "path": {
+                                    "id": 340,
+                                    "task_form_id": 12
+                                }
+                            }
+                        ]
+                    }
                 }
             ]
         },
