@@ -714,6 +714,6 @@ if (!isset($_SESSION['analyst_id'])) {
             } catch (e) { /* ignore - user can still click Import */ }
         })();
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

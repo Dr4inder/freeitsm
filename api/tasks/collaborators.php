@@ -26,6 +26,8 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('tasks');
+// Reading who is involved is a read; adding, removing and ticking are writes (#181 Part G).
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') requireModuleWriteJson('tasks');
 
 try {
     $conn = connectToDatabase();

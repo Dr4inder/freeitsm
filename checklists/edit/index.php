@@ -289,6 +289,9 @@ $categories   = $conn->query("SELECT name FROM checklist_categories ORDER BY nam
                   '<div class="step-opts">' +
                     '<span class="step-opt"><label class="toggle-switch"><input type="checkbox" data-f="is_mandatory"' + (s.is_mandatory ? ' checked' : '') + '><span class="toggle-slider"></span></label> ' + esc(t('checklists.editor.mandatory')) + '</span>' +
                     '<span class="step-opt"><label class="toggle-switch"><input type="checkbox" data-f="requires_input"' + (s.requires_input ? ' checked' : '') + '><span class="toggle-slider"></span></label> ' + esc(t('checklists.editor.ask_for_value')) + '</span>' +
+                    // #181: on a TASK the step records Pass / Fail / Not applicable, and Fail
+                    // asks for an exception note. Tickets keep a plain tick.
+                    '<span class="step-opt" title="' + esc(t('checklists.editor.ask_for_result_hint')) + '"><label class="toggle-switch"><input type="checkbox" data-f="result_mode"' + (s.result_mode === 'pass_fail' ? ' checked' : '') + '><span class="toggle-slider"></span></label> ' + esc(t('checklists.editor.ask_for_result')) + '</span>' +
                     '<span class="step-ph-wrap"' + (s.requires_input ? '' : ' hidden') + '>' +
                       '<input type="text" class="ed-input step-ph" data-f="input_placeholder" value="' + esc(s.input_placeholder) + '" placeholder="' + esc(t('checklists.editor.value_prompt_ph')) + '">' +
                     '</span>' +
@@ -309,7 +312,9 @@ $categories   = $conn->query("SELECT name FROM checklist_categories ORDER BY nam
             const li = e.target.closest('.step-item');
             if (!li || !e.target.dataset.f) return;
             const i = +li.dataset.index, f = e.target.dataset.f;
-            if (e.target.type === 'checkbox') {
+            if (e.target.type === 'checkbox' && f === 'result_mode') {
+                steps[i][f] = e.target.checked ? 'pass_fail' : 'none';
+            } else if (e.target.type === 'checkbox') {
                 steps[i][f] = e.target.checked ? 1 : 0;
                 if (f === 'requires_input') {
                     const wrap = li.querySelector('.step-ph-wrap');
@@ -340,7 +345,7 @@ $categories   = $conn->query("SELECT name FROM checklist_categories ORDER BY nam
         });
 
         document.getElementById('edAddStep').addEventListener('click', function () {
-            steps.push({ title: '', suggested_role: '', is_mandatory: 1, requires_input: 0, input_placeholder: '' });
+            steps.push({ title: '', suggested_role: '', is_mandatory: 1, requires_input: 0, input_placeholder: '', result_mode: 'none' });
             markDirty(); renderSteps();
             const inputs = document.querySelectorAll('#edSteps .step-title');
             if (inputs.length) inputs[inputs.length - 1].focus();
@@ -408,7 +413,8 @@ $categories   = $conn->query("SELECT name FROM checklist_categories ORDER BY nam
                         suggested_role: it.suggested_role || '',
                         is_mandatory: Number(it.is_mandatory) ? 1 : 0,
                         requires_input: Number(it.requires_input) ? 1 : 0,
-                        input_placeholder: it.input_placeholder || ''
+                        input_placeholder: it.input_placeholder || '',
+                        result_mode: it.result_mode === 'pass_fail' ? 'pass_fail' : 'none'
                     };
                 });
                 renderSteps();
@@ -459,6 +465,6 @@ $categories   = $conn->query("SELECT name FROM checklist_categories ORDER BY nam
 
         load();
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

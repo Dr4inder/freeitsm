@@ -52,6 +52,17 @@ try {
     if (!isset($settings['checklists_enabled'])) {
         $settings['checklists_enabled'] = '0';
     }
+    // Repeating task evidence (#181) - each defaults to the forgiving choice.
+    $settings['evidence_completed_checklist'] = ($settings['evidence_completed_checklist'] ?? '') === 'refuse' ? 'refuse' : 'allow';
+    $settings['evidence_delete_occurrence']   = ($settings['evidence_delete_occurrence'] ?? '') === 'refuse' ? 'refuse' : 'allow';
+    $settings['evidence_report_access']       = ($settings['evidence_report_access'] ?? '') === 'permission' ? 'permission' : 'anyone';
+    $settings['evidence_skip_status_id']      = (string)($settings['evidence_skip_status_id'] ?? '');
+    // The closed statuses to choose from, and which one an unset choice falls back to.
+    require_once '../../includes/services/tasks.php';
+    $settings['evidence_closed_statuses'] = $conn->query(
+        "SELECT id, name FROM task_statuses WHERE is_closed = 1 AND is_active = 1 ORDER BY display_order, id"
+    )->fetchAll(PDO::FETCH_ASSOC);
+    $settings['evidence_skip_status_effective'] = TasksService::skipStatusId($conn);
 
     // card_fields — which extras show on board cards. Stored as JSON;
     // always returned as a complete object so callers needn't merge defaults.

@@ -131,7 +131,7 @@ echo "4. Read only modules: every write is refused to a read-only analyst (#180)
 // A module offers Read only (MODULES_WITH_READ_ONLY) only once every write endpoint calls
 // requireModuleWriteJson(). Without this check Read only would be a promise with a hole
 // in it - and the hole would look exactly like a working feature.
-$READ_ONLY_DIRS = ['changes' => 'api/change-management/', 'forms' => 'api/forms/'];
+$READ_ONLY_DIRS = ['changes' => 'api/change-management/', 'forms' => 'api/forms/', 'tasks' => 'api/tasks/'];
 $WRITE_EXEMPT = [
     // Approving is identity, not a write: a read-only approver must still approve.
     'api/change-management/submit_cab_vote.php'  => 'a CAB vote - needs a change_cab_members row, not write access',

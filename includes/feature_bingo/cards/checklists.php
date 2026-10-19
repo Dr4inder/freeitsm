@@ -97,4 +97,16 @@ return [
         'link'     => 'checklists/settings/?tab=roles',
         'check'    => ['rows', 'checklist_roles', "is_demo = 0 AND name NOT IN ('Tier 1 Support','Tier 2 Support','Network Admin','Systems Administrator','Security Team','Database Admin','DevOps / Cloud','HR & IT')"],
     ],
+    [
+        'id'       => 'checklists.step_results',
+        'module'   => 'checklists',
+        'tier'     => 'extra',
+        'category' => 'governance',
+        'title'    => 'Steps that ask for a result',
+        'what'     => 'A checklist step set to "Ask for a result": on a task it records Pass, Fail or Not applicable, and Fail asks for an exception note.',
+        'why'      => 'A completed task no longer implies the control passed - a failed restore test is recorded as an exception and shows in the evidence report.',
+        'done'     => 'At least one checklist step asks for a result.',
+        'link'     => 'checklists/',
+        'check'    => ['rows', 'checklist_template_items', "result_mode = 'pass_fail'"],
+    ],
 ];

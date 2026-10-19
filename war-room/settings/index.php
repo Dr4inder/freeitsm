@@ -131,7 +131,7 @@ $choices = [0, 7, 30, 90, 180, 365];
     <script src="../../assets/js/ai-settings.js?v=3"></script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
     <script>
         // ⚠️ The tab bar is rendered by the shared helper but SWITCHING is each
         // page's own job — renderSettingsTabBar() only emits the buttons. This

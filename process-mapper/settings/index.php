@@ -486,6 +486,6 @@ $shapes = include '../includes/shapes.php';
                  switchTab, saveSidebarMode };
     })();
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

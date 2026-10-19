@@ -9,6 +9,9 @@ require_once '../includes/i18n.php';
 require_once '../includes/theme.php';
 require_once '../includes/timezone.php';
 requireModuleAccess('tasks');
+// Read only access to Tasks (#181 Part G): the page offers nothing that writes. The
+// services and endpoints refuse regardless - this only stops the page offering it.
+$tasksReadOnly = analystModuleLevel(connectToDatabase(), (int)$_SESSION['analyst_id'], 'tasks') === 'read';
 
 // How this analyst likes a task to open: the side panel, or a large window.
 // Read here and published to the page, the same way the theme and timezone are
@@ -106,7 +109,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/tasks.css?v=46">
+    <link rel="stylesheet" href="../assets/css/tasks.css?v=47">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
@@ -116,7 +119,7 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../assets/js/tinymce/tinymce.min.js"></script>
     <link rel="stylesheet" href="../assets/css/mobile.css?v=194">
 </head>
-<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>">
+<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>"<?php echo $tasksReadOnly ? ' class="module-read-only"' : ''; ?>>
     <?php include 'includes/header.php'; ?>
 
     <?php /* `--views` marks the ONE page whose sidebar carries the board/list
@@ -383,7 +386,7 @@ $translationNamespaces = ['common', 'tasks'];
     window.TASK_CAN_PROJECTS = <?php echo json_encode($taskCanProjects); ?>;</script>
     <script src="../assets/js/tasks-priority.js?v=1"></script>
     <script src="../assets/js/tasks-ctx-menu.js?v=4"></script>
-    <script src="../assets/js/tasks.js?v=54"></script>
-    <script src="../assets/js/mobile.js?v=79"></script>
+    <script src="../assets/js/tasks.js?v=55"></script>
+    <script src="../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

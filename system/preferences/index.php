@@ -2346,6 +2346,6 @@ $fmtSample = new DateTime('2026-08-05 14:30:00', new DateTimeZone(Tz::current())
 
         document.addEventListener('DOMContentLoaded', loadSignatures);
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

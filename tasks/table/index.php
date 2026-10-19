@@ -17,6 +17,9 @@ I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('tasks');
+// Read only access to Tasks (#181 Part G): the page offers nothing that writes. The
+// services and endpoints refuse regardless - this only stops the page offering it.
+$tasksReadOnly = analystModuleLevel(connectToDatabase(), (int)$_SESSION['analyst_id'], 'tasks') === 'read';
 
 $current_page = 'table';
 $path_prefix = '../../';
@@ -31,7 +34,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks', t('tasks.nav.table'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=46">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=47">
     <link rel="stylesheet" href="../../assets/css/data-table.css?v=4">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
@@ -39,7 +42,7 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
 </head>
-<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>">
+<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>"<?php echo $tasksReadOnly ? ' class="module-read-only"' : ''; ?>>
     <?php include '../includes/header.php'; ?>
 
     <div class="tasks-container">
@@ -111,6 +114,6 @@ $translationNamespaces = ['common', 'tasks'];
     <script src="../../assets/js/data-table.js?v=6"></script>
     <script src="../../assets/js/tasks-ctx-menu.js?v=4"></script>
     <script src="../../assets/js/tasks-table.js?v=5"></script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

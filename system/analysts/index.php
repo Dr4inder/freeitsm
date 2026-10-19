@@ -1160,6 +1160,6 @@ $translationNamespaces = ['common', 'tickets'];
             loadAnalysts();
         });
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

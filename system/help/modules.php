@@ -60,7 +60,7 @@ require __DIR__ . '/_top.php';
     <div class="help-section-header"><?php echo helpSectionNum('read-only'); ?>
         <div>
             <h3>Read only</h3>
-            <p><strong>Change Management</strong> and <strong>Forms</strong> offer a second level for a grant. Open the module on this page and choose <strong>Full</strong> or <strong>Read only</strong> beside each team and analyst you tick.</p>
+            <p><strong>Change Management</strong>, <strong>Forms</strong> and <strong>Tasks</strong> offer a second level for a grant. Open the module on this page and choose <strong>Full</strong> or <strong>Read only</strong> beside each team and analyst you tick.</p>
         </div>
     </div>
     <div class="help-cards">
@@ -71,6 +71,10 @@ require __DIR__ . '/_top.php';
         <div class="help-card">
             <h4>An approver</h4>
             <p>Approving is not editing. A read-only analyst named on a change's CAB, or as a change's or form's approver, can still vote or decide.</p>
+        </div>
+        <div class="help-card">
+            <h4>An auditor</h4>
+            <p>Read only access to <strong>Tasks</strong>, with the <strong>Run the evidence report</strong> permission where Tasks restricts it, lets someone read every task, its history and the evidence report for repeating tasks, and print or export it - and change nothing. Attaching or removing documents counts as a change too.</p>
         </div>
     </div>
     <div class="help-note">Levels combine like grants: under <strong>Most permissive</strong>, the highest level wins, so an analyst's own Full beats a team's Read only; under <strong>Least permissive</strong>, the lowest wins. Anyone with <em>all modules</em> has Full everywhere. The effective access checker shows the level and where it came from. Other modules have no level - they are Full wherever granted.</div>

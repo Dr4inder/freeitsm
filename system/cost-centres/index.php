@@ -602,6 +602,6 @@ $ccT = fn(string $k) => t('system.cost_centres.' . $k);
         load();
     })();
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

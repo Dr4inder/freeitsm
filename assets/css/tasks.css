@@ -2585,3 +2585,63 @@ body {
 .detail-project-stage { font-weight: 600; color: var(--text-muted, #555); }
 
 .detail-project-open { text-transform: none; letter-spacing: normal; }
+
+/* ── Repeating task evidence (#181) ─────────────────────────────── */
+.recur-scheduled { font-size: 12px; color: var(--text-muted, #666); margin-top: 6px; }
+.recur-evidence { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.recur-evidence a.recur-link { text-decoration: none; display: inline-block; }
+.recur-skip { margin-top: 8px; padding: 10px; border: 1px solid var(--border, #e5e7eb); border-radius: 6px; background: var(--surface-2, #f8f9fa); }
+.recur-skip label { display: block; font-size: 12px; color: var(--text-muted, #666); margin-bottom: 4px; }
+.recur-skip textarea { width: 100%; box-sizing: border-box; font: inherit; font-size: 13px; padding: 6px 8px;
+    border: 1px solid var(--border, #e5e7eb); border-radius: 4px; background: var(--surface, #fff); color: var(--text, #333); }
+.recur-skip-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 6px; }
+
+.history-section { margin-top: 20px; }
+.history-section h4 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted, #666); }
+.history-list { max-height: 360px; overflow-y: auto; border: 1px solid var(--border-soft, #eef0f3); border-radius: 6px; }
+#tdmTab-history .history-list { max-height: none; }
+.history-item { padding: 7px 10px; border-top: 1px solid var(--border-soft, #eef0f3); }
+.history-item:first-child { border-top: 0; }
+.history-what { font-size: 13px; color: var(--text, #333); overflow-wrap: anywhere; }
+.history-meta { font-size: 11px; color: var(--text-muted, #666); margin-top: 2px; }
+.history-step .history-what { color: var(--text-secondary, #555); }
+.history-empty { padding: 10px; font-size: 13px; color: var(--text-muted, #666); }
+
+#taskChecklistSection .chk-result-spacer { width: 13px; flex-shrink: 0; }
+#taskChecklistSection .chk-results { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 4px; }
+#taskChecklistSection .chk-result {
+    font-size: 11px; padding: 2px 8px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--border, #e5e7eb); background: var(--surface, #fff); color: var(--text, #333);
+}
+#taskChecklistSection .chk-result-pass.active { background: var(--success-bg, #dcfce7); border-color: var(--success-text, #16a34a); color: var(--success-text, #166534); }
+#taskChecklistSection .chk-result-fail.active { background: var(--danger-bg, #fee2e2); border-color: var(--danger-text, #b91c1c); color: var(--danger-text, #991b1b); }
+#taskChecklistSection .chk-result-na.active   { background: var(--surface-2, #f0f0f0); border-color: var(--text-muted, #666); color: var(--text, #333); }
+#taskChecklistSection .chk-exception { display: flex; gap: 6px; align-items: flex-start; margin-top: 6px; }
+#taskChecklistSection .chk-exception textarea { flex: 1; min-width: 0; font: inherit; font-size: 12px; padding: 4px 6px;
+    border: 1px solid var(--border, #e5e7eb); border-radius: 4px; background: var(--surface, #fff); color: var(--text, #333); }
+#taskChecklistSection .chk-exception-note { font-size: 12px; color: var(--danger-text, #991b1b); margin-top: 4px; }
+#taskChecklistSection .chk-step.failed .chk-step-title { text-decoration: none; color: var(--danger-text, #991b1b); }
+
+/* Read only access to Tasks (#181 Part G): nothing that writes is offered. The
+   services and endpoints refuse regardless - this only stops the page offering
+   what will be refused. */
+body.module-read-only #detailPanelBody input:not([type="search"]),
+body.module-read-only #detailPanelBody select,
+body.module-read-only #detailPanelBody textarea { pointer-events: none; opacity: .75; }
+body.module-read-only .column-add-btn,
+body.module-read-only .quick-add-container,
+body.module-read-only [onclick^="deleteCurrentTask"],
+body.module-read-only .subtask-add,
+body.module-read-only .comment-add,
+body.module-read-only .link-search-container,
+body.module-read-only .link-remove,
+body.module-read-only .chk-attach,
+body.module-read-only .chk-results,
+body.module-read-only .chk-handle,
+body.module-read-only .subtask-handle,
+body.module-read-only #taskChecklistSection .btn-link-small,
+body.module-read-only #taskChecklistSection input[type="checkbox"],
+body.module-read-only .recur-link[onclick],
+body.module-read-only .recur-skip,
+body.module-read-only #ctxMenu .ctx-item:not([data-action="open"]):not([data-action="copylink"]),
+body.module-read-only #ctxMenu .ctx-sep { display: none !important; }

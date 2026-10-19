@@ -2987,6 +2987,6 @@ foreach ($formActionDefs as $def) {
     </div>
     <!-- Mobile layer. Adds the views hamburger and the module drawer on a phone.
          Loaded last so it can wrap the page's own globals rather than edit them. -->
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=79"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=80"></script>
 </body>
 </html>

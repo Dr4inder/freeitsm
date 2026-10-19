@@ -224,18 +224,17 @@ function documentEntityRegistry(): array {
             'filter' => function (PDO $c, int $a, string $alias) { return activeTenantFilter($c, $a, $alias); },
         ],
         'task' => [
-            // No tenant_id column — module membership is the whole rule, as with
-            // contracts. Inventing a filter on a column that does not exist would
-            // simply error and, because the builder drops a type it cannot filter,
-            // silently hide every task's documents.
+            // Tasks belong to a company (they gained tenant_id in GH #83), so a
+            // task's documents follow the task's company exactly as a change's do.
+            // This entry predates that and said tasks had no company column.
             'module' => 'tasks',
             'table'  => 'tasks',
             'label'  => 'Task',
             'url'    => 'tasks/?task_id=%d',
             'title'  => 'title',
             'alive'  => null,
-            'can'    => null,
-            'filter' => null,
+            'can'    => function (PDO $c, int $a, int $id) { return analystCanAccessTask($c, $a, $id); },
+            'filter' => function (PDO $c, int $a, string $alias) { return activeTenantFilter($c, $a, $alias); },
         ],
         'supplier' => [
             // Sits beside contracts and wants the same things — due diligence,
@@ -406,6 +405,24 @@ function documentCanViewParent(PDO $conn, int $analystId, ?array $allowedModules
     } catch (Throwable $e) {
         return false;
     }
+}
+
+/**
+ * May this analyst CHANGE what is attached to a record - attach, upload to it, or unlink?
+ * documentCanViewParent(), plus the module's Read only level (#180, #181): somebody who
+ * may only read Change Management, Forms or Tasks must not attach evidence to it either.
+ *
+ * @param ?array $allowedModules  the analyst's allowed module keys; null means all
+ * @param string $type            the parent's entity type key from documentEntityRegistry()
+ * @param int    $parentId        the parent record's id
+ */
+function documentCanWriteParent(PDO $conn, int $analystId, ?array $allowedModules, string $type, int $parentId): bool {
+    if (!documentCanViewParent($conn, $analystId, $allowedModules, $type, $parentId)) return false;
+    $def = documentEntityDef($type);
+    if ($def && in_array($def['module'], MODULES_WITH_READ_ONLY, true)) {
+        return analystCanWriteModule($conn, $analystId, $def['module']);
+    }
+    return true;
 }
 
 /**

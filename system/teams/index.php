@@ -641,6 +641,6 @@ $translationNamespaces = ['common', 'tickets'];
             loadTeams();
         });
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

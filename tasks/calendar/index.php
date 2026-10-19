@@ -29,6 +29,9 @@ I18n::initFromSession();
 Tz::init();
 
 requireModuleAccess('tasks');
+// Read only access to Tasks (#181 Part G): the page offers nothing that writes. The
+// services and endpoints refuse regardless - this only stops the page offering it.
+$tasksReadOnly = analystModuleLevel(connectToDatabase(), (int)$_SESSION['analyst_id'], 'tasks') === 'read';
 
 $current_page = 'calendar';
 $path_prefix = '../../';
@@ -43,14 +46,14 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks', t('tasks.nav.calendar'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=46">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=47">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <script src="../../assets/js/i18n.js?v=3"></script>
     <link rel="stylesheet" href="../../assets/css/mobile.css?v=194">
 </head>
-<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>">
+<body data-analyst-id="<?php echo $_SESSION['analyst_id'] ?? ''; ?>"<?php echo $tasksReadOnly ? ' class="module-read-only"' : ''; ?>>
     <?php include '../includes/header.php'; ?>
 
     <div class="tasks-container">
@@ -150,6 +153,6 @@ $translationNamespaces = ['common', 'tasks'];
     </script>
     <script src="../../assets/js/tasks-quick-panel.js?v=1"></script>
     <script src="../../assets/js/tasks-calendar.js?v=12"></script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

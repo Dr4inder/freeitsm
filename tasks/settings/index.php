@@ -39,7 +39,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks', t('tasks.nav.settings'))); ?></title>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../../assets/css/tasks.css?v=46">
+    <link rel="stylesheet" href="../../assets/css/tasks.css?v=47">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
@@ -282,6 +282,36 @@ $translationNamespaces = ['common', 'tasks'];
             <!-- Said plainly, because "does this stop me completing a task?" and
                  "what happens if I switch it off again?" are the two questions. -->
             <p style="color: var(--text-muted, #666); margin-top: 16px;"><?php echo htmlspecialchars(t('tasks.settings.checklists_note')); ?></p>
+        </div>
+        <?php endif; ?>
+
+        <!-- Evidence Tab — repeating task evidence (#181) -->
+        <?php if (settingsTabVisible($visibleTabs, 'evidence')): ?>
+        <div class="tab-content<?php echo $activeTabId === 'evidence' ? ' active' : ''; ?>" id="evidence-tab" data-capability="<?php echo Cap::TASKS_EVIDENCE; ?>">
+            <div class="section-header">
+                <h2><?php echo htmlspecialchars(t('tasks.settings.evidence_heading')); ?></h2>
+            </div>
+            <p style="color: var(--text-muted, #666); margin-bottom: 16px;"><?php echo htmlspecialchars(t('tasks.settings.evidence_desc')); ?></p>
+            <?php foreach ([
+                ['evidence_completed_checklist', 'evidence_checklist', ['allow' => 'evidence_checklist_allow', 'refuse' => 'evidence_checklist_refuse']],
+                ['evidence_delete_occurrence',   'evidence_delete',    ['allow' => 'evidence_delete_allow', 'refuse' => 'evidence_delete_refuse']],
+                ['evidence_report_access',       'evidence_access',    ['anyone' => 'evidence_access_anyone', 'permission' => 'evidence_access_permission']],
+            ] as [$evKey, $evLabel, $evOptions]): ?>
+            <div class="card-field-row" style="display:block;">
+                <label class="card-field-name" for="ev_<?php echo $evKey; ?>"><?php echo htmlspecialchars(t('tasks.settings.' . $evLabel . '_name')); ?></label>
+                <select id="ev_<?php echo $evKey; ?>" class="ev-setting" data-key="<?php echo $evKey; ?>" disabled onchange="saveEvidenceSetting(this)" style="margin:6px 0;">
+                    <?php foreach ($evOptions as $v => $k): ?>
+                    <option value="<?php echo $v; ?>"><?php echo htmlspecialchars(t('tasks.settings.' . $k)); ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="card-field-desc"><?php echo htmlspecialchars(t('tasks.settings.' . $evLabel . '_desc')); ?></div>
+            </div>
+            <?php endforeach; ?>
+            <div class="card-field-row" style="display:block;">
+                <label class="card-field-name" for="ev_evidence_skip_status_id"><?php echo htmlspecialchars(t('tasks.settings.evidence_skip_status_name')); ?></label>
+                <select id="ev_evidence_skip_status_id" class="ev-setting" data-key="evidence_skip_status_id" disabled onchange="saveEvidenceSetting(this)" style="margin:6px 0;"></select>
+                <div class="card-field-desc"><?php echo htmlspecialchars(t('tasks.settings.evidence_skip_status_desc')); ?></div>
+            </div>
         </div>
         <?php endif; ?>
 
@@ -580,11 +610,42 @@ $translationNamespaces = ['common', 'tasks'];
             loadTimeScope();
             loadCollaboratorCompletion();
             loadTaskChecklistsEnabled();
+            loadEvidenceSettings();
             loadCardFields();
             loadTagSettings();
             const tabFromHash = location.hash.replace('#', '');
-            if (['calendar', 'time', 'involved', 'checklists', 'card', 'tags'].includes(tabFromHash)) switchTab(tabFromHash);
+            if (['calendar', 'time', 'involved', 'checklists', 'evidence', 'card', 'tags'].includes(tabFromHash)) switchTab(tabFromHash);
         });
+
+        // Repeating task evidence (#181). Disabled until loaded - a select that
+        // shows its first option before the saved value arrives reads as the
+        // saved value, and one careless click would then save it.
+        async function loadEvidenceSettings() {
+            const boxes = document.querySelectorAll('.ev-setting');
+            if (!boxes.length) return;
+            try {
+                const data = await fetch(API_BASE + 'get_settings.php').then(r => r.json());
+                if (!data.success) return;
+                const s = data.settings;
+                const skip = document.getElementById('ev_evidence_skip_status_id');
+                const effective = (s.evidence_closed_statuses || []).find(x => Number(x.id) === Number(s.evidence_skip_status_effective));
+                skip.innerHTML = `<option value="">${escapeHtml(t('tasks.settings.evidence_skip_status_auto', { name: effective ? effective.name : '-' }))}</option>`
+                    + (s.evidence_closed_statuses || []).map(x => `<option value="${Number(x.id)}">${escapeHtml(x.name)}</option>`).join('');
+                boxes.forEach(b => { b.value = String(s[b.dataset.key] ?? ''); b.disabled = false; });
+            } catch (e) { console.error(e); }
+        }
+
+        async function saveEvidenceSetting(box) {
+            try {
+                const res = await fetch(API_BASE + 'save_settings.php', {
+                    method: 'POST', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ settings: { [box.dataset.key]: box.value } })
+                });
+                const data = await res.json();
+                if (data.success) showToast(t('tasks.toast.saved'), 'success');
+                else showToast(data.error || t('tasks.toast.save_failed'), 'error');
+            } catch (e) { showToast(t('tasks.toast.save_failed'), 'error'); }
+        }
 
         // ── Tag display settings ──
         const TAG_SETTINGS = ['allow_create', 'surface_card', 'surface_filter',
@@ -955,6 +1016,6 @@ $translationNamespaces = ['common', 'tasks'];
         });
 
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

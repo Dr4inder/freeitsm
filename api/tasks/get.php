@@ -179,6 +179,25 @@ try {
         }
     }
 
+    // Repeating task evidence (#181): what the task window offers on an occurrence.
+    // Skip is for an OPEN top-level occurrence; the evidence report is for anybody
+    // the report permission lets in (everybody, until Tasks -> Settings -> Evidence
+    // restricts it). Read only access offers neither write.
+    require_once '../../includes/rbac.php';
+    $isOccurrence = !empty($task['recurrence_id']) && empty($task['parent_task_id']);
+    $canWrite = analystCanWriteModule($conn, (int)$_SESSION['analyst_id'], 'tasks');
+    $task['can_write'] = $canWrite;
+    $task['can_skip'] = $isOccurrence && $canWrite && empty($task['status_is_closed']);
+    $task['can_evidence'] = $isOccurrence && analystMayAct($conn, (int)$_SESSION['analyst_id'], Cap::TASKS_EVIDENCE_REPORT);
+    // Who completed it (#181) - a column that did not exist before. Its own query, so
+    // the task still loads on an install that has not run Database Verification.
+    $task['completed_by_name'] = null;
+    if (!empty($task['completed_by_id'])) {
+        $cb = $conn->prepare("SELECT full_name FROM analysts WHERE id = ?");
+        $cb->execute([(int)$task['completed_by_id']]);
+        $task['completed_by_name'] = $cb->fetchColumn() ?: null;
+    }
+
     echo json_encode(['success' => true, 'task' => $task]);
 
 } catch (Exception $e) {

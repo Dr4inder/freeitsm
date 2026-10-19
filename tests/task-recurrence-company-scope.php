@@ -113,7 +113,11 @@ try {
     $fail++;
     echo "  FAIL  unexpected: " . $e->getMessage() . "\n";
 } finally {
+    // #181's history outlives its tasks on purpose (no foreign keys) - remove it explicitly.
+    if ($tasks) $conn->exec("DELETE FROM task_events WHERE task_id IN (" . implode(',', $tasks) . ")");
     if ($tasks) $conn->exec("DELETE FROM tasks WHERE id IN (" . implode(',', $tasks) . ")");
+    if ($rules) $conn->exec("DELETE FROM task_events WHERE recurrence_id IN (" . implode(',', $rules) . ")");
+    if ($rules) $conn->exec("DELETE FROM task_recurrence_versions WHERE recurrence_id IN (" . implode(',', $rules) . ")");
     if ($rules) $conn->exec("DELETE FROM task_recurrences WHERE id IN (" . implode(',', $rules) . ")");
     if ($analyst) {
         $conn->exec("DELETE FROM analyst_modules WHERE analyst_id = $analyst");

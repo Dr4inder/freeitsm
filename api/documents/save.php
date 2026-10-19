@@ -58,7 +58,9 @@ try {
     $conn = connectToDatabase();
 
     // ---- 1. ACCESS FIRST -------------------------------------------------
-    if (!documentCanViewParent($conn, $analystId, $allowed, $parentType, $parentId)) {
+    // documentCanWriteParent: seeing the record is not enough - Read only access to its
+    // module (Change Management, Forms, Tasks) attaches and removes nothing (#181).
+    if (!documentCanWriteParent($conn, $analystId, $allowed, $parentType, $parentId)) {
         // Deliberately the same message whether it does not exist or is not
         // yours: probing this endpoint should not map out the estate.
         http_response_code(403);

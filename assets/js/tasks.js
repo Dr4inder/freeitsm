@@ -559,6 +559,7 @@ function buildBoardColumns() {
 function startColumnDrag(e, column) {
     // Left-button only; the + button is not a drag handle
     if (e.button !== 0 || e.target.closest('.column-add-btn')) return;
+    if (document.body.classList.contains('module-read-only')) return;   // #181 Part G
     const board = document.getElementById('boardView');
     const startX = e.clientX;
     let dragging = false;
@@ -1008,6 +1009,10 @@ let dragState = null;
  */
 function startDrag(e, card) {
     if (e.button !== 0) return;
+    // Read only access to Tasks (#181 Part G) moves nothing - the server refuses a
+    // drag anyway, and a card that springs back reads as the board being broken.
+    // A click still opens the task, which is handled elsewhere.
+    if (document.body.classList.contains('module-read-only')) return;
     // Don't start drag on click (for opening detail panel)
     const startX = e.clientX;
     const startY = e.clientY;
@@ -1438,6 +1443,7 @@ const TASK_MODAL_TABS = [
     { key: 'comments', match: '.comments-section', count: '.comment-item' },
     { key: 'links',    match: '.link-section' },
     { key: 'documents',match: '#taskDocuments' },
+    { key: 'history',  match: '.history-section' },   // #181 - what happened to the task
 ];
 
 /**
@@ -1660,6 +1666,7 @@ async function openDetailPanel(taskId) {
         detailTaskStatus = data.task.status || null;
         renderDetailPanel(data.task);
         loadTaskChecklists(taskId);
+        loadTaskHistory(taskId);
         // Who else is on it (GH #89). Fetched separately from the task itself
         // because the same call returns the CANDIDATE list, which is a different
         // question — "who could be added" depends on who is already on it.
@@ -1924,14 +1931,27 @@ function renderDetailPanel(task) {
             </div>
         </div>
 
-        <!-- Timestamps -->
+        <!-- Timestamps. An occurrence the repeat made says so (#181): it used to
+             name whoever created the FIRST task, who did not make this one. -->
         <div class="detail-timestamps">
-            <span>${esc(window.t('tasks.detail.created_by', { datetime: formatDateTime(task.created_datetime), name: task.created_by_name || '' }))}</span>
+            <span>${esc(String(task.created_via || '').indexOf('repeat') === 0
+                ? window.t('tasks.detail.created_by_repeat', { datetime: formatDateTime(task.created_datetime) })
+                : window.t('tasks.detail.created_by', { datetime: formatDateTime(task.created_datetime), name: task.created_by_name || '' }))}</span>
             <span>${esc(window.t('tasks.detail.updated', { datetime: formatDateTime(task.updated_datetime) }))}</span>
-            ${task.completed_datetime ? `<span>${esc(window.t('tasks.detail.completed', { datetime: formatDateTime(task.completed_datetime) }))}</span>` : ''}
+            ${task.completed_datetime ? `<span>${esc(task.skipped_datetime
+                ? window.t('tasks.detail.skipped_on', { datetime: formatDateTime(task.skipped_datetime) })
+                : (task.completed_by_name
+                    ? window.t('tasks.detail.completed_by', { datetime: formatDateTime(task.completed_datetime), name: task.completed_by_name })
+                    : window.t('tasks.detail.completed', { datetime: formatDateTime(task.completed_datetime) })))}</span>` : ''}
         </div>
         <div class="detail-section" style="margin-top:18px;">
             <div id="taskDocuments"></div>
+        </div>
+
+        <!-- History (#181). Loaded after the panel is drawn - see loadTaskHistory(). -->
+        <div class="history-section" id="taskHistorySection">
+            <h4>${esc(window.t('tasks.history.heading'))}</h4>
+            <div id="taskHistoryList" class="history-list"><div class="history-empty">${esc(window.t('tasks.history.loading'))}</div></div>
         </div>
     `;
 
@@ -2269,17 +2289,32 @@ function renderTaskChecklists() {
             const value = needsValue
                 ? `<input type="text" class="chk-step-value" id="chkValue${i.id}" value="${esc(i.response_value || '')}"
                           placeholder="${esc(i.input_placeholder || T('checklist_value_placeholder'))}" ${done ? 'disabled' : ''}>` : '';
+            // #181: a step that asks for a RESULT records Pass, Fail or Not applicable
+            // instead of a bare tick - so a task can be done while saying the control
+            // it checked failed. Fail asks for an exception note before it is saved.
+            const asksResult = i.result_mode === 'pass_fail';
+            const results = asksResult ? `
+                <div class="chk-results" role="group" aria-label="${esc(T('checklist_result'))}">
+                    ${['pass', 'fail', 'na'].map(r => `<button type="button" class="chk-result chk-result-${r}${i.result === r ? ' active' : ''}"
+                        onclick="chooseTaskStepResult(${i.id}, '${r}')">${esc(T('checklist_result_' + r))}</button>`).join('')}
+                    ${done ? `<button type="button" class="btn-link-small" onclick="postTaskChecklist({ action: 'toggle', item_id: ${i.id}, completed: 0 })">${esc(T('checklist_result_clear'))}</button>` : ''}
+                </div>
+                <div class="chk-exception" id="chkException${i.id}" style="display:none">
+                    <textarea id="chkNote${i.id}" rows="2" placeholder="${esc(T('checklist_exception_placeholder'))}"></textarea>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="saveTaskStepFail(${i.id})">${esc(T('checklist_result_save'))}</button>
+                </div>
+                ${i.result === 'fail' && i.exception_note ? `<div class="chk-exception-note">${esc(T('checklist_exception', { note: i.exception_note }))}</div>` : ''}` : '';
             return `
-                <div class="chk-step${done ? ' done' : ''}" data-sort-id="${i.id}" draggable="true"
+                <div class="chk-step${done ? ' done' : ''}${i.result === 'fail' ? ' failed' : ''}" data-sort-id="${i.id}" draggable="true"
                      ondragstart="chkDragStart(event)" ondragend="chkDragEnd(event)">
                     <span class="chk-handle" title="${esc(T('checklist_drag'))}" onmousedown="this.closest('[data-sort-id]').dataset.grab = '1'" aria-hidden="true">&#8942;&#8942;</span>
-                    <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleTaskChecklistItem(${i.id}, this)">
+                    ${asksResult ? '<span class="chk-result-spacer"></span>' : `<input type="checkbox" ${done ? 'checked' : ''} onchange="toggleTaskChecklistItem(${i.id}, this)">`}
                     <div class="chk-step-body">
                         <div class="chk-step-title">${esc(i.title)}
                             ${Number(i.is_mandatory) === 1 ? `<span class="chk-mandatory">${esc(T('checklist_mandatory'))}</span>` : ''}
                             ${i.suggested_role ? `<span class="chk-role">${esc(i.suggested_role)}</span>` : ''}
                         </div>
-                        ${value}${by}
+                        ${value}${results}${by}
                     </div>
                 </div>`;
         }).join('');
@@ -2385,6 +2420,7 @@ async function postTaskChecklist(payload) {
         checklistState.checklists = data.checklists || [];
         checklistState.templates  = data.templates || [];
         renderTaskChecklists();
+        if (selectedTaskId) loadTaskHistory(selectedTaskId);   // the step change is on the record now (#181)
         return true;
     } catch (e) {
         showToast(window.t('tasks.detail.checklist_failed'), 'error');
@@ -2413,6 +2449,29 @@ function toggleTaskChecklistItem(itemId, box) {
         return;
     }
     postTaskChecklist({ action: 'toggle', item_id: itemId, completed: box.checked ? 1 : 0, response_value: value });
+}
+
+/**
+ * Records a step's result (#181). Pass and Not applicable save at once; Fail opens the exception note
+ * first, because a failed control with no word on what went wrong is not evidence of anything.
+ */
+function chooseTaskStepResult(itemId, result) {
+    if (result === 'fail') {
+        const box = document.getElementById('chkException' + itemId);
+        if (box) { box.style.display = ''; document.getElementById('chkNote' + itemId).focus(); }
+        return;
+    }
+    postTaskChecklist({ action: 'result', item_id: itemId, result });
+}
+
+/** Saves a Fail result with its exception note, refusing an empty note here as the server does. */
+function saveTaskStepFail(itemId) {
+    const note = (document.getElementById('chkNote' + itemId).value || '').trim();
+    if (!note) {
+        showToast(window.t('tasks.detail.checklist_exception_needed'), 'error');
+        return;
+    }
+    postTaskChecklist({ action: 'result', item_id: itemId, result: 'fail', exception_note: note });
 }
 
 /** Asks for confirmation, then removes a checklist from the open task. */
@@ -2936,6 +2995,29 @@ function renderRecurrenceSection(task) {
            </button>`
         : '';
 
+    // Repeating task evidence (#181). The date the repeat made this occurrence FOR
+    // never changes; when the due date has been moved since, the window says so -
+    // a rescheduled deadline must stay visible, here as in the report.
+    const sched = task.scheduled_date && task.recurrence_id
+        ? `<div class="recur-scheduled">${esc(task.due_date && task.due_date !== task.scheduled_date
+              ? window.t('tasks.evidence.rescheduled_from', { scheduled: formatDate(task.scheduled_date), due: formatDate(task.due_date) })
+              : window.t('tasks.evidence.scheduled_for', { scheduled: formatDate(task.scheduled_date) }))}</div>`
+        : '';
+    const evidence = (task.can_skip || task.can_evidence)
+        ? `<div class="recur-evidence">
+               ${task.can_evidence ? `<a class="recur-link" href="evidence/report.php?series=${Number(task.recurrence_id)}" target="_blank" rel="noopener">${esc(window.t('tasks.evidence.open_report'))}</a>` : ''}
+               ${task.can_skip ? `<button type="button" class="recur-link" onclick="toggleSkipForm()">${esc(window.t('tasks.evidence.skip'))}</button>` : ''}
+           </div>
+           ${task.can_skip ? `<div class="recur-skip" id="recurSkip" style="display:none">
+               <label for="recurSkipReason">${esc(window.t('tasks.evidence.skip_reason'))}</label>
+               <textarea id="recurSkipReason" rows="2" maxlength="255"></textarea>
+               <div class="recur-skip-actions">
+                   <button type="button" class="btn btn-secondary btn-sm" onclick="toggleSkipForm()">${esc(window.t('tasks.evidence.cancel'))}</button>
+                   <button type="button" class="btn btn-primary btn-sm" onclick="skipCurrentOccurrence()">${esc(window.t('tasks.evidence.skip'))}</button>
+               </div>
+           </div>` : ''}`
+        : '';
+
     return `
         <div class="recur-section" id="recurSection">
             <h4>
@@ -2948,9 +3030,100 @@ function renderRecurrenceSection(task) {
                     ${esc(window.t(on ? 'tasks.recur.change' : 'tasks.recur.set_up'))}
                 </button>
             </div>
+            ${sched}
             ${master}
+            ${evidence}
             <div class="recur-editor" id="recurEditor" style="display:none">${renderRecurrenceEditor(r)}</div>
         </div>`;
+}
+
+/** Shows or hides the Skip form under Repeats (#181). */
+function toggleSkipForm() {
+    const el = document.getElementById('recurSkip');
+    if (!el) return;
+    const open = el.style.display === 'none';
+    el.style.display = open ? '' : 'none';
+    if (open) document.getElementById('recurSkipReason').focus();
+}
+
+/**
+ * Skips the open occurrence with the reason given (#181 Part D): it closes as skipped, not done, and a
+ * repeat set to "after completion" makes its next one, as completing would.
+ */
+async function skipCurrentOccurrence() {
+    const reason = (document.getElementById('recurSkipReason').value || '').trim();
+    if (!reason) {
+        showToast(window.t('tasks.evidence.skip_reason_required'), 'error');
+        return;
+    }
+    try {
+        const d = await fetch(API_BASE + 'skip.php', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: selectedTaskId, reason })
+        }).then(r => r.json());
+        if (!d.success) { showToast(d.error || window.t('tasks.evidence.skip_failed'), 'error'); return; }
+        showToast(window.t('tasks.evidence.skipped_toast'), 'success');
+        openDetailPanel(selectedTaskId);
+        loadTasks();
+    } catch (e) {
+        showToast(window.t('tasks.evidence.skip_failed'), 'error');
+    }
+}
+
+/**
+ * Loads and draws the task's History (#181): its events, the older audit rows and its checklist step
+ * changes, newest first. Each line says who (or "the repeat"), what, and when.
+ */
+async function loadTaskHistory(taskId) {
+    const host = document.getElementById('taskHistoryList');
+    if (!host) return;
+    const T = (k, p) => window.t('tasks.history.' + k, p);
+    let d;
+    try { d = await fetch(API_BASE + 'history.php?task_id=' + taskId).then(r => r.json()); }
+    catch (e) { d = null; }
+    if (selectedTaskId !== taskId) return;
+    if (!d || !d.success) { host.innerHTML = `<div class="history-empty">${esc(T('failed'))}</div>`; return; }
+    if (!d.history.length) { host.innerHTML = `<div class="history-empty">${esc(T('none'))}</div>`; return; }
+    const who = h => h.who || T(h.actor_kind === 'system' ? 'by_system' : (h.actor_kind === 'workflow' ? 'by_workflow' : 'by_nobody'));
+    const line = h => {
+        const det = h.detail || {};
+        if (h.kind === 'step') {
+            const after = det.after || {};
+            let what;
+            if (h.type === 'result') what = T('step_result', { step: det.step, result: T('result_' + (after.result || 'none')) });
+            else if (h.type === 'unticked') what = T('step_unticked', { step: det.step });
+            else if (h.type === 'value') what = T('step_value', { step: det.step, value: after.response_value || '' });
+            else what = T('step_ticked', { step: det.step });
+            if (after.exception_note) what += ' - ' + after.exception_note;
+            if (det.after_completion) what += ' ' + T('after_completion');
+            return what;
+        }
+        if (h.kind === 'audit') return T('audit', { field: h.type, from: h.from || '-', to: h.to || '-' });
+        switch (h.type) {
+            case 'created':        return T(det.via && det.via.indexOf('repeat') === 0 ? 'created_' + det.via : 'created');
+            case 'status_changed': return T('status_changed', { from: h.from || '-', to: h.to || '-' });
+            case 'completed':      return T('completed', { due: h.to ? formatDate(h.to) : '-' });
+            case 'reopened':       return T(det.was_skipped ? 'reopened_skip' : 'reopened');
+            case 'skipped':        return T('skipped', { reason: h.to || '' });
+            case 'due_date_changed':   return T('due_changed', { from: h.from ? formatDate(h.from) : '-', to: h.to ? formatDate(h.to) : '-' })
+                                            + (det.task_closed ? ' ' + T('after_completion') : '');
+            case 'start_date_changed': return T('start_changed', { from: h.from ? formatDate(h.from) : '-', to: h.to ? formatDate(h.to) : '-' });
+            case 'assigned':       return T('assigned', { from: h.from || '-', to: h.to || '-' });
+            case 'team_assigned':  return T('team_assigned', { from: h.from || '-', to: h.to || '-' });
+            case 'successor':      return det.expected
+                                        ? (det.existing_task_id ? T('successor_exists', { id: det.existing_task_id }) : T('successor', { due: h.to ? formatDate(h.to) : '-' }))
+                                        : T('successor_none_' + (det.reason || 'stopped'));
+            case 'checklist_attached': return T('checklist_attached', { name: h.to || '' }) + (det.after_completion ? ' ' + T('after_completion') : '');
+            case 'checklist_removed':  return T('checklist_removed', { name: h.from || '' }) + (det.after_completion ? ' ' + T('after_completion') : '');
+            case 'evidence_exported':  return T('evidence_exported', { what: h.to || '' });
+        }
+        return h.type;
+    };
+    host.innerHTML = d.history.map(h => `
+        <div class="history-item history-${esc(h.kind)}">
+            <div class="history-what">${esc(line(h))}</div>
+            <div class="history-meta">${esc(who(h))} · ${esc(formatDateTime(h.at))}</div>
+        </div>`).join('');
 }
 
 /** One sentence describing a rule, built from the same parts the editor sets. */
@@ -3639,6 +3812,11 @@ async function deleteCurrentTask() {
         if (data.success) {
             closeDetailPanel();
             showToast(window.t('tasks.toast.task_deleted'), 'success');
+        } else {
+            // A refusal used to be silent - the window simply stayed open. It can
+            // now be a deliberate one (#181: occurrences of a repeat kept as
+            // evidence), which has to say so and what to do instead.
+            showToast(data.error || window.t('tasks.toast.delete_failed'), 'error');
         }
     } catch (e) { console.error(e); }
 }
@@ -3835,11 +4013,21 @@ function esc(text) {
  */
 function formatDateTime(dt) {
     if (!dt) return '';
+    // (formatDate below is the bare-date twin.)
     // Stored UTC → render in the analyst's chosen display zone (parseUTCDate /
     // tzOpts from assets/js/tz.js). Used for comment/created/updated/completed
     // timestamps — all true datetimes.
     const d = parseUTCDate(dt);
     if (!d || isNaN(d)) return dt;
     return fmtDateTime(d);
+}
+
+/**
+ * Formats a bare calendar date (a due or scheduled date, YYYY-MM-DD) in the analyst's date format -
+ * NOT converted between zones, because "the 1st" is the 1st wherever the reader is.
+ */
+function formatDate(ymd) {
+    if (!ymd) return '';
+    return window.fmtNaiveDate ? fmtNaiveDate(String(ymd).slice(0, 10)) : String(ymd).slice(0, 10);
 }
 

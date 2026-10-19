@@ -370,6 +370,6 @@ $tt = fn(string $k) => htmlspecialchars(t('domains.settings.' . $k));
         document.addEventListener('DOMContentLoaded', () => { loadSettings().catch(e => showToast(e.message, 'error')); loadStatuses().catch(() => {}); });
     })();
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

@@ -51,6 +51,8 @@ return [
         'step_title_ph'     => 'What the analyst does',
         'mandatory'         => 'Mandatory',
         'ask_for_value'     => 'Ask for a value',
+        'ask_for_result'    => 'Ask for a result',
+        'ask_for_result_hint' => 'On a task, this step records Pass, Fail or Not applicable instead of a tick, and Fail asks what went wrong. Tickets keep a tick.',
         'value_prompt_ph'   => 'What to ask for, e.g. Asset tag',
         'remove_step'       => 'Remove step',
         'remove_step_named' => 'Remove "{name}" from this checklist?',

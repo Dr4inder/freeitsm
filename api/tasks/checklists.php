@@ -71,7 +71,7 @@ try {
     }
 
     // Read only access to Tasks (#181 Part G) reads checklists and changes none.
-    requireModuleWriteJson('tasks', $conn);
+    requireModuleWriteJson('tasks');
 
     if (!$enabled) {
         throw new ServiceError('validation', 'disabled', 'Checklists on tasks are switched off (Tasks → Settings → Checklists).');

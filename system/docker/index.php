@@ -373,6 +373,6 @@ $overrideFile = "services:\n  app:\n    ports:\n      - \"8443:443\"\n    volume
         });
     })();
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

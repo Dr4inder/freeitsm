@@ -181,5 +181,5 @@ $path_prefix = '../../';
     pmsLoad();
     </script>
 </body>
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=79"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=80"></script>
 </html>

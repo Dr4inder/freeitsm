@@ -237,9 +237,14 @@ try {
 } finally {
     // ---- Cleanup -----------------------------------------------------------
     try {
+        // #181's history outlives its tasks on purpose (no foreign keys), so a test
+        // has to remove what it wrote there itself, BEFORE the tasks go.
+        $conn->exec("DELETE e FROM task_events e JOIN tasks t ON t.id = e.task_id WHERE t.title LIKE 'ZZREC%'");
         $conn->prepare("DELETE FROM tasks WHERE title LIKE 'ZZREC%'")->execute();
         if ($rules) {
             $ph = implode(',', array_fill(0, count($rules), '?'));
+            $conn->prepare("DELETE FROM task_events WHERE recurrence_id IN ($ph)")->execute($rules);
+            $conn->prepare("DELETE FROM task_recurrence_versions WHERE recurrence_id IN ($ph)")->execute($rules);
             $conn->prepare("DELETE FROM task_recurrences WHERE id IN ($ph)")->execute($rules);
         }
         $left = (int)$conn->query("SELECT COUNT(*) FROM tasks WHERE title LIKE 'ZZREC%'")->fetchColumn();

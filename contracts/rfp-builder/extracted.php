@@ -527,6 +527,6 @@ $translationNamespaces = ['common', 'contracts'];
             if (e.target.id === 'editModal') closeEditModal();
         });
     </script>
-    <script src="../../assets/js/mobile.js?v=79"></script>
+    <script src="../../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

@@ -190,6 +190,6 @@ $translationNamespaces = ['common', 'change-management'];
 
     <script>window.API_BASE = '../api/change-management/';</script>
     <script src="../assets/js/change-calendar.js?v=4"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=79"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=80"></script>
 </body>
 </html>

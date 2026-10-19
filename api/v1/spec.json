@@ -3865,7 +3865,7 @@
                     "p": "\/tasks",
                     "perm": "tasks.read",
                     "s": "List \/ board feed",
-                    "d": "Lists top-level tasks in board order by default (pass parent_task_id to list a task's subtasks). Each task carries its tags, subtask done\/total counts and board position. Tasks are install-wide.",
+                    "d": "Lists top-level tasks in board order by default (pass parent_task_id to list a task's subtasks). Each task carries its tags, subtask done\/total counts and board position. Only tasks in the key's companies are listed.",
                     "params": [
                         {
                             "name": "state",

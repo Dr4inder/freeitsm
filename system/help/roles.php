@@ -53,8 +53,12 @@ require __DIR__ . '/_top.php';
         <tr><td><strong>Choose approvers</strong> (Change Management)</td><td>Set a change's CAB, its required members and its named approver.</td><td>Only once Change Management &rarr; Settings &rarr; <strong>Approvals</strong> limits it to this permission. Until then everyone with the module can.</td></tr>
         <tr><td><strong>Design forms</strong> (Forms)</td><td>Create, edit, publish and delete forms, including who approves them and what happens next.</td><td>Only once Forms &rarr; Settings &rarr; <strong>Access</strong> limits it to this permission. Until then everyone with Forms can.</td></tr>
         <tr><td><strong>Approve standard-change templates</strong> (Change Management)</td><td>Approve or reject a template version, which pre-authorises the changes raised from it. Nobody can approve a version they wrote.</td><td>Always.</td></tr>
+        <tr><td><strong>Run the evidence report</strong> (Tasks)</td><td>Open a repeating task's evidence report and print or export it.</td><td>Only once Tasks &rarr; Settings &rarr; <strong>Evidence</strong> limits it to this permission. Until then everyone who can see the repeating task can.</td></tr>
+        <tr><td><strong>View background job health</strong> (Reporting)</td><td>Open Reporting &rarr; System logs &rarr; Background jobs, and see the Watchtower card while a job needs attention. Also needs access to every company: job health is install-wide.</td><td>Always.</td></tr>
+        <tr><td><strong>Change what background jobs are expected to do</strong> (Reporting)</td><td>Change how often a background job is expected to run, or mark one &ldquo;not used here&rdquo; - which silences its alarm, so it is recorded with who did it.</td><td>Always.</td></tr>
     </table></div>
-    <div class="help-note ok"><strong>Nobody loses anything by upgrading.</strong> The first two only take effect when you switch them on in the module's settings, so build the role and give it out first. Forms' Access tab lists who would keep designing before you switch.</div>
+    <div class="help-note ok"><strong>Nobody loses anything by upgrading.</strong> The ones marked &ldquo;only once&rdquo; take effect when you switch them on in the module's settings, so build the role and give it out first. Forms' Access tab lists who would keep designing before you switch.</div>
+    <div class="help-note"><strong>An Auditor role.</strong> Read only access to Tasks (Module access) plus <strong>Run the evidence report</strong> gives someone everything an audit of repeating tasks needs - every record, its history, the evidence report and its exports - and nothing they can change.</div>
 </div>
 
 <!-- 4. Creating a role -->

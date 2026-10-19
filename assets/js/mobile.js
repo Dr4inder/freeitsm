@@ -2144,6 +2144,22 @@
           columns: [0, 4],
           watch: '#logsTableContainer' },
 
+        /* Background jobs (#182) — two more tables in the same container.
+           Health: Job · Health · Last scheduled run · Last run · Expected · (Edit).
+           The job (with what stops without it) leads and the health pill and
+           its problems read on their own; the two times and the interval are
+           bare values that need their headings. */
+        { table: 'body[data-mobile-page="rep-logs"] .logs-table[data-log-type="jobs"]',
+          columns: [2, 3, 4],
+          watch: '#logsTableContainer' },
+
+        /* Run history: Started · Job · Started by · Outcome · Took · Summary.
+           The job and the outcome pill say what they are; a bare time, a bare
+           "Schedule (command line)" and a bare "12 ms" do not. */
+        { table: 'body[data-mobile-page="rep-logs"] .logs-table[data-log-type="job-runs"]',
+          columns: [0, 2, 4],
+          watch: '#logsTableContainer' },
+
         /* ---- REPORTING: the Intune drill-down (LAYER 35j, #1482) ----
            Device · User · OS · Compliance · Encrypted · Last sync. The
            device name is the heading and compliance is a pill; the other

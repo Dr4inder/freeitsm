@@ -88,18 +88,21 @@ $translationNamespaces = ['common', 'tasks'];
             <a href="#repeats" class="help-nav-link" data-section="repeats">
                 <span class="help-nav-num">8</span> <?php echo htmlspecialchars(t('tasks.help.nav_repeats')); ?>
             </a>
+            <a href="#evidence" class="help-nav-link" data-section="evidence">
+                <span class="help-nav-num">9</span> <?php echo htmlspecialchars(t('tasks.help.nav_evidence')); ?>
+            </a>
             <a href="#tags" class="help-nav-link" data-section="tags">
-                <span class="help-nav-num">9</span> <?php echo htmlspecialchars(t('tasks.help.nav_tags')); ?>
+                <span class="help-nav-num">10</span> <?php echo htmlspecialchars(t('tasks.help.nav_tags')); ?>
             </a>
             <a href="#settings" class="help-nav-link" data-section="settings">
-                <span class="help-nav-num">10</span> <?php echo htmlspecialchars(t('tasks.help.nav_settings')); ?>
+                <span class="help-nav-num">11</span> <?php echo htmlspecialchars(t('tasks.help.nav_settings')); ?>
             </a>
             <a href="#tips" class="help-nav-link" data-section="tips">
-                <span class="help-nav-num">11</span> <?php echo htmlspecialchars(t('tasks.help.nav_tips')); ?>
+                <span class="help-nav-num">12</span> <?php echo htmlspecialchars(t('tasks.help.nav_tips')); ?>
             </a>
             <?php if ($showTenancyHelp): ?>
             <a href="#companies" class="help-nav-link" data-section="companies">
-                <span class="help-nav-num">12</span> <?php echo htmlspecialchars(t('tasks.help.nav_companies')); ?>
+                <span class="help-nav-num">13</span> <?php echo htmlspecialchars(t('tasks.help.nav_companies')); ?>
             </a>
             <?php endif; ?>
         </div>
@@ -400,10 +403,51 @@ $translationNamespaces = ['common', 'tasks'];
                     <h4><?php echo htmlspecialchars(t('tasks.help.repeats_stop_heading')); ?></h4>
                     <p><?php echo t('tasks.help.repeats_stop_body'); ?></p>
                 </div>
-                <!-- 9. Tags -->
-                <div class="help-section" id="tags">
+
+                <!-- 9. History and evidence (#181) -->
+                <div class="help-section" id="evidence">
                     <div class="help-section-header">
                         <span class="help-section-num">9</span>
+                        <div>
+                            <h3><?php echo htmlspecialchars(t('tasks.help.evidence_heading')); ?></h3>
+                            <p><?php echo t('tasks.help.evidence_intro'); ?></p>
+                        </div>
+                    </div>
+
+                    <h4><?php echo htmlspecialchars(t('tasks.help.evidence_history_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.evidence_history_body'); ?></p>
+                    <p class="help-note"><?php echo t('tasks.help.evidence_history_note'); ?></p>
+
+                    <h4><?php echo htmlspecialchars(t('tasks.help.evidence_report_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.evidence_report_body'); ?></p>
+                    <div class="help-list">
+                        <div><?php echo t('tasks.help.evidence_outcome_on_time'); ?></div>
+                        <div><?php echo t('tasks.help.evidence_outcome_rescheduled'); ?></div>
+                        <div><?php echo t('tasks.help.evidence_outcome_late'); ?></div>
+                        <div><?php echo t('tasks.help.evidence_outcome_open'); ?></div>
+                        <div><?php echo t('tasks.help.evidence_outcome_skipped'); ?></div>
+                        <div><?php echo t('tasks.help.evidence_outcome_missing'); ?></div>
+                        <div><?php echo t('tasks.help.evidence_outcome_removed'); ?></div>
+                    </div>
+                    <p style="margin-top:14px;"><?php echo t('tasks.help.evidence_flags'); ?></p>
+                    <p><?php echo t('tasks.help.evidence_why'); ?></p>
+
+                    <h4><?php echo htmlspecialchars(t('tasks.help.evidence_skip_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.evidence_skip_body'); ?></p>
+
+                    <h4><?php echo htmlspecialchars(t('tasks.help.evidence_results_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.evidence_results_body'); ?></p>
+
+                    <h4><?php echo htmlspecialchars(t('tasks.help.evidence_export_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.evidence_export_body'); ?></p>
+
+                    <h4><?php echo htmlspecialchars(t('tasks.help.evidence_auditor_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.evidence_auditor_body'); ?></p>
+                </div>
+                <!-- 10. Tags -->
+                <div class="help-section" id="tags">
+                    <div class="help-section-header">
+                        <span class="help-section-num">10</span>
                         <div>
                             <h3><?php echo htmlspecialchars(t('tasks.help.tags_heading')); ?></h3>
                             <p><?php echo t('tasks.help.tags_intro'); ?></p>
@@ -414,10 +458,10 @@ $translationNamespaces = ['common', 'tasks'];
                     <p class="help-note"><?php echo t('tasks.help.tags_tip'); ?></p>
                 </div>
 
-                <!-- 10. Settings -->
+                <!-- 11. Settings -->
                 <div class="help-section" id="settings">
                     <div class="help-section-header">
-                        <span class="help-section-num">10</span>
+                        <span class="help-section-num">11</span>
                         <div>
                             <h3><?php echo htmlspecialchars(t('tasks.help.settings_heading')); ?></h3>
                             <p><?php echo t('tasks.help.settings_intro'); ?></p>
@@ -452,6 +496,16 @@ $translationNamespaces = ['common', 'tasks'];
                     </div>
                     <p style="margin-top:14px;"><?php echo t('tasks.help.settings_checklists_note'); ?></p>
 
+                    <!-- Repeating task evidence (#181) -->
+                    <h4><?php echo htmlspecialchars(t('tasks.help.settings_evidence_heading')); ?></h4>
+                    <p><?php echo t('tasks.help.settings_evidence_body'); ?></p>
+                    <div class="help-list">
+                        <div><?php echo t('tasks.help.settings_evidence_checklist'); ?></div>
+                        <div><?php echo t('tasks.help.settings_evidence_delete'); ?></div>
+                        <div><?php echo t('tasks.help.settings_evidence_skip'); ?></div>
+                        <div><?php echo t('tasks.help.settings_evidence_access'); ?></div>
+                    </div>
+
                     <h4><?php echo htmlspecialchars(t('tasks.help.settings_tags_heading')); ?></h4>
                     <p><?php echo t('tasks.help.settings_tags_body'); ?></p>
                     <div class="help-list">
@@ -467,7 +521,7 @@ $translationNamespaces = ['common', 'tasks'];
                 <!-- 11. Quick tips -->
                 <div class="help-section" id="tips">
                     <div class="help-section-header">
-                        <span class="help-section-num">11</span>
+                        <span class="help-section-num">12</span>
                         <div>
                             <h3><?php echo htmlspecialchars(t('tasks.help.tips_heading')); ?></h3>
                             <p><?php echo t('tasks.help.tips_intro'); ?></p>
@@ -510,10 +564,10 @@ $translationNamespaces = ['common', 'tasks'];
                 </div>
 
                 <?php if ($showTenancyHelp): ?>
-                <!-- 12. Companies (multi-company installs only) -->
+                <!-- 13. Companies (multi-company installs only) -->
                 <div class="help-section" id="companies">
                     <div class="help-section-header">
-                        <span class="help-section-num">12</span>
+                        <span class="help-section-num">13</span>
                         <div>
                             <h3><?php echo htmlspecialchars(t('tasks.help.companies_heading')); ?></h3>
                             <p><?php echo t('tasks.help.companies_intro'); ?></p>
@@ -567,6 +621,6 @@ $translationNamespaces = ['common', 'tasks'];
             });
         });
     </script>
-    <script src="../assets/js/mobile.js?v=79"></script>
+    <script src="../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

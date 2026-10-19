@@ -260,6 +260,6 @@ $translationNamespaces = ['common', 'problem-management'];
     <script>window.PM_SHOW_PROJECTS = <?php echo analystCanAccessModule(connectToDatabase(), (int)$_SESSION['analyst_id'], 'projects') ? 'true' : 'false'; ?>; window.PM_BASE = <?php echo json_encode(BASE_URL); ?>;</script>
     <script src="<?php echo BASE_URL; ?>assets/js/project-links.js?v=1"></script>
     <script src="<?php echo BASE_URL; ?>assets/js/problem-management.js?v=23"></script>
-    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=79"></script>
+    <script src="<?php echo BASE_URL; ?>assets/js/mobile.js?v=80"></script>
 </body>
 </html>

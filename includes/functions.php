@@ -93,7 +93,7 @@ function getModuleRegistry(): array {
  * backstop - otherwise Read only would be a promise with a hole in it.
  * tests/module-access-coverage.php holds the line.
  */
-const MODULES_WITH_READ_ONLY = ['changes', 'forms'];
+const MODULES_WITH_READ_ONLY = ['changes', 'forms', 'tasks'];   // tasks: #181 Part G (the Auditor role)
 
 /**
  * What may this analyst do in this module: 'full', 'read', or null (no access)? The

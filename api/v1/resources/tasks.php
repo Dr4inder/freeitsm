@@ -18,11 +18,16 @@
  *   - comments are create-only (no edit/delete exists in the product);
  *     DELETE is a hard delete that cascades subtasks/comments/tags.
  *
- * Tasks have no audit trail in the product — none is invented here.
- * Task tables carry no tenant_id (install-wide), BUT a task can link to a
- * ticket, and tickets ARE company-scoped: the API validates ticket links
- * against the key's company scope and only reveals linked-ticket details the
- * key could read directly — tighter than the UI, which doesn't check.
+ * Tasks belong to a company (tenant_id, GH #83) and every read here is scoped to
+ * the key's companies - see apiTasksList. A task can also link to a ticket, and
+ * the API validates ticket links against the key's company scope and only
+ * reveals linked-ticket details the key could read directly.
+ *
+ * Tasks keep a history (#181: task_events, includes/services/task_history.php),
+ * written by TasksService for every write made here; it is shown in the task
+ * window's History tab and the evidence report, and is not served by this API.
+ * A key whose analyst has Read only access to Tasks is refused every write, by
+ * the service (#181 Part G).
  */
 
 // Task WRITES (create/update/move/delete/comment) are delegated to TasksService

@@ -273,6 +273,14 @@ $translationNamespaces = ['common', 'reporting'];
                     </div>
 
                     <p class="help-note"><?php echo htmlspecialchars(t('reporting.help.s3_tip')); ?></p>
+
+                    <!-- Background jobs (#182) -->
+                    <h4 id="background-jobs"><?php echo htmlspecialchars(t('reporting.help.s3_jobs_heading')); ?></h4>
+                    <p><?php echo htmlspecialchars(t('reporting.help.s3_jobs_intro')); ?></p>
+                    <p><?php echo htmlspecialchars(t('reporting.help.s3_jobs_states')); ?></p>
+                    <p><?php echo htmlspecialchars(t('reporting.help.s3_jobs_rules')); ?></p>
+                    <p><?php echo htmlspecialchars(t('reporting.help.s3_jobs_told')); ?></p>
+                    <p class="help-note"><?php echo htmlspecialchars(t('reporting.help.s3_jobs_edit')); ?></p>
                 </div>
 
                 <!-- Section 5: Understanding the Data (highlighted) -->
@@ -422,6 +430,6 @@ $translationNamespaces = ['common', 'reporting'];
             });
         });
     </script>
-    <script src="../assets/js/mobile.js?v=79"></script>
+    <script src="../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

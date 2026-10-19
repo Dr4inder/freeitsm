@@ -43,7 +43,9 @@ try {
     $conn = connectToDatabase();
 
     // 1. The record you are attaching TO.
-    if (!documentCanViewParent($conn, $analystId, $allowed, $parentType, $parentId)) {
+    // documentCanWriteParent: seeing the record is not enough - Read only access to its
+    // module (Change Management, Forms, Tasks) attaches and removes nothing (#181).
+    if (!documentCanWriteParent($conn, $analystId, $allowed, $parentType, $parentId)) {
         http_response_code(403);
         echo json_encode(['success' => false, 'error' => 'You do not have access to that record.']);
         exit;
