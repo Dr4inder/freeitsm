@@ -126,6 +126,22 @@ final class Cap
     const TASKS_TIME       = 'tasks.time';
     const TASKS_INVOLVED   = 'tasks.involved';    // who else is on a task (GH #89)
     const TASKS_CHECKLISTS = 'tasks.checklists';  // checklists on tasks on/off (discussion #138)
+    // Repeating task evidence (#181). EVIDENCE is the settings tab - what deleting an
+    // occurrence and changing a finished checklist do, and who may run the report.
+    // EVIDENCE_REPORT is everyday work: running the evidence report and its exports.
+    // Unrestricted until that tab says otherwise, so an upgrade changes nothing - and
+    // with Read only access to Tasks it makes an Auditor role.
+    const TASKS_EVIDENCE        = 'tasks.evidence';
+    const TASKS_EVIDENCE_REPORT = 'tasks.evidence_report';
+
+    // ---- Reporting: background job health (#182) ----------------------------
+    // Not a settings tab - Reporting has no settings - so both are everyday-work
+    // permissions that always apply. VIEW opens Reporting -> System logs ->
+    // Background jobs; its messages name mailboxes, directories and servers, so it
+    // is not everybody's with Reporting. SETTINGS changes what a job is expected to
+    // do - an interval, "not used here" - which can silence an alarm: sensitive.
+    const REPORTING_JOB_HEALTH   = 'reporting.job_health';
+    const REPORTING_JOB_SETTINGS = 'reporting.job_settings';
 
     // ---- Knowledge ---------------------------------------------------------
     const KNOWLEDGE_MANAGE      = 'knowledge.manage';       // umbrella

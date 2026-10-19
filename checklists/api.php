@@ -92,6 +92,10 @@ if ($action === 'save') {
     $del->execute([$id]);
 
     $ins = $conn->prepare("INSERT INTO checklist_template_items (template_id, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order, is_demo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    // #181: a step can ask for a RESULT on tasks (Pass / Fail / Not applicable).
+    // Its own statement, so the save still works before Database Verification.
+    $resultUpd = null;
+    try { $conn->query("SELECT result_mode FROM checklist_template_items LIMIT 0"); $resultUpd = $conn->prepare("UPDATE checklist_template_items SET result_mode = ? WHERE id = ?"); } catch (Throwable $e) { /* not yet */ }
     foreach ($items as $idx => $it) {
         $itTitle = is_string($it) ? trim($it) : trim($it['title'] ?? '');
         if ($itTitle === '') continue;
@@ -100,7 +104,15 @@ if ($action === 'save') {
         $reqInput = !empty($it['requires_input']) ? 1 : 0;
         $placeholder = is_array($it) ? trim($it['input_placeholder'] ?? '') : '';
         $ins->execute([$id, $itTitle, $role, $isMand, $reqInput, $placeholder, $idx + 1, $isDemo]);
+        if ($resultUpd && is_array($it) && ($it['result_mode'] ?? '') === 'pass_fail') {
+            $resultUpd->execute(['pass_fail', (int)$conn->lastInsertId()]);
+        }
     }
+
+    // #181: keep this version. Saving rewrites the steps above; the version keeps
+    // what the procedure said, and tasks record which version they were given.
+    require_once '../includes/services/checklists.php';
+    ChecklistsService::recordTemplateVersion($conn, $id, $analystId);
 
     echo json_encode(['success' => true, 'id' => $id]);
     exit;

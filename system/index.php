@@ -29,6 +29,16 @@ $storageReport = ['applicable' => false, 'at_risk' => 0];
 try { $storageReport = storagePersistenceReport(); } catch (Throwable $e) { /* never break the page over a diagnostic */ }
 $storageAtRisk = !empty($storageReport['applicable']) && $storageReport['at_risk'] > 0;
 
+// Background jobs (#182). A stopped job is silent - that is the whole problem the
+// issue describes - so the page administrators already open says so. A warning,
+// not an error: it can be fixed or marked "not used here", and the notice goes.
+$jobsNotice = null;
+try {
+    require_once '../includes/job_health.php';
+    $jobsSummary = jobHealthSummary(connectToDatabase());
+    if (!$jobsSummary['healthy']) $jobsNotice = $jobsSummary['unhealthy'];
+} catch (Throwable $e) { /* never break the page over a diagnostic */ }
+
 // Some areas are gated on a runtime condition the registry can't evaluate.
 // 'multitenant' (e.g. the email routing test) stays invisible at N=1.
 $isMultiTenant = false;
@@ -352,6 +362,24 @@ $translationNamespaces = ['common', 'system'];
             color: #f3c7c2;
         }
         [data-theme-mode="dark"] .storage-alert__list code { background: rgba(231, 76, 60, 0.18); }
+
+        /* #182 - background jobs that need attention. Amber: a warning, not an error. */
+        .jobs-alert {
+            text-align: left;
+            margin: 0 0 28px;
+            padding: 16px 18px;
+            background: #fff8e1;
+            border: 1px solid #f3d99b;
+            border-left: 4px solid #d97706;
+            border-radius: 6px;
+            color: #6b4705;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+        .jobs-alert p { margin: 0 0 8px; }
+        .jobs-alert__link { display: inline-block; padding: 7px 14px; background: #d97706; color: #fff; border-radius: 5px; font-weight: 600; text-decoration: none; }
+        .jobs-alert__link:hover { background: #b45309; }
+        [data-theme-mode="dark"] .jobs-alert { background: #33270d; border-color: #6b4f16; border-left-color: #f59e0b; color: #f6dfae; }
         [data-theme-mode="dark"] .storage-alert__link { background: #c0392b; color: #fff; }
     </style>
     <!-- Mobile layer LAST, after this page's own <style> (Techniques §9). -->
@@ -392,6 +420,20 @@ $translationNamespaces = ['common', 'system'];
                 <?php endif; ?>
                 <p class="storage-alert__act"><?php echo htmlspecialchars(t('system.storage_alert.act_first')); ?></p>
                 <a class="storage-alert__link" href="debug-tools/d013/"><?php echo htmlspecialchars(t('system.storage_alert.run_d013')); ?></a>
+            </div>
+            <?php endif; ?>
+
+            <?php if ($jobsNotice): ?>
+            <div class="jobs-alert" role="status">
+                <div class="storage-alert__title"><?php echo htmlspecialchars(t('reporting.jobs.notice_title')); ?></div>
+                <p><?php echo htmlspecialchars(t('reporting.jobs.notice_body')); ?></p>
+                <ul class="storage-alert__list">
+                    <?php foreach ($jobsNotice as $j): ?>
+                    <li><strong><?php echo htmlspecialchars($j['name']); ?></strong> - <?php echo htmlspecialchars(t('reporting.jobs.status_' . $j['status'])); ?>
+                        (<?php echo htmlspecialchars($j['affects']); ?>)</li>
+                    <?php endforeach; ?>
+                </ul>
+                <a class="jobs-alert__link" href="../reporting/logs/?tab=jobs"><?php echo htmlspecialchars(t('reporting.jobs.card_link')); ?></a>
             </div>
             <?php endif; ?>
 

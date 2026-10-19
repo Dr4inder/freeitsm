@@ -44,6 +44,7 @@ require_once __DIR__ . '/../service_context.php';
 require_once __DIR__ . '/../tenancy.php';                       // isMultiTenant / getDefaultTenantId for ticket scope
 require_once __DIR__ . '/checklists.php';                        // the checklist completion gate (discussion #138)
 require_once dirname(__DIR__, 2) . '/workflow/includes/engine.php';
+require_once __DIR__ . '/task_history.php';   // the record a task keeps (#181) - and THE status hook
 
 class TasksService
 {
@@ -58,6 +59,7 @@ class TasksService
      */
     public static function saveTask(PDO $conn, ActorContext $ctx, array $in): array
     {
+        self::assertCanWrite($conn, $ctx);
         if (!empty($in['id'])) {
             return ['id' => self::updateTask($conn, $ctx, (int)$in['id'], $in), 'created' => false];
         }
@@ -169,6 +171,11 @@ class TasksService
             self::updateTask($conn, $ctx, $taskId, $work);
         }
 
+        // #181: the task's history starts here. created_via says a PERSON made it,
+        // as opposed to the repeat - TaskRecurrence::createOccurrence() writes its own.
+        try { $conn->prepare("UPDATE tasks SET created_via = 'manual' WHERE id = ?")->execute([$taskId]); } catch (Throwable $e) { /* before Database Verification */ }
+        TaskHistory::record($conn, $taskId, 'created', $ctx, null, $dueDate, ['via' => 'manual', 'status' => $status[1] ?? null]);
+
         try {
             WorkflowEngine::dispatch('task.created', [
                 'task' => [
@@ -203,6 +210,7 @@ class TasksService
     private static function updateTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
     {
         $current = self::loadTaskRow($conn, $ctx, $taskId);           // 404 if gone
+        $before  = TaskHistory::before($conn, $taskId);                // #181: for the status hook and the history
         if (!array_diff_key($in, ['id' => true])) {
             throw new ServiceError('validation', 'missing_field', 'No fields to update.');
         }
@@ -297,6 +305,7 @@ class TasksService
         }
 
         $dueChanged = false;                // GH #89 — see the dispatches below
+        $dateChanges = [];                  // #181: field => [from, to]
         foreach (['start_date', 'due_date'] as $field) {
             if (array_key_exists($field, $in)) {
                 $newDate   = self::parseDateOnly($in[$field], $field);
@@ -308,6 +317,11 @@ class TasksService
                 // somebody re-picked the day it already was.
                 if ($field === 'due_date' && $newDate !== ($current['due_date'] ?? null)) {
                     $dueChanged = true;
+                }
+                // #181: both dates go on the record. The report tells a deadline that
+                // was MOVED from one that was always that date.
+                if ($newDate !== ($current[$field] ?? null)) {
+                    $dateChanges[$field] = [$current[$field] ?? null, $newDate];
                 }
             }
         }
@@ -387,7 +401,28 @@ class TasksService
         if ($firesCompleted) {
             ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId);
             self::completedDispatch($conn, $taskId);
-            self::recurrenceOnClosed($conn, $taskId);
+        }
+        // #181: THE status hook - records the change and who completed it, and makes
+        // a repeat's next occurrence (it used to be called from here directly, and
+        // the board's drag never called it at all).
+        if ($statusChanged) {
+            TaskHistory::afterStatusChange($conn, $ctx, $taskId, $before, $status[0]);
+        }
+        foreach ($dateChanges as $field => [$from, $to]) {
+            TaskHistory::record($conn, $taskId, $field . '_changed', $ctx, $from, $to,
+                $field === 'due_date' ? ['task_closed' => !empty($before['status_is_closed'])] : []);
+        }
+        if (array_key_exists('assigned_analyst_id', $in)
+            && (int)($current['assigned_analyst_id'] ?? 0) !== (int)($in['assigned_analyst_id'] ?: 0)) {
+            TaskHistory::record($conn, $taskId, 'assigned', $ctx,
+                self::analystLabel($conn, $current['assigned_analyst_id'] ?? null),
+                self::analystLabel($conn, $in['assigned_analyst_id'] ?: null));
+        }
+        if (array_key_exists('assigned_team_id', $in)
+            && (int)($current['assigned_team_id'] ?? 0) !== (int)($in['assigned_team_id'] ?: 0)) {
+            TaskHistory::record($conn, $taskId, 'team_assigned', $ctx,
+                self::teamLabel($conn, $current['assigned_team_id'] ?? null),
+                self::teamLabel($conn, $in['assigned_team_id'] ?: null));
         }
         if ($assignedTo !== null) {
             self::assignedDispatch($conn, $taskId, $assignedTo);
@@ -422,7 +457,9 @@ class TasksService
      */
     public static function moveTask(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
     {
+        self::assertCanWrite($conn, $ctx);
         $current = self::loadTaskRow($conn, $ctx, $taskId);
+        $before  = TaskHistory::before($conn, $taskId);
 
         $status = self::resolveLookup($conn, $in, 'status', 'task_statuses', true);
         $targetStatusId = $status !== null ? $status[0] : (int)$current['status_id'];
@@ -476,21 +513,15 @@ class TasksService
         // must stand whatever the recurrence does.
         if ($completing) {
             ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId);
-            self::recurrenceOnClosed($conn, $taskId);
         }
+        // #181: THE status hook - see TaskHistory. It makes the next occurrence.
+        TaskHistory::afterStatusChange($conn, $ctx, $taskId, $before, $targetStatusId);
         // Completing by DRAGGING must take the calendar entry away too, exactly
         // as ticking the box does. Same reason recurrence fires from here.
         self::calendarOnTaskChanged($conn, $taskId);
         return $taskId;
     }
 
-    /**
-     * Make the next occurrence, if this task repeats on completion (#94).
-     *
-     * Wrapped rather than called directly so both completion paths go through
-     * one place, and so a missing recurrence service — an install part-way
-     * through an upgrade — cannot break completing a task.
-     */
     /**
      * Put this task into (or take it out of) its assignee's calendar (#75).
      *
@@ -515,23 +546,25 @@ class TasksService
     }
 
     /**
-     * Tells the recurrence engine a task was closed, so it can create the next occurrence;
-     * a failure is logged, never thrown.
+     * Hard-delete a task + its whole subtask tree (comments/tags too). Returns ['id','subtasks_deleted'].
+     *
+     * #181: an occurrence of a repeat is evidence. Tasks -> Settings -> Evidence decides
+     * whether it may be deleted at all (refused: skip it instead); where it may, a frozen
+     * copy of everything the evidence report reads is kept first, owned by the series.
      */
-    private static function recurrenceOnClosed(PDO $conn, int $taskId): void
-    {
-        try {
-            require_once __DIR__ . '/task_recurrence.php';
-            TaskRecurrence::onTaskClosed($conn, $taskId);
-        } catch (Throwable $e) {
-            error_log('Task recurrence hook failed for task ' . $taskId . ': ' . $e->getMessage());
-        }
-    }
-
-    /** Hard-delete a task + its whole subtask tree (comments/tags too). Returns ['id','subtasks_deleted']. */
     public static function deleteTask(PDO $conn, ActorContext $ctx, int $taskId): array
     {
+        self::assertCanWrite($conn, $ctx);
         $row = self::loadTaskRow($conn, $ctx, $taskId);
+
+        $isOccurrence = !empty($row['recurrence_id']) && empty($row['parent_task_id']);
+        if ($isOccurrence) {
+            if (self::evidenceSetting($conn, 'tasks_evidence_delete_occurrence', 'allow') === 'refuse') {
+                throw new ServiceError('validation', 'occurrence_delete_refused',
+                    function_exists('t') ? t('tasks.evidence.delete_refused') : 'This task is an occurrence of a repeat, and repeats are kept as evidence here. Skip it instead.');
+            }
+            TaskHistory::recordRemoval($conn, $ctx, $taskId);
+        }
 
         $ids = [$taskId];
         $frontier = [$taskId];
@@ -558,6 +591,11 @@ class TasksService
         $ph = implode(',', array_fill(0, count($ids), '?'));
         $conn->prepare("DELETE FROM task_comments WHERE task_id IN ($ph)")->execute($ids);
         $conn->prepare("DELETE FROM task_tag_map WHERE task_id IN ($ph)")->execute($ids);
+        // The links to attached documents went nowhere once the task was gone
+        // (#181 section 5). The documents themselves stay; the tidy-up job
+        // collects any that nothing links to any more.
+        try { $conn->prepare("DELETE FROM document_links WHERE parent_type = 'task' AND parent_id IN ($ph)")->execute($ids); }
+        catch (Throwable $e) { /* an install without the documents tables */ }
         // Their checklists too (discussion #138) - whether or not the feature is
         // switched on now, or the rows are stranded pointing at deleted tasks.
         ChecklistsService::deleteForTasks($conn, $ids);
@@ -580,6 +618,7 @@ class TasksService
      */
     public static function createComment(PDO $conn, ActorContext $ctx, int $taskId, string $text): int
     {
+        self::assertCanWrite($conn, $ctx);
         self::loadTaskRow($conn, $ctx, $taskId);
         $text = trim($text);
         if ($text === '') {
@@ -742,6 +781,7 @@ class TasksService
     /** Put somebody on a task. Idempotent — adding twice is not a second fact. */
     public static function addCollaborator(PDO $conn, ActorContext $ctx, int $taskId, int $analystId): array
     {
+        self::assertCanWrite($conn, $ctx);
         $task = self::loadTaskRow($conn, $ctx, $taskId);          // 404 + company scope
         self::assertCollaboratorsAllowed($task);
         self::resolveAnalyst($conn, $analystId);                  // exists and is active
@@ -773,6 +813,7 @@ class TasksService
     /** Take somebody off a task. */
     public static function removeCollaborator(PDO $conn, ActorContext $ctx, int $taskId, int $analystId): array
     {
+        self::assertCanWrite($conn, $ctx);
         self::loadTaskRow($conn, $ctx, $taskId);
         $stmt = $conn->prepare("DELETE FROM task_collaborators WHERE task_id = ? AND analyst_id = ?");
         $stmt->execute([$taskId, $analystId]);
@@ -801,6 +842,7 @@ class TasksService
      */
     public static function setCollaboratorDone(PDO $conn, ActorContext $ctx, int $taskId, int $analystId, bool $done): array
     {
+        self::assertCanWrite($conn, $ctx);
         $task = self::loadTaskRow($conn, $ctx, $taskId);
         $isSelf  = $ctx->actorId === $analystId;
         $isOwner = (int)($task['assigned_analyst_id'] ?? 0) === (int)$ctx->actorId;
@@ -992,6 +1034,7 @@ class TasksService
      */
     public static function moveTaskToCompany(PDO $conn, ActorContext $ctx, int $taskId, int $targetTenantId): array
     {
+        self::assertCanWrite($conn, $ctx);
         $row = self::loadTaskRow($conn, $ctx, $taskId);          // 404 if gone or out of scope
 
         if (!isMultiTenant($conn)) {
@@ -1528,6 +1571,7 @@ class TasksService
      */
     public static function createTimeEntry(PDO $conn, ActorContext $ctx, int $taskId, array $in): int
     {
+        self::assertCanWrite($conn, $ctx);
         $task = self::loadTaskRow($conn, $ctx, $taskId);          // 404 + company scope
         self::assertTimeAllowed($conn, $task);
         $minutes = isset($in['minutes']) ? (int)$in['minutes'] : 0;
@@ -1555,6 +1599,7 @@ class TasksService
      */
     public static function deleteTimeEntry(PDO $conn, ActorContext $ctx, int $entryId): void
     {
+        self::assertCanWrite($conn, $ctx);
         $stmt = $conn->prepare("SELECT task_id, analyst_id FROM task_time_entries WHERE id = ? AND is_active = 1");
         $stmt->execute([$entryId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -1787,5 +1832,123 @@ class TasksService
             throw new ServiceError('bad_request', 'invalid_parameter',
                 "'{$field}' is not a valid date/time. Use ISO 8601, e.g. 2026-07-02T09:00:00Z.");
         }
+    }
+
+    // ======================================================================
+    //  Repeating task evidence (#181) and Read only access
+    // ======================================================================
+
+    /**
+     * Refuse a write to an analyst with Read only access to Tasks (#181 Part G) - the same rule
+     * Change Management and Forms enforce. In the service, so the board, the task window, the
+     * REST API and anything added later all refuse alike; the endpoints check it as well.
+     */
+    public static function assertCanWrite(PDO $conn, ActorContext $ctx): void
+    {
+        if ($ctx->actorId > 0 && function_exists('analystModuleLevel') && analystModuleLevel($conn, $ctx->actorId, 'tasks') === 'read') {
+            throw new ServiceError('forbidden', 'read_only',
+                function_exists('t') ? t('common.module_read_only') : 'You have read-only access to this module.');
+        }
+    }
+
+    /**
+     * One of the Tasks -> Settings -> Evidence settings, or its default.
+     *
+     * @param string $key  tasks_evidence_completed_checklist, tasks_evidence_delete_occurrence,
+     *     tasks_evidence_skip_status_id or tasks_evidence_report_access
+     * @param string $default  the value when unset - always the forgiving choice
+     */
+    public static function evidenceSetting(PDO $conn, string $key, string $default): string
+    {
+        try {
+            $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = ?");
+            $s->execute([$key]);
+            $v = $s->fetchColumn();
+            return ($v === false || $v === null || $v === '') ? $default : (string)$v;
+        } catch (Throwable $e) {
+            return $default;
+        }
+    }
+
+    /**
+     * The closed status a skipped occurrence moves to: the one chosen in Tasks -> Settings -> Evidence
+     * if it is still an active closed status, otherwise the LAST closed status in the admin's order -
+     * "Cancelled" on a standard install, and never the first, which is "Done".
+     */
+    public static function skipStatusId(PDO $conn): ?int
+    {
+        $chosen = (int)self::evidenceSetting($conn, 'tasks_evidence_skip_status_id', '0');
+        if ($chosen > 0) {
+            $s = $conn->prepare("SELECT id FROM task_statuses WHERE id = ? AND is_closed = 1 AND is_active = 1");
+            $s->execute([$chosen]);
+            if ($s->fetchColumn()) return $chosen;
+        }
+        $id = $conn->query("SELECT id FROM task_statuses WHERE is_closed = 1 AND is_active = 1
+                             ORDER BY display_order DESC, id DESC LIMIT 1")->fetchColumn();
+        return $id ? (int)$id : null;
+    }
+
+    /**
+     * Skip an occurrence of a repeat, with a reason (#181 Part D): it closes, recorded as SKIPPED -
+     * not done, not merely cancelled - and in a repeat set to "after completion" the next one is
+     * made, just as completing it would. Returns the status it moved to.
+     *
+     * @param string $reason  why it was skipped (required)
+     */
+    public static function skipOccurrence(PDO $conn, ActorContext $ctx, int $taskId, string $reason): array
+    {
+        self::assertCanWrite($conn, $ctx);
+        $row = self::loadTaskRow($conn, $ctx, $taskId);
+        $reason = trim($reason);
+        if ($reason === '') {
+            throw new ServiceError('validation', 'missing_field',
+                function_exists('t') ? t('tasks.evidence.skip_reason_required') : 'Say why it is being skipped.');
+        }
+        if (empty($row['recurrence_id']) || !empty($row['parent_task_id'])) {
+            throw new ServiceError('validation', 'invalid_field', 'Only an occurrence of a repeating task can be skipped.');
+        }
+        if (!empty($row['status_is_closed'])) {
+            throw new ServiceError('validation', 'invalid_field', 'This occurrence is already closed.');
+        }
+        $statusId = self::skipStatusId($conn);
+        if ($statusId === null) {
+            throw new ServiceError('validation', 'invalid_field', 'No active closed status is configured for tasks.');
+        }
+        $before = TaskHistory::before($conn, $taskId);
+        // No checklist gate: skipping is the explicit decision NOT to do the work,
+        // so outstanding steps are the point, not an obstacle.
+        $conn->prepare("UPDATE tasks SET status_id = ?, completed_datetime = COALESCE(completed_datetime, UTC_TIMESTAMP()),
+                               updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
+             ->execute([$statusId, $taskId]);
+        TaskHistory::afterStatusChange($conn, $ctx, $taskId, $before, $statusId, mb_substr($reason, 0, 255));
+        self::taskEventDispatch($conn, 'task.status_changed', $taskId);
+        self::calendarOnTaskChanged($conn, $taskId);
+        return ['id' => $taskId, 'status_id' => $statusId];
+    }
+
+    /**
+     * An analyst's name for the history, or null for nobody.
+     *
+     * @param mixed $id  an analyst id, or null / '' for nobody
+     */
+    private static function analystLabel(PDO $conn, $id): ?string
+    {
+        if (!$id) return null;
+        $s = $conn->prepare("SELECT full_name FROM analysts WHERE id = ?");
+        $s->execute([(int)$id]);
+        return (string)($s->fetchColumn() ?: ('#' . (int)$id));
+    }
+
+    /**
+     * A team's name for the history, or null for none.
+     *
+     * @param mixed $id  a team id, or null / '' for none
+     */
+    private static function teamLabel(PDO $conn, $id): ?string
+    {
+        if (!$id) return null;
+        $s = $conn->prepare("SELECT name FROM teams WHERE id = ?");
+        $s->execute([(int)$id]);
+        return (string)($s->fetchColumn() ?: ('#' . (int)$id));
     }
 }

@@ -1987,12 +1987,30 @@ try {
             // more eager than the poll_interval_minutes set per connection.
             'integration_cron_token'          => bin2hex(random_bytes(16)),
             'integration_cron_min_interval_seconds' => '60',
+            // LMS training reminders (cron/lms_reminders.php). Never seeded before
+            // #182, so its web address could not be used on any install - the HTTP
+            // door was shut because the secret did not exist.
+            'lms_reminder_cron_token'         => bin2hex(random_bytes(16)),
+            // Background job health (#182): when run recording began on this install.
+            // #181's evidence report says "run history not available" for anything
+            // earlier, rather than "no recorded run" - an absence of records from
+            // before recording existed proves nothing about the scheduler.
+            'job_runs_recording_since'        => gmdate('Y-m-d H:i:s'),
+            'job_runs_retention_months'       => '13',
             // Watchtower: flag tickets stuck in a paused-SLA status longer than this
             // (wall-clock hours since last status change). Guardrail against analysts
             // parking tickets in On Hold to escape the SLA clock.
             'watchtower_paused_too_long_hours' => '24',
             // Tasks calendar: how multi-day tasks render — deadline | span | repeat
             'tasks_calendar_span_mode'        => 'deadline',
+            // Repeating task evidence (#181), Tasks -> Settings -> Evidence. Each
+            // defaults to the more forgiving choice so an upgrade changes nothing;
+            // the record is kept either way. skip_status_id empty = the last closed
+            // status in the admin's order, worked out when it is needed.
+            'tasks_evidence_completed_checklist' => 'allow',      // allow | refuse
+            'tasks_evidence_delete_occurrence'   => 'allow',      // allow | refuse
+            'tasks_evidence_skip_status_id'      => '',
+            'tasks_evidence_report_access'       => 'anyone',     // anyone | permission
             // CSAT (customer satisfaction surveys on ticket closure)
             // mode: off | auto | manual
             //   off    — feature disabled, no survey ever sent
@@ -4114,6 +4132,40 @@ try {
         if ($idxExists('lms_course_assignments', 'uq_lca_course_group')) {
             try { $conn->exec("ALTER TABLE lms_course_assignments DROP INDEX uq_lca_course_group"); } catch (Exception $e) {}
         }
+    }
+
+    // ---- Repeating task evidence (#181): baselines ----------------------------
+    //
+    // A series that existed before rule versions were recorded gets ONE version,
+    // marked 'baseline', holding the rule as found now. The evidence report works
+    // out missing occurrences only from the first recorded version onwards and
+    // says "not recorded" before it - so the baseline is honest about being a
+    // starting point, not a history. Likewise each checklist template gets version 1.
+    // Idempotent: only rows with no version yet are touched.
+    if ($tableExists('task_recurrence_versions') && $tableExists('task_recurrences')) {
+        try {
+            $series = $conn->query(
+                "SELECT r.* FROM task_recurrences r
+                  WHERE NOT EXISTS (SELECT 1 FROM task_recurrence_versions v WHERE v.recurrence_id = r.id)"
+            )->fetchAll(PDO::FETCH_ASSOC);
+            if ($series) {
+                require_once '../../includes/services/task_history.php';
+                foreach ($series as $r) TaskHistory::recordRuleVersion($conn, (int)$r['id'], 'baseline', null, $r);
+                $results[] = ['table' => 'task_recurrence_versions', 'status' => 'updated',
+                              'details' => ['Recorded the current rule of ' . count($series) . ' repeating series as their first version (#181)']];
+            }
+        } catch (Exception $e) { /* non-fatal: the report says "not recorded" without it */ }
+    }
+    if ($tableExists('checklist_template_versions') && $colExists('checklist_templates', 'version_no')) {
+        try {
+            $tpls = $conn->query("SELECT id FROM checklist_templates WHERE version_no = 0")->fetchAll(PDO::FETCH_COLUMN);
+            if ($tpls) {
+                require_once '../../includes/services/checklists.php';
+                foreach ($tpls as $tid) ChecklistsService::recordTemplateVersion($conn, (int)$tid, null);
+                $results[] = ['table' => 'checklist_template_versions', 'status' => 'updated',
+                              'details' => ['Recorded ' . count($tpls) . ' checklist template(s) as version 1 (#181)']];
+            }
+        } catch (Exception $e) { /* non-fatal */ }
     }
 
     // ---- Comprehensive named-index backfill --------------------------------

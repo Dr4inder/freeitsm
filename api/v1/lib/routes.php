@@ -192,6 +192,9 @@ return [
     ['GET',    '#^/forms/(\d+)/submissions/(\d+)$#',       ['form_submissions', 'read'],      'apiFormSubmissionsGet'],
     ['DELETE', '#^/forms/(\d+)/submissions/(\d+)$#',       ['form_submissions', 'delete'],    'apiFormSubmissionsDelete'],
 
+    // Background job health (#182) - for outside monitoring; ?strict=1 answers 503 while unhealthy.
+    ['GET',    '#^/jobs/health$#',                         ['job_health', 'read'],            'apiJobsHealth'],
+
     ['GET',    '#^/workflows$#',                           ['workflows', 'read'],             'apiWorkflowsList'],
     ['POST',   '#^/workflows$#',                           ['workflows', 'create'],           'apiWorkflowsCreate'],
     ['GET',    '#^/workflows/(\d+)$#',                     ['workflows', 'read'],             'apiWorkflowsGet'],

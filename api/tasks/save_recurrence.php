@@ -14,6 +14,7 @@ require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/tenancy.php';
 require_once '../../includes/services/task_recurrence.php';
+require_once '../../includes/services/task_history.php';   // rule versions (#181)
 
 header('Content-Type: application/json');
 
@@ -22,6 +23,7 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('tasks');
+requireModuleWriteJson('tasks');
 
 $in = json_decode(file_get_contents('php://input'), true);
 if (!is_array($in)) {
@@ -60,8 +62,13 @@ try {
     // ---- Switching it off -------------------------------------------------
     if (!empty($in['off'])) {
         if (!empty($task['recurrence_id'])) {
-            $conn->prepare("UPDATE task_recurrences SET is_active = 0, updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
-                 ->execute([(int)$task['recurrence_id']]);
+            $off = $conn->prepare("UPDATE task_recurrences SET is_active = 0, updated_datetime = UTC_TIMESTAMP() WHERE id = ? AND is_active = 1");
+            $off->execute([(int)$task['recurrence_id']]);
+            // #181: stopping is a version of the rule, with who stopped it. The
+            // evidence report shows the stopped period as stopped, not as missing.
+            if ($off->rowCount() > 0) {
+                TaskHistory::recordRuleVersion($conn, (int)$task['recurrence_id'], 'stopped', ActorContext::fromSession($conn));
+            }
         }
         echo json_encode(['success' => true, 'recurrence' => null]);
         exit;
@@ -88,6 +95,15 @@ try {
     // a duplicate of the task in front of you.
     $rule['next_due_date'] = $mode === 'schedule' ? $probe : null;
 
+    // Was this series switched off? Saving it again is how a repeat is resumed.
+    $wasActive = null;
+    if (!empty($task['recurrence_id'])) {
+        $a = $conn->prepare("SELECT is_active FROM task_recurrences WHERE id = ?");
+        $a->execute([(int)$task['recurrence_id']]);
+        $v = $a->fetchColumn();
+        $wasActive = $v === false ? null : (bool)$v;
+    }
+
     $conn->beginTransaction();
 
     if (!empty($task['recurrence_id'])) {
@@ -113,6 +129,18 @@ try {
     }
 
     $conn->commit();
+
+    // #181: every save is a version of the rule - who changed it and when - so the
+    // evidence report can work out which dates were expected under the rule that
+    // applied at the time. The task the series starts from is its first occurrence,
+    // scheduled for its own due date.
+    $kind = $wasActive === null ? 'created' : ($wasActive ? 'changed' : 'resumed');
+    TaskHistory::recordRuleVersion($conn, $recurrenceId, $kind, ActorContext::fromSession($conn));
+    if ($kind === 'created' && !empty($task['due_date'])) {
+        try {
+            $conn->prepare("UPDATE tasks SET scheduled_date = COALESCE(scheduled_date, ?) WHERE id = ?")->execute([$task['due_date'], $taskId]);
+        } catch (Throwable $e) { /* before Database Verification */ }
+    }
 
     echo json_encode([
         'success'    => true,

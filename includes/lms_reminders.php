@@ -456,8 +456,34 @@ function lmsRemindersRunOpportunistic(PDO $conn): void
             return;
         }
 
-        lmsRemindersRun($conn, false);
+        // #182: a PAGE run - recorded, never proof that the schedule is alive.
+        require_once __DIR__ . '/job_runs.php';
+        $runId = JobRun::start($conn, 'lms_reminders', 'page', isset($_SESSION['analyst_id']) ? (int)$_SESSION['analyst_id'] : null);
+        try {
+            $r = lmsRemindersRun($conn, false);
+        } catch (Throwable $e) {
+            JobRun::fail($conn, $runId, $e);
+            throw $e;
+        }
+        lmsRemindersJobFinish($conn, $runId, $r);
     } catch (Throwable $e) {
         error_log('lms reminders (opportunistic): ' . $e->getMessage());
     }
+}
+
+/**
+ * Records the end of a reminders run in the job history (#182): some emails failing makes it
+ * PARTIAL, all of them FAILED. Reaching the per-run cap is the design working, not a failure.
+ *
+ * @param ?int $runId  from JobRun::start()
+ * @param array $r  what lmsRemindersRun() returned
+ */
+function lmsRemindersJobFinish(PDO $conn, ?int $runId, array $r): void
+{
+    require_once __DIR__ . '/job_runs.php';
+    $failed = (int)($r['failed'] ?? 0);
+    $sent   = (int)($r['sent'] ?? 0);
+    JobRun::finish($conn, $runId, $failed === 0 ? 'ok' : ($sent > 0 ? 'partial' : 'failed'),
+        ['sent' => $sent, 'already_sent' => (int)($r['skipped'] ?? 0), 'no_email' => (int)($r['unreachable'] ?? 0), 'failed' => $failed],
+        "Sent {$sent}, failed {$failed}.");
 }

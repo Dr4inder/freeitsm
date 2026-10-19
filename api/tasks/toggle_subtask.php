@@ -8,6 +8,7 @@ require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/tenancy.php';
 require_once '../../includes/services/checklists.php';   // completion gate (discussion #138)
+require_once '../../includes/services/task_history.php'; // THE status hook (#181)
 
 header('Content-Type: application/json');
 
@@ -16,6 +17,7 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('tasks');
+requireModuleWriteJson('tasks');
 
 $input = json_decode(file_get_contents('php://input'), true);
 $id = isset($input['id']) ? (int)$input['id'] : 0;
@@ -107,6 +109,7 @@ try {
         }
     }
 
+    $before = TaskHistory::before($conn, $id);   // #181
     $stmt = $conn->prepare(
         "UPDATE tasks SET status_id = ?, completed_datetime = {$completedSql},
                           updated_datetime = UTC_TIMESTAMP()
@@ -114,9 +117,13 @@ try {
     );
     $stmt->execute([$newStatusId, $id]);
     $newStatus = $newStatusRow['name'];
+    $ctx = ActorContext::fromSession($conn);
     if ($completing) {
-        ChecklistsService::recordTaskCompletionOverride($conn, ActorContext::fromSession($conn), $id);
+        ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $id);
     }
+    // #181: THE status hook - records who completed it. A subtask never repeats
+    // on its own, so this makes no next occurrence for one.
+    TaskHistory::afterStatusChange($conn, $ctx, $id, $before, $newStatusId);
 
     // Update parent's updated_datetime
     if ($task['parent_task_id']) {

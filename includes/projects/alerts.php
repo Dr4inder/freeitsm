@@ -293,7 +293,19 @@ function projectAlertsOpportunistic(PDO $conn): void
         if ($last !== '' && strtotime($last . ' UTC') > time() - 900) return;
         $conn->prepare("INSERT INTO system_settings (setting_key, setting_value) VALUES ('project_alerts_last_run', ?)
                         ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)")->execute([gmdate('Y-m-d H:i:s')]);
-        projectAlertsRun($conn);
+        // #182: project alerts are one part of the scheduled-workflows job. A page
+        // run of that part is recorded as one - never as proof the schedule is alive.
+        require_once __DIR__ . '/../job_runs.php';
+        $runId = JobRun::start($conn, 'workflow_scheduled', 'page', isset($_SESSION['analyst_id']) ? (int)$_SESSION['analyst_id'] : null);
+        try {
+            $fired = projectAlertsRun($conn);
+            JobRun::source($conn, $runId, 'workflow_scheduled', 'part:projects', 'Project alerts', true);
+            JobRun::finish($conn, $runId, 'ok', ['projects' => array_sum($fired)], 'Project alerts only, from the portfolio page.');
+        } catch (Throwable $e) {
+            JobRun::source($conn, $runId, 'workflow_scheduled', 'part:projects', 'Project alerts', false, $e->getMessage());
+            JobRun::fail($conn, $runId, $e);
+            throw $e;
+        }
     } catch (Throwable $e) {
         error_log('projects alerts: ' . $e->getMessage());
     }

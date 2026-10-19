@@ -234,33 +234,40 @@ function workflowEmitWarrantyExpiries(PDO $conn): int
  * computes its SLA state, so emitting from there costs nothing and cannot drift
  * from what the SLA emails think is true.
  */
-function workflowScheduledRun(PDO $conn): array
+function workflowScheduledRun(PDO $conn, ?array &$parts = null): array
 {
+    // #182: each part reports whether it WORKED, not just a count. A part that
+    // threw used to be logged and counted as 0, so the cron printed "OK" while
+    // planned maintenance had stopped starting - the job's three parts are now
+    // its three sources, and one failing makes the run PARTIAL, named.
+    $parts = [];
+    $part = function (string $key, callable $fn) use (&$parts) {
+        try {
+            $n = $fn();
+            $parts[$key] = ['ok' => true, 'error' => null];
+            return $n;
+        } catch (Throwable $e) {
+            error_log('[workflow_scheduled] ' . $key . ': ' . $e->getMessage());
+            $parts[$key] = ['ok' => false, 'error' => $e->getMessage()];
+            return 0;
+        }
+    };
+    $expiries = $part('expiries', fn() => [workflowEmitContractExpiries($conn), workflowEmitWarrantyExpiries($conn)]);
     return [
-        'contract_expiring'        => workflowEmitContractExpiries($conn),
-        'asset_warranty_expiring'  => workflowEmitWarrantyExpiries($conn),
+        'contract_expiring'        => is_array($expiries) ? $expiries[0] : 0,
+        'asset_warranty_expiring'  => is_array($expiries) ? $expiries[1] : 0,
         // Service Status planned maintenance (3.2.0): start what is due, finish
         // what has ended. Not a workflow trigger itself - the incident it makes is.
-        'planned_maintenance'      => (function () use ($conn) {
-            try {
-                require_once __DIR__ . '/service_status_planned.php';
-                return array_sum(statusPlannedRun($conn));
-            } catch (Throwable $e) {
-                error_log('[workflow_scheduled] planned maintenance: ' . $e->getMessage());
-                return 0;
-            }
-        })(),
+        'planned_maintenance'      => $part('planned_maintenance', function () use ($conn) {
+            require_once __DIR__ . '/service_status_planned.php';
+            return array_sum(statusPlannedRun($conn));
+        }),
         // Projects keep their own fire-once state (includes/projects/alerts.php):
         // health and tolerance changes, and stages ending soon.
-        'projects'                 => (function () use ($conn) {
-            try {
-                require_once __DIR__ . '/projects/alerts.php';
-                return array_sum(projectAlertsRun($conn));   // the cron prints one number per entry
-            } catch (Throwable $e) {
-                error_log('[workflow_scheduled] projects: ' . $e->getMessage());
-                return 0;
-            }
-        })(),
+        'projects'                 => $part('projects', function () use ($conn) {
+            require_once __DIR__ . '/projects/alerts.php';
+            return array_sum(projectAlertsRun($conn));   // the cron prints one number per entry
+        }),
     ];
 }
 

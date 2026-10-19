@@ -154,6 +154,26 @@ function domainWatchMark(PDO $conn, int $id, string $marker): void
 }
 
 /**
+ * Records the end of a Domains run in the job history (#182): failed lookups or failed
+ * alert emails make it PARTIAL. Never throws.
+ *
+ * @param ?int $runId  from JobRun::start()
+ * @param array $r  what domainScheduledRun() returned
+ */
+function domainJobFinish(PDO $conn, ?int $runId, array $r): void
+{
+    require_once __DIR__ . '/../job_runs.php';
+    $a = $r['alerts'] ?? [];
+    $problems = (int)($r['lookup_errors'] ?? 0) + (int)($a['failed'] ?? 0);
+    $work = (int)($r['lookups'] ?? 0) + (int)($r['checks'] ?? 0) + (int)($a['emails'] ?? 0);
+    JobRun::finish($conn, $runId, $problems === 0 ? 'ok' : ($work > 0 ? 'partial' : 'failed'),
+        ['lookups' => (int)($r['lookups'] ?? 0), 'lookup_errors' => (int)($r['lookup_errors'] ?? 0), 'checks' => (int)($r['checks'] ?? 0),
+         'emails' => (int)($a['emails'] ?? 0), 'emails_failed' => (int)($a['failed'] ?? 0)],
+        sprintf('%d looked up (%d failed), %d checked, %d e-mails (%d failed).', $r['lookups'] ?? 0, $r['lookup_errors'] ?? 0,
+            $r['checks'] ?? 0, $a['emails'] ?? 0, $a['failed'] ?? 0));
+}
+
+/**
  * The page-load run. Throttled to once an hour, short, and silent: it runs
  * inside a request somebody may be waiting on.
  */
@@ -164,7 +184,18 @@ function domainOpportunisticRun(PDO $conn): ?array
         $last = $conn->query("SELECT setting_value FROM system_settings WHERE setting_key = 'domain_opportunistic_last'")->fetchColumn();
         if ($last && (time() - (int)$last) < 3600) return null;
         domainSettingWrite($conn, 'domain_opportunistic_last', (string)time());   // claim first: two tabs, one run
-        return domainScheduledRun($conn, 25, false);
+        // #182: recorded as a PAGE run. It does the work, but never keeps the job's
+        // schedule looking healthy - only a cron or token-address run does that.
+        require_once __DIR__ . '/../job_runs.php';
+        $runId = JobRun::start($conn, 'domains', 'page', isset($_SESSION['analyst_id']) ? (int)$_SESSION['analyst_id'] : null);
+        try {
+            $r = domainScheduledRun($conn, 25, false);
+        } catch (Throwable $e) {
+            JobRun::fail($conn, $runId, $e);
+            throw $e;
+        }
+        domainJobFinish($conn, $runId, $r);
+        return $r;
     } catch (Throwable $e) {
         error_log('domains opportunistic run: ' . $e->getMessage());
         return null;

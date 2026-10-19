@@ -755,6 +755,31 @@ return [
         'notes'          => 'TEXT NULL',
     ],
 
+    // --- Background job health (#182) --------------------------------------
+    // One row per run of any background job (includes/job_runs.php); see freeitsm.sql.
+    'job_runs' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'job_key'           => 'VARCHAR(40) NOT NULL',
+        'trigger_kind'      => 'VARCHAR(10) NOT NULL',
+        'outcome'           => "VARCHAR(10) NOT NULL DEFAULT 'running'",
+        'started_datetime'  => 'DATETIME NOT NULL',
+        'finished_datetime' => 'DATETIME NULL',
+        'duration_ms'       => 'INT NULL',
+        'counts_json'       => 'TEXT NULL',
+        'summary'           => 'VARCHAR(500) NULL',
+        'analyst_id'        => 'INT NULL',
+    ],
+    'job_run_sources' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'run_id'           => 'INT NOT NULL',
+        'job_key'          => 'VARCHAR(40) NOT NULL',
+        'source_key'       => 'VARCHAR(80) NOT NULL',
+        'source_label'     => 'VARCHAR(190) NULL',
+        'ok'               => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'message'          => 'VARCHAR(500) NULL',
+        'created_datetime' => 'DATETIME NOT NULL',
+    ],
+
     // --- Ticket numbering (GH #71) ------------------------------------------
     // ⚠️ ticket_number_counters has NO auto-increment id: counter_key is the
     // primary key, which is what lets the read-and-increment be one statement.
@@ -3858,6 +3883,12 @@ return [
         // majority of tasks, which do not repeat.
         'recurrence_id'        => 'INT NULL',
         'recurrence_master_id' => 'INT NULL',
+        // Repeating task evidence (#181) - see freeitsm.sql for each one.
+        'scheduled_date'         => 'DATE NULL',
+        'previous_occurrence_id' => 'INT NULL',
+        'created_via'            => 'VARCHAR(20) NULL',
+        'completed_by_id'        => 'INT NULL',
+        'skipped_datetime'       => 'DATETIME NULL',
         // Projects (3.2.0): a project's work items ARE tasks, so a task names the
         // project and the stage/phase it belongs to. NULL on every other task.
         'project_id'          => 'INT NULL',
@@ -3872,6 +3903,51 @@ return [
         // task changes stage, so it never arrives somewhere carrying another lane's number.
         'project_position'    => 'INT NULL',
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer (#1297)
+    ],
+
+    // Repeating task evidence (#181): the record that outlives what it describes.
+    // No foreign keys, deliberately - see the block comment in freeitsm.sql.
+    'task_events' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'task_id'          => 'INT NOT NULL',
+        'recurrence_id'    => 'INT NULL',
+        'event_type'       => 'VARCHAR(30) NOT NULL',
+        'analyst_id'       => 'INT NULL',
+        'actor_kind'       => "VARCHAR(12) NOT NULL DEFAULT 'analyst'",
+        'actor_name'       => 'VARCHAR(150) NULL',
+        'from_value'       => 'VARCHAR(255) NULL',
+        'to_value'         => 'VARCHAR(255) NULL',
+        'detail_json'      => 'TEXT NULL',
+        'job_run_id'       => 'INT NULL',
+        'created_datetime' => 'DATETIME NOT NULL',
+    ],
+    'task_recurrence_versions' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'recurrence_id'    => 'INT NOT NULL',
+        'version_no'       => 'INT NOT NULL',
+        'change_kind'      => 'VARCHAR(20) NOT NULL',
+        'rule_json'        => 'TEXT NOT NULL',
+        'is_active'        => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'title'            => 'VARCHAR(255) NULL',
+        'master_task_id'   => 'INT NULL',
+        'tenant_id'        => 'INT NULL',
+        'analyst_id'       => 'INT NULL',
+        'actor_name'       => 'VARCHAR(150) NULL',
+        'created_datetime' => 'DATETIME NOT NULL',
+    ],
+    'task_removed_records' => [
+        'id'                     => 'INT NOT NULL AUTO_INCREMENT',
+        'task_id'                => 'INT NOT NULL',
+        'recurrence_id'          => 'INT NULL',
+        'previous_occurrence_id' => 'INT NULL',
+        'tenant_id'              => 'INT NULL',
+        'title'                  => 'VARCHAR(255) NULL',
+        'scheduled_date'         => 'DATE NULL',
+        'due_date'               => 'DATE NULL',
+        'removed_by_id'          => 'INT NULL',
+        'removed_by_name'        => 'VARCHAR(150) NULL',
+        'removed_datetime'       => 'DATETIME NOT NULL',
+        'snapshot_json'          => 'LONGTEXT NOT NULL',
     ],
 
     /**
@@ -5072,6 +5148,7 @@ return [
         'created_by_id'    => 'INT DEFAULT NULL',
         'created_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
         'updated_datetime' => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+        'version_no'       => 'INT NOT NULL DEFAULT 0',          // #181: newest checklist_template_versions row
         'is_demo'          => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer
     ],
     'checklist_template_items' => [
@@ -5085,6 +5162,7 @@ return [
         'requires_input'    => 'TINYINT(1) NOT NULL DEFAULT 0',
         'input_placeholder' => 'VARCHAR(255) DEFAULT NULL',
         'default_value'     => 'VARCHAR(255) DEFAULT NULL',
+        'result_mode'       => "VARCHAR(10) NOT NULL DEFAULT 'none'",   // #181: 'pass_fail' asks for a result on tasks
         'created_datetime'  => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
         'is_demo'          => 'TINYINT(1) NOT NULL DEFAULT 0',   // set by the demo data importer
     ],
@@ -5127,6 +5205,7 @@ return [
         'sort_order'        => 'INT NOT NULL DEFAULT 0',
         'created_by_id'     => 'INT DEFAULT NULL',
         'created_datetime'  => 'DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+        'template_version'  => 'INT NULL',                       // #181: which template version it was copied from
         'is_demo'           => 'TINYINT(1) NOT NULL DEFAULT 0',
     ],
     'task_checklist_items' => [
@@ -5143,7 +5222,36 @@ return [
         'input_placeholder'   => 'VARCHAR(255) DEFAULT NULL',
         'response_value'      => 'TEXT DEFAULT NULL',
         'sort_order'          => 'INT NOT NULL DEFAULT 1',
+        // #181: Pass / Fail / Not applicable, opt-in per template step.
+        'result_mode'         => "VARCHAR(10) NOT NULL DEFAULT 'none'",
+        'result'              => 'VARCHAR(10) NULL',
+        'exception_note'      => 'TEXT NULL',
         'is_demo'             => 'TINYINT(1) NOT NULL DEFAULT 0',
+    ],
+
+    // #181: the step history and the template versions - see freeitsm.sql. No FKs, on purpose.
+    'task_checklist_item_events' => [
+        'id'                => 'INT NOT NULL AUTO_INCREMENT',
+        'task_id'           => 'INT NOT NULL',
+        'task_checklist_id' => 'INT NOT NULL',
+        'item_id'           => 'INT NOT NULL',
+        'checklist_title'   => 'VARCHAR(255) NULL',
+        'item_title'        => 'VARCHAR(255) NULL',
+        'action'            => 'VARCHAR(20) NOT NULL',
+        'before_json'       => 'TEXT NULL',
+        'after_json'        => 'TEXT NULL',
+        'after_completion'  => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'analyst_id'        => 'INT NULL',
+        'actor_name'        => 'VARCHAR(150) NULL',
+        'created_datetime'  => 'DATETIME NOT NULL',
+    ],
+    'checklist_template_versions' => [
+        'id'               => 'INT NOT NULL AUTO_INCREMENT',
+        'template_id'      => 'INT NOT NULL',
+        'version_no'       => 'INT NOT NULL',
+        'snapshot_json'    => 'LONGTEXT NOT NULL',
+        'analyst_id'       => 'INT NULL',
+        'created_datetime' => 'DATETIME NOT NULL',
     ],
 
     // Domains module (GitHub #154) — see the matching block in freeitsm.sql for

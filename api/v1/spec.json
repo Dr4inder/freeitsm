@@ -12228,6 +12228,43 @@
             ]
         },
         {
+            "section": "Background jobs",
+            "items": [
+                {
+                    "m": "GET",
+                    "p": "\/jobs\/health",
+                    "perm": "job_health.read",
+                    "s": "Background job health",
+                    "d": "The health of every background job (SLA check, webhooks, repeating tasks, directory sync...): never seen, healthy, overdue, failing, partial, stuck, not needed or not used here, with each one's last SCHEDULED success - page loads and Run now never keep a job fresh - and the sources that are failing. Worked out when you ask; it never runs a job and never returns secrets. Install-wide, so the key and its analyst must reach every company. With strict=1 it answers 503 while anything needed is unhealthy.",
+                    "params": [
+                        {
+                            "name": "strict",
+                            "in": "query",
+                            "desc": "1 = answer 503 while any needed job is unhealthy (for monitors that read only the status code)",
+                            "req": false
+                        }
+                    ],
+                    "section": "Background jobs",
+                    "slug": "get-jobs-health",
+                    "extras": {
+                        "examples": [
+                            {
+                                "title": "Check every job",
+                                "note": "Every background job with its health, last scheduled success and any failing sources. Answers 200 whatever the health."
+                            },
+                            {
+                                "title": "For an uptime monitor",
+                                "note": "Answers 503 whenever any job this install needs is unhealthy, so a monitor that reads only status codes still raises the alarm.",
+                                "query": {
+                                    "strict": 1
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
             "section": "Requesters",
             "items": [
                 {
@@ -19023,6 +19060,21 @@
                     "path": {
                         "id": "7",
                         "revision_id": "812"
+                    }
+                }
+            ]
+        },
+        "GET \/jobs\/health": {
+            "examples": [
+                {
+                    "title": "Check every job",
+                    "note": "Every background job with its health, last scheduled success and any failing sources. Answers 200 whatever the health."
+                },
+                {
+                    "title": "For an uptime monitor",
+                    "note": "Answers 503 whenever any job this install needs is unhealthy, so a monitor that reads only status codes still raises the alarm.",
+                    "query": {
+                        "strict": 1
                     }
                 }
             ]

@@ -92,6 +92,19 @@ return [
             'setting_keys' => ['tasks_checklists_enabled'],
         ],
         [
+            // Repeating task evidence (#181): what deleting an occurrence and changing a
+            // finished task's checklist do, which status a skipped occurrence moves to,
+            // and whether running the evidence report needs its own permission. Sensitive:
+            // these decide what an audit trail allows.
+            'id'           => 'evidence',
+            'cap'          => Cap::TASKS_EVIDENCE,
+            'label_key'    => 'tasks.settings.tab_evidence',
+            'grant'        => 'Configure repeating task evidence: deleting occurrences, changing finished checklists, who runs the report',
+            'sensitive'    => true,
+            'setting_keys' => ['tasks_evidence_completed_checklist', 'tasks_evidence_delete_occurrence',
+                               'tasks_evidence_skip_status_id', 'tasks_evidence_report_access'],
+        ],
+        [
             // Deleting tags and configuring them. Creating one inline from the board is
             // everyday work and deliberately stays on plain module access.
             'id'           => 'tags',
@@ -104,6 +117,16 @@ return [
             'id'        => 'left-panel',
             'cap'       => null,
             'label_key' => 'common.left_panel.tab',
+        ],
+    ],
+
+    // Everyday work (#181) - not a tab. Bites only once Settings -> Evidence ->
+    // "Who can run the evidence report" is set to the permission.
+    'actions' => [
+        [
+            'cap'      => Cap::TASKS_EVIDENCE_REPORT,
+            'grant'    => 'Run the evidence report for a repeating task, and export it (print and CSV)',
+            'restrict' => ['setting' => 'tasks_evidence_report_access', 'value' => 'permission'],
         ],
     ],
 ];

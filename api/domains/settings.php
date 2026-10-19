@@ -71,7 +71,17 @@ domainApiRun(function () use ($conn, $analystId, $tabCaps) {
             domainApiFail('You do not have permission to run the scheduled work.', 403);
         }
         set_time_limit(180);
-        domainApiOk(['run' => domainScheduledRun($conn, 90, false)]);
+        // #182: a MANUAL run - recorded, but it never makes the schedule look alive.
+        require_once __DIR__ . '/../../includes/job_runs.php';
+        $runId = JobRun::start($conn, 'domains', 'manual', $analystId);
+        try {
+            $r = domainScheduledRun($conn, 90, false);
+        } catch (Throwable $e) {
+            JobRun::fail($conn, $runId, $e);
+            throw $e;
+        }
+        domainJobFinish($conn, $runId, $r);
+        domainApiOk(['run' => $r]);
     }
     if ($action === 'sync_calendar') {
         domainRequireCap($conn, Cap::DOMAINS_ALERTS);

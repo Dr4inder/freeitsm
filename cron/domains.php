@@ -31,6 +31,7 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../includes/encryption.php';
 require_once __DIR__ . '/../includes/domains/scheduler.php';
+require_once __DIR__ . '/../includes/job_runs.php';   // run history (#182)
 
 $isCli = (PHP_SAPI === 'cli');
 
@@ -56,21 +57,29 @@ if (!$isCli) {
     // ⚠️ An unset secret must never compare equal to an empty query string.
     if ($expected === '' || !hash_equals($expected, $given)) {
         http_response_code(403);
+        JobRun::refused($conn, 'domains', $expected === '' ? 'token not set' : 'wrong token');
         echo "Forbidden\n";
         exit(1);
     }
 }
+$trigger = JobRun::scheduledTrigger();
 
 // Never two at once: a slow run overlapping the next hour's would double the
 // registry and crt.sh traffic for no gain.
 $lock = $conn->query("SELECT GET_LOCK('freeitsm_domains_cron', 0)")->fetchColumn();
 if ((int)$lock !== 1) {
+    JobRun::skipped($conn, 'domains', $trigger, 'Another run is still going.');
     echo "Another Domains run is still going. Nothing to do.\n";
     exit(0);
 }
 
+$runId = JobRun::start($conn, 'domains', $trigger);
 try {
     $r = domainScheduledRun($conn, 240, true);
+    domainJobFinish($conn, $runId, $r);
+} catch (Throwable $e) {
+    JobRun::fail($conn, $runId, $e);
+    throw $e;
 } finally {
     $conn->query("SELECT RELEASE_LOCK('freeitsm_domains_cron')");
 }

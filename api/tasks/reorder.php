@@ -8,6 +8,7 @@ require_once '../../config.php';
 require_once '../../includes/functions.php';
 require_once '../../includes/tenancy.php';
 require_once '../../includes/services/checklists.php';   // completion gate (discussion #138)
+require_once '../../includes/services/task_history.php'; // THE status hook (#181)
 
 header('Content-Type: application/json');
 
@@ -16,6 +17,7 @@ if (!isset($_SESSION['analyst_id'])) {
     exit;
 }
 requireModuleAccessJson('tasks');
+requireModuleWriteJson('tasks');
 
 $input = json_decode(file_get_contents('php://input'), true);
 $taskId = isset($input['task_id']) ? (int)$input['task_id'] : 0;
@@ -64,6 +66,7 @@ try {
         }
     }
 
+    $before = TaskHistory::before($conn, $taskId);   // #181: read before the write
     $conn->beginTransaction();
     $newStatusId = (int)$sts['id'];
     $completedSql = $sts['is_closed']
@@ -90,9 +93,16 @@ try {
     }
 
     $conn->commit();
+    $ctx = ActorContext::fromSession($conn);
     if ($completing) {
-        ChecklistsService::recordTaskCompletionOverride($conn, ActorContext::fromSession($conn), $taskId);
+        ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId);
     }
+    // #181: THE status hook. Dragging a card into a closed column is the commonest
+    // way a task is completed, and until this line it never made a repeat's next
+    // occurrence - only the task window and the REST API did. It also records the
+    // change and who completed it. A reorder within one column changes no status
+    // and records nothing.
+    TaskHistory::afterStatusChange($conn, $ctx, $taskId, $before, $newStatusId);
     echo json_encode(['success' => true, 'message' => 'Task reordered']);
 
 } catch (Exception $e) {

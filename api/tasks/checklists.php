@@ -70,6 +70,9 @@ try {
         exit;
     }
 
+    // Read only access to Tasks (#181 Part G) reads checklists and changes none.
+    requireModuleWriteJson('tasks', $conn);
+
     if (!$enabled) {
         throw new ServiceError('validation', 'disabled', 'Checklists on tasks are switched off (Tasks → Settings → Checklists).');
     }
@@ -93,10 +96,18 @@ try {
             );
             break;
 
+        // #181: Pass / Fail / Not applicable on a step that asks for a result; Fail needs a note.
+        case 'result':
+            $taskId = ChecklistsService::taskIdForItem($conn, (int)($in['item_id'] ?? 0));
+            checklistTaskGate($conn, $taskId);
+            ChecklistsService::setTaskItemResult($conn, $ctx, (int)$in['item_id'], (string)($in['result'] ?? ''),
+                isset($in['exception_note']) ? (string)$in['exception_note'] : null);
+            break;
+
         case 'remove':
             $taskId = ChecklistsService::taskIdForChecklist($conn, (int)($in['checklist_id'] ?? 0));
             checklistTaskGate($conn, $taskId);
-            ChecklistsService::removeTaskChecklist($conn, (int)$in['checklist_id']);
+            ChecklistsService::removeTaskChecklist($conn, (int)$in['checklist_id'], $ctx);
             break;
 
         // Dragged into a new order in the task window. The whole list is sent,

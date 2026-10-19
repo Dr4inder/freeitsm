@@ -38,7 +38,20 @@ try {
     if ($action !== 'sync') {
         throw new Exception('Unknown action');
     }
-    $summary = proxmoxSyncConnection($conn, $id);
+    // #182: Sync now is a MANUAL run of the job, for this one server - recorded,
+    // and it can clear that server's failure, but it never makes the schedule look alive.
+    require_once __DIR__ . '/../../includes/job_runs.php';
+    $runId = JobRun::start($conn, 'proxmox_sync', 'manual', (int)($_SESSION['analyst_id'] ?? 0) ?: null);
+    try {
+        $summary = proxmoxSyncConnection($conn, $id);
+    } catch (Throwable $e) {
+        JobRun::fail($conn, $runId, $e);
+        throw $e;
+    }
+    $nm = $conn->prepare("SELECT name FROM proxmox_connections WHERE id = ?");
+    $nm->execute([$id]);
+    JobRun::source($conn, $runId, 'proxmox_sync', 'server:' . $id, (string)($nm->fetchColumn() ?: ('#' . $id)), $summary['status'] !== 'error', $summary['message'] ?? null);
+    JobRun::finish($conn, $runId, null, ['servers' => 1]);
     echo json_encode(['success' => $summary['status'] !== 'error', 'summary' => $summary,
         'error' => $summary['status'] === 'error' ? $summary['message'] : null]);
 } catch (Exception $e) {

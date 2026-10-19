@@ -474,8 +474,14 @@ class ChecklistsService
         $st->execute([$taskId]);
         $lists = $st->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
+        try {
+            $conn->query("SELECT result_mode FROM task_checklist_items LIMIT 0");
+            $resultCols = ', result_mode, result, exception_note';
+        } catch (Throwable $e) {
+            $resultCols = '';   // before Database Verification has added #181's columns
+        }
         $items = $conn->prepare("SELECT id, title, suggested_role, is_mandatory, requires_input, input_placeholder,
-                                        response_value, is_completed, completed_by_id, completed_by_name, completed_datetime
+                                        response_value, is_completed, completed_by_id, completed_by_name, completed_datetime{$resultCols}
                                    FROM task_checklist_items WHERE task_checklist_id = ?
                                   ORDER BY sort_order ASC, id ASC");
         foreach ($lists as &$l) {
@@ -517,6 +523,7 @@ class ChecklistsService
      */
     public static function attachTemplateToTask(PDO $conn, ActorContext $ctx, int $taskId, int $templateId): int
     {
+        self::assertTaskChecklistChangeAllowed($conn, $taskId);
         $tpl = $conn->prepare("SELECT title, closure_mode, scope FROM checklist_templates WHERE id = ?");
         $tpl->execute([$templateId]);
         $t = $tpl->fetch(PDO::FETCH_ASSOC);
@@ -526,8 +533,13 @@ class ChecklistsService
         if (!in_array((string)$t['scope'], ['task', 'both'], true)) {
             throw new ServiceError('validation', 'invalid_field', 'That checklist is for tickets only.');
         }
-        return self::copyTemplateToTask($conn, $taskId, $templateId, (string)$t['title'],
+        $id = self::copyTemplateToTask($conn, $taskId, $templateId, (string)$t['title'],
             (string)$t['closure_mode'], $ctx->actorId > 0 ? $ctx->actorId : null);
+        require_once __DIR__ . '/task_history.php';
+        TaskHistory::record($conn, $taskId, 'checklist_attached', $ctx, null, (string)$t['title'],
+            ['checklist_id' => $id, 'template_id' => $templateId, 'template_version' => self::templateVersionNo($conn, $templateId),
+             'after_completion' => self::taskIsClosed($conn, $taskId)]);
+        return $id;
     }
 
     /**
@@ -549,17 +561,28 @@ class ChecklistsService
                  ->execute([$taskId, $templateId, $title, $closureMode === 'block' ? 'block' : 'warn',
                             self::nextTaskChecklistOrder($conn, $taskId), $createdBy]);
             $chkId = (int)$conn->lastInsertId();
+            // #181: which version of the procedure this copy is, so the report shows
+            // the procedure as it stood for this occurrence.
+            $ver = self::templateVersionNo($conn, $templateId);
+            if ($ver !== null) {
+                $conn->prepare("UPDATE task_checklists SET template_version = ? WHERE id = ?")->execute([$ver, $chkId]);
+            }
 
-            $steps = $conn->prepare("SELECT title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order
+            $hasResult = self::hasResultColumns($conn);
+            $steps = $conn->prepare("SELECT title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order"
+                                    . ($hasResult ? ', result_mode' : '') . "
                                        FROM checklist_template_items WHERE template_id = ? ORDER BY sort_order ASC, id ASC");
             $steps->execute([$templateId]);
             $ins = $conn->prepare("INSERT INTO task_checklist_items
-                                     (task_checklist_id, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order)
-                                   VALUES (?, ?, ?, ?, ?, ?, ?)");
+                                     (task_checklist_id, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order"
+                                   . ($hasResult ? ', result_mode' : '') . ")
+                                   VALUES (?, ?, ?, ?, ?, ?, ?" . ($hasResult ? ', ?' : '') . ")");
             foreach ($steps->fetchAll(PDO::FETCH_ASSOC) as $i => $s) {
-                $ins->execute([$chkId, $s['title'], $s['suggested_role'] ?: null, !empty($s['is_mandatory']) ? 1 : 0,
-                               !empty($s['requires_input']) ? 1 : 0, $s['input_placeholder'] ?: null,
-                               $s['sort_order'] ?? ($i + 1)]);
+                $vals = [$chkId, $s['title'], $s['suggested_role'] ?: null, !empty($s['is_mandatory']) ? 1 : 0,
+                         !empty($s['requires_input']) ? 1 : 0, $s['input_placeholder'] ?: null,
+                         $s['sort_order'] ?? ($i + 1)];
+                if ($hasResult) $vals[] = ($s['result_mode'] ?? 'none') === 'pass_fail' ? 'pass_fail' : 'none';
+                $ins->execute($vals);
             }
             if ($own) $conn->commit();
             return $chkId;
@@ -643,11 +666,16 @@ class ChecklistsService
      */
     public static function toggleTaskItem(PDO $conn, ActorContext $ctx, int $itemId, bool $completed, ?string $value): array
     {
-        $st = $conn->prepare("SELECT requires_input FROM task_checklist_items WHERE id = ?");
-        $st->execute([$itemId]);
-        $row = $st->fetch(PDO::FETCH_ASSOC);
+        $row = self::taskItemRow($conn, $itemId);
         if (!$row) {
             throw new ServiceError('not_found', 'not_found', 'Step not found.');
+        }
+        self::assertTaskChecklistChangeAllowed($conn, (int)$row['task_id']);
+        // #181: a step that asks for a RESULT is ticked by recording one (Pass,
+        // Fail or Not applicable) - see setTaskItemResult(). Unticking it clears
+        // the result too, and both go on the step's history.
+        if ($completed && ($row['result_mode'] ?? 'none') === 'pass_fail' && empty($row['result'])) {
+            throw new ServiceError('validation', 'missing_field', 'Record a result for this step - Pass, Fail or Not applicable.');
         }
         // A value is only kept on a step that asks for one - a stray value on a
         // plain tick would show up as an answer to a question nobody asked.
@@ -663,16 +691,190 @@ class ChecklistsService
                  ->execute([$value !== '' ? $value : null, $ctx->actorId > 0 ? $ctx->actorId : null,
                             $ctx->actorName !== '' ? $ctx->actorName : null, $itemId]);
         } else {
+            // Unticking clears the step - but no longer erases WHO ticked it and
+            // when: the step's history below keeps that (#181).
             $conn->prepare("UPDATE task_checklist_items
                                SET is_completed = 0, response_value = NULL, completed_by_id = NULL,
                                    completed_by_name = NULL, completed_datetime = NULL
                              WHERE id = ?")
                  ->execute([$itemId]);
+            if (isset($row['result_mode'])) {
+                $conn->prepare("UPDATE task_checklist_items SET result = NULL, exception_note = NULL WHERE id = ?")->execute([$itemId]);
+            }
         }
-        $back = $conn->prepare("SELECT id, is_completed, response_value, completed_by_id, completed_by_name, completed_datetime
-                                  FROM task_checklist_items WHERE id = ?");
-        $back->execute([$itemId]);
-        return $back->fetch(PDO::FETCH_ASSOC) ?: [];
+        $after = self::taskItemRow($conn, $itemId) ?: [];
+        $action = $completed ? (!empty($row['is_completed']) ? 'value' : 'ticked') : 'unticked';
+        self::recordStepEvent($conn, $ctx, $row, $after, $action);
+        return array_intersect_key($after, array_flip(['id', 'is_completed', 'response_value', 'completed_by_id',
+            'completed_by_name', 'completed_datetime', 'result', 'exception_note']));
+    }
+
+    /**
+     * Record a step's RESULT (#181): Pass, Fail or Not applicable, on a step whose template asks for
+     * one. Recording a result ticks the step; Fail needs an exception note, because a failed control
+     * with no word on what went wrong is not evidence of anything. The task can still be completed
+     * with a failed step - that is the point: the report shows it as an exception, it does not hide it.
+     *
+     * @param string $result  pass, fail or na
+     * @param ?string $note  the exception note - required for fail, kept for the others if given
+     */
+    public static function setTaskItemResult(PDO $conn, ActorContext $ctx, int $itemId, string $result, ?string $note): array
+    {
+        $row = self::taskItemRow($conn, $itemId);
+        if (!$row) {
+            throw new ServiceError('not_found', 'not_found', 'Step not found.');
+        }
+        if (($row['result_mode'] ?? 'none') !== 'pass_fail') {
+            throw new ServiceError('validation', 'invalid_field', 'This step does not ask for a result.');
+        }
+        if (!in_array($result, ['pass', 'fail', 'na'], true)) {
+            throw new ServiceError('validation', 'invalid_field', 'A result is pass, fail or na.');
+        }
+        $note = $note !== null ? trim($note) : null;
+        if ($result === 'fail' && ($note === null || $note === '')) {
+            throw new ServiceError('validation', 'missing_field', 'Say what failed - a failed step needs an exception note.');
+        }
+        self::assertTaskChecklistChangeAllowed($conn, (int)$row['task_id']);
+        $conn->prepare("UPDATE task_checklist_items
+                           SET result = ?, exception_note = ?, is_completed = 1,
+                               completed_by_id = ?, completed_by_name = ?, completed_datetime = UTC_TIMESTAMP()
+                         WHERE id = ?")
+             ->execute([$result, $note !== '' ? $note : null, $ctx->actorId > 0 ? $ctx->actorId : null,
+                        $ctx->actorName !== '' ? $ctx->actorName : null, $itemId]);
+        $after = self::taskItemRow($conn, $itemId) ?: [];
+        self::recordStepEvent($conn, $ctx, $row, $after, 'result');
+        return $after;
+    }
+
+    /** A task checklist step with its checklist, task and the task's closed state - or null. */
+    private static function taskItemRow(PDO $conn, int $itemId): ?array
+    {
+        $extra = self::hasResultColumns($conn) ? ', i.result_mode, i.result, i.exception_note' : '';
+        $st = $conn->prepare("SELECT i.id, i.title, i.requires_input, i.response_value, i.is_completed, i.completed_by_id,
+                                     i.completed_by_name, i.completed_datetime{$extra},
+                                     c.id AS checklist_id, c.title AS checklist_title, c.task_id
+                                FROM task_checklist_items i JOIN task_checklists c ON c.id = i.task_checklist_id
+                               WHERE i.id = ?");
+        $st->execute([$itemId]);
+        return $st->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    /**
+     * One row of a step's history (#181): who, when, before and after, and whether the task was
+     * already complete. Never throws.
+     *
+     * @param array $before  taskItemRow() before the change
+     * @param array $after  taskItemRow() after it
+     * @param string $action  ticked, unticked, value or result
+     */
+    private static function recordStepEvent(PDO $conn, ActorContext $ctx, array $before, array $after, string $action): void
+    {
+        $pick = fn(array $r) => array_intersect_key($r, array_flip(['is_completed', 'response_value', 'completed_by_name',
+            'completed_datetime', 'result', 'exception_note']));
+        try {
+            $conn->prepare("INSERT INTO task_checklist_item_events (task_id, task_checklist_id, item_id, checklist_title, item_title,
+                                   action, before_json, after_json, after_completion, analyst_id, actor_name, created_datetime)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP())")
+                 ->execute([(int)$before['task_id'], (int)$before['checklist_id'], (int)$before['id'], $before['checklist_title'],
+                            $before['title'], $action, json_encode($pick($before)), json_encode($pick($after)),
+                            self::taskIsClosed($conn, (int)$before['task_id']) ? 1 : 0,
+                            $ctx->actorId > 0 ? $ctx->actorId : null, $ctx->actorName !== '' ? $ctx->actorName : null]);
+        } catch (Throwable $e) {
+            error_log('[checklists] could not record a step change on item ' . ($before['id'] ?? '?') . ': ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Tasks -> Settings -> Evidence: "Changing a completed task's checklist". By default a change is
+     * allowed and recorded (flagged in the report as made after completion); set to refuse, it is
+     * refused until the task is reopened (#181 decision 1).
+     *
+     * @param int $taskId  the task whose checklist is about to change
+     */
+    public static function assertTaskChecklistChangeAllowed(PDO $conn, int $taskId): void
+    {
+        if (!self::taskIsClosed($conn, $taskId)) return;
+        try {
+            $s = $conn->prepare("SELECT setting_value FROM system_settings WHERE setting_key = 'tasks_evidence_completed_checklist'");
+            $s->execute();
+            if ((string)$s->fetchColumn() !== 'refuse') return;
+        } catch (Throwable $e) {
+            return;
+        }
+        throw new ServiceError('validation', 'checklist_locked',
+            function_exists('t') ? t('tasks.evidence.checklist_locked') : 'This task is complete, so its checklist is locked. Reopen the task to change it.');
+    }
+
+    /** Is the task in a closed status? */
+    private static function taskIsClosed(PDO $conn, int $taskId): bool
+    {
+        try {
+            $s = $conn->prepare("SELECT ts.is_closed FROM tasks t JOIN task_statuses ts ON ts.id = t.status_id WHERE t.id = ?");
+            $s->execute([$taskId]);
+            return (bool)$s->fetchColumn();
+        } catch (Throwable $e) {
+            return false;
+        }
+    }
+
+    /** Have #181's result columns been added yet? Cached per request. */
+    private static function hasResultColumns(PDO $conn): bool
+    {
+        static $has = null;
+        if ($has !== null) return $has;
+        try {
+            $conn->query("SELECT result_mode FROM task_checklist_items LIMIT 0");
+            $conn->query("SELECT result_mode FROM checklist_template_items LIMIT 0");
+            return $has = true;
+        } catch (Throwable $e) {
+            return $has = false;
+        }
+    }
+
+    /** A template's current version number, or null (never versioned, or before Database Verification). */
+    private static function templateVersionNo(PDO $conn, int $templateId): ?int
+    {
+        try {
+            $s = $conn->prepare("SELECT version_no FROM checklist_templates WHERE id = ?");
+            $s->execute([$templateId]);
+            $v = (int)$s->fetchColumn();
+            return $v > 0 ? $v : null;
+        } catch (Throwable $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Save a version of a checklist template (#181): a snapshot of the template and its steps as they now
+     * stand, numbered one after the last. Called after every save of a template, and once by Database
+     * Verification for templates that existed before. The version outlives the template.
+     *
+     * @param ?int $analystId  who saved it; null for Database Verification's baseline
+     */
+    public static function recordTemplateVersion(PDO $conn, int $templateId, ?int $analystId): ?int
+    {
+        try {
+            $t = $conn->prepare("SELECT id, title, category, scope, closure_mode, description FROM checklist_templates WHERE id = ?");
+            $t->execute([$templateId]);
+            $tpl = $t->fetch(PDO::FETCH_ASSOC);
+            if (!$tpl) return null;
+            $resCol = self::hasResultColumns($conn) ? ', result_mode' : '';
+            $i = $conn->prepare("SELECT title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order{$resCol}
+                                   FROM checklist_template_items WHERE template_id = ? ORDER BY sort_order, id");
+            $i->execute([$templateId]);
+            $tpl['items'] = $i->fetchAll(PDO::FETCH_ASSOC);
+            $n = $conn->prepare("SELECT COALESCE(MAX(version_no), 0) + 1 FROM checklist_template_versions WHERE template_id = ?");
+            $n->execute([$templateId]);
+            $ver = (int)$n->fetchColumn();
+            $conn->prepare("INSERT INTO checklist_template_versions (template_id, version_no, snapshot_json, analyst_id, created_datetime)
+                            VALUES (?, ?, ?, ?, UTC_TIMESTAMP())")
+                 ->execute([$templateId, $ver, json_encode($tpl, JSON_UNESCAPED_UNICODE), $analystId]);
+            $conn->prepare("UPDATE checklist_templates SET version_no = ? WHERE id = ?")->execute([$ver, $templateId]);
+            return $ver;
+        } catch (Throwable $e) {
+            error_log('[checklists] could not version template ' . $templateId . ': ' . $e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -680,8 +882,27 @@ class ChecklistsService
      *
      * @param int $checklistId  the task_checklists row to remove, with its steps
      */
-    public static function removeTaskChecklist(PDO $conn, int $checklistId): void
+    public static function removeTaskChecklist(PDO $conn, int $checklistId, ?ActorContext $ctx = null): void
     {
+        // #181: a checklist removed from a task takes its ticks, values and results
+        // with it, so the removal is recorded WITH them, on the task's history.
+        $taskId = self::taskIdForChecklist($conn, $checklistId);
+        if ($taskId > 0) {
+            self::assertTaskChecklistChangeAllowed($conn, $taskId);
+            try {
+                $c = $conn->prepare("SELECT * FROM task_checklists WHERE id = ?");
+                $c->execute([$checklistId]);
+                $list = $c->fetch(PDO::FETCH_ASSOC) ?: [];
+                $i = $conn->prepare("SELECT * FROM task_checklist_items WHERE task_checklist_id = ? ORDER BY sort_order, id");
+                $i->execute([$checklistId]);
+                $list['items'] = $i->fetchAll(PDO::FETCH_ASSOC);
+                require_once __DIR__ . '/task_history.php';
+                TaskHistory::record($conn, $taskId, 'checklist_removed', $ctx, $list['title'] ?? null, null,
+                    ['checklist' => $list, 'after_completion' => self::taskIsClosed($conn, $taskId)]);
+            } catch (Throwable $e) {
+                error_log('[checklists] could not record removing checklist ' . $checklistId . ': ' . $e->getMessage());
+            }
+        }
         $own = !$conn->inTransaction();
         if ($own) $conn->beginTransaction();
         try {
@@ -832,9 +1053,10 @@ class ChecklistsService
                      ->execute([$toTaskId, $c['title'], $c['closure_mode'] ?: 'warn',
                                 self::nextTaskChecklistOrder($conn, $toTaskId), $c['created_by_id']]);
                 $newId = (int)$conn->lastInsertId();
+                $rm = self::hasResultColumns($conn) ? ', result_mode' : '';
                 $conn->prepare("INSERT INTO task_checklist_items
-                                  (task_checklist_id, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order)
-                                SELECT ?, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order
+                                  (task_checklist_id, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order{$rm})
+                                SELECT ?, title, suggested_role, is_mandatory, requires_input, input_placeholder, sort_order{$rm}
                                   FROM task_checklist_items WHERE task_checklist_id = ?")
                      ->execute([$newId, (int)$c['id']]);
             }

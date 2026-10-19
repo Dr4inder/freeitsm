@@ -1113,6 +1113,46 @@ CREATE TABLE IF NOT EXISTS `sla_cron_runs` (
     KEY `idx_sla_cron_ip_started` (`client_ip`, `started_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Background job health (#182). One row per run of ANY background job, written by
+-- includes/job_runs.php and read by includes/job_health.php. trigger_kind says who
+-- started it: cron (command line), web (its token address), page (run in passing by
+-- a page load) or manual (Run now) - only cron and web prove the SCHEDULE is alive.
+-- outcome: running | ok | partial | failed | skipped. Skipped runs did no work and
+-- are never read when deciding whether a job is failing. Kept 13 months by default
+-- (job_runs_retention_months) so #181's evidence report can read them; skipped, 30 days.
+CREATE TABLE IF NOT EXISTS `job_runs` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `job_key`           VARCHAR(40) NOT NULL,
+    `trigger_kind`      VARCHAR(10) NOT NULL,
+    `outcome`           VARCHAR(10) NOT NULL DEFAULT 'running',
+    `started_datetime`  DATETIME NOT NULL,
+    `finished_datetime` DATETIME NULL,
+    `duration_ms`       INT NULL,
+    `counts_json`       TEXT NULL,
+    `summary`           VARCHAR(500) NULL,
+    `analyst_id`        INT NULL,                -- who pressed Run now, or whose page load ran it
+    PRIMARY KEY (`id`),
+    KEY `idx_job_runs_job` (`job_key`, `outcome`, `started_datetime`),
+    KEY `idx_job_runs_started` (`started_datetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- One row per source a run worked through (a tracker connection, a directory, a
+-- server, a part of a job), so one failing source makes the run PARTIAL and is
+-- named. A source is failing until a later run processes THAT source successfully.
+CREATE TABLE IF NOT EXISTS `job_run_sources` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `run_id`           INT NOT NULL,
+    `job_key`          VARCHAR(40) NOT NULL,
+    `source_key`       VARCHAR(80) NOT NULL,
+    `source_label`     VARCHAR(190) NULL,
+    `ok`               TINYINT(1) NOT NULL DEFAULT 1,
+    `message`          VARCHAR(500) NULL,
+    `created_datetime` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_job_run_sources_run` (`run_id`),
+    KEY `idx_job_run_sources_src` (`job_key`, `source_key`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ============================================================================
 -- Ticket numbering (GH discussion #71).
 --
@@ -5032,6 +5072,19 @@ CREATE TABLE IF NOT EXISTS `tasks` (
     -- The constraints are added after task_recurrences is created, below.
     `recurrence_id`        INT NULL,
     `recurrence_master_id` INT NULL,
+    -- Repeating task evidence (#181). scheduled_date: the date the repeat created
+    -- this occurrence for - set once, never edited, while due_date stays editable,
+    -- so a moved deadline stays visible. previous_occurrence_id: in a repeat set to
+    -- "after completion", the occurrence whose completion or skip made this one -
+    -- it is how a successor that should exist and does not is found. created_via:
+    -- manual, or repeat_completion / repeat_schedule / repeat_catchup.
+    -- completed_by_id: who completed it (cleared on reopening; task_events keeps it).
+    -- skipped_datetime: set when the occurrence was SKIPPED rather than done.
+    `scheduled_date`         DATE NULL,
+    `previous_occurrence_id` INT NULL,
+    `created_via`            VARCHAR(20) NULL,
+    `completed_by_id`        INT NULL,
+    `skipped_datetime`       DATETIME NULL,
     -- Projects (3.2.0). A project's work items ARE tasks - there is no second task
     -- system - so a task simply names the project, and the stage or phase of it,
     -- that it belongs to. Both NULL on every task that is not project work.
@@ -5057,6 +5110,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
     -- list was rebuilt and tried to delete them.
     KEY `ix_tasks_recurrence_id` (`recurrence_id`),
     KEY `ix_tasks_recurrence_master` (`recurrence_master_id`),
+    KEY `ix_tasks_previous_occurrence` (`previous_occurrence_id`),
     CONSTRAINT `fk_tasks_supplier` FOREIGN KEY (`assigned_supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_tasks_contact` FOREIGN KEY (`assigned_contact_id`) REFERENCES `contacts` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_tasks_analyst` FOREIGN KEY (`assigned_analyst_id`) REFERENCES `analysts` (`id`) ON DELETE SET NULL,
@@ -5117,6 +5171,84 @@ CREATE TABLE IF NOT EXISTS `task_recurrences` (
 ALTER TABLE `tasks`
     ADD CONSTRAINT `fk_tasks_recurrence` FOREIGN KEY (`recurrence_id`) REFERENCES `task_recurrences` (`id`) ON DELETE SET NULL,
     ADD CONSTRAINT `fk_tasks_recurrence_master` FOREIGN KEY (`recurrence_master_id`) REFERENCES `tasks` (`id`) ON DELETE SET NULL;
+
+-- ============================================================================
+-- Repeating task evidence (#181). A record that OUTLIVES what it describes.
+--
+-- 🔴 None of these tables has a foreign key to tasks, task_recurrences or the
+-- checklist tables, deliberately. An auditor's question is "show me this check was
+-- done every month", and the answer must survive an occurrence being deleted, the
+-- series being stopped or its tasks removed, and the checklist template being
+-- deleted (Dr4inder on #181). A CASCADE here would delete the evidence with the
+-- thing it is evidence about. Rows are append-only: nothing updates or deletes them.
+-- ============================================================================
+
+-- One row per thing that happened to a task: created (by a person or by the
+-- repeat), status changed, completed (by whom, and the due date in force then),
+-- reopened, due / start date changed, assigned, skipped, a successor expected,
+-- a checklist attached or removed, evidence exported. Written by
+-- includes/services/task_history.php, from the one place each change happens.
+CREATE TABLE IF NOT EXISTS `task_events` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `task_id`          INT NOT NULL,
+    `recurrence_id`    INT NULL,                -- the series, so the report reads one series in one query
+    `event_type`       VARCHAR(30) NOT NULL,
+    `analyst_id`       INT NULL,                -- NULL = not a person (the repeat, a workflow, an API key with nobody behind it)
+    `actor_kind`       VARCHAR(12) NOT NULL DEFAULT 'analyst',   -- analyst | system | api | workflow | portal
+    `actor_name`       VARCHAR(150) NULL,       -- as it was then: an analyst renamed later is still named as they were
+    `from_value`       VARCHAR(255) NULL,
+    `to_value`         VARCHAR(255) NULL,
+    `detail_json`      TEXT NULL,
+    `job_run_id`       INT NULL,                -- the background job run that did it (#182), if one did
+    `created_datetime` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_task_events_task` (`task_id`, `id`),
+    KEY `idx_task_events_series` (`recurrence_id`, `event_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Every version of a repeat's rule: a snapshot each time it is set up, changed,
+-- stopped, resumed or finishes on its own. 'baseline' is the version Database
+-- Verification recorded for a series that already existed when this shipped.
+-- Carries the series' title, first task and company, so a series whose tasks
+-- are all gone can still be listed (Tasks -> Evidence) and scoped by company.
+CREATE TABLE IF NOT EXISTS `task_recurrence_versions` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `recurrence_id`    INT NOT NULL,
+    `version_no`       INT NOT NULL,
+    `change_kind`      VARCHAR(20) NOT NULL,    -- baseline | created | changed | stopped | resumed | finished
+    `rule_json`        TEXT NOT NULL,
+    `is_active`        TINYINT(1) NOT NULL DEFAULT 1,
+    `title`            VARCHAR(255) NULL,
+    `master_task_id`   INT NULL,
+    `tenant_id`        INT NULL,
+    `analyst_id`       INT NULL,
+    `actor_name`       VARCHAR(150) NULL,
+    `created_datetime` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_trv_series_version` (`recurrence_id`, `version_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- A deleted occurrence of a repeat, frozen: the task as it stood, its checklists
+-- with every step, tick, value, result and exception note, its step history, its
+-- task history, comments, subtasks and attachment references - everything the
+-- evidence report reads (#181 section 9). Belongs to the SERIES, not the task.
+CREATE TABLE IF NOT EXISTS `task_removed_records` (
+    `id`                     INT NOT NULL AUTO_INCREMENT,
+    `task_id`                INT NOT NULL,
+    `recurrence_id`          INT NULL,
+    `previous_occurrence_id` INT NULL,
+    `tenant_id`              INT NULL,
+    `title`                  VARCHAR(255) NULL,
+    `scheduled_date`         DATE NULL,
+    `due_date`               DATE NULL,
+    `removed_by_id`          INT NULL,
+    `removed_by_name`        VARCHAR(150) NULL,
+    `removed_datetime`       DATETIME NOT NULL,
+    `snapshot_json`          LONGTEXT NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_trr_series` (`recurrence_id`),
+    KEY `idx_trr_task` (`task_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Time actually spent on a task, as many sessions as it took (GH #112).
 -- Mirrors ticket_time_entries column for column: it is the same idea about a
@@ -7602,6 +7734,7 @@ CREATE TABLE IF NOT EXISTS `checklist_templates` (
     `created_by_id` INT NULL,
     `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `version_no` INT NOT NULL DEFAULT 0,       -- #181: the newest checklist_template_versions row; 0 = never versioned
   `is_demo` tinyint(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `idx_tpl_category` (`category`),
@@ -7619,6 +7752,7 @@ CREATE TABLE IF NOT EXISTS `checklist_template_items` (
     `requires_input` TINYINT(1) NOT NULL DEFAULT 0,
     `input_placeholder` VARCHAR(255) NULL,
     `default_value` VARCHAR(255) NULL,
+    `result_mode` VARCHAR(10) NOT NULL DEFAULT 'none',   -- #181: 'pass_fail' asks for Pass / Fail / Not applicable on tasks
     `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `is_demo` tinyint(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
@@ -7677,6 +7811,7 @@ CREATE TABLE IF NOT EXISTS `task_checklists` (
     `sort_order` INT NOT NULL DEFAULT 0,
     `created_by_id` INT NULL,
     `created_datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `template_version` INT NULL,                -- #181: which checklist_template_versions row it was copied from
     `is_demo` tinyint(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `idx_task_chk_task` (`task_id`),
@@ -7697,10 +7832,55 @@ CREATE TABLE IF NOT EXISTS `task_checklist_items` (
     `input_placeholder` VARCHAR(255) NULL,
     `response_value` TEXT NULL,
     `sort_order` INT NOT NULL DEFAULT 1,
+    -- #181: a step can ask for a RESULT as well as a tick - Pass, Fail or Not
+    -- applicable, and Fail asks for an exception note - so a task can be done
+    -- while recording that the control it checked did not pass. Copied from the
+    -- template step's result_mode: 'none' (a tick, as before) or 'pass_fail'.
+    `result_mode` VARCHAR(10) NOT NULL DEFAULT 'none',
+    `result` VARCHAR(10) NULL,                -- pass | fail | na
+    `exception_note` TEXT NULL,
     `is_demo` tinyint(1) NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `idx_item_task_chk` (`task_checklist_id`),
     CONSTRAINT `fk_task_chk_items_chk` FOREIGN KEY (`task_checklist_id`) REFERENCES `task_checklists` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- #181: every tick, untick, value and result on a task's checklist step, with who
+-- and when, before and after. Unticking used to erase who ticked a step; this keeps
+-- it. after_completion marks a change made once the task was already complete.
+-- No foreign keys, for the reason given on task_events.
+CREATE TABLE IF NOT EXISTS `task_checklist_item_events` (
+    `id`                INT NOT NULL AUTO_INCREMENT,
+    `task_id`           INT NOT NULL,
+    `task_checklist_id` INT NOT NULL,
+    `item_id`           INT NOT NULL,
+    `checklist_title`   VARCHAR(255) NULL,
+    `item_title`        VARCHAR(255) NULL,
+    `action`            VARCHAR(20) NOT NULL,    -- ticked | unticked | value | result
+    `before_json`       TEXT NULL,
+    `after_json`        TEXT NULL,
+    `after_completion`  TINYINT(1) NOT NULL DEFAULT 0,
+    `analyst_id`        INT NULL,
+    `actor_name`        VARCHAR(150) NULL,
+    `created_datetime`  DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `idx_tcie_task` (`task_id`, `id`),
+    KEY `idx_tcie_item` (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- #181: every saved version of a checklist template. Saving a template rewrites
+-- its steps; the version keeps what it said before, and each checklist on a task
+-- records which version it was copied from (task_checklists.template_version).
+-- Outlives the template, so a deleted procedure is still on the record.
+CREATE TABLE IF NOT EXISTS `checklist_template_versions` (
+    `id`               INT NOT NULL AUTO_INCREMENT,
+    `template_id`      INT NOT NULL,
+    `version_no`       INT NOT NULL,
+    `snapshot_json`    LONGTEXT NOT NULL,
+    `analyst_id`       INT NULL,
+    `created_datetime` DATETIME NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_ctv_template_version` (`template_id`, `version_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------

@@ -379,6 +379,14 @@ function apiV1PermissionCatalog(): array {
                 'read' => 'Read the engine\'s run history: status, payload snapshot, per-step log',
             ],
         ],
+        'job_health' => [
+            'label'   => 'Background job health',
+            'actions' => [
+                // #182. Never runs a job; never returns secrets. Install-wide, so the key
+                // and its analyst must reach every company - see api/v1/resources/jobs.php.
+                'read' => 'Read the health of every background job, for outside monitoring (all-company keys only)',
+            ],
+        ],
         'network_diagrams' => [
             'label'   => 'Network diagrams',
             'actions' => [

@@ -448,6 +448,45 @@ try {
             </div>
         </div>
 
+        <?php
+        // Background jobs (#182): a card shown ONLY while a job needs attention, and only
+        // to somebody allowed to see job health. Outside the grid on purpose - it is not
+        // one of the cards a person arranges or hides; it appears because something
+        // stopped, and goes when it is fixed. Worked out now, when the page is opened, so
+        // it does not depend on any job running to say a job has stopped.
+        $wtJobs = null;
+        try {
+            require_once '../includes/job_health.php';
+            $wtConn = connectToDatabase();
+            if (jobHealthMayView($wtConn, (int)$_SESSION['analyst_id'])) {
+                $wtJobs = jobHealthSummary($wtConn);
+                if ($wtJobs['healthy']) $wtJobs = null;
+            }
+        } catch (Throwable $e) { $wtJobs = null; /* never break the dashboard */ }
+        if ($wtJobs): ?>
+        <div class="wt-card wt-jobs-card" id="wtJobs" style="margin-bottom:16px;">
+            <div class="wt-card-header">
+                <div class="wt-card-header-left">
+                    <div class="wt-card-icon" style="background:#ca5010;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    </div>
+                    <div class="wt-card-name"><a href="../reporting/logs/?tab=jobs"><?php echo htmlspecialchars(t('reporting.jobs.card_title')); ?></a></div>
+                </div>
+                <div class="wt-status-dot <?php echo $wtJobs['unhealthy'][0]['severity'] >= 4 ? 'red' : 'amber'; ?>"></div>
+            </div>
+            <div class="wt-card-body" style="font-size:13px;">
+                <div><?php echo htmlspecialchars(t('reporting.jobs.card_body', ['n' => count($wtJobs['unhealthy'])])); ?></div>
+                <ul style="margin:6px 0 8px; padding-left:18px;">
+                    <?php foreach ($wtJobs['unhealthy'] as $j): ?>
+                    <li><strong><?php echo htmlspecialchars($j['name']); ?></strong> - <?php echo htmlspecialchars(t('reporting.jobs.status_' . $j['status'])); ?>
+                        <span style="color:var(--text-muted,#666);">(<?php echo htmlspecialchars($j['affects']); ?>)</span></li>
+                    <?php endforeach; ?>
+                </ul>
+                <a href="../reporting/logs/?tab=jobs"><?php echo htmlspecialchars(t('reporting.jobs.card_link')); ?></a>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <div class="wt-grid">
             <!-- Morning Checks -->
             <div class="wt-card" id="wtMorningChecks">

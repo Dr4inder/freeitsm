@@ -34,6 +34,7 @@ require_once __DIR__ . '/resources/service_status.php';
 require_once __DIR__ . '/resources/morning_checks.php';
 require_once __DIR__ . '/resources/forms.php';
 require_once __DIR__ . '/resources/workflows.php';
+require_once __DIR__ . '/resources/jobs.php';           // background job health (#182)
 require_once __DIR__ . '/resources/network_mapper.php'; // needs cmdb.php (above) for apiCmdbClassDefs
 
 // --- Resolve the request path ---------------------------------------------
@@ -170,6 +171,7 @@ function apiHandleRoot(PDO $conn, array $apiKey, array $params, array $body): vo
             'GET /forms/{id}/versions', 'POST /forms/{id}/versions',
             'GET /forms/{id}/submissions', 'POST /forms/{id}/submissions',
             'GET /forms/{id}/submissions/{submission_id}', 'DELETE /forms/{id}/submissions/{submission_id}',
+            'GET /jobs/health',
             'GET /workflows', 'POST /workflows', 'GET /workflows/{id}', 'PATCH /workflows/{id}',
             'DELETE /workflows/{id}', 'POST /workflows/{id}/fire', 'GET /workflows/{id}/executions',
             'GET /workflow-executions', 'GET /workflow-executions/{id}',
