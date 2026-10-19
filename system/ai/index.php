@@ -69,7 +69,7 @@ try {
             'label'     => $entry['label'],
             'provider'  => $cfg['provider'],
             'model'     => $cfg['model'],
-            'has_key'   => $cfg['api_key'] !== '',
+            'has_key'   => aiConfigured($cfg),   // a custom endpoint needs no key (GH #192)
             'reasoning' => (bool)$cfg['reasoning'],
             // Only OpenRouter understands the parameter. Said per row, honestly.
             'applies'   => $cfg['provider'] === 'openrouter',
@@ -220,7 +220,7 @@ try {
                         <div class="ai-row-main">
                             <div class="ai-row-name"><?php echo htmlspecialchars($f['label']); ?></div>
                             <div class="ai-row-meta">
-                                <?php echo htmlspecialchars(ucfirst($f['provider'])); ?> ·
+                                <?php echo htmlspecialchars(t('common.ai.provider_' . ($f['provider'] === 'openai_compatible' ? 'compatible' : $f['provider']))); ?> ·
                                 <code><?php echo htmlspecialchars($f['model']); ?></code>
                                 <?php if (!$f['has_key']): ?>
                                     · <?php echo htmlspecialchars(t('system.ai.no_key')); ?>

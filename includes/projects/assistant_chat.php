@@ -350,7 +350,7 @@ function projectChatTurn(PDO $conn, ActorContext $ctx, array $project, string $m
 {
     if (!projectChatReady($conn)) throw new ServiceError('validation', 'not_ready', 'Run System - Database Verification first.');
     $cfg = aiSettingsLoad($conn, 'projects_ai');
-    if (($cfg['api_key'] ?? '') === '') throw new RuntimeException('not_configured');
+    if (!aiConfigured($cfg)) throw new RuntimeException('not_configured');
     $pid = (int)$project['id'];
     $text = trim($text);
     if ($mode === 'chat' && $text === '') throw new ServiceError('validation', 'missing_field', 'Write a message first.');

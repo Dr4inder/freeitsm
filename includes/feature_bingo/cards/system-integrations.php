@@ -248,8 +248,21 @@ return [
         'link'     => 'system/ai/',
         'check'    => ['sql', "SELECT COUNT(*) FROM system_settings WHERE setting_key IN (" . $aiKeys('provider') . ") AND setting_value = 'azure'"],
     ],
+    // GH #192: a model server the install runs itself.
+    [
+        'id'       => 'system.ai_own_model',
+        'module'   => 'system',
+        'tier'     => 'extra',
+        'category' => 'ai',
+        'title'    => 'AI on your own model server',
+        'what'     => 'At least one AI feature uses an OpenAI-compatible endpoint you choose - Ollama, LM Studio, vLLM or similar - addressed by base URL and model, with a key only if the server needs one.',
+        'why'      => 'Ticket text, articles and drafts are processed inside your own network, which some organisations require and which works without Internet access.',
+        'done'     => 'At least one AI feature is set to the OpenAI-compatible (custom endpoint) provider.',
+        'link'     => 'system/ai/',
+        'check'    => ['sql', "SELECT COUNT(*) FROM system_settings WHERE setting_key IN (" . $aiKeys('provider') . ") AND setting_value = 'openai_compatible'"],
+    ],
 
-    // ── Integrations: issue trackers ────────────────────────────────────────
+    // ── Integrations: issue trackers────────────────────────────────────────
     [
         'id'       => 'system.jira_connection',
         'module'   => 'system',

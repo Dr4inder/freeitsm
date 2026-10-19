@@ -77,11 +77,17 @@
         var azDeploy   = panel.querySelector('[data-ai-azure-deployment]');
         var azVersion  = panel.querySelector('[data-ai-azure-api-version]');
         var modelGroup = panel.querySelector('[data-ai-model-group]');
+        // A custom OpenAI-compatible endpoint (GH #192).
+        var compatBox  = panel.querySelector('[data-ai-compatible]');
+        var compatUrl  = panel.querySelector('[data-ai-compatible-base-url]');
+        var keyClear   = panel.querySelector('[data-ai-key-clear]');
+        var keyClearWrap = panel.querySelector('[data-ai-key-clear-wrap]');
+        var hasKey     = false;
         var saveBtn    = panel.querySelector('[data-ai-save]');
         var testBtn    = panel.querySelector('[data-ai-test]');
         var resultEl   = panel.querySelector('[data-ai-result]');
 
-        var defaults = { anthropic: 'claude-haiku-4-5-20251001', openai: 'gpt-4o', openrouter: '' };
+        var defaults = { anthropic: 'claude-haiku-4-5-20251001', openai: 'gpt-4o', openrouter: '', openai_compatible: '' };
         var orModelsLoaded = false;
         var MODELS = [];   // [{ id, price? }]  current suggestion set
         var menuOpen = false;
@@ -90,6 +96,22 @@
         function setResult(text, cls) {
             resultEl.textContent = text || '';
             resultEl.className = 'ai-result' + (cls ? ' ' + cls : '');
+        }
+
+        /**
+         * Shows whether a key is saved: the masked placeholder, the hint - which says
+         * the key is optional for a custom endpoint (GH #192) - and the Remove box.
+         */
+        function setKeyState(saved, masked) {
+            hasKey = !!saved;
+            keyEl.placeholder = hasKey ? (masked || '••••') : 'sk-...';
+            keyHint.textContent = hasKey
+                ? tr('api_key_set', 'A key is saved. Leave blank to keep it.')
+                : (providerEl.value === 'openai_compatible'
+                    ? tr('api_key_optional_help', 'Optional. Leave blank if the server needs no key. Stored encrypted.')
+                    : tr('api_key_help', 'Stored encrypted. Leave blank to keep the saved key.'));
+            if (keyClearWrap) keyClearWrap.hidden = !hasKey;
+            if (keyClear) keyClear.checked = false;
         }
 
         // ---- custom model dropdown ----
@@ -176,12 +198,19 @@
             var isAzure = provider === 'azure';
             if (azureBox)   azureBox.hidden = !isAzure;
             if (modelGroup) modelGroup.hidden = isAzure;
+            // GH #192: the address box, and no suggestions - the server decides what models exist.
+            var isCompat = provider === 'openai_compatible';
+            if (compatBox) compatBox.hidden = !isCompat;
+            setKeyState(hasKey, keyEl.placeholder);
 
             if (isAzure) {
                 setCuratedModels(provider);   // empties the suggestion list
                 return;                       // no model default to apply below
             }
-            if (provider === 'openrouter') {
+            if (isCompat) {
+                setCuratedModels(provider);   // empties the suggestion list
+                modelHint.textContent = tr('compatible_model_help', 'The model\'s exact name on that server, for example llama3.1:8b.');
+            } else if (provider === 'openrouter') {
                 if (!orModelsLoaded) loadOpenRouterModels(); else if (menuOpen) renderMenu();
             } else {
                 setCuratedModels(provider);
@@ -204,10 +233,9 @@
                 if (azEndpoint) azEndpoint.value = d.azure_endpoint || '';
                 if (azDeploy)   azDeploy.value   = d.azure_deployment || '';
                 if (azVersion)  azVersion.value  = d.azure_api_version || '';
-                if (d.has_key) {
-                    keyEl.placeholder = d.masked_key || '••••';
-                    keyHint.textContent = tr('api_key_set', 'A key is saved. Leave blank to keep it.');
-                }
+                if (compatUrl)  compatUrl.value  = d.compatible_base_url || '';
+                hasKey = !!d.has_key;
+                if (d.has_key) keyEl.placeholder = d.masked_key || '••••';
                 applyProviderUi(providerEl.value, { keepModel: true });
             })
             .catch(function () { applyProviderUi(providerEl.value || 'anthropic', { keepModel: true }); });
@@ -230,7 +258,9 @@
                 // time getting right. The provider row decides what is used.
                 azure_endpoint:    azEndpoint ? azEndpoint.value.trim() : '',
                 azure_deployment:  azDeploy   ? azDeploy.value.trim()   : '',
-                azure_api_version: azVersion  ? azVersion.value.trim()  : ''
+                azure_api_version: azVersion  ? azVersion.value.trim()  : '',
+                compatible_base_url: compatUrl ? compatUrl.value.trim() : '',
+                clear_api_key: !!(keyClear && keyClear.checked)
             };
             fetch(apiBase + 'save_settings.php', {
                 method: 'POST', credentials: 'same-origin',
@@ -241,10 +271,13 @@
                 .then(function (d) {
                     if (d.success) {
                         keyEl.value = '';
-                        if (payload.api_key) {
-                            keyEl.placeholder = '••••';
-                            keyHint.textContent = tr('api_key_set', 'A key is saved. Leave blank to keep it.');
-                        }
+                        /* Read the key's state back rather than guessing it: a key is
+                           removed when asked, and is not carried across to or from a
+                           custom endpoint (GH #192), so the server is the one to say. */
+                        fetch(apiBase + 'get_settings.php?ns=' + encodeURIComponent(ns), { credentials: 'same-origin' })
+                            .then(function (r) { return r.json(); })
+                            .then(function (g) { if (g.success) setKeyState(g.has_key, g.masked_key); })
+                            .catch(function () { /* the save itself succeeded */ });
                         toast(tr('saved', 'Saved'), 'success');
                     } else {
                         toast(d.error || tr('save_failed', 'Failed to save'), 'error');
@@ -267,6 +300,17 @@
                 .then(function (d) {
                     if (d.success) {
                         setResult(tr('test_ok', 'Connection OK') + ' — ' + d.provider + ' · ' + d.model + ' · ' + d.duration_ms + 'ms', 'ok');
+                        // GH #192: a custom endpoint's test also says whether tool calling works.
+                        if (d.tools) {
+                            var tl = document.createElement('div');
+                            tl.className = 'ai-result-hint';
+                            tl.textContent = d.tools === 'supported'
+                                ? tr('test_tools_supported', 'Tool calling works with this model.')
+                                : d.tools === 'not_used'
+                                    ? tr('test_tools_not_used', 'The model did not call the test tool.')
+                                    : tr('test_tools_unsupported', 'Tool calling did not work with this model.') + (d.tools_hint ? ' ' + d.tools_hint : '');
+                            resultEl.appendChild(tl);
+                        }
                     } else {
                         setResult((tr('test_failed', 'Test failed') + ': ') + (d.error || ''), 'err');
                         // GH #171: what it most likely means, and where to see the whole exchange.

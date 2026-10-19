@@ -289,7 +289,7 @@ try {
         $generated = 0;
         if ($need > 0) {
             $cfg = aiSettingsLoad($conn, 'lms_ai');
-            if (($cfg['api_key'] ?? '') === '') {
+            if (!aiConfigured($cfg)) {
                 ctOut(['from_bank' => $fromBank, 'generated' => 0,
                        'message' => "The bank had {$fromBank}; {$need} more are needed and LMS AI is not set up (LMS → Settings → LMS AI). Write them by hand, or set up the AI."]);
             }

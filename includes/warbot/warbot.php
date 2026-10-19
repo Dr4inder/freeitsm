@@ -211,7 +211,7 @@ function warbotAnswer(PDO $conn, int $analystId, int $channelId, string $questio
     // 2. Plain English needs the brain.
     try {
         $cfg = aiSettingsLoad($conn, 'warroom_ai');
-        if (($cfg['api_key'] ?? '') === '') {
+        if (!aiConfigured($cfg)) {
             return ['text' => warbotNoBrain('no AI provider is configured'), 'degraded' => true];
         }
 

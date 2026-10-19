@@ -94,7 +94,7 @@ try {
     // (ns=tickets_reply_cleanup) so this feature keeps its own key + billing
     // line. Tone + custom instructions are reply-cleanup specific.
     $aiCfg = aiSettingsLoad($conn, 'tickets_reply_cleanup');
-    if (($aiCfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($aiCfg)) {
         sse_send('error', ['message' => 'Reply Cleanup AI not configured. Set up the provider and key in Tickets → Settings → Reply Cleanup.']);
         exit;
     }

@@ -33,8 +33,10 @@ try {
     requireAiNamespaceJson($conn, $ns);
 
     $cfg  = aiSettingsLoad($conn, $ns);
-    if ($cfg['api_key'] === '') {
-        echo json_encode(['success' => false, 'error' => 'No API key saved yet — save a key first.']);
+    if (!aiConfigured($cfg)) {
+        echo json_encode(['success' => false, 'error' => $cfg['provider'] === 'openai_compatible'
+            ? 'No base URL and model saved yet - save them first.'
+            : 'No API key saved yet — save a key first.']);
         exit;
     }
 
@@ -44,8 +46,33 @@ try {
         'max_tokens' => 16,
     ]);
 
+    /* GH #192: a custom endpoint answering "OK" proves the address, the key and
+       the model - not that the model can do everything a feature asks. Two of the
+       features (the war room bot and the Projects assistant) call tools, which
+       many local models cannot. So for a custom endpoint the test also asks for
+       one tool call and says plainly what came back, rather than letting a
+       green "Connection OK" imply every feature will work. */
+    $tools = null;
+    if ($cfg['provider'] === 'openai_compatible') {
+        try {
+            $probe = aiProviderChatTools($cfg, [
+                'system' => 'You are a connection test. Call the ping tool once, then reply with the single word: OK',
+                'user' => 'Call the ping tool.',
+                'max_rounds' => 2,
+                'max_tokens' => 64,
+            ], [['name' => 'ping', 'description' => 'Answers pong. Call it once.', 'schema' => ['type' => 'object', 'properties' => (object)[]]]],
+            function () { return 'pong'; });
+            $tools = $probe['calls'] ? 'supported' : 'not_used';
+        } catch (Exception $te) {
+            $tools = 'unsupported';
+            $toolsHint = $te->getMessage();   // the server's own words; the panel says which features need tools
+        }
+    }
+
     echo json_encode([
         'success'     => true,
+        'tools'       => $tools,
+        'tools_hint'  => $toolsHint ?? '',
         'provider'    => $result['provider'],
         'model'       => $result['model'],
         'duration_ms' => $result['duration_ms'],

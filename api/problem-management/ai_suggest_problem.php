@@ -19,7 +19,7 @@ try {
     $conn = connectToDatabase();
     $analystId = (int) $_SESSION['analyst_id'];
     $cfg = aiSettingsLoad($conn, 'problem_ai');
-    if (($cfg['api_key'] ?? '') === '') throw new Exception('Problem AI is not configured. Set a provider + key in Problem Management → Settings.');
+    if (!aiConfigured($cfg)) throw new Exception('Problem AI is not configured. Set a provider + key in Problem Management → Settings.');
 
     [$tf, $tp] = ticketTenantFilter($conn, $analystId, 't');
     // Subjects go to the AI provider - never a confidential ticket's (#62).

@@ -463,8 +463,10 @@ function getHelpTopics() {
                 ['id' => 'evidence',    'label' => 'Why off is the default'],
                 ['id' => 'per-feature', 'label' => 'One switch per feature'],
                 ['id' => 'providers',   'label' => 'Which providers'],
+                ['id' => 'own-model',   'label' => 'Your own model server'],
             ],
             'terms' => 'ai thinking extended thinking reasoning model openrouter anthropic openai claude gpt'
+                     . ' ollama lm studio vllm localai local model self-hosted on premises openai-compatible custom endpoint base url air-gapped'
                      . ' slow expensive tokens budget cost summarise summarize draft extract'
                      . ' no effect no api key why is the ai slow ai answers are bad',
         ],

@@ -44,7 +44,7 @@ function webchatAiConfigured(PDO $conn): bool
 function webchatAiReply(PDO $conn, string $question, array $history = [], ?int $tenantId = null): array
 {
     $cfg = aiSettingsLoad($conn, 'knowledge_ai');
-    if (($cfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($cfg)) {
         return ['ok' => false, 'answer' => '', 'articles' => [], 'error' => 'AI not configured'];
     }
 
@@ -104,7 +104,7 @@ function webchatAiSummarise(PDO $conn, string $transcript): string
     } catch (Exception $e) {
         return '';
     }
-    if (($cfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($cfg)) {
         return '';
     }
 

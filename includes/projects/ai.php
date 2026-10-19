@@ -347,7 +347,7 @@ function projectAiSystemPrompt(): string
 function projectAiAsk(PDO $conn, string $task, string $facts, int $maxTokens): array
 {
     $cfg = aiSettingsLoad($conn, 'projects_ai');
-    if (($cfg['api_key'] ?? '') === '') throw new RuntimeException('not_configured');
+    if (!aiConfigured($cfg)) throw new RuntimeException('not_configured');
     $res = aiProviderChat($cfg, [
         'system'     => projectAiSystemPrompt(),
         'user'       => $task . "\n\n<project_data>\n" . $facts . "\n</project_data>",

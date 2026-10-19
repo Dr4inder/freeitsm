@@ -132,7 +132,7 @@ try {
 
     /* ── write a new one ───────────────────────────────────────────────────── */
     $cfg = aiSettingsLoad($conn, TICKET_AI_NS);
-    if (($cfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($cfg)) {
         echo json_encode(['success' => false, 'error' => 'not_configured']);
         exit;
     }

@@ -31,17 +31,27 @@
  *                   {endpoint}/openai/v1/chat/completions, which takes no
  *                   query string and DOES want the deployment as `model`
  *                   (GH #171).
- *
- * Request shapes mirror the proven ones in includes/rfp_ai.php; this file is
+ *   - openai_compatible → POST {base URL}/chat/completions
+ *                   Any server that speaks the OpenAI wire format at an address
+ *                   the administrator chooses - Ollama, LM Studio, vLLM, LocalAI,
+ *                   a gateway (GH #192). The key is OPTIONAL: a local server
+ *                   usually has none, and no Authorization header is sent then.
+ *                   🔴 It NEVER falls back to a cloud provider: a failure is
+ *                   reported as a failure, because an administrator who chose a
+ *                   local model has usually chosen it so the text stays inside.
+ * * Request shapes mirror the proven ones in includes/rfp_ai.php; this file is
  * intentionally independent so the RFP builder isn't affected.
  */
 
 require_once __DIR__ . '/encryption.php';
 
+/** A reply that arrived but is not the shape a chat completion has (GH #192). Never retried or "fixed". */
+class AiResponseFormatError extends RuntimeException {}
+
 const AI_PROVIDER_RETRY_MAX        = 3;
 const AI_PROVIDER_RETRY_BACKOFF_MS = 2000;
 const AI_PROVIDER_HTTP_TIMEOUT     = 120;
-const AI_PROVIDER_VALID            = ['anthropic', 'openai', 'openrouter', 'azure'];
+const AI_PROVIDER_VALID            = ['anthropic', 'openai', 'openrouter', 'azure', 'openai_compatible'];
 
 /** Used when an Azure config names no api-version. A widely-deployed, stable one. */
 const AI_AZURE_DEFAULT_API_VERSION = '2024-02-01';
@@ -73,7 +83,8 @@ function aiProviderChat(array $cfg, array $opts): array
     if (!in_array($provider, AI_PROVIDER_VALID, true)) {
         throw new RuntimeException('Unknown AI provider: ' . $provider);
     }
-    if ($apiKey === '') {
+    // GH #192: a custom endpoint's key is optional - a local server usually has none.
+    if ($apiKey === '' && $provider !== 'openai_compatible') {
         throw new RuntimeException('No API key configured.');
     }
     /* ⚠️ Azure names a DEPLOYMENT rather than a model, so it is checked against
@@ -87,6 +98,8 @@ function aiProviderChat(array $cfg, array $opts): array
         if (trim((string)($cfg['azure_deployment'] ?? '')) === '') {
             throw new RuntimeException('No Azure deployment name configured.');
         }
+    } elseif ($provider === 'openai_compatible' && trim((string)($cfg['compatible_base_url'] ?? '')) === '') {
+        throw new RuntimeException('No base URL configured.');
     } elseif ($model === '') {
         throw new RuntimeException('No model configured.');
     }
@@ -118,6 +131,17 @@ function aiProviderChat(array $cfg, array $opts): array
             aiAzureChatUrl($cfg),
             aiAzureIsV1($cfg) ? $model : '',
             ['api-key: ' . $apiKey],
+            $verify,
+            $opts
+        );
+    } elseif ($provider === 'openai_compatible') {
+        // GH #192: the OpenAI wire format at the administrator's own address.
+        // A Bearer header only when a key is saved - a local server needs none,
+        // and a dummy credential is not something anyone should have to invent.
+        $result = aiProviderCallOpenAICompatible(
+            aiCompatibleChatUrl($cfg),
+            $model,
+            aiCompatibleAuthHeaders($apiKey),
             $verify,
             $opts
         );
@@ -268,6 +292,69 @@ function aiAzureApiVersionLooksValid(string $v): bool
 }
 
 /**
+ * The chat-completions URL of a custom OpenAI-compatible endpoint (GH #192).
+ *
+ * The administrator gives the BASE URL - for Ollama `http://host:11434/v1` - and
+ * FreeITSM appends `/chat/completions`, as the OpenAI clients do. A pasted full
+ * address (ending in /chat/completions) is cut back rather than doubled, and a
+ * trailing slash is tolerated: all three are the same intention.
+ *
+ * @param array $cfg  the AI settings - only compatible_base_url is read
+ */
+function aiCompatibleChatUrl(array $cfg): string
+{
+    $base = rtrim(trim((string)($cfg['compatible_base_url'] ?? '')), '/');
+    if (strtolower(substr($base, -17)) === '/chat/completions') {
+        $base = substr($base, 0, -17);
+    }
+    return rtrim($base, '/') . '/chat/completions';
+}
+
+/**
+ * The auth header for a custom endpoint: Bearer when a key is saved, none when not (GH #192).
+ *
+ * @param string $apiKey  the plaintext key; '' for a server that needs none
+ */
+function aiCompatibleAuthHeaders(string $apiKey): array
+{
+    return $apiKey !== '' ? ['Authorization: Bearer ' . $apiKey] : [];
+}
+
+/**
+ * Whether a feature's AI settings are complete enough to try a call.
+ *
+ * TRAP: do not test `$cfg['api_key'] === ''` for "AI is not set up". That was the
+ * test in every feature until GH #192, and it is wrong for a custom endpoint, whose
+ * key is optional - a local Ollama with no key would have been reported as "not
+ * configured" by every feature while the Test button said it worked.
+ *
+ * @param array $cfg  a feature's AI settings, as aiSettingsLoad() returns them
+ */
+function aiConfigured(array $cfg): bool
+{
+    if (($cfg['provider'] ?? '') === 'openai_compatible') {
+        return trim((string)($cfg['compatible_base_url'] ?? '')) !== ''
+            && trim((string)($cfg['model'] ?? '')) !== '';
+    }
+    return (string)($cfg['api_key'] ?? '') !== '';
+}
+
+/**
+ * Whether a custom endpoint's address is one FreeITSM will send to: http or https
+ * with a host, and nothing else (GH #192). Used when saving, so a typo is caught
+ * on the settings page rather than at the first AI request.
+ *
+ * @param string $url  the base URL as typed
+ */
+function aiCompatibleBaseUrlValid(string $url): bool
+{
+    $url = trim($url);
+    if ($url === '' || !filter_var($url, FILTER_VALIDATE_URL)) return false;
+    $scheme = strtolower((string)parse_url($url, PHP_URL_SCHEME));
+    return in_array($scheme, ['http', 'https'], true) && (string)parse_url($url, PHP_URL_HOST) !== '';
+}
+
+/**
  * The OpenAI chat-completions wire format, at whatever URL and behind whatever
  * auth header the caller names.
  *
@@ -374,7 +461,18 @@ function aiOpenAICompatPost(string $url, array $headers, array &$payload, bool $
 {
     for ($fixes = 0; ; $fixes++) {
         try {
-            return aiProviderHttpPost($url, $headers, json_encode($payload), $verify);
+            $resp = aiProviderHttpPost($url, $headers, json_encode($payload), $verify);
+            /* GH #192: a custom address can answer 200 with JSON that is not a chat
+               completion at all - a gateway's status page, another API. Reading it as
+               an empty answer would blame the model; say what it is instead. Every
+               real chat-completions server, Azure's content filter included, sends
+               `choices`. */
+            if (!isset($resp['data']['choices'][0])) {
+                throw new AiResponseFormatError('The address answered, but not with a chat completion (no "choices" in the reply). Check the base URL points at the OpenAI-compatible API, usually ending in /v1.');
+            }
+            return $resp;
+        } catch (AiResponseFormatError $e) {
+            throw $e;
         } catch (RuntimeException $e) {
             $msg = $e->getMessage();
             if ($fixes >= 2) throw $e;
@@ -429,6 +527,10 @@ function aiExplainFailure(array $cfg, string $msg): string
     $azure    = $provider === 'azure';
     $version  = trim((string)($cfg['azure_api_version'] ?? ''));
 
+    if ($provider === 'openai_compatible') {
+        $hint = aiExplainCompatibleFailure($cfg, $msg);
+        if ($hint !== '') return $hint;
+    }
     if (stripos($msg, 'Network error') !== false || stripos($msg, 'Could not resolve') !== false
         || stripos($msg, 'timed out') !== false || stripos($msg, 'certificate') !== false) {
         return 'The request never reached the provider. That is a network, DNS or certificate problem on this server rather than a setting - debug tool D006 checks HTTPS from here.';
@@ -458,6 +560,49 @@ function aiExplainFailure(array $cfg, string $msg): string
     }
     if (strpos($msg, '(HTTP 429)') !== false) {
         return 'The provider is rate limiting this key, or its quota or spending limit is used up.';
+    }
+    return '';
+}
+
+/**
+ * What a custom endpoint's failure most likely means (GH #192), or '' to fall
+ * through to the general explanations.
+ *
+ * ⚠️ The request is made by the FreeITSM SERVER. "localhost" in the base URL is
+ * that server - in Docker, the FreeITSM container - not the machine the
+ * administrator is sitting at, and not the host running the model. That is the
+ * commonest way a working Ollama looks broken, so it is named first.
+ *
+ * @param array $cfg  the AI settings the call used - compatible_base_url and model are read
+ * @param string $msg  the failure's message, as thrown by aiProviderHttpPost()
+ */
+function aiExplainCompatibleFailure(array $cfg, string $msg): string
+{
+    $host  = strtolower((string)parse_url(trim((string)($cfg['compatible_base_url'] ?? '')), PHP_URL_HOST));
+    $local = in_array($host, ['localhost', '127.0.0.1', '::1', '[::1]'], true);
+    $model = trim((string)($cfg['model'] ?? ''));
+
+    if (stripos($msg, 'Network error') !== false && (stripos($msg, 'connect') !== false || stripos($msg, 'refused') !== false)) {
+        return $local
+            ? 'Nothing answered at that address. The request comes from the FreeITSM server, so "' . $host . '" means the FreeITSM server itself - in Docker, the FreeITSM container, not the machine running the model. Use the model host\'s name or address (with Docker Desktop, host.docker.internal).'
+            : 'Nothing answered at that address and port from the FreeITSM server. Check the model server is running, is listening on a network address rather than only on its own localhost (Ollama: OLLAMA_HOST=0.0.0.0), and that no firewall is in the way.';
+    }
+    if (stripos($msg, 'timed out') !== false) {
+        return 'The model server took longer than ' . AI_PROVIDER_HTTP_TIMEOUT . ' seconds to answer. A large model on a CPU can; a smaller model, or one already loaded into memory, answers faster.';
+    }
+    if (stripos($msg, 'tool') !== false && (stripos($msg, 'support') !== false || stripos($msg, 'enable-auto-tool-choice') !== false)) {
+        return 'This model does not support tool calling, which this feature needs. Choose a model that does - Ollama marks them "tools" in its library - or use a different provider for this feature.';
+    }
+    if (strpos($msg, '(HTTP 401)') !== false || strpos($msg, '(HTTP 403)') !== false) {
+        return 'The server refused the request. It needs an API key, or the saved one is wrong.';
+    }
+    if (strpos($msg, '(HTTP 404)') !== false) {
+        return stripos($msg, 'model') !== false
+            ? 'The server does not have a model called "' . $model . '". Use its exact name as the server lists it (Ollama: ollama list), and pull it first if it is not there.'
+            : 'Nothing was found at that address. The base URL is usually the server\'s address ending in /v1 (Ollama: http://host:11434/v1) - FreeITSM adds /chat/completions itself.';
+    }
+    if (stripos($msg, 'not with a chat completion') !== false || stripos($msg, 'Syntax error') !== false) {
+        return 'Something answered, but it is not an OpenAI-compatible API. The base URL is usually the server\'s address ending in /v1.';
     }
     return '';
 }
@@ -510,7 +655,10 @@ function aiProviderChatTools(array $cfg, array $opts, array $tools, callable $ru
     $verify   = !empty($cfg['verify_ssl']);
 
     if (!in_array($provider, AI_PROVIDER_VALID, true)) throw new RuntimeException('Unknown AI provider: ' . $provider);
-    if ($apiKey === '') throw new RuntimeException('No API key configured.');
+    if ($apiKey === '' && $provider !== 'openai_compatible') throw new RuntimeException('No API key configured.');
+    if ($provider === 'openai_compatible' && trim((string)($cfg['compatible_base_url'] ?? '')) === '') {
+        throw new RuntimeException('No base URL configured.');
+    }
     if ($provider === 'azure') {
         if (trim((string)($cfg['azure_endpoint'] ?? '')) === '' || trim((string)($cfg['azure_deployment'] ?? '')) === '') {
             throw new RuntimeException('No Azure endpoint or deployment configured.');
@@ -651,6 +799,10 @@ function aiProviderChatTools(array $cfg, array $opts, array $tools, callable $ru
             // The deployment decides the model (see aiProviderChat) - except on v1.
             if (!aiAzureIsV1($cfg)) unset($payload['model']);
             $resp = aiOpenAICompatPost(aiAzureChatUrl($cfg), ['api-key: ' . $apiKey, 'content-type: application/json'], $payload, $verify);
+        } elseif ($provider === 'openai_compatible') {
+            // GH #192: the administrator's own address - never api.openai.com.
+            $resp = aiOpenAICompatPost(aiCompatibleChatUrl($cfg),
+                array_merge(aiCompatibleAuthHeaders($apiKey), ['content-type: application/json']), $payload, $verify);
         } else {
             $resp = aiOpenAICompatPost(rtrim($base, '/') . '/chat/completions', array_merge([
                 'Authorization: Bearer ' . $apiKey,
@@ -735,6 +887,10 @@ function aiProviderHttpPost(string $url, array $headers, string $body, bool $ver
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => AI_PROVIDER_HTTP_TIMEOUT,
+            // GH #192: an administrator can now name the address, so only ever speak
+            // HTTP(S) to it - never file://, gopher:// or the like. Redirects are not
+            // followed (cURL's default), so the address saved is the one used.
+            CURLOPT_PROTOCOLS      => CURLPROTO_HTTP | CURLPROTO_HTTPS,
         ]);
         sslApplyCurl($ch);
         $t0   = microtime(true);
@@ -765,7 +921,9 @@ function aiProviderHttpPost(string $url, array $headers, string $body, bool $ver
             return ['code' => $code, 'data' => $data];
         }
 
-        $errMsg  = $data['error']['message'] ?? ('HTTP ' . $code);
+        // OpenAI's shape is {error:{message}}; Ollama's native errors and some
+        // gateways send {error:"text"} - read both rather than reporting a bare code.
+        $errMsg  = $data['error']['message'] ?? (is_string($data['error'] ?? null) ? $data['error'] : ('HTTP ' . $code));
         $lastErr = "$errMsg (HTTP $code)";
 
         $retryable = ($code === 429 || ($code >= 500 && $code < 600));

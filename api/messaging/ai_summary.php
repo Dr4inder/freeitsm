@@ -43,7 +43,7 @@ try {
     }
 
     $cfg = aiSettingsLoad($conn, 'tickets_reply_cleanup');
-    if (($cfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($cfg)) {
         throw new Exception('AI is not configured. Set up the provider and key in Tickets → Settings → Reply Cleanup.');
     }
 

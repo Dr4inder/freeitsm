@@ -91,10 +91,17 @@ check('every .php in tests/ refuses to run unless PHP_SAPI is cli',
    stand-in Azure endpoint, so it must answer an HTTP request — but only from
    the `php -S` that tests/azure-openai/run.php starts itself. Named here so the
    exception stays deliberate rather than becoming a hole anyone may widen. */
-$mock = (string)@file_get_contents($root . '/tests/azure-openai/mock.php');
-check("the one HTTP exception (azure mock) is limited to php -S",
-    strpos($mock, "PHP_SAPI !== 'cli-server'") !== false,
-    'the Azure mock should accept the built-in server and nothing else');
+/* GH #192 added a second stand-in, for custom OpenAI-compatible endpoints. The
+   exceptions are named by PATH: this used to excuse any file called mock.php,
+   so a third one anywhere in tests/ would have passed without anybody deciding
+   it should. */
+$httpExceptions = ['tests/azure-openai/mock.php', 'tests/ai-compatible/mock.php'];
+foreach ($httpExceptions as $rel) {
+    $mock = (string)@file_get_contents($root . '/' . $rel);
+    check("the HTTP exception $rel is limited to php -S",
+        strpos($mock, "PHP_SAPI !== 'cli-server'") !== false,
+        'a stand-in endpoint should accept the built-in server and nothing else');
+}
 /* ⚠️ Asked of each file's HEAD, not its whole body. Asked of the whole body this
    check failed against a correct tree — because THIS file names the exception in
    order to describe it, and matched itself. Same trap as the first draft of the
@@ -102,7 +109,7 @@ check("the one HTTP exception (azure mock) is limited to php -S",
    searches a whole file finds the documentation as readily as the code. */
 $claimers = [];
 foreach ($scripts as $p) {
-    if (basename($p) === 'mock.php') continue;
+    if (in_array(str_replace('\\', '/', substr($p, strlen($root) + 1)), $httpExceptions, true)) continue;
     if (strpos(substr((string)file_get_contents($p), 0, 1200), "!== 'cli-server'") !== false) {
         $claimers[] = substr($p, strlen($root) + 1);
     }

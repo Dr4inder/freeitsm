@@ -22,7 +22,7 @@ try {
     if (!analystCanAccessProblem($conn, (int) $_SESSION['analyst_id'], $problemId)) throw new Exception('Problem not found');
 
     $cfg = aiSettingsLoad($conn, 'problem_ai');
-    if (($cfg['api_key'] ?? '') === '') throw new Exception('Problem AI is not configured. Set a provider + key in Problem Management → Settings.');
+    if (!aiConfigured($cfg)) throw new Exception('Problem AI is not configured. Set a provider + key in Problem Management → Settings.');
 
     // Problem context + its linked incidents.
     $p = $conn->prepare("SELECT title, description FROM problems WHERE id = ?");

@@ -85,7 +85,7 @@ function loadWorkflowAiConfig(PDO $conn): array
     // Provider / model / key / verify_ssl now come from the shared building
     // block (ns=workflow_ai), which adds OpenRouter alongside Anthropic/OpenAI.
     $cfg = aiSettingsLoad($conn, 'workflow_ai');
-    if (($cfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($cfg)) {
         throw new Exception('AI co-author is not configured. Set your provider, model and API key under Workflow → Settings → AI Integration.');
     }
     return $cfg;

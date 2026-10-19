@@ -128,7 +128,7 @@ $choices = [0, 7, 30, 90, 180, 365];
         <?php endif; ?>
     </div>
 
-    <script src="../../assets/js/ai-settings.js?v=3"></script>
+    <script src="../../assets/js/ai-settings.js?v=4"></script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
     <script src="../../assets/js/mobile.js?v=80"></script>

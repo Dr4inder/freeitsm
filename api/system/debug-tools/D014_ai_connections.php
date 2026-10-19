@@ -146,6 +146,7 @@ function traceLines(array $t, string $key, int $n): array {
 function setupKey(array $cfg): string {
     return implode('|', [$cfg['provider'], $cfg['provider'] === 'azure' ? '' : $cfg['model'],
         $cfg['azure_endpoint'] ?? '', $cfg['azure_deployment'] ?? '', $cfg['azure_api_version'] ?? '',
+        $cfg['provider'] === 'openai_compatible' ? ($cfg['compatible_base_url'] ?? '') : '',
         hash('sha256', (string)$cfg['api_key']), !empty($cfg['verify_ssl']) ? 1 : 0]);
 }
 /**
@@ -155,7 +156,8 @@ function setupKey(array $cfg): string {
  * @param string $p  the provider key, e.g. 'anthropic' or 'azure'
  */
 function providerLabel(string $p): string {
-    return ['anthropic' => 'Anthropic', 'openai' => 'OpenAI', 'openrouter' => 'OpenRouter', 'azure' => 'Azure OpenAI'][$p] ?? $p;
+    return ['anthropic' => 'Anthropic', 'openai' => 'OpenAI', 'openrouter' => 'OpenRouter', 'azure' => 'Azure OpenAI',
+            'openai_compatible' => 'Custom endpoint'][$p] ?? $p;
 }
 
 $conn     = connectToDatabase();
@@ -180,8 +182,8 @@ foreach ($registry as $ns => $entry) {
         ? 'deployment "' . $cfg['azure_deployment'] . '"'
         : 'model ' . $cfg['model'];
     $lines[] = sprintf('%-24s  %-12s  %s%s', $entry['label'], providerLabel($cfg['provider']), $what,
-        $cfg['api_key'] === '' ? '   (no key saved)' : '');
-    if (($only === '' || $only === $ns) && $cfg['api_key'] !== '') {
+        !aiConfigured($cfg) ? '   (not set up)' : ($cfg['api_key'] === '' ? '   (no key - custom endpoint)' : ''));
+    if (($only === '' || $only === $ns) && aiConfigured($cfg)) {
         $k = setupKey($cfg);
         if (!isset($setups[$k])) $setups[$k] = ['cfg' => $cfg, 'labels' => []];
         $setups[$k]['labels'][] = $entry['label'];
@@ -191,8 +193,8 @@ addSection($sections, 'AI FEATURES AND THEIR PROVIDERS', $lines);
 
 if (!$setups) {
     addSection($sections, 'VERDICT', $only !== ''
-        ? $registry[$only]['label'] . ' has no API key saved, so there is nothing to call. Save a key in its AI settings first.'
-        : 'No AI feature has an API key saved, so there is nothing to call. Each module\'s AI settings has its own key.');
+        ? $registry[$only]['label'] . ' is not set up (no API key saved, or for a custom endpoint no base URL and model), so there is nothing to call. Set it up in its AI settings first.'
+        : 'No AI feature is set up, so there is nothing to call. Each module\'s AI settings has its own key - or, for a custom endpoint, its own base URL and model.');
     emit_and_exit($sections);
 }
 
@@ -221,6 +223,17 @@ foreach ($setups as $setup) {
             $notes[] = 'The endpoint host "' . $host . '" is not one Azure OpenAI normally uses';
             $notes[] = '(*.openai.azure.com, *.services.ai.azure.com or *.cognitiveservices.azure.com).';
             $notes[] = 'Fine if it is a gateway in front of Azure; otherwise check it.';
+        }
+    } elseif ($cfg['provider'] === 'openai_compatible') {
+        // GH #192: a server the administrator runs. Show the address actually built.
+        $c[] = 'Base URL as saved : ' . ($cfg['compatible_base_url'] ?: '(empty - REQUIRED)');
+        $c[] = 'Sent to           : ' . aiCompatibleChatUrl($cfg);
+        $c[] = 'Model             : ' . ($cfg['model'] ?: '(empty - REQUIRED)');
+        $host = strtolower((string)parse_url((string)$cfg['compatible_base_url'], PHP_URL_HOST));
+        if (in_array($host, ['localhost', '127.0.0.1', '::1', '[::1]'], true)) {
+            $notes[] = '"' . $host . '" is the FreeITSM server itself - in Docker, the FreeITSM';
+            $notes[] = 'container. If the model runs on another machine, or on the Docker host,';
+            $notes[] = 'use that machine\'s name or address (Docker Desktop: host.docker.internal).';
         }
     } else {
         $c[] = 'Model             : ' . ($cfg['model'] ?: '(empty - REQUIRED)');

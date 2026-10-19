@@ -16,7 +16,7 @@ const CMDB_AI_PROPERTY_TYPES = ['text', 'number', 'date', 'boolean', 'dropdown',
  */
 function loadCmdbAiConfig(PDO $conn): array {
     $cfg = aiSettingsLoad($conn, 'cmdb_ai'); // provider, model, api_key, verify_ssl
-    if (($cfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($cfg)) {
         throw new Exception('CMDB AI is not configured. Set your provider and key in CMDB → Settings → AI Integration.');
     }
 

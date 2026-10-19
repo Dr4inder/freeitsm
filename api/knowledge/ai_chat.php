@@ -118,7 +118,7 @@ try {
     // Load the configured chat provider/model/key (Anthropic / OpenAI / OpenRouter)
     // via the shared AI settings building block.
     $aiCfg = aiSettingsLoad($conn, 'knowledge_ai');
-    if (($aiCfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($aiCfg)) {
         echo json_encode(['success' => false, 'error' => 'AI API key not configured. Please add it in Knowledge Settings.']);
         exit;
     }

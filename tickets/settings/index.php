@@ -136,7 +136,7 @@ function renderOversizeFields(string $px, bool $withLimits): void
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <script src="../../assets/js/i18n.js?v=3"></script>
-    <script src="../../assets/js/ai-settings.js?v=3"></script>
+    <script src="../../assets/js/ai-settings.js?v=4"></script>
     <!-- Reply templates are rich text, so this page needs the same editor the reply
          box uses. Loaded for every tab because the tab bar is server-rendered and
          there is no navigation event to lazy-load on. -->

@@ -49,7 +49,7 @@ $translationNamespaces = ['common', 'forms'];
     <script src="../../assets/js/i18n.js?v=3"></script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../../assets/js/tz.js?v=5"></script>
-    <script src="../../assets/js/ai-settings.js?v=3"></script>
+    <script src="../../assets/js/ai-settings.js?v=4"></script>
     <link rel="stylesheet" href="../../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../../assets/css/inbox.css?v=79">
     <style>

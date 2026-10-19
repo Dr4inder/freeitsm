@@ -93,7 +93,7 @@ try {
     }
 
     $aiCfg = aiSettingsLoad($conn, 'tickets_reply_cleanup');
-    if (($aiCfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($aiCfg)) {
         // Not an error worth shouting about: merging works without AI, and the
         // caller treats this as "no summary" rather than "the merge failed".
         sse_send('unconfigured', ['message' => 'No AI provider configured for Tickets.']);

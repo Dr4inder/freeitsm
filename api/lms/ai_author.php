@@ -48,7 +48,7 @@ try {
     $conn  = connectToDatabase();
 
     $cfg = aiSettingsLoad($conn, 'lms_ai');
-    if (($cfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($cfg)) {
         throw new Exception('LMS AI is not configured. Set a provider and key in LMS → Settings.');
     }
 

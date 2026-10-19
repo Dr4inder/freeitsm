@@ -94,7 +94,7 @@ try {
     // Its own namespace if configured, otherwise the module's existing Knowledge
     // AI key — see writeupAiConfig().
     $aiCfg = writeupAiConfig($conn);
-    if (($aiCfg['api_key'] ?? '') === '') {
+    if (!aiConfigured($aiCfg)) {
         sse_send('error', ['message' => 'The Knowledge assistant is not set up yet. Add a provider and key in Knowledge → Settings → Assistant.']);
         exit;
     }
