@@ -225,6 +225,10 @@ try {
         foreach ($summary['skipped'] as $line) echo "  - $line\n";
     }
 
+    // Non-zero when any notification failed (#182), like the other jobs, so a
+    // scheduler watching exit codes can tell too. The run is already recorded.
+    if (!empty($summary['errors'])) exit(1);
+
 } catch (Exception $e) {
     http_response_code(500);
     if (isset($conn) && $runId) {
