@@ -504,6 +504,8 @@ function switchView(view) {
     if (groupToggle) groupToggle.style.display = view === 'board' ? '' : 'none';
     const subtasksToggle = document.getElementById('boardSubtasksSection');
     if (subtasksToggle) subtasksToggle.style.display = view === 'board' ? '' : 'none';
+    const sortToggle = document.getElementById('boardSortSection');
+    if (sortToggle) sortToggle.style.display = view === 'board' ? '' : 'none';
     if (view === 'board') renderBoard();
     else renderList();
     saveTaskPreference('tasks_view', view);
@@ -651,6 +653,61 @@ function switchBoardGroup(group) {
     renderBoard();
 }
 
+// ── Card order: manual or by due date (GH #191) ────────────────────
+//
+// A personal choice (user_preferences tasks_board_sort). Due date orders the
+// DISPLAY only: board_position - the manual order everybody shares - is never
+// rewritten, so switching back to Manual restores it exactly. Applied in both
+// renderers, so it holds after loading, filtering, searching and any save that
+// reloads the board (a due-date change included).
+let boardSort = window.TASK_BOARD_SORT === 'due' ? 'due' : 'manual';
+
+/** Switches the card order, remembers it, and redraws. */
+function setBoardSort(mode) {
+    boardSort = mode === 'due' ? 'due' : 'manual';
+    document.querySelectorAll('#boardSortToggle .view-btn')
+        .forEach(b => b.classList.toggle('active', b.dataset.sort === boardSort));
+    const hint = document.getElementById('boardSortHint');
+    if (hint) hint.style.display = boardSort === 'due' ? '' : 'none';
+    saveTaskPreference('tasks_board_sort', boardSort);
+    renderBoard();
+}
+
+/** Today as YYYY-MM-DD in the viewer's own calendar - the same day formatDueBadge() calls "today". */
+function boardTodayYmd() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+/**
+ * Where a task falls in due-date order: open work by date (overdue, then due today, then future -
+ * which is simply ascending date), then open work with no due date, then done work (which is never
+ * "overdue") in the same shape. A due date is a bare calendar day, compared as text.
+ */
+function boardDueRank(t) {
+    const done = taskIsDone(t) ? 1 : 0;
+    const due = t.due_date ? String(t.due_date).slice(0, 10) : '';
+    return [done, due ? 0 : 1, due];
+}
+
+/**
+ * Sorts one column's tasks in place by due date when that order is chosen, keeping the order they
+ * arrived in for equal dates - so ties fall back to the manual order, stably.
+ *
+ * @param tiebreak  optional comparator applied after the due date (the analyst board's status order)
+ */
+function applyBoardSort(list, tiebreak) {
+    if (boardSort !== 'due') return list;
+    const index = new Map(list.map((t, i) => [t, i]));
+    return list.sort((a, b) => {
+        const ra = boardDueRank(a), rb = boardDueRank(b);
+        if (ra[0] !== rb[0]) return ra[0] - rb[0];
+        if (ra[1] !== rb[1]) return ra[1] - rb[1];
+        if (ra[2] !== rb[2]) return ra[2] < rb[2] ? -1 : 1;
+        return (tiebreak ? tiebreak(a, b) : 0) || (index.get(a) - index.get(b));
+    });
+}
+
 /**
  * Draws the board as one column per analyst with a task in view - the viewer's own column first and
  * always present, then by name, with Unassigned last.
@@ -694,6 +751,9 @@ function renderBoardByAnalyst() {
     cols.forEach(g => {
         g.tasks.sort((a, b) => statusRank(a.status) - statusRank(b.status)
             || (a.board_position || 0) - (b.board_position || 0));
+        // GH #191: by due date the date decides, and status order only breaks a tie -
+        // the card's status chip still says where it stands.
+        applyBoardSort(g.tasks, (a, b) => statusRank(a.status) - statusRank(b.status));
         const initials = g.id ? g.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() : '–';
         const col = document.createElement('div');
         col.className = 'board-column board-column--analyst';
@@ -739,8 +799,8 @@ function renderBoard() {
         const status = col.dataset.status;
         const cardsEl = col.querySelector('.board-cards');
         const countEl = col.querySelector('.column-count');
-        const filtered = tasks.filter(t =>
-            t.status === status && taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t) && taskMatchesDone(t));
+        const filtered = applyBoardSort(tasks.filter(t =>
+            t.status === status && taskMatchesSearch(t) && taskMatchesTag(t) && taskMatchesProject(t) && taskMatchesContractor(t) && taskMatchesDone(t)));
         if (countEl) countEl.textContent = filtered.length;
 
         if (filtered.length === 0) {
@@ -1101,6 +1161,10 @@ function moveDrag(e) {
         }
     });
 
+    // Sorted by due date (GH #191) a card's place in a column is decided by its
+    // date, not by where it is dropped - so there is no line to drop it on.
+    if (boardSort === 'due') return;
+
     // Show indicator
     const indicator = document.createElement('div');
     indicator.className = 'drop-indicator';
@@ -1229,6 +1293,20 @@ async function endDrag(e) {
     const container = targetColumn.querySelector('.board-cards');
     const otherCards = Array.from(container.querySelectorAll('.task-card:not(.dragging)'));
 
+    // Sorted by due date (GH #191): a drop in the SAME column changes nothing - the
+    // shared manual order is not rewritten from a display order. A drop in another
+    // column still moves the task there, placed after that column's manual order.
+    if (boardSort === 'due') {
+        const moved = tasks.find(t => t.id == dragState.taskId) || {};
+        const movedId = dragState.taskId;
+        dragState = null;
+        if (moved.status === newStatus) { renderBoard(); return; }
+        const last = tasks.filter(t => t.status === newStatus && !t.parent_task_id)
+            .reduce((m, t) => Math.max(m, Number(t.board_position) || 0), -1);
+        await dropWithStatus(movedId, newStatus, moved.status, [{ id: movedId, board_position: last + 1 }]);
+        return;
+    }
+
     // Find insert position
     let insertIndex = otherCards.length;
     for (let i = 0; i < otherCards.length; i++) {
@@ -1248,11 +1326,20 @@ async function endDrag(e) {
     const positions = ordered.map((id, idx) => ({ id, board_position: idx }));
     const movedTaskId = dragState.taskId;
     dragState = null;
+    await dropWithStatus(movedTaskId, newStatus, (tasks.find(t => t.id == movedTaskId) || {}).status, positions);
+}
 
+/**
+ * Sends a card drop to the server - the status it landed in and the positions to store - after the
+ * checklist question a completing drop asks, then reloads the board. Shared by the manual drop and
+ * the due-date drop (GH #191).
+ *
+ * @param positions  [{id, board_position}] to store; the due-date drop sends only the moved card's
+ */
+async function dropWithStatus(movedTaskId, newStatus, movedFrom, positions) {
     // Dropping into a closed column is completing the task - the commonest way
     // it happens - so it gets the same checklist question as the status box
     // (discussion #138). Declined: the card goes back where it was.
-    const movedFrom = (tasks.find(t => t.id == movedTaskId) || {}).status;
     if (!(await confirmChecklistCompletion(movedTaskId, newStatus, movedFrom))) {
         loadTasks();
         return;

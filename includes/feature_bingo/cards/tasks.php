@@ -341,6 +341,19 @@ return [
         'link'     => 'tasks/',
         'check'    => ['rows', 'user_preferences', "preference_key = 'tasks_board_group' AND preference_value = 'analyst'"],
     ],
+    // GH #191: cards in each board column sorted by due date.
+    [
+        'id'       => 'tasks.board_due_sort',
+        'module'   => 'tasks',
+        'tier'     => 'extra',
+        'category' => 'productivity',
+        'title'    => 'The board in due-date order',
+        'what'     => 'Card order -> Due date on the task board, so each column shows overdue work first, then today\'s, then the rest by date - without disturbing the order everyone else has dragged the cards into.',
+        'why'      => 'What needs doing next is at the top of every column, rather than wherever the card happened to be dropped.',
+        'done'     => 'Somebody has sorted the board by due date.',
+        'link'     => 'tasks/',
+        'check'    => ['rows', 'user_preferences', "preference_key = 'tasks_board_sort' AND preference_value = 'due'"],
+    ],
     [
         'id'       => 'tasks.hide_done_subtasks',
         'module'   => 'tasks',

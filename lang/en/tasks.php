@@ -87,6 +87,13 @@ return [
         'group_label'          => 'Columns',
         'group_status'         => 'Status',
         'group_analyst'        => 'Analyst',
+        // GH #191: the order of cards within each column.
+        'sort_label'        => 'Card order',
+        'sort_manual'       => 'Manual',
+        'sort_due'          => 'Due date',
+        'sort_manual_title' => 'The order cards were dragged into, shared by everyone',
+        'sort_due_title'    => 'Overdue first, then due today, then by due date; no due date last',
+        'sort_due_hint'     => 'Sorted by due date. Drag a card to another column to move it; to rearrange within a column, switch to Manual.',
         'unassigned'           => 'Unassigned',
         'reassigned'           => 'Assigned to {name}',
         'reassign_failed'      => 'Could not reassign the task',
@@ -791,6 +798,7 @@ return [
         'board_search_heading' => 'Search and filters',
         'board_search_body'    => 'The sidebar carries a <strong>Search</strong> box (filters as you type, matching the title and description &mdash; and tag names if enabled) plus filters for <strong>My Tasks / All Tasks</strong>, <strong>Team</strong>, <strong>Analyst</strong> and, when enabled, <strong>Tag</strong>. Filters and search apply to the list view too. Tick <strong>Hide done</strong> to leave out every task in a closed status - on the board that also hides the Done columns. It is remembered for you, and a task that is done never shows as <em>Overdue</em>.',
         'board_subtasks' => 'A task\'s subtasks are listed under its card - click one to open it. Inside a task, drag a subtask by its <strong>&#8942;&#8942;</strong> handle to change the order. Choose which subtasks the cards list under <strong>Subtasks on cards</strong> in the sidebar: <strong>All</strong>, <strong>Open</strong> (only the ones still to do) or <strong>None</strong> (just the count). Click a card&rsquo;s count, such as <strong>1/4</strong>, to show or hide that one card&rsquo;s subtasks whatever the setting says. Both are remembered for you.',
+        'board_card_order' => 'Use <strong>Card order</strong> in the left panel to choose how cards sit inside each column. <strong>Manual</strong> is the order cards were dragged into, which everyone shares. <strong>Due date</strong> puts overdue work first, then work due today, then the rest by date, with tasks that have no due date at the bottom - for you only, and without changing the manual order, which comes back as it was when you switch back. While sorted by due date you can still drag a card to another column; to rearrange cards within a column, switch to Manual. Your choice is remembered.',
         'board_columns_by_analyst' => 'Use <strong>Columns &rarr; Analyst</strong> in the left panel to see one column per person instead (yours first, then <em>Unassigned</em>), with each card showing its status. Dragging a card to someone else\'s column assigns the task to them. Your choice is remembered.',
         'board_tip'            => 'Choose what each card shows &mdash; priority, assignee, team, dates, a description excerpt, subtask progress, tags &mdash; under Settings &rarr; Card, so you can scan tasks without opening them.',
 

@@ -43,6 +43,9 @@ $taskModalLayout = 'columns';
 $taskView   = 'board';
 $taskFilter = 'my';
 $taskBoardGroup = 'status';
+// Card order on the board (GH #191): manual (the shared board positions) or by due date.
+// A personal choice; it orders the DISPLAY only and never rewrites board_position.
+$taskBoardSort = 'manual';
 $taskHideDoneSubtasks = false;
 // GH #184. Hide done: like Board/List, it cannot hide a task beyond the plain
 // meaning of the switch you ticked, so it is remembered (the rule above).
@@ -58,7 +61,7 @@ try {
         "SELECT preference_key, preference_value FROM user_preferences
          WHERE analyst_id = ? AND preference_key IN
                ('tasks_detail_view', 'tasks_modal_layout', 'tasks_view', 'tasks_filter', 'tasks_board_group',
-                'tasks_hide_done_subtasks', 'tasks_hide_done', 'tasks_board_subtasks', 'tasks_subtask_cards')"
+                'tasks_hide_done_subtasks', 'tasks_hide_done', 'tasks_board_subtasks', 'tasks_subtask_cards', 'tasks_board_sort')"
     );
     $__p->execute([(int) ($_SESSION['analyst_id'] ?? 0)]);
     foreach ($__p->fetchAll(PDO::FETCH_KEY_PAIR) as $__k => $__v) {
@@ -72,6 +75,7 @@ try {
         // Board columns by status (default) or by analyst (2.10.0). No schema
         // change: a user_preferences row, like the board/list choice above.
         if ($__k === 'tasks_board_group' && $__v === 'analyst') { $taskBoardGroup = 'analyst'; }
+        if ($__k === 'tasks_board_sort' && $__v === 'due') { $taskBoardSort = 'due'; }
         // System -> Preferences: stop listing subtasks under a card once all are done.
         if ($__k === 'tasks_hide_done_subtasks' && $__v === 'on') { $taskHideDoneSubtasks = true; }
         if ($__k === 'tasks_hide_done' && $__v === 'on') { $taskHideDone = true; }
@@ -109,7 +113,7 @@ $translationNamespaces = ['common', 'tasks'];
     <title><?php echo htmlspecialchars(pageTitle('tasks')); ?></title>
     <link rel="stylesheet" href="../assets/css/theme.css?v=27">
     <link rel="stylesheet" href="../assets/css/inbox.css?v=79">
-    <link rel="stylesheet" href="../assets/css/tasks.css?v=47">
+    <link rel="stylesheet" href="../assets/css/tasks.css?v=48">
     <script>window.translations = <?php echo json_encode(I18n::exportForJs($translationNamespaces), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;</script>
     <?php echo Tz::scriptTag(); ?>
     <script src="../assets/js/tz.js?v=5"></script>
@@ -187,6 +191,17 @@ $translationNamespaces = ['common', 'tasks'];
                     <?php echo htmlspecialchars(t('tasks.filter.hide_done')); ?>
                 </label>
             </div>
+            <?php /* GH #191: the order of cards within each column. Due date sorts the display only;
+                     the board's shared manual order is untouched and comes back on Manual. */ ?>
+            <div class="sidebar-section sidebar-section--view" id="boardSortSection"<?php echo $taskView === 'list' ? ' style="display:none"' : ''; ?>>
+                <div class="sidebar-label"><?php echo htmlspecialchars(t('tasks.board.sort_label')); ?></div>
+                <div class="view-toggle" id="boardSortToggle">
+                    <button class="view-btn<?php echo $taskBoardSort === 'manual' ? ' active' : ''; ?>" data-sort="manual" onclick="setBoardSort('manual')" title="<?php echo htmlspecialchars(t('tasks.board.sort_manual_title')); ?>"><?php echo htmlspecialchars(t('tasks.board.sort_manual')); ?></button>
+                    <button class="view-btn<?php echo $taskBoardSort === 'due' ? ' active' : ''; ?>" data-sort="due" onclick="setBoardSort('due')" title="<?php echo htmlspecialchars(t('tasks.board.sort_due_title')); ?>"><?php echo htmlspecialchars(t('tasks.board.sort_due')); ?></button>
+                </div>
+                <div class="sidebar-hint" id="boardSortHint"<?php echo $taskBoardSort === 'due' ? '' : ' style="display:none"'; ?>><?php echo htmlspecialchars(t('tasks.board.sort_due_hint')); ?></div>
+            </div>
+
             <div class="sidebar-section sidebar-section--view" id="boardSubtasksSection"<?php echo $taskView === 'list' ? ' style="display:none"' : ''; ?>>
                 <div class="sidebar-label"><?php echo htmlspecialchars(t('tasks.board.subtasks_label')); ?></div>
                 <div class="view-toggle" id="boardSubtasksToggle">
@@ -379,6 +394,7 @@ $translationNamespaces = ['common', 'tasks'];
     window.TASK_MODAL_LAYOUT = <?php echo json_encode($taskModalLayout); ?>;
     window.TASK_VIEW = <?php echo json_encode($taskView); ?>;
     window.TASK_BOARD_GROUP = <?php echo json_encode($taskBoardGroup); ?>;
+    window.TASK_BOARD_SORT = <?php echo json_encode($taskBoardSort); ?>;
     window.TASK_HIDE_DONE = <?php echo json_encode($taskHideDone); ?>;
     window.TASK_BOARD_SUBTASKS = <?php echo json_encode($taskBoardSubtasks); ?>;
     window.TASK_SUBTASK_CARDS = <?php echo json_encode((object)$taskSubtaskCards); ?>;
@@ -386,7 +402,7 @@ $translationNamespaces = ['common', 'tasks'];
     window.TASK_CAN_PROJECTS = <?php echo json_encode($taskCanProjects); ?>;</script>
     <script src="../assets/js/tasks-priority.js?v=1"></script>
     <script src="../assets/js/tasks-ctx-menu.js?v=4"></script>
-    <script src="../assets/js/tasks.js?v=55"></script>
+    <script src="../assets/js/tasks.js?v=56"></script>
     <script src="../assets/js/mobile.js?v=80"></script>
 </body>
 </html>

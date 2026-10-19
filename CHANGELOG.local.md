@@ -36,6 +36,7 @@ When publishing to the website, move entries from **Unpublished** to the **Publi
 | 2459 | API               | Fix         | **The REST API said tasks were install-wide**; they are scoped to the key's companies (they have been since tasks gained companies). Docs and the catalogue corrected. |
 | 2460 | Tests             | Improvement | **New suites `tests/job-health.php`, `tests/task-evidence.php` and `tests/task-read-only.php`**, and the older task tests now remove the history rows they write - history deliberately outlives its tasks, so a test has to tidy it itself. |
 | 2461 | Reporting         | Improvement | **The Background jobs tables become cards on a phone**, like the other two System logs tables (`assets/js/mobile.js` v80). |
+| 2462 | Tasks             | Feature     | **Task board cards can be sorted by due date** (GH #191) - Card order -> Manual / Due date in the left panel, per analyst (`user_preferences.tasks_board_sort`); due date orders the display only and never rewrites `board_position`, a same-column drop does nothing and a drop in another column moves the card to the end of that column's manual order. |
 
 
 

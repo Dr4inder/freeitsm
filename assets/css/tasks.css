@@ -2645,3 +2645,6 @@ body.module-read-only .recur-link[onclick],
 body.module-read-only .recur-skip,
 body.module-read-only #ctxMenu .ctx-item:not([data-action="open"]):not([data-action="copylink"]),
 body.module-read-only #ctxMenu .ctx-sep { display: none !important; }
+
+/* GH #191: the note under Card order while cards are sorted by due date. */
+.sidebar-hint { font-size: 11px; line-height: 1.4; color: var(--text-muted, #666); margin-top: 6px; }
