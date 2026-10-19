@@ -213,7 +213,7 @@ class TaskFollowUps
     }
 
     /** For the #181 frozen record. */
-    public static function snapshot(PDO $conn, int $taskId): array
+    public static function snapshot(PDO $conn, int $taskId, bool $strict = false): array
     {
         if (!self::ready($conn)) return [];
         try {
@@ -221,6 +221,7 @@ class TaskFollowUps
                                          'open' => $f['open'], 'created_here' => $f['created_here'], 'source_kind' => $f['source_kind']],
                              self::forTask($conn, $taskId, 0));
         } catch (Throwable $e) {
+            if ($strict) throw $e;
             return [];
         }
     }

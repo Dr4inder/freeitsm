@@ -60,6 +60,68 @@ final class TaskHistory
                                   array $detail = [], ?int $recurrenceId = null): void
     {
         try {
+            self::write($conn, $taskId, $type, $ctx, $from, $to, $detail, $recurrenceId);
+        } catch (Throwable $e) {
+            error_log('[task history] could not record ' . $type . ' on task ' . $taskId . ': ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * TEST HOOK (#181 follow-up): the event type whose next STRICT write throws, or '*' for any.
+     * Set only by tests/task-evidence-atomic.php, in its own CLI process - never by the app.
+     */
+    public static ?string $failNextWrite = null;
+
+    /** Has Database Verification created the history tables? Cached per request. Before it, there is no evidence to keep. */
+    public static function ready(PDO $conn): bool
+    {
+        static $ready = null;
+        if ($ready !== null) return $ready;
+        try {
+            $conn->query("SELECT id FROM task_events LIMIT 0");
+            $conn->query("SELECT completed_by_id, skipped_datetime FROM tasks LIMIT 0");
+            $conn->query("SELECT id FROM task_removed_records LIMIT 0");
+            return $ready = true;
+        } catch (Throwable $e) {
+            return $ready = false;
+        }
+    }
+
+    /**
+     * Records one event as EVIDENCE: inside the caller's transaction, and a failure is the
+     * caller's failure (GH #181, Dr4inder's review). The change and its record are saved
+     * together or not at all - "usually recorded" is not evidence.
+     *
+     * @throws ServiceError evidence_not_recorded when the write fails
+     */
+    public static function recordStrict(PDO $conn, int $taskId, string $type, ?ActorContext $ctx, $from = null, $to = null,
+                                        array $detail = [], ?int $recurrenceId = null): void
+    {
+        if (!self::ready($conn)) return;          // no history tables yet: nothing to keep, nothing to fail
+        try {
+            self::write($conn, $taskId, $type, $ctx, $from, $to, $detail, $recurrenceId);
+        } catch (Throwable $e) {
+            throw self::notRecorded($type, $e);
+        }
+    }
+
+    /** The error a failed evidence write becomes. Nothing was changed - say so. */
+    public static function notRecorded(string $what, Throwable $e): ServiceError
+    {
+        error_log('[task history] evidence not recorded (' . $what . '): ' . $e->getMessage());
+        return new ServiceError('conflict', 'evidence_not_recorded',
+            function_exists('t') ? t('tasks.history.not_recorded') : 'Nothing was changed: the record of this change could not be saved. Try again, and tell your administrator if it keeps happening.');
+    }
+
+    /** The one INSERT behind record() and recordStrict(). Throws. */
+    private static function write(PDO $conn, int $taskId, string $type, ?ActorContext $ctx, $from, $to,
+                                  array $detail, ?int $recurrenceId): void
+    {
+        if (self::$failNextWrite !== null && (self::$failNextWrite === '*' || self::$failNextWrite === $type)) {
+            self::$failNextWrite = null;
+            throw new RuntimeException('injected failure (test)');
+        }
+        {
             if ($recurrenceId === null) {
                 $r = $conn->prepare("SELECT recurrence_id FROM tasks WHERE id = ?");
                 $r->execute([$taskId]);
@@ -76,8 +138,6 @@ final class TaskHistory
                             $from === null ? null : mb_substr((string)$from, 0, 255),
                             $to === null ? null : mb_substr((string)$to, 0, 255),
                             $detail ? json_encode($detail, JSON_UNESCAPED_UNICODE) : null, $runId]);
-        } catch (Throwable $e) {
-            error_log('[task history] could not record ' . $type . ' on task ' . $taskId . ': ' . $e->getMessage());
         }
     }
 
@@ -120,55 +180,104 @@ final class TaskHistory
     public static function afterStatusChange(PDO $conn, ?ActorContext $ctx, int $taskId, array $before, int $newStatusId,
                                              ?string $skipReason = null): void
     {
-        if (!$before || (int)($before['status_id'] ?? 0) === $newStatusId) return;
+        // Kept for any caller that writes the status itself: the evidence in its own
+        // transaction, then the successor. The four status writers use the two halves.
+        $own = !$conn->inTransaction();
+        if ($own) $conn->beginTransaction();
+        try {
+            $result = self::recordStatusChange($conn, $ctx, $taskId, $before, $newStatusId, $skipReason);
+            if ($own) $conn->commit();
+        } catch (Throwable $e) {
+            if ($own && $conn->inTransaction()) $conn->rollBack();
+            throw $e;
+        }
+        self::afterCommit($conn, $ctx, $result);
+    }
+
+    /**
+     * THE status hook's EVIDENCE half (GH #181) - call INSIDE the transaction that writes the
+     * status, after that write. Records the change; on completing, who did it and the due date in
+     * force, the procedure texts (#190), and - for a repeat set to "after completion" - whether a
+     * successor is now expected. Any failure throws, so the caller's transaction rolls the status
+     * change back with it: the change and its record stand or fall together.
+     *
+     * @return ?array what afterCommit() needs (the successor to create), or null
+     */
+    public static function recordStatusChange(PDO $conn, ?ActorContext $ctx, int $taskId, array $before, int $newStatusId,
+                                              ?string $skipReason = null): ?array
+    {
+        if (!$before || (int)($before['status_id'] ?? 0) === $newStatusId) return null;
+        $strict = self::ready($conn);
         try {
             $st = $conn->prepare("SELECT name, is_closed FROM task_statuses WHERE id = ?");
             $st->execute([$newStatusId]);
             $new = $st->fetch(PDO::FETCH_ASSOC) ?: ['name' => null, 'is_closed' => 0];
         } catch (Throwable $e) {
-            return;
+            if ($strict) throw self::notRecorded('status', $e);
+            return null;
         }
         $wasClosed = !empty($before['status_is_closed']);
         $nowClosed = !empty($new['is_closed']);
         $rid = !empty($before['recurrence_id']) ? (int)$before['recurrence_id'] : null;
+        $successor = null;
 
-        self::record($conn, $taskId, 'status_changed', $ctx, $before['status_name'] ?? null, $new['name'], [], $rid);
+        self::recordStrict($conn, $taskId, 'status_changed', $ctx, $before['status_name'] ?? null, $new['name'], [], $rid);
 
         if (!$wasClosed && $nowClosed) {
             [$aid] = self::actor($ctx);
             $detail = ['due_date' => $before['due_date'] ?? null, 'scheduled_date' => $before['scheduled_date'] ?? null];
-            if ($skipReason !== null) {
-                try {
-                    $conn->prepare("UPDATE tasks SET skipped_datetime = UTC_TIMESTAMP(), completed_by_id = NULL WHERE id = ?")->execute([$taskId]);
-                } catch (Throwable $e) { /* before Database Verification */ }
-                self::record($conn, $taskId, 'skipped', $ctx, null, $skipReason, $detail, $rid);
-            } else {
-                try {
-                    $conn->prepare("UPDATE tasks SET completed_by_id = ?, skipped_datetime = NULL WHERE id = ?")->execute([$aid, $taskId]);
-                } catch (Throwable $e) { /* before Database Verification */ }
-                self::record($conn, $taskId, 'completed', $ctx, null, $before['due_date'] ?? null, $detail, $rid);
-            }
-            // GH #190: freeze the procedure texts this occurrence was done against.
-            require_once __DIR__ . '/task_procedures.php';
-            TaskProcedures::freeze($conn, $taskId);
-            // Top-level occurrences only: a subtask is a step inside the work, never a repeat of it.
-            if (empty($before['parent_task_id'])) {
-                try {
-                    require_once __DIR__ . '/task_recurrence.php';
-                    TaskRecurrence::onTaskClosed($conn, $taskId, $ctx);
-                } catch (Throwable $e) {
-                    error_log('Task recurrence hook failed for task ' . $taskId . ': ' . $e->getMessage());
+            try {
+                if ($strict) {
+                    $conn->prepare($skipReason !== null
+                        ? "UPDATE tasks SET skipped_datetime = UTC_TIMESTAMP(), completed_by_id = NULL WHERE id = ?"
+                        : "UPDATE tasks SET completed_by_id = ?, skipped_datetime = NULL WHERE id = ?")
+                         ->execute($skipReason !== null ? [$taskId] : [$aid, $taskId]);
                 }
+            } catch (Throwable $e) {
+                throw self::notRecorded('completed_by', $e);
+            }
+            self::recordStrict($conn, $taskId, $skipReason !== null ? 'skipped' : 'completed', $ctx, null,
+                               $skipReason !== null ? $skipReason : ($before['due_date'] ?? null), $detail, $rid);
+            // GH #190: the procedure texts this occurrence was done against are evidence too.
+            require_once __DIR__ . '/task_procedures.php';
+            TaskProcedures::freeze($conn, $taskId, $strict);
+            // Top-level occurrences only: a subtask is a step inside the work, never a repeat of it.
+            // Whether a successor is now EXPECTED is recorded here, in the transaction;
+            // making it is afterCommit()'s - Dr4inder: the expectation must be durable first.
+            if (empty($before['parent_task_id'])) {
+                require_once __DIR__ . '/task_recurrence.php';
+                $successor = TaskRecurrence::successorExpectation($conn, $taskId, $ctx, $strict);
             }
         } elseif ($wasClosed && !$nowClosed) {
-            self::record($conn, $taskId, 'reopened', $ctx, $before['completed_datetime'] ?? null, null, [
+            self::recordStrict($conn, $taskId, 'reopened', $ctx, $before['completed_datetime'] ?? null, null, [
                 'completed_datetime' => $before['completed_datetime'] ?? null,
                 'completed_by_id'    => isset($before['completed_by_id']) ? (int)$before['completed_by_id'] ?: null : null,
                 'was_skipped'        => !empty($before['skipped_datetime']),
             ], $rid);
             try {
-                $conn->prepare("UPDATE tasks SET completed_by_id = NULL, skipped_datetime = NULL WHERE id = ?")->execute([$taskId]);
-            } catch (Throwable $e) { /* before Database Verification */ }
+                if ($strict) $conn->prepare("UPDATE tasks SET completed_by_id = NULL, skipped_datetime = NULL WHERE id = ?")->execute([$taskId]);
+            } catch (Throwable $e) {
+                throw self::notRecorded('reopened', $e);
+            }
+        }
+        return ['task_id' => $taskId, 'successor' => $successor];
+    }
+
+    /**
+     * THE status hook's second half - AFTER the commit: make the successor whose expectation
+     * is already on the record. A failure here is logged, not raised: the completion stands,
+     * and the evidence report shows the successor as Missing, naming the completion.
+     *
+     * @param ?array $result  what recordStatusChange() returned
+     */
+    public static function afterCommit(PDO $conn, ?ActorContext $ctx, ?array $result): void
+    {
+        if (!$result || empty($result['successor']['create'])) return;
+        try {
+            require_once __DIR__ . '/task_recurrence.php';
+            TaskRecurrence::createSuccessor($conn, (int)$result['task_id'], $result['successor']);
+        } catch (Throwable $e) {
+            error_log('Task recurrence: successor not created for task ' . $result['task_id'] . ': ' . $e->getMessage());
         }
     }
 
@@ -226,10 +335,11 @@ final class TaskHistory
      *
      * @param int $taskId  the occurrence being deleted (top level, with a recurrence_id)
      */
-    public static function recordRemoval(PDO $conn, ?ActorContext $ctx, int $taskId): void
+    public static function recordRemoval(PDO $conn, ?ActorContext $ctx, int $taskId, ?array $snap = null, bool $strict = false): void
     {
+        if ($strict && !self::ready($conn)) return;
         try {
-            $snap = self::snapshot($conn, $taskId);
+            $snap = $snap ?? self::snapshot($conn, $taskId, $strict);
             if (!$snap) return;
             $t = $snap['task'];
             [$aid, , $name] = self::actor($ctx);
@@ -241,9 +351,20 @@ final class TaskHistory
                  ->execute([$taskId, $t['recurrence_id'] ?? null, $t['previous_occurrence_id'] ?? null, $t['tenant_id'] ?? null,
                             $t['title'] ?? null, $t['scheduled_date'] ?? null, $t['due_date'] ?? null, $aid, $name,
                             json_encode($snap, JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR)]);
-            self::record($conn, $taskId, 'removed', $ctx, null, null, ['title' => $t['title'] ?? null],
-                         isset($t['recurrence_id']) ? (int)$t['recurrence_id'] : null);
+            if (self::$failNextWrite === 'removed_record') { self::$failNextWrite = null; throw new RuntimeException('injected failure (test)'); }
+            if ($strict) {
+                self::recordStrict($conn, $taskId, 'removed', $ctx, null, null, ['title' => $t['title'] ?? null],
+                                   isset($t['recurrence_id']) ? (int)$t['recurrence_id'] : null);
+            } else {
+                self::record($conn, $taskId, 'removed', $ctx, null, null, ['title' => $t['title'] ?? null],
+                             isset($t['recurrence_id']) ? (int)$t['recurrence_id'] : null);
+            }
+        } catch (ServiceError $e) {
+            if ($strict) throw $e;
+            error_log('[task history] could not record the removal of task ' . $taskId . ': ' . $e->getMessage());
         } catch (Throwable $e) {
+            // Strict (deleteTask): the occurrence is NOT deleted without its retained record.
+            if ($strict) throw self::notRecorded('removal', $e);
             error_log('[task history] could not record the removal of task ' . $taskId . ': ' . $e->getMessage());
         }
     }
@@ -253,12 +374,20 @@ final class TaskHistory
      *
      * @param int $taskId  the task
      */
-    public static function snapshot(PDO $conn, int $taskId): ?array
+    public static function snapshot(PDO $conn, int $taskId, bool $strict = false): ?array
     {
-        $q = function (string $sql, array $args) use ($conn): array {
+        /* Strict (a removal about to happen): a failed READ is a failure, not an empty section -
+           an occurrence deleted with "no comments" because the comments query broke is the very
+           gap the retained record exists to close. A table that does not exist on this install
+           (42S02) holds nothing to keep, so that alone reads as empty. */
+        $q = function (string $sql, array $args) use ($conn, $strict): array {
             try { $s = $conn->prepare($sql); $s->execute($args); return $s->fetchAll(PDO::FETCH_ASSOC) ?: []; }
-            catch (Throwable $e) { return []; }
+            catch (Throwable $e) {
+                if ($strict && !($e instanceof PDOException && $e->getCode() === '42S02')) throw $e;
+                return [];
+            }
         };
+        if ($strict && self::$failNextWrite === 'snapshot_read') { self::$failNextWrite = null; throw new RuntimeException('injected failure (test)'); }
         $task = $q("SELECT t.*, ts.name AS status_name, ts.is_closed AS status_is_closed
                       FROM tasks t LEFT JOIN task_statuses ts ON ts.id = t.status_id WHERE t.id = ?", [$taskId])[0] ?? null;
         if (!$task) return null;
@@ -287,11 +416,11 @@ final class TaskHistory
                                   WHERE t.parent_task_id = ? ORDER BY t.board_position, t.id", [$taskId]),
             'documents'   => $docs,
             // GH #190: its forms and every submission made for them, answers and labels included.
-            'forms'       => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_forms.php'; return TaskForms::snapshot($conn, $taskId); })(),
+            'forms'       => (function () use ($conn, $taskId, $strict) { require_once __DIR__ . '/task_forms.php'; return TaskForms::snapshot($conn, $taskId, $strict); })(),
             // ...and the procedures it followed, with the frozen text each points at (GH #190 phase 2).
-            'procedures'  => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_procedures.php'; return TaskProcedures::snapshot($conn, $taskId); })(),
+            'procedures'  => (function () use ($conn, $taskId, $strict) { require_once __DIR__ . '/task_procedures.php'; return TaskProcedures::snapshot($conn, $taskId, $strict); })(),
             // ...and its follow-up tickets and tasks (GH #190 phase 3).
-            'follow_ups'  => (function () use ($conn, $taskId) { require_once __DIR__ . '/task_follow_ups.php'; return TaskFollowUps::snapshot($conn, $taskId); })(),
+            'follow_ups'  => (function () use ($conn, $taskId, $strict) { require_once __DIR__ . '/task_follow_ups.php'; return TaskFollowUps::snapshot($conn, $taskId, $strict); })(),
         ];
     }
 

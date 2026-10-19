@@ -388,42 +388,57 @@ class TasksService
             $tagIds = self::resolveTags($conn, $in['tags']);
         }
 
-        if ($updates) {
-            $updates[] = 'updated_datetime = UTC_TIMESTAMP()';
-            $args[]    = $taskId;
-            $conn->prepare('UPDATE tasks SET ' . implode(', ', $updates) . ' WHERE id = ?')->execute($args);
+        /* #181 (Dr4inder's review): the change and its history are ONE transaction. Every
+           evidence write below is strict - if one fails, the whole change rolls back and the
+           caller is told, rather than the task changing with no record of it. Successor
+           creation, workflow events and the calendar follow the commit. */
+        $own = !$conn->inTransaction();
+        if ($own) $conn->beginTransaction();
+        $statusResult = null;
+        try {
+            if ($updates) {
+                $updates[] = 'updated_datetime = UTC_TIMESTAMP()';
+                $args[]    = $taskId;
+                $conn->prepare('UPDATE tasks SET ' . implode(', ', $updates) . ' WHERE id = ?')->execute($args);
+            }
+            if ($tagIds !== null) {
+                self::syncTags($conn, $taskId, $tagIds);
+                $conn->prepare("UPDATE tasks SET updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$taskId]);
+            }
+            if ($firesCompleted) {
+                ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId, true);
+            }
+            // THE status hook's evidence half - the change, who completed it, and
+            // whether a repeat's successor is now expected.
+            if ($statusChanged) {
+                $statusResult = TaskHistory::recordStatusChange($conn, $ctx, $taskId, $before, $status[0]);
+            }
+            foreach ($dateChanges as $field => [$from, $to]) {
+                TaskHistory::recordStrict($conn, $taskId, $field . '_changed', $ctx, $from, $to,
+                    $field === 'due_date' ? ['task_closed' => !empty($before['status_is_closed'])] : []);
+            }
+            if (array_key_exists('assigned_analyst_id', $in)
+                && (int)($current['assigned_analyst_id'] ?? 0) !== (int)($in['assigned_analyst_id'] ?: 0)) {
+                TaskHistory::recordStrict($conn, $taskId, 'assigned', $ctx,
+                    self::analystLabel($conn, $current['assigned_analyst_id'] ?? null),
+                    self::analystLabel($conn, $in['assigned_analyst_id'] ?: null));
+            }
+            if (array_key_exists('assigned_team_id', $in)
+                && (int)($current['assigned_team_id'] ?? 0) !== (int)($in['assigned_team_id'] ?: 0)) {
+                TaskHistory::recordStrict($conn, $taskId, 'team_assigned', $ctx,
+                    self::teamLabel($conn, $current['assigned_team_id'] ?? null),
+                    self::teamLabel($conn, $in['assigned_team_id'] ?: null));
+            }
+            if ($own) $conn->commit();
+        } catch (Throwable $e) {
+            if ($own && $conn->inTransaction()) $conn->rollBack();
+            throw $e;
         }
-        if ($tagIds !== null) {
-            self::syncTags($conn, $taskId, $tagIds);
-            $conn->prepare("UPDATE tasks SET updated_datetime = UTC_TIMESTAMP() WHERE id = ?")->execute([$taskId]);
-        }
-
         if ($firesCompleted) {
-            ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId);
             self::completedDispatch($conn, $taskId);
         }
-        // #181: THE status hook - records the change and who completed it, and makes
-        // a repeat's next occurrence (it used to be called from here directly, and
-        // the board's drag never called it at all).
-        if ($statusChanged) {
-            TaskHistory::afterStatusChange($conn, $ctx, $taskId, $before, $status[0]);
-        }
-        foreach ($dateChanges as $field => [$from, $to]) {
-            TaskHistory::record($conn, $taskId, $field . '_changed', $ctx, $from, $to,
-                $field === 'due_date' ? ['task_closed' => !empty($before['status_is_closed'])] : []);
-        }
-        if (array_key_exists('assigned_analyst_id', $in)
-            && (int)($current['assigned_analyst_id'] ?? 0) !== (int)($in['assigned_analyst_id'] ?: 0)) {
-            TaskHistory::record($conn, $taskId, 'assigned', $ctx,
-                self::analystLabel($conn, $current['assigned_analyst_id'] ?? null),
-                self::analystLabel($conn, $in['assigned_analyst_id'] ?: null));
-        }
-        if (array_key_exists('assigned_team_id', $in)
-            && (int)($current['assigned_team_id'] ?? 0) !== (int)($in['assigned_team_id'] ?: 0)) {
-            TaskHistory::record($conn, $taskId, 'team_assigned', $ctx,
-                self::teamLabel($conn, $current['assigned_team_id'] ?? null),
-                self::teamLabel($conn, $in['assigned_team_id'] ?: null));
-        }
+        // The successor, whose expectation is already on the record.
+        TaskHistory::afterCommit($conn, $ctx, $statusResult);
         if ($assignedTo !== null) {
             self::assignedDispatch($conn, $taskId, $assignedTo);
         }
@@ -499,8 +514,14 @@ class TasksService
             foreach ($column as $i => $id) {
                 $posUpd->execute([$i, $id]);
             }
+            // #181: the move's evidence, IN its transaction - a move whose history
+            // cannot be written does not happen (Dr4inder's review).
+            if ($completing) {
+                ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId, true);
+            }
+            $statusResult = TaskHistory::recordStatusChange($conn, $ctx, $taskId, $before, $targetStatusId);
             $conn->commit();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             if ($conn->inTransaction()) $conn->rollBack();
             throw $e;
         }
@@ -511,11 +532,8 @@ class TasksService
         // would give a task that repeats when you tick it and silently does not
         // when you drag it. Outside the transaction: the move is committed and
         // must stand whatever the recurrence does.
-        if ($completing) {
-            ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId);
-        }
-        // #181: THE status hook - see TaskHistory. It makes the next occurrence.
-        TaskHistory::afterStatusChange($conn, $ctx, $taskId, $before, $targetStatusId);
+        // #181: the successor, after the commit - its expectation is already recorded.
+        TaskHistory::afterCommit($conn, $ctx, $statusResult);
         // Completing by DRAGGING must take the calendar entry away too, exactly
         // as ticking the box does. Same reason recurrence fires from here.
         self::calendarOnTaskChanged($conn, $taskId);
@@ -563,7 +581,14 @@ class TasksService
                 throw new ServiceError('validation', 'occurrence_delete_refused',
                     function_exists('t') ? t('tasks.evidence.delete_refused') : 'This task is an occurrence of a repeat, and repeats are kept as evidence here. Skip it instead.');
             }
-            TaskHistory::recordRemoval($conn, $ctx, $taskId);
+            /* #181 (Dr4inder's review): build the complete retained record FIRST - a failed
+               read throws instead of becoming an empty section - and write it in the same
+               transaction as the delete below. No record, no delete. */
+            try {
+                $removalSnapshot = TaskHistory::ready($conn) ? TaskHistory::snapshot($conn, $taskId, true) : null;
+            } catch (Throwable $e) {
+                throw TaskHistory::notRecorded('removal', $e);
+            }
         }
 
         $ids = [$taskId];
@@ -589,6 +614,12 @@ class TasksService
         }
 
         $ph = implode(',', array_fill(0, count($ids), '?'));
+        $own = !$conn->inTransaction();
+        if ($own) $conn->beginTransaction();
+        try {
+        if ($isOccurrence) {
+            TaskHistory::recordRemoval($conn, $ctx, $taskId, $removalSnapshot ?? null, true);
+        }
         $conn->prepare("DELETE FROM task_comments WHERE task_id IN ($ph)")->execute($ids);
         $conn->prepare("DELETE FROM task_tag_map WHERE task_id IN ($ph)")->execute($ids);
         // The links to attached documents went nowhere once the task was gone
@@ -608,6 +639,11 @@ class TasksService
         TaskFollowUps::deleteForTasks($conn, $ids);
         foreach (array_reverse($ids) as $id) {
             $conn->prepare("DELETE FROM tasks WHERE id = ?")->execute([$id]);
+        }
+            if ($own) $conn->commit();
+        } catch (Throwable $e) {
+            if ($own && $conn->inTransaction()) $conn->rollBack();
+            throw $e;
         }
         WorkflowEngine::dispatch('task.deleted', ['task' => [
             'id'          => $taskId,
@@ -1924,10 +1960,19 @@ class TasksService
         $before = TaskHistory::before($conn, $taskId);
         // No checklist gate: skipping is the explicit decision NOT to do the work,
         // so outstanding steps are the point, not an obstacle.
-        $conn->prepare("UPDATE tasks SET status_id = ?, completed_datetime = COALESCE(completed_datetime, UTC_TIMESTAMP()),
-                               updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
-             ->execute([$statusId, $taskId]);
-        TaskHistory::afterStatusChange($conn, $ctx, $taskId, $before, $statusId, mb_substr($reason, 0, 255));
+        // The skip and its record, together (#181).
+        $conn->beginTransaction();
+        try {
+            $conn->prepare("UPDATE tasks SET status_id = ?, completed_datetime = COALESCE(completed_datetime, UTC_TIMESTAMP()),
+                                   updated_datetime = UTC_TIMESTAMP() WHERE id = ?")
+                 ->execute([$statusId, $taskId]);
+            $statusResult = TaskHistory::recordStatusChange($conn, $ctx, $taskId, $before, $statusId, mb_substr($reason, 0, 255));
+            $conn->commit();
+        } catch (Throwable $e) {
+            if ($conn->inTransaction()) $conn->rollBack();
+            throw $e;
+        }
+        TaskHistory::afterCommit($conn, $ctx, $statusResult);
         self::taskEventDispatch($conn, 'task.status_changed', $taskId);
         self::calendarOnTaskChanged($conn, $taskId);
         return ['id' => $taskId, 'status_id' => $statusId];

@@ -463,7 +463,7 @@ class TaskForms
      * removed: each requirement, and every submission made for it - superseded ones included -
      * with its answers and their labels, so the record reads even after the form is gone.
      */
-    public static function snapshot(PDO $conn, int $taskId): array
+    public static function snapshot(PDO $conn, int $taskId, bool $strict = false): array
     {
         if (!self::columnsReady($conn)) return [];
         try {
@@ -480,6 +480,7 @@ class TaskForms
             }
             return ['requirements' => $req->fetchAll(PDO::FETCH_ASSOC), 'submissions' => $subs];
         } catch (Throwable $e) {
+            if ($strict) throw $e;   // a removal is not made with its forms silently missing
             return [];
         }
     }

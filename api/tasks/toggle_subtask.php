@@ -110,20 +110,30 @@ try {
     }
 
     $before = TaskHistory::before($conn, $id);   // #181
-    $stmt = $conn->prepare(
-        "UPDATE tasks SET status_id = ?, completed_datetime = {$completedSql},
-                          updated_datetime = UTC_TIMESTAMP()
-         WHERE id = ?"
-    );
-    $stmt->execute([$newStatusId, $id]);
-    $newStatus = $newStatusRow['name'];
     $ctx = ActorContext::fromSession($conn);
-    if ($completing) {
-        ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $id);
+    // The tick and its record, together (#181, Dr4inder's review): if the history
+    // cannot be saved, the subtask stays as it was.
+    $conn->beginTransaction();
+    try {
+        $stmt = $conn->prepare(
+            "UPDATE tasks SET status_id = ?, completed_datetime = {$completedSql},
+                              updated_datetime = UTC_TIMESTAMP()
+             WHERE id = ?"
+        );
+        $stmt->execute([$newStatusId, $id]);
+        if ($completing) {
+            ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $id, true);
+        }
+        // THE status hook's evidence half. A subtask never repeats on its own, so
+        // there is no successor to make afterwards.
+        $statusResult = TaskHistory::recordStatusChange($conn, $ctx, $id, $before, $newStatusId);
+        $conn->commit();
+    } catch (Throwable $e) {
+        if ($conn->inTransaction()) $conn->rollBack();
+        throw $e;
     }
-    // #181: THE status hook - records who completed it. A subtask never repeats
-    // on its own, so this makes no next occurrence for one.
-    TaskHistory::afterStatusChange($conn, $ctx, $id, $before, $newStatusId);
+    TaskHistory::afterCommit($conn, $ctx, $statusResult);
+    $newStatus = $newStatusRow['name'];
 
     // Update parent's updated_datetime
     if ($task['parent_task_id']) {
@@ -133,6 +143,6 @@ try {
 
     echo json_encode(['success' => true, 'new_status' => $newStatus]);
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }

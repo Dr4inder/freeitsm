@@ -289,7 +289,41 @@ class TaskRecurrence
     public static function onTaskClosed(PDO $conn, int $taskId, ?ActorContext $ctx = null): ?int
     {
         try {
-            require_once __DIR__ . '/task_history.php';
+            $plan = self::successorExpectation($conn, $taskId, $ctx, false);
+            return !empty($plan['create']) ? self::createSuccessor($conn, $taskId, $plan) : null;
+        } catch (Throwable $e) {
+            error_log('TaskRecurrence::onTaskClosed failed for task ' . $taskId . ': ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Make the successor whose expectation successorExpectation() recorded - AFTER the commit.
+     *
+     * @param array $plan  successorExpectation()'s answer, with create = true
+     */
+    public static function createSuccessor(PDO $conn, int $taskId, array $plan): ?int
+    {
+        return self::createOccurrence($conn, $taskId, $plan['rule'], $plan['next'], 'repeat_completion', $taskId);
+    }
+
+    /**
+     * Whether completing (or skipping) this occurrence makes a successor due, RECORDED - the
+     * half of the old onTaskClosed() that is evidence (GH #181). Strict, it runs inside the
+     * status change's transaction and a failure undoes the change; the successor itself is made
+     * after the commit, by createSuccessor(), so a failure there leaves a durable expectation
+     * and the report shows the gap as Missing.
+     *
+     * @return ?array ['create' => bool, 'rule' => row, 'next' => date] or null (not a completion-mode repeat)
+     */
+    public static function successorExpectation(PDO $conn, int $taskId, ?ActorContext $ctx, bool $strict): ?array
+    {
+        require_once __DIR__ . '/task_history.php';
+        $rec = function (string $type, $to, array $detail, int $rid) use ($conn, $taskId, $ctx, $strict) {
+            if ($strict) TaskHistory::recordStrict($conn, $taskId, $type, $ctx, null, $to, $detail, $rid);
+            else         TaskHistory::record($conn, $taskId, $type, $ctx, null, $to, $detail, $rid);
+        };
+        if (true) {   // (kept as a block: the body is the old onTaskClosed()'s, unchanged)
             // Active or not: a stopped series still answers "was a successor expected?" - no.
             $s = $conn->prepare("SELECT r.* FROM task_recurrences r JOIN tasks t ON t.recurrence_id = r.id
                                   WHERE t.id = ? AND t.parent_task_id IS NULL");
@@ -299,8 +333,8 @@ class TaskRecurrence
             $rid = (int)$rule['id'];
 
             if (!(int)$rule['is_active']) {
-                TaskHistory::record($conn, $taskId, 'successor', $ctx, null, null, ['expected' => false, 'reason' => 'stopped'], $rid);
-                return null;
+                $rec('successor', null, ['expected' => false, 'reason' => 'stopped'], $rid);
+                return ['create' => false];
             }
 
             // Counted from the day it was actually finished, not from the day it
@@ -308,10 +342,9 @@ class TaskRecurrence
             // month after you did it. The INSTALL's day, not UTC's (#181 section 5).
             $next = self::nextDate($rule, date('Y-m-d'));
             if ($next === null || self::isExhausted($rule, $next)) {
-                TaskHistory::record($conn, $taskId, 'successor', $ctx, null, null,
-                    ['expected' => false, 'reason' => $next === null ? 'no_date' : 'finished'], $rid);
+                $rec('successor', null, ['expected' => false, 'reason' => $next === null ? 'no_date' : 'finished'], $rid);
                 self::deactivate($conn, $rid, $next === null ? 'no_date' : 'finished');
-                return null;
+                return ['create' => false];
             }
 
             // One successor per occurrence, however often it is reopened and completed.
@@ -319,18 +352,15 @@ class TaskRecurrence
             $ex->execute([$taskId]);
             $existing = $ex->fetchColumn();
             if ($existing) {
-                TaskHistory::record($conn, $taskId, 'successor', $ctx, null, $next,
-                    ['expected' => true, 'existing_task_id' => (int)$existing], $rid);
-                return null;
+                $rec('successor', $next, ['expected' => true, 'existing_task_id' => (int)$existing], $rid);
+                return ['create' => false];
             }
 
-            // Recorded BEFORE it is created, so a failure below still leaves the
-            // expectation on the record and the report shows the gap.
-            TaskHistory::record($conn, $taskId, 'successor', $ctx, null, $next, ['expected' => true], $rid);
-            return self::createOccurrence($conn, $taskId, $rule, $next, 'repeat_completion', $taskId);
-        } catch (Throwable $e) {
-            error_log('TaskRecurrence::onTaskClosed failed for task ' . $taskId . ': ' . $e->getMessage());
-            return null;
+            // Recorded BEFORE it is created - in the status change's own transaction
+            // when strict - so a failure to create it still leaves the expectation on
+            // the record and the report shows the gap.
+            $rec('successor', $next, ['expected' => true], $rid);
+            return ['create' => true, 'rule' => $rule, 'next' => $next];
         }
     }
 

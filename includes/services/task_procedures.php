@@ -165,7 +165,7 @@ class TaskProcedures
      * this is the record of what the work was done against, not something being shown.
      * An article since deleted keeps whatever was frozen before. Never throws.
      */
-    public static function freeze(PDO $conn, int $taskId): void
+    public static function freeze(PDO $conn, int $taskId, bool $strict = false): void
     {
         if (!self::ready($conn)) return;
         try {
@@ -184,6 +184,8 @@ class TaskProcedures
                      ->execute([(int)$sid->fetchColumn(), (int)$r['version'], (int)$r['id']]);
             }
         } catch (Throwable $e) {
+            // Strict (inside the completion's transaction): no completion without its procedure record.
+            if ($strict) throw TaskHistory::notRecorded('procedure', $e);
             error_log('[task procedures] freeze failed for task ' . $taskId . ': ' . $e->getMessage());
         }
     }
@@ -212,7 +214,7 @@ class TaskProcedures
     }
 
     /** For the #181 frozen record: each reference and what it was frozen against. */
-    public static function snapshot(PDO $conn, int $taskId): array
+    public static function snapshot(PDO $conn, int $taskId, bool $strict = false): array
     {
         if (!self::ready($conn)) return [];
         try {
@@ -220,6 +222,7 @@ class TaskProcedures
             $st->execute([$taskId]);
             return $st->fetchAll(PDO::FETCH_ASSOC);
         } catch (Throwable $e) {
+            if ($strict) throw $e;
             return [];
         }
     }

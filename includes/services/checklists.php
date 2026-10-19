@@ -1034,7 +1034,7 @@ class ChecklistsService
      * instead of being stamped with a colleague's name (the round-two lesson,
      * see writeClosureNote()).
      */
-    public static function recordTaskCompletionOverride(PDO $conn, ActorContext $ctx, int $taskId): void
+    public static function recordTaskCompletionOverride(PDO $conn, ActorContext $ctx, int $taskId, bool $strict = false): void
     {
         $outstanding = self::tasksEnabled($conn) ? self::taskOutstandingMandatorySteps($conn, $taskId) : [];
         // GH #190: required forms it was completed without are recorded the same way.
@@ -1057,6 +1057,12 @@ class ChecklistsService
                             // 'app' for the web interface, as the rest of task_audit writes it.
                             $ctx->source === 'ui' ? 'app' : substr($ctx->source, 0, 20)]);
         } catch (Throwable $e) {
+            // Strict (inside the completion's transaction, GH #181): completing with work
+            // outstanding is an exception the report must show - no completion without it.
+            if ($strict) {
+                require_once __DIR__ . '/task_history.php';
+                throw TaskHistory::notRecorded('completion_override', $e);
+            }
             error_log('[checklists] could not record task completion override for task ' . $taskId . ': ' . $e->getMessage());
         }
     }

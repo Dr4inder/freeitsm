@@ -338,6 +338,8 @@ return [
     ],
 
     'history' => [
+        // GH #181: a change whose record could not be saved is not made at all.
+        'not_recorded'       => 'Nothing was changed: the record of this change could not be saved. Try again, and tell your administrator if it keeps happening.',
         'heading'   => 'History',
         'loading'   => 'Loading...',
         'none'      => 'Nothing recorded yet. History is kept from the day this was added to FreeITSM.',

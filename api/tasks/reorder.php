@@ -92,20 +92,21 @@ try {
         $posStmt->execute(array_merge([(int)$pos['board_position'], (int)$pos['id']], $posTenantArgs));
     }
 
-    $conn->commit();
+    // #181: THE status hook. Dragging a card into a closed column is the commonest
+    // way a task is completed. Its EVIDENCE is written here, inside the drag's own
+    // transaction (Dr4inder's review): if the history cannot be saved, the card does
+    // not move. A reorder within one column changes no status and records nothing.
     $ctx = ActorContext::fromSession($conn);
     if ($completing) {
-        ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId);
+        ChecklistsService::recordTaskCompletionOverride($conn, $ctx, $taskId, true);
     }
-    // #181: THE status hook. Dragging a card into a closed column is the commonest
-    // way a task is completed, and until this line it never made a repeat's next
-    // occurrence - only the task window and the REST API did. It also records the
-    // change and who completed it. A reorder within one column changes no status
-    // and records nothing.
-    TaskHistory::afterStatusChange($conn, $ctx, $taskId, $before, $newStatusId);
+    $statusResult = TaskHistory::recordStatusChange($conn, $ctx, $taskId, $before, $newStatusId);
+    $conn->commit();
+    // After the commit: a repeat's next occurrence, its expectation already recorded.
+    TaskHistory::afterCommit($conn, $ctx, $statusResult);
     echo json_encode(['success' => true, 'message' => 'Task reordered']);
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     // The status lookup and the checklist gate now run BEFORE the transaction
     // starts, so there may be nothing to roll back.
     if (isset($conn) && $conn->inTransaction()) {
